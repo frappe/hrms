@@ -11,12 +11,12 @@
  "link_to": "Payroll",
  "link_type": "Workspace Sidebar",
  "logo_url": "/assets/hrms/icons/desktop_icons/salary_payout.svg",
- "modified": "2026-01-01 20:07:01.308523",
+ "modified": "2026-02-12 08:25:54.701526",
  "modified_by": "Administrator",
  "name": "Payroll",
  "owner": "Administrator",
  "parent_icon": "Frappe HR",
- "restrict_removal": 0,
+ "restrict_removal": 1,
  "roles": [],
  "standard": 1
 }
