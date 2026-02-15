@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-02-01 09:43+0000\n"
-"PO-Revision-Date: 2026-02-03 00:52\n"
+"POT-Creation-Date: 2026-02-08 09:42+0000\n"
+"PO-Revision-Date: 2026-02-10 02:11\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -359,7 +359,7 @@ msgstr "Gelmedi"
 msgid "Absent Days"
 msgstr "Devamsızlık Günleri"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:174
+#: hrms/hr/report/shift_attendance/shift_attendance.py:178
 msgid "Absent Records"
 msgstr "Devamsızlık Kayıtları"
 
@@ -1332,7 +1332,7 @@ msgstr "Devamlılık Sayısı"
 
 #. Label of the attendance_date (Date) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
-#: hrms/hr/report/shift_attendance/shift_attendance.py:43
+#: hrms/hr/report/shift_attendance/shift_attendance.py:46
 msgid "Attendance Date"
 msgstr "Devamlılık Tarihi"
 
@@ -1345,7 +1345,7 @@ msgstr "İlk Tarih"
 msgid "Attendance From Date and Attendance To Date is mandatory"
 msgstr "Devamlılık için Başlangıç ve Bitiş Tarihi zorunludur"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:123
+#: hrms/hr/report/shift_attendance/shift_attendance.py:126
 msgid "Attendance ID"
 msgstr "Devamlılık ID"
 
@@ -1391,7 +1391,7 @@ msgstr "Devamlılık Güncellendi"
 msgid "Attendance Warnings"
 msgstr "Devamlılık Uyarıları"
 
-#: hrms/hr/doctype/attendance/attendance.py:60
+#: hrms/hr/doctype/attendance/attendance.py:63
 msgid "Attendance date {0} can not be less than employee {1}'s joining date: {2}"
 msgstr "Devamlılık tarihi {0}, {1} Personelin işe başlama tarihi olan {2} değerinden önce olamaz."
 
@@ -1399,11 +1399,11 @@ msgstr "Devamlılık tarihi {0}, {1} Personelin işe başlama tarihi olan {2} de
 msgid "Attendance for all the employees under this criteria has been marked already."
 msgstr "Bu kritere göre tüm personellerin devamlılığı zaten işaretlenmiştir."
 
-#: hrms/hr/doctype/attendance/attendance.py:118
+#: hrms/hr/doctype/attendance/attendance.py:121
 msgid "Attendance for employee {0} is already marked for an overlapping shift {1}: {2}"
 msgstr ""
 
-#: hrms/hr/doctype/attendance/attendance.py:72
+#: hrms/hr/doctype/attendance/attendance.py:75
 msgid "Attendance for employee {0} is already marked for the date {1}: {2}"
 msgstr ""
 
@@ -1671,6 +1671,11 @@ msgstr "Engellenen Günler"
 msgid "Block Holidays on important days."
 msgstr "Önemli günlerdeki tatilleri engelleyin."
 
+#. Label of the boarding_status (Select) field in DocType 'Employee Onboarding'
+#: hrms/hr/doctype/employee_onboarding/employee_onboarding.json
+msgid "Boarding Status"
+msgstr ""
+
 #. Label of the bonus_section (Section Break) field in DocType 'Retention
 #. Bonus'
 #: hrms/payroll/doctype/retention_bonus/retention_bonus.json
@@ -1805,7 +1810,7 @@ msgstr ""
 msgid "Cannot find active Leave Period"
 msgstr "Etkin İzin Dönemi bulunamadı"
 
-#: hrms/hr/doctype/attendance/attendance.py:152
+#: hrms/hr/doctype/attendance/attendance.py:155
 msgid "Cannot mark attendance for an Inactive employee {0}"
 msgstr ""
 
@@ -2632,7 +2637,7 @@ msgstr "Domestic (Yerli)"
 msgid "Duplicate Assignment"
 msgstr ""
 
-#: hrms/hr/doctype/attendance/attendance.py:77
+#: hrms/hr/doctype/attendance/attendance.py:80
 msgid "Duplicate Attendance"
 msgstr ""
 
@@ -2668,7 +2673,7 @@ msgstr "HATA ({0}): {1}"
 msgid "Early Exit"
 msgstr "Erken Çıkış"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:91
+#: hrms/hr/report/shift_attendance/shift_attendance.py:94
 msgid "Early Exit By"
 msgstr ""
 
@@ -2677,7 +2682,7 @@ msgstr ""
 msgid "Early Exit Grace Period"
 msgstr "Erken Grace Çıkış Dönemi"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:186
+#: hrms/hr/report/shift_attendance/shift_attendance.py:190
 msgid "Early Exits"
 msgstr "Erken Çıkışlar"
 
@@ -3324,11 +3329,11 @@ msgstr ""
 msgid "Employee {0} has already claimed the benefit '{1}' for {2} ({3}).<br>To prevent overpayments, only one claim per benefit type is allowed in each payroll cycle."
 msgstr ""
 
-#: hrms/hr/doctype/attendance/attendance.py:211
+#: hrms/hr/doctype/attendance/attendance.py:214
 msgid "Employee {0} is not active or does not exist"
 msgstr "Personel {0} aktif değil veya yok"
 
-#: hrms/hr/doctype/attendance/attendance.py:187
+#: hrms/hr/doctype/attendance/attendance.py:190
 msgid "Employee {0} is on Leave on {1}"
 msgstr "Personel {0}, {1} tarihinde izinli"
 
@@ -3336,7 +3341,7 @@ msgstr "Personel {0}, {1} tarihinde izinli"
 msgid "Employee {0} not found in Training Event Participants."
 msgstr "{0} isimli Personel Eğitim Katılımcılarında bulunamadı."
 
-#: hrms/hr/doctype/attendance/attendance.py:180
+#: hrms/hr/doctype/attendance/attendance.py:183
 msgid "Employee {0} on Half day on {1}"
 msgstr "Personel {0}, {1} tarihinde yarım gün çalışacak"
 
@@ -4640,7 +4645,7 @@ msgstr "Yarım Gün Tarih, İş Başlangıç Tarihi ile İş Bitiş Tarihi aras�
 msgid "Half Day Marked Employee Header"
 msgstr ""
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:168
+#: hrms/hr/report/shift_attendance/shift_attendance.py:172
 msgid "Half Day Records"
 msgstr "Yarım Gün Kayıtları"
 
@@ -4923,7 +4928,7 @@ msgstr "Devamlılıkları İçeri Aktar"
 
 #. Label of the in_time (Datetime) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
-#: hrms/hr/report/shift_attendance/shift_attendance.py:67
+#: hrms/hr/report/shift_attendance/shift_attendance.py:70
 msgid "In Time"
 msgstr "Zamanında"
 
@@ -4951,6 +4956,10 @@ msgstr ""
 #: hrms/hr/doctype/attendance_request/attendance_request.json
 msgid "Include Holidays"
 msgstr "Tatilleri Dahil Et"
+
+#: hrms/hr/report/shift_attendance/shift_attendance.js:64
+msgid "Include Shift Attendance Without Checkins"
+msgstr ""
 
 #. Label of the include_holidays_in_total_working_days (Check) field in DocType
 #. 'Payroll Settings'
@@ -5667,7 +5676,7 @@ msgstr "Kontrolün Son Senkronizasyonu"
 msgid "Last {0} was at {1}"
 msgstr ""
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:180
+#: hrms/hr/report/shift_attendance/shift_attendance.py:184
 msgid "Late Entries"
 msgstr ""
 
@@ -5685,7 +5694,7 @@ msgstr "Geç giriş"
 msgid "Late Entry & Early Exit Settings for Auto Attendance"
 msgstr ""
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:85
+#: hrms/hr/report/shift_attendance/shift_attendance.py:88
 msgid "Late Entry By"
 msgstr ""
 
@@ -6680,6 +6689,10 @@ msgstr "verilen çalışanın saha değeri için çalışan bulunamadı. &#39;{}
 msgid "No Employees Selected"
 msgstr "Personel Seçilmedi"
 
+#: hrms/utils/holiday_list.py:107
+msgid "No Holiday List was found for Employee {0} or their company {1} for date {2}. Please assign through {3}"
+msgstr ""
+
 #: hrms/hr/doctype/job_applicant/job_applicant_dashboard.html:53
 msgid "No Interview has been scheduled."
 msgstr "Henüz bir görüşme planlanmadı."
@@ -6821,7 +6834,7 @@ msgstr "Hiçbir öğe seçilmedi"
 msgid "No leave allocation found for {0} for {1} on given date."
 msgstr ""
 
-#: hrms/hr/doctype/attendance/attendance.py:197
+#: hrms/hr/doctype/attendance/attendance.py:200
 msgid "No leave record found for employee {0} on {1}"
 msgstr "{0} personeli için {1} tarihinde izin kaydı bulunamadı"
 
@@ -7140,7 +7153,7 @@ msgstr "Diğer Vergiler ve Masraflar"
 
 #. Label of the out_time (Datetime) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
-#: hrms/hr/report/shift_attendance/shift_attendance.py:73
+#: hrms/hr/report/shift_attendance/shift_attendance.py:76
 msgid "Out Time"
 msgstr "Çıkış Süresi"
 
@@ -7161,7 +7174,7 @@ msgstr "Genel Ortalama Puan"
 msgid "Overlapping Attendance Request"
 msgstr ""
 
-#: hrms/hr/doctype/attendance/attendance.py:123
+#: hrms/hr/doctype/attendance/attendance.py:126
 msgid "Overlapping Shift Attendance"
 msgstr ""
 
@@ -7664,10 +7677,6 @@ msgstr "Lütfen önce Otomatik Devamlılığı etkinleştirin ve kurulumu tamaml
 msgid "Please Select Company First"
 msgstr "Lütfen Önce Firma Seçin"
 
-#: hrms/utils/holiday_list.py:105
-msgid "Please assign Holiday List for Employee {0} or their company {1} through {2}"
-msgstr ""
-
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:836
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 msgstr ""
@@ -7754,7 +7763,7 @@ msgstr "Lütfen önce bir şirket seçin."
 msgid "Please select a csv file"
 msgstr "Lütfen bir csv dosyası seçin"
 
-#: hrms/hr/doctype/attendance/attendance.py:348
+#: hrms/hr/doctype/attendance/attendance.py:352
 msgid "Please select a date."
 msgstr "Lütfen bir tarih seçin."
 
@@ -7957,7 +7966,7 @@ msgstr "Konaklama için Tercih Edilen Alan"
 msgid "Present"
 msgstr "Geldi"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:162
+#: hrms/hr/report/shift_attendance/shift_attendance.py:166
 msgid "Present Records"
 msgstr ""
 
@@ -9306,7 +9315,7 @@ msgstr "Vardiya & Devamlılık"
 msgid "Shift Actual End"
 msgstr "Vardiya Sonu"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:117
+#: hrms/hr/report/shift_attendance/shift_attendance.py:120
 msgid "Shift Actual End Time"
 msgstr "Vardiya Gerçek Bitiş Saati"
 
@@ -9316,7 +9325,7 @@ msgstr "Vardiya Gerçek Bitiş Saati"
 msgid "Shift Actual Start"
 msgstr "Vardiya Gerçek Başlangıç"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:111
+#: hrms/hr/report/shift_attendance/shift_attendance.py:114
 msgid "Shift Actual Start Time"
 msgstr "Vardiya Gerçek Başlangıç Saati"
 
@@ -9374,7 +9383,7 @@ msgstr "Vardiya Detayları"
 msgid "Shift End"
 msgstr "vardiya sonu"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:61
+#: hrms/hr/report/shift_attendance/shift_attendance.py:64
 msgid "Shift End Time"
 msgstr "Vardiya Bitiş Saati"
 
@@ -9456,7 +9465,7 @@ msgstr "Vardiya Ayarları"
 msgid "Shift Start"
 msgstr "Vardiya Başlangıcı"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:55
+#: hrms/hr/report/shift_attendance/shift_attendance.py:58
 msgid "Shift Start Time"
 msgstr "Vardiya Başlangıç Saati"
 
@@ -10721,11 +10730,11 @@ msgstr ""
 msgid "Under Review"
 msgstr "İnceleniyor"
 
-#: hrms/hr/doctype/attendance/attendance.py:231
+#: hrms/hr/doctype/attendance/attendance.py:234
 msgid "Unlinked Attendance record from Employee Checkins: {}"
 msgstr ""
 
-#: hrms/hr/doctype/attendance/attendance.py:234
+#: hrms/hr/doctype/attendance/attendance.py:237
 msgid "Unlinked logs"
 msgstr "Bağlantısız kayıtlar"
 

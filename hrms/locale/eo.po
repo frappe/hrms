@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-02-01 09:43+0000\n"
-"PO-Revision-Date: 2026-02-03 00:52\n"
+"POT-Creation-Date: 2026-02-08 09:42+0000\n"
+"PO-Revision-Date: 2026-02-10 02:11\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Esperanto\n"
 "MIME-Version: 1.0\n"
@@ -334,7 +334,7 @@ msgstr "crwdns140860:0crwdne140860:0"
 msgid "Absent Days"
 msgstr "crwdns140862:0crwdne140862:0"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:174
+#: hrms/hr/report/shift_attendance/shift_attendance.py:178
 msgid "Absent Records"
 msgstr "crwdns104824:0crwdne104824:0"
 
@@ -1307,7 +1307,7 @@ msgstr "crwdns161506:0crwdne161506:0"
 
 #. Label of the attendance_date (Date) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
-#: hrms/hr/report/shift_attendance/shift_attendance.py:43
+#: hrms/hr/report/shift_attendance/shift_attendance.py:46
 msgid "Attendance Date"
 msgstr "crwdns105344:0crwdne105344:0"
 
@@ -1320,7 +1320,7 @@ msgstr "crwdns141040:0crwdne141040:0"
 msgid "Attendance From Date and Attendance To Date is mandatory"
 msgstr "crwdns105350:0crwdne105350:0"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:123
+#: hrms/hr/report/shift_attendance/shift_attendance.py:126
 msgid "Attendance ID"
 msgstr "crwdns105352:0crwdne105352:0"
 
@@ -1366,7 +1366,7 @@ msgstr "crwdns105366:0crwdne105366:0"
 msgid "Attendance Warnings"
 msgstr "crwdns105368:0crwdne105368:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:60
+#: hrms/hr/doctype/attendance/attendance.py:63
 msgid "Attendance date {0} can not be less than employee {1}'s joining date: {2}"
 msgstr "crwdns105372:0{0}crwdnd105372:0{1}crwdnd105372:0{2}crwdne105372:0"
 
@@ -1374,11 +1374,11 @@ msgstr "crwdns105372:0{0}crwdnd105372:0{1}crwdnd105372:0{2}crwdne105372:0"
 msgid "Attendance for all the employees under this criteria has been marked already."
 msgstr "crwdns105374:0crwdne105374:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:118
+#: hrms/hr/doctype/attendance/attendance.py:121
 msgid "Attendance for employee {0} is already marked for an overlapping shift {1}: {2}"
 msgstr "crwdns105376:0{0}crwdnd105376:0{1}crwdnd105376:0{2}crwdne105376:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:72
+#: hrms/hr/doctype/attendance/attendance.py:75
 msgid "Attendance for employee {0} is already marked for the date {1}: {2}"
 msgstr "crwdns105378:0{0}crwdnd105378:0{1}crwdnd105378:0{2}crwdne105378:0"
 
@@ -1646,6 +1646,11 @@ msgstr "crwdns141098:0crwdne141098:0"
 msgid "Block Holidays on important days."
 msgstr "crwdns141100:0crwdne141100:0"
 
+#. Label of the boarding_status (Select) field in DocType 'Employee Onboarding'
+#: hrms/hr/doctype/employee_onboarding/employee_onboarding.json
+msgid "Boarding Status"
+msgstr "crwdns195204:0crwdne195204:0"
+
 #. Label of the bonus_section (Section Break) field in DocType 'Retention
 #. Bonus'
 #: hrms/payroll/doctype/retention_bonus/retention_bonus.json
@@ -1780,7 +1785,7 @@ msgstr "crwdns148484:0{0}crwdne148484:0"
 msgid "Cannot find active Leave Period"
 msgstr "crwdns105566:0crwdne105566:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:152
+#: hrms/hr/doctype/attendance/attendance.py:155
 msgid "Cannot mark attendance for an Inactive employee {0}"
 msgstr "crwdns105568:0{0}crwdne105568:0"
 
@@ -2607,7 +2612,7 @@ msgstr "crwdns141318:0crwdne141318:0"
 msgid "Duplicate Assignment"
 msgstr "crwdns194882:0crwdne194882:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:77
+#: hrms/hr/doctype/attendance/attendance.py:80
 msgid "Duplicate Attendance"
 msgstr "crwdns106418:0crwdne106418:0"
 
@@ -2643,7 +2648,7 @@ msgstr "crwdns141326:0{0}crwdnd141326:0{1}crwdne141326:0"
 msgid "Early Exit"
 msgstr "crwdns106428:0crwdne106428:0"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:91
+#: hrms/hr/report/shift_attendance/shift_attendance.py:94
 msgid "Early Exit By"
 msgstr "crwdns106434:0crwdne106434:0"
 
@@ -2652,7 +2657,7 @@ msgstr "crwdns106434:0crwdne106434:0"
 msgid "Early Exit Grace Period"
 msgstr "crwdns141328:0crwdne141328:0"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:186
+#: hrms/hr/report/shift_attendance/shift_attendance.py:190
 msgid "Early Exits"
 msgstr "crwdns106438:0crwdne106438:0"
 
@@ -3299,11 +3304,11 @@ msgstr "crwdns106894:0{0}crwdnd106894:0{1}crwdnd106894:0{2}crwdnd106894:0{3}crwd
 msgid "Employee {0} has already claimed the benefit '{1}' for {2} ({3}).<br>To prevent overpayments, only one claim per benefit type is allowed in each payroll cycle."
 msgstr "crwdns159518:0{0}crwdnd159518:0{1}crwdnd159518:0{2}crwdnd159518:0{3}crwdne159518:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:211
+#: hrms/hr/doctype/attendance/attendance.py:214
 msgid "Employee {0} is not active or does not exist"
 msgstr "crwdns106898:0{0}crwdne106898:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:187
+#: hrms/hr/doctype/attendance/attendance.py:190
 msgid "Employee {0} is on Leave on {1}"
 msgstr "crwdns106900:0{0}crwdnd106900:0{1}crwdne106900:0"
 
@@ -3311,7 +3316,7 @@ msgstr "crwdns106900:0{0}crwdnd106900:0{1}crwdne106900:0"
 msgid "Employee {0} not found in Training Event Participants."
 msgstr "crwdns106902:0{0}crwdne106902:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:180
+#: hrms/hr/doctype/attendance/attendance.py:183
 msgid "Employee {0} on Half day on {1}"
 msgstr "crwdns106904:0{0}crwdnd106904:0{1}crwdne106904:0"
 
@@ -4615,7 +4620,7 @@ msgstr "crwdns107558:0crwdne107558:0"
 msgid "Half Day Marked Employee Header"
 msgstr "crwdns155416:0crwdne155416:0"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:168
+#: hrms/hr/report/shift_attendance/shift_attendance.py:172
 msgid "Half Day Records"
 msgstr "crwdns107560:0crwdne107560:0"
 
@@ -4898,7 +4903,7 @@ msgstr "crwdns141664:0crwdne141664:0"
 
 #. Label of the in_time (Datetime) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
-#: hrms/hr/report/shift_attendance/shift_attendance.py:67
+#: hrms/hr/report/shift_attendance/shift_attendance.py:70
 msgid "In Time"
 msgstr "crwdns107684:0crwdne107684:0"
 
@@ -4926,6 +4931,10 @@ msgstr "crwdns148752:0crwdne148752:0"
 #: hrms/hr/doctype/attendance_request/attendance_request.json
 msgid "Include Holidays"
 msgstr "crwdns141678:0crwdne141678:0"
+
+#: hrms/hr/report/shift_attendance/shift_attendance.js:64
+msgid "Include Shift Attendance Without Checkins"
+msgstr "crwdns195206:0crwdne195206:0"
 
 #. Label of the include_holidays_in_total_working_days (Check) field in DocType
 #. 'Payroll Settings'
@@ -5642,7 +5651,7 @@ msgstr "crwdns141790:0crwdne141790:0"
 msgid "Last {0} was at {1}"
 msgstr "crwdns151246:0{0}crwdnd151246:0{1}crwdne151246:0"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:180
+#: hrms/hr/report/shift_attendance/shift_attendance.py:184
 msgid "Late Entries"
 msgstr "crwdns108036:0crwdne108036:0"
 
@@ -5660,7 +5669,7 @@ msgstr "crwdns108038:0crwdne108038:0"
 msgid "Late Entry & Early Exit Settings for Auto Attendance"
 msgstr "crwdns141792:0crwdne141792:0"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:85
+#: hrms/hr/report/shift_attendance/shift_attendance.py:88
 msgid "Late Entry By"
 msgstr "crwdns108046:0crwdne108046:0"
 
@@ -6655,6 +6664,10 @@ msgstr "crwdns108520:0crwdne108520:0"
 msgid "No Employees Selected"
 msgstr "crwdns108522:0crwdne108522:0"
 
+#: hrms/utils/holiday_list.py:107
+msgid "No Holiday List was found for Employee {0} or their company {1} for date {2}. Please assign through {3}"
+msgstr "crwdns195208:0{0}crwdnd195208:0{1}crwdnd195208:0{2}crwdnd195208:0{3}crwdne195208:0"
+
 #: hrms/hr/doctype/job_applicant/job_applicant_dashboard.html:53
 msgid "No Interview has been scheduled."
 msgstr "crwdns141954:0crwdne141954:0"
@@ -6796,7 +6809,7 @@ msgstr "crwdns108556:0crwdne108556:0"
 msgid "No leave allocation found for {0} for {1} on given date."
 msgstr "crwdns159608:0{0}crwdnd159608:0{1}crwdne159608:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:197
+#: hrms/hr/doctype/attendance/attendance.py:200
 msgid "No leave record found for employee {0} on {1}"
 msgstr "crwdns108558:0{0}crwdnd108558:0{1}crwdne108558:0"
 
@@ -7115,7 +7128,7 @@ msgstr "crwdns142034:0crwdne142034:0"
 
 #. Label of the out_time (Datetime) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
-#: hrms/hr/report/shift_attendance/shift_attendance.py:73
+#: hrms/hr/report/shift_attendance/shift_attendance.py:76
 msgid "Out Time"
 msgstr "crwdns108714:0crwdne108714:0"
 
@@ -7136,7 +7149,7 @@ msgstr "crwdns142038:0crwdne142038:0"
 msgid "Overlapping Attendance Request"
 msgstr "crwdns108726:0crwdne108726:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:123
+#: hrms/hr/doctype/attendance/attendance.py:126
 msgid "Overlapping Shift Attendance"
 msgstr "crwdns108728:0crwdne108728:0"
 
@@ -7639,10 +7652,6 @@ msgstr "crwdns108938:0crwdne108938:0"
 msgid "Please Select Company First"
 msgstr "crwdns108940:0crwdne108940:0"
 
-#: hrms/utils/holiday_list.py:105
-msgid "Please assign Holiday List for Employee {0} or their company {1} through {2}"
-msgstr "crwdns194908:0{0}crwdnd194908:0{1}crwdnd194908:0{2}crwdne194908:0"
-
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:836
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 msgstr "crwdns108946:0{0}crwdnd108946:0{1}crwdne108946:0"
@@ -7729,7 +7738,7 @@ msgstr "crwdns108968:0crwdne108968:0"
 msgid "Please select a csv file"
 msgstr "crwdns108970:0crwdne108970:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:348
+#: hrms/hr/doctype/attendance/attendance.py:352
 msgid "Please select a date."
 msgstr "crwdns108972:0crwdne108972:0"
 
@@ -7932,7 +7941,7 @@ msgstr "crwdns142124:0crwdne142124:0"
 msgid "Present"
 msgstr "crwdns142126:0crwdne142126:0"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:162
+#: hrms/hr/report/shift_attendance/shift_attendance.py:166
 msgid "Present Records"
 msgstr "crwdns109070:0crwdne109070:0"
 
@@ -9281,7 +9290,7 @@ msgstr "crwdns161508:0crwdne161508:0"
 msgid "Shift Actual End"
 msgstr "crwdns142420:0crwdne142420:0"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:117
+#: hrms/hr/report/shift_attendance/shift_attendance.py:120
 msgid "Shift Actual End Time"
 msgstr "crwdns109724:0crwdne109724:0"
 
@@ -9291,7 +9300,7 @@ msgstr "crwdns109724:0crwdne109724:0"
 msgid "Shift Actual Start"
 msgstr "crwdns142422:0crwdne142422:0"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:111
+#: hrms/hr/report/shift_attendance/shift_attendance.py:114
 msgid "Shift Actual Start Time"
 msgstr "crwdns109728:0crwdne109728:0"
 
@@ -9349,7 +9358,7 @@ msgstr "crwdns148558:0crwdne148558:0"
 msgid "Shift End"
 msgstr "crwdns142430:0crwdne142430:0"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:61
+#: hrms/hr/report/shift_attendance/shift_attendance.py:64
 msgid "Shift End Time"
 msgstr "crwdns109740:0crwdne109740:0"
 
@@ -9431,7 +9440,7 @@ msgstr "crwdns142438:0crwdne142438:0"
 msgid "Shift Start"
 msgstr "crwdns142440:0crwdne142440:0"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:55
+#: hrms/hr/report/shift_attendance/shift_attendance.py:58
 msgid "Shift Start Time"
 msgstr "crwdns109752:0crwdne109752:0"
 
@@ -10696,11 +10705,11 @@ msgstr "crwdns161242:0crwdne161242:0"
 msgid "Under Review"
 msgstr "crwdns142670:0crwdne142670:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:231
+#: hrms/hr/doctype/attendance/attendance.py:234
 msgid "Unlinked Attendance record from Employee Checkins: {}"
 msgstr "crwdns110444:0crwdne110444:0"
 
-#: hrms/hr/doctype/attendance/attendance.py:234
+#: hrms/hr/doctype/attendance/attendance.py:237
 msgid "Unlinked logs"
 msgstr "crwdns110446:0crwdne110446:0"
 

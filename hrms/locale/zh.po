@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-02-01 09:43+0000\n"
-"PO-Revision-Date: 2026-02-03 00:52\n"
+"POT-Creation-Date: 2026-02-08 09:42+0000\n"
+"PO-Revision-Date: 2026-02-10 02:11\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Chinese Simplified\n"
 "MIME-Version: 1.0\n"
@@ -359,7 +359,7 @@ msgstr "缺勤"
 msgid "Absent Days"
 msgstr "缺勤天数"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:174
+#: hrms/hr/report/shift_attendance/shift_attendance.py:178
 msgid "Absent Records"
 msgstr "缺勤记录"
 
@@ -1332,7 +1332,7 @@ msgstr "考勤次数"
 
 #. Label of the attendance_date (Date) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
-#: hrms/hr/report/shift_attendance/shift_attendance.py:43
+#: hrms/hr/report/shift_attendance/shift_attendance.py:46
 msgid "Attendance Date"
 msgstr "考勤日期"
 
@@ -1345,7 +1345,7 @@ msgstr "考勤起始日期"
 msgid "Attendance From Date and Attendance To Date is mandatory"
 msgstr "必须填写考勤起止日期"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:123
+#: hrms/hr/report/shift_attendance/shift_attendance.py:126
 msgid "Attendance ID"
 msgstr "考勤编号"
 
@@ -1391,7 +1391,7 @@ msgstr "考勤已更新"
 msgid "Attendance Warnings"
 msgstr "考勤预警"
 
-#: hrms/hr/doctype/attendance/attendance.py:60
+#: hrms/hr/doctype/attendance/attendance.py:63
 msgid "Attendance date {0} can not be less than employee {1}'s joining date: {2}"
 msgstr "考勤日期{0}不得早于员工{1}的入职日期{2}"
 
@@ -1399,11 +1399,11 @@ msgstr "考勤日期{0}不得早于员工{1}的入职日期{2}"
 msgid "Attendance for all the employees under this criteria has been marked already."
 msgstr "符合条件的所有员工考勤已记录"
 
-#: hrms/hr/doctype/attendance/attendance.py:118
+#: hrms/hr/doctype/attendance/attendance.py:121
 msgid "Attendance for employee {0} is already marked for an overlapping shift {1}: {2}"
 msgstr "员工{0}的考勤已记录在重叠班次{1}：{2}中"
 
-#: hrms/hr/doctype/attendance/attendance.py:72
+#: hrms/hr/doctype/attendance/attendance.py:75
 msgid "Attendance for employee {0} is already marked for the date {1}: {2}"
 msgstr "员工{0}在日期{1}的考勤已记录：{2}"
 
@@ -1671,6 +1671,11 @@ msgstr "封存天数"
 msgid "Block Holidays on important days."
 msgstr "在重要日期封存假期"
 
+#. Label of the boarding_status (Select) field in DocType 'Employee Onboarding'
+#: hrms/hr/doctype/employee_onboarding/employee_onboarding.json
+msgid "Boarding Status"
+msgstr ""
+
 #. Label of the bonus_section (Section Break) field in DocType 'Retention
 #. Bonus'
 #: hrms/payroll/doctype/retention_bonus/retention_bonus.json
@@ -1805,7 +1810,7 @@ msgstr "无法对状态为{0}的考核周期创建或修改事务"
 msgid "Cannot find active Leave Period"
 msgstr "未找到有效假期周期"
 
-#: hrms/hr/doctype/attendance/attendance.py:152
+#: hrms/hr/doctype/attendance/attendance.py:155
 msgid "Cannot mark attendance for an Inactive employee {0}"
 msgstr "无法为停用员工{0}记录考勤"
 
@@ -2635,7 +2640,7 @@ msgstr "国内"
 msgid "Duplicate Assignment"
 msgstr ""
 
-#: hrms/hr/doctype/attendance/attendance.py:77
+#: hrms/hr/doctype/attendance/attendance.py:80
 msgid "Duplicate Attendance"
 msgstr "重复考勤记录"
 
@@ -2671,7 +2676,7 @@ msgstr "错误({0})：{1}"
 msgid "Early Exit"
 msgstr "早退"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:91
+#: hrms/hr/report/shift_attendance/shift_attendance.py:94
 msgid "Early Exit By"
 msgstr "早退处理人"
 
@@ -2680,7 +2685,7 @@ msgstr "早退处理人"
 msgid "Early Exit Grace Period"
 msgstr "早退宽限期"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:186
+#: hrms/hr/report/shift_attendance/shift_attendance.py:190
 msgid "Early Exits"
 msgstr "早退记录"
 
@@ -3327,11 +3332,11 @@ msgstr "员工{0}已在{2}至{3}期间申请{1}:{4}"
 msgid "Employee {0} has already claimed the benefit '{1}' for {2} ({3}).<br>To prevent overpayments, only one claim per benefit type is allowed in each payroll cycle."
 msgstr "员工{0}已在{2}（{3}）期间报销过福利“{1}”。<br>为防止超额支付，每个薪资周期内每种福利类型仅允许报销一次"
 
-#: hrms/hr/doctype/attendance/attendance.py:211
+#: hrms/hr/doctype/attendance/attendance.py:214
 msgid "Employee {0} is not active or does not exist"
 msgstr "员工{0}未激活或不存在"
 
-#: hrms/hr/doctype/attendance/attendance.py:187
+#: hrms/hr/doctype/attendance/attendance.py:190
 msgid "Employee {0} is on Leave on {1}"
 msgstr "员工{0}在{1}请假"
 
@@ -3339,7 +3344,7 @@ msgstr "员工{0}在{1}请假"
 msgid "Employee {0} not found in Training Event Participants."
 msgstr "未在培训参与者中找到员工{0}"
 
-#: hrms/hr/doctype/attendance/attendance.py:180
+#: hrms/hr/doctype/attendance/attendance.py:183
 msgid "Employee {0} on Half day on {1}"
 msgstr "员工{0}在{1}为半日假"
 
@@ -4643,7 +4648,7 @@ msgstr "半日假日期应在工作起止日期之间"
 msgid "Half Day Marked Employee Header"
 msgstr "半日制员工标识标题"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:168
+#: hrms/hr/report/shift_attendance/shift_attendance.py:172
 msgid "Half Day Records"
 msgstr "半日假记录"
 
@@ -4926,7 +4931,7 @@ msgstr "导入考勤"
 
 #. Label of the in_time (Datetime) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
-#: hrms/hr/report/shift_attendance/shift_attendance.py:67
+#: hrms/hr/report/shift_attendance/shift_attendance.py:70
 msgid "In Time"
 msgstr "准时"
 
@@ -4954,6 +4959,10 @@ msgstr "包含子公司"
 #: hrms/hr/doctype/attendance_request/attendance_request.json
 msgid "Include Holidays"
 msgstr "包含节假日"
+
+#: hrms/hr/report/shift_attendance/shift_attendance.js:64
+msgid "Include Shift Attendance Without Checkins"
+msgstr ""
 
 #. Label of the include_holidays_in_total_working_days (Check) field in DocType
 #. 'Payroll Settings'
@@ -5670,7 +5679,7 @@ msgstr "最后一次签到同步"
 msgid "Last {0} was at {1}"
 msgstr "最后一次{0}时间为{1}"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:180
+#: hrms/hr/report/shift_attendance/shift_attendance.py:184
 msgid "Late Entries"
 msgstr "迟到记录"
 
@@ -5688,7 +5697,7 @@ msgstr "迟到记录"
 msgid "Late Entry & Early Exit Settings for Auto Attendance"
 msgstr "自动考勤迟到早退设置"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:85
+#: hrms/hr/report/shift_attendance/shift_attendance.py:88
 msgid "Late Entry By"
 msgstr "迟到处理人"
 
@@ -6683,6 +6692,10 @@ msgstr "根据员工字段值'{}': {} 未找到对应员工"
 msgid "No Employees Selected"
 msgstr "未选择员工"
 
+#: hrms/utils/holiday_list.py:107
+msgid "No Holiday List was found for Employee {0} or their company {1} for date {2}. Please assign through {3}"
+msgstr ""
+
 #: hrms/hr/doctype/job_applicant/job_applicant_dashboard.html:53
 msgid "No Interview has been scheduled."
 msgstr "未安排面试"
@@ -6824,7 +6837,7 @@ msgstr "未选择项目"
 msgid "No leave allocation found for {0} for {1} on given date."
 msgstr "在指定日期未找到{0}的{1}假期分配。"
 
-#: hrms/hr/doctype/attendance/attendance.py:197
+#: hrms/hr/doctype/attendance/attendance.py:200
 msgid "No leave record found for employee {0} on {1}"
 msgstr "未找到员工{0}在{1}的假期记录"
 
@@ -7143,7 +7156,7 @@ msgstr "其他税费及附加"
 
 #. Label of the out_time (Datetime) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
-#: hrms/hr/report/shift_attendance/shift_attendance.py:73
+#: hrms/hr/report/shift_attendance/shift_attendance.py:76
 msgid "Out Time"
 msgstr "签退时间"
 
@@ -7164,7 +7177,7 @@ msgstr "总体平均评分"
 msgid "Overlapping Attendance Request"
 msgstr "重叠考勤申请"
 
-#: hrms/hr/doctype/attendance/attendance.py:123
+#: hrms/hr/doctype/attendance/attendance.py:126
 msgid "Overlapping Shift Attendance"
 msgstr "重叠班次考勤"
 
@@ -7667,10 +7680,6 @@ msgstr "请先启用自动考勤并完成设置"
 msgid "Please Select Company First"
 msgstr "请先选择公司"
 
-#: hrms/utils/holiday_list.py:105
-msgid "Please assign Holiday List for Employee {0} or their company {1} through {2}"
-msgstr ""
-
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:836
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 msgstr "请先为员工{0}分配自{1}或之前生效的薪资结构"
@@ -7757,7 +7766,7 @@ msgstr "请先选择公司"
 msgid "Please select a csv file"
 msgstr "请选择CSV文件"
 
-#: hrms/hr/doctype/attendance/attendance.py:348
+#: hrms/hr/doctype/attendance/attendance.py:352
 msgid "Please select a date."
 msgstr "请选择日期"
 
@@ -7960,7 +7969,7 @@ msgstr "首选住宿区域"
 msgid "Present"
 msgstr "出勤"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:162
+#: hrms/hr/report/shift_attendance/shift_attendance.py:166
 msgid "Present Records"
 msgstr "出勤记录"
 
@@ -9309,7 +9318,7 @@ msgstr "班次与考勤"
 msgid "Shift Actual End"
 msgstr "班次实际结束"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:117
+#: hrms/hr/report/shift_attendance/shift_attendance.py:120
 msgid "Shift Actual End Time"
 msgstr "班次实际结束时间"
 
@@ -9319,7 +9328,7 @@ msgstr "班次实际结束时间"
 msgid "Shift Actual Start"
 msgstr "班次实际开始"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:111
+#: hrms/hr/report/shift_attendance/shift_attendance.py:114
 msgid "Shift Actual Start Time"
 msgstr "班次实际开始时间"
 
@@ -9377,7 +9386,7 @@ msgstr "班次详情"
 msgid "Shift End"
 msgstr "班次结束"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:61
+#: hrms/hr/report/shift_attendance/shift_attendance.py:64
 msgid "Shift End Time"
 msgstr "班次结束时间"
 
@@ -9459,7 +9468,7 @@ msgstr "班次设置"
 msgid "Shift Start"
 msgstr "班次开始"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:55
+#: hrms/hr/report/shift_attendance/shift_attendance.py:58
 msgid "Shift Start Time"
 msgstr "班次开始时间"
 
@@ -10724,11 +10733,11 @@ msgstr ""
 msgid "Under Review"
 msgstr "审核中"
 
-#: hrms/hr/doctype/attendance/attendance.py:231
+#: hrms/hr/doctype/attendance/attendance.py:234
 msgid "Unlinked Attendance record from Employee Checkins: {}"
 msgstr "已解除考勤记录与员工签到的关联：{}"
 
-#: hrms/hr/doctype/attendance/attendance.py:234
+#: hrms/hr/doctype/attendance/attendance.py:237
 msgid "Unlinked logs"
 msgstr "未关联日志"
 

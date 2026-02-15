@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-02-01 09:43+0000\n"
-"PO-Revision-Date: 2026-02-03 00:52\n"
+"POT-Creation-Date: 2026-02-08 09:42+0000\n"
+"PO-Revision-Date: 2026-02-10 02:11\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -359,7 +359,7 @@ msgstr "Odsutan"
 msgid "Absent Days"
 msgstr "Dani Odsutnosti"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:174
+#: hrms/hr/report/shift_attendance/shift_attendance.py:178
 msgid "Absent Records"
 msgstr "Zapisi o Odsustvu"
 
@@ -1332,7 +1332,7 @@ msgstr "Broj Prisustva"
 
 #. Label of the attendance_date (Date) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
-#: hrms/hr/report/shift_attendance/shift_attendance.py:43
+#: hrms/hr/report/shift_attendance/shift_attendance.py:46
 msgid "Attendance Date"
 msgstr "Datum Prisustva"
 
@@ -1345,7 +1345,7 @@ msgstr "Prisustvo od Datuma"
 msgid "Attendance From Date and Attendance To Date is mandatory"
 msgstr "Prisustvo od datuma i prisustvo do datuma je obavezno"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:123
+#: hrms/hr/report/shift_attendance/shift_attendance.py:126
 msgid "Attendance ID"
 msgstr "ID Prisustva"
 
@@ -1391,7 +1391,7 @@ msgstr "Prisustvo Ažurirano"
 msgid "Attendance Warnings"
 msgstr "Upozorenja Prisustvu"
 
-#: hrms/hr/doctype/attendance/attendance.py:60
+#: hrms/hr/doctype/attendance/attendance.py:63
 msgid "Attendance date {0} can not be less than employee {1}'s joining date: {2}"
 msgstr "Datum Prisustva {0} ne može biti prije od datuma pridruživanja {1}: {2}"
 
@@ -1399,11 +1399,11 @@ msgstr "Datum Prisustva {0} ne može biti prije od datuma pridruživanja {1}: {2
 msgid "Attendance for all the employees under this criteria has been marked already."
 msgstr "Prisustvo za sav personal po ovom kriterijumu je već navedeno."
 
-#: hrms/hr/doctype/attendance/attendance.py:118
+#: hrms/hr/doctype/attendance/attendance.py:121
 msgid "Attendance for employee {0} is already marked for an overlapping shift {1}: {2}"
 msgstr "Prisustvo za {0} je već navedeno za preklapajuću smjenu {1}: {2}"
 
-#: hrms/hr/doctype/attendance/attendance.py:72
+#: hrms/hr/doctype/attendance/attendance.py:75
 msgid "Attendance for employee {0} is already marked for the date {1}: {2}"
 msgstr "Prisustvo za {0} je već navedeno za datum {1}: {2}"
 
@@ -1671,6 +1671,11 @@ msgstr "Blokiraj Dane"
 msgid "Block Holidays on important days."
 msgstr "Blokiraj Praznike na važne dane."
 
+#. Label of the boarding_status (Select) field in DocType 'Employee Onboarding'
+#: hrms/hr/doctype/employee_onboarding/employee_onboarding.json
+msgid "Boarding Status"
+msgstr "Status Introdukcije"
+
 #. Label of the bonus_section (Section Break) field in DocType 'Retention
 #. Bonus'
 #: hrms/payroll/doctype/retention_bonus/retention_bonus.json
@@ -1805,7 +1810,7 @@ msgstr "Nije moguće kreirati ili mijenjati transakcije prema Ciklusu Ocjenjivan
 msgid "Cannot find active Leave Period"
 msgstr "Nije moguće pronaći aktivni Period Odsustva"
 
-#: hrms/hr/doctype/attendance/attendance.py:152
+#: hrms/hr/doctype/attendance/attendance.py:155
 msgid "Cannot mark attendance for an Inactive employee {0}"
 msgstr "Nije moguće navesti prisustvo za neaktivan personal {0}"
 
@@ -2635,7 +2640,7 @@ msgstr "Domaći"
 msgid "Duplicate Assignment"
 msgstr "Dupliciraj Dodjelu"
 
-#: hrms/hr/doctype/attendance/attendance.py:77
+#: hrms/hr/doctype/attendance/attendance.py:80
 msgid "Duplicate Attendance"
 msgstr "Duplicirano Prisustvo"
 
@@ -2671,7 +2676,7 @@ msgstr "GREŠKA({0}): {1}"
 msgid "Early Exit"
 msgstr "Rana Odjava"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:91
+#: hrms/hr/report/shift_attendance/shift_attendance.py:94
 msgid "Early Exit By"
 msgstr "Rana Odjava do"
 
@@ -2680,7 +2685,7 @@ msgstr "Rana Odjava do"
 msgid "Early Exit Grace Period"
 msgstr "Period Odgode Ranog Izlaza"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:186
+#: hrms/hr/report/shift_attendance/shift_attendance.py:190
 msgid "Early Exits"
 msgstr "Rane Odjave"
 
@@ -3327,11 +3332,11 @@ msgstr "{0} se već prijavio za {1} između {2} i {3} : {4}"
 msgid "Employee {0} has already claimed the benefit '{1}' for {2} ({3}).<br>To prevent overpayments, only one claim per benefit type is allowed in each payroll cycle."
 msgstr "Personal {0} je već zatražio/la beneficiju '{1}' za {2} ({3}).<br>Da bi se spriječile prekomjerne isplate, dozvoljen je samo jedan zahtjev po tipui beneficije u svakom ciklusu obračuna plata."
 
-#: hrms/hr/doctype/attendance/attendance.py:211
+#: hrms/hr/doctype/attendance/attendance.py:214
 msgid "Employee {0} is not active or does not exist"
 msgstr "{0} nije aktivan ili ne postoji"
 
-#: hrms/hr/doctype/attendance/attendance.py:187
+#: hrms/hr/doctype/attendance/attendance.py:190
 msgid "Employee {0} is on Leave on {1}"
 msgstr "{0} je odsutan {1}"
 
@@ -3339,7 +3344,7 @@ msgstr "{0} je odsutan {1}"
 msgid "Employee {0} not found in Training Event Participants."
 msgstr "{0} nije pronađen među učesnicima obuke."
 
-#: hrms/hr/doctype/attendance/attendance.py:180
+#: hrms/hr/doctype/attendance/attendance.py:183
 msgid "Employee {0} on Half day on {1}"
 msgstr "{0} na pola dana {1}"
 
@@ -4643,7 +4648,7 @@ msgstr "Poludnevni datum bi trebao biti između Datuma Početka Rada i Datuma Za
 msgid "Half Day Marked Employee Header"
 msgstr "Poludnevni Personal Zaglavlje"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:168
+#: hrms/hr/report/shift_attendance/shift_attendance.py:172
 msgid "Half Day Records"
 msgstr "Poludnevni Zapisi"
 
@@ -4926,7 +4931,7 @@ msgstr "Import Prisustvo"
 
 #. Label of the in_time (Datetime) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
-#: hrms/hr/report/shift_attendance/shift_attendance.py:67
+#: hrms/hr/report/shift_attendance/shift_attendance.py:70
 msgid "In Time"
 msgstr "U Vrijeme"
 
@@ -4954,6 +4959,10 @@ msgstr "Uključuje Podređena Poduzeća"
 #: hrms/hr/doctype/attendance_request/attendance_request.json
 msgid "Include Holidays"
 msgstr "Uključuje Praznike"
+
+#: hrms/hr/report/shift_attendance/shift_attendance.js:64
+msgid "Include Shift Attendance Without Checkins"
+msgstr "Uključi Prisustvo u smjeni bez Prijava"
 
 #. Label of the include_holidays_in_total_working_days (Check) field in DocType
 #. 'Payroll Settings'
@@ -5670,7 +5679,7 @@ msgstr "Zadnja Sinhronizacija Prijave"
 msgid "Last {0} was at {1}"
 msgstr "Zadnja {0} je bila u {1}"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:180
+#: hrms/hr/report/shift_attendance/shift_attendance.py:184
 msgid "Late Entries"
 msgstr "Kasne Prijave"
 
@@ -5688,7 +5697,7 @@ msgstr "Kasna Prijava"
 msgid "Late Entry & Early Exit Settings for Auto Attendance"
 msgstr "Postavke Kasne Prijave i Rane Odjave za Automatsko Prisustvo"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:85
+#: hrms/hr/report/shift_attendance/shift_attendance.py:88
 msgid "Late Entry By"
 msgstr "Kasna Prijava od"
 
@@ -6683,6 +6692,10 @@ msgstr "Nije pronađen personal za datu vrijednost polja '{}': {}"
 msgid "No Employees Selected"
 msgstr "Nema odabranog Personala"
 
+#: hrms/utils/holiday_list.py:107
+msgid "No Holiday List was found for Employee {0} or their company {1} for date {2}. Please assign through {3}"
+msgstr "Nije pronađena lista praznika za {0} ili za {1} za datum {2}. Dodijeli putem {3}"
+
 #: hrms/hr/doctype/job_applicant/job_applicant_dashboard.html:53
 msgid "No Interview has been scheduled."
 msgstr "Intervju nije zakazan."
@@ -6824,7 +6837,7 @@ msgstr "Nisu odabrani Artikli"
 msgid "No leave allocation found for {0} for {1} on given date."
 msgstr "Nije pronađena dodjela odsustva za {0} za {1} na dati datum."
 
-#: hrms/hr/doctype/attendance/attendance.py:197
+#: hrms/hr/doctype/attendance/attendance.py:200
 msgid "No leave record found for employee {0} on {1}"
 msgstr "Nije pronađen yapisnik Odsustva za personal {0} na {1}"
 
@@ -7143,7 +7156,7 @@ msgstr "Ostali Porezi i Naknade"
 
 #. Label of the out_time (Datetime) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
-#: hrms/hr/report/shift_attendance/shift_attendance.py:73
+#: hrms/hr/report/shift_attendance/shift_attendance.py:76
 msgid "Out Time"
 msgstr "Vrijeme Ističe"
 
@@ -7164,7 +7177,7 @@ msgstr "Ukupna Prosječna Ocjena"
 msgid "Overlapping Attendance Request"
 msgstr "Preklapajući Zahtjev za Prisustvo"
 
-#: hrms/hr/doctype/attendance/attendance.py:123
+#: hrms/hr/doctype/attendance/attendance.py:126
 msgid "Overlapping Shift Attendance"
 msgstr "Preklapajuće Prisustvo Smjene"
 
@@ -7667,10 +7680,6 @@ msgstr "Omogući Automatsko Prisustvo i prvo dovršite podešavanje."
 msgid "Please Select Company First"
 msgstr "Odaberi Poduzeće"
 
-#: hrms/utils/holiday_list.py:105
-msgid "Please assign Holiday List for Employee {0} or their company {1} through {2}"
-msgstr "Dodijeli Listu Praznika za {0} ili za {1} do {2}"
-
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:836
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 msgstr "Dodijeli Strukturu Plata za {0} primjenjivu od ili prije {1}"
@@ -7757,7 +7766,7 @@ msgstr "Odaberi Poduzeće."
 msgid "Please select a csv file"
 msgstr "Odaberi csv datoteku"
 
-#: hrms/hr/doctype/attendance/attendance.py:348
+#: hrms/hr/doctype/attendance/attendance.py:352
 msgid "Please select a date."
 msgstr "Odaberi Datum."
 
@@ -7960,7 +7969,7 @@ msgstr "Preferirano područje za smještaj"
 msgid "Present"
 msgstr "Prisutan"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:162
+#: hrms/hr/report/shift_attendance/shift_attendance.py:166
 msgid "Present Records"
 msgstr "Trenutni Zapisi"
 
@@ -9309,7 +9318,7 @@ msgstr "Smjena & Prisustvo"
 msgid "Shift Actual End"
 msgstr "Stvarni Kraj Smjene"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:117
+#: hrms/hr/report/shift_attendance/shift_attendance.py:120
 msgid "Shift Actual End Time"
 msgstr "Vrijeme Stvarnog Kraja Smjene"
 
@@ -9319,7 +9328,7 @@ msgstr "Vrijeme Stvarnog Kraja Smjene"
 msgid "Shift Actual Start"
 msgstr "Stvarni Početak Smjene"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:111
+#: hrms/hr/report/shift_attendance/shift_attendance.py:114
 msgid "Shift Actual Start Time"
 msgstr "Vrijeme Stvarnog Početka Smjene"
 
@@ -9377,7 +9386,7 @@ msgstr "Detalji Smjene"
 msgid "Shift End"
 msgstr "Kraj Smjene"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:61
+#: hrms/hr/report/shift_attendance/shift_attendance.py:64
 msgid "Shift End Time"
 msgstr "Vrijeme Kraja Smjene"
 
@@ -9459,7 +9468,7 @@ msgstr "Postavke Smjene"
 msgid "Shift Start"
 msgstr "Početak Smjene"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:55
+#: hrms/hr/report/shift_attendance/shift_attendance.py:58
 msgid "Shift Start Time"
 msgstr "Vrijeme Početka Smjene"
 
@@ -10724,11 +10733,11 @@ msgstr "Nezatraženi Iznos (Valuta Poduzeća)"
 msgid "Under Review"
 msgstr "Pod Recenzijom"
 
-#: hrms/hr/doctype/attendance/attendance.py:231
+#: hrms/hr/doctype/attendance/attendance.py:234
 msgid "Unlinked Attendance record from Employee Checkins: {}"
 msgstr "Prekini vezu zapisa Prisustva sa prijavama personala: {}"
 
-#: hrms/hr/doctype/attendance/attendance.py:234
+#: hrms/hr/doctype/attendance/attendance.py:237
 msgid "Unlinked logs"
 msgstr "Nepovezani Zapisi"
 

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-02-01 09:43+0000\n"
-"PO-Revision-Date: 2026-02-03 00:52\n"
+"POT-Creation-Date: 2026-02-08 09:42+0000\n"
+"PO-Revision-Date: 2026-02-10 02:11\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -359,7 +359,7 @@ msgstr "Frånvarande"
 msgid "Absent Days"
 msgstr "Frånvarande Dagar"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:174
+#: hrms/hr/report/shift_attendance/shift_attendance.py:178
 msgid "Absent Records"
 msgstr "Frånvarande Poster"
 
@@ -1332,7 +1332,7 @@ msgstr "Närvaro"
 
 #. Label of the attendance_date (Date) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
-#: hrms/hr/report/shift_attendance/shift_attendance.py:43
+#: hrms/hr/report/shift_attendance/shift_attendance.py:46
 msgid "Attendance Date"
 msgstr "Närvaro Datum"
 
@@ -1345,7 +1345,7 @@ msgstr "Närvaro Från Datum"
 msgid "Attendance From Date and Attendance To Date is mandatory"
 msgstr "Närvaro Från Datum och Till Datum erfordras"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:123
+#: hrms/hr/report/shift_attendance/shift_attendance.py:126
 msgid "Attendance ID"
 msgstr "Närvari ID"
 
@@ -1391,7 +1391,7 @@ msgstr "Närvaro Uppdaterad"
 msgid "Attendance Warnings"
 msgstr "Närvaro Varning"
 
-#: hrms/hr/doctype/attendance/attendance.py:60
+#: hrms/hr/doctype/attendance/attendance.py:63
 msgid "Attendance date {0} can not be less than employee {1}'s joining date: {2}"
 msgstr "Närvaro datum {0} får inte vara tidigare än personal {1}  anslutning datum: {2}"
 
@@ -1399,11 +1399,11 @@ msgstr "Närvaro datum {0} får inte vara tidigare än personal {1}  anslutning 
 msgid "Attendance for all the employees under this criteria has been marked already."
 msgstr "Närvaro för all personal under dessa kriterier är redan angiven."
 
-#: hrms/hr/doctype/attendance/attendance.py:118
+#: hrms/hr/doctype/attendance/attendance.py:121
 msgid "Attendance for employee {0} is already marked for an overlapping shift {1}: {2}"
 msgstr "Närvaro för personal {0} är redan angiven för överlappande skift {1}: {2}"
 
-#: hrms/hr/doctype/attendance/attendance.py:72
+#: hrms/hr/doctype/attendance/attendance.py:75
 msgid "Attendance for employee {0} is already marked for the date {1}: {2}"
 msgstr "Närvaro för personal {0} är redan angiven för följande datum {1}: {2}"
 
@@ -1671,6 +1671,11 @@ msgstr "Spärra Dagar"
 msgid "Block Holidays on important days."
 msgstr "Spärra helger på viktiga dagar."
 
+#. Label of the boarding_status (Select) field in DocType 'Employee Onboarding'
+#: hrms/hr/doctype/employee_onboarding/employee_onboarding.json
+msgid "Boarding Status"
+msgstr "Introduktion Status"
+
 #. Label of the bonus_section (Section Break) field in DocType 'Retention
 #. Bonus'
 #: hrms/payroll/doctype/retention_bonus/retention_bonus.json
@@ -1805,7 +1810,7 @@ msgstr "Kan inte skapa eller ändra transaktioner mot utvärderingscykel med sta
 msgid "Cannot find active Leave Period"
 msgstr "Kan inte hitta aktiv Frånvaro Period"
 
-#: hrms/hr/doctype/attendance/attendance.py:152
+#: hrms/hr/doctype/attendance/attendance.py:155
 msgid "Cannot mark attendance for an Inactive employee {0}"
 msgstr "Kan inte ange närvaro för inaktiv personal {0}"
 
@@ -2635,7 +2640,7 @@ msgstr "Inrikes"
 msgid "Duplicate Assignment"
 msgstr "Duplicera Tilldelning"
 
-#: hrms/hr/doctype/attendance/attendance.py:77
+#: hrms/hr/doctype/attendance/attendance.py:80
 msgid "Duplicate Attendance"
 msgstr "Kopiera Närvaro"
 
@@ -2671,7 +2676,7 @@ msgstr "FEL ({0}): {1}"
 msgid "Early Exit"
 msgstr "Tidig Utstämpling"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:91
+#: hrms/hr/report/shift_attendance/shift_attendance.py:94
 msgid "Early Exit By"
 msgstr "Tidig Utstämpling Efter"
 
@@ -2680,7 +2685,7 @@ msgstr "Tidig Utstämpling Efter"
 msgid "Early Exit Grace Period"
 msgstr "Tidig Utstämpling Anstånd Period"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:186
+#: hrms/hr/report/shift_attendance/shift_attendance.py:190
 msgid "Early Exits"
 msgstr "Tidiga Utstämplingar"
 
@@ -3327,11 +3332,11 @@ msgstr "Personal {0} har redan ansökt om {1} mellan {2} och {3}: {4}"
 msgid "Employee {0} has already claimed the benefit '{1}' for {2} ({3}).<br>To prevent overpayments, only one claim per benefit type is allowed in each payroll cycle."
 msgstr "{0} har redan ansökt om förmån \"{1}\" för {2} ({3}).<br>För att förhindra överbetalningar tillåts endast en ansökan per förmånstyp i varje lönecykel."
 
-#: hrms/hr/doctype/attendance/attendance.py:211
+#: hrms/hr/doctype/attendance/attendance.py:214
 msgid "Employee {0} is not active or does not exist"
 msgstr "Personal {0} är inte aktiv eller finns inte"
 
-#: hrms/hr/doctype/attendance/attendance.py:187
+#: hrms/hr/doctype/attendance/attendance.py:190
 msgid "Employee {0} is on Leave on {1}"
 msgstr "Personal {0} är Ledig {1}"
 
@@ -3339,7 +3344,7 @@ msgstr "Personal {0} är Ledig {1}"
 msgid "Employee {0} not found in Training Event Participants."
 msgstr "Personal {0} hittades inte i Utbildning Händelse Deltagare."
 
-#: hrms/hr/doctype/attendance/attendance.py:180
+#: hrms/hr/doctype/attendance/attendance.py:183
 msgid "Employee {0} on Half day on {1}"
 msgstr "Personal {0} halvdag {1}"
 
@@ -4643,7 +4648,7 @@ msgstr "Halv Dag Datum ska vara mellan Arbete från datum och Arbete slut datum"
 msgid "Half Day Marked Employee Header"
 msgstr "Halvdag Vald Personal Rubrik"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:168
+#: hrms/hr/report/shift_attendance/shift_attendance.py:172
 msgid "Half Day Records"
 msgstr "Halv Dag"
 
@@ -4926,7 +4931,7 @@ msgstr "Importera Närvaro"
 
 #. Label of the in_time (Datetime) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
-#: hrms/hr/report/shift_attendance/shift_attendance.py:67
+#: hrms/hr/report/shift_attendance/shift_attendance.py:70
 msgid "In Time"
 msgstr "I Tid"
 
@@ -4954,6 +4959,10 @@ msgstr "Inkludera Dotterbolag"
 #: hrms/hr/doctype/attendance_request/attendance_request.json
 msgid "Include Holidays"
 msgstr "Inkludera Helgdagar"
+
+#: hrms/hr/report/shift_attendance/shift_attendance.js:64
+msgid "Include Shift Attendance Without Checkins"
+msgstr "Inkludera Skiftnärvaro utan Stämplingar"
 
 #. Label of the include_holidays_in_total_working_days (Check) field in DocType
 #. 'Payroll Settings'
@@ -5670,7 +5679,7 @@ msgstr "Senaste Synkronisering av Stämplingar"
 msgid "Last {0} was at {1}"
 msgstr "Senaste {0} var {1}"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:180
+#: hrms/hr/report/shift_attendance/shift_attendance.py:184
 msgid "Late Entries"
 msgstr "Sena Ankomster"
 
@@ -5688,7 +5697,7 @@ msgstr "Sen Instämpling"
 msgid "Late Entry & Early Exit Settings for Auto Attendance"
 msgstr "Sen Instämpling & Tidig Utstämpling för Automatiskt Närvaro"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:85
+#: hrms/hr/report/shift_attendance/shift_attendance.py:88
 msgid "Late Entry By"
 msgstr "Sen Ankomst Av"
 
@@ -6683,6 +6692,10 @@ msgstr "Ingen Personal hittades för angiven Personal fält värde. '{}': {}"
 msgid "No Employees Selected"
 msgstr "Ingen Personal Vald"
 
+#: hrms/utils/holiday_list.py:107
+msgid "No Holiday List was found for Employee {0} or their company {1} for date {2}. Please assign through {3}"
+msgstr "Ingen Helgdag Lista hittades för {0} eller {1} för datum {2}. Tilldela via {3}"
+
 #: hrms/hr/doctype/job_applicant/job_applicant_dashboard.html:53
 msgid "No Interview has been scheduled."
 msgstr "Ingen intervju är schemalagd."
@@ -6824,7 +6837,7 @@ msgstr "Inga poster valda"
 msgid "No leave allocation found for {0} for {1} on given date."
 msgstr "Ingen frånvaro tilldelning hittades för {0} för {1} på angiven datum."
 
-#: hrms/hr/doctype/attendance/attendance.py:197
+#: hrms/hr/doctype/attendance/attendance.py:200
 msgid "No leave record found for employee {0} on {1}"
 msgstr "Ingen Ledighet Post hittades för Personal {0} {1}"
 
@@ -7143,7 +7156,7 @@ msgstr "Övriga Skatter och Avgifter"
 
 #. Label of the out_time (Datetime) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
-#: hrms/hr/report/shift_attendance/shift_attendance.py:73
+#: hrms/hr/report/shift_attendance/shift_attendance.py:76
 msgid "Out Time"
 msgstr "Utgående Tid"
 
@@ -7164,7 +7177,7 @@ msgstr "Övergripande Genomsnittlig Betyg"
 msgid "Overlapping Attendance Request"
 msgstr "Överlappande Närvaro Begäran"
 
-#: hrms/hr/doctype/attendance/attendance.py:123
+#: hrms/hr/doctype/attendance/attendance.py:126
 msgid "Overlapping Shift Attendance"
 msgstr "Överlappande Skift Närvaro"
 
@@ -7667,10 +7680,6 @@ msgstr "Aktivera Automatisk Närvaro och slutför installation."
 msgid "Please Select Company First"
 msgstr "Välj Bolag"
 
-#: hrms/utils/holiday_list.py:105
-msgid "Please assign Holiday List for Employee {0} or their company {1} through {2}"
-msgstr "Tilldela Helg Lista för {0} eller {1} till {2}"
-
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:836
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 msgstr "Tilldela först Löneart för {0} som gäller från eller före {1}"
@@ -7757,7 +7766,7 @@ msgstr "Välj Bolag"
 msgid "Please select a csv file"
 msgstr "Välj CSV fil"
 
-#: hrms/hr/doctype/attendance/attendance.py:348
+#: hrms/hr/doctype/attendance/attendance.py:352
 msgid "Please select a date."
 msgstr "Välj Datum"
 
@@ -7960,7 +7969,7 @@ msgstr "Prioriterad Område för Logi"
 msgid "Present"
 msgstr "Närvarande"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:162
+#: hrms/hr/report/shift_attendance/shift_attendance.py:166
 msgid "Present Records"
 msgstr "Närvaro Poster"
 
@@ -9309,7 +9318,7 @@ msgstr "Skift & Närvaro"
 msgid "Shift Actual End"
 msgstr "Skift Faktisk Slut"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:117
+#: hrms/hr/report/shift_attendance/shift_attendance.py:120
 msgid "Shift Actual End Time"
 msgstr "Skift Faktisk Slut Tid"
 
@@ -9319,7 +9328,7 @@ msgstr "Skift Faktisk Slut Tid"
 msgid "Shift Actual Start"
 msgstr "Skift Faktisk Start"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:111
+#: hrms/hr/report/shift_attendance/shift_attendance.py:114
 msgid "Shift Actual Start Time"
 msgstr "Skift Faktisk Start Tid"
 
@@ -9377,7 +9386,7 @@ msgstr "Skift Detaljer"
 msgid "Shift End"
 msgstr "Shift Slut"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:61
+#: hrms/hr/report/shift_attendance/shift_attendance.py:64
 msgid "Shift End Time"
 msgstr "Skift Slut Tid"
 
@@ -9459,7 +9468,7 @@ msgstr "Skift Inställningar"
 msgid "Shift Start"
 msgstr "Skift Start"
 
-#: hrms/hr/report/shift_attendance/shift_attendance.py:55
+#: hrms/hr/report/shift_attendance/shift_attendance.py:58
 msgid "Shift Start Time"
 msgstr "Skift Start Tid"
 
@@ -10724,11 +10733,11 @@ msgstr "Ej Begärd Belopp (Bolag Valuta)"
 msgid "Under Review"
 msgstr "Under Recension"
 
-#: hrms/hr/doctype/attendance/attendance.py:231
+#: hrms/hr/doctype/attendance/attendance.py:234
 msgid "Unlinked Attendance record from Employee Checkins: {}"
 msgstr "Ej Länkad Närvaro post från Personal Stämplingar: {}"
 
-#: hrms/hr/doctype/attendance/attendance.py:234
+#: hrms/hr/doctype/attendance/attendance.py:237
 msgid "Unlinked logs"
 msgstr "Olänkade Loggar"
 
