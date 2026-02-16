@@ -340,11 +340,40 @@ def create_structure_assignments(company, payroll_data, counts):
             print(f"  Error assigning {emp.employee_name}: {str(e)[:80]}")
 
 
-def create_health_insurance_additional_salaries(company, config, executive_designations, counts):
+def get_hi_plan(marital_status, date_of_birth):
+    """Determine Health Insurance plan based on marital status and age.
+
+    - married -> Family
+    - single -> Individual
+    - widowed or divorced -> age > 50: Individual, otherwise: Family
+    """
+    from datetime import date
+
+    status = (marital_status or "").strip().lower()
+
+    if status == "married":
+        return "Family"
+    elif status == "single":
+        return "Individual"
+    elif status in ("widowed", "divorced"):
+        if date_of_birth:
+            today = date.today()
+            dob = date_of_birth if isinstance(date_of_birth, date) else date.fromisoformat(str(date_of_birth))
+            age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+            return "Individual" if age > 50 else "Family"
+        return "Individual"
+    else:
+        return "Individual"
+
+
+def create_health_insurance_additional_salaries(company, config, counts):
     """Create recurring Additional Salary records for Health Insurance.
 
     Health Insurance is a fixed premium set per employee via Additional Salary.
-    Executives (Salaried) get Family rate, non-executives (Hourly) get Individual rate.
+    Plan type is determined by marital status and age:
+    - married -> Family ($150.12/wk)
+    - single -> Individual ($69.28/wk)
+    - widowed/divorced -> age > 50: Individual, age <= 50: Family
     Rates are defined in config: health_insurance_family and health_insurance_individual.
     """
     family_rate = config.get("health_insurance_family", 150.12)
@@ -356,13 +385,18 @@ def create_health_insurance_additional_salaries(company, config, executive_desig
     assignments = frappe.get_all(
         "Salary Structure Assignment",
         filters={"company": company, "docstatus": 1},
-        fields=["employee", "employee_name", "salary_structure"]
+        fields=["employee", "employee_name"]
     )
 
     for assign in assignments:
-        is_executive = assign.salary_structure == "Salaried"
-        rate = family_rate if is_executive else individual_rate
-        plan = "Family" if is_executive else "Individual"
+        emp_data = frappe.db.get_value(
+            "Employee", assign.employee,
+            ["marital_status", "date_of_birth", "date_of_joining"],
+            as_dict=True
+        )
+
+        plan = get_hi_plan(emp_data.marital_status, emp_data.date_of_birth)
+        rate = family_rate if plan == "Family" else individual_rate
 
         existing = frappe.db.exists("Additional Salary", {
             "employee": assign.employee,
@@ -376,7 +410,7 @@ def create_health_insurance_additional_salaries(company, config, executive_desig
 
         try:
             # from_date must be >= employee's date_of_joining (Frappe validation)
-            doj = frappe.db.get_value("Employee", assign.employee, "date_of_joining")
+            doj = emp_data.date_of_joining
             emp_from_date = max(str(doj), from_date) if doj else from_date
 
             doc = frappe.get_doc({
@@ -537,8 +571,7 @@ def create_payroll_data(company="NovaSoft", payroll_path=None):
     print("\n" + "="*50)
     print("Step 4: Creating Health Insurance Additional Salaries...")
     print("="*50)
-    executive_designations = payroll_data.get("executive_designations", [])
-    create_health_insurance_additional_salaries(company, config, executive_designations, counts)
+    create_health_insurance_additional_salaries(company, config, counts)
     frappe.db.commit()
 
     # Step 5: Create Salary Slips
@@ -600,7 +633,7 @@ def clear_payroll_data(company="NovaSoft", payroll_path=None):
     print(f"{'='*60}\n")
 
     deleted = {"slips": 0, "additional_salaries": 0, "assignments": 0, "structures": 0,
-              "components": 0, "tax_slabs": 0, "payroll_periods": 0}
+              "components": 0, "tax_slabs": 0, "payroll_periods": 0, "fiscal_years": 0}
 
     # Delete salary slips
     print("Deleting Salary Slips...")
@@ -689,6 +722,15 @@ def clear_payroll_data(company="NovaSoft", payroll_path=None):
         except Exception as e:
             print(f"  Error deleting payroll period {period_name}: {str(e)[:50]}")
 
+    # Delete Fiscal Year
+    print("Deleting Fiscal Year...")
+    if frappe.db.exists("Fiscal Year", fiscal_year):
+        try:
+            frappe.delete_doc("Fiscal Year", fiscal_year, force=True)
+            deleted["fiscal_years"] += 1
+        except Exception as e:
+            print(f"  Error deleting fiscal year {fiscal_year}: {str(e)[:50]}")
+
     # Restore HRMS default components
     restore_default_components()
 
@@ -704,6 +746,7 @@ def clear_payroll_data(company="NovaSoft", payroll_path=None):
     print(f"  Deleted {deleted['components']} Salary Components")
     print(f"  Deleted {deleted['tax_slabs']} Income Tax Slabs")
     print(f"  Deleted {deleted['payroll_periods']} Payroll Periods")
+    print(f"  Deleted {deleted['fiscal_years']} Fiscal Years")
     print(f"{'='*60}\n")
 
     return deleted

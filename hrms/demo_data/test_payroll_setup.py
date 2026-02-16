@@ -8,8 +8,8 @@ and database verification tests (requires Frappe context).
 Run standalone JSON tests:
     cd hrms/demo_data && python -m unittest test_payroll_setup -v
 
-Run DB verification tests:
-    bench run-tests --module hrms.demo_data.test_payroll_setup
+Run DB verification tests (inside Docker):
+    podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && ./env/bin/python -m pytest apps/hrms/hrms/demo_data/test_payroll_setup.py -v'
 """
 
 import json
@@ -85,20 +85,12 @@ class TestPayrollJsonValidation(unittest.TestCase):
         self.assertNotIn("import json", content)
 
 
-try:
-    import frappe
-    HAS_FRAPPE = True
-except ImportError:
-    HAS_FRAPPE = False
-
-
-@unittest.skipUnless(HAS_FRAPPE, "Requires Frappe context - run with: bench run-tests --module hrms.demo_data.test_payroll_setup")
 class TestDatabaseVerification(unittest.TestCase):
     """Verify payroll data was correctly added to the database.
 
     These tests require Frappe context and validate that the script
     created the expected records. Run with:
-        bench run-tests --module hrms.demo_data.test_payroll_setup
+        podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && ./env/bin/python -m pytest apps/hrms/hrms/demo_data/test_payroll_setup.py -v'
     """
 
     COMPANY = "NovaSoft"
@@ -106,9 +98,13 @@ class TestDatabaseVerification(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         try:
+            import frappe
+            frappe.init(site="hrms.localhost", sites_path="sites")
+            frappe.connect()
             frappe.set_user("Administrator")
         except Exception:
-            raise unittest.SkipTest("No active Frappe site context")
+            raise unittest.SkipTest("Frappe not available - skipping DB tests")
+        cls.frappe = frappe
         with open(PAYROLL_JSON_PATH, "r") as f:
             cls.data = json.load(f)
 
@@ -117,7 +113,7 @@ class TestDatabaseVerification(unittest.TestCase):
         expected = [c["name"] for c in self.data.get("salary_components", [])]
         for name in expected:
             self.assertTrue(
-                frappe.db.exists("Salary Component", name),
+                self.frappe.db.exists("Salary Component", name),
                 f"Salary Component '{name}' not found in database",
             )
 
@@ -126,16 +122,16 @@ class TestDatabaseVerification(unittest.TestCase):
         for struct in self.data.get("salary_structures", []):
             name = struct["name"]
             self.assertTrue(
-                frappe.db.exists("Salary Structure", name),
+                self.frappe.db.exists("Salary Structure", name),
                 f"Salary Structure '{name}' not found in database",
             )
-            doc = frappe.get_doc("Salary Structure", name)
+            doc = self.frappe.get_doc("Salary Structure", name)
             self.assertEqual(doc.docstatus, 1, f"Salary Structure '{name}' is not submitted")
             self.assertEqual(doc.is_active, "Yes", f"Salary Structure '{name}' is not active")
 
     def test_verify_structure_assignments(self):
         """Verify salary structure assignments exist with non-zero base salary."""
-        assignments = frappe.get_all(
+        assignments = self.frappe.get_all(
             "Salary Structure Assignment",
             filters={"company": self.COMPANY, "docstatus": 1},
             fields=["employee", "employee_name", "salary_structure", "base"],
@@ -149,7 +145,7 @@ class TestDatabaseVerification(unittest.TestCase):
 
     def test_verify_salary_slips(self):
         """Verify salary slips exist with non-zero gross pay and net pay."""
-        slips = frappe.get_all(
+        slips = self.frappe.get_all(
             "Salary Slip",
             filters={"company": self.COMPANY},
             fields=["employee", "employee_name", "gross_pay", "total_deduction", "net_pay"],
@@ -171,10 +167,10 @@ class TestDatabaseVerification(unittest.TestCase):
         fiscal_year = config.get("fiscal_year", "2025")
         slab_name = f"Federal Tax {fiscal_year} - {self.COMPANY}"
         self.assertTrue(
-            frappe.db.exists("Income Tax Slab", slab_name),
+            self.frappe.db.exists("Income Tax Slab", slab_name),
             f"Income Tax Slab '{slab_name}' not found in database",
         )
-        doc = frappe.get_doc("Income Tax Slab", slab_name)
+        doc = self.frappe.get_doc("Income Tax Slab", slab_name)
         expected_brackets = len(self.data.get("income_tax_slabs", []))
         self.assertEqual(
             len(doc.slabs), expected_brackets,
@@ -185,10 +181,10 @@ class TestDatabaseVerification(unittest.TestCase):
         """Verify fiscal year exists and is associated with the company."""
         fiscal_year = self.data.get("config", {}).get("fiscal_year", "2025")
         self.assertTrue(
-            frappe.db.exists("Fiscal Year", fiscal_year),
+            self.frappe.db.exists("Fiscal Year", fiscal_year),
             f"Fiscal Year '{fiscal_year}' not found in database",
         )
-        doc = frappe.get_doc("Fiscal Year", fiscal_year)
+        doc = self.frappe.get_doc("Fiscal Year", fiscal_year)
         companies = [c.company for c in doc.companies]
         self.assertIn(
             self.COMPANY, companies,
