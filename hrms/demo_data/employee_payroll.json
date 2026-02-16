@@ -100,7 +100,7 @@
       "name": "Income Tax State",
       "abbr": "SIT",
       "type": "Deduction",
-      "description": "State income tax (5% of total compensation)",
+      "description": "State income tax on total compensation",
       "is_tax_applicable": 0,
       "depends_on_payment_days": 0,
       "amount_based_on_formula": 1,

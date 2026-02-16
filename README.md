@@ -208,6 +208,13 @@ To clear payroll data for development purposes:
 podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.payroll_setup.clear_payroll_data --kwargs "{\"company\": \"NovaSoft\", \"payroll_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_payroll.json\"}"'
 ```
 
+To run the payroll test suite, first install pytest in the container, then run the tests directly with pytest (not via `bench run-tests`, which triggers a `before_tests` hook that creates a holiday list for the current year):
+```
+podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && ./env/bin/pip install pytest'
+
+podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && ./env/bin/python -m pytest apps/hrms/hrms/demo_data/test_payroll_setup.py -v'
+```
+
 ## Verifying Data in the App
 
 Navigate to `http://localhost:8000/app`, select the `NovaSoft` company, and confirm that the employees and related records have been created.

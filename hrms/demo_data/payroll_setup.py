@@ -8,7 +8,7 @@ All configuration is loaded from the JSON file (employee_payroll.json).
 Compatible with: Frappe v15.95.0, ERPNext v15.95.0, HRMS v15.55.0
 
 Author: shi-kejian
-Version: 4.1.0
+Version: 4.2.0
 
 Usage:
     bench --site [sitename] execute hrms.demo_data.payroll_setup.create_payroll_data \
@@ -340,12 +340,15 @@ def create_structure_assignments(company, payroll_data, counts):
             print(f"  Error assigning {emp.employee_name}: {str(e)[:80]}")
 
 
-def get_hi_plan(marital_status, date_of_birth):
+def get_hi_plan(marital_status, date_of_birth, date_of_joining):
     """Determine Health Insurance plan based on marital status and age.
 
     - married -> Family
     - single -> Individual
     - widowed or divorced -> age > 50: Individual, otherwise: Family
+
+    Age is calculated relative to the employee's date of joining to keep
+    results deterministic regardless of when the script runs.
     """
     from datetime import date
 
@@ -357,9 +360,11 @@ def get_hi_plan(marital_status, date_of_birth):
         return "Individual"
     elif status in ("widowed", "divorced"):
         if date_of_birth:
-            today = date.today()
+            ref_date = date_of_joining if date_of_joining else date(2025, 1, 1)
+            if not isinstance(ref_date, date):
+                ref_date = date.fromisoformat(str(ref_date))
             dob = date_of_birth if isinstance(date_of_birth, date) else date.fromisoformat(str(date_of_birth))
-            age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+            age = ref_date.year - dob.year - ((ref_date.month, ref_date.day) < (dob.month, dob.day))
             return "Individual" if age > 50 else "Family"
         return "Individual"
     else:
@@ -395,7 +400,7 @@ def create_health_insurance_additional_salaries(company, config, counts):
             as_dict=True
         )
 
-        plan = get_hi_plan(emp_data.marital_status, emp_data.date_of_birth)
+        plan = get_hi_plan(emp_data.marital_status, emp_data.date_of_birth, emp_data.date_of_joining)
         rate = family_rate if plan == "Family" else individual_rate
 
         existing = frappe.db.exists("Additional Salary", {

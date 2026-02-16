@@ -99,6 +99,15 @@ class TestDatabaseVerification(unittest.TestCase):
     def setUpClass(cls):
         try:
             import frappe
+
+            # Ensure log directories exist so frappe.init doesn't fail
+            log_dirs = [
+                os.path.expanduser("~/logs"),
+                os.path.join("sites", "hrms.localhost", "logs"),
+            ]
+            for d in log_dirs:
+                os.makedirs(d, exist_ok=True)
+
             frappe.init(site="hrms.localhost", sites_path="sites")
             frappe.connect()
             frappe.set_user("Administrator")
