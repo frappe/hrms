@@ -99,20 +99,27 @@ class TestDatabaseVerification(unittest.TestCase):
     def setUpClass(cls):
         try:
             import frappe
+        except ImportError:
+            raise unittest.SkipTest("frappe not installed")
 
-            # Ensure log directories exist so frappe.init doesn't fail
-            log_dirs = [
-                os.path.expanduser("~/logs"),
-                os.path.join("sites", "hrms.localhost", "logs"),
-            ]
-            for d in log_dirs:
-                os.makedirs(d, exist_ok=True)
+        # Derive bench path from the test file location.
+        # File: <bench>/apps/hrms/hrms/demo_data/test_payroll_setup.py
+        test_dir = os.path.dirname(os.path.abspath(__file__))
+        bench_path = os.path.abspath(os.path.join(test_dir, "..", "..", "..", ".."))
+        sites_path = os.path.join(bench_path, "sites")
 
-            frappe.init(site="hrms.localhost", sites_path="sites")
-            frappe.connect()
-            frappe.set_user("Administrator")
-        except Exception:
-            raise unittest.SkipTest("Frappe not available - skipping DB tests")
+        if not os.path.isdir(sites_path):
+            raise unittest.SkipTest(f"Sites directory not found: {sites_path}")
+
+        # Frappe resolves log paths relative to CWD (e.g. "../logs/database.log").
+        # Bench processes normally run from <bench>/sites so that "../logs" points
+        # to <bench>/logs. We replicate that here so the logger can find its files.
+        os.chdir(sites_path)
+
+        frappe.init(site="hrms.localhost", sites_path=sites_path)
+        frappe.connect()
+        frappe.set_user("Administrator")
+
         cls.frappe = frappe
         with open(PAYROLL_JSON_PATH, "r") as f:
             cls.data = json.load(f)
