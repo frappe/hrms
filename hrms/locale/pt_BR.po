@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2026-02-08 09:42+0000\n"
-"PO-Revision-Date: 2026-02-10 02:11\n"
+"PO-Revision-Date: 2026-02-14 03:34\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Portuguese, Brazilian\n"
 "MIME-Version: 1.0\n"
@@ -612,7 +612,7 @@ msgstr ""
 
 #: hrms/hr/doctype/job_opening/job_opening.py:102
 msgid "All Jobs"
-msgstr ""
+msgstr "Todas as Vagas"
 
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:70
 msgid "All allocated assets should be returned before submission"
@@ -931,7 +931,7 @@ msgstr ""
 
 #: hrms/templates/generators/job_opening.html:162
 msgid "Applications Received"
-msgstr ""
+msgstr "Candidatos Recebidos"
 
 #: hrms/www/jobs/index.html:235
 msgid "Applications received:"
@@ -951,7 +951,7 @@ msgstr ""
 #: hrms/templates/generators/job_opening.html:29
 #: hrms/templates/generators/job_opening.html:209
 msgid "Apply Now"
-msgstr ""
+msgstr "Enviar Currículo"
 
 #. Label of the applicable_for_public_holiday (Check) field in DocType
 #. 'Overtime Type'
@@ -8734,7 +8734,7 @@ msgstr ""
 
 #: hrms/templates/generators/job_opening.html:108
 msgid "Salary Range"
-msgstr ""
+msgstr "Faixa Salarial"
 
 #. Name of a report
 #. Label of a Link in the Payroll Workspace

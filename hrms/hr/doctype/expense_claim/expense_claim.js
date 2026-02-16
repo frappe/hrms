@@ -103,6 +103,7 @@ frappe.ui.form.on("Expense Claim", {
 		if (
 			frm.doc.docstatus === 1 &&
 			frm.doc.status !== "Paid" &&
+			frm.doc.approval_status !== "Rejected" &&
 			frappe.model.can_create("Payment Entry")
 		) {
 			frm.add_custom_button(
