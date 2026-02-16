@@ -391,12 +391,11 @@ const getShiftAssignment = (name: string) =>
 	});
 
 const employee = createResource({
-	url: "hrms.api.roster.get_values",
+	url: "hrms.api.roster.get_employee_values",
 	makeParams() {
 		const employee = (form.employee as { value: string }).value;
 		return {
-			doctype: "Employee",
-			name: employee,
+			employee: employee,
 			fields: ["employee_name", "company", "department"],
 		};
 	},

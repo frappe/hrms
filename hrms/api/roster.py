@@ -8,6 +8,12 @@ from hrms.hr.doctype.shift_assignment.shift_assignment import ShiftAssignment
 from hrms.hr.doctype.shift_assignment_tool.shift_assignment_tool import create_shift_assignment
 from hrms.hr.doctype.shift_schedule.shift_schedule import get_or_insert_shift_schedule
 
+ALLOWED_EMPLOYEE_FIELDS = {
+	"employee_name",
+	"company",
+	"department",
+}
+
 
 @frappe.whitelist()
 def get_default_company() -> str:
@@ -15,8 +21,18 @@ def get_default_company() -> str:
 
 
 @frappe.whitelist()
-def get_values(doctype: str, name: str, fields: list) -> dict[str, str]:
-	return frappe.db.get_value(doctype, name, fields, as_dict=True)
+def get_employee_values(employee: str, fields: list):
+	if not employee:
+		frappe.throw("Employee is required")
+
+	doc = frappe.get_doc("Employee", employee)
+	doc.check_permission("read")
+
+	# Validate requested fields
+	for field in fields:
+		if field not in ALLOWED_EMPLOYEE_FIELDS:
+			frappe.throw(f"Field not allowed: {field}", frappe.PermissionError)
+	return {field: doc.get(field) for field in fields}
 
 
 @frappe.whitelist()
