@@ -148,6 +148,7 @@
    "read_only": 1
   },
   {
+   "fetch_from": "employee.default_shift",
    "fieldname": "shift",
    "fieldtype": "Link",
    "label": "Shift",
@@ -225,8 +226,8 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-12-16 17:44:13.859387",
- "modified_by": "Administrator",
+ "modified": "2026-02-16 11:47:02.867654",
+ "modified_by": "nikita.pawar@intellore.com",
  "module": "HR",
  "name": "Attendance",
  "naming_rule": "By \"Naming Series\" field",
