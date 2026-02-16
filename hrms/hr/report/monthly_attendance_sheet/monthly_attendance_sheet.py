@@ -360,6 +360,64 @@ def get_employee_related_details(filters: Filters) -> tuple[dict, list]:
 			Employee.branch,
 			Employee.company,
 			Employee.holiday_list,
+			Employee.default_shift,  # ✅ ADDED
+			(Employee.date_of_joining).as_("joined_date"),
+			Case()
+			.when(
+				joining_date_condition,
+				1,
+			)
+			.else_(0)
+			.as_("joined_in_current_period"),
+		)
+		.where(Employee.company.isin(filters.companies))
+	)
+
+	if filters.employee:
+		query = query.where(Employee.name == filters.employee)
+
+	group_by = filters.group_by
+	if group_by:
+		group_by = group_by.lower()
+		query = query.orderby(group_by)
+
+	employee_details = query.run(as_dict=True)
+
+	group_by_param_values = []
+	emp_map = {}
+
+	if group_by:
+		group_key = lambda d: "" if d[group_by] is None else d[group_by]
+		for parameter, employees in groupby(sorted(employee_details, key=group_key), key=group_key):
+			group_by_param_values.append(parameter)
+			emp_map.setdefault(parameter, frappe._dict())
+
+			for emp in employees:
+				emp_map[parameter][emp.name] = emp
+	else:
+		for emp in employee_details:
+			emp_map[emp.name] = emp
+
+	return emp_map, group_by_param_values
+	"""Returns
+	1. nested dict for employee details
+	2. list of values for the group by filter
+	"""
+	Employee = frappe.qb.DocType("Employee")
+
+	joining_date_condition = get_date_condition(Employee.date_of_joining, filters)
+
+	query = (
+		frappe.qb.from_(Employee)
+		.select(
+			Employee.name,
+			Employee.employee_name,
+			Employee.designation,
+			Employee.grade,
+			Employee.department,
+			Employee.branch,
+			Employee.company,
+			Employee.holiday_list,
 			(Employee.date_of_joining).as_("joined_date"),
 			Case()
 			.when(
@@ -440,6 +498,70 @@ def get_holiday_map(filters: Filters) -> dict[str, list[dict]]:
 
 
 def get_rows(employee_details: dict, filters: Filters, holiday_map: dict, attendance_map: dict) -> list[dict]:
+	records = []
+	default_holiday_list = frappe.get_cached_value("Company", filters.company, "default_holiday_list")
+
+	for employee, details in employee_details.items():
+
+		# 1️⃣ Priority: Employee Holiday List
+		emp_holiday_list = details.holiday_list
+
+		# 2️⃣ Priority: Shift Type Holiday List (via default_shift)
+		if not emp_holiday_list and details.default_shift:
+			shift_holiday_list = frappe.get_cached_value(
+				"Shift Type",
+				details.default_shift,
+				"holiday_list",
+			)
+			if shift_holiday_list:
+				emp_holiday_list = shift_holiday_list
+
+		# 3️⃣ Priority: Company Default Holiday List
+		if not emp_holiday_list:
+			emp_holiday_list = default_holiday_list
+
+		holidays = holiday_map.get(emp_holiday_list)
+
+		if filters.summarized_view:
+			attendance = get_attendance_status_for_summarized_view(
+				employee,
+				filters,
+				holidays,
+				details.joined_in_current_period,
+				details.joined_date,
+			)
+			if not attendance:
+				continue
+
+			leave_summary = get_leave_summary(employee, filters)
+			entry_exits_summary = get_entry_exits_summary(employee, filters)
+
+			row = {"employee": employee, "employee_name": details.employee_name}
+			set_defaults_for_summarized_view(filters, row)
+			row.update(attendance)
+			row.update(leave_summary)
+			row.update(entry_exits_summary)
+
+			records.append(row)
+
+		else:
+			employee_attendance = attendance_map.get(employee)
+			if not employee_attendance:
+				continue
+
+			attendance_for_employee = get_attendance_status_for_detailed_view(
+				employee,
+				filters,
+				employee_attendance,
+				holidays,
+			)
+
+			for record in attendance_for_employee:
+				record.update({"employee": employee, "employee_name": details.employee_name})
+
+			records.extend(attendance_for_employee)
+
+	return records
 	records = []
 	default_holiday_list = frappe.get_cached_value("Company", filters.company, "default_holiday_list")
 
