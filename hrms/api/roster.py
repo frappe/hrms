@@ -23,7 +23,7 @@ def get_default_company() -> str:
 @frappe.whitelist()
 def get_employee_values(employee: str, fields: list):
 	if not employee:
-		frappe.throw("Employee is required")
+		frappe.throw(_("Employee is required"))
 
 	doc = frappe.get_doc("Employee", employee)
 	doc.check_permission("read")
@@ -31,7 +31,7 @@ def get_employee_values(employee: str, fields: list):
 	# Validate requested fields
 	for field in fields:
 		if field not in ALLOWED_EMPLOYEE_FIELDS:
-			frappe.throw(f"Field not allowed: {field}", frappe.PermissionError)
+			frappe.throw(_(f"Field not allowed: {field}"), frappe.PermissionError)
 	return {field: doc.get(field) for field in fields}
 
 
