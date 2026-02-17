@@ -15,11 +15,6 @@ def get_default_company() -> str:
 
 
 @frappe.whitelist()
-def get_values(doctype: str, name: str, fields: list) -> dict[str, str]:
-	return frappe.db.get_value(doctype, name, fields, as_dict=True)
-
-
-@frappe.whitelist()
 def get_events(
 	month_start: str, month_end: str, employee_filters: dict[str, str], shift_filters: dict[str, str]
 ) -> dict[str, list[dict]]:
