@@ -31,7 +31,7 @@ def get_employee_values(employee: str, fields: list):
 	# Validate requested fields
 	for field in fields:
 		if field not in ALLOWED_EMPLOYEE_FIELDS:
-			frappe.throw(_(f"Field not allowed: {field}"), frappe.PermissionError)
+			frappe.throw(_("Field not allowed: {}").format(field), frappe.PermissionError)
 	return {field: doc.get(field) for field in fields}
 
 
