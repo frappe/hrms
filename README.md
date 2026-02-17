@@ -191,9 +191,9 @@ podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.lo
 
 ### Adding Payroll Data to Existing Company Programmatically
 
-Creates payroll demo data including: Salary Components (earnings and deductions), Salary Structures, Salary Structure Assignments, and Salary Slips for November 2025.
+Creates payroll demo data including: Fiscal Year, Payroll Period, Income Tax Slab (federal brackets), Salary Components (earnings and deductions), Salary Structures (Salaried/Hourly), Salary Structure Assignments, and Salary Slips for November 2025. All configuration is loaded from the JSON file.
 
-Note: This script requires attendance data to be set up first, as it uses employees with attendance records.
+Note: This script requires company and employee data to be set up first (via `company_setup.py`).
 
 ```
 podman cp hrms/demo_data/payroll_setup.py docker_frappe_1:/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/payroll_setup.py
@@ -207,6 +207,13 @@ To clear payroll data for development purposes:
 ```
 podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.payroll_setup.clear_payroll_data --kwargs "{\"company\": \"NovaSoft\", \"payroll_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_payroll.json\"}"'
 ```
+
+<!-- To run the payroll test suite, first install pytest in the container, then run the tests directly with pytest (not via `bench run-tests`, which triggers a `before_tests` hook that creates a holiday list for the current year):
+```
+podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && ./env/bin/pip install pytest'
+
+podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && ./env/bin/python -m pytest apps/hrms/hrms/demo_data/test_payroll_setup.py -v'
+``` -->
 
 ## Verifying Data in the App
 
