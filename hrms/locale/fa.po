@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2026-02-08 09:42+0000\n"
-"PO-Revision-Date: 2026-02-10 02:11\n"
+"PO-Revision-Date: 2026-02-16 04:34\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -3198,7 +3198,7 @@ msgstr "اعلامیه معافیت مالیاتی کارکنان"
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_tax_exemption_declaration_category/employee_tax_exemption_declaration_category.json
 msgid "Employee Tax Exemption Declaration Category"
-msgstr "دسته بندی اظهارنامه معافیت مالیاتی کارکنان"
+msgstr "دسته‌بندی اظهارنامه معافیت مالیاتی کارکنان"
 
 #. Name of a DocType
 #. Label of a Link in the Tax & Benefits Workspace
