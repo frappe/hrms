@@ -209,6 +209,17 @@
 											{{ shift["start_time"] }} - {{ shift["end_time"] }}
 										</span>
 									</div>
+
+									<div v-if="shift['custom_break_start_time']" class="flex items-center space-x-1" > 
+										<FeatherIcon name="coffee" 
+											class="stroke-gray-400" 
+											style="height: 0.82rem; width: 0.82rem;" 
+										/> 
+										<span class="text-xs text-gray-400"> 
+											Break: {{ shift["custom_break_start_time"] }} - {{ shift["custom_break_end_time"] }} 
+										</span> 
+									</div>
+
 									<div
 										v-if="shift['shift_location']"
 										class="flex items-center space-x-1"
@@ -308,7 +319,7 @@ type Color =
 	| "yellow";
 
 type Shift = {
-	[K in "name" | "shift_type" | "status" | "start_time" | "end_time" | "shift_location"]: string;
+	[K in "name" | "shift_type" | "status" | "start_time" | "end_time" | "shift_location" | "custom_break_start_time" | "custom_break_end_time"]: string;
 } & {
 	color: Color;
 };
@@ -501,6 +512,10 @@ const handleShifts = (
 			status: event.status,
 			start_time: dayjs(event.start_time, "hh:mm:ss").format("HH:mm"),
 			end_time: dayjs(event.end_time, "hh:mm:ss").format("HH:mm"),
+			
+			custom_break_start_time: event.custom_break_start_time ? dayjs(event.custom_break_start_time, "hh:mm:ss").format("HH:mm") : "",
+			custom_break_end_time: event.custom_break_end_time ? dayjs(event.custom_break_end_time, "hh:mm:ss").format("HH:mm") : "",
+
 			color: event.color.toLowerCase() as Color,
 		});
 	}
