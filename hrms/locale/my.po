@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2026-02-15 09:43+0000\n"
-"PO-Revision-Date: 2026-02-18 04:50\n"
+"PO-Revision-Date: 2026-02-19 04:59\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Burmese\n"
 "MIME-Version: 1.0\n"
@@ -57,161 +57,161 @@ msgstr ""
 #. Option for the 'Rounding' (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "0.25"
-msgstr ""
+msgstr "၀.၂၅"
 
 #. Option for the 'Rounding' (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "0.5"
-msgstr ""
+msgstr "၀.၅"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "00:00"
-msgstr ""
+msgstr "၀၀:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "01:00"
-msgstr ""
+msgstr "၀၁:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "02:00"
-msgstr ""
+msgstr "၀၂:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "03:00"
-msgstr ""
+msgstr "၀၃:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "04:00"
-msgstr ""
+msgstr "၀၄:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "05:00"
-msgstr ""
+msgstr "၀၅:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "06:00"
-msgstr ""
+msgstr "၀၆:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "07:00"
-msgstr ""
+msgstr "၀၇:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "08:00"
-msgstr ""
+msgstr "၀၈:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "09:00"
-msgstr ""
+msgstr "၀၉:၀၀"
 
 #. Option for the 'Rounding' (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "1.0"
-msgstr ""
+msgstr "၁.၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "10:00"
-msgstr ""
+msgstr "၁၀:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "11:00"
-msgstr ""
+msgstr "၁၁:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "12:00"
-msgstr ""
+msgstr "၁၂:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "13:00"
-msgstr ""
+msgstr "၁၃:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "14:00"
-msgstr ""
+msgstr "၁၄:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "15:00"
-msgstr ""
+msgstr "၁၅:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "16:00"
-msgstr ""
+msgstr "၁၆:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "17:00"
-msgstr ""
+msgstr "၁၇:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "18:00"
-msgstr ""
+msgstr "၁၈:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "19:00"
-msgstr ""
+msgstr "၁၉:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "20:00"
-msgstr ""
+msgstr "၂၀:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "21:00"
-msgstr ""
+msgstr "၂၁:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "22:00"
-msgstr ""
+msgstr "၂၂:၀၀"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 msgid "23:00"
-msgstr ""
+msgstr "၂၃:၀၀"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:272
 msgid "<b>Base</b> amount has not been set for the following employee(s): {0}"
@@ -470,7 +470,7 @@ msgstr ""
 
 #: frontend/src/components/ExpensesTable.vue:123
 msgid "Add Expense"
-msgstr ""
+msgstr "ကုန်ကျစရိတ်ထည့်ပါ"
 
 #: hrms/public/js/performance/performance_feedback.js:95
 msgid "Add Feedback"
@@ -478,11 +478,11 @@ msgstr ""
 
 #: frontend/src/components/ExpenseTaxesTable.vue:118
 msgid "Add Tax"
-msgstr ""
+msgstr "အခွန်ထည့်ပါ"
 
 #: hrms/hr/employee_property_update.js:116
 msgid "Add to Details"
-msgstr ""
+msgstr "အသေးစိတ်အချက်အလက်များထဲသို့ထည့်ပါ"
 
 #. Label of the carry_forward (Check) field in DocType 'Leave Allocation'
 #. Label of the carry_forward (Check) field in DocType 'Leave Policy
@@ -490,13 +490,13 @@ msgstr ""
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 msgid "Add unused leaves from previous allocations"
-msgstr ""
+msgstr "ယခင်အသုံးမပြုရသေးသည့် ခွင့်များကို ပေါင်းထည့်မည်။"
 
 #. Description of the 'Carry Forward' (Check) field in DocType 'Leave Control
 #. Panel'
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 msgid "Add unused leaves from previous leave period's allocation to this allocation"
-msgstr ""
+msgstr "ပြီးခဲ့သော ကာလမှ အသုံးမပြုရသေးသည့် ခွင့်များကို လက်ရှိကာလ သို့ ထပ်ပေါင်းထည့်မည်။"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1597
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
@@ -504,18 +504,18 @@ msgstr ""
 
 #: hrms/hr/employee_property_update.js:193
 msgid "Added to details"
-msgstr ""
+msgstr "အသေးစိတ်အချက်အလက်များတွင် ထည့်သွင်းထားသည်"
 
 #. Label of the additional_amount (Currency) field in DocType 'Salary Detail'
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 msgid "Additional Amount"
-msgstr ""
+msgstr "ထပ်ဆောင်း ပမာဏ"
 
 #. Label of the additional_information_section (Section Break) field in DocType
 #. 'Employee Referral'
 #: hrms/hr/doctype/employee_referral/employee_referral.json
 msgid "Additional Information "
-msgstr ""
+msgstr "အခြားသော အချက်အလက်များ"
 
 #: hrms/payroll/report/provident_fund_deductions/provident_fund_deductions.py:46
 msgid "Additional PF"
@@ -530,12 +530,12 @@ msgstr ""
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
 #: hrms/payroll/workspace/payroll/payroll.json
 msgid "Additional Salary"
-msgstr ""
+msgstr "ထပ်ဆောင်းလစာ"
 
 #. Label of the additional_salary (Link) field in DocType 'Salary Detail'
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 msgid "Additional Salary "
-msgstr ""
+msgstr "ထပ်ဆောင်းလစာ"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:150
 msgid "Additional Salary for referral bonus can only be created against Employee Referral with status {0}"
@@ -735,7 +735,7 @@ msgstr ""
 #. Label of the allow_user (Link) field in DocType 'Leave Block List Allow'
 #: hrms/hr/doctype/leave_block_list_allow/leave_block_list_allow.json
 msgid "Allow User"
-msgstr ""
+msgstr "အသုံးပြုသူကို ခွင့်ပြုပါ"
 
 #. Label of the allow_list (Section Break) field in DocType 'Leave Block List'
 #: hrms/hr/doctype/leave_block_list/leave_block_list.json
@@ -841,7 +841,7 @@ msgstr ""
 
 #: hrms/setup.py:404
 msgid "Annual Salary"
-msgstr ""
+msgstr "နှစ်စဉ်လစာ"
 
 #. Label of the annual_taxable_amount (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json

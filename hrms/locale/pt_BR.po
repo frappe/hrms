@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2026-02-15 09:43+0000\n"
-"PO-Revision-Date: 2026-02-18 04:50\n"
+"PO-Revision-Date: 2026-02-19 04:58\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Portuguese, Brazilian\n"
 "MIME-Version: 1.0\n"
@@ -5462,7 +5462,7 @@ msgstr ""
 #: hrms/hr/report/recruitment_analytics/recruitment_analytics.py:52
 #: hrms/hr/workspace/recruitment/recruitment.json
 msgid "Job Offer"
-msgstr ""
+msgstr "Oferta de Trabalho"
 
 #. Name of a DocType
 #: hrms/hr/doctype/job_offer_term/job_offer_term.json
