@@ -80,7 +80,10 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 						flt(self.total_sanctioned_amount) > 0
 						and (
 							# grand total is reimbursed
-							(flt(self.grand_total, precision) == flt(self.total_amount_reimbursed, precision))
+							(
+								flt(self.grand_total, precision) + flt(self.total_advance_amount)
+								== flt(self.total_amount_reimbursed, precision)
+							)
 							# grand total (to be paid) is 0 since linked advances already cover the claimed amount
 							or (flt(self.grand_total, precision) == 0)
 						)
