@@ -616,7 +616,6 @@ def get_outstanding_amount_for_claim(claim):
 		flt(claim.total_sanctioned_amount)
 		+ flt(claim.total_taxes_and_charges)
 		- flt(claim.total_amount_reimbursed)
-		- flt(claim.total_advance_amount)
 	)
 
 	return flt(outstanding_amt, precision)
