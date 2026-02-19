@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-02-08 09:42+0000\n"
-"PO-Revision-Date: 2026-02-10 02:11\n"
+"POT-Creation-Date: 2026-02-15 09:43+0000\n"
+"PO-Revision-Date: 2026-02-18 04:50\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Esperanto\n"
 "MIME-Version: 1.0\n"
@@ -583,12 +583,6 @@ msgstr "crwdns194874:0{0}crwdnd194874:0{1}crwdne194874:0"
 #: hrms/hr/doctype/employee_advance/employee_advance.py:99
 msgid "Advance Account {} currency should be same as Salary Currency of Employee {}. Please select same currency Advance Account"
 msgstr "crwdns161214:0crwdne161214:0"
-
-#. Label of the base_advance_paid (Currency) field in DocType 'Expense Claim
-#. Advance'
-#: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
-msgid "Advance Paid (Company Currency)"
-msgstr "crwdns161216:0crwdne161216:0"
 
 #. Label of the advanced_filters_section (Section Break) field in DocType
 #. 'Leave Control Panel'
@@ -1929,7 +1923,7 @@ msgstr "crwdns141146:0crwdne141146:0"
 #. Label of the claimed_amount (Currency) field in DocType 'Employee Benefit
 #. Claim'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
-#: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:77
+#: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:80
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 msgid "Claimed Amount"
 msgstr "crwdns105612:0crwdne105612:0"

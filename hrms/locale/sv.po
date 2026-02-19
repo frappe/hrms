@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-02-08 09:42+0000\n"
-"PO-Revision-Date: 2026-02-10 02:11\n"
+"POT-Creation-Date: 2026-02-15 09:43+0000\n"
+"PO-Revision-Date: 2026-02-19 04:58\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -256,17 +256,17 @@ msgstr "<h3>Hjälp</h3>\n\n"
 "<li>Använd fält <code>bas</code> för att använda grundlön för personal</li>\n"
 "<li>Använd löne komponent förkortningar i villkor och formler. <code>BS = Grundlön</code></li>\n"
 "<li>Använd fält namn för personal detaljer i villkor och formler. <code>Anställning Typ = employment_type</code><code>Branch = branch</code></li>\n"
-"<li>Använd fält namn från lönespecifikation i villkor och formler. <code>Betalning Dagar = payment_days</code><code>Ledighet utan lön = leave_without_pay</code></li>\n"
+"<li>Använd fält namn från lönespecifikation i villkor och formler. <code>Betalning Dagar = payment_days</code><code>Frånvaro utan lön = leave_without_pay</code></li>\n"
 "<li>Belopp kan också anges direkt baserat på villkor. Se exempel 3</li></ol>\n\n"
 "<h4>Exempel</h4>\n"
 "<ol>\n"
-"<li>Beräkna grundlön baserat på <code>bas</code>\n"
+"<li>Beräkna Grundlön baserat på <code>bas</code>\n"
 "<pre><code>Villkor: bas &lt; 10 000</code></pre>\n"
 "<pre><code>Formel: bas * .2</code></pre></li>\n"
-"<li>Beräknar HRA baserat på grundlön<code>BS</code>\n"
+"<li>Beräknar Hyresbidrag baserat på Grundlön<code>BS</code>\n"
 "<pre><code>Villkor: BS &gt; 2000</code></pre>\n"
 "<pre><code>Formel: BS * .1</code></pre></li>\n"
-"<li>Beräknar TDS baserat på Anställning Typ<code>employment_type</code>\n"
+"<li>Beräknar Källskatt baserat på Anställning Typ<code>employment_type</code>\n"
 "<pre><code>Villkor: employment_type==\"Intern\"</code></pre>\n"
 "<pre><code>Belopp: 1000</code></pre></li>\n"
 "</ol>"
@@ -608,12 +608,6 @@ msgstr "Förskott Konto erfordras. Ange {0} i {1} och godkänn detta dokument."
 #: hrms/hr/doctype/employee_advance/employee_advance.py:99
 msgid "Advance Account {} currency should be same as Salary Currency of Employee {}. Please select same currency Advance Account"
 msgstr "Förskott Konto {} valuta ska vara samma som lönevaluta för {}. Välj samma valuta för Förskott Konto"
-
-#. Label of the base_advance_paid (Currency) field in DocType 'Expense Claim
-#. Advance'
-#: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
-msgid "Advance Paid (Company Currency)"
-msgstr "Förskott Betald (Bolag Valuta)"
 
 #. Label of the advanced_filters_section (Section Break) field in DocType
 #. 'Leave Control Panel'
@@ -1957,7 +1951,7 @@ msgstr "Begärd"
 #. Label of the claimed_amount (Currency) field in DocType 'Employee Benefit
 #. Claim'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
-#: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:77
+#: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:80
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 msgid "Claimed Amount"
 msgstr "Begärd Belopp"
