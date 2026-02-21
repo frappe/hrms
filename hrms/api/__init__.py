@@ -705,9 +705,11 @@ def get_doctype_states(doctype: str) -> dict:
 # File
 @frappe.whitelist()
 def get_attachments(dt: str, dn: str):
-	from frappe.desk.form.load import get_attachments
-
-	return get_attachments(dt, dn)
+	return frappe.get_list(
+		"File",
+		fields=["name", "file_name", "file_url", "is_private"],
+		filters={"attached_to_name": str(dn), "attached_to_doctype": dt},
+	)
 
 
 @frappe.whitelist()
