@@ -12,19 +12,23 @@
 					<span @click="navigate" class="underline">View List</span>
 				</router-link>
 			</div>
-			<Button
-				class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
-				id="open-checkin-modal"
-				@click="handleEmployeeCheckin"
-			>
-				<template #prefix>
-					<FeatherIcon
-						:name="nextAction.action === 'IN' ? 'arrow-right-circle' : 'arrow-left-circle'"
-						class="w-4"
-					/>
-				</template>
-				{{ nextAction.label }}
-			</Button>
+				<Button
+  variant="solid"
+  :theme="nextAction.action === 'IN' ? 'green' : 'red'"
+  class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
+  id="open-checkin-modal"
+  @click="handleEmployeeCheckin"
+>
+  <template #prefix>
+    <FeatherIcon
+      :name="nextAction.action === 'IN'
+        ? 'arrow-right-circle'
+        : 'arrow-left-circle'"
+      class="w-4"
+    />
+  </template>
+  {{ nextAction.label }}
+</Button>
 		</template>
 
 		<div v-else class="font-medium text-sm text-gray-500 mt-1.5">
@@ -68,10 +72,16 @@
 					</iframe>
 				</div>
 			</template>
+<Button
+  :loading="checkins.insert.loading"
+  variant="solid"
+  :theme="nextAction.action === 'IN' ? 'green' : 'red'"
+  class="w-full py-5 text-sm disabled:bg-gray-700"
+  @click="submitLog(nextAction.action)"
+>
+  {{ __("Confirm {0}", [nextAction.label]) }}
+</Button>
 
-			<Button :loading="checkins.insert.loading" variant="solid" class="w-full py-5 text-sm disabled:bg-gray-700" @click="submitLog(nextAction.action)">
-				{{ __("Confirm {0}", [nextAction.label]) }}
-			</Button>
 		</div>
 	</ion-modal>
 </template>
