@@ -102,9 +102,16 @@ def create_expense_claims_data(company="NovaSoft", data_path=None):
     create_employee_advances(data.get("employee_advances", []), company, counts)
     frappe.db.commit()
 
-    # Step 3: Create Expense Claims
+    # Step 3: Ensure all referenced expense types have default accounts
     print("\n" + "="*50)
-    print("Step 3: Creating Expense Claims...")
+    print("Step 3: Ensuring default accounts on all referenced expense types...")
+    print("="*50)
+    ensure_expense_type_accounts(data.get("expense_claims", []), company)
+    frappe.db.commit()
+
+    # Step 4: Create Expense Claims
+    print("\n" + "="*50)
+    print("Step 4: Creating Expense Claims...")
     print("="*50)
     create_expense_claims(data.get("expense_claims", []), company, counts)
     frappe.db.commit()
@@ -190,19 +197,75 @@ def create_expense_claim_types(types_list, company, counts):
             print(f"  Error creating {name}: {str(e)[:50]}")
 
 
+def ensure_expense_type_accounts(claims_list, company):
+    """Ensure every expense type referenced by claims has a default account.
+
+    System-default types (Food, Calls, etc.) may exist without a GL account
+    configured for this company. This causes 'Set the default account for the
+    Expense Claim Type ...' errors when creating claims.
+    """
+    default_account = get_default_expense_account(company)
+    if not default_account:
+        print("  WARNING: No default expense account found, skipping")
+        return
+
+    # Collect all expense types referenced by claims
+    referenced_types = set()
+    for claim in claims_list:
+        for exp in claim.get("expenses", []):
+            referenced_types.add(exp.get("expense_type"))
+
+    for type_name in sorted(referenced_types):
+        if not frappe.db.exists("Expense Claim Type", type_name):
+            continue
+
+        doc = frappe.get_doc("Expense Claim Type", type_name)
+        # Check if this company already has an account entry
+        has_account = any(
+            row.company == company and row.default_account
+            for row in doc.get("accounts", [])
+        )
+        if not has_account:
+            doc.append("accounts", {
+                "company": company,
+                "default_account": default_account
+            })
+            doc.save(ignore_permissions=True)
+            print(f"  Set default account for: {type_name}")
+        else:
+            print(f"  Already configured: {type_name}")
+
+
 def get_advance_account(company):
-    """Get or create the employee advance account for the company"""
+    """Get or create the employee advance account for the company.
+
+    ERPNext's default account is 'Employee Advances - {abbr}'. We check for
+    that first, then fall back to creating one if it doesn't exist.
+    """
     abbr = frappe.db.get_value("Company", company, "abbr") or company[:2].upper()
-    account_name = f"Advances to Employees - {abbr}"
 
-    # Check if account exists
-    if frappe.db.exists("Account", account_name):
-        return account_name
+    # Check for ERPNext's default advance account name first
+    default_name = f"Employee Advances - {abbr}"
+    if frappe.db.exists("Account", default_name):
+        # Ensure it has account_type = Receivable (required by Employee Advance doctype)
+        current_type = frappe.db.get_value("Account", default_name, "account_type")
+        if current_type != "Receivable":
+            frappe.db.set_value("Account", default_name, "account_type", "Receivable")
+            print(f"  Updated account type to Receivable: {default_name}")
+        return default_name
 
-    # Create the account under Loans and Advances (Assets)
+    # Also check the alternate naming convention
+    alt_name = f"Advances to Employees - {abbr}"
+    if frappe.db.exists("Account", alt_name):
+        current_type = frappe.db.get_value("Account", alt_name, "account_type")
+        if current_type != "Receivable":
+            frappe.db.set_value("Account", alt_name, "account_type", "Receivable")
+            print(f"  Updated account type to Receivable: {alt_name}")
+        return alt_name
+
+    # Neither exists -- create one under Loans and Advances (Assets)
     parent_account = f"Loans and Advances (Assets) - {abbr}"
     if not frappe.db.exists("Account", parent_account):
-        # Fallback to any asset parent
         parent_account = frappe.db.get_value("Account", {
             "company": company,
             "root_type": "Asset",
@@ -213,7 +276,7 @@ def get_advance_account(company):
         try:
             doc = frappe.get_doc({
                 "doctype": "Account",
-                "account_name": "Advances to Employees",
+                "account_name": "Employee Advances",
                 "parent_account": parent_account,
                 "company": company,
                 "root_type": "Asset",
@@ -221,10 +284,10 @@ def get_advance_account(company):
                 "is_group": 0
             })
             doc.insert(ignore_permissions=True)
-            print(f"  Created advance account: {account_name}")
-            return account_name
+            print(f"  Created advance account: {default_name}")
+            return default_name
         except Exception as e:
-            print(f"  Could not create advance account: {str(e)[:50]}")
+            print(f"  Could not create advance account: {str(e)[:80]}")
 
     # Final fallback: use Earnest Money if available
     return frappe.db.get_value("Account", f"Earnest Money - {abbr}", "name")
