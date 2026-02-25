@@ -64,7 +64,7 @@ podman compose down
 
 ### Adding Employee Data to an Existing Container Programmatically
 
-Follow the instructions to add a company called `NovaSoft` with 106 employees. For clean testing of task development or code updates we recommend a fresh start, including volumes pruning.
+Follow the instructions to add a company called `NovaSoft` with 107 employees. For clean testing of task development or code updates we recommend a fresh start, including volumes pruning.
 
 ```
 podman-compose down
@@ -103,7 +103,7 @@ SELECT COUNT(*) FROM tabUser;
 SELECT name FROM tabCompany;
 ```
 
-Assuming the container is already running, copy the script and data into the container. In the example below, the container name is `docker_frappe_1` (verify using `podman ps`). The command first creates a parent directory, to then copy a folder with scripts and employee roster file.
+Assuming the container is already running, copy the script and data into the container. In the example below, the container name is `docker_frappe_1` (verify using `podman ps`). Use the following commands to create a parent directory and to copy  scripts, employee roster, and other files.
 
 ```
 podman exec docker_frappe_1 mkdir -p /home/frappe/frappe-bench/apps/hrms/hrms/demo_data
@@ -181,12 +181,31 @@ podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.lo
 Assuming the script has been already copied to the containter, execute it (leave management records for certain employees will be added):
 
 ```
-podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.leaves_management_setup.configure_leave_management --kwargs "{\"company\": \"NovaSoft\", \"attendance_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_attendance.json\"}"'
+podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.leaves_setup.configure_leave_management --kwargs "{\"company\": \"NovaSoft\", \"leaves_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_leaves.json\"}"'
 ```
 
-If you need to clean the attendance data for development purposes use:
+If you need to clean the leaves data for development purposes use:
 ```
-podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.leaves_management_setup.clear_leave_configuration --kwargs "{\"company\": \"NovaSoft\"}"'
+podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.leaves_setup.clear_leave_configuration --kwargs "{\"company\": \"NovaSoft\", \"leaves_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_leaves.json\"}"'
+```
+
+### Adding Payroll Data to Existing Company Programmatically
+
+Creates payroll demo data including: Fiscal Year, Payroll Period, Income Tax Slab (federal brackets), Salary Components (earnings and deductions), Salary Structures (Salaried/Hourly), Salary Structure Assignments, and Salary Slips for November 2025. All configuration is loaded from the JSON file.
+
+Note: This script requires company and employee data to be set up first (via `company_setup.py`).
+
+```
+podman cp hrms/demo_data/payroll_setup.py docker_frappe_1:/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/payroll_setup.py
+
+podman cp hrms/demo_data/employee_payroll.json docker_frappe_1:/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_payroll.json
+
+podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.payroll_setup.create_payroll_data --kwargs "{\"company\": \"NovaSoft\", \"payroll_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_payroll.json\"}"'
+```
+
+To clear payroll data for development purposes:
+```
+podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.payroll_setup.clear_payroll_data --kwargs "{\"company\": \"NovaSoft\", \"payroll_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_payroll.json\"}"'
 ```
 
 ### Adding Expense Claims Data to Existing Company Programmatically
@@ -201,7 +220,6 @@ To clear expense claims data for development purposes:
 ```
 podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.expense_claims_setup.clear_expense_claims_data --kwargs "{\"company\": \"NovaSoft\"}"'
 ```
-
 ## Verifying Data in the App
 
 Navigate to `http://localhost:8000/app`, select the `NovaSoft` company, and confirm that the employees and related records have been created.
@@ -219,8 +237,7 @@ Log in using the `Administrator` user, and HR user, and another user to check ac
 git checkout blue-develop
 git pull origin blue-develop
 git checkout -b feature/my-db-updates
-# ... make changes ...
-git stash pop # to recover uncommited updates (if needed)
+# ... make changes ... or git stash pop # to recover uncommited updates (if needed)
 git add .
 git commit -m "feat: description"
 git push origin feature/my-db-updates

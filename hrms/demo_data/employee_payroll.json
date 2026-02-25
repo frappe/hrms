@@ -1,0 +1,214 @@
+{
+  "config": {
+    "payroll_frequency": "Weekly",
+    "fiscal_year": "2025",
+    "fiscal_year_start": "2025-01-01",
+    "fiscal_year_end": "2025-12-31",
+    "payroll_period_start": "2025-01-01",
+    "payroll_period_end": "2025-12-31",
+    "salary_slip_start": "2025-11-17",
+    "salary_slip_end": "2025-11-23",
+    "health_insurance_family": 150.12,
+    "health_insurance_individual": 69.28,
+    "default_salary": 75000
+  },
+  "executive_designations": [
+    "Chief Executive Officer (CEO)",
+    "Chief Operating Officer (COO)",
+    "Chief Technology Officer (CTO)",
+    "Chief Financial Officer (CFO)",
+    "Chief People Officer (CPO)",
+    "Chief Revenue Officer (CRO)",
+    "General Counsel (GC)"
+  ],
+  "default_components_to_delete": [
+    "Leave Encashment",
+    "Basic",
+    "Income Tax"
+  ],
+  "salary_components": [
+    {
+      "name": "Base Salary (Salaried)",
+      "abbr": "BASE-SAL",
+      "type": "Earning",
+      "description": "Base salary for salaried employees - not affected by attendance",
+      "is_tax_applicable": 1,
+      "depends_on_payment_days": 0,
+      "condition": "designation in ['Chief Executive Officer (CEO)', 'Chief Operating Officer (COO)', 'Chief Technology Officer (CTO)', 'Chief Financial Officer (CFO)', 'Chief People Officer (CPO)', 'Chief Revenue Officer (CRO)', 'General Counsel (GC)']"
+    },
+    {
+      "name": "Base Salary (Hourly)",
+      "abbr": "BASE-HR",
+      "type": "Earning",
+      "description": "Base salary for hourly employees - prorated by attendance",
+      "is_tax_applicable": 1,
+      "depends_on_payment_days": 1,
+      "condition": "designation not in ['Chief Executive Officer (CEO)', 'Chief Operating Officer (COO)', 'Chief Technology Officer (CTO)', 'Chief Financial Officer (CFO)', 'Chief People Officer (CPO)', 'Chief Revenue Officer (CRO)', 'General Counsel (GC)']"
+    },
+    {
+      "name": "House Rent Allowance",
+      "abbr": "HRA",
+      "type": "Earning",
+      "description": "Housing allowance for executives (40% of base)",
+      "is_tax_applicable": 1,
+      "depends_on_payment_days": 0,
+      "amount_based_on_formula": 1,
+      "formula": "base * 0.40",
+      "condition": "designation in ['Chief Executive Officer (CEO)', 'Chief Operating Officer (COO)', 'Chief Technology Officer (CTO)', 'Chief Financial Officer (CFO)', 'Chief People Officer (CPO)', 'Chief Revenue Officer (CRO)', 'General Counsel (GC)']"
+    },
+    {
+      "name": "401K Contribution (Salaried)",
+      "abbr": "401K-SAL",
+      "type": "Deduction",
+      "description": "Employee 401K retirement contribution for salaried employees (6% of base)",
+      "is_tax_applicable": 0,
+      "depends_on_payment_days": 0,
+      "amount_based_on_formula": 1,
+      "formula": "base * 0.06",
+      "condition": "designation in ['Chief Executive Officer (CEO)', 'Chief Operating Officer (COO)', 'Chief Technology Officer (CTO)', 'Chief Financial Officer (CFO)', 'Chief People Officer (CPO)', 'Chief Revenue Officer (CRO)', 'General Counsel (GC)']"
+    },
+    {
+      "name": "401K Contribution (Hourly)",
+      "abbr": "401K-HR",
+      "type": "Deduction",
+      "description": "Employee 401K retirement contribution for hourly employees (6% of base)",
+      "is_tax_applicable": 0,
+      "depends_on_payment_days": 1,
+      "amount_based_on_formula": 1,
+      "formula": "base * 0.06",
+      "condition": "designation not in ['Chief Executive Officer (CEO)', 'Chief Operating Officer (COO)', 'Chief Technology Officer (CTO)', 'Chief Financial Officer (CFO)', 'Chief People Officer (CPO)', 'Chief Revenue Officer (CRO)', 'General Counsel (GC)']"
+    },
+    {
+      "name": "Health Insurance",
+      "abbr": "HI",
+      "type": "Deduction",
+      "description": "Employee health insurance premium - set per employee via Additional Salary",
+      "is_tax_applicable": 0,
+      "depends_on_payment_days": 0
+    },
+    {
+      "name": "Income Tax Federal",
+      "abbr": "FIT",
+      "type": "Deduction",
+      "description": "Federal income tax withholding based on IRS tax slabs",
+      "is_tax_applicable": 0,
+      "depends_on_payment_days": 0,
+      "is_income_tax_component": 1,
+      "variable_based_on_taxable_salary": 1
+    },
+    {
+      "name": "Income Tax State",
+      "abbr": "SIT",
+      "type": "Deduction",
+      "description": "State income tax on total compensation",
+      "is_tax_applicable": 0,
+      "depends_on_payment_days": 0,
+      "amount_based_on_formula": 1,
+      "formula": "(base + (base * 0.40)) * 0.05"
+    }
+  ],
+  "salary_structures": [
+    {
+      "name": "Salaried",
+      "description": "For executives (C-Suite and General Counsel)",
+      "payroll_frequency": "Weekly",
+      "earnings": [
+        {
+          "salary_component": "Base Salary (Salaried)",
+          "amount_based_on_formula": 1,
+          "formula": "base",
+          "condition": "designation in ['Chief Executive Officer (CEO)', 'Chief Operating Officer (COO)', 'Chief Technology Officer (CTO)', 'Chief Financial Officer (CFO)', 'Chief People Officer (CPO)', 'Chief Revenue Officer (CRO)', 'General Counsel (GC)']"
+        },
+        {
+          "salary_component": "House Rent Allowance",
+          "amount_based_on_formula": 1,
+          "formula": "base * 0.40",
+          "condition": "designation in ['Chief Executive Officer (CEO)', 'Chief Operating Officer (COO)', 'Chief Technology Officer (CTO)', 'Chief Financial Officer (CFO)', 'Chief People Officer (CPO)', 'Chief Revenue Officer (CRO)', 'General Counsel (GC)']"
+        }
+      ],
+      "deductions": [
+        {
+          "salary_component": "401K Contribution (Salaried)",
+          "amount_based_on_formula": 1,
+          "formula": "base * 0.06",
+          "condition": "designation in ['Chief Executive Officer (CEO)', 'Chief Operating Officer (COO)', 'Chief Technology Officer (CTO)', 'Chief Financial Officer (CFO)', 'Chief People Officer (CPO)', 'Chief Revenue Officer (CRO)', 'General Counsel (GC)']"
+        },
+        {
+          "salary_component": "Health Insurance",
+          "amount_based_on_formula": 0
+        },
+        {
+          "salary_component": "Income Tax Federal",
+          "amount_based_on_formula": 0
+        },
+        {
+          "salary_component": "Income Tax State",
+          "amount_based_on_formula": 1,
+          "formula": "(base + (base * 0.40)) * 0.05"
+        }
+      ]
+    },
+    {
+      "name": "Hourly",
+      "description": "For all non-executive staff",
+      "payroll_frequency": "Weekly",
+      "earnings": [
+        {
+          "salary_component": "Base Salary (Hourly)",
+          "amount_based_on_formula": 1,
+          "formula": "base",
+          "condition": "designation not in ['Chief Executive Officer (CEO)', 'Chief Operating Officer (COO)', 'Chief Technology Officer (CTO)', 'Chief Financial Officer (CFO)', 'Chief People Officer (CPO)', 'Chief Revenue Officer (CRO)', 'General Counsel (GC)']"
+        }
+      ],
+      "deductions": [
+        {
+          "salary_component": "401K Contribution (Hourly)",
+          "amount_based_on_formula": 1,
+          "formula": "base * 0.06",
+          "condition": "designation not in ['Chief Executive Officer (CEO)', 'Chief Operating Officer (COO)', 'Chief Technology Officer (CTO)', 'Chief Financial Officer (CFO)', 'Chief People Officer (CPO)', 'Chief Revenue Officer (CRO)', 'General Counsel (GC)']"
+        },
+        {
+          "salary_component": "Health Insurance",
+          "amount_based_on_formula": 0
+        },
+        {
+          "salary_component": "Income Tax Federal",
+          "amount_based_on_formula": 0
+        },
+        {
+          "salary_component": "Income Tax State",
+          "amount_based_on_formula": 1,
+          "formula": "(base + (base * 0.40)) * 0.05"
+        }
+      ]
+    }
+  ],
+  "income_tax_slabs": [
+    {"from_amount": 0, "to_amount": 11600, "percent_deduction": 10},
+    {"from_amount": 11600, "to_amount": 47150, "percent_deduction": 12},
+    {"from_amount": 47150, "to_amount": 100525, "percent_deduction": 22},
+    {"from_amount": 100525, "to_amount": 191950, "percent_deduction": 24},
+    {"from_amount": 191950, "to_amount": 243725, "percent_deduction": 32},
+    {"from_amount": 243725, "to_amount": 609350, "percent_deduction": 35},
+    {"from_amount": 609350, "to_amount": 0, "percent_deduction": 37}
+  ],
+  "employee_salaries": {
+    "Alice Marie Kim": 256000,
+    "Ben Foster": 199000,
+    "Carla Ruiz": 196000,
+    "Eugene Sanders": 219000,
+    "Monica Priya Patel": 204000,
+    "Jordan Blake": 203000,
+    "Laura Chen": 190000,
+    "Maria Torres": 84000,
+    "Nathan Brooks": 77000,
+    "Taylor Kim": 71000,
+    "Helena Santos": 56000
+  },
+  "metadata": {
+    "description": "Payroll data for US tech company - weekly payroll cycle",
+    "payroll_month": "November 2025",
+    "currency": "USD",
+    "notes": "Salaried structure for C-suite executives, Hourly for Accounts staff. Federal tax slabs are simplified 2025 rates for single filers."
+  }
+}
