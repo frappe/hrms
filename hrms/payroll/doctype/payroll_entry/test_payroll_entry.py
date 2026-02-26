@@ -1060,6 +1060,59 @@ class TestPayrollEntry(FrappeTestCase):
 		payroll_entry.reload()
 		self.assertEqual(payroll_entry.status, "Cancelled")
 
+	def test_payroll_entry_with_zero_amount(self):
+		company = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee("test_zero_amount@payroll.com", company=company.name)
+
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		earning_comp = create_salary_component("Test Earning", **{"type": "Earning"})
+		earning_comp.append("accounts", {"company": company.name, "account": "Salary - _TC"})
+		earning_comp.save()
+
+		deduction_comp = create_salary_component("Test Deduction", **{"type": "Deduction"})
+		deduction_comp.append("accounts", {"company": company.name, "account": "Salary - _TC"})
+		deduction_comp.save()
+
+		make_salary_structure(
+			"_Test Zero Amount Salary Structure",
+			"Monthly",
+			employee,
+			company=company.name,
+			other_details={
+				"earnings": [{"salary_component": earning_comp.name, "amount": 1000}],
+				"deductions": [{"salary_component": deduction_comp.name, "amount": 1000}],
+			},
+		)
+
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = make_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company.default_payroll_payable_account,
+			currency=company.default_currency,
+			company=company.name,
+			cost_center="Main - _TC",
+		)
+
+		self.assertEqual(payroll_entry.status, "Submitted")
+
+		salary_slip = frappe.db.get_value("Salary Slip", {"payroll_entry": payroll_entry.name}, "name")
+		self.assertIsNotNone(salary_slip)
+
+		salary_slip_doc = frappe.get_doc("Salary Slip", salary_slip)
+		self.assertEqual(salary_slip_doc.net_pay, 0)
+		self.assertEqual(salary_slip_doc.gross_pay, 1000)
+		self.assertEqual(salary_slip_doc.total_deduction, 1000)
+		self.assertEqual(salary_slip_doc.net_pay, 0)
+
+		journal_entry_name = frappe.db.get_value(
+			"Journal Entry Account",
+			{"reference_type": "Payroll Entry", "reference_name": payroll_entry.name},
+			"parent",
+		)
+		self.assertIsNotNone(journal_entry_name, "Journal Entry should be created for zero net pay")
+
 
 def get_payroll_entry(**args):
 	args = frappe._dict(args)

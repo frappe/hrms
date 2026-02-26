@@ -153,6 +153,7 @@ override_doctype_class = {
 	"Timesheet": "hrms.overrides.employee_timesheet.EmployeeTimesheet",
 	"Payment Entry": "hrms.overrides.employee_payment_entry.EmployeePaymentEntry",
 	"Project": "hrms.overrides.employee_project.EmployeeProject",
+	"Journal Entry": "hrms.overrides.journal_entry.HRMSJournalEntry",
 }
 
 # Document Events
