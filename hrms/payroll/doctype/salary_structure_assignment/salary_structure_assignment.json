@@ -228,7 +228,8 @@
    "fetch_if_empty": 1,
    "fieldname": "max_benefits",
    "fieldtype": "Currency",
-   "label": "Maximum Benefit Amount"
+   "label": "Maximum Benefit Amount",
+   "options": "currency"
   },
   {
    "fieldname": "column_break_kjvm",
@@ -245,7 +246,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-01-09 11:52:07.106968",
+ "modified": "2026-02-26 14:37:43.779340",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure Assignment",
