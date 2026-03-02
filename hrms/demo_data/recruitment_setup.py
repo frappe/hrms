@@ -1998,3 +1998,78 @@ def create_appointment_letters(job_offers, company, appointment_templates):
     print(f"  ✓ Created {len(created_letters)} appointment letters")
     return created_letters
 
+def clear_recruitment_data(company="NovaSoft"):
+    """
+    Clear all recruitment demo data created by this script.
+    USE WITH CAUTION - This will delete data!
+
+    Usage:
+        bench --site [sitename] execute hrms.demo_data.recruitment_setup.clear_recruitment_data
+        Or with company:
+        bench --site [sitename] execute hrms.demo_data.recruitment_setup.clear_recruitment_data --kwargs '{"company": "NovaSoft"}'
+    """
+    frappe.set_user("Administrator")
+
+    print(f"\n{'='*60}")
+    print(f"⚠️  Clearing Recruitment Data for Company: {company}")
+    print(f"{'='*60}\n")
+
+    # Delete in reverse dependency order (opposite of creation)
+    doctypes_to_clear = [
+        # Most dependent first
+        ("Appointment Letter", {"company": company}),
+        ("Job Offer", {"company": company}),
+        ("Interview Feedback", {}),
+        ("Interview", {"company": company}),
+        ("Job Applicant", {"company": company}),
+        ("Employee Referral", {"company": company}),
+        ("Job Opening", {"company": company}),
+        ("Job Requisition", {"company": company}),
+        ("Staffing Plan", {"company": company}),
+        # Master data (be careful with these)
+        ("Job Offer Term Template", {}),
+        ("Offer Term", {}),
+        ("Appointment Letter Template", {}),
+        ("Interview Round", {}),
+        ("Job Applicant Source", {}),
+        ("Interview Type", {}),
+        # Skills might be used elsewhere, so skip or handle carefully
+        # ("Skill", {}),
+    ]
+
+    total_deleted = 0
+    for doctype, filters in doctypes_to_clear:
+        try:
+            # Get meta to check if submittable
+            meta = frappe.get_meta(doctype)
+
+            # Get all documents matching filters
+            docs = frappe.get_all(doctype, filters=filters, pluck="name")
+            deleted_count = 0
+            for doc_name in docs:
+                try:
+                    doc = frappe.get_doc(doctype, doc_name)
+                    # Cancel if submitted
+                    if meta.is_submittable and doc.docstatus == 1:
+                        doc.cancel()
+                    # Delete the document
+                    frappe.delete_doc(doctype, doc_name, force=True)
+                    deleted_count += 1
+
+                except Exception as e:
+                    print(f"  ⚠ Error deleting {doctype} {doc_name}: {str(e)[:50]}")
+
+            if deleted_count > 0:
+                print(f"  ✓ Deleted {deleted_count} {doctype} records")
+                total_deleted += deleted_count
+        except Exception as e:
+            print(f"  ⚠ Error processing {doctype}: {str(e)[:50]}")
+
+    frappe.db.commit()
+
+    print(f"\n{'='*60}")
+    print(f"✅ Recruitment Data Deletion Complete!")
+    print(f"{'='*60}")
+    print(f"\n  Total records deleted: {total_deleted}")
+    print(f"\n{'='*60}\n")
+    return {"total_deleted": total_deleted}

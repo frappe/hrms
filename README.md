@@ -52,6 +52,14 @@ ERPNext v15.95.0
 HRMS v15.55.0
 ```
 
+The company `NovaSoft` with 107 employees, departments, positions, recruitment data, payroll data, leaves, and all other required data creation is now part of docker_frappe_1 container startup. It may take 1 to 2 mins for container to be up running, you can check container logs using 
+```
+podman logs -f docker_frappe_1
+```
+
+The script to create this company and populate all employee data exists here: `docker/entrypoint.sh`
+
+
 The default docker-compose.yml file launches the application at: `localhost:8000`
 
 > Note: If you prefer using Docker, refer to the original documentation.
@@ -60,12 +68,6 @@ The default docker-compose.yml file launches the application at: `localhost:8000
 ```
 podman-compose down
 ```
-
-### Checking Novasoft
-As a part of container docker_frappe_1 startup, it creates a company called `NovaSoft` with 107 employees and all other required data. 
-
-The script to create this company and populate all employee data exists here: `docker/entrypoint.sh`
-
 
 ### DB Access
 
@@ -108,50 +110,42 @@ For adding or updating data, modify the demo data locally and copy updated to co
 podman cp hrms/demo_data/. docker_frappe_1:/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/
 ```
 
-and modify the data as required.
 
 If you need to clean(remove) the attendance data for development purposes use:
 ```
-podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.attendance_setup.clear_attendance_data --kwargs "{\"company\": \"NovaSoft\", \"attendance_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_attendance.json\"}"'
+podman exec -it docker_frappe_1 bash -c 'bench --site hrms.localhost execute hrms.demo_data.attendance_setup.clear_attendance_data --kwargs "{\"company\": \"NovaSoft\", \"attendance_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_attendance.json\"}"'
 ```
 
 To clear recruitment data for development purposes:
 ```
-podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.recruitment_setup.clear_recruitment_data --kwargs "{\"company\": \"NovaSoft\"}"'
+podman exec -it docker_frappe_1 bash -c 'bench --site hrms.localhost execute hrms.demo_data.recruitment_setup.clear_recruitment_data --kwargs "{\"company\": \"NovaSoft\"}"'
 ```
 
 To clear performance data for development purposes:
 ```
-podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.performance_setup.clear_performance_data --kwargs "{\"company\": \"NovaSoft\"}"'
+podman exec -it docker_frappe_1 bash -c 'bench --site hrms.localhost execute hrms.demo_data.performance_setup.clear_performance_data --kwargs "{\"company\": \"NovaSoft\"}"'
 ```
 
 To clear tenure data for development purposes:
 ```
-podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.tenure_setup.clear_tenure_data --kwargs "{\"company\": \"NovaSoft\"}"'
+podman exec -it docker_frappe_1 bash -c 'bench --site hrms.localhost execute hrms.demo_data.tenure_setup.clear_tenure_data --kwargs "{\"company\": \"NovaSoft\"}"'
 ```
 
 If you need to clean the leaves data for development purposes use:
 ```
-podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.leaves_setup.clear_leave_configuration --kwargs "{\"company\": \"NovaSoft\", \"leaves_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_leaves.json\"}"'
+podman exec -it docker_frappe_1 bash -c 'bench --site hrms.localhost execute hrms.demo_data.leaves_setup.clear_leave_configuration --kwargs "{\"company\": \"NovaSoft\", \"leaves_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_leaves.json\"}"'
 ```
 
 To clear payroll data for development purposes:
 ```
-podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && bench --site hrms.localhost execute hrms.demo_data.payroll_setup.clear_payroll_data --kwargs "{\"company\": \"NovaSoft\", \"payroll_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_payroll.json\"}"'
+podman exec -it docker_frappe_1 bash -c 'bench --site hrms.localhost execute hrms.demo_data.payroll_setup.clear_payroll_data --kwargs "{\"company\": \"NovaSoft\", \"payroll_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_payroll.json\"}"'
 ```
-
-<!-- To run the payroll test suite, first install pytest in the container, then run the tests directly with pytest (not via `bench run-tests`, which triggers a `before_tests` hook that creates a holiday list for the current year):
-```
-podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && ./env/bin/pip install pytest'
-
-podman exec -it docker_frappe_1 bash -c 'cd frappe-bench && ./env/bin/python -m pytest apps/hrms/hrms/demo_data/test_payroll_setup.py -v'
-``` -->
 
 ## Verifying Data in the App
 
 Navigate to `http://localhost:8000/app`, select the `NovaSoft` company, and confirm that the employees and related records have been created.
 
-Log in using the `Administrator` user, and HR user, and another user to check access and permission to transactions.
+Log in using the `Administrator` user, an HR user, and another user to check access and permission to transactions.
 
 ## UI troubleshooting
 
