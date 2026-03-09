@@ -78,6 +78,13 @@ def get_all_employees() -> list[dict]:
 	)
 
 
+def get_current_employee() -> str:
+	employee = get_current_employee_info().get("name")
+	if not employee:
+		frappe.throw(_("Employee not found"), frappe.PermissionError)
+	return employee
+
+
 # HR Settings
 @frappe.whitelist()
 def get_hr_settings() -> dict:
@@ -119,7 +126,8 @@ def are_push_notifications_enabled() -> bool:
 
 # Attendance
 @frappe.whitelist()
-def get_attendance_calendar_events(employee: str, from_date: str, to_date: str) -> dict[str, str]:
+def get_attendance_calendar_events(from_date: str, to_date: str) -> dict[str, str]:
+	employee = get_current_employee()
 	holidays = get_holidays_for_calendar(employee, from_date, to_date)
 	attendance = get_attendance_for_calendar(employee, from_date, to_date)
 	events = {}
@@ -526,7 +534,9 @@ def get_expense_claims(
 
 
 @frappe.whitelist()
-def get_expense_claim_summary(employee: str) -> dict:
+def get_expense_claim_summary() -> dict:
+	employee = get_current_employee()
+
 	from frappe.query_builder.functions import Sum
 
 	Claim = frappe.qb.DocType("Expense Claim")
@@ -614,7 +624,8 @@ def get_expense_approval_details(employee: str) -> dict:
 
 # Employee Advance
 @frappe.whitelist()
-def get_employee_advance_balance(employee: str) -> list[dict]:
+def get_employee_advance_balance() -> list[dict]:
+	employee = get_current_employee()
 	Advance = frappe.qb.DocType("Employee Advance")
 
 	advances = (
