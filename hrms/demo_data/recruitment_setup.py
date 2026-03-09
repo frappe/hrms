@@ -2020,9 +2020,9 @@ def clear_recruitment_data(company="NovaSoft"):
         ("Appointment Letter", {"company": company}),
         ("Job Offer", {"company": company}),
         ("Interview Feedback", {}),
-        ("Interview", {"company": company}),
-        ("Job Applicant", {"company": company}),
-        ("Employee Referral", {"company": company}),
+        ("Interview", {}),  # No direct company field, linked through Job Applicant
+        ("Job Applicant", {}),  # No direct company field, linked through Job Opening
+        ("Employee Referral", {}),  # No direct company field
         ("Job Opening", {"company": company}),
         ("Job Requisition", {"company": company}),
         ("Staffing Plan", {"company": company}),
@@ -2038,32 +2038,77 @@ def clear_recruitment_data(company="NovaSoft"):
     ]
 
     total_deleted = 0
+    # Disable foreign key constraints for deletion
+    frappe.db.sql("SET FOREIGN_KEY_CHECKS=0")
+
+    # Special handling for Job Offer - use raw SQL to avoid validation issues
+    frappe.db.sql("SET FOREIGN_KEY_CHECKS=0")
+    job_offers = frappe.db.sql(f"SELECT name FROM `tabJob Offer` WHERE company = %s", (company,), as_list=True)
+    job_offer_deleted = 0
+    for offer in job_offers:
+        offer_name = offer[0]
+        try:
+            frappe.db.sql(f"DELETE FROM `tabJob Offer Term` WHERE parent = %s", (offer_name,))
+            frappe.db.sql(f"DELETE FROM `tabJob Offer` WHERE name = %s", (offer_name,))
+            job_offer_deleted += 1
+        except:
+            pass
+    frappe.db.sql("SET FOREIGN_KEY_CHECKS=1")
+    if job_offer_deleted > 0:
+        print(f"  ✓ Deleted {job_offer_deleted} Job Offer records")
+    total_deleted += job_offer_deleted
+
+    # Process remaining doctypes
     for doctype, filters in doctypes_to_clear:
+        # Skip Job Offer since we already handled it
+        if doctype == "Job Offer":
+            continue
+
         try:
             # Get meta to check if submittable
             meta = frappe.get_meta(doctype)
 
-            # Get all documents matching filters
-            docs = frappe.get_all(doctype, filters=filters, pluck="name")
+            # For doctypes without company field, use raw SQL to avoid filter issues
+            if doctype in ["Interview", "Job Applicant", "Employee Referral"]:
+                # Use raw SQL for these as they don't have company field
+                frappe.db.sql("SET FOREIGN_KEY_CHECKS=0")
+                doc_names = frappe.db.sql(f"SELECT name FROM `tab{doctype}`", as_list=True)
+                doc_names = [row[0] for row in doc_names]
+                frappe.db.sql("SET FOREIGN_KEY_CHECKS=1")
+            else:
+                # Get all documents matching filters
+                docs = frappe.get_all(doctype, filters=filters, pluck="name")
+                doc_names = docs
+
             deleted_count = 0
-            for doc_name in docs:
+            for doc_name in doc_names:
                 try:
-                    doc = frappe.get_doc(doctype, doc_name)
-                    # Cancel if submitted
-                    if meta.is_submittable and doc.docstatus == 1:
-                        doc.cancel()
-                    # Delete the document
-                    frappe.delete_doc(doctype, doc_name, force=True)
+                    # Check docstatus first without loading the full document
+                    docstatus = frappe.db.get_value(doctype, doc_name, "docstatus")
+
+                    # For cancelled documents, use direct SQL deletion
+                    if meta.is_submittable and docstatus == 2:
+                        frappe.db.sql(f"DELETE FROM `tab{doctype}` WHERE name = %s", (doc_name,))
+                    else:
+                        doc = frappe.get_doc(doctype, doc_name)
+                        # Cancel if submitted
+                        if meta.is_submittable and doc.docstatus == 1:
+                            doc.cancel()
+                        # Delete the document
+                        frappe.delete_doc(doctype, doc_name, force=True)
                     deleted_count += 1
 
                 except Exception as e:
-                    print(f"  ⚠ Error deleting {doctype} {doc_name}: {str(e)[:50]}")
+                    print(f"  ⚠ Error deleting {doctype} {doc_name}: {str(e)[:100]}")
 
             if deleted_count > 0:
                 print(f"  ✓ Deleted {deleted_count} {doctype} records")
                 total_deleted += deleted_count
         except Exception as e:
-            print(f"  ⚠ Error processing {doctype}: {str(e)[:50]}")
+            print(f"  ⚠ Error processing {doctype}: {str(e)[:100]}")
+
+    # Re-enable foreign key constraints
+    frappe.db.sql("SET FOREIGN_KEY_CHECKS=1")
 
     frappe.db.commit()
 
