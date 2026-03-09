@@ -27,29 +27,6 @@ def get_employee_department(employee_id):
     return frappe.db.get_value("Employee", employee_id, "department")
 
 
-def ensure_fiscal_year(company, year=2025):
-    """Ensure a fiscal year exists for the given year"""
-    fy_name = f"FY {year}-{year+1}"
-    if frappe.db.exists("Fiscal Year", fy_name):
-        return fy_name
-
-    # Create fiscal year
-    try:
-        doc = frappe.get_doc({
-            "doctype": "Fiscal Year",
-            "year": fy_name,
-            "year_start_date": f"{year}-01-01",
-            "year_end_date": f"{year}-12-31"
-        })
-        doc.append("companies", {"company": company})
-        doc.insert(ignore_permissions=True)
-        print(f"  Created Fiscal Year: {fy_name}")
-        return fy_name
-    except Exception as e:
-        print(f"  Error creating fiscal year: {str(e)[:50]}")
-        return None
-
-
 def create_expense_claims_data(company="NovaSoft", data_path=None):
     """
     Create Expense Claims demo data from JSON file
@@ -63,10 +40,12 @@ def create_expense_claims_data(company="NovaSoft", data_path=None):
     print(f"Creating Expense Claims Data for Company: {company}")
     print(f"{'='*60}\n")
 
-    # Ensure fiscal year exists for the data dates (Oct-Nov 2025)
-    print("Ensuring Fiscal Year exists...")
-    ensure_fiscal_year(company, 2025)
-    frappe.db.commit()
+    # Verify fiscal year exists (created by company_setup.py)
+    fiscal_year = "2025"
+    if not frappe.db.exists("Fiscal Year", fiscal_year):
+        print(f"  ERROR: Fiscal Year '{fiscal_year}' not found. Run company_setup.py first.")
+    else:
+        print(f"  Fiscal Year: {fiscal_year}")
 
     # Load data
     if data_path is None:

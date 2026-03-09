@@ -19,34 +19,6 @@ import frappe
 from hrms.demo_data.utils import load_json
 
 
-def ensure_fiscal_year(company, config):
-    """Ensure Fiscal Year exists for the company"""
-    fiscal_year = config.get("fiscal_year", "2025")
-    year_start = config.get("fiscal_year_start", f"{fiscal_year}-01-01")
-    year_end = config.get("fiscal_year_end", f"{fiscal_year}-12-31")
-
-    if not frappe.db.exists("Fiscal Year", fiscal_year):
-        doc = frappe.get_doc({
-            "doctype": "Fiscal Year",
-            "year": fiscal_year,
-            "year_start_date": year_start,
-            "year_end_date": year_end,
-            "is_short_year": 0
-        })
-        doc.append("companies", {"company": company})
-        doc.insert(ignore_permissions=True)
-        print(f"  Created Fiscal Year: {fiscal_year}")
-    else:
-        existing = frappe.get_doc("Fiscal Year", fiscal_year)
-        company_exists = any(c.company == company for c in existing.companies)
-        if not company_exists:
-            existing.append("companies", {"company": company})
-            existing.save(ignore_permissions=True)
-            print(f"  Associated {company} with Fiscal Year {fiscal_year}")
-        else:
-            print(f"  Fiscal Year {fiscal_year} already exists for {company}")
-
-
 def ensure_payroll_period(company, config):
     """Ensure Payroll Period exists for the company"""
     fiscal_year = config.get("fiscal_year", "2025")
@@ -542,7 +514,12 @@ def create_payroll_data(company="NovaSoft", payroll_path=None):
     print("\n" + "="*50)
     print("Step 0: Ensuring prerequisites...")
     print("="*50)
-    ensure_fiscal_year(company, config)
+    fiscal_year = config.get("fiscal_year", "2025")
+    if not frappe.db.exists("Fiscal Year", fiscal_year):
+        print(f"  ERROR: Fiscal Year '{fiscal_year}' not found. Run company_setup.py first.")
+        frappe.throw(f"Fiscal Year '{fiscal_year}' not found. Run company_setup.py first.")
+    else:
+        print(f"  Fiscal Year: {fiscal_year}")
     ensure_payroll_period(company, config)
     ensure_holiday_list(company)
     slab_name = ensure_income_tax_slab(company, config, tax_slabs)
