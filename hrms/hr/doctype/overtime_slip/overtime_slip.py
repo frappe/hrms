@@ -19,31 +19,6 @@ from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignmen
 
 
 class OvertimeSlip(Document):
-	# begin: auto-generated types
-	# This code is auto-generated. Do not modify anything in this block.
-
-	from typing import TYPE_CHECKING
-
-	if TYPE_CHECKING:
-		from frappe.types import DF
-
-		from hrms.hr.doctype.overtime_details.overtime_details import OvertimeDetails
-
-		amended_from: DF.Link | None
-		company: DF.Link
-		department: DF.Link | None
-		employee: DF.Link
-		employee_name: DF.Data | None
-		end_date: DF.Date
-		overtime_details: DF.Table[OvertimeDetails]
-		payroll_entry: DF.Link | None
-		posting_date: DF.Date
-		salary_slip: DF.Link | None
-		start_date: DF.Date
-		submitted_via_payroll_entry: DF.Check
-		total_overtime_duration: DF.Float
-	# end: auto-generated types
-
 	def validate(self):
 		if not (self.start_date or self.end_date):
 			self.get_frequency_and_dates()
@@ -331,8 +306,18 @@ class OvertimeSlip(Document):
 			for data in self._cached_salary_slip.earnings
 			if data.salary_component in components and not data.get("additional_salary", None)
 		)
-		payment_days = max(self._cached_salary_slip.payment_days, 1)
-		applicable_daily_amount = component_amount / payment_days
+		# payment_days = max(self._cached_salary_slip.payment_days, 1)
+		# applicable_daily_amount = component_amount / payment_days
+
+
+		# Modified OT hourly rate calculation
+		# Earlier calculation was based on payment_days which may default to 30 in payroll.
+		# Updated logic uses total_working_days to ensure overtime is calculated based on actual working days.
+		# Fallback kept as 30 if working days are not available.
+		# Change implemented by Krishna Kachhad – Anansi Techsol LLP
+		
+		total_working_days = self._cached_salary_slip.total_working_days or 30
+		applicable_daily_amount = component_amount / total_working_days
 
 		return applicable_daily_amount / standard_working_hours
 
@@ -417,6 +402,7 @@ class OvertimeSlip(Document):
 		return details
 
 
+@frappe.whitelist()
 def filter_employees_for_overtime_slip_creation(start_date, end_date, employees, limit=None):
 	if not employees:
 		return []
