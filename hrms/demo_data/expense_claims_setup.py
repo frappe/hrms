@@ -88,9 +88,29 @@ def create_expense_claims_data(company="NovaSoft", data_path=None):
     ensure_expense_type_accounts(data.get("expense_claims", []), company)
     frappe.db.commit()
 
-    # Step 4: Create Expense Claims
+    # Step 4: Remove unused expense claim types from Frappe defaults
     print("\n" + "="*50)
-    print("Step 4: Creating Expense Claims...")
+    print("Step 4: Removing unused expense claim types...")
+    print("="*50)
+    # Keep only types we use; delete Frappe fixture defaults we don't need
+    used_types = {t["name"] for t in data.get("expense_claim_types", [])}
+    # Also keep types referenced by any expense claim
+    for claim in data.get("expense_claims", []):
+        for expense in claim.get("expenses", []):
+            used_types.add(expense.get("expense_type", ""))
+    all_types = frappe.get_all("Expense Claim Type", pluck="name")
+    for ect in all_types:
+        if ect not in used_types:
+            try:
+                frappe.delete_doc("Expense Claim Type", ect, force=True)
+                print(f"  Removed unused type: {ect}")
+            except Exception as e:
+                print(f"  Could not remove {ect}: {str(e)[:50]}")
+    frappe.db.commit()
+
+    # Step 5: Create Expense Claims
+    print("\n" + "="*50)
+    print("Step 5: Creating Expense Claims...")
     print("="*50)
     create_expense_claims(data.get("expense_claims", []), company, counts)
     frappe.db.commit()
