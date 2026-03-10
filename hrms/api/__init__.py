@@ -383,6 +383,7 @@ def get_leave_balance_map() -> dict[str, dict[str, float]]:
 	}
 	"""
 	from hrms.hr.doctype.leave_application.leave_application import get_leave_details
+
 	employee = get_current_employee()
 
 	date = getdate()
