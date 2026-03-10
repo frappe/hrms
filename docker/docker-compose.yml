@@ -16,6 +16,7 @@ services:
     image: redis:alpine
 
   frappe:
+    image: ea_bench:v15
     build:
       context: ..
       dockerfile: docker/Dockerfile

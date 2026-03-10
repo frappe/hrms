@@ -36,6 +36,7 @@ bench --site hrms.localhost execute hrms.demo_data.tenure_setup.create_tenure_da
 bench --site hrms.localhost execute hrms.demo_data.leaves_setup.configure_leave_management --kwargs "{\"company\": \"NovaSoft\", \"leaves_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_leaves.json\"}"
 # Adding Payroll Data 
 bench --site hrms.localhost execute hrms.demo_data.payroll_setup.create_payroll_data --kwargs "{\"company\": \"NovaSoft\", \"payroll_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_payroll.json\"}"
-
+# Adding Expense Claims Data
+bench --site hrms.localhost execute hrms.demo_data.expense_claims_setup.create_expense_claims_data --kwargs "{\"company\": \"NovaSoft\", \"data_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/expense_claims_data.json\"}"
 
 bench start

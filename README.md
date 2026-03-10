@@ -141,6 +141,11 @@ To clear payroll data for development purposes:
 podman exec -it docker_frappe_1 bash -c 'bench --site hrms.localhost execute hrms.demo_data.payroll_setup.clear_payroll_data --kwargs "{\"company\": \"NovaSoft\", \"payroll_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_payroll.json\"}"'
 ```
 
+To clear expense claims data for development purposes:
+```
+podman exec -it docker_frappe_1 bash -c 'bench --site hrms.localhost execute hrms.demo_data.expense_claims_setup.clear_expense_claims_data --kwargs "{\"company\": \"NovaSoft\", \"data_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/expense_claims_data.json\"}"'
+```
+
 ## Verifying Data in the App
 
 Navigate to `http://localhost:8000/app`, select the `NovaSoft` company, and confirm that the employees and related records have been created.
