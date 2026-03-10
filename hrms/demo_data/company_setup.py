@@ -39,12 +39,17 @@ def create_demo_data(company="NovaSoft", abbr="NS", roster_path=None):
 	# 3 Create company if it doesn't exist
 	company_name = ensure_company_exists(company, abbr)
 
+	# 3.5 Ensure Fiscal Year exists
+	print("Ensuring Fiscal Year exists...")
+	ensure_fiscal_year(company_name)
+	frappe.db.commit()
+
 	# 4 Set default company
 	print("Setting default company...")
 	set_default_company(company_name)
 	frappe.db.commit()
 
-	# 4 Configure HR Settings (retirement age, etc.)
+	# 5 Configure HR Settings (retirement age, etc.)
 	print("Configuring HR Settings...")
 	configure_hr_settings()
 	frappe.db.commit()
@@ -149,6 +154,33 @@ def configure_hr_settings():
 		print("  ✓ Set retirement age to 65 years")
 	except Exception as e:
 		print(f"  ⚠ Error configuring HR Settings: {str(e)[:60]}")
+
+def ensure_fiscal_year(company, year=2025):
+	"""Ensure Fiscal Year exists for the company"""
+	fiscal_year = str(year)
+	year_start = f"{year}-01-01"
+	year_end = f"{year}-12-31"
+
+	if not frappe.db.exists("Fiscal Year", fiscal_year):
+		doc = frappe.get_doc({
+			"doctype": "Fiscal Year",
+			"year": fiscal_year,
+			"year_start_date": year_start,
+			"year_end_date": year_end,
+			"is_short_year": 0
+		})
+		doc.append("companies", {"company": company})
+		doc.insert(ignore_permissions=True)
+		print(f"  Created Fiscal Year: {fiscal_year}")
+	else:
+		existing = frappe.get_doc("Fiscal Year", fiscal_year)
+		company_exists = any(c.company == company for c in existing.companies)
+		if not company_exists:
+			existing.append("companies", {"company": company})
+			existing.save(ignore_permissions=True)
+			print(f"  Associated {company} with Fiscal Year {fiscal_year}")
+		else:
+			print(f"  Fiscal Year {fiscal_year} already exists for {company}")
 
 # ----------------------FRAMEWORK DOCTYPES------------------------------------
 def setup_warehouse_types():
