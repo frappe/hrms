@@ -171,8 +171,10 @@ def create_expense_claim_types(types_list, company, counts):
                     "default_account": default_account
                 })
                 existing_doc.save(ignore_permissions=True)
+                counts["expense_types"] += 1
                 print(f"  Updated account for: {name}")
             else:
+                counts["expense_types"] += 1
                 print(f"  Already exists: {name}")
             continue
 
@@ -539,10 +541,13 @@ def clear_expense_claims_data(company="NovaSoft", data_path=None):
             except Exception as e:
                 print(f"  Error deleting advance {adv.name}: {str(e)[:50]}")
 
-    # Delete expense claim types (only custom ones we created)
+    # Delete expense claim types (defined + referenced by claims)
     print("Deleting Custom Expense Claim Types...")
-    for type_data in data.get("expense_claim_types", []):
-        name = type_data.get("name")
+    types_to_delete = {t.get("name") for t in data.get("expense_claim_types", [])}
+    for claim in data.get("expense_claims", []):
+        for exp in claim.get("expenses", []):
+            types_to_delete.add(exp.get("expense_type"))
+    for name in sorted(types_to_delete):
         if frappe.db.exists("Expense Claim Type", name):
             try:
                 frappe.delete_doc("Expense Claim Type", name, force=True)

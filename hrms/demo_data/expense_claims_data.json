@@ -5,7 +5,8 @@
     {"name": "Client Entertainment", "description": "Client dinners, events, and hospitality"},
     {"name": "Office Supplies", "description": "Stationery, printer supplies, small equipment"},
     {"name": "Training", "description": "Courses, certifications, professional development"},
-    {"name": "Mileage", "description": "Personal vehicle usage reimbursement at $0.67/mile"}
+    {"name": "Mileage", "description": "Personal vehicle usage reimbursement at $0.67/mile"},
+    {"name": "Food", "description": "Meals and dining during business activities"}
   ],
   "employee_advances": [
     {
