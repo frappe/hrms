@@ -116,10 +116,10 @@ If you need to clean(remove) the attendance data for development purposes use:
 podman exec -it docker_frappe_1 bash -c 'bench --site hrms.localhost execute hrms.demo_data.attendance_setup.clear_attendance_data --kwargs "{\"company\": \"NovaSoft\", \"attendance_path\": \"/home/frappe/frappe-bench/apps/hrms/hrms/demo_data/employee_attendance.json\"}"'
 ```
 
-To clear recruitment data for development purposes:
-```
+<!-- TODO: Re-add clear_recruitment_data once recruitment cleanup is reworked without raw SQL -->
+<!-- To clear recruitment data for development purposes:
 podman exec -it docker_frappe_1 bash -c 'bench --site hrms.localhost execute hrms.demo_data.recruitment_setup.clear_recruitment_data --kwargs "{\"company\": \"NovaSoft\"}"'
-```
+-->
 
 To clear performance data for development purposes:
 ```
