@@ -61,7 +61,7 @@ def get_current_employee_info() -> dict:
 
 @frappe.whitelist()
 def get_all_employees() -> list[dict]:
-	return frappe.get_all(
+	return frappe.get_list(
 		"Employee",
 		fields=[
 			"name",
