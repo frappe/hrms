@@ -302,7 +302,8 @@ def get_shift_request_approvers(employee: str) -> str | list[str]:
 
 
 @frappe.whitelist()
-def get_shifts(employee: str) -> list[dict[str, str]]:
+def get_shifts() -> list[dict[str, str]]:
+	employee = get_current_employee()
 	ShiftAssignment = frappe.qb.DocType("Shift Assignment")
 	ShiftType = frappe.qb.DocType("Shift Type")
 	return (
@@ -373,7 +374,7 @@ def get_leave_applications(
 
 
 @frappe.whitelist()
-def get_leave_balance_map(employee: str) -> dict[str, dict[str, float]]:
+def get_leave_balance_map() -> dict[str, dict[str, float]]:
 	"""
 	Returns a map of leave type and balance details like:
 	{
@@ -382,6 +383,7 @@ def get_leave_balance_map(employee: str) -> dict[str, dict[str, float]]:
 	}
 	"""
 	from hrms.hr.doctype.leave_application.leave_application import get_leave_details
+	employee = get_current_employee()
 
 	date = getdate()
 	leave_map = {}
