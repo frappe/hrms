@@ -61,10 +61,18 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		self.set_expense_account(validate=True)
 		self.set_default_accounting_dimension()
 		self.calculate_taxes()
+		# important
+		self.calculate_unreimbursed_amount()
 		self.set_status()
 		self.validate_company_and_department()
 		if self.task and not self.project:
 			self.project = frappe.db.get_value("Task", self.task, "project")
+
+	def calculate_unreimbursed_amount(self):
+	# """Calculate remaining amount that is not reimbursed yet"""
+		claimed = flt(self.grand_total or 0)
+		reimbursed = flt(self.total_amount_reimbursed or 0)
+		self.custom_unreimbursed_amount = claimed - reimbursed
 
 	def set_status(self, update=False):
 		status = {"0": "Draft", "1": "Submitted", "2": "Cancelled"}[cstr(self.docstatus or 0)]
@@ -586,7 +594,17 @@ def update_reimbursed_amount(doc):
 	total_amount_reimbursed = get_total_reimbursed_amount(doc)
 
 	doc.total_amount_reimbursed = total_amount_reimbursed
-	frappe.db.set_value("Expense Claim", doc.name, "total_amount_reimbursed", total_amount_reimbursed)
+
+	unreimbursed = flt(doc.grand_total or 0) - flt(total_amount_reimbursed or 0)
+
+	frappe.db.set_value(
+		"Expense Claim",
+		doc.name,
+		{
+			"total_amount_reimbursed": total_amount_reimbursed,
+			"custom_unreimbursed_amount": unreimbursed,
+		},
+	)
 
 	doc.set_status(update=True)
 

@@ -501,7 +501,14 @@
    "label": "Total Exchange Gain/Loss",
    "options": "Company:company:default_currency",
    "read_only": 1
-  }
+  },
+  {
+    "fieldname": "custom_unreimbursed_amount",
+    "label": "Unreimbursed Amount",
+    "fieldtype": "Currency",
+    "read_only": 1,
+    "insert_after": "total_amount_reimbursed"
+}  
  ],
  "icon": "fa fa-money",
  "idx": 1,
