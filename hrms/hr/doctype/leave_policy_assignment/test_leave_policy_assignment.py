@@ -171,15 +171,9 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 		self.assertEqual(new_leaves_allocated, 20)
 
 	def test_pro_rated_leave_allocation_for_custom_date_range(self):
-		leave_type = frappe.get_doc(
-			{
-				"doctype": "Leave Type",
-				"leave_type_name": "_Test Leave Type_",
-				"include_holiday": 1,
-				"is_earned_leave": 1,
-				"allocate_on_day": "First Day",
-			}
-		).submit()
+		leave_type = create_leave_type(
+			leave_type_name="_Test Leave Type_", is_earned_leave=True, allocate_on_day="First Day"	
+		)
 
 		leave_policy = frappe.get_doc(
 			{
