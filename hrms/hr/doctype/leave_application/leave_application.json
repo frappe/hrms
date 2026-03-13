@@ -12,7 +12,6 @@
   "employee",
   "employee_name",
   "column_break_4",
-  "leave_type",
   "company",
   "department",
   "section_break_5",
@@ -22,6 +21,7 @@
   "half_day_date",
   "total_leave_days",
   "column_break1",
+  "leave_type",
   "description",
   "leave_balance",
   "section_break_7",
@@ -75,6 +75,7 @@
    "fieldname": "leave_type",
    "fieldtype": "Link",
    "ignore_user_permissions": 1,
+   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Leave Type",
    "options": "Leave Type",
@@ -99,7 +100,7 @@
   {
    "fieldname": "section_break_5",
    "fieldtype": "Section Break",
-   "label": "Dates & Reason"
+   "label": "Leave Details"
   },
   {
    "fieldname": "from_date",
@@ -112,6 +113,7 @@
   {
    "fieldname": "to_date",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "To Date",
    "reqd": 1,
    "search_index": 1
@@ -255,7 +257,7 @@
  "is_submittable": 1,
  "links": [],
  "max_attachments": 3,
- "modified": "2026-01-27 12:02:51.679025",
+ "modified": "2026-03-13 08:47:19.783060",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Application",
