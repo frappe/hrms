@@ -16,11 +16,12 @@ services:
     image: redis:alpine
 
   frappe:
-    image: frappe/bench:v5.22.8
-    command: bash /workspace/init.sh
+    image: ea_bench:v15
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
     environment:
       - SHELL=/bin/bash
-    working_dir: /home/frappe
     volumes:
       - .:/workspace
     ports:
