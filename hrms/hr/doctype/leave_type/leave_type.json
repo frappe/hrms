@@ -36,13 +36,13 @@
   "earned_leave_frequency",
   "column_break_22",
   "allocate_on_day",
-  "rounding"
+  "rounding",
+  "connections_tab"
  ],
  "fields": [
   {
    "fieldname": "leave_type_name",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Leave Type Name",
    "oldfieldname": "leave_type_name",
    "oldfieldtype": "Data",
@@ -230,12 +230,18 @@
    "fieldtype": "Int",
    "label": "Non-Encashable Leaves",
    "non_negative": 1
+  },
+  {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1
   }
  ],
  "icon": "fa fa-flag",
  "idx": 1,
  "links": [],
- "modified": "2024-12-18 19:51:44.162375",
+ "modified": "2026-03-13 10:37:13.489375",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Type",
@@ -269,6 +275,7 @@
    "role": "Employee"
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
