@@ -136,6 +136,7 @@
    "allow_on_submit": 1,
    "fieldname": "total_leaves_allocated",
    "fieldtype": "Float",
+   "in_list_view": 1,
    "label": "Total Leaves Allocated",
    "read_only": 1,
    "reqd": 1
@@ -258,7 +259,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-12 12:54:03.589896",
+ "modified": "2026-03-13 09:58:07.547194",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Allocation",
