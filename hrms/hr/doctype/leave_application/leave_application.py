@@ -79,7 +79,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		color: DF.Color | None
 		company: DF.Link
 		department: DF.Link | None
-		description: DF.SmallText | None
+		description: DF.Literal["", "Sick", "Doctor / Medical Appointment", "Personal Work", "Study / Exams", "Travelling", "Vacation", "Getting Married", "Wedding / Family Function", "Family Emergency", "Break", "Grievance leave", "Other (Specify)"]
 		employee: DF.Link
 		employee_name: DF.Data | None
 		follow_via_email: DF.Check
@@ -94,6 +94,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		naming_series: DF.Literal["HR-LAP-.YYYY.-"]
 		posting_date: DF.Date
 		salary_slip: DF.Link | None
+		specify_reason: DF.SmallText | None
 		status: DF.Literal["Open", "Approved", "Rejected", "Cancelled"]
 		to_date: DF.Date
 		total_leave_days: DF.Float

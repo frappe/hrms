@@ -31,18 +31,6 @@
    "type": "Link"
   },
   {
-   "child": 0,
-   "collapsible": 1,
-   "icon": "money-coins-1",
-   "indent": 0,
-   "keep_closed": 0,
-   "label": "Leave Encashment",
-   "link_to": "Leave Encashment",
-   "link_type": "DocType",
-   "show_arrow": 0,
-   "type": "Link"
-  },
-  {
    "child": 1,
    "collapsible": 1,
    "icon": "setting",
@@ -74,6 +62,18 @@
    "keep_closed": 0,
    "label": "Leave Allocation",
    "link_to": "Leave Allocation",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "money-coins-1",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Leave Encashment",
+   "link_to": "Leave Encashment",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
@@ -221,7 +221,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-01-12 14:12:08.828397",
+ "modified": "2026-03-16 11:20:54.673263",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leaves",
