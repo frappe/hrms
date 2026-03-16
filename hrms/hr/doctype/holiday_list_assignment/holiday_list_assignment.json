@@ -44,7 +44,6 @@
   {
    "fieldname": "naming_series",
    "fieldtype": "Select",
-   "in_list_view": 1,
    "label": "Naming Series",
    "options": "HR-HLA-.YYYY.-",
    "reqd": 1
@@ -107,7 +106,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-01-07 16:11:21.856458",
+ "modified": "2026-03-16 12:43:14.826131",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Holiday List Assignment",
