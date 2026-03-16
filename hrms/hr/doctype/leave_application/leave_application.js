@@ -297,7 +297,7 @@ frappe.ui.form.on("Leave Application", {
 		frm.trigger("get_leave_balance");
 	},
 
-	add_approval_action: function(frm){
+	add_approval_action: function (frm) {
 		if (frm.doc.status === "Open") {
 			frm.add_custom_button(__("Approve"), () => {
 				frm.set_value("status", "Approved");
@@ -307,9 +307,9 @@ frappe.ui.form.on("Leave Application", {
 			frm.add_custom_button(__("Reject"), () => {
 				frm.set_value("status", "Rejected");
 				frm.save();
-			})
+			});
 		}
-	}
+	},
 });
 
 frappe.tour["Leave Application"] = [

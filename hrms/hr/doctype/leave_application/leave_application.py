@@ -79,7 +79,21 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		color: DF.Color | None
 		company: DF.Link
 		department: DF.Link | None
-		description: DF.Literal["", "Sick", "Doctor / Medical Appointment", "Personal Work", "Study / Exams", "Travelling", "Vacation", "Getting Married", "Wedding / Family Function", "Family Emergency", "Break", "Grievance leave", "Other (Specify)"]
+		description: DF.Literal[
+			"",
+			"Sick",
+			"Doctor / Medical Appointment",
+			"Personal Work",
+			"Study / Exams",
+			"Travelling",
+			"Vacation",
+			"Getting Married",
+			"Wedding / Family Function",
+			"Family Emergency",
+			"Break",
+			"Grievance leave",
+			"Other (Specify)",
+		]
 		employee: DF.Link
 		employee_name: DF.Data | None
 		follow_via_email: DF.Check
