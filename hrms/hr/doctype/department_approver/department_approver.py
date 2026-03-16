@@ -9,12 +9,26 @@ from frappe.utils import get_link_to_form
 
 
 class DepartmentApprover(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		approver: DF.Link
+		parent: DF.Data
+		parentfield: DF.Data
+		parenttype: DF.Data
+	# end: auto-generated types
+
 	pass
 
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
-def get_approvers(doctype, txt, searchfield, start, page_len, filters):
+def get_approvers(doctype: str, txt: str, searchfield: str, start: int, page_len: int, filters: dict):
 	if not filters.get("employee"):
 		frappe.throw(_("Please select Employee first."))
 

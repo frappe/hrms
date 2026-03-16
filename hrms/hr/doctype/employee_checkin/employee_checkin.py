@@ -2,7 +2,7 @@
 # For license information, please see license.txt
 
 
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
 import frappe
 from frappe import _
@@ -22,6 +22,32 @@ class CheckinRadiusExceededError(frappe.ValidationError):
 
 
 class EmployeeCheckin(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		attendance: DF.Link | None
+		device_id: DF.Data | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		latitude: DF.Float
+		log_type: DF.Literal["", "IN", "OUT"]
+		longitude: DF.Float
+		offshift: DF.Check
+		overtime_type: DF.Link | None
+		shift: DF.Link | None
+		shift_actual_end: DF.Datetime | None
+		shift_actual_start: DF.Datetime | None
+		shift_end: DF.Datetime | None
+		shift_start: DF.Datetime | None
+		skip_auto_attendance: DF.Check
+		time: DF.Datetime
+	# end: auto-generated types
+
 	def before_validate(self):
 		self.time = get_datetime(self.time).replace(microsecond=0)
 
@@ -132,15 +158,15 @@ class EmployeeCheckin(Document):
 
 @frappe.whitelist()
 def add_log_based_on_employee_field(
-	employee_field_value,
-	timestamp,
-	device_id=None,
-	log_type=None,
-	skip_auto_attendance=0,
-	employee_fieldname="attendance_device_id",
-	latitude=None,
-	longitude=None,
-):
+	employee_field_value: str | int,
+	timestamp: str | datetime,
+	device_id: str | int | None = None,
+	log_type: str | None = None,
+	skip_auto_attendance: str | bool | int = 0,
+	employee_fieldname: str = "attendance_device_id",
+	latitude: str | float | None = None,
+	longitude: str | float | None = None,
+) -> Document:
 	"""Finds the relevant Employee using the employee field value and creates a Employee Checkin.
 
 	:param employee_field_value: The value to look for in employee field.
@@ -198,17 +224,17 @@ def bulk_fetch_shift(checkins: list[str] | str) -> None:
 
 
 def mark_attendance_and_link_log(
-	logs,
-	attendance_status,
-	attendance_date,
-	working_hours=None,
-	late_entry=False,
-	early_exit=False,
-	in_time=None,
-	out_time=None,
-	shift=None,
-	overtime_type=None,
-):
+	logs: list[Document],
+	attendance_status: str,
+	attendance_date: str | date,
+	working_hours: float | None = None,
+	late_entry: int | bool = False,
+	early_exit: int | bool = False,
+	in_time: datetime | None = None,
+	out_time: datetime | None = None,
+	shift: str | None = None,
+	overtime_type: str | None = None,
+) -> Document | None:
 	"""Creates an attendance and links the attendance to the Employee Checkin.
 	Note: If attendance is already present for the given date, the logs are marked as skipped and no exception is thrown.
 

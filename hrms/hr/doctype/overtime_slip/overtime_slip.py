@@ -19,6 +19,31 @@ from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignmen
 
 
 class OvertimeSlip(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.hr.doctype.overtime_details.overtime_details import OvertimeDetails
+
+		amended_from: DF.Link | None
+		company: DF.Link
+		department: DF.Link | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		end_date: DF.Date
+		overtime_details: DF.Table[OvertimeDetails]
+		payroll_entry: DF.Link | None
+		posting_date: DF.Date
+		salary_slip: DF.Link | None
+		start_date: DF.Date
+		submitted_via_payroll_entry: DF.Check
+		total_overtime_duration: DF.Float
+	# end: auto-generated types
+
 	def validate(self):
 		if not (self.start_date or self.end_date):
 			self.get_frequency_and_dates()
@@ -392,7 +417,6 @@ class OvertimeSlip(Document):
 		return details
 
 
-@frappe.whitelist()
 def filter_employees_for_overtime_slip_creation(start_date, end_date, employees, limit=None):
 	if not employees:
 		return []

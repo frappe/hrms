@@ -173,7 +173,7 @@ def get_data(filters):
 
 
 @frappe.whitelist()
-def get_years():
+def get_years() -> str:
 	year_list = frappe.db.sql_list(
 		"""select distinct YEAR(end_date) from `tabSalary Slip` ORDER BY YEAR(end_date) DESC"""
 	)

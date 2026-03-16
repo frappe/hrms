@@ -11,6 +11,31 @@ from hrms.hr.utils import update_employee_work_history
 
 
 class EmployeeTransfer(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.hr.doctype.employee_property_history.employee_property_history import (
+			EmployeePropertyHistory,
+		)
+
+		amended_from: DF.Link | None
+		company: DF.Link | None
+		create_new_employee_id: DF.Check
+		department: DF.Link | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		new_company: DF.Link | None
+		new_employee_id: DF.Link | None
+		reallocate_leaves: DF.Check
+		transfer_date: DF.Date
+		transfer_details: DF.Table[EmployeePropertyHistory]
+	# end: auto-generated types
+
 	def before_submit(self):
 		if getdate(self.transfer_date) > getdate():
 			frappe.throw(

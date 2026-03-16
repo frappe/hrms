@@ -4,6 +4,7 @@
 
 import frappe
 from frappe import _
+from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe.model.workflow import get_workflow_name
 from frappe.query_builder.functions import Sum
@@ -40,6 +41,59 @@ class MismatchError(frappe.ValidationError):
 
 
 class ExpenseClaim(AccountsController, PWANotificationsMixin):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.hr.doctype.expense_claim_advance.expense_claim_advance import ExpenseClaimAdvance
+		from hrms.hr.doctype.expense_claim_detail.expense_claim_detail import ExpenseClaimDetail
+		from hrms.hr.doctype.expense_taxes_and_charges.expense_taxes_and_charges import ExpenseTaxesandCharges
+
+		advances: DF.Table[ExpenseClaimAdvance]
+		amended_from: DF.Link | None
+		approval_status: DF.Literal["Draft", "Approved", "Rejected", "Cancelled"]
+		bank_or_cash_account: DF.Link | None
+		base_grand_total: DF.Currency
+		base_total_advance_amount: DF.Currency
+		base_total_claimed_amount: DF.Currency
+		base_total_sanctioned_amount: DF.Currency
+		base_total_taxes_and_charges: DF.Currency
+		clearance_date: DF.Date | None
+		company: DF.Link
+		cost_center: DF.Link | None
+		currency: DF.Link
+		delivery_trip: DF.Link | None
+		department: DF.Link | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		exchange_rate: DF.Float
+		expense_approver: DF.Link | None
+		expenses: DF.Table[ExpenseClaimDetail]
+		gain_loss_account: DF.Link | None
+		grand_total: DF.Currency
+		is_paid: DF.Check
+		mode_of_payment: DF.Link | None
+		naming_series: DF.Literal["HR-EXP-.YYYY.-"]
+		payable_account: DF.Link | None
+		posting_date: DF.Date
+		project: DF.Link | None
+		remark: DF.SmallText | None
+		status: DF.Literal["Draft", "Paid", "Unpaid", "Rejected", "Submitted", "Cancelled"]
+		task: DF.Link | None
+		taxes: DF.Table[ExpenseTaxesandCharges]
+		total_advance_amount: DF.Currency
+		total_amount_reimbursed: DF.Currency
+		total_claimed_amount: DF.Currency
+		total_exchange_gain_loss: DF.Currency
+		total_sanctioned_amount: DF.Currency
+		total_taxes_and_charges: DF.Currency
+		vehicle_log: DF.Link | None
+	# end: auto-generated types
+
 	def onload(self):
 		self.get("__onload").make_payment_via_journal_entry = frappe.db.get_single_value(
 			"Accounts Settings", "make_payment_via_journal_entry"
@@ -623,7 +677,7 @@ def get_outstanding_amount_for_claim(claim):
 
 
 @frappe.whitelist()
-def make_bank_entry(dt, dn):
+def make_bank_entry(dt: str, dn: str) -> dict:
 	from erpnext.accounts.doctype.journal_entry.journal_entry import get_default_bank_cash_account
 
 	expense_claim = frappe.get_doc(dt, dn)
@@ -667,7 +721,7 @@ def make_bank_entry(dt, dn):
 
 
 @frappe.whitelist()
-def get_expense_claim_account_and_cost_center(expense_claim_type, company):
+def get_expense_claim_account_and_cost_center(expense_claim_type: str, company: str) -> dict:
 	data = get_expense_claim_account(expense_claim_type, company)
 	cost_center = erpnext.get_default_cost_center(company)
 
@@ -675,7 +729,7 @@ def get_expense_claim_account_and_cost_center(expense_claim_type, company):
 
 
 @frappe.whitelist()
-def get_expense_claim_account(expense_claim_type, company):
+def get_expense_claim_account(expense_claim_type: str, company: str) -> dict:
 	account = frappe.db.get_value(
 		"Expense Claim Account", {"parent": expense_claim_type, "company": company}, "default_account"
 	)
@@ -691,7 +745,7 @@ def get_expense_claim_account(expense_claim_type, company):
 
 
 @frappe.whitelist()
-def get_advances(expense_claim, advance_id=None):
+def get_advances(expense_claim: str | dict | Document, advance_id: str | None = None):
 	import json
 
 	if isinstance(expense_claim, str):
@@ -733,7 +787,7 @@ def get_advances(expense_claim, advance_id=None):
 
 
 @frappe.whitelist()
-def get_expense_claim(employee_advance, payment_via_journal_entry):
+def get_expense_claim(employee_advance: str | dict, payment_via_journal_entry: str | int | bool) -> Document:
 	if isinstance(employee_advance, str):
 		employee_advance = frappe.get_doc("Employee Advance", employee_advance)
 
@@ -905,7 +959,9 @@ def validate_expense_claim_in_jv(doc, method=None):
 
 
 @frappe.whitelist()
-def make_expense_claim_for_delivery_trip(source_name, target_doc=None):
+def make_expense_claim_for_delivery_trip(
+	source_name: str, target_doc: str | Document | None = None
+) -> Document:
 	doc = get_mapped_doc(
 		"Delivery Trip",
 		source_name,
@@ -917,7 +973,12 @@ def make_expense_claim_for_delivery_trip(source_name, target_doc=None):
 
 
 @frappe.whitelist()
-def get_allocation_amount(paid_amount=None, claimed_amount=None, return_amount=None, unclaimed_amount=None):
+def get_allocation_amount(
+	paid_amount: str | float | None = None,
+	claimed_amount: str | float | None = None,
+	return_amount: str | float | None = None,
+	unclaimed_amount: str | float | None = None,
+) -> float | None:
 	if unclaimed_amount is not None and return_amount is not None:
 		return flt(unclaimed_amount) - flt(return_amount)
 	elif paid_amount is not None and claimed_amount is not None and return_amount is not None:

@@ -7,6 +7,23 @@ import hrms
 
 
 class PWANotification(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from_user: DF.Link | None
+		message: DF.TextEditor | None
+		name: DF.Int | None
+		read: DF.Check
+		reference_document_name: DF.Data | None
+		reference_document_type: DF.Link | None
+		to_user: DF.Link | None
+	# end: auto-generated types
+
 	def on_update(self):
 		hrms.refetch_resource("hrms:notifications", self.to_user)
 

@@ -2,6 +2,7 @@
 # License: GNU General Public License v3. See license.txt
 
 import frappe
+from frappe.model.document import Document
 from frappe.utils import flt, nowdate
 
 import erpnext
@@ -72,7 +73,13 @@ class EmployeePaymentEntry(PaymentEntry):
 
 
 @frappe.whitelist()
-def get_payment_entry_for_employee(dt, dn, party_amount=None, bank_account=None, bank_amount=None):
+def get_payment_entry_for_employee(
+	dt: str,
+	dn: str,
+	party_amount: float | None = None,
+	bank_account: str | None = None,
+	bank_amount: float | None = None,
+):
 	"""Function to make Payment Entry for Employee Advance, Gratuity, Expense Claim, Leave Encashment"""
 	doc = frappe.get_doc(dt, dn)
 
@@ -223,7 +230,11 @@ def get_paid_amount_and_received_amount(
 
 @frappe.whitelist()
 def get_payment_reference_details(
-	reference_doctype, reference_name, party_account_currency, party_type=None, party=None
+	reference_doctype: str,
+	reference_name: str,
+	party_account_currency: str,
+	party_type: str | None = None,
+	party: str | None = None,
 ):
 	if reference_doctype in ("Expense Claim", "Employee Advance", "Gratuity", "Leave Encashment"):
 		return get_reference_details_for_employee(reference_doctype, reference_name, party_account_currency)
@@ -234,7 +245,9 @@ def get_payment_reference_details(
 
 
 @frappe.whitelist()
-def get_reference_details_for_employee(reference_doctype, reference_name, party_account_currency):
+def get_reference_details_for_employee(
+	reference_doctype: str, reference_name: str, party_account_currency: str
+):
 	"""
 	Returns payment reference details for employee related doctypes:
 	Employee Advance, Expense Claim, Gratuity, Leave Encashment
@@ -307,7 +320,7 @@ def get_total_amount_and_exchange_rate(ref_doc, party_account_currency, company_
 
 # update exchange rate in linked advance
 @frappe.whitelist()
-def set_exchange_rate_in_advance(doc, method=None):
+def set_exchange_rate_in_advance(doc: Document, method: None = None):
 	if doc.references:
 		for reference_doc in doc.references:
 			if reference_doc.reference_doctype == "Employee Advance" and doc.target_exchange_rate:

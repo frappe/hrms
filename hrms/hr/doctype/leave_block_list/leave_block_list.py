@@ -11,6 +11,25 @@ from frappe.utils import getdate
 
 
 class LeaveBlockList(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.hr.doctype.leave_block_list_allow.leave_block_list_allow import LeaveBlockListAllow
+		from hrms.hr.doctype.leave_block_list_date.leave_block_list_date import LeaveBlockListDate
+
+		applies_to_all_departments: DF.Check
+		company: DF.Link
+		leave_block_list_allowed: DF.Table[LeaveBlockListAllow]
+		leave_block_list_dates: DF.Table[LeaveBlockListDate]
+		leave_block_list_name: DF.Data
+		leave_type: DF.Link | None
+	# end: auto-generated types
+
 	def validate(self):
 		dates = []
 		for d in self.get("leave_block_list_dates"):
@@ -20,7 +39,7 @@ class LeaveBlockList(Document):
 			dates.append(d.block_date)
 
 	@frappe.whitelist()
-	def set_weekly_off_dates(self, start_date, end_date, days, reason):
+	def set_weekly_off_dates(self, start_date: str, end_date: str, days: list, reason: str) -> None:
 		date_list = self.get_block_dates_from_date(start_date, end_date, days)
 		for date in date_list:
 			self.append("leave_block_list_dates", {"block_date": date, "reason": reason})

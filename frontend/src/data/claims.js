@@ -4,9 +4,6 @@ import { reactive } from "vue"
 
 export const expenseClaimSummary = createResource({
 	url: "hrms.api.get_expense_claim_summary",
-	params: {
-		employee: employeeResource.data.name,
-	},
 	auto: true,
 	cache: "hrms:expense_claim_summary",
 })

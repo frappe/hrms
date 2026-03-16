@@ -1,5 +1,7 @@
 # Copyright (c) 2025, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
+import datetime
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -10,6 +12,30 @@ from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import create_leave_l
 
 
 class LeaveAdjustment(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		adjustment_type: DF.Literal["", "Allocate", "Reduce"]
+		allocated_leaves: DF.Float
+		amended_from: DF.Link | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		from_date: DF.Date | None
+		leave_allocation: DF.Link
+		leave_type: DF.Link
+		leaves_after_adjustment: DF.Float
+		leaves_to_adjust: DF.Float
+		naming_series: DF.Literal["HR-LAD-.YYYY.-"]
+		posting_date: DF.Date
+		reason_for_adjustment: DF.SmallText | None
+		to_date: DF.Date | None
+	# end: auto-generated types
+
 	def before_validate(self):
 		system_precision = cint(frappe.db.get_single_value("System Settings", "float_precision")) or 3
 		precision = self.precision("leaves_to_adjust") or system_precision
@@ -98,7 +124,9 @@ class LeaveAdjustment(Document):
 
 
 @frappe.whitelist()
-def get_leave_allocation_for_posting_date(employee, leave_type, posting_date):
+def get_leave_allocation_for_posting_date(
+	employee: str, leave_type: str, posting_date: str | datetime.date
+) -> list[dict]:
 	"""
 	Returns the leave allocation for the given employee, leave type and posting date.
 	"""
@@ -117,7 +145,9 @@ def get_leave_allocation_for_posting_date(employee, leave_type, posting_date):
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
-def get_allocated_leave_types(doctype, txt, searchfield, start, page_len, filters):
+def get_allocated_leave_types(
+	doctype: str, txt: str, searchfield: str, start: int, page_len: int, filters: dict
+) -> tuple[tuple[str, str]]:
 	"""
 	Returns the leave types allocated to the given employee
 	"""

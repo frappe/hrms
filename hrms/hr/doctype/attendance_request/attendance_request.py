@@ -18,6 +18,29 @@ class OverlappingAttendanceRequestError(frappe.ValidationError):
 
 
 class AttendanceRequest(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		amended_from: DF.Link | None
+		company: DF.Link
+		department: DF.Link | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		explanation: DF.SmallText | None
+		from_date: DF.Date
+		half_day: DF.Check
+		half_day_date: DF.Date | None
+		include_holidays: DF.Check
+		reason: DF.Literal["Work From Home", "On Duty"]
+		shift: DF.Link | None
+		to_date: DF.Date
+	# end: auto-generated types
+
 	def validate(self):
 		validate_active_employee(self.employee)
 		validate_dates(self, self.from_date, self.to_date, False)

@@ -12,6 +12,34 @@ from hrms.mixins.appraisal import AppraisalMixin
 
 
 class EmployeePerformanceFeedback(Document, AppraisalMixin):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.hr.doctype.employee_feedback_rating.employee_feedback_rating import EmployeeFeedbackRating
+
+		added_on: DF.Datetime
+		amended_from: DF.Link | None
+		appraisal: DF.Link
+		appraisal_cycle: DF.Link | None
+		company: DF.Link
+		department: DF.Link | None
+		designation: DF.Link | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		feedback: DF.TextEditor
+		feedback_ratings: DF.Table[EmployeeFeedbackRating]
+		reviewer: DF.Link
+		reviewer_designation: DF.Link | None
+		reviewer_name: DF.Data | None
+		total_score: DF.Float
+		user: DF.Link | None
+	# end: auto-generated types
+
 	def validate(self):
 		validate_active_appraisal_cycle(self.appraisal_cycle)
 

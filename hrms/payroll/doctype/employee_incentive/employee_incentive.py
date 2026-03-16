@@ -10,6 +10,25 @@ from hrms.hr.utils import validate_active_employee
 
 
 class EmployeeIncentive(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		amended_from: DF.Link | None
+		company: DF.Link
+		currency: DF.Link
+		department: DF.Link | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		incentive_amount: DF.Currency
+		payroll_date: DF.Date
+		salary_component: DF.Link
+	# end: auto-generated types
+
 	def validate(self):
 		validate_active_employee(self.employee)
 		self.validate_salary_structure()

@@ -14,6 +14,36 @@ from hrms.payroll.doctype.employee_benefit_ledger.employee_benefit_ledger import
 
 
 class PayrollCorrection(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.payroll.doctype.payroll_correction_child.payroll_correction_child import (
+			PayrollCorrectionChild,
+		)
+
+		accrual_arrears: DF.Table[PayrollCorrectionChild]
+		amended_from: DF.Link | None
+		company: DF.Link
+		currency: DF.Link | None
+		days_to_reverse: DF.Float
+		deduction_arrears: DF.Table[PayrollCorrectionChild]
+		earning_arrears: DF.Table[PayrollCorrectionChild]
+		employee: DF.Link
+		employee_name: DF.Data | None
+		lwp_days: DF.Float
+		month_for_lwp_reversal: DF.Literal[None]
+		payment_days: DF.Float
+		payroll_date: DF.Date
+		payroll_period: DF.Link
+		salary_slip_reference: DF.Link
+		working_days: DF.Float
+	# end: auto-generated types
+
 	def validate(self):
 		if self.days_to_reverse <= 0:
 			frappe.throw(_("Days to Reverse must be greater than zero."))
@@ -54,7 +84,7 @@ class PayrollCorrection(Document):
 		delete_employee_benefit_ledger_entry("reference_document", self.name)
 
 	@frappe.whitelist()
-	def fetch_salary_slip_details(self):
+	def fetch_salary_slip_details(self) -> dict[str, list] | None:
 		# Fetch salary slip details with LWP for the employee in the payroll period
 		if not (self.employee and self.payroll_period and self.company):
 			return {"months": [], "slip_details": []}

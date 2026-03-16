@@ -8,6 +8,22 @@ from frappe.model.document import Document
 
 
 class ExpenseClaimType(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.hr.doctype.expense_claim_account.expense_claim_account import ExpenseClaimAccount
+
+		accounts: DF.Table[ExpenseClaimAccount]
+		deferred_expense_account: DF.Check
+		description: DF.SmallText | None
+		expense_type: DF.Data
+	# end: auto-generated types
+
 	def validate(self):
 		self.validate_accounts()
 		self.validate_repeating_companies()

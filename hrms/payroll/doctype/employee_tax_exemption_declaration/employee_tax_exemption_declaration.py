@@ -17,6 +17,30 @@ from hrms.hr.utils import (
 
 
 class EmployeeTaxExemptionDeclaration(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.payroll.doctype.employee_tax_exemption_declaration_category.employee_tax_exemption_declaration_category import (
+			EmployeeTaxExemptionDeclarationCategory,
+		)
+
+		amended_from: DF.Link | None
+		company: DF.Link | None
+		currency: DF.Link
+		declarations: DF.Table[EmployeeTaxExemptionDeclarationCategory]
+		department: DF.Link | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		payroll_period: DF.Link
+		total_declared_amount: DF.Currency
+		total_exemption_amount: DF.Currency
+	# end: auto-generated types
+
 	def validate(self):
 		validate_active_employee(self.employee)
 		validate_tax_declaration(self.declarations)
@@ -58,7 +82,7 @@ class EmployeeTaxExemptionDeclaration(Document):
 
 
 @frappe.whitelist()
-def make_proof_submission(source_name, target_doc=None):
+def make_proof_submission(source_name: str, target_doc: str | Document | None = None) -> Document:
 	doclist = get_mapped_doc(
 		"Employee Tax Exemption Declaration",
 		source_name,

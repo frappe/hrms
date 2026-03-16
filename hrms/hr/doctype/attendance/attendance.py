@@ -37,6 +37,38 @@ class OverlappingShiftAttendanceError(frappe.ValidationError):
 
 
 class Attendance(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		actual_overtime_duration: DF.Float
+		amended_from: DF.Link | None
+		attendance_date: DF.Date
+		attendance_request: DF.Link | None
+		company: DF.Link
+		department: DF.Link | None
+		early_exit: DF.Check
+		employee: DF.Link
+		employee_name: DF.Data | None
+		half_day_status: DF.Literal["", "Present", "Absent"]
+		in_time: DF.Datetime | None
+		late_entry: DF.Check
+		leave_application: DF.Link | None
+		leave_type: DF.Link | None
+		modify_half_day_status: DF.Check
+		naming_series: DF.Literal["HR-ATT-.YYYY.-"]
+		out_time: DF.Datetime | None
+		overtime_type: DF.Link | None
+		shift: DF.Link | None
+		standard_working_hours: DF.Float
+		status: DF.Literal["", "Present", "Absent", "On Leave", "Half Day", "Work From Home"]
+		working_hours: DF.Float
+	# end: auto-generated types
+
 	def before_insert(self):
 		if self.half_day_status == "":
 			self.half_day_status = None
@@ -366,7 +398,9 @@ def mark_bulk_attendance(data: str | dict):
 
 
 @frappe.whitelist()
-def get_unmarked_days(employee, from_date, to_date, exclude_holidays=0):
+def get_unmarked_days(
+	employee: str, from_date: str | date, to_date: str | date, exclude_holidays: str | int = 0
+) -> list:
 	joining_date, relieving_date = frappe.get_cached_value(
 		"Employee", employee, ["date_of_joining", "relieving_date"]
 	)

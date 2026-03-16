@@ -12,6 +12,34 @@ from frappe.utils import add_days, add_to_date, cint, get_link_to_form, getdate
 
 
 class SalaryWithholding(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.payroll.doctype.salary_withholding_cycle.salary_withholding_cycle import (
+			SalaryWithholdingCycle,
+		)
+
+		amended_from: DF.Link | None
+		company: DF.Link | None
+		cycles: DF.Table[SalaryWithholdingCycle]
+		date_of_joining: DF.Date | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		from_date: DF.Date
+		number_of_withholding_cycles: DF.Int
+		payroll_frequency: DF.Literal["", "Monthly", "Fortnightly", "Bimonthly", "Weekly", "Daily"]
+		posting_date: DF.Date
+		reason_for_withholding_salary: DF.SmallText | None
+		relieving_date: DF.Date | None
+		status: DF.Literal["", "Draft", "Withheld", "Released", "Cancelled"]
+		to_date: DF.Date
+	# end: auto-generated types
+
 	def validate(self):
 		if not self.payroll_frequency:
 			self.payroll_frequency = get_payroll_frequency(self.employee, self.from_date)
@@ -60,7 +88,7 @@ class SalaryWithholding(Document):
 			self.status = status
 
 	@frappe.whitelist()
-	def set_withholding_cycles_and_to_date(self):
+	def set_withholding_cycles_and_to_date(self) -> None:
 		self.to_date = self.get_to_date()
 
 		cycle_from_date = cycle_to_date = getdate(self.from_date)

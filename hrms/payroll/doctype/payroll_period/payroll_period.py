@@ -12,6 +12,22 @@ from hrms.hr.utils import get_exact_month_diff, get_holiday_dates_for_employee
 
 
 class PayrollPeriod(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.payroll.doctype.payroll_period_date.payroll_period_date import PayrollPeriodDate
+
+		company: DF.Link
+		end_date: DF.Date
+		periods: DF.Table[PayrollPeriodDate]
+		start_date: DF.Date
+	# end: auto-generated types
+
 	def validate(self):
 		self.validate_from_to_dates("start_date", "end_date")
 		self.validate_overlap()

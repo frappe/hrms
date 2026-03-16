@@ -9,6 +9,39 @@ from frappe.utils import today
 
 
 class LeaveType(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		allocate_on_day: DF.Literal["First Day", "Last Day", "Date of Joining"]
+		allow_encashment: DF.Check
+		allow_negative: DF.Check
+		allow_over_allocation: DF.Check
+		applicable_after: DF.Int
+		earned_leave_frequency: DF.Literal["Monthly", "Quarterly", "Half-Yearly", "Yearly"]
+		earning_component: DF.Link | None
+		expire_carry_forwarded_leaves_after_days: DF.Int
+		fraction_of_daily_salary_per_leave: DF.Float
+		include_holiday: DF.Check
+		is_carry_forward: DF.Check
+		is_compensatory: DF.Check
+		is_earned_leave: DF.Check
+		is_lwp: DF.Check
+		is_optional_leave: DF.Check
+		is_ppl: DF.Check
+		leave_type_name: DF.Data
+		max_continuous_days_allowed: DF.Int
+		max_encashable_leaves: DF.Int
+		max_leaves_allowed: DF.Float
+		maximum_carry_forwarded_leaves: DF.Float
+		non_encashable_leaves: DF.Int
+		rounding: DF.Literal["", "0.25", "0.5", "1.0"]
+	# end: auto-generated types
+
 	def validate(self):
 		self.validate_lwp()
 		self.validate_leave_types()

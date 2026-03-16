@@ -16,6 +16,33 @@ from hrms.hr.utils import validate_bulk_tool_fields
 
 
 class ShiftAssignmentTool(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		action: DF.Literal["Assign Shift", "Assign Shift Schedule", "Process Shift Requests"]
+		approver: DF.Link | None
+		branch: DF.Link | None
+		company: DF.Link
+		department: DF.Link | None
+		designation: DF.Link | None
+		employment_type: DF.Link | None
+		end_date: DF.Date | None
+		from_date: DF.Date | None
+		grade: DF.Link | None
+		shift_location: DF.Link | None
+		shift_schedule: DF.Link | None
+		shift_type: DF.Link | None
+		shift_type_filter: DF.Link | None
+		start_date: DF.Date | None
+		status: DF.Literal["Active", "Inactive"]
+		to_date: DF.Date | None
+	# end: auto-generated types
+
 	@frappe.whitelist()
 	def get_employees(self, advanced_filters: list | None = None) -> list:
 		if not advanced_filters:

@@ -53,9 +53,6 @@ export const teamLeaves = createResource({
 
 export const leaveBalance = createResource({
 	url: "hrms.api.get_leave_balance_map",
-	params: {
-		employee: employeeResource.data.name,
-	},
 	auto: true,
 	cache: "hrms:leave_balance",
 	transform: (data) => {

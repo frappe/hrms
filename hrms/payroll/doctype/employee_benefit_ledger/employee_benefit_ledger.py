@@ -8,6 +8,30 @@ from frappe.utils import flt
 
 
 class EmployeeBenefitLedger(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		amount: DF.Currency
+		company: DF.Data | None
+		employee: DF.Link | None
+		employee_name: DF.Data | None
+		flexible_benefit: DF.Check
+		payroll_period: DF.Link | None
+		posting_date: DF.Date | None
+		reference_doctype: DF.Link | None
+		reference_document: DF.DynamicLink | None
+		remarks: DF.Data | None
+		salary_component: DF.Link | None
+		salary_slip: DF.Link | None
+		transaction_type: DF.Literal["Accrual", "Payout"]
+		yearly_benefit: DF.Currency
+	# end: auto-generated types
+
 	def validate(self):
 		type = frappe.get_cached_value("Salary Component", self.salary_component, "type")
 		if type != "Earning":

@@ -11,6 +11,26 @@ from hrms.hr.utils import validate_active_employee
 
 
 class RetentionBonus(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		amended_from: DF.Link | None
+		bonus_amount: DF.Currency
+		bonus_payment_date: DF.Date
+		company: DF.Link
+		currency: DF.Link
+		date_of_joining: DF.Data | None
+		department: DF.Link | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		salary_component: DF.Link
+	# end: auto-generated types
+
 	def validate(self):
 		validate_active_employee(self.employee)
 		if getdate(self.bonus_payment_date) < getdate():

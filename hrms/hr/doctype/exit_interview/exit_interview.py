@@ -10,6 +10,37 @@ from erpnext.setup.doctype.employee.employee import get_employee_email
 
 
 class ExitInterview(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.hr.doctype.interviewer.interviewer import Interviewer
+
+		amended_from: DF.Link | None
+		company: DF.Link
+		date: DF.Date | None
+		date_of_joining: DF.Date | None
+		department: DF.Link | None
+		designation: DF.Link | None
+		email: DF.Data | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		employee_status: DF.Literal["", "Employee Retained", "Exit Confirmed"]
+		interview_summary: DF.TextEditor | None
+		interviewers: DF.TableMultiSelect[Interviewer]
+		naming_series: DF.Literal["HR-EXIT-INT-"]
+		questionnaire_email_sent: DF.Check
+		ref_doctype: DF.Link | None
+		reference_document_name: DF.DynamicLink | None
+		relieving_date: DF.Date | None
+		reports_to: DF.Link | None
+		status: DF.Literal["Pending", "Scheduled", "Completed", "Cancelled"]
+	# end: auto-generated types
+
 	def validate(self):
 		self.validate_relieving_date()
 		self.validate_duplicate_interview()
@@ -61,7 +92,7 @@ class ExitInterview(Document):
 
 
 @frappe.whitelist()
-def send_exit_questionnaire(interviews):
+def send_exit_questionnaire(interviews: str | list) -> None:
 	interviews = get_interviews(interviews)
 	validate_questionnaire_settings()
 

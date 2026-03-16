@@ -57,7 +57,7 @@ frappe.ui.form.on("Employee Referral", {
 		frappe.call({
 			method: "hrms.hr.doctype.employee_referral.employee_referral.create_additional_salary",
 			args: {
-				doc: frm.doc,
+				employee_referral: frm.doc.name,
 			},
 			callback: function (r) {
 				var doclist = frappe.model.sync(r.message);

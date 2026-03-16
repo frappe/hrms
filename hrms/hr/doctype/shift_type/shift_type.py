@@ -36,6 +36,44 @@ EMPLOYEE_CHUNK_SIZE = 50
 
 
 class ShiftType(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		allow_check_out_after_shift_end_time: DF.Int
+		allow_overtime: DF.Check
+		auto_update_last_sync: DF.Check
+		begin_check_in_before_shift_start_time: DF.Int
+		color: DF.Literal[
+			"Blue", "Cyan", "Fuchsia", "Green", "Lime", "Orange", "Pink", "Red", "Violet", "Yellow"
+		]
+		determine_check_in_and_check_out: DF.Literal[
+			"Alternating entries as IN and OUT during the same shift",
+			"Strictly based on Log Type in Employee Checkin",
+		]
+		early_exit_grace_period: DF.Int
+		enable_auto_attendance: DF.Check
+		enable_early_exit_marking: DF.Check
+		enable_late_entry_marking: DF.Check
+		end_time: DF.Time
+		holiday_list: DF.Link | None
+		last_sync_of_checkin: DF.Datetime | None
+		late_entry_grace_period: DF.Int
+		mark_auto_attendance_on_holidays: DF.Check
+		overtime_type: DF.Link | None
+		process_attendance_after: DF.Date | None
+		start_time: DF.Time
+		working_hours_calculation_based_on: DF.Literal[
+			"First Check-in and Last Check-out", "Every Valid Check-in and Check-out"
+		]
+		working_hours_threshold_for_absent: DF.Float
+		working_hours_threshold_for_half_day: DF.Float
+	# end: auto-generated types
+
 	def validate(self):
 		start = get_time(self.start_time)
 		end = get_time(self.end_time)
@@ -108,7 +146,7 @@ class ShiftType(Document):
 		)
 
 	@frappe.whitelist()
-	def process_auto_attendance(self, is_manually_triggered=False):
+	def process_auto_attendance(self, is_manually_triggered: int | bool = False) -> None | str:
 		if self.has_incorrect_shift_config():
 			return
 
@@ -392,7 +430,12 @@ class ShiftType(Document):
 	def mark_absent_for_half_day_dates(self, employee):
 		half_day_attendances = frappe.get_all(
 			"Attendance",
-			filters={"employee": employee, "status": "Half Day", "modify_half_day_status": 1},
+			filters={
+				"employee": employee,
+				"status": "Half Day",
+				"modify_half_day_status": 1,
+				"attendance_date": ["<=", getdate(self.last_sync_of_checkin)],
+			},
 			fields=["name", "attendance_date"],
 		)
 		start_time = get_time(self.start_time)

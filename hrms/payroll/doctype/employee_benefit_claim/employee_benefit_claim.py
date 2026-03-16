@@ -14,6 +14,28 @@ from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignmen
 
 
 class EmployeeBenefitClaim(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		amended_from: DF.Link | None
+		attachments: DF.Attach | None
+		claimed_amount: DF.Currency
+		company: DF.Link
+		currency: DF.Link
+		department: DF.Link | None
+		earning_component: DF.Link
+		employee: DF.Link
+		employee_name: DF.Data | None
+		max_amount_eligible: DF.Currency
+		payroll_date: DF.Date
+		yearly_benefit: DF.Currency
+	# end: auto-generated types
+
 	def validate(self):
 		self.validate_date_and_benefit_claim_amount()
 		self.validate_duplicate_claim()
@@ -92,7 +114,7 @@ class EmployeeBenefitClaim(Document):
 		).submit()
 
 	@frappe.whitelist()
-	def get_benefit_details(self):
+	def get_benefit_details(self) -> None:
 		# Fetch max benefit amount and claimable amount for the employee based on the earning component chosen
 		from hrms.payroll.doctype.employee_benefit_ledger.employee_benefit_ledger import (
 			get_max_claim_eligible,
@@ -166,7 +188,9 @@ class EmployeeBenefitClaim(Document):
 
 
 @frappe.whitelist()
-def get_benefit_components(doctype, txt, searchfield, start, page_len, filters):
+def get_benefit_components(
+	doctype: str, txt: str, searchfield: str, start: int, page_len: int, filters: dict
+) -> list:
 	"""Fetch benefit components to choose from based on employee and date filters."""
 	employee = filters.get("employee")
 	date = filters.get("date")

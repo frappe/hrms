@@ -11,6 +11,21 @@ from hrms.hr.utils import validate_overlap
 
 
 class LeavePeriod(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		company: DF.Link
+		from_date: DF.Date
+		is_active: DF.Check
+		optional_holiday_list: DF.Link | None
+		to_date: DF.Date
+	# end: auto-generated types
+
 	def validate(self):
 		self.validate_dates()
 		validate_overlap(self, self.from_date, self.to_date, self.company)

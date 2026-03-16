@@ -197,7 +197,9 @@ def get_holidays(month_start: str, month_end: str, employee_filters: dict[str, s
 	holiday_lists = {}
 
 	for employee in frappe.get_list("Employee", filters=employee_filters, pluck="name"):
-		if not (holiday_list := get_holiday_list_for_employee(employee, raise_exception=False)):
+		if not (
+			holiday_list := get_holiday_list_for_employee(employee, raise_exception=False, as_on=month_end)
+		):
 			continue
 		if holiday_list not in holiday_lists:
 			holiday_lists[holiday_list] = frappe.get_all(

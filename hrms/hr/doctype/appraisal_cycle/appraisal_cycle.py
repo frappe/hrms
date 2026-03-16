@@ -9,6 +9,31 @@ from frappe.query_builder.terms import SubQuery
 
 
 class AppraisalCycle(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.hr.doctype.appraisee.appraisee import Appraisee
+
+		appraisees: DF.Table[Appraisee]
+		branch: DF.Link | None
+		calculate_final_score_based_on_formula: DF.Check
+		company: DF.Link
+		cycle_name: DF.Data
+		department: DF.Link | None
+		description: DF.TextEditor | None
+		designation: DF.Link | None
+		end_date: DF.Date
+		final_score_formula: DF.Code | None
+		kra_evaluation_method: DF.Literal["Automated Based on Goal Progress", "Manual Rating"]
+		start_date: DF.Date
+		status: DF.Literal["Not Started", "In Progress", "Completed"]
+	# end: auto-generated types
+
 	def onload(self):
 		self.set_onload("appraisals_created", self.check_if_appraisals_exist())
 

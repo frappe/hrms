@@ -4,6 +4,7 @@
 
 import frappe
 from frappe import _
+from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 
 from hrms.controllers.employee_boarding_controller import EmployeeBoardingController
@@ -14,6 +15,37 @@ class IncompleteTaskError(frappe.ValidationError):
 
 
 class EmployeeOnboarding(EmployeeBoardingController):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.hr.doctype.employee_boarding_activity.employee_boarding_activity import (
+			EmployeeBoardingActivity,
+		)
+
+		activities: DF.Table[EmployeeBoardingActivity]
+		amended_from: DF.Link | None
+		boarding_begins_on: DF.Date
+		boarding_status: DF.Literal["Pending", "In Process", "Completed"]
+		company: DF.Link
+		date_of_joining: DF.Date
+		department: DF.Link | None
+		designation: DF.Link | None
+		employee: DF.Link | None
+		employee_grade: DF.Link | None
+		employee_name: DF.Data
+		employee_onboarding_template: DF.Link | None
+		holiday_list: DF.Link | None
+		job_applicant: DF.Link
+		job_offer: DF.Link
+		notify_users_by_email: DF.Check
+		project: DF.Link | None
+	# end: auto-generated types
+
 	def validate(self):
 		super().validate()
 		self.set_employee()
@@ -68,7 +100,7 @@ class EmployeeOnboarding(EmployeeBoardingController):
 
 
 @frappe.whitelist()
-def make_employee(source_name, target_doc=None):
+def make_employee(source_name: str, target_doc: str | Document | None = None) -> Document:
 	doc = frappe.get_doc("Employee Onboarding", source_name)
 	doc.validate_employee_creation()
 

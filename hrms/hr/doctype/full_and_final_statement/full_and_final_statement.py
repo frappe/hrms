@@ -13,6 +13,37 @@ from hrms.hr.doctype.full_and_final_statement.full_and_final_statement_loan_util
 
 
 class FullandFinalStatement(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.hr.doctype.full_and_final_asset.full_and_final_asset import FullandFinalAsset
+		from hrms.hr.doctype.full_and_final_outstanding_statement.full_and_final_outstanding_statement import (
+			FullandFinalOutstandingStatement,
+		)
+
+		amended_from: DF.Link | None
+		assets_allocated: DF.Table[FullandFinalAsset]
+		company: DF.Link | None
+		date_of_joining: DF.Date | None
+		department: DF.Link | None
+		designation: DF.Link | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		payables: DF.Table[FullandFinalOutstandingStatement]
+		receivables: DF.Table[FullandFinalOutstandingStatement]
+		relieving_date: DF.Date | None
+		status: DF.Literal["Paid", "Unpaid", "Cancelled"]
+		total_asset_recovery_cost: DF.Currency
+		total_payable_amount: DF.Currency
+		total_receivable_amount: DF.Currency
+		transaction_date: DF.Date
+	# end: auto-generated types
+
 	def before_insert(self):
 		self.status = "Unpaid"
 		self.get_outstanding_statements()
@@ -275,7 +306,7 @@ class FullandFinalStatement(Document):
 
 
 @frappe.whitelist()
-def get_account_and_amount(ref_doctype, ref_document, company):
+def get_account_and_amount(ref_doctype: str, ref_document: str, company: str) -> list | None:
 	if not ref_doctype or not ref_document:
 		return None
 

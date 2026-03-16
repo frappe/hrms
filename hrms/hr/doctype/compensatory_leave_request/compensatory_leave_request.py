@@ -19,6 +19,27 @@ from hrms.hr.utils import (
 
 
 class CompensatoryLeaveRequest(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		amended_from: DF.Link | None
+		department: DF.Link | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		half_day: DF.Check
+		half_day_date: DF.Date | None
+		leave_allocation: DF.Link | None
+		leave_type: DF.Link | None
+		reason: DF.SmallText
+		work_end_date: DF.Date
+		work_from_date: DF.Date
+	# end: auto-generated types
+
 	def validate(self):
 		validate_active_employee(self.employee)
 		validate_dates(self, self.work_from_date, self.work_end_date)

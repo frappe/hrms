@@ -16,6 +16,33 @@ class DuplicateInterviewRoundError(frappe.ValidationError):
 
 
 class Interview(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.hr.doctype.interview_detail.interview_detail import InterviewDetail
+
+		amended_from: DF.Link | None
+		average_rating: DF.Rating
+		designation: DF.Link | None
+		expected_average_rating: DF.Rating
+		from_time: DF.Time
+		interview_details: DF.Table[InterviewDetail]
+		interview_round: DF.Link
+		interview_summary: DF.Text | None
+		job_applicant: DF.Link
+		job_opening: DF.Link | None
+		reminded: DF.Check
+		resume_link: DF.Data | None
+		scheduled_on: DF.Date
+		status: DF.Literal["Pending", "Under Review", "Cleared", "Rejected", "Cancelled"]
+		to_time: DF.Time
+	# end: auto-generated types
+
 	def validate(self):
 		self.validate_duplicate_interview()
 		self.validate_designation()
@@ -81,7 +108,9 @@ class Interview(Document):
 		return status_map.get(self.status, None)
 
 	@frappe.whitelist()
-	def reschedule_interview(self, scheduled_on, from_time, to_time):
+	def reschedule_interview(
+		self, scheduled_on: datetime.date, from_time: datetime.time, to_time: datetime.time
+	) -> None:
 		if scheduled_on == self.scheduled_on and from_time == self.from_time and to_time == self.to_time:
 			frappe.msgprint(
 				_("No changes found in timings."), indicator="orange", title=_("Interview Not Rescheduled")
@@ -308,14 +337,14 @@ def send_daily_feedback_reminder():
 
 
 @frappe.whitelist()
-def get_expected_skill_set(interview_round):
+def get_expected_skill_set(interview_round: str) -> list[dict]:
 	return frappe.get_all(
 		"Expected Skill Set", filters={"parent": interview_round}, fields=["skill"], order_by="idx"
 	)
 
 
 @frappe.whitelist()
-def create_interview_feedback(data, interview_name, interviewer, job_applicant):
+def create_interview_feedback(data: str | dict, interview_name: str, interviewer: str, job_applicant: str):
 	import json
 
 	if isinstance(data, str):
@@ -348,7 +377,9 @@ def create_interview_feedback(data, interview_name, interviewer, job_applicant):
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
-def get_interviewer_list(doctype, txt, searchfield, start, page_len, filters):
+def get_interviewer_list(
+	doctype: str, txt: str, searchfield: str, start: int, page_len: int, filters: dict
+) -> list:
 	filters = [
 		["Has Role", "parent", "like", f"%{txt}%"],
 		["Has Role", "role", "=", "interviewer"],
@@ -369,7 +400,7 @@ def get_interviewer_list(doctype, txt, searchfield, start, page_len, filters):
 
 
 @frappe.whitelist()
-def get_events(start, end, filters=None):
+def get_events(start: str, end: str, filters: str | None = None):
 	"""Returns events for Gantt / Calendar view rendering.
 
 	:param start: Start date-time.

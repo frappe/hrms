@@ -20,6 +20,37 @@ class EmployeeAdvanceOverPayment(frappe.ValidationError):
 
 
 class EmployeeAdvance(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		advance_account: DF.Link | None
+		advance_amount: DF.Currency
+		amended_from: DF.Link | None
+		base_paid_amount: DF.Currency
+		claimed_amount: DF.Currency
+		company: DF.Link
+		currency: DF.Link
+		department: DF.Link | None
+		employee: DF.Link
+		employee_name: DF.ReadOnly | None
+		mode_of_payment: DF.Link | None
+		naming_series: DF.Literal["HR-EAD-.YYYY.-"]
+		paid_amount: DF.Currency
+		pending_amount: DF.Currency
+		posting_date: DF.Date
+		purpose: DF.SmallText
+		repay_unclaimed_amount_from_salary: DF.Check
+		return_amount: DF.Currency
+		status: DF.Literal[
+			"Draft", "Paid", "Unpaid", "Claimed", "Returned", "Partly Claimed and Returned", "Cancelled"
+		]
+	# end: auto-generated types
+
 	def onload(self):
 		self.get("__onload").make_payment_via_journal_entry = frappe.db.get_single_value(
 			"Accounts Settings", "make_payment_via_journal_entry"
@@ -256,7 +287,7 @@ class EmployeeAdvance(Document):
 
 
 @frappe.whitelist()
-def make_bank_entry(dt, dn):
+def make_bank_entry(dt: str, dn: str) -> dict:
 	doc = frappe.get_doc(dt, dn)
 	payment_account = get_same_currency_bank_cash_account(doc.company, doc.currency, doc.mode_of_payment)
 
@@ -297,7 +328,7 @@ def make_bank_entry(dt, dn):
 
 
 @frappe.whitelist()
-def create_return_through_additional_salary(doc):
+def create_return_through_additional_salary(doc: str | dict | Document) -> Document:
 	import json
 
 	if isinstance(doc, str):
@@ -317,14 +348,14 @@ def create_return_through_additional_salary(doc):
 
 @frappe.whitelist()
 def make_return_entry(
-	employee,
-	company,
-	employee_advance_name,
-	return_amount,
-	advance_account,
-	currency,
-	mode_of_payment=None,
-):
+	employee: str,
+	company: str,
+	employee_advance_name: str,
+	return_amount: str | float,
+	advance_account: str,
+	currency: str,
+	mode_of_payment: str | None = None,
+) -> dict:
 	bank_cash_account = get_same_currency_bank_cash_account(company, currency, mode_of_payment)
 
 	advance_account_currency = frappe.db.get_value("Account", advance_account, "account_currency")

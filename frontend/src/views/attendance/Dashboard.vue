@@ -69,18 +69,12 @@ import {
 	myShiftRequests,
 } from "@/data/attendance"
 
-const employee = inject("$employee")
 const dayjs = inject("$dayjs")
 
 const shifts = createResource({
 	url: "hrms.api.get_shifts",
 	auto: true,
 	cache: "hrms:shifts",
-	makeParams() {
-		return {
-			employee: employee.data?.name,
-		}
-	},
 	transform: (data) => {
 		return data.map((assignment) => {
 			assignment.doctype = "Shift Assignment"

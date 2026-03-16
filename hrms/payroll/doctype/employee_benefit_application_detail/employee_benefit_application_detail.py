@@ -7,4 +7,20 @@ from frappe.model.document import Document
 
 
 class EmployeeBenefitApplicationDetail(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		amount: DF.Currency
+		max_benefit_amount: DF.Currency
+		parent: DF.Data
+		parentfield: DF.Data
+		parenttype: DF.Data
+		salary_component: DF.Link
+	# end: auto-generated types
+
 	pass

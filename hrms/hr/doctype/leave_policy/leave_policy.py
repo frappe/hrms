@@ -8,6 +8,21 @@ from frappe.model.document import Document
 
 
 class LeavePolicy(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.hr.doctype.leave_policy_detail.leave_policy_detail import LeavePolicyDetail
+
+		amended_from: DF.Link | None
+		leave_policy_details: DF.Table[LeavePolicyDetail]
+		title: DF.Data
+	# end: auto-generated types
+
 	def validate(self):
 		if self.leave_policy_details:
 			for lp_detail in self.leave_policy_details:

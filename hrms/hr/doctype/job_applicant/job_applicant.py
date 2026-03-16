@@ -18,6 +18,34 @@ class DuplicationError(frappe.ValidationError):
 
 
 class JobApplicant(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		applicant_name: DF.Data
+		applicant_rating: DF.Rating
+		country: DF.Link | None
+		cover_letter: DF.Text | None
+		currency: DF.Link | None
+		designation: DF.Link | None
+		email_id: DF.Data
+		employee_referral: DF.Link | None
+		job_title: DF.Link | None
+		lower_range: DF.Currency
+		notes: DF.Data | None
+		phone_number: DF.Data | None
+		resume_attachment: DF.Attach | None
+		resume_link: DF.Data | None
+		source: DF.Link | None
+		source_name: DF.Link | None
+		status: DF.Literal["Open", "Replied", "Rejected", "Hold", "Accepted"]
+		upper_range: DF.Currency
+	# end: auto-generated types
+
 	def onload(self):
 		job_offer = frappe.get_all("Job Offer", filters={"job_applicant": self.name})
 		if job_offer:
@@ -58,12 +86,8 @@ class JobApplicant(Document):
 
 
 @frappe.whitelist()
-def create_interview(doc, interview_round):
-	import json
-
-	if isinstance(doc, str):
-		doc = json.loads(doc)
-		doc = frappe.get_doc(doc)
+def create_interview(job_applicant: str, interview_round: str) -> Document:
+	doc = frappe.get_doc("Job Applicant", job_applicant)
 
 	round_designation = frappe.db.get_value("Interview Round", interview_round, "designation")
 
@@ -89,7 +113,7 @@ def create_interview(doc, interview_round):
 
 
 @frappe.whitelist()
-def get_interview_details(job_applicant):
+def get_interview_details(job_applicant: str) -> dict:
 	interview_details = frappe.db.get_all(
 		"Interview",
 		filters={"job_applicant": job_applicant, "docstatus": ["!=", 2]},
@@ -108,7 +132,7 @@ def get_interview_details(job_applicant):
 
 
 @frappe.whitelist()
-def get_applicant_to_hire_percentage():
+def get_applicant_to_hire_percentage() -> dict:
 	frappe.has_permission("Job Applicant", throw=True)
 
 	total_applicants = frappe.db.count("Job Applicant")

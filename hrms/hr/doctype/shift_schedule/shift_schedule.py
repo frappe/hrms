@@ -7,6 +7,21 @@ from frappe.utils import random_string
 
 
 class ShiftSchedule(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.automation.doctype.assignment_rule_day.assignment_rule_day import AssignmentRuleDay
+		from frappe.types import DF
+
+		amended_from: DF.Link | None
+		frequency: DF.Literal["Every Week", "Every 2 Weeks", "Every 3 Weeks", "Every 4 Weeks"]
+		repeat_on_days: DF.Table[AssignmentRuleDay]
+		shift_type: DF.Link
+	# end: auto-generated types
+
 	def before_validate(self):
 		to_be_deleted = []
 		seen_days = set()

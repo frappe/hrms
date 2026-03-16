@@ -10,6 +10,32 @@ from frappe.utils import cint, flt, get_link_to_form
 
 
 class JobOffer(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.hr.doctype.job_offer_term.job_offer_term import JobOfferTerm
+
+		amended_from: DF.Link | None
+		applicant_email: DF.Data | None
+		applicant_name: DF.Data
+		company: DF.Link
+		designation: DF.Link
+		job_applicant: DF.Link
+		job_offer_term_template: DF.Link | None
+		letter_head: DF.Link | None
+		offer_date: DF.Date
+		offer_terms: DF.Table[JobOfferTerm]
+		select_print_heading: DF.Link | None
+		select_terms: DF.Link | None
+		status: DF.Literal["Awaiting Response", "Accepted", "Rejected", "Cancelled"]
+		terms: DF.TextEditor | None
+	# end: auto-generated types
+
 	def onload(self):
 		employee = frappe.db.get_value("Employee", {"job_applicant": self.job_applicant}, "name") or ""
 		self.set_onload("employee", employee)
@@ -88,7 +114,7 @@ def get_staffing_plan_detail(designation, company, offer_date):
 
 
 @frappe.whitelist()
-def make_employee(source_name, target_doc=None):
+def make_employee(source_name: str, target_doc: str | Document | None = None):
 	def set_missing_values(source, target):
 		target.personal_email, target.first_name = frappe.db.get_value(
 			"Job Applicant", source.job_applicant, ["email_id", "applicant_name"]

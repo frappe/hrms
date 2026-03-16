@@ -12,6 +12,50 @@ PROCEED_WITH_FREQUENCY_CHANGE = False
 
 
 class HRSettings(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		allow_employee_checkin_from_mobile_app: DF.Check
+		allow_geolocation_tracking: DF.Check
+		allow_multiple_shift_assignments: DF.Check
+		auto_leave_encashment: DF.Check
+		check_vacancies: DF.Check
+		emp_created_by: DF.Literal["Naming Series", "Employee Number", "Full Name"]
+		exit_questionnaire_notification_template: DF.Link | None
+		exit_questionnaire_web_form: DF.Link | None
+		expense_approver_mandatory_in_expense_claim: DF.Check
+		feedback_reminder_notification_template: DF.Link | None
+		frequency: DF.Literal["Weekly", "Monthly"]
+		hiring_sender: DF.Link | None
+		hiring_sender_email: DF.Data | None
+		interview_reminder_template: DF.Link | None
+		leave_approval_notification_template: DF.Link | None
+		leave_approver_mandatory_in_leave_application: DF.Check
+		leave_status_notification_template: DF.Link | None
+		prevent_self_expense_approval: DF.Check
+		prevent_self_leave_approval: DF.Check
+		remind_before: DF.Time | None
+		restrict_backdated_leave_application: DF.Check
+		retirement_age: DF.Data | None
+		role_allowed_to_create_backdated_leave_application: DF.Link | None
+		send_birthday_reminders: DF.Check
+		send_holiday_reminders: DF.Check
+		send_interview_feedback_reminder: DF.Check
+		send_interview_reminder: DF.Check
+		send_leave_notification: DF.Check
+		send_work_anniversary_reminders: DF.Check
+		sender: DF.Link | None
+		sender_email: DF.Data | None
+		show_leaves_of_all_department_members_in_calendar: DF.Check
+		standard_working_hours: DF.Float
+		unlink_payment_on_cancellation_of_employee_advance: DF.Check
+	# end: auto-generated types
+
 	def validate(self):
 		self.set_naming_series()
 

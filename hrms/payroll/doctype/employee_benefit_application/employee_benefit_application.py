@@ -14,6 +14,32 @@ from hrms.payroll.doctype.employee_benefit_claim.employee_benefit_claim import g
 
 
 class EmployeeBenefitApplication(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.payroll.doctype.employee_benefit_application_detail.employee_benefit_application_detail import (
+			EmployeeBenefitApplicationDetail,
+		)
+
+		amended_from: DF.Link | None
+		company: DF.Link
+		currency: DF.Link
+		date: DF.Date
+		department: DF.Link | None
+		employee: DF.Link
+		employee_benefits: DF.Table[EmployeeBenefitApplicationDetail]
+		employee_name: DF.Data | None
+		max_benefits: DF.Currency
+		payroll_period: DF.Link
+		remaining_benefit: DF.Currency
+		total_amount: DF.Currency
+	# end: auto-generated types
+
 	def validate(self):
 		validate_active_employee(self.employee)
 		self.validate_duplicate_on_payroll_period()
@@ -59,7 +85,7 @@ class EmployeeBenefitApplication(Document):
 			)
 
 	@frappe.whitelist()
-	def set_benefit_components_and_currency(self):
+	def set_benefit_components_and_currency(self) -> None:
 		# get employee benefits from salary structure assignment and populate the employee benefits table
 		self.employee_benefits = []
 		salary_structure_assignment = get_salary_structure_assignment(self.employee, self.date)

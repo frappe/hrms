@@ -10,6 +10,24 @@ from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignmen
 
 
 class HolidayListAssignment(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		amended_from: DF.Link | None
+		applicable_for: DF.Literal["Employee", "Company"]
+		assigned_to: DF.DynamicLink
+		employee_company: DF.Link | None
+		employee_name: DF.Data | None
+		from_date: DF.Date
+		holiday_list: DF.Link
+		naming_series: DF.Literal["HR-HLA-.YYYY.-"]
+	# end: auto-generated types
+
 	@property
 	def holiday_list_start(self):
 		return frappe.get_value("Holiday List", self.holiday_list, "from_date") if self.holiday_list else None

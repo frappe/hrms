@@ -118,7 +118,7 @@ def update_employee_transfer(doc, method=None):
 
 
 @frappe.whitelist()
-def get_timeline_data(doctype, name):
+def get_timeline_data(doctype: str, name: str) -> dict:
 	"""Return timeline for attendance"""
 	from frappe.desk.notifications import get_open_count
 
@@ -144,7 +144,7 @@ def get_timeline_data(doctype, name):
 
 
 @frappe.whitelist()
-def get_retirement_date(date_of_birth=None):
+def get_retirement_date(date_of_birth: str | None = None):
 	if date_of_birth:
 		try:
 			retirement_age = cint(frappe.db.get_single_value("HR Settings", "retirement_age") or 60)

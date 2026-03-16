@@ -8,6 +8,25 @@ from frappe.model.document import Document
 
 
 class TrainingFeedback(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		amended_from: DF.Link | None
+		course: DF.Data | None
+		department: DF.Link | None
+		employee: DF.Link
+		employee_name: DF.ReadOnly | None
+		event_name: DF.Data | None
+		feedback: DF.Text
+		trainer_name: DF.Data | None
+		training_event: DF.Link
+	# end: auto-generated types
+
 	def validate(self):
 		training_event = frappe.get_doc("Training Event", self.training_event)
 		if training_event.docstatus != 1:

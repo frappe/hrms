@@ -6,6 +6,35 @@ from hrms.controllers.employee_boarding_controller import EmployeeBoardingContro
 
 
 class EmployeeSeparation(EmployeeBoardingController):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.hr.doctype.employee_boarding_activity.employee_boarding_activity import (
+			EmployeeBoardingActivity,
+		)
+
+		activities: DF.Table[EmployeeBoardingActivity]
+		amended_from: DF.Link | None
+		boarding_begins_on: DF.Date
+		boarding_status: DF.Literal["Pending", "In Process", "Completed"]
+		company: DF.Link
+		department: DF.Link | None
+		designation: DF.Link | None
+		employee: DF.Link
+		employee_grade: DF.Link | None
+		employee_name: DF.Data | None
+		employee_separation_template: DF.Link | None
+		exit_interview: DF.TextEditor | None
+		notify_users_by_email: DF.Check
+		project: DF.Link | None
+		resignation_letter_date: DF.Date | None
+	# end: auto-generated types
+
 	def validate(self):
 		super().validate()
 

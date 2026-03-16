@@ -36,7 +36,7 @@
    "icon": "liabilities",
    "indent": 0,
    "keep_closed": 0,
-   "label": "Excemption Submission Proof",
+   "label": "Exemption Submission Proof",
    "link_to": "Employee Tax Exemption Proof Submission",
    "link_type": "DocType",
    "show_arrow": 0,
@@ -148,7 +148,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-01-22 12:54:35.728011",
+ "modified": "2026-02-23 12:00:35.246366",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Tax & Benefits",

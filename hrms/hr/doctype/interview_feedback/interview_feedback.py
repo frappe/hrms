@@ -10,6 +10,27 @@ from frappe.utils import flt, get_link_to_form, getdate
 
 
 class InterviewFeedback(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.hr.doctype.skill_assessment.skill_assessment import SkillAssessment
+
+		amended_from: DF.Link | None
+		average_rating: DF.Rating
+		feedback: DF.Text | None
+		interview: DF.Link
+		interview_round: DF.Link
+		interviewer: DF.Link
+		job_applicant: DF.Link | None
+		result: DF.Literal["", "Cleared", "Rejected"]
+		skill_assessment: DF.Table[SkillAssessment]
+	# end: auto-generated types
+
 	def validate(self):
 		self.validate_interviewer()
 		self.validate_interview_date()

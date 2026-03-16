@@ -11,6 +11,19 @@ from frappe.utils import global_date_format
 
 
 class DailyWorkSummary(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		daily_work_summary_group: DF.Link | None
+		email_sent_to: DF.Code | None
+		status: DF.Literal["Open", "Sent"]
+	# end: auto-generated types
+
 	def send_mails(self, dws_group, emails):
 		"""Send emails to get daily work summary to all users \
 			in selected daily work summary group"""

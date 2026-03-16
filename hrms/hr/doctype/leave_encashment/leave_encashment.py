@@ -19,6 +19,38 @@ from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignmen
 
 
 class LeaveEncashment(AccountsController):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		actual_encashable_days: DF.Float
+		additional_salary: DF.Link | None
+		amended_from: DF.Link | None
+		company: DF.Link
+		cost_center: DF.Link | None
+		currency: DF.Link
+		department: DF.Link | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		encashment_amount: DF.Currency
+		encashment_date: DF.Date | None
+		encashment_days: DF.Float
+		expense_account: DF.Link | None
+		leave_allocation: DF.Link | None
+		leave_balance: DF.Float
+		leave_period: DF.Link
+		leave_type: DF.Link
+		paid_amount: DF.Currency
+		pay_via_payment_entry: DF.Check
+		payable_account: DF.Link | None
+		posting_date: DF.Date | None
+		status: DF.Literal["Draft", "Unpaid", "Paid", "Submitted", "Cancelled"]
+	# end: auto-generated types
+
 	def validate(self):
 		set_employee_name(self)
 		validate_active_employee(self.employee)

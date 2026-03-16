@@ -9,6 +9,33 @@ from frappe.utils import format_duration, get_link_to_form, time_diff_in_seconds
 
 
 class JobRequisition(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		company: DF.Link
+		completed_on: DF.Date | None
+		department: DF.Link | None
+		description: DF.TextEditor
+		designation: DF.Link
+		expected_by: DF.Date | None
+		expected_compensation: DF.Currency
+		naming_series: DF.Literal["HR-HIREQ-"]
+		no_of_positions: DF.Int
+		posting_date: DF.Date
+		reason_for_requesting: DF.Text | None
+		requested_by: DF.Link
+		requested_by_dept: DF.Link | None
+		requested_by_designation: DF.Link | None
+		requested_by_name: DF.Data | None
+		status: DF.Literal["Pending", "Open & Approved", "Rejected", "Filled", "On Hold", "Cancelled"]
+		time_to_fill: DF.Duration | None
+	# end: auto-generated types
+
 	def validate(self):
 		self.validate_duplicates()
 		self.set_time_to_fill()
@@ -40,7 +67,7 @@ class JobRequisition(Document):
 			self.time_to_fill = time_diff_in_seconds(self.completed_on, self.posting_date)
 
 	@frappe.whitelist()
-	def associate_job_opening(self, job_opening):
+	def associate_job_opening(self, job_opening: str) -> None:
 		frappe.db.set_value(
 			"Job Opening", job_opening, {"job_requisition": self.name, "vacancies": self.no_of_positions}
 		)
@@ -53,7 +80,7 @@ class JobRequisition(Document):
 
 
 @frappe.whitelist()
-def make_job_opening(source_name, target_doc=None):
+def make_job_opening(source_name: str, target_doc: str | Document | None = None) -> Document:
 	def set_missing_values(source, target):
 		target.job_title = source.designation
 		target.status = "Open"

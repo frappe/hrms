@@ -16,6 +16,27 @@ from hrms.payroll.doctype.salary_structure.salary_structure import (
 
 
 class BulkSalaryStructureAssignment(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		branch: DF.Link | None
+		company: DF.Link
+		currency: DF.Link | None
+		department: DF.Link | None
+		designation: DF.Link | None
+		employment_type: DF.Link | None
+		from_date: DF.Date
+		grade: DF.Link | None
+		income_tax_slab: DF.Link | None
+		payroll_payable_account: DF.Link | None
+		salary_structure: DF.Link
+	# end: auto-generated types
+
 	@frappe.whitelist()
 	def get_employees(self, advanced_filters: list) -> list:
 		quick_filter_fields = [

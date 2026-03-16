@@ -16,6 +16,39 @@ class DuplicateAssignment(frappe.ValidationError):
 
 
 class SalaryStructureAssignment(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.payroll.doctype.employee_benefit_detail.employee_benefit_detail import EmployeeBenefitDetail
+		from hrms.payroll.doctype.employee_cost_center.employee_cost_center import EmployeeCostCenter
+
+		amended_from: DF.Link | None
+		base: DF.Currency
+		company: DF.Link
+		currency: DF.Link
+		department: DF.Link | None
+		designation: DF.Link | None
+		employee: DF.Link
+		employee_benefits: DF.Table[EmployeeBenefitDetail]
+		employee_name: DF.Data | None
+		from_date: DF.Date
+		grade: DF.Link | None
+		income_tax_slab: DF.Link | None
+		leave_encashment_amount_per_day: DF.Currency
+		max_benefits: DF.Currency
+		payroll_cost_centers: DF.Table[EmployeeCostCenter]
+		payroll_payable_account: DF.Link | None
+		salary_structure: DF.Link
+		tax_deducted_till_date: DF.Currency
+		taxable_earnings_till_date: DF.Currency
+		variable: DF.Currency
+	# end: auto-generated types
+
 	def validate(self):
 		self.validate_dates()
 		self.validate_company()
@@ -114,7 +147,7 @@ class SalaryStructureAssignment(Document):
 			self.payroll_payable_account = payroll_payable_account
 
 	@frappe.whitelist()
-	def set_payroll_cost_centers(self):
+	def set_payroll_cost_centers(self) -> None:
 		self.payroll_cost_centers = []
 		default_payroll_cost_center = self.get_payroll_cost_center()
 		if default_payroll_cost_center:
@@ -200,7 +233,7 @@ def get_assigned_salary_structure(employee, on_date):
 
 
 @frappe.whitelist()
-def get_employee_currency(employee):
+def get_employee_currency(employee: str) -> str:
 	employee_currency = frappe.db.get_value("Salary Structure Assignment", {"employee": employee}, "currency")
 	if not employee_currency:
 		frappe.throw(

@@ -105,7 +105,7 @@ frappe.ui.form.on("Job Applicant", {
 		frappe.call({
 			method: "hrms.hr.doctype.job_applicant.job_applicant.create_interview",
 			args: {
-				doc: frm.doc,
+				job_applicant: frm.doc.name,
 				interview_round: values.interview_round,
 			},
 			callback: function (r) {

@@ -11,6 +11,30 @@ from hrms.hr.utils import update_employee_work_history, validate_active_employee
 
 
 class EmployeePromotion(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.hr.doctype.employee_property_history.employee_property_history import (
+			EmployeePropertyHistory,
+		)
+
+		amended_from: DF.Link | None
+		company: DF.Link | None
+		current_ctc: DF.Currency
+		department: DF.Link | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		promotion_date: DF.Date
+		promotion_details: DF.Table[EmployeePropertyHistory]
+		revised_ctc: DF.Currency
+		salary_currency: DF.Link | None
+	# end: auto-generated types
+
 	def validate(self):
 		validate_active_employee(self.employee)
 

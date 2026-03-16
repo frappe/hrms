@@ -12,6 +12,31 @@ from hrms.hr.utils import validate_bulk_tool_fields
 
 
 class LeaveControlPanel(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		allocate_based_on_leave_policy: DF.Check
+		branch: DF.Link | None
+		carry_forward: DF.Check
+		company: DF.Link | None
+		dates_based_on: DF.Literal["Leave Period", "Joining Date", "Custom Range"]
+		department: DF.Link | None
+		designation: DF.Link | None
+		employee_grade: DF.Link | None
+		employment_type: DF.Link | None
+		from_date: DF.Date | None
+		leave_period: DF.Link | None
+		leave_policy: DF.Link | None
+		leave_type: DF.Link | None
+		no_of_days: DF.Float
+		to_date: DF.Date | None
+	# end: auto-generated types
+
 	def validate_fields(self, employees: list):
 		mandatory_fields = []
 		if self.dates_based_on == "Leave Period":

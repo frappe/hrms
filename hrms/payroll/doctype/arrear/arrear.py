@@ -14,6 +14,32 @@ from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_s
 
 
 class Arrear(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.payroll.doctype.payroll_correction_child.payroll_correction_child import (
+			PayrollCorrectionChild,
+		)
+
+		accrual_arrears: DF.Table[PayrollCorrectionChild]
+		amended_from: DF.Link | None
+		arrear_start_date: DF.Date
+		company: DF.Link
+		currency: DF.Link
+		deduction_arrears: DF.Table[PayrollCorrectionChild]
+		earning_arrears: DF.Table[PayrollCorrectionChild]
+		employee: DF.Link
+		employee_name: DF.Data | None
+		payroll_date: DF.Date
+		payroll_period: DF.Link
+		salary_structure: DF.Link
+	# end: auto-generated types
+
 	@property
 	def payroll_period_details(self):
 		if not hasattr(self, "__payroll_period_details"):

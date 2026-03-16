@@ -11,6 +11,35 @@ from erpnext.controllers.accounts_controller import AccountsController
 
 
 class Gratuity(AccountsController):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		amended_from: DF.Link | None
+		amount: DF.Currency
+		company: DF.Link
+		cost_center: DF.Link | None
+		current_work_experience: DF.Float
+		department: DF.Link | None
+		designation: DF.Data | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		expense_account: DF.Link | None
+		gratuity_rule: DF.Link
+		mode_of_payment: DF.Link | None
+		paid_amount: DF.Currency
+		pay_via_salary_slip: DF.Check
+		payable_account: DF.Link | None
+		payroll_date: DF.Date | None
+		posting_date: DF.Date
+		salary_component: DF.Link | None
+		status: DF.Literal["Draft", "Unpaid", "Paid", "Submitted", "Cancelled"]
+	# end: auto-generated types
+
 	def validate(self):
 		data = self.calculate_work_experience_and_amount()
 		self.current_work_experience = data["current_work_experience"]

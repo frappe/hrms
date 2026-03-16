@@ -374,3 +374,4 @@ company_data_to_be_ignored = [
 # List of apps whose translatable strings should be excluded from this app's translations.
 ignore_translatable_strings_from = ["frappe", "erpnext"]
 employee_holiday_list = ["hrms.utils.holiday_list.get_holiday_list_for_employee"]
+export_python_type_annotations = True

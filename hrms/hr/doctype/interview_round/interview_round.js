@@ -27,7 +27,7 @@ frappe.ui.form.on("Interview Round", {
 		frappe.call({
 			method: "hrms.hr.doctype.interview_round.interview_round.create_interview",
 			args: {
-				doc: frm.doc,
+				interview_round: frm.doc.name,
 			},
 			callback: function (r) {
 				var doclist = frappe.model.sync(r.message);

@@ -14,6 +14,33 @@ from hrms.hr.utils import validate_active_employee
 
 
 class Goal(NestedSet):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		appraisal_cycle: DF.Link | None
+		company: DF.Link | None
+		description: DF.TextEditor | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		end_date: DF.Date | None
+		goal_name: DF.Data
+		is_group: DF.Check
+		kra: DF.Link | None
+		lft: DF.Int
+		old_parent: DF.Link | None
+		parent_goal: DF.Link | None
+		progress: DF.Percent
+		rgt: DF.Int
+		start_date: DF.Date
+		status: DF.Literal["", "Pending", "In Progress", "Completed", "Archived", "Closed"]
+		user: DF.Data | None
+	# end: auto-generated types
+
 	nsm_parent_field = "parent_goal"
 
 	def before_insert(self):

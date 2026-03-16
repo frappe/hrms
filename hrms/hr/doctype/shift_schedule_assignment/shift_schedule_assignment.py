@@ -10,6 +10,24 @@ from hrms.hr.doctype.shift_assignment_tool.shift_assignment_tool import create_s
 
 
 class ShiftScheduleAssignment(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		company: DF.Link
+		create_shifts_after: DF.Date | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		enabled: DF.Check
+		shift_location: DF.Link | None
+		shift_schedule: DF.Link
+		shift_status: DF.Literal["Active", "Inactive"]
+	# end: auto-generated types
+
 	def validate(self):
 		self.validate_existing_shift_assignments()
 
