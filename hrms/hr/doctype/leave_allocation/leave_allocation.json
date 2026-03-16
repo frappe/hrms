@@ -34,7 +34,8 @@
   "earned_leave_schedule",
   "retry_failed_allocations",
   "notes",
-  "description"
+  "description",
+  "connection_tab"
  ],
  "fields": [
   {
@@ -252,6 +253,12 @@
    "fieldtype": "Button",
    "hidden": 1,
    "label": "Retry Failed Allocations"
+  },
+  {
+   "fieldname": "connection_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connection",
+   "show_dashboard": 1
   }
  ],
  "icon": "fa fa-ok",
@@ -259,7 +266,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-13 09:58:07.547194",
+ "modified": "2026-03-16 12:33:09.010233",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Allocation",
