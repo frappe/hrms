@@ -643,7 +643,11 @@ def get_total_reimbursed_amount(doc):
 
 		amount_via_payment_entry = frappe.db.get_value(
 			"Payment Entry Reference",
-			{"reference_name": doc.name, "docstatus": 1},
+			{
+				"reference_name": doc.name,
+				"advance_voucher_type": None,
+				"docstatus": 1,
+			},
 			[{"SUM": "allocated_amount"}],
 		)
 
