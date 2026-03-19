@@ -1,5 +1,4 @@
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, add_months, flt, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -17,9 +16,10 @@ from hrms.hr.doctype.leave_application.test_leave_application import make_leave_
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 from hrms.hr.report.leave_ledger.leave_ledger import execute
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestLeaveLedger(IntegrationTestCase):
+class TestLeaveLedger(HRMSTestSuite):
 	def setUp(self):
 		for dt in [
 			"Leave Application",
@@ -190,6 +190,3 @@ class TestLeaveLedger(IntegrationTestCase):
 		self.assertEqual(f"Total Leaves ({self.casual_leave})", total_row.employee)
 		# 15 leave allocated, 2 leave taken
 		self.assertEqual(total_row.leaves, 13)
-
-	def tearDown(self):
-		frappe.flags.current_date = None

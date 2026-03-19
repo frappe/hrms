@@ -1,10 +1,10 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-from frappe.tests import IntegrationTestCase
+from hrms.tests.utils import HRMSTestSuite
 
 # import frappe
 
 
-class TestInterviewRound(IntegrationTestCase):
+class TestInterviewRound(HRMSTestSuite):
 	pass

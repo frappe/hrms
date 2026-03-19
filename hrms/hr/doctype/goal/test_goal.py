@@ -2,17 +2,16 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.appraisal_template.test_appraisal_template import create_kras
 from hrms.hr.doctype.goal.goal import get_children, update_status
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestGoal(IntegrationTestCase):
+class TestGoal(HRMSTestSuite):
 	def setUp(self):
-		frappe.db.delete("Goal")
 		create_kras(["Development", "Quality"])
 
 		self.employee1 = make_employee("employee1@example.com", company="_Test Company")
@@ -159,8 +158,8 @@ class TestGoal(IntegrationTestCase):
 		parent1.reload()
 
 		self.assertEqual(parent2.progress, 0.0)
-		self.assertEqual(child1.progress, 16.667)
-		self.assertEqual(parent1.progress, 16.667)
+		self.assertEqual(child1.progress, 16.67)
+		self.assertEqual(parent1.progress, 16.67)
 
 	def test_update_kra_in_child_goals(self):
 		parent_goal = create_goal(self.employee1, "Development", 1)

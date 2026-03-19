@@ -13,21 +13,12 @@ from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignmen
 from hrms.tests.utils import HRMSTestSuite
 from hrms.utils.holiday_list import get_holiday_list_for_employee
 
-# On IntegrationTestCase, the doctype test records and all
-# link-field test record dependencies are recursively loaded
-# Use these module variables to add/remove to/from that list
-
 
 class IntegrationTestHolidayListAssignment(HRMSTestSuite):
 	"""
 	Integration tests for HolidayListAssignment.
 	Use this class for testing interactions between multiple components.
 	"""
-
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
-		cls.make_employees()
 
 	def setUp(self):
 		for d in ["Holiday List Assignment"]:
@@ -36,12 +27,13 @@ class IntegrationTestHolidayListAssignment(HRMSTestSuite):
 		self.holiday_list = make_holiday_list(
 			list_name="Test HLA", from_date=get_year_start(getdate()), to_date=get_year_ending(getdate())
 		)
+		self.employee = frappe.get_value("Employee", {"first_name": "_Test Employee"}, "name")
 
 	def test_exisitng_assignment(self):
 		from_date = get_year_start(getdate())
 		create_holiday_list_assignment(
 			"Employee",
-			assigned_to=self.employees[0].name,
+			assigned_to=self.employee,
 			holiday_list=self.holiday_list,
 			from_date=from_date,
 		)
@@ -50,7 +42,7 @@ class IntegrationTestHolidayListAssignment(HRMSTestSuite):
 			DuplicateAssignment,
 			create_holiday_list_assignment,
 			"Employee",
-			assigned_to=self.employees[0].name,
+			assigned_to=self.employee,
 			from_date=from_date,
 		)
 

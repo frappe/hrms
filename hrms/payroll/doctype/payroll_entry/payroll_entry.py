@@ -980,6 +980,7 @@ class PayrollEntry(Document):
 		salary_slip_total -= total_loan_repayment
 
 		bank_entry = None
+
 		if salary_slip_total > 0:
 			remark = "withheld salaries" if for_withheld_salaries else "salaries"
 			bank_entry = self.set_accounting_entries_for_bank_entry(
@@ -1616,11 +1617,13 @@ def create_salary_slips_for_employees(employees, args, publish_progress=True):
 			)
 
 	except Exception as e:
-		frappe.db.rollback()
+		if not frappe.in_test:
+			frappe.db.rollback()
 		log_payroll_failure("creation", payroll_entry, e)
 
 	finally:
-		frappe.db.commit()  # nosemgrep
+		if not frappe.in_test:
+			frappe.db.commit()  # nosemgrep
 		frappe.publish_realtime("completed_salary_slip_creation", user=frappe.session.user)
 
 
@@ -1699,11 +1702,13 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 		show_payroll_submission_status(submitted, unsubmitted, payroll_entry)
 
 	except Exception as e:
-		frappe.db.rollback()
+		if not frappe.in_test:
+			frappe.db.rollback()
 		log_payroll_failure("submission", payroll_entry, e)
 
 	finally:
-		frappe.db.commit()  # nosemgrep
+		if not frappe.in_test:
+			frappe.db.commit()  # nosemgrep
 		frappe.publish_realtime("completed_salary_slip_submission", user=frappe.session.user)
 
 	frappe.flags.via_payroll_entry = False

@@ -2,8 +2,8 @@
 # See license.txt
 
 # import frappe
-from frappe.tests import IntegrationTestCase
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestFullandFinalAsset(IntegrationTestCase):
+class TestFullandFinalAsset(HRMSTestSuite):
 	pass

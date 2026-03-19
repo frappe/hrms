@@ -22,11 +22,6 @@ company_name = "_Test Company 3"
 
 
 class TestExpenseClaim(HRMSTestSuite):
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
-		cls.make_employees()
-
 	def setUp(self):
 		if not frappe.db.get_value("Cost Center", {"company": company_name}):
 			cost_center = frappe.new_doc("Cost Center")
@@ -42,16 +37,10 @@ class TestExpenseClaim(HRMSTestSuite):
 
 			frappe.db.set_value("Company", company_name, "default_cost_center", cost_center)
 		frappe.db.set_value("Account", "Employee Advances - _TC", "account_type", "Receivable")
-
-	def tearDown(self):
 		frappe.set_user("Administrator")
 
 	def test_total_expense_claim_for_project(self):
-		frappe.db.delete("Task")
-		frappe.db.delete("Project")
-		frappe.db.sql("update `tabExpense Claim` set project = '', task = ''")
-
-		project = create_project("_Test Project 1")
+		project = create_project("_Test Project 1", company="_Test Company")
 
 		task = frappe.new_doc("Task")
 		task.update(
@@ -494,7 +483,7 @@ class TestExpenseClaim(HRMSTestSuite):
 		create_test_contact_and_address()
 		address = create_address(driver)
 
-		delivery_trip = create_delivery_trip(driver, address)
+		delivery_trip = create_delivery_trip(driver, address, company="_Test Company")
 		expense_claim = make_expense_claim_for_delivery_trip(delivery_trip.name)
 		self.assertEqual(delivery_trip.name, expense_claim.delivery_trip)
 
@@ -517,7 +506,7 @@ class TestExpenseClaim(HRMSTestSuite):
 		self.assertEqual(je.accounts[0].debit_in_account_currency, expense_claim.grand_total)
 
 	def test_accounting_dimension_mapping(self):
-		project = create_project("_Test Expense Project")
+		project = create_project("_Test Expense Project", company="_Test Company")
 		payable_account = get_payable_account(company_name)
 
 		expense_claim = make_expense_claim(
@@ -1072,12 +1061,13 @@ def allocate_using_payment_reconciliation(expense_claim, employee, journal_entry
 	pr.reconcile()
 
 
-def create_project(project_name):
+def create_project(project_name, **args):
 	project = frappe.db.exists("Project", {"project_name": project_name})
 	if project:
 		return project
 
 	doc = frappe.new_doc("Project")
 	doc.project_name = project_name
+	doc.update(args)
 	doc.insert()
 	return doc.name

@@ -2,17 +2,17 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, today
 
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_employee
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestTrainingEvent(IntegrationTestCase):
+class TestTrainingEvent(HRMSTestSuite):
 	def setUp(self):
 		create_training_program("Basic Training")
-		employee = make_employee("robert_loan@trainig.com")
-		employee2 = make_employee("suzie.tan@trainig.com")
+		employee = make_employee("robert_loan@trainig.com", company="_Test Company")
+		employee2 = make_employee("suzie.tan@trainig.com", company="_Test Company")
 		self.attendees = [{"employee": employee}, {"employee": employee2}]
 
 	def test_training_event_status_update(self):
@@ -33,17 +33,15 @@ class TestTrainingEvent(IntegrationTestCase):
 		for entry in training_event.employees:
 			self.assertEqual(entry.status, "Open")
 
-	def tearDown(self):
-		frappe.db.rollback()
 
-
-def create_training_program(training_program):
+def create_training_program(training_program, company="_Test Company"):
 	if not frappe.db.get_value("Training Program", training_program):
 		frappe.get_doc(
 			{
 				"doctype": "Training Program",
 				"training_program": training_program,
 				"description": training_program,
+				"company": company,
 			}
 		).insert()
 

@@ -2,23 +2,18 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.job_opening.job_opening import close_expired_job_openings
 from hrms.hr.doctype.staffing_plan.test_staffing_plan import make_company
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestJobOpening(IntegrationTestCase):
+class TestJobOpening(HRMSTestSuite):
 	def setUp(self):
-		frappe.db.delete("Staffing Plan")
-		frappe.db.delete("Staffing Plan Detail")
-		frappe.db.delete("Job Opening")
-
 		make_company("_Test Opening Company", "_TOC")
-		frappe.db.delete("Employee", {"company": "_Test Opening Company"})
 
 	def test_vacancies_fulfilled(self):
 		make_employee("test_job_opening@example.com", company="_Test Opening Company", designation="Designer")

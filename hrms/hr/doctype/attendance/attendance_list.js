@@ -10,7 +10,6 @@ frappe.listview_settings["Attendance"] = {
 			return [__(doc.status), "orange", "status,=," + doc.status];
 		}
 	},
-
 	onload: function (list_view) {
 		let me = this;
 		if (frappe.perm.has_perm("Attendance", 0, "create")) {
@@ -115,15 +114,6 @@ frappe.listview_settings["Attendance"] = {
 										method: "hrms.hr.doctype.attendance.attendance.mark_bulk_attendance",
 										args: {
 											data: data,
-										},
-										callback: function (r) {
-											if (r.message === 1) {
-												frappe.show_alert({
-													message: __("Attendance Marked"),
-													indicator: "blue",
-												});
-												cur_dialog.hide();
-											}
 										},
 									});
 								},

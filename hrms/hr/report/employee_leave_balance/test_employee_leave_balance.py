@@ -3,7 +3,6 @@
 
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, add_months, flt, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -21,11 +20,12 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_leave_application,
 )
 from hrms.tests.test_utils import get_first_day, get_first_sunday, get_last_day
+from hrms.tests.utils import HRMSTestSuite
 
 test_records = frappe.get_test_records("Leave Type")
 
 
-class TestEmployeeLeaveBalance(IntegrationTestCase):
+class TestEmployeeLeaveBalance(HRMSTestSuite):
 	def setUp(self):
 		for dt in [
 			"Leave Application",
@@ -48,9 +48,6 @@ class TestEmployeeLeaveBalance(IntegrationTestCase):
 		self.holiday_list = make_holiday_list(
 			"_Test Emp Balance Holiday List", self.year_start, self.year_end
 		)
-
-	def tearDown(self):
-		frappe.db.rollback()
 
 	@assign_holiday_list("_Test Emp Balance Holiday List", "_Test Company")
 	def test_employee_leave_balance(self):

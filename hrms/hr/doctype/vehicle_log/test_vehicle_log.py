@@ -2,15 +2,15 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import cstr, flt, nowdate, random_string
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.vehicle_log.vehicle_log import make_expense_claim
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestVehicleLog(IntegrationTestCase):
+class TestVehicleLog(HRMSTestSuite):
 	def setUp(self):
 		employee_id = frappe.db.sql("""select name from `tabEmployee` where name='testdriver@example.com'""")
 		self.employee_id = employee_id[0][0] if employee_id else None
@@ -19,10 +19,6 @@ class TestVehicleLog(IntegrationTestCase):
 			self.employee_id = make_employee("testdriver@example.com", company="_Test Company")
 
 		self.license_plate = get_vehicle(self.employee_id)
-
-	def tearDown(self):
-		frappe.delete_doc("Vehicle", self.license_plate, force=1)
-		frappe.delete_doc("Employee", self.employee_id, force=1)
 
 	def test_make_vehicle_log_and_syncing_of_odometer_value(self):
 		vehicle_log = make_vehicle_log(self.license_plate, self.employee_id)
