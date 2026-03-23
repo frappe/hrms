@@ -22,6 +22,7 @@ import { employeeResource } from "@/data/employee"
 
 import dayjs from "@/utils/dayjs"
 import getIonicConfig from "@/utils/ionicConfig"
+import { buildHrmsPath, redirectToAmeideOidc } from "@/utils/auth"
 
 import FrappePushNotification from "../public/frappe-push-notification"
 
@@ -121,9 +122,10 @@ router.beforeEach(async (to, _, next) => {
 		// password reset page is outside the PWA scope
 		if (to.path === "/update-password") {
 			return next(false)
-		} else if (to.name !== "Login") {
-			next({ name: "Login" })
 		}
+
+		redirectToAmeideOidc(buildHrmsPath(to.fullPath || to.path))
+		return next(false)
 	}
 
 	if (isLoggedIn && to.name !== "InvalidEmployee") {

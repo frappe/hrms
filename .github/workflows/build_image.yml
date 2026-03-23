@@ -25,6 +25,7 @@ permissions:
 env:
   IMAGE_NAME: ghcr.io/ameideio/io-ameide-hr
   FRAPPE_BRANCH: version-15
+  APP_REPOSITORY: https://github.com/ameideio/io-ameide-hr
 
 jobs:
   publish:
@@ -36,13 +37,36 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          ref: ${{ github.event.inputs.ref || github.ref }}
+          ref: ${{ github.event.inputs.ref || github.ref_name }}
 
       - name: Encode apps.json
         shell: bash
+        env:
+          SOURCE_REF: ${{ github.event.inputs.ref || github.ref_name }}
         run: |
           set -euo pipefail
           apps_json_path="${GITHUB_WORKSPACE}/.github/helper/apps.json"
+          source_ref="${SOURCE_REF#refs/heads/}"
+          source_ref="${source_ref#refs/tags/}"
+          source_sha="$(git rev-parse HEAD)"
+          export APPS_JSON_PATH="${apps_json_path}"
+          export APP_REPOSITORY="${APP_REPOSITORY}"
+          export SOURCE_REF_NORMALIZED="${source_ref}"
+          export SOURCE_SHA="${source_sha}"
+          echo "Publishing app payload from ref ${SOURCE_REF_NORMALIZED} at commit ${SOURCE_SHA}"
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          path = Path(os.environ["APPS_JSON_PATH"])
+          apps = json.loads(path.read_text())
+          for app in apps:
+              if app.get("url") == os.environ["APP_REPOSITORY"]:
+                  app["branch"] = os.environ["SOURCE_REF_NORMALIZED"]
+                  app["cache_key"] = os.environ["SOURCE_SHA"]
+          path.write_text(json.dumps(apps, separators=(",", ":")))
+          PY
           echo "APPS_JSON_BASE64=$(base64 -w 0 < "${apps_json_path}")" >> "${GITHUB_ENV}"
 
       - name: Checkout frappe_docker
