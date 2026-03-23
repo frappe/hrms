@@ -82,9 +82,9 @@ website_generators = ["Job Opening"]
 website_route_rules = [
 	{"from_route": "/hrms/<path:app_path>", "to_route": "hrms"},
 	{"from_route": "/hr/<path:app_path>", "to_route": "roster"},
-	{"from_route": "/auth/ameide-oidc", "to_route": "ameide_oidc"},
-	{"from_route": "/auth/ameide-oidc/redirect", "to_route": "ameide_oidc_redirect"},
-	{"from_route": "/auth/ameide-oidc/logout", "to_route": "ameide_oidc_logout"},
+	{"from_route": "/auth/ameide-oidc", "to_route": "auth/ameide_oidc"},
+	{"from_route": "/auth/ameide-oidc/redirect", "to_route": "auth/ameide_oidc_redirect"},
+	{"from_route": "/auth/ameide-oidc/logout", "to_route": "auth/ameide_oidc_logout"},
 ]
 
 website_redirects = [

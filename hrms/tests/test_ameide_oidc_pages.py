@@ -99,15 +99,15 @@ class TestAmeideOidcPages(unittest.TestCase):
 	def test_hooks_expose_sales_equivalent_ameide_routes(self):
 		hooks = self._load_hooks()
 		self.assertIn(
-			{"from_route": "/auth/ameide-oidc", "to_route": "ameide_oidc"},
+			{"from_route": "/auth/ameide-oidc", "to_route": "auth/ameide_oidc"},
 			hooks.website_route_rules,
 		)
 		self.assertIn(
-			{"from_route": "/auth/ameide-oidc/redirect", "to_route": "ameide_oidc_redirect"},
+			{"from_route": "/auth/ameide-oidc/redirect", "to_route": "auth/ameide_oidc_redirect"},
 			hooks.website_route_rules,
 		)
 		self.assertIn(
-			{"from_route": "/auth/ameide-oidc/logout", "to_route": "ameide_oidc_logout"},
+			{"from_route": "/auth/ameide-oidc/logout", "to_route": "auth/ameide_oidc_logout"},
 			hooks.website_route_rules,
 		)
 		self.assertIn(
