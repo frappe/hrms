@@ -21,7 +21,7 @@ from frappe.utils import (
 )
 
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
-from erpnext.setup.doctype.holiday_list.holiday_list import is_half_holiday, is_holiday
+from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.employee_checkin.employee_checkin import (
@@ -33,6 +33,19 @@ from hrms.utils import get_date_range
 from hrms.utils.holiday_list import get_holiday_dates_between
 
 EMPLOYEE_CHUNK_SIZE = 50
+
+
+def has_half_day_holiday(holiday_list, attendance_date):
+	if not holiday_list or not frappe.db.has_column("Holiday", "half_day"):
+		return False
+
+	return bool(
+		frappe.db.exists(
+			"Holiday",
+			{"parent": holiday_list, "holiday_date": attendance_date, "half_day": 1},
+			cache=True,
+		)
+	)
 
 
 class ShiftType(Document):
@@ -232,7 +245,7 @@ class ShiftType(Document):
 
 	def is_half_holiday(self, employee, attendance_date):
 		holiday_list = self.get_holiday_list(employee, attendance_date)
-		if is_half_holiday(holiday_list, attendance_date):
+		if has_half_day_holiday(holiday_list, attendance_date):
 			return True
 		return False
 
