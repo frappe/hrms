@@ -111,7 +111,11 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2026-03-30 14:57:27.717762",
+=======
+ "modified": "2026-03-24 16:41:30.040870",
+>>>>>>> 3e9fee70 (fix: default permission for HR User role)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening Template",
@@ -129,6 +133,10 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "read": 1,
+   "role": "HR User"
   }
  ],
  "row_format": "Dynamic",

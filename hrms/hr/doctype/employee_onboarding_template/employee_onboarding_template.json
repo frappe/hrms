@@ -68,7 +68,7 @@
   }
  ],
  "links": [],
- "modified": "2024-03-27 13:09:40.119200",
+ "modified": "2026-03-24 17:11:10.175908",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Onboarding Template",
@@ -85,8 +85,16 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",

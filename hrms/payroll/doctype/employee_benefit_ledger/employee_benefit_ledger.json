@@ -137,7 +137,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-18 20:31:17.942493",
+ "modified": "2026-03-24 16:52:52.563748",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Benefit Ledger",
@@ -178,6 +178,11 @@
    "report": 1,
    "role": "Administrator",
    "share": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "HR User"
   }
  ],
  "row_format": "Dynamic",

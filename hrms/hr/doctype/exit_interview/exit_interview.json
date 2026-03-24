@@ -218,7 +218,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-27 13:09:43.272097",
+ "modified": "2026-03-24 17:28:00.876231",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Exit Interview",
@@ -236,8 +236,14 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "HR User"
   }
  ],
+ "row_format": "Dynamic",
  "sender_field": "email",
  "sort_field": "creation",
  "sort_order": "DESC",

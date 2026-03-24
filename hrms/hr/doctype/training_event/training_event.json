@@ -198,7 +198,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-27 13:10:53.965453",
+ "modified": "2026-03-24 17:45:41.639205",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Training Event",
@@ -220,8 +220,15 @@
    "share": 1,
    "submit": 1,
    "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "event_name",
  "show_name_in_global_search": 1,
  "sort_field": "creation",

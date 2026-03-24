@@ -62,7 +62,7 @@
   }
  ],
  "links": [],
- "modified": "2024-03-27 13:09:41.506556",
+ "modified": "2026-03-24 17:20:54.718151",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Skill Map",
@@ -79,9 +79,17 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "write": 1
   }
  ],
  "quick_entry": 1,
+ "row_format": "Dynamic",
  "sort_field": "creation",
  "sort_order": "ASC",
  "states": [],
