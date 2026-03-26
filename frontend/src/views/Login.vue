@@ -5,7 +5,10 @@
 				<div class="flex flex-col mx-auto gap-3 items-center">
 					<FrappeHRLogo class="h-8 w-8" />
 					<div class="text-3xl font-semibold text-gray-900 text-center">
-						{{ __("Login to Frappe HR") }}
+						{{ __("Horti Group") }}
+					</div>
+					<div class="text-base text-gray-500 text-center">
+						{{ __("Employee Field App") }}
 					</div>
 				</div>
 
