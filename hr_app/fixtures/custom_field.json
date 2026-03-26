@@ -1,0 +1,24 @@
+[
+  {
+    "doctype": "Custom Field",
+    "dt": "HR Settings",
+    "fieldname": "require_checkin_photo",
+    "fieldtype": "Check",
+    "label": "Require Checkin Photo",
+    "description": "If enabled, employees must capture a photo when checking in via the mobile app.",
+    "default": "0",
+    "insert_after": "allow_geolocation_tracking",
+    "module": "HR"
+  },
+  {
+    "doctype": "Custom Field",
+    "dt": "HR Settings",
+    "fieldname": "hide_accounting_features",
+    "fieldtype": "Check",
+    "label": "Hide Accounting Features",
+    "description": "If enabled, expense claims and employee advances are hidden in the mobile app.",
+    "default": "1",
+    "insert_after": "require_checkin_photo",
+    "module": "HR"
+  }
+]

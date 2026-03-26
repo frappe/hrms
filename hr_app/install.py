@@ -1,21 +1,32 @@
-import click
-
-from hr_app.setup import after_install as setup
+import frappe
 
 
 def after_install():
-	try:
-		print("Setting up Frappe HR...")
-		setup()
+	create_hr_settings_custom_fields()
 
-		click.secho("Thank you for installing Frappe HR!", fg="green")
 
-	except Exception as e:
-		BUG_REPORT_URL = "https://github.com/frappe/hrms/issues/new"
-		click.secho(
-			"Installation for Frappe HR app failed due to an error."
-			" Please try re-installing the app or"
-			f" report the issue on {BUG_REPORT_URL} if not resolved.",
-			fg="bright_red",
-		)
-		raise e
+def create_hr_settings_custom_fields():
+	fields = [
+		{
+			"dt": "HR Settings",
+			"fieldname": "require_checkin_photo",
+			"fieldtype": "Check",
+			"label": "Require Checkin Photo",
+			"description": "If enabled, employees must capture a photo when checking in via the mobile app.",
+			"default": "0",
+			"insert_after": "allow_geolocation_tracking",
+		},
+		{
+			"dt": "HR Settings",
+			"fieldname": "hide_accounting_features",
+			"fieldtype": "Check",
+			"label": "Hide Accounting Features",
+			"description": "If enabled, expense claims and employee advances are hidden in the mobile app.",
+			"default": "1",
+			"insert_after": "require_checkin_photo",
+		},
+	]
+
+	for field in fields:
+		if not frappe.db.exists("Custom Field", {"dt": field["dt"], "fieldname": field["fieldname"]}):
+			frappe.get_doc({"doctype": "Custom Field", **field}).insert()
