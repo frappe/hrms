@@ -202,7 +202,7 @@
    "link_fieldname": "job_requisition"
   }
  ],
- "modified": "2026-03-24 16:39:36.702349",
+ "modified": "2026-03-26 15:56:44.142590",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Requisition",
@@ -224,6 +224,18 @@
   {
    "read": 1,
    "role": "HR User"
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
   }
  ],
  "row_format": "Dynamic",

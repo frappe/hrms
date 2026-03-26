@@ -275,7 +275,11 @@
  "idx": 1,
  "is_published_field": "publish",
  "links": [],
+<<<<<<< HEAD
  "modified": "2026-04-14 15:47:13.527606",
+=======
+ "modified": "2026-03-26 15:59:46.904459",
+>>>>>>> c6e46fc0 (fix: default permission for HR manager role & add custom docperm for doctypes in frappe app)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
@@ -286,10 +290,33 @@
    "create": 1,
    "delete": 1,
    "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
    "print": 1,
    "read": 1,
    "report": 1,
    "role": "HR User",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
    "share": 1,
    "write": 1
   }

@@ -2,7 +2,7 @@
  "based_on": "",
  "chart_name": "Employees by Age",
  "chart_type": "Custom",
- "creation": "2022-08-22 19:07:51.906347",
+ "creation": "2025-07-15 13:15:12.774524",
  "custom_options": "{\n\t\"colors\": [\"#7cd6fd\"],\n\t\"barOptions\": {\"spaceRatio\": 0.5}\n}",
  "docstatus": 0,
  "doctype": "Dashboard Chart",
@@ -13,15 +13,26 @@
  "idx": 0,
  "is_public": 1,
  "is_standard": 1,
- "last_synced_on": "2022-08-22 19:00:02.464180",
- "modified": "2022-08-22 19:11:20.076166",
+ "last_synced_on": "2026-03-26 15:46:28.262525",
+ "modified": "2026-03-26 15:46:47.145092",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employees by Age",
  "number_of_groups": 0,
  "owner": "Administrator",
  "parent_document_type": "",
- "roles": [],
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HR Manager"
+  },
+  {
+   "role": "HR User"
+  }
+ ],
+ "show_values_over_chart": 0,
  "source": "Employees by Age",
  "time_interval": "Yearly",
  "timeseries": 0,
