@@ -838,3 +838,16 @@ def get_allowed_states_for_workflow(workflow: dict, user_id: str) -> list[str]:
 @frappe.whitelist()
 def get_permitted_fields_for_write(doctype: str) -> list[str]:
 	return get_permitted_fields(doctype, permission_type="write")
+
+
+# Daily Reports
+@frappe.whitelist()
+def get_daily_reports(limit: int = 50) -> list[dict]:
+	employee = get_current_employee()
+	return frappe.get_list(
+		"Daily Report",
+		filters={"employee": employee},
+		fields=["name", "date", "employee_name", "status", "file"],
+		order_by="date desc",
+		limit=limit,
+	)

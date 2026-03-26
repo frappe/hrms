@@ -8,6 +8,7 @@
   "date",
   "employee",
   "employee_name",
+  "status",
   "section_break_attachment",
   "file"
  ],
@@ -38,6 +39,15 @@
    "read_only": 1
   },
   {
+   "default": "Pending",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Pending\nApproved\nIncomplete\nRejected",
+   "permlevel": 1
+  },
+  {
    "fieldname": "section_break_attachment",
    "fieldtype": "Section Break",
    "label": "Attachment"
@@ -61,6 +71,7 @@
    "email": 1,
    "export": 0,
    "if_owner": 1,
+   "permlevel": 0,
    "print": 1,
    "read": 1,
    "report": 0,
@@ -73,6 +84,7 @@
    "delete": 1,
    "email": 1,
    "export": 1,
+   "permlevel": 0,
    "print": 1,
    "read": 1,
    "report": 1,
@@ -85,6 +97,33 @@
    "delete": 1,
    "email": 1,
    "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "permlevel": 0,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
    "print": 1,
    "read": 1,
    "report": 1,

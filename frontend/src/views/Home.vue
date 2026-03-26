@@ -23,6 +23,7 @@ import LeaveIcon from "@/components/icons/LeaveIcon.vue"
 import ExpenseIcon from "@/components/icons/ExpenseIcon.vue"
 import EmployeeAdvanceIcon from "@/components/icons/EmployeeAdvanceIcon.vue"
 import SalaryIcon from "@/components/icons/SalaryIcon.vue"
+import DailyReportIcon from "@/components/icons/DailyReportIcon.vue"
 
 const __ = inject("$translate")
 
@@ -33,6 +34,11 @@ const settings = createResource({
 
 const quickLinks = computed(() => {
 	const links = [
+		{
+			icon: markRaw(DailyReportIcon),
+			title: __("Daily Reports"),
+			route: "DailyReportList",
+		},
 		{
 			icon: markRaw(AttendanceIcon),
 			title: __("Request Attendance"),
@@ -51,7 +57,7 @@ const quickLinks = computed(() => {
 	]
 
 	if (!settings.data?.hide_accounting_features) {
-		links.splice(2, 0,
+		links.splice(3, 0,
 			{
 				icon: markRaw(ExpenseIcon),
 				title: __("Claim an Expense"),
