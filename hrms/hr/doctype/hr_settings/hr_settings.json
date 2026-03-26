@@ -44,6 +44,8 @@
   "attendance_settings_section",
   "allow_employee_checkin_from_mobile_app",
   "allow_geolocation_tracking",
+  "require_checkin_photo",
+  "hide_accounting_features",
   "tenure_tab",
   "employee_exit_settings_section",
   "exit_questionnaire_web_form",
@@ -292,6 +294,18 @@
    "fieldname": "allow_geolocation_tracking",
    "fieldtype": "Check",
    "label": "Allow Geolocation Tracking"
+  },
+  {
+   "default": "0",
+   "fieldname": "require_checkin_photo",
+   "fieldtype": "Check",
+   "label": "Require Photo on Check-in (HortiHub)"
+  },
+  {
+   "default": "1",
+   "fieldname": "hide_accounting_features",
+   "fieldtype": "Check",
+   "label": "Hide Accounting Features in Mobile App (HortiHub)"
   },
   {
    "fieldname": "attendance_settings_section",

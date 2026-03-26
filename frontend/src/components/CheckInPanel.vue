@@ -69,7 +69,45 @@
 				</div>
 			</template>
 
-			<Button :loading="checkins.insert.loading" variant="solid" class="w-full py-5 text-sm disabled:bg-gray-700" @click="submitLog(nextAction.action)">
+			<!-- Camera photo capture -->
+			<div class="w-full">
+				<div v-if="photoDataUrl" class="relative">
+					<img :src="photoDataUrl" class="w-full rounded object-cover max-h-48" />
+					<button
+						class="absolute top-2 right-2 bg-white rounded-full p-1 shadow"
+						@click="clearPhoto"
+					>
+						<FeatherIcon name="x" class="h-4 w-4 text-gray-700" />
+					</button>
+				</div>
+				<label v-else class="cursor-pointer block">
+					<div
+						class="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded p-4 gap-2"
+						:class="settings.data?.require_checkin_photo ? 'border-orange-400' : ''"
+					>
+						<FeatherIcon name="camera" class="h-6 w-6 text-gray-500" />
+						<span class="text-sm text-gray-500">
+							{{ settings.data?.require_checkin_photo ? __("Photo Required – Tap to Take") : __("Take Photo (Optional)") }}
+						</span>
+					</div>
+					<input
+						ref="cameraInput"
+						type="file"
+						accept="image/*"
+						capture="environment"
+						class="hidden"
+						@change="handlePhotoCapture"
+					/>
+				</label>
+			</div>
+
+			<Button
+				:loading="checkins.insert.loading"
+				:disabled="settings.data?.require_checkin_photo && !photoDataUrl"
+				variant="solid"
+				class="w-full py-5 text-sm disabled:bg-gray-700"
+				@click="submitLog(nextAction.action)"
+			>
 				{{ __("Confirm {0}", [nextAction.label]) }}
 			</Button>
 		</div>
@@ -77,7 +115,7 @@
 </template>
 
 <script setup>
-import { createResource, createListResource, toast, FeatherIcon } from "frappe-ui"
+import { createResource, createListResource, toast, FeatherIcon, frappeRequest } from "frappe-ui"
 import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
 
@@ -93,6 +131,9 @@ const checkinTimestamp = ref(null)
 const latitude = ref(0)
 const longitude = ref(0)
 const locationStatus = ref("")
+const photoDataUrl = ref(null)
+const cameraInput = ref(null)
+
 const settings = createResource({
 	url: "hrms.api.get_hr_settings",
 	auto: true,
@@ -155,6 +196,40 @@ const handleEmployeeCheckin = () => {
 	}
 }
 
+function handlePhotoCapture(event) {
+	const file = event.target.files[0]
+	if (!file) return
+	const reader = new FileReader()
+	reader.onload = (e) => {
+		photoDataUrl.value = e.target.result
+	}
+	reader.readAsDataURL(file)
+}
+
+function clearPhoto() {
+	photoDataUrl.value = null
+	if (cameraInput.value) cameraInput.value.value = ""
+}
+
+async function uploadCheckinPhoto(checkinName) {
+	if (!photoDataUrl.value) return
+	const base64Content = photoDataUrl.value.split(",")[1]
+	try {
+		await frappeRequest({
+			url: "hrms.api.upload_base64_file",
+			method: "POST",
+			params: {
+				content: base64Content,
+				filename: `checkin_${checkinName}.jpg`,
+				dt: DOCTYPE,
+				dn: checkinName,
+			},
+		})
+	} catch (err) {
+		console.error("Failed to upload check-in photo:", err)
+	}
+}
+
 const submitLog = (logType) => {
 	const actionLabel = logType === "IN" ? __("Check-in") : __("Check-out")
 
@@ -167,7 +242,14 @@ const submitLog = (logType) => {
 			longitude: longitude.value,
 		},
 		{
-			onSuccess() {
+			async onSuccess() {
+				// reload to get the newly created checkin name for photo attachment
+				await checkins.reload()
+				const latestCheckin = checkins.data?.[0]
+				if (photoDataUrl.value && latestCheckin) {
+					await uploadCheckinPhoto(latestCheckin.name)
+				}
+				photoDataUrl.value = null
 				modalController.dismiss()
 				toast({
 					title: __("Success"),

@@ -92,7 +92,19 @@ def get_hr_settings() -> dict:
 	return frappe._dict(
 		allow_employee_checkin_from_mobile_app=settings.allow_employee_checkin_from_mobile_app,
 		allow_geolocation_tracking=settings.allow_geolocation_tracking,
+		require_checkin_photo=settings.require_checkin_photo,
+		hide_accounting_features=settings.hide_accounting_features,
 	)
+
+
+@frappe.whitelist()
+def update_horthub_settings(fieldname: str, value: int) -> None:
+	allowed_fields = {"require_checkin_photo", "hide_accounting_features"}
+	if fieldname not in allowed_fields:
+		frappe.throw(_("Invalid setting: {0}").format(fieldname), frappe.PermissionError)
+
+	frappe.only_for(["HR Manager", "System Manager"])
+	frappe.db.set_single_value("HR Settings", fieldname, value)
 
 
 # Notifications

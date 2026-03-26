@@ -24,10 +24,10 @@ export default defineConfig({
 			},
 			manifest: {
 				display: "standalone",
-				name: "Frappe HR",
-				short_name: "Frappe HR",
+				name: "HortiHub",
+				short_name: "HortiHub",
 				start_url: "/hrms",
-				description: "Everyday HR & Payroll operations at your fingertips",
+				description: "HortiHub - HR operations at your fingertips",
 				theme_color: "#ffffff",
 				icons: [
 					{
