@@ -28,3 +28,15 @@ body {
 	-ms-overflow-style: none; /* IE and Edge */
 	scrollbar-width: none; /* Firefox */
 }
+
+/* HortiApp green theme: solid action buttons */
+button.bg-gray-900 {
+	background-color: #166534 !important;
+}
+button.bg-gray-900:hover,
+button.hover\:bg-gray-700:hover {
+	background-color: #15803d !important;
+}
+button.active\:bg-gray-600:active {
+	background-color: #14532d !important;
+}

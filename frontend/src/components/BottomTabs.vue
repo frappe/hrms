@@ -11,8 +11,8 @@
 			:class="[
 				'bg-white text-xs space-y-1.5 !hover:border-gray-300 !hover:text-gray-700 transition active:scale-95',
 				route.path === item.route
-					? 'border-gray-900 text-gray-800 font-semibold'
-					: 'text-gray-600 font-normal',
+					? 'border-green-700 text-green-700 font-semibold'
+					: 'text-gray-500 font-normal',
 			]"
 		>
 			<component :is="item.icon" class="h-5 w-5" />

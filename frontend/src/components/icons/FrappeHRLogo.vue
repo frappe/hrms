@@ -1,29 +1,41 @@
 <template>
 	<svg
 		xmlns="http://www.w3.org/2000/svg"
-		width="117"
-		height="117"
 		viewBox="0 0 117 117"
 		fill="none"
 	>
-		<g clip-path="url(#clip0_0_45)">
-			<path
-				d="M93.4394 0H23.5606C10.5485 0 0 10.5485 0 23.5606V93.4394C0 106.452 10.5485 117 23.5606 117H93.4394C106.452 117 117 106.452 117 93.4394V23.5606C117 10.5485 106.452 0 93.4394 0Z"
-				fill="#A1EEC9"
-			/>
-			<path
-				d="M56.3316 68.0044C45.408 68.0044 36.4657 59.1156 36.4657 48.1385V46.425L47.068 46.5321L46.9609 48.1385C46.9609 53.279 51.1376 57.5092 56.3316 57.5092H60.6154C65.7559 57.5092 69.9861 53.3325 69.9861 48.1385V43.8547C69.9861 38.7142 65.8094 34.484 60.6154 34.484H36.3586L36.4657 23.8817L60.6154 23.9888C71.5389 23.9888 80.4813 32.8776 80.4813 43.8547V48.1385C80.4813 59.062 71.5925 68.0044 60.6154 68.0044H56.3316Z"
-				fill="#0B313A"
-			/>
-			<path
-				d="M32.1281 85.0856C39.4105 78.7135 48.7812 75.1258 58.5267 75.1258C68.2723 75.1258 77.643 78.7135 84.9254 85.2462L77.8572 93.0105C72.5025 88.2448 65.6485 85.621 58.5267 85.621C51.405 85.621 44.4974 88.2448 39.1428 93.064L32.1817 85.0856H32.1281Z"
-				fill="#0B313A"
-			/>
-		</g>
-		<defs>
-			<clipPath id="clip0_0_45">
-				<rect width="117" height="117" fill="white" />
-			</clipPath>
-		</defs>
+		<!-- Forest green rounded background -->
+		<rect width="117" height="117" rx="24" fill="#166534" />
+		<!-- Stylised plant sprout: two leaves + stem -->
+		<path
+			d="M58.5 90V52"
+			stroke="#bbf7d0"
+			stroke-width="5"
+			stroke-linecap="round"
+		/>
+		<!-- Left leaf -->
+		<path
+			d="M58.5 65C58.5 65 48 58 36 62c4 10 14 16 22.5 10"
+			fill="#4ade80"
+			stroke="#4ade80"
+			stroke-width="2"
+			stroke-linejoin="round"
+		/>
+		<!-- Right leaf -->
+		<path
+			d="M58.5 52C58.5 52 69 45 81 49c-4 10-14 16-22.5 10"
+			fill="#86efac"
+			stroke="#86efac"
+			stroke-width="2"
+			stroke-linejoin="round"
+		/>
+		<!-- Small top leaf -->
+		<path
+			d="M58.5 38C58.5 38 64 30 74 30c-1 9-7 14-15.5 12"
+			fill="#bbf7d0"
+			stroke="#bbf7d0"
+			stroke-width="2"
+			stroke-linejoin="round"
+		/>
 	</svg>
 </template>
