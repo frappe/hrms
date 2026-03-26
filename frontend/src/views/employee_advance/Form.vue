@@ -47,7 +47,7 @@ const companyCurrency = computed(() =>
 
 // get form fields
 const formFields = createResource({
-	url: "hrms.api.get_doctype_fields",
+	url: "hr_app.api.get_doctype_fields",
 	params: { doctype: "Employee Advance" },
 	transform(data) {
 		const fields = getFilteredFields(data)
@@ -61,7 +61,7 @@ const formFields = createResource({
 formFields.reload()
 
 const employeeCurrency = createResource({
-	url: "hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment.get_employee_currency",
+	url: "hr_app.payroll.doctype.salary_structure_assignment.salary_structure_assignment.get_employee_currency",
 	params: { employee: employee.data.name },
 	onSuccess(data) {
 		employeeAdvance.value.currency = data
@@ -77,7 +77,7 @@ const exchangeRate = createResource({
 })
 
 const advanceAccount = createResource({
-	url: "hrms.api.get_advance_account",
+	url: "hr_app.api.get_advance_account",
 	params: { company: employeeAdvance.value.company },
 	onSuccess(data) {
 		employeeAdvance.value.advance_account = data

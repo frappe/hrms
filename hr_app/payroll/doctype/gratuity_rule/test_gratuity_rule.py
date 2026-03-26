@@ -1,0 +1,9 @@
+# Copyright (c) 2020, Frappe Technologies Pvt. Ltd. and Contributors
+# See license.txt
+
+# import frappe
+from hr_app.tests.utils import HRMSTestSuite
+
+
+class TestGratuityRule(HRMSTestSuite):
+	pass

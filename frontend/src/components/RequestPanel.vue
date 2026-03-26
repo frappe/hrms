@@ -36,7 +36,7 @@ const socket = inject("$socket")
 const TAB_BUTTONS = ["My Requests", "Team Requests"] // __("My Requests"), __("Team Requests")
 
 const settings = createResource({
-	url: "hrms.api.get_hr_settings",
+	url: "hr_app.api.get_hr_settings",
 	auto: true,
 })
 

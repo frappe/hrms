@@ -16,7 +16,7 @@ export class FileAttachment {
 		return new Promise(async (resolve, reject) => {
 			const reader = getFileReader()
 			const uploader = createResource({
-				url: "hrms.api.upload_base64_file",
+				url: "hr_app.api.upload_base64_file",
 				onSuccess: (fileDoc) => resolve(fileDoc),
 				onError: (error) => {
 					toast({
@@ -50,7 +50,7 @@ export class FileAttachment {
 
 	delete() {
 		return createResource({
-			url: "hrms.api.delete_attachment",
+			url: "hr_app.api.delete_attachment",
 			onSuccess: () => {
 				console.log("Deleted successfully ✅")
 			},
@@ -73,7 +73,7 @@ const hasWords = (list, status) => list.some((word) => status.includes(word))
 
 export async function guessStatusColor(doctype, status) {
 	const statesResource = createResource({
-		url: "hrms.api.get_doctype_states",
+		url: "hr_app.api.get_doctype_states",
 		params: { doctype: doctype },
 	})
 

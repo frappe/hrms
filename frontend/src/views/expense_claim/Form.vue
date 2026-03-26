@@ -96,7 +96,7 @@ const currency = computed(() => getCompanyCurrency(expenseClaim.value.company))
 
 // get form fields
 const formFields = createResource({
-	url: "hrms.api.get_doctype_fields",
+	url: "hr_app.api.get_doctype_fields",
 	params: { doctype: "Expense Claim" },
 	transform(data) {
 		let fields = getFilteredFields(data)
@@ -115,7 +115,7 @@ formFields.reload()
 
 // resources
 const advances = createResource({
-	url: "hrms.hr.doctype.expense_claim.expense_claim.get_advances",
+	url: "hr_app.hr.doctype.expense_claim.expense_claim.get_advances",
 	params: { employee: currEmployee.value },
 	auto: true,
 	onSuccess(data) {
@@ -149,7 +149,7 @@ const advances = createResource({
 })
 
 const expenseApproverDetails = createResource({
-	url: "hrms.api.get_expense_approval_details",
+	url: "hr_app.api.get_expense_approval_details",
 	params: { employee: currEmployee.value },
 	onSuccess(data) {
 		setExpenseApprover(data)
@@ -157,7 +157,7 @@ const expenseApproverDetails = createResource({
 })
 
 const companyDetails = createResource({
-	url: "hrms.api.get_company_cost_center_and_expense_account",
+	url: "hr_app.api.get_company_cost_center_and_expense_account",
 	params: { company: expenseClaim.value.company },
 	onSuccess(data) {
 		expenseClaim.value.cost_center = data?.cost_center

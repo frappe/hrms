@@ -72,7 +72,7 @@ import {
 const dayjs = inject("$dayjs")
 
 const shifts = createResource({
-	url: "hrms.api.get_shifts",
+	url: "hr_app.api.get_shifts",
 	auto: true,
 	cache: "hrms:shifts",
 	transform: (data) => {

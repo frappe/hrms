@@ -119,7 +119,7 @@ const DAYS = [
 
 //resources
 const calendarEvents = createResource({
-	url: "hrms.api.get_attendance_calendar_events",
+	url: "hr_app.api.get_attendance_calendar_events",
 	auto: true,
 	cache: "hrms:attendance_calendar_events",
 	makeParams() {

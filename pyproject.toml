@@ -1,5 +1,5 @@
 [project]
-name = "hrms"
+name = "hr_app"
 authors = [
     { name = "Frappe Technologies Pvt Ltd", email = "developers@frappe.io" },
 ]
@@ -47,7 +47,7 @@ docstring-code-format = true
 [tool.ruff.lint.isort.sections]
 "frappe" = ["frappe"]
 "erpnext" = ["erpnext"]
-"hrms" = ["hrms"]
+"hr_app" = ["hr_app"]
 
 [tool.ruff.lint.isort]
 section-order = [
@@ -56,7 +56,7 @@ section-order = [
     "third-party",
     "frappe",
     "erpnext",
-    "hrms",
+    "hr_app",
     "first-party",
     "local-folder",
 ]

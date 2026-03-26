@@ -198,7 +198,7 @@ function resetSelectedItem() {
 }
 
 const expensesTableFields = createResource({
-	url: "hrms.api.get_doctype_fields",
+	url: "hr_app.api.get_doctype_fields",
 	params: { doctype: "Expense Claim Detail" },
 	transform(data) {
 		const excludeFields = ["description_sb", "amounts_sb"]

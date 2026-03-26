@@ -135,7 +135,7 @@ const photoDataUrl = ref(null)
 const cameraInput = ref(null)
 
 const settings = createResource({
-	url: "hrms.api.get_hr_settings",
+	url: "hr_app.api.get_hr_settings",
 	auto: true,
 })
 
@@ -216,7 +216,7 @@ async function uploadCheckinPhoto(checkinName) {
 	const base64Content = photoDataUrl.value.split(",")[1]
 	try {
 		await frappeRequest({
-			url: "hrms.api.upload_base64_file",
+			url: "hr_app.api.upload_base64_file",
 			method: "POST",
 			params: {
 				content: base64Content,

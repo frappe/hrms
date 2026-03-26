@@ -47,7 +47,7 @@ const transformShiftRequests = (data) =>
 	})
 
 export const myAttendanceRequests = createResource({
-	url: "hrms.api.get_attendance_requests",
+	url: "hr_app.api.get_attendance_requests",
 	params: {
 		employee: employeeResource.data.name,
 		limit: 10,
@@ -67,7 +67,7 @@ const transformAttendanceRequests = (data) => {
 		})
 }
 export const myShiftRequests = createResource({
-	url: "hrms.api.get_shift_requests",
+	url: "hr_app.api.get_shift_requests",
 	params: {
 		employee: employeeResource.data.name,
 		limit: 10,
@@ -80,7 +80,7 @@ export const myShiftRequests = createResource({
 })
 
 export const teamShiftRequests = createResource({
-	url: "hrms.api.get_shift_requests",
+	url: "hr_app.api.get_shift_requests",
 	params: {
 		employee: employeeResource.data.name,
 		approver_id: employeeResource.data.user_id,
@@ -94,7 +94,7 @@ export const teamShiftRequests = createResource({
 	},
 })
 export const teamAttendanceRequests = createResource({
-	url: "hrms.api.get_attendance_requests",
+	url: "hr_app.api.get_attendance_requests",
 	params: {
 		employee: employeeResource.data.name,
 		for_approval: 1,

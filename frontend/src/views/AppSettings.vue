@@ -156,7 +156,7 @@ const description = computed(() => {
 
 onMounted(async () => {
 	try {
-		const data = await frappeRequest({ url: "hrms.api.get_hr_settings" })
+		const data = await frappeRequest({ url: "hr_app.api.get_hr_settings" })
 		hrSettings.require_checkin_photo = !!data.require_checkin_photo
 		hrSettings.hide_accounting_features = !!data.hide_accounting_features
 		hrSettingsLoaded.value = true
@@ -170,7 +170,7 @@ async function updateHRSetting(fieldname, value) {
 	hrSettings[fieldname] = value
 	try {
 		await frappeRequest({
-			url: "hrms.api.update_horthub_settings",
+			url: "hr_app.api.update_horthub_settings",
 			method: "POST",
 			params: { fieldname, value: value ? 1 : 0 },
 		})

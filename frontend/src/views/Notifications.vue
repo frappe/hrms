@@ -125,7 +125,7 @@ const allowPushNotifications = computed(
 )
 
 const markAllAsRead = createResource({
-	url: "hrms.api.mark_all_notifications_as_read",
+	url: "hr_app.api.mark_all_notifications_as_read",
 	onSuccess() {
 		notifications.reload()
 	},

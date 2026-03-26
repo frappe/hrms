@@ -27,7 +27,7 @@ import SalaryIcon from "@/components/icons/SalaryIcon.vue"
 const __ = inject("$translate")
 
 const settings = createResource({
-	url: "hrms.api.get_hr_settings",
+	url: "hr_app.api.get_hr_settings",
 	auto: true,
 })
 

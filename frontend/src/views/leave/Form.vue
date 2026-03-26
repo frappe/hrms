@@ -41,7 +41,7 @@ const leaveApplication = ref({})
 
 // get form fields
 const formFields = createResource({
-	url: "hrms.api.get_doctype_fields",
+	url: "hr_app.api.get_doctype_fields",
 	params: { doctype: "Leave Application" },
 	transform(data) {
 		let fields = getFilteredFields(data)
@@ -62,7 +62,7 @@ const formFields = createResource({
 formFields.reload()
 
 const leaveApprovalDetails = createResource({
-	url: "hrms.api.get_leave_approval_details",
+	url: "hr_app.api.get_leave_approval_details",
 	params: { employee: currEmployee.value },
 	onSuccess(data) {
 		setLeaveApprovers(data)
@@ -70,7 +70,7 @@ const leaveApprovalDetails = createResource({
 })
 
 const leaveTypes = createResource({
-	url: "hrms.api.get_leave_types",
+	url: "hr_app.api.get_leave_types",
 	params: {
 		employee: currEmployee.value,
 		date: today,
@@ -188,7 +188,7 @@ function setTotalLeaveDays() {
 	if (!areValuesSet()) return
 
 	const leaveDays = createResource({
-		url: "hrms.hr.doctype.leave_application.leave_application.get_number_of_leave_days",
+		url: "hr_app.hr.doctype.leave_application.leave_application.get_number_of_leave_days",
 		params: {
 			employee: currEmployee.value,
 			leave_type: leaveApplication.value.leave_type,
@@ -209,7 +209,7 @@ function setLeaveBalance() {
 	if (!areValuesSet()) return
 
 	const leaveBalance = createResource({
-		url: "hrms.hr.doctype.leave_application.leave_application.get_leave_balance_on",
+		url: "hr_app.hr.doctype.leave_application.leave_application.get_leave_balance_on",
 		params: {
 			employee: currEmployee.value,
 			date: leaveApplication.value.from_date,
