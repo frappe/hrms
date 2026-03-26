@@ -80,7 +80,7 @@ const routes = [
 ]
 
 const router = createRouter({
-	history: createWebHistory("/hrms"),
+	history: createWebHistory("/hr-app"),
 	routes,
 })
 

@@ -26,7 +26,7 @@ export default defineConfig({
 				display: "standalone",
 				name: "HortiHub",
 				short_name: "HortiHub",
-				start_url: "/hrms",
+				start_url: "/hr-app",
 				description: "HortiHub - HR operations at your fingertips",
 				theme_color: "#ffffff",
 				icons: [
