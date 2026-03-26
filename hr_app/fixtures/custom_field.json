@@ -1,6 +1,7 @@
 [
   {
     "doctype": "Custom Field",
+    "name": "HR Settings-require_checkin_photo",
     "dt": "HR Settings",
     "fieldname": "require_checkin_photo",
     "fieldtype": "Check",
@@ -12,6 +13,7 @@
   },
   {
     "doctype": "Custom Field",
+    "name": "HR Settings-hide_accounting_features",
     "dt": "HR Settings",
     "fieldname": "hide_accounting_features",
     "fieldtype": "Check",
