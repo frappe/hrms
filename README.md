@@ -94,7 +94,7 @@ Use the following credentials to log in:
 
 1. Set up bench by following the [Installation Steps](https://docs.frappe.io/framework/user/en/installation) and start the server and keep it running
 	```sh
-	$ bench start
+	bench start
 	```
 	For Debian and Ubuntu derivatives, install the distro-specific `wkhtmltox` package from the official [wkhtmltopdf packaging releases](https://github.com/wkhtmltopdf/packaging/releases/tag/0.12.6.1-3) (`bookworm` for Debian/Parrot, `jammy` for Ubuntu) instead of using the placeholder `wkhtmltox_file.deb` command from the generic downloads page.
 2. In a separate terminal window, run the following commands

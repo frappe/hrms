@@ -44,9 +44,9 @@ install_whktml() {
         wkhtml_package="wkhtmltox_0.12.6.1-3.bookworm_${arch}.deb"
     fi
 
-    if [ -n "$wkhtml_package" ]; then
-        wget -O "/tmp/${wkhtml_package}" "https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/${wkhtml_package}"
-        sudo apt install -y xvfb xfonts-75dpi xfonts-base "/tmp/${wkhtml_package}"
+    if [ -n "$wkhtml_package" ] \
+       && wget -O "/tmp/${wkhtml_package}" "https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/${wkhtml_package}" \
+       && sudo apt install -y xvfb xfonts-75dpi xfonts-base "/tmp/${wkhtml_package}"; then
         return
     fi
 
