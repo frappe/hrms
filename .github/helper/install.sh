@@ -33,6 +33,23 @@ mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "GRANT ALL PRIVILEGES ON 
 mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "FLUSH PRIVILEGES"
 
 install_whktml() {
+    local arch os_like wkhtml_package
+
+    arch="$(dpkg --print-architecture)"
+    os_like="$(. /etc/os-release && printf '%s %s' "$ID" "$ID_LIKE")"
+
+    if echo "$os_like" | grep -Eq '(^| )ubuntu( |$)'; then
+        wkhtml_package="wkhtmltox_0.12.6.1-3.jammy_${arch}.deb"
+    elif echo "$os_like" | grep -Eq '(^| )debian( |$)'; then
+        wkhtml_package="wkhtmltox_0.12.6.1-3.bookworm_${arch}.deb"
+    fi
+
+    if [ -n "$wkhtml_package" ]; then
+        wget -O "/tmp/${wkhtml_package}" "https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/${wkhtml_package}"
+        sudo apt install -y xvfb xfonts-75dpi xfonts-base "/tmp/${wkhtml_package}"
+        return
+    fi
+
     wget -O /tmp/wkhtmltox.tar.xz https://github.com/frappe/wkhtmltopdf/raw/master/wkhtmltox-0.12.3_linux-generic-amd64.tar.xz
     tar -xf /tmp/wkhtmltox.tar.xz -C /tmp
     sudo mv /tmp/wkhtmltox/bin/wkhtmltopdf /usr/local/bin/wkhtmltopdf
