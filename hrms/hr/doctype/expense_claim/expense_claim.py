@@ -724,7 +724,7 @@ def get_advances(expense_claim: str | dict | Document, advance_id: str | None = 
 			& (advance.status.notin(["Claimed", "Returned", "Partly Claimed and Returned"]))
 		)
 	else:
-		query = query.where(advance.name == advance_id)
+		query = query.where((advance.name == advance_id) & (advance.employee == employee))
 
 	advances = query.run(as_dict=True)
 

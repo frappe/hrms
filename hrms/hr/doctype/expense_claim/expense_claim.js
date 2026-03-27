@@ -576,8 +576,13 @@ frappe.ui.form.on("Expense Claim Advance", {
 					advance_id: child.employee_advance,
 				},
 				callback: function (r, rt) {
+<<<<<<< HEAD
 					if (r.message) {
 						child.employee_advance = r.message[0].employee_advance;
+=======
+					if (r.message && r.message.length > 0) {
+						child.employee_advance = r.message[0].name;
+>>>>>>> c8be6ec76 (fix(employee_advance): add validation to fetch only selected employee advance)
 						child.posting_date = r.message[0].posting_date;
 						child.advance_account = r.message[0].advance_account;
 						child.advance_paid = r.message[0].advance_paid;
@@ -595,6 +600,12 @@ frappe.ui.form.on("Expense Claim Advance", {
 						);
 						set_in_company_currency(frm, child, ["allocated_amount"]);
 						refresh_field("advances");
+					} else {
+						frappe.throw(
+							__("Selected employee advance is not of employee {0}", [
+								frm.doc.employee,
+							]),
+						);
 					}
 				},
 			});
