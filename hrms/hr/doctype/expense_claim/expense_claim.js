@@ -601,6 +601,9 @@ frappe.ui.form.on("Expense Claim Advance", {
 						set_in_company_currency(frm, child, ["allocated_amount"]);
 						refresh_field("advances");
 					} else {
+						frm.doc.advances = [];
+						frappe.validated = false;
+						refresh_field("advances");
 						frappe.throw(
 							__("Selected employee advance is not of employee {0}", [
 								frm.doc.employee,
