@@ -164,7 +164,6 @@ class TestExpenseClaim(HRMSTestSuite):
 	def test_other_employee_advances_link_with_claim(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import make_employee_advance
 
-		frappe.db.delete("Employee Advance")
 		payable_account = get_payable_account("_Test Company")
 
 		employee = make_employee("test_employee@employee.advance", "_Test Company")
