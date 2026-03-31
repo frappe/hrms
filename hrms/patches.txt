@@ -37,6 +37,7 @@ hrms.patches.v15_0.rename_claim_date_to_payroll_date_in_employee_benefit_claim
 hrms.patches.v15_0.add_leave_type_permission_for_ess
 hrms.patches.v15_0.remove_ess_user_type_limit
 <<<<<<< HEAD
+<<<<<<< HEAD
 hrms.patches.v15_0.update_approver_custom_fields
 hrms.patches.v16_0.create_custom_field_for_employee_advance_in_employee_master
 hrms.patches.v16_0.delete_old_workspaces #2026-01-09
@@ -49,4 +50,9 @@ hrms.patches.v16_0.remove_ess_user_type_limit
 =======
 hrms.patches.v15_0.remove_other_employees_advance_link_in_expense_claim
 >>>>>>> 49d5b6d01 (patch: patch: remove invalid employee advance links from claims)
+<<<<<<< HEAD
 >>>>>>> 5ea5ed48 (patch: patch: remove invalid employee advance links from claims)
+=======
+=======
+>>>>>>> 116e0065d (Revert "patch: patch: remove invalid employee advance links from claims")
+>>>>>>> 07aaf2cc (Revert "patch: patch: remove invalid employee advance links from claims")
