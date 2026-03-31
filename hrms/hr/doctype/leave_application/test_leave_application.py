@@ -1422,6 +1422,61 @@ class TestLeaveApplication(HRMSTestSuite):
 		application.reload()
 		self.assertEqual(application.status, "Cancelled")
 
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	def test_attendance_marking_on_leave_application_with_two_half_day_leaves(self):
+		employee = get_employee()
+		date = getdate()
+		first_sunday = get_first_sunday(self.holiday_list, for_date=get_year_start(date))
+		leave_date = add_days(first_sunday, 1)
+
+		leave_type_1 = create_leave_type(leave_type_name="_Test Half Day Leave Type 1")
+		leave_type_2 = create_leave_type(leave_type_name="_Test Half Day Leave Type 2")
+
+		make_allocation_record(
+			employee=employee.name,
+			leave_type=leave_type_1.name,
+			from_date=get_year_start(date),
+			to_date=get_year_ending(date),
+			leaves=10,
+		)
+		make_allocation_record(
+			employee=employee.name,
+			leave_type=leave_type_2.name,
+			from_date=get_year_start(date),
+			to_date=get_year_ending(date),
+			leaves=10,
+		)
+
+		first_leave = make_leave_application(
+			employee.name,
+			leave_date,
+			leave_date,
+			leave_type_1.name,
+			half_day=1,
+			half_day_date=leave_date,
+		)
+		second_leave = make_leave_application(
+			employee.name,
+			leave_date,
+			leave_date,
+			leave_type_2.name,
+			half_day=1,
+			half_day_date=leave_date,
+		)
+
+		attendance_records = frappe.get_all(
+			"Attendance",
+			filters={"employee": employee.name, "attendance_date": leave_date, "docstatus": ("!=", 2)},
+			fields=["status", "leave_type", "leave_application"],
+		)
+
+		self.assertEqual(len(attendance_records), 2)
+		for record in attendance_records:
+			self.assertEqual(record.status, "Half Day")
+
+		total_leaves = first_leave.total_leave_days + second_leave.total_leave_days
+		self.assertEqual(total_leaves, 1)
+
 
 def create_carry_forwarded_allocation(employee, leave_type, date=None):
 	date = date or nowdate()

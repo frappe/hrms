@@ -322,15 +322,29 @@ class LeaveApplication(Document, PWANotificationsMixin):
 
 		for dt in daterange(getdate(self.from_date), getdate(self.to_date)):
 			date = dt.strftime("%Y-%m-%d")
-			# check for existing attenadnce absent or if half day with half day status absent,
-			attendance_name = frappe.db.exists(
-				"Attendance",
-				dict(
-					employee=self.employee,
-					attendance_date=date,
-					docstatus=("!=", 2),
-				),
-			)
+			# check for existing attendance absent or if half day with half day status absent,
+
+			# For handling case of two half day leaves on same day, with different leave types
+			if self.half_day and dt == getdate(self.half_day_date):
+				attendance_name = frappe.db.exists(
+					"Attendance",
+					dict(
+						employee=self.employee,
+						attendance_date=date,
+						docstatus=("!=", 2),
+						leave_type=self.leave_type,
+					),
+				)
+			else:
+				attendance_name = frappe.db.exists(
+					"Attendance",
+					dict(
+						employee=self.employee,
+						attendance_date=date,
+						docstatus=("!=", 2),
+					),
+				)
+
 			# don't mark attendance for holidays
 			# if leave type does not include holidays within leaves as leaves
 			if date in holiday_dates:

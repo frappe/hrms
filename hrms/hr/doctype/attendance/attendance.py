@@ -86,6 +86,27 @@ class Attendance(Document):
 		self.validate_employee_status()
 		self.check_leave_record()
 
+	def on_submit(self):
+		# check for two half day leaves
+		self.check_and_update_half_day_status_for_overlapping_leaves()
+
+	def check_and_update_half_day_status_for_overlapping_leaves(self):
+		if self.status == "Half Day":
+			attendance_record = frappe.db.exists(
+				"Attendance",
+				{
+					"employee": self.employee,
+					"attendance_date": self.attendance_date,
+					"status": "Half Day",
+					"docstatus": 1,
+					"name": ("!=", self.name),
+				},
+			)
+
+			if attendance_record:
+				frappe.db.set_value("Attendance", attendance_record, "half_day_status", "Absent")
+				self.db_set("half_day_status", "Absent")
+
 	def on_cancel(self):
 		self.unlink_attendance_from_checkins()
 
