@@ -426,6 +426,13 @@ hrms.HierarchyChart = class {
 		node.$children.show();
 		$(`path[data-parent="${node.id}"]`).show();
 		node.expanded = true;
+
+		// Push this parent away from the next sibling parent so their
+		// connector lines occupy distinct vertical bands.
+		if (child_nodes && child_nodes.length > 1) {
+			const extra = (child_nodes.length - 1) * 88;
+			node.$link.closest(".child-node").css("margin-bottom", extra + "px");
+		}
 	}
 
 	add_node(node, data) {
