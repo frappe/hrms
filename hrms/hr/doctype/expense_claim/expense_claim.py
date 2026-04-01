@@ -496,33 +496,11 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		precision = self.precision("total_advance_amount")
 
 		for d in self.get("advances"):
-			self.round_floats_in(d)
-<<<<<<< HEAD
-=======
-
-			ref_doc = frappe.db.get_value(
-				"Employee Advance",
-				d.employee_advance,
-				[
-					"employee",
-					"posting_date",
-					"paid_amount",
-					"claimed_amount",
-					"return_amount",
-					"advance_account",
-				],
-				as_dict=1,
-			)
-
-			if self.employee != ref_doc.employee:
+			advance_employee = frappe.db.get_value("Employee Advance", d.employee_advance, "employee")
+			if self.employee != advance_employee:
 				frappe.throw(_("Selected employee advance is not of employee {}").format(self.employee))
 
-			d.posting_date = ref_doc.posting_date
-			d.advance_account = ref_doc.advance_account
-			d.advance_paid = ref_doc.paid_amount
-			d.unclaimed_amount = flt(ref_doc.paid_amount) - flt(ref_doc.claimed_amount)
-
->>>>>>> 93ecb5181 (fix(employee_advance): validate selected employee advance on server side)
+			self.round_floats_in(d)
 			if d.allocated_amount and flt(d.allocated_amount) > flt(
 				flt(d.unclaimed_amount) - flt(d.return_amount), precision
 			):
@@ -722,7 +700,6 @@ def get_expense_claim_account(expense_claim_type, company):
 
 
 @frappe.whitelist()
-<<<<<<< HEAD
 def get_advances(expense_claim: str | dict | Document, advance_id: str | None = None):
 	import json
 
@@ -731,9 +708,6 @@ def get_advances(expense_claim: str | dict | Document, advance_id: str | None = 
 	expense_claim_doc = frappe.get_doc(expense_claim)
 	expense_claim_doc.advances = []
 
-=======
-def get_advances(employee: str, advance_id: str | None = None):
->>>>>>> 19d00af50 (refactor: add type hints in get_advance)
 	advance = frappe.qb.DocType("Employee Advance")
 
 	query = frappe.qb.from_(advance).select(
@@ -754,7 +728,7 @@ def get_advances(employee: str, advance_id: str | None = None):
 			& (advance.status.notin(["Claimed", "Returned", "Partly Claimed and Returned"]))
 		)
 	else:
-		query = query.where((advance.name == advance_id) & (advance.employee == employee))
+		query = query.where((advance.name == advance_id) & (advance.employee == expense_claim_doc.employee))
 
 	advances = query.run(as_dict=True)
 
