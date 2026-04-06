@@ -4,6 +4,7 @@
 
 import frappe
 from frappe import _
+from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe.model.workflow import get_workflow_name
 from frappe.query_builder.functions import Sum
@@ -695,7 +696,7 @@ def get_expense_claim_account(expense_claim_type, company):
 
 
 @frappe.whitelist()
-def get_advances(expense_claim, advance_id=None):
+def get_advances(expense_claim: str | dict | Document, advance_id: str | None = None):
 	import json
 
 	if isinstance(expense_claim, str):
@@ -737,7 +738,7 @@ def get_advances(expense_claim, advance_id=None):
 
 
 @frappe.whitelist()
-def get_expense_claim(employee_advance, payment_via_journal_entry):
+def get_expense_claim(employee_advance: str | dict, payment_via_journal_entry: str | int | bool) -> Document:
 	if isinstance(employee_advance, str):
 		employee_advance = frappe.get_doc("Employee Advance", employee_advance)
 
