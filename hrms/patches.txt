@@ -43,17 +43,3 @@ hrms.patches.v16_0.create_holiday_list_assignments
 hrms.patches.v16_0.set_base_paid_amount_in_employee_advance
 hrms.patches.v16_0.set_currency_and_base_fields_in_expense_claim
 hrms.patches.v16_0.remove_ess_user_type_limit
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
-hrms.patches.v15_0.remove_other_employees_advance_link_in_expense_claim
->>>>>>> 49d5b6d01 (patch: patch: remove invalid employee advance links from claims)
-<<<<<<< HEAD
->>>>>>> 5ea5ed48 (patch: patch: remove invalid employee advance links from claims)
-=======
-=======
->>>>>>> 116e0065d (Revert "patch: patch: remove invalid employee advance links from claims")
->>>>>>> 07aaf2cc (Revert "patch: patch: remove invalid employee advance links from claims")
-=======
->>>>>>> 4ee2aca0 (fix: conflicts)
