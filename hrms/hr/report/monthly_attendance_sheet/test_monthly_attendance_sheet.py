@@ -10,6 +10,7 @@ from erpnext.setup.doctype.holiday_list.test_holiday_list import set_holiday_lis
 from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.leave_allocation.leave_allocation import OverlapError
 from hrms.hr.doctype.leave_application.test_leave_application import make_allocation_record
+from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
 from hrms.hr.report.monthly_attendance_sheet.monthly_attendance_sheet import execute
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
@@ -29,6 +30,8 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 
 		if not frappe.db.exists("Shift Type", "Day Shift"):
 			setup_shift_type(shift_type="Day Shift")
+		if not frappe.db.exists("Leave Type", "_Test Leave Type"):
+			create_leave_type(leave_type_name="_Test Leave Type")
 
 		date = getdate()
 		from_date = get_year_start(date)
