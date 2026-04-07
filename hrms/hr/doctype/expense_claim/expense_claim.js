@@ -73,6 +73,10 @@ frappe.ui.form.on("Expense Claim", {
 				},
 			};
 		});
+
+		frm.make_methods = {
+			"Payment Entry": () => frm.events.make_payment_entry(frm),
+		};
 	},
 
 	onload: function (frm) {

@@ -60,11 +60,20 @@ class AttendanceRequest(Document):
 		if len(attendance_warnings) == attendance_request_days and not any(
 			warning["action"] == "Overwrite" for warning in attendance_warnings
 		):
-			frappe.throw(
-				title=_("No attendance records to create"),
-				msg=_(
-					"Please check if employee is on leave or attendance with the same status exists for selected day(s)."
-				),
+			message_table = [[_("Date"), _("Reason"), _("Action")]]
+			for warning in attendance_warnings:
+				message_table.append(
+					[
+						format_date(warning["date"]),
+						_(warning["reason"]),
+						_(warning["action"]),
+					]
+				)
+			frappe.msgprint(
+				title=_("No attendance records to create due to following reasons"),
+				msg=message_table,
+				as_table=True,
+				raise_exception=True,
 			)
 
 	def validate_shifts(self):
