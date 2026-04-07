@@ -3,6 +3,7 @@
 
 frappe.ui.form.on("Leave Control Panel", {
 	setup: function (frm) {
+		frm.set_value("company", frappe.defaults.get_default("company"));
 		frm.trigger("set_query");
 		frm.trigger("set_leave_details");
 		hrms.setup_employee_filter_group(frm);
@@ -26,15 +27,14 @@ frappe.ui.form.on("Leave Control Panel", {
 	},
 
 	company: function (frm) {
-		if (frm.doc.company) {
-			frm.set_query("department", function () {
-				return {
-					filters: {
-						company: frm.doc.company,
-					},
-				};
-			});
-		}
+		frm.trigger("set_leave_details");
+		frm.set_query("department", function () {
+			return {
+				filters: {
+					company: frm.doc.company,
+				},
+			};
+		});
 		frm.trigger("get_employees");
 	},
 
@@ -106,7 +106,7 @@ frappe.ui.form.on("Leave Control Panel", {
 				leave_type: null,
 				no_of_days: 0,
 				leave_policy: null,
-				company: frappe.defaults.get_default("company"),
+				company: frm.doc.company,
 			});
 		});
 	},
@@ -167,6 +167,7 @@ frappe.ui.form.on("Leave Control Panel", {
 			return {
 				filters: {
 					is_active: 1,
+					company: frm.doc.company,
 				},
 			};
 		});
