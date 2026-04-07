@@ -57,7 +57,7 @@ def get_employees(
 		"company": company,
 		"employment_type": employment_type,
 		"designation": designation,
-		"employee_grade": employee_grade,
+		"grade": employee_grade,
 	}.items():
 		if value:
 			filters[field] = value
