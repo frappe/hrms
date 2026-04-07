@@ -62,7 +62,7 @@
   }
  ],
  "links": [],
- "modified": "2026-03-24 17:20:54.718151",
+ "modified": "2026-04-07 17:56:17.634829",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Skill Map",
@@ -85,6 +85,15 @@
    "read": 1,
    "report": 1,
    "role": "HR User",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
    "write": 1
   }
  ],

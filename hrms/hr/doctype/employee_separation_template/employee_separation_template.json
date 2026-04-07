@@ -68,7 +68,7 @@
   }
  ],
  "links": [],
- "modified": "2024-03-27 13:09:41.257092",
+ "modified": "2026-04-07 18:18:38.087000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Separation Template",
@@ -85,8 +85,20 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "HR Manager",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "HR User"
   }
  ],
+ "row_format": "Dynamic",
  "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",

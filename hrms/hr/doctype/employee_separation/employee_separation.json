@@ -155,7 +155,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-27 13:09:41.099448",
+ "modified": "2026-04-07 18:18:56.500261",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Separation",
@@ -175,9 +175,21 @@
    "share": 1,
    "submit": 1,
    "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "HR User"
   }
  ],
  "quick_entry": 1,
+ "row_format": "Dynamic",
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],

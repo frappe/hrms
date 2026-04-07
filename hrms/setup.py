@@ -890,4 +890,12 @@ def add_docperms():
 			docperm = add_permission(doctype, role)
 			if docperm:
 				update_custom_docperm(docperm, ptypes)
+<<<<<<< HEAD
 >>>>>>> c6e46fc0 (fix: default permission for HR manager role & add custom docperm for doctypes in frappe app)
+=======
+
+
+def make_people_workspace_standard():
+	if frappe.db.exists("Workspace Sidebar", "People"):
+		frappe.db.set_value("Workspace Sidebar", "People", "standard", 1)
+>>>>>>> 4a8fff88 (fix: default perm for HR manager & HR user)

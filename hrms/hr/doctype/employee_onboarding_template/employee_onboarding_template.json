@@ -68,7 +68,7 @@
   }
  ],
  "links": [],
- "modified": "2026-03-24 17:11:10.175908",
+ "modified": "2026-04-07 17:54:37.020259",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Onboarding Template",
@@ -91,6 +91,15 @@
    "read": 1,
    "report": 1,
    "role": "HR User",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
    "write": 1
   }
  ],
