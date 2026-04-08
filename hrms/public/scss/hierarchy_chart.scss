@@ -23,6 +23,54 @@
 	box-shadow: none;
 }
 
+.hierarchy-chart-main {
+	&.hierarchy-main-chart {
+		min-height: 300px;
+		max-height: 700px;
+		overflow: auto;
+		position: relative;
+	}
+
+	&.hierarchy-main-export {
+		min-height: auto;
+		max-height: none;
+		overflow: visible;
+		position: fixed;
+		left: 0;
+		top: 0;
+	}
+
+	&.hierarchy-main-mobile-chart {
+		min-height: 300px;
+		max-height: 600px;
+		overflow: auto;
+		position: relative;
+	}
+
+	&.hierarchy-main-empty {
+		overflow: auto;
+		position: relative;
+	}
+
+	&.hierarchy-main-mobile-empty {
+		overflow: auto;
+		position: relative;
+	}
+
+	&.hierarchy-main-empty #hierarchy-empty-root,
+	&.hierarchy-main-mobile-empty #hierarchy-empty-root {
+		min-height: max(320px, calc(100vh - 240px));
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+	}
+}
+
+[data-fieldname="company"] .link-field.hierarchy-company-link-field {
+	z-index: 2;
+}
+
 .node-image {
 	width: 3rem;
 	height: 3rem;
