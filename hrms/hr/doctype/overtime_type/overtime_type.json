@@ -119,7 +119,7 @@
   },
   {
    "default": "Salary Component Based",
-   "description": "Choose how the hourly overtime amount is calculated:\n<ol style=\"padding-left:15px;\"><li>Fixed Hourly Rate: A fixed, manually entered hourly rate.</li>\n<li>Salary Component-Based:\n\n(Sum of selected component amounts) \u00f7 (Payment Days) \u00f7 (Standard Daily Hours)</li></ol>",
+   "description": "Choose how the hourly overtime amount is calculated:\n<ol style=\"padding-left:15px\"><li>Fixed Hourly Rate: A fixed, manually entered hourly rate.</li>\n<li>Salary Component-Based:\n\n(Sum of selected component amounts) \u00f7 (Payment Days) \u00f7 (Standard Daily Hours)</li></ol>",
    "fieldname": "overtime_calculation_method",
    "fieldtype": "Select",
    "label": "Overtime Amount Calculation",
@@ -132,7 +132,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-24 16:44:58.729676",
+ "modified": "2026-04-09 19:08:42.248177",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Overtime Type",
@@ -152,8 +152,15 @@
    "write": 1
   },
   {
+   "create": 1,
+   "delete": 1,
    "read": 1,
-   "role": "HR User"
+   "role": "HR Manager",
+   "write": 1
+  },
+  {
+   "role": "HR User",
+   "select": 1
   }
  ],
  "row_format": "Dynamic",

@@ -3,7 +3,7 @@
  "based_on": "",
  "chart_name": "Timesheet Activity Breakup",
  "chart_type": "Group By",
- "creation": "2022-08-21 14:31:10.401241",
+ "creation": "2025-07-15 13:15:12.817847",
  "docstatus": 0,
  "doctype": "Dashboard Chart",
  "document_type": "Timesheet Detail",
@@ -14,15 +14,35 @@
  "idx": 0,
  "is_public": 1,
  "is_standard": 1,
- "last_synced_on": "2022-08-21 17:55:44.318686",
- "modified": "2022-08-21 17:59:38.576219",
+ "last_synced_on": "2026-04-09 17:49:28.227780",
+ "modified": "2026-04-09 17:53:47.303664",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Timesheet Activity Breakup",
  "number_of_groups": 0,
  "owner": "Administrator",
  "parent_document_type": "Timesheet",
- "roles": [],
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HR Manager"
+  },
+  {
+   "role": "HR User"
+  },
+  {
+   "role": "Manufacturing User"
+  },
+  {
+   "role": "Accounts User"
+  },
+  {
+   "role": "Employee"
+  }
+ ],
+ "show_values_over_chart": 0,
  "source": "",
  "time_interval": "Yearly",
  "timeseries": 0,
