@@ -8,8 +8,11 @@ from frappe.desk.page.setup_wizard.install_fixtures import (
 )
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 from frappe.installer import update_site_config
+=======
+>>>>>>> 3e8274a8 (fix: remove unwanted import)
 from frappe.permissions import add_permission
 >>>>>>> c6e46fc0 (fix: default permission for HR manager role & add custom docperm for doctypes in frappe app)
 
