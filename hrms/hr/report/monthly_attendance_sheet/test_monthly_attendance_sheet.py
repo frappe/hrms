@@ -15,7 +15,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
 )
-from hrms.tests.test_utils import create_company, get_first_day_for_prev_month
+from hrms.tests.test_utils import create_company, create_department, get_first_day_for_prev_month
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -519,6 +519,112 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 			== "L"
 		)
 
+	def test_attendance_with_department_filter(self):
+		previous_month_first = get_first_day_for_prev_month()
+
+		dept1 = create_department("Test Dept Alpha")
+		dept2 = create_department("Test Dept Beta")
+
+		emp_dept1 = make_employee("emp_dept1@example.com", company=self.company, department=dept1)
+		emp_dept2 = make_employee("emp_dept2@example.com", company=self.company, department=dept2)
+
+		mark_attendance(emp_dept1, previous_month_first, "Present")
+		mark_attendance(emp_dept2, previous_month_first, "Present")
+
+		filters = frappe._dict(
+			{
+				"month": previous_month_first.month,
+				"year": previous_month_first.year,
+				"company": self.company,
+				"department": dept1,
+				"filter_based_on": self.filter_based_on,
+			}
+		)
+		report = execute(filters=filters)
+
+		employees_in_report = [row.get("employee") for row in report[1] if row.get("employee")]
+
+		# only emp_dept1 should appear; emp_dept2 belongs to a different department
+		self.assertIn(emp_dept1, employees_in_report)
+		self.assertNotIn(emp_dept2, employees_in_report)
+
+	def test_attendance_with_branch_filter(self):
+		previous_month_first = get_first_day_for_prev_month()
+
+		branch1 = create_branch("Test Branch Alpha")
+		branch2 = create_branch("Test Branch Beta")
+
+		emp_branch1 = make_employee("emp_branch1@example.com", company=self.company, branch=branch1)
+		emp_branch2 = make_employee("emp_branch2@example.com", company=self.company, branch=branch2)
+
+		mark_attendance(emp_branch1, previous_month_first, "Present")
+		mark_attendance(emp_branch2, previous_month_first, "Present")
+
+		filters = frappe._dict(
+			{
+				"month": previous_month_first.month,
+				"year": previous_month_first.year,
+				"company": self.company,
+				"branch": branch1,
+				"filter_based_on": self.filter_based_on,
+			}
+		)
+		report = execute(filters=filters)
+
+		employees_in_report = [row.get("employee") for row in report[1] if row.get("employee")]
+
+		# only emp_branch1 should appear; emp_branch2 belongs to a different branch
+		self.assertIn(emp_branch1, employees_in_report)
+		self.assertNotIn(emp_branch2, employees_in_report)
+
+	def test_attendance_with_department_and_branch_filter_combined(self):
+		previous_month_first = get_first_day_for_prev_month()
+
+		dept = create_department("Test Dept Combined")
+		branch = create_branch("Test Branch Combined")
+
+		# employee matching both department and branch
+		emp_match = make_employee(
+			"emp_match@example.com", company=self.company, department=dept, branch=branch
+		)
+		# employee with correct department but wrong branch
+		emp_wrong_branch = make_employee(
+			"emp_wrong_branch@example.com",
+			company=self.company,
+			department=dept,
+			branch=create_branch("Test Branch Other"),
+		)
+		# employee with correct branch but wrong department
+		emp_wrong_dept = make_employee(
+			"emp_wrong_dept@example.com",
+			company=self.company,
+			department=create_department("Test Dept Other"),
+			branch=branch,
+		)
+
+		mark_attendance(emp_match, previous_month_first, "Present")
+		mark_attendance(emp_wrong_branch, previous_month_first, "Present")
+		mark_attendance(emp_wrong_dept, previous_month_first, "Present")
+
+		filters = frappe._dict(
+			{
+				"month": previous_month_first.month,
+				"year": previous_month_first.year,
+				"company": self.company,
+				"department": dept,
+				"branch": branch,
+				"filter_based_on": self.filter_based_on,
+			}
+		)
+		report = execute(filters=filters)
+
+		employees_in_report = [row.get("employee") for row in report[1] if row.get("employee")]
+
+		# only the employee matching both department and branch should appear
+		self.assertIn(emp_match, employees_in_report)
+		self.assertNotIn(emp_wrong_branch, employees_in_report)
+		self.assertNotIn(emp_wrong_dept, employees_in_report)
+
 	def test_detailed_view_with_date_range_and_group_by_filter(self):
 		today = getdate()
 		mark_attendance(self.employee, today, "Absent", "Day Shift")
@@ -589,3 +695,9 @@ def execute_report_with_invalid_filters(invalid_filter_name):
 
 def date_key(date_obj):
 	return date_obj.strftime("%d-%m-%Y")
+
+
+def create_branch(branch_name):
+	if not frappe.db.exists("Branch", branch_name):
+		frappe.get_doc({"doctype": "Branch", "branch": branch_name}).insert(ignore_permissions=True)
+	return branch_name

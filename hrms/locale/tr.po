@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-03-22 09:44+0000\n"
-"PO-Revision-Date: 2026-03-23 13:22\n"
+"POT-Creation-Date: 2026-04-05 09:45+0000\n"
+"PO-Revision-Date: 2026-04-06 14:49\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Turkish\n"
 "MIME-Version: 1.0\n"
@@ -868,7 +868,7 @@ msgstr "Yıllık Tahsis"
 msgid "Annual Allocation Exceeded"
 msgstr "Yıllık Tahsis Aşıldı"
 
-#: hrms/setup.py:404
+#: hrms/setup.py:407
 msgid "Annual Salary"
 msgstr "Yıllık Maaş"
 
@@ -1076,7 +1076,7 @@ msgstr "Değerlendirme Genel Bakışı"
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/doctype/appraisal_template/appraisal_template.json
-#: hrms/hr/doctype/appraisee/appraisee.json hrms/setup.py:162
+#: hrms/hr/doctype/appraisee/appraisee.json hrms/setup.py:161
 #: hrms/workspace_sidebar/performance.json
 msgid "Appraisal Template"
 msgstr "Değerlendirme Şablonu"
@@ -1120,7 +1120,7 @@ msgstr "Değerlendirilen"
 msgid "Appraisees: {0}"
 msgstr "Değerlendirilenler: {0}"
 
-#: hrms/setup.py:396
+#: hrms/setup.py:399
 msgid "Apprentice"
 msgstr "Çırak"
 
@@ -1165,7 +1165,7 @@ msgstr "Onaylandı"
 msgid "Approver"
 msgstr "Onaylayan"
 
-#: hrms/setup.py:133 hrms/setup.py:235
+#: hrms/setup.py:132 hrms/setup.py:235
 msgid "Approvers"
 msgstr "Onaylayanlar"
 
@@ -1314,8 +1314,8 @@ msgstr ""
 
 #. Name of a DocType
 #. Label of the attendance (Select) field in DocType 'Training Event Employee'
-#. Label of a Card Break in the People Workspace
-#. Label of a Link in the People Workspace
+#. Label of a Card Break in the HR Setup Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Card Break in the Shift & Attendance Workspace
 #. Label of a Link in the Shift & Attendance Workspace
 #. Option for the 'Calculate Payroll Working Days Based On' (Select) field in
@@ -1323,7 +1323,7 @@ msgstr ""
 #: frontend/src/components/BottomTabs.vue:48
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 #: hrms/overrides/dashboard_overrides.py:10
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
@@ -1367,13 +1367,13 @@ msgstr "Geldi Olarak Kaydedildi"
 
 #. Label of the attendance_request (Link) field in DocType 'Attendance'
 #. Name of a DocType
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Shift & Attendance Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/attendance/attendance.js:18
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/attendance_request/attendance_request.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 #: hrms/workspace_sidebar/shift_&_attendance.json
 msgid "Attendance Request"
@@ -1783,7 +1783,7 @@ msgstr "Bordro Çalışma Günlerini Şuna Göre Hesaplayın"
 msgid "Calculated in days"
 msgstr "Gün olarak hesaplandı"
 
-#: hrms/setup.py:332
+#: hrms/setup.py:335
 msgid "Calls"
 msgstr "Aramalar"
 
@@ -1860,6 +1860,7 @@ msgid "Cannot update status of Goal groups"
 msgstr ""
 
 #. Label of the carry_forward (Check) field in DocType 'Leave Control Panel'
+#. Label of the is_carry_forward (Check) field in DocType 'Leave Type'
 #. Label of the carry_forward_section (Section Break) field in DocType 'Leave
 #. Type'
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
@@ -1873,7 +1874,7 @@ msgstr ""
 msgid "Carry Forwarded Leaves"
 msgstr "Devreden İzinler"
 
-#: hrms/setup.py:347 hrms/setup.py:348
+#: hrms/setup.py:350 hrms/setup.py:351
 msgid "Casual Leave"
 msgstr "Mazeret İzni"
 
@@ -2002,7 +2003,7 @@ msgstr ""
 
 #. Label of a Card Break in the Expenses Workspace
 #: hrms/hr/workspace/expenses/expenses.json
-#: hrms/overrides/dashboard_overrides.py:84
+#: hrms/overrides/dashboard_overrides.py:87
 msgid "Claims"
 msgstr "Talepler"
 
@@ -2047,15 +2048,16 @@ msgstr "Şirket Bilgileri"
 
 #. Name of a DocType
 #. Label of the compensatory_request (Link) field in DocType 'Leave Allocation'
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Leaves Workspace
-#. Label of a Link in the People Workspace
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.json
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
-#: hrms/hr/workspace/leaves/leaves.json hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/leaves/leaves.json
 msgid "Compensatory Leave Request"
 msgstr "Telafi Bırakma Talebi"
 
-#: hrms/setup.py:356 hrms/setup.py:357
+#: hrms/setup.py:359 hrms/setup.py:360
 msgid "Compensatory Off"
 msgstr "Telafi İzni"
 
@@ -2371,12 +2373,13 @@ msgstr "Günlük Çalışma Özeti"
 #. Label of the daily_work_summary_group (Link) field in DocType 'Daily Work
 #. Summary'
 #. Name of a DocType
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Tenure Workspace
 #: hrms/hr/doctype/daily_work_summary/daily_work_summary.json
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 #: hrms/hr/page/team_updates/team_updates.js:12
-#: hrms/hr/workspace/people/people.json hrms/hr/workspace/tenure/tenure.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Daily Work Summary Group"
 msgstr "Günlük Çalışma Özet Grubu"
 
@@ -2386,10 +2389,11 @@ msgid "Daily Work Summary Group User"
 msgstr "Günlük Çalışma Özet Grubu Kullanıcısı"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Tenure Workspace
 #: hrms/hr/report/daily_work_summary_replies/daily_work_summary_replies.json
-#: hrms/hr/workspace/people/people.json hrms/hr/workspace/tenure/tenure.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Daily Work Summary Replies"
 msgstr "Günlük İş Özeti Cevapları"
 
@@ -2416,7 +2420,7 @@ msgstr "Tarih & Gerekçe"
 msgid "Dates Based On"
 msgstr "Tarihe Göre"
 
-#: hrms/setup.py:121
+#: hrms/setup.py:120
 msgid "Days for which Holidays are blocked for this department."
 msgstr "Bu departman için Tatillerin bloke edildiği günler."
 
@@ -2527,15 +2531,15 @@ msgstr "Bu mod seçildiğinde varsayılan Banka / Kasa hesabı otomatik Maaş De
 msgid "Default Base Pay"
 msgstr "Varsayılan Baz Ücret"
 
-#: hrms/setup.py:81
+#: hrms/setup.py:80
 msgid "Default Employee Advance Account"
 msgstr "Varsayılan Personel Avans Hesabı"
 
-#: hrms/setup.py:73
+#: hrms/setup.py:72
 msgid "Default Expense Claim Payable Account"
 msgstr "Varsayılan Gider Alacak Hesabı"
 
-#: hrms/overrides/company.py:133 hrms/setup.py:96
+#: hrms/overrides/company.py:133 hrms/setup.py:95
 msgid "Default Payroll Payable Account"
 msgstr "Varsayılan Ödenecek Bordro Hesabı"
 
@@ -2848,7 +2852,7 @@ msgid "Employee A/C Number"
 msgstr "Personel A/C Numarası"
 
 #: hrms/patches/v16_0/create_custom_field_for_employee_advance_in_employee_master.py:11
-#: hrms/setup.py:267
+#: hrms/setup.py:270
 msgid "Employee Advance Account"
 msgstr ""
 
@@ -2858,20 +2862,20 @@ msgstr "Personel Avans Bakiyesi"
 
 #. Name of a report
 #. Label of a Link in the Expenses Workspace
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #: hrms/hr/report/employee_advance_summary/employee_advance_summary.json
 #: hrms/hr/workspace/expenses/expenses.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 msgid "Employee Advance Summary"
 msgstr "Personel Avans Özeti"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Tenure Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/report/employee_analytics/employee_analytics.json
-#: hrms/hr/workspace/people/people.json hrms/hr/workspace/tenure/tenure.json
-#: hrms/workspace_sidebar/tenure.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/tenure/tenure.json hrms/workspace_sidebar/tenure.json
 msgid "Employee Analytics"
 msgstr "Personel Analitiği"
 
@@ -2916,17 +2920,17 @@ msgstr ""
 #. Label of the employee_benefits_section (Section Break) field in DocType
 #. 'Salary Structure Assignment'
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/setup.py:406
+#: hrms/setup.py:409
 msgid "Employee Benefits"
 msgstr "Personele sağlanan faydalar"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Tenure Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/report/employee_birthday/employee_birthday.json
-#: hrms/hr/workspace/people/people.json hrms/hr/workspace/tenure/tenure.json
-#: hrms/workspace_sidebar/tenure.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/tenure/tenure.json hrms/workspace_sidebar/tenure.json
 msgid "Employee Birthday"
 msgstr "Personel Doğum Günü"
 
@@ -2936,11 +2940,11 @@ msgid "Employee Boarding Activity"
 msgstr "Çalışan Yatılı Etkinliği"
 
 #. Name of a DocType
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Shift & Attendance Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 #: hrms/workspace_sidebar/shift_&_attendance.json
 msgid "Employee Checkin"
@@ -2999,6 +3003,10 @@ msgstr "Personel Detayları"
 msgid "Employee Emails"
 msgstr "Çalışan E-postaları"
 
+#: hrms/overrides/dashboard_overrides.py:25
+msgid "Employee Exit"
+msgstr "Çalışan Çıkışı"
+
 #. Label of the employee_exit_settings_section (Section Break) field in DocType
 #. 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
@@ -3006,12 +3014,12 @@ msgid "Employee Exit Settings"
 msgstr "Personel Çıkış Ayarları"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Tenure Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/report/employee_exits/employee_exits.json
-#: hrms/hr/workspace/people/people.json hrms/hr/workspace/tenure/tenure.json
-#: hrms/workspace_sidebar/tenure.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/tenure/tenure.json hrms/workspace_sidebar/tenure.json
 msgid "Employee Exits"
 msgstr "Personel Çıkışları"
 
@@ -3038,7 +3046,7 @@ msgstr "Personel Geri Bildirimi Değerlendirmesi"
 #. Template'
 #. Label of the employee_grade (Link) field in DocType 'Leave Control Panel'
 #. Label of the grade (Link) field in DocType 'Shift Assignment Tool'
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of the grade (Link) field in DocType 'Bulk Salary Structure
 #. Assignment'
 #. Label of a Workspace Sidebar Item
@@ -3050,9 +3058,9 @@ msgstr "Personel Geri Bildirimi Değerlendirmesi"
 #: hrms/hr/doctype/employee_separation_template/employee_separation_template.json
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
-#: hrms/workspace_sidebar/people.json
+#: hrms/workspace_sidebar/hr_setup.json
 msgid "Employee Grade"
 msgstr "Personel Ünvanı"
 
@@ -3099,32 +3107,34 @@ msgid "Employee Info"
 msgstr "Personel Bilgisi"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Tenure Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/report/employee_information/employee_information.json
-#: hrms/hr/workspace/people/people.json hrms/hr/workspace/tenure/tenure.json
-#: hrms/workspace_sidebar/tenure.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/tenure/tenure.json hrms/workspace_sidebar/tenure.json
 msgid "Employee Information"
 msgstr "Personel Bilgileri"
 
 #. Name of a report
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Leaves Workspace
-#. Label of a Link in the People Workspace
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.json
-#: hrms/hr/workspace/leaves/leaves.json hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/leaves/leaves.json
 msgid "Employee Leave Balance"
 msgstr "Personel İzin Bakiyesi"
 
 #. Name of a report
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Leaves Workspace
-#. Label of a Link in the People Workspace
 #: hrms/hr/report/employee_leave_balance_summary/employee_leave_balance_summary.json
-#: hrms/hr/workspace/leaves/leaves.json hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/leaves/leaves.json
 msgid "Employee Leave Balance Summary"
 msgstr "Personel İzin Bakiyesi Özeti"
 
-#: hrms/setup.py:780
+#: hrms/setup.py:771
 msgid "Employee Loan"
 msgstr ""
 
@@ -3195,7 +3205,7 @@ msgstr "Çalışan Mülkiyet Tarihi"
 #: hrms/hr/doctype/employee_referral/employee_referral.json
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 #: hrms/hr/doctype/job_requisition/job_requisition.js:18
-#: hrms/hr/workspace/recruitment/recruitment.json hrms/setup.py:400
+#: hrms/hr/workspace/recruitment/recruitment.json hrms/setup.py:403
 msgid "Employee Referral"
 msgstr "Personel başvurusu"
 
@@ -3430,9 +3440,9 @@ msgstr ""
 msgid "Employees HTML"
 msgstr "Personeller HTML"
 
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Workspace Sidebar Item
-#: hrms/hr/workspace/people/people.json hrms/workspace_sidebar/leaves.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json hrms/workspace_sidebar/leaves.json
 msgid "Employees Working on a Holiday"
 msgstr "Tatilde Çalışan Personeller"
 
@@ -3494,7 +3504,7 @@ msgstr "Tatilde Çalışan Personeller"
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
-#: hrms/setup.py:186 hrms/templates/generators/job_opening.html:141
+#: hrms/setup.py:185 hrms/templates/generators/job_opening.html:141
 msgid "Employment Type"
 msgstr "Çalışma Türü"
 
@@ -3651,7 +3661,7 @@ msgstr "{row_id}satırında {doctype} {doclink} değerlendirilirken hata oluştu
 msgid "Estimated Cost Per Position"
 msgstr "Pozisyon Başına Tahmini Maliyet"
 
-#: hrms/overrides/dashboard_overrides.py:52
+#: hrms/overrides/dashboard_overrides.py:55
 msgid "Evaluation"
 msgstr "Değerlendirme"
 
@@ -3843,8 +3853,8 @@ msgstr "Çıkış Soruları"
 
 #: hrms/hr/doctype/exit_interview/test_exit_interview.py:110
 #: hrms/hr/doctype/exit_interview/test_exit_interview.py:120
-#: hrms/hr/doctype/exit_interview/test_exit_interview.py:122 hrms/setup.py:481
-#: hrms/setup.py:483 hrms/setup.py:504
+#: hrms/hr/doctype/exit_interview/test_exit_interview.py:122 hrms/setup.py:484
+#: hrms/setup.py:486 hrms/setup.py:507
 msgid "Exit Questionnaire Notification"
 msgstr "Çıkış Görüşmesi Bildirimi"
 
@@ -3907,7 +3917,8 @@ msgstr "Gerekli Beceriler"
 #. Name of a role
 #. Label of the expense_approver (Link) field in DocType 'Expense Claim'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
-#: hrms/hr/doctype/expense_claim/expense_claim.json hrms/setup.py:153
+#: hrms/hr/doctype/expense_claim/expense_claim.json
+#: hrms/patches/v15_0/update_approver_custom_fields.py:11 hrms/setup.py:152
 #: hrms/setup.py:241
 msgid "Expense Approver"
 msgstr "Harcama Onaylayıcısı"
@@ -4047,7 +4058,7 @@ msgstr "Personeller için {0} oluşturulamadı/gönderilemedi:"
 msgid "Failed to delete defaults for country {0}."
 msgstr "{0} ülkesinin varsayılanları silinemedi."
 
-#: hrms/api/__init__.py:785
+#: hrms/api/__init__.py:787
 msgid "Failed to download PDF: {0}"
 msgstr ""
 
@@ -4287,7 +4298,7 @@ msgstr ""
 msgid "Follow via Email"
 msgstr "E-Posta ile Takip Et"
 
-#: hrms/setup.py:333
+#: hrms/setup.py:336
 msgid "Food"
 msgstr "Yiyecek Grupları"
 
@@ -4429,7 +4440,7 @@ msgstr ""
 msgid "Full and Final Outstanding Statement"
 msgstr ""
 
-#: hrms/setup.py:389
+#: hrms/setup.py:392
 msgid "Full-time"
 msgstr "tam mesai"
 
@@ -4663,25 +4674,33 @@ msgstr "Yılbaşından Bugüne Brüt (Şirket Para Birimi)"
 msgid "Group goal's progress is auto-calculated based on the child goals."
 msgstr ""
 
-#: hrms/setup.py:322
+#: hrms/setup.py:325
 msgid "HR"
 msgstr "İnsan Kaynakları"
 
-#: hrms/setup.py:59
+#: hrms/setup.py:58
 msgid "HR & Payroll"
 msgstr "Bordro"
 
-#: hrms/setup.py:65
+#: hrms/setup.py:64
 msgid "HR & Payroll Settings"
 msgstr "İnsan Kaynakları & Bordro Ayarları"
 
 #. Name of a DocType
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 #: hrms/hr/doctype/leave_application/leave_application.py:218
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 msgid "HR Settings"
 msgstr "İnsan Kaynakları Ayarları"
+
+#. Label of a Desktop Icon
+#. Name of a Workspace
+#. Title of a Workspace Sidebar
+#: hrms/desktop_icon/hr_setup.json hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/workspace_sidebar/hr_setup.json
+msgid "HR Setup"
+msgstr ""
 
 #: hrms/config/desktop.py:5
 msgid "HRMS"
@@ -5196,7 +5215,7 @@ msgstr "Faiz Tutarı"
 msgid "Interest Income Account"
 msgstr "Faiz Geliri Hesabı"
 
-#: hrms/setup.py:395
+#: hrms/setup.py:398
 msgid "Intern"
 msgstr "Stajyer"
 
@@ -5245,8 +5264,8 @@ msgstr "Görüşme Geri Bildirimi"
 #: hrms/hr/doctype/interview/test_interview.py:309
 #: hrms/hr/doctype/interview/test_interview.py:318
 #: hrms/hr/doctype/interview/test_interview.py:320
-#: hrms/hr/doctype/interview/test_interview.py:327 hrms/setup.py:467
-#: hrms/setup.py:469 hrms/setup.py:502
+#: hrms/hr/doctype/interview/test_interview.py:327 hrms/setup.py:470
+#: hrms/setup.py:472 hrms/setup.py:505
 msgid "Interview Feedback Reminder"
 msgstr "Mülakat Geri Bildirim Hatırlatıcısı"
 
@@ -5261,8 +5280,8 @@ msgstr "Görüşme Yeniden Planlanmadı"
 #: hrms/hr/doctype/interview/test_interview.py:293
 #: hrms/hr/doctype/interview/test_interview.py:302
 #: hrms/hr/doctype/interview/test_interview.py:304
-#: hrms/hr/doctype/interview/test_interview.py:326 hrms/setup.py:455
-#: hrms/setup.py:457 hrms/setup.py:498
+#: hrms/hr/doctype/interview/test_interview.py:326 hrms/setup.py:458
+#: hrms/setup.py:460 hrms/setup.py:501
 msgid "Interview Reminder"
 msgstr "Mülakat Hatırlatıcı"
 
@@ -5440,9 +5459,7 @@ msgid "Is Applicable for Referral Bonus"
 msgstr "Referans Bonusu Uygulanabilir"
 
 #. Label of the is_carry_forward (Check) field in DocType 'Leave Ledger Entry'
-#. Label of the is_carry_forward (Check) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.json
-#: hrms/hr/doctype/leave_type/leave_type.json
 #: hrms/hr/report/leave_ledger/leave_ledger.py:85
 msgid "Is Carry Forward"
 msgstr "İleriye Dönük"
@@ -5488,11 +5505,6 @@ msgstr "Gelir Vergisi Bileşenleri"
 #: hrms/hr/report/leave_ledger/leave_ledger.py:97
 msgid "Is Leave Without Pay"
 msgstr "Ücretsiz İzin"
-
-#. Label of the is_optional_leave (Check) field in DocType 'Leave Type'
-#: hrms/hr/doctype/leave_type/leave_type.json
-msgid "Is Optional Leave"
-msgstr "İsteğe Bağlı İzin"
 
 #. Label of the is_ppl (Check) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
@@ -5580,7 +5592,7 @@ msgstr "İş Başvuru Yolu"
 #. Label of the job_description_tab (Tab Break) field in DocType 'Job
 #. Requisition'
 #. Label of the description (Text Editor) field in DocType 'Job Requisition'
-#: hrms/hr/doctype/job_requisition/job_requisition.json hrms/setup.py:410
+#: hrms/hr/doctype/job_requisition/job_requisition.json hrms/setup.py:413
 msgid "Job Description"
 msgstr "İş Tanımı"
 
@@ -5861,13 +5873,13 @@ msgstr "Tahsisleri Bırak"
 
 #. Label of the leave_application (Link) field in DocType 'Attendance'
 #. Name of a DocType
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Leaves Workspace
-#. Label of a Link in the People Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/leave_application/leave_application.json
-#: hrms/hr/workspace/leaves/leaves.json hrms/hr/workspace/people/people.json
-#: hrms/workspace_sidebar/leaves.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/leaves/leaves.json hrms/workspace_sidebar/leaves.json
 msgid "Leave Application"
 msgstr "İzin Formu"
 
@@ -5875,7 +5887,7 @@ msgstr "İzin Formu"
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
 msgstr "İzin başvuru süresi, ardışık olmayan iki farklı izin tahsisi {0} ve {1} arasında olamaz."
 
-#: hrms/setup.py:432 hrms/setup.py:434 hrms/setup.py:494
+#: hrms/setup.py:435 hrms/setup.py:437 hrms/setup.py:497
 msgid "Leave Approval Notification"
 msgstr "İzin Onay Bildirimi"
 
@@ -5888,8 +5900,9 @@ msgstr "İzin Onay Bildirimi Şablonu"
 #. Label of the leave_approver (Link) field in DocType 'Leave Application'
 #. Name of a role
 #: hrms/hr/doctype/leave_application/leave_application.json
-#: hrms/hr/doctype/overtime_slip/overtime_slip.json hrms/setup.py:146
-#: hrms/setup.py:248
+#: hrms/hr/doctype/overtime_slip/overtime_slip.json
+#: hrms/patches/v15_0/update_approver_custom_fields.py:19 hrms/setup.py:145
+#: hrms/setup.py:249
 msgid "Leave Approver"
 msgstr "İzni Onaylayan"
 
@@ -5926,7 +5939,7 @@ msgstr ""
 #. Label of a Link in the Leaves Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/leave_block_list/leave_block_list.json
-#: hrms/hr/workspace/leaves/leaves.json hrms/setup.py:125
+#: hrms/hr/workspace/leaves/leaves.json hrms/setup.py:124
 #: hrms/workspace_sidebar/leaves.json
 msgid "Leave Block List"
 msgstr "Bloklu İzin Listesi"
@@ -6084,7 +6097,7 @@ msgstr "İzin Politikası: {0} zaten {1} Personeli için {2} ile {3} dönemi iç
 msgid "Leave Settings"
 msgstr ""
 
-#: hrms/setup.py:441 hrms/setup.py:443 hrms/setup.py:495
+#: hrms/setup.py:444 hrms/setup.py:446 hrms/setup.py:498
 msgid "Leave Status Notification"
 msgstr "İzin Durum Bildirimi"
 
@@ -6162,8 +6175,8 @@ msgstr "{0} Türü Ayrılma özelliği değiştirilemez"
 
 #. Label of the leave_without_pay (Float) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/report/salary_register/salary_register.py:179 hrms/setup.py:381
-#: hrms/setup.py:382
+#: hrms/payroll/report/salary_register/salary_register.py:179 hrms/setup.py:384
+#: hrms/setup.py:385
 msgid "Leave Without Pay"
 msgstr "Ücretsiz izin"
 
@@ -6195,6 +6208,11 @@ msgstr "Öncelik tahsis edememek izin {0}, izin özellikleri zaten devredilen ge
 msgid "Leave cannot be applied/cancelled before {0}, as leave balance has already been carry-forwarded in the future leave allocation record {1}"
 msgstr "İzin yapısı zaten devredilen gelecek izin tahsisi kayıtlarında olduğu gibi, daha önce {0} iptal / tatbik etmek anlamsız bırakın {1}"
 
+#. Label of the is_optional_leave (Check) field in DocType 'Leave Type'
+#: hrms/hr/doctype/leave_type/leave_type.json
+msgid "Leave for optional holiday"
+msgstr ""
+
 #: hrms/hr/doctype/leave_application/leave_application.py:565
 msgid "Leave of type {0} cannot be longer than {1}."
 msgstr "{0} türündeki izin {1} değerinden daha uzun olamaz."
@@ -6215,8 +6233,8 @@ msgstr "Alınan İzinler"
 #. Label of a Desktop Icon
 #. Label of the leaves_tab (Tab Break) field in DocType 'HR Settings'
 #. Label of the leaves (Float) field in DocType 'Leave Ledger Entry'
+#. Label of a Card Break in the HR Setup Workspace
 #. Name of a Workspace
-#. Label of a Card Break in the People Workspace
 #. Label of the leave_details_section (Tab Break) field in DocType 'Salary
 #. Slip'
 #. Title of a Workspace Sidebar
@@ -6226,7 +6244,8 @@ msgstr "Alınan İzinler"
 #: hrms/hr/doctype/leave_policy/leave_policy_dashboard.py:8
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment_dashboard.py:8
 #: hrms/hr/report/leave_ledger/leave_ledger.py:59
-#: hrms/hr/workspace/leaves/leaves.json hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/leaves/leaves.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/workspace_sidebar/leaves.json
 msgid "Leaves"
@@ -6260,7 +6279,7 @@ msgstr "Onay Bekleyen İzinler"
 msgid "Leaves for the Leave Type {0} won't be carry-forwarded since carry-forwarding is disabled."
 msgstr "{0} İzin Türü için izinler devre dışı bırakıldığından devredilemez."
 
-#: hrms/setup.py:412
+#: hrms/setup.py:415
 msgid "Leaves per Year"
 msgstr "Yıllık İzin"
 
@@ -6289,6 +6308,11 @@ msgstr "Yaşam döngüsü"
 msgid "Lime"
 msgstr "Limon Yeşili"
 
+#. Label of the limits_tab (Tab Break) field in DocType 'Leave Type'
+#: hrms/hr/doctype/leave_type/leave_type.json
+msgid "Limits"
+msgstr ""
+
 #. Description of the 'Appraisal Linking' (Section Break) field in DocType
 #. 'Goal'
 #: hrms/hr/doctype/goal/goal.json hrms/hr/doctype/goal/goal_tree.js:97
@@ -6309,7 +6333,7 @@ msgstr "Avans Hesabı"
 msgid "Loan Product"
 msgstr ""
 
-#: hrms/payroll/report/salary_register/salary_register.py:233 hrms/setup.py:773
+#: hrms/payroll/report/salary_register/salary_register.py:233 hrms/setup.py:764
 msgid "Loan Repayment"
 msgstr ""
 
@@ -6606,7 +6630,7 @@ msgstr "Mayıs"
 msgid "Meal Preference"
 msgstr "Yemek Tercihi"
 
-#: hrms/setup.py:334
+#: hrms/setup.py:337
 msgid "Medical"
 msgstr "Tıbbi"
 
@@ -6677,11 +6701,11 @@ msgid "Month To Date(Company Currency)"
 msgstr "Ay Başından Bugüne (Şirket Para Birimi)"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Shift & Attendance Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 #: hrms/workspace_sidebar/shift_&_attendance.json
 msgid "Monthly Attendance Sheet"
@@ -7066,7 +7090,7 @@ msgstr "Not: Maaş bordronuz şifreyle korunmaktadır, PDF'i açmak için gereke
 msgid "Nothing to change"
 msgstr "Değiştirecek bir şey yok"
 
-#: hrms/setup.py:413
+#: hrms/setup.py:416
 msgid "Notice Period"
 msgstr "İhbar süresi"
 
@@ -7275,7 +7299,7 @@ msgstr "İsteğe Bağlı İzinler, Çalışanların şirket tarafından yayınla
 
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/page/organizational_chart/organizational_chart.js:4
-#: hrms/workspace_sidebar/people.json
+#: hrms/workspace_sidebar/hr_setup.json
 msgid "Organizational Chart"
 msgstr "Organizasyon Şeması"
 
@@ -7488,7 +7512,7 @@ msgstr ""
 msgid "Parent Goal"
 msgstr ""
 
-#: hrms/setup.py:390
+#: hrms/setup.py:393
 msgid "Part-time"
 msgstr "Yarı zamanlı"
 
@@ -7602,7 +7626,7 @@ msgstr ""
 #: hrms/desktop_icon/payroll.json
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/overrides/dashboard_overrides.py:37
-#: hrms/overrides/dashboard_overrides.py:77
+#: hrms/overrides/dashboard_overrides.py:80
 #: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/workspace_sidebar/payroll.json
 msgid "Payroll"
@@ -7622,7 +7646,7 @@ msgstr ""
 msgid "Payroll Correction Child"
 msgstr ""
 
-#: hrms/setup.py:111 hrms/setup.py:281
+#: hrms/setup.py:110 hrms/setup.py:284
 msgid "Payroll Cost Center"
 msgstr ""
 
@@ -7686,7 +7710,7 @@ msgstr "Bordro Numarası"
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/setup.py:846
+#: hrms/setup.py:837
 msgid "Payroll Payable Account"
 msgstr "Bordro Borç Hesabı"
 
@@ -7735,9 +7759,9 @@ msgstr "Bordro Dönemleri"
 msgid "Payroll Reports"
 msgstr "Bordro Raporları"
 
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Name of a DocType
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Payroll Settings"
 msgstr "Bordro Ayarları"
@@ -7780,14 +7804,6 @@ msgstr "Bekleyen Mülakatlar"
 msgid "Pending Questionnaires"
 msgstr "Bekleyen Mülakatlar"
 
-#. Label of a Desktop Icon
-#. Name of a Workspace
-#. Title of a Workspace Sidebar
-#: hrms/desktop_icon/people.json hrms/hr/workspace/people/people.json
-#: hrms/workspace_sidebar/people.json
-msgid "People"
-msgstr ""
-
 #. Label of the percent_deduction (Percent) field in DocType 'Taxable Salary
 #. Slab'
 #: hrms/payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
@@ -7811,7 +7827,7 @@ msgstr ""
 msgid "Permanently submit {0}"
 msgstr ""
 
-#: hrms/setup.py:394
+#: hrms/setup.py:397
 msgid "Piecework"
 msgstr "parça başı iş"
 
@@ -8148,15 +8164,15 @@ msgstr ""
 msgid "Printed On {0}"
 msgstr ""
 
-#: hrms/setup.py:373 hrms/setup.py:374
+#: hrms/setup.py:376 hrms/setup.py:377
 msgid "Privilege Leave"
 msgstr "Ayrıcalık izni"
 
-#: hrms/setup.py:391
+#: hrms/setup.py:394
 msgid "Probation"
 msgstr "Deneme Süresi"
 
-#: hrms/setup.py:405
+#: hrms/setup.py:408
 msgid "Probationary Period"
 msgstr "Deneme Dönemi"
 
@@ -8168,7 +8184,7 @@ msgstr "İşlem Sonrasına Devam Etme"
 #. Label of the process_payroll_accounting_entry_based_on_employee (Check)
 #. field in DocType 'Payroll Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
-#: hrms/setup.py:857
+#: hrms/setup.py:848
 msgid "Process Payroll Accounting Entry based on Employee"
 msgstr ""
 
@@ -8409,11 +8425,11 @@ msgid "Recruitment"
 msgstr "İşe Alım"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Recruitment Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/report/recruitment_analytics/recruitment_analytics.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/hr/workspace/recruitment/recruitment.json
 #: hrms/workspace_sidebar/recruitment.json
 msgid "Recruitment Analytics"
@@ -8541,7 +8557,7 @@ msgstr "Sıfır Değerindeyse Kaldır"
 msgid "Rented Car"
 msgstr "kiralanmış araba"
 
-#: hrms/setup.py:830 hrms/setup.py:839
+#: hrms/setup.py:821 hrms/setup.py:830
 msgid "Repay From Salary"
 msgstr ""
 
@@ -8612,7 +8628,7 @@ msgstr "Talep Eden (İsim)"
 msgid "Require Full Funding"
 msgstr "Tam Finansman Gerektir"
 
-#: hrms/setup.py:170
+#: hrms/setup.py:169
 msgid "Required Skills"
 msgstr "Gerekli Beceriler"
 
@@ -8626,7 +8642,7 @@ msgstr "Çalışan Yaratma için Gerekli"
 msgid "Reschedule Interview"
 msgstr "Röportajı Yeniden Planla"
 
-#: hrms/setup.py:411
+#: hrms/setup.py:414
 msgid "Responsibilities"
 msgstr "Sorumluluklar"
 
@@ -8949,7 +8965,7 @@ msgstr "Maaş Kaydı"
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/workspace/payroll/payroll.json hrms/setup.py:309
+#: hrms/payroll/workspace/payroll/payroll.json hrms/setup.py:312
 #: hrms/workspace_sidebar/payroll.json
 msgid "Salary Slip"
 msgstr "Maaş Bordrosu"
@@ -9597,7 +9613,8 @@ msgstr "Vardiya Konumu"
 msgid "Shift Request"
 msgstr "Vardiya Talebi"
 
-#: hrms/setup.py:139 hrms/setup.py:260
+#: hrms/patches/v15_0/update_approver_custom_fields.py:27 hrms/setup.py:138
+#: hrms/setup.py:262
 msgid "Shift Request Approver"
 msgstr "Vardiya Talebi Onaylayıcısı"
 
@@ -9740,7 +9757,7 @@ msgstr "Göster Maaş Kayma"
 msgid "Showing"
 msgstr "Gösteriliyor"
 
-#: hrms/setup.py:365 hrms/setup.py:366
+#: hrms/setup.py:368 hrms/setup.py:369
 msgid "Sick Leave"
 msgstr "Hastalık İzni"
 
@@ -9777,7 +9794,7 @@ msgstr "Yetkinlik İsmi"
 
 #. Label of the skills_section (Section Break) field in DocType 'Employee Skill
 #. Map'
-#: hrms/hr/doctype/employee_skill_map/employee_skill_map.json hrms/setup.py:176
+#: hrms/hr/doctype/employee_skill_map/employee_skill_map.json hrms/setup.py:175
 msgid "Skills"
 msgstr "Yetkinlikler"
 
@@ -9895,7 +9912,7 @@ msgstr "İstatistiksel Bileşen"
 msgid "Status for Other Half"
 msgstr ""
 
-#: hrms/setup.py:408
+#: hrms/setup.py:411
 msgid "Stock Options"
 msgstr "Stok Seçenekleri"
 
@@ -10170,7 +10187,7 @@ msgstr "Eğer izin için başvuruda bulunulduğu gün (ler) tatildir. İstemeniz
 msgid "The days between {0} to {1} are not valid holidays."
 msgstr ""
 
-#: hrms/setup.py:130
+#: hrms/setup.py:129
 msgid "The first Approver in the list will be set as the default Approver."
 msgstr ""
 
@@ -10243,7 +10260,8 @@ msgstr ""
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
 msgstr ""
 
-#. Description of the 'Is Optional Leave' (Check) field in DocType 'Leave Type'
+#. Description of the 'Leave for optional holiday' (Check) field in DocType
+#. 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "These leaves are holidays permitted by the company however, availing it is optional for an Employee."
 msgstr "Bu izinler, şirket tarafından izin verilen tatillerdir, ancak bir Çalışan için isteğe bağlıdır."
@@ -10284,7 +10302,7 @@ msgstr "Bu alan, bir Personelin arka arkaya başvurabileceği maksimum izin say�
 msgid "This field allows you to set the maximum number of leaves that can be allocated annually for this Leave Type while creating the Leave Policy"
 msgstr "Bu alan, İzin Politikası oluşturulurken bu İzin Türü için yıllık olarak tahsis edilebilecek maksimum izin sayısını ayarlamanıza olanak tanır"
 
-#: hrms/overrides/dashboard_overrides.py:60
+#: hrms/overrides/dashboard_overrides.py:63
 msgid "This is based on the attendance of this Employee"
 msgstr "Bu tablo, Personelin işe devamlılığını gösterir"
 
@@ -10532,11 +10550,11 @@ msgstr ""
 msgid "Total Exemption Amount"
 msgstr "Toplam Muafiyet Tutarı"
 
-#: hrms/setup.py:299
+#: hrms/setup.py:302
 msgid "Total Expense Claim (via Expense Claim)"
 msgstr ""
 
-#: hrms/setup.py:290
+#: hrms/setup.py:293
 msgid "Total Expense Claim (via Expense Claims)"
 msgstr "Toplam Harcama Talepleri"
 
@@ -10559,7 +10577,7 @@ msgstr "Toplam Saat (T)"
 msgid "Total Income Tax"
 msgstr "Toplam Gelir Vergisi"
 
-#: hrms/setup.py:803
+#: hrms/setup.py:794
 msgid "Total Interest Amount"
 msgstr ""
 
@@ -10592,7 +10610,7 @@ msgstr "Ayrılan Toplam İzinler"
 msgid "Total Leaves Encashed"
 msgstr "Toplam İzin Paraya çevrilen"
 
-#: hrms/setup.py:817
+#: hrms/setup.py:808
 msgid "Total Loan Repayment"
 msgstr ""
 
@@ -10629,7 +10647,7 @@ msgstr ""
 msgid "Total Present"
 msgstr "Toplam Gün"
 
-#: hrms/setup.py:794
+#: hrms/setup.py:785
 msgid "Total Principal Amount"
 msgstr ""
 
@@ -10755,7 +10773,7 @@ msgstr "Eğitmen Adı"
 #. Label of a Card Break in the Tenure Workspace
 #: hrms/hr/doctype/employee_training/employee_training.json
 #: hrms/hr/workspace/tenure/tenure.json
-#: hrms/overrides/dashboard_overrides.py:49
+#: hrms/overrides/dashboard_overrides.py:52
 msgid "Training"
 msgstr "Eğitim"
 
@@ -10850,7 +10868,7 @@ msgstr "Transfer Tarihi"
 
 #. Label of a Card Break in the Expenses Workspace
 #. Label of a Workspace Sidebar Item
-#: hrms/hr/workspace/expenses/expenses.json hrms/setup.py:336
+#: hrms/hr/workspace/expenses/expenses.json hrms/setup.py:339
 #: hrms/workspace_sidebar/expenses.json
 msgid "Travel"
 msgstr "Gezi"
@@ -10881,11 +10899,12 @@ msgstr "Seyahat Programı"
 
 #. Name of a DocType
 #. Label of a Link in the Expenses Workspace
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/travel_request/travel_request.json
 #: hrms/hr/workspace/expenses/expenses.json
-#: hrms/hr/workspace/people/people.json hrms/workspace_sidebar/expenses.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/workspace_sidebar/expenses.json
 msgid "Travel Request"
 msgstr "Seyahat Talebi"
 
@@ -11237,7 +11256,7 @@ msgstr "Uyarı: İzin yazılımı aşağıdaki engel bölümleri bulunmaktadır"
 msgid "Warning: {0} already has an active Shift Assignment {1} for some/all of these dates."
 msgstr "Uyarı: {0} adresinde bu tarihlerin bazıları/hepsi için halihazırda aktif bir Vardiya Ataması {1} bulunmaktadır."
 
-#: hrms/setup.py:398
+#: hrms/setup.py:401
 msgid "Website Listing"
 msgstr "Web Sitesi Listesi"
 
@@ -11439,7 +11458,7 @@ msgstr "Personel planına göre, ana şirket {4} için {3} personel planında ya
 msgid "You can only submit Leave Encashment for a valid encashment amount"
 msgstr "İzin Depozitini geçerli bir nakit miktarı için gönderebilirsiniz."
 
-#: hrms/api/__init__.py:742
+#: hrms/api/__init__.py:744
 msgid "You can only upload JPG, PNG, PDF, TXT or Microsoft documents."
 msgstr "Sadece JPG, PNG, PDF, TXT veya Microsoft belgelerini yükleyebilirsiniz."
 

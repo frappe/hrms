@@ -506,6 +506,7 @@ def get_expense_claims(
 		"`tabExpense Claim`.posting_date",
 		"`tabExpense Claim`.employee",
 		"`tabExpense Claim`.employee_name",
+		"`tabExpense Claim`.currency",
 		"`tabExpense Claim`.approval_status",
 		"`tabExpense Claim`.status",
 		"`tabExpense Claim`.expense_approver",
@@ -654,11 +655,6 @@ def get_employee_advance_balance() -> list[dict]:
 	).run(as_dict=True)
 
 	return advances
-
-
-@frappe.whitelist()
-def get_advance_account(company: str) -> str | None:
-	return frappe.db.get_value("Company", company, "default_employee_advance_account", cache=True)
 
 
 # Company

@@ -51,9 +51,11 @@ const searchText = ref("");
 const value = computed({
 	get: () => props.modelValue,
 	set: (val) => {
-		const newVal = val && typeof val === "object" && val.value !== undefined ? val.value : val;
-		console.log(newVal);
-		emit("update:modelValue", newVal || "");
+		if (typeof val === "string") {
+			emit("update:modelValue", val);
+		} else {
+			emit("update:modelValue", val?.value || "");
+		}
 	},
 });
 
@@ -88,9 +90,6 @@ const reloadOptions = (searchTextVal) => {
 
 const handleQueryUpdate = debounce((newQuery) => {
 	const val = newQuery || "";
-
-	if (val === "" && props.modelValue) return;
-
 	if (searchText.value === val) return;
 	searchText.value = val;
 	reloadOptions(val);
@@ -103,5 +102,10 @@ watch(
 		reloadOptions("");
 	},
 	{ immediate: true },
+);
+
+watch(
+	() => props.filters,
+	() => reloadOptions(""),
 );
 </script>

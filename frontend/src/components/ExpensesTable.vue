@@ -4,7 +4,7 @@
 		<h2 class="text-base font-semibold text-gray-800">{{ __("Expenses") }} </h2>
 		<div class="flex flex-row gap-3 items-center">
 			<span class="text-base font-semibold text-gray-800">
-				{{ formatCurrency(expenseClaim.total_claimed_amount, currency) }}
+				{{ formatCurrency(expenseClaim.total_claimed_amount, expenseClaim.currency) }}
 			</span>
 			<Button
 				v-if="!isReadOnly"
@@ -40,7 +40,7 @@
 									{{
 										__("{0}: {1}", [
 											__("Sanctioned"),
-											formatCurrency(item.sanctioned_amount || 0, currency),
+											formatCurrency(item.sanctioned_amount || 0, expenseClaim.currency),
 										])
 									}}
 								</span>
@@ -53,7 +53,7 @@
 					</div>
 					<div class="flex flex-row justify-end items-center gap-2">
 						<span class="text-gray-700 font-normal rounded text-base">
-							{{ formatCurrency(item.amount, currency) }}
+							{{ formatCurrency(item.amount, expenseClaim.currency) }}
 						</span>
 						<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
 					</div>
@@ -75,7 +75,7 @@
 					</span>
 				</div>
 				<div class="w-full flex flex-col items-center justify-center gap-5 p-4 max-h-[80vh]">
-					<div class="flex flex-col w-full space-y-4 overflow-y-auto">
+					<div class="flex flex-col w-full space-y-4 overflow-y-auto px-0.5">
 						<FormField
 							v-for="field in expensesTableFields.data"
 							:key="field.fieldname"
@@ -140,13 +140,11 @@ import CustomIonModal from "@/components/CustomIonModal.vue"
 import { claimTypesByID } from "@/data/claims"
 import { formatCurrency } from "@/utils/formatters"
 
+import { useCurrencyConversion } from "@/composables/useCurrencyConversion"
+
 const props = defineProps({
 	expenseClaim: {
 		type: Object,
-		required: true,
-	},
-	currency: {
-		type: String,
 		required: true,
 	},
 	isReadOnly: {
@@ -201,11 +199,18 @@ const expensesTableFields = createResource({
 	url: "hrms.api.get_doctype_fields",
 	params: { doctype: "Expense Claim Detail" },
 	transform(data) {
-		const excludeFields = ["description_sb", "amounts_sb"]
+		const excludeFields = ["description_sb", "amounts_sb", "base_amount", "base_sanctioned_amount"]
 		return data.filter((field) => !excludeFields.includes(field.fieldname))
 	},
 })
 expensesTableFields.reload()
+
+const expenseClaimRef = computed(() => props.expenseClaim)
+useCurrencyConversion(
+	expensesTableFields,
+	expenseClaimRef,
+	["amount", "sanctioned_amount"]
+)
 
 const modalTitle = computed(() => {
 	if (props.isReadOnly) return __("Expense Item")

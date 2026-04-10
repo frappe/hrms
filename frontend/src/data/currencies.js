@@ -21,3 +21,13 @@ export function getCompanyCurrencySymbol(company) {
 export function getCurrencySymbol(currency) {
 	return currencySymbols?.data?.[currency]
 }
+
+export const currencyPrecision = createResource({
+	url: "frappe.client.get_single_value",
+	params: {
+		doctype: "System Settings",
+		field: "currency_precision"
+	},
+	auto: true,
+	initialData: 2
+});

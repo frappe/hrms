@@ -14,7 +14,7 @@
 					<span>{{ claimDates }}</span>
 					<span class="whitespace-pre"> &middot; </span>
 					<span class="whitespace-nowrap">
-						{{ formatCurrency(props.doc.total_claimed_amount, currency) }}
+						{{ formatCurrency(props.doc.total_claimed_amount, props.doc.currency) }}
 					</span>
 				</div>
 			</div>
@@ -33,7 +33,6 @@ import { computed, inject } from "vue"
 import ListItem from "@/components/ListItem.vue"
 import ExpenseIcon from "@/components/icons/ExpenseIcon.vue"
 
-import { getCompanyCurrency } from "@/data/currencies"
 import { formatCurrency } from "@/utils/formatters"
 
 const dayjs = inject("$dayjs")
@@ -99,7 +98,6 @@ const claimDates = computed(() => {
 	}
 })
 
-const currency = computed(() => getCompanyCurrency(props.doc.company))
 
 const approvalStatus = computed(() => {
 	return props.doc.approval_status === "Draft" ? "Pending" : props.doc.approval_status

@@ -1,0 +1,32 @@
+
+<div id="hierarchy-empty-root" class="text-muted flex flex-1 items-center justify-center align-center text-center">
+  <div class="">
+    <div class="empty-apps-state">
+      <svg class="icon icon-xl" style="stroke: var(--text-light);">
+        <use href="#icon-small-file"></use>
+      </svg>
+      <div class="mt-4 mb-2">
+        {{ __("You haven't created a {0} for {1} yet.", [__(doctype), __(company)]) }}
+      </div>
+
+      {% if can_create %}
+        {% if device_type == "desktop" %}
+          <button
+            class="btn btn-default btn-sm btn-new-doc hidden-xs"
+            id="add-doc-btn"
+          >
+            {{ __("Create a new {0}", [__(doctype)]) }}
+          </button>
+        {% else %}
+          <button
+            class="btn btn-primary btn-new-doc visible-xs"
+            id="add-doc-btn"
+          >
+            {{ __("Create {0}", [__(doctype)]) }}
+          </button>
+        {% endif %}
+      {% endif %}
+
+    </div>
+  </div>
+</div>

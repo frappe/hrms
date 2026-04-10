@@ -120,6 +120,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		if frappe.db.get_value("Leave Type", self.leave_type, "is_optional_leave"):
 			self.validate_optional_leave()
 		self.validate_applicable_after()
+		self.validate_for_self_approval()
 
 	def on_update(self):
 		if self.status == "Open" and self.docstatus < 1:
@@ -137,7 +138,6 @@ class LeaveApplication(Document, PWANotificationsMixin):
 
 		self.validate_back_dated_application()
 		self.update_attendance()
-		self.validate_for_self_approval()
 
 		# notify leave applier about approval
 		if frappe.db.get_single_value("HR Settings", "send_leave_notification"):
@@ -931,6 +931,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			self_leave_approval_not_allowed
 			and employee_user == frappe.session.user
 			and not get_workflow_name("Leave Application")
+			and self.status == "Approved"
 		):
 			frappe.throw(_("Self-approval for leaves is not allowed"))
 

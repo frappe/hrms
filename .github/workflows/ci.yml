@@ -10,6 +10,9 @@ on:
       - "**.csv"
       - "**.po"
       - "**.pot"
+      - 'crowdin.yml'
+      - '.mergify.yml'
+      - '**.vue'
   schedule:
     # Run everday at midnight UTC / 5:30 IST
     - cron: "0 0 * * *"
@@ -32,7 +35,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        container: [1, 2]
+        container: [1, 2, 3]
 
     name: Python Unit Tests
 

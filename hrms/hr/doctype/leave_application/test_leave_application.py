@@ -958,7 +958,7 @@ class TestLeaveApplication(HRMSTestSuite):
 		add_role(leave_approver, "Leave Approver")
 
 		make_allocation_record(employee.name)
-		application = application = frappe.get_doc(
+		application = frappe.get_doc(
 			doctype="Leave Application",
 			employee=employee.name,
 			leave_type="_Test Leave Type",
@@ -971,12 +971,13 @@ class TestLeaveApplication(HRMSTestSuite):
 		)
 		application.insert()
 		application.status = "Approved"
-
 		frappe.set_user(employee.user_id)
-		self.assertRaises(frappe.ValidationError, application.submit)
+		self.assertRaises(frappe.ValidationError, application.save)
 
 		frappe.set_user(leave_approver)
 		application.reload()
+		application.status = "Approved"
+		application.save()
 		application.submit()
 		self.assertEqual(1, application.docstatus)
 

@@ -374,6 +374,10 @@ def get_employee_related_details(filters: Filters) -> tuple[dict, list]:
 
 	if filters.employee:
 		query = query.where(Employee.name == filters.employee)
+	if filters.department and filters.department != "All Departments":
+		query = query.where(Employee.department == filters.department)
+	if filters.branch:
+		query = query.where(Employee.branch == filters.branch)
 
 	group_by = filters.group_by
 	if group_by:

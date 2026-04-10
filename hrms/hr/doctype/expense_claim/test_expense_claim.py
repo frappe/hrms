@@ -161,6 +161,34 @@ class TestExpenseClaim(HRMSTestSuite):
 		expense_claim2.load_from_db()
 		self.assertEqual(expense_claim2.status, "Paid")
 
+	def test_other_employee_advances_link_with_claim(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import make_employee_advance
+
+		payable_account = get_payable_account("_Test Company")
+
+		employee = make_employee("test_employee@employee.advance", "_Test Company")
+		advance = make_employee_advance(employee)
+
+		employee_with_no_advance = make_employee("test_employee@not-employee.advance", "_Test Company")
+		claim_with_no_advance = make_expense_claim(
+			payable_account,
+			1000,
+			1000,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			do_not_submit=True,
+			employee=employee_with_no_advance,
+		)
+		claim_with_no_advance.save()
+
+		claim_with_no_advance.append(
+			"advances",
+			{
+				"employee_advance": advance.name,
+			},
+		)
+		self.assertRaises(frappe.ValidationError, claim_with_no_advance.save)
+
 	def test_expense_claim_against_fully_paid_advances(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (
 			get_advances_for_claim,

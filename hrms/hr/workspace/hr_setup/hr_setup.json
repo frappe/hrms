@@ -138,58 +138,6 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Other Reports",
-   "link_count": 4,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "dependencies": "Employee",
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Employee Information",
-   "link_count": 0,
-   "link_to": "Employee Information",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "Employee",
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Employee Birthday",
-   "link_count": 0,
-   "link_to": "Employee Birthday",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "Employee",
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Employees Working on a Holiday",
-   "link_count": 0,
-   "link_to": "Employees working on a holiday",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "Daily Work Summary",
-   "hidden": 0,
-   "is_query_report": 1,
-   "label": "Daily Work Summary Replies",
-   "link_count": 0,
-   "link_to": "Daily Work Summary Replies",
-   "link_type": "Report",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Setup",
    "link_count": 4,
    "onboard": 0,
@@ -382,9 +330,63 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Other Reports",
+   "link_count": 4,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "Employee",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Employee Information",
+   "link_count": 0,
+   "link_to": "Employee Information",
+   "link_type": "Report",
+   "onboard": 0,
+   "report_ref_doctype": "Employee",
+   "type": "Link"
+  },
+  {
+   "dependencies": "Employee",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Employee Birthday",
+   "link_count": 0,
+   "link_to": "Employee Birthday",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Employee",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Employees Working on a Holiday",
+   "link_count": 0,
+   "link_to": "Employees working on a holiday",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Daily Work Summary",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Daily Work Summary Replies",
+   "link_count": 0,
+   "link_to": "Daily Work Summary Replies",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-03-11 12:49:12.920080",
+ "modified": "2026-04-06 19:29:59.207478",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Setup",

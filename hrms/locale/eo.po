@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-03-22 09:44+0000\n"
-"PO-Revision-Date: 2026-03-23 13:22\n"
+"POT-Creation-Date: 2026-04-05 09:45+0000\n"
+"PO-Revision-Date: 2026-04-06 14:50\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Esperanto\n"
 "MIME-Version: 1.0\n"
@@ -843,7 +843,7 @@ msgstr "crwdns140960:0crwdne140960:0"
 msgid "Annual Allocation Exceeded"
 msgstr "crwdns149070:0crwdne149070:0"
 
-#: hrms/setup.py:404
+#: hrms/setup.py:407
 msgid "Annual Salary"
 msgstr "crwdns105158:0crwdne105158:0"
 
@@ -1051,7 +1051,7 @@ msgstr "crwdns105246:0crwdne105246:0"
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/doctype/appraisal_template/appraisal_template.json
-#: hrms/hr/doctype/appraisee/appraisee.json hrms/setup.py:162
+#: hrms/hr/doctype/appraisee/appraisee.json hrms/setup.py:161
 #: hrms/workspace_sidebar/performance.json
 msgid "Appraisal Template"
 msgstr "crwdns105248:0crwdne105248:0"
@@ -1095,7 +1095,7 @@ msgstr "crwdns105270:0crwdne105270:0"
 msgid "Appraisees: {0}"
 msgstr "crwdns105272:0{0}crwdne105272:0"
 
-#: hrms/setup.py:396
+#: hrms/setup.py:399
 msgid "Apprentice"
 msgstr "crwdns105274:0crwdne105274:0"
 
@@ -1140,7 +1140,7 @@ msgstr "crwdns141000:0crwdne141000:0"
 msgid "Approver"
 msgstr "crwdns141002:0crwdne141002:0"
 
-#: hrms/setup.py:133 hrms/setup.py:235
+#: hrms/setup.py:132 hrms/setup.py:235
 msgid "Approvers"
 msgstr "crwdns148888:0crwdne148888:0"
 
@@ -1289,8 +1289,8 @@ msgstr "crwdns160870:0crwdne160870:0"
 
 #. Name of a DocType
 #. Label of the attendance (Select) field in DocType 'Training Event Employee'
-#. Label of a Card Break in the People Workspace
-#. Label of a Link in the People Workspace
+#. Label of a Card Break in the HR Setup Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Card Break in the Shift & Attendance Workspace
 #. Label of a Link in the Shift & Attendance Workspace
 #. Option for the 'Calculate Payroll Working Days Based On' (Select) field in
@@ -1298,7 +1298,7 @@ msgstr "crwdns160870:0crwdne160870:0"
 #: frontend/src/components/BottomTabs.vue:48
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 #: hrms/overrides/dashboard_overrides.py:10
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
@@ -1342,13 +1342,13 @@ msgstr "crwdns105354:0crwdne105354:0"
 
 #. Label of the attendance_request (Link) field in DocType 'Attendance'
 #. Name of a DocType
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Shift & Attendance Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/attendance/attendance.js:18
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/attendance_request/attendance_request.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 #: hrms/workspace_sidebar/shift_&_attendance.json
 msgid "Attendance Request"
@@ -1758,7 +1758,7 @@ msgstr "crwdns141120:0crwdne141120:0"
 msgid "Calculated in days"
 msgstr "crwdns141122:0crwdne141122:0"
 
-#: hrms/setup.py:332
+#: hrms/setup.py:335
 msgid "Calls"
 msgstr "crwdns105530:0crwdne105530:0"
 
@@ -1835,6 +1835,7 @@ msgid "Cannot update status of Goal groups"
 msgstr "crwdns105574:0crwdne105574:0"
 
 #. Label of the carry_forward (Check) field in DocType 'Leave Control Panel'
+#. Label of the is_carry_forward (Check) field in DocType 'Leave Type'
 #. Label of the carry_forward_section (Section Break) field in DocType 'Leave
 #. Type'
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
@@ -1848,7 +1849,7 @@ msgstr "crwdns141126:0crwdne141126:0"
 msgid "Carry Forwarded Leaves"
 msgstr "crwdns141128:0crwdne141128:0"
 
-#: hrms/setup.py:347 hrms/setup.py:348
+#: hrms/setup.py:350 hrms/setup.py:351
 msgid "Casual Leave"
 msgstr "crwdns105582:0crwdne105582:0"
 
@@ -1977,7 +1978,7 @@ msgstr "crwdns159484:0{0}crwdne159484:0"
 
 #. Label of a Card Break in the Expenses Workspace
 #: hrms/hr/workspace/expenses/expenses.json
-#: hrms/overrides/dashboard_overrides.py:84
+#: hrms/overrides/dashboard_overrides.py:87
 msgid "Claims"
 msgstr "crwdns105618:0crwdne105618:0"
 
@@ -2022,15 +2023,16 @@ msgstr "crwdns151176:0crwdne151176:0"
 
 #. Name of a DocType
 #. Label of the compensatory_request (Link) field in DocType 'Leave Allocation'
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Leaves Workspace
-#. Label of a Link in the People Workspace
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.json
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
-#: hrms/hr/workspace/leaves/leaves.json hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/leaves/leaves.json
 msgid "Compensatory Leave Request"
 msgstr "crwdns105768:0crwdne105768:0"
 
-#: hrms/setup.py:356 hrms/setup.py:357
+#: hrms/setup.py:359 hrms/setup.py:360
 msgid "Compensatory Off"
 msgstr "crwdns105774:0crwdne105774:0"
 
@@ -2346,12 +2348,13 @@ msgstr "crwdns106030:0crwdne106030:0"
 #. Label of the daily_work_summary_group (Link) field in DocType 'Daily Work
 #. Summary'
 #. Name of a DocType
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Tenure Workspace
 #: hrms/hr/doctype/daily_work_summary/daily_work_summary.json
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 #: hrms/hr/page/team_updates/team_updates.js:12
-#: hrms/hr/workspace/people/people.json hrms/hr/workspace/tenure/tenure.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Daily Work Summary Group"
 msgstr "crwdns106034:0crwdne106034:0"
 
@@ -2361,10 +2364,11 @@ msgid "Daily Work Summary Group User"
 msgstr "crwdns106040:0crwdne106040:0"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Tenure Workspace
 #: hrms/hr/report/daily_work_summary_replies/daily_work_summary_replies.json
-#: hrms/hr/workspace/people/people.json hrms/hr/workspace/tenure/tenure.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Daily Work Summary Replies"
 msgstr "crwdns106042:0crwdne106042:0"
 
@@ -2391,7 +2395,7 @@ msgstr "crwdns141260:0crwdne141260:0"
 msgid "Dates Based On"
 msgstr "crwdns141262:0crwdne141262:0"
 
-#: hrms/setup.py:121
+#: hrms/setup.py:120
 msgid "Days for which Holidays are blocked for this department."
 msgstr "crwdns148890:0crwdne148890:0"
 
@@ -2502,15 +2506,15 @@ msgstr "crwdns141282:0crwdne141282:0"
 msgid "Default Base Pay"
 msgstr "crwdns141284:0crwdne141284:0"
 
-#: hrms/setup.py:81
+#: hrms/setup.py:80
 msgid "Default Employee Advance Account"
 msgstr "crwdns148892:0crwdne148892:0"
 
-#: hrms/setup.py:73
+#: hrms/setup.py:72
 msgid "Default Expense Claim Payable Account"
 msgstr "crwdns148894:0crwdne148894:0"
 
-#: hrms/overrides/company.py:133 hrms/setup.py:96
+#: hrms/overrides/company.py:133 hrms/setup.py:95
 msgid "Default Payroll Payable Account"
 msgstr "crwdns148486:0crwdne148486:0"
 
@@ -2823,7 +2827,7 @@ msgid "Employee A/C Number"
 msgstr "crwdns106578:0crwdne106578:0"
 
 #: hrms/patches/v16_0/create_custom_field_for_employee_advance_in_employee_master.py:11
-#: hrms/setup.py:267
+#: hrms/setup.py:270
 msgid "Employee Advance Account"
 msgstr "crwdns161222:0crwdne161222:0"
 
@@ -2833,20 +2837,20 @@ msgstr "crwdns151202:0crwdne151202:0"
 
 #. Name of a report
 #. Label of a Link in the Expenses Workspace
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #: hrms/hr/report/employee_advance_summary/employee_advance_summary.json
 #: hrms/hr/workspace/expenses/expenses.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 msgid "Employee Advance Summary"
 msgstr "crwdns106586:0crwdne106586:0"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Tenure Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/report/employee_analytics/employee_analytics.json
-#: hrms/hr/workspace/people/people.json hrms/hr/workspace/tenure/tenure.json
-#: hrms/workspace_sidebar/tenure.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/tenure/tenure.json hrms/workspace_sidebar/tenure.json
 msgid "Employee Analytics"
 msgstr "crwdns106590:0crwdne106590:0"
 
@@ -2891,17 +2895,17 @@ msgstr "crwdns159510:0crwdne159510:0"
 #. Label of the employee_benefits_section (Section Break) field in DocType
 #. 'Salary Structure Assignment'
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/setup.py:406
+#: hrms/setup.py:409
 msgid "Employee Benefits"
 msgstr "crwdns106606:0crwdne106606:0"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Tenure Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/report/employee_birthday/employee_birthday.json
-#: hrms/hr/workspace/people/people.json hrms/hr/workspace/tenure/tenure.json
-#: hrms/workspace_sidebar/tenure.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/tenure/tenure.json hrms/workspace_sidebar/tenure.json
 msgid "Employee Birthday"
 msgstr "crwdns106610:0crwdne106610:0"
 
@@ -2911,11 +2915,11 @@ msgid "Employee Boarding Activity"
 msgstr "crwdns106612:0crwdne106612:0"
 
 #. Name of a DocType
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Shift & Attendance Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 #: hrms/workspace_sidebar/shift_&_attendance.json
 msgid "Employee Checkin"
@@ -2974,6 +2978,10 @@ msgstr "crwdns141364:0crwdne141364:0"
 msgid "Employee Emails"
 msgstr "crwdns141366:0crwdne141366:0"
 
+#: hrms/overrides/dashboard_overrides.py:25
+msgid "Employee Exit"
+msgstr "crwdns200020:0crwdne200020:0"
+
 #. Label of the employee_exit_settings_section (Section Break) field in DocType
 #. 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
@@ -2981,12 +2989,12 @@ msgid "Employee Exit Settings"
 msgstr "crwdns141368:0crwdne141368:0"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Tenure Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/report/employee_exits/employee_exits.json
-#: hrms/hr/workspace/people/people.json hrms/hr/workspace/tenure/tenure.json
-#: hrms/workspace_sidebar/tenure.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/tenure/tenure.json hrms/workspace_sidebar/tenure.json
 msgid "Employee Exits"
 msgstr "crwdns106640:0crwdne106640:0"
 
@@ -3013,7 +3021,7 @@ msgstr "crwdns106646:0crwdne106646:0"
 #. Template'
 #. Label of the employee_grade (Link) field in DocType 'Leave Control Panel'
 #. Label of the grade (Link) field in DocType 'Shift Assignment Tool'
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of the grade (Link) field in DocType 'Bulk Salary Structure
 #. Assignment'
 #. Label of a Workspace Sidebar Item
@@ -3025,9 +3033,9 @@ msgstr "crwdns106646:0crwdne106646:0"
 #: hrms/hr/doctype/employee_separation_template/employee_separation_template.json
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
-#: hrms/workspace_sidebar/people.json
+#: hrms/workspace_sidebar/hr_setup.json
 msgid "Employee Grade"
 msgstr "crwdns106650:0crwdne106650:0"
 
@@ -3074,32 +3082,34 @@ msgid "Employee Info"
 msgstr "crwdns141372:0crwdne141372:0"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Tenure Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/report/employee_information/employee_information.json
-#: hrms/hr/workspace/people/people.json hrms/hr/workspace/tenure/tenure.json
-#: hrms/workspace_sidebar/tenure.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/tenure/tenure.json hrms/workspace_sidebar/tenure.json
 msgid "Employee Information"
 msgstr "crwdns106682:0crwdne106682:0"
 
 #. Name of a report
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Leaves Workspace
-#. Label of a Link in the People Workspace
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.json
-#: hrms/hr/workspace/leaves/leaves.json hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/leaves/leaves.json
 msgid "Employee Leave Balance"
 msgstr "crwdns106684:0crwdne106684:0"
 
 #. Name of a report
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Leaves Workspace
-#. Label of a Link in the People Workspace
 #: hrms/hr/report/employee_leave_balance_summary/employee_leave_balance_summary.json
-#: hrms/hr/workspace/leaves/leaves.json hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/leaves/leaves.json
 msgid "Employee Leave Balance Summary"
 msgstr "crwdns106686:0crwdne106686:0"
 
-#: hrms/setup.py:780
+#: hrms/setup.py:771
 msgid "Employee Loan"
 msgstr "crwdns148896:0crwdne148896:0"
 
@@ -3170,7 +3180,7 @@ msgstr "crwdns106806:0crwdne106806:0"
 #: hrms/hr/doctype/employee_referral/employee_referral.json
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 #: hrms/hr/doctype/job_requisition/job_requisition.js:18
-#: hrms/hr/workspace/recruitment/recruitment.json hrms/setup.py:400
+#: hrms/hr/workspace/recruitment/recruitment.json hrms/setup.py:403
 msgid "Employee Referral"
 msgstr "crwdns106808:0crwdne106808:0"
 
@@ -3405,9 +3415,9 @@ msgstr "crwdns106908:0{0}crwdnd106908:0{1}crwdne106908:0"
 msgid "Employees HTML"
 msgstr "crwdns141398:0crwdne141398:0"
 
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Workspace Sidebar Item
-#: hrms/hr/workspace/people/people.json hrms/workspace_sidebar/leaves.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json hrms/workspace_sidebar/leaves.json
 msgid "Employees Working on a Holiday"
 msgstr "crwdns106924:0crwdne106924:0"
 
@@ -3469,7 +3479,7 @@ msgstr "crwdns106934:0crwdne106934:0"
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
-#: hrms/setup.py:186 hrms/templates/generators/job_opening.html:141
+#: hrms/setup.py:185 hrms/templates/generators/job_opening.html:141
 msgid "Employment Type"
 msgstr "crwdns106936:0crwdne106936:0"
 
@@ -3626,7 +3636,7 @@ msgstr "crwdns107018:0{doctype}crwdnd107018:0{doclink}crwdnd107018:0{row_id}crwd
 msgid "Estimated Cost Per Position"
 msgstr "crwdns141422:0crwdne141422:0"
 
-#: hrms/overrides/dashboard_overrides.py:52
+#: hrms/overrides/dashboard_overrides.py:55
 msgid "Evaluation"
 msgstr "crwdns107022:0crwdne107022:0"
 
@@ -3818,8 +3828,8 @@ msgstr "crwdns107092:0crwdne107092:0"
 
 #: hrms/hr/doctype/exit_interview/test_exit_interview.py:110
 #: hrms/hr/doctype/exit_interview/test_exit_interview.py:120
-#: hrms/hr/doctype/exit_interview/test_exit_interview.py:122 hrms/setup.py:481
-#: hrms/setup.py:483 hrms/setup.py:504
+#: hrms/hr/doctype/exit_interview/test_exit_interview.py:122 hrms/setup.py:484
+#: hrms/setup.py:486 hrms/setup.py:507
 msgid "Exit Questionnaire Notification"
 msgstr "crwdns107096:0crwdne107096:0"
 
@@ -3882,7 +3892,8 @@ msgstr "crwdns141460:0crwdne141460:0"
 #. Name of a role
 #. Label of the expense_approver (Link) field in DocType 'Expense Claim'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
-#: hrms/hr/doctype/expense_claim/expense_claim.json hrms/setup.py:153
+#: hrms/hr/doctype/expense_claim/expense_claim.json
+#: hrms/patches/v15_0/update_approver_custom_fields.py:11 hrms/setup.py:152
 #: hrms/setup.py:241
 msgid "Expense Approver"
 msgstr "crwdns107124:0crwdne107124:0"
@@ -4022,7 +4033,7 @@ msgstr "crwdns107188:0{0}crwdne107188:0"
 msgid "Failed to delete defaults for country {0}."
 msgstr "crwdns141486:0{0}crwdne141486:0"
 
-#: hrms/api/__init__.py:785
+#: hrms/api/__init__.py:787
 msgid "Failed to download PDF: {0}"
 msgstr "crwdns159538:0{0}crwdne159538:0"
 
@@ -4262,7 +4273,7 @@ msgstr "crwdns107284:0crwdne107284:0"
 msgid "Follow via Email"
 msgstr "crwdns141530:0crwdne141530:0"
 
-#: hrms/setup.py:333
+#: hrms/setup.py:336
 msgid "Food"
 msgstr "crwdns107288:0crwdne107288:0"
 
@@ -4404,7 +4415,7 @@ msgstr "crwdns107384:0crwdne107384:0"
 msgid "Full and Final Outstanding Statement"
 msgstr "crwdns107386:0crwdne107386:0"
 
-#: hrms/setup.py:389
+#: hrms/setup.py:392
 msgid "Full-time"
 msgstr "crwdns107392:0crwdne107392:0"
 
@@ -4638,25 +4649,33 @@ msgstr "crwdns141598:0crwdne141598:0"
 msgid "Group goal's progress is auto-calculated based on the child goals."
 msgstr "crwdns107500:0crwdne107500:0"
 
-#: hrms/setup.py:322
+#: hrms/setup.py:325
 msgid "HR"
 msgstr "crwdns107504:0crwdne107504:0"
 
-#: hrms/setup.py:59
+#: hrms/setup.py:58
 msgid "HR & Payroll"
 msgstr "crwdns148898:0crwdne148898:0"
 
-#: hrms/setup.py:65
+#: hrms/setup.py:64
 msgid "HR & Payroll Settings"
 msgstr "crwdns148900:0crwdne148900:0"
 
 #. Name of a DocType
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 #: hrms/hr/doctype/leave_application/leave_application.py:218
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 msgid "HR Settings"
 msgstr "crwdns107510:0crwdne107510:0"
+
+#. Label of a Desktop Icon
+#. Name of a Workspace
+#. Title of a Workspace Sidebar
+#: hrms/desktop_icon/hr_setup.json hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/workspace_sidebar/hr_setup.json
+msgid "HR Setup"
+msgstr "crwdns199636:0crwdne199636:0"
 
 #: hrms/config/desktop.py:5
 msgid "HRMS"
@@ -5171,7 +5190,7 @@ msgstr "crwdns141698:0crwdne141698:0"
 msgid "Interest Income Account"
 msgstr "crwdns141700:0crwdne141700:0"
 
-#: hrms/setup.py:395
+#: hrms/setup.py:398
 msgid "Intern"
 msgstr "crwdns107754:0crwdne107754:0"
 
@@ -5220,8 +5239,8 @@ msgstr "crwdns107770:0crwdne107770:0"
 #: hrms/hr/doctype/interview/test_interview.py:309
 #: hrms/hr/doctype/interview/test_interview.py:318
 #: hrms/hr/doctype/interview/test_interview.py:320
-#: hrms/hr/doctype/interview/test_interview.py:327 hrms/setup.py:467
-#: hrms/setup.py:469 hrms/setup.py:502
+#: hrms/hr/doctype/interview/test_interview.py:327 hrms/setup.py:470
+#: hrms/setup.py:472 hrms/setup.py:505
 msgid "Interview Feedback Reminder"
 msgstr "crwdns107776:0crwdne107776:0"
 
@@ -5236,8 +5255,8 @@ msgstr "crwdns107780:0crwdne107780:0"
 #: hrms/hr/doctype/interview/test_interview.py:293
 #: hrms/hr/doctype/interview/test_interview.py:302
 #: hrms/hr/doctype/interview/test_interview.py:304
-#: hrms/hr/doctype/interview/test_interview.py:326 hrms/setup.py:455
-#: hrms/setup.py:457 hrms/setup.py:498
+#: hrms/hr/doctype/interview/test_interview.py:326 hrms/setup.py:458
+#: hrms/setup.py:460 hrms/setup.py:501
 msgid "Interview Reminder"
 msgstr "crwdns107782:0crwdne107782:0"
 
@@ -5415,9 +5434,7 @@ msgid "Is Applicable for Referral Bonus"
 msgstr "crwdns141730:0crwdne141730:0"
 
 #. Label of the is_carry_forward (Check) field in DocType 'Leave Ledger Entry'
-#. Label of the is_carry_forward (Check) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.json
-#: hrms/hr/doctype/leave_type/leave_type.json
 #: hrms/hr/report/leave_ledger/leave_ledger.py:85
 msgid "Is Carry Forward"
 msgstr "crwdns141732:0crwdne141732:0"
@@ -5463,11 +5480,6 @@ msgstr "crwdns141742:0crwdne141742:0"
 #: hrms/hr/report/leave_ledger/leave_ledger.py:97
 msgid "Is Leave Without Pay"
 msgstr "crwdns141744:0crwdne141744:0"
-
-#. Label of the is_optional_leave (Check) field in DocType 'Leave Type'
-#: hrms/hr/doctype/leave_type/leave_type.json
-msgid "Is Optional Leave"
-msgstr "crwdns141748:0crwdne141748:0"
 
 #. Label of the is_ppl (Check) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
@@ -5555,7 +5567,7 @@ msgstr "crwdns141760:0crwdne141760:0"
 #. Label of the job_description_tab (Tab Break) field in DocType 'Job
 #. Requisition'
 #. Label of the description (Text Editor) field in DocType 'Job Requisition'
-#: hrms/hr/doctype/job_requisition/job_requisition.json hrms/setup.py:410
+#: hrms/hr/doctype/job_requisition/job_requisition.json hrms/setup.py:413
 msgid "Job Description"
 msgstr "crwdns107930:0crwdne107930:0"
 
@@ -5836,13 +5848,13 @@ msgstr "crwdns141798:0crwdne141798:0"
 
 #. Label of the leave_application (Link) field in DocType 'Attendance'
 #. Name of a DocType
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Leaves Workspace
-#. Label of a Link in the People Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/leave_application/leave_application.json
-#: hrms/hr/workspace/leaves/leaves.json hrms/hr/workspace/people/people.json
-#: hrms/workspace_sidebar/leaves.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/leaves/leaves.json hrms/workspace_sidebar/leaves.json
 msgid "Leave Application"
 msgstr "crwdns108064:0crwdne108064:0"
 
@@ -5850,7 +5862,7 @@ msgstr "crwdns108064:0crwdne108064:0"
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
 msgstr "crwdns108070:0{0}crwdnd108070:0{1}crwdne108070:0"
 
-#: hrms/setup.py:432 hrms/setup.py:434 hrms/setup.py:494
+#: hrms/setup.py:435 hrms/setup.py:437 hrms/setup.py:497
 msgid "Leave Approval Notification"
 msgstr "crwdns108072:0crwdne108072:0"
 
@@ -5863,8 +5875,9 @@ msgstr "crwdns141800:0crwdne141800:0"
 #. Label of the leave_approver (Link) field in DocType 'Leave Application'
 #. Name of a role
 #: hrms/hr/doctype/leave_application/leave_application.json
-#: hrms/hr/doctype/overtime_slip/overtime_slip.json hrms/setup.py:146
-#: hrms/setup.py:248
+#: hrms/hr/doctype/overtime_slip/overtime_slip.json
+#: hrms/patches/v15_0/update_approver_custom_fields.py:19 hrms/setup.py:145
+#: hrms/setup.py:249
 msgid "Leave Approver"
 msgstr "crwdns108076:0crwdne108076:0"
 
@@ -5901,7 +5914,7 @@ msgstr "crwdns196014:0crwdne196014:0"
 #. Label of a Link in the Leaves Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/leave_block_list/leave_block_list.json
-#: hrms/hr/workspace/leaves/leaves.json hrms/setup.py:125
+#: hrms/hr/workspace/leaves/leaves.json hrms/setup.py:124
 #: hrms/workspace_sidebar/leaves.json
 msgid "Leave Block List"
 msgstr "crwdns108088:0crwdne108088:0"
@@ -6059,7 +6072,7 @@ msgstr "crwdns108152:0{0}crwdnd108152:0{1}crwdnd108152:0{2}crwdnd108152:0{3}crwd
 msgid "Leave Settings"
 msgstr "crwdns194902:0crwdne194902:0"
 
-#: hrms/setup.py:441 hrms/setup.py:443 hrms/setup.py:495
+#: hrms/setup.py:444 hrms/setup.py:446 hrms/setup.py:498
 msgid "Leave Status Notification"
 msgstr "crwdns108154:0crwdne108154:0"
 
@@ -6137,8 +6150,8 @@ msgstr "crwdns108194:0{0}crwdne108194:0"
 
 #. Label of the leave_without_pay (Float) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/report/salary_register/salary_register.py:179 hrms/setup.py:381
-#: hrms/setup.py:382
+#: hrms/payroll/report/salary_register/salary_register.py:179 hrms/setup.py:384
+#: hrms/setup.py:385
 msgid "Leave Without Pay"
 msgstr "crwdns108196:0crwdne108196:0"
 
@@ -6170,6 +6183,11 @@ msgstr "crwdns108210:0{0}crwdnd108210:0{1}crwdne108210:0"
 msgid "Leave cannot be applied/cancelled before {0}, as leave balance has already been carry-forwarded in the future leave allocation record {1}"
 msgstr "crwdns108212:0{0}crwdnd108212:0{1}crwdne108212:0"
 
+#. Label of the is_optional_leave (Check) field in DocType 'Leave Type'
+#: hrms/hr/doctype/leave_type/leave_type.json
+msgid "Leave for optional holiday"
+msgstr "crwdns200022:0crwdne200022:0"
+
 #: hrms/hr/doctype/leave_application/leave_application.py:565
 msgid "Leave of type {0} cannot be longer than {1}."
 msgstr "crwdns108214:0{0}crwdnd108214:0{1}crwdne108214:0"
@@ -6190,8 +6208,8 @@ msgstr "crwdns108220:0crwdne108220:0"
 #. Label of a Desktop Icon
 #. Label of the leaves_tab (Tab Break) field in DocType 'HR Settings'
 #. Label of the leaves (Float) field in DocType 'Leave Ledger Entry'
+#. Label of a Card Break in the HR Setup Workspace
 #. Name of a Workspace
-#. Label of a Card Break in the People Workspace
 #. Label of the leave_details_section (Tab Break) field in DocType 'Salary
 #. Slip'
 #. Title of a Workspace Sidebar
@@ -6201,7 +6219,8 @@ msgstr "crwdns108220:0crwdne108220:0"
 #: hrms/hr/doctype/leave_policy/leave_policy_dashboard.py:8
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment_dashboard.py:8
 #: hrms/hr/report/leave_ledger/leave_ledger.py:59
-#: hrms/hr/workspace/leaves/leaves.json hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/leaves/leaves.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/workspace_sidebar/leaves.json
 msgid "Leaves"
@@ -6235,7 +6254,7 @@ msgstr "crwdns141834:0crwdne141834:0"
 msgid "Leaves for the Leave Type {0} won't be carry-forwarded since carry-forwarding is disabled."
 msgstr "crwdns108230:0{0}crwdne108230:0"
 
-#: hrms/setup.py:412
+#: hrms/setup.py:415
 msgid "Leaves per Year"
 msgstr "crwdns108232:0crwdne108232:0"
 
@@ -6264,6 +6283,11 @@ msgstr "crwdns108256:0crwdne108256:0"
 msgid "Lime"
 msgstr "crwdns148536:0crwdne148536:0"
 
+#. Label of the limits_tab (Tab Break) field in DocType 'Leave Type'
+#: hrms/hr/doctype/leave_type/leave_type.json
+msgid "Limits"
+msgstr "crwdns200024:0crwdne200024:0"
+
 #. Description of the 'Appraisal Linking' (Section Break) field in DocType
 #. 'Goal'
 #: hrms/hr/doctype/goal/goal.json hrms/hr/doctype/goal/goal_tree.js:97
@@ -6284,7 +6308,7 @@ msgstr "crwdns141848:0crwdne141848:0"
 msgid "Loan Product"
 msgstr "crwdns141850:0crwdne141850:0"
 
-#: hrms/payroll/report/salary_register/salary_register.py:233 hrms/setup.py:773
+#: hrms/payroll/report/salary_register/salary_register.py:233 hrms/setup.py:764
 msgid "Loan Repayment"
 msgstr "crwdns108270:0crwdne108270:0"
 
@@ -6581,7 +6605,7 @@ msgstr "crwdns108388:0crwdne108388:0"
 msgid "Meal Preference"
 msgstr "crwdns141906:0crwdne141906:0"
 
-#: hrms/setup.py:334
+#: hrms/setup.py:337
 msgid "Medical"
 msgstr "crwdns108392:0crwdne108392:0"
 
@@ -6652,11 +6676,11 @@ msgid "Month To Date(Company Currency)"
 msgstr "crwdns141928:0crwdne141928:0"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Shift & Attendance Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 #: hrms/workspace_sidebar/shift_&_attendance.json
 msgid "Monthly Attendance Sheet"
@@ -7041,7 +7065,7 @@ msgstr "crwdns141990:0{0}crwdne141990:0"
 msgid "Nothing to change"
 msgstr "crwdns108596:0crwdne108596:0"
 
-#: hrms/setup.py:413
+#: hrms/setup.py:416
 msgid "Notice Period"
 msgstr "crwdns108598:0crwdne108598:0"
 
@@ -7250,7 +7274,7 @@ msgstr "crwdns108696:0crwdne108696:0"
 
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/page/organizational_chart/organizational_chart.js:4
-#: hrms/workspace_sidebar/people.json
+#: hrms/workspace_sidebar/hr_setup.json
 msgid "Organizational Chart"
 msgstr "crwdns108698:0crwdne108698:0"
 
@@ -7463,7 +7487,7 @@ msgstr "crwdns142048:0crwdne142048:0"
 msgid "Parent Goal"
 msgstr "crwdns142050:0crwdne142050:0"
 
-#: hrms/setup.py:390
+#: hrms/setup.py:393
 msgid "Part-time"
 msgstr "crwdns108778:0crwdne108778:0"
 
@@ -7577,7 +7601,7 @@ msgstr "crwdns159658:0crwdne159658:0"
 #: hrms/desktop_icon/payroll.json
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/overrides/dashboard_overrides.py:37
-#: hrms/overrides/dashboard_overrides.py:77
+#: hrms/overrides/dashboard_overrides.py:80
 #: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/workspace_sidebar/payroll.json
 msgid "Payroll"
@@ -7597,7 +7621,7 @@ msgstr "crwdns159660:0crwdne159660:0"
 msgid "Payroll Correction Child"
 msgstr "crwdns159662:0crwdne159662:0"
 
-#: hrms/setup.py:111 hrms/setup.py:281
+#: hrms/setup.py:110 hrms/setup.py:284
 msgid "Payroll Cost Center"
 msgstr "crwdns148908:0crwdne148908:0"
 
@@ -7661,7 +7685,7 @@ msgstr "crwdns108866:0crwdne108866:0"
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/setup.py:846
+#: hrms/setup.py:837
 msgid "Payroll Payable Account"
 msgstr "crwdns108870:0crwdne108870:0"
 
@@ -7710,9 +7734,9 @@ msgstr "crwdns142088:0crwdne142088:0"
 msgid "Payroll Reports"
 msgstr "crwdns108892:0crwdne108892:0"
 
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Name of a DocType
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Payroll Settings"
 msgstr "crwdns108894:0crwdne108894:0"
@@ -7755,14 +7779,6 @@ msgstr "crwdns108920:0crwdne108920:0"
 msgid "Pending Questionnaires"
 msgstr "crwdns108922:0crwdne108922:0"
 
-#. Label of a Desktop Icon
-#. Name of a Workspace
-#. Title of a Workspace Sidebar
-#: hrms/desktop_icon/people.json hrms/hr/workspace/people/people.json
-#: hrms/workspace_sidebar/people.json
-msgid "People"
-msgstr "crwdns194906:0crwdne194906:0"
-
 #. Label of the percent_deduction (Percent) field in DocType 'Taxable Salary
 #. Slab'
 #: hrms/payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
@@ -7786,7 +7802,7 @@ msgstr "crwdns151296:0{0}crwdne151296:0"
 msgid "Permanently submit {0}"
 msgstr "crwdns151298:0{0}crwdne151298:0"
 
-#: hrms/setup.py:394
+#: hrms/setup.py:397
 msgid "Piecework"
 msgstr "crwdns108934:0crwdne108934:0"
 
@@ -8123,15 +8139,15 @@ msgstr "crwdns142128:0crwdne142128:0"
 msgid "Printed On {0}"
 msgstr "crwdns154514:0{0}crwdne154514:0"
 
-#: hrms/setup.py:373 hrms/setup.py:374
+#: hrms/setup.py:376 hrms/setup.py:377
 msgid "Privilege Leave"
 msgstr "crwdns109080:0crwdne109080:0"
 
-#: hrms/setup.py:391
+#: hrms/setup.py:394
 msgid "Probation"
 msgstr "crwdns109082:0crwdne109082:0"
 
-#: hrms/setup.py:405
+#: hrms/setup.py:408
 msgid "Probationary Period"
 msgstr "crwdns109084:0crwdne109084:0"
 
@@ -8143,7 +8159,7 @@ msgstr "crwdns142136:0crwdne142136:0"
 #. Label of the process_payroll_accounting_entry_based_on_employee (Check)
 #. field in DocType 'Payroll Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
-#: hrms/setup.py:857
+#: hrms/setup.py:848
 msgid "Process Payroll Accounting Entry based on Employee"
 msgstr "crwdns142138:0crwdne142138:0"
 
@@ -8384,11 +8400,11 @@ msgid "Recruitment"
 msgstr "crwdns109188:0crwdne109188:0"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Recruitment Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/report/recruitment_analytics/recruitment_analytics.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/hr/workspace/recruitment/recruitment.json
 #: hrms/workspace_sidebar/recruitment.json
 msgid "Recruitment Analytics"
@@ -8516,7 +8532,7 @@ msgstr "crwdns142240:0crwdne142240:0"
 msgid "Rented Car"
 msgstr "crwdns142242:0crwdne142242:0"
 
-#: hrms/setup.py:830 hrms/setup.py:839
+#: hrms/setup.py:821 hrms/setup.py:830
 msgid "Repay From Salary"
 msgstr "crwdns148910:0crwdne148910:0"
 
@@ -8587,7 +8603,7 @@ msgstr "crwdns142250:0crwdne142250:0"
 msgid "Require Full Funding"
 msgstr "crwdns142252:0crwdne142252:0"
 
-#: hrms/setup.py:170
+#: hrms/setup.py:169
 msgid "Required Skills"
 msgstr "crwdns148912:0crwdne148912:0"
 
@@ -8601,7 +8617,7 @@ msgstr "crwdns142254:0crwdne142254:0"
 msgid "Reschedule Interview"
 msgstr "crwdns109308:0crwdne109308:0"
 
-#: hrms/setup.py:411
+#: hrms/setup.py:414
 msgid "Responsibilities"
 msgstr "crwdns109320:0crwdne109320:0"
 
@@ -8924,7 +8940,7 @@ msgstr "crwdns109454:0crwdne109454:0"
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/workspace/payroll/payroll.json hrms/setup.py:309
+#: hrms/payroll/workspace/payroll/payroll.json hrms/setup.py:312
 #: hrms/workspace_sidebar/payroll.json
 msgid "Salary Slip"
 msgstr "crwdns109456:0crwdne109456:0"
@@ -9572,7 +9588,8 @@ msgstr "crwdns149148:0crwdne149148:0"
 msgid "Shift Request"
 msgstr "crwdns109742:0crwdne109742:0"
 
-#: hrms/setup.py:139 hrms/setup.py:260
+#: hrms/patches/v15_0/update_approver_custom_fields.py:27 hrms/setup.py:138
+#: hrms/setup.py:262
 msgid "Shift Request Approver"
 msgstr "crwdns148914:0crwdne148914:0"
 
@@ -9715,7 +9732,7 @@ msgstr "crwdns109770:0crwdne109770:0"
 msgid "Showing"
 msgstr "crwdns109774:0crwdne109774:0"
 
-#: hrms/setup.py:365 hrms/setup.py:366
+#: hrms/setup.py:368 hrms/setup.py:369
 msgid "Sick Leave"
 msgstr "crwdns109776:0crwdne109776:0"
 
@@ -9752,7 +9769,7 @@ msgstr "crwdns142448:0crwdne142448:0"
 
 #. Label of the skills_section (Section Break) field in DocType 'Employee Skill
 #. Map'
-#: hrms/hr/doctype/employee_skill_map/employee_skill_map.json hrms/setup.py:176
+#: hrms/hr/doctype/employee_skill_map/employee_skill_map.json hrms/setup.py:175
 msgid "Skills"
 msgstr "crwdns142450:0crwdne142450:0"
 
@@ -9870,7 +9887,7 @@ msgstr "crwdns142468:0crwdne142468:0"
 msgid "Status for Other Half"
 msgstr "crwdns154516:0crwdne154516:0"
 
-#: hrms/setup.py:408
+#: hrms/setup.py:411
 msgid "Stock Options"
 msgstr "crwdns109928:0crwdne109928:0"
 
@@ -10145,7 +10162,7 @@ msgstr "crwdns110060:0crwdne110060:0"
 msgid "The days between {0} to {1} are not valid holidays."
 msgstr "crwdns110062:0{0}crwdnd110062:0{1}crwdne110062:0"
 
-#: hrms/setup.py:130
+#: hrms/setup.py:129
 msgid "The first Approver in the list will be set as the default Approver."
 msgstr "crwdns148916:0crwdne148916:0"
 
@@ -10218,7 +10235,8 @@ msgstr "crwdns162092:0{0}crwdne162092:0"
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
 msgstr "crwdns110086:0{0}crwdnd110086:0{1}crwdne110086:0"
 
-#. Description of the 'Is Optional Leave' (Check) field in DocType 'Leave Type'
+#. Description of the 'Leave for optional holiday' (Check) field in DocType
+#. 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "These leaves are holidays permitted by the company however, availing it is optional for an Employee."
 msgstr "crwdns142536:0crwdne142536:0"
@@ -10259,7 +10277,7 @@ msgstr "crwdns110102:0crwdne110102:0"
 msgid "This field allows you to set the maximum number of leaves that can be allocated annually for this Leave Type while creating the Leave Policy"
 msgstr "crwdns110104:0crwdne110104:0"
 
-#: hrms/overrides/dashboard_overrides.py:60
+#: hrms/overrides/dashboard_overrides.py:63
 msgid "This is based on the attendance of this Employee"
 msgstr "crwdns110106:0crwdne110106:0"
 
@@ -10507,11 +10525,11 @@ msgstr "crwdns161238:0crwdne161238:0"
 msgid "Total Exemption Amount"
 msgstr "crwdns142594:0crwdne142594:0"
 
-#: hrms/setup.py:299
+#: hrms/setup.py:302
 msgid "Total Expense Claim (via Expense Claim)"
 msgstr "crwdns148918:0crwdne148918:0"
 
-#: hrms/setup.py:290
+#: hrms/setup.py:293
 msgid "Total Expense Claim (via Expense Claims)"
 msgstr "crwdns148920:0crwdne148920:0"
 
@@ -10534,7 +10552,7 @@ msgstr "crwdns110262:0crwdne110262:0"
 msgid "Total Income Tax"
 msgstr "crwdns142598:0crwdne142598:0"
 
-#: hrms/setup.py:803
+#: hrms/setup.py:794
 msgid "Total Interest Amount"
 msgstr "crwdns148922:0crwdne148922:0"
 
@@ -10567,7 +10585,7 @@ msgstr "crwdns142604:0crwdne142604:0"
 msgid "Total Leaves Encashed"
 msgstr "crwdns142606:0crwdne142606:0"
 
-#: hrms/setup.py:817
+#: hrms/setup.py:808
 msgid "Total Loan Repayment"
 msgstr "crwdns148924:0crwdne148924:0"
 
@@ -10604,7 +10622,7 @@ msgstr "crwdns159728:0crwdne159728:0"
 msgid "Total Present"
 msgstr "crwdns110284:0crwdne110284:0"
 
-#: hrms/setup.py:794
+#: hrms/setup.py:785
 msgid "Total Principal Amount"
 msgstr "crwdns148926:0crwdne148926:0"
 
@@ -10730,7 +10748,7 @@ msgstr "crwdns142640:0crwdne142640:0"
 #. Label of a Card Break in the Tenure Workspace
 #: hrms/hr/doctype/employee_training/employee_training.json
 #: hrms/hr/workspace/tenure/tenure.json
-#: hrms/overrides/dashboard_overrides.py:49
+#: hrms/overrides/dashboard_overrides.py:52
 msgid "Training"
 msgstr "crwdns110352:0crwdne110352:0"
 
@@ -10825,7 +10843,7 @@ msgstr "crwdns142652:0crwdne142652:0"
 
 #. Label of a Card Break in the Expenses Workspace
 #. Label of a Workspace Sidebar Item
-#: hrms/hr/workspace/expenses/expenses.json hrms/setup.py:336
+#: hrms/hr/workspace/expenses/expenses.json hrms/setup.py:339
 #: hrms/workspace_sidebar/expenses.json
 msgid "Travel"
 msgstr "crwdns110402:0crwdne110402:0"
@@ -10856,11 +10874,12 @@ msgstr "crwdns110410:0crwdne110410:0"
 
 #. Name of a DocType
 #. Label of a Link in the Expenses Workspace
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/travel_request/travel_request.json
 #: hrms/hr/workspace/expenses/expenses.json
-#: hrms/hr/workspace/people/people.json hrms/workspace_sidebar/expenses.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/workspace_sidebar/expenses.json
 msgid "Travel Request"
 msgstr "crwdns110414:0crwdne110414:0"
 
@@ -11212,7 +11231,7 @@ msgstr "crwdns110586:0crwdne110586:0"
 msgid "Warning: {0} already has an active Shift Assignment {1} for some/all of these dates."
 msgstr "crwdns110588:0{0}crwdnd110588:0{1}crwdne110588:0"
 
-#: hrms/setup.py:398
+#: hrms/setup.py:401
 msgid "Website Listing"
 msgstr "crwdns110590:0crwdne110590:0"
 
@@ -11414,7 +11433,7 @@ msgstr "crwdns110686:0{0}crwdnd110686:0{1}crwdnd110686:0{2}crwdnd110686:0{3}crwd
 msgid "You can only submit Leave Encashment for a valid encashment amount"
 msgstr "crwdns110688:0crwdne110688:0"
 
-#: hrms/api/__init__.py:742
+#: hrms/api/__init__.py:744
 msgid "You can only upload JPG, PNG, PDF, TXT or Microsoft documents."
 msgstr "crwdns110690:0crwdne110690:0"
 

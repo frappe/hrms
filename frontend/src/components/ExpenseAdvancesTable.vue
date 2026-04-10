@@ -21,7 +21,7 @@
 				<div class="flex flex-row items-start gap-3">
 					<FormControl
 						type="checkbox"
-						class="mt-[0.5px]"
+						class="mt-[1.5px]"
 						v-model="advance.selected"
 						:disabled="isReadOnly"
 					/>
@@ -34,7 +34,7 @@
 							<div class="text-xs font-normal text-gray-500">
 								{{ __("{0}: {1}", [
 									__("Unclaimed Amount"),
-									formatCurrency(advance.unclaimed_amount, currency),
+									formatCurrency(advance.unclaimed_amount, expenseClaim.currency),
 								]) }}
 							</div>
 						</div>
@@ -74,17 +74,13 @@ const props = defineProps({
 		type: Object,
 		required: true,
 	},
-	currency: {
-		type: String,
-		required: true,
-	},
 	isReadOnly: {
 		type: Boolean,
 		default: false,
 	},
 })
 
-const currencySymbol = computed(() => getCurrencySymbol(props.currency))
+const currencySymbol = computed(() => getCurrencySymbol(props.expenseClaim.currency))
 
 function toggleAdvanceSelection(advance) {
 	if (props.isReadOnly) return
