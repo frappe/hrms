@@ -34,9 +34,6 @@ from hrms.hr.doctype.leave_application.leave_application import (
 	get_new_and_cf_leaves_taken,
 )
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import expire_allocation
-from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
-	create_assignment_for_multiple_employees,
-)
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
@@ -1234,6 +1231,7 @@ class TestLeaveApplication(HRMSTestSuite):
 		attendance_name = mark_attendance(
 			employee=employee.name, attendance_date=nowdate(), status="Half Day", half_day_status="Absent"
 		)
+
 		leave_application = make_leave_application(
 			employee.name,
 			nowdate(),
@@ -1243,12 +1241,14 @@ class TestLeaveApplication(HRMSTestSuite):
 			half_day=1,
 			half_day_date=nowdate(),
 		)
+
 		attendance = frappe.get_value(
 			"Attendance",
 			attendance_name,
 			["status", "half_day_status", "leave_type", "leave_application"],
 			as_dict=True,
 		)
+
 		self.assertEqual(attendance.status, "Half Day")
 		self.assertEqual(attendance.half_day_status, "Present")
 		self.assertEqual(attendance.leave_type, leave_type.name)
