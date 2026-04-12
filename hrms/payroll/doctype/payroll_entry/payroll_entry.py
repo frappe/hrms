@@ -656,6 +656,7 @@ class PayrollEntry(Document):
 				payable_amount,
 				self.payroll_payable_account,
 				employee_wise_accounting_enabled,
+				submitted_salary_slips=submitted_salary_slips,
 			)
 
 			# when party is not required, skip the validation in journal & gl entry
@@ -692,7 +693,8 @@ class PayrollEntry(Document):
 		journal_entry.user_remark = user_remark
 		journal_entry.company = self.company
 		journal_entry.posting_date = self.posting_date
-		journal_entry.party_not_required = True if not employee_wise_accounting_enabled else False
+		# party_not_required should be false when any row sets party/party_type
+		journal_entry.party_not_required = not any((a.get('party_type') and a.get('party')) for a in accounts)
 
 		journal_entry.set("accounts", accounts)
 		journal_entry.multi_currency = multi_currency
@@ -772,6 +774,7 @@ class PayrollEntry(Document):
 		payable_amount,
 		payroll_payable_account,
 		employee_wise_accounting_enabled,
+		submitted_salary_slips=None,
 	):
 		# Payable amount
 		if employee_wise_accounting_enabled:
@@ -806,6 +809,42 @@ class PayrollEntry(Document):
 					accounts=accounts,
 				)
 		else:
+			# Even when employee-wise accounting is disabled, we may still want employee balances to
+			# update (party_type/party on payable lines). If salary slips are provided, split the
+			# payable amount per employee (and cost center when available).
+			if submitted_salary_slips:
+				agg = {}
+				for ss in submitted_salary_slips:
+					emp = getattr(ss, 'employee', None) or (ss.get('employee') if isinstance(ss, dict) else None)
+					if not emp:
+						continue
+					cc = (getattr(ss, 'cost_center', None) or (ss.get('cost_center') if isinstance(ss, dict) else None) or self.cost_center)
+					amt = getattr(ss, 'net_pay', None) if not isinstance(ss, dict) else ss.get('net_pay')
+					try:
+						amt = flt(amt, precision)
+					except Exception:
+						amt = 0
+					agg[(emp, cc)] = (agg.get((emp, cc), 0) or 0) + amt
+
+				if agg:
+					for (emp, cc), amt in agg.items():
+						if not amt:
+							continue
+						self.get_accounting_entries_and_payable_amount(
+							payroll_payable_account,
+							cc,
+							amt,
+							currencies,
+							company_currency,
+							0,
+							accounting_dimensions,
+							precision,
+							entry_type="payable",
+							party=emp,
+							accounts=accounts,
+						)
+					return
+
 			payable_amount = self.get_accounting_entries_and_payable_amount(
 				payroll_payable_account,
 				self.cost_center,
