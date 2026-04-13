@@ -443,13 +443,77 @@ def get_holiday_map(filters: Filters) -> dict[str, list[dict]]:
 	return holiday_map
 
 
+def get_employee_holidays_for_period(
+	employee: str, filters: Filters, holiday_map: dict, default_holiday_list: str
+) -> list:
+	"""Returns merged holidays for an employee over the filter period,
+	correctly resolving Holiday List Assignments (including mid-period changes).
+	"""
+	from hrms.utils.holiday_list import get_holiday_list_for_employee
+
+	dates = get_dates_in_period(filters)
+	if not dates:
+		return []
+
+	start_date = getdate(dates[0])
+	end_date = getdate(dates[-1])
+
+	start_hl = (
+		get_holiday_list_for_employee(employee, raise_exception=False, as_on=start_date)
+		or default_holiday_list
+	)
+	end_hl = (
+		get_holiday_list_for_employee(employee, raise_exception=False, as_on=end_date)
+		or default_holiday_list
+	)
+
+	if not start_hl:
+		return []
+
+	if start_hl == end_hl:
+		return holiday_map.get(start_hl, [])
+
+	# Holiday list changed mid-period — fetch the transition assignments
+	HLA = frappe.qb.DocType("Holiday List Assignment")
+	assignments = (
+		frappe.qb.from_(HLA)
+		.select(HLA.holiday_list, HLA.from_date)
+		.where(HLA.assigned_to == employee)
+		.where(HLA.from_date.between(start_date, end_date))
+		.where(HLA.docstatus == 1)
+		.orderby(HLA.from_date)
+	).run(as_dict=True)
+
+	merged = []
+	seen_dates = set()
+	prev_date = start_date
+	prev_hl = start_hl
+
+	for assignment in assignments:
+		transition = getdate(assignment.from_date)
+		for holiday in holiday_map.get(prev_hl, []):
+			hdate = getdate(holiday.holiday_date)
+			if prev_date <= hdate < transition and hdate not in seen_dates:
+				merged.append(holiday)
+				seen_dates.add(hdate)
+		prev_date = transition
+		prev_hl = assignment.holiday_list
+
+	for holiday in holiday_map.get(prev_hl, []):
+		hdate = getdate(holiday.holiday_date)
+		if prev_date <= hdate <= end_date and hdate not in seen_dates:
+			merged.append(holiday)
+			seen_dates.add(hdate)
+
+	return merged
+
+
 def get_rows(employee_details: dict, filters: Filters, holiday_map: dict, attendance_map: dict) -> list[dict]:
 	records = []
 	default_holiday_list = frappe.get_cached_value("Company", filters.company, "default_holiday_list")
 
 	for employee, details in employee_details.items():
-		emp_holiday_list = details.holiday_list or default_holiday_list
-		holidays = holiday_map.get(emp_holiday_list)
+		holidays = get_employee_holidays_for_period(employee, filters, holiday_map, default_holiday_list)
 
 		if filters.summarized_view:
 			attendance = get_attendance_status_for_summarized_view(
