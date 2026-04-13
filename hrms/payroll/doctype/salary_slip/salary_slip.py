@@ -1544,6 +1544,11 @@ class SalarySlip(TransactionBase):
 
 		for additional_salary in additional_salaries:
 			component_data = get_salary_component_data(additional_salary.component)
+			remove_if_zero_valued = frappe.get_cached_value(
+				"Salary Component", additional_salary.component, "remove_if_zero_valued"
+			)
+			if flt(additional_salary.amount) == 0 and remove_if_zero_valued:
+				continue
 			self.update_component_row(
 				component_data,
 				additional_salary.amount,
@@ -1744,7 +1749,7 @@ class SalarySlip(TransactionBase):
 			):
 				component_row.set(attr, component_data.get(attr))
 
-		if additional_salary and amount:
+		if additional_salary:
 			if additional_salary.overwrite:
 				component_row.additional_amount = flt(
 					flt(amount) - flt(component_row.get("default_amount", 0)),
