@@ -31,6 +31,7 @@ import LeaveIcon from "@/components/icons/LeaveIcon.vue"
 import ExpenseIcon from "@/components/icons/ExpenseIcon.vue"
 import SalaryIcon from "@/components/icons/SalaryIcon.vue"
 import AttendanceIcon from "@/components/icons/AttendanceIcon.vue"
+import GrievanceIcon from "@/components/icons/GrievanceIcon.vue"
 import { inject } from "vue"
 
 const __ = inject("$translate")
@@ -62,6 +63,11 @@ const tabItems = [
 		icon: SalaryIcon,
 		title: __("Salary"),
 		route: "/dashboard/salary-slips",
+	},
+	{
+		icon: GrievanceIcon,
+		title: __("Grievances"),
+		route: "/grievances",
 	},
 ]
 </script>

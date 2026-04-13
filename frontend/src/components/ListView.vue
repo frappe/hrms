@@ -155,6 +155,7 @@ import ListFiltersActionSheet from "@/components/ListFiltersActionSheet.vue"
 import CustomIonModal from "@/components/CustomIonModal.vue"
 import RequestActionSheet from "@/components/RequestActionSheet.vue"
 import { EMPLOYEE_CHECKIN_FIELDS } from "@/data/config/requestSummaryFields"
+import GrievanceItem from "@/components/GrievanceItem.vue"
 
 import useWorkflow from "@/composables/workflow"
 import { useListUpdate } from "@/composables/realtime"
@@ -185,6 +186,10 @@ const props = defineProps({
 		type: String,
 		required: true,
 	},
+	employeeField: {
+		type: String,
+		default: "employee",
+	},
 })
 
 const getButtonKey = (tab) => tab?.key ?? tab
@@ -197,6 +202,7 @@ const listItemComponent = {
 	"Leave Application": markRaw(LeaveRequestItem),
 	"Expense Claim": markRaw(ExpenseClaimItem),
 	"Employee Advance": markRaw(EmployeeAdvanceItem),
+	"Employee Grievance": markRaw(GrievanceItem),
 }
 
 const router = useRouter()
@@ -239,9 +245,9 @@ const defaultFilters = computed(() => {
 	const filters = []
 
 	if (isTeamRequest.value) {
-		filters.push([props.doctype, "employee", "!=", employee.data.name])
+		filters.push([props.doctype, props.employeeField, "!=", employee.data.name])
 	} else {
-		filters.push([props.doctype, "employee", "=", employee.data.name])
+		filters.push([props.doctype, props.employeeField, "=", employee.data.name])
 	}
 
 	return filters
