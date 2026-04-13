@@ -365,6 +365,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			dict(
 				employee=self.employee,
 				docstatus=1,
+				status="Approved",
 				half_day=1,
 				half_day_date=self.half_day_date,
 				name=("!=", self.name),
