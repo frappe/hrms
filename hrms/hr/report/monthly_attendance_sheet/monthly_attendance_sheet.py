@@ -562,11 +562,19 @@ def get_attendance_status_for_summarized_view(
 		return {}
 
 	total_days = get_dates_in_period(filters)
-	total_holidays = total_unmarked_days = 0
+	total_holidays = total_unmarked_days = absent_on_holiday = 0
+
+	holiday_dates = {getdate(h.holiday_date) for h in (holidays or [])}
 
 	for d in total_days:
 		d = getdate(d)
-		if d.day in attendance_days or (joined_in_current_period and d < joined_date):
+		if joined_in_current_period and d < joined_date:
+			continue
+
+		if d.day in attendance_days:
+			# Absent on a Weekly Off / Holiday should count as holiday, not absent
+			if d in holiday_dates:
+				absent_on_holiday += 1
 			continue
 
 		status = get_holiday_status(d, holidays)
@@ -575,10 +583,12 @@ def get_attendance_status_for_summarized_view(
 		elif not status:
 			total_unmarked_days += 1
 
+	total_holidays += absent_on_holiday
+
 	return {
 		"total_present": summary.total_present + summary.total_half_days,
 		"total_leaves": summary.total_leaves + summary.total_half_days,
-		"total_absent": summary.total_absent,
+		"total_absent": max(0.0, summary.total_absent - absent_on_holiday),
 		"total_holidays": total_holidays,
 		"unmarked_days": total_unmarked_days,
 	}
@@ -659,8 +669,12 @@ def get_attendance_status_for_detailed_view(
 
 			status = status_dict.get(d)
 
-			if status is None and holidays:
-				status = get_holiday_status(d, holidays)
+			if holidays:
+				holiday_status = get_holiday_status(d, holidays)
+				# Holiday/Weekly Off takes precedence over an Absent mark;
+				# all other recorded statuses (Present, On Leave, etc.) are kept as-is.
+				if status is None or (status == "Absent" and holiday_status):
+					status = holiday_status
 
 			abbr = status_map.get(status, "")
 			row[d.strftime("%d-%m-%Y")] = abbr
