@@ -15,29 +15,19 @@ from hrms.hr.doctype.shift_assignment.shift_assignment import (
 	OverlappingShiftError,
 	get_actual_start_end_datetime_of_shift,
 	get_events,
+	mark_expired_shift_assignments_as_inactive,
 )
 from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
 from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
 from hrms.tests.utils import HRMSTestSuite
 
-test_dependencies = ["Shift Type"]
-
 
 class TestShiftAssignment(HRMSTestSuite):
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
-		cls.make_employees()
-
-	def setUp(self):
-		frappe.db.delete("Shift Assignment")
-		frappe.db.delete("Shift Type")
-
 	def test_overlapping_for_ongoing_shift(self):
 		shift = "Day Shift"
 		employee = "_T-Employee-00001"
 		date = nowdate()
-
+		frappe.db.set_single_value("HR Settings", "allow_multiple_shift_assignments", 1)
 		# shift should be Ongoing if Only start_date is present and status = Active
 		setup_shift_type(shift_type=shift)
 		make_shift_assignment(shift, employee, date)
@@ -70,6 +60,7 @@ class TestShiftAssignment(HRMSTestSuite):
 		date = nowdate()
 
 		setup_shift_type(shift_type=shift)
+		frappe.db.set_single_value("HR Settings", "allow_multiple_shift_assignments", 1)
 		make_shift_assignment(shift, employee, date, add_days(date, 30))
 
 		assignment = make_shift_assignment(
@@ -79,7 +70,7 @@ class TestShiftAssignment(HRMSTestSuite):
 
 	def test_overlapping_for_a_fixed_period_shift_and_ongoing_shift(self):
 		employee = make_employee("test_shift_assignment@example.com", company="_Test Company")
-
+		frappe.db.set_single_value("HR Settings", "allow_multiple_shift_assignments", 1)
 		# shift setup for 8-12
 		shift_type = setup_shift_type(shift_type="Shift 1", start_time="08:00:00", end_time="12:00:00")
 		date = getdate()
@@ -97,6 +88,7 @@ class TestShiftAssignment(HRMSTestSuite):
 	def test_overlap_for_shifts_on_same_day_with_overlapping_timeslots(self):
 		employee = make_employee("test_shift_assignment@example.com", company="_Test Company")
 		date = getdate()
+		frappe.db.set_single_value("HR Settings", "allow_multiple_shift_assignments", 1)
 
 		# shift setup for 8-12
 		setup_shift_type(shift_type="Shift 1", start_time="08:00:00", end_time="12:00:00")
@@ -127,7 +119,7 @@ class TestShiftAssignment(HRMSTestSuite):
 			[("01:00:00", "02:00:00"), ("01:30:00", "03:00:00")],
 			[("21:00:00", "23:00:00"), ("22:00:00", "03:00:00")],
 		]
-
+		frappe.db.set_single_value("HR Settings", "allow_multiple_shift_assignments", 1)
 		for i, pair in enumerate(overlapping_shifts):
 			s1 = setup_shift_type(shift_type=f"Shift 1-{i}", start_time=pair[0][0], end_time=pair[0][1])
 			s2 = setup_shift_type(shift_type=f"Shift 2-{i}", start_time=pair[1][0], end_time=pair[1][1])
@@ -305,3 +297,35 @@ class TestShiftAssignment(HRMSTestSuite):
 		self.assertEqual(attendance.overtime_type, shift_type.overtime_type)
 		self.assertEqual(attendance.working_hours, 11.0)
 		self.assertEqual(attendance.actual_overtime_duration, 2.0)
+
+	def test_mark_expired_shift_assignments_as_inactive(self):
+		today = getdate()
+		shift_type = setup_shift_type(shift_type="Expired Shift", start_time="08:00:00", end_time="16:00:00")
+
+		expired_employee = make_employee("test_expired_shift_assignment@example.com", company="_Test Company")
+		active_employee = make_employee("test_active_shift_assignment@example.com", company="_Test Company")
+		ongoing_employee = make_employee("test_ongoing_shift_assignment@example.com", company="_Test Company")
+
+		expired_assignment = make_shift_assignment(
+			shift_type.name,
+			expired_employee,
+			add_days(today, -7),
+			add_days(today, -1),
+		)
+		active_assignment = make_shift_assignment(
+			shift_type.name,
+			active_employee,
+			add_days(today, -1),
+			add_days(today, 2),
+		)
+		ongoing_assignment = make_shift_assignment(shift_type.name, ongoing_employee, add_days(today, -3))
+
+		mark_expired_shift_assignments_as_inactive()
+
+		expired_assignment.reload()
+		active_assignment.reload()
+		ongoing_assignment.reload()
+
+		self.assertEqual(expired_assignment.status, "Inactive")
+		self.assertEqual(active_assignment.status, "Active")
+		self.assertEqual(ongoing_assignment.status, "Active")

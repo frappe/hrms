@@ -2,7 +2,6 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -10,6 +9,7 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
 from hrms.payroll.doctype.payroll_entry.test_payroll_entry import make_payroll_entry
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.tests.utils import HRMSTestSuite
 
 COMPANY_NAME = "_Test Company"
 MONTH_1_START = getdate("2024-01-01")
@@ -18,21 +18,13 @@ MONTH_2_START = getdate("2024-02-01")
 MONTH_2_END = getdate("2024-02-29")
 
 
-class TestSalaryWithholding(IntegrationTestCase):
+class TestSalaryWithholding(HRMSTestSuite):
 	def setUp(self):
-		for dt in [
-			"Salary Withholding",
-			"Salary Withholding Cycle",
-			"Salary Slip",
-			"Payroll Entry",
-			"Salary Structure",
-			"Salary Structure Assignment",
-			"Payroll Employee Detail",
-			"Journal Entry",
-		]:
-			frappe.db.delete(dt)
-
 		self.company = frappe.get_doc("Company", COMPANY_NAME)
+		default_payroll_payble_account = frappe.get_value(
+			"Company", self.company.name, "default_payroll_payable_account"
+		)
+		frappe.db.set_value("Account", default_payroll_payble_account, "account_type", "Payable")
 		self.employee1 = make_employee("employee1@example.com", company=COMPANY_NAME, designation="Engineer")
 		self.employee2 = make_employee("employee2@example.com", company=COMPANY_NAME, designation="Engineer")
 
@@ -121,12 +113,14 @@ class TestSalaryWithholding(IntegrationTestCase):
 
 	def _make_payroll_entry(self, date: str | None = None):
 		dates = get_start_end_dates("Monthly", date or MONTH_1_START)
+
 		return make_payroll_entry(
 			start_date=dates.start_date,
 			end_date=dates.end_date,
 			payable_account=self.company.default_payroll_payable_account,
 			currency=self.company.default_currency,
 			company=self.company.name,
+			cost_center="Main - _TC",
 		)
 
 	def _submit_bank_entry(self, bank_entry: dict):

@@ -21,6 +21,7 @@ const EXPENSE_CLAIM_FIELDS = [
 	"`tabExpense Claim`.name",
 	"`tabExpense Claim`.employee",
 	"`tabExpense Claim`.employee_name",
+	"`tabExpense Claim`.currency",
 	"`tabExpense Claim`.approval_status",
 	"`tabExpense Claim`.status",
 	"`tabExpense Claim`.expense_approver",
@@ -28,7 +29,7 @@ const EXPENSE_CLAIM_FIELDS = [
 	"`tabExpense Claim`.posting_date",
 	"`tabExpense Claim`.company",
 	"`tabExpense Claim Detail`.expense_type",
-	"count(`tabExpense Claim Detail`.expense_type) as total_expenses",
+	{"COUNT": "`tabExpense Claim Detail`.expense_type", "as":"total_expenses"}
 ]
 
 const FILTER_CONFIG = [

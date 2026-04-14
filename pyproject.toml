@@ -65,6 +65,7 @@ section-order = [
 [project.urls]
 Homepage = "https://frappe.io/hr"
 Repository = "https://github.com/frappe/hrms.git"
+Documentation = "https://docs.frappe.io/hr"
 "Bug Reports" = "https://github.com/frappe/hrms/issues"
 
 

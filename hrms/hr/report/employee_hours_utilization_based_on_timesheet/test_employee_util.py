@@ -1,5 +1,4 @@
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils.make_random import get_random
 
 from erpnext.projects.doctype.project.test_project import make_project
@@ -8,28 +7,26 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.report.employee_hours_utilization_based_on_timesheet.employee_hours_utilization_based_on_timesheet import (
 	execute,
 )
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestEmployeeUtilization(IntegrationTestCase):
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
+class TestEmployeeUtilization(HRMSTestSuite):
+	def setUp(self):
 		# Create test employee
-		cls.test_emp1 = make_employee("test1@employeeutil.com", "_Test Company")
-		cls.test_emp2 = make_employee("test2@employeeutil.com", "_Test Company")
+		self.test_emp1 = make_employee("test1@employeeutil.com", "_Test Company")
+		self.test_emp2 = make_employee("test2@employeeutil.com", "_Test Company")
 
 		# Create test project
-		cls.test_project = make_project({"project_name": "_Test Project"})
+		self.test_project = make_project({"project_name": "_Test Project"})
 
 		# Create test timesheets
-		cls.create_test_timesheets()
+		self.create_test_timesheets()
 
 		frappe.db.set_single_value("HR Settings", "standard_working_hours", 9)
 
-	@classmethod
-	def create_test_timesheets(cls):
+	def create_test_timesheets(self):
 		timesheet1 = frappe.new_doc("Timesheet")
-		timesheet1.employee = cls.test_emp1
+		timesheet1.employee = self.test_emp1
 		timesheet1.company = "_Test Company"
 
 		timesheet1.append(
@@ -47,7 +44,7 @@ class TestEmployeeUtilization(IntegrationTestCase):
 		timesheet1.submit()
 
 		timesheet2 = frappe.new_doc("Timesheet")
-		timesheet2.employee = cls.test_emp2
+		timesheet2.employee = self.test_emp2
 		timesheet2.company = "_Test Company"
 
 		timesheet2.append(
@@ -58,29 +55,12 @@ class TestEmployeeUtilization(IntegrationTestCase):
 				"is_billable": 0,
 				"from_time": "2021-04-01 13:30:00.000000",
 				"to_time": "2021-04-01 23:30:00.000000",
-				"project": cls.test_project.name,
+				"project": self.test_project.name,
 			},
 		)
 
 		timesheet2.save()
 		timesheet2.submit()
-
-	@classmethod
-	def tearDownClass(cls):
-		# Delete time logs
-		frappe.db.sql(
-			"""
-            DELETE FROM `tabTimesheet Detail`
-            WHERE parent IN (
-                SELECT name
-                FROM `tabTimesheet`
-                WHERE company = '_Test Company'
-            )
-        """
-		)
-
-		frappe.db.sql("DELETE FROM `tabTimesheet` WHERE company='_Test Company'")
-		frappe.db.sql(f"DELETE FROM `tabProject` WHERE name='{cls.test_project.name}'")
 
 	def test_utilization_report_with_required_filters_only(self):
 		filters = {"company": "_Test Company", "from_date": "2021-04-01", "to_date": "2021-04-03"}

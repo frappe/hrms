@@ -156,7 +156,7 @@ class EmployeeBoardingController(Document):
 
 
 @frappe.whitelist()
-def get_onboarding_details(parent, parenttype):
+def get_onboarding_details(parent: str, parenttype: str):
 	return frappe.get_all(
 		"Employee Boarding Activity",
 		fields=[

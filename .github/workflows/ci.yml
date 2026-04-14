@@ -10,6 +10,9 @@ on:
       - "**.csv"
       - "**.po"
       - "**.pot"
+      - 'crowdin.yml'
+      - '.mergify.yml'
+      - '**.vue'
   schedule:
     # Run everday at midnight UTC / 5:30 IST
     - cron: "0 0 * * *"
@@ -32,7 +35,7 @@ jobs:
       fail-fast: false
 
       matrix:
-        container: [1, 2]
+        container: [1, 2, 3]
 
     name: Python Unit Tests
 
@@ -112,7 +115,7 @@ jobs:
           FRAPPE_BRANCH: ${{ github.event.inputs.branch }}
 
       - name: Run Tests
-        run: cd ~/frappe-bench/ && bench --site test_site run-parallel-tests --app hrms --total-builds ${{ strategy.job-total }} --build-number ${{ matrix.container }}
+        run: cd ~/frappe-bench/ && bench --site test_site run-parallel-tests --app hrms --total-builds ${{ strategy.job-total }} --build-number ${{ matrix.container }} --lightmode
         env:
           TYPE: server
           CAPTURE_COVERAGE: ${{ github.event_name != 'pull_request' }}

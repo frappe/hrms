@@ -18,11 +18,10 @@
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
 import { createResource } from "frappe-ui"
-import { ref, watch, inject, computed } from "vue"
+import { ref, inject, watch } from "vue"
 
 import FormView from "@/components/FormView.vue"
-
-import { getCompanyCurrency } from "@/data/currencies"
+import { useCurrencyConversion } from "@/composables/useCurrencyConversion"
 
 const employee = inject("$employee")
 
@@ -41,10 +40,6 @@ const employeeAdvance = ref({
 	department: employee.data.department,
 })
 
-const companyCurrency = computed(() =>
-	getCompanyCurrency(employeeAdvance.value.company)
-)
-
 // get form fields
 const formFields = createResource({
 	url: "hrms.api.get_doctype_fields",
@@ -53,48 +48,20 @@ const formFields = createResource({
 		const fields = getFilteredFields(data)
 		return applyFilters(fields)
 	},
-	onSuccess(_) {
-		employeeCurrency.reload()
-		advanceAccount.reload()
-	},
 })
 formFields.reload()
 
-const employeeCurrency = createResource({
-	url: "hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment.get_employee_currency",
-	params: { employee: employee.data.name },
-	onSuccess(data) {
-		employeeAdvance.value.currency = data
-		setExchangeRate()
-	},
-})
-
-const exchangeRate = createResource({
-	url: "erpnext.setup.utils.get_exchange_rate",
-	onSuccess(data) {
-		employeeAdvance.value.exchange_rate = data
-	},
-})
-
-const advanceAccount = createResource({
-	url: "hrms.api.get_advance_account",
-	params: { company: employeeAdvance.value.company },
-	onSuccess(data) {
-		employeeAdvance.value.advance_account = data
-	},
-})
-
-// form scripts
-watch(
-	() => employeeAdvance.value.currency,
-	() => setExchangeRate()
+useCurrencyConversion(
+	formFields,
+	employeeAdvance,
+	["paid_amount"]
 )
 
 // helper functions
 function getFilteredFields(fields) {
 	// reduce noise from the form view by excluding unnecessary fields
 	// eg: employee and other details can be fetched from the session user
-	const excludeFields = ["naming_series"]
+	const excludeFields = ["naming_series", "base_paid_amount"]
 	const extraFields = [
 		"employee",
 		"employee_name",
@@ -112,16 +79,14 @@ function getFilteredFields(fields) {
 function applyFilters(fields) {
 	return fields.map((field) => {
 		if (field.fieldname === "advance_account") {
-			let currencies = [employeeAdvance.value.currency]
-			if (employeeAdvance.value.currency != companyCurrency.value)
-				currencies.push(companyCurrency.value)
+			if (!employeeAdvance.value.currency) return field
 
 			field.linkFilters = {
-				company: employeeAdvance.value.company,
-				is_group: 0,
 				root_type: "Asset",
+				is_group: 0,
 				account_type: "Receivable",
-				account_currency: ["in", currencies],
+				account_currency: employeeAdvance.value.currency,
+				company: employeeAdvance.value.company,
 			}
 		}
 
@@ -129,23 +94,12 @@ function applyFilters(fields) {
 	})
 }
 
-function setExchangeRate() {
-	if (!employeeAdvance.value.currency) return
-	const exchange_rate_field = formFields.data?.find(
-		(field) => field.fieldname === "exchange_rate"
-	)
-
-	if (employeeAdvance.value.currency === companyCurrency.value) {
-		employeeAdvance.value.exchange_rate = 1
-		exchange_rate_field.hidden = 1
-	} else {
-		exchangeRate.fetch({
-			from_currency: employeeAdvance.value.currency,
-			to_currency: companyCurrency.value,
-		})
-		exchange_rate_field.hidden = 0
+watch(
+	() => employeeAdvance.value.currency,
+	() => {
+		applyFilters(formFields.data)
 	}
-}
+)
 
 function validateForm() {}
 </script>

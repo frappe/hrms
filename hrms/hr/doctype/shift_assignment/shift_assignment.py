@@ -199,6 +199,25 @@ def get_events(start: str | date, end: str | date, filters: list | None = None):
 	return get_shift_events(assignments)
 
 
+def mark_expired_shift_assignments_as_inactive():
+	today = getdate()
+	shift_assignment = frappe.qb.DocType("Shift Assignment")
+
+	expired_assignments = (
+		frappe.qb.from_(shift_assignment)
+		.select(shift_assignment.name)
+		.where(
+			(shift_assignment.docstatus == 1)
+			& (shift_assignment.status == "Active")
+			& (shift_assignment.end_date.isnotnull())
+			& (shift_assignment.end_date < today)
+		)
+	).run(pluck=True)
+
+	for assignment in expired_assignments:
+		frappe.db.set_value("Shift Assignment", assignment, "status", "Inactive")
+
+
 def get_shift_assignments(start: str, end: str, filters: str | list | None = None) -> list[dict]:
 	import json
 

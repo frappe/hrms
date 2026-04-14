@@ -4,7 +4,7 @@ import frappe
 
 
 @frappe.whitelist()
-def get_data(start=0):
+def get_data(start: int = 0):
 	# frappe.only_for('Employee', 'System Manager')
 	data = frappe.get_all(
 		"Communication",

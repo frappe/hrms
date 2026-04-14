@@ -22,11 +22,6 @@ company_name = "_Test Company 3"
 
 
 class TestExpenseClaim(HRMSTestSuite):
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
-		cls.make_employees()
-
 	def setUp(self):
 		if not frappe.db.get_value("Cost Center", {"company": company_name}):
 			cost_center = frappe.new_doc("Cost Center")
@@ -42,16 +37,10 @@ class TestExpenseClaim(HRMSTestSuite):
 
 			frappe.db.set_value("Company", company_name, "default_cost_center", cost_center)
 		frappe.db.set_value("Account", "Employee Advances - _TC", "account_type", "Receivable")
-
-	def tearDown(self):
 		frappe.set_user("Administrator")
 
 	def test_total_expense_claim_for_project(self):
-		frappe.db.delete("Task")
-		frappe.db.delete("Project")
-		frappe.db.sql("update `tabExpense Claim` set project = '', task = ''")
-
-		project = create_project("_Test Project 1")
+		project = create_project("_Test Project 1", company="_Test Company")
 
 		task = frappe.new_doc("Task")
 		task.update(
@@ -171,6 +160,34 @@ class TestExpenseClaim(HRMSTestSuite):
 		allocate_using_payment_reconciliation(expense_claim2, employee, je, payable_account)
 		expense_claim2.load_from_db()
 		self.assertEqual(expense_claim2.status, "Paid")
+
+	def test_other_employee_advances_link_with_claim(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import make_employee_advance
+
+		payable_account = get_payable_account("_Test Company")
+
+		employee = make_employee("test_employee@employee.advance", "_Test Company")
+		advance = make_employee_advance(employee)
+
+		employee_with_no_advance = make_employee("test_employee@not-employee.advance", "_Test Company")
+		claim_with_no_advance = make_expense_claim(
+			payable_account,
+			1000,
+			1000,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			do_not_submit=True,
+			employee=employee_with_no_advance,
+		)
+		claim_with_no_advance.save()
+
+		claim_with_no_advance.append(
+			"advances",
+			{
+				"employee_advance": advance.name,
+			},
+		)
+		self.assertRaises(frappe.ValidationError, claim_with_no_advance.save)
 
 	def test_expense_claim_against_fully_paid_advances(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (
@@ -494,7 +511,7 @@ class TestExpenseClaim(HRMSTestSuite):
 		create_test_contact_and_address()
 		address = create_address(driver)
 
-		delivery_trip = create_delivery_trip(driver, address)
+		delivery_trip = create_delivery_trip(driver, address, company="_Test Company")
 		expense_claim = make_expense_claim_for_delivery_trip(delivery_trip.name)
 		self.assertEqual(delivery_trip.name, expense_claim.delivery_trip)
 
@@ -517,7 +534,7 @@ class TestExpenseClaim(HRMSTestSuite):
 		self.assertEqual(je.accounts[0].debit_in_account_currency, expense_claim.grand_total)
 
 	def test_accounting_dimension_mapping(self):
-		project = create_project("_Test Expense Project")
+		project = create_project("_Test Expense Project", company="_Test Company")
 		payable_account = get_payable_account(company_name)
 
 		expense_claim = make_expense_claim(
@@ -1072,12 +1089,13 @@ def allocate_using_payment_reconciliation(expense_claim, employee, journal_entry
 	pr.reconcile()
 
 
-def create_project(project_name):
+def create_project(project_name, **args):
 	project = frappe.db.exists("Project", {"project_name": project_name})
 	if project:
 		return project
 
 	doc = frappe.new_doc("Project")
 	doc.project_name = project_name
+	doc.update(args)
 	doc.insert()
 	return doc.name

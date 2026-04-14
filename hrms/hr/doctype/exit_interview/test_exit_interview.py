@@ -6,21 +6,18 @@ import os
 import frappe
 from frappe import _
 from frappe.core.doctype.user_permission.test_user_permission import create_user
-from frappe.tests import IntegrationTestCase
 from frappe.tests.test_webform import create_custom_doctype, create_webform
 from frappe.utils import getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.exit_interview.exit_interview import send_exit_questionnaire
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestExitInterview(IntegrationTestCase):
-	def setUp(self):
-		frappe.db.sql("delete from `tabExit Interview`")
-
+class TestExitInterview(HRMSTestSuite):
 	def test_duplicate_interview(self):
-		employee = make_employee("employeeexitint1@example.com")
+		employee = make_employee("employeeexitint1@example.com", company="_Test Company")
 		frappe.db.set_value("Employee", employee, "relieving_date", getdate())
 		interview = create_exit_interview(employee)
 
@@ -28,7 +25,7 @@ class TestExitInterview(IntegrationTestCase):
 		self.assertRaises(frappe.DuplicateEntryError, doc.save)
 
 	def test_relieving_date_validation(self):
-		employee = make_employee("employeeexitint2@example.com")
+		employee = make_employee("employeeexitint2@example.com", company="_Test Company")
 		# unset relieving date
 		frappe.db.set_value("Employee", employee, "relieving_date", None)
 
@@ -41,7 +38,7 @@ class TestExitInterview(IntegrationTestCase):
 		self.assertTrue(interview.name)
 
 	def test_interview_date_updated_in_employee_master(self):
-		employee = make_employee("employeeexit3@example.com")
+		employee = make_employee("employeeexit3@example.com", company="_Test Company")
 		frappe.db.set_value("Employee", employee, "relieving_date", getdate())
 
 		interview = create_exit_interview(employee)
@@ -71,7 +68,7 @@ class TestExitInterview(IntegrationTestCase):
 			},
 		)
 
-		employee = make_employee("employeeexit3@example.com")
+		employee = make_employee("employeeexit3@example.com", company="_Test Company")
 		frappe.db.set_value("Employee", employee, "relieving_date", getdate())
 
 		interview = create_exit_interview(employee)
@@ -81,15 +78,12 @@ class TestExitInterview(IntegrationTestCase):
 		self.assertTrue("Subject: Exit Questionnaire Notification" in email_queue[0].message)
 
 	def test_status_on_discard(self):
-		employee = make_employee("test_status@example.com")
+		employee = make_employee("test_status@example.com", company="_Test Company")
 		frappe.db.set_value("Employee", employee, "relieving_date", getdate())
 		interview = create_exit_interview(employee)
 		interview.discard()
 		interview.reload()
 		self.assertEqual(interview.status, "Cancelled")
-
-	def tearDown(self):
-		frappe.db.rollback()
 
 
 def create_exit_interview(employee, save=True):

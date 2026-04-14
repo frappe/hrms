@@ -9,22 +9,20 @@
  "engine": "InnoDB",
  "field_order": [
   "leave_type_name",
-  "max_leaves_allowed",
-  "applicable_after",
-  "max_continuous_days_allowed",
-  "column_break_3",
-  "is_carry_forward",
+  "is_compensatory",
   "is_lwp",
   "is_ppl",
   "fraction_of_daily_salary_per_leave",
-  "is_optional_leave",
+  "column_break_3",
   "allow_negative",
   "allow_over_allocation",
   "include_holiday",
-  "is_compensatory",
+  "is_optional_leave",
   "carry_forward_section",
+  "is_carry_forward",
   "maximum_carry_forwarded_leaves",
   "expire_carry_forwarded_leaves_after_days",
+  "column_break_lfjz",
   "encashment",
   "allow_encashment",
   "max_encashable_leaves",
@@ -37,6 +35,11 @@
   "column_break_22",
   "allocate_on_day",
   "rounding",
+  "limits_tab",
+  "max_leaves_allowed",
+  "max_continuous_days_allowed",
+  "column_break_bsas",
+  "applicable_after",
   "connections_tab"
  ],
  "fields": [
@@ -77,7 +80,7 @@
    "fieldname": "is_carry_forward",
    "fieldtype": "Check",
    "in_list_view": 1,
-   "label": "Is Carry Forward",
+   "label": "Carry Forward",
    "oldfieldname": "is_carry_forward",
    "oldfieldtype": "Check"
   },
@@ -93,7 +96,7 @@
    "description": "These leaves are holidays permitted by the company however, availing it is optional for an Employee.",
    "fieldname": "is_optional_leave",
    "fieldtype": "Check",
-   "label": "Is Optional Leave"
+   "label": "Leave for optional holiday"
   },
   {
    "default": "0",
@@ -114,13 +117,7 @@
    "label": "Is Compensatory"
   },
   {
-   "collapsible": 1,
-   "depends_on": "eval: doc.is_carry_forward == 1",
-   "fieldname": "carry_forward_section",
-   "fieldtype": "Section Break",
-   "label": "Carry Forward"
-  },
-  {
+   "depends_on": "is_carry_forward",
    "description": "Calculated in days",
    "fieldname": "expire_carry_forwarded_leaves_after_days",
    "fieldtype": "Int",
@@ -232,16 +229,36 @@
    "non_negative": 1
   },
   {
+   "fieldname": "limits_tab",
+   "fieldtype": "Tab Break",
+   "label": "Limits"
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "is_carry_forward",
+   "fieldname": "carry_forward_section",
+   "fieldtype": "Section Break",
+   "label": "Carry Forward"
+  },
+  {
+   "fieldname": "column_break_lfjz",
+   "fieldtype": "Column Break"
+  },
+  {
    "fieldname": "connections_tab",
    "fieldtype": "Tab Break",
    "label": "Connections",
    "show_dashboard": 1
+  },
+  {
+   "fieldname": "column_break_bsas",
+   "fieldtype": "Column Break"
   }
  ],
  "icon": "fa fa-flag",
  "idx": 1,
  "links": [],
- "modified": "2026-03-13 10:37:13.489375",
+ "modified": "2026-02-06 18:26:27.583525",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Type",

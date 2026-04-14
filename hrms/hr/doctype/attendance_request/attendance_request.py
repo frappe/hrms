@@ -44,6 +44,7 @@ class AttendanceRequest(Document):
 	def validate(self):
 		validate_active_employee(self.employee)
 		validate_dates(self, self.from_date, self.to_date, False)
+		self.validate_shifts()
 		self.validate_half_day()
 		self.validate_request_overlap()
 		self.validate_no_attendance_to_create()
@@ -59,19 +60,56 @@ class AttendanceRequest(Document):
 		if len(attendance_warnings) == attendance_request_days and not any(
 			warning["action"] == "Overwrite" for warning in attendance_warnings
 		):
-			frappe.throw(
-				title=_("No attendance records to create"),
-				msg=_(
-					"Please check if employee is on leave or attendance with the same status exists for selected day(s)."
-				),
+			message_table = [[_("Date"), _("Reason"), _("Action")]]
+			for warning in attendance_warnings:
+				message_table.append(
+					[
+						format_date(warning["date"]),
+						_(warning["reason"]),
+						_(warning["action"]),
+					]
+				)
+			frappe.msgprint(
+				title=_("No attendance records to create due to following reasons"),
+				msg=message_table,
+				as_table=True,
+				raise_exception=True,
 			)
+
+	def validate_shifts(self):
+		# Shift should be mentioned if employee has a shift assignment
+		shifts = self.get_active_shifts()
+		if shifts and not self.shift:
+			if len(shifts) == 1:
+				self.shift = shifts[0]
+			else:
+				frappe.throw(
+					_(
+						"There are multiple shifts assigned to the employee for the same period. Please mention the shift"
+					)
+				)
+
+	def get_active_shifts(self):
+		shifts = frappe.get_all(
+			"Shift Assignment",
+			filters={
+				"docstatus": 1,
+				"status": "Active",
+				"employee": self.employee,
+				"start_date": ("<=", self.from_date),
+				"end_date": (">=", self.to_date),
+			},
+			pluck="shift_type",
+		)
+
+		return list(set(shifts))
 
 	def validate_request_overlap(self):
 		if not self.name:
 			self.name = "New Attendance Request"
 
 		Request = frappe.qb.DocType("Attendance Request")
-		overlapping_request = (
+		query = (
 			frappe.qb.from_(Request)
 			.select(Request.name)
 			.where(
@@ -81,7 +119,12 @@ class AttendanceRequest(Document):
 				& (self.to_date >= Request.from_date)
 				& (self.from_date <= Request.to_date)
 			)
-		).run(as_dict=True)
+		)
+
+		if self.shift:
+			query = query.where(Request.shift == self.shift)
+
+		overlapping_request = query.run(as_dict=True)
 
 		if overlapping_request:
 			self.throw_overlap_error(overlapping_request[0].name)
@@ -196,6 +239,7 @@ class AttendanceRequest(Document):
 				"employee": self.employee,
 				"attendance_date": attendance_date,
 				"docstatus": ("!=", 2),
+				"shift": self.shift,
 			},
 		)
 		return frappe.get_doc("Attendance", attendance) if attendance else None

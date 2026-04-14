@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-03-08 09:41+0000\n"
-"PO-Revision-Date: 2026-03-09 10:36\n"
+"POT-Creation-Date: 2026-04-12 09:46+0000\n"
+"PO-Revision-Date: 2026-04-13 16:27\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Chinese Simplified\n"
 "MIME-Version: 1.0\n"
@@ -344,11 +344,11 @@ msgstr "在{1}至{2}期间存在{0}（"
 #. Employee'
 #. Option for the 'Consider Unmarked Attendance As' (Select) field in DocType
 #. 'Payroll Settings'
-#: frontend/src/components/AttendanceCalendar.vue:80
+#: frontend/src/components/AttendanceCalendar.vue:79
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:732
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:736
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Absent"
 msgstr "缺勤"
@@ -367,7 +367,7 @@ msgstr "缺勤记录"
 msgid "Account No"
 msgstr "账号"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:154
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:155
 msgid "Account type should be set {0} for payroll payable account {1}, please set and try again"
 msgstr "工资应付账户{1}的账户类型应设置为{0}，请设置后重试"
 
@@ -424,7 +424,7 @@ msgstr "计提组件仅可为采用计提支付方式的弹性福利工资组件
 msgid "Accrual Component must be set for Flexible Benefit Salary Components with accrual payout methods."
 msgstr "采用计提支付方式的弹性福利工资组件必须设置计提组件"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:666
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:667
 msgid "Accrual Journal Entry for salaries from {0} to {1}"
 msgstr "{0}至{1}期间工资的应计日记账分录"
 
@@ -525,7 +525,7 @@ msgstr "添加上次未使用假期"
 msgid "Add unused leaves from previous leave period's allocation to this allocation"
 msgstr "将上一假期周期未使用的假期添加至本次分配"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1679
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1680
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
 msgstr "薪资结构未配置税费组件，已自动从主薪资组件中添加税费项"
 
@@ -651,11 +651,11 @@ msgstr "员工建档的必填任务尚未全部完成"
 msgid "Allocate Based On Leave Policy"
 msgstr "按假期政策分配"
 
-#: hrms/hr/doctype/leave_control_panel/leave_control_panel.js:176
+#: hrms/hr/doctype/leave_control_panel/leave_control_panel.js:177
 msgid "Allocate Leave"
 msgstr "分配假期"
 
-#: hrms/hr/doctype/leave_control_panel/leave_control_panel.js:192
+#: hrms/hr/doctype/leave_control_panel/leave_control_panel.js:193
 msgid "Allocate leaves to {0} employee(s)?"
 msgstr "是否为{0}名员工分配假期？"
 
@@ -681,7 +681,7 @@ msgstr "已分配假期"
 msgid "Allocated Via"
 msgstr ""
 
-#: hrms/hr/doctype/leave_control_panel/leave_control_panel.js:205
+#: hrms/hr/doctype/leave_control_panel/leave_control_panel.js:206
 msgid "Allocating Leave"
 msgstr "假期分配中"
 
@@ -800,7 +800,7 @@ msgstr "允许分配的假期数超过分配周期天数"
 msgid "Alternating entries as IN and OUT during the same shift"
 msgstr "同一班次内交替记录签到/签退"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:82
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:83
 msgid "Amount Based on Formula"
 msgstr "公式计算金额"
 
@@ -810,7 +810,7 @@ msgstr "公式计算金额"
 #. Detail'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:141
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:142
 msgid "Amount based on formula"
 msgstr "基于公式的金额"
 
@@ -868,7 +868,7 @@ msgstr "年度分配"
 msgid "Annual Allocation Exceeded"
 msgstr "超出年度分配额度"
 
-#: hrms/setup.py:404
+#: hrms/setup.py:407
 msgid "Annual Salary"
 msgstr "年薪"
 
@@ -1076,7 +1076,7 @@ msgstr "考核概览"
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/doctype/appraisal_template/appraisal_template.json
-#: hrms/hr/doctype/appraisee/appraisee.json hrms/setup.py:162
+#: hrms/hr/doctype/appraisee/appraisee.json hrms/setup.py:161
 #: hrms/workspace_sidebar/performance.json
 msgid "Appraisal Template"
 msgstr "考核模板"
@@ -1120,7 +1120,7 @@ msgstr "被考核人"
 msgid "Appraisees: {0}"
 msgstr "被考核人：{0}"
 
-#: hrms/setup.py:396
+#: hrms/setup.py:399
 msgid "Apprentice"
 msgstr "实习生"
 
@@ -1165,7 +1165,7 @@ msgstr "已批准"
 msgid "Approver"
 msgstr "审批人"
 
-#: hrms/setup.py:133 hrms/setup.py:235
+#: hrms/setup.py:132 hrms/setup.py:235
 msgid "Approvers"
 msgstr "审批人列表"
 
@@ -1261,7 +1261,7 @@ msgstr "正在分配薪资结构"
 msgid "Assigning Structure..."
 msgstr "分配结构中..."
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:290
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:291
 msgid "Assigning Structures..."
 msgstr "分配多个结构..."
 
@@ -1314,8 +1314,8 @@ msgstr ""
 
 #. Name of a DocType
 #. Label of the attendance (Select) field in DocType 'Training Event Employee'
-#. Label of a Card Break in the People Workspace
-#. Label of a Link in the People Workspace
+#. Label of a Card Break in the HR Setup Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Card Break in the Shift & Attendance Workspace
 #. Label of a Link in the Shift & Attendance Workspace
 #. Option for the 'Calculate Payroll Working Days Based On' (Select) field in
@@ -1323,7 +1323,7 @@ msgstr ""
 #: frontend/src/components/BottomTabs.vue:48
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 #: hrms/overrides/dashboard_overrides.py:10
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
@@ -1360,7 +1360,6 @@ msgid "Attendance ID"
 msgstr "考勤编号"
 
 #. Label of the attendance (Link) field in DocType 'Employee Checkin'
-#: hrms/hr/doctype/attendance/attendance_list.js:122
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.js:102
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
 msgid "Attendance Marked"
@@ -1368,13 +1367,13 @@ msgstr "已记录考勤"
 
 #. Label of the attendance_request (Link) field in DocType 'Attendance'
 #. Name of a DocType
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Shift & Attendance Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/attendance/attendance.js:18
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/attendance_request/attendance_request.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 #: hrms/workspace_sidebar/shift_&_attendance.json
 msgid "Attendance Request"
@@ -1395,7 +1394,7 @@ msgstr "考勤设置"
 msgid "Attendance To Date"
 msgstr "考勤截止日期"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:144
+#: hrms/hr/doctype/attendance_request/attendance_request.py:187
 msgid "Attendance Updated"
 msgstr "考勤已更新"
 
@@ -1403,7 +1402,7 @@ msgstr "考勤已更新"
 msgid "Attendance Warnings"
 msgstr "考勤预警"
 
-#: hrms/hr/doctype/attendance/attendance.py:95
+#: hrms/hr/doctype/attendance/attendance.py:97
 msgid "Attendance date {0} can not be less than employee {1}'s joining date: {2}"
 msgstr "考勤日期{0}不得早于员工{1}的入职日期{2}"
 
@@ -1411,11 +1410,11 @@ msgstr "考勤日期{0}不得早于员工{1}的入职日期{2}"
 msgid "Attendance for all the employees under this criteria has been marked already."
 msgstr "符合条件的所有员工考勤已记录"
 
-#: hrms/hr/doctype/attendance/attendance.py:153
+#: hrms/hr/doctype/attendance/attendance.py:155
 msgid "Attendance for employee {0} is already marked for an overlapping shift {1}: {2}"
 msgstr "员工{0}的考勤已记录在重叠班次{1}：{2}中"
 
-#: hrms/hr/doctype/attendance/attendance.py:107
+#: hrms/hr/doctype/attendance/attendance.py:109
 msgid "Attendance for employee {0} is already marked for the date {1}: {2}"
 msgstr "员工{0}在日期{1}的考勤已记录：{2}"
 
@@ -1427,7 +1426,7 @@ msgstr "员工{0}在以下日期已有考勤记录：{1}"
 msgid "Attendance for the following dates will be skipped/overwritten on submission"
 msgstr "提交时将跳过/覆盖以下日期的考勤记录"
 
-#: hrms/hr/doctype/attendance/attendance_list.js:102
+#: hrms/hr/doctype/attendance/attendance_list.js:101
 msgid "Attendance from {0} to {1} has already been marked for the Employee {2}"
 msgstr "员工{2}在{0}至{1}期间的考勤已记录"
 
@@ -1443,11 +1442,15 @@ msgstr "这些员工在所选薪资期间的考勤待处理，请记录考勤后
 msgid "Attendance marked successfully"
 msgstr "考勤记录成功"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:163
+#: hrms/hr/doctype/attendance/attendance.py:404
+msgid "Attendance marked successfully."
+msgstr "考勤记录成功."
+
+#: hrms/hr/doctype/attendance_request/attendance_request.py:206
 msgid "Attendance not submitted for {0} as it is a Holiday."
 msgstr "{0}为节假日，未提交考勤"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:172
+#: hrms/hr/doctype/attendance_request/attendance_request.py:215
 msgid "Attendance not submitted for {0} as {1} is on leave."
 msgstr "{0}因{1}请假未提交考勤"
 
@@ -1559,7 +1562,7 @@ msgstr "等待回复"
 msgid "Backdated Leave Application is restricted. Please set the {} in {}"
 msgstr "禁止补请假申请，请在{}设置{}"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:286
+#: hrms/hr/doctype/expense_claim/expense_claim.js:290
 msgid "Bank Entries"
 msgstr "银行流水"
 
@@ -1625,7 +1628,7 @@ msgstr "组件{0}的福利金额超过{1}"
 msgid "Benefit amount of component {0} should be greater than 0"
 msgstr "组件{0}的福利金额应大于0"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:484
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:487
 msgid "Benefit amount {0} for Salary Component {1} should not be greater than maximum benefit amount {2} set in {3}"
 msgstr "工资组件{1}的福利金额{0}不应大于在{3}中设置的最大福利金额{2}"
 
@@ -1718,7 +1721,7 @@ msgstr "奖金发放日期"
 msgid "Bonus Payment Date cannot be a past date"
 msgstr "奖金发放日期不能为过去日期"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:272
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:273
 msgid "Branch: {0}"
 msgstr "分支机构：{0}"
 
@@ -1737,6 +1740,14 @@ msgstr "批量分配休假政策"
 #: hrms/payroll/workspace/payroll/payroll.json
 msgid "Bulk Salary Structure Assignment"
 msgstr "批量分配薪资结构"
+
+#: hrms/hr/doctype/attendance/attendance.py:398
+msgid "Bulk attendance marking is already in progress for employee {0}. You can monitor the job status {1}"
+msgstr ""
+
+#: hrms/hr/doctype/attendance/attendance.py:394
+msgid "Bulk attendance marking is queued with a background job. It may take a while. You can monitor the job status {0}"
+msgstr ""
 
 #. Description of the 'Calculate Final Score based on Formula' (Check) field in
 #. DocType 'Appraisal Cycle'
@@ -1772,11 +1783,11 @@ msgstr "薪资工作日计算依据"
 msgid "Calculated in days"
 msgstr "按天数计算"
 
-#: hrms/setup.py:332
+#: hrms/setup.py:335
 msgid "Calls"
 msgstr "通话记录"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:188
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:189
 msgid "Cancellation Queued"
 msgstr "取消已排队"
 
@@ -1812,11 +1823,11 @@ msgstr "无法取消班次分配{0}，因其关联考勤记录{1}"
 msgid "Cannot cancel Shift Assignment: {0} as it is linked to Employee Checkin: {1}"
 msgstr "无法取消班次分配{0}，因其关联员工签到{1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:388
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:389
 msgid "Cannot create Salary Slip for Employee joining after Payroll Period"
 msgstr "无法为薪资周期后入职员工创建工资条"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:391
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:392
 msgid "Cannot create Salary Slip for Employee who has left before Payroll Period"
 msgstr "无法为薪资周期前离职员工创建工资条"
 
@@ -1832,11 +1843,11 @@ msgstr "无法对状态为{0}的考核周期创建或修改事务"
 msgid "Cannot find active Leave Period"
 msgstr "未找到有效假期周期"
 
-#: hrms/hr/doctype/attendance/attendance.py:187
+#: hrms/hr/doctype/attendance/attendance.py:189
 msgid "Cannot mark attendance for an Inactive employee {0}"
 msgstr "无法为停用员工{0}记录考勤"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:111
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:112
 msgid "Cannot submit. Attendance is not marked for some employees."
 msgstr "无法提交，部分员工考勤未记录"
 
@@ -1849,6 +1860,7 @@ msgid "Cannot update status of Goal groups"
 msgstr "无法更新目标组状态"
 
 #. Label of the carry_forward (Check) field in DocType 'Leave Control Panel'
+#. Label of the is_carry_forward (Check) field in DocType 'Leave Type'
 #. Label of the carry_forward_section (Section Break) field in DocType 'Leave
 #. Type'
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
@@ -1862,7 +1874,7 @@ msgstr "结转"
 msgid "Carry Forwarded Leaves"
 msgstr "结转假期"
 
-#: hrms/setup.py:347 hrms/setup.py:348
+#: hrms/setup.py:350 hrms/setup.py:351
 msgid "Casual Leave"
 msgstr "事假"
 
@@ -1871,11 +1883,11 @@ msgstr "事假"
 msgid "Cause of Grievance"
 msgstr "申诉事由"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:128
+#: hrms/hr/doctype/attendance_request/attendance_request.py:171
 msgid "Changed the status from {0} to {1} and Status for Other Half to {2} via Attendance Request"
 msgstr "通过考勤申请将状态从{0}更改为{1}，并将另一半状态更改为{2}"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:132
+#: hrms/hr/doctype/attendance_request/attendance_request.py:175
 msgid "Changed the status from {0} to {1} via Attendance Request"
 msgstr "通过考勤申请将状态从{0}更改为{1}"
 
@@ -1891,7 +1903,7 @@ msgstr "修改父级目标的KRA将同步所有子目标KRA（如存在）"
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
 msgstr "查看<a href='/app/List/Error Log?reference_doctype={0}'>{1}</a>获取详情"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1576
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1582
 msgid "Check Error Log {0} for more details."
 msgstr "查看错误日志{0}获取详情"
 
@@ -1994,7 +2006,7 @@ msgstr "员工{0}的报销金额应大于0"
 
 #. Label of a Card Break in the Expenses Workspace
 #: hrms/hr/workspace/expenses/expenses.json
-#: hrms/overrides/dashboard_overrides.py:84
+#: hrms/overrides/dashboard_overrides.py:87
 msgid "Claims"
 msgstr "报销单"
 
@@ -2005,7 +2017,7 @@ msgstr "报销单"
 msgid "Cleared"
 msgstr "已清算"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.js:292
+#: hrms/payroll/doctype/salary_slip/salary_slip.js:300
 msgid "Click {0} to change the configuration and then resave salary slip"
 msgstr "点击{0}修改配置后重新保存工资条"
 
@@ -2039,15 +2051,16 @@ msgstr "公司信息"
 
 #. Name of a DocType
 #. Label of the compensatory_request (Link) field in DocType 'Leave Allocation'
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Leaves Workspace
-#. Label of a Link in the People Workspace
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.json
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
-#: hrms/hr/workspace/leaves/leaves.json hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/leaves/leaves.json
 msgid "Compensatory Leave Request"
 msgstr "补休申请"
 
-#: hrms/setup.py:356 hrms/setup.py:357
+#: hrms/setup.py:359 hrms/setup.py:360
 msgid "Compensatory Off"
 msgstr "调休"
 
@@ -2067,7 +2080,7 @@ msgstr "组件属性及引用"
 msgid "Condition & Formula"
 msgstr "条件与公式"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.js:8
+#: hrms/payroll/doctype/salary_structure/salary_structure.js:9
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:12
 msgid "Condition and Formula Help"
 msgstr "条件与公式说明"
@@ -2100,7 +2113,7 @@ msgstr "考虑宽限期"
 #. Label of the consider_marked_attendance_on_holidays (Check) field in DocType
 #. 'Payroll Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
-#: hrms/payroll/doctype/salary_slip/salary_slip.js:282
+#: hrms/payroll/doctype/salary_slip/salary_slip.js:287
 msgid "Consider Marked Attendance on Holidays"
 msgstr "节假日考勤纳入考量"
 
@@ -2111,7 +2124,7 @@ msgstr "考虑免税申报"
 #. Label of the consider_unmarked_attendance_as (Select) field in DocType
 #. 'Payroll Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
-#: hrms/payroll/doctype/salary_slip/salary_slip.js:282
+#: hrms/payroll/doctype/salary_slip/salary_slip.js:286
 msgid "Consider Unmarked Attendance As"
 msgstr "未记录考勤视为"
 
@@ -2133,7 +2146,7 @@ msgstr "联系电话"
 msgid "Copy of Invitation/Announcement"
 msgstr "邀请函/公告副本"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1639
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1647
 msgid "Could not submit some Salary Slips: {}"
 msgstr "无法提交部分工资条：{}"
 
@@ -2225,6 +2238,10 @@ msgstr "批量创建工资条"
 msgid "Create Shifts After"
 msgstr "创建班次时间范围"
 
+#: hrms/public/js/templates/hierarchy_empty_state.html:25
+msgid "Create {0}"
+msgstr ""
+
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:217
 msgid "Creating Appraisals"
 msgstr "正在创建绩效考核"
@@ -2233,7 +2250,7 @@ msgstr "正在创建绩效考核"
 msgid "Creating Payment Entries......"
 msgstr "正在创建付款分录......"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1599
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1605
 msgid "Creating Salary Slips..."
 msgstr "正在创建工资条..."
 
@@ -2363,12 +2380,13 @@ msgstr "每日工作摘要"
 #. Label of the daily_work_summary_group (Link) field in DocType 'Daily Work
 #. Summary'
 #. Name of a DocType
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Tenure Workspace
 #: hrms/hr/doctype/daily_work_summary/daily_work_summary.json
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json
 #: hrms/hr/page/team_updates/team_updates.js:12
-#: hrms/hr/workspace/people/people.json hrms/hr/workspace/tenure/tenure.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Daily Work Summary Group"
 msgstr "每日工作摘要组"
 
@@ -2378,14 +2396,15 @@ msgid "Daily Work Summary Group User"
 msgstr "每日工作摘要组成员"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Tenure Workspace
 #: hrms/hr/report/daily_work_summary_replies/daily_work_summary_replies.json
-#: hrms/hr/workspace/people/people.json hrms/hr/workspace/tenure/tenure.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/tenure/tenure.json
 msgid "Daily Work Summary Replies"
 msgstr "每日工作摘要回复"
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:167
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:187
 msgid "Date Range Exceeded"
 msgstr "日期范围超出"
 
@@ -2408,7 +2427,7 @@ msgstr "日期及原因"
 msgid "Dates Based On"
 msgstr "日期依据"
 
-#: hrms/setup.py:121
+#: hrms/setup.py:120
 msgid "Days for which Holidays are blocked for this department."
 msgstr "本部门封存的假期天数"
 
@@ -2519,15 +2538,15 @@ msgstr "选择此模式时，银行/现金默认账户将自动更新至薪资�
 msgid "Default Base Pay"
 msgstr "默认基本工资"
 
-#: hrms/setup.py:81
+#: hrms/setup.py:80
 msgid "Default Employee Advance Account"
 msgstr "默认员工预支账户"
 
-#: hrms/setup.py:73
+#: hrms/setup.py:72
 msgid "Default Expense Claim Payable Account"
 msgstr "默认费用报销应付账户"
 
-#: hrms/overrides/company.py:133 hrms/setup.py:96
+#: hrms/overrides/company.py:133 hrms/setup.py:95
 msgid "Default Payroll Payable Account"
 msgstr "默认应付薪资账户"
 
@@ -2564,7 +2583,7 @@ msgstr "部门空缺分布"
 msgid "Department {0} does not belong to company: {1}"
 msgstr "部门{0}不属于公司{1}"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:274
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:275
 msgid "Department: {0}"
 msgstr "部门：{0}"
 
@@ -2573,8 +2592,8 @@ msgstr "部门：{0}"
 msgid "Departure Datetime"
 msgstr "离开时间"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:142
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:146
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:143
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:147
 msgid "Depends On Payment Days"
 msgstr "依赖计薪天数"
 
@@ -2597,7 +2616,7 @@ msgstr "职位空缺描述"
 msgid "Designation Skill"
 msgstr "职级技能"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:276
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:277
 msgid "Designation: {0}"
 msgstr "职级：{0}"
 
@@ -2612,7 +2631,7 @@ msgstr "担保人详细信息（姓名，所在地）"
 msgid "Determine Check-in and Check-out"
 msgstr "确定签到/签退规则"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:144
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:145
 msgid "Disable {0} for the {1} component, to prevent the amount from being deducted twice, as its formula already uses a payment-days-based component."
 msgstr "请为{1}组件禁用{0}，因其公式已包含基于计薪天数的组件，避免重复扣除"
 
@@ -2662,7 +2681,7 @@ msgstr "国内"
 msgid "Duplicate Assignment"
 msgstr ""
 
-#: hrms/hr/doctype/attendance/attendance.py:112
+#: hrms/hr/doctype/attendance/attendance.py:114
 msgid "Duplicate Attendance"
 msgstr "重复考勤记录"
 
@@ -2790,11 +2809,11 @@ msgstr "收入项"
 msgid "Earnings & Deductions"
 msgstr "收入与扣除项"
 
-#: frontend/src/components/ExpensesTable.vue:213
+#: frontend/src/components/ExpensesTable.vue:218
 msgid "Edit Expense Item"
 msgstr "编辑费用项"
 
-#: frontend/src/components/ExpenseTaxesTable.vue:221
+#: frontend/src/components/ExpenseTaxesTable.vue:225
 msgid "Edit Expense Tax"
 msgstr "编辑费用税费"
 
@@ -2840,7 +2859,7 @@ msgid "Employee A/C Number"
 msgstr "员工银行账号"
 
 #: hrms/patches/v16_0/create_custom_field_for_employee_advance_in_employee_master.py:11
-#: hrms/setup.py:267
+#: hrms/setup.py:270
 msgid "Employee Advance Account"
 msgstr ""
 
@@ -2850,20 +2869,20 @@ msgstr "员工预支余额"
 
 #. Name of a report
 #. Label of a Link in the Expenses Workspace
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #: hrms/hr/report/employee_advance_summary/employee_advance_summary.json
 #: hrms/hr/workspace/expenses/expenses.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 msgid "Employee Advance Summary"
 msgstr "员工预支汇总"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Tenure Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/report/employee_analytics/employee_analytics.json
-#: hrms/hr/workspace/people/people.json hrms/hr/workspace/tenure/tenure.json
-#: hrms/workspace_sidebar/tenure.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/tenure/tenure.json hrms/workspace_sidebar/tenure.json
 msgid "Employee Analytics"
 msgstr "员工分析"
 
@@ -2908,17 +2927,17 @@ msgstr "员工福利分类账"
 #. Label of the employee_benefits_section (Section Break) field in DocType
 #. 'Salary Structure Assignment'
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/setup.py:406
+#: hrms/setup.py:409
 msgid "Employee Benefits"
 msgstr "员工福利"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Tenure Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/report/employee_birthday/employee_birthday.json
-#: hrms/hr/workspace/people/people.json hrms/hr/workspace/tenure/tenure.json
-#: hrms/workspace_sidebar/tenure.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/tenure/tenure.json hrms/workspace_sidebar/tenure.json
 msgid "Employee Birthday"
 msgstr "员工生日"
 
@@ -2928,11 +2947,11 @@ msgid "Employee Boarding Activity"
 msgstr "员工入职活动"
 
 #. Name of a DocType
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Shift & Attendance Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 #: hrms/workspace_sidebar/shift_&_attendance.json
 msgid "Employee Checkin"
@@ -2991,6 +3010,10 @@ msgstr "员工详细信息"
 msgid "Employee Emails"
 msgstr "员工邮箱列表"
 
+#: hrms/overrides/dashboard_overrides.py:25
+msgid "Employee Exit"
+msgstr "员工离职管理"
+
 #. Label of the employee_exit_settings_section (Section Break) field in DocType
 #. 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
@@ -2998,12 +3021,12 @@ msgid "Employee Exit Settings"
 msgstr "员工离职设置"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Tenure Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/report/employee_exits/employee_exits.json
-#: hrms/hr/workspace/people/people.json hrms/hr/workspace/tenure/tenure.json
-#: hrms/workspace_sidebar/tenure.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/tenure/tenure.json hrms/workspace_sidebar/tenure.json
 msgid "Employee Exits"
 msgstr "员工离职记录"
 
@@ -3030,7 +3053,7 @@ msgstr "员工反馈评分"
 #. Template'
 #. Label of the employee_grade (Link) field in DocType 'Leave Control Panel'
 #. Label of the grade (Link) field in DocType 'Shift Assignment Tool'
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of the grade (Link) field in DocType 'Bulk Salary Structure
 #. Assignment'
 #. Label of a Workspace Sidebar Item
@@ -3042,9 +3065,9 @@ msgstr "员工反馈评分"
 #: hrms/hr/doctype/employee_separation_template/employee_separation_template.json
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
-#: hrms/workspace_sidebar/people.json
+#: hrms/workspace_sidebar/hr_setup.json
 msgid "Employee Grade"
 msgstr "员工职级"
 
@@ -3091,32 +3114,34 @@ msgid "Employee Info"
 msgstr "员工基本信息"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Tenure Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/report/employee_information/employee_information.json
-#: hrms/hr/workspace/people/people.json hrms/hr/workspace/tenure/tenure.json
-#: hrms/workspace_sidebar/tenure.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/tenure/tenure.json hrms/workspace_sidebar/tenure.json
 msgid "Employee Information"
 msgstr "员工信息"
 
 #. Name of a report
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Leaves Workspace
-#. Label of a Link in the People Workspace
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.json
-#: hrms/hr/workspace/leaves/leaves.json hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/leaves/leaves.json
 msgid "Employee Leave Balance"
 msgstr "员工假期余额"
 
 #. Name of a report
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Leaves Workspace
-#. Label of a Link in the People Workspace
 #: hrms/hr/report/employee_leave_balance_summary/employee_leave_balance_summary.json
-#: hrms/hr/workspace/leaves/leaves.json hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/leaves/leaves.json
 msgid "Employee Leave Balance Summary"
 msgstr "员工假期余额汇总"
 
-#: hrms/setup.py:780
+#: hrms/setup.py:771
 msgid "Employee Loan"
 msgstr "员工借款"
 
@@ -3187,7 +3212,7 @@ msgstr "员工属性变更历史"
 #: hrms/hr/doctype/employee_referral/employee_referral.json
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 #: hrms/hr/doctype/job_requisition/job_requisition.js:18
-#: hrms/hr/workspace/recruitment/recruitment.json hrms/setup.py:400
+#: hrms/hr/workspace/recruitment/recruitment.json hrms/setup.py:403
 msgid "Employee Referral"
 msgstr "员工推荐"
 
@@ -3338,13 +3363,17 @@ msgstr "员工编号可通过指定员工ID或命名规则生成，请在此选�
 msgid "Employee name"
 msgstr "员工姓名"
 
+#: hrms/api/__init__.py:84
+msgid "Employee not found"
+msgstr ""
+
 #. Description of the 'Employee Naming By' (Select) field in DocType 'HR
 #. Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Employee records are created using the selected option"
 msgstr "员工档案将按所选选项创建"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:323
+#: hrms/hr/doctype/shift_type/shift_type.py:325
 msgid "Employee was marked Absent due to missing Employee Checkins."
 msgstr "因缺少签到记录，员工标记为缺勤"
 
@@ -3352,7 +3381,7 @@ msgstr "因缺少签到记录，员工标记为缺勤"
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr "因未达到工时阈值，员工标记为缺勤"
 
-#: hrms/hr/doctype/shift_type/shift_type.py:452
+#: hrms/hr/doctype/shift_type/shift_type.py:459
 msgid "Employee was marked Absent for other half due to missing Employee Checkins."
 msgstr "由于缺少员工打卡记录，该员工另一半被标记为缺勤"
 
@@ -3360,7 +3389,7 @@ msgstr "由于缺少员工打卡记录，该员工另一半被标记为缺勤"
 msgid "Employee {0} : {1}"
 msgstr "员工{0}：{1}"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:90
+#: hrms/hr/doctype/attendance_request/attendance_request.py:133
 msgid "Employee {0} already has an Attendance Request {1} that overlaps with this period"
 msgstr "员工{0}已有考勤申请{1}与本期间重叠"
 
@@ -3384,11 +3413,11 @@ msgstr "员工{0}已在{2}至{3}期间申请{1}:{4}"
 msgid "Employee {0} has already claimed the benefit '{1}' for {2} ({3}).<br>To prevent overpayments, only one claim per benefit type is allowed in each payroll cycle."
 msgstr "员工{0}已在{2}（{3}）期间报销过福利“{1}”。<br>为防止超额支付，每个薪资周期内每种福利类型仅允许报销一次"
 
-#: hrms/hr/doctype/attendance/attendance.py:246
+#: hrms/hr/doctype/attendance/attendance.py:248
 msgid "Employee {0} is not active or does not exist"
 msgstr "员工{0}未激活或不存在"
 
-#: hrms/hr/doctype/attendance/attendance.py:222
+#: hrms/hr/doctype/attendance/attendance.py:224
 msgid "Employee {0} is on Leave on {1}"
 msgstr "员工{0}在{1}请假"
 
@@ -3396,11 +3425,11 @@ msgstr "员工{0}在{1}请假"
 msgid "Employee {0} not found in Training Event Participants."
 msgstr "未在培训参与者中找到员工{0}"
 
-#: hrms/hr/doctype/attendance/attendance.py:215
+#: hrms/hr/doctype/attendance/attendance.py:217
 msgid "Employee {0} on Half day on {1}"
 msgstr "员工{0}在{1}为半日假"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:730
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:731
 msgid "Employee {0} relieved on {1} must be set as 'Left'"
 msgstr "员工{0}于{1}离职需标记为'已离职'"
 
@@ -3418,9 +3447,9 @@ msgstr "员工{0}需满足最低{1}年工龄方可享受离职金"
 msgid "Employees HTML"
 msgstr "员工HTML模板"
 
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Workspace Sidebar Item
-#: hrms/hr/workspace/people/people.json hrms/workspace_sidebar/leaves.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json hrms/workspace_sidebar/leaves.json
 msgid "Employees Working on a Holiday"
 msgstr "节假日出勤员工"
 
@@ -3482,7 +3511,7 @@ msgstr "节假日工作员工"
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
-#: hrms/setup.py:186 hrms/templates/generators/job_opening.html:141
+#: hrms/setup.py:185 hrms/templates/generators/job_opening.html:141
 msgid "Employment Type"
 msgstr "雇佣类型"
 
@@ -3561,7 +3590,7 @@ msgstr "邮件工资条加密"
 msgid "End Date cannot be before Start Date"
 msgstr "结束日期不得早于开始日期"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:280
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:281
 msgid "End date: {0}"
 msgstr "截止日期：{0}"
 
@@ -3597,7 +3626,8 @@ msgstr "输入本期间需分配的假期天数"
 msgid "Enter yearly benefit amounts"
 msgstr "输入年度福利金额"
 
-#: frontend/src/components/FormField.vue:42
+#: frontend/src/components/FormField.vue:40
+#: frontend/src/components/FormField.vue:52
 msgid "Enter {0}"
 msgstr "输入{0}"
 
@@ -3605,7 +3635,7 @@ msgstr "输入{0}"
 msgid "Error creating {0}"
 msgstr "创建{0}时出错"
 
-#: frontend/src/components/FormView.vue:592
+#: frontend/src/components/FormView.vue:591
 msgid "Error deleting {0}"
 msgstr "删除{0}时出错"
 
@@ -3613,11 +3643,11 @@ msgstr "删除{0}时出错"
 msgid "Error downloading PDF"
 msgstr "下载 PDF 时出错"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1406
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1407
 msgid "Error in formula or condition"
 msgstr "公式或条件错误"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2622
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2623
 msgid "Error in formula or condition: {0} in Income Tax Slab"
 msgstr "所得税税级公式或条件错误：{0}"
 
@@ -3625,11 +3655,11 @@ msgstr "所得税税级公式或条件错误：{0}"
 msgid "Error in some rows"
 msgstr "部分行数据错误"
 
-#: frontend/src/components/FormView.vue:570
+#: frontend/src/components/FormView.vue:569
 msgid "Error updating {0}"
 msgstr "更新{0}时出错"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2701
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2702
 msgid "Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
 msgstr "评估{doctype}{doclink}第{row_id}行时出错。<br><br><b>错误：</b>{error}<br><br><b>提示：</b>{description}"
 
@@ -3639,7 +3669,7 @@ msgstr "评估{doctype}{doclink}第{row_id}行时出错。<br><br><b>错误：</
 msgid "Estimated Cost Per Position"
 msgstr "单岗位预估成本"
 
-#: hrms/overrides/dashboard_overrides.py:52
+#: hrms/overrides/dashboard_overrides.py:55
 msgid "Evaluation"
 msgstr "评估"
 
@@ -3724,7 +3754,7 @@ msgstr "考试"
 msgid "Exchange rate of Payment Entry against Employee Advance"
 msgstr ""
 
-#: hrms/hr/doctype/attendance/attendance_list.js:85
+#: hrms/hr/doctype/attendance/attendance_list.js:84
 msgid "Exclude Holidays"
 msgstr "排除节假日"
 
@@ -3829,10 +3859,10 @@ msgstr "员工{1}已存在离职面谈{0}"
 msgid "Exit Questionnaire"
 msgstr "离职问卷"
 
-#: hrms/hr/doctype/exit_interview/test_exit_interview.py:116
-#: hrms/hr/doctype/exit_interview/test_exit_interview.py:126
-#: hrms/hr/doctype/exit_interview/test_exit_interview.py:128 hrms/setup.py:481
-#: hrms/setup.py:483 hrms/setup.py:504
+#: hrms/hr/doctype/exit_interview/test_exit_interview.py:110
+#: hrms/hr/doctype/exit_interview/test_exit_interview.py:120
+#: hrms/hr/doctype/exit_interview/test_exit_interview.py:122 hrms/setup.py:484
+#: hrms/setup.py:486 hrms/setup.py:507
 msgid "Exit Questionnaire Notification"
 msgstr "离职问卷通知"
 
@@ -3895,7 +3925,8 @@ msgstr "预期技能组合"
 #. Name of a role
 #. Label of the expense_approver (Link) field in DocType 'Expense Claim'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
-#: hrms/hr/doctype/expense_claim/expense_claim.json hrms/setup.py:153
+#: hrms/hr/doctype/expense_claim/expense_claim.json
+#: hrms/patches/v15_0/update_approver_custom_fields.py:11 hrms/setup.py:152
 #: hrms/setup.py:241
 msgid "Expense Approver"
 msgstr "费用审批人"
@@ -3930,7 +3961,7 @@ msgstr "费用报销汇总"
 #. Label of the expense_type (Data) field in DocType 'Expense Claim Type'
 #. Label of a Link in the Expenses Workspace
 #. Label of a Workspace Sidebar Item
-#: hrms/hr/doctype/expense_claim/expense_claim.py:739
+#: hrms/hr/doctype/expense_claim/expense_claim.py:747
 #: hrms/hr/doctype/expense_claim_detail/expense_claim_detail.json
 #: hrms/hr/doctype/expense_claim_type/expense_claim_type.json
 #: hrms/hr/workspace/expenses/expenses.json
@@ -3957,7 +3988,7 @@ msgstr "费用报销记录"
 msgid "Expense Date"
 msgstr "费用日期"
 
-#: frontend/src/components/ExpensesTable.vue:211
+#: frontend/src/components/ExpensesTable.vue:216
 msgid "Expense Item"
 msgstr "费用项"
 
@@ -3967,7 +3998,7 @@ msgstr "费用项"
 msgid "Expense Proof"
 msgstr "费用凭证"
 
-#: frontend/src/components/ExpenseTaxesTable.vue:219
+#: frontend/src/components/ExpenseTaxesTable.vue:223
 msgid "Expense Tax"
 msgstr "费用税费"
 
@@ -4023,7 +4054,7 @@ msgstr "过期假期天数"
 msgid "Explanation"
 msgstr "说明"
 
-#: hrms/public/js/hierarchy_chart/hierarchy_chart_desktop.js:137
+#: hrms/public/js/hierarchy_chart/hierarchy_chart_desktop.js:136
 msgid "Exporting..."
 msgstr "导出中..."
 
@@ -4035,7 +4066,7 @@ msgstr "为员工创建/提交{0}失败："
 msgid "Failed to delete defaults for country {0}."
 msgstr "删除国家{0}默认设置失败"
 
-#: hrms/api/__init__.py:771
+#: hrms/api/__init__.py:783
 msgid "Failed to download PDF: {0}"
 msgstr "无法下载 PDF： {0}"
 
@@ -4221,7 +4252,7 @@ msgstr "首日"
 msgid "First Name "
 msgstr "名字"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1559
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1565
 msgid "Fiscal Year {0} not found"
 msgstr "未找到会计年度{0}"
 
@@ -4275,7 +4306,7 @@ msgstr "待处理离职结算"
 msgid "Follow via Email"
 msgstr "邮件关注"
 
-#: hrms/setup.py:333
+#: hrms/setup.py:336
 msgid "Food"
 msgstr "餐饮"
 
@@ -4286,7 +4317,7 @@ msgstr "适用于职级"
 
 #. Label of the employee (Link) field in DocType 'Employee Performance
 #. Feedback'
-#: hrms/hr/doctype/attendance/attendance_list.js:29
+#: hrms/hr/doctype/attendance/attendance_list.js:28
 #: hrms/hr/doctype/employee_performance_feedback/employee_performance_feedback.json
 msgid "For Employee"
 msgstr "员工专属"
@@ -4417,7 +4448,7 @@ msgstr "完全资产结算"
 msgid "Full and Final Outstanding Statement"
 msgstr "完全未结清声明"
 
-#: hrms/setup.py:389
+#: hrms/setup.py:392
 msgid "Full-time"
 msgstr "全职"
 
@@ -4651,25 +4682,33 @@ msgstr "年度累计总收入（公司币种）"
 msgid "Group goal's progress is auto-calculated based on the child goals."
 msgstr "组目标的进度根据子目标自动计算"
 
-#: hrms/setup.py:322
+#: hrms/setup.py:325
 msgid "HR"
 msgstr "人力资源"
 
-#: hrms/setup.py:59
+#: hrms/setup.py:58
 msgid "HR & Payroll"
 msgstr "人力资源与薪资"
 
-#: hrms/setup.py:65
+#: hrms/setup.py:64
 msgid "HR & Payroll Settings"
 msgstr "人力资源与薪资设置"
 
 #. Name of a DocType
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 #: hrms/hr/doctype/leave_application/leave_application.py:218
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 msgid "HR Settings"
 msgstr "HR设置"
+
+#. Label of a Desktop Icon
+#. Name of a Workspace
+#. Title of a Workspace Sidebar
+#: hrms/desktop_icon/hr_setup.json hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/workspace_sidebar/hr_setup.json
+msgid "HR Setup"
+msgstr ""
 
 #: hrms/config/desktop.py:5
 msgid "HRMS"
@@ -4680,7 +4719,7 @@ msgstr "人力资源管理系统"
 #. Label of the half_day (Check) field in DocType 'Compensatory Leave Request'
 #. Option for the 'Status' (Select) field in DocType 'Employee Attendance Tool'
 #. Label of the half_day (Check) field in DocType 'Leave Application'
-#: frontend/src/components/AttendanceCalendar.vue:80
+#: frontend/src/components/AttendanceCalendar.vue:79
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/attendance_request/attendance_request.json
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.json
@@ -4721,7 +4760,7 @@ msgstr "半日制员工标识标题"
 msgid "Half Day Records"
 msgstr "半日假记录"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:54
+#: hrms/hr/doctype/attendance_request/attendance_request.py:55
 msgid "Half day date should be in between from date and to date"
 msgstr "半日假日期应在起止日期之间"
 
@@ -5006,7 +5045,7 @@ msgstr "导入考勤"
 msgid "In Time"
 msgstr "准时"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:182
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:183
 msgid "In case of any error during this background process, the system will add a comment about the error on this Payroll Entry and revert to the Submitted status"
 msgstr "后台处理过程中若发生错误，系统将在薪资条目添加错误注释并恢复至已提交状态"
 
@@ -5022,7 +5061,7 @@ msgstr "激励"
 msgid "Incentive Amount"
 msgstr "激励金额"
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:102
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:122
 msgid "Include Company Descendants"
 msgstr "包含子公司"
 
@@ -5123,15 +5162,15 @@ msgstr "所得税税级其他费用"
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr "薪资结构{0}包含税费组件{1}，必须设置所得税税级"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1956
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1957
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr "所得税税级生效日期不得晚于薪资周期开始日期{0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1944
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1945
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr "薪资结构分配{0}未设置所得税税级"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1952
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1953
 msgid "Income Tax Slab: {0} is disabled"
 msgstr "所得税税级{0}已禁用"
 
@@ -5184,7 +5223,7 @@ msgstr "利息金额"
 msgid "Interest Income Account"
 msgstr "利息收入账户"
 
-#: hrms/setup.py:395
+#: hrms/setup.py:398
 msgid "Intern"
 msgstr "实习生"
 
@@ -5230,11 +5269,11 @@ msgstr "面试详情"
 msgid "Interview Feedback"
 msgstr "面试反馈"
 
-#: hrms/hr/doctype/interview/test_interview.py:312
-#: hrms/hr/doctype/interview/test_interview.py:321
-#: hrms/hr/doctype/interview/test_interview.py:323
-#: hrms/hr/doctype/interview/test_interview.py:330 hrms/setup.py:467
-#: hrms/setup.py:469 hrms/setup.py:502
+#: hrms/hr/doctype/interview/test_interview.py:309
+#: hrms/hr/doctype/interview/test_interview.py:318
+#: hrms/hr/doctype/interview/test_interview.py:320
+#: hrms/hr/doctype/interview/test_interview.py:327 hrms/setup.py:470
+#: hrms/setup.py:472 hrms/setup.py:505
 msgid "Interview Feedback Reminder"
 msgstr "面试反馈提醒"
 
@@ -5246,11 +5285,11 @@ msgstr "面试反馈{0}提交成功"
 msgid "Interview Not Rescheduled"
 msgstr "面试未改期"
 
-#: hrms/hr/doctype/interview/test_interview.py:296
-#: hrms/hr/doctype/interview/test_interview.py:305
-#: hrms/hr/doctype/interview/test_interview.py:307
-#: hrms/hr/doctype/interview/test_interview.py:329 hrms/setup.py:455
-#: hrms/setup.py:457 hrms/setup.py:498
+#: hrms/hr/doctype/interview/test_interview.py:293
+#: hrms/hr/doctype/interview/test_interview.py:302
+#: hrms/hr/doctype/interview/test_interview.py:304
+#: hrms/hr/doctype/interview/test_interview.py:326 hrms/setup.py:458
+#: hrms/setup.py:460 hrms/setup.py:501
 msgid "Interview Reminder"
 msgstr "面试提醒"
 
@@ -5366,7 +5405,7 @@ msgstr "无效附加薪资"
 msgid "Invalid Arrear Component"
 msgstr "无效欠薪组件"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:500
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:503
 msgid "Invalid Benefit Amounts"
 msgstr "无效福利金额"
 
@@ -5374,7 +5413,7 @@ msgstr "无效福利金额"
 msgid "Invalid Dates"
 msgstr "无效日期"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2733
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2734
 msgid "Invalid LWP Days Reversed"
 msgstr "无效LWP天数冲销"
 
@@ -5382,7 +5421,7 @@ msgstr "无效LWP天数冲销"
 msgid "Invalid Leave Ledger Entry"
 msgstr "无效假期台账条目"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:327
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:328
 msgid "Invalid Payroll Payable Account. The account currency must be {0} or {1}"
 msgstr "应付薪资账户无效，账户币种必须为{0}或{1}"
 
@@ -5391,7 +5430,7 @@ msgstr "应付薪资账户无效，账户币种必须为{0}或{1}"
 msgid "Invalid Shift Times"
 msgstr "无效班次时间"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:987
+#: hrms/hr/doctype/expense_claim/expense_claim.py:995
 msgid "Invalid parameters provided. Please pass the required arguments."
 msgstr "参数无效，请传递必要参数"
 
@@ -5428,9 +5467,7 @@ msgid "Is Applicable for Referral Bonus"
 msgstr "是否适用推荐奖金"
 
 #. Label of the is_carry_forward (Check) field in DocType 'Leave Ledger Entry'
-#. Label of the is_carry_forward (Check) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.json
-#: hrms/hr/doctype/leave_type/leave_type.json
 #: hrms/hr/report/leave_ledger/leave_ledger.py:85
 msgid "Is Carry Forward"
 msgstr "是否结转"
@@ -5476,11 +5513,6 @@ msgstr "是否所得税组件"
 #: hrms/hr/report/leave_ledger/leave_ledger.py:97
 msgid "Is Leave Without Pay"
 msgstr "是否无薪假"
-
-#. Label of the is_optional_leave (Check) field in DocType 'Leave Type'
-#: hrms/hr/doctype/leave_type/leave_type.json
-msgid "Is Optional Leave"
-msgstr "是否为可选假期"
 
 #. Label of the is_ppl (Check) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
@@ -5568,7 +5600,7 @@ msgstr "职位申请路径"
 #. Label of the job_description_tab (Tab Break) field in DocType 'Job
 #. Requisition'
 #. Label of the description (Text Editor) field in DocType 'Job Requisition'
-#: hrms/hr/doctype/job_requisition/job_requisition.json hrms/setup.py:410
+#: hrms/hr/doctype/job_requisition/job_requisition.json hrms/setup.py:413
 msgid "Job Description"
 msgstr "职位描述"
 
@@ -5743,7 +5775,7 @@ msgstr "关键责任区"
 msgid "Key Result Area"
 msgstr "关键成果领域"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2730
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2731
 msgid "LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
 msgstr "员工{2}从{3}到{4}的LWP天数冲销（{0}）与实际薪资调整总额（{1}）不匹配"
 
@@ -5809,7 +5841,7 @@ msgstr "纬度：{0}°"
 
 #. Option for the 'Calculate Payroll Working Days Based On' (Select) field in
 #. DocType 'Payroll Settings'
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:734
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:738
 #: hrms/overrides/dashboard_overrides.py:12
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Leave"
@@ -5849,13 +5881,13 @@ msgstr "假期分配记录"
 
 #. Label of the leave_application (Link) field in DocType 'Attendance'
 #. Name of a DocType
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Leaves Workspace
-#. Label of a Link in the People Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/leave_application/leave_application.json
-#: hrms/hr/workspace/leaves/leaves.json hrms/hr/workspace/people/people.json
-#: hrms/workspace_sidebar/leaves.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/leaves/leaves.json hrms/workspace_sidebar/leaves.json
 msgid "Leave Application"
 msgstr "请假申请"
 
@@ -5863,7 +5895,7 @@ msgstr "请假申请"
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
 msgstr "请假期间不可跨越不连续的假期分配记录{0}和{1}"
 
-#: hrms/setup.py:432 hrms/setup.py:434 hrms/setup.py:494
+#: hrms/setup.py:435 hrms/setup.py:437 hrms/setup.py:497
 msgid "Leave Approval Notification"
 msgstr "请假审批通知"
 
@@ -5876,8 +5908,9 @@ msgstr "请假审批通知模板"
 #. Label of the leave_approver (Link) field in DocType 'Leave Application'
 #. Name of a role
 #: hrms/hr/doctype/leave_application/leave_application.json
-#: hrms/hr/doctype/overtime_slip/overtime_slip.json hrms/setup.py:146
-#: hrms/setup.py:248
+#: hrms/hr/doctype/overtime_slip/overtime_slip.json
+#: hrms/patches/v15_0/update_approver_custom_fields.py:19 hrms/setup.py:145
+#: hrms/setup.py:249
 msgid "Leave Approver"
 msgstr "请假审批人"
 
@@ -5914,7 +5947,7 @@ msgstr ""
 #. Label of a Link in the Leaves Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/leave_block_list/leave_block_list.json
-#: hrms/hr/workspace/leaves/leaves.json hrms/setup.py:125
+#: hrms/hr/workspace/leaves/leaves.json hrms/setup.py:124
 #: hrms/workspace_sidebar/leaves.json
 msgid "Leave Block List"
 msgstr "假期封存列表"
@@ -5947,7 +5980,7 @@ msgstr "假期封存日期"
 msgid "Leave Block List Name"
 msgstr "假期封存列表名称"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:1418
+#: hrms/hr/doctype/leave_application/leave_application.py:1423
 msgid "Leave Blocked"
 msgstr "已封存假期"
 
@@ -6072,7 +6105,7 @@ msgstr "员工{1}在{2}至{3}期间已分配休假政策{0}"
 msgid "Leave Settings"
 msgstr ""
 
-#: hrms/setup.py:441 hrms/setup.py:443 hrms/setup.py:495
+#: hrms/setup.py:444 hrms/setup.py:446 hrms/setup.py:498
 msgid "Leave Status Notification"
 msgstr "假期状态通知"
 
@@ -6150,12 +6183,12 @@ msgstr "假期类型{0}不可折现"
 
 #. Label of the leave_without_pay (Float) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/report/salary_register/salary_register.py:179 hrms/setup.py:381
-#: hrms/setup.py:382
+#: hrms/payroll/report/salary_register/salary_register.py:179 hrms/setup.py:384
+#: hrms/setup.py:385
 msgid "Leave Without Pay"
 msgstr "无薪假"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:595
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:596
 msgid "Leave Without Pay does not match with approved {} records"
 msgstr "无薪假与已批准的{}记录不符"
 
@@ -6183,6 +6216,11 @@ msgstr "不可在{0}前分配假期，因未来分配记录{1}已结转余额"
 msgid "Leave cannot be applied/cancelled before {0}, as leave balance has already been carry-forwarded in the future leave allocation record {1}"
 msgstr "不可在{0}前申请/取消假期，因未来分配记录{1}已结转余额"
 
+#. Label of the is_optional_leave (Check) field in DocType 'Leave Type'
+#: hrms/hr/doctype/leave_type/leave_type.json
+msgid "Leave for optional holiday"
+msgstr ""
+
 #: hrms/hr/doctype/leave_application/leave_application.py:565
 msgid "Leave of type {0} cannot be longer than {1}."
 msgstr "{0}类型假期不可超过{1}天"
@@ -6203,8 +6241,8 @@ msgstr "已休假天数"
 #. Label of a Desktop Icon
 #. Label of the leaves_tab (Tab Break) field in DocType 'HR Settings'
 #. Label of the leaves (Float) field in DocType 'Leave Ledger Entry'
+#. Label of a Card Break in the HR Setup Workspace
 #. Name of a Workspace
-#. Label of a Card Break in the People Workspace
 #. Label of the leave_details_section (Tab Break) field in DocType 'Salary
 #. Slip'
 #. Title of a Workspace Sidebar
@@ -6214,7 +6252,8 @@ msgstr "已休假天数"
 #: hrms/hr/doctype/leave_policy/leave_policy_dashboard.py:8
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment_dashboard.py:8
 #: hrms/hr/report/leave_ledger/leave_ledger.py:59
-#: hrms/hr/workspace/leaves/leaves.json hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/hr/workspace/leaves/leaves.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/workspace_sidebar/leaves.json
 msgid "Leaves"
@@ -6248,7 +6287,7 @@ msgstr "待审批假期"
 msgid "Leaves for the Leave Type {0} won't be carry-forwarded since carry-forwarding is disabled."
 msgstr "假期类型{0}禁用结转，假期余额不可结转"
 
-#: hrms/setup.py:412
+#: hrms/setup.py:415
 msgid "Leaves per Year"
 msgstr "年度假期天数"
 
@@ -6277,6 +6316,11 @@ msgstr "生命周期"
 msgid "Lime"
 msgstr "青柠色"
 
+#. Label of the limits_tab (Tab Break) field in DocType 'Leave Type'
+#: hrms/hr/doctype/leave_type/leave_type.json
+msgid "Limits"
+msgstr ""
+
 #. Description of the 'Appraisal Linking' (Section Break) field in DocType
 #. 'Goal'
 #: hrms/hr/doctype/goal/goal.json hrms/hr/doctype/goal/goal_tree.js:97
@@ -6297,7 +6341,7 @@ msgstr "贷款账户"
 msgid "Loan Product"
 msgstr "贷款产品"
 
-#: hrms/payroll/report/salary_register/salary_register.py:233 hrms/setup.py:773
+#: hrms/payroll/report/salary_register/salary_register.py:233 hrms/setup.py:764
 msgid "Loan Repayment"
 msgstr "贷款还款"
 
@@ -6394,9 +6438,9 @@ msgstr ""
 msgid "Mar"
 msgstr "三月"
 
-#: hrms/hr/doctype/attendance/attendance_list.js:17
-#: hrms/hr/doctype/attendance/attendance_list.js:25
-#: hrms/hr/doctype/attendance/attendance_list.js:135
+#: hrms/hr/doctype/attendance/attendance_list.js:16
+#: hrms/hr/doctype/attendance/attendance_list.js:24
+#: hrms/hr/doctype/attendance/attendance_list.js:125
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.js:232
 #: hrms/hr/doctype/shift_type/shift_type.js:13
 msgid "Mark Attendance"
@@ -6423,7 +6467,7 @@ msgstr "标记为进行中"
 msgid "Mark as {0}"
 msgstr "标记为{0}"
 
-#: hrms/hr/doctype/attendance/attendance_list.js:109
+#: hrms/hr/doctype/attendance/attendance_list.js:108
 msgid "Mark attendance as {0} for {1} on selected dates?"
 msgstr "确认将{1}在所选日期标记为{0}？"
 
@@ -6594,7 +6638,7 @@ msgstr "五月"
 msgid "Meal Preference"
 msgstr "餐饮偏好"
 
-#: hrms/setup.py:334
+#: hrms/setup.py:337
 msgid "Medical"
 msgstr "医疗"
 
@@ -6641,7 +6685,7 @@ msgstr "缺失离职日期"
 msgid "Missing Salary Components"
 msgstr "缺少工资组件"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1947
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1948
 msgid "Missing Tax Slab"
 msgstr "缺失税级"
 
@@ -6665,11 +6709,11 @@ msgid "Month To Date(Company Currency)"
 msgstr "本月累计（公司币种）"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Shift & Attendance Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 #: hrms/workspace_sidebar/shift_&_attendance.json
 msgid "Monthly Attendance Sheet"
@@ -6709,8 +6753,8 @@ msgstr "我的假期"
 msgid "My Requests"
 msgstr "我的申请"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1392
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2617
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1393
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2618
 msgid "Name error"
 msgstr "名称错误"
 
@@ -6738,7 +6782,7 @@ msgstr "净工资（公司币种）"
 msgid "Net Pay Info"
 msgstr "净工资信息"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:291
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:292
 msgid "Net Pay cannot be less than 0"
 msgstr "净工资不能小于零"
 
@@ -6746,7 +6790,7 @@ msgstr "净工资不能小于零"
 msgid "Net Salary Amount"
 msgstr "净薪资金额"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:126
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:127
 msgid "Net pay cannot be negative"
 msgstr "净工资不可为负数"
 
@@ -6755,11 +6799,11 @@ msgstr "净工资不可为负数"
 msgid "New Employee ID"
 msgstr "新员工编号"
 
-#: frontend/src/components/ExpensesTable.vue:213
+#: frontend/src/components/ExpensesTable.vue:218
 msgid "New Expense Item"
 msgstr "新建费用项"
 
-#: frontend/src/components/ExpenseTaxesTable.vue:221
+#: frontend/src/components/ExpenseTaxesTable.vue:225
 msgid "New Expense Tax"
 msgstr "新建费用税费"
 
@@ -6797,7 +6841,7 @@ msgstr "新班次分配将在此日期后创建"
 msgid "No Bank/Cash Account found for currency {0}. Please create one under company {1}."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:251
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:252
 msgid "No Employee Found"
 msgstr "未找到员工"
 
@@ -6865,7 +6909,7 @@ msgstr "未找到员工{0}在欠薪起始日期{2}或之后有效的薪资结构
 msgid "No active employee found associated with the email ID {0}. Try logging in with your employee email ID or contact your HR manager for access."
 msgstr "未找到与邮箱ID {0}关联的有效员工，请使用员工邮箱登录或联系HR获取权限"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:521
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:522
 msgid "No active or default Salary Structure found for employee {0} for the given dates"
 msgstr "员工{0}在指定日期范围内未找到有效或默认薪资结构"
 
@@ -6914,19 +6958,19 @@ msgstr "未找到符合该条件的考勤记录"
 msgid "No attendance records found."
 msgstr "未找到考勤记录"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:63
-msgid "No attendance records to create"
-msgstr "无需创建考勤记录"
+#: hrms/hr/doctype/attendance_request/attendance_request.py:73
+msgid "No attendance records to create due to following reasons"
+msgstr ""
 
 #: hrms/hr/doctype/interview/interview.py:116
 msgid "No changes found in timings."
 msgstr "未发现时间变更"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:281
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:282
 msgid "No employees found"
 msgstr "未找到员工"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:264
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:265
 msgid "No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>Payroll Payable Account: {2}"
 msgstr "未找到符合以下条件的员工：<br>公司：{0}<br>币种：{1}<br>应付薪资账户：{2}"
 
@@ -6954,7 +6998,7 @@ msgstr "未选择项目"
 msgid "No leave allocation found for {0} for {1} on given date."
 msgstr "在指定日期未找到{0}的{1}假期分配。"
 
-#: hrms/hr/doctype/attendance/attendance.py:232
+#: hrms/hr/doctype/attendance/attendance.py:234
 msgid "No leave record found for employee {0} on {1}"
 msgstr "未找到员工{0}在{1}的假期记录"
 
@@ -6979,7 +7023,7 @@ msgstr "岗位数量"
 msgid "No replies from"
 msgstr "无来自的回复"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1625
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1633
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
 msgstr "未找到符合筛选条件的待提交工资条，或工资条已提交"
 
@@ -7046,7 +7090,7 @@ msgstr "注意：现有考勤记录中的班次不会被覆盖"
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr "注意：期间总分配假期{0}不得少于已批准假期{1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2256
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2257
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr "注意：工资条PDF密码格式为{0}"
 
@@ -7054,7 +7098,7 @@ msgstr "注意：工资条PDF密码格式为{0}"
 msgid "Nothing to change"
 msgstr "无变更内容"
 
-#: hrms/setup.py:413
+#: hrms/setup.py:416
 msgid "Notice Period"
 msgstr "通知期"
 
@@ -7169,7 +7213,7 @@ msgid "On Duty"
 msgstr "在岗"
 
 #. Option for the 'Status' (Select) field in DocType 'Attendance'
-#: frontend/src/components/AttendanceCalendar.vue:80
+#: frontend/src/components/AttendanceCalendar.vue:79
 #: hrms/hr/doctype/attendance/attendance.json
 msgid "On Leave"
 msgstr "休假中"
@@ -7211,7 +7255,7 @@ msgstr "仅面试官可提交面试反馈"
 msgid "Only Interviews with Cleared or Rejected status can be submitted."
 msgstr "仅通过或拒绝状态的面试可提交"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:136
+#: hrms/hr/doctype/leave_application/leave_application.py:137
 msgid "Only Leave Applications with status 'Approved' and 'Rejected' can be submitted"
 msgstr "仅'已批准'或'已拒绝'状态的请假申请可提交"
 
@@ -7262,8 +7306,8 @@ msgid "Optional Leaves are holidays that Employees can choose to avail from a li
 msgstr "可选假期是员工可从公司公布的假期列表中选择的节假日"
 
 #. Label of a Workspace Sidebar Item
-#: hrms/hr/page/organizational_chart/organizational_chart.js:4
-#: hrms/workspace_sidebar/people.json
+#: hrms/hr/page/organizational_chart/organizational_chart.js:154
+#: hrms/workspace_sidebar/hr_setup.json
 msgid "Organizational Chart"
 msgstr "组织架构图"
 
@@ -7292,11 +7336,11 @@ msgstr "超额分配"
 msgid "Overall Average Rating"
 msgstr "总体平均评分"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:95
+#: hrms/hr/doctype/attendance_request/attendance_request.py:138
 msgid "Overlapping Attendance Request"
 msgstr "重叠考勤申请"
 
-#: hrms/hr/doctype/attendance/attendance.py:158
+#: hrms/hr/doctype/attendance/attendance.py:160
 msgid "Overlapping Shift Attendance"
 msgstr "重叠班次考勤"
 
@@ -7387,11 +7431,11 @@ msgstr "加班单已提交"
 msgid "Overtime Slip created for {0} employee(s)"
 msgstr "已为{0}名员工创建加班单"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1286
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1290
 msgid "Overtime Slip creation is queued. It may take a few minutes"
 msgstr "加班单创建已加入队列。可能需要几分钟时间"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1310
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1314
 msgid "Overtime Slip submission is queued. It may take a few minutes"
 msgstr "加班单提交已加入队列。可能需要几分钟时间"
 
@@ -7476,7 +7520,7 @@ msgstr "通过工资条支付"
 msgid "Parent Goal"
 msgstr "父级目标"
 
-#: hrms/setup.py:390
+#: hrms/setup.py:393
 msgid "Part-time"
 msgstr "兼职"
 
@@ -7548,11 +7592,11 @@ msgstr "计薪天数"
 msgid "Payment Days Calculation Help"
 msgstr "计薪天数计算说明"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:147
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:148
 msgid "Payment Days Dependency"
 msgstr "计薪天数依赖项"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.js:282
+#: hrms/payroll/doctype/salary_slip/salary_slip.js:284
 msgid "Payment Days calculations are based on these Payroll Settings"
 msgstr "计薪天数计算基于以下薪资设置"
 
@@ -7561,7 +7605,7 @@ msgstr "计薪天数计算基于以下薪资设置"
 msgid "Payment and Accounting"
 msgstr "支付与会计"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1136
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1140
 msgid "Payment of {0} from {1} to {2}"
 msgstr "从{1}至{2}支付{0}"
 
@@ -7590,13 +7634,13 @@ msgstr "在最终薪资周期支付未申领金额"
 #: hrms/desktop_icon/payroll.json
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
 #: hrms/overrides/dashboard_overrides.py:37
-#: hrms/overrides/dashboard_overrides.py:77
+#: hrms/overrides/dashboard_overrides.py:80
 #: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/workspace_sidebar/payroll.json
 msgid "Payroll"
 msgstr "薪资"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.js:282
+#: hrms/payroll/doctype/salary_slip/salary_slip.js:285
 msgid "Payroll Based On"
 msgstr "薪资计算依据"
 
@@ -7610,7 +7654,7 @@ msgstr "薪资调整"
 msgid "Payroll Correction Child"
 msgstr "薪资调整子项"
 
-#: hrms/setup.py:111 hrms/setup.py:281
+#: hrms/setup.py:110 hrms/setup.py:284
 msgid "Payroll Cost Center"
 msgstr "薪资成本中心"
 
@@ -7640,7 +7684,7 @@ msgstr "薪资日期"
 msgid "Payroll Employee Detail"
 msgstr "员工薪资明细"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:180
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:181
 msgid "Payroll Entry cancellation is queued. It may take a few minutes"
 msgstr "薪资条目取消已加入队列，可能需要几分钟"
 
@@ -7674,7 +7718,7 @@ msgstr "薪资编号"
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/setup.py:846
+#: hrms/setup.py:837
 msgid "Payroll Payable Account"
 msgstr "应付薪资账户"
 
@@ -7723,9 +7767,9 @@ msgstr "薪资周期列表"
 msgid "Payroll Reports"
 msgstr "薪资报表"
 
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Name of a DocType
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Payroll Settings"
 msgstr "薪资设置"
@@ -7768,14 +7812,6 @@ msgstr "待处理面试"
 msgid "Pending Questionnaires"
 msgstr "待处理问卷"
 
-#. Label of a Desktop Icon
-#. Name of a Workspace
-#. Title of a Workspace Sidebar
-#: hrms/desktop_icon/people.json hrms/hr/workspace/people/people.json
-#: hrms/workspace_sidebar/people.json
-msgid "People"
-msgstr ""
-
 #. Label of the percent_deduction (Percent) field in DocType 'Taxable Salary
 #. Slab'
 #: hrms/payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
@@ -7799,7 +7835,7 @@ msgstr "永久取消{0}"
 msgid "Permanently submit {0}"
 msgstr "永久提交{0}"
 
-#: hrms/setup.py:394
+#: hrms/setup.py:397
 msgid "Piecework"
 msgstr "计件工作"
 
@@ -7816,13 +7852,9 @@ msgstr "请先启用自动考勤并完成设置"
 msgid "Please Select Company First"
 msgstr "请先选择公司"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:918
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:919
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 msgstr "请先为员工{0}分配自{1}或之前生效的薪资结构"
-
-#: hrms/hr/doctype/attendance_request/attendance_request.py:64
-msgid "Please check if employee is on leave or attendance with the same status exists for selected day(s)."
-msgstr "请检查员工是否请假或所选日期存在相同状态考勤"
 
 #: hrms/templates/emails/training_event.html:17
 msgid "Please confirm once you have completed your training"
@@ -7852,7 +7884,7 @@ msgstr "请在获取加班明细前填写员工、过账日期和公司。"
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr "请调整{0}以避免班次时间重叠"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2245
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2246
 msgid "Please see attachment"
 msgstr "请查看附件"
 
@@ -7889,12 +7921,12 @@ msgstr "请选择班次表和分配日期"
 msgid "Please select Shift Type and assignment date(s)."
 msgstr "请选择班次类型和分配日期"
 
-#: hrms/public/js/hierarchy_chart/hierarchy_chart_mobile.js:233
+#: hrms/public/js/hierarchy_chart/hierarchy_chart_mobile.js:240
 msgid "Please select a company first"
 msgstr "请先选择公司"
 
-#: hrms/public/js/hierarchy_chart/hierarchy_chart_desktop.js:103
-#: hrms/public/js/hierarchy_chart/hierarchy_chart_desktop.js:299
+#: hrms/public/js/hierarchy_chart/hierarchy_chart_desktop.js:93
+#: hrms/public/js/hierarchy_chart/hierarchy_chart_desktop.js:293
 msgid "Please select a company first."
 msgstr "请先选择公司"
 
@@ -7902,7 +7934,7 @@ msgstr "请先选择公司"
 msgid "Please select a csv file"
 msgstr "请选择CSV文件"
 
-#: hrms/hr/doctype/attendance/attendance.py:384
+#: hrms/hr/doctype/attendance/attendance.py:386
 msgid "Please select a date."
 msgstr "请选择日期"
 
@@ -7959,7 +7991,7 @@ msgstr "请选择要记录考勤的员工"
 msgid "Please select the salary slips to email"
 msgstr "请选择要发送邮件的工资条"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:319
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:320
 msgid "Please set \"Default Payroll Payable Account\" in Company Defaults"
 msgstr "请在公司默认设置中设置\"默认薪资账户\""
 
@@ -7971,7 +8003,7 @@ msgstr "请在公司{0}设置基本工资和HRA组件"
 msgid "Please set Earning Component for Leave type: {0}."
 msgstr "请为假期类型{0}设置收入组件"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:579
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:580
 msgid "Please set Payroll based on in Payroll settings"
 msgstr "请在薪资设置中选择薪资计算依据"
 
@@ -7979,12 +8011,12 @@ msgstr "请在薪资设置中选择薪资计算依据"
 msgid "Please set Relieving Date for employee: {0}"
 msgstr "请设置员工{0}的离职日期"
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:166
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:186
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:52
 msgid "Please set a date range less than 90 days."
 msgstr "请设置小于90天的日期范围。"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:396
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:397
 msgid "Please set account in Salary Component {0}"
 msgstr "请在薪资组件{0}设置账户"
 
@@ -8004,11 +8036,11 @@ msgstr ""
 msgid "Please set the Appraisal Template for all the {0} or select the template in the Employees table below."
 msgstr "请为所有{0}设置考核模板，或在下方员工表中选择模板"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:523
+#: hrms/hr/doctype/expense_claim/expense_claim.js:527
 msgid "Please set the Company"
 msgstr "请设置公司"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:384
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:385
 msgid "Please set the Date Of Joining for employee {0}"
 msgstr "请设置员工{0}的入职日期"
 
@@ -8096,11 +8128,11 @@ msgstr "首选住宿区域"
 #. Employee'
 #. Option for the 'Consider Unmarked Attendance As' (Select) field in DocType
 #. 'Payroll Settings'
-#: frontend/src/components/AttendanceCalendar.vue:80
+#: frontend/src/components/AttendanceCalendar.vue:79
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:733
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:737
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Present"
 msgstr "出勤"
@@ -8136,15 +8168,15 @@ msgstr "本金金额"
 msgid "Printed On {0}"
 msgstr "打印时间：{0}"
 
-#: hrms/setup.py:373 hrms/setup.py:374
+#: hrms/setup.py:376 hrms/setup.py:377
 msgid "Privilege Leave"
 msgstr "特权假"
 
-#: hrms/setup.py:391
+#: hrms/setup.py:394
 msgid "Probation"
 msgstr "试用期"
 
-#: hrms/setup.py:405
+#: hrms/setup.py:408
 msgid "Probationary Period"
 msgstr "试用期间"
 
@@ -8156,7 +8188,7 @@ msgstr "处理考勤时间范围"
 #. Label of the process_payroll_accounting_entry_based_on_employee (Check)
 #. field in DocType 'Payroll Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
-#: hrms/setup.py:857
+#: hrms/setup.py:848
 msgid "Process Payroll Accounting Entry based on Employee"
 msgstr "按员工处理薪资会计条目"
 
@@ -8210,6 +8242,15 @@ msgstr "熟练程度"
 #: hrms/hr/report/project_profitability/project_profitability.py:183
 msgid "Profit"
 msgstr "利润"
+
+#. Name of a report
+#. Label of a Link in the Shift & Attendance Workspace
+#. Label of a Workspace Sidebar Item
+#: hrms/hr/report/project_profitability/project_profitability.json
+#: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
+#: hrms/workspace_sidebar/shift_&_attendance.json
+msgid "Project Profitability"
+msgstr "项目盈利能力"
 
 #. Label of the promotion_date (Date) field in DocType 'Employee Promotion'
 #: hrms/hr/doctype/employee_promotion/employee_promotion.json
@@ -8388,11 +8429,11 @@ msgid "Recruitment"
 msgstr "招聘"
 
 #. Name of a report
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Recruitment Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/report/recruitment_analytics/recruitment_analytics.json
-#: hrms/hr/workspace/people/people.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
 #: hrms/hr/workspace/recruitment/recruitment.json
 #: hrms/workspace_sidebar/recruitment.json
 msgid "Recruitment Analytics"
@@ -8415,7 +8456,7 @@ msgstr "减少天数超过{0}在假期类型{2}下的可用假期余额{1}"
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:405
 #: hrms/hr/doctype/leave_application/leave_application.py:569
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:218
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:140
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:141
 msgid "Reference: {0}"
 msgstr "参考编号：{0}"
 
@@ -8520,7 +8561,7 @@ msgstr "零值时移除"
 msgid "Rented Car"
 msgstr "租用车辆"
 
-#: hrms/setup.py:830 hrms/setup.py:839
+#: hrms/setup.py:821 hrms/setup.py:830
 msgid "Repay From Salary"
 msgstr "从工资中偿还"
 
@@ -8591,7 +8632,7 @@ msgstr "申请人（姓名）"
 msgid "Require Full Funding"
 msgstr "需全额资助"
 
-#: hrms/setup.py:170
+#: hrms/setup.py:169
 msgid "Required Skills"
 msgstr "所需技能"
 
@@ -8605,7 +8646,7 @@ msgstr "员工建档必填"
 msgid "Reschedule Interview"
 msgstr "重新安排面试"
 
-#: hrms/setup.py:411
+#: hrms/setup.py:414
 msgid "Responsibilities"
 msgstr "职责"
 
@@ -8740,23 +8781,23 @@ msgstr "四舍五入"
 msgid "Route to the custom Job Application Webform"
 msgstr "指向自定义职位申请网页表单的路径"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:119
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:120
 msgid "Row #{0}: Cannot set amount or formula for Salary Component {1} with Variable Based On Taxable Salary"
 msgstr "行号#{0}：无法为薪资组件{1}设置金额或公式，因其基于应税工资变量"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:138
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:139
 msgid "Row #{0}: The {1} Component has the options {2} and {3} enabled."
 msgstr "行号#{0}：组件{1}已启用{2}和{3}选项"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:162
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:163
 msgid "Row #{0}: Timesheet amount will overwrite the Earning component amount for the Salary Component {1}"
 msgstr "行号#{0}：工时表金额将覆盖薪资组件{1}的收入项金额"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:955
+#: hrms/hr/doctype/expense_claim/expense_claim.py:963
 msgid "Row No {0}: Amount cannot be greater than the Outstanding Amount against Expense Claim {1}. Outstanding Amount is {2}"
 msgstr "行号{0}：金额不可超过费用报销{1}的未结金额{2}"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:557
+#: hrms/hr/doctype/expense_claim/expense_claim.py:561
 msgid "Row {0}# Allocated amount {1} cannot be greater than unclaimed amount {2}"
 msgstr "行号{0}# 分配金额{1}不可超过未申领金额{2}"
 
@@ -8850,7 +8891,7 @@ msgstr "薪资组件类型"
 msgid "Salary Component for timesheet based payroll."
 msgstr "基于工时表的薪资组件"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:473
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:476
 msgid "Salary Component {0} cannot be selected more than once in Employee Benefits"
 msgstr "工资组件{0}在员工福利中不能重复选择"
 
@@ -8928,7 +8969,7 @@ msgstr "薪资登记表"
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/workspace/payroll/payroll.json hrms/setup.py:309
+#: hrms/payroll/workspace/payroll/payroll.json hrms/setup.py:312
 #: hrms/workspace_sidebar/payroll.json
 msgid "Salary Slip"
 msgstr "工资条"
@@ -8972,11 +9013,11 @@ msgstr "工资条参考"
 msgid "Salary Slip Timesheet"
 msgstr "工资条工时表"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:136
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:137
 msgid "Salary Slip already exists for {0} for the given dates"
 msgstr "员工{0}的工资条在指定日期已存在"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:329
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:330
 msgid "Salary Slip creation is queued. It may take a few minutes"
 msgstr "工资条创建已加入队列，可能需要几分钟"
 
@@ -8984,19 +9025,19 @@ msgstr "工资条创建已加入队列，可能需要几分钟"
 msgid "Salary Slip not found."
 msgstr "未找到工资条。"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:418
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:419
 msgid "Salary Slip of employee {0} already created for this period"
 msgstr "员工{0}的工资条已在本周期创建"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:424
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:425
 msgid "Salary Slip of employee {0} already created for time sheet {1}"
 msgstr "员工{0}的工资条已关联工时表{1}"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:374
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:375
 msgid "Salary Slip submission is queued. It may take a few minutes"
 msgstr "工资条提交已加入队列，可能需要几分钟"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1564
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1570
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr "工资条{0}处理失败，关联薪资条目{1}"
 
@@ -9018,11 +9059,11 @@ msgstr "已创建工资条"
 msgid "Salary Slips Submitted"
 msgstr "已提交工资条"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1606
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1612
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
 msgstr "员工{}的工资条已存在，本次薪资处理将跳过"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1631
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1639
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr "已提交{0}至{1}期间的工资条"
 
@@ -9064,11 +9105,11 @@ msgstr "薪资结构分配字段"
 msgid "Salary Structure Assignment for Employee already exists"
 msgstr "员工薪资结构分配已存在"
 
-#: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:245
+#: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:247
 msgid "Salary Structure Assignment not found for employee {0} on date {1}"
 msgstr "未找到员工{0}在日期{1}的薪资结构分配"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:524
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:525
 msgid "Salary Structure Missing"
 msgstr "缺失薪资结构"
 
@@ -9130,7 +9171,7 @@ msgstr "未设置公积金、附加公积金或公积金贷款类型的工资组
 msgid "Salary components should be part of the Salary Structure."
 msgstr "薪资组件应属于薪资结构的一部分"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2797
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2798
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr "工资条邮件已加入发送队列，查看{0}了解状态"
 
@@ -9147,7 +9188,7 @@ msgstr "批准金额"
 msgid "Sanctioned Amount (Company Currency)"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:581
+#: hrms/hr/doctype/expense_claim/expense_claim.py:585
 msgid "Sanctioned Amount cannot be greater than Claim Amount in Row {0}."
 msgstr "行号{0}中批准金额不可超过报销金额"
 
@@ -9196,7 +9237,7 @@ msgstr "选择LWP冲销月份"
 msgid "Select Payment Account to make Bank Entry"
 msgstr "选择支付账户以创建银行分录"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1769
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1783
 msgid "Select Payroll Frequency."
 msgstr "选择薪资频率"
 
@@ -9223,9 +9264,15 @@ msgstr "选择条款与条件"
 msgid "Select Users"
 msgstr "选择用户"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:568
+#: hrms/hr/doctype/expense_claim/expense_claim.js:572
 msgid "Select an employee to get the employee advance."
 msgstr "选择员工以获取预支款"
+
+#. Description of the 'Include Holidays' (Check) field in DocType 'Attendance
+#. Request'
+#: hrms/hr/doctype/attendance_request/attendance_request.json
+msgid "Select if any of the days selected for request are holidays"
+msgstr ""
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.js:237
 msgid "Select the Employee for which you want to allocate leaves."
@@ -9275,6 +9322,14 @@ msgstr "选择员工申请的假期类型如病假、特权假、事假等"
 msgid "Select your Leave Approver i.e. the person who approves or rejects your leaves."
 msgstr "选择您的假期审批人"
 
+#: hrms/hr/doctype/expense_claim/expense_claim.js:607
+msgid "Selected employee advance is not of employee {0}"
+msgstr ""
+
+#: hrms/hr/doctype/expense_claim/expense_claim.py:554
+msgid "Selected employee advance is not of employee {}"
+msgstr ""
+
 #. Label of the self_appraisal_tab (Tab Break) field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/doctype/employee_performance_feedback/employee_performance_feedback.py:61
@@ -9303,7 +9358,7 @@ msgstr "自主学习"
 msgid "Self-approval for Expense Claims is not allowed"
 msgstr "不允许费用报销的自我审批"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:909
+#: hrms/hr/doctype/leave_application/leave_application.py:910
 msgid "Self-approval for leaves is not allowed"
 msgstr "禁止自我审批假期"
 
@@ -9421,7 +9476,7 @@ msgstr "设置前雇主收入与税费期初余额"
 msgid "Set optional filters to fetch employees in the appraisee list"
 msgstr "设置可选筛选条件获取被考核人列表"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:738
+#: hrms/hr/doctype/expense_claim/expense_claim.py:746
 msgid "Set the default account for the {0} {1}"
 msgstr "为{0}{1}设置默认账户"
 
@@ -9576,7 +9631,8 @@ msgstr "班次地点"
 msgid "Shift Request"
 msgstr "班次申请"
 
-#: hrms/setup.py:139 hrms/setup.py:260
+#: hrms/patches/v15_0/update_approver_custom_fields.py:27 hrms/setup.py:138
+#: hrms/setup.py:262
 msgid "Shift Request Approver"
 msgstr "班次申请审批人"
 
@@ -9719,7 +9775,7 @@ msgstr "显示工资条"
 msgid "Showing"
 msgstr "显示中"
 
-#: hrms/setup.py:365 hrms/setup.py:366
+#: hrms/setup.py:368 hrms/setup.py:369
 msgid "Sick Leave"
 msgstr "病假"
 
@@ -9756,7 +9812,7 @@ msgstr "技能名称"
 
 #. Label of the skills_section (Section Break) field in DocType 'Employee Skill
 #. Map'
-#: hrms/hr/doctype/employee_skill_map/employee_skill_map.json hrms/setup.py:176
+#: hrms/hr/doctype/employee_skill_map/employee_skill_map.json hrms/setup.py:175
 msgid "Skills"
 msgstr "技能列表"
 
@@ -9766,7 +9822,7 @@ msgstr "技能列表"
 msgid "Skip Auto Attendance"
 msgstr "跳过自动考勤"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:359
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:360
 msgid "Skipping Salary Structure Assignment for the following employees, as Salary Structure Assignment records already exists against them. {0}"
 msgstr "以下员工薪资结构分配记录已存在，跳过分配：{0}"
 
@@ -9838,7 +9894,7 @@ msgstr "标准免税额度"
 msgid "Standard Working Hours"
 msgstr "标准工时"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1883
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1884
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}."
 msgstr "起止日期不在有效薪资周期内，无法计算{0}"
 
@@ -9850,7 +9906,7 @@ msgstr "开始日期不能大于结束日期"
 msgid "Start date cannot be greater than end date."
 msgstr "开始日期不能大于结束日期。"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:278
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:279
 msgid "Start date: {0}"
 msgstr "开始日期：{0}"
 
@@ -9874,7 +9930,7 @@ msgstr "统计组件"
 msgid "Status for Other Half"
 msgstr "其他部分状态"
 
-#: hrms/setup.py:408
+#: hrms/setup.py:411
 msgid "Stock Options"
 msgstr "股票期权"
 
@@ -9890,7 +9946,7 @@ msgstr "禁止用户在下述日期申请休假"
 msgid "Strictly based on Log Type in Employee Checkin"
 msgstr "严格依据员工签到日志类型"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:300
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:301
 msgid "Structures have been assigned successfully"
 msgstr "结构分配成功"
 
@@ -9948,7 +10004,7 @@ msgstr "通过薪资录入提交"
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr "提交工资条并创建日记账分录..."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1686
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1694
 msgid "Submitting Salary Slips..."
 msgstr "正在提交工资条..."
 
@@ -9974,7 +10030,7 @@ msgstr "所有前期税级总和"
 msgid "Sum of benefit amounts {0} exceeds maximum limit of {1}"
 msgstr "福利金额总和{0}超过最大限额{1}"
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:108
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:128
 msgid "Summarized View"
 msgstr "汇总视图"
 
@@ -9982,11 +10038,11 @@ msgstr "汇总视图"
 msgid "Sync {0}"
 msgstr "同步{0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1399
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1400
 msgid "Syntax error"
 msgstr "语法错误"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2620
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2621
 msgid "Syntax error in condition: {0} in Income Tax Slab"
 msgstr "所得税税级条件语法错误：{0}"
 
@@ -10149,7 +10205,7 @@ msgstr "申请日期为节假日，无需请假"
 msgid "The days between {0} to {1} are not valid holidays."
 msgstr "{0}至{1}期间并非有效节假日"
 
-#: hrms/setup.py:130
+#: hrms/setup.py:129
 msgid "The first Approver in the list will be set as the default Approver."
 msgstr "列表首位审批人将设为默认审批人"
 
@@ -10200,9 +10256,13 @@ msgstr "班次开始前允许签到的时间范围"
 msgid "Theory"
 msgstr "理论"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:576
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:577
 msgid "There are more holidays than working days this month."
 msgstr "本月节假日多于工作日"
+
+#: hrms/hr/doctype/attendance_request/attendance_request.py:87
+msgid "There are multiple shifts assigned to the employee for the same period. Please mention the shift"
+msgstr ""
 
 #: hrms/payroll/doctype/arrear/arrear.py:410
 msgid "There are no arrear differences between existing and new salary structure components."
@@ -10218,11 +10278,12 @@ msgstr "人员配置计划{0}下无空缺岗位"
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:425
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:426
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
 msgstr "无员工使用薪资结构{0}。分配{1}给员工以预览工资条"
 
-#. Description of the 'Is Optional Leave' (Check) field in DocType 'Leave Type'
+#. Description of the 'Leave for optional holiday' (Check) field in DocType
+#. 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "These leaves are holidays permitted by the company however, availing it is optional for an Employee."
 msgstr "此类假期为公司允许的节假日，员工可自主选择是否休假"
@@ -10243,15 +10304,15 @@ msgstr "本补休假自{0}起生效"
 msgid "This employee already has a log with the same timestamp.{0}"
 msgstr "该员工已有相同时间戳记录{0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1407
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1408
 msgid "This error can be due to invalid formula or condition."
 msgstr "可能由无效公式或条件导致"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1400
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1401
 msgid "This error can be due to invalid syntax."
 msgstr "可能由语法错误导致"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1393
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1394
 msgid "This error can be due to missing or deleted field."
 msgstr "可能由字段缺失或删除导致"
 
@@ -10263,7 +10324,7 @@ msgstr "本字段用于设置员工可申请的最大连续休假天数"
 msgid "This field allows you to set the maximum number of leaves that can be allocated annually for this Leave Type while creating the Leave Policy"
 msgstr "本字段用于在创建休假政策时设置该假期类型的年度最大分配天数"
 
-#: hrms/overrides/dashboard_overrides.py:60
+#: hrms/overrides/dashboard_overrides.py:63
 msgid "This is based on the attendance of this Employee"
 msgstr "基于该员工的考勤记录"
 
@@ -10511,11 +10572,11 @@ msgstr ""
 msgid "Total Exemption Amount"
 msgstr "免税额总计"
 
-#: hrms/setup.py:299
+#: hrms/setup.py:302
 msgid "Total Expense Claim (via Expense Claim)"
 msgstr "费用报销总额（通过费用报销单）"
 
-#: hrms/setup.py:290
+#: hrms/setup.py:293
 msgid "Total Expense Claim (via Expense Claims)"
 msgstr "费用报销总额（通过费用报销）"
 
@@ -10538,7 +10599,7 @@ msgstr "总工时（T）"
 msgid "Total Income Tax"
 msgstr "所得税总额"
 
-#: hrms/setup.py:803
+#: hrms/setup.py:794
 msgid "Total Interest Amount"
 msgstr "利息总金额"
 
@@ -10571,7 +10632,7 @@ msgstr "总分配假期"
 msgid "Total Leaves Encashed"
 msgstr "已兑现总假期"
 
-#: hrms/setup.py:817
+#: hrms/setup.py:808
 msgid "Total Loan Repayment"
 msgstr "贷款偿还总额"
 
@@ -10608,7 +10669,7 @@ msgstr "总支付额"
 msgid "Total Present"
 msgstr "总出勤数"
 
-#: hrms/setup.py:794
+#: hrms/setup.py:785
 msgid "Total Principal Amount"
 msgstr "本金总额"
 
@@ -10645,7 +10706,7 @@ msgstr "总分"
 msgid "Total Self Score"
 msgstr "自评总分"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:575
+#: hrms/hr/doctype/expense_claim/expense_claim.py:579
 msgid "Total advance amount cannot be greater than total sanctioned amount"
 msgstr "预支总额不可超过批准总额"
 
@@ -10675,7 +10736,7 @@ msgstr "分配假期总数不可超过年度分配额{0}"
 msgid "Total leaves allocated is mandatory for Leave Type {0}"
 msgstr "假期类型{0}必须填写分配假期总数"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:497
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:500
 msgid "Total of all employee benefits cannot be greater that Max Benefits Amount {0}"
 msgstr "所有员工福利总额不能大于最大福利金额{0}"
 
@@ -10705,7 +10766,7 @@ msgstr "所有{0}的总权重必须为100%。当前为{1}%"
 msgid "Total working Days Per Year"
 msgstr "年总工作日数"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:261
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:262
 msgid "Total working hours should not be greater than max working hours {0}"
 msgstr "总工时不可超过最大工时{0}"
 
@@ -10734,7 +10795,7 @@ msgstr "培训师姓名"
 #. Label of a Card Break in the Tenure Workspace
 #: hrms/hr/doctype/employee_training/employee_training.json
 #: hrms/hr/workspace/tenure/tenure.json
-#: hrms/overrides/dashboard_overrides.py:49
+#: hrms/overrides/dashboard_overrides.py:52
 msgid "Training"
 msgstr "培训"
 
@@ -10829,7 +10890,7 @@ msgstr "调岗日期"
 
 #. Label of a Card Break in the Expenses Workspace
 #. Label of a Workspace Sidebar Item
-#: hrms/hr/workspace/expenses/expenses.json hrms/setup.py:336
+#: hrms/hr/workspace/expenses/expenses.json hrms/setup.py:339
 #: hrms/workspace_sidebar/expenses.json
 msgid "Travel"
 msgstr "差旅"
@@ -10860,11 +10921,12 @@ msgstr "差旅行程"
 
 #. Name of a DocType
 #. Label of a Link in the Expenses Workspace
-#. Label of a Link in the People Workspace
+#. Label of a Link in the HR Setup Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/travel_request/travel_request.json
 #: hrms/hr/workspace/expenses/expenses.json
-#: hrms/hr/workspace/people/people.json hrms/workspace_sidebar/expenses.json
+#: hrms/hr/workspace/hr_setup/hr_setup.json
+#: hrms/workspace_sidebar/expenses.json
 msgid "Travel Request"
 msgstr "差旅申请"
 
@@ -10915,15 +10977,15 @@ msgstr ""
 msgid "Under Review"
 msgstr "审核中"
 
-#: hrms/hr/doctype/attendance/attendance.py:266
+#: hrms/hr/doctype/attendance/attendance.py:268
 msgid "Unlinked Attendance record from Employee Checkins: {}"
 msgstr "已解除考勤记录与员工签到的关联：{}"
 
-#: hrms/hr/doctype/attendance/attendance.py:269
+#: hrms/hr/doctype/attendance/attendance.py:271
 msgid "Unlinked logs"
 msgstr "未关联日志"
 
-#: hrms/hr/doctype/attendance/attendance_list.js:91
+#: hrms/hr/doctype/attendance/attendance_list.js:90
 msgid "Unmarked Attendance for days"
 msgstr "未标记考勤天数"
 
@@ -11033,7 +11095,7 @@ msgstr "更新状态"
 msgid "Update Tax"
 msgstr "更新税务"
 
-#: hrms/hr/doctype/attendance_request/attendance_request.py:138
+#: hrms/hr/doctype/attendance_request/attendance_request.py:181
 msgid "Updated status from {0} to {1} for date {2} in the attendance record {3}"
 msgstr "考勤记录{3}中日期{2}的状态已从{0}更新为{1}"
 
@@ -11216,7 +11278,7 @@ msgstr "警告：请假申请包含以下禁假日期"
 msgid "Warning: {0} already has an active Shift Assignment {1} for some/all of these dates."
 msgstr "警告：{0}在部分/全部日期已有生效的班次分配{1}"
 
-#: hrms/setup.py:398
+#: hrms/setup.py:401
 msgid "Website Listing"
 msgstr "官网职位列表"
 
@@ -11293,7 +11355,7 @@ msgstr "工作起始日期"
 #. Option for the 'Status' (Select) field in DocType 'Attendance'
 #. Option for the 'Reason' (Select) field in DocType 'Attendance Request'
 #. Option for the 'Status' (Select) field in DocType 'Employee Attendance Tool'
-#: frontend/src/components/AttendanceCalendar.vue:80
+#: frontend/src/components/AttendanceCalendar.vue:79
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/attendance_request/attendance_request.json
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
@@ -11418,7 +11480,7 @@ msgstr "根据母公司{4}的编制计划{3}，您最多可规划{2}的{0}个空
 msgid "You can only submit Leave Encashment for a valid encashment amount"
 msgstr "仅当存在有效兑现金额时可提交假期折现申请"
 
-#: hrms/api/__init__.py:728
+#: hrms/api/__init__.py:740
 msgid "You can only upload JPG, PNG, PDF, TXT or Microsoft documents."
 msgstr "仅可上传JPG、PNG、PDF、TXT或Microsoft文档"
 
@@ -11455,6 +11517,10 @@ msgstr "您近期无节假日安排"
 msgid "You have no upcoming shifts"
 msgstr "您暂无即将排班"
 
+#: hrms/public/js/templates/hierarchy_empty_state.html:9
+msgid "You haven't created a {0} for {1} yet."
+msgstr ""
+
 #: hrms/overrides/employee_master.py:83
 msgid "You may add additional details, if any, and submit the offer."
 msgstr "您可补充其他详细信息（如有）并提交录用通知"
@@ -11474,6 +11540,10 @@ msgstr "您的面试时段已从{0}{1}-{2}调整至{3}{4}-{5}"
 #: frontend/src/views/Login.vue:63
 msgid "Your password has expired. Please reset your password to continue"
 msgstr "密码已过期，请重置密码以继续"
+
+#: hrms/hr/doctype/attendance_request/attendance_request.py:69
+msgid "action"
+msgstr "操作"
 
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:121
 msgid "active"
@@ -11524,6 +11594,10 @@ msgstr "处理"
 msgid "processed"
 msgstr "已处理"
 
+#: hrms/hr/doctype/attendance_request/attendance_request.py:68
+msgid "reason"
+msgstr "原因"
+
 #: hrms/www/jobs/index.html:122
 msgid "result"
 msgstr "结果"
@@ -11544,7 +11618,11 @@ msgstr "评审"
 msgid "submitted"
 msgstr "已提交"
 
-#: hrms/payroll/doctype/salary_component/salary_component.py:185
+#: hrms/hr/page/organizational_chart/organizational_chart.js:30
+msgid "the selected company"
+msgstr ""
+
+#: hrms/payroll/doctype/salary_component/salary_component.py:187
 msgid "via Salary Component sync"
 msgstr "通过薪资组件同步"
 
@@ -11562,7 +11640,7 @@ msgstr ""
 msgid "{0} & {1}"
 msgstr "{0} & {1}"
 
-#: frontend/src/components/ExpenseClaimItem.vue:84
+#: frontend/src/components/ExpenseClaimItem.vue:83
 msgid "{0} & {1} more"
 msgstr "{0} 及另外{1}项"
 
@@ -11570,7 +11648,7 @@ msgstr "{0} 及另外{1}项"
 msgid "{0} : {1}"
 msgstr "{0}：{1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2616
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2617
 msgid "{0} <br> This error can be due to missing or deleted field."
 msgstr "{0} <br> 此错误可能由字段缺失或删除导致"
 
@@ -11586,7 +11664,7 @@ msgstr "{0} 字段"
 msgid "{0} Missing"
 msgstr "缺失{0}"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:77
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:78
 msgid "{0} Row #{1}: Formula is set but {2} is disabled for the Salary Component {3}."
 msgstr "{0} 行#{1}：已设置公式但薪资组件{3}的{2}未启用"
 
@@ -11627,7 +11705,7 @@ msgstr ""
 msgid "{0} created successfully!"
 msgstr "{0}创建成功！"
 
-#: frontend/src/components/FormView.vue:583
+#: frontend/src/components/FormView.vue:582
 msgid "{0} deleted successfully!"
 msgstr "{0}删除成功！"
 
@@ -11693,7 +11771,7 @@ msgstr "{0}成功！"
 msgid "{0} to {1} employee(s)?"
 msgstr "确认将{0}应用于{1}名员工？"
 
-#: frontend/src/components/FormView.vue:561
+#: frontend/src/components/FormView.vue:560
 msgid "{0} updated successfully!"
 msgstr "{0}更新成功！"
 
@@ -11713,7 +11791,7 @@ msgstr "{0} {1} {2}?"
 msgid "{0}. Check error log for more details."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2277
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2278
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr "{0}：未找到员工邮箱，邮件未发送"
 

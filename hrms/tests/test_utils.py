@@ -58,15 +58,12 @@ def get_first_sunday(holiday_list="Salary Slip Test Holiday List", for_date=None
 		month_start_date = date
 
 	month_end_date = get_last_day(date)
-	first_sunday = frappe.db.sql(
-		"""
-		select holiday_date from `tabHoliday`
-		where parent = %s
-			and holiday_date between %s and %s
-		order by holiday_date
-	""",
-		(holiday_list, month_start_date, month_end_date),
-	)[0][0]
+	first_sunday = frappe.get_value(
+		"Holiday",
+		{"parent": holiday_list, "holiday_date": ("between", (month_start_date, month_end_date))},
+		"holiday_date",
+		order_by="holiday_date asc",
+	)
 
 	return first_sunday
 

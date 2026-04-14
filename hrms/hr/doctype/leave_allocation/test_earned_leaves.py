@@ -29,34 +29,21 @@ from hrms.tests.utils import HRMSTestSuite
 
 
 class TestLeaveAllocation(HRMSTestSuite):
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
-		cls.make_employees()
-		cls.make_leave_types()
-
 	def setUp(self):
-		for doctype in [
-			"Leave Period",
-			"Leave Application",
-			"Leave Allocation",
-			"Leave Policy Assignment",
-			"Leave Ledger Entry",
-		]:
-			frappe.db.delete(doctype)
-
-		employee = frappe.get_doc("Employee", "_T-Employee-00001")
+		employee = frappe.get_doc("Employee", {"first_name": "_Test Employee"})
 		self.original_doj = employee.date_of_joining
 		employee.date_of_joining = add_months(getdate(), -24)
 		employee.save()
 
-		employee2 = frappe.get_doc("Employee", "_T-Employee-00002")
-		employee2.date_of_joining = add_months(getdate(), -24)
-		employee2.save()
+		self.employee2 = frappe.get_doc("Employee", {"first_name": "_Test Employee 1"})
+		self.employee2.date_of_joining = add_months(getdate(), -24)
+		self.employee2.save()
 
 		self.employee = employee
-		self.leave_type = "Test Earned Leave"
 
+		self.leave_type = create_earned_leave_type(
+			"Test Earned Leave", "First Day", "0.5", earned_leave_frequency="Monthly"
+		).name
 		from_date = get_year_start(getdate())
 		to_date = get_year_ending(getdate())
 		self.holiday_list = make_holiday_list(from_date=from_date, to_date=to_date)
@@ -408,7 +395,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		# pro-rated leaves should be considered only for the month of DOJ i.e. Mar = 0.548 leaves
 		# and full leaves for the remaining 2 months i.e. Apr and May = 2 leaves
-		self.assertEqual(leaves_allocated, 2.548)
+		self.assertEqual(leaves_allocated, 2.55)
 
 	def test_no_pro_rated_leaves_allocated_before_effective_date(self):
 		start_date = get_first_day(add_months(getdate(), -1))
@@ -535,12 +522,11 @@ class TestLeaveAllocation(HRMSTestSuite):
 		self.assertRaises(frappe.ValidationError, leave_allocation.allocate_leaves_manually, 1)
 
 	def test_quarterly_earned_leaves_allocated_on_last_day_in_the_middle_of_leave_period(self):
-		employee = frappe.get_doc("Employee", "_T-Employee-00002")
 		# allocated after one quarter
 		frappe.flags.current_date = add_months(get_year_start(getdate()), 4)
 
 		assignment = make_policy_assignment(
-			employee,
+			self.employee2,
 			allocate_on_day="Last Day",
 			earned_leave_frequency="Quarterly",
 			annual_allocation=12,
@@ -552,7 +538,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 		# quarter passed 1 so leaves allocated should be 3
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 
@@ -561,10 +547,8 @@ class TestLeaveAllocation(HRMSTestSuite):
 	def test_quarterly_earned_leaves_allocated_on_last_day_at_the_start_of_the_leave_period(self):
 		frappe.flags.current_date = get_year_start(getdate())
 
-		employee = frappe.get_doc("Employee", "_T-Employee-00002")
-
 		assignment = make_policy_assignment(
-			employee,
+			self.employee2,
 			allocate_on_day="Last Day",
 			earned_leave_frequency="Quarterly",
 			annual_allocation=12,
@@ -575,7 +559,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 
@@ -584,10 +568,8 @@ class TestLeaveAllocation(HRMSTestSuite):
 	def test_quartertly_earned_leaves_allocated_on_first_day_at_the_start_of_leave_period(self):
 		frappe.flags.current_date = get_year_start(getdate())
 
-		employee = frappe.get_doc("Employee", "_T-Employee-00002")
-
 		assignment = make_policy_assignment(
-			employee,
+			self.employee2,
 			allocate_on_day="First Day",
 			earned_leave_frequency="Quarterly",
 			annual_allocation=12,
@@ -598,7 +580,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 
@@ -607,11 +589,9 @@ class TestLeaveAllocation(HRMSTestSuite):
 	def test_quarterly_earned_leaves_allocated_by_the_scheduler(self):
 		frappe.flags.current_date = get_year_start(getdate())
 
-		employee = frappe.get_doc("Employee", "_T-Employee-00002")
-
 		# created policy assignment at the begining of the year so allocated leaces should be 0
 		assignment = make_policy_assignment(
-			employee,
+			self.employee2,
 			allocate_on_day="First Day",
 			earned_leave_frequency="Quarterly",
 			annual_allocation=12,
@@ -627,7 +607,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 		self.assertEqual(total_leaves_allocated, 6)
@@ -638,21 +618,21 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 		self.assertEqual(total_leaves_allocated, 9)
 
 	def test_quarterly_leaves_allocated_pro_rated(self):
 		# joined 1 month 10 days after the leave period date
-		employee = frappe.get_doc("Employee", "_T-Employee-00002")
-		employee.date_of_joining = add_to_date(get_year_start(getdate()), months=1, days=10)
-		employee.save()
+
+		self.employee2.date_of_joining = add_to_date(get_year_start(getdate()), months=1, days=10)
+		self.employee2.save()
 
 		# make policy assignment on the same day
 		frappe.flags.current_date = add_to_date(get_year_start(getdate()), months=1, days=10)
 		assignment = make_policy_assignment(
-			employee,
+			self.employee2,
 			allocate_on_day="Last Day",
 			earned_leave_frequency="Quarterly",
 			annual_allocation=12,
@@ -664,7 +644,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 		# no allocation at the beginning
@@ -675,7 +655,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 		# 1 full for full month + 1/(28 days of feb)*20 days = 0.7142 rounded to 0.25 = 1.75
@@ -683,10 +663,9 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 	def test_half_yearly_earned_leaves_allocated_on_last_day_at_the_start_of_leave_period(self):
 		frappe.flags.current_date = get_year_start(getdate())
-		employee = frappe.get_doc("Employee", "_T-Employee-00002")
 
 		assignment = make_policy_assignment(
-			employee,
+			self.employee2,
 			allocate_on_day="Last Day",
 			earned_leave_frequency="Half-Yearly",
 			annual_allocation=12,
@@ -697,19 +676,17 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 
 		self.assertEqual(total_leaves_allocated, 0.0)
 
 	def test_half_yearly_earned_leaves_allocated_on_last_day_in_the_middle_of_leave_period(self):
-		employee = frappe.get_doc("Employee", "_T-Employee-00002")
-
 		frappe.flags.current_date = add_months(get_year_start(getdate()), 7)
 
 		assignment = make_policy_assignment(
-			employee,
+			self.employee2,
 			allocate_on_day="Last Day",
 			earned_leave_frequency="Half-Yearly",
 			annual_allocation=12,
@@ -720,19 +697,17 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 
 		self.assertEqual(total_leaves_allocated, 6.0)
 
 	def test_half_yearly_earned_leaves_allocated_on_first_day_at_the_start_of_leave_period(self):
-		employee = frappe.get_doc("Employee", "_T-Employee-00002")
-
 		frappe.flags.current_date = get_year_start(getdate())
 
 		assignment = make_policy_assignment(
-			employee,
+			self.employee2,
 			allocate_on_day="First Day",
 			earned_leave_frequency="Half-Yearly",
 			annual_allocation=12,
@@ -743,7 +718,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 
@@ -752,10 +727,8 @@ class TestLeaveAllocation(HRMSTestSuite):
 	def test_half_yearly_earned_leaves_allocated_by_the_scheduler(self):
 		frappe.flags.current_date = get_year_start(getdate())
 
-		employee = frappe.get_doc("Employee", "_T-Employee-00002")
-
 		assignment = make_policy_assignment(
-			employee,
+			self.employee2,
 			allocate_on_day="First Day",
 			earned_leave_frequency="Half-Yearly",
 			annual_allocation=12,
@@ -766,7 +739,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 		self.assertEqual(total_leaves_allocated, 6)
@@ -778,20 +751,19 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 		self.assertEqual(total_leaves_allocated, 12)
 
 	def test_half_yearly_leaves_allocated_pro_rated(self):
-		employee = frappe.get_doc("Employee", "_T-Employee-00002")
-		employee.date_of_joining = add_to_date(get_year_start(getdate()), months=3, days=25)
-		employee.save()
+		self.employee2.date_of_joining = add_to_date(get_year_start(getdate()), months=3, days=25)
+		self.employee2.save()
 
 		# make policy assignment on the same day
 		frappe.flags.current_date = add_to_date(get_year_start(getdate()), months=3, days=25)
 		assignment = make_policy_assignment(
-			employee,
+			self.employee2,
 			allocate_on_day="Last Day",
 			earned_leave_frequency="Half-Yearly",
 			annual_allocation=12,
@@ -803,7 +775,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 
@@ -814,19 +786,17 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 		# 2 full + 1/30*5 = 2.166 rounded to 0.25
 		self.assertEqual(total_leaves_allocated, 2.25)
 
 	def test_yearly_leaves_allocated_on_last_day_at_the_start_of_the_period(self):
-		employee = frappe.get_doc("Employee", "_T-Employee-00002")
-
 		frappe.flags.current_date = get_year_start(getdate())
 		# 4 year leave policy
 		assignment = make_policy_assignment(
-			employee,
+			self.employee2,
 			allocate_on_day="Last Day",
 			earned_leave_frequency="Yearly",
 			annual_allocation=12,
@@ -837,19 +807,17 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 
 		self.assertEqual(total_leaves_allocated, 0.0)
 
 	def test_yearly_leaves_allocated_on_last_day_in_the_middle_of_the_period(self):
-		employee = frappe.get_doc("Employee", "_T-Employee-00002")
-
 		frappe.flags.current_date = add_to_date(get_year_start(getdate()), years=2)
 		# 4 year leave policy
 		assignment = make_policy_assignment(
-			employee,
+			self.employee2,
 			allocate_on_day="Last Day",
 			earned_leave_frequency="Yearly",
 			annual_allocation=12,
@@ -860,19 +828,17 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 
 		self.assertEqual(total_leaves_allocated, 24.0)
 
 	def test_yearly_leaves_allocated_on_first_day_at_the_start_of_the_period(self):
-		employee = frappe.get_doc("Employee", "_T-Employee-00002")
-
 		frappe.flags.current_date = get_year_start(getdate())
 		# 4 year leave policy
 		assignment = make_policy_assignment(
-			employee,
+			self.employee2,
 			allocate_on_day="First Day",
 			earned_leave_frequency="Yearly",
 			annual_allocation=12,
@@ -883,7 +849,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 
@@ -892,10 +858,8 @@ class TestLeaveAllocation(HRMSTestSuite):
 	def test_yearly_leaves_allocated_by_scheduler(self):
 		frappe.flags.current_date = get_year_start(getdate())
 
-		employee = frappe.get_doc("Employee", "_T-Employee-00002")
-
 		assignment = make_policy_assignment(
-			employee,
+			self.employee2,
 			allocate_on_day="First Day",
 			earned_leave_frequency="Yearly",
 			annual_allocation=12,
@@ -906,7 +870,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 		self.assertEqual(total_leaves_allocated, 12)
@@ -917,20 +881,19 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 		self.assertEqual(total_leaves_allocated, 24)
 
 	def test_yearly_leaves_allocated_pro_rated(self):
-		employee = frappe.get_doc("Employee", "_T-Employee-00002")
-		employee.date_of_joining = add_to_date(get_year_start(getdate()), months=7, days=15)
-		employee.save()
+		self.employee2.date_of_joining = add_to_date(get_year_start(getdate()), months=7, days=15)
+		self.employee2.save()
 
 		# make policy assignment on the same day
 		frappe.flags.current_date = add_to_date(get_year_start(getdate()), months=7, days=15)
 		assignment = make_policy_assignment(
-			employee,
+			self.employee2,
 			allocate_on_day="Last Day",
 			earned_leave_frequency="Yearly",
 			annual_allocation=12,
@@ -942,7 +905,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 
@@ -953,7 +916,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 		total_leaves_allocated = frappe.get_value(
 			"Leave Allocation",
-			{"employee": employee.name, "leave_policy_assignment": assignment},
+			{"employee": self.employee2.name, "leave_policy_assignment": assignment},
 			"total_leaves_allocated",
 		)
 		# 4 months full leave 1/30*15 = 0.5 rounded to 0.25
@@ -1083,13 +1046,11 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 	def test_allocating_earned_leave_when_schedule_doesnt_exist(self):
 		frappe.flags.current_date = get_year_start(getdate())
-		employee1 = frappe.get_doc("Employee", "_T-Employee-00002")
+		employee1 = self.employee2
 		employee2 = frappe.copy_doc(employee1)
 		employee2.user_id = None
 		employee2.insert()
-		leave_type = create_earned_leave_type(
-			"Test Earned Leave", "First Day", 0.5, earned_leave_frequency="Monthly"
-		)
+
 		leave_period = create_leave_period(
 			"Test Earned Leave Period",
 			start_date=get_year_start(getdate()),
@@ -1099,7 +1060,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 			{
 				"doctype": "Leave Policy",
 				"title": "Test Earned Leave Policy",
-				"leave_policy_details": [{"leave_type": leave_type.name, "annual_allocation": 24}],
+				"leave_policy_details": [{"leave_type": self.leave_type, "annual_allocation": 24}],
 			}
 		).insert()
 
@@ -1141,12 +1102,6 @@ class TestLeaveAllocation(HRMSTestSuite):
 		self.assertEqual(total_leaves_allocated_with_schedule, 4)
 
 		frappe.delete_doc_if_exists("Employee", employee2.name, force=1)
-
-	def tearDown(self):
-		frappe.db.set_value("Employee", self.employee.name, "date_of_joining", self.original_doj)
-		frappe.db.set_value("Employee", "_T-Employee-00002", "date_of_joining", self.original_doj)
-		frappe.db.set_value("Leave Type", self.leave_type, "max_leaves_allowed", 0)
-		frappe.flags.current_date = None
 
 
 def create_earned_leave_type(

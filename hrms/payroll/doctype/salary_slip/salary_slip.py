@@ -1018,7 +1018,7 @@ class SalarySlip(TransactionBase):
 		# get taxable_earnings for current period (all days)
 		self.current_taxable_earnings = self.get_taxable_earnings(self.tax_slab.allow_tax_exemption)
 		self.future_structured_taxable_earnings = self.current_taxable_earnings.taxable_earnings * (
-			ceil(self.remaining_sub_periods) - 1
+			round(self.remaining_sub_periods) - 1
 		)
 
 		current_taxable_earnings_before_exemption = (
@@ -1026,7 +1026,7 @@ class SalarySlip(TransactionBase):
 			+ self.current_taxable_earnings.amount_exempted_from_income_tax
 		)
 		self.future_structured_taxable_earnings_before_exemption = (
-			current_taxable_earnings_before_exemption * (ceil(self.remaining_sub_periods) - 1)
+			current_taxable_earnings_before_exemption * (round(self.remaining_sub_periods) - 1)
 		)
 
 		# get taxable_earnings, addition_earnings for current actual payment days

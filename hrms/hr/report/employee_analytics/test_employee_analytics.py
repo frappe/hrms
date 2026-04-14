@@ -1,21 +1,17 @@
 import frappe
 from frappe import _
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
-from frappe.tests import IntegrationTestCase
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.report.employee_analytics.employee_analytics import execute
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestEmployeeAnalytics(IntegrationTestCase):
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
+class TestEmployeeAnalytics(HRMSTestSuite):
+	def setUp(self):
 		create_branches()
 		create_employee_grade()
-
-	def setUp(self):
 		self.company = "_Test Company"
 		self.company_2 = create_company("_Test Company 2")
 
@@ -96,3 +92,4 @@ def create_company(company_name):
 			}
 		)
 		company = company.save()
+	return company.name

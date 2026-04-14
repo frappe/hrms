@@ -2,7 +2,6 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, flt, get_first_day, getdate, nowdate, today
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -10,27 +9,18 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 from hrms.hr.doctype.overtime_type.test_overtime_type import create_overtime_type
 from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
+from hrms.payroll.doctype.salary_slip.test_salary_slip import make_earning_salary_component
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.tests.utils import HRMSTestSuite
 
-TEST_COMPANY = "_Test Company"
 
-
-class TestOvertimeSlip(IntegrationTestCase):
-	def setUp(self):
-		frappe.db.delete("Overtime Type")
-		frappe.db.delete("Overtime Slip")
-		frappe.db.delete("Shift Assignment")
-		frappe.db.delete("Salary Structure Assignment")
-		frappe.db.delete("Salary Structure")
-		frappe.db.delete("Employee")
-		frappe.db.delete("Shift Type", {"name": "_Test Overtime Shift"})
-
+class TestOvertimeSlip(HRMSTestSuite):
 	def test_overtime_calculation_and_additional_salary_creation(self):
 		from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
 
-		employee = make_employee("test_overtime_slip_salary@example.com")
+		employee = make_employee("test_overtime_slip_salary@example.com", company="_Test Company")
 		salary_structure = make_salary_structure(
-			"Test Overtime Salary Slip", "Monthly", employee=employee, company=TEST_COMPANY
+			"Test Overtime Salary Slip", "Monthly", employee=employee, company="_Test Company"
 		)
 
 		overtime_type, overtime_slip, total_overtime_hours = setup_overtime(employee)
@@ -73,8 +63,10 @@ class TestOvertimeSlip(IntegrationTestCase):
 		self.assertEqual(flt(expected_overtime_amount, 2), actual_overtime_amount)
 
 	def test_overtime_calculation_for_fixed_hourly_rate(self):
-		employee = make_employee("test_overtime_slip_fixed@example.com")
-		make_salary_structure("Test Overtime Salary Slip", "Monthly", employee=employee, company=TEST_COMPANY)
+		employee = make_employee("test_overtime_slip_fixed@example.com", company="_Test Company")
+		make_salary_structure(
+			"Test Overtime Salary Slip", "Monthly", employee=employee, company="_Test Company"
+		)
 
 		overtime_type, overtime_slip, total_overtime_hours = setup_overtime(employee, "Fixed Hourly Rate")
 		expected_overtime_amount = (
@@ -95,11 +87,12 @@ class TestOvertimeSlip(IntegrationTestCase):
 		date = getdate()
 		month_start_date = get_first_day(date)
 
-		company = frappe.get_doc("Company", TEST_COMPANY)
-		employee = make_employee("test_overtime_slip_01@example.com")
+		company = frappe.get_doc("Company", "_Test Company")
+		make_earning_salary_component(setup=True, company_list=["_Test Company"])
+		employee = make_employee("test_overtime_slip_01@example.com", company="_Test Company")
 		overtime_type = create_overtime_type(overtime_calculation_method="Fixed Hourly Rate")
 		shift_type = setup_shift_type(
-			company=TEST_COMPANY,
+			company="_Test Company",
 			shift_type="_Test Overtime Shift",
 			allow_overtime=1,
 			overtime_type=overtime_type.name,
@@ -109,7 +102,9 @@ class TestOvertimeSlip(IntegrationTestCase):
 		)
 		frappe.db.set_single_value("Payroll Settings", "create_overtime_slip", 1)
 
-		make_salary_structure("Test Overtime Salary Slip", "Monthly", employee=employee, company=TEST_COMPANY)
+		make_salary_structure(
+			"Test Overtime Salary Slip", "Monthly", employee=employee, company="_Test Company"
+		)
 		make_shift_assignment(
 			shift_type=shift_type.name, employee=employee, start_date=add_days(month_start_date, -1)
 		)
@@ -123,6 +118,7 @@ class TestOvertimeSlip(IntegrationTestCase):
 			payable_account=company.default_payroll_payable_account,
 			currency=company.default_currency,
 			company=company.name,
+			cost_center="Main - _TC",
 		)
 
 		payroll_entry.create_overtime_slips()
@@ -138,9 +134,6 @@ class TestOvertimeSlip(IntegrationTestCase):
 		)
 
 		self.assertTrue(overtime_slip)
-
-	def tearDown(self):
-		frappe.db.rollback()
 
 
 def create_overtime_slip(employee):
@@ -174,7 +167,7 @@ def setup_overtime(employee, overtime_calculation_method="Salary Component Based
 	date = getdate()
 	month_start_date = get_first_day(date)
 	shift_type = setup_shift_type(
-		company=TEST_COMPANY,
+		company="_Test Company",
 		shift_type="_Test Overtime Shift",
 		allow_overtime=1,
 		overtime_type=overtime_type.name,

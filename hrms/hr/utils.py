@@ -163,7 +163,7 @@ def update_to_date_in_work_history(employee, cancel):
 
 
 @frappe.whitelist()
-def get_employee_field_property(employee, fieldname):
+def get_employee_field_property(employee: str, fieldname: str):
 	if not (employee and fieldname):
 		return
 
@@ -309,7 +309,7 @@ def get_total_exemption_amount(declarations):
 
 
 @frappe.whitelist()
-def get_leave_period(from_date, to_date, company):
+def get_leave_period(from_date: str | datetime.date, to_date: str | datetime.date, company: str):
 	leave_period = frappe.db.sql(
 		"""
 		select name, from_date, to_date
@@ -489,13 +489,13 @@ def send_email_for_failed_allocations(failed_allocations):
 
 @frappe.whitelist()
 def get_monthly_earned_leave(
-	date_of_joining,
-	annual_leaves,
-	frequency,
-	rounding,
-	period_start_date=None,
-	period_end_date=None,
-	pro_rated=True,
+	date_of_joining: str | datetime.date,
+	annual_leaves: float,
+	frequency: str,
+	rounding: str | float,
+	period_start_date: str | datetime.date | None = None,
+	period_end_date: str | datetime.date | None = None,
+	pro_rated: bool = True,
 ):
 	earned_leaves = 0.0
 	divide_by_frequency = {"Yearly": 1, "Half-Yearly": 2, "Quarterly": 4, "Monthly": 12}
@@ -965,7 +965,7 @@ def notify_bulk_action_status(doctype: str, failure: list, success: list) -> Non
 
 
 @frappe.whitelist()
-def set_geolocation_from_coordinates(doc):
+def set_geolocation_from_coordinates(doc: Document):
 	if not frappe.db.get_single_value("HR Settings", "allow_geolocation_tracking"):
 		return
 

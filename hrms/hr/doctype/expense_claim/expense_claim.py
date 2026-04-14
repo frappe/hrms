@@ -549,6 +549,10 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		precision = self.precision("total_advance_amount")
 
 		for d in self.get("advances"):
+			advance_employee = frappe.db.get_value("Employee Advance", d.employee_advance, "employee")
+			if self.employee != advance_employee:
+				frappe.throw(_("Selected employee advance is not of employee {}").format(self.employee))
+
 			self.round_floats_in(d)
 			if d.allocated_amount and flt(d.allocated_amount) > flt(
 				flt(d.unclaimed_amount) - flt(d.return_amount), precision
@@ -643,7 +647,11 @@ def get_total_reimbursed_amount(doc):
 
 		amount_via_payment_entry = frappe.db.get_value(
 			"Payment Entry Reference",
-			{"reference_name": doc.name, "docstatus": 1},
+			{
+				"reference_name": doc.name,
+				"advance_voucher_type": None,
+				"docstatus": 1,
+			},
 			[{"SUM": "allocated_amount"}],
 		)
 
@@ -773,7 +781,7 @@ def get_advances(expense_claim: str | dict | Document, advance_id: str | None = 
 			& (advance.status.notin(["Claimed", "Returned", "Partly Claimed and Returned"]))
 		)
 	else:
-		query = query.where(advance.name == advance_id)
+		query = query.where((advance.name == advance_id) & (advance.employee == expense_claim_doc.employee))
 
 	advances = query.run(as_dict=True)
 

@@ -3,7 +3,6 @@
 import calendar
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, add_months, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -15,9 +14,10 @@ from hrms.payroll.doctype.salary_structure.salary_structure import (
 	make_salary_slip,
 )
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestArrear(IntegrationTestCase):
+class TestArrear(HRMSTestSuite):
 	def test_arrear_calculation(self):
 		# Test arrear calculation when new salary structure is applied retroactively later in the payroll period after salary slip creation
 		# Include the case where payroll correction exists for LWP reversal for already processed salary slip
@@ -27,7 +27,7 @@ class TestArrear(IntegrationTestCase):
 			company="_Test Company",
 			date_of_joining="2021-01-01",
 		)
-		make_payroll_period()
+		make_payroll_period(company="_Test Company")
 		current_payroll_period = frappe.get_last_doc("Payroll Period", filters={"company": "_Test Company"})
 
 		# Create initial salary structure with lower salary

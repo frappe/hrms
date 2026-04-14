@@ -1,6 +1,5 @@
 import frappe
-from frappe.tests import IntegrationTestCase
-from frappe.utils import add_days, getdate
+from frappe.utils import add_days, flt, getdate
 
 from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet
 from erpnext.projects.doctype.timesheet.timesheet import make_sales_invoice
@@ -9,13 +8,11 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.report.project_profitability.project_profitability import execute
 from hrms.payroll.doctype.salary_slip.salary_slip import make_salary_slip_from_timesheet
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_salary_structure_for_timesheet
+from hrms.tests.utils import HRMSTestSuite
 
-test_dependencies = ["Customer"]
 
-
-class TestProjectProfitability(IntegrationTestCase):
+class TestProjectProfitability(HRMSTestSuite):
 	def setUp(self):
-		frappe.db.delete("Timesheet")
 		emp = make_employee("test_employee_9@salary.com", company="_Test Company")
 
 		frappe.db.set_single_value("HR Settings", "standard_working_hours", 8)
@@ -60,9 +57,10 @@ class TestProjectProfitability(IntegrationTestCase):
 		self.assertEqual(self.salary_slip.total_working_days, row.total_working_days)
 
 		standard_working_hours = frappe.db.get_single_value("HR Settings", "standard_working_hours")
-		utilization = timesheet.total_billed_hours / (
-			self.salary_slip.total_working_days * standard_working_hours
+		utilization = flt(
+			timesheet.total_billed_hours / (self.salary_slip.total_working_days * standard_working_hours), 2
 		)
+
 		self.assertEqual(utilization, row.utilization)
 
 		profit = self.sales_invoice.base_grand_total - self.salary_slip.base_gross_pay * utilization

@@ -1,5 +1,4 @@
 import frappe
-from frappe.tests import IntegrationTestCase
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -11,13 +10,11 @@ from hrms.hr.doctype.employee_performance_feedback.test_employee_performance_fee
 )
 from hrms.hr.report.appraisal_overview.appraisal_overview import execute
 from hrms.tests.test_utils import create_company
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestAppraisalOverview(IntegrationTestCase):
+class TestAppraisalOverview(HRMSTestSuite):
 	def setUp(self):
-		frappe.db.delete("Goal")
-		frappe.db.delete("Appraisal")
-
 		self.company = create_company("_Test Appraisal").name
 
 		engineer = create_designation(designation_name="Engineer")
@@ -55,7 +52,7 @@ class TestAppraisalOverview(IntegrationTestCase):
 			"avg_feedback_score": 3.85,
 			"goal_score": 3.6,
 			"self_score": 3.85,
-			"final_score": 3.767,
+			"final_score": 3.77,
 			"feedback_count": 1,
 		}
 

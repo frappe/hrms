@@ -34,9 +34,19 @@
 			@update:modelValue="(v) => emit('update:modelValue', v)"
 		/>
 
+		<TextEditor
+			v-else-if="props.fieldtype === 'Text Editor'"
+			:content="modelValue"
+			:placeholder="__('Enter {0}', [props.label])"
+			@change="(v) => emit('update:modelValue', v)"
+			:fixedMenu="true"
+			:editable="!isReadOnly"
+			editor-class="prose-sm border-b border-x border-gray-200 rounded-b-sm p-1 min-h-[4rem]"
+		/>
+
 		<!-- Text -->
 		<Input
-			v-else-if="['Text Editor', 'Small Text', 'Text', 'Long Text'].includes(props.fieldtype)"
+			v-else-if="['Small Text', 'Text', 'Long Text'].includes(props.fieldtype)"
 			type="textarea"
 			:value="modelValue"
 			:placeholder="__('Enter {0}', [props.label])"
@@ -140,7 +150,7 @@
 </template>
 
 <script setup>
-import { Autocomplete, DateTimePicker, ErrorMessage, Input } from "frappe-ui"
+import { Autocomplete, DateTimePicker, ErrorMessage, Input, TextEditor } from "frappe-ui"
 import { computed, onMounted, inject } from "vue"
 
 import Link from "@/components/Link.vue"

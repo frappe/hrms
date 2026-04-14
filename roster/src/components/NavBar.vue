@@ -1,7 +1,7 @@
 <template>
 	<div class="h-12 bg-white border-b px-12 flex items-center">
 		<div class="flex items-center space-x-1.5">
-			<a href="/app/hr" class="text-gray-600 hover:text-gray-700 flex items-center">
+			<a href="/desk/people" class="text-gray-600 hover:text-gray-700 flex items-center">
 				<FrappeHRLogo class="h-6 w-6 mr-2.5" />
 				Frappe HR
 			</a>

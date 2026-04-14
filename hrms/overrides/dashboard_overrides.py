@@ -43,6 +43,9 @@ def get_dashboard_for_employee(data):
 					"Employee Incentive",
 					"Retention Bonus",
 					"Bank Account",
+					"Overtime Slip",
+					"Arrear",
+					"Payroll Correction",
 				],
 			},
 			{

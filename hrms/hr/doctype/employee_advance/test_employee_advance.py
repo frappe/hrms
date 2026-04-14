@@ -2,7 +2,6 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase, change_settings
 from frappe.utils import flt, nowdate
 
 import erpnext
@@ -22,19 +21,15 @@ from hrms.hr.doctype.expense_claim.test_expense_claim import (
 )
 from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestEmployeeAdvance(IntegrationTestCase):
+class TestEmployeeAdvance(HRMSTestSuite):
 	def setUp(self):
 		frappe.db.delete("Employee Advance")
 		self.update_company_in_fiscal_year()
 		frappe.db.set_value("Account", "Employee Advances - _TC", "account_type", "Receivable")
 		frappe.db.set_value("Account", "_Test Employee Advance - _TC", "account_type", "Receivable")
-
-	def tearDown(self):
-		frappe.set_value(
-			"Company", "_Test Company", "default_employee_advance_account", "Employee Advances - _TC"
-		)
 
 	def test_paid_amount_and_status(self):
 		employee_name = make_employee("_T@employee.advance", "_Test Company")
@@ -284,7 +279,9 @@ class TestEmployeeAdvance(IntegrationTestCase):
 		# (1000 - 500) + (1000 - 700)
 		self.assertEqual(advance3.pending_amount, 800)
 
-	@change_settings("HR Settings", {"unlink_payment_on_cancellation_of_employee_advance": True})
+	@HRMSTestSuite.change_settings(
+		"HR Settings", {"unlink_payment_on_cancellation_of_employee_advance": True}
+	)
 	def test_unlink_payment_entries(self):
 		employee_name = make_employee("_T@employee.advance", "_Test Company")
 		self.assertTrue(frappe.db.exists("Employee", employee_name))

@@ -2,20 +2,16 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, get_first_day, get_last_day, getdate, nowdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.staffing_plan.staffing_plan import ParentCompanyError, SubsidiaryCompanyError
+from hrms.tests.utils import HRMSTestSuite
 
-test_dependencies = ["Designation"]
 
-
-class TestStaffingPlan(IntegrationTestCase):
+class TestStaffingPlan(HRMSTestSuite):
 	def setUp(self):
-		for doctype in ["Staffing Plan", "Staffing Plan Detail"]:
-			frappe.db.delete(doctype)
 		make_company()
 
 	def test_staffing_plan(self):

@@ -284,7 +284,7 @@ const documents = createResource({
 
 const createPermission = createResource({
 	url: "frappe.client.has_permission",
-	params: { doctype: props.doctype, docname: null, perm_type: "create" },
+	params: { doctype: props.doctype, docname: "", perm_type: "create" },
 	auto: true,
 })
 

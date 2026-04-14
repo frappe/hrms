@@ -2,7 +2,6 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -22,27 +21,12 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 )
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 from hrms.tests.test_utils import get_first_sunday
+from hrms.tests.utils import HRMSTestSuite
 
-test_records = frappe.get_test_records("Leave Type")
 
-
-class TestLeaveEncashment(IntegrationTestCase):
+class TestLeaveEncashment(HRMSTestSuite):
 	def setUp(self):
-		for dt in [
-			"Leave Period",
-			"Leave Policy Assignment",
-			"Leave Allocation",
-			"Leave Ledger Entry",
-			"Additional Salary",
-			"Leave Encashment",
-			"Leave Application",
-		]:
-			frappe.db.delete(dt)
-
 		self.leave_type = "_Test Leave Type Encashment"
-		if frappe.db.exists("Leave Type", self.leave_type):
-			frappe.delete_doc("Leave Type", self.leave_type, force=True)
-		frappe.get_doc(test_records[2]).insert()
 
 		date = getdate()
 		year_start = getdate(get_year_start(date))
@@ -50,14 +34,14 @@ class TestLeaveEncashment(IntegrationTestCase):
 
 		self.holiday_list = make_holiday_list("_Test Leave Encashment", year_start, year_end)
 
-		# create the leave policy
-		leave_policy = create_leave_policy(leave_type=self.leave_type, annual_allocation=10)
-		leave_policy.submit()
-
 		# create employee, salary structure and assignment
 		self.employee = make_employee("test_employee_encashment@example.com", company="_Test Company")
 
 		self.leave_period = create_leave_period(year_start, year_end, "_Test Company")
+
+		# create the leave policy
+		leave_policy = create_leave_policy(leave_type=self.leave_type, annual_allocation=10)
+		leave_policy.submit()
 
 		data = {
 			"assignment_based_on": "Leave Period",
@@ -72,6 +56,7 @@ class TestLeaveEncashment(IntegrationTestCase):
 			"Monthly",
 			self.employee,
 			other_details={"leave_encashment_amount_per_day": 50},
+			company="_Test Company",
 		)
 
 	@assign_holiday_list("_Test Leave Encashment", "_Test Company")
@@ -306,6 +291,8 @@ class TestLeaveEncashment(IntegrationTestCase):
 			employee,
 			from_date=start_date,
 			other_details={"leave_encashment_amount_per_day": 50},
+			company="_Test Company",
+			currency="INR",
 		)
 
 		leave_encashment = self.create_test_leave_encashment(
@@ -326,6 +313,7 @@ class TestLeaveEncashment(IntegrationTestCase):
 			"Monthly",
 			self.employee,
 			other_details={"leave_encashment_amount_per_day": 50},
+			company="_Test Company",
 		)
 
 		create_salary_structure_assignment(
@@ -435,6 +423,7 @@ class TestLeaveEncashment(IntegrationTestCase):
 			"Salary Structure for Encashment Amount",
 			"Monthly",
 			self.employee,
+			company="_Test Company",
 		)
 
 		create_salary_structure_assignment(

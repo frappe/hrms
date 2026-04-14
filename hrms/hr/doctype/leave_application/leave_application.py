@@ -135,6 +135,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		if frappe.db.get_value("Leave Type", self.leave_type, "is_optional_leave"):
 			self.validate_optional_leave()
 		self.validate_applicable_after()
+		self.validate_for_self_approval()
 
 	def on_update(self):
 		if self.status == "Open" and self.docstatus < 1:
@@ -152,7 +153,6 @@ class LeaveApplication(Document, PWANotificationsMixin):
 
 		self.validate_back_dated_application()
 		self.update_attendance()
-		self.validate_for_self_approval()
 
 		# notify leave applier about approval
 		if frappe.db.get_single_value("HR Settings", "send_leave_notification"):
@@ -920,6 +920,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			self_leave_approval_not_allowed
 			and employee_user == frappe.session.user
 			and not get_workflow_name("Leave Application")
+			and self.status == "Approved"
 		):
 			frappe.throw(_("Self-approval for leaves is not allowed"))
 
@@ -982,6 +983,8 @@ def get_number_of_leave_days(
 
 @frappe.whitelist()
 def get_leave_details(employee: str, date: str | datetime.date, for_salary_slip: bool = False) -> dict:
+	frappe.has_permission("Employee", "read", employee, throw=True)
+
 	allocation_records = get_leave_allocation_records(employee, date)
 	leave_allocation = {}
 	precision = cint(frappe.db.get_single_value("System Settings", "float_precision")) or 2
@@ -1041,6 +1044,8 @@ def get_leave_balance_on(
 	        if True, returns a dict eg: {'leave_balance': 10, 'leave_balance_for_consumption': 1}
 	        else, returns leave_balance (in this case 10)
 	"""
+	if frappe.request:
+		frappe.has_permission("Employee", "read", employee, throw=True)
 
 	if not to_date:
 		to_date = nowdate()

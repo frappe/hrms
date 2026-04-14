@@ -2,7 +2,6 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -10,13 +9,11 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.appraisal_cycle.test_appraisal_cycle import create_appraisal_cycle
 from hrms.hr.doctype.appraisal_template.test_appraisal_template import create_appraisal_template
 from hrms.tests.test_utils import create_company
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestEmployeePerformanceFeedback(IntegrationTestCase):
+class TestEmployeePerformanceFeedback(HRMSTestSuite):
 	def setUp(self):
-		frappe.db.delete("Employee Performance Feedback")
-		frappe.db.delete("Appraisal")
-
 		company = create_company("_Test Appraisal").name
 		self.template = create_appraisal_template()
 
@@ -104,7 +101,7 @@ class TestEmployeePerformanceFeedback(IntegrationTestCase):
 		feedback2.submit()
 
 		avg_feedback_score = frappe.db.get_value("Appraisal", self.appraisal, "avg_feedback_score")
-		self.assertEqual(avg_feedback_score, 3.575)
+		self.assertEqual(avg_feedback_score, 3.58)
 
 	def test_update_avg_feedback_score_on_cancel(self):
 		feedback = create_performance_feedback(

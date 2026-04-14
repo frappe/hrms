@@ -7,7 +7,6 @@ import os
 import frappe
 from frappe import _
 from frappe.core.doctype.user_permission.test_user_permission import create_user
-from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, get_datetime, get_time, getdate, nowtime
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
@@ -21,9 +20,10 @@ from hrms.hr.doctype.interview.interview import (
 )
 from hrms.hr.doctype.job_applicant.job_applicant import get_interview_details
 from hrms.tests.test_utils import create_job_applicant, get_email_by_subject
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestInterview(IntegrationTestCase):
+class TestInterview(HRMSTestSuite):
 	def test_validations_for_designation(self):
 		job_applicant = create_job_applicant()
 		interview = create_interview_and_dependencies(
@@ -204,9 +204,6 @@ class TestInterview(IntegrationTestCase):
 		interview.reload()
 
 		self.assertEqual(interview.status, "Cancelled")
-
-	def tearDown(self):
-		frappe.db.rollback()
 
 
 def create_interview_and_dependencies(

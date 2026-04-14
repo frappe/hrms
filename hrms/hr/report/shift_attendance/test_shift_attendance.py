@@ -1,7 +1,6 @@
 from datetime import date, datetime, time
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import format_datetime
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -10,24 +9,16 @@ from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
 from hrms.hr.report.shift_attendance.shift_attendance import execute
 from hrms.tests.test_utils import create_company
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestShiftAttendance(IntegrationTestCase):
-	@classmethod
-	def setUpClass(cls):
+class TestShiftAttendance(HRMSTestSuite):
+	def setUp(self):
 		create_company()
-		super().setUpClass()
-		frappe.db.delete("Employee", {"company": "_Test Company"})
-		frappe.db.delete("Attendance")
-		cls.create_records()
+		self.create_records()
 
-	@classmethod
-	def tearDownClass(cls):
-		frappe.db.rollback()
-
-	@classmethod
-	def create_records(cls):
-		cls.shift1 = setup_shift_type(
+	def create_records(self):
+		self.shift1 = setup_shift_type(
 			shift_type="Shift 1",
 			start_time="08:00:00",
 			end_time="12:00:00",
@@ -38,7 +29,7 @@ class TestShiftAttendance(IntegrationTestCase):
 			process_attendance_after="2023-01-01",
 			last_sync_of_checkin="2023-01-04 04:00:00",
 		)
-		cls.shift2 = setup_shift_type(
+		self.shift2 = setup_shift_type(
 			shift_type="Shift 2",
 			start_time="22:00:00",
 			end_time="02:00:00",
@@ -50,38 +41,38 @@ class TestShiftAttendance(IntegrationTestCase):
 			last_sync_of_checkin="2023-01-04 04:00:00",
 		)
 
-		cls.emp1 = make_employee(
+		self.emp1 = make_employee(
 			"employee1@example.com",
 			company="_Test Company",
 			default_shift="Shift 1",
 		)
-		cls.emp2 = make_employee(
+		self.emp2 = make_employee(
 			"employee2@example.com",
 			company="_Test Company",
 			default_shift="Shift 2",
 		)
 
 		# Present | Early Entry | Late Exit
-		make_checkin(cls.emp1, datetime(2023, 1, 1, 7, 30), "IN")
-		make_checkin(cls.emp1, datetime(2023, 1, 1, 12, 30), "OUT")
+		make_checkin(self.emp1, datetime(2023, 1, 1, 7, 30), "IN")
+		make_checkin(self.emp1, datetime(2023, 1, 1, 12, 30), "OUT")
 		# Present | Late Entry | Late Exit
-		make_checkin(cls.emp1, datetime(2023, 1, 2, 8, 30), "IN")
-		make_checkin(cls.emp1, datetime(2023, 1, 2, 12, 30), "OUT")
+		make_checkin(self.emp1, datetime(2023, 1, 2, 8, 30), "IN")
+		make_checkin(self.emp1, datetime(2023, 1, 2, 12, 30), "OUT")
 		# Present | Early Entry | Early Exit
-		make_checkin(cls.emp1, datetime(2023, 1, 3, 7, 30), "IN")
-		make_checkin(cls.emp1, datetime(2023, 1, 3, 11, 30), "OUT")
+		make_checkin(self.emp1, datetime(2023, 1, 3, 7, 30), "IN")
+		make_checkin(self.emp1, datetime(2023, 1, 3, 11, 30), "OUT")
 		# Present | Late Entry | Early Exit
-		make_checkin(cls.emp2, datetime(2023, 1, 1, 22, 30), "IN")
-		make_checkin(cls.emp2, datetime(2023, 1, 2, 1, 30), "OUT")
+		make_checkin(self.emp2, datetime(2023, 1, 1, 22, 30), "IN")
+		make_checkin(self.emp2, datetime(2023, 1, 2, 1, 30), "OUT")
 		# Half Day | Early Entry | Early Exit
-		make_checkin(cls.emp2, datetime(2023, 1, 2, 21, 30), "IN")
-		make_checkin(cls.emp2, datetime(2023, 1, 2, 23, 15), "OUT")
+		make_checkin(self.emp2, datetime(2023, 1, 2, 21, 30), "IN")
+		make_checkin(self.emp2, datetime(2023, 1, 2, 23, 15), "OUT")
 		# Absent | Early Entry | Early Exit
-		make_checkin(cls.emp2, datetime(2023, 1, 3, 21, 30), "IN")
-		make_checkin(cls.emp2, datetime(2023, 1, 3, 22, 15), "OUT")
+		make_checkin(self.emp2, datetime(2023, 1, 3, 21, 30), "IN")
+		make_checkin(self.emp2, datetime(2023, 1, 3, 22, 15), "OUT")
 
-		cls.shift1.process_auto_attendance()
-		cls.shift2.process_auto_attendance()
+		self.shift1.process_auto_attendance()
+		self.shift2.process_auto_attendance()
 
 	def test_data(self):
 		filters = frappe._dict(

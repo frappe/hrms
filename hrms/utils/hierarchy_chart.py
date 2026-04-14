@@ -7,7 +7,7 @@ from frappe import _
 
 
 @frappe.whitelist()
-def get_all_nodes(method, company):
+def get_all_nodes(method: str, company: str):
 	"""Recursively gets all data from nodes"""
 	method = frappe.get_attr(method)
 

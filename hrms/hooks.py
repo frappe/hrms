@@ -98,6 +98,7 @@ jinja = {
 
 # before_install = "hrms.install.before_install"
 after_install = "hrms.install.after_install"
+before_migrate = "hrms.setup.make_people_workspace_standard"
 after_migrate = "hrms.setup.update_select_perm_after_install"
 
 setup_wizard_complete = "hrms.subscription_utils.update_erpnext_access"
@@ -237,6 +238,7 @@ scheduler_events = {
 		"hrms.controllers.employee_reminders.send_work_anniversary_reminders",
 		"hrms.hr.doctype.daily_work_summary_group.daily_work_summary_group.send_summary",
 		"hrms.hr.doctype.interview.interview.send_daily_feedback_reminder",
+		"hrms.hr.doctype.shift_assignment.shift_assignment.mark_expired_shift_assignments_as_inactive",
 		"hrms.hr.doctype.job_opening.job_opening.close_expired_job_openings",
 	],
 	"daily_long": [
@@ -375,3 +377,4 @@ company_data_to_be_ignored = [
 ignore_translatable_strings_from = ["frappe", "erpnext"]
 employee_holiday_list = ["hrms.utils.holiday_list.get_holiday_list_for_employee"]
 export_python_type_annotations = True
+require_type_annotated_api_methods = True

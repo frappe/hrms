@@ -16,18 +16,7 @@ from hrms.tests.utils import HRMSTestSuite
 
 
 class TestCompensatoryLeaveRequest(HRMSTestSuite):
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
-		cls.make_employees()
-
 	def setUp(self):
-		frappe.db.delete("Compensatory Leave Request")
-		frappe.db.delete("Leave Ledger Entry")
-		frappe.db.delete("Leave Allocation")
-		frappe.db.delete("Attendance")
-		frappe.db.delete("Leave Period")
-
 		create_leave_period(add_months(today(), -3), add_months(today(), 3), "_Test Company")
 		self.holiday_list = "_Test Compensatory Leave"
 		create_holiday_list()

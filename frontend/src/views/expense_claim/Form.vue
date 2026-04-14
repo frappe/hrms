@@ -13,12 +13,12 @@
 				:showAttachmentView="true"
 				@validateForm="validateForm"
 				:showDownloadPDFButton="true"
+				@formReloaded="onFormReloaded"
 			>
 				<!-- Child Tables -->
 				<template #expenses="{ isFormReadOnly }">
 					<ExpensesTable
 						v-model:expenseClaim="expenseClaim"
-						:currency="currency"
 						:isReadOnly="isReadOnly || isFormReadOnly"
 						@addExpenseItem="addExpenseItem"
 						@updateExpenseItem="updateExpenseItem"
@@ -29,7 +29,6 @@
 				<template #taxes="{ isFormReadOnly }">
 					<ExpenseTaxesTable
 						v-model:expenseClaim="expenseClaim"
-						:currency="currency"
 						:isReadOnly="isReadOnly || isFormReadOnly"
 						@addExpenseTax="addExpenseTax"
 						@updateExpenseTax="updateExpenseTax"
@@ -40,10 +39,8 @@
 				<template #advances="{ isFormReadOnly }">
 					<ExpenseAdvancesTable
 						v-model:expenseClaim="expenseClaim"
-						:currency="currency"
 						:isReadOnly="isReadOnly || isFormReadOnly"
 					/>
-			
 				</template>
 			</FormView>
 		</ion-content>
@@ -59,8 +56,8 @@ import FormView from "@/components/FormView.vue"
 import ExpensesTable from "@/components/ExpensesTable.vue"
 import ExpenseTaxesTable from "@/components/ExpenseTaxesTable.vue"
 import ExpenseAdvancesTable from "@/components/ExpenseAdvancesTable.vue"
-
 import { getCompanyCurrency } from "@/data/currencies"
+import { useCurrencyConversion } from "@/composables/useCurrencyConversion"
 
 
 const dayjs = inject("$dayjs")
@@ -90,9 +87,10 @@ const tabs = [
 const expenseClaim = ref({
 	employee: currEmployee,
 	company: employeeCompany,
+	doctype: "Expense Claim",
 })
 
-const currency = computed(() => getCompanyCurrency(expenseClaim.value.company))
+const companyCurrency = computed(() => getCompanyCurrency(expenseClaim.value.company))
 
 // get form fields
 const formFields = createResource({
@@ -108,45 +106,69 @@ const formFields = createResource({
 	},
 	onSuccess(_data) {
 		expenseApproverDetails.reload()
+		if (!expenseClaim.value.currency) {
+			employeeCurrency.reload()
+		}
 		companyDetails.reload()
 	},
 })
 formFields.reload()
 
-// resources
+useCurrencyConversion(
+	formFields,
+	expenseClaim,
+	[
+		"total_sanctioned_amount",
+		"total_taxes_and_charges",
+		"total_advance_amount",
+		"grand_total",
+		"total_claimed_amount"
+	]
+)
+
+// resources & helper functions
 const advances = createResource({
 	url: "hrms.hr.doctype.expense_claim.expense_claim.get_advances",
-	params: { employee: currEmployee.value },
-	auto: true,
+	makeParams() {
+		return { expense_claim: expenseClaim.value }
+	},
 	onSuccess(data) {
-		// set advances
-		if (props.id) {
-			expenseClaim.value.advances?.map((advance) => (advance.selected = true))
-		} else {
-			expenseClaim.value.advances = []
-		}
-
-		return data.forEach((advance) => {
-			if (
-				props.id &&
-				expenseClaim.value.advances?.some(
-					(entry) => entry.employee_advance === advance.name
-				)
-			)
-				return
-
-			expenseClaim.value.advances?.push({
-				employee_advance: advance.name,
-				purpose: advance.purpose,
-				posting_date: advance.posting_date,
-				advance_account: advance.advance_account,
-				advance_paid: advance.paid_amount,
-				unclaimed_amount: advance.paid_amount - advance.claimed_amount,
-				allocated_amount: 0,
-			})
-		})
+		selectAllocatedAdvances()
+		addUnallocatedAdvances(data)
 	},
 })
+
+function selectAllocatedAdvances() {
+	if (props.id) {
+		expenseClaim.value?.advances?.map((advance) => (advance.selected = true))
+	} else {
+		expenseClaim.value.advances = []
+	}
+}
+
+function addUnallocatedAdvances(data) {
+	// only show advances for selection in a draft claim
+	const isDraft = expenseClaim.value?.docstatus == 0 || !expenseClaim.value?.docstatus
+	if (!isDraft) return
+
+	const allocatedAdvances = new Set(
+		expenseClaim.value?.advances?.map((advance) => advance.employee_advance)
+	)
+
+	return data.forEach((advance) => {
+		if (props.id && allocatedAdvances.has(advance.employee_advance)) return
+
+		expenseClaim.value?.advances?.push({
+			...advance,
+			selected: false,
+			allocated_amount: 0,
+		})
+	})
+}
+
+function onFormReloaded() {
+	advances.reload()
+}
 
 const expenseApproverDetails = createResource({
 	url: "hrms.api.get_expense_approval_details",
@@ -156,6 +178,22 @@ const expenseApproverDetails = createResource({
 	},
 })
 
+const employeeCurrency = createResource({
+	url: "frappe.client.get_value",
+	makeParams() {
+		return {
+			doctype: "Employee",
+			fieldname: ["salary_currency"],
+			filters: { name: currEmployee.value },
+		};
+	},
+	onSuccess(data) {
+		if (data?.salary_currency) {
+			expenseClaim.value.currency = data.salary_currency;
+		}
+	}
+});
+
 const companyDetails = createResource({
 	url: "hrms.api.get_company_cost_center_and_expense_account",
 	params: { company: expenseClaim.value.company },
@@ -163,6 +201,13 @@ const companyDetails = createResource({
 		expenseClaim.value.cost_center = data?.cost_center
 		expenseClaim.value.payable_account =
 			data?.default_expense_claim_payable_account
+	},
+})
+
+const exchangeRate = createResource({
+	url: "erpnext.setup.utils.get_exchange_rate",
+	onSuccess(data) {
+		expenseClaim.value.exchange_rate = data
 	},
 })
 
@@ -176,8 +221,10 @@ watch(
 		}
 		currEmployee.value = employee_id
 		expenseApproverDetails.fetch({ employee: currEmployee.value })
-	}
+		employeeCurrency.fetch()
+	},
 )
+
 watch(
 	() => expenseClaim.value.company,
 	(company) => {
@@ -185,13 +232,18 @@ watch(
 		companyDetails.fetch({ company: employeeCompany.value })
 	}
 )
+
 watch(
-	() => props.id && expenseClaim.value.expenses,
-	(_) => {
-		if (expenseClaim.value.docstatus === 0) {
-			advances.reload()
-		}
-	}
+	() => expenseClaim.value.currency,
+	() => setExchangeRate()
+)
+
+watch(
+	() => expenseClaim.value.name,
+	() => {
+		advances.reload()
+	},
+	{ immediate: true }
 )
 
 watch(
@@ -235,7 +287,12 @@ function getFilteredFields(fields) {
 
 	if (!props.id) excludeFields.push(...extraFields)
 
-	return fields.filter((field) => !excludeFields.includes(field.fieldname))
+	return fields.filter((field) => {
+		if (excludeFields.includes(field.fieldname)) return false
+
+		if (field.fieldname?.startsWith("base_")) return false
+		return true
+	})
 }
 
 function applyFilters(field) {
@@ -245,6 +302,7 @@ function applyFilters(field) {
 			account_type: "Payable",
 			company: expenseClaim.value.company,
 			is_group: 0,
+			account_currency: expenseClaim.value.currency,
 		}
 	} else if (field.fieldname === "cost_center") {
 		field.linkFilters = {
@@ -364,6 +422,8 @@ function allocateAdvanceAmount() {
 	let amount_to_be_allocated =
 		parseFloat(expenseClaim.value.total_sanctioned_amount) +
 		parseFloat(expenseClaim.value.total_taxes_and_charges)
+
+	if (!amount_to_be_allocated) return
 	let total_advance_amount = 0
 
 	expenseClaim?.value?.advances?.forEach((advance) => {
@@ -387,8 +447,8 @@ function calculateTotalAdvance() {
 	let total_advance_amount = 0
 
 	expenseClaim?.value?.advances?.forEach((advance) => {
-		if (advance.selected) {
-			total_advance_amount += parseFloat(advance.allocated_amount)
+		if (advance.selected || parseFloat(advance.allocated_amount) > 0) {
+			total_advance_amount += parseFloat(advance.allocated_amount || 0)
 		}
 	})
 	expenseClaim.value.total_advance_amount = total_advance_amount
@@ -413,4 +473,16 @@ function validateForm() {
 	})
 }
 
+function setExchangeRate() {
+	if (!expenseClaim.value.currency || !formFields.data) return
+	const exchange_rate_field = formFields.data?.find(
+		(field) => field.fieldname === "exchange_rate"
+	)
+
+	exchangeRate.fetch({
+		from_currency: expenseClaim.value.currency,
+		to_currency: companyCurrency.value,
+	})
+	if (exchange_rate_field) exchange_rate_field.hidden = 0
+}
 </script>

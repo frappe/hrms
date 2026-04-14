@@ -2,34 +2,32 @@
 # See license.txt
 
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, add_months, nowdate
 
 import erpnext
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
-from hrms.payroll.doctype.salary_slip.test_salary_slip import make_employee_salary_slip, setup_test
+from hrms.payroll.doctype.salary_slip.test_salary_slip import make_employee_salary_slip
 from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 	make_salary_slip,
 	make_salary_structure,
 )
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestAdditionalSalary(IntegrationTestCase):
-	def setUp(self):
-		setup_test()
-
+class TestAdditionalSalary(HRMSTestSuite):
 	def test_recurring_additional_salary(self):
 		amount = 0
 		salary_component = None
-		emp_id = make_employee("test_additional@salary.com")
+		emp_id = make_employee("test_additional@salary.com", company="_Test Company")
 		frappe.db.set_value("Employee", emp_id, "relieving_date", add_days(nowdate(), 1800))
 		salary_structure = make_salary_structure(
 			"Test Salary Structure Additional Salary",
 			"Monthly",
 			employee=emp_id,
 			from_date=add_days(nowdate(), -50),
+			company="_Test Company",
 		)
 		add_sal = get_additional_salary(emp_id)
 
@@ -44,13 +42,14 @@ class TestAdditionalSalary(IntegrationTestCase):
 		self.assertEqual(salary_component, add_sal.salary_component)
 
 	def test_disabled_recurring_additional_salary(self):
-		emp_id = make_employee("test_additional@salary.com")
+		emp_id = make_employee("test_additional@salary.com", company="_Test Company")
 
 		salary_structure = make_salary_structure(
 			"Test Salary Structure Additional Salary",
 			"Monthly",
 			employee=emp_id,
 			from_date=add_days(nowdate(), -50),
+			company="_Test Company",
 		)
 		add_sal = get_additional_salary(emp_id)
 		ss = make_employee_salary_slip(emp_id, "Monthly", salary_structure=salary_structure.name)
@@ -71,10 +70,13 @@ class TestAdditionalSalary(IntegrationTestCase):
 		salary_component = None
 		date = nowdate()
 
-		emp_id = make_employee("test_additional@salary.com")
+		emp_id = make_employee("test_additional@salary.com", company="_Test Company")
 		frappe.db.set_value("Employee", emp_id, "relieving_date", add_days(date, 1800))
 		salary_structure = make_salary_structure(
-			"Test Salary Structure Additional Salary", "Monthly", employee=emp_id
+			"Test Salary Structure Additional Salary",
+			"Monthly",
+			employee=emp_id,
+			company="_Test Company",
 		)
 		add_sal = get_additional_salary(emp_id, recurring=False, payroll_date=date)
 
@@ -108,11 +110,14 @@ class TestAdditionalSalary(IntegrationTestCase):
 		self.assertIsNone(salary_component)
 
 	def test_overwrite_salary_structure_amount(self):
-		emp_id = make_employee("test_additional@salary.com")
+		emp_id = make_employee("test_additional@salary.com", company="_Test Company")
 
 		# Salary Structure created with HRA Salary Component amount as 3000
 		salary_structure = make_salary_structure(
-			"Test Salary Structure Additional Salary", "Monthly", employee=emp_id
+			"Test Salary Structure Additional Salary",
+			"Monthly",
+			employee=emp_id,
+			company="_Test Company",
 		)
 		self.assertEqual(salary_structure.earnings[1].amount, 3000)
 
@@ -131,9 +136,13 @@ class TestAdditionalSalary(IntegrationTestCase):
 				(d for d in salary_slip.get("deductions") if d.salary_component == "TDS"), frappe._dict()
 			)
 
-		emp_id = make_employee("test_additional@salary.com")
+		emp_id = make_employee("test_additional@salary.com", company="_Test Company")
 		salary_structure = make_salary_structure(
-			"Test Salary Structure Additional Salary", "Monthly", employee=emp_id, test_tax=True
+			"Test Salary Structure Additional Salary",
+			"Monthly",
+			employee=emp_id,
+			test_tax=True,
+			company="_Test Company",
 		)
 		date = nowdate()
 
@@ -154,13 +163,14 @@ class TestAdditionalSalary(IntegrationTestCase):
 		self.assertNotEqual(tds_component.amount, 5000)
 
 	def test_validate_duplicate_or_overlapping_additional_salary(self):
-		emp_id = make_employee("test_additional@salary.com")
+		emp_id = make_employee("test_additional@salary.com", company="_Test Company")
 		date = nowdate()
 		make_salary_structure(
 			"Test Salary Structure Additional Salary",
 			"Monthly",
 			employee=emp_id,
 			from_date=add_days(date, -50),
+			company="_Test Company",
 		)
 		get_additional_salary(emp_id, overwrite_salary_structure=1)
 		additional_salary_doc = frappe.get_doc(
@@ -182,6 +192,7 @@ def get_additional_salary(
 ):
 	create_salary_component("Recurring Salary Component")
 	add_sal = frappe.new_doc("Additional Salary")
+	add_sal.company = "_Test Company"
 	add_sal.employee = emp_id
 	add_sal.salary_component = salary_component or "Recurring Salary Component"
 
@@ -192,7 +203,7 @@ def get_additional_salary(
 	add_sal.overwrite_salary_structure_amount = overwrite_salary_structure
 
 	add_sal.amount = 5000
-	add_sal.currency = erpnext.get_default_currency()
+	add_sal.currency = "INR"
 	add_sal.save()
 	add_sal.submit()
 

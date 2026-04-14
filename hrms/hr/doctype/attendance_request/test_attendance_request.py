@@ -8,7 +8,6 @@ from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.attendance_request.attendance_request import OverlappingAttendanceRequestError
 from hrms.hr.doctype.leave_application.test_leave_application import make_allocation_record
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
-	make_holiday_list,
 	make_leave_application,
 )
 from hrms.tests.test_utils import add_date_to_holiday_list, get_first_sunday
@@ -16,23 +15,9 @@ from hrms.tests.utils import HRMSTestSuite
 
 
 class TestAttendanceRequest(HRMSTestSuite):
-	@classmethod
-	def setUpClass(cls):
-		super().setUpClass()
-		cls.make_employees()
-
 	def setUp(self):
-		for doctype in ["Attendance Request", "Attendance"]:
-			frappe.db.delete(doctype)
-
-		self.from_date = get_year_start(add_months(getdate(), -1))
-		self.to_date = get_year_ending(getdate())
-		self.holiday_list = make_holiday_list(
-			from_date=self.from_date, to_date=self.to_date, add_weekly_offs=False
-		)
-
+		self.holiday_list = "Salary Slip Test Holiday List"
 		self.employee = get_employee()
-		frappe.db.set_value("Employee", self.employee.name, "holiday_list", self.holiday_list)
 
 	def test_attendance_request_overlap(self):
 		create_attendance_request(employee=self.employee.name, reason="On Duty", company="_Test Company")
@@ -66,11 +51,15 @@ class TestAttendanceRequest(HRMSTestSuite):
 	def test_on_duty_attendance_request(self):
 		"Test creation of Attendance from Attendance Request, on duty."
 		attendance_request = create_attendance_request(
-			employee=self.employee.name, reason="On Duty", company="_Test Company"
+			employee=self.employee.name,
+			reason="On Duty",
+			company="_Test Company",
+			from_date=getdate(),
+			to_date=getdate(),
 		)
 		records = self.get_attendance_records(attendance_request.name)
 
-		self.assertEqual(len(records), 2)
+		self.assertEqual(len(records), 1)
 		self.assertEqual(records[0].status, "Present")
 		self.assertEqual(records[0].docstatus, 1)
 
@@ -110,6 +99,7 @@ class TestAttendanceRequest(HRMSTestSuite):
 
 	def test_skip_attendance_on_holiday(self):
 		today = getdate()
+		frappe.db.delete("Holiday", {"parent": self.holiday_list})
 		add_date_to_holiday_list(today, self.holiday_list)
 
 		attendance_request = create_attendance_request(
@@ -123,6 +113,9 @@ class TestAttendanceRequest(HRMSTestSuite):
 		self.assertEqual(records[0].status, "Present")
 
 	def test_skip_attendance_on_leave(self):
+		self.from_date = get_year_start(add_months(getdate(), -1))
+		self.to_date = get_year_ending(getdate())
+
 		frappe.delete_doc_if_exists("Leave Type", "Test Skip Attendance", force=1)
 		leave_type = frappe.get_doc(
 			dict(leave_type_name="Test Skip Attendance", doctype="Leave Type")
@@ -130,8 +123,8 @@ class TestAttendanceRequest(HRMSTestSuite):
 
 		make_allocation_record(leave_type=leave_type.name, from_date=self.from_date, to_date=self.to_date)
 		today = getdate()
+		frappe.db.delete("Holiday", {"parent": self.holiday_list})
 		make_leave_application(self.employee.name, today, today, leave_type.name)
-
 		attendance_request = create_attendance_request(
 			employee=self.employee.name, reason="On Duty", company="_Test Company"
 		)
@@ -250,6 +243,71 @@ class TestAttendanceRequest(HRMSTestSuite):
 		)
 		self.assertEqual(half_day_status, "Absent")
 
+	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": True})
+	def test_overlap_with_different_shifts(self):
+		shift_1 = create_shift("Morning Shift", "08:00:00", "12:00:00")
+		shift_2 = create_shift("Evening Shift", "14:00:00", "18:00:00")
+
+		create_shift_assignment(
+			self.employee.name, shift_1.name, add_days(getdate(), -1), add_days(getdate(), 1)
+		)
+		create_shift_assignment(
+			self.employee.name, shift_2.name, add_days(getdate(), -1), add_days(getdate(), 1)
+		)
+
+		today = getdate()
+
+		frappe.get_doc(
+			{
+				"doctype": "Attendance",
+				"employee": self.employee.name,
+				"attendance_date": today,
+				"status": "Absent",
+				"shift": shift_1.name,
+				"company": "_Test Company",
+			}
+		).insert()
+
+		frappe.get_doc(
+			{
+				"doctype": "Attendance",
+				"employee": self.employee.name,
+				"attendance_date": today,
+				"status": "Absent",
+				"shift": shift_2.name,
+				"company": "_Test Company",
+			}
+		).insert()
+
+		create_attendance_request(
+			employee=self.employee.name,
+			reason="On Duty",
+			company="_Test Company",
+			from_date=today,
+			to_date=today,
+			shift=shift_1.name,
+		)
+
+		# same dates with a different shift should NOT overlap
+		self.assertTrue(
+			create_attendance_request(
+				employee=self.employee.name,
+				reason="On Duty",
+				company="_Test Company",
+				from_date=today,
+				to_date=today,
+				shift=shift_2.name,
+			)
+		)
+
+		attendances = frappe.db.get_all(
+			"Attendance",
+			{"employee": self.employee.name, "attendance_date": today, "status": "Present"},
+			pluck="name",
+		)
+
+		self.assertEqual(len(attendances), 2)
+
 
 def get_employee():
 	return frappe.get_doc("Employee", "_T-Employee-00001")
@@ -267,6 +325,7 @@ def create_attendance_request(**args: dict) -> dict:
 			"to_date": today,
 			"reason": "On Duty",
 			"company": "_Test Company",
+			"shift": args.shift or None,
 		}
 	)
 
@@ -274,3 +333,24 @@ def create_attendance_request(**args: dict) -> dict:
 		attendance_request.update(args)
 
 	return attendance_request.submit()
+
+
+def create_shift(name, start_time, end_time):
+	if frappe.db.exists("Shift Type", name):
+		return frappe.get_doc("Shift Type", name)
+	return frappe.get_doc(
+		{"doctype": "Shift Type", "__newname": name, "start_time": start_time, "end_time": end_time}
+	).insert()
+
+
+def create_shift_assignment(employee, shift_type, start_date, end_date):
+	return frappe.get_doc(
+		{
+			"doctype": "Shift Assignment",
+			"employee": employee,
+			"shift_type": shift_type,
+			"start_date": start_date,
+			"end_date": end_date,
+			"company": "_Test Company",
+		}
+	).submit()
