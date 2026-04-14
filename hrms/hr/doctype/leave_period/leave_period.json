@@ -34,6 +34,7 @@
    "default": "0",
    "fieldname": "is_active",
    "fieldtype": "Check",
+   "in_list_view": 1,
    "label": "Is Active"
   },
   {
@@ -56,7 +57,7 @@
   }
  ],
  "links": [],
- "modified": "2024-03-27 13:10:01.453851",
+ "modified": "2026-04-14 12:24:35.036495",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Period",
@@ -100,6 +101,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "from_date, to_date, company",
  "sort_field": "creation",
  "sort_order": "DESC",

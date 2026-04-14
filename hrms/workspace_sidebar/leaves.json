@@ -189,8 +189,8 @@
    "icon": "",
    "indent": 0,
    "keep_closed": 0,
-   "label": "Leave Block List",
-   "link_to": "Leave Block List",
+   "label": "Leave Type",
+   "link_to": "Leave Type",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
@@ -201,8 +201,8 @@
    "icon": "",
    "indent": 0,
    "keep_closed": 0,
-   "label": "Leave Type",
-   "link_to": "Leave Type",
+   "label": "Leave Block List",
+   "link_to": "Leave Block List",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
@@ -221,7 +221,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-03-16 11:20:54.673263",
+ "modified": "2026-04-14 12:18:59.398277",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leaves",

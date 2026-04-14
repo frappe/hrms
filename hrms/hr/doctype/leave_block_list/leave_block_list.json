@@ -76,6 +76,7 @@
   {
    "fieldname": "leave_type",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Leave Type",
    "options": "Leave Type"
   },
@@ -88,7 +89,7 @@
  "icon": "fa fa-calendar",
  "idx": 1,
  "links": [],
- "modified": "2026-03-16 12:48:24.559364",
+ "modified": "2026-04-14 12:22:34.174445",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Block List",
