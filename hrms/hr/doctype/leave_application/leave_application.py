@@ -85,13 +85,13 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			"Doctor / Medical Appointment",
 			"Personal Work",
 			"Study / Exams",
-			"Travelling",
+			"Travel",
 			"Vacation",
 			"Getting Married",
 			"Wedding / Family Function",
 			"Family Emergency",
 			"Break",
-			"Grievance leave",
+			"Grievance Leave",
 			"Other (Specify)",
 		]
 		employee: DF.Link

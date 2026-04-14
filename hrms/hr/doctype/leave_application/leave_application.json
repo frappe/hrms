@@ -150,7 +150,7 @@
    "fieldname": "description",
    "fieldtype": "Select",
    "label": "Reason",
-   "options": "\nSick\nDoctor / Medical Appointment\nPersonal Work\nStudy / Exams\nTravelling\nVacation\nGetting Married\nWedding / Family Function\nFamily Emergency\nBreak\nGrievance leave\nOther (Specify)"
+   "options": "\nSick\nDoctor / Medical Appointment\nPersonal Work\nStudy / Exams\nTravel\nVacation\nGetting Married\nWedding / Family Function\nFamily Emergency\nBreak\nGrievance Leave\nOther (Specify)"
   },
   {
    "fieldname": "section_break_7",
@@ -257,7 +257,8 @@
    "depends_on": "eval: doc.description == \"Other (Specify)\"",
    "fieldname": "specify_reason",
    "fieldtype": "Small Text",
-   "label": "Specify Reason"
+   "label": "Specify Reason",
+   "mandatory_depends_on": "eval: doc.description == \"Other (Specify)\""
   }
  ],
  "icon": "fa fa-calendar",
@@ -265,7 +266,7 @@
  "is_submittable": 1,
  "links": [],
  "max_attachments": 3,
- "modified": "2026-03-16 12:22:47.066429",
+ "modified": "2026-04-14 12:53:22.924694",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Application",
