@@ -48,6 +48,7 @@ const formFields = createResource({
 
 		return fields.map((field) => {
 			if (field.fieldname === "half_day_date") field.hidden = true
+			if (field.fieldname === "specify_reason") field.hidden = true
 
 			if (field.fieldname === "posting_date") field.default = today
 
@@ -101,6 +102,13 @@ watch(
 watch(
 	() => leaveApplication.value.half_day,
 	(half_day) => setHalfDayDate(half_day)
+)
+
+watch(
+	() => leaveApplication.value.description,
+	(description) => {
+		toggleSpecifyReason(description)
+	}
 )
 
 watch(
@@ -287,5 +295,17 @@ function areValuesSet() {
 function validateForm() {
 	setHalfDayDate(leaveApplication.value.half_day)
 	leaveApplication.value.employee = currEmployee.value
+}
+
+function toggleSpecifyReason(description) {
+	const specifyReason = formFields.data.find((f) => f.fieldname === "specify_reason")
+	if (description === "Other (Specify)") {
+		specifyReason.hidden = false
+		specifyReason.reqd = true
+	} else {
+		specifyReason.hidden = true
+		specifyReason.reqd = false
+		leaveApplication.value.specify_reason = ""
+	}
 }
 </script>

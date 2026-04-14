@@ -150,7 +150,7 @@
    "fieldname": "description",
    "fieldtype": "Select",
    "label": "Reason",
-   "options": "\nSick\nDoctor / Medical Appointment\nPersonal Work\nStudy / Exams\nTravel\nVacation\nGetting Married\nWedding / Family Function\nFamily Emergency\nBreak\nGrievance Leave\nOther (Specify)"
+   "options": "\nSick\nDoctor/Medical Appointment\nPersonal Work\nStudy/Exams\nTravel\nVacation\nGetting Married\nWedding/Family Function\nFamily Emergency\nBreak\nGrievance Leave\nOther (Specify)"
   },
   {
    "fieldname": "section_break_7",
@@ -266,7 +266,7 @@
  "is_submittable": 1,
  "links": [],
  "max_attachments": 3,
- "modified": "2026-04-14 12:53:22.924694",
+ "modified": "2026-04-14 16:38:12.367182",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Application",
