@@ -17,6 +17,7 @@ from frappe.utils import cint, cstr, formatdate, getdate
 from frappe.utils.nestedset import get_descendants_of
 
 from hrms.utils import date_diff, get_date_range
+from hrms.utils.holiday_list import get_holiday_list_for_employee
 
 Filters = frappe._dict
 
@@ -445,10 +446,11 @@ def get_holiday_map(filters: Filters) -> dict[str, list[dict]]:
 
 def get_rows(employee_details: dict, filters: Filters, holiday_map: dict, attendance_map: dict) -> list[dict]:
 	records = []
-	default_holiday_list = frappe.get_cached_value("Company", filters.company, "default_holiday_list")
-
 	for employee, details in employee_details.items():
-		emp_holiday_list = details.holiday_list or default_holiday_list
+		emp_holiday_list = get_holiday_list_for_employee(
+			employee, as_on=filters.end_date, raise_exception=False
+		)
+
 		holidays = holiday_map.get(emp_holiday_list)
 
 		if filters.summarized_view:
