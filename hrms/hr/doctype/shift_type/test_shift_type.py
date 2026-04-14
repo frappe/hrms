@@ -609,6 +609,44 @@ class TestShiftType(HRMSTestSuite):
 		)
 		self.assertIsNone(attendance)
 
+	def test_skip_marking_absent_on_weekly_off_via_holiday_list_assignment(self):
+		"""
+		Tests that Absent is not marked on Weekly Off days when the employee's
+		holiday list is resolved through a Holiday List Assignment (Employee.holiday_list
+		is intentionally left blank). Previously, Shift Type imported ERPNext's
+		get_holiday_list_for_employee which ignored HLA records, causing Absent to be
+		stamped on every day including Weekly Offs.
+		"""
+		from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+			create_holiday_list_assignment,
+		)
+
+		employee = make_employee(
+			"test_employee_hla_weekly_off@example.com",
+			company="_Test Company",
+		)
+		# leave Employee.holiday_list blank; rely on HLA
+		frappe.db.set_value("Employee", employee, "holiday_list", None)
+
+		# assign holiday list via HLA (Sundays are weekly offs in self.holiday_list)
+		create_holiday_list_assignment("Employee", employee, self.holiday_list)
+
+		shift_type = setup_shift_type(shift_type="Test Absent HLA Weekly Off")
+		shift_type.holiday_list = None  # force resolution through employee's HLA
+		shift_type.save()
+
+		first_sunday = get_first_sunday(self.holiday_list, for_date=getdate())
+		make_shift_assignment(shift_type.name, employee, first_sunday)
+
+		shift_type.process_auto_attendance()
+
+		# Weekly Off day must not receive an Absent attendance record
+		attendance = frappe.db.get_value(
+			"Attendance",
+			{"attendance_date": first_sunday, "employee": employee},
+		)
+		self.assertIsNone(attendance)
+
 	def test_skip_absent_marking_for_a_fallback_default_shift(self):
 		"""
 		Tests if an employee is not marked absent for default shift

@@ -6,7 +6,10 @@ from frappe.utils import add_days, get_year_ending, get_year_start, getdate
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
-from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import assign_holiday_list
+from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+	assign_holiday_list,
+	create_holiday_list_assignment,
+)
 from hrms.hr.doctype.leave_allocation.leave_allocation import OverlapError
 from hrms.hr.doctype.leave_application.test_leave_application import make_allocation_record
 from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
@@ -15,7 +18,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
 )
-from hrms.tests.test_utils import create_company, create_department, get_first_day_for_prev_month
+from hrms.tests.test_utils import create_company, create_department, get_first_day_for_prev_month, get_first_sunday
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -396,6 +399,52 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 		self.assertEqual(absent[0], 1)
 		self.assertEqual(present[1], 1)
 		self.assertEqual(leaves[2], 1)
+
+	def test_holiday_list_assignment_reflected_in_report(self):
+		"""
+		Tests that Weekly Off / Holiday markers from a Holiday List Assignment are
+		shown in the Monthly Attendance Sheet when Employee.holiday_list is blank.
+		Previously the report read Employee.holiday_list (static field) and ignored
+		Holiday List Assignment records entirely.
+		"""
+		previous_month_first = get_first_day_for_prev_month()
+		date = getdate()
+		from_date = get_year_start(date)
+		to_date = get_year_ending(date)
+		holiday_list = make_holiday_list(list_name="Test HLA Report Holiday List", from_date=from_date, to_date=to_date)
+
+		employee = make_employee("test_hla_report@example.com", company=self.company)
+		# leave Employee.holiday_list blank; rely on HLA
+		frappe.db.set_value("Employee", employee, "holiday_list", None)
+
+		# assign holiday list via HLA
+		create_holiday_list_assignment("Employee", employee, holiday_list)
+
+		# mark attendance on one working day
+		mark_attendance(employee, previous_month_first, "Present")
+
+		filters = frappe._dict(
+			{
+				"month": previous_month_first.month,
+				"year": previous_month_first.year,
+				"company": self.company,
+				"employee": employee,
+				"filter_based_on": self.filter_based_on,
+			}
+		)
+		report = execute(filters=filters)
+		self.assertTrue(report[1], "Expected at least one row in the report")
+
+		row = report[1][0]
+
+		# find the first Sunday (weekly off) in the previous month from this holiday list
+		first_sunday = get_first_sunday(holiday_list, for_date=previous_month_first)
+		if first_sunday and first_sunday.month == previous_month_first.month:
+			self.assertEqual(
+				row[date_key(first_sunday)],
+				"WO",
+				"Weekly Off from Holiday List Assignment must be shown as WO in the report",
+			)
 
 	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_validations(self):
