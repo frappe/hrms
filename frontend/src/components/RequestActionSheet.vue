@@ -85,6 +85,7 @@
 			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t z-[100] p-4"
 		>
 			<Button
+				v-if="!isSelfLeaveRequest || !preventSelfLeaveApproval"
 				@click="updateDocumentStatus({ status: 'Rejected' })"
 				class="w-full py-5"
 				variant="subtle"
@@ -97,6 +98,7 @@
 			</Button>
 
 			<Button
+				v-if="!isSelfLeaveRequest || !preventSelfLeaveApproval"
 				@click="updateDocumentStatus({ status: 'Approved' })"
 				class="w-full py-5"
 				variant="solid"
@@ -132,6 +134,7 @@
 			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t z-[100] p-4"
 		>
 			<Button
+				v-if="!isSelfLeaveRequest || !preventSelfLeaveApproval"
 				@click="updateDocumentStatus({ docstatus: 2 })"
 				class="w-full py-5"
 				variant="subtle"
@@ -188,6 +191,10 @@ const props = defineProps({
 	},
 	modelValue: {
 		type: Object,
+		required: true,
+	},
+	preventSelfLeaveApproval: {
+		type: Boolean,
 		required: true,
 	},
 })
@@ -337,6 +344,13 @@ const openFormView = () => {
 onMounted(() => {
 	workflow.value = useWorkflow(props.modelValue.doctype)
 })
+
+const sessionEmployee = inject("$employee")
+const currEmployee = ref(sessionEmployee.data.name)
+
+const isSelfLeaveRequest = computed(() => {
+  return document?.doc?.employee === currEmployee.value;
+});
 </script>
 
 <style scoped>

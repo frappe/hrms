@@ -37,7 +37,11 @@
 		:initial-breakpoint="1"
 		:breakpoints="[0, 1]"
 	>
-		<RequestActionSheet :fields="fieldsMap[selectedRequest?.doctype]" v-model="selectedRequest" />
+		<RequestActionSheet 
+			:fields="fieldsMap[selectedRequest?.doctype]" 
+			v-model="selectedRequest"
+			:preventSelfLeaveApproval="props.preventSelfLeaveApproval"
+		/>
 	</ion-modal>
 </template>
 
@@ -77,6 +81,10 @@ const props = defineProps({
 	emptyStateMessage: {
 		type: String,
 		default: "",
+	},
+	preventSelfLeaveApproval: {
+		type: Boolean,
+		required: true,
 	},
 })
 
