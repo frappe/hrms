@@ -24,6 +24,7 @@
 							:items="myLeaves.data"
 							:addListButton="true"
 							listButtonRoute="LeaveApplicationListView"
+							:preventSelfLeaveApproval="preventSelfLeaveApproval"
 						/>
 					</div>
 					<Holidays />
@@ -41,6 +42,22 @@ import LeaveBalance from "@/components/LeaveBalance.vue"
 import RequestList from "@/components/RequestList.vue"
 import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
 import Holidays from "@/components/Holidays.vue"
+import { ref, onMounted } from "vue";
+import { createResource } from "frappe-ui";
 
 import { myLeaves } from "@/data/leaves"
+
+const preventSelfLeaveApproval = ref("")
+
+const hr_setting_leave_approval = createResource({
+  url: "hrms.api.get_hr_settings",
+  onSuccess(data) {
+    preventSelfLeaveApproval.value = data?.prevent_self_leave_approval === 1;
+  },
+})
+
+onMounted(() => {
+  hr_setting_leave_approval.reload()
+})
+
 </script>
