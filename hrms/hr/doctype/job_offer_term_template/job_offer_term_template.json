@@ -25,7 +25,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-24 16:34:57.674790",
+ "modified": "2026-04-16 13:01:10.285764",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer Term Template",
@@ -57,8 +57,10 @@
    "write": 1
   },
   {
+   "create": 1,
    "read": 1,
-   "role": "HR User"
+   "role": "HR User",
+   "write": 1
   }
  ],
  "row_format": "Dynamic",

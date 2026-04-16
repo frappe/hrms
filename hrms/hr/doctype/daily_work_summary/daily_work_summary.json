@@ -36,7 +36,7 @@
  ],
  "in_create": 1,
  "links": [],
- "modified": "2026-04-07 18:28:53.092864",
+ "modified": "2026-04-16 12:52:47.429304",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Daily Work Summary",
@@ -48,7 +48,6 @@
   },
   {
    "read": 1,
-   "report": 1,
    "role": "HR User"
   },
   {

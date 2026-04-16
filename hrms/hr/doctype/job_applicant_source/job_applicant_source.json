@@ -27,7 +27,7 @@
   }
  ],
  "links": [],
- "modified": "2026-04-09 18:40:30.740866",
+ "modified": "2026-04-16 12:58:16.397378",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Applicant Source",
@@ -45,7 +45,6 @@
   {
    "create": 1,
    "read": 1,
-   "report": 1,
    "role": "HR User",
    "write": 1
   },
@@ -60,10 +59,6 @@
    "role": "HR Manager",
    "share": 1,
    "write": 1
-  },
-  {
-   "role": "HR User",
-   "select": 1
   }
  ],
  "quick_entry": 1,

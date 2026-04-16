@@ -218,7 +218,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-07 18:21:45.116409",
+ "modified": "2026-04-16 12:55:29.457937",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Exit Interview",
@@ -239,7 +239,6 @@
   },
   {
    "read": 1,
-   "report": 1,
    "role": "HR User"
   },
   {

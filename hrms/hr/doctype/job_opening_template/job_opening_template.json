@@ -114,6 +114,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
  "modified": "2026-03-30 14:57:27.717762",
 =======
  "modified": "2026-03-24 16:41:30.040870",
@@ -124,6 +125,9 @@
 =======
  "modified": "2026-04-09 18:30:25.105332",
 >>>>>>> 4ad1deca (fix: deault perm for HR manager & HR user)
+=======
+ "modified": "2026-04-16 13:05:04.934642",
+>>>>>>> 44ca81e2 (fix: add default perms for HR user & remove unnecessary perms)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening Template",
@@ -150,8 +154,10 @@
    "write": 1
   },
   {
+   "create": 1,
+   "read": 1,
    "role": "HR User",
-   "select": 1
+   "write": 1
   }
  ],
  "row_format": "Dynamic",
