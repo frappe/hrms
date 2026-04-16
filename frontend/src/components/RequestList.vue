@@ -37,7 +37,7 @@
 		:initial-breakpoint="1"
 		:breakpoints="[0, 1]"
 	>
-		<RequestActionSheet 
+		<RequestActionSheet
 			:fields="fieldsMap[selectedRequest?.doctype]" 
 			v-model="selectedRequest"
 		/>

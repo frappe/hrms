@@ -43,5 +43,4 @@ import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
 import Holidays from "@/components/Holidays.vue"
 
 import { myLeaves } from "@/data/leaves"
-
 </script>
