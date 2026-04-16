@@ -14,8 +14,8 @@
  "idx": 0,
  "is_public": 1,
  "is_standard": 1,
- "last_synced_on": "2026-04-09 17:49:28.227780",
- "modified": "2026-04-09 17:53:47.303664",
+ "last_synced_on": "2026-04-16 17:14:16.020107",
+ "modified": "2026-04-16 17:18:58.677457",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Timesheet Activity Breakup",
@@ -31,12 +31,6 @@
   },
   {
    "role": "HR User"
-  },
-  {
-   "role": "Manufacturing User"
-  },
-  {
-   "role": "Accounts User"
   },
   {
    "role": "Employee"
