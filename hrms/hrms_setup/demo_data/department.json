@@ -1,0 +1,27 @@
+[
+    {
+        "doctype": "Department",
+        "department_name": "Engineering",
+        "company": "__DEMO_COMPANY__"
+    },
+    {
+        "doctype": "Department",
+        "department_name": "Sales",
+        "company": "__DEMO_COMPANY__"
+    },
+    {
+        "doctype": "Department",
+        "department_name": "HR",
+        "company": "__DEMO_COMPANY__"
+    },
+    {
+        "doctype": "Department",
+        "department_name": "Finance",
+        "company": "__DEMO_COMPANY__"
+    },
+    {
+        "doctype": "Department",
+        "department_name": "Operations",
+        "company": "__DEMO_COMPANY__"
+    }
+]

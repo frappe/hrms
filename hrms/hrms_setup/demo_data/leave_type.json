@@ -1,0 +1,43 @@
+[
+    {
+        "doctype": "Leave Type",
+        "leave_type_name": "Casual Leave",
+        "name": "Casual Leave",
+        "allow_encashment": 0,
+        "is_carry_forward": 0,
+        "include_holiday": 1
+    },
+    {
+        "doctype": "Leave Type",
+        "leave_type_name": "Sick Leave",
+        "name": "Sick Leave",
+        "allow_encashment": 0,
+        "is_carry_forward": 1,
+        "include_holiday": 1
+    },
+    {
+        "doctype": "Leave Type",
+        "leave_type_name": "Earned Leave",
+        "name": "Earned Leave",
+        "allow_encashment": 1,
+        "is_carry_forward": 1,
+        "include_holiday": 1
+    },
+    {
+        "doctype": "Leave Type",
+        "leave_type_name": "Maternity Leave",
+        "name": "Maternity Leave",
+        "allow_encashment": 0,
+        "is_carry_forward": 0,
+        "include_holiday": 1
+    },
+    {
+        "doctype": "Leave Type",
+        "leave_type_name": "Compensatory Leave",
+        "name": "Compensatory Leave",
+        "is_compensatory": 1,
+        "allow_encashment": 0,
+        "is_carry_forward": 0,
+        "include_holiday": 1
+    }
+]

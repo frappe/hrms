@@ -1,0 +1,14 @@
+[
+    {
+        "doctype": "Employment Type",
+        "employee_type_name": "Full-time"
+    },
+    {
+        "doctype": "Employment Type",
+        "employee_type_name": "Part-time"
+    },
+    {
+        "doctype": "Employment Type",
+        "employee_type_name": "Contract"
+    }
+]

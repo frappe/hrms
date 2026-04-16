@@ -1,0 +1,20 @@
+[
+    {
+        "doctype": "Shift Type",
+        "shift_type_name": "General Shift",
+        "start_time": "09:00:00",
+        "end_time": "18:00:00"
+    },
+    {
+        "doctype": "Shift Type",
+        "shift_type_name": "Morning Shift",
+        "start_time": "06:00:00",
+        "end_time": "14:00:00"
+    },
+    {
+        "doctype": "Shift Type",
+        "shift_type_name": "Night Shift",
+        "start_time": "22:00:00",
+        "end_time": "06:00:00"
+    }
+]

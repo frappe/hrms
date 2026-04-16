@@ -1,0 +1,30 @@
+[
+    {
+        "doctype": "Salary Component",
+        "salary_component": "Special Allowance",
+        "salary_component_abbr": "SA",
+        "type": "Earning",
+        "amount_based_on_formula": 0
+    },
+    {
+        "doctype": "Salary Component",
+        "salary_component": "Conveyance Allowance",
+        "salary_component_abbr": "CA",
+        "type": "Earning",
+        "amount_based_on_formula": 0
+    },
+    {
+        "doctype": "Salary Component",
+        "salary_component": "Medical Allowance",
+        "salary_component_abbr": "MA",
+        "type": "Earning",
+        "amount_based_on_formula": 0
+    },
+    {
+        "doctype": "Salary Component",
+        "salary_component": "Performance Bonus",
+        "salary_component_abbr": "PB",
+        "type": "Earning",
+        "amount_based_on_formula": 0
+    }
+]

@@ -1,0 +1,70 @@
+[
+    {
+        "doctype": "Designation",
+        "designation_name": "Junior Software Engineer"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Software Engineer"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Senior Software Engineer"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Tech Lead"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Engineering Manager"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Sales Executive"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Senior Sales Executive"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Sales Manager"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "HR Executive"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "HR Manager"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Finance Executive"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Finance Analyst"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Finance Manager"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Operations Executive"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Operations Manager"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Business Development Executive"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Business Development Manager"
+    }
+]

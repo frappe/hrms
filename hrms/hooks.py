@@ -38,6 +38,8 @@ app_include_css = "hrms.bundle.css"
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "hrms/public/scss/website"
 
+web_include_js = ["/assets/hrms/js/utils/demo.js"]
+
 # include js, css files in header of web form
 # webform_include_js = {"doctype": "public/js/doctype.js"}
 # webform_include_css = {"doctype": "public/css/doctype.css"}
@@ -101,7 +103,21 @@ after_install = "hrms.install.after_install"
 before_migrate = "hrms.setup.make_people_workspace_standard"
 after_migrate = "hrms.setup.update_select_perm_after_install"
 
+setup_wizard_requires = "assets/hrms/js/setup_wizard.js"
+setup_wizard_stages = "hrms.hrms_setup.setup_wizard.get_setup_stages"
+
 setup_wizard_complete = "hrms.subscription_utils.update_erpnext_access"
+
+standard_navbar_items = [
+	{
+		"item_label": "Delete Demo Data",
+		"item_type": "Action",
+		"action": "hrms.demo.clear_demo();",
+		"is_standard": 1,
+		"condition": "eval: frappe.boot.sysdefaults.demo_company && frappe.boot.sysdefaults.demo_company.length > 0",
+		"icon": "trash",
+	},
+]
 
 # Uninstallation
 # ------------
