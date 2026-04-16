@@ -40,7 +40,6 @@
 		<RequestActionSheet 
 			:fields="fieldsMap[selectedRequest?.doctype]" 
 			v-model="selectedRequest"
-			:preventSelfLeaveApproval="props.preventSelfLeaveApproval"
 		/>
 	</ion-modal>
 </template>
@@ -81,10 +80,6 @@ const props = defineProps({
 	emptyStateMessage: {
 		type: String,
 		default: "",
-	},
-	preventSelfLeaveApproval: {
-		type: Boolean,
-		required: true,
 	},
 })
 

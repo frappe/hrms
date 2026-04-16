@@ -77,11 +77,12 @@
 </template>
 
 <script setup>
-import { createResource, createListResource, toast, FeatherIcon } from "frappe-ui"
+import { createListResource, toast, FeatherIcon } from "frappe-ui"
 import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
 
 import { formatTimestamp } from "@/utils/formatters"
+import { settings } from "@/data/settings"
 
 const DOCTYPE = "Employee Checkin"
 
@@ -93,10 +94,6 @@ const checkinTimestamp = ref(null)
 const latitude = ref(0)
 const longitude = ref(0)
 const locationStatus = ref("")
-const settings = createResource({
-	url: "hrms.api.get_hr_settings",
-	auto: true,
-})
 
 const checkins = createListResource({
 	doctype: DOCTYPE,

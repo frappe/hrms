@@ -85,7 +85,6 @@
 			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t z-[100] p-4"
 		>
 			<Button
-				v-if="!isSelfLeaveRequest || !preventSelfLeaveApproval"
 				@click="updateDocumentStatus({ status: 'Rejected' })"
 				class="w-full py-5"
 				variant="subtle"
@@ -98,7 +97,6 @@
 			</Button>
 
 			<Button
-				v-if="!isSelfLeaveRequest || !preventSelfLeaveApproval"
 				@click="updateDocumentStatus({ status: 'Approved' })"
 				class="w-full py-5"
 				variant="solid"
@@ -134,7 +132,6 @@
 			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t z-[100] p-4"
 		>
 			<Button
-				v-if="!isSelfLeaveRequest || !preventSelfLeaveApproval"
 				@click="updateDocumentStatus({ docstatus: 2 })"
 				class="w-full py-5"
 				variant="subtle"
@@ -174,6 +171,7 @@ import FilePreviewModal from "@/components/FilePreviewModal.vue"
 import WorkflowActionSheet from "@/components/WorkflowActionSheet.vue"
 
 import { getCompanyCurrency } from "@/data/currencies"
+import { settings } from "@/data/settings"
 import { formatCurrency } from "@/utils/formatters"
 
 import useWorkflow from "@/composables/workflow"
@@ -191,10 +189,6 @@ const props = defineProps({
 	},
 	modelValue: {
 		type: Object,
-		required: true,
-	},
-	preventSelfLeaveApproval: {
-		type: Boolean,
 		required: true,
 	},
 })
@@ -238,9 +232,16 @@ const permittedWriteFields = createResource({
 	auto: true,
 })
 
+const sessionEmployee = inject("$employee")
+
 function hasPermission(action) {
-	if (action === "approval")
+	if (action === "approval" && props.modelValue.doctype === "Leave Application"){
+		// prevent self leave approval
+		const isSelfLeave = document?.doc?.employee === sessionEmployee?.data?.name 
+		if (isSelfLeave && settings.data?.prevent_self_leave_approval)
+			return false
 		return permittedWriteFields.data?.includes(approvalField.value)
+	}
 	return docPermissions.data?.permissions[action]
 }
 
@@ -345,12 +346,6 @@ onMounted(() => {
 	workflow.value = useWorkflow(props.modelValue.doctype)
 })
 
-const sessionEmployee = inject("$employee")
-const currEmployee = ref(sessionEmployee.data.name)
-
-const isSelfLeaveRequest = computed(() => {
-  return document?.doc?.employee === currEmployee.value;
-});
 </script>
 
 <style scoped>
