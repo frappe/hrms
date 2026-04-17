@@ -214,11 +214,7 @@
  "idx": 1,
  "index_web_pages_for_search": 1,
  "links": [],
-<<<<<<< HEAD
  "modified": "2026-04-14 11:35:48.142348",
-=======
- "modified": "2026-03-26 16:00:40.248633",
->>>>>>> c6e46fc0 (fix: default permission for HR manager role & add custom docperm for doctypes in frappe app)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Applicant",

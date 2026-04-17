@@ -275,11 +275,7 @@
  "idx": 1,
  "is_published_field": "publish",
  "links": [],
-<<<<<<< HEAD
  "modified": "2026-04-14 15:47:13.527606",
-=======
- "modified": "2026-03-26 15:59:46.904459",
->>>>>>> c6e46fc0 (fix: default permission for HR manager role & add custom docperm for doctypes in frappe app)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
