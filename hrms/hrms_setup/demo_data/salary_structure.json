@@ -3,285 +3,285 @@
         "doctype": "Salary Structure",
         "salary_structure": "Junior Software Engineer",
         "company": "__DEMO_COMPANY__",
-        "currency": "INR",
+        "currency": "USD",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
-            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 15000},
-            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 6000},
-            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 2500},
-            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 1500},
-            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 1000}
+            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 2500},
+            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 1000},
+            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 500},
+            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 300},
+            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 200}
         ],
         "deductions": [
-            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 1500},
-            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 200}
+            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 300},
+            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 50}
         ]
     },
     {
         "doctype": "Salary Structure",
         "salary_structure": "Software Engineer",
         "company": "__DEMO_COMPANY__",
-        "currency": "INR",
+        "currency": "USD",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
-            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 25000},
-            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 10000},
-            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 5000},
-            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 3000},
-            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 2000}
+            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 4000},
+            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 1600},
+            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 800},
+            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 500},
+            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 300}
         ],
         "deductions": [
-            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 3000},
-            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 200}
+            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 480},
+            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 50}
         ]
     },
     {
         "doctype": "Salary Structure",
         "salary_structure": "Senior Software Engineer",
         "company": "__DEMO_COMPANY__",
-        "currency": "INR",
+        "currency": "USD",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
-            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 45000},
-            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 18000},
-            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 9000},
-            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 4000},
-            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 3000}
+            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 6500},
+            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 2600},
+            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 1300},
+            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 700},
+            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 500}
         ],
         "deductions": [
-            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 5000},
-            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 200}
+            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 780},
+            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 50}
         ]
     },
     {
         "doctype": "Salary Structure",
         "salary_structure": "Tech Lead",
         "company": "__DEMO_COMPANY__",
-        "currency": "INR",
+        "currency": "USD",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
-            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 60000},
-            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 24000},
-            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 12000},
-            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 5000},
-            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 4000}
+            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 8500},
+            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 3400},
+            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 1700},
+            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 800},
+            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 600}
         ],
         "deductions": [
-            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 6500},
-            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 200}
+            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 1020},
+            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 50}
         ]
     },
     {
         "doctype": "Salary Structure",
         "salary_structure": "Engineering Manager",
         "company": "__DEMO_COMPANY__",
-        "currency": "INR",
+        "currency": "USD",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
-            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 80000},
-            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 32000},
-            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 15000},
-            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 6000},
-            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 5000}
+            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 12000},
+            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 4800},
+            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 2400},
+            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 1000},
+            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 800}
         ],
         "deductions": [
-            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 8000},
-            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 200}
+            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 1440},
+            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 50}
         ]
     },
     {
         "doctype": "Salary Structure",
         "salary_structure": "Sales Executive",
         "company": "__DEMO_COMPANY__",
-        "currency": "INR",
+        "currency": "USD",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
-            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 18000},
-            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 7200},
-            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 3500},
-            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 2000},
-            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 1300}
+            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 2800},
+            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 1100},
+            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 600},
+            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 400},
+            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 250}
         ],
         "deductions": [
-            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 1800},
-            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 200}
+            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 340},
+            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 50}
         ]
     },
     {
         "doctype": "Salary Structure",
         "salary_structure": "Sales Manager",
         "company": "__DEMO_COMPANY__",
-        "currency": "INR",
+        "currency": "USD",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
-            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 50000},
-            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 20000},
-            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 10000},
-            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 4000},
-            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 3000}
+            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 7500},
+            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 3000},
+            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 1500},
+            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 700},
+            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 500}
         ],
         "deductions": [
-            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 5500},
-            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 200}
+            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 900},
+            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 50}
         ]
     },
     {
         "doctype": "Salary Structure",
         "salary_structure": "Finance Executive",
         "company": "__DEMO_COMPANY__",
-        "currency": "INR",
+        "currency": "USD",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
-            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 20000},
-            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 8000},
-            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 4000},
-            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 2000},
-            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 1500}
+            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 3200},
+            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 1300},
+            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 650},
+            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 350},
+            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 250}
         ],
         "deductions": [
-            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 2000},
-            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 200}
+            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 380},
+            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 50}
         ]
     },
     {
         "doctype": "Salary Structure",
         "salary_structure": "Finance Manager",
         "company": "__DEMO_COMPANY__",
-        "currency": "INR",
+        "currency": "USD",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
-            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 55000},
-            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 22000},
-            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 11000},
-            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 5000},
-            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 3000}
+            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 8000},
+            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 3200},
+            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 1600},
+            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 750},
+            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 500}
         ],
         "deductions": [
-            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 6000},
-            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 200}
+            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 960},
+            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 50}
         ]
     },
     {
         "doctype": "Salary Structure",
         "salary_structure": "HR Executive",
         "company": "__DEMO_COMPANY__",
-        "currency": "INR",
+        "currency": "USD",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
-            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 18000},
-            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 7200},
-            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 3500},
-            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 2000},
-            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 1300}
+            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 2800},
+            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 1100},
+            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 600},
+            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 350},
+            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 250}
         ],
         "deductions": [
-            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 1800},
-            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 200}
+            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 340},
+            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 50}
         ]
     },
     {
         "doctype": "Salary Structure",
         "salary_structure": "HR Manager",
         "company": "__DEMO_COMPANY__",
-        "currency": "INR",
+        "currency": "USD",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
-            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 50000},
-            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 20000},
-            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 10000},
-            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 4000},
-            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 3000}
+            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 7000},
+            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 2800},
+            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 1400},
+            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 600},
+            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 450}
         ],
         "deductions": [
-            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 5500},
-            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 200}
+            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 840},
+            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 50}
         ]
     },
     {
         "doctype": "Salary Structure",
         "salary_structure": "Operations Executive",
         "company": "__DEMO_COMPANY__",
-        "currency": "INR",
+        "currency": "USD",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
-            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 18000},
-            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 7200},
-            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 3500},
-            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 2000},
-            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 1300}
+            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 2800},
+            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 1100},
+            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 600},
+            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 350},
+            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 250}
         ],
         "deductions": [
-            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 1800},
-            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 200}
+            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 340},
+            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 50}
         ]
     },
     {
         "doctype": "Salary Structure",
         "salary_structure": "Operations Manager",
         "company": "__DEMO_COMPANY__",
-        "currency": "INR",
+        "currency": "USD",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
-            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 45000},
-            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 18000},
-            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 9000},
-            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 4000},
-            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 3000}
+            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 6500},
+            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 2600},
+            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 1300},
+            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 600},
+            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 450}
         ],
         "deductions": [
-            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 5000},
-            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 200}
+            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 780},
+            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 50}
         ]
     },
     {
         "doctype": "Salary Structure",
         "salary_structure": "Business Development Executive",
         "company": "__DEMO_COMPANY__",
-        "currency": "INR",
+        "currency": "USD",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
-            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 20000},
-            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 8000},
-            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 4000},
-            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 2500},
-            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 1500}
+            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 3200},
+            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 1300},
+            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 650},
+            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 400},
+            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 300}
         ],
         "deductions": [
-            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 2000},
-            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 200}
+            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 380},
+            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 50}
         ]
     },
     {
         "doctype": "Salary Structure",
         "salary_structure": "Business Development Manager",
         "company": "__DEMO_COMPANY__",
-        "currency": "INR",
+        "currency": "USD",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
-            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 50000},
-            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 20000},
-            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 10000},
-            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 4000},
-            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 3000}
+            {"doctype": "Salary Detail", "salary_component": "Basic", "amount": 7500},
+            {"doctype": "Salary Detail", "salary_component": "House Rent Allowance", "amount": 3000},
+            {"doctype": "Salary Detail", "salary_component": "Special Allowance", "amount": 1500},
+            {"doctype": "Salary Detail", "salary_component": "Conveyance Allowance", "amount": 700},
+            {"doctype": "Salary Detail", "salary_component": "Medical Allowance", "amount": 500}
         ],
         "deductions": [
-            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 5500},
-            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 200}
+            {"doctype": "Salary Detail", "salary_component": "Provident Fund", "amount": 900},
+            {"doctype": "Salary Detail", "salary_component": "Professional Tax", "amount": 50}
         ]
     }
 ]

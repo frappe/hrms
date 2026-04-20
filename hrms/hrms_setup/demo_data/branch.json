@@ -5,6 +5,10 @@
     },
     {
         "doctype": "Branch",
-        "branch": "Bangalore Office"
+        "branch": "New York Office"
+    },
+    {
+        "doctype": "Branch",
+        "branch": "Dubai Branch"
     }
 ]

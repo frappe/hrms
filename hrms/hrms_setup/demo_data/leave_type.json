@@ -1,11 +1,12 @@
 [
     {
         "doctype": "Leave Type",
-        "leave_type_name": "Casual Leave",
-        "name": "Casual Leave",
-        "allow_encashment": 0,
-        "is_carry_forward": 0,
-        "include_holiday": 1
+        "leave_type_name": "Annual Leave",
+        "name": "Annual Leave",
+        "allow_encashment": 1,
+        "is_carry_forward": 1,
+        "include_holiday": 1,
+        "max_days_allowed": 20
     },
     {
         "doctype": "Leave Type",
@@ -13,15 +14,17 @@
         "name": "Sick Leave",
         "allow_encashment": 0,
         "is_carry_forward": 1,
-        "include_holiday": 1
+        "include_holiday": 1,
+        "max_days_allowed": 10
     },
     {
         "doctype": "Leave Type",
-        "leave_type_name": "Earned Leave",
-        "name": "Earned Leave",
-        "allow_encashment": 1,
-        "is_carry_forward": 1,
-        "include_holiday": 1
+        "leave_type_name": "Personal Leave",
+        "name": "Personal Leave",
+        "allow_encashment": 0,
+        "is_carry_forward": 0,
+        "include_holiday": 1,
+        "max_days_allowed": 5
     },
     {
         "doctype": "Leave Type",
@@ -29,7 +32,17 @@
         "name": "Maternity Leave",
         "allow_encashment": 0,
         "is_carry_forward": 0,
-        "include_holiday": 1
+        "include_holiday": 1,
+        "max_days_allowed": 90
+    },
+    {
+        "doctype": "Leave Type",
+        "leave_type_name": "Paternity Leave",
+        "name": "Paternity Leave",
+        "allow_encashment": 0,
+        "is_carry_forward": 0,
+        "include_holiday": 1,
+        "max_days_allowed": 15
     },
     {
         "doctype": "Leave Type",
@@ -39,5 +52,14 @@
         "allow_encashment": 0,
         "is_carry_forward": 0,
         "include_holiday": 1
+    },
+    {
+        "doctype": "Leave Type",
+        "leave_type_name": "Unpaid Leave",
+        "name": "Unpaid Leave",
+        "is_unpaid": 1,
+        "allow_encashment": 0,
+        "is_carry_forward": 0,
+        "include_holiday": 0
     }
 ]

@@ -1,6 +1,20 @@
 [
     {
         "doctype": "Salary Component",
+        "salary_component": "Basic",
+        "salary_component_abbr": "BASIC",
+        "type": "Earning",
+        "amount_based_on_formula": 0
+    },
+    {
+        "doctype": "Salary Component",
+        "salary_component": "House Rent Allowance",
+        "salary_component_abbr": "HRA",
+        "type": "Earning",
+        "amount_based_on_formula": 0
+    },
+    {
+        "doctype": "Salary Component",
         "salary_component": "Special Allowance",
         "salary_component_abbr": "SA",
         "type": "Earning",
@@ -25,6 +39,21 @@
         "salary_component": "Performance Bonus",
         "salary_component_abbr": "PB",
         "type": "Earning",
+        "amount_based_on_formula": 0
+    },
+    {
+        "doctype": "Salary Component",
+        "salary_component": "Provident Fund",
+        "salary_component_abbr": "PF",
+        "type": "Deduction",
+        "amount_based_on_formula": 0,
+        "is_tax_applicable": 1
+    },
+    {
+        "doctype": "Salary Component",
+        "salary_component": "Professional Tax",
+        "salary_component_abbr": "PT",
+        "type": "Deduction",
         "amount_based_on_formula": 0
     }
 ]

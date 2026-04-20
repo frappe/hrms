@@ -105,8 +105,8 @@ def create_demo_company():
 			"doctype": "Company",
 			"company_name": DEMO_COMPANY,
 			"abbr": DEMO_COMPANY_ABBR,
-			"default_currency": "INR",
-			"country": "India",
+			"default_currency": "USD",
+			"country": "United Arab Emirates",
 			"create_chart_of_accounts_based_on": "Standard Template",
 			"chart_of_accounts": "Standard",
 			"domain": "Retail",
@@ -198,19 +198,22 @@ def create_holiday_lists():
 	records = []
 
 	BRANCH_HOLIDAYS = [
-		("Mumbai HQ", "MH"),
-		("Bangalore Office", "KA"),
+		("Mumbai HQ", "IN", "MH"),
+		("New York Office", "US", "NY"),
+		("Dubai Branch", "AE", "AZ"),
 	]
 
-	for branch_name, state_code in BRANCH_HOLIDAYS:
+	holiday_lists = []
+	for branch_name, country, subdivision in BRANCH_HOLIDAYS:
 		hl_name = f"Holiday List - {branch_name} - {current_year}"
 		hl_from = f"{current_year}-01-01"
 		hl_to = f"{current_year}-12-31"
 
 		if frappe.db.exists("Holiday List", hl_name):
+			holiday_lists.append(hl_name)
 			continue
 
-		holidays = get_state_holidays("IN", state_code, current_year, hl_from, hl_to)
+		holidays = get_state_holidays(country, subdivision, current_year, hl_from, hl_to)
 
 		records.append(
 			{
@@ -218,16 +221,16 @@ def create_holiday_lists():
 				"holiday_list_name": hl_name,
 				"from_date": hl_from,
 				"to_date": hl_to,
-				"country": "India",
-				"subdivision": state_code,
+				"country": country,
+				"subdivision": subdivision,
 				"holidays": holidays,
 			}
 		)
+		holiday_lists.append(hl_name)
 
 	if records:
 		make_records(records)
 
-	hl_name = f"Holiday List - Mumbai HQ - {current_year}"
 	if not frappe.db.exists(
 		"Holiday List Assignment",
 		{"assigned_to": DEMO_COMPANY, "from_date": f"{current_year}-01-01", "docstatus": 1},
@@ -238,11 +241,31 @@ def create_holiday_lists():
 				"naming_series": "HR-HLA-.YYYY.-",
 				"applicable_for": "Company",
 				"assigned_to": DEMO_COMPANY,
-				"holiday_list": hl_name,
+				"holiday_list": holiday_lists[0],
 				"from_date": f"{current_year}-01-01",
 			}
 		]
 		make_records(records)
+
+	setup_leave_period(current_year)
+
+
+def setup_leave_period(current_year):
+	from frappe.desk.page.setup_wizard.setup_wizard import make_records
+
+	if frappe.db.exists("Leave Period", f"Leave Period {current_year}-{current_year + 1}"):
+		return
+
+	records = [
+		{
+			"doctype": "Leave Period",
+			"leave_period_name": f"Leave Period {current_year}-{current_year + 1}",
+			"from_date": f"{current_year}-04-01",
+			"to_date": f"{current_year + 1}-03-31",
+			"company": DEMO_COMPANY,
+		}
+	]
+	make_records(records)
 
 
 def get_state_holidays(country, subdivision, year, from_date, to_date):

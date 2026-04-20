@@ -10,5 +10,13 @@
     {
         "doctype": "Employment Type",
         "employee_type_name": "Contract"
+    },
+    {
+        "doctype": "Employment Type",
+        "employee_type_name": "Intern"
+    },
+    {
+        "doctype": "Employment Type",
+        "employee_type_name": "Freelance"
     }
 ]
