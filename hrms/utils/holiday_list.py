@@ -139,6 +139,109 @@ def get_assigned_holiday_list(assigned_to: str, as_on=None, as_dict: bool = Fals
 	return holiday_list
 
 
+def get_holiday_lists_for_employee_in_date_range(
+	employee: str,
+	start_date: date | str,
+	end_date: date | str,
+	as_dict: bool = True,
+) -> list[dict]:
+	"""
+	Returns all applicable holiday lists for an employee within a date range.
+	Effective to_date = MIN(Holiday List's to_date, next assignment's from_date - 1 day
+	[
+	    {"holiday_list": "HL-1", "from_date": date, "to_date": date},
+	    {"holiday_list": "HL-2", "from_date": date, "to_date": date},
+	]
+	"""
+	start_date = getdate(start_date)
+	end_date = getdate(end_date)
+
+	HLA = frappe.qb.DocType("Holiday List Assignment")
+	HolidayList = frappe.qb.DocType("Holiday List")
+
+	assignments = (
+		frappe.qb.from_(HLA)
+		.join(HolidayList)
+		.on(HLA.holiday_list == HolidayList.name)
+		.select(
+			HLA.holiday_list,
+			HLA.from_date,
+			HolidayList.to_date.as_("holiday_list_to_date"),
+		)
+		.where(HLA.assigned_to == employee)
+		.where(HLA.docstatus == 1)
+		.where(HLA.from_date <= end_date)
+		.where(HolidayList.to_date >= start_date)
+		.orderby(HLA.from_date)
+	).run(as_dict=True)
+
+	if not assignments:
+		company = frappe.db.get_value("Employee", employee, "company")
+		if company:
+			assignments = get_holiday_lists_for_company_in_date_range(company, start_date, end_date)
+
+	if not assignments:
+		return []
+
+	result = []
+	for idx, assignment in enumerate(assignments):
+		from_date = assignment.from_date
+		hl_to_date = assignment.holiday_list_to_date
+
+		next_assignment = assignments[idx + 1] if idx + 1 < len(assignments) else None
+		if next_assignment:
+			effective_to_date = min(hl_to_date, add_days(next_assignment.from_date, -1))
+		else:
+			effective_to_date = hl_to_date
+
+		from_date = max(from_date, start_date)
+		effective_to_date = min(effective_to_date, end_date)
+
+		if from_date <= effective_to_date:
+			result.append(
+				{
+					"holiday_list": assignment.holiday_list,
+					"from_date": from_date,
+					"to_date": effective_to_date,
+				}
+			)
+
+	return result
+
+
+def get_holiday_lists_for_company_in_date_range(
+	company: str,
+	start_date: date | str,
+	end_date: date | str,
+) -> list[dict]:
+	"""
+	Returns all applicable holiday lists for a company within a date range.
+	"""
+	start_date = getdate(start_date)
+	end_date = getdate(end_date)
+
+	HLA = frappe.qb.DocType("Holiday List Assignment")
+	HolidayList = frappe.qb.DocType("Holiday List")
+
+	assignments = (
+		frappe.qb.from_(HLA)
+		.join(HolidayList)
+		.on(HLA.holiday_list == HolidayList.name)
+		.select(
+			HLA.holiday_list,
+			HLA.from_date,
+			HolidayList.to_date.as_("holiday_list_to_date"),
+		)
+		.where(HLA.assigned_to == company)
+		.where(HLA.docstatus == 1)
+		.where(HLA.from_date <= end_date)
+		.where(HolidayList.to_date >= start_date)
+		.orderby(HLA.from_date)
+	).run(as_dict=True)
+
+	return assignments
+
+
 def invalidate_cache(doc, method=None):
 	from hrms.payroll.doctype.salary_slip.salary_slip import HOLIDAYS_BETWEEN_DATES
 

@@ -17,7 +17,7 @@ from frappe.utils import cint, cstr, formatdate, getdate
 from frappe.utils.nestedset import get_descendants_of
 
 from hrms.utils import date_diff, get_date_range
-from hrms.utils.holiday_list import get_holiday_list_for_employee
+from hrms.utils.holiday_list import get_holiday_lists_for_employee_in_date_range
 
 Filters = frappe._dict
 
@@ -444,14 +444,46 @@ def get_holiday_map(filters: Filters) -> dict[str, list[dict]]:
 	return holiday_map
 
 
+def get_holidays_for_employee(employee: str, filters: Filters, holiday_map: dict) -> list[dict]:
+	"""
+	Returns the merged list of holidays for an employee within the filter period,
+	correctly handling multiple holiday list assignments.
+
+	For each assignment, only holidays that fall within the effective date range
+	of that assignment are included (from_date to effective to_date).
+	"""
+	start_date, end_date = get_date_range_from_filters(filters)
+
+	hl_assignments = get_holiday_lists_for_employee_in_date_range(employee, start_date, end_date)
+
+	if not hl_assignments:
+		return []
+
+	merged_holidays = []
+	for assignment in hl_assignments:
+		hl_holidays = holiday_map.get(assignment["holiday_list"], [])
+		for holiday in hl_holidays:
+			h_date = getdate(holiday.holiday_date)
+			if assignment["from_date"] <= h_date <= assignment["to_date"]:
+				merged_holidays.append(holiday)
+
+	return merged_holidays
+
+
+def get_date_range_from_filters(filters: Filters) -> tuple:
+	"""Returns (start_date, end_date) as date objects from filters."""
+	if filters.filter_based_on == "Month":
+		total_days = get_total_days_in_month(filters)
+		start_date = getdate(f"{cstr(filters.year)}-{cstr(filters.month)}-01")
+		end_date = getdate(f"{cstr(filters.year)}-{cstr(filters.month)}-{total_days}")
+		return start_date, end_date
+	return getdate(filters.start_date), getdate(filters.end_date)
+
+
 def get_rows(employee_details: dict, filters: Filters, holiday_map: dict, attendance_map: dict) -> list[dict]:
 	records = []
 	for employee, details in employee_details.items():
-		emp_holiday_list = get_holiday_list_for_employee(
-			employee, as_on=filters.end_date, raise_exception=False
-		)
-
-		holidays = holiday_map.get(emp_holiday_list)
+		holidays = get_holidays_for_employee(employee, filters, holiday_map)
 
 		if filters.summarized_view:
 			attendance = get_attendance_status_for_summarized_view(
