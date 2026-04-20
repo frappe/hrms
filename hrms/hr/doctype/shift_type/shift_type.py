@@ -162,7 +162,7 @@ class ShiftType(Document):
 					return "Attendance has been marked as per employee check-ins."
 				except Exception as e:
 					error_log = frappe.log_error(e)
-					return f"An error occured during marking attendance. Refer the full error log {get_link_to_form('Error Log',error_log.name,label='here')}"
+					return f"An error occurred during marking attendance. Refer the full error log {get_link_to_form('Error Log',error_log.name,label='here')}"
 		else:
 			self._process(logs)
 

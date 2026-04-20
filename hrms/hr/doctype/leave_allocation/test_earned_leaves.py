@@ -589,7 +589,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 	def test_quarterly_earned_leaves_allocated_by_the_scheduler(self):
 		frappe.flags.current_date = get_year_start(getdate())
 
-		# created policy assignment at the begining of the year so allocated leaces should be 0
+		# created policy assignment at the beginning of the year so allocated leaves should be 0
 		assignment = make_policy_assignment(
 			self.employee2,
 			allocate_on_day="First Day",
