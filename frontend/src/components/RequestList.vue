@@ -37,7 +37,10 @@
 		:initial-breakpoint="1"
 		:breakpoints="[0, 1]"
 	>
-		<RequestActionSheet :fields="fieldsMap[selectedRequest?.doctype]" v-model="selectedRequest" />
+		<RequestActionSheet
+			:fields="fieldsMap[selectedRequest?.doctype]" 
+			v-model="selectedRequest"
+		/>
 	</ion-modal>
 </template>
 
