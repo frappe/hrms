@@ -139,107 +139,147 @@ def get_assigned_holiday_list(assigned_to: str, as_on=None, as_dict: bool = Fals
 	return holiday_list
 
 
-def get_holiday_lists_for_employee_in_date_range(
-	employee: str,
+def get_holiday_lists_bulk(
+	assigned_to_list: list[str],
 	start_date: date | str,
 	end_date: date | str,
-	as_dict: bool = True,
-) -> list[dict]:
+) -> dict[str, list[dict]]:
 	"""
-	Returns all applicable holiday lists for an employee within a date range.
-	Effective to_date = MIN(Holiday List's to_date, next assignment's from_date - 1 day
-	[
-	    {"holiday_list": "HL-1", "from_date": date, "to_date": date},
-	    {"holiday_list": "HL-2", "from_date": date, "to_date": date},
-	]
+	Returns effective holiday list ranges for multiple assigned_to values in one query.
+
+	{
+	    "EMP-001": [{"holiday_list": "HL-1", "from_date": date, "to_date": date}, ...],
+	    "EMP-002": [...],
+	}
 	"""
+	if not assigned_to_list:
+		return {}
+
 	start_date = getdate(start_date)
 	end_date = getdate(end_date)
 
+	return get_holiday_list_assignments(assigned_to_list, start_date, end_date)
+
+
+def get_holiday_list_assignments(
+	assigned_to_list: list[str],
+	start_date: date,
+	end_date: date,
+) -> dict[str, list[dict]]:
+	"""
+	Single query: returns effective HLA ranges per assigned_to, clipped to start_date/end_date.
+	effective_to_date = MIN(HL.to_date, next assignment's from_date - 1 day)
+
+	{
+	    "EMP-001": [{"holiday_list": "HL-1", "from_date": date, "to_date": date}, ...],
+	}
+	"""
 	HLA = frappe.qb.DocType("Holiday List Assignment")
 	HolidayList = frappe.qb.DocType("Holiday List")
 
-	assignments = (
+	rows = (
 		frappe.qb.from_(HLA)
 		.join(HolidayList)
 		.on(HLA.holiday_list == HolidayList.name)
 		.select(
+			HLA.assigned_to,
 			HLA.holiday_list,
 			HLA.from_date,
 			HolidayList.to_date.as_("holiday_list_to_date"),
 		)
-		.where(HLA.assigned_to == employee)
+		.where(HLA.assigned_to.isin(assigned_to_list))
 		.where(HLA.docstatus == 1)
 		.where(HLA.from_date <= end_date)
 		.where(HolidayList.to_date >= start_date)
+		.orderby(HLA.assigned_to)
 		.orderby(HLA.from_date)
 	).run(as_dict=True)
 
-	if not assignments:
-		company = frappe.db.get_value("Employee", employee, "company")
-		if company:
-			assignments = get_holiday_lists_for_company_in_date_range(company, start_date, end_date)
+	raw = {}
+	for row in rows:
+		raw.setdefault(row.assigned_to, []).append(row)
 
-	if not assignments:
-		return []
+	result = {}
+	for assigned_to, assignments in raw.items():
+		ranges = []
+		for idx, assignment in enumerate(assignments):
+			hl_to_date = getdate(assignment.holiday_list_to_date)
+			next_assignment = assignments[idx + 1] if idx + 1 < len(assignments) else None
 
-	result = []
-	for idx, assignment in enumerate(assignments):
-		from_date = assignment.from_date
-		hl_to_date = assignment.holiday_list_to_date
+			if next_assignment:
+				effective_to_date = min(hl_to_date, add_days(next_assignment.from_date, -1))
+			else:
+				effective_to_date = hl_to_date
 
-		next_assignment = assignments[idx + 1] if idx + 1 < len(assignments) else None
-		if next_assignment:
-			effective_to_date = min(hl_to_date, add_days(next_assignment.from_date, -1))
-		else:
-			effective_to_date = hl_to_date
+			from_date = max(getdate(assignment.from_date), start_date)
+			effective_to_date = min(getdate(effective_to_date), end_date)
 
-		from_date = max(from_date, start_date)
-		effective_to_date = min(effective_to_date, end_date)
-
-		if from_date <= effective_to_date:
-			result.append(
-				{
-					"holiday_list": assignment.holiday_list,
-					"from_date": from_date,
-					"to_date": effective_to_date,
-				}
-			)
+			if from_date <= effective_to_date:
+				ranges.append(
+					{
+						"holiday_list": assignment.holiday_list,
+						"from_date": from_date,
+						"to_date": effective_to_date,
+					}
+				)
+		if ranges:
+			result[assigned_to] = ranges
 
 	return result
 
 
-def get_holiday_lists_for_company_in_date_range(
-	company: str,
-	start_date: date | str,
-	end_date: date | str,
+def fill_date_gaps_with_fallback(
+	primary_ranges: list[dict],
+	fallback_ranges: list[dict],
+	start_date: date,
+	end_date: date,
 ) -> list[dict]:
 	"""
-	Returns all applicable holiday lists for a company within a date range.
+	For any dates in [start_date, end_date] not covered by primary_ranges,
+	fills those gaps using fallback_ranges (typically company assignments).
+
+	Example: employee HLA starts Jan 16, company HLA covers full month →
+	Jan 1-15 use the company holiday list, Jan 16-31 use the employee's.
 	"""
-	start_date = getdate(start_date)
-	end_date = getdate(end_date)
+	if not primary_ranges:
+		return fallback_ranges
+	if not fallback_ranges:
+		return primary_ranges
 
-	HLA = frappe.qb.DocType("Holiday List Assignment")
-	HolidayList = frappe.qb.DocType("Holiday List")
+	result = []
+	current = start_date
 
-	assignments = (
-		frappe.qb.from_(HLA)
-		.join(HolidayList)
-		.on(HLA.holiday_list == HolidayList.name)
-		.select(
-			HLA.holiday_list,
-			HLA.from_date,
-			HolidayList.to_date.as_("holiday_list_to_date"),
-		)
-		.where(HLA.assigned_to == company)
-		.where(HLA.docstatus == 1)
-		.where(HLA.from_date <= end_date)
-		.where(HolidayList.to_date >= start_date)
-		.orderby(HLA.from_date)
-	).run(as_dict=True)
+	for primary in sorted(primary_ranges, key=lambda r: r["from_date"]):
+		gap_end = add_days(primary["from_date"], -1)
+		if current <= gap_end:
+			for fallback in fallback_ranges:
+				overlap_start = max(getdate(fallback["from_date"]), current)
+				overlap_end = min(getdate(fallback["to_date"]), gap_end)
+				if overlap_start <= overlap_end:
+					result.append(
+						{
+							"holiday_list": fallback["holiday_list"],
+							"from_date": overlap_start,
+							"to_date": overlap_end,
+						}
+					)
+		result.append(primary)
+		current = add_days(primary["to_date"], 1)
 
-	return assignments
+	if current <= end_date:
+		for fallback in fallback_ranges:
+			overlap_start = max(getdate(fallback["from_date"]), current)
+			overlap_end = min(getdate(fallback["to_date"]), end_date)
+			if overlap_start <= overlap_end:
+				result.append(
+					{
+						"holiday_list": fallback["holiday_list"],
+						"from_date": overlap_start,
+						"to_date": overlap_end,
+					}
+				)
+
+	return sorted(result, key=lambda r: r["from_date"])
 
 
 def invalidate_cache(doc, method=None):
