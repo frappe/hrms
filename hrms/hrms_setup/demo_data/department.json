@@ -23,5 +23,10 @@
         "doctype": "Department",
         "department_name": "Operations",
         "company": "__DEMO_COMPANY__"
+    },
+    {
+        "doctype": "Department",
+        "department_name": "Business Development",
+        "company": "__DEMO_COMPANY__"
     }
 ]

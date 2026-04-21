@@ -1,6 +1,7 @@
 [
     {
         "doctype": "Shift Type",
+        "name": "Day Shift",
         "shift_type_name": "Day Shift",
         "start_time": "09:00:00",
         "end_time": "18:00:00",
@@ -8,6 +9,7 @@
     },
     {
         "doctype": "Shift Type",
+        "name": "Morning Shift",
         "shift_type_name": "Morning Shift",
         "start_time": "06:00:00",
         "end_time": "15:00:00",
@@ -15,6 +17,7 @@
     },
     {
         "doctype": "Shift Type",
+        "name": "Night Shift",
         "shift_type_name": "Night Shift",
         "start_time": "22:00:00",
         "end_time": "07:00:00",
@@ -22,6 +25,7 @@
     },
     {
         "doctype": "Shift Type",
+        "name": "Flexi Shift",
         "shift_type_name": "Flexi Shift",
         "start_time": "08:00:00",
         "end_time": "17:00:00",
@@ -31,6 +35,7 @@
     },
     {
         "doctype": "Shift Type",
+        "name": "Remote Work",
         "shift_type_name": "Remote Work",
         "start_time": "09:00:00",
         "end_time": "18:00:00",

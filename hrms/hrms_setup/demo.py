@@ -75,7 +75,6 @@ def log_demo_data_failed_notification(error_log):
 
 
 def setup_demo(args):
-	create_demo_company()
 	setup_organization()
 	setup_employment_types()
 	setup_hr_masters()
@@ -93,14 +92,21 @@ def create_demo_company():
 	current_year = getdate().year
 	fy_start = f"{current_year}-04-01"
 	fy_end = f"{current_year + 1}-03-31"
+	fy_name = f"{current_year}-{current_year + 1}"
 
-	records = [
-		{
-			"doctype": "Fiscal Year",
-			"year": f"{current_year}-{current_year + 1}",
-			"year_start_date": fy_start,
-			"year_end_date": fy_end,
-		},
+	records = []
+
+	if not frappe.db.exists("Fiscal Year", fy_name):
+		records.append(
+			{
+				"doctype": "Fiscal Year",
+				"year": fy_name,
+				"year_start_date": fy_start,
+				"year_end_date": fy_end,
+			}
+		)
+
+	records.append(
 		{
 			"doctype": "Company",
 			"company_name": DEMO_COMPANY,
@@ -111,9 +117,11 @@ def create_demo_company():
 			"chart_of_accounts": "Standard",
 			"domain": "Retail",
 			"enable_perpetual_inventory": 1,
-		},
-	]
-	make_records(records)
+		}
+	)
+
+	if records:
+		make_records(records)
 
 
 def setup_organization():
@@ -200,7 +208,7 @@ def create_holiday_lists():
 	BRANCH_HOLIDAYS = [
 		("Mumbai HQ", "IN", "MH"),
 		("New York Office", "US", "NY"),
-		("Dubai Branch", "AE", "AZ"),
+		("Dubai Branch", "AE", None),
 	]
 
 	holiday_lists = []
@@ -315,7 +323,11 @@ def setup_employees():
 	department_names = set(r["department"] for r in records if r.get("department"))
 	department_map = {}
 	for dept_name in department_names:
-		dept = frappe.get_all("Department", filters={"department_name": dept_name}, fields=["name"])
+		dept = frappe.get_all(
+			"Department",
+			filters=[["department_name", "like", f"{dept_name}%"]],
+			fields=["name", "department_name"],
+		)
 		if dept:
 			department_map[dept_name] = dept[0].name
 
