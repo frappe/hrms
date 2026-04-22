@@ -201,21 +201,46 @@ def get_events(start: str | date, end: str | date, filters: list | None = None):
 
 def mark_expired_shift_assignments_as_inactive():
 	today = getdate()
+	now = datetime.combine(today, datetime.min.time())
+	buffer_hours = 3
 	shift_assignment = frappe.qb.DocType("Shift Assignment")
+	shift_type = frappe.qb.DocType("Shift Type")
 
 	expired_assignments = (
 		frappe.qb.from_(shift_assignment)
-		.select(shift_assignment.name)
+		.join(shift_type)
+		.on(shift_assignment.shift_type == shift_type.name)
+		.select(
+			shift_assignment.name,
+			shift_assignment.end_date,
+			shift_type.start_time,
+			shift_type.end_time,
+			shift_type.name.as_("shift_type_name"),
+		)
 		.where(
 			(shift_assignment.docstatus == 1)
 			& (shift_assignment.status == "Active")
 			& (shift_assignment.end_date.isnotnull())
 			& (shift_assignment.end_date < today)
 		)
-	).run(pluck=True)
+	).run(as_dict=True)
 
 	for assignment in expired_assignments:
-		frappe.db.set_value("Shift Assignment", assignment, "status", "Inactive")
+		start_time = assignment.start_time
+		end_time = assignment.end_time
+		end_date = assignment.end_date
+
+		start_time = (datetime.min + start_time).time()
+		end_time = (datetime.min + end_time).time()
+
+		if start_time > end_time:
+			shift_end_datetime = datetime.combine(end_date + timedelta(days=1), end_time)
+		else:
+			shift_end_datetime = datetime.combine(end_date, end_time)
+
+		shift_end_with_buffer = shift_end_datetime + timedelta(hours=buffer_hours)
+		if now > shift_end_with_buffer:
+			frappe.db.set_value("Shift Assignment", assignment.name, "status", "Inactive")
 
 
 def get_shift_assignments(start: str, end: str, filters: str | list | None = None) -> list[dict]:

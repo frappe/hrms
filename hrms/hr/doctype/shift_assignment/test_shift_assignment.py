@@ -329,3 +329,32 @@ class TestShiftAssignment(HRMSTestSuite):
 		self.assertEqual(expired_assignment.status, "Inactive")
 		self.assertEqual(active_assignment.status, "Active")
 		self.assertEqual(ongoing_assignment.status, "Active")
+
+	def test_mark_expired_shift_assignments_as_inactive_night_shift(self):
+		today = getdate()
+		night_shift_type = setup_shift_type(
+			shift_type="Night Shift Test", start_time="22:00:00", end_time="06:00:00"
+		)
+
+		active_employee = make_employee("test_night_active_shift@example.com", company="_Test Company")
+		expired_employee = make_employee("test_night_expired_shift@example.com", company="_Test Company")
+
+		active_assignment = make_shift_assignment(
+			night_shift_type.name,
+			active_employee,
+			add_days(today, -10),
+			add_days(today, -1),
+		)
+		expired_assignment = make_shift_assignment(
+			night_shift_type.name,
+			expired_employee,
+			add_days(today, -10),
+			add_days(today, -2),
+		)
+
+		mark_expired_shift_assignments_as_inactive()
+
+		active_assignment.reload()
+		expired_assignment.reload()
+		self.assertEqual(active_assignment.status, "Active")
+		self.assertEqual(expired_assignment.status, "Inactive")
