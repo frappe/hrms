@@ -41,21 +41,21 @@ class EmployeeAttendanceTool(Document):
 		return
 
 	@staticmethod
-	def get_list(args):
+	def get_list():
 		pass
 
 	@staticmethod
-	def get_count(args):
+	def get_count():
 		pass
 
 	@staticmethod
-	def get_stats(args):
+	def get_stats():
 		pass
 
-	def db_insert(self, *args, **kwargs):
+	def db_insert(self):
 		pass
 
-	def db_update(self, *args, **kwargs):
+	def db_update(self):
 		pass
 
 	def delete(self):
