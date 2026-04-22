@@ -1509,6 +1509,8 @@ def validate_leave_access(employee):
 	employee_user = frappe.db.get_value("Employee", employee, "user_id")
 	leave_approver = get_leave_approver(employee)
 
-	if frappe.session.user not in (employee_user, leave_approver, "Administrator"):
+	if frappe.session.user not in (employee_user, leave_approver) and (
+		not frappe.has_permission("Employee", "read", employee)
+	):
 		frappe.throw(_("Not permitted"), frappe.PermissionError)
 >>>>>>> 55ee832c0 (fix(leave_application): validate leave access for approver & employee)
