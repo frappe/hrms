@@ -132,7 +132,7 @@
 			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t z-[100] p-4"
 		>
 			<Button
-				@click="updateDocumentStatus({ docstatus: 2 })"
+				@click="confirmCancel"
 				class="w-full py-5"
 				variant="subtle"
 				theme="red"
@@ -157,7 +157,7 @@
 
 <script setup>
 import { computed, inject, ref, defineAsyncComponent, onMounted } from "vue"
-import { IonModal, modalController } from "@ionic/vue"
+import { IonModal, modalController, alertController } from "@ionic/vue"
 import { useRouter } from "vue-router"
 import {
 	toast,
@@ -332,6 +332,27 @@ const updateDocumentStatus = ({ status = "", docstatus = 0 }) => {
 			},
 		}
 	)
+}
+
+const confirmCancel = async () => {
+	const alert = await alertController.create({
+		header: __("Confirm"),
+		message: __("Are you sure you want to cancel this document?"),
+		buttons: [
+			{
+				text: __("No"),
+				role: "cancel",
+			},
+			{
+				text: __("Yes"),
+				role: "confirm",
+				handler: () => {
+					updateDocumentStatus({ docstatus: 2 })
+				},
+			},
+		],
+	})
+	await alert.present()
 }
 
 const openFormView = () => {
