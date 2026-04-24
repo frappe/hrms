@@ -18,12 +18,12 @@ def execute(filters=None):
 	return columns, data
 
 
-def validate_company_region(self):
-	if self.company and get_region(self.company) != "India":
+def validate_company_region(filters=None):
+	if filters and filters.company and get_region(filters.company) != "India":
 		frappe.throw(
 			_(
 				"The company {0} is not in India. Professional Tax Deductions Report is only available for companies in India."
-			).format(frappe.bold(self.company))
+			).format(frappe.bold(filters.company))
 		)
 
 
