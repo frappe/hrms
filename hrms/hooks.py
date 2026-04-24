@@ -98,7 +98,6 @@ jinja = {
 
 # before_install = "hrms.install.before_install"
 after_install = "hrms.install.after_install"
-before_migrate = "hrms.setup.make_people_workspace_standard"
 after_migrate = "hrms.setup.update_select_perm_after_install"
 
 setup_wizard_complete = "hrms.subscription_utils.update_erpnext_access"

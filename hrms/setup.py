@@ -877,11 +877,6 @@ def add_default_hr_permissions():
 				update_permission_property(doctype, role, permlevel=0, ptype=ptype, value=value)
 
 
-def make_people_workspace_standard():
-	if frappe.db.exists("Workspace Sidebar", "People"):
-		frappe.db.set_value("Workspace Sidebar", "People", "standard", 1)
-
-
 def setup_repost_defaults():
 	accounts_settings = frappe.get_doc("Accounts Settings")
 	for x in frappe.get_hooks("repost_allowed_doctypes"):
