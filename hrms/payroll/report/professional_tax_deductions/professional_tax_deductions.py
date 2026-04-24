@@ -5,14 +5,26 @@
 import frappe
 from frappe import _
 
+from erpnext import get_region
+
 from hrms.payroll.report.provident_fund_deductions.provident_fund_deductions import get_conditions
 
 
 def execute(filters=None):
+	validate_company_region(filters)
 	data = get_data(filters)
 	columns = get_columns(filters) if len(data) else []
 
 	return columns, data
+
+
+def validate_company_region(self):
+	if self.company and get_region(self.company) != "India":
+		frappe.throw(
+			_(
+				"The company {0} is not in India. Professional Tax Deductions Report is only available for companies in India."
+			).format(frappe.bold(self.company))
+		)
 
 
 def get_columns(filters):
