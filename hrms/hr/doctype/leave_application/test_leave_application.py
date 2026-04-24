@@ -1531,10 +1531,13 @@ class TestLeaveApplication(FrappeTestCase):
 		self.assertEqual(leave_application.docstatus, 1)
 
 	def test_leave_approver_with_restricted_employee_access(self):
-		permitted_employee = get_employee()
+		permitted_employee = make_employee(
+			"test_employee_with_permission@example.com",
+			"_Test Company",
+		)
 		leave_approver = "approver_restricted@example.com"
 		make_employee(leave_approver, "_Test Company")
-		add_user_permission("Employee", permitted_employee.name, leave_approver)
+		add_user_permission("Employee", permitted_employee, leave_approver)
 
 		target_employee_user = "employee_without_user_perm_for_leave_approver@example.com"
 		target_employee = make_employee(target_employee_user, "_Test Company", leave_approver=leave_approver)
