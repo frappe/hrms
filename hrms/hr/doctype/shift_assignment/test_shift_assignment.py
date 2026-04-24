@@ -300,6 +300,7 @@ class TestShiftAssignment(HRMSTestSuite):
 
 	def test_mark_expired_shift_assignments_as_inactive(self):
 		today = getdate()
+		yesterday = add_days(today, -1)
 		shift_type = setup_shift_type(shift_type="Expired Shift", start_time="08:00:00", end_time="16:00:00")
 
 		expired_employee = make_employee("test_expired_shift_assignment@example.com", company="_Test Company")
@@ -310,7 +311,7 @@ class TestShiftAssignment(HRMSTestSuite):
 			shift_type.name,
 			expired_employee,
 			add_days(today, -7),
-			add_days(today, -1),
+			add_days(yesterday, -1),
 		)
 		active_assignment = make_shift_assignment(
 			shift_type.name,
