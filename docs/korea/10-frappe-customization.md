@@ -36,7 +36,6 @@ Frappe Framework
 |-------------|-----------|------|---------|
 | **Tax** | `kr_dependents_count` | Int | 간이세액표 가족수 |
 | | `kr_withholding_rate` | Select | 80/100/120% |
-| | `kr_resident_id` | Data | 주민등록번호 (encrypted) |
 | **Insurance** | `kr_pension_notified_amount` | Currency | 국민연금 공단 고지액 |
 | | `kr_pension_exempt` | Check | 만60세 면제 |
 | | `kr_employ_ins_exempt` | Check | 만65세 입사 면제 |
@@ -46,6 +45,18 @@ Frappe Framework
 | | `kr_pension_agreement` | Check | 연금 협정국 |
 | | `kr_foreign_employ_exempt` | Check | 고용보험 미가입 |
 | **Severance** | `kr_severance_eligible` | Check | 퇴직금 지급 대상 |
+
+#### 주민번호 처리 (PII 경계)
+
+주민등록번호(주민번호 13자리)는 Frappe DocType 에 저장하지 않는다.
+- Password/Encrypted 필드 포함 — 어떤 형태로도 Frappe DB 저장 금지
+- 필요 시 외부 privacy_broker 의 일회성 조회 API 만 사용
+- 호출 시 감사 로그 자동 기록 (privacy_broker 정책)
+
+근거:
+- 본 통합 PR #3 §9.4 "PII 금지 적용 결과"
+- privacy_broker 경계 = Frappe 외부 시스템 원칙 (PM 결재)
+- Codex 어댑서리얼 [P1] 보강
 
 ---
 
@@ -66,13 +77,16 @@ Frappe Framework
 
 ### Deductions
 
+pension_base = `kr_pension_notified_amount` (취득신고 보수월액).
+taxable_pay = 보수월액 = 과세급여 (총급여 - 비과세소득).
+
 | Component | Type | Formula | Phase |
 |-----------|------|---------|-------|
-| 국민연금 | Formula | `kr_national_pension(base)` | 1 |
-| 건강보험 | Formula | `kr_health_insurance(base)` | 1 |
+| 국민연금 | Formula | `kr_national_pension(pension_base)` | 1 |
+| 건강보험 | Formula | `kr_health_insurance(taxable_pay)` | 1 |
 | 장기요양 | Formula | `kr_longterm_care(health_ins)` | 1 |
-| 고용보험 | Formula | `kr_employment_insurance(base)` | 1 |
-| 소득세 | Formula | `kr_income_tax(taxable, deps)` | 1 |
+| 고용보험 | Formula | `kr_employment_insurance(taxable_pay)` | 1 |
+| 소득세 | Formula | `kr_income_tax(taxable, deps, withholding_rate)` | 1 |
 | 지방소득세 | Formula | `income_tax * 0.1` | 1 |
 
 ---
@@ -125,7 +139,7 @@ def validate(doc, method):
 
 doc_events = {
     "Salary Slip": {
-        "before_save": "hrms.regional.south_korea.salary_slip.before_calculate",
+        "before_validate": "hrms.regional.south_korea.salary_slip.before_calculate",
         "on_change": "hrms.regional.south_korea.salary_slip.on_calculate",
         "validate": "hrms.regional.south_korea.salary_slip.validate",
     }
