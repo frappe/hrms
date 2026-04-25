@@ -313,6 +313,176 @@
 }
 ```
 
+### 2-5. 중도퇴사 연말정산 결과 (severance.py — calc_mid_year_settlement)
+
+> 근거: seojaehong/hrms@6749897cae:docs/korea/04-year-end-settlement.md §6
+
+```json
+{
+  "title": "MidYearSettlementExport",
+  "type": "object",
+  "description": "중도퇴사 연말정산 7단계 계산 결과",
+  "properties": {
+    "_step1": "── Step 1~2 ──",
+    "총급여":          { "type": "integer", "description": "연간 급여합계 - 비과세" },
+    "근로소득공제":     { "type": "integer", "description": "구간표 적용 (docs/korea/03 §5)" },
+    "근로소득금액":     { "type": "integer", "description": "총급여 - 근로소득공제" },
+
+    "_step3_4": "── Step 3~4: 소득공제 ──",
+    "선택방법":        { "type": "string", "enum": ["A", "B"], "description": "유불리 자동 비교 결과" },
+    "인적공제":        { "type": "integer", "const": 1500000, "description": "본인 기본공제 150만" },
+    "국민연금공제":     { "type": "integer", "description": "당해 국민연금 기납부액" },
+    "보험료합계":       { "type": "integer", "description": "건강+장기+고용 (Method A/B 판단 기준)" },
+    "보험료특별소득공제": {
+      "type": "integer",
+      "description": "Method A: 보험료합계 적용 (§52①). Method B: 0원. ⚠ 이 차이가 유불리의 핵심"
+    },
+    "소득공제합계":     { "type": "integer" },
+
+    "_step5_6": "── Step 5~6: 세액 ──",
+    "과세표준":        { "type": "integer", "description": "근로소득금액 - 소득공제합계 (0 이상)" },
+    "산출세액":        { "type": "integer", "description": "기본세율 적용 (docs/korea/03 §4)" },
+    "근로소득세액공제":  { "type": "integer", "description": "docs/korea/03 §6 구간표" },
+    "표준세액공제":     {
+      "type": "integer",
+      "description": "Method B: min(130,000, 산출세액-근로소득세액공제). Method A: 0. ⚠ §59의4⑨"
+    },
+    "세액공제합계":     { "type": "integer" },
+    "결정세액":        { "type": "integer", "description": "산출세액 - 세액공제합계 (0 이상)" },
+    "결정지방소득세":   { "type": "integer", "description": "결정세액 × 10%" },
+
+    "_step7": "── Step 7: 차감징수 ──",
+    "기납부소득세":     {
+      "type": "integer",
+      "description": "⚠ CRITICAL: 퇴직월 이전까지의 소득세 합계. 퇴직월 소득세는 정산결과 자체이므로 절대 포함 금지. (docs/korea/04 §6-5 사고 사례 참조)"
+    },
+    "기납부지방소득세":  { "type": "integer" },
+    "차감징수소득세":   { "type": "integer", "description": "10원 올림 (ceil). ⚠ 퇴직소득세(floor)와 반대 방향" },
+    "차감징수지방소득세": { "type": "integer" },
+    "차감징수합계":     { "type": "integer", "description": "양수=추가납부, 음수=환급" },
+
+    "_comparison": "── Method 비교 ──",
+    "Method_A_결정세액": { "type": "integer", "description": "보험료공제 적용 시 결정세액" },
+    "Method_B_결정세액": { "type": "integer", "description": "표준세액공제 적용 시 결정세액" }
+  }
+}
+```
+
+**Method A vs B 자동 판단 규칙** (docs/korea/04 §6-3 인용):
+```
+보험료합 = 건강 + 장기 + 고용보험
+절세효과_A = 보험료합 × 한계세율
+절세효과_B = 130,000 (표준세액공제)
+→ 결정세액이 작은 쪽 선택 (금액 기반, 세율 근사 아님)
+```
+
+**검증 이력**: 32건 PASS (올웨이즈샤브 28건 + 다이닝원 4건)
+- 이승준(3,240만) = Method A (고소득 → 보험료공제 유리)
+- 나머지 31건 = Method B (저소득 → 표준세액공제 유리)
+
+**Validation Rule**:
+```python
+assert abs(차감징수소득세) <= 기납부소득세 or 차감징수소득세 >= 0
+# 환급액은 기납부를 초과할 수 없음
+```
+
+### 2-6. 퇴직금 계산 결과 (severance.py — calc_severance_pay)
+
+> 근거: seojaehong/hrms@6749897cae:docs/korea/05-severance.md
+
+```json
+{
+  "title": "SeverancePayExport",
+  "type": "object",
+  "description": "퇴직금 계산 결과 (고용노동부 기준 3개월 평균임금)",
+  "properties": {
+    "_dates": "── 날짜 ──",
+    "입사일":    { "type": "string", "format": "date" },
+    "퇴사일":    { "type": "string", "format": "date", "description": "마지막 근무일" },
+    "퇴직일":    { "type": "string", "format": "date", "description": "⚠ 퇴사일 + 1일 (docs/korea/05 §2)" },
+    "재직일수":   { "type": "integer", "description": "퇴직일 - 입사일" },
+
+    "_3month": "── 3개월 평균임금 산정 ──",
+    "3개월_시작": { "type": "string", "format": "date", "description": "퇴직일 역산 3개월" },
+    "3개월_종료": { "type": "string", "format": "date" },
+    "3개월_총일수": { "type": "integer", "description": "3개월간 총 역일수 (calendar days)" },
+    "임금총액_A":   { "type": "integer", "description": "3개월간 임금총액 (일할계산 포함)" },
+    "상여금가산_B":  { "type": "integer", "description": "연간상여금 × 3/12" },
+    "연차수당가산_C": { "type": "integer", "description": "연차수당일급 × 미사용일수 × 3/12" },
+    "평균임금산정기초액": { "type": "integer", "description": "A + B + C" },
+    "1일평균임금":  { "type": "number", "description": "기초액 / 3개월_총일수 (소수점)" },
+    "1일통상임금":  { "type": "integer", "description": "통상임금 (비교용)" },
+    "적용임금종류":  { "type": "string", "enum": ["평균임금", "통상임금"], "description": "둘 중 큰 쪽 적용" },
+    "적용1일임금":  { "type": "number" },
+
+    "_result": "── 퇴직금 ──",
+    "퇴직금":     { "type": "integer", "description": "적용1일임금 × 30 × (재직일수/365) — 원 단위 절사" }
+  }
+}
+```
+
+### 2-7. 퇴직소득세 결과 (severance.py — calc_severance_income_tax)
+
+> 근거: seojaehong/hrms@6749897cae:docs/korea/05-severance.md §4
+
+```json
+{
+  "title": "SeveranceTaxExport",
+  "type": "object",
+  "description": "퇴직소득세 계산 결과",
+  "properties": {
+    "퇴직소득":        { "type": "integer", "description": "= 퇴직금" },
+    "근속연수":        { "type": "integer", "description": "1년 미만 올림" },
+    "공제적용근속연수":  { "type": "integer", "description": "2012년 이후 입사: 근속연수와 동일" },
+    "근속연수공제":     { "type": "integer", "description": "5년이하 100만×N, 10년이하 500만+200만×(N-5), ..." },
+    "환산급여":        { "type": "integer", "description": "(퇴직소득 - 근속연수공제) × 12 / 근속연수" },
+    "환산급여공제":     { "type": "integer", "description": "800만이하 전액, 7000만이하 800만+60%, ..." },
+    "과세표준":        { "type": "integer", "description": "환산급여 - 환산급여공제" },
+    "환산산출세액":     { "type": "integer", "description": "기본세율 적용" },
+    "퇴직소득산출세액":  { "type": "integer", "description": "환산세액 × 근속연수 / 12" },
+    "소득세":          { "type": "integer", "description": "⚠ 10원 절사 (floor) — 연말정산(ceil)과 반대" },
+    "지방소득세":       { "type": "integer", "description": "소득세 × 10% → 10원 절사" },
+    "세금합계":        { "type": "integer" }
+  }
+}
+```
+
+**Edge Cases** (docs/korea/05 §6 인용):
+
+| 케이스 | 엔진 처리 | 비고 |
+|--------|----------|------|
+| 재직 1년 미만 | `calc_severance_pay` → return 0 (퇴직금 없음) | 법정 최소 요건 |
+| 파트→정직원 전환 | 커스텀 퇴직금 (전체급여/12) → 별도 산정서 | docs/korea/05 §6-1 |
+| DAY(퇴직일)=1 | 퇴사일이 전월 말일 → 3개월 기간 시프트 | docs/korea/05 §6-3 |
+| DC형 퇴직연금 | 엔진 미처리 — 퇴직연금 사업자가 계산 | 현 사업장 전부 DB형/퇴직금 |
+| 중간정산 | 엔진 미처리 — 수동 진행 (빈도 극히 낮음) | 향후 Frappe에서 이력 관리 가능 |
+
+### 2-8. 퇴직 통합 Export (퇴직금 + 퇴직소득세 + 중도퇴사 연말정산)
+
+```json
+{
+  "title": "TerminationSettlementExport",
+  "type": "object",
+  "description": "퇴직 시 통합 정산 결과 — 3개 계산의 합본",
+  "properties": {
+    "employee_token": { "type": "string", "description": "비식별 ID (broker 경유)" },
+    "site_key":       { "type": "string" },
+    "settlement_date": { "type": "string", "format": "date" },
+    "severance":       { "$ref": "#SeverancePayExport" },
+    "severance_tax":   { "$ref": "#SeveranceTaxExport" },
+    "mid_year_tax":    { "$ref": "#MidYearSettlementExport" },
+    "net_severance":   {
+      "type": "integer",
+      "description": "퇴직금 실수령 = 퇴직금 - 퇴직소득세 - 퇴직지방소득세"
+    },
+    "final_salary_adjustment": {
+      "type": "integer",
+      "description": "마지막 급여 차감징수세액 (연말정산 결과)"
+    }
+  }
+}
+```
+
 ---
 
 ## 3. API 노출 방식 — 3옵션 비교
