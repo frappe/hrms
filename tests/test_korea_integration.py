@@ -377,6 +377,89 @@ class KoreaIntegrationTests(unittest.TestCase):
         self.assertIn("audit", result)
         self.assertEqual(result["audit"]["resolution_policy"], "yaml_wins")
 
+    def test_import_year_end_settlement_result_rejects_unknown_fields(self):
+        with self.assertRaises(FakeFrappeError):
+            self.module.import_year_end_settlement_result(
+                payload={
+                    "run_id": "YES-1",
+                    "employee_id": "EMP-0001",
+                    "settlement_year": 2025,
+                    "settlement_kind": "annual_february",
+                    "applied_pay_year_month": "2026-02",
+                    "prepaid_tax": 100,
+                    "determined_tax": 120,
+                    "adjustment_tax": 20,
+                    "unexpected": "x",
+                }
+            )
+
+    def test_import_year_end_settlement_result_links_salary_slip_when_external_ref_exists(self):
+        result = self.module.import_year_end_settlement_result(
+            payload={
+                "run_id": "YES-1",
+                "employee_id": "EMP-0001",
+                "settlement_year": 2025,
+                "settlement_kind": "annual_february",
+                "applied_pay_year_month": "2026-02",
+                "salary_slip_external_ref": "SS-0001",
+                "prepaid_tax": 100,
+                "determined_tax": 120,
+                "adjustment_tax": 20,
+                "local_income_tax": 2,
+                "note": "final adjustment",
+            }
+        )
+
+        self.assertEqual(result["status"], "updated")
+        self.assertEqual(result["employee_id"], "EMP-0001")
+        self.assertEqual(result["settlement_year"], 2025)
+        self.assertEqual(result["applied_pay_year_month"], "2026-02")
+        self.assertEqual(result["salary_slip"], "SS-0001")
+        self.assertEqual(len(self.fake_frappe._comments), 1)
+        self.assertEqual(self.fake_frappe._comments[0]["reference_name"], "SS-0001")
+        self.assertIn("year-end settlement", self.fake_frappe._comments[0]["content"])
+
+    def test_import_severance_result_rejects_pii_fields(self):
+        with self.assertRaises(FakeFrappeError):
+            self.module.import_severance_result(
+                payload={
+                    "run_id": "SEV-1",
+                    "employee_id": "EMP-0001",
+                    "retirement_date": "2026-04-30",
+                    "average_wage": 100,
+                    "service_years": 3,
+                    "severance_pay": 1000,
+                    "severance_income_tax": 30,
+                    "net_pay": 970,
+                    "bank_account_number": "123-456-7890",
+                }
+            )
+
+    def test_import_severance_result_returns_updated_when_linked_salary_slip_exists(self):
+        result = self.module.import_severance_result(
+            payload={
+                "run_id": "SEV-1",
+                "employee_id": "EMP-0001",
+                "retirement_date": "2026-04-30",
+                "linked_salary_slip": "SS-0001",
+                "average_wage": 100,
+                "service_years": 3,
+                "severance_pay": 1000,
+                "severance_income_tax": 30,
+                "local_income_tax": 3,
+                "net_pay": 967,
+                "note": "severance calc",
+            }
+        )
+
+        self.assertEqual(result["status"], "updated")
+        self.assertEqual(result["employee_id"], "EMP-0001")
+        self.assertEqual(result["retirement_date"], "2026-04-30")
+        self.assertIsNone(result["korea_severance_slip"])
+        self.assertEqual(len(self.fake_frappe._comments), 1)
+        self.assertEqual(self.fake_frappe._comments[0]["reference_name"], "SS-0001")
+        self.assertIn("severance import", self.fake_frappe._comments[0]["content"])
+
     def test_import_payroll_result_rejects_pii_fields(self):
         with self.assertRaises(FakeFrappeError):
             self.module.import_payroll_result(

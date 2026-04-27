@@ -50,7 +50,29 @@ SOCIAL_INSURANCE_FIELDS = {
     "employment_insurance",
 }
 WITHHOLDING_TAX_FIELDS = {"income_tax", "local_income_tax"}
+YEAR_END_SETTLEMENT_REQUIRED_FIELDS = {
+    "run_id",
+    "employee_id",
+    "settlement_year",
+    "settlement_kind",
+    "applied_pay_year_month",
+    "prepaid_tax",
+    "determined_tax",
+    "adjustment_tax",
+}
+SEVERANCE_REQUIRED_FIELDS = {
+    "run_id",
+    "employee_id",
+    "retirement_date",
+    "average_wage",
+    "service_years",
+    "severance_pay",
+    "severance_income_tax",
+    "net_pay",
+}
+SETTLEMENT_KINDS = {"annual_february", "mid_year_termination"}
 PAY_YEAR_MONTH_PATTERN = re.compile(r"^[0-9]{4}-(0[1-9]|1[0-2])$")
+DATE_PATTERN = re.compile(r"^[0-9]{4}-[0-9]{2}-[0-9]{2}$")
 
 
 @frappe.whitelist()
@@ -333,6 +355,107 @@ def import_payroll_result(payload: dict[str, Any] | None = None, **kwargs) -> di
     }
 
 
+@frappe.whitelist()
+def import_year_end_settlement_result(payload: dict[str, Any] | None = None, **kwargs) -> dict[str, Any]:
+    payload = _coerce_payload(payload, kwargs)
+    _ensure_no_pii(payload)
+    _reject_unknown_keys(
+        payload,
+        {
+            "run_id",
+            "employee_id",
+            "settlement_year",
+            "settlement_kind",
+            "applied_pay_year_month",
+            "salary_slip_external_ref",
+            "prepaid_tax",
+            "determined_tax",
+            "adjustment_tax",
+            "local_income_tax",
+            "engine_version",
+            "ruleset_version",
+            "note",
+        },
+        "payload",
+    )
+    _require_keys(payload, YEAR_END_SETTLEMENT_REQUIRED_FIELDS, "payload")
+    if payload.get("settlement_kind") not in SETTLEMENT_KINDS:
+        frappe.throw("settlement_kind must be one of annual_february, mid_year_termination")
+    if not isinstance(payload.get("settlement_year"), int) or payload.get("settlement_year") < 2000:
+        frappe.throw("settlement_year must be an integer greater than or equal to 2000")
+    if not PAY_YEAR_MONTH_PATTERN.match(str(payload.get("applied_pay_year_month", ""))):
+        frappe.throw("applied_pay_year_month must be in YYYY-MM format")
+    for field in ["prepaid_tax", "determined_tax", "adjustment_tax"]:
+        _as_float(payload.get(field))
+    if payload.get("local_income_tax") is not None:
+        _as_float(payload.get("local_income_tax"))
+
+    salary_slip = None
+    external_ref = payload.get("salary_slip_external_ref")
+    if external_ref and getattr(frappe, "db", None) and frappe.db.exists("Salary Slip", external_ref):
+        salary_slip = external_ref
+    if salary_slip:
+        _record_year_end_settlement_comment(salary_slip, payload)
+
+    return {
+        "status": "updated" if salary_slip else "received",
+        "employee_id": payload["employee_id"],
+        "settlement_year": payload["settlement_year"],
+        "applied_pay_year_month": payload["applied_pay_year_month"],
+        "salary_slip": salary_slip,
+        "korea_calc_reference": None,
+        "message": "Validated and queued for year-end settlement mapping" if not salary_slip else "Validated and linked to Salary Slip",
+    }
+
+
+@frappe.whitelist()
+def import_severance_result(payload: dict[str, Any] | None = None, **kwargs) -> dict[str, Any]:
+    payload = _coerce_payload(payload, kwargs)
+    _ensure_no_pii(payload)
+    _reject_unknown_keys(
+        payload,
+        {
+            "run_id",
+            "employee_id",
+            "retirement_date",
+            "linked_salary_slip",
+            "average_wage",
+            "service_years",
+            "severance_pay",
+            "severance_income_tax",
+            "local_income_tax",
+            "net_pay",
+            "engine_version",
+            "ruleset_version",
+            "note",
+        },
+        "payload",
+    )
+    _require_keys(payload, SEVERANCE_REQUIRED_FIELDS, "payload")
+    if not DATE_PATTERN.match(str(payload.get("retirement_date", ""))):
+        frappe.throw("retirement_date must be in YYYY-MM-DD format")
+    for field in ["average_wage", "service_years", "severance_pay", "severance_income_tax", "net_pay"]:
+        _as_float(payload.get(field))
+    if payload.get("local_income_tax") is not None:
+        _as_float(payload.get("local_income_tax"))
+
+    linked_salary_slip = None
+    external_ref = payload.get("linked_salary_slip")
+    if external_ref and getattr(frappe, "db", None) and frappe.db.exists("Salary Slip", external_ref):
+        linked_salary_slip = external_ref
+    if linked_salary_slip:
+        _record_severance_import_comment(linked_salary_slip, payload)
+
+    return {
+        "status": "updated" if linked_salary_slip else "received",
+        "employee_id": payload["employee_id"],
+        "retirement_date": payload["retirement_date"],
+        "korea_severance_slip": None,
+        "korea_calc_reference": None,
+        "message": "Validated and queued for severance mapping" if not linked_salary_slip else "Validated and linked to Salary Slip",
+    }
+
+
 def _normalize_employee_row(row: dict[str, Any]) -> dict[str, Any]:
     clean = deepcopy(row)
     _ensure_no_pii(clean)
@@ -460,6 +583,48 @@ def _record_payroll_import_comment(salary_slip: str, payload: dict[str, Any]) ->
     except Exception:
         if getattr(frappe, "log_error", None):
             frappe.log_error("Failed to persist Korea payroll import comment")
+
+
+def _record_year_end_settlement_comment(salary_slip: str, payload: dict[str, Any]) -> None:
+    _insert_salary_slip_comment(
+        salary_slip,
+        (
+            f"Korea year-end settlement import received: run_id={payload['run_id']}, "
+            f"employee_id={payload['employee_id']}, settlement_year={payload['settlement_year']}, "
+            f"applied_pay_year_month={payload['applied_pay_year_month']}, adjustment_tax={payload['adjustment_tax']}"
+        ),
+        "Failed to persist Korea year-end settlement import comment",
+    )
+
+
+def _record_severance_import_comment(salary_slip: str, payload: dict[str, Any]) -> None:
+    _insert_salary_slip_comment(
+        salary_slip,
+        (
+            f"Korea severance import received: run_id={payload['run_id']}, "
+            f"employee_id={payload['employee_id']}, retirement_date={payload['retirement_date']}, "
+            f"net_pay={payload['net_pay']}"
+        ),
+        "Failed to persist Korea severance import comment",
+    )
+
+
+def _insert_salary_slip_comment(salary_slip: str, content: str, error_message: str) -> None:
+    if not getattr(frappe, "get_doc", None):
+        return
+
+    comment = {
+        "doctype": "Comment",
+        "comment_type": "Info",
+        "reference_doctype": "Salary Slip",
+        "reference_name": salary_slip,
+        "content": content,
+    }
+    try:
+        frappe.get_doc(comment).insert(ignore_permissions=True)
+    except Exception:
+        if getattr(frappe, "log_error", None):
+            frappe.log_error(error_message)
 
 
 def _apply_worksite_yaml_item(item: dict[str, Any]) -> tuple[str, dict[str, Any] | None]:
