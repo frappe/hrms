@@ -1,0 +1,578 @@
+from __future__ import annotations
+
+import json
+import re
+from copy import deepcopy
+from datetime import date, datetime
+from typing import Any
+
+import frappe
+
+DEFAULT_PAGE_SIZE = 100
+MAX_PAGE_SIZE = 500
+BLOCKED_PII_FIELDS = {
+    "resident_registration_number",
+    "foreigner_registration_number",
+    "bank_account_number",
+    "address",
+}
+EMPLOYMENT_TYPE_CATEGORY_MAP = {
+    "정규직": "regular",
+    "일용직": "daily",
+    "파트타임": "part_time",
+    "계약직": "contract",
+}
+WORKSITE_EVENT_TYPES = {"created", "updated", "deactivated"}
+PAYROLL_REQUIRED_FIELDS = {
+    "run_id",
+    "employee_id",
+    "pay_year_month",
+    "taxable_items",
+    "non_taxable_items",
+    "social_insurance_deductions",
+    "withholding_tax",
+    "net_pay",
+}
+SOCIAL_INSURANCE_FIELDS = {
+    "national_pension",
+    "health_insurance",
+    "long_term_care_insurance",
+    "employment_insurance",
+}
+WITHHOLDING_TAX_FIELDS = {"income_tax", "local_income_tax"}
+PAY_YEAR_MONTH_PATTERN = re.compile(r"^[0-9]{4}-(0[1-9]|1[0-2])$")
+
+
+@frappe.whitelist()
+def export_employee_master(
+    employee_id: str | None = None,
+    company: str | None = None,
+    branch: str | None = None,
+    modified_after: str | None = None,
+    include_inactive: bool = False,
+    page: int = 1,
+    page_size: int = DEFAULT_PAGE_SIZE,
+) -> dict[str, Any]:
+    page, page_size = _normalize_pagination(page, page_size)
+    filters: dict[str, Any] = {}
+    if employee_id:
+        filters["name"] = employee_id
+    if company:
+        filters["company"] = company
+    if branch:
+        filters["branch"] = branch
+    if modified_after:
+        filters["modified"] = [">", modified_after]
+    if not _coerce_bool(include_inactive):
+        filters["status"] = "Active"
+
+    fields = [
+        "name",
+        "employee_number",
+        "employee_name",
+        "company",
+        "branch",
+        "department",
+        "designation",
+        "employment_type",
+        "date_of_joining",
+        "relieving_date",
+        "status",
+        "modified",
+    ]
+    fields.extend(_get_optional_fields("Employee", ["visa_status_code"]))
+
+    rows = frappe.get_all(
+        "Employee",
+        filters=filters,
+        fields=fields,
+        order_by="modified asc",
+        start=(page - 1) * page_size,
+        page_length=page_size + 1,
+    )
+
+    has_more = len(rows) > page_size
+    payload = [_normalize_employee_row(row) for row in rows[:page_size]]
+    return {"data": payload, "meta": _build_meta(page, page_size, has_more)}
+
+
+@frappe.whitelist()
+def export_time_and_leave(
+    from_date: str,
+    to_date: str,
+    company: str | None = None,
+    branch: str | None = None,
+    employee_id: str | None = None,
+    modified_after: str | None = None,
+    page: int = 1,
+    page_size: int = DEFAULT_PAGE_SIZE,
+) -> dict[str, Any]:
+    if not from_date or not to_date:
+        frappe.throw("from_date and to_date are required")
+    if _stringify_date(from_date) > _stringify_date(to_date):
+        frappe.throw("from_date must be less than or equal to to_date")
+
+    page, page_size = _normalize_pagination(page, page_size)
+    query_page_length = _bounded_query_page_length(page_size)
+    attendance_fields = ["name", "employee", "attendance_date", "status", "shift", "modified"]
+    attendance_fields.extend(_get_optional_fields("Attendance"))
+
+    attendance_filters: dict[str, Any] = {
+        "attendance_date": ["between", [from_date, to_date]],
+        "docstatus": 1,
+    }
+    leave_filters: dict[str, Any] = {
+        "from_date": ["<=", to_date],
+        "to_date": [">=", from_date],
+        "docstatus": 1,
+    }
+    if employee_id:
+        attendance_filters["employee"] = employee_id
+        leave_filters["employee"] = employee_id
+    if modified_after:
+        attendance_filters["modified"] = [">", modified_after]
+        leave_filters["modified"] = [">", modified_after]
+
+    employee_filters = {k: v for k, v in {"company": company, "branch": branch}.items() if v}
+    employee_whitelist = None
+    if employee_filters:
+        employee_whitelist = set(
+            frappe.get_all("Employee", filters=employee_filters, pluck="name", page_length=query_page_length)
+        )
+        if not employee_whitelist:
+            return {"data": [], "meta": _build_meta(page, page_size, False)}
+
+    attendance_rows = frappe.get_all(
+        "Attendance",
+        filters=attendance_filters,
+        fields=attendance_fields,
+        order_by="employee asc, attendance_date asc",
+        page_length=query_page_length,
+    )
+    leave_rows = frappe.get_all(
+        "Leave Application",
+        filters=leave_filters,
+        fields=[
+            "name",
+            "employee",
+            "leave_type",
+            "from_date",
+            "to_date",
+            "half_day",
+            "half_day_date",
+            "total_leave_days",
+            "status",
+            "modified",
+        ],
+        order_by="employee asc, from_date asc",
+        page_length=query_page_length,
+    )
+
+    data = _build_time_and_leave_export(
+        attendance_rows=attendance_rows,
+        leave_rows=leave_rows,
+        from_date=from_date,
+        to_date=to_date,
+        employee_whitelist=employee_whitelist,
+    )
+
+    start = (page - 1) * page_size
+    sliced = data[start : start + page_size + 1]
+    has_more = len(sliced) > page_size
+    return {"data": sliced[:page_size], "meta": _build_meta(page, page_size, has_more)}
+
+
+@frappe.whitelist()
+def notify_worksite_master_change(payload: dict[str, Any] | None = None, **kwargs) -> dict[str, Any]:
+    payload = _coerce_payload(payload, kwargs)
+    _reject_unknown_keys(payload, {"event_type", "worksite"}, "payload")
+    event_type = payload.get("event_type")
+    worksite = payload.get("worksite") or {}
+
+    if event_type not in WORKSITE_EVENT_TYPES:
+        frappe.throw("event_type must be one of created, updated, deactivated")
+    _require_keys(worksite, {"company", "branch", "business_registration_number", "effective_from"}, "worksite")
+    _reject_unknown_keys(
+        worksite,
+        {
+            "company",
+            "branch",
+            "business_registration_number",
+            "worksite_code",
+            "effective_from",
+            "status",
+            "modified",
+        },
+        "worksite",
+    )
+
+    return {
+        "status": "queued",
+        "event_type": event_type,
+        "worksite": {
+            "company": worksite.get("company"),
+            "branch": worksite.get("branch"),
+            "business_registration_number": worksite.get("business_registration_number"),
+            "worksite_code": worksite.get("worksite_code"),
+            "effective_from": worksite.get("effective_from"),
+            "status": worksite.get("status"),
+            "modified": worksite.get("modified"),
+        },
+    }
+
+
+@frappe.whitelist()
+def apply_worksite_master_from_yaml(payload: dict[str, Any] | None = None, **kwargs) -> dict[str, Any]:
+    payload = _coerce_payload(payload, kwargs)
+    _reject_unknown_keys(payload, {"yaml_version", "items"}, "payload")
+    yaml_version = payload.get("yaml_version")
+    items = payload.get("items")
+
+    if not yaml_version:
+        frappe.throw("yaml_version is required")
+    if not isinstance(items, list):
+        frappe.throw("items must be a list")
+
+    applied = []
+    conflicts = []
+    for item in items:
+        _require_keys(item, {"company", "branch", "business_registration_number", "effective_from"}, "item")
+        _reject_unknown_keys(
+            item,
+            {
+                "company",
+                "branch",
+                "business_registration_number",
+                "worksite_code",
+                "status",
+                "effective_from",
+                "effective_to",
+                "source_modified",
+            },
+            "item",
+        )
+        applied.append(
+            {
+                "company": item.get("company"),
+                "branch": item.get("branch"),
+                "action": "ignored",
+            }
+        )
+
+    return {"yaml_version": yaml_version, "applied": applied, "conflicts": conflicts}
+
+
+@frappe.whitelist()
+def import_payroll_result(payload: dict[str, Any] | None = None, **kwargs) -> dict[str, Any]:
+    payload = _coerce_payload(payload, kwargs)
+    _ensure_no_pii(payload)
+    _reject_unknown_keys(
+        payload,
+        {
+            "run_id",
+            "employee_id",
+            "pay_year_month",
+            "salary_slip_external_ref",
+            "taxable_items",
+            "non_taxable_items",
+            "social_insurance_deductions",
+            "withholding_tax",
+            "gross_pay",
+            "total_deduction",
+            "net_pay",
+            "ruleset_version",
+            "engine_version",
+        },
+        "payload",
+    )
+    _require_keys(payload, PAYROLL_REQUIRED_FIELDS, "payload")
+    if not PAY_YEAR_MONTH_PATTERN.match(str(payload.get("pay_year_month", ""))):
+        frappe.throw("pay_year_month must be in YYYY-MM format")
+    if getattr(frappe, "db", None) and frappe.db.exists("Korea Calc Reference", {"run_id": payload["run_id"]}):
+        frappe.throw(f"run_id already imported: {payload['run_id']}")
+    _validate_payroll_items(payload.get("taxable_items"), "taxable_items")
+    _validate_payroll_items(payload.get("non_taxable_items"), "non_taxable_items")
+    _validate_required_numeric_mapping(
+        payload.get("social_insurance_deductions"), SOCIAL_INSURANCE_FIELDS, "social_insurance_deductions"
+    )
+    _validate_required_numeric_mapping(payload.get("withholding_tax"), WITHHOLDING_TAX_FIELDS, "withholding_tax")
+
+    salary_slip = None
+    external_ref = payload.get("salary_slip_external_ref")
+    if external_ref and getattr(frappe, "db", None) and frappe.db.exists("Salary Slip", external_ref):
+        salary_slip = external_ref
+
+    if salary_slip:
+        _record_payroll_import_comment(salary_slip, payload)
+
+    return {
+        "status": "updated" if salary_slip else "received",
+        "employee_id": payload["employee_id"],
+        "pay_year_month": payload["pay_year_month"],
+        "salary_slip": salary_slip,
+        "korea_calc_reference": None,
+        "message": "Validated and queued for downstream mapping" if not salary_slip else "Validated and linked to Salary Slip",
+    }
+
+
+def _normalize_employee_row(row: dict[str, Any]) -> dict[str, Any]:
+    clean = deepcopy(row)
+    _ensure_no_pii(clean)
+    employment_type = clean.get("employment_type") or "기타"
+    employment_category = EMPLOYMENT_TYPE_CATEGORY_MAP.get(employment_type, "other")
+    if clean.get("visa_status_code"):
+        employment_category = "foreign_worker"
+
+    return {
+        "employee_id": clean.get("name"),
+        "employee_number": clean.get("employee_number") or clean.get("name"),
+        "employee_name": clean.get("employee_name") or clean.get("name"),
+        "company": clean.get("company"),
+        "branch": clean.get("branch"),
+        "department": clean.get("department"),
+        "designation": clean.get("designation"),
+        "employment_type": employment_type if employment_type in EMPLOYMENT_TYPE_CATEGORY_MAP or employment_type == "기타" else "기타",
+        "employment_category": employment_category,
+        "visa_status_code": clean.get("visa_status_code"),
+        "date_of_joining": _stringify_date(clean.get("date_of_joining")),
+        "relieving_date": _stringify_date(clean.get("relieving_date")),
+        "status": clean.get("status"),
+        "modified": _stringify_datetime(clean.get("modified")),
+    }
+
+
+def _build_time_and_leave_export(
+    attendance_rows: list[dict[str, Any]],
+    leave_rows: list[dict[str, Any]],
+    from_date: str,
+    to_date: str,
+    employee_whitelist: set[str] | None = None,
+) -> list[dict[str, Any]]:
+    grouped: dict[str, dict[str, Any]] = {}
+
+    for row in attendance_rows:
+        employee = row.get("employee")
+        if not employee or (employee_whitelist is not None and employee not in employee_whitelist):
+            continue
+        target = grouped.setdefault(employee, _new_time_and_leave_bucket(employee, from_date, to_date))
+        normalized = _normalize_attendance_row(row)
+        target["attendance_records"].append(normalized)
+        target["work_time_summary"]["regular_hours_total"] += normalized["regular_hours"]
+        target["work_time_summary"]["overtime_hours_total"] += normalized["overtime_hours"]
+        target["work_time_summary"]["night_hours_total"] += normalized["night_hours"]
+        target["work_time_summary"]["holiday_hours_total"] += normalized["holiday_hours"]
+
+    for row in leave_rows:
+        employee = row.get("employee")
+        if not employee or (employee_whitelist is not None and employee not in employee_whitelist):
+            continue
+        target = grouped.setdefault(employee, _new_time_and_leave_bucket(employee, from_date, to_date))
+        target["leave_records"].append(_normalize_leave_row(row))
+
+    return [grouped[key] for key in sorted(grouped)]
+
+
+def _new_time_and_leave_bucket(employee: str, from_date: str, to_date: str) -> dict[str, Any]:
+    return {
+        "employee_id": employee,
+        "period": {"from_date": from_date, "to_date": to_date},
+        "attendance_records": [],
+        "leave_records": [],
+        "work_time_summary": {
+            "regular_hours_total": 0.0,
+            "overtime_hours_total": 0.0,
+            "night_hours_total": 0.0,
+            "holiday_hours_total": 0.0,
+        },
+    }
+
+
+def _normalize_attendance_row(row: dict[str, Any]) -> dict[str, Any]:
+    regular_hours = _as_float(row.get("regular_hours", row.get("working_hours", 0)))
+    overtime_hours = _as_float(row.get("overtime_hours", row.get("custom_overtime_hours", 0)))
+    night_hours = _as_float(row.get("night_hours", row.get("custom_night_hours", 0)))
+    holiday_hours = _as_float(row.get("holiday_hours", row.get("custom_holiday_hours", 0)))
+
+    return {
+        "attendance_id": row.get("name"),
+        "attendance_date": _stringify_date(row.get("attendance_date")),
+        "status": row.get("status"),
+        "shift_type": row.get("shift"),
+        "in_time": _stringify_datetime(row.get("in_time")),
+        "out_time": _stringify_datetime(row.get("out_time")),
+        "regular_hours": regular_hours,
+        "overtime_hours": overtime_hours,
+        "night_hours": night_hours,
+        "holiday_hours": holiday_hours,
+        "modified": _stringify_datetime(row.get("modified")),
+    }
+
+
+def _normalize_leave_row(row: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "leave_application_id": row.get("name"),
+        "leave_type": row.get("leave_type"),
+        "from_date": _stringify_date(row.get("from_date")),
+        "to_date": _stringify_date(row.get("to_date")),
+        "half_day": bool(row.get("half_day")),
+        "half_day_date": _stringify_date(row.get("half_day_date")),
+        "total_leave_days": _as_float(row.get("total_leave_days", 0)),
+        "status": row.get("status"),
+        "modified": _stringify_datetime(row.get("modified")),
+    }
+
+
+def _record_payroll_import_comment(salary_slip: str, payload: dict[str, Any]) -> None:
+    if not getattr(frappe, "get_doc", None):
+        return
+
+    comment = {
+        "doctype": "Comment",
+        "comment_type": "Info",
+        "reference_doctype": "Salary Slip",
+        "reference_name": salary_slip,
+        "content": (
+            f"Korea payroll import received: run_id={payload['run_id']}, "
+            f"employee_id={payload['employee_id']}, pay_year_month={payload['pay_year_month']}, "
+            f"net_pay={payload['net_pay']}"
+        ),
+    }
+    try:
+        frappe.get_doc(comment).insert(ignore_permissions=True)
+    except Exception:
+        if getattr(frappe, "log_error", None):
+            frappe.log_error("Failed to persist Korea payroll import comment")
+
+
+def _get_optional_fields(doctype: str, candidates: list[str] | None = None) -> list[str]:
+    db = getattr(frappe, "db", None)
+    if not db or not hasattr(db, "get_table_columns"):
+        return candidates or []
+
+    columns = set(db.get_table_columns(doctype) or [])
+    candidates = candidates or [
+        "working_hours",
+        "regular_hours",
+        "overtime_hours",
+        "night_hours",
+        "holiday_hours",
+        "custom_overtime_hours",
+        "custom_night_hours",
+        "custom_holiday_hours",
+        "in_time",
+        "out_time",
+    ]
+    return [field for field in candidates if field in columns]
+
+
+def _coerce_payload(payload: dict[str, Any] | None, kwargs: dict[str, Any]) -> dict[str, Any]:
+    if payload is not None:
+        return payload
+    if kwargs:
+        return kwargs
+    if getattr(frappe, "local", None) and getattr(frappe.local, "form_dict", None):
+        form_dict = dict(frappe.local.form_dict)
+        if len(form_dict) == 1 and "payload" in form_dict and isinstance(form_dict["payload"], str):
+            return json.loads(form_dict["payload"])
+        return form_dict
+    return {}
+
+
+def _normalize_pagination(page: int | str, page_size: int | str) -> tuple[int, int]:
+    try:
+        page = max(int(page), 1)
+    except (TypeError, ValueError):
+        page = 1
+    try:
+        page_size = int(page_size)
+    except (TypeError, ValueError):
+        page_size = DEFAULT_PAGE_SIZE
+    page_size = min(max(page_size, 1), MAX_PAGE_SIZE)
+    return page, page_size
+
+
+def _build_meta(page: int, page_size: int, has_more: bool) -> dict[str, Any]:
+    return {"page": page, "page_size": page_size, "has_more": has_more}
+
+
+def _bounded_query_page_length(page_size: int) -> int:
+    return min(max(page_size, DEFAULT_PAGE_SIZE), MAX_PAGE_SIZE) + 1
+
+
+def _coerce_bool(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.strip().lower() in {"1", "true", "yes", "y"}
+    return bool(value)
+
+
+def _ensure_no_pii(payload: Any) -> None:
+    if isinstance(payload, dict):
+        keys = set(payload)
+        blocked = keys & BLOCKED_PII_FIELDS
+        if blocked:
+            frappe.throw(f"PII fields are not allowed: {', '.join(sorted(blocked))}")
+        for value in payload.values():
+            _ensure_no_pii(value)
+    elif isinstance(payload, list):
+        for item in payload:
+            _ensure_no_pii(item)
+
+
+def _require_keys(payload: Any, required_keys: set[str], label: str) -> None:
+    if not isinstance(payload, dict):
+        frappe.throw(f"{label} must be an object")
+    missing = [key for key in sorted(required_keys) if key not in payload or payload.get(key) in (None, "")]
+    if missing:
+        frappe.throw(f"{label} is missing required fields: {', '.join(missing)}")
+
+
+def _reject_unknown_keys(payload: Any, allowed_keys: set[str], label: str) -> None:
+    if not isinstance(payload, dict):
+        frappe.throw(f"{label} must be an object")
+    unknown = sorted(set(payload) - allowed_keys)
+    if unknown:
+        frappe.throw(f"{label} contains unsupported fields: {', '.join(unknown)}")
+
+
+def _validate_payroll_items(items: Any, label: str) -> None:
+    if not isinstance(items, list):
+        frappe.throw(f"{label} must be a list")
+    for item in items:
+        _require_keys(item, {"code", "label", "amount"}, label)
+        _reject_unknown_keys(item, {"code", "label", "amount"}, label)
+        _as_float(item.get("amount"))
+
+
+def _validate_required_numeric_mapping(payload: Any, required_keys: set[str], label: str) -> None:
+    _require_keys(payload, required_keys, label)
+    _reject_unknown_keys(payload, required_keys, label)
+    for key in required_keys:
+        _as_float(payload.get(key))
+
+
+def _as_float(value: Any) -> float:
+    try:
+        return float(value or 0)
+    except (TypeError, ValueError):
+        frappe.throw(f"Invalid numeric value: {value}")
+        raise RuntimeError(f"frappe.throw returned unexpectedly for invalid numeric value: {value}")
+
+
+def _stringify_date(value: Any) -> str | None:
+    if value is None or value == "":
+        return None
+    if isinstance(value, date) and not isinstance(value, datetime):
+        return value.isoformat()
+    if isinstance(value, datetime):
+        return value.date().isoformat()
+    return str(value)
+
+
+def _stringify_datetime(value: Any) -> str | None:
+    if value is None or value == "":
+        return None
+    if isinstance(value, datetime):
+        return value.isoformat(sep=" ")
+    return str(value)
