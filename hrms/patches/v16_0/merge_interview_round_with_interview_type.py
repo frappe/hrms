@@ -7,4 +7,9 @@ def execute():
 		for interview_round, interview_type in frappe.get_all(
 			"Interview Round", fields=["name", "interview_type"], as_list=True
 		):
+<<<<<<< HEAD
 			rename_doc("Interview Type", interview_type, interview_round)
+=======
+			if interview_type != interview_round and interview_type and interview_round:
+				rename_doc("Interview Type", interview_type, interview_round)
+>>>>>>> f03001cd (fix: Interview-type patch)
