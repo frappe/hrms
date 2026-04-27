@@ -239,7 +239,7 @@ def notify_worksite_master_change(payload: dict[str, Any] | None = None, **kwarg
     )
 
     return {
-        "status": "queued",
+        "status": "received",
         "event_type": event_type,
         "worksite": {
             "company": worksite.get("company"),
@@ -252,7 +252,7 @@ def notify_worksite_master_change(payload: dict[str, Any] | None = None, **kwarg
         },
         "audit": {
             "resolution_policy": "yaml_wins",
-            "queued": True,
+            "queued": False,
             "source": "frappe",
         },
     }
@@ -482,6 +482,10 @@ def _normalize_employee_row(row: dict[str, Any]) -> dict[str, Any]:
     clean = deepcopy(row)
     _ensure_no_pii(clean)
     employment_type = clean.get("employment_type") or "기타"
+    if employment_type not in EMPLOYMENT_TYPE_CATEGORY_MAP and employment_type != "기타" and getattr(frappe, "log_error", None):
+        frappe.log_error(f"Unknown employment_type from Korea export: {employment_type}")
+        employment_type = "기타"
+
     employment_category = EMPLOYMENT_TYPE_CATEGORY_MAP.get(employment_type, "other")
     if clean.get("visa_status_code"):
         employment_category = "foreign_worker"
@@ -494,7 +498,7 @@ def _normalize_employee_row(row: dict[str, Any]) -> dict[str, Any]:
         "branch": clean.get("branch"),
         "department": clean.get("department"),
         "designation": clean.get("designation"),
-        "employment_type": employment_type if employment_type in EMPLOYMENT_TYPE_CATEGORY_MAP or employment_type == "기타" else "기타",
+        "employment_type": employment_type,
         "employment_category": employment_category,
         "visa_status_code": clean.get("visa_status_code"),
         "date_of_joining": _stringify_date(clean.get("date_of_joining")),

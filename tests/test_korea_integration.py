@@ -102,7 +102,8 @@ class FakeFrappeModule(types.SimpleNamespace):
         self.whitelist = lambda *args, **kwargs: (lambda fn: fn)
         self.throw = self._throw
         self.parse_json = lambda value: value
-        self.log_error = lambda *args, **kwargs: None
+        self.error_logs = []
+        self.log_error = lambda *args, **kwargs: self.error_logs.append({"args": args, "kwargs": kwargs})
         self.get_traceback = lambda: "traceback"
         self.local = types.SimpleNamespace(form_dict={}, request=None)
         self.session = types.SimpleNamespace(user="integration@example.com")
@@ -220,6 +221,31 @@ class KoreaIntegrationTests(unittest.TestCase):
         self.assertEqual(result["data"][1]["employment_category"], "foreign_worker")
         self.assertEqual(result["data"][1]["visa_status_code"], "E-9")
         self.assertNotIn("address", result["data"][0])
+
+    def test_export_employee_master_logs_unknown_employment_type(self):
+        self.fake_frappe._employee_rows = [
+            {
+                "name": "EMP-0099",
+                "employee_number": "1099",
+                "employee_name": "Park Mystery",
+                "company": "Winners",
+                "branch": "Seoul",
+                "department": "Ops",
+                "designation": "Analyst",
+                "employment_type": "인턴",
+                "date_of_joining": "2026-02-01",
+                "relieving_date": None,
+                "status": "Active",
+                "modified": "2026-04-26 11:00:00",
+            }
+        ]
+
+        result = self.module.export_employee_master(page=1, page_size=1)
+
+        self.assertEqual(result["data"][0]["employment_type"], "기타")
+        self.assertEqual(result["data"][0]["employment_category"], "other")
+        self.assertEqual(len(self.fake_frappe.error_logs), 1)
+        self.assertIn("Unknown employment_type", self.fake_frappe.error_logs[0]["args"][0])
 
     def test_export_time_and_leave_groups_records(self):
         self.fake_frappe._attendance_rows = [
@@ -396,11 +422,12 @@ class KoreaIntegrationTests(unittest.TestCase):
             }
         )
 
-        self.assertEqual(result["status"], "queued")
+        self.assertEqual(result["status"], "received")
         self.assertEqual(result["event_type"], "updated")
         self.assertEqual(result["worksite"]["branch"], "Bupyeong")
         self.assertIn("audit", result)
         self.assertEqual(result["audit"]["resolution_policy"], "yaml_wins")
+        self.assertFalse(result["audit"]["queued"])
 
     def test_import_year_end_settlement_result_rejects_unknown_fields(self):
         with self.assertRaises(FakeFrappeError):
