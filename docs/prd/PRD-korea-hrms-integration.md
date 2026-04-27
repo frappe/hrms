@@ -497,6 +497,9 @@
 
 **완료 게이트**:
 - 두 파일럿 사업장 1개월치 1원 단위 동일성 100%
+- 최신 Korea DocType 반영 후 `bench migrate` 성공
+- landed Korea DocType 모두 `frappe.db.exists(...)` 검증 완료
+- Korea import/worksite API smoke 통과
 - PII 감사 로그 정상 작동
 - 백업/복구 검증
 
@@ -546,6 +549,9 @@
 
 ### 1 사업장 파일럿 (Phase 2 게이트)
 - [ ] parallel run 1개월치 1원 단위 동일성 100% (직원 전체)
+- [ ] 최신 Korea DocType 반영 후 `bench migrate` 성공
+- [ ] landed Korea DocType 모두 `frappe.db.exists(...)` 검증 완료
+- [ ] Korea import/worksite API smoke 통과
 - [ ] PII 감사 로그 모든 호출 기록
 - [ ] privacy_broker 일회성 조회 작동
 - [ ] 명세서 PDF 한국 양식 출력 정상
