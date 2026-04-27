@@ -203,6 +203,9 @@ doc_events = {
 		],
 	},
 	"Loan": {"validate": "hrms.hr.utils.validate_loan_repay_from_salary"},
+	"Salary Slip": {
+		"validate": "hrms.payroll.doctype.salary_slip.korea_salary_slip.apply_korea_salary_slip_fields"
+	},
 	"Employee": {
 		"validate": "hrms.overrides.employee_master.validate_onboarding_process",
 		"on_update": [
