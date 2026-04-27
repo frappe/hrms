@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import inspect
 import json
 import re
+from contextlib import contextmanager
 from copy import deepcopy
 from datetime import date, datetime
 from typing import Any
@@ -10,6 +12,7 @@ import frappe
 
 DEFAULT_PAGE_SIZE = 100
 MAX_PAGE_SIZE = 500
+LOCK_TTL_SECONDS = 10
 BLOCKED_PII_FIELDS = {
     "resident_registration_number",
     "foreigner_registration_number",
@@ -653,36 +656,107 @@ def _insert_salary_slip_comment(salary_slip: str, content: str, error_message: s
             frappe.log_error(error_message)
 
 
+@contextmanager
+def _worksite_sync_lock(branch_name: str):
+    lock_key = f"korea-worksite-sync:{branch_name}"
+    cache_factory = getattr(frappe, "cache", None)
+    if callable(cache_factory):
+        cache = cache_factory()
+        cache_lock = getattr(cache, "lock", None)
+        if callable(cache_lock):
+            with cache_lock(lock_key, timeout=LOCK_TTL_SECONDS, **_nonblocking_lock_kwargs(cache_lock)):
+                yield
+            return
+
+    utils = getattr(frappe, "utils", None)
+    lock_module = getattr(utils, "lock", None) if utils else None
+    create_lock = getattr(lock_module, "create_lock", None) if lock_module else None
+    if callable(create_lock):
+        parameters = inspect.signature(create_lock).parameters
+        kwargs = _nonblocking_lock_kwargs(create_lock)
+        if "timeout" in parameters:
+            kwargs["timeout"] = LOCK_TTL_SECONDS
+        elif "expire" in parameters:
+            kwargs["expire"] = LOCK_TTL_SECONDS
+        elif "expires" in parameters:
+            kwargs["expires"] = LOCK_TTL_SECONDS
+        with create_lock(lock_key, **kwargs):
+            yield
+        return
+
+    frappe.throw("No supported Frappe lock primitive available for worksite sync")
+
+
+def _nonblocking_lock_kwargs(lock_factory: Any) -> dict[str, Any]:
+    try:
+        parameters = inspect.signature(lock_factory).parameters
+    except (TypeError, ValueError):
+        return {"blocking_timeout": 0}
+    if "blocking_timeout" in parameters:
+        return {"blocking_timeout": 0}
+    if "blocking" in parameters:
+        return {"blocking": False}
+    if "wait" in parameters:
+        return {"wait": False}
+    return {"blocking_timeout": 0}
+
+
+def _is_frappe_lock_error(exc: Exception) -> bool:
+    lock_error = getattr(frappe, "LockError", None)
+    if lock_error and isinstance(exc, lock_error):
+        return True
+
+    exceptions_module = getattr(frappe, "exceptions", None)
+    fallback_lock_error = getattr(exceptions_module, "LockError", None) if exceptions_module else None
+    if fallback_lock_error and isinstance(exc, fallback_lock_error):
+        return True
+
+    return exc.__class__.__name__ == "LockError"
+
+
 def _apply_worksite_yaml_item(item: dict[str, Any]) -> tuple[str, dict[str, Any] | None]:
     branch_name = item["branch"]
-    branch_exists = bool(getattr(frappe.db, "exists", lambda *args, **kwargs: None)("Branch", branch_name))
-    current = _get_branch_worksite_state(branch_name) if branch_exists else {}
-    desired = _build_desired_worksite_state(item)
-    field_map = _get_worksite_field_map()
-    changed_fields = [
-        field
-        for field, value in desired.items()
-        if field != "last_sync_payload" and current.get(field) != value
-    ]
+    try:
+        with _worksite_sync_lock(branch_name):
+            branch_exists = bool(getattr(frappe.db, "exists", lambda *args, **kwargs: None)("Branch", branch_name))
+            current = _get_branch_worksite_state(branch_name) if branch_exists else {}
+            desired = _build_desired_worksite_state(item)
+            field_map = _get_worksite_field_map()
+            changed_fields = [
+                field
+                for field, value in desired.items()
+                if field != "last_sync_payload" and current.get(field) != value
+            ]
 
-    if not branch_exists:
-        _persist_branch_worksite_state(branch_name, item["company"], desired)
-        return "created", None
-    if not changed_fields:
-        return "ignored", None
+            if not branch_exists:
+                _persist_branch_worksite_state(branch_name, item["company"], desired)
+                return "created", None
+            if not changed_fields:
+                return "ignored", None
 
-    desired["sync_status"] = "conflict_detected"
-    _persist_branch_worksite_state(branch_name, item["company"], desired)
-    detail = ", ".join(sorted(field_map.get(field, field) for field in changed_fields))
-    return (
-        "updated",
-        {
-            "company": item.get("company"),
-            "branch": branch_name,
-            "resolution": "yaml_wins",
-            "detail": detail,
-        },
-    )
+            desired["sync_status"] = "conflict_detected"
+            _persist_branch_worksite_state(branch_name, item["company"], desired)
+            detail = ", ".join(sorted(field_map.get(field, field) for field in changed_fields))
+            return (
+                "updated",
+                {
+                    "company": item.get("company"),
+                    "branch": branch_name,
+                    "resolution": "yaml_wins",
+                    "detail": detail,
+                },
+            )
+    except Exception as exc:
+        if _is_frappe_lock_error(exc):
+            return (
+                "rejected_locked",
+                {
+                    "company": item.get("company"),
+                    "branch": branch_name,
+                    "reason": "concurrent_sync_in_progress",
+                },
+            )
+        raise
 
 
 def _build_desired_worksite_state(item: dict[str, Any]) -> dict[str, Any]:

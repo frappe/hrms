@@ -552,7 +552,7 @@ paths:
               $ref: '#/components/schemas/WorksiteYamlSyncRequest'
       responses:
         '200':
-          description: Worksite sync result
+          description: Worksite sync result (non-blocking; a locked branch returns action=rejected_locked)
           content:
             application/json:
               schema:
@@ -616,7 +616,7 @@ components:
         "properties": {
           "company": { "type": "string" },
           "branch": { "type": "string" },
-          "action": { "type": "string", "enum": ["created", "updated", "ignored"] }
+          "action": { "type": "string", "enum": ["created", "updated", "ignored", "rejected_locked"] }
         },
         "additionalProperties": false
       }
@@ -625,13 +625,18 @@ components:
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["company", "branch", "resolution"],
+        "required": ["company", "branch"],
         "properties": {
           "company": { "type": "string" },
           "branch": { "type": "string" },
           "resolution": { "type": "string", "enum": ["yaml_wins"] },
-          "detail": { "type": ["string", "null"] }
+          "detail": { "type": ["string", "null"] },
+          "reason": { "type": "string", "enum": ["concurrent_sync_in_progress"] }
         },
+        "anyOf": [
+          { "required": ["resolution"] },
+          { "required": ["reason"] }
+        ],
         "additionalProperties": false
       }
     }

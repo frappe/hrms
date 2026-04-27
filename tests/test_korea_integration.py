@@ -13,6 +13,10 @@ class FakeDuplicateEntryError(Exception):
     pass
 
 
+class FakeLockError(Exception):
+    pass
+
+
 class FakeDB:
     def __init__(self):
         self.exists_calls = []
@@ -107,6 +111,11 @@ class FakeFrappeModule(types.SimpleNamespace):
         self.get_traceback = lambda: "traceback"
         self.local = types.SimpleNamespace(form_dict={}, request=None)
         self.session = types.SimpleNamespace(user="integration@example.com")
+        self.LockError = FakeLockError
+        self._cache = FakeCache()
+
+    def cache(self):
+        return self._cache
 
     def _throw(self, message, exc=None):
         raise FakeFrappeError(message)
@@ -164,6 +173,34 @@ class FakeFrappeModule(types.SimpleNamespace):
 
         self._comments.append(payload)
         return types.SimpleNamespace(insert=lambda ignore_permissions=False: payload)
+
+
+class FakeCache:
+    def __init__(self):
+        self.lock_calls = []
+        self.lock_enter_calls = []
+        self.lock_release_calls = []
+        self.lock_unavailable_keys = set()
+
+    def lock(self, key, timeout=None, **kwargs):
+        self.lock_calls.append({"key": key, "timeout": timeout, **kwargs})
+        return FakeCacheLock(self, key)
+
+
+class FakeCacheLock:
+    def __init__(self, cache, key):
+        self.cache = cache
+        self.key = key
+
+    def __enter__(self):
+        self.cache.lock_enter_calls.append(self.key)
+        if self.key in self.cache.lock_unavailable_keys:
+            raise FakeLockError(f"Lock unavailable: {self.key}")
+        return self
+
+    def __exit__(self, exc_type, exc, tb):
+        self.cache.lock_release_calls.append({"key": self.key, "exc_type": exc_type.__name__ if exc_type else None})
+        return False
 
 
 class KoreaIntegrationTests(unittest.TestCase):
@@ -405,6 +442,103 @@ class KoreaIntegrationTests(unittest.TestCase):
 
         self.assertEqual(result["applied"], [{"company": "Winners", "branch": "Bupyeong", "action": "ignored"}])
         self.assertEqual(result["conflicts"], [])
+
+    def test_apply_worksite_yaml_item_acquires_lock_for_branch(self):
+        item = {
+            "company": "Winners",
+            "branch": "Bupyeong",
+            "business_registration_number": "123-45-67890",
+            "worksite_code": "BUP-01",
+            "status": "active",
+            "effective_from": "2026-04-01",
+            "effective_to": None,
+            "source_modified": "2026-04-26 09:00:00",
+        }
+
+        self.module._apply_worksite_yaml_item(item)
+
+        self.assertEqual(
+            self.fake_frappe._cache.lock_calls,
+            [{"key": "korea-worksite-sync:Bupyeong", "timeout": 10, "blocking_timeout": 0}],
+        )
+        self.assertEqual(self.fake_frappe._cache.lock_enter_calls, ["korea-worksite-sync:Bupyeong"])
+
+    def test_apply_worksite_yaml_item_releases_lock_after_normal_path(self):
+        item = {
+            "company": "Winners",
+            "branch": "Bupyeong",
+            "business_registration_number": "123-45-67890",
+            "worksite_code": "BUP-01",
+            "status": "active",
+            "effective_from": "2026-04-01",
+            "effective_to": None,
+            "source_modified": "2026-04-26 09:00:00",
+        }
+
+        result = self.module._apply_worksite_yaml_item(item)
+
+        self.assertEqual(result, ("created", None))
+        self.assertEqual(
+            self.fake_frappe._cache.lock_release_calls,
+            [{"key": "korea-worksite-sync:Bupyeong", "exc_type": None}],
+        )
+
+    def test_apply_worksite_yaml_item_releases_lock_after_throw(self):
+        item = {
+            "company": "Winners",
+            "branch": "Bupyeong",
+            "business_registration_number": "123-45-67890",
+            "worksite_code": "BUP-01",
+            "status": "active",
+            "effective_from": "2026-04-01",
+            "effective_to": None,
+            "source_modified": "2026-04-26 09:00:00",
+        }
+        original = self.module._persist_branch_worksite_state
+
+        def raising(*args, **kwargs):
+            raise FakeFrappeError("boom")
+
+        self.module._persist_branch_worksite_state = raising
+        try:
+            with self.assertRaises(FakeFrappeError):
+                self.module._apply_worksite_yaml_item(item)
+        finally:
+            self.module._persist_branch_worksite_state = original
+
+        self.assertEqual(
+            self.fake_frappe._cache.lock_release_calls,
+            [{"key": "korea-worksite-sync:Bupyeong", "exc_type": "FakeFrappeError"}],
+        )
+
+    def test_apply_worksite_yaml_item_returns_rejected_when_lock_unavailable(self):
+        item = {
+            "company": "Winners",
+            "branch": "Bupyeong",
+            "business_registration_number": "123-45-67890",
+            "worksite_code": "BUP-01",
+            "status": "active",
+            "effective_from": "2026-04-01",
+            "effective_to": None,
+            "source_modified": "2026-04-26 09:00:00",
+        }
+        self.fake_frappe._cache.lock_unavailable_keys.add("korea-worksite-sync:Bupyeong")
+
+        result = self.module._apply_worksite_yaml_item(item)
+
+        self.assertEqual(
+            result,
+            (
+                "rejected_locked",
+                {
+                    "company": "Winners",
+                    "branch": "Bupyeong",
+                    "reason": "concurrent_sync_in_progress",
+                },
+            ),
+        )
+        self.assertEqual(self.fake_frappe._cache.lock_enter_calls, ["korea-worksite-sync:Bupyeong"])
+        self.assertEqual(self.fake_frappe._cache.lock_release_calls, [])
 
     def test_notify_worksite_master_change_returns_auditable_payload(self):
         result = self.module.notify_worksite_master_change(
