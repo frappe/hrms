@@ -934,7 +934,7 @@ def get_number_of_leave_days(
 
 @frappe.whitelist()
 def get_leave_details(employee: str, date: str | datetime.date, for_salary_slip: bool = False) -> dict:
-	frappe.has_permission("Employee", "read", employee, throw=True)
+	validate_leave_access(employee)
 
 	allocation_records = get_leave_allocation_records(employee, date)
 	leave_allocation = {}
@@ -995,8 +995,7 @@ def get_leave_balance_on(
 	        if True, returns a dict eg: {'leave_balance': 10, 'leave_balance_for_consumption': 1}
 	        else, returns leave_balance (in this case 10)
 	"""
-	if frappe.request:
-		frappe.has_permission("Employee", "read", employee, throw=True)
+	validate_leave_access(employee)
 
 	if not to_date:
 		to_date = nowdate()
@@ -1491,3 +1490,24 @@ def get_leave_approver(employee):
 
 def on_doctype_update():
 	frappe.db.add_index("Leave Application", ["employee", "from_date", "to_date"])
+
+
+@frappe.whitelist()
+def get_leave_approver_and_mandatory(employee: str) -> dict:
+	frappe.has_permission("Employee", "read", employee, throw=True)
+	mandatory = frappe.db.get_single_value("HR Settings", "leave_approver_mandatory_in_leave_application")
+
+	return {
+		"is_mandatory": 1 if mandatory else 0,
+		"leave_approver": get_leave_approver(employee),
+	}
+
+
+def validate_leave_access(employee):
+	employee_user = frappe.db.get_value("Employee", employee, "user_id")
+	leave_approver = get_leave_approver(employee)
+
+	if frappe.session.user not in (employee_user, leave_approver) and (
+		not frappe.has_permission("Employee", "read", employee)
+	):
+		frappe.throw(_("Not permitted"), frappe.PermissionError)

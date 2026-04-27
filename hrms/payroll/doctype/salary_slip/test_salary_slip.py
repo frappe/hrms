@@ -2603,6 +2603,8 @@ def make_leave_application(
 	company=None,
 	half_day=False,
 	half_day_date=None,
+	status=None,
+	leave_approver=None,
 	submit=True,
 ):
 	create_user("test@example.com")
