@@ -1,0 +1,119 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:effective_from",
+ "creation": "2026-04-28 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "effective_from",
+  "national_pension_rate",
+  "pension_upper_limit",
+  "pension_lower_limit",
+  "health_insurance_rate",
+  "longterm_care_rate",
+  "employment_insurance_rate",
+  "min_wage_hourly"
+ ],
+ "fields": [
+  {
+   "fieldname": "effective_from",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Effective From",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "national_pension_rate",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "National Pension Rate",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "pension_upper_limit",
+   "fieldtype": "Currency",
+   "label": "Pension Upper Limit"
+  },
+  {
+   "default": "0",
+   "fieldname": "pension_lower_limit",
+   "fieldtype": "Currency",
+   "label": "Pension Lower Limit"
+  },
+  {
+   "default": "0",
+   "fieldname": "health_insurance_rate",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Health Insurance Rate",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "longterm_care_rate",
+   "fieldtype": "Percent",
+   "label": "Long-term Care Rate",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "employment_insurance_rate",
+   "fieldtype": "Percent",
+   "label": "Employment Insurance Rate",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "min_wage_hourly",
+   "fieldtype": "Currency",
+   "label": "Minimum Wage Hourly"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-04-28 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Payroll",
+ "name": "Korea Insurance Rates",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "search_fields": "effective_from",
+ "sort_field": "effective_from",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "effective_from",
+ "track_changes": 1
+}

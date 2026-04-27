@@ -1,0 +1,169 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "format:{year}-{salary_from}",
+ "creation": "2026-04-28 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "year",
+  "salary_from",
+  "salary_to",
+  "dep_1",
+  "dep_2",
+  "dep_3",
+  "dep_4",
+  "dep_5",
+  "dep_6",
+  "dep_7",
+  "dep_8",
+  "dep_9",
+  "dep_10",
+  "dep_11"
+ ],
+ "fields": [
+  {
+   "fieldname": "year",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Year",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "salary_from",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Salary From",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "salary_to",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Salary To",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "dep_1",
+   "fieldtype": "Currency",
+   "label": "Dependents 1",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "dep_2",
+   "fieldtype": "Currency",
+   "label": "Dependents 2",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "dep_3",
+   "fieldtype": "Currency",
+   "label": "Dependents 3",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "dep_4",
+   "fieldtype": "Currency",
+   "label": "Dependents 4",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "dep_5",
+   "fieldtype": "Currency",
+   "label": "Dependents 5",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "dep_6",
+   "fieldtype": "Currency",
+   "label": "Dependents 6",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "dep_7",
+   "fieldtype": "Currency",
+   "label": "Dependents 7",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "dep_8",
+   "fieldtype": "Currency",
+   "label": "Dependents 8",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "dep_9",
+   "fieldtype": "Currency",
+   "label": "Dependents 9",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "dep_10",
+   "fieldtype": "Currency",
+   "label": "Dependents 10",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "dep_11",
+   "fieldtype": "Currency",
+   "label": "Dependents 11",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-04-28 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Payroll",
+ "name": "Korea Tax Table",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "search_fields": "year, salary_from, salary_to",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "year",
+ "track_changes": 1
+}
