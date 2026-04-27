@@ -419,6 +419,25 @@ class KoreaIntegrationTests(unittest.TestCase):
         self.assertEqual(self.fake_frappe._comments[0]["reference_name"], "SS-0001")
         self.assertIn("year-end settlement", self.fake_frappe._comments[0]["content"])
 
+    def test_import_year_end_settlement_rejects_duplicate_run_id(self):
+        self.fake_frappe.db.korea_calc_reference_run_ids.add("YES-1")
+
+        with self.assertRaises(FakeFrappeError):
+            self.module.import_year_end_settlement_result(
+                payload={
+                    "run_id": "YES-1",
+                    "employee_id": "EMP-0001",
+                    "settlement_year": 2025,
+                    "settlement_kind": "annual_february",
+                    "applied_pay_year_month": "2026-02",
+                    "prepaid_tax": 100,
+                    "determined_tax": 120,
+                    "adjustment_tax": 20,
+                }
+            )
+
+        self.assertIn(("Korea Calc Reference", {"run_id": "YES-1"}), self.fake_frappe.db.exists_calls)
+
     def test_import_severance_result_rejects_pii_fields(self):
         with self.assertRaises(FakeFrappeError):
             self.module.import_severance_result(
@@ -459,6 +478,25 @@ class KoreaIntegrationTests(unittest.TestCase):
         self.assertEqual(len(self.fake_frappe._comments), 1)
         self.assertEqual(self.fake_frappe._comments[0]["reference_name"], "SS-0001")
         self.assertIn("severance import", self.fake_frappe._comments[0]["content"])
+
+    def test_import_severance_rejects_duplicate_run_id(self):
+        self.fake_frappe.db.korea_calc_reference_run_ids.add("SEV-1")
+
+        with self.assertRaises(FakeFrappeError):
+            self.module.import_severance_result(
+                payload={
+                    "run_id": "SEV-1",
+                    "employee_id": "EMP-0001",
+                    "retirement_date": "2026-04-30",
+                    "average_wage": 100,
+                    "service_years": 3,
+                    "severance_pay": 1000,
+                    "severance_income_tax": 30,
+                    "net_pay": 970,
+                }
+            )
+
+        self.assertIn(("Korea Calc Reference", {"run_id": "SEV-1"}), self.fake_frappe.db.exists_calls)
 
     def test_import_payroll_result_rejects_pii_fields(self):
         with self.assertRaises(FakeFrappeError):

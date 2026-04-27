@@ -385,6 +385,8 @@ def import_year_end_settlement_result(payload: dict[str, Any] | None = None, **k
         frappe.throw("settlement_year must be an integer greater than or equal to 2000")
     if not PAY_YEAR_MONTH_PATTERN.match(str(payload.get("applied_pay_year_month", ""))):
         frappe.throw("applied_pay_year_month must be in YYYY-MM format")
+    if getattr(frappe, "db", None) and frappe.db.exists("Korea Calc Reference", {"run_id": payload["run_id"]}):
+        frappe.throw(f"run_id already imported: {payload['run_id']}")
     for field in ["prepaid_tax", "determined_tax", "adjustment_tax"]:
         _as_float(payload.get(field))
     if payload.get("local_income_tax") is not None:
@@ -434,6 +436,8 @@ def import_severance_result(payload: dict[str, Any] | None = None, **kwargs) -> 
     _require_keys(payload, SEVERANCE_REQUIRED_FIELDS, "payload")
     if not DATE_PATTERN.match(str(payload.get("retirement_date", ""))):
         frappe.throw("retirement_date must be in YYYY-MM-DD format")
+    if getattr(frappe, "db", None) and frappe.db.exists("Korea Calc Reference", {"run_id": payload["run_id"]}):
+        frappe.throw(f"run_id already imported: {payload['run_id']}")
     for field in ["average_wage", "service_years", "severance_pay", "severance_income_tax", "net_pay"]:
         _as_float(payload.get(field))
     if payload.get("local_income_tax") is not None:
