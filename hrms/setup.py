@@ -53,7 +53,7 @@ def before_app_uninstall(app_name):
 
 def get_custom_fields():
 	"""HR specific custom fields that need to be added to the masters in ERPNext"""
-	return {
+	custom_fields = {
 		"Company": [
 			{
 				"fieldname": "hr_and_payroll_tab",
@@ -327,6 +327,215 @@ def get_custom_fields():
 				"fieldtype": "Check",
 				"label": _("HR"),
 				"insert_after": "buying",
+			},
+		],
+	}
+
+	for doctype, fields in get_korea_phase2_custom_fields().items():
+		custom_fields.setdefault(doctype, []).extend(fields)
+
+	return custom_fields
+
+
+def get_korea_phase2_custom_fields():
+	return {
+		"Employee": [
+			{
+				"fieldname": "kr_payroll_section",
+				"fieldtype": "Section Break",
+				"label": _("Korea Payroll"),
+				"insert_after": "payroll_cost_center",
+			},
+			{
+				"fieldname": "kr_dependents_count",
+				"fieldtype": "Int",
+				"label": _("Dependents Count"),
+				"default": "1",
+				"insert_after": "kr_payroll_section",
+			},
+			{
+				"fieldname": "kr_withholding_rate",
+				"fieldtype": "Percent",
+				"label": _("Withholding Rate"),
+				"description": _("Used for special withholding cases when the Korea default table is not enough."),
+				"insert_after": "kr_dependents_count",
+			},
+			{
+				"fieldname": "kr_foreign_flat_tax",
+				"fieldtype": "Check",
+				"label": _("Apply Foreign Flat Tax"),
+				"default": "0",
+				"insert_after": "kr_withholding_rate",
+			},
+			{
+				"fieldname": "kr_payroll_column_break",
+				"fieldtype": "Column Break",
+				"insert_after": "kr_foreign_flat_tax",
+			},
+			{
+				"fieldname": "kr_pension_notified_amount",
+				"fieldtype": "Currency",
+				"label": _("National Pension Notified Amount"),
+				"options": "Company:company:default_currency",
+				"insert_after": "kr_payroll_column_break",
+			},
+			{
+				"fieldname": "kr_pension_exempt",
+				"fieldtype": "Check",
+				"label": _("National Pension Exempt"),
+				"default": "0",
+				"insert_after": "kr_pension_notified_amount",
+			},
+			{
+				"fieldname": "kr_employ_ins_exempt",
+				"fieldtype": "Check",
+				"label": _("Employment Insurance Exempt"),
+				"default": "0",
+				"insert_after": "kr_pension_exempt",
+			},
+			{
+				"fieldname": "kr_foreign_section",
+				"fieldtype": "Section Break",
+				"label": _("Korea Foreign Worker"),
+				"insert_after": "kr_employ_ins_exempt",
+			},
+			{
+				"fieldname": "kr_visa_type",
+				"fieldtype": "Data",
+				"label": _("Visa Type"),
+				"insert_after": "kr_foreign_section",
+			},
+			{
+				"fieldname": "kr_pension_agreement",
+				"fieldtype": "Check",
+				"label": _("Pension Agreement Applies"),
+				"default": "0",
+				"insert_after": "kr_visa_type",
+			},
+			{
+				"fieldname": "kr_foreign_employ_exempt",
+				"fieldtype": "Check",
+				"label": _("Foreign Employment Insurance Exempt"),
+				"default": "0",
+				"insert_after": "kr_pension_agreement",
+			},
+		],
+		"Salary Slip": [
+			{
+				"fieldname": "kr_insurance_detail_section",
+				"fieldtype": "Section Break",
+				"label": _("Korea Insurance Detail"),
+				"insert_after": "base_total_deduction",
+			},
+			{
+				"fieldname": "kr_national_pension",
+				"fieldtype": "Currency",
+				"label": _("National Pension"),
+				"default": "0",
+				"options": "currency",
+				"read_only": 1,
+				"insert_after": "kr_insurance_detail_section",
+			},
+			{
+				"fieldname": "kr_health_insurance",
+				"fieldtype": "Currency",
+				"label": _("Health Insurance"),
+				"default": "0",
+				"options": "currency",
+				"read_only": 1,
+				"insert_after": "kr_national_pension",
+			},
+			{
+				"fieldname": "kr_longterm_care",
+				"fieldtype": "Currency",
+				"label": _("Long-term Care Insurance"),
+				"default": "0",
+				"options": "currency",
+				"read_only": 1,
+				"insert_after": "kr_health_insurance",
+			},
+			{
+				"fieldname": "kr_employment_insurance",
+				"fieldtype": "Currency",
+				"label": _("Employment Insurance"),
+				"default": "0",
+				"options": "currency",
+				"read_only": 1,
+				"insert_after": "kr_longterm_care",
+			},
+			{
+				"fieldname": "kr_insurance_employer_total",
+				"fieldtype": "Currency",
+				"label": _("Insurance Employer Total"),
+				"default": "0",
+				"options": "currency",
+				"read_only": 1,
+				"insert_after": "kr_employment_insurance",
+			},
+			{
+				"fieldname": "kr_tax_detail_section",
+				"fieldtype": "Section Break",
+				"label": _("Korea Tax Detail"),
+				"insert_after": "kr_insurance_employer_total",
+			},
+			{
+				"fieldname": "kr_income_tax",
+				"fieldtype": "Currency",
+				"label": _("Income Tax"),
+				"default": "0",
+				"options": "currency",
+				"read_only": 1,
+				"insert_after": "kr_tax_detail_section",
+			},
+			{
+				"fieldname": "kr_local_income_tax",
+				"fieldtype": "Currency",
+				"label": _("Local Income Tax"),
+				"default": "0",
+				"options": "currency",
+				"read_only": 1,
+				"insert_after": "kr_income_tax",
+			},
+			{
+				"fieldname": "kr_tax_method",
+				"fieldtype": "Select",
+				"label": _("Korea Tax Method"),
+				"options": "간이세액표\n19% flat",
+				"read_only": 1,
+				"insert_after": "kr_local_income_tax",
+			},
+			{
+				"fieldname": "kr_summary_section",
+				"fieldtype": "Section Break",
+				"label": _("Korea Payroll Summary"),
+				"insert_after": "kr_tax_method",
+			},
+			{
+				"fieldname": "kr_taxable_pay",
+				"fieldtype": "Currency",
+				"label": _("Taxable Pay"),
+				"default": "0",
+				"options": "currency",
+				"read_only": 1,
+				"insert_after": "kr_summary_section",
+			},
+			{
+				"fieldname": "kr_nontaxable_pay",
+				"fieldtype": "Currency",
+				"label": _("Non-taxable Pay"),
+				"default": "0",
+				"options": "currency",
+				"read_only": 1,
+				"insert_after": "kr_taxable_pay",
+			},
+			{
+				"fieldname": "kr_total_deductions",
+				"fieldtype": "Currency",
+				"label": _("Korea Total Deductions"),
+				"default": "0",
+				"options": "currency",
+				"read_only": 1,
+				"insert_after": "kr_nontaxable_pay",
 			},
 		],
 	}
