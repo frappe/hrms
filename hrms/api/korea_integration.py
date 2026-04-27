@@ -331,8 +331,6 @@ def import_payroll_result(payload: dict[str, Any] | None = None, **kwargs) -> di
     _require_keys(payload, PAYROLL_REQUIRED_FIELDS, "payload")
     if not PAY_YEAR_MONTH_PATTERN.match(str(payload.get("pay_year_month", ""))):
         frappe.throw("pay_year_month must be in YYYY-MM format")
-    if getattr(frappe, "db", None) and frappe.db.exists("Korea Calc Reference", {"run_id": payload["run_id"]}):
-        frappe.throw(f"run_id already imported: {payload['run_id']}")
     _validate_payroll_items(payload.get("taxable_items"), "taxable_items")
     _validate_payroll_items(payload.get("non_taxable_items"), "non_taxable_items")
     _validate_required_numeric_mapping(
@@ -340,19 +338,23 @@ def import_payroll_result(payload: dict[str, Any] | None = None, **kwargs) -> di
     )
     _validate_required_numeric_mapping(payload.get("withholding_tax"), WITHHOLDING_TAX_FIELDS, "withholding_tax")
 
-    salary_slip = None
-    external_ref = payload.get("salary_slip_external_ref")
-    if external_ref and getattr(frappe, "db", None) and frappe.db.exists("Salary Slip", external_ref):
-        salary_slip = external_ref
+    with _korea_calc_reference_run_lock(payload["run_id"]):
+        if getattr(frappe, "db", None) and frappe.db.exists("Korea Calc Reference", {"run_id": payload["run_id"]}):
+            frappe.throw(f"run_id already imported: {payload['run_id']}")
 
-    if salary_slip:
-        _record_payroll_import_comment(salary_slip, payload)
+        salary_slip = None
+        external_ref = payload.get("salary_slip_external_ref")
+        if external_ref and getattr(frappe, "db", None) and frappe.db.exists("Salary Slip", external_ref):
+            salary_slip = external_ref
 
-    korea_calc_reference = _create_korea_calc_reference(
-        kind="payroll",
-        payload=payload,
-        salary_slip_external_ref=external_ref,
-    )
+        if salary_slip:
+            _record_payroll_import_comment(salary_slip, payload)
+
+        korea_calc_reference = _create_korea_calc_reference(
+            kind="payroll",
+            payload=payload,
+            salary_slip_external_ref=external_ref,
+        )
 
     return {
         "status": "updated" if salary_slip else "received",
@@ -394,25 +396,27 @@ def import_year_end_settlement_result(payload: dict[str, Any] | None = None, **k
         frappe.throw("settlement_year must be an integer greater than or equal to 2000")
     if not PAY_YEAR_MONTH_PATTERN.match(str(payload.get("applied_pay_year_month", ""))):
         frappe.throw("applied_pay_year_month must be in YYYY-MM format")
-    if getattr(frappe, "db", None) and frappe.db.exists("Korea Calc Reference", {"run_id": payload["run_id"]}):
-        frappe.throw(f"run_id already imported: {payload['run_id']}")
     for field in ["prepaid_tax", "determined_tax", "adjustment_tax"]:
         _as_float(payload.get(field))
     if payload.get("local_income_tax") is not None:
         _as_float(payload.get("local_income_tax"))
 
-    salary_slip = None
-    external_ref = payload.get("salary_slip_external_ref")
-    if external_ref and getattr(frappe, "db", None) and frappe.db.exists("Salary Slip", external_ref):
-        salary_slip = external_ref
-    if salary_slip:
-        _record_year_end_settlement_comment(salary_slip, payload)
+    with _korea_calc_reference_run_lock(payload["run_id"]):
+        if getattr(frappe, "db", None) and frappe.db.exists("Korea Calc Reference", {"run_id": payload["run_id"]}):
+            frappe.throw(f"run_id already imported: {payload['run_id']}")
 
-    korea_calc_reference = _create_korea_calc_reference(
-        kind="year_end_settlement",
-        payload=payload,
-        salary_slip_external_ref=external_ref,
-    )
+        salary_slip = None
+        external_ref = payload.get("salary_slip_external_ref")
+        if external_ref and getattr(frappe, "db", None) and frappe.db.exists("Salary Slip", external_ref):
+            salary_slip = external_ref
+        if salary_slip:
+            _record_year_end_settlement_comment(salary_slip, payload)
+
+        korea_calc_reference = _create_korea_calc_reference(
+            kind="year_end_settlement",
+            payload=payload,
+            salary_slip_external_ref=external_ref,
+        )
 
     return {
         "status": "updated" if salary_slip else "received",
@@ -451,25 +455,27 @@ def import_severance_result(payload: dict[str, Any] | None = None, **kwargs) -> 
     _require_keys(payload, SEVERANCE_REQUIRED_FIELDS, "payload")
     if not DATE_PATTERN.match(str(payload.get("retirement_date", ""))):
         frappe.throw("retirement_date must be in YYYY-MM-DD format")
-    if getattr(frappe, "db", None) and frappe.db.exists("Korea Calc Reference", {"run_id": payload["run_id"]}):
-        frappe.throw(f"run_id already imported: {payload['run_id']}")
     for field in ["average_wage", "service_years", "severance_pay", "severance_income_tax", "net_pay"]:
         _as_float(payload.get(field))
     if payload.get("local_income_tax") is not None:
         _as_float(payload.get("local_income_tax"))
 
-    linked_salary_slip = None
-    external_ref = payload.get("linked_salary_slip")
-    if external_ref and getattr(frappe, "db", None) and frappe.db.exists("Salary Slip", external_ref):
-        linked_salary_slip = external_ref
-    if linked_salary_slip:
-        _record_severance_import_comment(linked_salary_slip, payload)
+    with _korea_calc_reference_run_lock(payload["run_id"]):
+        if getattr(frappe, "db", None) and frappe.db.exists("Korea Calc Reference", {"run_id": payload["run_id"]}):
+            frappe.throw(f"run_id already imported: {payload['run_id']}")
 
-    korea_calc_reference = _create_korea_calc_reference(
-        kind="severance",
-        payload=payload,
-        salary_slip_external_ref=external_ref,
-    )
+        linked_salary_slip = None
+        external_ref = payload.get("linked_salary_slip")
+        if external_ref and getattr(frappe, "db", None) and frappe.db.exists("Salary Slip", external_ref):
+            linked_salary_slip = external_ref
+        if linked_salary_slip:
+            _record_severance_import_comment(linked_salary_slip, payload)
+
+        korea_calc_reference = _create_korea_calc_reference(
+            kind="severance",
+            payload=payload,
+            salary_slip_external_ref=external_ref,
+        )
 
     return {
         "status": "updated" if linked_salary_slip else "received",
@@ -921,6 +927,33 @@ def _validate_required_numeric_mapping(payload: Any, required_keys: set[str], la
     _reject_unknown_keys(payload, required_keys, label)
     for key in required_keys:
         _as_float(payload.get(key))
+
+
+@contextmanager
+def _korea_calc_reference_run_lock(run_id: str):
+    db = getattr(frappe, "db", None)
+    if not db or not hasattr(db, "sql"):
+        yield
+        return
+
+    lock_name = f"korea_calc_reference:{run_id}"
+    lock_result = db.sql("SELECT GET_LOCK(%s, %s)", (lock_name, 5))
+    if _extract_lock_scalar(lock_result) != 1:
+        frappe.throw(f"Could not acquire import lock for run_id: {run_id}")
+
+    try:
+        yield
+    finally:
+        db.sql("SELECT RELEASE_LOCK(%s)", (lock_name,))
+
+
+def _extract_lock_scalar(result: Any) -> Any:
+    if isinstance(result, (list, tuple)) and result:
+        first = result[0]
+        if isinstance(first, (list, tuple)) and first:
+            return first[0]
+        return first
+    return result
 
 
 def _create_korea_calc_reference(

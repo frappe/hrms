@@ -21,11 +21,14 @@ class FakeDB:
     def __init__(self):
         self.exists_calls = []
         self.set_value_calls = []
+        self.sql_calls = []
         self.single_values = {}
         self.korea_calc_reference_run_ids = set()
         self.korea_calc_reference_records = {}
         self.branch_records = {}
         self.employee_names = {"EMP-0001"}
+        self.lock_results = {}
+        self.release_results = {}
         self.table_columns = {
             "Attendance": [
                 "name",
@@ -91,6 +94,16 @@ class FakeDB:
 
     def get_table_columns(self, doctype):
         return self.table_columns.get(doctype, [])
+
+    def sql(self, query, values=None, as_dict=False):
+        self.sql_calls.append({"query": query, "values": values, "as_dict": as_dict})
+        if "GET_LOCK" in query:
+            lock_name = values[0] if values else None
+            return [(self.lock_results.get(lock_name, 1),)]
+        if "RELEASE_LOCK" in query:
+            lock_name = values[0] if values else None
+            return [(self.release_results.get(lock_name, 1),)]
+        return []
 
 
 class FakeFrappeModule(types.SimpleNamespace):
@@ -869,6 +882,58 @@ class KoreaIntegrationTests(unittest.TestCase):
                 payload={
                     "run_id": "RUN-MISSING-EMP-1",
                     "employee_id": "EMP-4040",
+                    "pay_year_month": "2026-04",
+                    "taxable_items": [{"code": "BASE", "label": "기본급", "amount": 2000}],
+                    "non_taxable_items": [],
+                    "social_insurance_deductions": {
+                        "national_pension": 10,
+                        "health_insurance": 20,
+                        "long_term_care_insurance": 3,
+                        "employment_insurance": 4,
+                    },
+                    "withholding_tax": {"income_tax": 30, "local_income_tax": 3},
+                    "gross_pay": 2000,
+                    "total_deduction": 67,
+                    "net_pay": 1933,
+                }
+            )
+
+    def test_import_payroll_result_acquires_and_releases_run_id_lock(self):
+        self.module.import_payroll_result(
+            payload={
+                "run_id": "RUN-LOCK-1",
+                "employee_id": "EMP-0001",
+                "pay_year_month": "2026-04",
+                "taxable_items": [{"code": "BASE", "label": "기본급", "amount": 2000}],
+                "non_taxable_items": [],
+                "social_insurance_deductions": {
+                    "national_pension": 10,
+                    "health_insurance": 20,
+                    "long_term_care_insurance": 3,
+                    "employment_insurance": 4,
+                },
+                "withholding_tax": {"income_tax": 30, "local_income_tax": 3},
+                "gross_pay": 2000,
+                "total_deduction": 67,
+                "net_pay": 1933,
+            }
+        )
+
+        lock_queries = [call for call in self.fake_frappe.db.sql_calls if "GET_LOCK" in call["query"]]
+        release_queries = [call for call in self.fake_frappe.db.sql_calls if "RELEASE_LOCK" in call["query"]]
+        self.assertEqual(len(lock_queries), 1)
+        self.assertEqual(len(release_queries), 1)
+        self.assertEqual(lock_queries[0]["values"][0], "korea_calc_reference:RUN-LOCK-1")
+        self.assertEqual(release_queries[0]["values"][0], "korea_calc_reference:RUN-LOCK-1")
+
+    def test_import_payroll_result_rejects_when_run_id_lock_not_acquired(self):
+        self.fake_frappe.db.lock_results["korea_calc_reference:RUN-LOCK-FAIL-1"] = 0
+
+        with self.assertRaises(FakeFrappeError):
+            self.module.import_payroll_result(
+                payload={
+                    "run_id": "RUN-LOCK-FAIL-1",
+                    "employee_id": "EMP-0001",
                     "pay_year_month": "2026-04",
                     "taxable_items": [{"code": "BASE", "label": "기본급", "amount": 2000}],
                     "non_taxable_items": [],
