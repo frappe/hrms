@@ -139,13 +139,13 @@ def get_assigned_holiday_list(assigned_to: str, as_on=None, as_dict: bool = Fals
 	return holiday_list
 
 
-def get_holiday_lists_bulk(
+def get_assigned_holiday_lists_to_employee_and_company(
 	assigned_to_list: list[str],
 	start_date: date | str,
 	end_date: date | str,
 ) -> dict[str, list[dict]]:
 	"""
-	Returns effective holiday list ranges for multiple assigned_to values in one query.
+	Returns effective holiday list ranges for multiple assigned_to values (employees/companies) in one query.
 
 	{
 	    "EMP-001": [{"holiday_list": "HL-1", "from_date": date, "to_date": date}, ...],
@@ -158,16 +158,16 @@ def get_holiday_lists_bulk(
 	start_date = getdate(start_date)
 	end_date = getdate(end_date)
 
-	return get_holiday_list_assignments(assigned_to_list, start_date, end_date)
+	return build_holiday_list_map(assigned_to_list, start_date, end_date)
 
 
-def get_holiday_list_assignments(
+def build_holiday_list_map(
 	assigned_to_list: list[str],
 	start_date: date,
 	end_date: date,
 ) -> dict[str, list[dict]]:
 	"""
-	Single query: returns effective HLA ranges per assigned_to, clipped to start_date/end_date.
+	Single query + compute effective HLA ranges per assigned_to, clipped to start_date/end_date.
 	effective_to_date = MIN(HL.to_date, next assignment's from_date - 1 day)
 
 	{
@@ -199,8 +199,22 @@ def get_holiday_list_assignments(
 	for assignment in holiday_list_assignments:
 		holiday_assignment_map.setdefault(assignment.assigned_to, []).append(assignment)
 
+	result = build_effective_date_ranges_for_holiday_assignments(holiday_assignment_map, start_date, end_date)
+
+	return result
+
+
+def build_effective_date_ranges_for_holiday_assignments(
+	holiday_assignment_map: dict[str, list[dict]],
+	start_date: date,
+	end_date: date,
+) -> dict[str, list[dict]]:
+	"""
+	Returns map of {assigned_to: [raw_holiday_list_assignment_rows]},
+	effective_to_date = MIN(HL.to_date, next assignment's from_date - 1 day)
+	"""
 	result = {}
-	for assigned_to, assignments in raw.items():
+	for assigned_to, assignments in holiday_assignment_map.items():
 		ranges = []
 		for idx, assignment in enumerate(assignments):
 			hl_to_date = getdate(assignment.holiday_list_to_date)
@@ -228,7 +242,7 @@ def get_holiday_list_assignments(
 	return result
 
 
-def fill_date_gaps_with_fallback(
+def fill_employee_holiday_list_date_gaps_with_company_holiday_list(
 	primary_ranges: list[dict],
 	fallback_ranges: list[dict],
 	start_date: date,

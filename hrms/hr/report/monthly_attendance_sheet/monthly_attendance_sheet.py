@@ -17,7 +17,10 @@ from frappe.utils import add_days, cint, cstr, formatdate, getdate
 from frappe.utils.nestedset import get_descendants_of
 
 from hrms.utils import date_diff, get_date_range
-from hrms.utils.holiday_list import fill_date_gaps_with_fallback, get_holiday_lists_bulk
+from hrms.utils.holiday_list import (
+	fill_employee_holiday_list_date_gaps_with_company_holiday_list,
+	get_assigned_holiday_lists_to_employee_and_company,
+)
 
 Filters = frappe._dict
 
@@ -241,7 +244,7 @@ def get_data(filters: Filters, attendance_map: dict) -> list[dict]:
 	if filters.group_by:
 		ungrouped_employee_details = {}
 		for details in employee_details.values():
-			ungrouped_employee_details.update(details) 
+			ungrouped_employee_details.update(details)
 	else:
 		ungrouped_employee_details = employee_details
 
@@ -440,17 +443,18 @@ def get_employee_holiday_map(employee_details: dict, filters: Filters) -> dict[s
 	employees = list(employee_details.keys())
 	companies = list({d.company for d in employee_details.values() if d.get("company")})
 
-	# Query 1: one bulk HLA fetch for all employees + companies
-	bulk = get_holiday_lists_bulk(employees + companies, start_date, end_date)
+	assigned_holiday_lists = get_assigned_holiday_lists_to_employee_and_company(
+		employees + companies, start_date, end_date
+	)
 
-	# resolve each employee's effective HL ranges.
 	# gaps in employee-level assignments are filled with company-level assignments,
-	# so e.g. company WO/H entries before an employee's first HLA still appear.
 	employee_hl_ranges = {}
 	for employee, details in employee_details.items():
-		employee_ranges = bulk.get(employee, [])
-		company_ranges = bulk.get(details.get("company"), [])
-		ranges = fill_date_gaps_with_fallback(employee_ranges, company_ranges, start_date, end_date)
+		employee_ranges = assigned_holiday_lists.get(employee, [])
+		company_ranges = assigned_holiday_lists.get(details.get("company"), [])
+		ranges = fill_employee_holiday_list_date_gaps_with_company_holiday_list(
+			employee_ranges, company_ranges, start_date, end_date
+		)
 		if ranges:
 			employee_hl_ranges[employee] = ranges
 
@@ -460,7 +464,6 @@ def get_employee_holiday_map(employee_details: dict, filters: Filters) -> dict[s
 	# collect only the HL names employees are actually assigned to
 	used_hl_names = {r["holiday_list"] for ranges in employee_hl_ranges.values() for r in ranges}
 
-	# Query 2: holidays for used HLs only, filtered to the period
 	Holiday = frappe.qb.DocType("Holiday")
 	holiday_rows = (
 		frappe.qb.from_(Holiday)
