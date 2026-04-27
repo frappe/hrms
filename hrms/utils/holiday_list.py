@@ -177,7 +177,7 @@ def get_holiday_list_assignments(
 	HLA = frappe.qb.DocType("Holiday List Assignment")
 	HolidayList = frappe.qb.DocType("Holiday List")
 
-	rows = (
+	holiday_list_assignments = (
 		frappe.qb.from_(HLA)
 		.join(HolidayList)
 		.on(HLA.holiday_list == HolidayList.name)
@@ -195,9 +195,9 @@ def get_holiday_list_assignments(
 		.orderby(HLA.from_date)
 	).run(as_dict=True)
 
-	raw = {}
-	for row in rows:
-		raw.setdefault(row.assigned_to, []).append(row)
+	holiday_assignment_map = {}
+	for assignment in holiday_list_assignments:
+		holiday_assignment_map.setdefault(assignment.assigned_to, []).append(assignment)
 
 	result = {}
 	for assigned_to, assignments in raw.items():

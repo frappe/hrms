@@ -239,11 +239,13 @@ def get_data(filters: Filters, attendance_map: dict) -> list[dict]:
 
 	# flatten grouped structure so get_employee_holiday_map always gets {emp: details}
 	if filters.group_by:
-		flat_employees = {emp: det for group in employee_details.values() for emp, det in group.items()}
+		ungrouped_employee_details = {}
+		for details in employee_details.values():
+			ungrouped_employee_details.update(details) 
 	else:
-		flat_employees = employee_details
+		ungrouped_employee_details = employee_details
 
-	employee_holiday_map = get_employee_holiday_map(flat_employees, filters)
+	employee_holiday_map = get_employee_holiday_map(ungrouped_employee_details, filters)
 	data = []
 
 	if filters.group_by:
