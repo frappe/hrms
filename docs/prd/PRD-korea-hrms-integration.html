@@ -1,0 +1,1017 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><title>PRD - Korea HRMS Integration</title><style>
+@page { size: A4; margin: 18mm 16mm 20mm 16mm; }
+* { box-sizing: border-box; }
+body {
+    font-family: 'Segoe UI', 'Malgun Gothic', '맑은 고딕', 'Noto Sans CJK KR', sans-serif;
+    font-size: 11pt;
+    line-height: 1.55;
+    color: #1f2328;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+}
+h1 { font-size: 22pt; border-bottom: 2px solid #1f2328; padding-bottom: 6pt; margin-top: 0; }
+h2 { font-size: 16pt; border-bottom: 1px solid #cbd2d9; padding-bottom: 4pt; margin-top: 20pt; }
+h3 { font-size: 13pt; color: #324b62; margin-top: 14pt; }
+h4 { font-size: 11pt; color: #4a5d6f; margin-top: 12pt; }
+h1, h2, h3, h4 { page-break-after: avoid; }
+p, li { margin: 4pt 0; }
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 8pt 0 12pt 0;
+    page-break-inside: avoid;
+    font-size: 10pt;
+}
+th, td {
+    border: 1px solid #d0d7de;
+    padding: 5pt 7pt;
+    text-align: left;
+    vertical-align: top;
+}
+th { background-color: #f0f3f6; font-weight: 600; }
+code {
+    background-color: #f4f5f7;
+    padding: 1pt 4pt;
+    border-radius: 3pt;
+    font-family: 'Consolas', 'D2Coding', monospace;
+    font-size: 9.5pt;
+}
+pre {
+    background-color: #f4f5f7;
+    padding: 8pt 10pt;
+    border-radius: 4pt;
+    overflow-x: auto;
+    page-break-inside: avoid;
+    font-size: 9.5pt;
+    line-height: 1.4;
+}
+pre code { background: none; padding: 0; }
+blockquote {
+    border-left: 3pt solid #4a90e2;
+    padding-left: 10pt;
+    color: #4a5d6f;
+    margin: 6pt 0;
+    background: #f7faff;
+    padding: 6pt 10pt;
+}
+hr { border: 0; border-top: 1px solid #d0d7de; margin: 16pt 0; }
+ul, ol { padding-left: 22pt; }
+strong { color: #0a0a0a; }
+.cover-meta { color: #6c7681; font-size: 10pt; }
+</style></head><body><h1 id="prd-korea-hrms-integration">PRD — Korea HRMS Integration</h1>
+<blockquote>
+<p><strong>Product Requirements Document</strong><br>
+Version: <strong>1.1</strong> (Open Questions resolved)<br>
+Status: <strong>APPROVED FOR DEVELOPMENT</strong><br>
+Last updated: 2026-04-26<br>
+Owner: 총괄 PM (Claude Opus, this session)<br>
+Sponsor: 사장님 (seojaehong)</p>
+</blockquote>
+<hr>
+<h2 id="1-document-metadata">1. Document Metadata</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Project Name</td>
+<td>한국 노동/세무 자동화 + Frappe HRMS 통합</td>
+</tr>
+<tr>
+<td>Repo (서버)</td>
+<td>https://github.com/seojaehong/hrms</td>
+</tr>
+<tr>
+<td>Repo (엔진)</td>
+<td>(private) <code>_10_고객/_active/급여자동화</code></td>
+</tr>
+<tr>
+<td>Base Branch</td>
+<td><code>feature/korea-payroll-docs</code></td>
+</tr>
+<tr>
+<td>SoT Document Set</td>
+<td><code>docs/korea/01~10</code> + <code>README.md</code> (이 레포)</td>
+</tr>
+<tr>
+<td>Adversarial Review Baseline</td>
+<td>Codex session <code>b5e6xaiyi</code> (2026-04-25)</td>
+</tr>
+<tr>
+<td>Active PRs</td>
+<td>#7 (Korea integration API MVP)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="2-executive-summary">2. Executive Summary</h2>
+<p>본 프로젝트는 <strong>현재 Excel + Python 기반으로 운영 중인 급여자동화 엔진</strong>과 <strong>신규 도입할 Frappe HRMS</strong>를 결합하여, 사장님 회사의 모든 사업장(부평/올웨이즈샤브 외 다수)을 위한 <strong>한국 노동법/세법 100% 정합 인사·급여 시스템</strong>을 구축한다.</p>
+<p>핵심 설계 결정:</p>
+<ol>
+<li><strong>병렬 결합 아키텍처</strong> — Frappe = HR 백본 (조직/직원/근태) / 급여자동화 엔진 = 한국 룰 엔진 (계산/명세서). 통합 단일 시스템 X.</li>
+<li><strong>PII는 Frappe 외부</strong> — 주민번호/계좌/외국인등록번호는 Frappe 어떤 필드(Password/Encrypted 포함)로도 저장 금지. privacy_broker 일회성 조회만.</li>
+<li><strong>기존 운영 영향 0%</strong> — 옵셔널 패턴 (visa_type=None, foreign_flat_tax=False 등 디폴트 = 기존 동작 유지). 부평/올샤 운영 중단 없음.</li>
+<li><strong>SoT 분할</strong> — <code>docs/korea/*</code> (한국 룰 명세, 사장님 권한) / <code>docs/integration/*</code> (양측 계약, PM 권한) / 코드 (각 작업자 권한)</li>
+</ol>
+<hr>
+<h2 id="3-background-context">3. Background &amp; Context</h2>
+<h3 id="3-1">3-1. 현재 자산</h3>
+<ul>
+<li><strong>급여자동화 엔진</strong> (Python + openpyxl + YAML)</li>
+<li>부평, 올웨이즈샤브 등 다수 사업장 운영 중</li>
+<li>4대보험/소득세/연말정산/퇴직금/일용직/외국인 룰 구현</li>
+<li>privacy_broker (PII 처리) 검증 완료 (Privacy Architecture v2)</li>
+<li><strong>노동법/판례 KB</strong></li>
+<li>노동위 판정례 42k 전수 태깅 (8축)</li>
+<li>BigCase 판례 17k 파싱</li>
+<li>최영우 노동법 3권 195개 챕터</li>
+<li>행정해석 671건 (294건 본문 수집)</li>
+<li><strong>기타</strong></li>
+<li>Gmail 자동 브리핑 (AM/PM)</li>
+<li>옵시디언 Vault (참고/상담 일지)</li>
+</ul>
+<h3 id="3-2">3-2. 도입 배경</h3>
+<ul>
+<li>현재 엔진은 운영 정확하지만 <strong>HR 전반 (조직도, 직원관리, 근태 UI) 부재</strong></li>
+<li>Frappe HRMS = 인도산 오픈소스 ERPNext 기반 HR 모듈. 조직/직원/근태/휴가 풍부</li>
+<li>단, <strong>한국 노동법/세법 미지원</strong>. 직접 구현 시 메인테인 부담 큼</li>
+<li>결론: <strong>Frappe 의 HR 골격만 가져오고, 한국 룰은 기존 엔진 유지</strong> = 병렬 결합</li>
+</ul>
+<h3 id="3-3-codex-2026-04-25">3-3. Codex 어댑서리얼 학습 (2026-04-25)</h3>
+<p>4 P1 결함 발견 → 모두 해소 (PR #6 머지):<br>
+1. <code>kr_resident_id</code> Data 평문 저장 → 필드 제거 + privacy_broker only<br>
+2. <code>kr_income_tax</code> 시그니처에 <code>withholding_rate</code> 누락 → 추가<br>
+3. 4대보험 base 통합 (<code>base</code>) → 보험별 분리 (pension_base / taxable_pay)<br>
+4. Hook 등록 시점 <code>before_save</code> (계산 후) → <code>before_validate</code> (계산 전)</p>
+<hr>
+<h2 id="4-vision-goals">4. Vision &amp; Goals</h2>
+<h3 id="4-1-vision">4-1. Vision</h3>
+<p><strong>한국 노동법/세법을 1원 단위로 정확히 처리하면서, 글로벌 HR 표준(Frappe HRMS) UI/UX 위에서 운영 가능한 통합 인사 시스템.</strong></p>
+<h3 id="4-2-goals">4-2. Goals (우선순위 순)</h3>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Goal</th>
+<th>측정 지표</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>G1</td>
+<td>기존 운영 사업장 영향 0%</td>
+<td>부평/올샤 4월 급여 1원 단위 동일성</td>
+</tr>
+<tr>
+<td>G2</td>
+<td>한국 노동법/세법 100% 정합</td>
+<td>docs/korea/01~10 명세 vs 구현 갭 0건</td>
+</tr>
+<tr>
+<td>G3</td>
+<td>PII 외부 보관 (Frappe 무PII)</td>
+<td>Frappe DB grep "주민" "resident" 결과 0건</td>
+</tr>
+<tr>
+<td>G4</td>
+<td>신규 사업장 1주 내 추가 가능</td>
+<td>사업장 마스터 설정 + YAML → 운영</td>
+</tr>
+<tr>
+<td>G5</td>
+<td>운영 사고 0건 (1년 기준)</td>
+<td>1원 차이/세무신고 오류/PII 유출</td>
+</tr>
+</tbody>
+</table>
+<h3 id="4-3-non-goals-prd">4-3. Non-Goals (이 PRD 범위 외)</h3>
+<ul>
+<li>ERPNext 의 회계/재고/CRM 모듈 사용</li>
+<li>모바일 앱 (Phase 4 이후)</li>
+<li>다국어 (한국어 only, 영어는 Frappe 디폴트만)</li>
+<li>Custom Frappe Framework 수정</li>
+</ul>
+<hr>
+<h2 id="5-scope-out-of-scope">5. Scope &amp; Out-of-Scope</h2>
+<h3 id="5-1-in-scope">5-1. In Scope</h3>
+<ul>
+<li>Frappe HRMS 한국 리전 설정</li>
+<li>Korea Salary Slip Extension (DocType)</li>
+<li>Korea Severance Slip (DocType)</li>
+<li>직원/근태/휴가/사업장 master sync API (양방향)</li>
+<li>급여 결과 import API (엔진 → Frappe)</li>
+<li>04/05 import API (연말정산/퇴직금)</li>
+<li>privacy_broker 통합 (PII 일회성 조회)</li>
+<li>한국 명세서 양식 (Print Format)</li>
+<li>1개 사업장 파일럿 → 전 사업장 확대</li>
+</ul>
+<h3 id="5-2-out-of-scope">5-2. Out of Scope</h3>
+<ul>
+<li>ERPNext 의 다른 모듈 활용</li>
+<li>Frappe Framework Core 수정</li>
+<li>신규 노동법 룰 발굴 (docs/korea/ 가 SoT — 사장님 결정)</li>
+<li>AI 기반 급여 예측/이상감지</li>
+<li>다른 회사 (사장님 외) 사용</li>
+</ul>
+<hr>
+<h2 id="6-stakeholders-personas">6. Stakeholders &amp; Personas</h2>
+<h3 id="6-1-stakeholders">6-1. Stakeholders</h3>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>책임</th>
+<th>결정 권한</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>사장님 (Sponsor)</td>
+<td>비즈니스 결정, SoT 명세 권한, 작업자 라우팅</td>
+<td>최종 결재</td>
+</tr>
+<tr>
+<td>총괄 PM (Claude Opus)</td>
+<td>양측 조율, git 모니터링, 결정자</td>
+<td>양보 불가 라인 + 머지 (사장님 컨펌)</td>
+</tr>
+<tr>
+<td>로컬엔진 작업자</td>
+<td>한국 룰 엔진 메인테이너</td>
+<td>코드 구현 자율</td>
+</tr>
+<tr>
+<td>서버개발자 (Hermes)</td>
+<td>Frappe HRMS 확장</td>
+<td>코드 구현 자율</td>
+</tr>
+</tbody>
+</table>
+<h3 id="6-2-personas">6-2. Personas (사용자)</h3>
+<ul>
+<li><strong>인사담당자</strong> (사장님 회사) — 매월 급여 처리, 4대보험 신고, 연말정산</li>
+<li><strong>점장/매장 책임자</strong> — 직원 등록, 근태 입력, 명세서 출력</li>
+<li><strong>세무사</strong> (외부) — 매월 세무대장 수신, 연말정산 보조</li>
+<li><strong>공단/세무서</strong> (간접) — 신고서/명세서 수신</li>
+</ul>
+<hr>
+<h2 id="7-use-cases">7. Use Cases</h2>
+<h3 id="uc-1">UC-1. 매월 급여 처리 (반복)</h3>
+<ol>
+<li>점장이 Frappe 에 근태 입력</li>
+<li>PM 또는 자동화가 매월 25일 트리거</li>
+<li>Frappe → 엔진: 직원 마스터 + 근태 export (REST)</li>
+<li>엔진: privacy_broker 통해 PII 일회성 조회</li>
+<li>엔진: 4대보험 + 소득세 + 비과세 적용 → 결과 JSON</li>
+<li>엔진 → Frappe: import_payroll_result API</li>
+<li>Frappe: Korea Salary Slip 생성 + 명세서 PDF</li>
+<li>사장님: Frappe Dashboard 에서 사업장별 합계 확인</li>
+<li>세무사 발송: 자동 메일</li>
+</ol>
+<h3 id="uc-2">UC-2. 신규 사업장 추가</h3>
+<ol>
+<li>사장님: Frappe 에 Company/Branch 생성</li>
+<li>PM: 사업장 YAML 생성 (<code>config/{사업장}.yaml</code>)</li>
+<li>Frappe → 엔진: 사업장 마스터 sync API</li>
+<li>엔진: 사업장별 4대보험 적용 룰 설정</li>
+<li>첫 달 1원 단위 검증 후 정식 운영</li>
+</ol>
+<h3 id="uc-3-1">UC-3. 연말정산 (연 1회)</h3>
+<ol>
+<li>1~2월: Frappe 에 직원별 공제증빙 입력 또는 import</li>
+<li>엔진: 7단계 계산 (Method A/B 비교)</li>
+<li>엔진 → Frappe: import_year_end_settlement_result API</li>
+<li>Frappe: 결정세액 / 차감징수세액 표시</li>
+<li>2월 급여에 반영</li>
+</ol>
+<h3 id="uc-4">UC-4. 퇴직금 (수시)</h3>
+<ol>
+<li>점장: Frappe 에 퇴사일 입력</li>
+<li>엔진: 평균임금 + 근속연수 + 퇴직소득세 계산</li>
+<li>엔진 → Frappe: import_severance_result API</li>
+<li>Frappe: Korea Severance Slip 생성</li>
+</ol>
+<h3 id="uc-5">UC-5. 외국인 직원 (수시)</h3>
+<ol>
+<li>점장: Frappe 에 입사 등록 + visa_type 입력</li>
+<li>엔진: 비자별 4대보험 + 19% 단일세율 옵션 적용</li>
+<li>(이하 UC-1 동일)</li>
+</ol>
+<hr>
+<h2 id="8-functional-requirements-fr">8. Functional Requirements (FR)</h2>
+<blockquote>
+<p>양측 계약(<code>docs/integration/frappe-side-contract.md</code>, <code>docs/integration/engine-side-contract.md</code>)을 정식 규격으로 본다. 본 절은 우선순위/범위 명시.</p>
+</blockquote>
+<h3 id="fr-1-frappe-custom-doctype-phase-1">FR-1. Frappe Custom DocType (Phase 1)</h3>
+<ul>
+<li><strong>Korea Salary Slip Extension</strong> (Salary Slip 확장)</li>
+<li>한국 항목: 과세/비과세/4대보험/소득세/실지급액</li>
+<li>외부 엔진 결과 import 받음</li>
+<li><strong>Korea Severance Slip</strong> (별도 DocType)</li>
+<li>평균임금 / 근속연수 / 퇴직금 / 퇴직소득세 / 실지급액</li>
+<li><strong>Korea Calc Reference</strong> (감사용 캐시)</li>
+<li>외부 엔진 호출 결과 + timestamp + run_id</li>
+</ul>
+<h3 id="fr-2-frappe-api-endpoints-phase-1">FR-2. Frappe API Endpoints (Phase 1)</h3>
+<ul>
+<li><code>export_employee_master</code> — 직원 마스터 (PII 차단)</li>
+<li><code>export_time_and_leave</code> — 근태/휴가 export</li>
+<li><code>sync_worksite</code> — 사업장 마스터 양방향 sync</li>
+<li><code>import_payroll_result</code> — 급여 결과 import (idempotent)</li>
+<li><code>import_year_end_settlement_result</code> — 04 연말정산 결과 (Phase 2)</li>
+<li><code>import_severance_result</code> — 05 퇴직금 결과 (Phase 2)</li>
+</ul>
+<h3 id="fr-3-interface-phase-1">FR-3. 엔진 측 Interface (Phase 1)</h3>
+<ul>
+<li><code>LocationConfig</code> JSON Schema (사업장 YAML → JSON)</li>
+<li><code>EmployeeRecord</code> 통일 dict 출력</li>
+<li>25 REST endpoint 후보 (engine-side-contract §3 참조)</li>
+<li>privacy_broker 일회성 조회 (<code>get_pii(employee_id, field)</code>)</li>
+<li>Frappe push 인터페이스 (idempotency + 멱등키)</li>
+</ul>
+<h3 id="fr-4-hook-frappe-phase-1">FR-4. Hook (Frappe → 엔진 트리거) (Phase 1)</h3>
+<ul>
+<li><code>before_validate</code> on Salary Slip → 한국 데이터 로드</li>
+<li><code>validate</code> on Salary Slip → net_pay 음수 검증</li>
+<li>자동화: Payroll Entry 생성 시 Salary Slip 자동 호출</li>
+</ul>
+<h3 id="fr-5-phase-1">FR-5. 한국 명세서 양식 (Phase 1)</h3>
+<ul>
+<li>Korean Print Format (HTML/PDF)</li>
+<li>4대보험 breakdown</li>
+<li>비과세 식대/자가운전보조금 명시</li>
+<li>회사 도장 (옵션)</li>
+</ul>
+<h3 id="fr-6-4-phase-2">FR-6. 4대보험 신고서 (Phase 2)</h3>
+<ul>
+<li>취득신고서 / 상실신고서 (현재 엔진이 생성)</li>
+<li>보수총액 정산 (현재 엔진이 생성)</li>
+<li>Frappe 에서 신고서 PDF 다운로드 가능</li>
+</ul>
+<h3 id="fr-7-ui-phase-3">FR-7. 한국화 UI (Phase 3)</h3>
+<ul>
+<li>메뉴 한국어 라벨</li>
+<li>직원 입력 폼 한국 필드 추가 (visa_type, dependents 등)</li>
+<li>Dashboard (사업장별/월별 합계)</li>
+</ul>
+<h3 id="fr-8-cicd-phase-1">FR-8. CI/CD (Phase 1 시작)</h3>
+<ul>
+<li>GitHub Actions</li>
+<li>Frappe 서버: lint + test</li>
+<li>엔진: pytest + 회귀</li>
+</ul>
+<h3 id="fr-9-phase-4">FR-9. 운영 인프라 (Phase 4)</h3>
+<ul>
+<li>도메인 + HTTPS (사장님 도메인)</li>
+<li>Cloudflare Tunnel + Access (Zero Trust 인증 게이팅)</li>
+<li>백업 (DB + 파일)</li>
+<li>모니터링 (에러 알림)</li>
+</ul>
+<hr>
+<h2 id="9-non-functional-requirements-nfr">9. Non-Functional Requirements (NFR)</h2>
+<h3 id="nfr-1-correctness">NFR-1. 정확성 (Correctness)</h3>
+<ul>
+<li><strong>1원 단위 정확</strong> — 모든 급여 계산 결과는 1원도 차이 없음</li>
+<li>회귀 테스트: 기존 사업장 1개월치 직원 전체 1원 단위 동일성</li>
+</ul>
+<h3 id="nfr-2-security">NFR-2. 보안 (Security)</h3>
+<ul>
+<li><strong>PII 금지</strong> — Frappe DB 어떤 필드(Password/Encrypted 포함)에도 주민번호/계좌/외국인등록번호 저장 금지</li>
+<li>privacy_broker 일회성 조회 + 감사 로그</li>
+<li>HTTPS only (운영)</li>
+<li>Cloudflare Access 인증 게이팅 (운영)</li>
+</ul>
+<h3 id="nfr-3-0-operational-continuity">NFR-3. 운영 영향 0% (Operational Continuity)</h3>
+<ul>
+<li>기존 사업장 (부평/올샤 등) 운영 중단 없이 도입</li>
+<li>엔진 코드 변경은 옵셔널 패턴 (디폴트 = 기존 동작)</li>
+<li>Frappe 도입은 점진적 (1 사업장 파일럿 → 확대)</li>
+</ul>
+<h3 id="nfr-4-availability">NFR-4. 가용성 (Availability)</h3>
+<ul>
+<li>운영 시간 09:00~18:00 가용 (KR 시간)</li>
+<li>매월 25~31일 (급여 처리 기간) 다운타임 0</li>
+<li>백업 일 1회</li>
+</ul>
+<h3 id="nfr-5-performance">NFR-5. 성능 (Performance)</h3>
+<ul>
+<li>1 사업장 50명 급여 계산: &lt; 30초</li>
+<li>API 응답: P95 &lt; 2초</li>
+<li>신고서 생성: &lt; 60초</li>
+</ul>
+<h3 id="nfr-6-auditability">NFR-6. 감사 (Auditability)</h3>
+<ul>
+<li>모든 API 호출 로그 (호출자/시점/payload 요약)</li>
+<li>privacy_broker 조회 로그 별도 보관 (개인정보보호법)</li>
+<li>Salary Slip 변경 이력 (Frappe 기본 audit)</li>
+</ul>
+<h3 id="nfr-7-maintainability">NFR-7. 메인테인 (Maintainability)</h3>
+<ul>
+<li>docs/korea/ SoT 명세 우선 (코드는 명세 따름)</li>
+<li>양측 계약 (docs/integration/) 변경 시 PM 결재</li>
+<li>Frappe upstream 업데이트 추적 (월 1회)</li>
+</ul>
+<hr>
+<h2 id="10-architecture">10. Architecture (요약)</h2>
+<pre><code>[사장님]
+   │
+   ├── Frappe HRMS (HR 백본)             [급여자동화 엔진]
+   │     ├── Employee                       ├── insurance.py
+   │     ├── Attendance                     ├── payroll_calc.py
+   │     ├── Leave                          ├── severance.py
+   │     ├── Korea Salary Slip ◀──┐         ├── minimum_wage.py
+   │     └── Korea Severance Slip │         ├── daily_worker_tax.py
+   │                              │         └── [...신규 모듈]
+   │                              │              │
+   │     [Korea Integration API]  │              │
+   │     ├── export_employee  ◀───┼──────────────┘ (REST)
+   │     ├── export_time      ◀───┼─────── (REST)
+   │     ├── sync_worksite    ◀───┼─────── (REST 양방향)
+   │     ├── import_payroll   ◀───┴─── (REST 결과 push)
+   │     ├── import_yearend   ◀───── (REST)
+   │     └── import_severance ◀───── (REST)
+   │
+   └── privacy_broker (PII 일회성 조회)
+         ├── 주민번호 (encrypted store)
+         ├── 계좌번호
+         ├── 외국인등록번호
+         └── 감사 로그
+</code></pre>
+<p>원칙:<br>
+- Frappe = HR 마스터 / 엔진 = 룰 엔진<br>
+- 양방향 sync 는 사업장 마스터만 (나머지는 단방향)<br>
+- PII = Frappe 외부 (privacy_broker only)<br>
+- 결과 결합 = Frappe 측이 import (엔진 측이 push)</p>
+<hr>
+<h2 id="11-interface-contracts">11. Interface Contracts</h2>
+<p>본 PRD 의 인터페이스 권위 문서:<br>
+- 서버측: <a href="../integration/frappe-side-contract.md"><code>docs/integration/frappe-side-contract.md</code></a><br>
+- 엔진측: <a href="../integration/engine-side-contract.md"><code>docs/integration/engine-side-contract.md</code></a></p>
+<p>본 문서는 PRD level 만 명시. 라인-by-라인 명세는 위 두 파일 참조.</p>
+<hr>
+<h2 id="12-roles-responsibilities-3">12. Roles &amp; Responsibilities (3자 + 사장님)</h2>
+<h3 id="12-1-sponsor-sot">12-1. 사장님 (Sponsor / SoT 권한자)</h3>
+<p><strong>책임</strong>:<br>
+- 비즈니스 우선순위 결정 (사업장 파일럿 시점, 운영 적용 게이트)<br>
+- <code>docs/korea/*</code> SoT 명세 권한 (변경 시 사장님 컨펌 필수)<br>
+- 작업자 메시지 라우팅 (PM ↔ 양측 작업자 통신 중계)<br>
+- 최종 결재 (PR 머지, 운영 적용)<br>
+- 비용/예산 관리</p>
+<p><strong>금지/주의</strong>:<br>
+- 직접 PR 머지 (PM 검증 후 권장. 단 권한은 사장님)<br>
+- 양측 작업자 직접 git 명령 위임 (PM 거치는 게 안전)</p>
+<h3 id="12-2-pm-claude-opus-this-session">12-2. 총괄 PM (Claude Opus, this session)</h3>
+<p><strong>책임</strong>:<br>
+- 양측 작업 조율 / 인터페이스 계약 통합<br>
+- git 직접 모니터링 (gh CLI 으로 PR/브랜치/커밋 검증)<br>
+- 결정자 (PII 경계, 머지 순서, 우선순위) — 사장님 컨펌 필요시 컨펌 받음<br>
+- 검증 도구 활용 (Codex 어댑서리얼, gap-detector)<br>
+- 양측 작업자 회신 지시문 작성 (사장님이 전달)<br>
+- 정기 회고 (주 1회 금요일)<br>
+- 위험 관리 / 미해결 이슈 추적</p>
+<p><strong>산출물</strong>:<br>
+- 양측 회신 지시문<br>
+- PR 검토 보고서<br>
+- 머지 결정 + 실행 (사장님 컨펌 후)<br>
+- PRD 갱신<br>
+- Codex/gap-detector 분석 보고서</p>
+<p><strong>금지/주의</strong>:<br>
+- 자율 머지 — 사장님 컨펌 필수 (지난 사이클 학습)<br>
+- 직접 코드 작성 — 작업자 영역 (단, 문서 작성/cherry-pick 정도는 OK)<br>
+- <code>docs/korea/*</code> 직접 수정 — 사장님 SoT<br>
+- 양측 작업자에게 메시지 직접 전송 — 사장님 라우터 거침</p>
+<h3 id="12-3">12-3. 로컬엔진 작업자 (급여자동화 메인테이너)</h3>
+<p><strong>책임</strong>:<br>
+- 한국 노동법/세법 룰 엔진 (4대보험, 소득세, 연말정산, 퇴직금, 일용직, 외국인)<br>
+- 1원 단위 정확한 계산 (CLAUDE.md 룰 준수)<br>
+- privacy_broker 통합 (PII 처리)<br>
+- 기존 운영 사업장 (부평/올샤 등) 운영 책임<br>
+- engine-side-contract 구현 (FastAPI 또는 CLI 기반)<br>
+- 회귀/단위 테스트 유지</p>
+<p><strong>산출물</strong>:<br>
+- 급여 계산 결과 JSON (Frappe import 용)<br>
+- 신규 코드 모듈 (insurance.py, minimum_wage.py 등)<br>
+- 04/05 export 스키마 + 구현 코드<br>
+- docs/integration/engine-side-contract.md<br>
+- 회귀 테스트 + pytest</p>
+<p><strong>금지/주의</strong>:<br>
+- Frappe 내부 코드 수정 (서버측 영역)<br>
+- <code>docs/korea/*</code> 명세 직접 수정 (사장님 SoT)<br>
+- 기존 운영 영향 (옵셔널 패턴 유지)<br>
+- main 브랜치 직접 commit 시 회귀 테스트 + 1원 단위 검증 자료 첨부 필수<br>
+- privacy_broker 우회 (직접 PII 접근 금지)</p>
+<h3 id="12-4-hermes">12-4. 서버개발자 (Hermes)</h3>
+<p><strong>책임</strong>:<br>
+- Frappe HRMS 확장 (Custom DocType, API, Hook, Print Format)<br>
+- 한국화 UI (locale, 메뉴) — Phase 3<br>
+- frappe-side-contract 구현<br>
+- 인프라 (Cloudflare Tunnel, 도메인, CI/CD)<br>
+- 양측 통신 (REST API)<br>
+- Frappe upstream 업데이트 추적</p>
+<p><strong>산출물</strong>:<br>
+- hrms/api/korea_integration.py (PR #7 기준)<br>
+- Custom DocType 메타 (Korea Salary Slip Extension, Korea Severance Slip)<br>
+- Salary Component Formula (docs/korea/10 fix 후)<br>
+- Migration scripts<br>
+- Print Format<br>
+- Test suite (pytest 또는 Frappe TestCase)<br>
+- docs/integration/frappe-side-contract.md</p>
+<p><strong>금지/주의</strong>:<br>
+- <code>docs/korea/*</code> 명세 직접 수정 (사장님 SoT)<br>
+- 로컬 엔진 코드 수정 (로컬엔진 영역)<br>
+- PR base 위반 (반드시 <code>feature/korea-payroll-docs</code>)<br>
+- PM 결정 무시 (특히 PII 경계 — 양보 불가 라인)<br>
+- Force push 또는 머지된 PR 의 브랜치 수정</p>
+<hr>
+<h2 id="13-decision-authority-matrix">13. Decision Authority Matrix</h2>
+<table>
+<thead>
+<tr>
+<th>결정 종류</th>
+<th>1차 권한</th>
+<th>2차 컨펌</th>
+<th>흐름</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>코드 구현 방법</td>
+<td>작업자</td>
+<td>-</td>
+<td>자율</td>
+</tr>
+<tr>
+<td>PR 생성</td>
+<td>작업자</td>
+<td>-</td>
+<td>자율 (작업자 push)</td>
+</tr>
+<tr>
+<td>PR base 브랜치 결정</td>
+<td>PM</td>
+<td>-</td>
+<td>PR 생성 전 PM 안내</td>
+</tr>
+<tr>
+<td><strong>PR 머지</strong></td>
+<td>PM</td>
+<td><strong>사장님 컨펌</strong></td>
+<td>작업자 push → PM 검토 → 사장님 컨펌 → PM 머지</td>
+</tr>
+<tr>
+<td>양측 계약 변경 (<code>docs/integration/</code>)</td>
+<td>PM</td>
+<td>사장님 통지</td>
+<td>PM 결정</td>
+</tr>
+<tr>
+<td><strong><code>docs/korea/*</code> 변경</strong></td>
+<td><strong>사장님</strong></td>
+<td>-</td>
+<td>사장님 컨펌 후 작업자</td>
+</tr>
+<tr>
+<td><strong>PII 경계</strong></td>
+<td><strong>PM 양보 불가</strong></td>
+<td>-</td>
+<td>PM 결정</td>
+</tr>
+<tr>
+<td>운영 적용 (사업장 파일럿)</td>
+<td>사장님</td>
+<td>PM 검증</td>
+<td>사장님 결정</td>
+</tr>
+<tr>
+<td>비용/예산</td>
+<td>사장님</td>
+<td>-</td>
+<td>사장님 결정</td>
+</tr>
+<tr>
+<td>Codex 어댑서리얼 실행</td>
+<td>PM</td>
+<td>-</td>
+<td>자율</td>
+</tr>
+<tr>
+<td>머지된 PR 의 revert</td>
+<td>PM</td>
+<td><strong>사장님 컨펌 필수</strong></td>
+<td>revert 영향 큼</td>
+</tr>
+<tr>
+<td>브랜치 삭제 (dangling)</td>
+<td>PM</td>
+<td>사장님 통지</td>
+<td>PM 진행</td>
+</tr>
+<tr>
+<td>다음 사이클 우선순위</td>
+<td>PM</td>
+<td>사장님 컨펌</td>
+<td>PM 추천 + 사장님 결정</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="14-communication-protocol">14. Communication Protocol</h2>
+<h3 id="14-1">14-1. 통신 흐름</h3>
+<pre><code>[사장님]
+   │  ▲
+   │  │ (메시지 라우팅)
+   ▼  │
+[총괄 PM (Claude Opus)] ─── 직접 ───▶ [Git (SoT)]
+                                          ▲
+                                          │ (push, PR)
+[로컬엔진 작업자] ─────────────────────────┤
+[서버개발자 (Hermes)] ─────────────────────┘
+</code></pre>
+<p><strong>핵심 규칙</strong>:<br>
+- 작업자 ↔ PM 직접 통신 X (사장님 라우터)<br>
+- PM ↔ Git 직접 (gh CLI)<br>
+- 작업자 ↔ Git 직접 (push, PR)<br>
+- 사장님 = 비동기 메시지 중계자</p>
+<h3 id="14-2-pm">14-2. 작업자 → PM 보고 패턴 (사장님 통과)</h3>
+<p>표준 형식:<br>
+1. <strong>결론</strong> (1-2줄)<br>
+2. <strong>근거</strong> (커밋 SHA, PR 번호, 변경 파일, 검증 결과)<br>
+3. <strong>리스크</strong> (있으면)<br>
+4. <strong>다음 행동</strong> (제안)</p>
+<h3 id="14-3-pm">14-3. PM → 작업자 회신 패턴 (사장님 통과)</h3>
+<p>표준 형식:<br>
+1. <strong>평가</strong> (✅ APPROVED / ⚠ 조건부 / ❌ 반려)<br>
+2. <strong>수정 사항</strong> (필요시, 라인-by-라인)<br>
+3. <strong>PR 생성/처리 지시</strong> (브랜치명, base, title, body 형식)<br>
+4. <strong>금지 사항</strong><br>
+5. <strong>완료 후 보고 형식</strong></p>
+<h3 id="14-4-pm">14-4. 정기 PM 정리 세션</h3>
+<ul>
+<li>주기: 매주 금요일</li>
+<li>내용: 사이클 회고 + 다음 주 우선순위 + 위험 검토</li>
+<li>산출물: PRD 의 "변경 이력" 갱신 + 다음 주 행동 plan</li>
+</ul>
+<hr>
+<h2 id="15-phasing-roadmap">15. Phasing &amp; Roadmap</h2>
+<h3 id="phase-1-frappe-api-mvp">Phase 1 — 인터페이스 확정 + Frappe API MVP (현재) ✅ 진행 중</h3>
+<ul>
+<li>✅ 양측 계약 작성 + 머지 (PR #3, #4)</li>
+<li>✅ docs/korea/10 P1 4건 fix (PR #6)</li>
+<li>🔄 hrms/api/korea_integration.py MVP (PR #7 — 검토 중)</li>
+<li>⏸ 사업장 마스터 sync API</li>
+<li>⏸ 04/05 import API 구현 (계약은 있음)</li>
+</ul>
+<p><strong>완료 게이트</strong>:<br>
+- PR #7 머지<br>
+- 사업장 마스터 양방향 sync 작동<br>
+- 04/05 import API 1건 동작 검증</p>
+<h3 id="phase-2-custom-doctype">Phase 2 — Custom DocType + 부평/올샤 파일럿</h3>
+<ul>
+<li>Korea Salary Slip Extension DocType 구현</li>
+<li>Korea Severance Slip DocType 구현</li>
+<li>Hook (before_validate, on_calculate, validate) 등록</li>
+<li>Salary Component Formula 등록</li>
+<li>Korea Tax Table / Korea Insurance Rates DocType</li>
+<li><strong>첫 파일럿: 부평 사업장 (Week 1-4)</strong></li>
+<li>1개월 parallel run (기존 엔진 + Frappe 동시)</li>
+<li>1원 단위 동일성 검증</li>
+<li><strong>두 번째 파일럿: 올웨이즈샤브 (Week 2-5, 1주 시차)</strong></li>
+<li>동일 검증 패턴</li>
+<li>부평 1주 검증 결과 안정 후 진입</li>
+</ul>
+<p><strong>완료 게이트</strong>:<br>
+- 두 파일럿 사업장 1개월치 1원 단위 동일성 100%<br>
+- PII 감사 로그 정상 작동<br>
+- 백업/복구 검증</p>
+<h3 id="phase-3-ui">Phase 3 — 한국화 UI + 추가 사업장 확대</h3>
+<ul>
+<li>메뉴/필드 한국어 라벨</li>
+<li>Dashboard (사업장별/월별 합계)</li>
+<li>사업장 2~3개 확대 적용</li>
+<li>신고서 PDF 다운로드 기능</li>
+</ul>
+<h3 id="phase-4">Phase 4 — 운영 인프라 + 전 사업장 적용</h3>
+<ul>
+<li>도메인 + HTTPS + Cloudflare Access</li>
+<li>모니터링 + 알림</li>
+<li>백업/복구 자동화</li>
+<li>전 사업장 점진 마이그레이션</li>
+<li>기존 엔진 = 룰 엔진으로만 전환</li>
+</ul>
+<hr>
+<h2 id="16-milestones-gates">16. Milestones &amp; Gates</h2>
+<table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>완료 조건</th>
+<th>게이트 (다음 단계 진입)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M1: 인터페이스 확정</td>
+<td>양측 계약 머지 + Codex 어댑서리얼 P1 = 0</td>
+<td>✅ 통과 (2026-04-25)</td>
+</tr>
+<tr>
+<td>M2: API MVP</td>
+<td>PR #7 머지 + 04/05 작동</td>
+<td>🔄 진행 중</td>
+</tr>
+<tr>
+<td>M3: DocType + Hook</td>
+<td>Salary Slip 자동 생성 작동</td>
+<td>⏸</td>
+</tr>
+<tr>
+<td>M4: 1 사업장 파일럿</td>
+<td>parallel run 1원 동일성 100%</td>
+<td>⏸</td>
+</tr>
+<tr>
+<td>M5: 한국화 UI</td>
+<td>메뉴 한국어 + Dashboard</td>
+<td>⏸</td>
+</tr>
+<tr>
+<td>M6: 전 사업장 운영</td>
+<td>모든 사업장 Frappe 마이그레이션</td>
+<td>⏸</td>
+</tr>
+</tbody>
+</table>
+<p><strong>전환 게이트</strong> (절대 통과 조건):<br>
+1. 1원 단위 동일성 (1개월 parallel run)<br>
+2. PII 감사 로그 작동<br>
+3. 백업/복구 검증<br>
+4. 운영자(사장님) 컨펌</p>
+<p>→ 위 4건 모두 통과 전엔 실데이터 운영 진입 금지.</p>
+<hr>
+<h2 id="17-acceptance-criteria">17. Acceptance Criteria</h2>
+<h3 id="phase-1">Phase 1 (현재) 완료 조건</h3>
+<ul>
+<li>[ ] PR #7 머지 (Korea integration API MVP)</li>
+<li>[ ] 사업장 마스터 sync API 동작 검증</li>
+<li>[ ] 04/05 import API 1건 동작 검증</li>
+<li>[ ] frappe-side-contract.md ↔ korea_integration.py 정량 갭 0건 (gap-detector)</li>
+</ul>
+<h3 id="1-phase-2">1 사업장 파일럿 (Phase 2 게이트)</h3>
+<ul>
+<li>[ ] parallel run 1개월치 1원 단위 동일성 100% (직원 전체)</li>
+<li>[ ] PII 감사 로그 모든 호출 기록</li>
+<li>[ ] privacy_broker 일회성 조회 작동</li>
+<li>[ ] 명세서 PDF 한국 양식 출력 정상</li>
+<li>[ ] 4대보험 신고서 (취득/상실) 정상 생성</li>
+</ul>
+<h3 id="phase-4_1">전 사업장 운영 (Phase 4 게이트)</h3>
+<ul>
+<li>[ ] 6개월 무사고 운영 (1원 차이/세무신고 오류/PII 유출 0건)</li>
+<li>[ ] 모든 사업장 마이그레이션 완료</li>
+<li>[ ] 백업/복구 정기 테스트 통과</li>
+<li>[ ] 운영자(사장님) 자율 운영 가능 (PM 의존도 ↓)</li>
+</ul>
+<hr>
+<h2 id="18-risk-register">18. Risk Register</h2>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>위험</th>
+<th>확률</th>
+<th>영향</th>
+<th>완화</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R1</td>
+<td>비동기 통신 충돌 (작업자 ↔ PM)</td>
+<td>중</td>
+<td>중</td>
+<td>PM 자동 머지 X. 사장님 컨펌 패턴. 학습됨 (PR #6 사이클)</td>
+</tr>
+<tr>
+<td>R2</td>
+<td>Frappe upstream 변경으로 한국화 깨짐</td>
+<td>중</td>
+<td>큼</td>
+<td>월 1회 dry-run merge. 충돌 시 즉시 PM 알림</td>
+</tr>
+<tr>
+<td>R3</td>
+<td>PII 누출 (Frappe 또는 privacy_broker)</td>
+<td>낮</td>
+<td>매우 큼</td>
+<td>양보 불가 라인. Codex 어댑서리얼 정기 (분기 1회). 감사 로그</td>
+</tr>
+<tr>
+<td>R4</td>
+<td>1원 단위 차이 (운영 적용 후)</td>
+<td>중</td>
+<td>큼</td>
+<td>parallel run 게이트. 첫 달 1원 검증 후 적용. 옵셔널 패턴</td>
+</tr>
+<tr>
+<td>R5</td>
+<td>docs/korea/ 미세 결함 (Codex 미발견)</td>
+<td>중</td>
+<td>중</td>
+<td>분기 1회 어댑서리얼 + gap-detector</td>
+</tr>
+<tr>
+<td>R6</td>
+<td>작업자 1명 부재 (휴가/아웃 등)</td>
+<td>낮</td>
+<td>큼</td>
+<td>산출물 = 코드 + 문서. PM 이 산출물 기반 인계 가능</td>
+</tr>
+<tr>
+<td>R7</td>
+<td>PM (Claude Opus) context 한계</td>
+<td>중</td>
+<td>중</td>
+<td>정기 정리 세션 + 메모리 시스템 활용. 핵심 결정은 PRD 갱신</td>
+</tr>
+<tr>
+<td>R8</td>
+<td>비용 (Claude 토큰) 누적</td>
+<td>중</td>
+<td>작</td>
+<td>효율 운영 (단순 결정 자율 / 큰 결정 컨펌)</td>
+</tr>
+<tr>
+<td>R9</td>
+<td>dangling 브랜치 누적</td>
+<td>중</td>
+<td>작</td>
+<td>정기 PM 정리 (주 1회) — 삭제/처리 결정</td>
+</tr>
+<tr>
+<td>R10</td>
+<td>사장님 부재 시 작업자 자율 진행</td>
+<td>중</td>
+<td>큼</td>
+<td>PRD = 1차 가이드. PM 결정 위임 룰 명시</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="19-resolved-decisions-formerly-open-questions">19. Resolved Decisions (formerly Open Questions)</h2>
+<p>본 PRD v1.1 시점 모두 결정 완료. 사장님 OQ1 직접 결정, OQ2~OQ7 PM 자율 결정 (사장님 위임).</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>질문</th>
+<th><strong>결정</strong></th>
+<th>결정자</th>
+<th>근거</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>OQ1</strong></td>
+<td>첫 파일럿 사업장은?</td>
+<td><strong>부평 + 올웨이즈샤브 둘 다.</strong> 부평 Week 1-4 → 올샤 Week 2-5 (1주 시차)</td>
+<td><strong>사장님</strong></td>
+<td>양 사업장 다 검증 = 더 강력한 안전망. 1주 시차 = 부평 결과 보고 올샤 보정 가능</td>
+</tr>
+<tr>
+<td><strong>OQ2</strong></td>
+<td>privacy_broker 외부 store 위치?</td>
+<td><strong>기존 privacy_broker 구조 유지</strong> (Privacy Architecture v2 검증 완료 자산). Phase 4 운영 진입 시 cloud KMS 마이그레이션 검토</td>
+<td>PM</td>
+<td>검증된 자산 우선. 클라우드 KMS는 운영 비용+락인 부담. 현재 구조로 양보 불가 라인 충족</td>
+</tr>
+<tr>
+<td><strong>OQ3</strong></td>
+<td>엔진 측 API 방식?</td>
+<td><strong>FastAPI 얇은 REST 래퍼 우선 (Phase 1).</strong> Celery/큐 기반은 Phase 4 (전 사업장 동시 처리 시) 검토</td>
+<td>PM</td>
+<td>engine-side-contract.md 추천 일치. 동기 호출이 1~3 사업장 규모에 충분. 단순 우선</td>
+</tr>
+<tr>
+<td><strong>OQ4</strong></td>
+<td>Frappe 인증?</td>
+<td><strong>Phase 1~3 = Frappe 자체 인증 (간소).</strong> Phase 4 = 사내 SSO 검토 — 네이버웍스(winhr.co.kr) SAML 우선 검토, 미지원 시 Google Workspace fallback</td>
+<td>PM</td>
+<td>초기 단계는 단순. 운영 확대 시 SSO 도입. 사장님 도메인이 네이버웍스라 그쪽 우선</td>
+</tr>
+<tr>
+<td><strong>OQ5</strong></td>
+<td>dangling 브랜치 처리?</td>
+<td><strong>bcfa2d5f (PM 반려안 — Data→Password) = 삭제.</strong> <strong>514638098 (PII 강화안 — 옵션 B) = 별도 PR 머지</strong> (PR 번호는 다음 사이클에서 할당)</td>
+<td>PM</td>
+<td>반려안은 무용. 강화안은 의미 있는 보강 (운영 시 무지성 변경 방지)</td>
+</tr>
+<tr>
+<td><strong>OQ6</strong></td>
+<td>PR #7 누락 항목?</td>
+<td><strong>별도 PR로 분리.</strong> 순서: PR #7 (현 MVP) 머지 → PR (사업장 sync) → PR (04/05 import)</td>
+<td>PM</td>
+<td>작은 PR이 review 효율 ↑. PR #7 검증 완료 상태에서 추가 변경은 새 검증 필요</td>
+</tr>
+<tr>
+<td><strong>OQ7</strong></td>
+<td>정기 회고 일정?</td>
+<td><strong>매주 금요일 16:00 KR (30분).</strong> 내용: 주간 사이클 회고 + 다음 주 우선순위 + 위험 검토. 사장님 부재 시 PM 단독 진행 + 산출물 보고</td>
+<td>PM</td>
+<td>금요일 = 주말 진입 전 정리. 16:00 = 노무 업무 마감 후. 30분 = 사장님 부담 낮음</td>
+</tr>
+</tbody>
+</table>
+<h3 id="action-items">결정 영향 요약 (Action Items)</h3>
+<ul>
+<li>
+<p><strong>즉시 액션</strong>:<br>
+  1. bcfa2d5f 브랜치 삭제 (PM 진행)<br>
+  2. 514638098 별도 PR 생성 지시 (Hermes)<br>
+  3. PR #7 머지 후 사업장 sync PR / 04/05 import PR 순차 진행<br>
+  4. 첫 회고: 다음 금요일 (2026-05-01) 16:00 KR</p>
+</li>
+<li>
+<p><strong>Phase 2 진입 시</strong>:</p>
+</li>
+<li>부평 + 올샤 1주 시차 파일럿 plan 확정</li>
+<li>
+<p>parallel run 인프라 준비 (기존 엔진 + Frappe 동시 호출)</p>
+</li>
+<li>
+<p><strong>Phase 4 진입 시</strong>:</p>
+</li>
+<li>네이버웍스 SAML 가능성 조사</li>
+<li>cloud KMS 마이그레이션 검토 (privacy_broker)</li>
+<li>Celery/큐 도입 검토</li>
+</ul>
+<hr>
+<h2 id="20-glossary">20. Glossary</h2>
+<ul>
+<li><strong>SoT</strong> — Single Source of Truth. 단일 진실의 원천</li>
+<li><strong>PII</strong> — Personally Identifiable Information. 개인식별정보 (주민번호 등)</li>
+<li><strong>privacy_broker</strong> — PII 일회성 조회 + 감사 로그 시스템 (Frappe 외부)</li>
+<li><strong>양측 계약</strong> — frappe-side-contract.md + engine-side-contract.md</li>
+<li><strong>옵셔널 패턴</strong> — 신규 파라미터 디폴트 = None/False = 기존 동작 유지</li>
+<li><strong>parallel run</strong> — 기존 엔진 + 신규 시스템 동시 실행 + 결과 비교</li>
+<li><strong>Codex 어댑서리얼</strong> — Codex (다른 LLM) 가 설계 결함을 도전적으로 검증</li>
+<li><strong>gap-detector</strong> — bkit 의 명세 ↔ 구현 정량 갭 측정 도구</li>
+</ul>
+<hr>
+<h2 id="21-appendix-change-log">21. Appendix: Change Log</h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Date</th>
+<th>작성자</th>
+<th>변경</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0</td>
+<td>2026-04-26</td>
+<td>총괄 PM</td>
+<td>초안 작성 (Phase 1 진행 중 시점)</td>
+</tr>
+<tr>
+<td><strong>1.1</strong></td>
+<td><strong>2026-04-26</strong></td>
+<td><strong>총괄 PM</strong></td>
+<td><strong>OQ1~OQ7 모두 결정 완료. 부평+올샤 파일럿 plan 명시. PDF 변환</strong></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="22-approval">22. Approval</h2>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Approver</th>
+<th>Date</th>
+<th>Signature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sponsor</td>
+<td>사장님 (seojaehong)</td>
+<td>2026-04-26</td>
+<td>OQ1 결정 + OQ2~OQ7 PM 위임 = 묵시 승인</td>
+</tr>
+<tr>
+<td>총괄 PM</td>
+<td>Claude Opus</td>
+<td>2026-04-26</td>
+<td>v1.1 결정 완료</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><strong>END OF PRD</strong></p></body></html>
