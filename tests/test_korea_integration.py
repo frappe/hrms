@@ -9,13 +9,19 @@ class FakeFrappeError(Exception):
     pass
 
 
+class FakeDuplicateEntryError(Exception):
+    pass
+
+
 class FakeDB:
     def __init__(self):
         self.exists_calls = []
         self.set_value_calls = []
         self.single_values = {}
         self.korea_calc_reference_run_ids = set()
+        self.korea_calc_reference_records = {}
         self.branch_records = {}
+        self.employee_names = {"EMP-0001"}
         self.table_columns = {
             "Attendance": [
                 "name",
@@ -48,6 +54,8 @@ class FakeDB:
         self.exists_calls.append((doctype, name))
         if doctype == "Salary Slip" and name == "SS-0001":
             return True
+        if doctype == "Employee":
+            return name in self.employee_names
         if doctype == "Korea Calc Reference" and isinstance(name, dict):
             return name.get("run_id") in self.korea_calc_reference_run_ids
         if doctype == "Branch":
@@ -97,6 +105,7 @@ class FakeFrappeModule(types.SimpleNamespace):
         self.log_error = lambda *args, **kwargs: None
         self.get_traceback = lambda: "traceback"
         self.local = types.SimpleNamespace(form_dict={}, request=None)
+        self.session = types.SimpleNamespace(user="integration@example.com")
 
     def _throw(self, message, exc=None):
         raise FakeFrappeError(message)
@@ -133,6 +142,22 @@ class FakeFrappeModule(types.SimpleNamespace):
                 record = self.db.branch_records.setdefault(branch_name, {"name": branch_name})
                 record.update(payload)
                 return record
+
+            return types.SimpleNamespace(insert=insert)
+
+        if payload.get("doctype") == "Korea Calc Reference":
+            record_name = payload.get("name") or payload.get("run_id")
+
+            def insert(ignore_permissions=False):
+                if payload.get("employee_id") not in self.db.employee_names:
+                    raise FakeFrappeError(f"Could not find Employee: {payload.get('employee_id')}")
+                if payload.get("run_id") in self.db.korea_calc_reference_run_ids:
+                    raise FakeDuplicateEntryError(f"Duplicate run_id: {payload.get('run_id')}")
+                record = {"name": record_name}
+                record.update(payload)
+                self.db.korea_calc_reference_records[record_name] = record
+                self.db.korea_calc_reference_run_ids.add(payload.get("run_id"))
+                return types.SimpleNamespace(**record)
 
             return types.SimpleNamespace(insert=insert)
 
@@ -583,6 +608,131 @@ class KoreaIntegrationTests(unittest.TestCase):
         self.assertEqual(result["salary_slip"], "SS-0001")
         self.assertEqual(len(self.fake_frappe._comments), 1)
         self.assertEqual(self.fake_frappe._comments[0]["reference_name"], "SS-0001")
+
+    def test_korea_calc_reference_created_on_import_payroll(self):
+        result = self.module.import_payroll_result(
+            payload={
+                "run_id": "RUN-2",
+                "employee_id": "EMP-0001",
+                "pay_year_month": "2026-04",
+                "salary_slip_external_ref": "SS-0001",
+                "taxable_items": [{"code": "BASE", "label": "기본급", "amount": 2000}],
+                "non_taxable_items": [],
+                "social_insurance_deductions": {
+                    "national_pension": 10,
+                    "health_insurance": 20,
+                    "long_term_care_insurance": 3,
+                    "employment_insurance": 4,
+                },
+                "withholding_tax": {"income_tax": 30, "local_income_tax": 3},
+                "gross_pay": 2000,
+                "total_deduction": 67,
+                "net_pay": 1933,
+                "engine_version": "engine-1",
+                "ruleset_version": "ruleset-1",
+            }
+        )
+
+        self.assertEqual(result["korea_calc_reference"], "RUN-2")
+        record = self.fake_frappe.db.korea_calc_reference_records["RUN-2"]
+        self.assertEqual(record["kind"], "payroll")
+        self.assertEqual(record["employee_id"], "EMP-0001")
+        self.assertEqual(record["pay_year_month"], "2026-04")
+        self.assertEqual(record["salary_slip_external_ref"], "SS-0001")
+        self.assertEqual(record["imported_by"], "integration@example.com")
+
+    def test_korea_calc_reference_created_on_import_year_end_settlement(self):
+        result = self.module.import_year_end_settlement_result(
+            payload={
+                "run_id": "YES-2",
+                "employee_id": "EMP-0001",
+                "settlement_year": 2025,
+                "settlement_kind": "annual_february",
+                "applied_pay_year_month": "2026-02",
+                "salary_slip_external_ref": "SS-0001",
+                "prepaid_tax": 100,
+                "determined_tax": 120,
+                "adjustment_tax": 20,
+                "local_income_tax": 2,
+                "engine_version": "engine-1",
+                "ruleset_version": "ruleset-1",
+            }
+        )
+
+        self.assertEqual(result["korea_calc_reference"], "YES-2")
+        record = self.fake_frappe.db.korea_calc_reference_records["YES-2"]
+        self.assertEqual(record["kind"], "year_end_settlement")
+        self.assertEqual(record["applied_pay_year_month"], "2026-02")
+        self.assertEqual(record["salary_slip_external_ref"], "SS-0001")
+
+    def test_korea_calc_reference_created_on_import_severance(self):
+        result = self.module.import_severance_result(
+            payload={
+                "run_id": "SEV-2",
+                "employee_id": "EMP-0001",
+                "retirement_date": "2026-04-30",
+                "linked_salary_slip": "SS-0001",
+                "average_wage": 100,
+                "service_years": 3,
+                "severance_pay": 1000,
+                "severance_income_tax": 30,
+                "local_income_tax": 3,
+                "net_pay": 967,
+                "engine_version": "engine-1",
+                "ruleset_version": "ruleset-1",
+            }
+        )
+
+        self.assertEqual(result["korea_calc_reference"], "SEV-2")
+        record = self.fake_frappe.db.korea_calc_reference_records["SEV-2"]
+        self.assertEqual(record["kind"], "severance")
+        self.assertEqual(record["retirement_date"], "2026-04-30")
+        self.assertEqual(record["salary_slip_external_ref"], "SS-0001")
+
+    def test_korea_calc_reference_run_id_unique_constraint(self):
+        payload = {
+            "run_id": "RUN-UNIQ-1",
+            "employee_id": "EMP-0001",
+            "kind": "payroll",
+            "import_payload": "{}",
+            "imported_by": "integration@example.com",
+        }
+
+        self.fake_frappe.get_doc({"doctype": "Korea Calc Reference", **payload}).insert(ignore_permissions=True)
+        with self.assertRaises(FakeDuplicateEntryError):
+            self.fake_frappe.get_doc({"doctype": "Korea Calc Reference", **payload}).insert(ignore_permissions=True)
+
+    def test_korea_calc_reference_employee_id_must_be_existing_employee(self):
+        with self.assertRaises(FakeFrappeError):
+            self.module.import_payroll_result(
+                payload={
+                    "run_id": "RUN-MISSING-EMP-1",
+                    "employee_id": "EMP-4040",
+                    "pay_year_month": "2026-04",
+                    "taxable_items": [{"code": "BASE", "label": "기본급", "amount": 2000}],
+                    "non_taxable_items": [],
+                    "social_insurance_deductions": {
+                        "national_pension": 10,
+                        "health_insurance": 20,
+                        "long_term_care_insurance": 3,
+                        "employment_insurance": 4,
+                    },
+                    "withholding_tax": {"income_tax": 30, "local_income_tax": 3},
+                    "gross_pay": 2000,
+                    "total_deduction": 67,
+                    "net_pay": 1933,
+                }
+            )
+
+    def test_serialize_import_payload_rejects_pii_again_before_persist(self):
+        with self.assertRaises(FakeFrappeError):
+            self.module._serialize_import_payload(
+                {
+                    "run_id": "RUN-PII-1",
+                    "employee_id": "EMP-0001",
+                    "address": "Seoul",
+                }
+            )
 
 
 if __name__ == "__main__":
