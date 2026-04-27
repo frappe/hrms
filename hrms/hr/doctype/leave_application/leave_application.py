@@ -1490,8 +1490,6 @@ def get_leave_approver(employee):
 
 def on_doctype_update():
 	frappe.db.add_index("Leave Application", ["employee", "from_date", "to_date"])
-<<<<<<< HEAD
-=======
 
 
 @frappe.whitelist()
@@ -1513,4 +1511,3 @@ def validate_leave_access(employee):
 		not frappe.has_permission("Employee", "read", employee)
 	):
 		frappe.throw(_("Not permitted"), frappe.PermissionError)
->>>>>>> 55ee832c0 (fix(leave_application): validate leave access for approver & employee)
