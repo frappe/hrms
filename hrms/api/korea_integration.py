@@ -16,6 +16,16 @@ BLOCKED_PII_FIELDS = {
     "bank_account_number",
     "address",
 }
+WORKSITE_FIELD_CANDIDATES = {
+    "business_registration_number": ["custom_business_registration_number", "business_registration_number"],
+    "worksite_code": ["custom_worksite_code", "worksite_code"],
+    "status": ["custom_worksite_status", "status"],
+    "effective_from": ["custom_effective_from", "effective_from"],
+    "effective_to": ["custom_effective_to", "effective_to"],
+    "source_modified": ["custom_source_modified", "source_modified"],
+    "sync_status": ["custom_sync_status", "sync_status"],
+    "last_sync_payload": ["custom_last_sync_payload", "last_sync_payload"],
+}
 EMPLOYMENT_TYPE_CATEGORY_MAP = {
     "정규직": "regular",
     "일용직": "daily",
@@ -218,6 +228,11 @@ def notify_worksite_master_change(payload: dict[str, Any] | None = None, **kwarg
             "status": worksite.get("status"),
             "modified": worksite.get("modified"),
         },
+        "audit": {
+            "resolution_policy": "yaml_wins",
+            "queued": True,
+            "source": "frappe",
+        },
     }
 
 
@@ -251,13 +266,16 @@ def apply_worksite_master_from_yaml(payload: dict[str, Any] | None = None, **kwa
             },
             "item",
         )
+        action, conflict = _apply_worksite_yaml_item(item)
         applied.append(
             {
                 "company": item.get("company"),
                 "branch": item.get("branch"),
-                "action": "ignored",
+                "action": action,
             }
         )
+        if conflict:
+            conflicts.append(conflict)
 
     return {"yaml_version": yaml_version, "applied": applied, "conflicts": conflicts}
 
@@ -442,6 +460,94 @@ def _record_payroll_import_comment(salary_slip: str, payload: dict[str, Any]) ->
     except Exception:
         if getattr(frappe, "log_error", None):
             frappe.log_error("Failed to persist Korea payroll import comment")
+
+
+def _apply_worksite_yaml_item(item: dict[str, Any]) -> tuple[str, dict[str, Any] | None]:
+    branch_name = item["branch"]
+    branch_exists = bool(getattr(frappe.db, "exists", lambda *args, **kwargs: None)("Branch", branch_name))
+    current = _get_branch_worksite_state(branch_name) if branch_exists else {}
+    desired = _build_desired_worksite_state(item)
+    field_map = _get_worksite_field_map()
+    changed_fields = [
+        field
+        for field, value in desired.items()
+        if field != "last_sync_payload" and current.get(field) != value
+    ]
+
+    if not branch_exists:
+        _persist_branch_worksite_state(branch_name, item["company"], desired)
+        return "created", None
+    if not changed_fields:
+        return "ignored", None
+
+    desired["sync_status"] = "conflict_detected"
+    _persist_branch_worksite_state(branch_name, item["company"], desired)
+    detail = ", ".join(sorted(field_map.get(field, field) for field in changed_fields))
+    return (
+        "updated",
+        {
+            "company": item.get("company"),
+            "branch": branch_name,
+            "resolution": "yaml_wins",
+            "detail": detail,
+        },
+    )
+
+
+def _build_desired_worksite_state(item: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "business_registration_number": item.get("business_registration_number"),
+        "worksite_code": item.get("worksite_code"),
+        "status": item.get("status"),
+        "effective_from": item.get("effective_from"),
+        "effective_to": item.get("effective_to"),
+        "source_modified": item.get("source_modified"),
+        "sync_status": "synced",
+        "last_sync_payload": json.dumps(item, ensure_ascii=False, sort_keys=True),
+    }
+
+
+def _get_branch_worksite_state(branch_name: str) -> dict[str, Any]:
+    field_map = _get_worksite_field_map()
+    state = {}
+    getter = getattr(frappe.db, "get_value", None)
+    if not getter:
+        return state
+    for logical_field, actual_field in field_map.items():
+        state[logical_field] = getter("Branch", branch_name, actual_field)
+    return state
+
+
+def _persist_branch_worksite_state(branch_name: str, company: str, state: dict[str, Any]) -> None:
+    field_map = _get_worksite_field_map()
+    payload = {"company": company}
+    for logical_field, value in state.items():
+        actual_field = field_map.get(logical_field)
+        if actual_field:
+            payload[actual_field] = value
+
+    exists = bool(getattr(frappe.db, "exists", lambda *args, **kwargs: None)("Branch", branch_name))
+    if not exists and getattr(frappe, "get_doc", None):
+        doc_payload = {"doctype": "Branch", "name": branch_name, "branch": branch_name, **payload}
+        try:
+            frappe.get_doc(doc_payload).insert(ignore_permissions=True)
+            return
+        except Exception:
+            if getattr(frappe, "log_error", None):
+                frappe.log_error(f"Failed to insert Branch for worksite sync: {branch_name}")
+
+    setter = getattr(frappe.db, "set_value", None)
+    if setter:
+        setter("Branch", branch_name, payload)
+
+
+def _get_worksite_field_map() -> dict[str, str]:
+    field_map = {}
+    for logical_field, candidates in WORKSITE_FIELD_CANDIDATES.items():
+        available = _get_optional_fields("Branch", candidates)
+        if available:
+            field_map[logical_field] = available[0]
+    return field_map
 
 
 def _get_optional_fields(doctype: str, candidates: list[str] | None = None) -> list[str]:

@@ -15,6 +15,7 @@ class FakeDB:
         self.set_value_calls = []
         self.single_values = {}
         self.korea_calc_reference_run_ids = set()
+        self.branch_records = {}
         self.table_columns = {
             "Attendance": [
                 "name",
@@ -29,6 +30,18 @@ class FakeDB:
                 "modified",
             ],
             "Employee": ["name", "employee_number", "employee_name", "visa_status_code"],
+            "Branch": [
+                "name",
+                "company",
+                "custom_business_registration_number",
+                "custom_worksite_code",
+                "custom_worksite_status",
+                "custom_effective_from",
+                "custom_effective_to",
+                "custom_source_modified",
+                "custom_sync_status",
+                "custom_last_sync_payload",
+            ],
         }
 
     def exists(self, doctype, name):
@@ -37,10 +50,32 @@ class FakeDB:
             return True
         if doctype == "Korea Calc Reference" and isinstance(name, dict):
             return name.get("run_id") in self.korea_calc_reference_run_ids
+        if doctype == "Branch":
+            return name if name in self.branch_records else None
         return False
 
-    def set_value(self, *args, **kwargs):
-        self.set_value_calls.append((args, kwargs))
+    def set_value(self, doctype, name, values, *args, **kwargs):
+        self.set_value_calls.append(((doctype, name, values), kwargs))
+        if doctype == "Branch":
+            record = self.branch_records.setdefault(name, {"name": name})
+            if isinstance(values, dict):
+                record.update(values)
+            else:
+                fieldname = values
+                value = args[0] if args else kwargs.get("value")
+                record[fieldname] = value
+
+    def get_value(self, doctype, name, fieldname=None):
+        if doctype != "Branch":
+            return None
+        record = self.branch_records.get(name)
+        if not record:
+            return None
+        if fieldname is None:
+            return record
+        if isinstance(fieldname, (list, tuple)):
+            return {field: record.get(field) for field in fieldname}
+        return record.get(fieldname)
 
     def get_table_columns(self, doctype):
         return self.table_columns.get(doctype, [])
@@ -91,6 +126,16 @@ class FakeFrappeModule(types.SimpleNamespace):
         return list(rows[start : start + page_length])
 
     def get_doc(self, payload):
+        if payload.get("doctype") == "Branch":
+            branch_name = payload.get("name") or payload.get("branch")
+
+            def insert(ignore_permissions=False):
+                record = self.db.branch_records.setdefault(branch_name, {"name": branch_name})
+                record.update(payload)
+                return record
+
+            return types.SimpleNamespace(insert=insert)
+
         self._comments.append(payload)
         return types.SimpleNamespace(insert=lambda ignore_permissions=False: payload)
 
@@ -207,6 +252,130 @@ class KoreaIntegrationTests(unittest.TestCase):
         self.assertIsNotNone(calls_by_doctype["Employee"]["page_length"])
         self.assertIsNotNone(calls_by_doctype["Attendance"]["page_length"])
         self.assertIsNotNone(calls_by_doctype["Leave Application"]["page_length"])
+
+    def test_apply_worksite_master_from_yaml_creates_branch_record(self):
+        result = self.module.apply_worksite_master_from_yaml(
+            payload={
+                "yaml_version": "2026-04-26",
+                "items": [
+                    {
+                        "company": "Winners",
+                        "branch": "Bupyeong",
+                        "business_registration_number": "123-45-67890",
+                        "worksite_code": "BUP-01",
+                        "status": "active",
+                        "effective_from": "2026-04-01",
+                        "effective_to": None,
+                        "source_modified": "2026-04-26 09:00:00",
+                    }
+                ],
+            }
+        )
+
+        self.assertEqual(result["yaml_version"], "2026-04-26")
+        self.assertEqual(result["applied"], [{"company": "Winners", "branch": "Bupyeong", "action": "created"}])
+        self.assertEqual(result["conflicts"], [])
+        self.assertEqual(
+            self.fake_frappe.db.branch_records["Bupyeong"]["custom_business_registration_number"],
+            "123-45-67890",
+        )
+        self.assertEqual(self.fake_frappe.db.branch_records["Bupyeong"]["custom_sync_status"], "synced")
+
+    def test_apply_worksite_master_from_yaml_updates_existing_branch_and_marks_conflict(self):
+        self.fake_frappe.db.branch_records["Bupyeong"] = {
+            "name": "Bupyeong",
+            "company": "Winners",
+            "custom_business_registration_number": "999-99-99999",
+            "custom_worksite_code": "OLD",
+            "custom_worksite_status": "inactive",
+            "custom_effective_from": "2026-03-01",
+            "custom_effective_to": None,
+            "custom_source_modified": "2026-03-01 09:00:00",
+            "custom_sync_status": "manual_override",
+        }
+
+        result = self.module.apply_worksite_master_from_yaml(
+            payload={
+                "yaml_version": "2026-04-26",
+                "items": [
+                    {
+                        "company": "Winners",
+                        "branch": "Bupyeong",
+                        "business_registration_number": "123-45-67890",
+                        "worksite_code": "BUP-01",
+                        "status": "active",
+                        "effective_from": "2026-04-01",
+                        "effective_to": None,
+                        "source_modified": "2026-04-26 09:00:00",
+                    }
+                ],
+            }
+        )
+
+        self.assertEqual(result["applied"], [{"company": "Winners", "branch": "Bupyeong", "action": "updated"}])
+        self.assertEqual(result["conflicts"][0]["resolution"], "yaml_wins")
+        self.assertIn("custom_business_registration_number", result["conflicts"][0]["detail"])
+        self.assertEqual(
+            self.fake_frappe.db.branch_records["Bupyeong"]["custom_business_registration_number"],
+            "123-45-67890",
+        )
+        self.assertEqual(self.fake_frappe.db.branch_records["Bupyeong"]["custom_sync_status"], "conflict_detected")
+
+    def test_apply_worksite_master_from_yaml_ignores_identical_branch_record(self):
+        self.fake_frappe.db.branch_records["Bupyeong"] = {
+            "name": "Bupyeong",
+            "company": "Winners",
+            "custom_business_registration_number": "123-45-67890",
+            "custom_worksite_code": "BUP-01",
+            "custom_worksite_status": "active",
+            "custom_effective_from": "2026-04-01",
+            "custom_effective_to": None,
+            "custom_source_modified": "2026-04-26 09:00:00",
+            "custom_sync_status": "synced",
+        }
+
+        result = self.module.apply_worksite_master_from_yaml(
+            payload={
+                "yaml_version": "2026-04-26",
+                "items": [
+                    {
+                        "company": "Winners",
+                        "branch": "Bupyeong",
+                        "business_registration_number": "123-45-67890",
+                        "worksite_code": "BUP-01",
+                        "status": "active",
+                        "effective_from": "2026-04-01",
+                        "effective_to": None,
+                        "source_modified": "2026-04-26 09:00:00",
+                    }
+                ],
+            }
+        )
+
+        self.assertEqual(result["applied"], [{"company": "Winners", "branch": "Bupyeong", "action": "ignored"}])
+        self.assertEqual(result["conflicts"], [])
+
+    def test_notify_worksite_master_change_returns_auditable_payload(self):
+        result = self.module.notify_worksite_master_change(
+            payload={
+                "event_type": "updated",
+                "worksite": {
+                    "company": "Winners",
+                    "branch": "Bupyeong",
+                    "business_registration_number": "123-45-67890",
+                    "worksite_code": "BUP-01",
+                    "effective_from": "2026-04-01",
+                    "status": "active",
+                    "modified": "2026-04-26 10:00:00",
+                },
+            }
+        )
+
+        self.assertEqual(result["status"], "queued")
+        self.assertEqual(result["event_type"], "updated")
+        self.assertEqual(result["worksite"]["branch"], "Bupyeong")
+        self.assertIn("audit", result)
+        self.assertEqual(result["audit"]["resolution_policy"], "yaml_wins")
 
     def test_import_payroll_result_rejects_pii_fields(self):
         with self.assertRaises(FakeFrappeError):
