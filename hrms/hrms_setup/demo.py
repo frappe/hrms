@@ -81,9 +81,10 @@ def setup_demo(args):
 	setup_payroll()
 	setup_fixtures()
 	setup_employees()
+	setup_leave_and_attendance()
 
 
-def create_demo_company():
+def create_demo_company(args=None):
 	if frappe.db.exists("Company", DEMO_COMPANY):
 		return
 
@@ -382,3 +383,56 @@ def get_records_from_json(doctype):
 
 def get_data_path(doctype):
 	return os.path.join(os.path.dirname(__file__), "demo_data", f"{doctype.lower().replace(' ', '_')}.json")
+
+
+def setup_leave_and_attendance():
+	from hrms.hrms_setup.demo_attendance import (
+		create_leave_allocations,
+		create_leave_applications,
+		generate_attendance,
+	)
+
+	employees = frappe.get_all(
+		"Employee",
+		filters={"status": "Active", "company": DEMO_COMPANY},
+		fields=[
+			"name",
+			"employee_name",
+			"date_of_joining",
+			"final_confirmation_date",
+			"employment_type",
+			"company",
+		],
+	)
+
+	leave_period = frappe.db.get_value(
+		"Leave Period",
+		{"company": DEMO_COMPANY},
+		"name",
+		order_by="from_date DESC",
+	)
+
+	if not leave_period:
+		current_year = getdate().year
+		leave_period_name = f"Leave Period {current_year}-{current_year + 1}"
+		if not frappe.db.exists("Leave Period", leave_period_name):
+			from frappe.desk.page.setup_wizard.setup_wizard import make_records
+
+			make_records(
+				[
+					{
+						"doctype": "Leave Period",
+						"leave_period_name": leave_period_name,
+						"from_date": f"{current_year}-04-01",
+						"to_date": f"{current_year + 1}-03-31",
+						"company": DEMO_COMPANY,
+					}
+				]
+			)
+		leave_period = leave_period_name
+
+	leave_period_doc = frappe.get_doc("Leave Period", leave_period)
+
+	create_leave_allocations(employees, leave_period_doc, DEMO_COMPANY)
+	create_leave_applications(employees, leave_period_doc)
+	generate_attendance(employees, leave_period_doc)
