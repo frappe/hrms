@@ -148,7 +148,6 @@ def export_time_and_leave(
         frappe.throw("from_date must be less than or equal to to_date")
 
     page, page_size = _normalize_pagination(page, page_size)
-    query_page_length = _bounded_query_page_length(page_size)
     attendance_fields = ["name", "employee", "attendance_date", "status", "shift", "modified"]
     attendance_fields.extend(_get_optional_fields("Attendance"))
 
@@ -171,9 +170,7 @@ def export_time_and_leave(
     employee_filters = {k: v for k, v in {"company": company, "branch": branch}.items() if v}
     employee_whitelist = None
     if employee_filters:
-        employee_whitelist = set(
-            frappe.get_all("Employee", filters=employee_filters, pluck="name", page_length=query_page_length)
-        )
+        employee_whitelist = set(frappe.get_all("Employee", filters=employee_filters, pluck="name"))
         if not employee_whitelist:
             return {"data": [], "meta": _build_meta(page, page_size, False)}
 
@@ -182,7 +179,6 @@ def export_time_and_leave(
         filters=attendance_filters,
         fields=attendance_fields,
         order_by="employee asc, attendance_date asc",
-        page_length=query_page_length,
     )
     leave_rows = frappe.get_all(
         "Leave Application",
@@ -200,7 +196,6 @@ def export_time_and_leave(
             "modified",
         ],
         order_by="employee asc, from_date asc",
-        page_length=query_page_length,
     )
 
     data = _build_time_and_leave_export(
@@ -870,10 +865,6 @@ def _normalize_pagination(page: int | str, page_size: int | str) -> tuple[int, i
 
 def _build_meta(page: int, page_size: int, has_more: bool) -> dict[str, Any]:
     return {"page": page, "page_size": page_size, "has_more": has_more}
-
-
-def _bounded_query_page_length(page_size: int) -> int:
-    return min(max(page_size, DEFAULT_PAGE_SIZE), MAX_PAGE_SIZE) + 1
 
 
 def _coerce_bool(value: Any) -> bool:

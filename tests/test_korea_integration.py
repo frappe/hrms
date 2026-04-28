@@ -337,22 +337,59 @@ class KoreaIntegrationTests(unittest.TestCase):
         self.assertEqual(employee_row["work_time_summary"]["overtime_hours_total"], 2.0)
         self.assertEqual(employee_row["leave_records"][0]["leave_type"], "연차")
 
-    def test_export_time_and_leave_uses_bounded_page_length_for_queries(self):
-        self.fake_frappe._employee_rows = [{"name": "EMP-0001"}]
+    def test_export_time_and_leave_paginates_full_employee_result_set(self):
+        self.fake_frappe._attendance_rows = [
+            {
+                "name": f"ATT-{index:04d}",
+                "employee": f"EMP-{index:04d}",
+                "attendance_date": "2026-04-01",
+                "status": "Present",
+                "shift": "Day",
+                "working_hours": 8,
+                "modified": "2026-04-01 09:00:00",
+            }
+            for index in range(1, 251)
+        ]
 
-        self.module.export_time_and_leave(
+        result = self.module.export_time_and_leave(
+            from_date="2026-04-01",
+            to_date="2026-04-30",
+            page=2,
+            page_size=100,
+        )
+
+        self.assertEqual(result["meta"], {"page": 2, "page_size": 100, "has_more": True})
+        self.assertEqual(len(result["data"]), 100)
+        self.assertEqual(result["data"][0]["employee_id"], "EMP-0101")
+        self.assertEqual(result["data"][-1]["employee_id"], "EMP-0200")
+
+    def test_export_time_and_leave_company_filter_does_not_truncate_employee_whitelist(self):
+        self.fake_frappe._employee_rows = [{"name": f"EMP-{index:04d}"} for index in range(1, 151)]
+        self.fake_frappe._attendance_rows = [
+            {
+                "name": f"ATT-{index:04d}",
+                "employee": f"EMP-{index:04d}",
+                "attendance_date": "2026-04-01",
+                "status": "Present",
+                "shift": "Day",
+                "working_hours": 8,
+                "modified": "2026-04-01 09:00:00",
+            }
+            for index in range(1, 151)
+        ]
+
+        result = self.module.export_time_and_leave(
             from_date="2026-04-01",
             to_date="2026-04-30",
             company="Winners",
-            branch="Seoul",
             page=2,
-            page_size=10,
+            page_size=100,
         )
 
-        calls_by_doctype = {call["doctype"]: call for call in self.fake_frappe.get_all_calls}
-        self.assertIsNotNone(calls_by_doctype["Employee"]["page_length"])
-        self.assertIsNotNone(calls_by_doctype["Attendance"]["page_length"])
-        self.assertIsNotNone(calls_by_doctype["Leave Application"]["page_length"])
+        self.assertEqual(result["meta"], {"page": 2, "page_size": 100, "has_more": False})
+        self.assertEqual(len(result["data"]), 50)
+        self.assertEqual(result["data"][0]["employee_id"], "EMP-0101")
+        self.assertEqual(result["data"][-1]["employee_id"], "EMP-0150")
 
     def test_apply_worksite_master_from_yaml_creates_branch_record(self):
         result = self.module.apply_worksite_master_from_yaml(
