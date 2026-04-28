@@ -1,0 +1,142 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:external_run_id",
+ "creation": "2026-04-28 05:05:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee",
+  "retirement_date",
+  "linked_salary_slip",
+  "average_wage",
+  "service_years",
+  "severance_pay",
+  "severance_income_tax",
+  "local_income_tax",
+  "net_pay",
+  "external_run_id",
+  "engine_version",
+  "ruleset_version",
+  "linked_calc_reference"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "retirement_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Retirement Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "linked_salary_slip",
+   "fieldtype": "Link",
+   "label": "Linked Salary Slip",
+   "options": "Salary Slip"
+  },
+  {
+   "fieldname": "average_wage",
+   "fieldtype": "Currency",
+   "label": "Average Wage"
+  },
+  {
+   "fieldname": "service_years",
+   "fieldtype": "Float",
+   "label": "Service Years"
+  },
+  {
+   "fieldname": "severance_pay",
+   "fieldtype": "Currency",
+   "label": "Severance Pay"
+  },
+  {
+   "fieldname": "severance_income_tax",
+   "fieldtype": "Currency",
+   "label": "Severance Income Tax"
+  },
+  {
+   "fieldname": "local_income_tax",
+   "fieldtype": "Currency",
+   "label": "Local Income Tax"
+  },
+  {
+   "fieldname": "net_pay",
+   "fieldtype": "Currency",
+   "label": "Net Pay"
+  },
+  {
+   "fieldname": "external_run_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "External Run ID",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "engine_version",
+   "fieldtype": "Data",
+   "label": "Engine Version"
+  },
+  {
+   "fieldname": "ruleset_version",
+   "fieldtype": "Data",
+   "label": "Ruleset Version"
+  },
+  {
+   "fieldname": "linked_calc_reference",
+   "fieldtype": "Link",
+   "label": "Linked Calc Reference",
+   "options": "Korea Calc Reference"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-04-28 05:05:00.000000",
+ "modified_by": "Administrator",
+ "module": "Payroll",
+ "name": "Korea Severance Slip",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "external_run_id",
+ "track_changes": 1
+}

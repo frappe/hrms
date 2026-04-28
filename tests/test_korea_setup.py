@@ -111,6 +111,10 @@ class KoreaSetupCustomFieldsTests(unittest.TestCase):
             "kr_taxable_pay",
             "kr_nontaxable_pay",
             "kr_total_deductions",
+            "kr_year_end_section",
+            "kr_prepaid_tax",
+            "kr_determined_tax",
+            "kr_adjustment_tax",
         }
 
         self.assertTrue(expected.issubset(salary_slip_fields.keys()))

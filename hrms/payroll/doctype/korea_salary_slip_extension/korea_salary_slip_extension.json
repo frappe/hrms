@@ -1,0 +1,161 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:salary_slip",
+ "creation": "2026-04-28 04:35:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "salary_slip",
+  "employee",
+  "pay_year_month",
+  "tax_method",
+  "taxable_total",
+  "non_taxable_total",
+  "national_pension",
+  "health_insurance",
+  "long_term_care_insurance",
+  "employment_insurance",
+  "income_tax",
+  "local_income_tax",
+  "net_pay",
+  "engine_version",
+  "ruleset_version",
+  "linked_calc_reference"
+ ],
+ "fields": [
+  {
+   "fieldname": "salary_slip",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Salary Slip",
+   "options": "Salary Slip",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "pay_year_month",
+   "fieldtype": "Data",
+   "label": "Pay Year Month"
+  },
+  {
+   "fieldname": "tax_method",
+   "fieldtype": "Select",
+   "label": "Korea Tax Method",
+   "options": "간이세액표\n19% flat"
+  },
+  {
+   "fieldname": "taxable_total",
+   "fieldtype": "Currency",
+   "label": "Taxable Total"
+  },
+  {
+   "fieldname": "non_taxable_total",
+   "fieldtype": "Currency",
+   "label": "Non-taxable Total"
+  },
+  {
+   "fieldname": "national_pension",
+   "fieldtype": "Currency",
+   "label": "National Pension"
+  },
+  {
+   "fieldname": "health_insurance",
+   "fieldtype": "Currency",
+   "label": "Health Insurance"
+  },
+  {
+   "fieldname": "long_term_care_insurance",
+   "fieldtype": "Currency",
+   "label": "Long-term Care Insurance"
+  },
+  {
+   "fieldname": "employment_insurance",
+   "fieldtype": "Currency",
+   "label": "Employment Insurance"
+  },
+  {
+   "fieldname": "income_tax",
+   "fieldtype": "Currency",
+   "label": "Income Tax"
+  },
+  {
+   "fieldname": "local_income_tax",
+   "fieldtype": "Currency",
+   "label": "Local Income Tax"
+  },
+  {
+   "fieldname": "net_pay",
+   "fieldtype": "Currency",
+   "label": "Net Pay"
+  },
+  {
+   "fieldname": "engine_version",
+   "fieldtype": "Data",
+   "label": "Engine Version"
+  },
+  {
+   "fieldname": "ruleset_version",
+   "fieldtype": "Data",
+   "label": "Ruleset Version"
+  },
+  {
+   "fieldname": "linked_calc_reference",
+   "fieldtype": "Link",
+   "label": "Linked Calc Reference",
+   "options": "Korea Calc Reference"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-04-28 04:35:00.000000",
+ "modified_by": "Administrator",
+ "module": "Payroll",
+ "name": "Korea Salary Slip Extension",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "search_fields": "salary_slip, employee, pay_year_month",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "salary_slip",
+ "track_changes": 1
+}
