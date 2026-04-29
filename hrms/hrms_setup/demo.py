@@ -78,10 +78,124 @@ def setup_demo(args):
 	setup_organization()
 	setup_employment_types()
 	setup_hr_masters()
+	setup_payroll_accounts()
 	setup_payroll()
 	setup_fixtures()
 	setup_employees()
+	setup_salary_structure_assignments()
 	setup_leave_and_attendance()
+	setup_payroll_runs()
+	setup_expense_claim_type_accounts()
+	setup_expense_claims()
+
+
+def setup_expense_claim_type_accounts():
+	from hrms.hrms_setup.demo_expense import setup_expense_claim_type_accounts as set_accounts
+
+	set_accounts()
+
+
+def setup_payroll_runs():
+	from hrms.hrms_setup.demo_payroll import setup_payroll_runs as run_payroll
+
+	run_payroll()
+
+
+def setup_salary_structure_assignments():
+	DEMO_COMPANY = "Sparrow Tech Pvt Ltd"
+
+	company = frappe.db.exists("Company", DEMO_COMPANY)
+	if not company:
+		first_company = frappe.get_all("Company", pluck="name")
+		if not first_company:
+			return
+		company = first_company[0]
+	else:
+		company = DEMO_COMPANY
+
+	salary_structures = frappe.get_all(
+		"Salary Structure",
+		filters={"company": company, "docstatus": 1, "is_active": "Yes"},
+		pluck="name",
+	)
+
+	if not salary_structures:
+		frappe.publish_realtime(
+			"demo_progress", {"message": "No submitted Salary Structures found, skipping SSA"}
+		)
+		return
+
+	employees = frappe.get_all(
+		"Employee",
+		filters={"status": "Active", "company": company},
+		fields=["name", "employee_name", "designation", "department"],
+	)
+
+	if not employees:
+		return
+
+	created = 0
+	for emp in employees:
+		if not emp.designation:
+			continue
+
+		ss_name = None
+		emp_designation_lower = emp.designation.lower()
+		for ss_key in salary_structures:
+			if ss_key.lower() in emp_designation_lower or emp_designation_lower in ss_key.lower():
+				ss_name = ss_key
+				break
+
+		if not ss_name:
+			ss_name = salary_structures[0] if salary_structures else None
+
+		existing = frappe.db.exists("Salary Structure Assignment", {"employee": emp.name, "docstatus": 1})
+		if existing:
+			continue
+
+		try:
+			currency = "USD"
+			ss_doc = frappe.get_doc("Salary Structure", ss_name)
+			if ss_doc.currency:
+				currency = ss_doc.currency
+
+			payroll_payable_account = None
+			accounts = frappe.get_all(
+				"Account",
+				filters={
+					"company": company,
+					"account_name": ["like", "%Payroll Payable%"],
+				},
+				pluck="name",
+			)
+			if accounts:
+				payroll_payable_account = accounts[0]
+
+			assignment = frappe.get_doc(
+				{
+					"doctype": "Salary Structure Assignment",
+					"employee": emp.name,
+					"salary_structure": ss_name,
+					"company": company,
+					"department": emp.department,
+					"from_date": f"{getdate().year}-01-01",
+					"currency": currency,
+					"payroll_payable_account": payroll_payable_account,
+				}
+			)
+			assignment.insert(ignore_permissions=True)
+			assignment.submit()
+			created += 1
+		except Exception:
+			continue
+
+	frappe.publish_realtime("demo_progress", {"message": f"Created {created} Salary Structure Assignments"})
+
+
+def setup_expense_claims():
+	from hrms.hrms_setup.demo_expense import setup_expense_claims as run_expense
+
+	run_expense()
 
 
 def create_demo_company(args=None):
@@ -91,9 +205,9 @@ def create_demo_company(args=None):
 	from frappe.desk.page.setup_wizard.setup_wizard import make_records
 
 	current_year = getdate().year
-	fy_start = f"{current_year}-04-01"
-	fy_end = f"{current_year + 1}-03-31"
-	fy_name = f"{current_year}-{current_year + 1}"
+	fy_start = f"{current_year}-01-01"
+	fy_end = f"{current_year}-12-31"
+	fy_name = f"{current_year}"
 
 	records = []
 
@@ -173,6 +287,29 @@ def setup_hr_masters():
 	create_holiday_lists()
 
 
+def setup_payroll_accounts():
+	company = frappe.db.exists("Company", DEMO_COMPANY)
+	if not company:
+		first = frappe.get_all("Company", pluck="name")
+		if not first:
+			return
+		company = first[0]
+	else:
+		company = DEMO_COMPANY
+
+	accounts = frappe.get_all(
+		"Account",
+		filters={
+			"company": company,
+			"account_name": ["like", "%Payroll Payable%"],
+		},
+		pluck="name",
+	)
+
+	if accounts:
+		frappe.db.set_value("Account", accounts[0], "account_type", "Payable")
+
+
 def setup_payroll():
 	ensure_salary_components()
 	create_salary_structure()
@@ -198,6 +335,9 @@ def create_salary_structure():
 	records = get_records_from_json("Salary Structure")
 	if records:
 		make_records(records)
+
+	for ss in frappe.get_all("Salary Structure", {"company": DEMO_COMPANY, "docstatus": 0}):
+		frappe.get_doc("Salary Structure", ss.name).submit()
 
 
 def create_holiday_lists():
@@ -256,6 +396,10 @@ def create_holiday_lists():
 		]
 		make_records(records)
 
+	hla = frappe.get_last_doc("Holiday List Assignment", {"assigned_to": DEMO_COMPANY})
+	if hla:
+		hla.submit()
+
 	setup_leave_period(current_year)
 
 
@@ -268,9 +412,9 @@ def setup_leave_period(current_year):
 	records = [
 		{
 			"doctype": "Leave Period",
-			"leave_period_name": f"Leave Period {current_year}-{current_year + 1}",
-			"from_date": f"{current_year}-04-01",
-			"to_date": f"{current_year + 1}-03-31",
+			"leave_period_name": f"Leave Period {current_year}",
+			"from_date": f"{current_year}-01-01",
+			"to_date": f"{current_year}-12-31",
 			"company": DEMO_COMPANY,
 		}
 	]
@@ -423,8 +567,8 @@ def setup_leave_and_attendance():
 					{
 						"doctype": "Leave Period",
 						"leave_period_name": leave_period_name,
-						"from_date": f"{current_year}-04-01",
-						"to_date": f"{current_year + 1}-03-31",
+						"from_date": f"{current_year}-01-01",
+						"to_date": f"{current_year}-12-31",
 						"company": DEMO_COMPANY,
 					}
 				]

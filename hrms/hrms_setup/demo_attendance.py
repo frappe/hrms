@@ -113,9 +113,8 @@ def create_leave_applications(employees, leave_period):
 	if not leave_types:
 		leave_types = ["Sick Leave", "Annual Leave", "Casual Leave", "Personal Leave"]
 
-	leave_period_start = getdate(leave_period.from_date)
-	leave_period_end = getdate(leave_period.to_date)
 	current_date = getdate()
+	three_months_ago = add_days(current_date, -90)
 
 	statuses = ["Approved", "Pending", "Rejected"]
 	status_weights = [0.6, 0.25, 0.15]
@@ -131,8 +130,8 @@ def create_leave_applications(employees, leave_period):
 		if join_date > current_date:
 			continue
 
-		emp_start = max(join_date, leave_period_start)
-		emp_end = min(current_date, leave_period_end)
+		emp_start = max(join_date, three_months_ago)
+		emp_end = current_date
 
 		tenure_days = (emp_end - emp_start).days
 		if tenure_days < 7:
@@ -248,9 +247,8 @@ def create_leave_applications(employees, leave_period):
 
 
 def generate_attendance(employees, leave_period):
-	leave_period_start = getdate(leave_period.from_date)
-	leave_period_end = getdate(leave_period.to_date)
 	current_date = getdate()
+	three_months_ago = add_days(current_date, -90)
 
 	created = 0
 
@@ -261,8 +259,8 @@ def generate_attendance(employees, leave_period):
 		if join_date > current_date:
 			continue
 
-		emp_start = max(join_date, leave_period_start)
-		emp_end = min(current_date, leave_period_end)
+		emp_start = max(join_date, three_months_ago)
+		emp_end = current_date
 
 		emp_approved_leaves = get_employee_leaves(emp.name, emp_start, emp_end, "Approved")
 		holidays = get_employee_holidays(emp.name, emp_start, emp_end)

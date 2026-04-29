@@ -1,0 +1,533 @@
+[
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Vikram Sharma",
+        "salary_structure": "Engineering Manager",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Sarah Johnson",
+        "salary_structure": "Sales Manager",
+        "company": "__DEMO_COMPANY__",
+        "department": "Sales",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Ahmed Al-Rashid",
+        "salary_structure": "HR Manager",
+        "company": "__DEMO_COMPANY__",
+        "department": "HR",
+        "from_date": "2025-01-01",
+        "currency": "AED"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "James Williams",
+        "salary_structure": "Finance Manager",
+        "company": "__DEMO_COMPANY__",
+        "department": "Finance",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Priya Nair",
+        "salary_structure": "Operations Manager",
+        "company": "__DEMO_COMPANY__",
+        "department": "Operations",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Maria Garcia",
+        "salary_structure": "Business Development Manager",
+        "company": "__DEMO_COMPANY__",
+        "department": "Business Development",
+        "from_date": "2025-01-01",
+        "currency": "AED"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Chen Wei",
+        "salary_structure": "Tech Lead",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Fatima Hassan",
+        "salary_structure": "Sales Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "Sales",
+        "from_date": "2025-01-01",
+        "currency": "AED"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Marcus Thompson",
+        "salary_structure": "Senior Software Engineer",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Ananya Patel",
+        "salary_structure": "Software Engineer",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Robert Brown",
+        "salary_structure": "Software Engineer",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Sophie Dubois",
+        "salary_structure": "Junior Software Engineer",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "AED"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "David Miller",
+        "salary_structure": "Finance Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "Finance",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Aisha Khan",
+        "salary_structure": "HR Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "HR",
+        "from_date": "2025-01-01",
+        "currency": "AED"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Karthik Venkataraman",
+        "salary_structure": "Operations Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "Operations",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Emma Wilson",
+        "salary_structure": "Sales Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "Sales",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Yusuf Ahmed",
+        "salary_structure": "Business Development Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "Business Development",
+        "from_date": "2025-01-01",
+        "currency": "AED"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Daniel Anderson",
+        "salary_structure": "Finance Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "Finance",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Lisa Taylor",
+        "salary_structure": "Software Engineer",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Oliver Davis",
+        "salary_structure": "Operations Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "Operations",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Nisha Bhat",
+        "salary_structure": "Senior Software Engineer",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Hassan Malik",
+        "salary_structure": "Sales Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "Sales",
+        "from_date": "2025-01-01",
+        "currency": "AED"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Elena Petrov",
+        "salary_structure": "Software Engineer",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "AED"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Wei Zhang",
+        "salary_structure": "Finance Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "Finance",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Aarav Joshi",
+        "salary_structure": "Software Engineer",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Olivia Martinez",
+        "salary_structure": "Software Engineer",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Khalid Nasser",
+        "salary_structure": "Sales Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "Sales",
+        "from_date": "2025-01-01",
+        "currency": "AED"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Isabella Rossi",
+        "salary_structure": "HR Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "HR",
+        "from_date": "2025-01-01",
+        "currency": "AED"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Arjun Reddy",
+        "salary_structure": "Finance Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "Finance",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Priya Menon",
+        "salary_structure": "Software Engineer",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Rajesh Iyer",
+        "salary_structure": "Senior Software Engineer",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Anjali Shetty",
+        "salary_structure": "HR Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "HR",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Karthik Nair",
+        "salary_structure": "Sales Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "Sales",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Neha Kapoor",
+        "salary_structure": "Operations Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "Operations",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Sanjay Joshi",
+        "salary_structure": "Finance Manager",
+        "company": "__DEMO_COMPANY__",
+        "department": "Finance",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Riya Desai",
+        "salary_structure": "Business Development Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "Business Development",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Vikram Singh",
+        "salary_structure": "Tech Lead",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Meera Pandey",
+        "salary_structure": "HR Manager",
+        "company": "__DEMO_COMPANY__",
+        "department": "HR",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Ahmed Khan",
+        "salary_structure": "Software Engineer",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Fatima Al-Rashid",
+        "salary_structure": "Sales Manager",
+        "company": "__DEMO_COMPANY__",
+        "department": "Sales",
+        "from_date": "2025-01-01",
+        "currency": "AED"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Omar Hassan",
+        "salary_structure": "Senior Software Engineer",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "AED"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Layla Abdullah",
+        "salary_structure": "Finance Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "Finance",
+        "from_date": "2025-01-01",
+        "currency": "AED"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Khalid Mahmoud",
+        "salary_structure": "Operations Manager",
+        "company": "__DEMO_COMPANY__",
+        "department": "Operations",
+        "from_date": "2025-01-01",
+        "currency": "AED"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Noor Ali",
+        "salary_structure": "HR Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "HR",
+        "from_date": "2025-01-01",
+        "currency": "AED"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Tariq Nasser",
+        "salary_structure": "Sales Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "Sales",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Sara Yousef",
+        "salary_structure": "Business Development Manager",
+        "company": "__DEMO_COMPANY__",
+        "department": "Business Development",
+        "from_date": "2025-01-01",
+        "currency": "AED"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Rashid Khalid",
+        "salary_structure": "Software Engineer",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "AED"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Amina Hussein",
+        "salary_structure": "Finance Manager",
+        "company": "__DEMO_COMPANY__",
+        "department": "Finance",
+        "from_date": "2025-01-01",
+        "currency": "AED"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Youssef Ibrahim",
+        "salary_structure": "Tech Lead",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "AED"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Emily Rodriguez",
+        "salary_structure": "HR Manager",
+        "company": "__DEMO_COMPANY__",
+        "department": "HR",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Daniel Kim",
+        "salary_structure": "Software Engineer",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Sophia Martinez",
+        "salary_structure": "Sales Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "Sales",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "James Thompson",
+        "salary_structure": "Finance Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "Finance",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Olivia Brown",
+        "salary_structure": "Operations Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "Operations",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Ethan Davis",
+        "salary_structure": "Senior Software Engineer",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Ava Wilson",
+        "salary_structure": "Business Development Executive",
+        "company": "__DEMO_COMPANY__",
+        "department": "Business Development",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Ryan Moore",
+        "salary_structure": "Tech Lead",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Mia Taylor",
+        "salary_structure": "Finance Manager",
+        "company": "__DEMO_COMPANY__",
+        "department": "Finance",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    },
+    {
+        "doctype": "Salary Structure Assignment",
+        "employee": "Lucas White",
+        "salary_structure": "Software Engineer",
+        "company": "__DEMO_COMPANY__",
+        "department": "Engineering",
+        "from_date": "2025-01-01",
+        "currency": "USD"
+    }
+]

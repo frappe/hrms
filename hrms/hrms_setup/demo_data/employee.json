@@ -32,7 +32,7 @@
         "salary_mode": "Bank",
         "bank_name": "HDFC Bank",
         "bank_ac_no": "50200012345678",
-        "salary_currency": "INR",
+        "salary_currency": "USD",
         "ctc": 1440000,
         "final_confirmation_date": "2020-05-01",
         "notice_number_of_days": 90,
@@ -46,7 +46,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Computer Science"
             }
-        ]
+        ],
+        "leave_approver": ""
     },
     {
         "doctype": "Employee",
@@ -95,7 +96,8 @@
                 "class_per": "GPA 3.8",
                 "maj_opt_subj": "Business"
             }
-        ]
+        ],
+        "leave_approver": ""
     },
     {
         "doctype": "Employee",
@@ -144,7 +146,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Human Resources"
             }
-        ]
+        ],
+        "leave_approver": ""
     },
     {
         "doctype": "Employee",
@@ -193,7 +196,8 @@
                 "class_per": "GPA 3.9",
                 "maj_opt_subj": "Finance"
             }
-        ]
+        ],
+        "leave_approver": ""
     },
     {
         "doctype": "Employee",
@@ -228,7 +232,7 @@
         "salary_mode": "Bank",
         "bank_name": "Kotak Mahindra Bank",
         "bank_ac_no": "2345678901",
-        "salary_currency": "INR",
+        "salary_currency": "USD",
         "ctc": 900000,
         "final_confirmation_date": "2022-06-01",
         "notice_number_of_days": 60,
@@ -242,7 +246,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Business Administration"
             }
-        ]
+        ],
+        "leave_approver": ""
     },
     {
         "doctype": "Employee",
@@ -291,7 +296,8 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "International Business"
             }
-        ]
+        ],
+        "leave_approver": ""
     },
     {
         "doctype": "Employee",
@@ -308,7 +314,7 @@
         "designation": "Tech Lead",
         "branch": "New York Office",
         "employment_type": "Full-time",
-        "reports_to": "Sarah Johnson",
+        "reports_to": "Vikram Sharma",
         "cell_number": "+1-555-345-6789",
         "company_email": "chen.wei@sparrowtech.com",
         "personal_email": "chen.wei@gmail.com",
@@ -340,7 +346,8 @@
                 "maj_opt_subj": "Computer Science"
             }
         ],
-        "create_user_automatically": 1
+        "create_user_automatically": 1,
+        "leave_approver": "Vikram Sharma"
     },
     {
         "doctype": "Employee",
@@ -357,7 +364,7 @@
         "designation": "Senior Sales Executive",
         "branch": "Dubai Branch",
         "employment_type": "Full-time",
-        "reports_to": "Ahmed Al-Rashid",
+        "reports_to": "Sarah Johnson",
         "cell_number": "+971-55-456-7890",
         "company_email": "fatima.hassan@sparrowtech.com",
         "personal_email": "fatima.hassan@gmail.com",
@@ -389,7 +396,8 @@
                 "maj_opt_subj": "Marketing"
             }
         ],
-        "create_user_automatically": 1
+        "create_user_automatically": 1,
+        "leave_approver": "Sarah Johnson"
     },
     {
         "doctype": "Employee",
@@ -438,7 +446,8 @@
                 "maj_opt_subj": "Computer Science Engineering"
             }
         ],
-        "create_user_automatically": 1
+        "create_user_automatically": 1,
+        "leave_approver": "Chen Wei"
     },
     {
         "doctype": "Employee",
@@ -455,7 +464,7 @@
         "designation": "Software Engineer",
         "branch": "Mumbai HQ",
         "employment_type": "Full-time",
-        "reports_to": "Vikram Sharma",
+        "reports_to": "Chen Wei",
         "cell_number": "+91-9930012345",
         "company_email": "ananya.patel@sparrowtech.com",
         "personal_email": "ananya.patel95@gmail.com",
@@ -472,7 +481,7 @@
         "salary_mode": "Bank",
         "bank_name": "Punjab National Bank",
         "bank_ac_no": "4567890123",
-        "salary_currency": "INR",
+        "salary_currency": "USD",
         "ctc": 600000,
         "scheduled_confirmation_date": "2024-09-01",
         "final_confirmation_date": "2024-09-01",
@@ -488,7 +497,8 @@
                 "maj_opt_subj": "Computer Science"
             }
         ],
-        "create_user_automatically": 1
+        "create_user_automatically": 1,
+        "leave_approver": "Chen Wei"
     },
     {
         "doctype": "Employee",
@@ -505,7 +515,7 @@
         "designation": "Software Engineer",
         "branch": "New York Office",
         "employment_type": "Full-time",
-        "reports_to": "Marcus Thompson",
+        "reports_to": "Chen Wei",
         "cell_number": "+1-555-678-9012",
         "company_email": "robert.brown@sparrowtech.com",
         "personal_email": "robert.brown@gmail.com",
@@ -537,7 +547,8 @@
                 "maj_opt_subj": "Computer Engineering"
             }
         ],
-        "create_user_automatically": 1
+        "create_user_automatically": 1,
+        "leave_approver": "Chen Wei"
     },
     {
         "doctype": "Employee",
@@ -554,7 +565,7 @@
         "designation": "Junior Software Engineer",
         "branch": "Dubai Branch",
         "employment_type": "Full-time",
-        "reports_to": "Chen Wei",
+        "reports_to": "Ananya Patel",
         "cell_number": "+971-55-678-9012",
         "company_email": "sophie.dubois@sparrowtech.com",
         "personal_email": "sophie.dubois@gmail.com",
@@ -586,7 +597,8 @@
                 "maj_opt_subj": "Computer Science Engineering"
             }
         ],
-        "create_user_automatically": 1
+        "create_user_automatically": 1,
+        "leave_approver": "Ananya Patel"
     },
     {
         "doctype": "Employee",
@@ -635,7 +647,8 @@
                 "maj_opt_subj": "Economics"
             }
         ],
-        "create_user_automatically": 1
+        "create_user_automatically": 1,
+        "leave_approver": "James Williams"
     },
     {
         "doctype": "Employee",
@@ -684,7 +697,8 @@
                 "maj_opt_subj": "Human Resources"
             }
         ],
-        "create_user_automatically": 1
+        "create_user_automatically": 1,
+        "leave_approver": "Ahmed Al-Rashid"
     },
     {
         "doctype": "Employee",
@@ -718,7 +732,7 @@
         "salary_mode": "Bank",
         "bank_name": "Federal Bank",
         "bank_ac_no": "9012345678",
-        "salary_currency": "INR",
+        "salary_currency": "USD",
         "ctc": 480000,
         "scheduled_confirmation_date": "2025-07-06",
         "notice_number_of_days": 30,
@@ -733,7 +747,8 @@
                 "maj_opt_subj": "Business Administration"
             }
         ],
-        "create_user_automatically": 1
+        "create_user_automatically": 1,
+        "leave_approver": "Priya Nair"
     },
     {
         "doctype": "Employee",
@@ -782,7 +797,8 @@
                 "maj_opt_subj": "Business Administration"
             }
         ],
-        "create_user_automatically": 1
+        "create_user_automatically": 1,
+        "leave_approver": "Sarah Johnson"
     },
     {
         "doctype": "Employee",
@@ -831,7 +847,8 @@
                 "maj_opt_subj": "Business Administration"
             }
         ],
-        "create_user_automatically": 1
+        "create_user_automatically": 1,
+        "leave_approver": "Maria Garcia"
     },
     {
         "doctype": "Employee",
@@ -848,7 +865,7 @@
         "designation": "Finance Analyst",
         "branch": "New York Office",
         "employment_type": "Full-time",
-        "reports_to": "James Williams",
+        "reports_to": "David Miller",
         "cell_number": "+1-555-123-7890",
         "company_email": "daniel.anderson@sparrowtech.com",
         "personal_email": "daniel.anderson99@gmail.com",
@@ -880,7 +897,8 @@
                 "maj_opt_subj": "Finance"
             }
         ],
-        "create_user_automatically": 1
+        "create_user_automatically": 1,
+        "leave_approver": "David Miller"
     },
     {
         "doctype": "Employee",
@@ -898,7 +916,7 @@
         "branch": "Mumbai HQ",
         "employment_type": "Contract",
         "create_user_automatically": 1,
-        "reports_to": "Vikram Sharma",
+        "reports_to": "Chen Wei",
         "cell_number": "+91-9020012345",
         "company_email": "lisa.taylor@sparrowtech.com",
         "personal_email": "lisa.taylor98@gmail.com",
@@ -915,7 +933,7 @@
         "salary_mode": "Bank",
         "bank_name": "Karnataka Bank",
         "bank_ac_no": "3344556677",
-        "salary_currency": "INR",
+        "salary_currency": "USD",
         "ctc": 500000,
         "contract_end_date": "2025-11-12",
         "notice_number_of_days": 15,
@@ -929,7 +947,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Information Science"
             }
-        ]
+        ],
+        "leave_approver": "Chen Wei"
     },
     {
         "doctype": "Employee",
@@ -978,7 +997,8 @@
                 "maj_opt_subj": "Operations Management"
             }
         ],
-        "create_user_automatically": 1
+        "create_user_automatically": 1,
+        "leave_approver": "Priya Nair"
     },
     {
         "doctype": "Employee",
@@ -995,7 +1015,7 @@
         "designation": "Senior Software Engineer",
         "branch": "Mumbai HQ",
         "employment_type": "Full-time",
-        "reports_to": "Vikram Sharma",
+        "reports_to": "Chen Wei",
         "cell_number": "+91-9040012345",
         "company_email": "nisha.bhat@sparrowtech.com",
         "personal_email": "nisha.bhat94@gmail.com",
@@ -1012,7 +1032,7 @@
         "salary_mode": "Bank",
         "bank_name": "IDFC First Bank",
         "bank_ac_no": "5566778899",
-        "salary_currency": "INR",
+        "salary_currency": "USD",
         "ctc": 900000,
         "final_confirmation_date": "2024-10-01",
         "notice_number_of_days": 30,
@@ -1027,7 +1047,8 @@
                 "maj_opt_subj": "Computer Science Engineering"
             }
         ],
-        "create_user_automatically": 1
+        "create_user_automatically": 1,
+        "leave_approver": "Chen Wei"
     },
     {
         "doctype": "Employee",
@@ -1044,7 +1065,7 @@
         "designation": "Sales Executive",
         "branch": "Dubai Branch",
         "employment_type": "Full-time",
-        "reports_to": "Fatima Hassan",
+        "reports_to": "Sarah Johnson",
         "cell_number": "+971-55-345-6789",
         "company_email": "hassan.malik@sparrowtech.com",
         "personal_email": "hassan.malik93@gmail.com",
@@ -1076,7 +1097,8 @@
                 "maj_opt_subj": "Commerce"
             }
         ],
-        "create_user_automatically": 1
+        "create_user_automatically": 1,
+        "leave_approver": "Sarah Johnson"
     },
     {
         "doctype": "Employee",
@@ -1125,7 +1147,8 @@
                 "maj_opt_subj": "Computer Science"
             }
         ],
-        "create_user_automatically": 1
+        "create_user_automatically": 1,
+        "leave_approver": "Chen Wei"
     },
     {
         "doctype": "Employee",
@@ -1174,7 +1197,8 @@
                 "maj_opt_subj": "Finance"
             }
         ],
-        "create_user_automatically": 1
+        "create_user_automatically": 1,
+        "leave_approver": "James Williams"
     },
     {
         "doctype": "Employee",
@@ -1192,7 +1216,7 @@
         "branch": "Mumbai HQ",
         "employment_type": "Intern",
         "create_user_automatically": 1,
-        "reports_to": "Ananya Patel",
+        "reports_to": "Chen Wei",
         "cell_number": "+91-9140012345",
         "company_email": "aarav.joshi@sparrowtech.com",
         "personal_email": "aarav.joshi02@gmail.com",
@@ -1209,7 +1233,7 @@
         "salary_mode": "Bank",
         "bank_name": "HDFC Bank",
         "bank_ac_no": "556677889900",
-        "salary_currency": "INR",
+        "salary_currency": "USD",
         "ctc": 300000,
         "contract_end_date": "2026-05-01",
         "notice_number_of_days": 7,
@@ -1223,7 +1247,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Computer Science Engineering"
             }
-        ]
+        ],
+        "leave_approver": "Chen Wei"
     },
     {
         "doctype": "Employee",
@@ -1241,7 +1266,7 @@
         "branch": "New York Office",
         "employment_type": "Intern",
         "create_user_automatically": 1,
-        "reports_to": "Marcus Thompson",
+        "reports_to": "Chen Wei",
         "cell_number": "+1-555-678-2345",
         "company_email": "olivia.martinez@sparrowtech.com",
         "personal_email": "olivia.martinez01@gmail.com",
@@ -1272,7 +1297,8 @@
                 "class_per": "GPA 3.9",
                 "maj_opt_subj": "Computer Science Engineering"
             }
-        ]
+        ],
+        "leave_approver": "Chen Wei"
     },
     {
         "doctype": "Employee",
@@ -1290,7 +1316,7 @@
         "branch": "Dubai Branch",
         "employment_type": "Intern",
         "create_user_automatically": 1,
-        "reports_to": "Hassan Malik",
+        "reports_to": "Sarah Johnson",
         "cell_number": "+971-55-789-0123",
         "company_email": "khalid.nasser@sparrowtech.com",
         "personal_email": "khalid.nasser02@gmail.com",
@@ -1321,7 +1347,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Business Administration"
             }
-        ]
+        ],
+        "leave_approver": "Sarah Johnson"
     },
     {
         "doctype": "Employee",
@@ -1339,7 +1366,7 @@
         "branch": "Dubai Branch",
         "employment_type": "Intern",
         "create_user_automatically": 1,
-        "reports_to": "Aisha Khan",
+        "reports_to": "Ahmed Al-Rashid",
         "cell_number": "+971-55-890-1234",
         "company_email": "isabella.rossi@sparrowtech.com",
         "personal_email": "isabella.rossi01@gmail.com",
@@ -1370,7 +1397,8 @@
                 "class_per": "110/110",
                 "maj_opt_subj": "Human Resources"
             }
-        ]
+        ],
+        "leave_approver": "Ahmed Al-Rashid"
     },
     {
         "doctype": "Employee",
@@ -1388,7 +1416,7 @@
         "branch": "Mumbai HQ",
         "employment_type": "Intern",
         "create_user_automatically": 1,
-        "reports_to": "David Miller",
+        "reports_to": "James Williams",
         "cell_number": "+91-9180012345",
         "company_email": "arjun.reddy@sparrowtech.com",
         "personal_email": "arjun.reddy02@gmail.com",
@@ -1405,7 +1433,7 @@
         "salary_mode": "Bank",
         "bank_name": "Kotak Mahindra Bank",
         "bank_ac_no": "990011223344",
-        "salary_currency": "INR",
+        "salary_currency": "USD",
         "ctc": 280000,
         "contract_end_date": "2026-06-10",
         "notice_number_of_days": 7,
@@ -1419,7 +1447,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Finance & Accounts"
             }
-        ]
+        ],
+        "leave_approver": "James Williams"
     },
     {
         "doctype": "Employee",
@@ -1437,7 +1466,7 @@
         "branch": "Mumbai HQ",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Vikram Sharma",
+        "reports_to": "Chen Wei",
         "cell_number": "+91-9988012345",
         "company_email": "priya.menon@sparrowtech.com",
         "personal_email": "priya.menon@gmail.com",
@@ -1454,7 +1483,7 @@
         "salary_mode": "Bank",
         "bank_name": "HDFC Bank",
         "bank_ac_no": "552270011234",
-        "salary_currency": "INR",
+        "salary_currency": "USD",
         "ctc": 650000,
         "notice_number_of_days": 30,
         "education": [
@@ -1467,7 +1496,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Software Engineering"
             }
-        ]
+        ],
+        "leave_approver": "Chen Wei"
     },
     {
         "doctype": "Employee",
@@ -1485,7 +1515,7 @@
         "branch": "Mumbai HQ",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Amit Patel",
+        "reports_to": "Chen Wei",
         "cell_number": "+91-9877012345",
         "company_email": "rajesh.iyer@sparrowtech.com",
         "personal_email": "rajesh.iyer@gmail.com",
@@ -1502,7 +1532,7 @@
         "salary_mode": "Bank",
         "bank_name": "ICICI Bank",
         "bank_ac_no": "154270011234",
-        "salary_currency": "INR",
+        "salary_currency": "USD",
         "ctc": 1200000,
         "notice_number_of_days": 60,
         "education": [
@@ -1515,7 +1545,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Computer Science"
             }
-        ]
+        ],
+        "leave_approver": "Chen Wei"
     },
     {
         "doctype": "Employee",
@@ -1533,7 +1564,7 @@
         "branch": "Mumbai HQ",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Sarah Johnson",
+        "reports_to": "Ahmed Al-Rashid",
         "cell_number": "+91-9966012345",
         "company_email": "anjali.shetty@sparrowtech.com",
         "personal_email": "anjali.shetty@gmail.com",
@@ -1550,7 +1581,7 @@
         "salary_mode": "Bank",
         "bank_name": "Axis Bank",
         "bank_ac_no": "215270011234",
-        "salary_currency": "INR",
+        "salary_currency": "USD",
         "ctc": 420000,
         "notice_number_of_days": 30,
         "education": [
@@ -1563,7 +1594,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Human Resources"
             }
-        ]
+        ],
+        "leave_approver": "Ahmed Al-Rashid"
     },
     {
         "doctype": "Employee",
@@ -1581,7 +1613,7 @@
         "branch": "Mumbai HQ",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Michael Chen",
+        "reports_to": "Sarah Johnson",
         "cell_number": "+91-9955012345",
         "company_email": "karthik.nair@sparrowtech.com",
         "personal_email": "karthik.nair@gmail.com",
@@ -1598,7 +1630,7 @@
         "salary_mode": "Bank",
         "bank_name": "Kotak Bank",
         "bank_ac_no": "174270011234",
-        "salary_currency": "INR",
+        "salary_currency": "USD",
         "ctc": 550000,
         "notice_number_of_days": 30,
         "education": [
@@ -1611,7 +1643,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Sales & Marketing"
             }
-        ]
+        ],
+        "leave_approver": "Sarah Johnson"
     },
     {
         "doctype": "Employee",
@@ -1629,7 +1662,7 @@
         "branch": "Mumbai HQ",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Raj Malhotra",
+        "reports_to": "Priya Nair",
         "cell_number": "+91-9933012345",
         "company_email": "neha.kapoor@sparrowtech.com",
         "personal_email": "neha.kapoor@gmail.com",
@@ -1646,7 +1679,7 @@
         "salary_mode": "Bank",
         "bank_name": "Yes Bank",
         "bank_ac_no": "194270011234",
-        "salary_currency": "INR",
+        "salary_currency": "USD",
         "ctc": 380000,
         "notice_number_of_days": 30,
         "education": [
@@ -1659,7 +1692,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Operations Management"
             }
-        ]
+        ],
+        "leave_approver": "Priya Nair"
     },
     {
         "doctype": "Employee",
@@ -1677,7 +1711,7 @@
         "branch": "Mumbai HQ",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Vikram Sharma",
+        "reports_to": "",
         "cell_number": "+91-9922012345",
         "company_email": "sanjay.joshi@sparrowtech.com",
         "personal_email": "sanjay.joshi@gmail.com",
@@ -1694,7 +1728,7 @@
         "salary_mode": "Bank",
         "bank_name": "SBI",
         "bank_ac_no": "204270011234",
-        "salary_currency": "INR",
+        "salary_currency": "USD",
         "ctc": 950000,
         "notice_number_of_days": 60,
         "education": [
@@ -1707,7 +1741,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Finance"
             }
-        ]
+        ],
+        "leave_approver": ""
     },
     {
         "doctype": "Employee",
@@ -1725,7 +1760,7 @@
         "branch": "Mumbai HQ",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "David Miller",
+        "reports_to": "Maria Garcia",
         "cell_number": "+91-9911012345",
         "company_email": "riya.desai@sparrowtech.com",
         "personal_email": "riya.desai@gmail.com",
@@ -1742,7 +1777,7 @@
         "salary_mode": "Bank",
         "bank_name": "IndusInd Bank",
         "bank_ac_no": "234270011234",
-        "salary_currency": "INR",
+        "salary_currency": "USD",
         "ctc": 480000,
         "notice_number_of_days": 30,
         "education": [
@@ -1755,7 +1790,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Business Development"
             }
-        ]
+        ],
+        "leave_approver": "Maria Garcia"
     },
     {
         "doctype": "Employee",
@@ -1773,7 +1809,7 @@
         "branch": "Mumbai HQ",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Amit Patel",
+        "reports_to": "Vikram Sharma",
         "cell_number": "+91-9909012345",
         "company_email": "vikram.singh@sparrowtech.com",
         "personal_email": "vikram.singh@gmail.com",
@@ -1790,7 +1826,7 @@
         "salary_mode": "Bank",
         "bank_name": "IDFC First Bank",
         "bank_ac_no": "254270011234",
-        "salary_currency": "INR",
+        "salary_currency": "USD",
         "ctc": 1850000,
         "notice_number_of_days": 90,
         "education": [
@@ -1803,7 +1839,8 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Artificial Intelligence"
             }
-        ]
+        ],
+        "leave_approver": "Vikram Sharma"
     },
     {
         "doctype": "Employee",
@@ -1821,7 +1858,7 @@
         "branch": "Mumbai HQ",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Sarah Johnson",
+        "reports_to": "",
         "cell_number": "+91-9898012345",
         "company_email": "meera.pandey@sparrowtech.com",
         "personal_email": "meera.pandey@gmail.com",
@@ -1838,7 +1875,7 @@
         "salary_mode": "Bank",
         "bank_name": "Federal Bank",
         "bank_ac_no": "264270011234",
-        "salary_currency": "INR",
+        "salary_currency": "USD",
         "ctc": 720000,
         "notice_number_of_days": 45,
         "education": [
@@ -1851,7 +1888,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Human Resources"
             }
-        ]
+        ],
+        "leave_approver": ""
     },
     {
         "doctype": "Employee",
@@ -1869,7 +1907,7 @@
         "branch": "Mumbai HQ",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Vikram Singh",
+        "reports_to": "Chen Wei",
         "cell_number": "+91-9888012345",
         "company_email": "ahmed.khan@sparrowtech.com",
         "personal_email": "ahmed.khan@gmail.com",
@@ -1886,7 +1924,7 @@
         "salary_mode": "Bank",
         "bank_name": "RBL Bank",
         "bank_ac_no": "274270011234",
-        "salary_currency": "INR",
+        "salary_currency": "USD",
         "ctc": 580000,
         "notice_number_of_days": 30,
         "education": [
@@ -1899,7 +1937,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Computer Engineering"
             }
-        ]
+        ],
+        "leave_approver": "Chen Wei"
     },
     {
         "doctype": "Employee",
@@ -1917,7 +1956,7 @@
         "branch": "Dubai Branch",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "John Smith",
+        "reports_to": "",
         "cell_number": "+971-55-111-2222",
         "company_email": "fatima.alrashid@sparrowtech.com",
         "personal_email": "fatima.alrashid@gmail.com",
@@ -1947,7 +1986,8 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Marketing"
             }
-        ]
+        ],
+        "leave_approver": ""
     },
     {
         "doctype": "Employee",
@@ -1965,7 +2005,7 @@
         "branch": "Dubai Branch",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Maria Garcia",
+        "reports_to": "Chen Wei",
         "cell_number": "+971-55-222-3333",
         "company_email": "omar.hassan@sparrowtech.com",
         "personal_email": "omar.hassan@gmail.com",
@@ -1995,7 +2035,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Computer Science"
             }
-        ]
+        ],
+        "leave_approver": "Chen Wei"
     },
     {
         "doctype": "Employee",
@@ -2013,7 +2054,7 @@
         "branch": "Dubai Branch",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Fatima Al-Rashid",
+        "reports_to": "James Williams",
         "cell_number": "+971-55-333-4444",
         "company_email": "layla.abdullah@sparrowtech.com",
         "personal_email": "layla.abdullah@gmail.com",
@@ -2043,7 +2084,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Finance"
             }
-        ]
+        ],
+        "leave_approver": "James Williams"
     },
     {
         "doctype": "Employee",
@@ -2061,7 +2103,7 @@
         "branch": "Dubai Branch",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "John Smith",
+        "reports_to": "",
         "cell_number": "+971-55-444-5555",
         "company_email": "khalid.mahmoud@sparrowtech.com",
         "personal_email": "khalid.mahmoud@gmail.com",
@@ -2091,7 +2133,8 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Supply Chain Management"
             }
-        ]
+        ],
+        "leave_approver": ""
     },
     {
         "doctype": "Employee",
@@ -2109,7 +2152,7 @@
         "branch": "Dubai Branch",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Layla Abdullah",
+        "reports_to": "Ahmed Al-Rashid",
         "cell_number": "+971-55-555-6666",
         "company_email": "noor.ali@sparrowtech.com",
         "personal_email": "noor.ali@gmail.com",
@@ -2139,7 +2182,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Human Resources"
             }
-        ]
+        ],
+        "leave_approver": "Ahmed Al-Rashid"
     },
     {
         "doctype": "Employee",
@@ -2157,7 +2201,7 @@
         "branch": "Dubai Branch",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Fatima Al-Rashid",
+        "reports_to": "Sarah Johnson",
         "cell_number": "+971-55-666-7777",
         "company_email": "tariq.nasser@sparrowtech.com",
         "personal_email": "tariq.nasser@gmail.com",
@@ -2187,7 +2231,8 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Sales"
             }
-        ]
+        ],
+        "leave_approver": "Sarah Johnson"
     },
     {
         "doctype": "Employee",
@@ -2205,7 +2250,7 @@
         "branch": "Dubai Branch",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "John Smith",
+        "reports_to": "",
         "cell_number": "+971-55-777-8888",
         "company_email": "sara.yousef@sparrowtech.com",
         "personal_email": "sara.yousef@gmail.com",
@@ -2235,7 +2280,8 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Strategy"
             }
-        ]
+        ],
+        "leave_approver": ""
     },
     {
         "doctype": "Employee",
@@ -2253,7 +2299,7 @@
         "branch": "Dubai Branch",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Omar Hassan",
+        "reports_to": "Chen Wei",
         "cell_number": "+971-55-888-9999",
         "company_email": "rashid.khalid@sparrowtech.com",
         "personal_email": "rashid.khalid@gmail.com",
@@ -2283,7 +2329,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Software Engineering"
             }
-        ]
+        ],
+        "leave_approver": "Chen Wei"
     },
     {
         "doctype": "Employee",
@@ -2301,7 +2348,7 @@
         "branch": "Dubai Branch",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Khalid Mahmoud",
+        "reports_to": "",
         "cell_number": "+971-55-999-0000",
         "company_email": "amina.hussein@sparrowtech.com",
         "personal_email": "amina.hussein@gmail.com",
@@ -2331,7 +2378,8 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Finance"
             }
-        ]
+        ],
+        "leave_approver": ""
     },
     {
         "doctype": "Employee",
@@ -2349,7 +2397,7 @@
         "branch": "Dubai Branch",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Maria Garcia",
+        "reports_to": "Vikram Sharma",
         "cell_number": "+971-50-111-2222",
         "company_email": "youssef.ibrahim@sparrowtech.com",
         "personal_email": "youssef.ibrahim@gmail.com",
@@ -2379,7 +2427,8 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Cloud Computing"
             }
-        ]
+        ],
+        "leave_approver": "Vikram Sharma"
     },
     {
         "doctype": "Employee",
@@ -2397,7 +2446,7 @@
         "branch": "New York Office",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "James Wilson",
+        "reports_to": "",
         "cell_number": "+1-555-111-2222",
         "company_email": "emily.rodriguez@sparrowtech.com",
         "personal_email": "emily.rodriguez@gmail.com",
@@ -2427,7 +2476,8 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Human Resources"
             }
-        ]
+        ],
+        "leave_approver": ""
     },
     {
         "doctype": "Employee",
@@ -2445,7 +2495,7 @@
         "branch": "New York Office",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Lisa Anderson",
+        "reports_to": "Chen Wei",
         "cell_number": "+1-555-222-3333",
         "company_email": "daniel.kim@sparrowtech.com",
         "personal_email": "daniel.kim@gmail.com",
@@ -2475,7 +2525,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Computer Science"
             }
-        ]
+        ],
+        "leave_approver": "Chen Wei"
     },
     {
         "doctype": "Employee",
@@ -2493,7 +2544,7 @@
         "branch": "New York Office",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Robert Taylor",
+        "reports_to": "Sarah Johnson",
         "cell_number": "+1-555-333-4444",
         "company_email": "sophia.martinez@sparrowtech.com",
         "personal_email": "sophia.martinez@gmail.com",
@@ -2523,7 +2574,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Sales & Marketing"
             }
-        ]
+        ],
+        "leave_approver": "Sarah Johnson"
     },
     {
         "doctype": "Employee",
@@ -2541,7 +2593,7 @@
         "branch": "New York Office",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Emily Rodriguez",
+        "reports_to": "James Williams",
         "cell_number": "+1-555-444-5555",
         "company_email": "james.thompson@sparrowtech.com",
         "personal_email": "james.thompson@gmail.com",
@@ -2571,7 +2623,8 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Finance"
             }
-        ]
+        ],
+        "leave_approver": "James Williams"
     },
     {
         "doctype": "Employee",
@@ -2589,7 +2642,7 @@
         "branch": "New York Office",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "David Lee",
+        "reports_to": "Priya Nair",
         "cell_number": "+1-555-555-6666",
         "company_email": "olivia.brown@sparrowtech.com",
         "personal_email": "olivia.brown@gmail.com",
@@ -2619,7 +2672,8 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Operations"
             }
-        ]
+        ],
+        "leave_approver": "Priya Nair"
     },
     {
         "doctype": "Employee",
@@ -2637,7 +2691,7 @@
         "branch": "New York Office",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Lisa Anderson",
+        "reports_to": "Chen Wei",
         "cell_number": "+1-555-666-7777",
         "company_email": "ethan.davis@sparrowtech.com",
         "personal_email": "ethan.davis@gmail.com",
@@ -2667,7 +2721,8 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Software Engineering"
             }
-        ]
+        ],
+        "leave_approver": "Chen Wei"
     },
     {
         "doctype": "Employee",
@@ -2685,7 +2740,7 @@
         "branch": "New York Office",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Robert Taylor",
+        "reports_to": "Maria Garcia",
         "cell_number": "+1-555-777-8888",
         "company_email": "ava.wilson@sparrowtech.com",
         "personal_email": "ava.wilson@gmail.com",
@@ -2715,7 +2770,8 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Business Development"
             }
-        ]
+        ],
+        "leave_approver": "Maria Garcia"
     },
     {
         "doctype": "Employee",
@@ -2733,7 +2789,7 @@
         "branch": "New York Office",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "James Wilson",
+        "reports_to": "Vikram Sharma",
         "cell_number": "+1-555-888-9999",
         "company_email": "ryan.moore@sparrowtech.com",
         "personal_email": "ryan.moore@gmail.com",
@@ -2763,7 +2819,8 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Machine Learning"
             }
-        ]
+        ],
+        "leave_approver": "Vikram Sharma"
     },
     {
         "doctype": "Employee",
@@ -2781,7 +2838,7 @@
         "branch": "New York Office",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "James Wilson",
+        "reports_to": "",
         "cell_number": "+1-555-999-0000",
         "company_email": "mia.taylor@sparrowtech.com",
         "personal_email": "mia.taylor@gmail.com",
@@ -2811,7 +2868,8 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Financial Engineering"
             }
-        ]
+        ],
+        "leave_approver": ""
     },
     {
         "doctype": "Employee",
@@ -2829,7 +2887,7 @@
         "branch": "New York Office",
         "employment_type": "Full-time",
         "create_user_automatically": 1,
-        "reports_to": "Ryan Moore",
+        "reports_to": "Chen Wei",
         "cell_number": "+1-555-100-1111",
         "company_email": "lucas.white@sparrowtech.com",
         "personal_email": "lucas.white@gmail.com",
@@ -2859,6 +2917,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Computer Engineering"
             }
-        ]
+        ],
+        "leave_approver": "Chen Wei"
     }
 ]

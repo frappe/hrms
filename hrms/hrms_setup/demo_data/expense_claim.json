@@ -1,0 +1,222 @@
+[
+    {
+        "doctype": "Expense Claim",
+        "employee": "Marcus Thompson",
+        "company": "__DEMO_COMPANY__",
+        "expense_approver": "Chen Wei",
+        "posting_date": "2026-03-28",
+        "approval_status": "Pending",
+        "total_claimed_amount": 9544,
+        "total_sanctioned_amount": 0,
+        "is_paid": 0,
+        "status": "Pending",
+        "expenses": [
+            {
+                "doctype": "Expense Claim Detail",
+                "expense_type": "Food",
+                "expense_date": "2026-03-28",
+                "amount": 9544,
+                "description": "Food expense - Training",
+                "sanctioned_amount": 0
+            }
+        ]
+    },
+    {
+        "doctype": "Expense Claim",
+        "employee": "Fatima Hassan",
+        "company": "__DEMO_COMPANY__",
+        "expense_approver": "Sarah Johnson",
+        "posting_date": "2026-03-27",
+        "approval_status": "Approved",
+        "total_claimed_amount": 6810,
+        "total_sanctioned_amount": 6810,
+        "is_paid": 1,
+        "status": "Approved",
+        "expenses": [
+            {
+                "doctype": "Expense Claim Detail",
+                "expense_type": "Food",
+                "expense_date": "2026-03-27",
+                "amount": 6810,
+                "description": "Food expense - Training",
+                "sanctioned_amount": 6810
+            }
+        ]
+    },
+    {
+        "doctype": "Expense Claim",
+        "employee": "Ahmed Al-Rashid",
+        "company": "__DEMO_COMPANY__",
+        "expense_approver": "",
+        "posting_date": "2026-03-29",
+        "approval_status": "Pending",
+        "total_claimed_amount": 8243,
+        "total_sanctioned_amount": 0,
+        "is_paid": 0,
+        "status": "Pending",
+        "expenses": [
+            {
+                "doctype": "Expense Claim Detail",
+                "expense_type": "Others",
+                "expense_date": "2026-03-29",
+                "amount": 8243,
+                "description": "Others expense - Client visit",
+                "sanctioned_amount": 0
+            }
+        ]
+    },
+    {
+        "doctype": "Expense Claim",
+        "employee": "Maria Garcia",
+        "company": "__DEMO_COMPANY__",
+        "expense_approver": "",
+        "posting_date": "2026-03-09",
+        "approval_status": "Approved",
+        "total_claimed_amount": 11287,
+        "total_sanctioned_amount": 11287,
+        "is_paid": 1,
+        "status": "Approved",
+        "expenses": [
+            {
+                "doctype": "Expense Claim Detail",
+                "expense_type": "Food",
+                "expense_date": "2026-03-09",
+                "amount": 11287,
+                "description": "Food expense - Training",
+                "sanctioned_amount": 11287
+            }
+        ]
+    },
+    {
+        "doctype": "Expense Claim",
+        "employee": "Priya Nair",
+        "company": "__DEMO_COMPANY__",
+        "expense_approver": "",
+        "posting_date": "2026-04-12",
+        "approval_status": "Approved",
+        "total_claimed_amount": 13452,
+        "total_sanctioned_amount": 13452,
+        "is_paid": 1,
+        "status": "Approved",
+        "expenses": [
+            {
+                "doctype": "Expense Claim Detail",
+                "expense_type": "Others",
+                "expense_date": "2026-04-12",
+                "amount": 13452,
+                "description": "Others expense - Field work",
+                "sanctioned_amount": 13452
+            }
+        ]
+    },
+    {
+        "doctype": "Expense Claim",
+        "employee": "Sarah Johnson",
+        "company": "__DEMO_COMPANY__",
+        "expense_approver": "",
+        "posting_date": "2026-03-10",
+        "approval_status": "Approved",
+        "total_claimed_amount": 12034,
+        "total_sanctioned_amount": 12034,
+        "is_paid": 1,
+        "status": "Approved",
+        "expenses": [
+            {
+                "doctype": "Expense Claim Detail",
+                "expense_type": "Others",
+                "expense_date": "2026-03-10",
+                "amount": 12034,
+                "description": "Others expense - Office work",
+                "sanctioned_amount": 12034
+            }
+        ]
+    },
+    {
+        "doctype": "Expense Claim",
+        "employee": "Vikram Sharma",
+        "company": "__DEMO_COMPANY__",
+        "expense_approver": "",
+        "posting_date": "2026-03-22",
+        "approval_status": "Approved",
+        "total_claimed_amount": 9147,
+        "total_sanctioned_amount": 9147,
+        "is_paid": 1,
+        "status": "Approved",
+        "expenses": [
+            {
+                "doctype": "Expense Claim Detail",
+                "expense_type": "Medical",
+                "expense_date": "2026-03-22",
+                "amount": 9147,
+                "description": "Medical expense - Client visit",
+                "sanctioned_amount": 9147
+            }
+        ]
+    },
+    {
+        "doctype": "Expense Claim",
+        "employee": "James Williams",
+        "company": "__DEMO_COMPANY__",
+        "expense_approver": "",
+        "posting_date": "2026-04-07",
+        "approval_status": "Rejected",
+        "total_claimed_amount": 13842,
+        "total_sanctioned_amount": 0,
+        "is_paid": 0,
+        "status": "Rejected",
+        "expenses": [
+            {
+                "doctype": "Expense Claim Detail",
+                "expense_type": "Medical",
+                "expense_date": "2026-04-07",
+                "amount": 13842,
+                "description": "Medical expense - Field work",
+                "sanctioned_amount": 0
+            }
+        ]
+    },
+    {
+        "doctype": "Expense Claim",
+        "employee": "Chen Wei",
+        "company": "__DEMO_COMPANY__",
+        "expense_approver": "Vikram Sharma",
+        "posting_date": "2026-04-20",
+        "approval_status": "Rejected",
+        "total_claimed_amount": 8884,
+        "total_sanctioned_amount": 0,
+        "is_paid": 0,
+        "status": "Rejected",
+        "expenses": [
+            {
+                "doctype": "Expense Claim Detail",
+                "expense_type": "Calls",
+                "expense_date": "2026-04-20",
+                "amount": 8884,
+                "description": "Calls expense - Field work",
+                "sanctioned_amount": 0
+            }
+        ]
+    },
+    {
+        "doctype": "Expense Claim",
+        "employee": "Ananya Patel",
+        "company": "__DEMO_COMPANY__",
+        "expense_approver": "Chen Wei",
+        "posting_date": "2026-03-19",
+        "approval_status": "Approved",
+        "total_claimed_amount": 10332,
+        "total_sanctioned_amount": 10332,
+        "is_paid": 1,
+        "status": "Approved",
+        "expenses": [
+            {
+                "doctype": "Expense Claim Detail",
+                "expense_type": "Calls",
+                "expense_date": "2026-03-19",
+                "amount": 10332,
+                "description": "Calls expense - Client visit",
+                "sanctioned_amount": 10332
+            }
+        ]
+    }
+]
