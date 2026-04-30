@@ -1,0 +1,143 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: frappe\n"
+"Report-Msgid-Bugs-To: contact@frappe.io\n"
+"POT-Creation-Date: 2026-04-30 00:00+0000\n"
+"PO-Revision-Date: 2026-04-30 00:00+0000\n"
+"Last-Translator: contact@frappe.io\n"
+"Language-Team: Korean\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: frappe\n"
+"X-Crowdin-Project-ID: 639578\n"
+"X-Crowdin-Language: ko\n"
+"X-Crowdin-File: /[frappe.hrms] develop/hrms/locale/main.pot\n"
+"X-Crowdin-File-ID: 58\n"
+"Language: ko_KR\n"
+
+#: hrms/setup.py
+msgid "Korea Payroll"
+msgstr "한국 급여"
+
+#: hrms/setup.py
+msgid "Dependents Count"
+msgstr "부양가족 수"
+
+#: hrms/setup.py
+msgid "Withholding Rate"
+msgstr "원천징수율"
+
+#: hrms/setup.py
+msgid "Apply Foreign Flat Tax"
+msgstr "외국인 단일세율 적용"
+
+#: hrms/setup.py
+msgid "National Pension Notified Amount"
+msgstr "국민연금 기준소득월액"
+
+#: hrms/setup.py
+msgid "National Pension Exempt"
+msgstr "국민연금 제외"
+
+#: hrms/setup.py
+msgid "Employment Insurance Exempt"
+msgstr "고용보험 제외"
+
+#: hrms/setup.py
+msgid "Korea Foreign Worker"
+msgstr "한국 외국인 근로자"
+
+#: hrms/setup.py
+msgid "Visa Type"
+msgstr "비자 유형"
+
+#: hrms/setup.py
+msgid "Pension Agreement Applies"
+msgstr "연금 협정 적용"
+
+#: hrms/setup.py
+msgid "Foreign Employment Insurance Exempt"
+msgstr "외국인 고용보험 제외"
+
+#: hrms/setup.py
+msgid "Korea Insurance Detail"
+msgstr "4대보험 상세"
+
+#: hrms/setup.py
+msgid "National Pension"
+msgstr "국민연금"
+
+#: hrms/setup.py
+msgid "Health Insurance"
+msgstr "건강보험"
+
+#: hrms/setup.py
+msgid "Long-term Care Insurance"
+msgstr "장기요양보험"
+
+#: hrms/setup.py
+msgid "Employment Insurance"
+msgstr "고용보험"
+
+#: hrms/setup.py
+msgid "Insurance Employer Total"
+msgstr "회사 부담 보험료 합계"
+
+#: hrms/setup.py
+msgid "Korea Tax Detail"
+msgstr "세금 상세"
+
+#: hrms/setup.py
+msgid "Income Tax"
+msgstr "소득세"
+
+#: hrms/setup.py
+msgid "Local Income Tax"
+msgstr "지방소득세"
+
+#: hrms/setup.py
+msgid "Korea Tax Method"
+msgstr "한국 세액 방식"
+
+#: hrms/setup.py
+msgid "Korea Payroll Summary"
+msgstr "한국 급여 요약"
+
+#: hrms/setup.py
+msgid "Taxable Pay"
+msgstr "과세급여"
+
+#: hrms/setup.py
+msgid "Non-taxable Pay"
+msgstr "비과세급여"
+
+#: hrms/setup.py
+msgid "Korea Total Deductions"
+msgstr "한국식 총공제"
+
+#: hrms/setup.py
+msgid "Korea Year End Settlement"
+msgstr "연말정산"
+
+#: hrms/setup.py
+msgid "Prepaid Tax"
+msgstr "기납부세액"
+
+#: hrms/setup.py
+msgid "Determined Tax"
+msgstr "결정세액"
+
+#: hrms/setup.py
+msgid "Adjustment Tax"
+msgstr "정산세액"
+
+#: hrms/setup.py
+msgid "Year End Settlement Kind"
+msgstr "정산구분"
+
+#: hrms/setup.py
+msgid "Year End Target Month"
+msgstr "귀속월"

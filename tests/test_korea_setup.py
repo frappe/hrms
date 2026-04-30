@@ -122,6 +122,42 @@ class KoreaSetupCustomFieldsTests(unittest.TestCase):
         self.assertEqual(salary_slip_fields["kr_tax_method"]["fieldtype"], "Select")
         self.assertIn("간이세액표", salary_slip_fields["kr_tax_method"]["options"])
 
+    def test_get_custom_fields_places_korea_salary_slip_fields_in_two_column_sections(self):
+        custom_fields = self.module.get_custom_fields()
+        salary_slip_fields = {
+            field["fieldname"]: field for field in custom_fields.get("Salary Slip", [])
+        }
+
+        self.assertEqual(salary_slip_fields["kr_insurance_employee_column_break"]["fieldtype"], "Column Break")
+        self.assertEqual(
+            salary_slip_fields["kr_insurance_employee_column_break"]["insert_after"],
+            "kr_health_insurance",
+        )
+        self.assertEqual(salary_slip_fields["kr_tax_column_break"]["fieldtype"], "Column Break")
+        self.assertEqual(salary_slip_fields["kr_tax_column_break"]["insert_after"], "kr_income_tax")
+        self.assertEqual(salary_slip_fields["kr_summary_column_break"]["fieldtype"], "Column Break")
+        self.assertEqual(salary_slip_fields["kr_summary_column_break"]["insert_after"], "kr_taxable_pay")
+        self.assertEqual(salary_slip_fields["kr_year_end_column_break"]["fieldtype"], "Column Break")
+        self.assertEqual(
+            salary_slip_fields["kr_year_end_column_break"]["insert_after"],
+            "kr_adjustment_tax",
+        )
+
+    def test_korean_locale_file_covers_korea_payroll_labels(self):
+        locale_path = pathlib.Path(__file__).resolve().parents[1] / "hrms" / "locale" / "ko.po"
+        locale_text = locale_path.read_text()
+
+        self.assertIn('msgid "Korea Payroll"', locale_text)
+        self.assertIn('msgstr "한국 급여"', locale_text)
+        self.assertIn('msgid "Korea Insurance Detail"', locale_text)
+        self.assertIn('msgstr "4대보험 상세"', locale_text)
+        self.assertIn('msgid "Korea Tax Detail"', locale_text)
+        self.assertIn('msgstr "세금 상세"', locale_text)
+        self.assertIn('msgid "Korea Payroll Summary"', locale_text)
+        self.assertIn('msgstr "한국 급여 요약"', locale_text)
+        self.assertIn('msgid "Korea Year End Settlement"', locale_text)
+        self.assertIn('msgstr "연말정산"', locale_text)
+
 
 if __name__ == "__main__":
     unittest.main()

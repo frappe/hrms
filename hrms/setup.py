@@ -446,6 +446,11 @@ def get_korea_phase2_custom_fields():
 				"insert_after": "kr_national_pension",
 			},
 			{
+				"fieldname": "kr_insurance_employee_column_break",
+				"fieldtype": "Column Break",
+				"insert_after": "kr_health_insurance",
+			},
+			{
 				"fieldname": "kr_longterm_care",
 				"fieldtype": "Currency",
 				"label": _("Long-term Care Insurance"),
@@ -488,6 +493,11 @@ def get_korea_phase2_custom_fields():
 				"insert_after": "kr_tax_detail_section",
 			},
 			{
+				"fieldname": "kr_tax_column_break",
+				"fieldtype": "Column Break",
+				"insert_after": "kr_income_tax",
+			},
+			{
 				"fieldname": "kr_local_income_tax",
 				"fieldtype": "Currency",
 				"label": _("Local Income Tax"),
@@ -518,6 +528,11 @@ def get_korea_phase2_custom_fields():
 				"options": "currency",
 				"read_only": 1,
 				"insert_after": "kr_summary_section",
+			},
+			{
+				"fieldname": "kr_summary_column_break",
+				"fieldtype": "Column Break",
+				"insert_after": "kr_taxable_pay",
 			},
 			{
 				"fieldname": "kr_nontaxable_pay",
@@ -569,6 +584,11 @@ def get_korea_phase2_custom_fields():
 				"options": "currency",
 				"read_only": 1,
 				"insert_after": "kr_determined_tax",
+			},
+			{
+				"fieldname": "kr_year_end_column_break",
+				"fieldtype": "Column Break",
+				"insert_after": "kr_adjustment_tax",
 			},
 			{
 				"fieldname": "kr_year_end_settlement_kind",
