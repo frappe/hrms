@@ -46,7 +46,13 @@ class FakeDB:
                 "custom_holiday_hours",
                 "modified",
             ],
-            "Employee": ["name", "employee_number", "employee_name", "visa_status_code"],
+            "Employee": [
+                "name",
+                "employee_number",
+                "employee_name",
+                "visa_status_code",
+                "kr_employ_ins_exempt",
+            ],
             "Branch": [
                 "name",
                 "company",
@@ -339,6 +345,7 @@ class KoreaIntegrationTests(unittest.TestCase):
                 "department": "Ops",
                 "designation": "Manager",
                 "employment_type": "정규직",
+                "kr_employ_ins_exempt": 1,
                 "date_of_joining": "2024-01-15",
                 "relieving_date": None,
                 "status": "Active",
@@ -367,9 +374,24 @@ class KoreaIntegrationTests(unittest.TestCase):
         self.assertEqual(len(result["data"]), 2)
         self.assertEqual(result["data"][0]["employee_id"], "EMP-0001")
         self.assertEqual(result["data"][0]["employment_category"], "regular")
+        self.assertTrue(result["data"][0]["employment_insurance_exempt"])
         self.assertEqual(result["data"][1]["employment_category"], "foreign_worker")
+        self.assertFalse(result["data"][1]["employment_insurance_exempt"])
         self.assertEqual(result["data"][1]["visa_status_code"], "E-9")
         self.assertNotIn("address", result["data"][0])
+
+    def test_export_employee_master_requires_employment_insurance_field(self):
+        self.fake_frappe.db.table_columns["Employee"] = [
+            "name",
+            "employee_number",
+            "employee_name",
+            "visa_status_code",
+        ]
+
+        with self.assertRaises(FakeFrappeError) as exc:
+            self.module.export_employee_master(page=1, page_size=1)
+
+        self.assertIn("Employee.kr_employ_ins_exempt custom field is required", str(exc.exception))
 
     def test_export_employee_master_logs_unknown_employment_type(self):
         self.fake_frappe._employee_rows = [
@@ -592,6 +614,41 @@ class KoreaIntegrationTests(unittest.TestCase):
         self.assertEqual(result["applied"], [{"company": "Winners", "branch": "Bupyeong", "action": "ignored"}])
         self.assertEqual(result["conflicts"], [])
 
+    def test_apply_worksite_master_from_yaml_handles_branch_without_company_column(self):
+        self.fake_frappe.db.table_columns["Branch"] = [
+            "name",
+            "custom_business_registration_number",
+            "custom_worksite_code",
+            "custom_worksite_status",
+            "custom_effective_from",
+            "custom_effective_to",
+            "custom_source_modified",
+            "custom_sync_status",
+            "custom_last_sync_payload",
+        ]
+
+        result = self.module.apply_worksite_master_from_yaml(
+            payload={
+                "yaml_version": "2026-04-26",
+                "items": [
+                    {
+                        "company": "Winners",
+                        "branch": "Bupyeong",
+                        "business_registration_number": "123-45-67890",
+                        "worksite_code": "BUP-01",
+                        "status": "active",
+                        "effective_from": "2026-04-01",
+                        "effective_to": None,
+                        "source_modified": "2026-04-26 09:00:00",
+                    }
+                ],
+            }
+        )
+
+        self.assertEqual(result["applied"], [{"company": "Winners", "branch": "Bupyeong", "action": "created"}])
+        self.assertEqual(self.fake_frappe.db.branch_records["Bupyeong"]["custom_worksite_code"], "BUP-01")
+        self.assertNotIn("company", self.fake_frappe.db.branch_records["Bupyeong"])
+
     def test_apply_worksite_yaml_item_acquires_lock_for_branch(self):
         item = {
             "company": "Winners",
@@ -711,6 +768,14 @@ class KoreaIntegrationTests(unittest.TestCase):
         self.assertIn("audit", result)
         self.assertEqual(result["audit"]["resolution_policy"], "yaml_wins")
         self.assertFalse(result["audit"]["queued"])
+
+    def test_notify_worksite_master_change_accepts_json_string_payload(self):
+        result = self.module.notify_worksite_master_change(
+            payload='{"event_type": "updated", "worksite": {"company": "Winners", "branch": "Bupyeong", "business_registration_number": "123-45-67890", "worksite_code": "BUP-01", "effective_from": "2026-04-01", "status": "active", "modified": "2026-04-26 10:00:00"}}'
+        )
+
+        self.assertEqual(result["status"], "received")
+        self.assertEqual(result["worksite"]["branch"], "Bupyeong")
 
     def test_import_year_end_settlement_result_rejects_unknown_fields(self):
         with self.assertRaises(FakeFrappeError):

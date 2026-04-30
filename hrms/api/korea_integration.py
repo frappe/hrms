@@ -115,7 +115,10 @@ def export_employee_master(
         "status",
         "modified",
     ]
-    fields.extend(_get_optional_fields("Employee", ["visa_status_code"]))
+    employee_optional_fields = _get_optional_fields("Employee", ["visa_status_code", "kr_employ_ins_exempt"])
+    if "kr_employ_ins_exempt" not in employee_optional_fields:
+        frappe.throw("Employee.kr_employ_ins_exempt custom field is required for Korea employee export")
+    fields.extend(employee_optional_fields)
 
     rows = frappe.get_all(
         "Employee",
@@ -528,6 +531,7 @@ def _normalize_employee_row(row: dict[str, Any]) -> dict[str, Any]:
         "designation": clean.get("designation"),
         "employment_type": employment_type,
         "employment_category": employment_category,
+        "employment_insurance_exempt": _coerce_bool(clean.get("kr_employ_ins_exempt")),
         "visa_status_code": clean.get("visa_status_code"),
         "date_of_joining": _stringify_date(clean.get("date_of_joining")),
         "relieving_date": _stringify_date(clean.get("relieving_date")),
@@ -917,7 +921,9 @@ def _get_branch_worksite_state(branch_name: str) -> dict[str, Any]:
 
 def _persist_branch_worksite_state(branch_name: str, company: str, state: dict[str, Any]) -> None:
     field_map = _get_worksite_field_map()
-    payload = {"company": company}
+    payload = {}
+    if _get_optional_fields("Branch", ["company"]):
+        payload["company"] = company
     for logical_field, value in state.items():
         actual_field = field_map.get(logical_field)
         if actual_field:
@@ -970,6 +976,8 @@ def _get_optional_fields(doctype: str, candidates: list[str] | None = None) -> l
 
 def _coerce_payload(payload: dict[str, Any] | None, kwargs: dict[str, Any]) -> dict[str, Any]:
     if payload is not None:
+        if isinstance(payload, str):
+            return json.loads(payload)
         return payload
     if kwargs:
         return kwargs
