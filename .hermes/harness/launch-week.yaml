@@ -1,0 +1,49 @@
+week_goal: "Frappe/HRMS Korea launch board를 유료 구독 가능한 managed pilot 수준까지 고정"
+launch_posture: "manual-paid-onboarding"
+workdir: "/home/ubuntu/worktrees/hrms-prA-korea-calc-reference"
+runtime:
+  site: "hrms.localhost"
+  ping_url: "http://127.0.0.1:8000/api/method/ping"
+  docker_container: "docker-frappe-1"
+  docker_compose: "docker/docker-compose.yml"
+definition_of_done:
+  - "Korea core unittest 묶음 반복 통과"
+  - "runtime ping 정상"
+  - "핵심 Korea DocType 5종 repo/runtime 일치"
+  - "worksite/integration boundary drift가 문서와 테스트로 통제됨"
+  - "launch board가 repo-local harness에서 자동 생성되고 daily retro cron이 이를 소비함"
+  - "수동 유료 온보딩 운영 posture 명시"
+out_of_scope_phase1:
+  - "self-serve checkout"
+  - "in-product payment gateway"
+  - "privacy_broker live integration"
+priority_board:
+  - id: p0-external-pension-cap
+    title: "국민연금 상한 미구현"
+    owner: "external-engine"
+    status: "blocked-outside-repo"
+    evidence:
+      - "docs/integration/engine-side-contract.md:891-892"
+      - "docs/korea/02-social-insurance.md:42-52"
+  - id: p0-frappe-employment-insurance-exemption-export
+    title: "내국인 만65세 고용보험 면제 flag가 export contract에 없음"
+    owner: "frappe-boundary"
+    status: "completed"
+    evidence:
+      - "hrms/api/korea_integration.py:104-119"
+      - "docs/integration/frappe-side-contract.md:103-119"
+      - "hrms/setup.py:390-395"
+  - id: launch-ops-manual-billing-onboarding
+    title: "유료 온보딩 운영 문서/프로비저닝 posture 고정"
+    owner: "pm-ops"
+    status: "completed"
+    evidence:
+      - "docs/prd/PRD-korea-hrms-integration.md:106-111"
+      - "hrms/subscription_utils.py:30-59"
+      - "docs/runbooks/korea-phase2-runtime-gate-and-pilot-smoke.md"
+key_tests:
+  - "python3 -m unittest tests.test_korea_integration tests.test_korea_salary_slip_hooks tests.test_korea_payroll_doctypes tests.test_korea_print_formats tests.test_korea_setup tests.test_korea_privacy_contract"
+key_checks:
+  - "curl -H 'Host: hrms.localhost' http://127.0.0.1:8000/api/method/ping"
+  - "sudo docker ps"
+  - "bench --site hrms.localhost execute frappe.db.exists"

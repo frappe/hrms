@@ -110,6 +110,7 @@
 - 직급(designation)
 - 근무형태(employment_type)
 - 외국인 비자 구분(visa_status_code 등 비민감 분류코드)
+- 고용보험 면제 여부(employment_insurance_exempt, 만65세 입사 면제 등 비민감 플래그)
 
 ### 5.5 절대 포함 금지
 - 주민번호
@@ -213,6 +214,10 @@ components:
           "visa_status_code": {
             "type": ["string", "null"],
             "description": "외국인 비자 분류코드. 번호/등록정보는 포함하지 않음"
+          },
+          "employment_insurance_exempt": {
+            "type": "boolean",
+            "description": "만65세 입사 면제 등 고용보험 공제 면제 여부를 나타내는 비민감 플래그"
           },
           "date_of_joining": { "type": "string", "format": "date" },
           "relieving_date": { "type": ["string", "null"], "format": "date" },
@@ -1064,6 +1069,11 @@ components:
    - privacy broker → engine/Frappe: `broker_lookup_id`, `subject_match_status`, `expires_at`
    - 주민번호 원문/부분값/복원 가능한 토큰은 Frappe에 저장하지 않는다.
 4. `Korea Calc Reference`에는 broker lookup 결과가 필요하면 `broker_lookup_id`와 성공/실패 상태만 남긴다.
+
+#### Phase 2 pilot defer note
+- `privacy_broker live integration is deferred` until endpoint/auth/audit specifications are fixed outside this repo.
+- `Frappe runtime does not call privacy_broker in this pilot` and no placeholder broker client is shipped in Phase 2.
+- `manual or external secure-store lookup remains outside this repo` for any subject-resolution step that would touch PII.
 
 ### 9.5 표준 Salary Slip vs Korea Salary Slip 충돌 룰
 

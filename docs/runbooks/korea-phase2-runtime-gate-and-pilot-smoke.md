@@ -176,6 +176,11 @@ curl -s -H 'Host: hrms.localhost' http://127.0.0.1:8000/api/method/hrms.api.kore
 - contract shape 유지
 - worksite lock/rejected_locked 동작 유지
 
+## 파일럿 범위 고정 메모
+- `privacy_broker live integration is deferred for this pilot`.
+- `do not hot-deploy placeholder broker code` without endpoint/auth/audit spec.
+- `PII lookup stays outside Frappe runtime` and must be handled by manual or external secure-store procedures.
+
 ## 파일럿 진입 전 최종 체크리스트
 - [ ] `bench migrate` 성공
 - [ ] `Korea Calc Reference` / `Korea Insurance Rates` / `Korea Tax Table` exists 확인
