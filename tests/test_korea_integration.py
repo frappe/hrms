@@ -859,6 +859,45 @@ class KoreaIntegrationTests(unittest.TestCase):
         self.assertEqual(result["status"], "received")
         self.assertEqual(result["worksite"]["branch"], "Bupyeong")
 
+    def test_notify_worksite_master_change_ignores_frappe_cmd_kwarg(self):
+        result = self.module.notify_worksite_master_change(
+            cmd="hrms.api.korea_integration.notify_worksite_master_change",
+            event_type="updated",
+            worksite={
+                "company": "Winners",
+                "branch": "Bupyeong",
+                "business_registration_number": "123-45-67890",
+                "worksite_code": "BUP-01",
+                "effective_from": "2026-04-01",
+                "status": "active",
+                "modified": "2026-04-26 10:00:00",
+            },
+        )
+
+        self.assertEqual(result["status"], "received")
+        self.assertEqual(result["event_type"], "updated")
+
+    def test_apply_worksite_master_from_yaml_ignores_frappe_cmd_kwarg(self):
+        result = self.module.apply_worksite_master_from_yaml(
+            cmd="hrms.api.korea_integration.apply_worksite_master_from_yaml",
+            yaml_version="2026-04-30T00:00:00Z",
+            items=[
+                {
+                    "company": "Winners",
+                    "branch": "Bupyeong",
+                    "business_registration_number": "123-45-67890",
+                    "worksite_code": "BUP-01",
+                    "status": "active",
+                    "effective_from": "2026-04-01",
+                    "effective_to": None,
+                    "source_modified": "2026-04-30T00:00:00Z",
+                }
+            ],
+        )
+
+        self.assertEqual(result["applied"][0]["branch"], "Bupyeong")
+        self.assertIn(result["applied"][0]["action"], {"created", "updated", "ignored"})
+
     def test_import_year_end_settlement_result_rejects_unknown_fields(self):
         with self.assertRaises(FakeFrappeError):
             self.module.import_year_end_settlement_result(

@@ -986,15 +986,20 @@ def _get_optional_fields(doctype: str, candidates: list[str] | None = None) -> l
     return [field for field in candidates if field in columns]
 
 
+FRAPPE_RPC_META_KEYS = {"cmd", "data", "method", "doctype"}
+
+
 def _coerce_payload(payload: dict[str, Any] | None, kwargs: dict[str, Any]) -> dict[str, Any]:
     if payload is not None:
         if isinstance(payload, str):
             return json.loads(payload)
         return payload
     if kwargs:
-        return kwargs
+        if "payload" in kwargs and isinstance(kwargs["payload"], str):
+            return json.loads(kwargs["payload"])
+        return {key: value for key, value in kwargs.items() if key not in FRAPPE_RPC_META_KEYS}
     if getattr(frappe, "local", None) and getattr(frappe.local, "form_dict", None):
-        form_dict = dict(frappe.local.form_dict)
+        form_dict = {key: value for key, value in dict(frappe.local.form_dict).items() if key not in FRAPPE_RPC_META_KEYS}
         if len(form_dict) == 1 and "payload" in form_dict and isinstance(form_dict["payload"], str):
             return json.loads(form_dict["payload"])
         return form_dict
