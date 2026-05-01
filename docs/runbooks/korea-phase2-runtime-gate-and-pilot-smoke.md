@@ -17,8 +17,8 @@
 
 ### 현재 live DocType 상태
 - `Korea Calc Reference` → live 존재 확인
-- `Korea Insurance Rates` → 아직 live 미반영
-- `Korea Tax Table` → 아직 live 미반영
+- `Korea Insurance Rates` → live 존재 확인
+- `Korea Tax Table` → live 존재 확인
 
 실행 근거:
 ```bash
@@ -29,8 +29,19 @@ bench --site hrms.localhost execute frappe.db.exists --args "[""DocType"", ""Kor
 ```
 
 ### 현재 live app tree 상태
-- container 내부 `/home/frappe/frappe-bench/apps/hrms`에는 `korea_calc_reference`만 확인됨
-- `korea_insurance_rates`, `korea_tax_table`, `salary_slip/korea_salary_slip.py`는 아직 미배포 상태
+- container 내부 `/home/frappe/frappe-bench/apps/hrms`에 `korea_calc_reference`, `korea_insurance_rates`, `korea_tax_table`, `salary_slip/korea_salary_slip.py`가 배포됨
+- `hrms/api/korea_integration.py`도 live 반영되어 `employment_insurance_exempt` export와 employee-bound pagination helper가 확인됨
+
+### 이번 세션의 runtime 검증 결과
+- `bench --site hrms.localhost migrate` 성공
+- `bench --site hrms.localhost execute frappe.get_attr --args "[""hrms.payroll.doctype.salary_slip.korea_salary_slip.apply_korea_salary_slip_fields""]"` 성공
+- live container code 기준 synthetic pagination proof 성공
+  - page 2 / page_size 100 요청에서 `EMP-0101 ~ EMP-0200`만 반환
+  - stream query는 `page_length=200` chunk로 수행되고 최종 fetch는 paged employee set만 사용
+- site-context smoke 성공
+  - `export_employee_master` → 2 rows, `employment_insurance_exempt` field 확인
+  - `export_time_and_leave` → contract shape 정상 반환
+  - `notify_worksite_master_change` / `apply_worksite_master_from_yaml` → 비파괴 validation path까지 정상 진입
 
 ## Gate 1. 배포 전 점검
 1. base 브랜치 HEAD 확인
@@ -52,6 +63,7 @@ sudo docker exec docker-frappe-1 bash -lc 'cd /home/frappe/frappe-bench/apps/hrm
 
 ## Gate 2. Hot-deploy 대상 최소 범위
 이번 Phase 2 landed 범위에서 runtime 반영 대상 최소 세트:
+- `hrms/api/korea_integration.py`
 - `hrms/setup.py`
 - `hrms/hooks.py`
 - `hrms/payroll/doctype/korea_calc_reference/*`
@@ -69,6 +81,7 @@ sudo docker exec docker-frappe-1 bash -lc 'mkdir -p /home/frappe/runtime-backups
 ```bash
 cd /home/ubuntu/worktrees/hrms-prA-korea-calc-reference
 tar -cf /tmp/korea-phase2-runtime.tar \
+  hrms/api/korea_integration.py \
   hrms/setup.py \
   hrms/hooks.py \
   hrms/payroll/doctype/korea_calc_reference \
@@ -90,12 +103,14 @@ TS=$(date +%Y%m%d-%H%M%S)
 BK=/home/frappe/runtime-backups/$TS
 mkdir -p "$BK"
 cd /home/frappe/frappe-bench/apps/hrms
+mkdir -p "$BK/hrms/api" "$BK/hrms/payroll/doctype/salary_slip"
+cp -a hrms/api/korea_integration.py "$BK/hrms/api/" || true
 cp -a hrms/setup.py "$BK/" || true
 cp -a hrms/hooks.py "$BK/" || true
 cp -a hrms/payroll/doctype/korea_calc_reference "$BK/" || true
 cp -a hrms/payroll/doctype/korea_insurance_rates "$BK/" || true
 cp -a hrms/payroll/doctype/korea_tax_table "$BK/" || true
-cp -a hrms/payroll/doctype/salary_slip/korea_salary_slip.py "$BK/" || true
+cp -a hrms/payroll/doctype/salary_slip/korea_salary_slip.py "$BK/hrms/payroll/doctype/salary_slip/" || true
 cd /home/frappe/frappe-bench/apps/hrms
 tar -xf /home/frappe/runtime-backups/korea-phase2-runtime.tar
 '
@@ -105,6 +120,7 @@ tar -xf /home/frappe/runtime-backups/korea-phase2-runtime.tar
 ```bash
 sudo docker exec docker-frappe-1 bash -lc 'cd /home/frappe/frappe-bench/apps/hrms && \
 python -m py_compile \
+  hrms/api/korea_integration.py \
   hrms/setup.py \
   hrms/hooks.py \
   hrms/payroll/doctype/korea_calc_reference/korea_calc_reference.py \
