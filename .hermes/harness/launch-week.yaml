@@ -19,7 +19,7 @@ out_of_scope_phase1:
   - "privacy_broker live integration"
 priority_board:
   - id: p0-external-pension-cap
-    title: "국민연금 상한 미구현"
+    title: "국민연금 상한 미구현 (2026.07부터 659만/41만 반영 필요)"
     owner: "external-engine"
     status: "blocked-outside-repo"
     evidence:

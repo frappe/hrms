@@ -177,15 +177,31 @@ def export_time_and_leave(
         if not employee_whitelist:
             return {"data": [], "meta": _build_meta(page, page_size, False)}
 
+    employee_page, has_more = _collect_time_and_leave_employee_page(
+        attendance_filters=attendance_filters,
+        leave_filters=leave_filters,
+        employee_whitelist=employee_whitelist,
+        page=page,
+        page_size=page_size,
+    )
+    if not employee_page:
+        return {"data": [], "meta": _build_meta(page, page_size, False)}
+
+    employee_page_set = set(employee_page)
+    paged_attendance_filters = dict(attendance_filters)
+    paged_attendance_filters["employee"] = ["in", employee_page]
+    paged_leave_filters = dict(leave_filters)
+    paged_leave_filters["employee"] = ["in", employee_page]
+
     attendance_rows = frappe.get_all(
         "Attendance",
-        filters=attendance_filters,
+        filters=paged_attendance_filters,
         fields=attendance_fields,
         order_by="employee asc, attendance_date asc",
     )
     leave_rows = frappe.get_all(
         "Leave Application",
-        filters=leave_filters,
+        filters=paged_leave_filters,
         fields=[
             "name",
             "employee",
@@ -206,13 +222,9 @@ def export_time_and_leave(
         leave_rows=leave_rows,
         from_date=from_date,
         to_date=to_date,
-        employee_whitelist=employee_whitelist,
+        employee_whitelist=employee_page_set,
     )
-
-    start = (page - 1) * page_size
-    sliced = data[start : start + page_size + 1]
-    has_more = len(sliced) > page_size
-    return {"data": sliced[:page_size], "meta": _build_meta(page, page_size, has_more)}
+    return {"data": data, "meta": _build_meta(page, page_size, has_more)}
 
 
 @frappe.whitelist()
@@ -1004,6 +1016,96 @@ def _normalize_pagination(page: int | str, page_size: int | str) -> tuple[int, i
 
 def _build_meta(page: int, page_size: int, has_more: bool) -> dict[str, Any]:
     return {"page": page, "page_size": page_size, "has_more": has_more}
+
+
+def _collect_time_and_leave_employee_page(
+    *,
+    attendance_filters: dict[str, Any],
+    leave_filters: dict[str, Any],
+    employee_whitelist: set[str] | None,
+    page: int,
+    page_size: int,
+) -> tuple[list[str], bool]:
+    start = (page - 1) * page_size
+    limit = start + page_size + 1
+    attendance_stream = _iter_time_and_leave_employee_ids(
+        doctype="Attendance",
+        filters=attendance_filters,
+        order_by="employee asc, attendance_date asc",
+        employee_whitelist=employee_whitelist,
+    )
+    leave_stream = _iter_time_and_leave_employee_ids(
+        doctype="Leave Application",
+        filters=leave_filters,
+        order_by="employee asc, from_date asc",
+        employee_whitelist=employee_whitelist,
+    )
+
+    merged_employee_ids = _merge_employee_streams(attendance_stream, leave_stream, limit=limit)
+    has_more = len(merged_employee_ids) > start + page_size
+    return merged_employee_ids[start : start + page_size], has_more
+
+
+def _iter_time_and_leave_employee_ids(
+    *,
+    doctype: str,
+    filters: dict[str, Any],
+    order_by: str,
+    employee_whitelist: set[str] | None,
+):
+    chunk_size = max(DEFAULT_PAGE_SIZE * 2, 200)
+    start = 0
+    last_employee = None
+
+    while True:
+        rows = frappe.get_all(
+            doctype,
+            filters=filters,
+            fields=["employee"],
+            order_by=order_by,
+            start=start,
+            page_length=chunk_size,
+        )
+        if not rows:
+            break
+
+        for row in rows:
+            employee = row.get("employee")
+            if not employee or employee == last_employee:
+                continue
+            last_employee = employee
+            if employee_whitelist is not None and employee not in employee_whitelist:
+                continue
+            yield employee
+
+        if len(rows) < chunk_size:
+            break
+        start += chunk_size
+
+
+def _merge_employee_streams(attendance_stream, leave_stream, *, limit: int) -> list[str]:
+    merged: list[str] = []
+    attendance_employee = next(attendance_stream, None)
+    leave_employee = next(leave_stream, None)
+
+    while len(merged) < limit and (attendance_employee is not None or leave_employee is not None):
+        if leave_employee is None or (attendance_employee is not None and attendance_employee < leave_employee):
+            candidate = attendance_employee
+            attendance_employee = next(attendance_stream, None)
+        elif attendance_employee is None or leave_employee < attendance_employee:
+            candidate = leave_employee
+            leave_employee = next(leave_stream, None)
+        else:
+            candidate = attendance_employee
+            attendance_employee = next(attendance_stream, None)
+            leave_employee = next(leave_stream, None)
+
+        if candidate is None:
+            continue
+        if not merged or merged[-1] != candidate:
+            merged.append(candidate)
+
+    return merged
 
 
 def _coerce_bool(value: Any) -> bool:

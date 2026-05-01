@@ -129,7 +129,7 @@ if not employment_exempt_export_ready:
 snapshot['derived']['remaining'].append(
     {
         'status': '대기',
-        'item': '외부 엔진의 국민연금 상한(6,370,000) 계산 로직 보정',
+        'item': '외부 엔진의 국민연금 상한 계산 로직 보정 (2026.01~06 6,370,000 / 2026.07~2027.06 6,590,000, 하한 410,000)',
         'evidence': [
             'docs/integration/engine-side-contract.md:891-892',
             'docs/korea/02-social-insurance.md:42-52',

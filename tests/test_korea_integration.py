@@ -512,6 +512,88 @@ class KoreaIntegrationTests(unittest.TestCase):
         self.assertEqual(result["data"][0]["employee_id"], "EMP-0101")
         self.assertEqual(result["data"][-1]["employee_id"], "EMP-0150")
 
+    def test_export_time_and_leave_no_data_loss_for_200_employees(self):
+        self.fake_frappe._attendance_rows = [
+            {
+                "name": f"ATT-{index:04d}",
+                "employee": f"EMP-{index:04d}",
+                "attendance_date": "2026-04-01",
+                "status": "Present",
+                "shift": "Day",
+                "working_hours": 8,
+                "modified": "2026-04-01 09:00:00",
+            }
+            for index in range(1, 201)
+        ]
+
+        result = self.module.export_time_and_leave(
+            from_date="2026-04-01",
+            to_date="2026-04-30",
+            page=2,
+            page_size=100,
+        )
+
+        self.assertEqual(result["meta"], {"page": 2, "page_size": 100, "has_more": False})
+        self.assertEqual(len(result["data"]), 100)
+        self.assertEqual(result["data"][0]["employee_id"], "EMP-0101")
+        self.assertEqual(result["data"][-1]["employee_id"], "EMP-0200")
+
+        attendance_calls = [
+            call for call in self.fake_frappe.get_all_calls if call["doctype"] == "Attendance"
+        ]
+        self.assertEqual(attendance_calls[0]["fields"], ["employee"])
+        self.assertIsNotNone(attendance_calls[0]["page_length"])
+        self.assertEqual(attendance_calls[-1]["filters"]["employee"][0], "in")
+        self.assertEqual(attendance_calls[-1]["filters"]["employee"][1][0], "EMP-0101")
+        self.assertEqual(attendance_calls[-1]["filters"]["employee"][1][-1], "EMP-0200")
+
+    def test_export_time_and_leave_no_timeout_for_large_period(self):
+        self.fake_frappe._attendance_rows = [
+            {
+                "name": f"ATT-{index:04d}",
+                "employee": f"EMP-{index:04d}",
+                "attendance_date": "2026-04-01",
+                "status": "Present",
+                "shift": "Day",
+                "working_hours": 8,
+                "modified": "2026-04-01 09:00:00",
+            }
+            for index in range(1, 601)
+        ]
+        self.fake_frappe._leave_rows = [
+            {
+                "name": f"LEAVE-{index:04d}",
+                "employee": f"EMP-{index:04d}",
+                "leave_type": "연차",
+                "from_date": "2026-04-10",
+                "to_date": "2026-04-10",
+                "half_day": 0,
+                "half_day_date": None,
+                "total_leave_days": 1,
+                "status": "Approved",
+                "modified": "2026-04-10 09:00:00",
+            }
+            for index in range(1, 601)
+        ]
+
+        result = self.module.export_time_and_leave(
+            from_date="2026-01-01",
+            to_date="2026-04-30",
+            page=1,
+            page_size=100,
+        )
+
+        self.assertEqual(result["meta"], {"page": 1, "page_size": 100, "has_more": True})
+        self.assertEqual(len(result["data"]), 100)
+
+        stream_calls = [
+            call
+            for call in self.fake_frappe.get_all_calls
+            if call["doctype"] in {"Attendance", "Leave Application"} and call["fields"] == ["employee"]
+        ]
+        self.assertGreaterEqual(len(stream_calls), 2)
+        self.assertTrue(all(call["page_length"] is not None for call in stream_calls))
+
     def test_apply_worksite_master_from_yaml_creates_branch_record(self):
         result = self.module.apply_worksite_master_from_yaml(
             payload={
