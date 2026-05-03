@@ -117,6 +117,10 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		self.validate_salary_processed_days()
 		self.validate_attendance()
 		self.set_half_day_date()
+
+		if self.half_day and self.half_day_type and not self.remaining_half_status:
+			frappe.throw(_("Remaining Half Status is required"))
+
 		if frappe.db.get_value("Leave Type", self.leave_type, "is_optional_leave"):
 			self.validate_optional_leave()
 		self.validate_applicable_after()
@@ -345,7 +349,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		if attendance_name:
 			# update existing attendance, change absent to on leave or half day
 			doc = frappe.get_doc("Attendance", attendance_name)
-			half_day_status = None if status == "On Leave" else "Present"
+			half_day_status = None if status == "On Leave" else (self.remaining_half_status or "Present")
 			modify_half_day_status = 1 if doc.status == "Absent" and status == "Half Day" else 0
 			doc.db_set(
 				{
@@ -353,6 +357,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 					"leave_type": self.leave_type,
 					"leave_application": self.name,
 					"half_day_status": half_day_status,
+					"half_day_type": self.half_day_type if status == "Half Day" else None,
 					"modify_half_day_status": modify_half_day_status,
 				}
 			)
@@ -366,7 +371,8 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			doc.leave_type = self.leave_type
 			doc.leave_application = self.name
 			doc.status = status
-			doc.half_day_status = "Present" if status == "Half Day" else None
+			doc.half_day_status = (self.remaining_half_status or "Present") if status == "Half Day" else None
+			doc.half_day_type = self.half_day_type if status == "Half Day" else None
 			doc.modify_half_day_status = 1 if status == "Half Day" else 0
 			doc.flags.ignore_validate = True  # ignores check leave record validation in attendance
 			doc.insert(ignore_permissions=True)

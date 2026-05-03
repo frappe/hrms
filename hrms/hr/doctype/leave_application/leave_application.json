@@ -20,6 +20,8 @@
   "to_date",
   "half_day",
   "half_day_date",
+  "half_day_type",
+  "remaining_half_status",
   "total_leave_days",
   "column_break1",
   "description",
@@ -127,6 +129,22 @@
    "fieldname": "half_day_date",
    "fieldtype": "Date",
    "label": "Half Day Date"
+  },
+  {
+   "depends_on": "eval:doc.half_day==1",
+   "fieldname": "half_day_type",
+   "fieldtype": "Select",
+   "label": "Half Day Type",
+   "mandatory_depends_on": "eval:doc.half_day==1",
+   "options": "\nFirst Half\nSecond Half"
+  },
+  {
+   "default": "Present",
+   "depends_on": "eval:doc.half_day==1",
+   "fieldname": "remaining_half_status",
+   "fieldtype": "Select",
+   "label": "Remaining Half Status",
+   "options": "Present\nAbsent\nWork From Home\nOn Duty"
   },
   {
    "fieldname": "total_leave_days",

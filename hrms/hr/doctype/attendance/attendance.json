@@ -20,6 +20,7 @@
   "company",
   "department",
   "attendance_request",
+  "half_day_type",
   "half_day_status",
   "details_section",
   "shift",
@@ -212,11 +213,19 @@
   },
   {
    "depends_on": "eval:doc.status==\"Half Day\";",
+   "fieldname": "half_day_type",
+   "fieldtype": "Select",
+   "label": "Half Day Type",
+   "no_copy": 1,
+   "options": "\nFirst Half\nSecond Half"
+  },
+  {
+   "depends_on": "eval:doc.status==\"Half Day\";",
    "fieldname": "half_day_status",
    "fieldtype": "Select",
    "label": "Status for Other Half",
    "no_copy": 1,
-   "options": "\nPresent\nAbsent"
+   "options": "\nPresent\nAbsent\nWork From Home\nOn Duty"
   },
   {
    "default": "0",
