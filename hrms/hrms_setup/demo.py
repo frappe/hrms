@@ -82,11 +82,96 @@ def setup_demo(args):
 	setup_payroll()
 	setup_fixtures()
 	setup_employees()
+	setup_employee_approvers()
 	setup_salary_structure_assignments()
 	setup_leave_and_attendance()
 	setup_payroll_runs()
 	setup_expense_claim_type_accounts()
 	setup_expense_claims()
+	setup_recruitment_data()
+	setup_appraisals()
+
+
+def setup_appraisals():
+	from frappe.desk.page.setup_wizard.setup_wizard import make_records
+
+	kra_records = get_records_from_json("KRA")
+	make_records(kra_records)
+
+	template_records = get_records_from_json("Appraisal Template")
+	for r in template_records:
+		goals = r.pop("goals", [])
+		if goals:
+			kra_titles = {kra.title: kra.name for kra in frappe.get_all("KRA", fields=["name", "title"])}
+			for goal in goals:
+				if goal.get("key_result_area") in kra_titles:
+					goal["key_result_area"] = kra_titles[goal["key_result_area"]]
+
+			template = frappe.get_doc({"doctype": "Appraisal Template", **r})
+			for goal in goals:
+				template.append("goals", goal)
+			template.insert(ignore_permissions=True)
+
+	cycle_records = get_records_from_json("Appraisal Cycle")
+	make_records(cycle_records)
+
+	employee_map = {}
+	for emp in frappe.get_all(
+		"Employee", filters={"company": DEMO_COMPANY}, fields=["name", "employee_name"]
+	):
+		employee_map[emp.employee_name] = emp.name
+
+	cycle_map = {
+		c.cycle_name: c.name for c in frappe.get_all("Appraisal Cycle", fields=["name", "cycle_name"])
+	}
+	template_map = {
+		t.template_title: t.name
+		for t in frappe.get_all("Appraisal Template", fields=["name", "template_title"])
+	}
+	kra_map = {kra.title: kra.name for kra in frappe.get_all("KRA", fields=["name", "title"])}
+
+	appraisal_records = get_records_from_json("Appraisal")
+	for r in appraisal_records:
+		emp_name = r.get("employee")
+		if emp_name in employee_map:
+			r["employee"] = employee_map[emp_name]
+
+		cycle_name = r.get("appraisal_cycle")
+		if cycle_name in cycle_map:
+			r["appraisal_cycle"] = cycle_map[cycle_name]
+
+		template_name = r.get("appraisal_template")
+		if template_name in template_map:
+			r["appraisal_template"] = template_map[template_name]
+
+		kras = r.get("appraisal_kra", [])
+		if kras:
+			for kra in kras:
+				kra_title = kra.get("kra")
+				if kra_title in kra_map:
+					kra["kra"] = kra_map[kra_title]
+
+	make_records(appraisal_records)
+
+	frappe.publish_realtime("demo_progress", {"message": "Created appraisals"})
+
+
+def setup_employee_approvers():
+	employees = frappe.get_all(
+		"Employee",
+		filters={"company": DEMO_COMPANY, "status": "Active", "reports_to": ["!=", ""]},
+		fields=["name", "reports_to"],
+	)
+
+	created = 0
+	for emp in employees:
+		manager_user = frappe.get_value("Employee", emp.reports_to, "user_id")
+		if manager_user:
+			frappe.db.set_value("Employee", emp.name, "leave_approver", manager_user)
+			created += 1
+
+	if created:
+		frappe.publish_realtime("demo_progress", {"message": f"Set leave_approver for {created} employees"})
 
 
 def setup_expense_claim_type_accounts():
@@ -196,6 +281,91 @@ def setup_expense_claims():
 	from hrms.hrms_setup.demo_expense import setup_expense_claims as run_expense
 
 	run_expense()
+
+
+def setup_recruitment_data():
+	from frappe.desk.page.setup_wizard.setup_wizard import make_records
+
+	sources = ["Website Listing", "Walk In", "Employee Referral", "Campaign"]
+	for source in sources:
+		if not frappe.db.exists("Job Applicant Source", source):
+			frappe.get_doc({"doctype": "Job Applicant Source", "source_name": source}).insert(
+				ignore_permissions=True
+			)
+
+	job_opening_records = get_records_from_json("Job Opening")
+	department_names = set(record["department"] for record in job_opening_records if record.get("department"))
+	department_map = {}
+	for dept_name in department_names:
+		dept = frappe.get_all(
+			"Department",
+			filters=[["department_name", "like", f"{dept_name}%"], ["company", "=", DEMO_COMPANY]],
+			fields=["name", "department_name"],
+		)
+		if dept:
+			department_map[dept_name] = dept[0].name
+
+	for record in job_opening_records:
+		if record.get("department") and department_map.get(record["department"]):
+			record["department"] = department_map[record["department"]]
+
+	make_records(job_opening_records)
+
+	job_openings = {}
+	for jo in frappe.get_all("Job Opening", filters={"company": DEMO_COMPANY}, fields=["name", "job_title"]):
+		job_openings[jo.job_title] = jo.name
+
+	employee_map = {}
+	for emp in frappe.get_all(
+		"Employee", filters={"company": DEMO_COMPANY}, fields=["name", "employee_name"]
+	):
+		employee_map[emp.employee_name] = emp.name
+
+	job_applicant_records = get_records_from_json("Job Applicant")
+	job_applicant_names = {}
+
+	temp_applicants = []
+	for record in job_applicant_records:
+		job_title = record.get("job_title", "")
+		if job_title and job_title in job_openings:
+			record["job_title"] = job_openings[job_title]
+		elif not job_title:
+			for title, jo_name in job_openings.items():
+				if title in record.get("cover_letter", "") or title in record.get("applicant_name", ""):
+					record["job_title"] = jo_name
+					break
+
+		if record.get("source") == "Employee Referral" and record.get("source_name"):
+			emp_name = record.get("source_name")
+			if emp_name in employee_map:
+				record["source_name"] = employee_map[emp_name]
+			else:
+				record.pop("source_name", None)
+
+		applicant_name = record.get("applicant_name")
+		temp_applicants.append((record, applicant_name))
+
+	records_to_create = [rec for rec, _ in temp_applicants]
+	make_records(records_to_create)
+
+	for __, applicant_name in temp_applicants:
+		job_applicant_name = frappe.get_all(
+			"Job Applicant", filters={"applicant_name": applicant_name}, fields=["name"]
+		)
+		if job_applicant_name:
+			job_applicant_names[applicant_name] = job_applicant_name[0].name
+
+	job_offer_records = get_records_from_json("Job Offer")
+	for record in job_offer_records:
+		job_applicant_name = record.get("job_applicant", "")
+		if job_applicant_name and job_applicant_name in job_applicant_names:
+			record["job_applicant"] = job_applicant_names[job_applicant_name]
+		record.pop("name", None)
+
+	if job_offer_records:
+		make_records(job_offer_records)
+
+	frappe.publish_realtime("demo_progress", {"message": "Created recruitment data"})
 
 
 def create_demo_company(args=None):
@@ -470,7 +640,7 @@ def setup_employees():
 	for dept_name in department_names:
 		dept = frappe.get_all(
 			"Department",
-			filters=[["department_name", "like", f"{dept_name}%"]],
+			filters=[["department_name", "like", f"{dept_name}%"], ["company", "=", DEMO_COMPANY]],
 			fields=["name", "department_name"],
 		)
 		if dept:

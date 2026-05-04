@@ -1,0 +1,172 @@
+[
+    {
+        "doctype": "Appraisal",
+        "naming_series": "HR-APR-.YYYY.-",
+        "employee": "Vikram Sharma",
+        "company": "__DEMO_COMPANY__",
+        "appraisal_cycle": "Q4 2025 Review",
+        "start_date": "2025-10-01",
+        "end_date": "2025-12-31",
+        "appraisal_template": "Management Review",
+        "appraisal_kra": [
+            {"kra": "Team Management", "per_weightage": 30},
+            {"kra": "Project Delivery", "per_weightage": 25},
+            {"kra": "Process Improvement", "per_weightage": 20},
+            {"kra": "Innovation", "per_weightage": 15},
+            {"kra": "Compliance", "per_weightage": 10}
+        ]
+    },
+    {
+        "doctype": "Appraisal",
+        "naming_series": "HR-APR-.YYYY.-",
+        "employee": "Sarah Johnson",
+        "company": "__DEMO_COMPANY__",
+        "appraisal_cycle": "Q4 2025 Review",
+        "start_date": "2025-10-01",
+        "end_date": "2025-12-31",
+        "appraisal_template": "Management Review",
+        "appraisal_kra": [
+            {"kra": "Team Management", "per_weightage": 30},
+            {"kra": "Project Delivery", "per_weightage": 25},
+            {"kra": "Process Improvement", "per_weightage": 20},
+            {"kra": "Innovation", "per_weightage": 15},
+            {"kra": "Compliance", "per_weightage": 10}
+        ]
+    },
+    {
+        "doctype": "Appraisal",
+        "naming_series": "HR-APR-.YYYY.-",
+        "employee": "Ahmed Al-Rashid",
+        "company": "__DEMO_COMPANY__",
+        "appraisal_cycle": "Q4 2025 Review",
+        "start_date": "2025-10-01",
+        "end_date": "2025-12-31",
+        "appraisal_template": "Standard Performance Review",
+        "appraisal_kra": [
+            {"kra": "Project Delivery", "per_weightage": 30},
+            {"kra": "Code Quality", "per_weightage": 25},
+            {"kra": "Team Collaboration", "per_weightage": 20},
+            {"kra": "Innovation", "per_weightage": 15},
+            {"kra": "Communication", "per_weightage": 10}
+        ]
+    },
+    {
+        "doctype": "Appraisal",
+        "naming_series": "HR-APR-.YYYY.-",
+        "employee": "James Williams",
+        "company": "__DEMO_COMPANY__",
+        "appraisal_cycle": "Q4 2025 Review",
+        "start_date": "2025-10-01",
+        "end_date": "2025-12-31",
+        "appraisal_template": "Sales Team Review",
+        "appraisal_kra": [
+            {"kra": "Sales Targets", "per_weightage": 40},
+            {"kra": "Client Satisfaction", "per_weightage": 25},
+            {"kra": "Team Collaboration", "per_weightage": 15},
+            {"kra": "Communication", "per_weightage": 10},
+            {"kra": "Process Improvement", "per_weightage": 10}
+        ]
+    },
+    {
+        "doctype": "Appraisal",
+        "naming_series": "HR-APR-.YYYY.-",
+        "employee": "Priya Nair",
+        "company": "__DEMO_COMPANY__",
+        "appraisal_cycle": "Q4 2025 Review",
+        "start_date": "2025-10-01",
+        "end_date": "2025-12-31",
+        "appraisal_template": "Standard Performance Review",
+        "appraisal_kra": [
+            {"kra": "Project Delivery", "per_weightage": 30},
+            {"kra": "Code Quality", "per_weightage": 25},
+            {"kra": "Team Collaboration", "per_weightage": 20},
+            {"kra": "Innovation", "per_weightage": 15},
+            {"kra": "Communication", "per_weightage": 10}
+        ]
+    },
+    {
+        "doctype": "Appraisal",
+        "naming_series": "HR-APR-.YYYY.-",
+        "employee": "Maria Garcia",
+        "company": "__DEMO_COMPANY__",
+        "appraisal_cycle": "Q1 2026 Review",
+        "start_date": "2026-01-01",
+        "end_date": "2026-03-31",
+        "appraisal_template": "Standard Performance Review",
+        "appraisal_kra": [
+            {"kra": "Project Delivery", "per_weightage": 30},
+            {"kra": "Code Quality", "per_weightage": 25},
+            {"kra": "Team Collaboration", "per_weightage": 20},
+            {"kra": "Innovation", "per_weightage": 15},
+            {"kra": "Communication", "per_weightage": 10}
+        ]
+    },
+    {
+        "doctype": "Appraisal",
+        "naming_series": "HR-APR-.YYYY.-",
+        "employee": "Chen Wei",
+        "company": "__DEMO_COMPANY__",
+        "appraisal_cycle": "Q1 2026 Review",
+        "start_date": "2026-01-01",
+        "end_date": "2026-03-31",
+        "appraisal_template": "Standard Performance Review",
+        "appraisal_kra": [
+            {"kra": "Project Delivery", "per_weightage": 30},
+            {"kra": "Code Quality", "per_weightage": 25},
+            {"kra": "Team Collaboration", "per_weightage": 20},
+            {"kra": "Innovation", "per_weightage": 15},
+            {"kra": "Communication", "per_weightage": 10}
+        ]
+    },
+    {
+        "doctype": "Appraisal",
+        "naming_series": "HR-APR-.YYYY.-",
+        "employee": "Fatima Hassan",
+        "company": "__DEMO_COMPANY__",
+        "appraisal_cycle": "Q1 2026 Review",
+        "start_date": "2026-01-01",
+        "end_date": "2026-03-31",
+        "appraisal_template": "Management Review",
+        "appraisal_kra": [
+            {"kra": "Team Management", "per_weightage": 30},
+            {"kra": "Project Delivery", "per_weightage": 25},
+            {"kra": "Process Improvement", "per_weightage": 20},
+            {"kra": "Innovation", "per_weightage": 15},
+            {"kra": "Compliance", "per_weightage": 10}
+        ]
+    },
+    {
+        "doctype": "Appraisal",
+        "naming_series": "HR-APR-.YYYY.-",
+        "employee": "Marcus Thompson",
+        "company": "__DEMO_COMPANY__",
+        "appraisal_cycle": "Q1 2026 Review",
+        "start_date": "2026-01-01",
+        "end_date": "2026-03-31",
+        "appraisal_template": "Sales Team Review",
+        "appraisal_kra": [
+            {"kra": "Sales Targets", "per_weightage": 40},
+            {"kra": "Client Satisfaction", "per_weightage": 25},
+            {"kra": "Team Collaboration", "per_weightage": 15},
+            {"kra": "Communication", "per_weightage": 10},
+            {"kra": "Process Improvement", "per_weightage": 10}
+        ]
+    },
+    {
+        "doctype": "Appraisal",
+        "naming_series": "HR-APR-.YYYY.-",
+        "employee": "David Miller",
+        "company": "__DEMO_COMPANY__",
+        "appraisal_cycle": "Q1 2026 Review",
+        "start_date": "2026-01-01",
+        "end_date": "2026-03-31",
+        "appraisal_template": "Standard Performance Review",
+        "appraisal_kra": [
+            {"kra": "Project Delivery", "per_weightage": 30},
+            {"kra": "Code Quality", "per_weightage": 25},
+            {"kra": "Team Collaboration", "per_weightage": 20},
+            {"kra": "Innovation", "per_weightage": 15},
+            {"kra": "Communication", "per_weightage": 10}
+        ]
+    }
+]

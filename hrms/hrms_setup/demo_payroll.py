@@ -83,7 +83,7 @@ def setup_payroll_runs():
 					for ss_name in salary_slips:
 						frappe.get_doc("Salary Slip", ss_name).submit()
 
-				payroll_entry.submit()
+				# payroll_entry.submit()
 				created += 1
 
 			except Exception as e:

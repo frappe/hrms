@@ -109,6 +109,18 @@ def setup_expense_claims():
 		processed_record = record.copy()
 		processed_record["employee"] = employee_id
 		processed_record["company"] = company
+		processed_record["exchange_rate"] = 1
+		processed_record["currency"] = "USD"
+
+		# Get payable account
+		payable_accounts = frappe.get_all(
+			"Account",
+			filters={"company": company, "account_type": "Payable", "is_group": 0},
+			pluck="name",
+			limit=1,
+		)
+		if payable_accounts:
+			processed_record["payable_account"] = payable_accounts[0]
 
 		# Set expense approver from reports_to
 		manager = reports_to_map.get(employee_id)

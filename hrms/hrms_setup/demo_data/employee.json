@@ -46,8 +46,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Computer Science"
             }
-        ],
-        "leave_approver": ""
+        ]
     },
     {
         "doctype": "Employee",
@@ -96,8 +95,7 @@
                 "class_per": "GPA 3.8",
                 "maj_opt_subj": "Business"
             }
-        ],
-        "leave_approver": ""
+        ]
     },
     {
         "doctype": "Employee",
@@ -146,8 +144,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Human Resources"
             }
-        ],
-        "leave_approver": ""
+        ]
     },
     {
         "doctype": "Employee",
@@ -196,8 +193,7 @@
                 "class_per": "GPA 3.9",
                 "maj_opt_subj": "Finance"
             }
-        ],
-        "leave_approver": ""
+        ]
     },
     {
         "doctype": "Employee",
@@ -246,8 +242,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Business Administration"
             }
-        ],
-        "leave_approver": ""
+        ]
     },
     {
         "doctype": "Employee",
@@ -296,8 +291,7 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "International Business"
             }
-        ],
-        "leave_approver": ""
+        ]
     },
     {
         "doctype": "Employee",
@@ -346,8 +340,7 @@
                 "maj_opt_subj": "Computer Science"
             }
         ],
-        "create_user_automatically": 1,
-        "leave_approver": "Vikram Sharma"
+        "create_user_automatically": 1
     },
     {
         "doctype": "Employee",
@@ -396,8 +389,7 @@
                 "maj_opt_subj": "Marketing"
             }
         ],
-        "create_user_automatically": 1,
-        "leave_approver": "Sarah Johnson"
+        "create_user_automatically": 1
     },
     {
         "doctype": "Employee",
@@ -446,8 +438,7 @@
                 "maj_opt_subj": "Computer Science Engineering"
             }
         ],
-        "create_user_automatically": 1,
-        "leave_approver": "Chen Wei"
+        "create_user_automatically": 1
     },
     {
         "doctype": "Employee",
@@ -497,8 +488,7 @@
                 "maj_opt_subj": "Computer Science"
             }
         ],
-        "create_user_automatically": 1,
-        "leave_approver": "Chen Wei"
+        "create_user_automatically": 1
     },
     {
         "doctype": "Employee",
@@ -547,8 +537,7 @@
                 "maj_opt_subj": "Computer Engineering"
             }
         ],
-        "create_user_automatically": 1,
-        "leave_approver": "Chen Wei"
+        "create_user_automatically": 1
     },
     {
         "doctype": "Employee",
@@ -597,8 +586,7 @@
                 "maj_opt_subj": "Computer Science Engineering"
             }
         ],
-        "create_user_automatically": 1,
-        "leave_approver": "Ananya Patel"
+        "create_user_automatically": 1
     },
     {
         "doctype": "Employee",
@@ -647,8 +635,7 @@
                 "maj_opt_subj": "Economics"
             }
         ],
-        "create_user_automatically": 1,
-        "leave_approver": "James Williams"
+        "create_user_automatically": 1
     },
     {
         "doctype": "Employee",
@@ -697,8 +684,7 @@
                 "maj_opt_subj": "Human Resources"
             }
         ],
-        "create_user_automatically": 1,
-        "leave_approver": "Ahmed Al-Rashid"
+        "create_user_automatically": 1
     },
     {
         "doctype": "Employee",
@@ -747,8 +733,7 @@
                 "maj_opt_subj": "Business Administration"
             }
         ],
-        "create_user_automatically": 1,
-        "leave_approver": "Priya Nair"
+        "create_user_automatically": 1
     },
     {
         "doctype": "Employee",
@@ -797,8 +782,7 @@
                 "maj_opt_subj": "Business Administration"
             }
         ],
-        "create_user_automatically": 1,
-        "leave_approver": "Sarah Johnson"
+        "create_user_automatically": 1
     },
     {
         "doctype": "Employee",
@@ -847,8 +831,7 @@
                 "maj_opt_subj": "Business Administration"
             }
         ],
-        "create_user_automatically": 1,
-        "leave_approver": "Maria Garcia"
+        "create_user_automatically": 1
     },
     {
         "doctype": "Employee",
@@ -897,8 +880,7 @@
                 "maj_opt_subj": "Finance"
             }
         ],
-        "create_user_automatically": 1,
-        "leave_approver": "David Miller"
+        "create_user_automatically": 1
     },
     {
         "doctype": "Employee",
@@ -947,8 +929,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Information Science"
             }
-        ],
-        "leave_approver": "Chen Wei"
+        ]
     },
     {
         "doctype": "Employee",
@@ -997,8 +978,7 @@
                 "maj_opt_subj": "Operations Management"
             }
         ],
-        "create_user_automatically": 1,
-        "leave_approver": "Priya Nair"
+        "create_user_automatically": 1
     },
     {
         "doctype": "Employee",
@@ -1047,8 +1027,7 @@
                 "maj_opt_subj": "Computer Science Engineering"
             }
         ],
-        "create_user_automatically": 1,
-        "leave_approver": "Chen Wei"
+        "create_user_automatically": 1
     },
     {
         "doctype": "Employee",
@@ -1097,8 +1076,7 @@
                 "maj_opt_subj": "Commerce"
             }
         ],
-        "create_user_automatically": 1,
-        "leave_approver": "Sarah Johnson"
+        "create_user_automatically": 1
     },
     {
         "doctype": "Employee",
@@ -1147,8 +1125,7 @@
                 "maj_opt_subj": "Computer Science"
             }
         ],
-        "create_user_automatically": 1,
-        "leave_approver": "Chen Wei"
+        "create_user_automatically": 1
     },
     {
         "doctype": "Employee",
@@ -1197,8 +1174,7 @@
                 "maj_opt_subj": "Finance"
             }
         ],
-        "create_user_automatically": 1,
-        "leave_approver": "James Williams"
+        "create_user_automatically": 1
     },
     {
         "doctype": "Employee",
@@ -1247,8 +1223,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Computer Science Engineering"
             }
-        ],
-        "leave_approver": "Chen Wei"
+        ]
     },
     {
         "doctype": "Employee",
@@ -1297,8 +1272,7 @@
                 "class_per": "GPA 3.9",
                 "maj_opt_subj": "Computer Science Engineering"
             }
-        ],
-        "leave_approver": "Chen Wei"
+        ]
     },
     {
         "doctype": "Employee",
@@ -1347,8 +1321,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Business Administration"
             }
-        ],
-        "leave_approver": "Sarah Johnson"
+        ]
     },
     {
         "doctype": "Employee",
@@ -1397,8 +1370,7 @@
                 "class_per": "110/110",
                 "maj_opt_subj": "Human Resources"
             }
-        ],
-        "leave_approver": "Ahmed Al-Rashid"
+        ]
     },
     {
         "doctype": "Employee",
@@ -1447,8 +1419,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Finance & Accounts"
             }
-        ],
-        "leave_approver": "James Williams"
+        ]
     },
     {
         "doctype": "Employee",
@@ -1496,8 +1467,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Software Engineering"
             }
-        ],
-        "leave_approver": "Chen Wei"
+        ]
     },
     {
         "doctype": "Employee",
@@ -1545,8 +1515,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Computer Science"
             }
-        ],
-        "leave_approver": "Chen Wei"
+        ]
     },
     {
         "doctype": "Employee",
@@ -1594,8 +1563,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Human Resources"
             }
-        ],
-        "leave_approver": "Ahmed Al-Rashid"
+        ]
     },
     {
         "doctype": "Employee",
@@ -1643,8 +1611,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Sales & Marketing"
             }
-        ],
-        "leave_approver": "Sarah Johnson"
+        ]
     },
     {
         "doctype": "Employee",
@@ -1692,8 +1659,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Operations Management"
             }
-        ],
-        "leave_approver": "Priya Nair"
+        ]
     },
     {
         "doctype": "Employee",
@@ -1741,8 +1707,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Finance"
             }
-        ],
-        "leave_approver": ""
+        ]
     },
     {
         "doctype": "Employee",
@@ -1790,8 +1755,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Business Development"
             }
-        ],
-        "leave_approver": "Maria Garcia"
+        ]
     },
     {
         "doctype": "Employee",
@@ -1839,8 +1803,7 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Artificial Intelligence"
             }
-        ],
-        "leave_approver": "Vikram Sharma"
+        ]
     },
     {
         "doctype": "Employee",
@@ -1888,8 +1851,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Human Resources"
             }
-        ],
-        "leave_approver": ""
+        ]
     },
     {
         "doctype": "Employee",
@@ -1937,8 +1899,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Computer Engineering"
             }
-        ],
-        "leave_approver": "Chen Wei"
+        ]
     },
     {
         "doctype": "Employee",
@@ -1986,8 +1947,7 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Marketing"
             }
-        ],
-        "leave_approver": ""
+        ]
     },
     {
         "doctype": "Employee",
@@ -2035,8 +1995,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Computer Science"
             }
-        ],
-        "leave_approver": "Chen Wei"
+        ]
     },
     {
         "doctype": "Employee",
@@ -2084,8 +2043,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Finance"
             }
-        ],
-        "leave_approver": "James Williams"
+        ]
     },
     {
         "doctype": "Employee",
@@ -2133,8 +2091,7 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Supply Chain Management"
             }
-        ],
-        "leave_approver": ""
+        ]
     },
     {
         "doctype": "Employee",
@@ -2182,8 +2139,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Human Resources"
             }
-        ],
-        "leave_approver": "Ahmed Al-Rashid"
+        ]
     },
     {
         "doctype": "Employee",
@@ -2231,8 +2187,7 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Sales"
             }
-        ],
-        "leave_approver": "Sarah Johnson"
+        ]
     },
     {
         "doctype": "Employee",
@@ -2280,8 +2235,7 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Strategy"
             }
-        ],
-        "leave_approver": ""
+        ]
     },
     {
         "doctype": "Employee",
@@ -2329,8 +2283,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Software Engineering"
             }
-        ],
-        "leave_approver": "Chen Wei"
+        ]
     },
     {
         "doctype": "Employee",
@@ -2378,8 +2331,7 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Finance"
             }
-        ],
-        "leave_approver": ""
+        ]
     },
     {
         "doctype": "Employee",
@@ -2427,8 +2379,7 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Cloud Computing"
             }
-        ],
-        "leave_approver": "Vikram Sharma"
+        ]
     },
     {
         "doctype": "Employee",
@@ -2476,8 +2427,7 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Human Resources"
             }
-        ],
-        "leave_approver": ""
+        ]
     },
     {
         "doctype": "Employee",
@@ -2525,8 +2475,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Computer Science"
             }
-        ],
-        "leave_approver": "Chen Wei"
+        ]
     },
     {
         "doctype": "Employee",
@@ -2574,8 +2523,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Sales & Marketing"
             }
-        ],
-        "leave_approver": "Sarah Johnson"
+        ]
     },
     {
         "doctype": "Employee",
@@ -2623,8 +2571,7 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Finance"
             }
-        ],
-        "leave_approver": "James Williams"
+        ]
     },
     {
         "doctype": "Employee",
@@ -2672,8 +2619,7 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Operations"
             }
-        ],
-        "leave_approver": "Priya Nair"
+        ]
     },
     {
         "doctype": "Employee",
@@ -2721,8 +2667,7 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Software Engineering"
             }
-        ],
-        "leave_approver": "Chen Wei"
+        ]
     },
     {
         "doctype": "Employee",
@@ -2770,8 +2715,7 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Business Development"
             }
-        ],
-        "leave_approver": "Maria Garcia"
+        ]
     },
     {
         "doctype": "Employee",
@@ -2819,8 +2763,7 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Machine Learning"
             }
-        ],
-        "leave_approver": "Vikram Sharma"
+        ]
     },
     {
         "doctype": "Employee",
@@ -2868,8 +2811,7 @@
                 "class_per": "Distinction",
                 "maj_opt_subj": "Financial Engineering"
             }
-        ],
-        "leave_approver": ""
+        ]
     },
     {
         "doctype": "Employee",
@@ -2917,7 +2859,6 @@
                 "class_per": "First Class",
                 "maj_opt_subj": "Computer Engineering"
             }
-        ],
-        "leave_approver": "Chen Wei"
+        ]
     }
 ]

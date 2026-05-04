@@ -1,0 +1,15 @@
+[
+    {
+        "doctype": "Job Offer",
+        "name": "HR-OFF-2026-00001",
+        "job_applicant": "Priya Patel",
+        "company": "__DEMO_COMPANY__",
+        "offer_date": "2026-03-25",
+        "status": "Accepted",
+        "currency": "USD",
+        "base": 95000,
+        "probation": 3,
+        "notice_period": 30,
+        "terms": "This offer is subject to successful verification of all provided documents and references."
+    }
+]

@@ -5,11 +5,11 @@
         "company": "__DEMO_COMPANY__",
         "expense_approver": "Chen Wei",
         "posting_date": "2026-03-28",
-        "approval_status": "Pending",
+        "approval_status": "Draft",
         "total_claimed_amount": 9544,
         "total_sanctioned_amount": 0,
         "is_paid": 0,
-        "status": "Pending",
+        "status": "Draft",
         "expenses": [
             {
                 "doctype": "Expense Claim Detail",
@@ -49,11 +49,11 @@
         "company": "__DEMO_COMPANY__",
         "expense_approver": "",
         "posting_date": "2026-03-29",
-        "approval_status": "Pending",
+        "approval_status": "Draft",
         "total_claimed_amount": 8243,
         "total_sanctioned_amount": 0,
         "is_paid": 0,
-        "status": "Pending",
+        "status": "Draft",
         "expenses": [
             {
                 "doctype": "Expense Claim Detail",

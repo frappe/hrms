@@ -1,0 +1,52 @@
+[
+    {
+        "doctype": "KRA",
+        "title": "Project Delivery",
+        "description": "Deliver projects on time and within scope"
+    },
+    {
+        "doctype": "KRA",
+        "title": "Code Quality",
+        "description": "Maintain high code quality standards"
+    },
+    {
+        "doctype": "KRA",
+        "title": "Team Collaboration",
+        "description": "Work effectively with team members"
+    },
+    {
+        "doctype": "KRA",
+        "title": "Innovation",
+        "description": "Propose and implement innovative solutions"
+    },
+    {
+        "doctype": "KRA",
+        "title": "Communication",
+        "description": "Effective communication with stakeholders"
+    },
+    {
+        "doctype": "KRA",
+        "title": "Client Satisfaction",
+        "description": "Ensure high client satisfaction levels"
+    },
+    {
+        "doctype": "KRA",
+        "title": "Sales Targets",
+        "description": "Achieve quarterly sales targets"
+    },
+    {
+        "doctype": "KRA",
+        "title": "Team Management",
+        "description": "Lead and develop team members"
+    },
+    {
+        "doctype": "KRA",
+        "title": "Process Improvement",
+        "description": "Identify and implement process improvements"
+    },
+    {
+        "doctype": "KRA",
+        "title": "Compliance",
+        "description": "Ensure compliance with company policies"
+    }
+]
