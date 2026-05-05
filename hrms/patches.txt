@@ -1,6 +1,7 @@
 [pre_model_sync]
 hrms.patches.v15_0.check_version_compatibility_with_frappe #2023-06-27
 hrms.patches.v16_0.merge_interview_round_with_interview_type
+hrms.patches.v16_0.make_people_workspace_sidebar_standard
 
 [post_model_sync]
 hrms.patches.post_install.set_payroll_entry_status

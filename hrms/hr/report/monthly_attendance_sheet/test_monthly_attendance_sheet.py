@@ -6,7 +6,10 @@ from frappe.utils import add_days, get_year_ending, get_year_start, getdate
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
-from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import assign_holiday_list
+from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+	assign_holiday_list,
+	create_holiday_list_assignment,
+)
 from hrms.hr.doctype.leave_allocation.leave_allocation import OverlapError
 from hrms.hr.doctype.leave_application.test_leave_application import make_allocation_record
 from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
@@ -625,6 +628,105 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 		self.assertNotIn(emp_wrong_branch, employees_in_report)
 		self.assertNotIn(emp_wrong_dept, employees_in_report)
 
+	def test_multiple_holiday_list_assignments_in_detailed_view(self):
+		"""
+		Employee switches holiday lists mid-month.
+		Holidays from each list must appear only within their effective date range.
+
+		HL-1 active days 1-15: holiday on day 5 AND day 20 (day 20 should NOT appear)
+		HL-2 active days 16-end: holiday on day 10 AND day 25 (day 10 should NOT appear)
+		"""
+		previous_month_first = get_first_day_for_prev_month()
+		year_start = getdate(get_year_start(previous_month_first))
+		year_end = getdate(get_year_ending(previous_month_first))
+
+		hl1_day = previous_month_first.replace(day=5)  # in HL-1's range
+		hl1_bleed = previous_month_first.replace(day=20)  # HL-1 holiday outside its range
+		hl2_bleed = previous_month_first.replace(day=10)  # HL-2 holiday before it becomes active
+		hl2_day = previous_month_first.replace(day=25)  # in HL-2's range
+		hl2_start = previous_month_first.replace(day=16)
+
+		hl1 = make_holiday_list(
+			"Test Multi HL-1", from_date=year_start, to_date=year_end, add_weekly_offs=False
+		)
+		hl2 = make_holiday_list(
+			"Test Multi HL-2", from_date=year_start, to_date=year_end, add_weekly_offs=False
+		)
+
+		add_holiday_to_list(hl1, hl1_day)
+		add_holiday_to_list(hl1, hl1_bleed)  # outside effective range — must not show
+		add_holiday_to_list(hl2, hl2_bleed)  # before HL-2 becomes active — must not show
+		add_holiday_to_list(hl2, hl2_day)
+
+		frappe.db.delete("Holiday List Assignment", {"assigned_to": self.employee})
+		create_holiday_list_assignment("Employee", self.employee, hl1, from_date=previous_month_first)
+		create_holiday_list_assignment("Employee", self.employee, hl2, from_date=hl2_start)
+
+		mark_attendance(self.employee, previous_month_first, "Present")
+
+		filters = frappe._dict(
+			{
+				"month": previous_month_first.month,
+				"year": previous_month_first.year,
+				"company": self.company,
+				"filter_based_on": "Month",
+			}
+		)
+		report = execute(filters=filters)
+		row = report[1][0]
+
+		# holiday in HL-1's active window → must appear
+		self.assertEqual(row[date_key(hl1_day)], "H")
+		# holiday in HL-2's active window → must appear
+		self.assertEqual(row[date_key(hl2_day)], "H")
+		# HL-1 holiday after HL-2 takes over → must NOT appear
+		self.assertNotEqual(row[date_key(hl1_bleed)], "H")
+		# HL-2 holiday before HL-2 becomes active → must NOT appear
+		self.assertNotEqual(row[date_key(hl2_bleed)], "H")
+
+	def test_multiple_holiday_list_assignments_in_summarized_view(self):
+		"""
+		Total holiday count must combine holidays from all active holiday list assignments.
+		"""
+		previous_month_first = get_first_day_for_prev_month()
+		year_start = getdate(get_year_start(previous_month_first))
+		year_end = getdate(get_year_ending(previous_month_first))
+
+		hl1_day = previous_month_first.replace(day=5)
+		hl2_day = previous_month_first.replace(day=25)
+		hl2_start = previous_month_first.replace(day=16)
+
+		hl1 = make_holiday_list(
+			"Test Multi HL-1", from_date=year_start, to_date=year_end, add_weekly_offs=False
+		)
+		hl2 = make_holiday_list(
+			"Test Multi HL-2", from_date=year_start, to_date=year_end, add_weekly_offs=False
+		)
+
+		add_holiday_to_list(hl1, hl1_day)
+		add_holiday_to_list(hl2, hl2_day)
+
+		frappe.db.delete("Holiday List Assignment", {"assigned_to": self.employee})
+		create_holiday_list_assignment("Employee", self.employee, hl1, from_date=previous_month_first)
+		create_holiday_list_assignment("Employee", self.employee, hl2, from_date=hl2_start)
+
+		mark_attendance(self.employee, previous_month_first.replace(day=3), "Present")
+
+		filters = frappe._dict(
+			{
+				"month": previous_month_first.month,
+				"year": previous_month_first.year,
+				"company": self.company,
+				"filter_based_on": "Month",
+				"summarized_view": 1,
+			}
+		)
+		report = execute(filters=filters)
+		row = report[1][0]
+
+		# one holiday from each list → total must be 2
+		self.assertEqual(row["total_holidays"], 2)
+
 	def test_detailed_view_with_date_range_and_group_by_filter(self):
 		today = getdate()
 		mark_attendance(self.employee, today, "Absent", "Day Shift")
@@ -701,3 +803,9 @@ def create_branch(branch_name):
 	if not frappe.db.exists("Branch", branch_name):
 		frappe.get_doc({"doctype": "Branch", "branch": branch_name}).insert(ignore_permissions=True)
 	return branch_name
+
+
+def add_holiday_to_list(holiday_list_name, holiday_date, description="Test Holiday"):
+	hl = frappe.get_doc("Holiday List", holiday_list_name)
+	hl.append("holidays", {"holiday_date": holiday_date, "description": description, "weekly_off": 0})
+	hl.save()

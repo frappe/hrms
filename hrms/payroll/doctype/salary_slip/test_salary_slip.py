@@ -2517,6 +2517,8 @@ def make_leave_application(
 	company=None,
 	half_day=False,
 	half_day_date=None,
+	status=None,
+	leave_approver=None,
 	submit=True,
 ):
 	create_user("test@example.com")
@@ -2530,8 +2532,8 @@ def make_leave_application(
 		half_day=half_day,
 		half_day_date=half_day_date,
 		company=company or "_Test Company" or "_Test Company",
-		status="Approved",
-		leave_approver="test@example.com",
+		status=status or "Approved",
+		leave_approver=leave_approver or "test@example.com",
 	).insert()
 
 	if submit:

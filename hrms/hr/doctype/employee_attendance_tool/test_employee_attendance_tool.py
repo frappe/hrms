@@ -4,6 +4,7 @@
 import frappe
 from frappe.utils import add_days, getdate
 
+from erpnext.setup.doctype.employee.employee import is_holiday
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
@@ -78,13 +79,16 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 		# only half day attendance created from leave type should be fetched to update in the tool
 		employee = frappe.get_doc("Employee", self.employee1)
 		leave_type = create_leave_type(leave_type="_Test Employee Attendance Tool", include_holidays=0)
+		date = getdate()
+		while is_holiday(employee=employee.name, date=date):
+			date = add_days(date, -1)
 		frappe.get_doc(
 			{
 				"doctype": "Leave Allocation",
 				"employee": employee.name,
 				"employee_name": employee.employee_name,
 				"leave_type": leave_type.name,
-				"from_date": add_days(getdate(), -2),
+				"from_date": add_days(date, -2),
 				"new_leaves_allocated": 15,
 				"carry_forward": 0,
 				"to_date": add_days(getdate(), 30),
@@ -92,16 +96,14 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 		).submit()
 		make_leave_application(
 			employee=employee.name,
-			from_date=getdate(),
-			to_date=getdate(),
+			from_date=date,
+			to_date=date,
 			leave_type=leave_type.name,
 			half_day=1,
-			half_day_date=getdate(),
+			half_day_date=date,
 		)
-		mark_attendance(
-			self.employee2, attendance_date=getdate(), status="Half Day", half_day_status="Absent"
-		)
-		total_employees = get_employees(getdate(), company="_Test Company")
+		mark_attendance(self.employee2, attendance_date=date, status="Half Day", half_day_status="Absent")
+		total_employees = get_employees(date, company="_Test Company")
 		half_marked_employees = total_employees.get("half_day_marked")
 		self.assertEqual(len(half_marked_employees), 1)
 		self.assertEqual(half_marked_employees[0].get("employee_name"), employee.employee_name)
@@ -114,8 +116,12 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 		employee2 = frappe.get_doc("Employee", self.employee2)
 		leave_type = create_leave_type(leave_type="_Test Employee Attendance Tool", include_holidays=0)
 		date = add_days(getdate(), -1)
-		create_leave_allocation(employee2, leave_type)
-		create_leave_allocation(employee4, leave_type)
+		while is_holiday(employee=employee2.name, date=date) or is_holiday(
+			employee=employee4.name, date=date
+		):
+			date = add_days(date, -1)
+		create_leave_allocation(employee2, leave_type, date)
+		create_leave_allocation(employee4, leave_type, date)
 		make_leave_application(
 			employee=employee2.name,
 			from_date=date,
@@ -229,14 +235,15 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 		self.assertNotIn(self.employee3.name, filtered)
 
 
-def create_leave_allocation(employee, leave_type):
+def create_leave_allocation(employee, leave_type, date=None):
+	from_date = add_days(date or getdate(), -2)
 	frappe.get_doc(
 		{
 			"doctype": "Leave Allocation",
 			"employee": employee.name,
 			"employee_name": employee.employee_name,
 			"leave_type": leave_type.name,
-			"from_date": add_days(getdate(), -2),
+			"from_date": from_date,
 			"new_leaves_allocated": 15,
 			"carry_forward": 0,
 			"to_date": add_days(getdate(), 30),

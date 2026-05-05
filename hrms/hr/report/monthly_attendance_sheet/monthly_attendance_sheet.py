@@ -13,10 +13,14 @@ import frappe
 from frappe import _
 from frappe.query_builder import Case
 from frappe.query_builder.functions import Count, Extract, Sum
-from frappe.utils import cint, cstr, formatdate, getdate
+from frappe.utils import add_days, cint, cstr, formatdate, getdate
 from frappe.utils.nestedset import get_descendants_of
 
 from hrms.utils import date_diff, get_date_range
+from hrms.utils.holiday_list import (
+	fill_employee_holiday_list_date_gaps_with_company_holiday_list,
+	get_assigned_holiday_lists_to_employee_and_company,
+)
 
 Filters = frappe._dict
 
@@ -235,7 +239,16 @@ def get_date_condition(docfield: Field, filters: Filters) -> Criterion:
 
 def get_data(filters: Filters, attendance_map: dict) -> list[dict]:
 	employee_details, group_by_param_values = get_employee_related_details(filters)
-	holiday_map = get_holiday_map(filters)
+
+	# flatten grouped structure so get_employee_holiday_map always gets {emp: details}
+	if filters.group_by:
+		ungrouped_employee_details = {}
+		for details in employee_details.values():
+			ungrouped_employee_details.update(details)
+	else:
+		ungrouped_employee_details = employee_details
+
+	employee_holiday_map = get_employee_holiday_map(ungrouped_employee_details, filters)
 	data = []
 
 	if filters.group_by:
@@ -245,14 +258,14 @@ def get_data(filters: Filters, attendance_map: dict) -> list[dict]:
 			if not value:
 				continue
 
-			records = get_rows(employee_details[value], filters, holiday_map, attendance_map)
+			records = get_rows(employee_details[value], filters, employee_holiday_map, attendance_map)
 
 			if records:
 				data.append({group_by_column: value})
 				data.extend(records)
 
 	else:
-		data = get_rows(employee_details, filters, holiday_map, attendance_map)
+		data = get_rows(employee_details, filters, employee_holiday_map, attendance_map)
 
 	return data
 
@@ -305,6 +318,7 @@ def get_attendance_map(filters: Filters) -> dict:
 
 def get_attendance_records(filters: Filters) -> list[dict]:
 	Attendance = frappe.qb.DocType("Attendance")
+	Employee = frappe.qb.DocType("Employee")
 	attendance_date_condition = get_date_condition(Attendance.attendance_date, filters)
 	status = (
 		frappe.qb.terms.Case()
@@ -335,6 +349,14 @@ def get_attendance_records(filters: Filters) -> list[dict]:
 
 	if filters.employee:
 		query = query.where(Attendance.employee == filters.employee)
+
+	if filters.department or filters.branch:
+		query = query.join(Employee).on(Attendance.employee == Employee.name)
+		if filters.department and filters.department != "All Departments":
+			query = query.where(Employee.department == filters.department)
+		if filters.branch:
+			query = query.where(Employee.branch == filters.branch)
+
 	query = query.orderby(Attendance.employee, Attendance.attendance_date)
 
 	return query.run(as_dict=1)
@@ -404,52 +426,87 @@ def get_employee_related_details(filters: Filters) -> tuple[dict, list]:
 	return emp_map, group_by_param_values
 
 
-def get_holiday_map(filters: Filters) -> dict[str, list[dict]]:
+def get_employee_holiday_map(employee_details: dict, filters: Filters) -> dict[str, list[dict]]:
 	"""
-	Returns a dict of holidays falling in the filter month and year
-	with list name as key and list of holidays as values like
-	{
-	        'Holiday List 1': [
-	                {'day_of_month': '0' , 'weekly_off': 1},
-	                {'day_of_month': '1', 'weekly_off': 0}
-	        ],
-	        'Holiday List 2': [
-	                {'day_of_month': '0' , 'weekly_off': 1},
-	                {'day_of_month': '1', 'weekly_off': 0}
-	        ]
-	}
+	Builds {employee: [holidays]} for all employees in two queries.
+
+	Query 1 — bulk HLA fetch for all employees + their companies.
+	Query 2 — holidays for only the holiday lists employees are actually assigned to.
+
+	Per-employee lookup after this call is an O(1) dict access.
 	"""
-	# add default holiday list too
-	holiday_lists = frappe.db.get_all("Holiday List", pluck="name")
-	default_holiday_list = frappe.get_cached_value("Company", filters.company, "default_holiday_list")
-	holiday_lists.append(default_holiday_list)
+	if not employee_details:
+		return {}
 
-	holiday_map = frappe._dict()
-	Holiday = frappe.qb.DocType("Holiday")
+	start_date, end_date = get_date_range_from_filters(filters)
 
-	holiday_condition = get_date_condition(Holiday.holiday_date, filters)
+	employees = list(employee_details.keys())
+	companies = list({d.company for d in employee_details.values() if d.get("company")})
 
-	for d in holiday_lists:
-		if not d:
-			continue
+	assigned_holiday_lists = get_assigned_holiday_lists_to_employee_and_company(
+		employees + companies, start_date, end_date
+	)
 
-		holidays = (
-			frappe.qb.from_(Holiday)
-			.select(Holiday.holiday_date, Holiday.weekly_off)
-			.where((Holiday.parent == d) & (holiday_condition))
-		).run(as_dict=True)
-		holiday_map.setdefault(d, holidays)
-
-	return holiday_map
-
-
-def get_rows(employee_details: dict, filters: Filters, holiday_map: dict, attendance_map: dict) -> list[dict]:
-	records = []
-	default_holiday_list = frappe.get_cached_value("Company", filters.company, "default_holiday_list")
-
+	# gaps in employee-level assignments are filled with company-level assignments,
+	employee_hl_ranges = {}
 	for employee, details in employee_details.items():
-		emp_holiday_list = details.holiday_list or default_holiday_list
-		holidays = holiday_map.get(emp_holiday_list)
+		employee_ranges = assigned_holiday_lists.get(employee, [])
+		company_ranges = assigned_holiday_lists.get(details.get("company"), [])
+		ranges = fill_employee_holiday_list_date_gaps_with_company_holiday_list(
+			employee_ranges, company_ranges, start_date, end_date
+		)
+		if ranges:
+			employee_hl_ranges[employee] = ranges
+
+	if not employee_hl_ranges:
+		return {}
+
+	# collect only the HL names employees are actually assigned to
+	used_hl_names = {r["holiday_list"] for ranges in employee_hl_ranges.values() for r in ranges}
+
+	Holiday = frappe.qb.DocType("Holiday")
+	holiday_rows = (
+		frappe.qb.from_(Holiday)
+		.select(Holiday.parent, Holiday.holiday_date, Holiday.weekly_off)
+		.where(Holiday.parent.isin(list(used_hl_names)))
+		.where(Holiday.holiday_date.between(start_date, end_date))
+	).run(as_dict=True)
+
+	hl_holidays = {}
+	for h in holiday_rows:
+		hl_holidays.setdefault(h.parent, []).append(h)
+
+	# filter holidays to each employee's effective ranges
+	employee_holiday_map = {}
+	for employee, ranges in employee_hl_ranges.items():
+		holidays = [
+			h
+			for r in ranges
+			for h in hl_holidays.get(r["holiday_list"], [])
+			if r["from_date"] <= getdate(h.holiday_date) <= r["to_date"]
+		]
+		if holidays:
+			employee_holiday_map[employee] = holidays
+
+	return employee_holiday_map
+
+
+def get_date_range_from_filters(filters: Filters) -> tuple:
+	"""Returns (start_date, end_date) as date objects from filters."""
+	if filters.filter_based_on == "Month":
+		total_days = get_total_days_in_month(filters)
+		start_date = getdate(f"{cstr(filters.year)}-{cstr(filters.month)}-01")
+		end_date = getdate(f"{cstr(filters.year)}-{cstr(filters.month)}-{total_days}")
+		return start_date, end_date
+	return getdate(filters.start_date), getdate(filters.end_date)
+
+
+def get_rows(
+	employee_details: dict, filters: Filters, employee_holiday_map: dict, attendance_map: dict
+) -> list[dict]:
+	records = []
+	for employee, details in employee_details.items():
+		holidays = employee_holiday_map.get(employee, [])
 
 		if filters.summarized_view:
 			attendance = get_attendance_status_for_summarized_view(

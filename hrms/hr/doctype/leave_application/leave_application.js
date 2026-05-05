@@ -168,6 +168,7 @@ frappe.ui.form.on("Leave Application", {
 	},
 
 	half_day_date(frm) {
+		frm.trigger("validate_half_day_date");
 		frm.trigger("calculate_total_days");
 	},
 
@@ -229,7 +230,20 @@ frappe.ui.form.on("Leave Application", {
 			});
 		}
 	},
+	validate_half_day_date: function (frm) {
+		if (!frm.doc.half_day_date) {
+			return;
+		}
 
+		return frm
+			.call("validate_half_day_date")
+			.then(() => {
+				frm.trigger("calculate_total_days");
+			})
+			.catch(() => {
+				frm.set_value("half_day_date", "");
+			});
+	},
 	calculate_total_days: function (frm) {
 		if (frm.doc.from_date && frm.doc.to_date && frm.doc.employee && frm.doc.leave_type) {
 			// server call is done to include holidays in leave days calculations

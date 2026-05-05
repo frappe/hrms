@@ -75,10 +75,7 @@
 							'bg-gray-50':
 								dropCell.employee === employee.name &&
 								dropCell.date === day.date &&
-								!(
-									isHolidayOrLeave(employee.name, day.date) ||
-									hasSameShift(employee.name, day.date)
-								),
+								!hasSameShift(employee.name, day.date),
 						}"
 						@mouseenter="
 							hoveredCell.employee = employee.name;
@@ -95,44 +92,41 @@
 						"
 						@drop="
 							() => {
-								if (
-									!(
-										isHolidayOrLeave(employee.name, day.date) ||
-										hasSameShift(employee.name, day.date)
-									)
-								) {
+								if (!hasSameShift(employee.name, day.date)) {
 									loading = true;
 									swapShift.submit();
 								}
 							}
 						"
 					>
-						<!-- Holiday -->
-						<div
-							v-if="events.data?.[employee.name]?.[day.date]?.holiday"
-							class="blocked-cell"
-						>
+						<div class="flex flex-col space-y-1.5 translate-x-0 translate-y-0">
+							<!-- Holiday -->
 							<div
-								v-html="
-									events.data[employee.name][day.date].weekly_off
-										? '<strong>WO</strong>'
-										: events.data[employee.name][day.date].description
-								"
-							></div>
-						</div>
+								v-if="events.data?.[employee.name]?.[day.date]?.holiday"
+								class="blocked-cell"
+							>
+								<div
+									v-html="
+										events.data[employee.name][day.date].holiday.weekly_off
+											? '<strong>WO</strong>'
+											: events.data[employee.name][day.date].holiday
+													.description
+									"
+								></div>
+							</div>
 
-						<!-- Leave -->
-						<div
-							v-else-if="events.data?.[employee.name]?.[day.date]?.leave"
-							class="blocked-cell"
-						>
-							{{ events.data[employee.name][day.date].leave_type }}
-						</div>
-
-						<!-- Shifts -->
-						<div v-else class="flex flex-col space-y-1.5 translate-x-0 translate-y-0">
+							<!-- Leave -->
 							<div
-								v-for="shift in events.data?.[employee.name]?.[day.date]"
+								v-else-if="events.data?.[employee.name]?.[day.date]?.leave"
+								class="blocked-cell"
+							>
+								{{ events.data[employee.name][day.date].leave.leave_type }}
+							</div>
+
+							<!-- Shifts -->
+							<div
+								v-for="shift in events.data?.[employee.name]?.[day.date]?.shift ||
+								[]"
 								@mouseenter="
 									hoveredCell.shift = shift.name;
 									hoveredCell.shift_type = shift.shift_type;
@@ -319,7 +313,12 @@ interface ShiftAssignment extends Shift {
 }
 
 type Events = Record<string, (HolidayWithDate | LeaveApplication | ShiftAssignment)[]>;
-type MappedEvents = Record<string, Record<string, Holiday | Leave | Shift[]>>;
+interface DateEvents {
+	holiday?: Holiday;
+	leave?: Leave;
+	shift?: Shift[];
+}
+type MappedEvents = Record<string, Record<string, DateEvents>>;
 
 const props = defineProps<{
 	firstOfMonth: Dayjs;
@@ -376,12 +375,9 @@ watch(loading, (val) => {
 	if (!val) dropCell.value = { employee: "", date: "", shift: "" };
 });
 
-const isHolidayOrLeave = (employee: string, day: string) =>
-	events.data?.[employee]?.[day]?.holiday || events.data?.[employee]?.[day]?.leave;
-
 const hasSameShift = (employee: string, day: string) =>
-	Array.isArray(events.data?.[employee]?.[day]) &&
-	events.data?.[employee]?.[day].some(
+	Array.isArray(events.data?.[employee]?.[day]?.shift) &&
+	events.data?.[employee]?.[day].shift.some(
 		(shift: Shift) =>
 			shift.shift_type === hoveredCell.value.shift_type &&
 			shift.shift_location === hoveredCell.value.shift_location &&
@@ -444,21 +440,22 @@ const mapEventsToDates = (data: Events, mappedEvents: MappedEvents, employee: st
 		const date = props.firstOfMonth.date(d);
 		const key = date.format("YYYY-MM-DD");
 
+		mappedEvents[employee][key] = {};
 		for (const event of Object.values(data[employee])) {
-			let result: Holiday | Leave | undefined;
+			let result;
 			if ("holiday" in event) {
 				result = handleHoliday(event, date);
 				if (result) {
-					mappedEvents[employee][key] = result;
-					break;
+					mappedEvents[employee][key].holiday = result;
 				}
 			} else if ("leave" in event) {
 				result = handleLeave(event, date);
 				if (result) {
-					mappedEvents[employee][key] = result;
-					break;
+					mappedEvents[employee][key].leave = result;
 				}
-			} else handleShifts(event, date, mappedEvents, employee, key);
+			} else {
+				handleShifts(event, date, mappedEvents, employee, key);
+			}
 		}
 		sortShiftsByStartTime(mappedEvents, employee, key);
 	}
@@ -493,8 +490,9 @@ const handleShifts = (
 		dayjs(event.start_date).isSameOrBefore(date) &&
 		(dayjs(event.end_date).isSameOrAfter(date) || !event.end_date)
 	) {
-		if (!Array.isArray(mappedEvents[employee][key])) mappedEvents[employee][key] = [];
-		mappedEvents[employee][key].push({
+		if (!Array.isArray(mappedEvents[employee][key].shift))
+			mappedEvents[employee][key].shift = [];
+		mappedEvents[employee][key].shift.push({
 			name: event.name,
 			shift_type: event.shift_type,
 			shift_location: event.shift_location,
@@ -507,10 +505,9 @@ const handleShifts = (
 };
 
 const sortShiftsByStartTime = (mappedEvents: MappedEvents, employee: string, key: string) => {
-	if (Array.isArray(mappedEvents[employee][key]))
-		mappedEvents[employee][key].sort((a: Shift, b: Shift) =>
-			a.start_time.localeCompare(b.start_time),
-		);
+	const entry = mappedEvents[employee][key];
+	if (entry && typeof entry === "object" && "shift" in entry && Array.isArray(entry.shift))
+		entry.shift.sort((a: Shift, b: Shift) => a.start_time.localeCompare(b.start_time));
 };
 </script>
 
