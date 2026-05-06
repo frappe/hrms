@@ -95,6 +95,14 @@ const latitude = ref(0)
 const longitude = ref(0)
 const locationStatus = ref("")
 
+const refreshCheckinState = async () => {
+	try {
+		await checkins.reload()
+	} catch (e) {
+		console.error("Failed to refresh checkin state", e)
+	}
+}
+
 const checkins = createListResource({
 	doctype: DOCTYPE,
 	fields: ["name", "employee", "employee_name", "log_type", "time", "device_id"],
@@ -144,7 +152,8 @@ const fetchLocation = () => {
 	}
 }
 
-const handleEmployeeCheckin = () => {
+const handleEmployeeCheckin = async () => {
+	await refreshCheckinState()
 	checkinTimestamp.value = dayjs().format("YYYY-MM-DD HH:mm:ss")
 
 	if (settings.data?.allow_geolocation_tracking) {
@@ -191,13 +200,20 @@ const submitLog = (logType) => {
 	)
 }
 
-onMounted(() => {
+const handleVisibilityChange = () => {
+	if (document.visibilityState === "visible") {
+		refreshCheckinState()
+	}
+}
+
+onMounted(async () => {
+	await refreshCheckinState()
+
 	socket.emit("doctype_subscribe", DOCTYPE)
 	socket.on("list_update", (data) => {
-		if (data.doctype == DOCTYPE) {
-			checkins.reload()
-		}
+		if (data.doctype == DOCTYPE) refreshCheckinState()
 	})
+	document.addEventListener("visibilitychange", handleVisibilityChange)
 })
 
 onBeforeUnmount(() => {
