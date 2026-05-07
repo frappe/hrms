@@ -4,7 +4,7 @@
 
 import frappe
 from frappe import _
-from frappe.query_builder import DocType, Order
+from frappe.query_builder import DocType
 from frappe.query_builder.functions import Extract
 from frappe.utils import getdate
 
@@ -187,7 +187,7 @@ def get_years() -> str:
 		frappe.qb.from_(SalarySlip)
 		.select(Extract("year", SalarySlip.end_date).as_("year"))
 		.distinct()
-		.orderby(Extract("year", SalarySlip.end_date), Order.desc)
+		.orderby(Extract("year", SalarySlip.end_date), order=frappe.qb.desc)
 		.run(pluck=True)
 	)
 	if not year_list:
