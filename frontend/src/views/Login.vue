@@ -33,6 +33,15 @@
 						>
 							{{ __("Login") }}
 						</Button>
+						<div class="text-center mt-4">
+							<button
+								type="button"
+								class="text-sm text-gray-600 hover:text-gray-900 underline"
+								@click="openForgotPassword"
+							>
+								{{ __("Forgot Password?") }}
+							</button>
+						</div>
 					</form>
 
 					<template v-if="authProviders.data?.length">
@@ -102,6 +111,34 @@
 					</form>
 				</template>
 			</Dialog>
+
+			<Dialog v-model="showForgotPassword">
+				<template #body-title>
+					<h2 class="text-lg font-bold">{{ __("Reset Password") }}</h2>
+				</template>
+				<template #body-content>
+					<p class="mb-4 text-gray-600">
+						{{ __("Enter your email address and we'll send you a link to reset your password.") }}
+					</p>
+					<form class="flex flex-col space-y-4" @submit.prevent="sendPasswordReset">
+						<Input
+							:label="__('Email')"
+							type="email"
+							placeholder="johndoe@mail.com"
+							v-model="forgotPasswordEmail"
+							autocomplete="username"
+						/>
+						<ErrorMessage :message="forgotPasswordError" />
+						<Button
+							:loading="forgotPasswordResource.loading"
+							variant="solid"
+							class="disabled:bg-gray-700 disabled:text-white !mt-6"
+						>
+							{{ __("Send Reset Link") }}
+						</Button>
+					</form>
+				</template>
+			</Dialog>
 		</ion-content>
 	</ion-page>
 </template>
@@ -109,7 +146,7 @@
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
 import { inject, reactive, ref } from "vue"
-import { Input, Button, ErrorMessage, Dialog, createResource } from "frappe-ui"
+import { Input, Button, ErrorMessage, Dialog, createResource, toast } from "frappe-ui"
 
 import FrappeHRLogo from "@/components/icons/FrappeHRLogo.vue"
 
@@ -127,6 +164,40 @@ const otp = reactive({
 	code: "",
 	verification: {},
 })
+
+const showForgotPassword = ref(false)
+const forgotPasswordEmail = ref("")
+const forgotPasswordError = ref("")
+
+const forgotPasswordResource = createResource({
+	url: "frappe.core.doctype.user.user.reset_password",
+	method: "POST",
+	onSuccess() {
+		toast({
+			title: __("Success"),
+			text: __("Password reset link has been sent to your email."),
+			icon: "check-circle",
+			position: "bottom-center",
+			iconClasses: "text-green-500",
+		})
+		showForgotPassword.value = false
+		forgotPasswordEmail.value = ""
+		forgotPasswordError.value = ""
+	},
+	onError(error) {
+		forgotPasswordError.value = error.messages?.[0] || __("Failed to send reset link")
+	},
+})
+
+function openForgotPassword() {
+	forgotPasswordEmail.value = email.value || ""
+	forgotPasswordError.value = ""
+	showForgotPassword.value = true
+}
+
+function sendPasswordReset() {
+	forgotPasswordResource.submit({ user: forgotPasswordEmail.value })
+}
 
 const session = inject("$session")
 const __ = inject("$translate")

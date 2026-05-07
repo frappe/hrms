@@ -71,7 +71,6 @@
 						<!-- Settings -->
 						<div
 							class="flex flex-col gap-5 my-4 w-full"
-							v-if="allowPushNotifications"
 						>
 							<div class="flex flex-col bg-white rounded">
 								<router-link
@@ -118,6 +117,7 @@
 				:breakpoints="[0, 1]"
 			>
 				<ProfileInfoModal
+					v-if="selectedItem"
 					:title="selectedItem.title"
 					:data="
 						selectedItem.fields.map((field) => {
@@ -132,15 +132,16 @@
 					"
 				/>
 			</ion-modal>
-		</ion-content>
-	</ion-page>
+
+	</ion-content>
+</ion-page>
 </template>
 
 <script setup>
 import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
 import { useRouter } from "vue-router"
-import { IonModal, IonPage, IonContent } from "@ionic/vue"
-import { FeatherIcon, createDocumentResource, createResource } from "frappe-ui"
+import { IonPage, IonContent } from "@ionic/vue"
+import { FeatherIcon, createDocumentResource, createResource, toast } from "frappe-ui"
 
 import { showErrorAlert } from "@/utils/dialogs"
 import { formatCurrency } from "@/utils/formatters"
@@ -265,6 +266,8 @@ const logout = async () => {
 		showErrorAlert(msg)
 	}
 }
+
+
 
 onMounted(() => {
 	socket.emit("doctype_subscribe", DOCTYPE)
