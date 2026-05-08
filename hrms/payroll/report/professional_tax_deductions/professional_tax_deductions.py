@@ -49,7 +49,6 @@ def get_data(filters):
 		.run(pluck="name")
 	)
 
-	print("Component Type List:", component_type_list)
 	if not len(component_type_list):
 		return []
 
@@ -82,5 +81,4 @@ def get_data(filters):
 
 		data.append(employee)
 
-	print("Data:", data)
 	return data
