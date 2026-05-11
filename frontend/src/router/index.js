@@ -68,6 +68,11 @@ const routes = [
 		component: () => import("@/views/AppSettings.vue"),
 	},
 	{
+		path: "/change-password",
+		name: "ChangePassword",
+		component: () => import("@/views/ChangePassword.vue"),
+	},
+	{
 		path: "/invalid-employee",
 		name: "InvalidEmployee",
 		component: () => import("@/views/InvalidEmployee.vue"),
