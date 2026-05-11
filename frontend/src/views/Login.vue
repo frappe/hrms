@@ -1,7 +1,37 @@
 <template>
 	<ion-page>
 		<ion-content class="ion-padding">
-			<div class="flex h-screen w-screen flex-col justify-center bg-white">
+			<div
+				v-if="resetPassword.showDialog"
+				class="flex h-screen w-screen flex-col bg-white"
+			>
+				<header class="flex items-center justify-between px-6 py-4">
+					<div class="text-lg font-semibold text-gray-900">
+						{{ __("Reset Password") }}
+					</div>
+					<button
+						type="button"
+						class="text-sm text-gray-600 hover:text-gray-900 underline"
+						@click="resetPassword.showDialog = false"
+					>
+						{{ __("Back to Login") }}
+					</button>
+				</header>
+				<div class="flex flex-1 flex-col items-center justify-center px-8 text-center">
+					<p class="text-gray-700">
+						{{ __("Your password has expired. Please reset your password to continue") }}
+					</p>
+					<a
+						class="mt-6 inline-flex items-center justify-center gap-2 transition-colors focus:outline-none text-white bg-gray-900 hover:bg-gray-800 active:bg-gray-700 focus-visible:ring focus-visible:ring-gray-400 h-9 text-base px-4 rounded"
+						:href="resetPassword.link"
+						target="_blank"
+					>
+						{{ __("Go to Reset Password page") }}
+					</a>
+				</div>
+			</div>
+
+			<div v-else class="flex h-screen w-screen flex-col justify-center bg-white">
 				<div class="flex flex-col mx-auto gap-3 items-center">
 					<FrappeHRLogo class="h-8 w-8" />
 					<div class="text-3xl font-semibold text-gray-900 text-center">
@@ -63,25 +93,7 @@
 				</div>
 			</div>
 
-			<Dialog v-model="resetPassword.showDialog">
-				<template #body-title>
-					<h2 class="text-lg font-bold">{{ __("Reset Password") }} </h2>
-				</template>
-				<template #body-content>
-					<p>
-						{{ __("Your password has expired. Please reset your password to continue") }}
-					</p>
-				</template>
-				<template #actions>
-					<a
-						class="inline-flex items-center justify-center gap-2 transition-colors focus:outline-none text-white bg-gray-900 hover:bg-gray-800 active:bg-gray-700 focus-visible:ring focus-visible:ring-gray-400 h-7 text-base px-2 rounded"
-						:href="resetPassword.link"
-						target="_blank"
-					>
-						{{ __("Go to Reset Password page") }}
-					</a>
-				</template>
-			</Dialog>
+
 
 			<Dialog v-model="otp.showDialog">
 				<template #body-title>
@@ -112,39 +124,46 @@
 				</template>
 			</Dialog>
 
-			<Dialog v-model="showForgotPassword">
-				<template #body-title>
-					<h2 class="text-lg font-bold">{{ __("Reset Password") }}</h2>
-				</template>
-				<template #body-content>
-					<p class="mb-4 text-gray-600">
-						{{ __("Enter your email address and we'll send you a link to reset your password.") }}
-					</p>
-					<form class="flex flex-col space-y-4" @submit.prevent="sendPasswordReset">
-						<Input
-							:label="__('Email')"
-							type="email"
-							placeholder="johndoe@mail.com"
-							v-model="forgotPasswordEmail"
-							autocomplete="username"
-						/>
-						<ErrorMessage :message="forgotPasswordError" />
-						<Button
-							:loading="forgotPasswordResource.loading"
-							variant="solid"
-							class="disabled:bg-gray-700 disabled:text-white !mt-6"
-						>
-							{{ __("Send Reset Link") }}
-						</Button>
-					</form>
-				</template>
-			</Dialog>
+			<ion-modal
+				ref="forgotPasswordModal"
+				:is-open="showForgotPasswordModal"
+				@didDismiss="closeForgotPasswordModal"
+				:initial-breakpoint="1"
+				:breakpoints="[0, 1]"
+			>
+				<div class="h-120 w-full flex flex-col items-center justify-center gap-5 p-4 mb-5">
+					<div class="flex flex-col gap-1.5 mt-2 items-center justify-center text-center">
+						<h2 class="font-bold text-xl">{{ __("Reset Password") }}</h2>
+						<p class="font-medium text-gray-500 text-sm">
+							{{ __("Enter your email address and we'll send you a link to reset your password.") }}
+						</p>
+					</div>
+					<Input
+						:label="__('Email')"
+						type="email"
+						placeholder="johndoe@mail.com"
+						v-model="forgotPasswordEmail"
+						autocomplete="username"
+						required
+						class="w-full"
+					/>
+					<ErrorMessage :message="forgotPasswordError" />
+					<Button
+						:loading="forgotPasswordResource.loading"
+						variant="solid"
+						class="w-full py-5 text-base disabled:bg-gray-700 disabled:text-white"
+						@click="sendPasswordReset"
+					>
+						{{ __("Send Reset Link") }}
+					</Button>
+				</div>
+			</ion-modal>
 		</ion-content>
 	</ion-page>
 </template>
 
 <script setup>
-import { IonPage, IonContent } from "@ionic/vue"
+import { IonPage, IonContent, IonModal } from "@ionic/vue"
 import { inject, reactive, ref } from "vue"
 import { Input, Button, ErrorMessage, Dialog, createResource, toast } from "frappe-ui"
 
@@ -165,7 +184,7 @@ const otp = reactive({
 	verification: {},
 })
 
-const showForgotPassword = ref(false)
+const showForgotPasswordModal = ref(false)
 const forgotPasswordEmail = ref("")
 const forgotPasswordError = ref("")
 
@@ -180,7 +199,7 @@ const forgotPasswordResource = createResource({
 			position: "bottom-center",
 			iconClasses: "text-green-500",
 		})
-		showForgotPassword.value = false
+		showForgotPasswordModal.value = false
 		forgotPasswordEmail.value = ""
 		forgotPasswordError.value = ""
 	},
@@ -192,11 +211,33 @@ const forgotPasswordResource = createResource({
 function openForgotPassword() {
 	forgotPasswordEmail.value = email.value || ""
 	forgotPasswordError.value = ""
-	showForgotPassword.value = true
+	showForgotPasswordModal.value = true
+}
+
+function closeForgotPasswordModal() {
+	showForgotPasswordModal.value = false
+	forgotPasswordError.value = ""
+}
+
+function isValidEmail(email) {
+	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
 function sendPasswordReset() {
-	forgotPasswordResource.submit({ user: forgotPasswordEmail.value })
+	const emailValue = (forgotPasswordEmail.value || "").trim()
+
+	if (!emailValue) {
+		forgotPasswordError.value = __("Please enter your email address")
+		return
+	}
+
+	if (!isValidEmail(emailValue)) {
+		forgotPasswordError.value = __("Please enter a valid email address")
+		return
+	}
+
+	forgotPasswordError.value = ""
+	forgotPasswordResource.submit({ user: emailValue })
 }
 
 const session = inject("$session")

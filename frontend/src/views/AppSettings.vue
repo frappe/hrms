@@ -22,21 +22,25 @@
 						<div class="flex flex-col bg-white rounded">
 							<div
 								class="flex flex-row cursor-pointer flex-start p-4 items-center justify-between border-b"
-								@click="openChangePasswordModal()"
 							>
-								<div class="flex flex-row items-center gap-3 grow">
+								<router-link
+									:to="{ name: 'ChangePassword' }"
+									class="flex flex-row items-center justify-between w-full"
+								>
+									<div class="flex flex-row items-center gap-3 grow">
+										<FeatherIcon
+											name="lock"
+											class="h-5 w-5 text-gray-500"
+										/>
+										<div class="text-base font-normal text-gray-800">
+											{{ __("Change Password") }}
+										</div>
+									</div>
 									<FeatherIcon
-										name="lock"
+										name="chevron-right"
 										class="h-5 w-5 text-gray-500"
 									/>
-									<div class="text-base font-normal text-gray-800">
-										{{ __("Change Password") }}
-									</div>
-								</div>
-								<FeatherIcon
-									name="chevron-right"
-									class="h-5 w-5 text-gray-500"
-								/>
+								</router-link>
 							</div>
 						</div>
 
@@ -64,54 +68,22 @@
 					</div>
 				</div>
 			</div>
-
-			<ion-modal
-				ref="modal"
-				:is-open="isResetPasswordModalOpen"
-				@didDismiss="closeChangePasswordModal"
-				:initial-breakpoint="1"
-				:breakpoints="[0, 1]"
-			>
-				<div class="w-full flex flex-col items-center justify-center gap-5 p-4 mb-5">
-					<div class="flex flex-col gap-1.5 mt-2 items-center justify-center">
-						<div class="font-bold text-xl">
-							{{ __("Change Password") }}
-						</div>
-						<div class="font-medium text-gray-500 text-sm text-center">
-							{{ __("Send password reset link to") }}
-							<span class="font-semibold text-gray-900">{{ user.data.name }}</span>?
-						</div>
-					</div>
-
-					<Button
-						:loading="resetPasswordResource.loading"
-						variant="solid"
-						class="w-full py-5 text-sm disabled:bg-gray-700"
-						@click="sendPasswordReset"
-					>
-						{{ __("Send Reset Link") }}
-					</Button>
-				</div>
-			</ion-modal>
 		</ion-content>
 	</ion-page>
 </template>
 
 <script setup>
-import { IonPage, IonContent, modalController } from "@ionic/vue"
+import { IonPage, IonContent } from "@ionic/vue"
 import { useRouter } from "vue-router"
-import { FeatherIcon, Switch, toast, LoadingIndicator, createResource, Input, ErrorMessage, Button } from "frappe-ui"
+import { FeatherIcon, Switch, toast, LoadingIndicator, Button } from "frappe-ui"
 
 import { computed, inject, ref } from "vue"
 
 import { arePushNotificationsEnabled } from "@/data/notifications"
 
 const __ = inject("$translate")
-const user = inject("$user")
 const router = useRouter()
 
-const resetPasswordError = ref("")
-const isResetPasswordModalOpen = ref(false)
 const pushNotificationState = ref(
 	window.frappePushNotification?.isNotificationEnabled()
 )
@@ -166,14 +138,6 @@ const togglePushNotifications = (newValue) => {
 			})
 	}
 }
-const openChangePasswordModal = async () => {
-	isResetPasswordModalOpen.value = true
-	console.log("Opening change password modal")
-}
-
-const closeChangePasswordModal = async () => {
-	isResetPasswordModalOpen.value = false
-}
 const enablePushNotifications = () => {
 	isLoading.value = true
 
@@ -206,34 +170,6 @@ const enablePushNotifications = () => {
 		.finally(() => {
 			isLoading.value = false
 		})
-}
-
-const resetPasswordResource = createResource({
-	url: "frappe.core.doctype.user.user.reset_password",
-	method: "POST",
-	onSuccess() {
-		modalController.dismiss()
-		toast({
-			title: __("Success"),
-			text: __("Password reset link has been sent to your email."),
-			icon: "check-circle",
-			position: "bottom-center",
-			iconClasses: "text-green-500",
-		})
-	},
-	onError(error) {
-		toast({
-			title: __("Error"),
-			text: error.messages?.[0] || __("Failed to send reset link"),
-			icon: "alert-circle",
-			position: "bottom-center",
-			iconClasses: "text-red-500",
-		})
-	},
-})
-
-function sendPasswordReset() {
-	resetPasswordResource.submit({ user: user.data.name })
 }
 
 </script>
