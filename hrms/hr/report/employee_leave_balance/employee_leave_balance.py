@@ -202,7 +202,7 @@ def get_allocated_leaves(from_date, to_date, employee, leave_type):
 		.select(Sum(ledger.leaves))
 		.where(
 			(ledger.docstatus == 1)
-			& (ledger.transaction_type == "Leave Allocation")
+			& (ledger.transaction_type.isin(["Leave Allocation", "Leave Adjustment"]))
 			& (ledger.employee == employee)
 			& (ledger.leave_type == leave_type)
 			& ((ledger.from_date[from_date:to_date]) | (ledger.to_date[from_date:to_date]))
