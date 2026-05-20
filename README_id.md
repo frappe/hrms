@@ -4,7 +4,7 @@
 	</a>
 	<h2>Frappe HR</h2>
 	<p align="center">
-		<p>Perangkat Lunak HR dan Payroll Open Source yang Modern dan Mudah Digunakan</p>
+		Perangkat Lunak HR dan Payroll Open Source yang Modern dan Mudah Digunakan
 	</p>
 
 [![CI](https://github.com/frappe/hrms/actions/workflows/ci.yml/badge.svg?branch=develop)](https://github.com/frappe/hrms/actions/workflows/ci.yml)
@@ -14,7 +14,7 @@
 </div>
 
 <div align="center">
-	<img src=".github/hrms-hero.png"/>
+	<img src=".github/hrms-hero.png" alt="Tampilan utama Frappe HR"/>
 </div>
 
 <div align="center">
@@ -44,11 +44,11 @@ Awalnya, ini adalah kumpulan modul dalam ERPNext. Namun mulai versi 14, seiring 
 <details open>
 
 <summary>Lihat Screenshot</summary>
-	<img src=".github/hrms-appraisal.png"/>
-	<img src=".github/hrms-requisition.png"/>
-	<img src=".github/hrms-attendance.png"/>
-	<img src=".github/hrms-salary.png"/>
-	<img src=".github/hrms-pwa.png"/>
+	<img src=".github/hrms-appraisal.png" alt="Tampilan Penilaian Kinerja"/>
+	<img src=".github/hrms-requisition.png" alt="Tampilan Rekrutmen"/>
+	<img src=".github/hrms-attendance.png" alt="Tampilan Kehadiran"/>
+	<img src=".github/hrms-salary.png" alt="Tampilan Slip Gaji"/>
+	<img src=".github/hrms-pwa.png" alt="Tampilan Aplikasi Mobile"/>
 </details>
 
 ### Teknologi yang Digunakan
@@ -78,7 +78,7 @@ Frappe Cloud mengurus instalasi, setup, upgrade, monitoring, pemeliharaan, dan d
 ## Setup Pengembangan
 ### Docker
 Anda membutuhkan Docker, docker-compose, dan git yang sudah terpasang di komputer Anda. Lihat [Dokumentasi Docker](https://docs.docker.com/). Setelah itu, jalankan perintah berikut:
-```
+```sh
 git clone https://github.com/frappe/hrms
 cd hrms/docker
 docker-compose up
