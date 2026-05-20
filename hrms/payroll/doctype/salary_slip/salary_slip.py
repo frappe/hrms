@@ -2459,7 +2459,11 @@ def get_salary_component_data(component):
 			"is_tax_applicable",
 			"is_flexible_benefit",
 			"variable_based_on_taxable_salary",
+<<<<<<< HEAD
 			"accrual_component",
+=======
+			"exempted_from_income_tax",
+>>>>>>> 6cf884793 (fix(salary_slip): add missing salary component fields)
 		),
 		as_dict=1,
 		cache=True,
