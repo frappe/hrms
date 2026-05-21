@@ -7,7 +7,8 @@
 			v-for="item in tabItems"
 			:key="item.title"
 			:tab="item.title"
-			:href="item.route"
+			:routerLink="item.route"
+			routerDirection="root"
 			:class="[
 				'bg-white text-xs space-y-1.5 !hover:border-gray-300 !hover:text-gray-700 transition active:scale-95',
 				route.path === item.route

@@ -43,10 +43,12 @@
 					{{ item.label }}
 				</p>
 
-				<!-- Nav link -->
+				<!-- Nav link: routerDirection="root" prevents Ionic from treating
+				     a previously-visited page as a "back" navigation -->
 				<router-link
 					v-else
 					:to="{ name: item.route }"
+					routerDirection="root"
 					class="flex items-center gap-3 px-3 py-2.5 mb-0.5 rounded-lg text-sm font-medium transition-colors"
 					:class="
 						isActive(item)
@@ -64,6 +66,7 @@
 		<div class="border-t border-gray-100 px-3 py-3">
 			<router-link
 				:to="{ name: 'Profile' }"
+				routerDirection="root"
 				class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors"
 			>
 				<FeatherIcon name="settings" class="h-4 w-4 shrink-0" />
