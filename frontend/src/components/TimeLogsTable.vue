@@ -60,72 +60,71 @@
 					</ion-buttons>
 				</ion-toolbar>
 			</ion-header>
-			<ion-content class="ion-padding">
-				<div class="flex flex-col gap-4 p-4">
-					<div class="flex flex-col gap-1">
-						<label class="text-sm text-gray-600">{{ __("Activity Type") }}</label>
-						<input
-							v-model="newLog.activity_type"
-							type="text"
-							class="border rounded p-2 text-sm w-full"
-							:placeholder="__('e.g. Development')"
-						/>
-					</div>
-					<div class="flex flex-col gap-1">
-						<label class="text-sm text-gray-600">{{ __("From Time") }}</label>
-						<input
-							v-model="newLog.from_time"
-							type="datetime-local"
-							class="border rounded p-2 text-sm w-full"
-							@change="calcHours"
-						/>
-					</div>
-					<div class="flex flex-col gap-1">
-						<label class="text-sm text-gray-600">{{ __("To Time") }}</label>
-						<input
-							v-model="newLog.to_time"
-							type="datetime-local"
-							class="border rounded p-2 text-sm w-full"
-							@change="calcHours"
-						/>
-					</div>
-					<div class="flex flex-col gap-1">
-						<label class="text-sm text-gray-600">{{ __("Hours") }}</label>
-						<input
-							v-model="newLog.hours"
-							type="number"
-							step="0.25"
-							min="0"
-							class="border rounded p-2 text-sm w-full"
-							:placeholder="__('Calculated automatically')"
-						/>
-					</div>
-					<div class="flex flex-col gap-1">
-						<label class="text-sm text-gray-600">{{ __("Project") }}</label>
-						<input
-							v-model="newLog.project"
-							type="text"
-							class="border rounded p-2 text-sm w-full"
-							:placeholder="__('Optional')"
-						/>
-					</div>
-					<div class="flex flex-col gap-1">
-						<label class="text-sm text-gray-600">{{ __("Description") }}</label>
-						<textarea
-							v-model="newLog.description"
-							rows="3"
-							class="border rounded p-2 text-sm w-full"
-							:placeholder="__('What did you work on?')"
-						/>
-					</div>
-					<button
-						class="w-full bg-blue-500 text-white rounded p-3 text-sm font-medium mt-2"
-						@click="saveLog"
-					>
-						{{ __("Add") }}
-					</button>
+			<!-- plain div instead of ion-content — ion-content body is blank in this Ionic version -->
+			<div class="overflow-y-auto flex flex-col gap-4 p-4 bg-white h-full">
+				<div class="flex flex-col gap-1">
+					<label class="text-sm text-gray-600">{{ __("Activity Type") }}</label>
+					<input
+						v-model="newLog.activity_type"
+						type="text"
+						class="border rounded p-2 text-sm w-full"
+						:placeholder="__('e.g. Development')"
+					/>
 				</div>
-			</ion-content>
+				<div class="flex flex-col gap-1">
+					<label class="text-sm text-gray-600">{{ __("From Time") }}</label>
+					<input
+						v-model="newLog.from_time"
+						type="datetime-local"
+						class="border rounded p-2 text-sm w-full"
+						@change="calcHours"
+					/>
+				</div>
+				<div class="flex flex-col gap-1">
+					<label class="text-sm text-gray-600">{{ __("To Time") }}</label>
+					<input
+						v-model="newLog.to_time"
+						type="datetime-local"
+						class="border rounded p-2 text-sm w-full"
+						@change="calcHours"
+					/>
+				</div>
+				<div class="flex flex-col gap-1">
+					<label class="text-sm text-gray-600">{{ __("Hours") }}</label>
+					<input
+						v-model="newLog.hours"
+						type="number"
+						step="0.25"
+						min="0"
+						class="border rounded p-2 text-sm w-full"
+						:placeholder="__('Calculated automatically')"
+					/>
+				</div>
+				<div class="flex flex-col gap-1">
+					<label class="text-sm text-gray-600">{{ __("Project") }}</label>
+					<input
+						v-model="newLog.project"
+						type="text"
+						class="border rounded p-2 text-sm w-full"
+						:placeholder="__('Optional')"
+					/>
+				</div>
+				<div class="flex flex-col gap-1">
+					<label class="text-sm text-gray-600">{{ __("Description") }}</label>
+					<textarea
+						v-model="newLog.description"
+						rows="3"
+						class="border rounded p-2 text-sm w-full"
+						:placeholder="__('What did you work on?')"
+					/>
+				</div>
+				<button
+					class="w-full bg-blue-500 text-white rounded p-3 text-sm font-medium mt-2"
+					@click="saveLog"
+				>
+					{{ __("Add") }}
+				</button>
+			</div>
 		</ion-modal>
 	</div>
 </template>
@@ -134,7 +133,7 @@
 import { ref, inject } from "vue"
 import {
 	IonModal, IonHeader, IonToolbar, IonTitle,
-	IonButtons, IonButton, IonContent,
+	IonButtons, IonButton,
 } from "@ionic/vue"
 import { FeatherIcon } from "frappe-ui"
 
