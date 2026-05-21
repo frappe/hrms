@@ -82,7 +82,6 @@ import FrappeHRLogo from "@/components/icons/FrappeHRLogo.vue"
 import HomeIcon from "@/components/icons/HomeIcon.vue"
 import TimerIcon from "@/components/icons/TimerIcon.vue"
 import TimesheetIcon from "@/components/icons/TimesheetIcon.vue"
-import AttendanceIcon from "@/components/icons/AttendanceIcon.vue"
 import LeaveIcon from "@/components/icons/LeaveIcon.vue"
 import ExpenseIcon from "@/components/icons/ExpenseIcon.vue"
 import SalaryIcon from "@/components/icons/SalaryIcon.vue"
@@ -100,8 +99,7 @@ const navItems = [
 	{ icon: markRaw(TimerIcon),      title: "Start Timer",     route: "TimesheetTimer",          path: "/timesheets/timer", exact: true },
 	{ icon: markRaw(TimesheetIcon),  title: "My Timesheets",   route: "TimesheetListView",       path: "/timesheets" },
 	{ type: "section", label: "HR" },
-	{ icon: markRaw(AttendanceIcon), title: "Attendance",      route: "AttendanceDashboard",     path: "/dashboard/attendance" },
-	{ icon: markRaw(LeaveIcon),      title: "Leaves",          route: "LeavesDashboard",         path: "/dashboard/leaves" },
+{ icon: markRaw(LeaveIcon),      title: "Leaves",          route: "LeavesDashboard",         path: "/dashboard/leaves" },
 	{ icon: markRaw(ExpenseIcon),    title: "Expenses",        route: "ExpenseClaimsDashboard",  path: "/dashboard/expense-claims" },
 	{ icon: markRaw(SalaryIcon),     title: "Salary Slips",    route: "SalarySlipsDashboard",   path: "/dashboard/salary-slips" },
 ]

@@ -3,6 +3,7 @@
 		<template #body>
 			<div class="flex flex-col items-center my-7 p-4 gap-7">
 				<QuickLinks :items="quickLinks" :title="__('Quick Links')" />
+				<WorkingHoursDashboard />
 				<RequestPanel />
 			</div>
 		</template>
@@ -15,6 +16,7 @@ import { inject, markRaw } from "vue"
 import QuickLinks from "@/components/QuickLinks.vue"
 import BaseLayout from "@/components/BaseLayout.vue"
 import RequestPanel from "@/components/RequestPanel.vue"
+import WorkingHoursDashboard from "@/components/WorkingHoursDashboard.vue"
 import LeaveIcon from "@/components/icons/LeaveIcon.vue"
 import ExpenseIcon from "@/components/icons/ExpenseIcon.vue"
 import EmployeeAdvanceIcon from "@/components/icons/EmployeeAdvanceIcon.vue"

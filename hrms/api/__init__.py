@@ -878,3 +878,74 @@ def save_timer_log(
 
 	frappe.db.commit()
 	return doc.name
+
+
+# Working-hours dashboard
+@frappe.whitelist()
+def get_working_hours_summary(employee: str, from_date: str, to_date: str) -> dict:
+	"""
+	Returns daily working hours for an employee between from_date and to_date (inclusive).
+	All dates in the range are returned; days with no logs get hours=0.
+	"""
+	from frappe.utils import getdate, add_days
+
+	rows = frappe.db.sql(
+		"""
+		SELECT
+			DATE(tsd.from_time)  AS log_date,
+			SUM(tsd.hours)       AS total_hours
+		FROM `tabTimesheet Detail` tsd
+		INNER JOIN `tabTimesheet` ts ON tsd.parent = ts.name
+		WHERE ts.employee   = %(employee)s
+		  AND ts.docstatus  != 2
+		  AND DATE(tsd.from_time) BETWEEN %(from_date)s AND %(to_date)s
+		GROUP BY DATE(tsd.from_time)
+		ORDER BY log_date
+		""",
+		{"employee": employee, "from_date": from_date, "to_date": to_date},
+		as_dict=True,
+	)
+
+	# Build a complete date range filled with zeros
+	daily: dict[str, float] = {}
+	cursor = getdate(from_date)
+	end = getdate(to_date)
+	while cursor <= end:
+		daily[str(cursor)] = 0.0
+		cursor = add_days(cursor, 1)
+
+	for row in rows:
+		daily[str(row["log_date"])] = round(float(row["total_hours"]), 2)
+
+	daily_list = [{"date": d, "hours": h} for d, h in daily.items()]
+	return {"daily": daily_list, "total": round(sum(daily.values()), 2)}
+
+
+@frappe.whitelist()
+def get_employee_project_summary(employee: str, from_date: str, to_date: str) -> list:
+	"""
+	Returns the employee's hours broken down by project for the given date range,
+	ordered by hours descending (top 8).
+	"""
+	rows = frappe.db.sql(
+		"""
+		SELECT
+			CASE
+				WHEN tsd.project IS NULL OR tsd.project = '' THEN 'No Project'
+				ELSE tsd.project
+			END          AS project,
+			SUM(tsd.hours) AS total_hours
+		FROM `tabTimesheet Detail` tsd
+		INNER JOIN `tabTimesheet` ts ON tsd.parent = ts.name
+		WHERE ts.employee   = %(employee)s
+		  AND ts.docstatus  != 2
+		  AND DATE(tsd.from_time) BETWEEN %(from_date)s AND %(to_date)s
+		GROUP BY project
+		ORDER BY total_hours DESC
+		LIMIT 8
+		""",
+		{"employee": employee, "from_date": from_date, "to_date": to_date},
+		as_dict=True,
+	)
+
+	return [{"project": r["project"], "hours": round(float(r["total_hours"]), 2)} for r in rows]
