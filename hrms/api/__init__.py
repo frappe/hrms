@@ -823,3 +823,58 @@ def get_allowed_states_for_workflow(workflow: dict, user_id: str) -> list[str]:
 @frappe.whitelist()
 def get_permitted_fields_for_write(doctype: str) -> list[str]:
 	return get_permitted_fields(doctype, permission_type="write")
+
+
+# Timer
+@frappe.whitelist()
+def save_timer_log(
+	employee: str,
+	from_time: str,
+	to_time: str,
+	hours: float,
+	activity_type: str = None,
+	project: str = None,
+	description: str = None,
+) -> str:
+	"""
+	Appends a timer-captured log to the employee's draft Timesheet for the day.
+	Creates a new draft Timesheet if none exists yet. Returns the Timesheet name.
+	"""
+	from frappe.utils import get_date_str
+
+	hours = float(hours)
+	log_date = get_date_str(from_time)
+
+	log_entry = {
+		"doctype": "Timesheet Detail",
+		"activity_type": activity_type or None,
+		"from_time": from_time,
+		"to_time": to_time,
+		"hours": hours,
+		"project": project or None,
+		"description": description or None,
+		"is_billable": 0,
+	}
+
+	existing_name = frappe.db.get_value(
+		"Timesheet",
+		{"employee": employee, "start_date": log_date, "docstatus": 0},
+		"name",
+	)
+
+	if existing_name:
+		doc = frappe.get_doc("Timesheet", existing_name)
+		doc.append("time_logs", log_entry)
+		doc.save()
+	else:
+		company = frappe.db.get_value("Employee", employee, "company")
+		doc = frappe.new_doc("Timesheet")
+		doc.employee = employee
+		doc.company = company
+		doc.start_date = log_date
+		doc.end_date = log_date
+		doc.append("time_logs", log_entry)
+		doc.insert()
+
+	frappe.db.commit()
+	return doc.name

@@ -10,7 +10,7 @@ export const unreadNotificationsCount = createResource({
 
 export const notifications = createListResource({
 	doctype: "PWA Notification",
-	filters: { to_user: userResource.data.name },
+	filters: { to_user: userResource.data?.name },
 	fields: [
 		"name",
 		"from_user",

@@ -30,13 +30,20 @@
 						{{ log.description }}
 					</div>
 				</div>
-				<button
-					v-if="!isReadOnly"
-					class="ml-3 text-gray-400 hover:text-red-500"
-					@click="$emit('deleteLog', idx)"
-				>
-					<FeatherIcon name="trash-2" class="h-4 w-4" />
-				</button>
+				<div v-if="!isReadOnly" class="flex flex-row items-center gap-2 ml-3">
+					<button
+						class="text-gray-400 hover:text-blue-500"
+						@click="openEdit(idx)"
+					>
+						<FeatherIcon name="edit-2" class="h-4 w-4" />
+					</button>
+					<button
+						class="text-gray-400 hover:text-red-500"
+						@click="$emit('deleteLog', idx)"
+					>
+						<FeatherIcon name="trash-2" class="h-4 w-4" />
+					</button>
+				</div>
 			</div>
 		</div>
 
@@ -44,17 +51,17 @@
 		<button
 			v-if="!isReadOnly"
 			class="flex flex-row items-center gap-2 text-sm text-blue-500 font-medium py-2"
-			@click="showModal = true"
+			@click="openAdd"
 		>
 			<FeatherIcon name="plus" class="h-4 w-4" />
 			{{ __("Add Time Log") }}
 		</button>
 
-		<!-- Add modal -->
+		<!-- Add / Edit modal -->
 		<ion-modal :is-open="showModal" @did-dismiss="closeModal">
 			<ion-header>
 				<ion-toolbar>
-					<ion-title>{{ __("Add Time Log") }}</ion-title>
+					<ion-title>{{ editIndex === null ? __("Add Time Log") : __("Edit Time Log") }}</ion-title>
 					<ion-buttons slot="end">
 						<ion-button @click="closeModal">{{ __("Cancel") }}</ion-button>
 					</ion-buttons>
@@ -70,7 +77,7 @@
 					:fieldname="field.fieldname"
 					:options="field.options"
 					:placeholder="field.placeholder"
-					v-model="newLog[field.fieldname]"
+					v-model="currentLog[field.fieldname]"
 					@change="field.fieldname === 'from_time' || field.fieldname === 'to_time' ? calcHours() : null"
 				/>
 				<Button
@@ -78,7 +85,7 @@
 					class="w-full mt-2"
 					@click="saveLog"
 				>
-					{{ __("Add") }}
+					{{ editIndex === null ? __("Add") : __("Update") }}
 				</Button>
 			</div>
 		</ion-modal>
@@ -141,23 +148,41 @@ const LOG_FIELDS = [
 ]
 
 const showModal = ref(false)
-const newLog = ref({})
+const currentLog = ref({})
+const editIndex = ref(null)
+
+function openAdd() {
+	editIndex.value = null
+	currentLog.value = {}
+	showModal.value = true
+}
+
+function openEdit(idx) {
+	editIndex.value = idx
+	currentLog.value = { ...props.timesheet.time_logs[idx] }
+	showModal.value = true
+}
 
 function closeModal() {
 	showModal.value = false
-	newLog.value = {}
+	currentLog.value = {}
+	editIndex.value = null
 }
 
 function calcHours() {
-	if (newLog.value.from_time && newLog.value.to_time) {
-		const diff = dayjs(newLog.value.to_time).diff(dayjs(newLog.value.from_time), "minute")
-		if (diff > 0) newLog.value.hours = parseFloat((diff / 60).toFixed(2))
+	if (currentLog.value.from_time && currentLog.value.to_time) {
+		const diff = dayjs(currentLog.value.to_time).diff(dayjs(currentLog.value.from_time), "minute")
+		if (diff > 0) currentLog.value.hours = parseFloat((diff / 60).toFixed(2))
 	}
 }
 
 function saveLog() {
-	if (!newLog.value.hours && !newLog.value.from_time) return
-	emit("addLog", { ...newLog.value })
+	if (!currentLog.value.hours && !currentLog.value.from_time) return
+	if (editIndex.value !== null) {
+		emit("updateLog", { ...currentLog.value }, editIndex.value)
+	} else {
+		emit("addLog", { ...currentLog.value })
+	}
 	closeModal()
 }
 

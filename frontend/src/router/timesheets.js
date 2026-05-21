@@ -5,6 +5,11 @@ const routes = [
 		component: () => import("@/views/timesheet/List.vue"),
 	},
 	{
+		name: "TimesheetTimer",
+		path: "/timesheets/timer",
+		component: () => import("@/views/timesheet/Timer.vue"),
+	},
+	{
 		name: "TimesheetFormView",
 		path: "/timesheets/new",
 		component: () => import("@/views/timesheet/Form.vue"),

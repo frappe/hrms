@@ -1,7 +1,7 @@
 <template>
 	<ion-page>
-		<ion-header class="ion-no-border">
-			<div class="w-full sm:w-96">
+		<ion-header class="ion-no-border md:hidden">
+			<div class="w-full">
 				<div class="flex flex-col bg-white shadow-sm p-4">
 					<div class="flex flex-row justify-between items-center">
 						<div class="flex flex-row items-center gap-2">
@@ -41,7 +41,7 @@
 		</ion-header>
 
 		<ion-content class="ion-no-padding">
-			<div class="flex flex-col h-screen w-screen sm:w-96">
+			<div class="flex flex-col h-full w-full">
 				<slot name="body"></slot>
 			</div>
 		</ion-content>
