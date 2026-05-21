@@ -60,70 +60,26 @@
 					</ion-buttons>
 				</ion-toolbar>
 			</ion-header>
-			<!-- plain div instead of ion-content — ion-content body is blank in this Ionic version -->
+			<!-- plain div — ion-content body is blank in this Ionic version -->
 			<div class="overflow-y-auto flex flex-col gap-4 p-4 bg-white h-full">
-				<div class="flex flex-col gap-1">
-					<label class="text-sm text-gray-600">{{ __("Activity Type") }}</label>
-					<input
-						v-model="newLog.activity_type"
-						type="text"
-						class="border rounded p-2 text-sm w-full"
-						:placeholder="__('e.g. Development')"
-					/>
-				</div>
-				<div class="flex flex-col gap-1">
-					<label class="text-sm text-gray-600">{{ __("From Time") }}</label>
-					<input
-						v-model="newLog.from_time"
-						type="datetime-local"
-						class="border rounded p-2 text-sm w-full"
-						@change="calcHours"
-					/>
-				</div>
-				<div class="flex flex-col gap-1">
-					<label class="text-sm text-gray-600">{{ __("To Time") }}</label>
-					<input
-						v-model="newLog.to_time"
-						type="datetime-local"
-						class="border rounded p-2 text-sm w-full"
-						@change="calcHours"
-					/>
-				</div>
-				<div class="flex flex-col gap-1">
-					<label class="text-sm text-gray-600">{{ __("Hours") }}</label>
-					<input
-						v-model="newLog.hours"
-						type="number"
-						step="0.25"
-						min="0"
-						class="border rounded p-2 text-sm w-full"
-						:placeholder="__('Calculated automatically')"
-					/>
-				</div>
-				<div class="flex flex-col gap-1">
-					<label class="text-sm text-gray-600">{{ __("Project") }}</label>
-					<input
-						v-model="newLog.project"
-						type="text"
-						class="border rounded p-2 text-sm w-full"
-						:placeholder="__('Optional')"
-					/>
-				</div>
-				<div class="flex flex-col gap-1">
-					<label class="text-sm text-gray-600">{{ __("Description") }}</label>
-					<textarea
-						v-model="newLog.description"
-						rows="3"
-						class="border rounded p-2 text-sm w-full"
-						:placeholder="__('What did you work on?')"
-					/>
-				</div>
-				<button
-					class="w-full bg-blue-500 text-white rounded p-3 text-sm font-medium mt-2"
+				<FormField
+					v-for="field in LOG_FIELDS"
+					:key="field.fieldname"
+					:label="__(field.label)"
+					:fieldtype="field.fieldtype"
+					:fieldname="field.fieldname"
+					:options="field.options"
+					:placeholder="field.placeholder"
+					v-model="newLog[field.fieldname]"
+					@change="field.fieldname === 'from_time' || field.fieldname === 'to_time' ? calcHours() : null"
+				/>
+				<Button
+					variant="solid"
+					class="w-full mt-2"
 					@click="saveLog"
 				>
 					{{ __("Add") }}
-				</button>
+				</Button>
 			</div>
 		</ion-modal>
 	</div>
@@ -135,7 +91,8 @@ import {
 	IonModal, IonHeader, IonToolbar, IonTitle,
 	IonButtons, IonButton,
 } from "@ionic/vue"
-import { FeatherIcon } from "frappe-ui"
+import { FeatherIcon, Button } from "frappe-ui"
+import FormField from "@/components/FormField.vue"
 
 const __ = inject("$translate")
 const dayjs = inject("$dayjs")
@@ -146,6 +103,42 @@ const props = defineProps({
 })
 
 const emit = defineEmits(["update:timesheet", "addLog", "updateLog", "deleteLog"])
+
+const LOG_FIELDS = [
+	{
+		fieldname: "activity_type",
+		fieldtype: "Link",
+		label: "Activity Type",
+		options: "Activity Type",
+	},
+	{
+		fieldname: "from_time",
+		fieldtype: "Datetime",
+		label: "From Time",
+	},
+	{
+		fieldname: "to_time",
+		fieldtype: "Datetime",
+		label: "To Time",
+	},
+	{
+		fieldname: "hours",
+		fieldtype: "Float",
+		label: "Hours",
+		placeholder: "Calculated automatically",
+	},
+	{
+		fieldname: "project",
+		fieldtype: "Link",
+		label: "Project",
+		options: "Project",
+	},
+	{
+		fieldname: "description",
+		fieldtype: "Small Text",
+		label: "Description",
+	},
+]
 
 const showModal = ref(false)
 const newLog = ref({})
