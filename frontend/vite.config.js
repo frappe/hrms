@@ -7,6 +7,7 @@ import path from "path"
 import fs from "fs"
 
 export default defineConfig({
+	base: "/assets/hrms/frontend/",
 	server: {
 		port: 8080,
 		proxy: getProxyOptions(),
