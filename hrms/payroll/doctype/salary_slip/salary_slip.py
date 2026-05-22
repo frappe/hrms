@@ -41,6 +41,7 @@ from hrms.payroll.doctype.employee_benefit_ledger.employee_benefit_ledger import
 	create_employee_benefit_ledger_entry,
 	delete_employee_benefit_ledger_entry,
 )
+from hrms.payroll.doctype.income_tax_slab.income_tax_slab import calculate_tax_by_tax_slab
 from hrms.payroll.doctype.payroll_entry.payroll_entry import get_salary_withholdings, get_start_end_dates
 from hrms.payroll.doctype.payroll_period.payroll_period import (
 	get_payroll_period,
@@ -2491,76 +2492,6 @@ def get_payroll_payable_account(company, payroll_entry):
 		)
 
 	return payroll_payable_account
-
-
-def calculate_tax_by_tax_slab(annual_taxable_earning, tax_slab, eval_globals=None, eval_locals=None):
-	from hrms.hr.utils import calculate_tax_with_marginal_relief
-
-	tax_amount = 0
-	total_other_taxes_and_charges = 0
-
-	if annual_taxable_earning > tax_slab.tax_relief_limit:
-		eval_locals.update({"annual_taxable_earning": annual_taxable_earning})
-
-		for slab in tax_slab.slabs:
-			cond = cstr(slab.condition).strip()
-			if cond and not eval_tax_slab_condition(cond, eval_globals, eval_locals):
-				continue
-			if not slab.to_amount and annual_taxable_earning >= slab.from_amount:
-				tax_amount += (annual_taxable_earning - slab.from_amount + 1) * slab.percent_deduction * 0.01
-				continue
-
-			if annual_taxable_earning >= slab.from_amount and annual_taxable_earning < slab.to_amount:
-				tax_amount += (annual_taxable_earning - slab.from_amount + 1) * slab.percent_deduction * 0.01
-			elif annual_taxable_earning >= slab.from_amount and annual_taxable_earning >= slab.to_amount:
-				tax_amount += (slab.to_amount - slab.from_amount + 1) * slab.percent_deduction * 0.01
-
-		tax_with_marginal_relief = calculate_tax_with_marginal_relief(
-			tax_slab, tax_amount, annual_taxable_earning
-		)
-		if tax_with_marginal_relief is not None:
-			tax_amount = tax_with_marginal_relief
-
-		for d in tax_slab.other_taxes_and_charges:
-			if flt(d.min_taxable_income) and flt(d.min_taxable_income) > annual_taxable_earning:
-				continue
-
-			if flt(d.max_taxable_income) and flt(d.max_taxable_income) < annual_taxable_earning:
-				continue
-			other_taxes_and_charges = tax_amount * flt(d.percent) / 100
-			tax_amount += other_taxes_and_charges
-			total_other_taxes_and_charges += other_taxes_and_charges
-
-	return tax_amount, total_other_taxes_and_charges
-
-
-def eval_tax_slab_condition(condition, eval_globals=None, eval_locals=None):
-	if not eval_globals:
-		eval_globals = {
-			"int": int,
-			"float": float,
-			"long": int,
-			"round": round,
-			"date": date,
-			"getdate": getdate,
-			"get_first_day": get_first_day,
-			"get_last_day": get_last_day,
-		}
-
-	try:
-		condition = condition.strip()
-		if condition:
-			return frappe.safe_eval(condition, eval_globals, eval_locals)
-	except NameError as err:
-		frappe.throw(
-			_("{0} <br> This error can be due to missing or deleted field.").format(err),
-			title=_("Name error"),
-		)
-	except SyntaxError as err:
-		frappe.throw(_("Syntax error in condition: {0} in Income Tax Slab").format(err))
-	except Exception as e:
-		frappe.throw(_("Error in formula or condition: {0} in Income Tax Slab").format(e))
-		raise
 
 
 def get_lwp_or_ppl_for_date_range(employee, start_date, end_date):
