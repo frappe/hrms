@@ -25,6 +25,12 @@
 							v-model="password"
 							autocomplete="current-password"
 						/>
+						<router-link
+							class="self-end text-sm font-medium text-gray-700 hover:text-gray-900"
+							:to="{ name: 'ForgotPassword' }"
+						>
+							{{ __("Forgot Password?") }}
+						</router-link>
 						<ErrorMessage :message="errorMessage" />
 						<Button
 							:loading="session.login.loading"

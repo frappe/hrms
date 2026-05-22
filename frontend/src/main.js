@@ -121,7 +121,7 @@ router.beforeEach(async (to, _, next) => {
 		// password reset page is outside the PWA scope
 		if (to.path === "/update-password") {
 			return next(false)
-		} else if (to.name !== "Login") {
+		} else if (!["Login", "ForgotPassword"].includes(to.name)) {
 			next({ name: "Login" })
 		}
 	}
