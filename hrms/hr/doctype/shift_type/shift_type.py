@@ -70,8 +70,8 @@ class ShiftType(Document):
 		working_hours_calculation_based_on: DF.Literal[
 			"First Check-in and Last Check-out", "Every Valid Check-in and Check-out"
 		]
-		working_hours_threshold_for_absent: DF.Float
-		working_hours_threshold_for_half_day: DF.Float
+		working_hours_threshold_for_absent: DF.Int
+		working_hours_threshold_for_half_day: DF.Int
 	# end: auto-generated types
 
 	def validate(self):
@@ -183,12 +183,12 @@ class ShiftType(Document):
 			if not self.should_mark_attendance(employee, attendance_date):
 				continue
 
-			working_hours_threshold_for_half_day = flt(self.working_hours_threshold_for_half_day)
-			working_hours_threshold_for_absent = flt(self.working_hours_threshold_for_absent)
+			working_hours_threshold_for_half_day = (flt(self.working_hours_threshold_for_half_day) or 0) / 3600
+			working_hours_threshold_for_absent = (flt(self.working_hours_threshold_for_absent) or 0) / 3600
 
 			if self.is_half_holiday(employee, attendance_date):
-				working_hours_threshold_for_half_day = flt(self.working_hours_threshold_for_half_day) / 2
-				working_hours_threshold_for_absent = flt(self.working_hours_threshold_for_absent) / 2
+				working_hours_threshold_for_half_day /= 2
+				working_hours_threshold_for_absent /= 2
 
 			overtime_type = single_shift_logs[0].get("overtime_type")
 			(

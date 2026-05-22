@@ -243,7 +243,7 @@ class TestShiftType(HRMSTestSuite):
 		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
-		shift_type = setup_shift_type(shift_type="Half Day Test", working_hours_threshold_for_half_day=2)
+		shift_type = setup_shift_type(shift_type="Half Day Test", working_hours_threshold_for_half_day=7200)
 		date = getdate()
 		make_shift_assignment(shift_type.name, employee, date)
 
@@ -267,7 +267,7 @@ class TestShiftType(HRMSTestSuite):
 		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
-		shift_type = setup_shift_type(shift_type="Absent Test", working_hours_threshold_for_absent=2)
+		shift_type = setup_shift_type(shift_type="Absent Test", working_hours_threshold_for_absent=7200)
 		date = getdate()
 		make_shift_assignment(shift_type.name, employee, date)
 
@@ -294,8 +294,8 @@ class TestShiftType(HRMSTestSuite):
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
 		shift_type = setup_shift_type(
 			shift_type="Half Day + Absent Test",
-			working_hours_threshold_for_half_day=2,
-			working_hours_threshold_for_absent=1,
+			working_hours_threshold_for_half_day=7200,
+			working_hours_threshold_for_absent=3600,
 		)
 		date = getdate()
 		make_shift_assignment(shift_type.name, employee, date)
@@ -323,8 +323,8 @@ class TestShiftType(HRMSTestSuite):
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
 		shift_type = setup_shift_type(
 			shift_type="Half Day + Absent Test",
-			working_hours_threshold_for_half_day=2,
-			working_hours_threshold_for_absent=1,
+			working_hours_threshold_for_half_day=7200,
+			working_hours_threshold_for_absent=3600,
 		)
 		date = getdate()
 		make_shift_assignment(shift_type.name, employee, date)
@@ -868,8 +868,8 @@ class TestShiftType(HRMSTestSuite):
 		shift = setup_shift_type(
 			start_time="10:00:00",
 			end_time="18:00:00",
-			working_hours_threshold_for_half_day=4.75,
-			working_hours_threshold_for_absent=1.25,
+			working_hours_threshold_for_half_day=17100,
+			working_hours_threshold_for_absent=4500,
 		)
 		employee = make_employee(
 			"test_working_hours@example.com", company="_Test Company", default_shift=shift.name
@@ -916,8 +916,8 @@ class TestShiftType(HRMSTestSuite):
 		shift = setup_shift_type(
 			start_time="10:00:00",
 			end_time="18:00:00",
-			working_hours_threshold_for_half_day=6,
-			working_hours_threshold_for_absent=3,
+			working_hours_threshold_for_half_day=21600,
+			working_hours_threshold_for_absent=10800,
 			holiday_list="_Test Half Day",
 		)
 		employee1 = make_employee(

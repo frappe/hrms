@@ -661,7 +661,7 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		self.assertRaises(frappe.ValidationError, log.save)
 
 	def test_modifying_half_attendance_created_from_leave(self):
-		shift = setup_shift_type(working_hours_threshold_for_half_day=3)
+		shift = setup_shift_type(working_hours_threshold_for_half_day=10800)
 		emp = make_employee("testhalfday@example.com", company="_Test Company", default_shift=shift.name)
 		employee = frappe.get_doc("Employee", emp)
 		# create attendance from leave
@@ -712,7 +712,7 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		self.assertEqual(attendance[0].out_time, out_log.time)
 
 	def test_modifying_half_day_attendance_when_checkins_are_absent(self):
-		shift = setup_shift_type(working_hours_threshold_for_half_day=1)
+		shift = setup_shift_type(working_hours_threshold_for_half_day=3600)
 		emp = make_employee("testhalfday2@example.com", company="_Test Company", default_shift=shift.name)
 		employee = frappe.get_doc("Employee", emp)
 		# create attendance from leave
@@ -760,8 +760,8 @@ class TestEmployeeCheckin(HRMSTestSuite):
 			shift_type="_Test Half Day",
 			start_time="08:00:00",
 			end_time="15:00:00",
-			working_hours_threshold_for_half_day=4,
-			working_hours_threshold_for_absent=2,
+			working_hours_threshold_for_half_day=14400,
+			working_hours_threshold_for_absent=7200,
 		)
 		emp = make_employee("testhalfday3@example.com", company="_Test Company", default_shift=shift.name)
 		employee = frappe.get_doc("Employee", emp)
@@ -816,8 +816,8 @@ class TestEmployeeCheckin(HRMSTestSuite):
 			shift_type="_Test Half Day",
 			start_time="08:00:00",
 			end_time="15:00:00",
-			working_hours_threshold_for_half_day=4,
-			working_hours_threshold_for_absent=2,
+			working_hours_threshold_for_half_day=14400,
+			working_hours_threshold_for_absent=7200,
 		)
 		emp = make_employee("testhalfday4@example.com", company="_Test Company", default_shift=shift.name)
 		employee = frappe.get_doc("Employee", emp)
