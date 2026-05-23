@@ -20,6 +20,9 @@ class IncomeTaxSlab(Document):
 
 
 def calculate_tax_by_tax_slab(annual_taxable_earning, tax_slab, eval_globals=None, eval_locals=None):
+	eval_globals = eval_globals or {}
+	eval_locals = eval_locals or {}
+
 	if annual_taxable_earning <= tax_slab.tax_relief_limit:
 		return 0, 0
 
