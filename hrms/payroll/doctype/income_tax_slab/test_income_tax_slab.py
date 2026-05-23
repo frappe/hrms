@@ -25,23 +25,6 @@ SIMPLE_SLABS = [
 ]
 
 
-def make_slab(slabs, other_taxes_and_charges=None, tax_relief_limit=0):
-	return frappe._dict(
-		slabs=[frappe._dict(**s) for s in slabs],
-		surcharge_slabs=[],
-		other_taxes_and_charges=[frappe._dict(**c) for c in (other_taxes_and_charges or [])],
-		tax_relief_limit=tax_relief_limit,
-	)
-
-
-SIMPLE_SLABS = [
-	{"from_amount": 0, "to_amount": 300000, "percent_deduction": 0, "condition": ""},
-	{"from_amount": 300000, "to_amount": 700000, "percent_deduction": 5, "condition": ""},
-	{"from_amount": 700000, "to_amount": 1000000, "percent_deduction": 10, "condition": ""},
-	{"from_amount": 1000000, "to_amount": 0, "percent_deduction": 30, "condition": ""},
-]
-
-
 class TestIncomeTaxSlab(HRMSTestSuite):
 	def setUp(self):
 		self.slab = make_income_tax_slab(SIMPLE_SLABS)
