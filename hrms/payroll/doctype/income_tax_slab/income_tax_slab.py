@@ -91,13 +91,13 @@ def eval_tax_slab_condition(condition, eval_globals=None, eval_locals=None):
 			return frappe.safe_eval(condition, eval_globals, eval_locals)
 	except NameError as err:
 		frappe.throw(
-			_("{0} <br> This error can be due to missing or deleted field.").format(err),
+			_("{0} <br> This error can be due to missing or deleted field.").format(str(err)),
 			title=_("Name error"),
 		)
 	except SyntaxError as err:
-		frappe.throw(_("Syntax error in condition: {0} in Income Tax Slab").format(err))
+		frappe.throw(_("Syntax error in condition: {0} in Income Tax Slab").format(str(err)))
 	except Exception as e:
-		frappe.throw(_("Error in formula or condition: {0} in Income Tax Slab").format(e))
+		frappe.throw(_("Error in formula or condition: {0} in Income Tax Slab").format(str(e)))
 		raise
 
 
