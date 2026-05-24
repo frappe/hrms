@@ -148,7 +148,20 @@ def make_salary_structure(
 	test_accrual_component=False,
 	test_arrear=False,
 	test_salary_structure_arrear=False,
+	earnings=None,
+	deductions=None,
 ):
+	"""
+	Create a test salary structure.
+
+	``earnings`` and ``deductions`` accept a list of component dicts in the
+	same format as ``make_earning_salary_component`` / ``make_deduction_salary_component``
+	return.  When provided they are used directly, bypassing the default test
+	components.  The calling test is responsible for ensuring those salary
+	component records already exist in the database.  Omitting these
+	parameters preserves the original behaviour so existing tests are
+	unaffected.
+	"""
 	if not currency:
 		currency = "INR" or "INR"
 
@@ -167,14 +180,18 @@ def make_salary_structure(
 		"doctype": "Salary Structure",
 		"name": salary_structure,
 		"company": company or "_Test Company",
-		"earnings": make_earning_salary_component(
+		"earnings": earnings
+		if earnings is not None
+		else make_earning_salary_component(
 			setup=True,
 			test_tax=test_tax,
 			company_list=["_Test Company"],
 			test_accrual_component=test_accrual_component,
 			test_arrear=test_arrear,
 		),
-		"deductions": make_deduction_salary_component(
+		"deductions": deductions
+		if deductions is not None
+		else make_deduction_salary_component(
 			setup=True,
 			test_tax=test_tax,
 			company_list=["_Test Company"],
