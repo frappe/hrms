@@ -151,19 +151,8 @@ def make_salary_structure(
 	earnings=None,
 	deductions=None,
 ):
-	"""
-	Create a test salary structure.
-
-	``earnings`` and ``deductions`` accept a list of component dicts in the
-	same format as ``make_earning_salary_component`` / ``make_deduction_salary_component``
-	return.  When provided they are used directly, bypassing the default test
-	components.  The calling test is responsible for ensuring those salary
-	component records already exist in the database.  Omitting these
-	parameters preserves the original behaviour so existing tests are
-	unaffected.
-	"""
 	if not currency:
-		currency = "INR" or "INR"
+		currency = "INR"
 
 	if frappe.db.exists("Salary Structure", salary_structure):
 		frappe.db.delete("Salary Structure", salary_structure)
