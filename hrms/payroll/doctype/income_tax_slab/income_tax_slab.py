@@ -27,7 +27,7 @@ def calculate_tax_by_tax_slab(annual_taxable_earning, tax_slab, eval_globals=Non
 		return 0, 0
 
 	tax_amount = calculate_base_tax_from_tax_slabs(
-		tax_slab, annual_taxable_earning, eval_globals, eval_locals
+		annual_taxable_earning, tax_slab, eval_globals, eval_locals
 	)
 
 	if tax_with_marginal_relief := calculate_tax_with_marginal_relief(
@@ -39,11 +39,11 @@ def calculate_tax_by_tax_slab(annual_taxable_earning, tax_slab, eval_globals=Non
 		tax_amount, annual_taxable_earning, tax_slab, eval_globals, eval_locals
 	)
 
-	tax_amount, other_taxes = calculate_other_charges(tax_slab, annual_taxable_earning, tax_amount)
+	tax_amount, other_taxes = calculate_other_charges(tax_amount, annual_taxable_earning, tax_slab)
 	return tax_amount, surcharge + other_taxes
 
 
-def calculate_base_tax_from_tax_slabs(tax_slab, annual_taxable_earning, eval_globals, eval_locals):
+def calculate_base_tax_from_tax_slabs(annual_taxable_earning, tax_slab, eval_globals, eval_locals):
 	tax_amount = 0
 	eval_locals.update({"annual_taxable_earning": annual_taxable_earning})
 
@@ -61,7 +61,7 @@ def calculate_base_tax_from_tax_slabs(tax_slab, annual_taxable_earning, eval_glo
 	return tax_amount
 
 
-def calculate_other_charges(tax_slab, annual_taxable_earning, tax_amount):
+def calculate_other_charges(tax_amount, annual_taxable_earning, tax_slab):
 	total_other_taxes_and_charges = 0
 	for d in tax_slab.other_taxes_and_charges:
 		if flt(d.min_taxable_income) and flt(d.min_taxable_income) > annual_taxable_earning:

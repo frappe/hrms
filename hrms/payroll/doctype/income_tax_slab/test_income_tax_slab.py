@@ -39,9 +39,9 @@ class TestIncomeTaxSlab(HRMSTestSuite):
 
 	def test_other_charges_applied_as_flat_rate(self):
 		"""Charges in other_taxes_and_charges are a flat percentage — no marginal relief logic."""
-		base_tax = calculate_base_tax_from_tax_slabs(self.slab_with_cess, 1500000, None, {})
+		base_tax = calculate_base_tax_from_tax_slabs(1500000, self.slab_with_cess, None, {})
 
-		_, cess = calculate_other_charges(self.slab_with_cess, 1500000, base_tax)
+		_, cess = calculate_other_charges(base_tax, 1500000, self.slab_with_cess)
 
 		self.assertEqual(cess, base_tax * 4 / 100)
 
@@ -61,9 +61,9 @@ class TestIncomeTaxSlab(HRMSTestSuite):
 				}
 			],
 		)
-		base_tax = calculate_base_tax_from_tax_slabs(slab, income, None, {})
+		base_tax = calculate_base_tax_from_tax_slabs(income, slab, None, {})
 
-		_, surcharge = calculate_other_charges(slab, income, base_tax)
+		_, surcharge = calculate_other_charges(base_tax, income, slab)
 
 		self.assertEqual(surcharge, base_tax * 10 / 100)
 
@@ -80,9 +80,9 @@ class TestIncomeTaxSlab(HRMSTestSuite):
 				}
 			],
 		)
-		base_tax = calculate_base_tax_from_tax_slabs(slab, 1500000, None, {})
+		base_tax = calculate_base_tax_from_tax_slabs(1500000, slab, None, {})
 
-		_, charge = calculate_other_charges(slab, 1500000, base_tax)
+		_, charge = calculate_other_charges(base_tax, 1500000, slab)
 
 		self.assertEqual(charge, 0)
 
@@ -106,7 +106,7 @@ class TestIncomeTaxSlab(HRMSTestSuite):
 
 	def test_cess_computed_on_base_tax(self):
 		"""other_taxes_and_charges (cess) is computed on the running tax total passed in."""
-		base_tax = calculate_base_tax_from_tax_slabs(self.slab_with_cess, 1500000, None, {})
+		base_tax = calculate_base_tax_from_tax_slabs(1500000, self.slab_with_cess, None, {})
 		total_tax, charges = calculate_tax_by_tax_slab(1500000, self.slab_with_cess, None, {})
 
 		expected_cess = base_tax * 4 / 100
@@ -176,7 +176,7 @@ class TestIncomeTaxSlab(HRMSTestSuite):
 		tds = next((d.amount for d in salary_slip.deductions if d.salary_component == "TDS"), 0)
 
 		annual_income = salary_slip.annual_taxable_amount
-		base_tax = calculate_base_tax_from_tax_slabs(income_tax_slab, annual_income, None, {})
+		base_tax = calculate_base_tax_from_tax_slabs(annual_income, income_tax_slab, None, {})
 		surcharge = base_tax * 10 / 100
 		cess = (base_tax + surcharge) * 4 / 100
 		expected_tds = round((base_tax + surcharge + cess) / 12)
