@@ -34,12 +34,13 @@ const EMPLOYEE_ADVANCE_FIELDS = [
 const STATUS_FILTER_OPTIONS = [
 	"Draft",
 	"Paid",
+	"Partially Paid",
 	"Unpaid",
 	"Claimed",
 	"Returned",
 	"Partly Claimed and Returned",
 	"Cancelled",
-] // __("Draft"), __("Paid"), __("Unpaid"), __("Claimed"), __("Returned"), __("Partly Claimed and Returned"), __("Cancelled")
+] // __("Draft"), __("Paid"), __("Partially Paid"), __("Unpaid"), __("Claimed"), __("Returned"), __("Partly Claimed and Returned"), __("Cancelled")
 const FILTER_CONFIG = [
 	{
 		fieldname: "status",

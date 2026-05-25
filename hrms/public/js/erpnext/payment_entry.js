@@ -47,10 +47,11 @@ frappe.ui.form.on("Payment Entry", {
 				filters["is_paid"] = 0;
 			}
 
-			if (
-				child.reference_doctype == "Employee Advance" ||
-				child.reference_doctype == "Leave Encashment"
-			) {
+			if (child.reference_doctype == "Employee Advance") {
+				filters["status"] = ["in", ["Unpaid", "Partially Paid"]];
+			}
+
+			if (child.reference_doctype == "Leave Encashment") {
 				filters["status"] = "Unpaid";
 			}
 
