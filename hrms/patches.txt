@@ -47,3 +47,4 @@ hrms.patches.v16_0.set_currency_and_base_fields_in_expense_claim
 hrms.patches.v16_0.remove_ess_user_type_limit
 hrms.patches.v16_0.add_default_hr_role_permissions #2026-05-28
 hrms.patches.v16_0.set_reference_fields_in_expense_claim_advance
+hrms.patches.v16_0.update_partially_paid_employee_advance_status
