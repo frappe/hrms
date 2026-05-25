@@ -47,7 +47,14 @@ class EmployeeAdvance(Document):
 		repay_unclaimed_amount_from_salary: DF.Check
 		return_amount: DF.Currency
 		status: DF.Literal[
-			"Draft", "Paid", "Unpaid", "Claimed", "Returned", "Partly Claimed and Returned", "Cancelled"
+			"Draft",
+			"Paid",
+			"Partially Paid",
+			"Unpaid",
+			"Claimed",
+			"Returned",
+			"Partly Claimed and Returned",
+			"Cancelled",
 		]
 	# end: auto-generated types
 
@@ -154,6 +161,8 @@ class EmployeeAdvance(Document):
 				or (self.paid_amount and self.repay_unclaimed_amount_from_salary)
 			):
 				status = "Paid"
+			elif flt(self.paid_amount) > 0:
+				status = "Partially Paid"
 			else:
 				status = "Unpaid"
 		elif self.docstatus == 2:
@@ -233,6 +242,7 @@ class EmployeeAdvance(Document):
 		self.db_set("paid_amount", paid_amount)
 		self.db_set("return_amount", return_amount)
 		self.set_status(update=True)
+		self.set_pending_amount()
 
 		base_paid_amount = aple_paid_amount.get("base_paid_amount") or 0
 		self.db_set("base_paid_amount", base_paid_amount)
@@ -266,7 +276,7 @@ class EmployeeAdvance(Document):
 				(Advance.employee == self.employee)
 				& (Advance.docstatus == 1)
 				& (Advance.posting_date <= self.posting_date)
-				& (Advance.status == "Unpaid")
+				& (Advance.status.isin(["Unpaid", "Partially Paid"]))
 			)
 		).run()[0][0] or 0.0
 

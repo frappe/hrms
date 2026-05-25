@@ -122,7 +122,7 @@
    "fieldtype": "Select",
    "label": "Status",
    "no_copy": 1,
-   "options": "Draft\nPaid\nUnpaid\nClaimed\nReturned\nPartly Claimed and Returned\nCancelled",
+   "options": "Draft\nPaid\nPartially Paid\nUnpaid\nClaimed\nReturned\nPartly Claimed and Returned\nCancelled",
    "read_only": 1
   },
   {
@@ -291,6 +291,10 @@
    "color": "Green",
    "title": "Paid"
   },
+    {
+     "color": "Blue",
+     "title": "Partially Paid"
+    },
   {
    "color": "Orange",
    "title": "Unpaid"
