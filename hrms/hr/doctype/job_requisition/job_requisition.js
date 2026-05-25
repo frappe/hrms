@@ -81,4 +81,30 @@ frappe.ui.form.on("Job Requisition", {
 			frm.page.set_inner_btn_group_as_primary(__("Actions"));
 		}
 	},
+	before_save: function (frm) {
+		frm.trigger("handle_duplicate_check");
+	},
+	handle_duplicate_check: function (frm) {
+		if (!frm.is_new() || frm.duplicate_confirmed) return;
+		frappe.validated = false;
+
+		frm.call("check_duplicate_job_requisition").then((r) => {
+			if (!r.message) {
+				frm.duplicate_confirmed = true;
+				frm.save();
+				return;
+			}
+
+			frappe.confirm(
+				__(
+					"A Job Requisition already exists for {0} requested by {1} for the same department.<br> Do you want to continue?",
+					[frm.doc.designation.bold(), frm.doc.requested_by.bold()],
+				),
+				() => {
+					frm.duplicate_confirmed = true;
+					frm.save();
+				},
+			);
+		});
+	},
 });
