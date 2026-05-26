@@ -227,7 +227,7 @@ class TestEmployeeAdvance(HRMSTestSuite):
 
 		self.assertEqual(advance.status, "Partially Paid")
 
-		claim = get_expense_claim(advance.name, payment_via_journal_entry=0)
+		claim = get_expense_claim(advance.name)
 		self.assertEqual(len(claim.advances), 1)
 		self.assertEqual(claim.advances[0].employee_advance, advance.name)
 		self.assertEqual(claim.advances[0].advance_paid, 700)
