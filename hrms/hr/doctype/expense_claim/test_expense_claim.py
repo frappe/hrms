@@ -255,7 +255,7 @@ class TestExpenseClaim(FrappeTestCase):
 	def test_expense_claim_partially_paid_via_advance(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (
 			make_employee_advance,
-			make_journal_entry_for_advance,
+			make_payment_entry,
 		)
 		from hrms.hr.doctype.expense_claim.expense_claim import get_expense_claim
 
@@ -264,11 +264,20 @@ class TestExpenseClaim(FrappeTestCase):
 		employee = make_employee("test_partial_advance_claim@expenseclaim.com", "_Test Company")
 		advance = make_employee_advance(employee, {"advance_amount": 500})
 		make_payment_entry(advance)
+		advance.reload()
 
 		currency, cost_center = frappe.db.get_value(
 			"Company", "_Test Company", ["default_currency", "cost_center"]
 		)
-		claim = get_expense_claim(advance.name)  # function call to create claim from employee advance form
+		claim = get_expense_claim(
+			employee,
+			"_Test Company",
+			advance.name,
+			advance.posting_date,
+			advance.paid_amount,
+			advance.claimed_amount,
+			advance.return_amount,
+		)  # function call to create claim from employee advance form
 		claim.update(
 			{
 				"payable_account": get_payable_account("_Test Company"),
