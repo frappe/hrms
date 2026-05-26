@@ -243,6 +243,7 @@ class EmployeeAdvance(Document):
 		self.db_set("return_amount", return_amount)
 		self.set_status(update=True)
 		self.set_pending_amount()
+		self.db_set("pending_amount", self.pending_amount)
 
 		base_paid_amount = aple_paid_amount.get("base_paid_amount") or 0
 		self.db_set("base_paid_amount", base_paid_amount)
