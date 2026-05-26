@@ -261,21 +261,9 @@ class TestExpenseClaim(FrappeTestCase):
 
 		frappe.db.delete("Employee Advance")
 
-<<<<<<< HEAD
-		payable_account = get_payable_account("_Test Company")
-		claim = make_expense_claim(
-			payable_account, 1000, 1000, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
-		)
-
-		# link advance for partial amount
-		advance = make_employee_advance(claim.employee, {"advance_amount": 500})
-		pe = make_journal_entry_for_advance(advance)
-		pe.submit()
-=======
 		employee = make_employee("test_partial_advance_claim@expenseclaim.com", "_Test Company")
 		advance = make_employee_advance(employee, {"advance_amount": 500})
 		make_payment_entry(advance)
->>>>>>> 39ce6934f (test: update partial employee advance expense claim validation)
 
 		currency, cost_center = frappe.db.get_value(
 			"Company", "_Test Company", ["default_currency", "cost_center"]
