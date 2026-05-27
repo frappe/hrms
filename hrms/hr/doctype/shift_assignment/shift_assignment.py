@@ -422,7 +422,6 @@ def get_shifts_for_date(employee: str, for_timestamp: datetime) -> list[dict[str
 		.where(
 			(assignment.employee == employee)
 			& (assignment.docstatus == 1)
-			& (assignment.status == "Active")
 			# for shifts that exceed a day in duration or margins
 			# eg: shift = 00:30:00 - 10:00:00, including margins (1 hr) = 23:30:00 - 11:00:00
 			# if for_timestamp = 23:30:00 (falls in before shift margin), also fetch next days shift to find the correct shift
@@ -508,12 +507,7 @@ def get_prev_or_next_shift(
 		shift_dates = frappe.get_all(
 			"Shift Assignment",
 			["start_date", "end_date"],
-			{
-				"employee": employee,
-				"start_date": (direction, for_timestamp.date()),
-				"docstatus": 1,
-				"status": "Active",
-			},
+			{"employee": employee, "start_date": (direction, for_timestamp.date()), "docstatus": 1},
 			as_list=True,
 			limit=MAX_DAYS,
 			order_by="start_date " + sort_order,

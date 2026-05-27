@@ -452,6 +452,55 @@ class TestEmployeeCheckin(HRMSTestSuite):
 			self.assertEqual(log.shift_actual_start, start_timestamp)
 			self.assertEqual(log.shift_actual_end, end_timestamp)
 
+	def test_night_shift_out_on_next_day_with_inactive_assignment(self):
+		employee = make_employee("test_c_shift_inactive@example.com", company="_Test Company")
+		shift_type = setup_shift_type(
+			shift_type="Test Night Shift",
+			start_time="22:00:00",
+			end_time="06:00:00",
+			allow_check_out_after_shift_end_time=120,
+		)
+		date = getdate()
+		next_day = add_days(date, 1)
+
+		# single-day assignment — mimics what the HRMS roster creates
+		assignment = make_shift_assignment(shift_type.name, employee, date, date)
+
+		# IN log while assignment is still Active
+		log_in = make_checkin(employee, datetime.combine(date, get_time("21:50:00")))
+		self.assertEqual(log_in.shift, shift_type.name)
+
+		# Simulate roster overwrite / scheduler marking the assignment Inactive
+		frappe.db.set_value("Shift Assignment", assignment.name, "status", "Inactive")
+
+		# OUT log on the next calendar day, within the 120-min checkout margin (actual_end = 08:00)
+		# This is the bug: currently returns None because status = "Active" filter excludes the assignment
+		log_out = make_checkin(employee, datetime.combine(next_day, get_time("06:21:00")), log_type="OUT")
+		self.assertEqual(log_out.shift, shift_type.name)
+
+	def test_backdated_night_shift_checkins_with_inactive_assignment(self):
+		employee = make_employee("test_c_shift_backdated@example.com", company="_Test Company")
+		shift_type = setup_shift_type(
+			shift_type="Test Night Shift Backdated",
+			start_time="22:00:00",
+			end_time="06:00:00",
+			allow_check_out_after_shift_end_time=120,
+		)
+		date = getdate()
+		next_day = add_days(date, 1)
+
+		# single-day assignment, immediately mark it Inactive to simulate a past-expired assignment
+		assignment = make_shift_assignment(shift_type.name, employee, date, date)
+		frappe.db.set_value("Shift Assignment", assignment.name, "status", "Inactive")
+
+		# Both checkins are "backdated" — inserted after the assignment is already Inactive
+		log_in = make_checkin(employee, datetime.combine(date, get_time("21:50:00")))
+		log_out = make_checkin(employee, datetime.combine(next_day, get_time("06:21:00")))
+
+		# Both should resolve to the C shift; Inactive status must not block tagging
+		self.assertEqual(log_in.shift, shift_type.name)
+		self.assertEqual(log_out.shift, shift_type.name)
+
 	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
 	def test_consecutive_shift_assignments_overlapping_within_grace_period(self):
 		# test adjustment for start and end times if they are overlapping
