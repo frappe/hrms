@@ -89,6 +89,7 @@
    "fieldtype": "Select",
    "label": "Status",
    "options": "Draft\nApproved\nRejected",
+   "permlevel": 1,
    "reqd": 1
   },
   {
@@ -146,6 +147,23 @@
    "share": 1,
    "submit": 1,
    "write": 1
+  },
+  {
+   "permlevel": 1,
+   "read": 1,
+   "role": "All"
+  },
+  {
+   "permlevel": 1,
+   "read": 1,
+   "write": 1,
+   "role": "HR Manager"
+  },
+  {
+   "permlevel": 1,
+   "read": 1,
+   "write": 1,
+   "role": "HR User"
   }
  ],
  "sort_field": "creation",

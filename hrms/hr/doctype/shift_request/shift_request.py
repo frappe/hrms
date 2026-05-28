@@ -24,6 +24,7 @@ class ShiftRequest(Document, PWANotificationsMixin):
 		self.validate_overlapping_shift_requests()
 		self.validate_approver()
 		self.validate_default_shift()
+		self.validate_status_change()
 
 	def on_update(self):
 		share_doc_with_approver(self, self.approver)
@@ -134,3 +135,13 @@ class ShiftRequest(Document, PWANotificationsMixin):
 		)
 
 		frappe.throw(msg, title=_("Overlapping Shift Requests"), exc=OverlappingShiftRequestError)
+
+	def validate_status_change(self):
+		if frappe.has_permission("Shift Request", "submit", self):
+			return
+
+		if self.status != "Draft":
+			frappe.throw(
+				_("You do not have permission to change the Status of a Shift Request."),
+				frappe.PermissionError,
+			)
