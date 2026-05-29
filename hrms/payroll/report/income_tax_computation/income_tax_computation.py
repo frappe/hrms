@@ -393,7 +393,15 @@ class IncomeTaxComputationReport:
 		standard_exemptions_per_slab = dict(
 			frappe.get_all(
 				"Income Tax Slab",
-				filters={"company": self.filters.company, "docstatus": 1, "disabled": 0},
+				filters={
+					"company": self.filters.company,
+					"docstatus": 1,
+					"disabled": 0,
+					"effective_from": (
+						"between",
+						[self.payroll_period_start_date, self.payroll_period_end_date],
+					),
+				},
 				fields=["name", "standard_tax_exemption_amount"],
 				as_list=1,
 			)
