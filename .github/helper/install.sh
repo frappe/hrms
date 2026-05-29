@@ -61,9 +61,10 @@ mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL character_set
 mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
 
 # Belt-and-suspenders: also set performance variables at runtime in case
-# MARIADB_EXTRA_FLAGS was not honoured by the container image.
+# MARIADB_EXTRA_FLAGS was not honoured by the container image. Mirrors the
+# full flag set; all three are dynamic in MariaDB 11.x.
 mariadb --host 127.0.0.1 --port 3306 -u root -proot \
-    -e "SET GLOBAL innodb_flush_log_at_trx_commit=0; SET GLOBAL sync_binlog=0;"
+    -e "SET GLOBAL innodb_flush_log_at_trx_commit=0; SET GLOBAL sync_binlog=0; SET GLOBAL innodb_doublewrite=0;"
 
 mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "CREATE USER 'test_frappe'@'localhost' IDENTIFIED BY 'test_frappe'"
 mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "CREATE DATABASE test_frappe"
