@@ -265,10 +265,14 @@ class SalaryBreakupReport:
 
 	def get_message(self):
 		path = "hrms/payroll/report/employee_ctc_break_up/employee_profile_card.html"
+		employee_name, designation, image = frappe.get_value(
+			"Employee", self.employee, ["employee_name", "designation", "image"]
+		)
 		context = dict(
 			{
-				"employee_name": frappe.get_value("Employee", self.employee, "employee_name"),
-				"designation": frappe.get_value("Employee", self.employee, "designation"),
+				"employee_name": employee_name,
+				"designation": designation,
+				"image": image,
 				"salary_structure": self.salary_structure,
 				"per_cycle": self.payroll_frequency,
 				"annual_ctc": self.format_currency(self.ctc),
