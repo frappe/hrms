@@ -12,13 +12,20 @@ paymentsbranch=${PAYMENTS_BRANCH:-${githubbranch%"-hotfix"}}
 lendingbranch="develop"
 
 # ---------------------------------------------------------------------------
-# Phase 1 — parallelise the three slow, independent setup steps:
-#   a) system packages   b) frappe-bench pip install   c) frappe git clone
+# Phase 1 — parallelise every slow, independent setup step:
+#   a) system packages   b) frappe-bench pip install
+#   c) shallow git clone of frappe and all dependency apps
+#
+# The dependency apps (frappe, payments, erpnext, lending) are cloned here
+# --depth 1 instead of letting `bench get-app` fetch them later. erpnext in
+# particular has a multi-GB history; a sequential full clone over the network
+# was the main reason hrms CI install ran ~2x slower than erpnext's. Phase 2
+# then installs them from these local checkouts, so no network re-clone.
 # ---------------------------------------------------------------------------
 
 sudo apt update
 
-# apt remove/install must run sequentially but can overlap with pip and clone.
+# apt remove/install must run sequentially but can overlap with pip and clones.
 sudo apt remove mysql-server mysql-client
 sudo apt install libcups2-dev redis-server mariadb-client libmariadb-dev &
 apt_pid=$!
@@ -27,11 +34,23 @@ pip install frappe-bench &
 pip_pid=$!
 
 git clone "https://github.com/${frappeuser}/frappe" --branch "${frappebranch}" --depth 1 &
-clone_pid=$!
+frappe_pid=$!
+
+git clone "https://github.com/${frappeuser}/payments" --branch "${paymentsbranch}" --depth 1 &
+payments_pid=$!
+
+git clone "https://github.com/${frappeuser}/erpnext" --branch "${erpnextbranch}" --depth 1 &
+erpnext_pid=$!
+
+git clone "https://github.com/${frappeuser}/lending" --branch "${lendingbranch}" --depth 1 &
+lending_pid=$!
 
 wait $apt_pid
 wait $pip_pid
-wait $clone_pid
+wait $frappe_pid
+wait $payments_pid
+wait $erpnext_pid
+wait $lending_pid
 
 bench init --skip-assets --frappe-path ~/frappe --python "$(which python)" frappe-bench
 
@@ -70,9 +89,10 @@ sed -i 's/schedule:/# schedule:/g' Procfile
 sed -i 's/socketio:/# socketio:/g' Procfile
 sed -i 's/redis_socketio:/# redis_socketio:/g' Procfile
 
-bench get-app "https://github.com/${frappeuser}/payments" --branch "$paymentsbranch"
-bench get-app "https://github.com/${frappeuser}/erpnext" --branch "$erpnextbranch" --resolve-deps
-bench get-app "https://github.com/${frappeuser}/lending" --branch "$lendingbranch"
+# Install from the local checkouts cloned in Phase 1 (no network re-clone).
+bench get-app payments ~/payments
+bench get-app erpnext ~/erpnext --resolve-deps
+bench get-app lending ~/lending
 bench get-app hrms "${GITHUB_WORKSPACE}"
 bench setup requirements --dev
 
