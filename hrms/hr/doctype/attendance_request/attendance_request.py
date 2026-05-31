@@ -67,11 +67,13 @@ class AttendanceRequest(Document):
 				)
 
 	def get_active_shifts(self):
+		# Attendance requests are typically posted after the shift period for corrections.
+		# Expired shift assignments are auto-marked Inactive, but should still be considered
+		# here so that the shift is auto-fetched for backdated requests.
 		shifts = frappe.get_all(
 			"Shift Assignment",
 			filters={
 				"docstatus": 1,
-				"status": "Active",
 				"employee": self.employee,
 				"start_date": ("<=", self.from_date),
 				"end_date": (">=", self.to_date),

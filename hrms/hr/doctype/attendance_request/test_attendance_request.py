@@ -334,6 +334,44 @@ class TestAttendanceRequest(HRMSTestSuite):
 		self.assertEqual(attendance.half_day_status, "Absent")
 		self.assertEqual(attendance.modify_half_day_status, 0)
 
+	def test_expired_shift_assignment_is_auto_fetched(self):
+		"""Backdated attendance requests should auto-fetch the shift even after the
+		assignment has been marked Inactive by mark_expired_shift_assignments_as_inactive."""
+		from hrms.hr.doctype.shift_assignment.shift_assignment import (
+			mark_expired_shift_assignments_as_inactive,
+		)
+
+		today = getdate()
+		shift_start = add_days(today, -10)
+		shift_end = add_days(today, -5)
+
+		shift_type = create_shift("Test Expired Shift", "09:00:00", "17:00:00")
+		create_shift_assignment(self.employee.name, shift_type.name, shift_start, shift_end)
+
+		# Cron auto-marks the assignment Inactive because its end_date is in the past
+		mark_expired_shift_assignments_as_inactive()
+
+		assignment_status = frappe.db.get_value(
+			"Shift Assignment",
+			{"employee": self.employee.name, "shift_type": shift_type.name},
+			"status",
+		)
+		self.assertEqual(assignment_status, "Inactive")
+
+		# Attendance request for the now-expired shift period — shift should still be auto-fetched
+		attendance_request = frappe.get_doc(
+			{
+				"doctype": "Attendance Request",
+				"employee": self.employee.name,
+				"from_date": shift_start,
+				"to_date": shift_end,
+				"reason": "On Duty",
+				"company": "_Test Company",
+			}
+		).save()
+
+		self.assertEqual(attendance_request.shift, shift_type.name)
+
 	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": True})
 	def test_overlap_with_different_shifts(self):
 		shift_1 = create_shift("Morning Shift", "08:00:00", "12:00:00")
