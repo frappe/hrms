@@ -22,6 +22,9 @@
   "end_date",
   "column_break_13",
   "deduct_tax_for_unsubmitted_tax_exemption_proof",
+  "create_salary_slip_on",
+  "submit_salary_slip_on",
+  "schedule_enabled",
   "employees_tab",
   "section_break_17",
   "branch",
@@ -330,6 +333,22 @@
    "fieldtype": "Select",
    "label": "Overtime Slip Step",
    "options": "\nCreate\nSubmit"
+  },
+  {
+   "fieldname": "create_salary_slip_on",
+   "fieldtype": "Datetime",
+   "label": "Create Salary Slip On"
+  },
+  {
+   "fieldname": "submit_salary_slip_on",
+   "fieldtype": "Datetime",
+   "label": "Submit Salary Slip On"
+  },
+  {
+   "default": "0",
+   "fieldname": "schedule_enabled",
+   "fieldtype": "Check",
+   "label": "Create & Submit as per Schedule"
   }
  ],
  "icon": "fa fa-cog",
@@ -340,11 +359,11 @@
    "link_fieldname": "payroll_entry"
   }
  ],
- "modified": "2025-08-25 20:05:37.733324",
+ "modified": "2026-06-01 15:05:14.602689",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",
- "naming_rule": "Expression (old style)",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

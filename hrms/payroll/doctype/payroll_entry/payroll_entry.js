@@ -125,6 +125,13 @@ frappe.ui.form.on("Payroll Entry", {
 				frm.scroll_to_field("error_message");
 			});
 		}
+
+		if (!frm.is_new()) {
+            frm.add_custom_button("Create & Submit as per Schedule", () => {
+                frm.set_value("schedule_enabled", 1);
+                frm.save();
+            });
+        }
 	},
 
 	get_employee_details: function (frm) {

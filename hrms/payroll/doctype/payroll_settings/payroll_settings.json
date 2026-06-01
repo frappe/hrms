@@ -31,7 +31,8 @@
   "process_payroll_accounting_entry_based_on_employee",
   "mandatory_benefit_application",
   "column_break_zi9y",
-  "create_overtime_slip"
+  "create_overtime_slip",
+  "schedule_payroll"
  ],
  "fields": [
   {
@@ -196,13 +197,19 @@
    "fieldname": "mandatory_benefit_application",
    "fieldtype": "Check",
    "label": "Mandatory Benefit Application"
+  },
+  {
+   "default": "0",
+   "fieldname": "schedule_payroll",
+   "fieldtype": "Check",
+   "label": "Schedule Payroll"
   }
  ],
  "icon": "fa fa-cog",
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-03-26 15:37:55.573986",
+ "modified": "2026-06-01 14:59:41.388724",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Settings",

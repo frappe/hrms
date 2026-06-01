@@ -21,6 +21,8 @@ from frappe.utils import (
 	flt,
 	get_link_to_form,
 	getdate,
+	now_datetime,
+	time_diff_in_minutes
 )
 
 import erpnext
@@ -41,7 +43,6 @@ class PayrollEntry(Document):
 
 	if TYPE_CHECKING:
 		from frappe.types import DF
-
 		from hrms.payroll.doctype.payroll_employee_detail.payroll_employee_detail import PayrollEmployeeDetail
 
 		amended_from: DF.Link | None
@@ -49,6 +50,7 @@ class PayrollEntry(Document):
 		branch: DF.Link | None
 		company: DF.Link
 		cost_center: DF.Link
+		create_salary_slip_on: DF.Datetime | None
 		currency: DF.Link
 		deduct_tax_for_unsubmitted_tax_exemption_proof: DF.Check
 		department: DF.Link | None
@@ -68,8 +70,10 @@ class PayrollEntry(Document):
 		salary_slip_based_on_timesheet: DF.Check
 		salary_slips_created: DF.Check
 		salary_slips_submitted: DF.Check
+		schedule_enabled: DF.Check
 		start_date: DF.Date
 		status: DF.Literal["Draft", "Submitted", "Cancelled", "Queued", "Failed"]
+		submit_salary_slip_on: DF.Datetime | None
 		validate_attendance: DF.Check
 	# end: auto-generated types
 
@@ -95,6 +99,17 @@ class PayrollEntry(Document):
 	def validate(self):
 		self.number_of_employees = len(self.employees)
 		self.set_status()
+		self.validate_schedule()
+
+	def validate_schedule(self):
+		if self.create_salary_slip_on and self.submit_salary_slip_on:
+			diff = time_diff_in_minutes(
+				self.submit_salary_slip_on,
+				self.create_salary_slip_on
+			)
+
+			if diff < 60:
+				frappe.throw(_("Submit time must be at least 60 minutes after create time"))
 
 	def set_status(self, status=None, update=False):
 		if not status:
@@ -1832,3 +1847,31 @@ def get_salary_withholdings(
 	if pluck:
 		return withheld_salaries.run(pluck=pluck)
 	return withheld_salaries.run(as_dict=True)
+
+
+def process_scheduled_payroll():
+    now = now_datetime()
+
+    entries = frappe.get_all(
+        "Payroll Entry",
+        filters={
+            "docstatus": 1,
+            "schedule_enabled": 1
+        },
+        fields=["name", "create_salary_slip_on", "submit_salary_slip_on"]
+    )
+
+    for e in entries:
+        doc = frappe.get_doc("Payroll Entry", e.name)
+
+        if doc.create_salary_slip_on and not doc.custom_created:
+            if now >= doc.create_salary_slip_on:
+                doc.create_salary_slips()
+                doc.custom_created = 1
+                doc.save()
+
+        if doc.submit_salary_slip_on and not doc.custom_submitted:
+            if now >= doc.submit_salary_slip_on:
+                doc.submit_salary_slips()
+                doc.custom_submitted = 1
+                doc.save()

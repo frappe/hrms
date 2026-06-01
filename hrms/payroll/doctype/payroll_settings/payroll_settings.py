@@ -32,6 +32,7 @@ class PayrollSettings(Document):
 		password_policy: DF.Data | None
 		payroll_based_on: DF.Literal["Leave", "Attendance"]
 		process_payroll_accounting_entry_based_on_employee: DF.Check
+		schedule_payroll: DF.Check
 		sender: DF.Link | None
 		sender_copy: DF.Link | None
 		sender_email: DF.Data | None
