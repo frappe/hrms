@@ -177,7 +177,7 @@ def get_events(start, end, filters=None):
 
 
 def mark_expired_shift_assignments_as_inactive():
-	today = getdate()
+	yesterday = add_days(getdate(), -1)
 	shift_assignment = frappe.qb.DocType("Shift Assignment")
 
 	expired_assignments = (
@@ -187,7 +187,7 @@ def mark_expired_shift_assignments_as_inactive():
 			(shift_assignment.docstatus == 1)
 			& (shift_assignment.status == "Active")
 			& (shift_assignment.end_date.isnotnull())
-			& (shift_assignment.end_date < today)
+			& (shift_assignment.end_date < yesterday)
 		)
 	).run(pluck=True)
 
