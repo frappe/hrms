@@ -273,6 +273,8 @@ def get_leaves(month_start: str, month_end: str, employee_filters: dict[str, str
 	LeaveApplication = frappe.qb.DocType("Leave Application")
 	Employee = frappe.qb.DocType("Employee")
 
+	frappe.has_permission("Leave Application", "read", throw=True)
+
 	query = (
 		frappe.qb.select(
 			LeaveApplication.name.as_("leave"),
