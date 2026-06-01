@@ -108,7 +108,6 @@ def get_component_amt_from_salary_slip(employee, salary_structure, basic_compone
 		salary_structure,
 		employee=employee,
 		for_preview=1,
-		ignore_permissions=True,
 		posting_date=from_date,
 	)
 
