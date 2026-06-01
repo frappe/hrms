@@ -357,6 +357,7 @@ def get_existing_assignments(employees, salary_structure, from_date):
 
 @frappe.whitelist()
 def make_salary_slip(
+<<<<<<< HEAD
 	source_name,
 	target_doc=None,
 	employee=None,
@@ -366,6 +367,17 @@ def make_salary_slip(
 	for_preview=0,
 	ignore_permissions=False,
 ):
+=======
+	source_name: str,
+	target_doc: str | Document | None = None,
+	employee: str | None = None,
+	posting_date: str | datetime.date | None = None,
+	as_print: bool = False,
+	print_format: str | None = None,
+	for_preview: int = 0,
+	lwp_days_corrected: float | None = None,
+) -> str | Document:
+>>>>>>> 9b4f3a344 (fix: Better perm checks for HRMS)
 	def postprocess(source, target):
 		if employee:
 			target.employee = employee
@@ -390,7 +402,6 @@ def make_salary_slip(
 		target_doc,
 		postprocess,
 		ignore_child_tables=True,
-		ignore_permissions=ignore_permissions,
 		cached=True,
 	)
 
