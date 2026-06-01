@@ -22,7 +22,7 @@ from frappe.utils import (
 	get_link_to_form,
 	getdate,
 	now_datetime,
-	time_diff_in_minutes
+	time_diff_in_seconds
 )
 
 import erpnext
@@ -103,10 +103,11 @@ class PayrollEntry(Document):
 
 	def validate_schedule(self):
 		if self.create_salary_slip_on and self.submit_salary_slip_on:
-			diff = time_diff_in_minutes(
+
+			diff = time_diff_in_seconds(
 				self.submit_salary_slip_on,
 				self.create_salary_slip_on
-			)
+			) / 60
 
 			if diff < 60:
 				frappe.throw(_("Submit time must be at least 60 minutes after create time"))
