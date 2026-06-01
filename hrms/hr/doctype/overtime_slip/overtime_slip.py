@@ -317,7 +317,6 @@ class OvertimeSlip(Document):
 		return make_salary_slip(
 			salary_structure,
 			employee=self.employee,
-			ignore_permissions=True,
 			posting_date=self.start_date,
 		)
 
