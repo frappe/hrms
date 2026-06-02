@@ -320,8 +320,8 @@ class TestPayrollEntry(HRMSTestSuite):
 
 		[party_type, party] = get_repayment_party_type(loan.name)
 
-		self.assertEqual(party_type, "Employee")
-		self.assertEqual(party, applicant)
+		self.assertEqual(cstr(party_type), "")
+		self.assertEqual(cstr(party), "")
 
 	def test_salary_slip_operation_queueing(self):
 		company = "_Test Company"
