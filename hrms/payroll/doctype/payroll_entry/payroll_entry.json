@@ -25,6 +25,8 @@
   "create_salary_slip_on",
   "submit_salary_slip_on",
   "schedule_enabled",
+  "custom_created",
+  "custom_submitted",
   "employees_tab",
   "section_break_17",
   "branch",
@@ -335,20 +337,37 @@
    "options": "\nCreate\nSubmit"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "create_salary_slip_on",
    "fieldtype": "Datetime",
    "label": "Create Salary Slip On"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "submit_salary_slip_on",
    "fieldtype": "Datetime",
    "label": "Submit Salary Slip On"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "schedule_enabled",
    "fieldtype": "Check",
    "label": "Create & Submit as per Schedule"
+  },
+  {
+   "default": "0",
+   "fieldname": "custom_created",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Custom Created"
+  },
+  {
+   "default": "0",
+   "fieldname": "custom_submitted",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Custom Submitted"
   }
  ],
  "icon": "fa fa-cog",
@@ -359,7 +378,7 @@
    "link_fieldname": "payroll_entry"
   }
  ],
- "modified": "2026-06-01 15:05:14.602689",
+ "modified": "2026-06-02 11:47:21.963670",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",

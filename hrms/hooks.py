@@ -247,9 +247,11 @@ scheduler_events = {
 	],
 	"weekly": ["hrms.controllers.employee_reminders.send_reminders_in_advance_weekly"],
 	"monthly": ["hrms.controllers.employee_reminders.send_reminders_in_advance_monthly"],
-    "*/1 * * * *": [
-		"hrms.payroll.doctype.payroll_entry.payroll_entry.process_scheduled_payroll"
-	]
+    "cron": {
+        "*/1 * * * *": [
+            "hrms.payroll.doctype.payroll_entry.payroll_entry.process_scheduled_payroll"
+        ]
+    }
 }
 
 advance_payment_payable_doctypes = ["Leave Encashment", "Gratuity", "Employee Advance"]

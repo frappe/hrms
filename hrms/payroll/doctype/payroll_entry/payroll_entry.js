@@ -126,12 +126,23 @@ frappe.ui.form.on("Payroll Entry", {
 			});
 		}
 
-		if (!frm.is_new()) {
-            frm.add_custom_button("Create & Submit as per Schedule", () => {
-                frm.set_value("schedule_enabled", 1);
-                frm.save();
-            });
-        }
+		if (
+			!frm.is_new() &&
+			frm.doc.docstatus === 0 &&
+			!frm.doc.schedule_enabled
+		) {
+			frm.add_custom_button(__("Create & Submit as per Schedule"), () => {
+				frm.set_value("schedule_enabled", 1);
+		
+				frm.save().then(() => {
+					frappe.msgprint(
+						__(
+							"Scheduled payroll has been enabled. Please submit the Payroll Entry for automatic processing."
+						)
+					);
+				});
+			});
+		}
 	},
 
 	get_employee_details: function (frm) {

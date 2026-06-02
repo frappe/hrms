@@ -52,6 +52,8 @@ class PayrollEntry(Document):
 		cost_center: DF.Link
 		create_salary_slip_on: DF.Datetime | None
 		currency: DF.Link
+		custom_created: DF.Check
+		custom_submitted: DF.Check
 		deduct_tax_for_unsubmitted_tax_exemption_proof: DF.Check
 		department: DF.Link | None
 		designation: DF.Link | None
@@ -1857,22 +1859,26 @@ def process_scheduled_payroll():
         "Payroll Entry",
         filters={
             "docstatus": 1,
-            "schedule_enabled": 1
+            "schedule_enabled": 1,
         },
-        fields=["name", "create_salary_slip_on", "submit_salary_slip_on"]
+        fields=["name", "create_salary_slip_on", "submit_salary_slip_on"],
     )
 
     for e in entries:
         doc = frappe.get_doc("Payroll Entry", e.name)
 
-        if doc.create_salary_slip_on and not doc.custom_created:
-            if now >= doc.create_salary_slip_on:
-                doc.create_salary_slips()
-                doc.custom_created = 1
-                doc.save()
+        if (
+            doc.create_salary_slip_on
+            and not doc.custom_created
+            and now >= doc.create_salary_slip_on
+        ):
+            doc.create_salary_slips()
+            doc.db_set("custom_created", 1)
 
-        if doc.submit_salary_slip_on and not doc.custom_submitted:
-            if now >= doc.submit_salary_slip_on:
-                doc.submit_salary_slips()
-                doc.custom_submitted = 1
-                doc.save()
+        if (
+            doc.submit_salary_slip_on
+            and not doc.custom_submitted
+            and now >= doc.submit_salary_slip_on
+        ):
+            doc.submit_salary_slips()
+            doc.db_set("custom_submitted", 1)
