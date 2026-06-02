@@ -82,7 +82,7 @@ hrms.HierarchyChart = class {
 	}
 
 	get_default_company() {
-		return __("All Companies");
+		return frappe.defaults.get_default("company") || __("All Companies");
 	}
 
 	show() {
