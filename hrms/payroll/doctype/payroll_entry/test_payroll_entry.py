@@ -320,8 +320,9 @@ class TestPayrollEntry(HRMSTestSuite):
 
 		[party_type, party] = get_repayment_party_type(loan.name)
 
-		self.assertEqual(cstr(party_type), "")
-		self.assertEqual(cstr(party), "")
+		# payroll payable GL entries always have party details regardless of employee tagging setting
+		self.assertEqual(party_type, "Employee")
+		self.assertEqual(party, applicant)
 
 	def test_salary_slip_operation_queueing(self):
 		company = "_Test Company"
