@@ -1,0 +1,100 @@
+[
+    {
+        "doctype": "Department",
+        "department_name": "Engineering",
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Department",
+        "department_name": "Sales",
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Department",
+        "department_name": "HR",
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Department",
+        "department_name": "Finance",
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Department",
+        "department_name": "Operations",
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Department",
+        "department_name": "Business Development",
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Branch",
+        "branch": "Mumbai HQ"
+    },
+    {
+        "doctype": "Branch",
+        "branch": "New York Office"
+    },
+    {
+        "doctype": "Branch",
+        "branch": "Dubai Branch"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Junior Software Engineer"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Software Engineer"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Senior Software Engineer"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Tech Lead"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Engineering Manager"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Sales Executive"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Senior Sales Executive"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Sales Manager"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "HR Executive"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Finance Executive"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Finance Analyst"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Operations Executive"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Operations Manager"
+    },
+    {
+        "doctype": "Designation",
+        "designation_name": "Business Development Executive"
+    }
+]

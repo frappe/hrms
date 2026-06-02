@@ -1,0 +1,99 @@
+[
+    {
+        "doctype": "Leave Type",
+        "leave_type_name": "Annual Leave",
+        "name": "Annual Leave",
+        "allow_encashment": 1,
+        "is_carry_forward": 1,
+        "include_holiday": 1,
+        "max_days_allowed": 20
+    },
+    {
+        "doctype": "Leave Type",
+        "leave_type_name": "Personal Leave",
+        "name": "Personal Leave",
+        "allow_encashment": 0,
+        "is_carry_forward": 0,
+        "include_holiday": 1,
+        "max_days_allowed": 5
+    },
+    {
+        "doctype": "Leave Type",
+        "leave_type_name": "Maternity Leave",
+        "name": "Maternity Leave",
+        "allow_encashment": 0,
+        "is_carry_forward": 0,
+        "include_holiday": 1,
+        "max_days_allowed": 90
+    },
+    {
+        "doctype": "Leave Type",
+        "leave_type_name": "Paternity Leave",
+        "name": "Paternity Leave",
+        "allow_encashment": 0,
+        "is_carry_forward": 0,
+        "include_holiday": 1,
+        "max_days_allowed": 15
+    },
+    {
+        "doctype": "Leave Type",
+        "leave_type_name": "Compensatory Leave",
+        "name": "Compensatory Leave",
+        "is_compensatory": 1,
+        "allow_encashment": 0,
+        "is_carry_forward": 0,
+        "include_holiday": 1
+    },
+    {
+        "doctype": "Leave Type",
+        "leave_type_name": "Unpaid Leave",
+        "name": "Unpaid Leave",
+        "is_unpaid": 1,
+        "allow_encashment": 0,
+        "is_carry_forward": 0,
+        "include_holiday": 0
+    },
+    {
+        "doctype": "Shift Type",
+        "name": "Day Shift",
+        "shift_type_name": "Day Shift",
+        "start_time": "09:00:00",
+        "end_time": "18:00:00",
+        "allow_check_ins": 1
+    },
+    {
+        "doctype": "Shift Type",
+        "name": "Morning Shift",
+        "shift_type_name": "Morning Shift",
+        "start_time": "06:00:00",
+        "end_time": "15:00:00",
+        "allow_check_ins": 1
+    },
+    {
+        "doctype": "Shift Type",
+        "name": "Night Shift",
+        "shift_type_name": "Night Shift",
+        "start_time": "22:00:00",
+        "end_time": "07:00:00",
+        "allow_check_ins": 1
+    },
+    {
+        "doctype": "Shift Type",
+        "name": "Flexi Shift",
+        "shift_type_name": "Flexi Shift",
+        "start_time": "08:00:00",
+        "end_time": "17:00:00",
+        "allow_check_ins": 1,
+        "begin_check_in_before_shift_start_time": 60,
+        "allow_check_out_after_shift_end_time": 60
+    },
+    {
+        "doctype": "Shift Type",
+        "name": "Remote Work",
+        "shift_type_name": "Remote Work",
+        "start_time": "09:00:00",
+        "end_time": "18:00:00",
+        "allow_check_ins": 1,
+        "working_hours": 9
+    }
+]

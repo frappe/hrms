@@ -1,0 +1,18 @@
+[
+    {
+        "doctype": "Job Applicant Source",
+        "source_name": "Website Listing"
+    },
+    {
+        "doctype": "Job Applicant Source",
+        "source_name": "Walk In"
+    },
+    {
+        "doctype": "Job Applicant Source",
+        "source_name": "Employee Referral"
+    },
+    {
+        "doctype": "Job Applicant Source",
+        "source_name": "Campaign"
+    }
+]

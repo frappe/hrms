@@ -108,15 +108,40 @@ setup_wizard_stages = "hrms.hrms_setup.setup_wizard.get_setup_stages"
 
 setup_wizard_complete = "hrms.subscription_utils.update_erpnext_access"
 
-standard_navbar_items = [
-	{
-		"item_label": "Delete Demo Data",
-		"item_type": "Action",
-		"action": "hrms.demo.clear_demo();",
-		"is_standard": 1,
-		"condition": "eval: frappe.boot.sysdefaults.demo_company && frappe.boot.sysdefaults.demo_company.length > 0",
-		"icon": "trash",
-	},
+extend_bootinfo = ["hrms.hrms_setup.demo.extend_bootinfo"]
+
+hrms_demo_master_doctypes = [
+	"gender",
+	"salutation",
+	"department",
+	"branch",
+	"designation",
+	"employment_type",
+	"leave_type",
+	"shift_type",
+	"holiday_list",
+	"holiday_list_assignment",
+	"leave_period",
+]
+
+hrms_demo_background_master_doctypes = [
+	"salary_component",
+	"salary_structure",
+	"job_applicant_source",
+	"job_opening",
+	"job_applicant",
+	"job_offer",
+	"kra",
+	"appraisal_template",
+	"appraisal_cycle",
+]
+
+hrms_demo_transaction_doctypes = [
+	"expense_claim",
+]
+
+hrms_demo_background_transaction_doctypes = [
+	"appraisal",
 ]
 
 # Uninstallation
@@ -316,10 +341,10 @@ global_search_doctypes = {
 	],
 }
 
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "hrms.event.get_events"
-# }
-#
+override_whitelisted_methods = {
+	"erpnext.setup.demo.clear_demo_data": "hrms.hrms_setup.demo.clear_demo_data",
+}
+
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps

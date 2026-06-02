@@ -2,21 +2,25 @@
     {
         "doctype": "Appraisal Cycle",
         "cycle_name": "Q4 2025 Review",
-        "company": "__DEMO_COMPANY__",
+        "company": "Sparrow Tech Pvt Ltd",
         "status": "In Progress",
         "start_date": "2025-10-01",
         "end_date": "2025-12-31",
         "description": "Quarterly performance review for Q4 2025",
-        "kra_evaluation_method": "Manual Rating"
+        "kra_evaluation_method": "Manual Rating",
+        "calculate_final_score_based_on_formula": 1,
+        "final_score_formula": "goal_score"
     },
     {
         "doctype": "Appraisal Cycle",
         "cycle_name": "Q1 2026 Review",
-        "company": "__DEMO_COMPANY__",
+        "company": "Sparrow Tech Pvt Ltd",
         "status": "In Progress",
         "start_date": "2026-01-01",
         "end_date": "2026-03-31",
         "description": "Quarterly performance review for Q1 2026",
-        "kra_evaluation_method": "Manual Rating"
+        "kra_evaluation_method": "Manual Rating",
+        "calculate_final_score_based_on_formula": 1,
+        "final_score_formula": "goal_score"
     }
 ]

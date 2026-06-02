@@ -1,0 +1,14 @@
+[
+    {
+        "doctype": "Gender",
+        "gender": "Male"
+    },
+    {
+        "doctype": "Gender",
+        "gender": "Female"
+    },
+    {
+        "doctype": "Gender",
+        "gender": "Other"
+    }
+]

@@ -1,38 +1,98 @@
 [
     {
         "doctype": "Appraisal Template",
-        "template_title": "Standard Performance Review",
-        "description": "Standard annual performance review template",
+        "template_title": "Management Review",
+        "description": "Performance review template for managers and team leads",
         "goals": [
-            {"key_result_area": "Project Delivery", "per_weightage": 30},
-            {"key_result_area": "Code Quality", "per_weightage": 25},
-            {"key_result_area": "Team Collaboration", "per_weightage": 20},
-            {"key_result_area": "Innovation", "per_weightage": 15},
-            {"key_result_area": "Communication", "per_weightage": 10}
+            {
+                "key_result_area": "Team Management",
+                "per_weightage": 25,
+                "doctype": "Appraisal Template Goal"
+            },
+            {
+                "key_result_area": "Project Delivery",
+                "per_weightage": 25,
+                "doctype": "Appraisal Template Goal"
+            },
+            {
+                "key_result_area": "Process Improvement",
+                "per_weightage": 20,
+                "doctype": "Appraisal Template Goal"
+            },
+            {
+                "key_result_area": "Innovation",
+                "per_weightage": 15,
+                "doctype": "Appraisal Template Goal"
+            },
+            {
+                "key_result_area": "Compliance",
+                "per_weightage": 15,
+                "doctype": "Appraisal Template Goal"
+            }
         ]
     },
     {
         "doctype": "Appraisal Template",
         "template_title": "Sales Team Review",
-        "description": "Performance review template for sales team",
+        "description": "Performance review template for sales team members",
         "goals": [
-            {"key_result_area": "Sales Targets", "per_weightage": 40},
-            {"key_result_area": "Client Satisfaction", "per_weightage": 25},
-            {"key_result_area": "Team Collaboration", "per_weightage": 15},
-            {"key_result_area": "Communication", "per_weightage": 10},
-            {"key_result_area": "Process Improvement", "per_weightage": 10}
+            {
+                "key_result_area": "Sales Targets",
+                "per_weightage": 40,
+                "doctype": "Appraisal Template Goal"
+            },
+            {
+                "key_result_area": "Client Satisfaction",
+                "per_weightage": 25,
+                "doctype": "Appraisal Template Goal"
+            },
+            {
+                "key_result_area": "Team Collaboration",
+                "per_weightage": 15,
+                "doctype": "Appraisal Template Goal"
+            },
+            {
+                "key_result_area": "Process Improvement",
+                "per_weightage": 10,
+                "doctype": "Appraisal Template Goal"
+            },
+            {
+                "key_result_area": "Communication",
+                "per_weightage": 10,
+                "doctype": "Appraisal Template Goal"
+            }
         ]
     },
     {
         "doctype": "Appraisal Template",
-        "template_title": "Management Review",
-        "description": "Performance review template for managers",
+        "template_title": "Standard Performance Review",
+        "description": "Standard performance review template for individual contributors",
         "goals": [
-            {"key_result_area": "Team Management", "per_weightage": 30},
-            {"key_result_area": "Project Delivery", "per_weightage": 25},
-            {"key_result_area": "Process Improvement", "per_weightage": 20},
-            {"key_result_area": "Innovation", "per_weightage": 15},
-            {"key_result_area": "Compliance", "per_weightage": 10}
+            {
+                "key_result_area": "Project Delivery",
+                "per_weightage": 30,
+                "doctype": "Appraisal Template Goal"
+            },
+            {
+                "key_result_area": "Code Quality",
+                "per_weightage": 25,
+                "doctype": "Appraisal Template Goal"
+            },
+            {
+                "key_result_area": "Team Collaboration",
+                "per_weightage": 20,
+                "doctype": "Appraisal Template Goal"
+            },
+            {
+                "key_result_area": "Innovation",
+                "per_weightage": 15,
+                "doctype": "Appraisal Template Goal"
+            },
+            {
+                "key_result_area": "Communication",
+                "per_weightage": 10,
+                "doctype": "Appraisal Template Goal"
+            }
         ]
     }
 ]

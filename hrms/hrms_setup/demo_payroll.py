@@ -9,7 +9,6 @@ def setup_payroll_runs():
 	if not company:
 		first_company = frappe.get_all("Company", pluck="name")
 		if not first_company:
-			frappe.publish_realtime("demo_progress", {"message": "No companies found, skipping payroll"})
 			return
 		company = first_company[0]
 	else:
@@ -23,7 +22,6 @@ def setup_payroll_runs():
 	)
 
 	if not currencies:
-		frappe.publish_realtime("demo_progress", {"message": "No Salary Structures found, skipping payroll"})
 		return
 
 	current_date = getdate()
@@ -37,7 +35,6 @@ def setup_payroll_runs():
 
 	months.reverse()
 
-	created = 0
 	for month in months:
 		for currency in currencies:
 			try:
@@ -63,10 +60,39 @@ def setup_payroll_runs():
 				)
 
 				payroll_entry.insert(ignore_permissions=True)
+				frappe.db.commit()
 
 				payroll_entry.fill_employee_details()
+				frappe.db.commit()
 
-				payroll_entry.create_salary_slips()
+				payroll_entry.reload()
+
+				from hrms.payroll.doctype.payroll_entry.payroll_entry import create_salary_slips_for_employees
+
+				args = frappe._dict(
+					{
+						"salary_slip_based_on_timesheet": payroll_entry.salary_slip_based_on_timesheet,
+						"payroll_frequency": payroll_entry.payroll_frequency,
+						"start_date": payroll_entry.start_date,
+						"end_date": payroll_entry.end_date,
+						"company": payroll_entry.company,
+						"posting_date": payroll_entry.posting_date,
+						"deduct_tax_for_unsubmitted_tax_exemption_proof": payroll_entry.deduct_tax_for_unsubmitted_tax_exemption_proof,
+						"payroll_entry": payroll_entry.name,
+						"exchange_rate": payroll_entry.exchange_rate,
+						"currency": payroll_entry.currency,
+					}
+				)
+
+				employees = [emp.employee for emp in payroll_entry.employees]
+				if not employees:
+					frappe.delete_doc(
+						"Payroll Entry", payroll_entry.name, ignore_permissions=True, force=True
+					)
+					frappe.db.commit()
+					continue
+
+				create_salary_slips_for_employees(employees, args, publish_progress=False)
 
 				payroll_entry.reload()
 
@@ -83,14 +109,9 @@ def setup_payroll_runs():
 					for ss_name in salary_slips:
 						frappe.get_doc("Salary Slip", ss_name).submit()
 
-				# payroll_entry.submit()
-				created += 1
-
 			except Exception as e:
 				frappe.log_error(f"Failed to create payroll for {month['start']} currency {currency}", str(e))
 				continue
-
-	frappe.publish_realtime("demo_progress", {"message": f"Created {created} Payroll Entries"})
 
 
 def get_default_payment_account(company):

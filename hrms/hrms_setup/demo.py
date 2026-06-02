@@ -6,10 +6,26 @@ import os
 
 import frappe
 from frappe import _
-from frappe.utils import getdate
 
 DEMO_COMPANY = "Sparrow Tech Pvt Ltd"
 DEMO_COMPANY_ABBR = "ST"
+DYNAMIC_DEMO_DATA_JOB_ID = "hrms_demo_dynamic_data_generation"
+DEMO_APPRAISALS_JOB_ID = "hrms_demo_appraisals_setup"
+DEMO_ASSIGNMENTS_JOB_ID = "hrms_demo_assignments_setup"
+DEMO_ATTENDANCE_JOB_ID = "hrms_demo_attendance_setup"
+DEMO_PAYROLL_JOB_ID = "hrms_demo_payroll_setup"
+
+
+def extend_bootinfo(bootinfo):
+	"""Inject the demo company name into the boot payload.
+
+	The frontend JS reads ``frappe.boot.sysdefaults.demo_company`` to decide
+	whether to show the "Demo Company" badge and the "Clear Demo Data" button.
+	We populate it only when the HRMS demo company exists and Global Defaults
+	hasn't already been set to a different value by another app's demo setup.
+	"""
+	if not bootinfo.sysdefaults.get("demo_company") and frappe.db.exists("Company", DEMO_COMPANY):
+		bootinfo.sysdefaults.demo_company = DEMO_COMPANY
 
 
 def setup_demo_data(args=None):
@@ -36,7 +52,17 @@ def clear_demo_data():
 
 	capture("demo_data_erased", "hrms")
 	try:
-		delete_company(DEMO_COMPANY)
+		company = get_demo_company_to_clear()
+		if not company:
+			return
+
+		clear_company_transactions(company)
+		if company == DEMO_COMPANY:
+			clear_hrms_masters(company)
+		clear_erpnext_masters()
+		clear_erpnext_demo_companies()
+		delete_company(company)
+
 		default_company = frappe.db.get_single_value("Global Defaults", "default_company")
 		frappe.db.set_default("company", default_company)
 	except Exception:
@@ -48,7 +74,181 @@ def clear_demo_data():
 		)
 
 
+def get_demo_company_to_clear():
+	return frappe.db.get_single_value("Global Defaults", "demo_company") or frappe.db.exists(
+		"Company", DEMO_COMPANY
+	)
+
+
+def clear_company_transactions(company):
+	from erpnext.setup.demo import create_transaction_deletion_record
+
+	if frappe.db.exists("Company", company):
+		create_transaction_deletion_record(company)
+
+
+def clear_erpnext_masters():
+	"""Clear ERPNext demo master records using force deletion to bypass link validation."""
+	from erpnext.setup.demo import read_data_file_using_hooks as erpnext_read_data_file
+
+	for doctype in frappe.get_hooks("demo_master_doctypes")[::-1]:
+		try:
+			data = erpnext_read_data_file(doctype)
+		except (FileNotFoundError, OSError):
+			continue
+		if data:
+			for item in json.loads(data):
+				clear_demo_record(item)
+
+
+def clear_erpnext_demo_companies():
+	"""Delete ERPNext-style demo companies (those ending with ' (Demo)').
+
+	ERPNext's demo setup creates a company named '<original_company> (Demo)' and
+	stores it in ``Global Defaults.demo_company``.  HRMS's ``create_demo_company``
+	overwrites that field with the HRMS company name, so calling ERPNext's
+	``clear_demo_data()`` directly would read the wrong company.
+
+	Instead we call the same three steps ERPNext's ``clear_demo_data`` performs
+	internally — TDR, ``clear_masters``, ``delete_company`` — but pass the
+	correct company name explicitly.
+	"""
+	from erpnext.setup.demo import (
+		create_transaction_deletion_record,
+	)
+	from erpnext.setup.demo import (
+		delete_company as erpnext_delete_company,
+	)
+
+	erpnext_demo_companies = frappe.get_all(
+		"Company",
+		filters={"company_name": ["like", "% (Demo)"]},
+		pluck="name",
+	)
+	for company in erpnext_demo_companies:
+		try:
+			create_transaction_deletion_record(company)
+			erpnext_delete_company(company)
+		except Exception:
+			frappe.log_error(f"Failed to delete ERPNext demo company: {company}")
+
+
+def clear_hrms_masters(company):
+	# First delete records that TDR skips (company_data_to_be_ignored) to unblock master deletion
+	clear_company_ignored_hrms_data(company)
+	clear_expense_claim_type_accounts(company)
+	for hook_name in (
+		"hrms_demo_background_transaction_doctypes",
+		"hrms_demo_transaction_doctypes",
+		"hrms_demo_background_master_doctypes",
+	):
+		clear_demo_records_from_hook(hook_name)
+
+	clear_demo_records("employee")
+	clear_demo_records_from_hook("hrms_demo_master_doctypes")
+
+
+def clear_company_ignored_hrms_data(company):
+	"""Delete HRMS records that TDR skips (company_data_to_be_ignored hook).
+
+	Uses direct DB deletion (same as ERPNext TDR) to avoid controller-level
+	link validation that would otherwise block deletion and accumulate error messages.
+	"""
+	for doctype in frappe.get_hooks("company_data_to_be_ignored") or []:
+		try:
+			meta = frappe.get_meta(doctype)
+			company_field = next(
+				(f.fieldname for f in meta.fields if f.fieldtype == "Link" and f.options == "Company"),
+				None,
+			)
+			if not company_field:
+				continue
+
+			names = frappe.get_all(doctype, filters={company_field: company}, pluck="name")
+			if not names:
+				continue
+
+			# Delete child tables first (same approach as TDR)
+			for child_df in meta.get_table_fields():
+				frappe.db.delete(child_df.options, {"parent": ["in", names]})
+
+			# Direct DB delete — bypasses all controller logic, link checks, and submission state
+			frappe.db.delete(doctype, {"name": ["in", names]})
+		except Exception:
+			frappe.log_error(f"Failed to clear {doctype} for demo company during demo clear")
+
+
+def clear_expense_claim_type_accounts(company):
+	for expense_claim_type in frappe.get_all("Expense Claim Type", pluck="name"):
+		doc = frappe.get_doc("Expense Claim Type", expense_claim_type)
+		original_count = len(doc.accounts)
+		doc.accounts = [account for account in doc.accounts if account.company != company]
+		if len(doc.accounts) != original_count:
+			doc.save(ignore_permissions=True)
+
+
+def clear_demo_records_from_hook(hook_name):
+	for doctype in frappe.get_hooks(hook_name)[::-1]:
+		clear_demo_records(doctype)
+
+
+def clear_demo_records(doctype):
+	if doctype in ("gender", "salutation"):
+		return
+
+	data = read_data_file_using_hooks(doctype)
+	if not data:
+		return
+
+	for record in json.loads(data)[::-1]:
+		clear_demo_record(record)
+
+
+def clear_demo_record(record):
+	record = record.copy()
+	doctype = record.pop("doctype")
+
+	if doctype in ("Company", "Fiscal Year"):
+		return
+
+	if record.get("name"):
+		delete_demo_doc(doctype, record["name"])
+		return
+
+	valid_columns = frappe.get_meta(doctype).get_valid_columns()
+	# Skip child table lists and calculated fields that may differ from creation values
+	skip_fields = {"total_score", "final_score", "total_claimed_amount", "total_sanctioned_amount"}
+	filters = {
+		key: value
+		for key, value in record.items()
+		if key in valid_columns and key not in skip_fields and not isinstance(value, list)
+	}
+	if not filters:
+		return
+
+	# Use frappe.db.get_value instead of frappe.get_doc to avoid adding "not found"
+	# messages to frappe's message queue when the record doesn't exist
+	name = frappe.db.get_value(doctype, filters)
+	if name:
+		delete_demo_doc(doctype, name)
+
+
+def delete_demo_doc(doctype, name):
+	if not frappe.db.exists(doctype, name):
+		return
+
+	meta = frappe.get_meta(doctype)
+	if meta.is_submittable:
+		# Set docstatus to draft directly — skip cancel() which accumulates
+		# "Cannot cancel because linked" messages in frappe's message queue
+		# even when the exception is caught. This mirrors the TDR force-delete approach.
+		frappe.db.set_value(doctype, name, "docstatus", 0)
+
+	frappe.delete_doc(doctype, name, ignore_permissions=True, force=True)
+
+
 def delete_company(company):
+	frappe.db.set_single_value("Global Defaults", "demo_company", "")
 	frappe.delete_doc("Company", company, ignore_permissions=True)
 
 
@@ -75,103 +275,181 @@ def log_demo_data_failed_notification(error_log):
 
 
 def setup_demo(args):
-	setup_organization()
-	setup_employment_types()
-	setup_hr_masters()
+	process_masters()
 	setup_payroll_accounts()
-	setup_payroll()
-	setup_fixtures()
+	submit_holiday_list_assignments()
 	setup_employees()
-	setup_employee_approvers()
-	setup_salary_structure_assignments()
-	setup_leave_and_attendance()
-	setup_payroll_runs()
 	setup_expense_claim_type_accounts()
-	setup_expense_claims()
-	setup_recruitment_data()
-	setup_appraisals()
+	process_transactions()
+	submit_approved_expense_claims()
+	enqueue_dynamic_demo_data()
 
 
-def setup_appraisals():
-	from frappe.desk.page.setup_wizard.setup_wizard import make_records
-
-	kra_records = get_records_from_json("KRA")
-	make_records(kra_records)
-
-	template_records = get_records_from_json("Appraisal Template")
-	for r in template_records:
-		goals = r.pop("goals", [])
-		if goals:
-			kra_titles = {kra.title: kra.name for kra in frappe.get_all("KRA", fields=["name", "title"])}
-			for goal in goals:
-				if goal.get("key_result_area") in kra_titles:
-					goal["key_result_area"] = kra_titles[goal["key_result_area"]]
-
-			template = frappe.get_doc({"doctype": "Appraisal Template", **r})
-			for goal in goals:
-				template.append("goals", goal)
-			template.insert(ignore_permissions=True)
-
-	cycle_records = get_records_from_json("Appraisal Cycle")
-	make_records(cycle_records)
-
-	employee_map = {}
-	for emp in frappe.get_all(
-		"Employee", filters={"company": DEMO_COMPANY}, fields=["name", "employee_name"]
-	):
-		employee_map[emp.employee_name] = emp.name
-
-	cycle_map = {
-		c.cycle_name: c.name for c in frappe.get_all("Appraisal Cycle", fields=["name", "cycle_name"])
-	}
-	template_map = {
-		t.template_title: t.name
-		for t in frappe.get_all("Appraisal Template", fields=["name", "template_title"])
-	}
-	kra_map = {kra.title: kra.name for kra in frappe.get_all("KRA", fields=["name", "title"])}
-
-	appraisal_records = get_records_from_json("Appraisal")
-	for r in appraisal_records:
-		emp_name = r.get("employee")
-		if emp_name in employee_map:
-			r["employee"] = employee_map[emp_name]
-
-		cycle_name = r.get("appraisal_cycle")
-		if cycle_name in cycle_map:
-			r["appraisal_cycle"] = cycle_map[cycle_name]
-
-		template_name = r.get("appraisal_template")
-		if template_name in template_map:
-			r["appraisal_template"] = template_map[template_name]
-
-		kras = r.get("appraisal_kra", [])
-		if kras:
-			for kra in kras:
-				kra_title = kra.get("kra")
-				if kra_title in kra_map:
-					kra["kra"] = kra_map[kra_title]
-
-	make_records(appraisal_records)
-
-	frappe.publish_realtime("demo_progress", {"message": "Created appraisals"})
+def _is_in_test():
+	return getattr(frappe.flags, "in_test", False) or getattr(frappe, "in_test", False)
 
 
-def setup_employee_approvers():
-	employees = frappe.get_all(
-		"Employee",
-		filters={"company": DEMO_COMPANY, "status": "Active", "reports_to": ["!=", ""]},
-		fields=["name", "reports_to"],
+def enqueue_dynamic_demo_data():
+	frappe.enqueue(
+		"hrms.hrms_setup.demo.setup_dynamic_demo_data",
+		queue="long",
+		timeout=3600,
+		job_id=DYNAMIC_DEMO_DATA_JOB_ID,
+		deduplicate=True,
+		enqueue_after_commit=True,
+		now=_is_in_test(),
 	)
 
-	created = 0
-	for emp in employees:
-		manager_user = frappe.get_value("Employee", emp.reports_to, "user_id")
-		if manager_user:
-			frappe.db.set_value("Employee", emp.name, "leave_approver", manager_user)
-			created += 1
 
-	if created:
-		frappe.publish_realtime("demo_progress", {"message": f"Set leave_approver for {created} employees"})
+def setup_dynamic_demo_data():
+	"""Step 1 — background masters + recruitment.
+
+	Each step commits its own data and chains the next step as a separate
+	background job so results are visible progressively in the UI.
+	"""
+	from frappe.utils.telemetry import capture
+
+	capture("dynamic_demo_data_creation_started", "hrms")
+	try:
+		process_background_masters()
+		submit_salary_structures()
+		set_employee_recruitment_links()
+		submit_accepted_job_offers()
+	except Exception:
+		capture("dynamic_demo_data_creation_failed", "hrms", properties={"exception": frappe.get_traceback()})
+		raise
+
+	frappe.enqueue(
+		"hrms.hrms_setup.demo.setup_demo_appraisals",
+		queue="long",
+		timeout=1800,
+		job_id=DEMO_APPRAISALS_JOB_ID,
+		deduplicate=True,
+		enqueue_after_commit=True,
+		now=_is_in_test(),
+	)
+
+
+def setup_demo_appraisals():
+	"""Step 2 — appraisals (background transactions)."""
+	try:
+		process_background_transactions()
+	except Exception:
+		frappe.log_error("Failed to create demo appraisals")
+		raise
+
+	frappe.enqueue(
+		"hrms.hrms_setup.demo.setup_demo_salary_assignments",
+		queue="long",
+		timeout=1800,
+		job_id=DEMO_ASSIGNMENTS_JOB_ID,
+		deduplicate=True,
+		enqueue_after_commit=True,
+		now=_is_in_test(),
+	)
+
+
+def setup_demo_salary_assignments():
+	"""Step 3 — salary structure assignments."""
+	from hrms.hrms_setup.demo_dynamic import setup_salary_structure_assignments
+
+	try:
+		setup_salary_structure_assignments(DEMO_COMPANY)
+	except Exception:
+		frappe.log_error("Failed to create demo salary structure assignments")
+		raise
+
+	frappe.enqueue(
+		"hrms.hrms_setup.demo.setup_demo_leave_and_attendance",
+		queue="long",
+		timeout=1800,
+		job_id=DEMO_ATTENDANCE_JOB_ID,
+		deduplicate=True,
+		enqueue_after_commit=True,
+		now=_is_in_test(),
+	)
+
+
+def setup_demo_leave_and_attendance():
+	"""Step 4 — leave allocations, leave applications, attendance records."""
+	from hrms.hrms_setup.demo_dynamic import setup_leave_and_attendance
+
+	try:
+		setup_leave_and_attendance(DEMO_COMPANY)
+	except Exception:
+		frappe.log_error("Failed to create demo leave and attendance")
+		raise
+
+	frappe.enqueue(
+		"hrms.hrms_setup.demo.setup_demo_payroll",
+		queue="long",
+		timeout=1800,
+		job_id=DEMO_PAYROLL_JOB_ID,
+		deduplicate=True,
+		enqueue_after_commit=True,
+		now=_is_in_test(),
+	)
+
+
+def setup_demo_payroll():
+	"""Step 5 — payroll runs (final step)."""
+	from frappe.utils.telemetry import capture
+
+	try:
+		setup_payroll_runs()
+	except Exception:
+		capture("dynamic_demo_data_creation_failed", "hrms", properties={"exception": frappe.get_traceback()})
+		raise
+
+	capture("dynamic_demo_data_creation_completed", "hrms")
+
+
+def process_masters():
+	process_demo_records("hrms_demo_master_doctypes")
+
+
+def process_transactions():
+	process_demo_records("hrms_demo_transaction_doctypes")
+
+
+def process_background_masters():
+	process_demo_records("hrms_demo_background_master_doctypes")
+
+
+def process_background_transactions():
+	process_demo_records("hrms_demo_background_transaction_doctypes")
+
+
+def process_demo_records(hook_name):
+	for doctype in frappe.get_hooks(hook_name):
+		data = read_data_file_using_hooks(doctype)
+		if data:
+			for item in json.loads(data):
+				create_demo_record(item)
+
+
+def create_demo_record(record):
+	from frappe.modules import scrub
+
+	doc = frappe.get_doc(record)
+
+	parent_link_field = "parent_" + scrub(doc.doctype)
+	if doc.meta.get_field(parent_link_field) and not doc.get(parent_link_field):
+		doc.flags.ignore_mandatory = True
+
+	previous_in_import = getattr(frappe.flags, "in_import", False)
+	if record.get("name"):
+		frappe.flags.in_import = True
+
+	try:
+		doc.insert(ignore_permissions=True, ignore_if_duplicate=True)
+	finally:
+		frappe.flags.in_import = previous_in_import
+
+
+def read_data_file_using_hooks(doctype):
+	with open(get_data_path(doctype)) as f:
+		return f.read()
 
 
 def setup_expense_claim_type_accounts():
@@ -186,275 +464,49 @@ def setup_payroll_runs():
 	run_payroll()
 
 
-def setup_salary_structure_assignments():
-	DEMO_COMPANY = "Sparrow Tech Pvt Ltd"
-
-	company = frappe.db.exists("Company", DEMO_COMPANY)
-	if not company:
-		first_company = frappe.get_all("Company", pluck="name")
-		if not first_company:
-			return
-		company = first_company[0]
-	else:
-		company = DEMO_COMPANY
-
-	salary_structures = frappe.get_all(
-		"Salary Structure",
-		filters={"company": company, "docstatus": 1, "is_active": "Yes"},
-		pluck="name",
-	)
-
-	if not salary_structures:
-		frappe.publish_realtime(
-			"demo_progress", {"message": "No submitted Salary Structures found, skipping SSA"}
-		)
-		return
-
-	employees = frappe.get_all(
-		"Employee",
-		filters={"status": "Active", "company": company},
-		fields=["name", "employee_name", "designation", "department"],
-	)
-
-	if not employees:
-		return
-
-	created = 0
-	for emp in employees:
-		if not emp.designation:
-			continue
-
-		ss_name = None
-		emp_designation_lower = emp.designation.lower()
-		for ss_key in salary_structures:
-			if ss_key.lower() in emp_designation_lower or emp_designation_lower in ss_key.lower():
-				ss_name = ss_key
-				break
-
-		if not ss_name:
-			ss_name = salary_structures[0] if salary_structures else None
-
-		existing = frappe.db.exists("Salary Structure Assignment", {"employee": emp.name, "docstatus": 1})
-		if existing:
-			continue
-
+def submit_approved_expense_claims():
+	for ec in frappe.get_all("Expense Claim", {"approval_status": "Approved", "docstatus": 0}):
 		try:
-			currency = "USD"
-			ss_doc = frappe.get_doc("Salary Structure", ss_name)
-			if ss_doc.currency:
-				currency = ss_doc.currency
-
-			payroll_payable_account = None
-			accounts = frappe.get_all(
-				"Account",
-				filters={
-					"company": company,
-					"account_name": ["like", "%Payroll Payable%"],
-				},
-				pluck="name",
-			)
-			if accounts:
-				payroll_payable_account = accounts[0]
-
-			assignment = frappe.get_doc(
-				{
-					"doctype": "Salary Structure Assignment",
-					"employee": emp.name,
-					"salary_structure": ss_name,
-					"company": company,
-					"department": emp.department,
-					"from_date": f"{getdate().year}-01-01",
-					"currency": currency,
-					"payroll_payable_account": payroll_payable_account,
-				}
-			)
-			assignment.insert(ignore_permissions=True)
-			assignment.submit()
-			created += 1
+			frappe.get_doc("Expense Claim", ec.name).submit()
 		except Exception:
 			continue
 
-	frappe.publish_realtime("demo_progress", {"message": f"Created {created} Salary Structure Assignments"})
-
-
-def setup_expense_claims():
-	from hrms.hrms_setup.demo_expense import setup_expense_claims as run_expense
-
-	run_expense()
-
-
-def setup_recruitment_data():
-	from frappe.desk.page.setup_wizard.setup_wizard import make_records
-
-	sources = ["Website Listing", "Walk In", "Employee Referral", "Campaign"]
-	for source in sources:
-		if not frappe.db.exists("Job Applicant Source", source):
-			frappe.get_doc({"doctype": "Job Applicant Source", "source_name": source}).insert(
-				ignore_permissions=True
-			)
-
-	job_opening_records = get_records_from_json("Job Opening")
-	department_names = set(record["department"] for record in job_opening_records if record.get("department"))
-	department_map = {}
-	for dept_name in department_names:
-		dept = frappe.get_all(
-			"Department",
-			filters=[["department_name", "like", f"{dept_name}%"], ["company", "=", DEMO_COMPANY]],
-			fields=["name", "department_name"],
-		)
-		if dept:
-			department_map[dept_name] = dept[0].name
-
-	for record in job_opening_records:
-		if record.get("department") and department_map.get(record["department"]):
-			record["department"] = department_map[record["department"]]
-
-	make_records(job_opening_records)
-
-	job_openings = {}
-	for jo in frappe.get_all("Job Opening", filters={"company": DEMO_COMPANY}, fields=["name", "job_title"]):
-		job_openings[jo.job_title] = jo.name
-
-	employee_map = {}
-	for emp in frappe.get_all(
-		"Employee", filters={"company": DEMO_COMPANY}, fields=["name", "employee_name"]
-	):
-		employee_map[emp.employee_name] = emp.name
-
-	job_applicant_records = get_records_from_json("Job Applicant")
-	job_applicant_names = {}
-
-	temp_applicants = []
-	for record in job_applicant_records:
-		job_title = record.get("job_title", "")
-		if job_title and job_title in job_openings:
-			record["job_title"] = job_openings[job_title]
-		elif not job_title:
-			for title, jo_name in job_openings.items():
-				if title in record.get("cover_letter", "") or title in record.get("applicant_name", ""):
-					record["job_title"] = jo_name
-					break
-
-		if record.get("source") == "Employee Referral" and record.get("source_name"):
-			emp_name = record.get("source_name")
-			if emp_name in employee_map:
-				record["source_name"] = employee_map[emp_name]
-			else:
-				record.pop("source_name", None)
-
-		applicant_name = record.get("applicant_name")
-		temp_applicants.append((record, applicant_name))
-
-	records_to_create = [rec for rec, _ in temp_applicants]
-	make_records(records_to_create)
-
-	for __, applicant_name in temp_applicants:
-		job_applicant_name = frappe.get_all(
-			"Job Applicant", filters={"applicant_name": applicant_name}, fields=["name"]
-		)
-		if job_applicant_name:
-			job_applicant_names[applicant_name] = job_applicant_name[0].name
-
-	job_offer_records = get_records_from_json("Job Offer")
-	for record in job_offer_records:
-		job_applicant_name = record.get("job_applicant", "")
-		if job_applicant_name and job_applicant_name in job_applicant_names:
-			record["job_applicant"] = job_applicant_names[job_applicant_name]
-		record.pop("name", None)
-
-	if job_offer_records:
-		make_records(job_offer_records)
-
-	frappe.publish_realtime("demo_progress", {"message": "Created recruitment data"})
-
 
 def create_demo_company(args=None):
+	from frappe.desk.page.setup_wizard.setup_wizard import make_records
+
+	records = []
+	for record in json.loads(read_data_file_using_hooks("demo_company")):
+		if record.get("doctype") == "Fiscal Year":
+			fiscal_year = record.get("name") or record.get("year")
+			if frappe.db.exists("Fiscal Year", fiscal_year):
+				continue
+			if fiscal_year_exists_for_dates(record.get("year_start_date"), record.get("year_end_date")):
+				continue
+
+		if record.get("doctype") == "Company" and frappe.db.exists("Company", record.get("company_name")):
+			continue
+
+		records.append(record)
+
+	if records:
+		make_records(records)
+
 	if frappe.db.exists("Company", DEMO_COMPANY):
-		return
+		frappe.db.set_single_value("Global Defaults", "demo_company", DEMO_COMPANY)
+		frappe.db.set_default("company", DEMO_COMPANY)
 
-	from frappe.desk.page.setup_wizard.setup_wizard import make_records
 
-	current_year = getdate().year
-	fy_start = f"{current_year}-01-01"
-	fy_end = f"{current_year}-12-31"
-	fy_name = f"{current_year}"
-
-	records = []
-
-	if not frappe.db.exists("Fiscal Year", fy_name):
-		records.append(
+def fiscal_year_exists_for_dates(year_start_date, year_end_date):
+	return bool(
+		frappe.db.exists(
+			"Fiscal Year",
 			{
-				"doctype": "Fiscal Year",
-				"year": fy_name,
-				"year_start_date": fy_start,
-				"year_end_date": fy_end,
-			}
+				"year_start_date": ["<=", year_end_date],
+				"year_end_date": [">=", year_start_date],
+			},
 		)
-
-	records.append(
-		{
-			"doctype": "Company",
-			"company_name": DEMO_COMPANY,
-			"abbr": DEMO_COMPANY_ABBR,
-			"default_currency": "USD",
-			"country": "United Arab Emirates",
-			"create_chart_of_accounts_based_on": "Standard Template",
-			"chart_of_accounts": "Standard",
-			"domain": "Retail",
-			"enable_perpetual_inventory": 1,
-		}
 	)
-
-	if records:
-		make_records(records)
-
-
-def setup_organization():
-	from frappe.desk.page.setup_wizard.setup_wizard import make_records
-
-	records = []
-	records.extend(get_records_from_json("Department"))
-	records.extend(get_records_from_json("Branch"))
-
-	existing = {d.name for d in frappe.get_all("Designation", fields=["name"])}
-	for record in get_records_from_json("Designation"):
-		if record["designation_name"] not in existing:
-			records.append(record)
-
-	make_records(records)
-
-
-def setup_employment_types():
-	from frappe.desk.page.setup_wizard.setup_wizard import make_records
-
-	records = []
-	existing = {et.name for et in frappe.get_all("Employment Type", fields=["name"])}
-
-	for record in get_records_from_json("Employment Type"):
-		if record["employee_type_name"] not in existing:
-			records.append(record)
-
-	if records:
-		make_records(records)
-
-
-def setup_hr_masters():
-	from frappe.desk.page.setup_wizard.setup_wizard import make_records
-
-	records = []
-
-	existing_leave_types = {lt.name for lt in frappe.get_all("Leave Type", fields=["name"])}
-	for record in get_records_from_json("Leave Type"):
-		if record["name"] not in existing_leave_types:
-			records.append(record)
-
-	existing_shift_types = {st.name for st in frappe.get_all("Shift Type", fields=["name"])}
-	for record in get_records_from_json("Shift Type"):
-		if record["shift_type_name"] not in existing_shift_types:
-			records.append(record)
-
-	make_records(records)
-	create_holiday_lists()
 
 
 def setup_payroll_accounts():
@@ -480,273 +532,84 @@ def setup_payroll_accounts():
 		frappe.db.set_value("Account", accounts[0], "account_type", "Payable")
 
 
-def setup_payroll():
-	ensure_salary_components()
-	create_salary_structure()
-
-
-def ensure_salary_components():
-	from frappe.desk.page.setup_wizard.setup_wizard import make_records
-
-	existing = {sc.name for sc in frappe.get_all("Salary Component", fields=["name"])}
-	records = []
-
-	for record in get_records_from_json("Salary Component"):
-		if record["salary_component"] not in existing:
-			records.append(record)
-
-	if records:
-		make_records(records)
-
-
-def create_salary_structure():
-	from frappe.desk.page.setup_wizard.setup_wizard import make_records
-
-	records = get_records_from_json("Salary Structure")
-	if records:
-		make_records(records)
-
+def submit_salary_structures():
 	for ss in frappe.get_all("Salary Structure", {"company": DEMO_COMPANY, "docstatus": 0}):
 		frappe.get_doc("Salary Structure", ss.name).submit()
 
 
-def create_holiday_lists():
-	from frappe.desk.page.setup_wizard.setup_wizard import make_records
-
-	current_year = getdate().year
-	records = []
-
-	BRANCH_HOLIDAYS = [
-		("Mumbai HQ", "IN", "MH"),
-		("New York Office", "US", "NY"),
-		("Dubai Branch", "AE", None),
-	]
-
-	holiday_lists = []
-	for branch_name, country, subdivision in BRANCH_HOLIDAYS:
-		hl_name = f"Holiday List - {branch_name} - {current_year}"
-		hl_from = f"{current_year}-01-01"
-		hl_to = f"{current_year}-12-31"
-
-		if frappe.db.exists("Holiday List", hl_name):
-			holiday_lists.append(hl_name)
-			continue
-
-		holidays = get_state_holidays(country, subdivision, current_year, hl_from, hl_to)
-
-		records.append(
-			{
-				"doctype": "Holiday List",
-				"holiday_list_name": hl_name,
-				"from_date": hl_from,
-				"to_date": hl_to,
-				"country": country,
-				"subdivision": subdivision,
-				"holidays": holidays,
-			}
-		)
-		holiday_lists.append(hl_name)
-
-	if records:
-		make_records(records)
-
-	if not frappe.db.exists(
-		"Holiday List Assignment",
-		{"assigned_to": DEMO_COMPANY, "from_date": f"{current_year}-01-01", "docstatus": 1},
+def submit_holiday_list_assignments():
+	for hla in frappe.get_all(
+		"Holiday List Assignment", {"assigned_to": DEMO_COMPANY, "docstatus": 0}, pluck="name"
 	):
-		records = [
-			{
-				"doctype": "Holiday List Assignment",
-				"naming_series": "HR-HLA-.YYYY.-",
-				"applicable_for": "Company",
-				"assigned_to": DEMO_COMPANY,
-				"holiday_list": holiday_lists[0],
-				"from_date": f"{current_year}-01-01",
-			}
-		]
-		make_records(records)
-
-	hla = frappe.get_last_doc("Holiday List Assignment", {"assigned_to": DEMO_COMPANY})
-	if hla:
-		hla.submit()
-
-	setup_leave_period(current_year)
-
-
-def setup_leave_period(current_year):
-	from frappe.desk.page.setup_wizard.setup_wizard import make_records
-
-	if frappe.db.exists("Leave Period", f"Leave Period {current_year}-{current_year + 1}"):
-		return
-
-	records = [
-		{
-			"doctype": "Leave Period",
-			"leave_period_name": f"Leave Period {current_year}",
-			"from_date": f"{current_year}-01-01",
-			"to_date": f"{current_year}-12-31",
-			"company": DEMO_COMPANY,
-		}
-	]
-	make_records(records)
-
-
-def get_state_holidays(country, subdivision, year, from_date, to_date):
-	from holidays import country_holidays
-
-	fd = getdate(from_date)
-	td = getdate(to_date)
-
-	holidays = []
-	for holiday_date, holiday_name in country_holidays(
-		country,
-		subdiv=subdivision,
-		years=list(range(fd.year, td.year + 1)),
-	).items():
-		if fd <= holiday_date <= td:
-			holidays.append(
-				{
-					"doctype": "Holiday",
-					"holiday_date": holiday_date.strftime("%Y-%m-%d"),
-					"description": holiday_name,
-				}
-			)
-	return holidays
-
-
-def setup_fixtures():
-	for gender in ("Male", "Female", "Other"):
-		if not frappe.db.exists("Gender", gender):
-			frappe.get_doc({"doctype": "Gender", "gender": gender}).insert(
-				ignore_permissions=True, ignore_if_duplicate=True
-			)
-
-	for salutation in ("Mr", "Ms", "Mrs", "Dr"):
-		if not frappe.db.exists("Salutation", salutation):
-			frappe.get_doc({"doctype": "Salutation", "salutation": salutation}).insert(
-				ignore_permissions=True, ignore_if_duplicate=True
-			)
+		frappe.get_doc("Holiday List Assignment", hla).submit()
 
 
 def setup_employees():
-	from frappe.desk.page.setup_wizard.setup_wizard import make_records
-
-	records = get_records_from_json("Employee")
+	records = json.loads(read_data_file_using_hooks("employee"))
 	if not records:
 		return
 
-	department_names = set(r["department"] for r in records if r.get("department"))
-	department_map = {}
-	for dept_name in department_names:
-		dept = frappe.get_all(
-			"Department",
-			filters=[["department_name", "like", f"{dept_name}%"], ["company", "=", DEMO_COMPANY]],
-			fields=["name", "department_name"],
-		)
-		if dept:
-			department_map[dept_name] = dept[0].name
-
-	for r in records:
-		if r.get("department") and department_map.get(r["department"]):
-			r["department"] = department_map[r["department"]]
-
-	manager_names = {}
-	for r in records:
-		if r.get("reports_to"):
-			manager_names[r["reports_to"]] = None
-
-	for r in records:
-		r.pop("reports_to", None)
-
-	make_records(records)
-
-	for name in manager_names:
-		emp_list = frappe.get_all("Employee", filters={"employee_name": name}, fields=["name"])
-		if emp_list:
-			manager_names[name] = emp_list[0].name
-
-	for r in get_records_from_json("Employee"):
-		if r.get("reports_to"):
-			manager_name = manager_names.get(r["reports_to"])
-			if manager_name:
-				emp_list = frappe.get_all(
-					"Employee", filters={"employee_name": r["employee_name"]}, fields=["name"]
-				)
-				if emp_list:
-					frappe.db.set_value("Employee", emp_list[0].name, "reports_to", manager_name)
-
-
-def get_records_from_json(doctype):
-	path = get_data_path(doctype)
-	with open(path) as f:
-		records = json.load(f)
-
+	employee_approvers = {}
 	for record in records:
-		for key, value in record.items():
-			if isinstance(value, str) and value == "__DEMO_COMPANY__":
-				record[key] = DEMO_COMPANY
-			elif isinstance(value, list):
-				for item in value:
-					if isinstance(item, dict):
-						for k, v in item.items():
-							if isinstance(v, str) and v == "__DEMO_COMPANY__":
-								item[k] = DEMO_COMPANY
+		approvers = {}
+		for fieldname in ("leave_approver", "expense_approver"):
+			value = record.pop(fieldname, None)
+			if value:
+				approvers[fieldname] = value
 
-	return records
+		if record.get("name") and approvers:
+			employee_approvers[record["name"]] = approvers
+
+		record.pop("job_applicant", None)
+
+		if record.get("create_user_automatically") and record.get("create_user_permission") is None:
+			record["create_user_permission"] = 0
+
+		create_demo_record(record)
+
+	set_employee_approvers(employee_approvers)
+
+
+def set_employee_approvers(employee_approvers):
+	for employee, approvers in employee_approvers.items():
+		if not frappe.db.exists("Employee", employee):
+			continue
+
+		employee_doc = frappe.get_doc("Employee", employee)
+		has_changes = False
+		for fieldname, value in approvers.items():
+			if employee_doc.get(fieldname) != value:
+				employee_doc.set(fieldname, value)
+				has_changes = True
+
+		if has_changes:
+			employee_doc.save(ignore_permissions=True)
+
+
+def set_employee_recruitment_links():
+	for record in json.loads(read_data_file_using_hooks("employee")):
+		employee = record.get("name")
+		job_applicant = record.get("job_applicant")
+		if not employee or not job_applicant:
+			continue
+		if not frappe.db.exists("Employee", employee) or not frappe.db.exists("Job Applicant", job_applicant):
+			continue
+
+		employee_doc = frappe.get_doc("Employee", employee)
+		if employee_doc.job_applicant != job_applicant:
+			employee_doc.job_applicant = job_applicant
+			employee_doc.save(ignore_permissions=True)
+
+
+def submit_accepted_job_offers():
+	for job_offer in frappe.get_all("Job Offer", {"status": "Accepted", "docstatus": 0}, pluck="name"):
+		try:
+			offer = frappe.get_doc("Job Offer", job_offer)
+			offer.flags.ignore_mandatory = True
+			offer.submit()
+		except Exception:
+			continue
 
 
 def get_data_path(doctype):
-	return os.path.join(os.path.dirname(__file__), "demo_data", f"{doctype.lower().replace(' ', '_')}.json")
-
-
-def setup_leave_and_attendance():
-	from hrms.hrms_setup.demo_attendance import (
-		create_leave_allocations,
-		create_leave_applications,
-		generate_attendance,
-	)
-
-	employees = frappe.get_all(
-		"Employee",
-		filters={"status": "Active", "company": DEMO_COMPANY},
-		fields=[
-			"name",
-			"employee_name",
-			"date_of_joining",
-			"final_confirmation_date",
-			"employment_type",
-			"company",
-		],
-	)
-
-	leave_period = frappe.db.get_value(
-		"Leave Period",
-		{"company": DEMO_COMPANY},
-		"name",
-		order_by="from_date DESC",
-	)
-
-	if not leave_period:
-		current_year = getdate().year
-		leave_period_name = f"Leave Period {current_year}-{current_year + 1}"
-		if not frappe.db.exists("Leave Period", leave_period_name):
-			from frappe.desk.page.setup_wizard.setup_wizard import make_records
-
-			make_records(
-				[
-					{
-						"doctype": "Leave Period",
-						"leave_period_name": leave_period_name,
-						"from_date": f"{current_year}-01-01",
-						"to_date": f"{current_year}-12-31",
-						"company": DEMO_COMPANY,
-					}
-				]
-			)
-		leave_period = leave_period_name
-
-	leave_period_doc = frappe.get_doc("Leave Period", leave_period)
-
-	create_leave_allocations(employees, leave_period_doc, DEMO_COMPANY)
-	create_leave_applications(employees, leave_period_doc)
-	generate_attendance(employees, leave_period_doc)
+	return os.path.join(os.path.dirname(__file__), "demo_data", f"{doctype}.json")

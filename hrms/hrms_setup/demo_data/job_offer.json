@@ -1,9 +1,8 @@
 [
     {
         "doctype": "Job Offer",
-        "name": "HR-OFF-2026-00001",
-        "job_applicant": "Priya Patel",
-        "company": "__DEMO_COMPANY__",
+        "job_applicant": "HR-APP-2026-00001",
+        "company": "Sparrow Tech Pvt Ltd",
         "offer_date": "2026-03-25",
         "status": "Accepted",
         "currency": "USD",

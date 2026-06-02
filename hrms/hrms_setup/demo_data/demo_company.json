@@ -1,0 +1,19 @@
+[
+    {
+        "doctype": "Fiscal Year",
+        "year": "2026",
+        "year_start_date": "2026-01-01",
+        "year_end_date": "2026-12-31"
+    },
+    {
+        "doctype": "Company",
+        "company_name": "Sparrow Tech Pvt Ltd",
+        "abbr": "ST",
+        "default_currency": "USD",
+        "country": "United Arab Emirates",
+        "create_chart_of_accounts_based_on": "Standard Template",
+        "chart_of_accounts": "Standard",
+        "domain": "Retail",
+        "enable_perpetual_inventory": 1
+    }
+]

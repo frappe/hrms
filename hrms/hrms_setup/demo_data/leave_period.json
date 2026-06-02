@@ -1,0 +1,9 @@
+[
+    {
+        "doctype": "Leave Period",
+        "leave_period_name": "Leave Period 2026",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "company": "Sparrow Tech Pvt Ltd"
+    }
+]

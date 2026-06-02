@@ -1,0 +1,18 @@
+[
+    {
+        "doctype": "Salutation",
+        "salutation": "Mr"
+    },
+    {
+        "doctype": "Salutation",
+        "salutation": "Ms"
+    },
+    {
+        "doctype": "Salutation",
+        "salutation": "Mrs"
+    },
+    {
+        "doctype": "Salutation",
+        "salutation": "Dr"
+    }
+]

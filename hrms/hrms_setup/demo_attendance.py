@@ -13,7 +13,6 @@ def create_leave_allocations(employees, leave_period, company):
 	)
 
 	if not available_leave_types:
-		frappe.publish_realtime("demo_progress", {"message": "No Leave Types found, skipping allocations"})
 		return
 
 	leave_type_map = {}
@@ -31,9 +30,6 @@ def create_leave_allocations(employees, leave_period, company):
 		"sick": {"confirmed": 8, "new": 4, "probation": 3, "intern": 0},
 		"personal": {"confirmed": 5, "new": 2, "probation": 2, "intern": 0},
 	}
-
-	created = 0
-	skipped = 0
 
 	leave_period_start = getdate(leave_period.from_date)
 	leave_period_end = getdate(leave_period.to_date)
@@ -69,7 +65,6 @@ def create_leave_allocations(employees, leave_period, company):
 				},
 			)
 			if existing:
-				skipped += 1
 				continue
 
 			try:
@@ -89,14 +84,8 @@ def create_leave_allocations(employees, leave_period, company):
 				)
 				allocation.insert(ignore_permissions=True)
 				allocation.submit()
-				created += 1
 			except Exception:
 				pass
-
-	frappe.publish_realtime(
-		"demo_progress",
-		{"message": f"Created {created} Leave Allocations, skipped {skipped}"},
-	)
 
 
 def create_leave_applications(employees, leave_period):
@@ -106,7 +95,6 @@ def create_leave_applications(employees, leave_period):
 	)
 
 	if not available_leave_types:
-		frappe.publish_realtime("demo_progress", {"message": "No Leave Types found, skipping applications"})
 		return
 
 	leave_types = [lt.name for lt in available_leave_types]
@@ -118,9 +106,6 @@ def create_leave_applications(employees, leave_period):
 
 	statuses = ["Approved", "Pending", "Rejected"]
 	status_weights = [0.6, 0.25, 0.15]
-
-	created = 0
-	skipped = 0
 
 	for emp in employees:
 		emp_doc = frappe.get_doc("Employee", emp.name)
@@ -178,7 +163,6 @@ def create_leave_applications(employees, leave_period):
 				},
 			)
 			if existing:
-				skipped += 1
 				continue
 
 			try:
@@ -205,7 +189,6 @@ def create_leave_applications(employees, leave_period):
 
 				if status == "Approved":
 					application.submit()
-				created += 1
 			except Exception:
 				pass
 
@@ -236,21 +219,13 @@ def create_leave_applications(employees, leave_period):
 					)
 					application.insert(ignore_permissions=True)
 					application.submit()
-					created += 1
 				except Exception:
 					pass
-
-	frappe.publish_realtime(
-		"demo_progress",
-		{"message": f"Created {created} Leave Applications, skipped {skipped}"},
-	)
 
 
 def generate_attendance(employees, leave_period):
 	current_date = getdate()
 	three_months_ago = add_days(current_date, -90)
-
-	created = 0
 
 	for emp in employees:
 		emp_doc = frappe.get_doc("Employee", emp.name)
@@ -326,17 +301,11 @@ def generate_attendance(employees, leave_period):
 					)
 					attendance.insert(ignore_permissions=True)
 					attendance.submit()
-					created += 1
 				except Exception:
 					pass
 
 			current_day = add_days(current_day, 1)
 			days_since_start += 1
-
-	frappe.publish_realtime(
-		"demo_progress",
-		{"message": f"Generated {created} Attendance records"},
-	)
 
 
 def get_employee_status(emp_doc):

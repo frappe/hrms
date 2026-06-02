@@ -1,0 +1,50 @@
+[
+    {
+        "doctype": "Payroll Entry",
+        "company": "Sparrow Tech Pvt Ltd",
+        "payroll_frequency": "Monthly",
+        "currency": "USD",
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "posting_date": "2026-03-31",
+        "payment_account": "Cash - ST",
+        "payroll_payable_account": "Payroll Payable - ST",
+        "exchange_rate": 1
+    },
+    {
+        "doctype": "Payroll Entry",
+        "company": "Sparrow Tech Pvt Ltd",
+        "payroll_frequency": "Monthly",
+        "currency": "AED",
+        "start_date": "2026-03-01",
+        "end_date": "2026-03-31",
+        "posting_date": "2026-03-31",
+        "payment_account": "Cash - ST",
+        "payroll_payable_account": "Payroll Payable - ST",
+        "exchange_rate": 1
+    },
+    {
+        "doctype": "Payroll Entry",
+        "company": "Sparrow Tech Pvt Ltd",
+        "payroll_frequency": "Monthly",
+        "currency": "USD",
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-30",
+        "posting_date": "2026-04-30",
+        "payment_account": "Cash - ST",
+        "payroll_payable_account": "Payroll Payable - ST",
+        "exchange_rate": 1
+    },
+    {
+        "doctype": "Payroll Entry",
+        "company": "Sparrow Tech Pvt Ltd",
+        "payroll_frequency": "Monthly",
+        "currency": "AED",
+        "start_date": "2026-04-01",
+        "end_date": "2026-04-30",
+        "posting_date": "2026-04-30",
+        "payment_account": "Cash - ST",
+        "payroll_payable_account": "Payroll Payable - ST",
+        "exchange_rate": 1
+    }
+]

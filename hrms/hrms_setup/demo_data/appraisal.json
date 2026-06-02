@@ -2,171 +2,511 @@
     {
         "doctype": "Appraisal",
         "naming_series": "HR-APR-.YYYY.-",
-        "employee": "Vikram Sharma",
-        "company": "__DEMO_COMPANY__",
+        "employee": "HR-EMP-00001",
+        "company": "Sparrow Tech Pvt Ltd",
         "appraisal_cycle": "Q4 2025 Review",
         "start_date": "2025-10-01",
         "end_date": "2025-12-31",
         "appraisal_template": "Management Review",
-        "appraisal_kra": [
-            {"kra": "Team Management", "per_weightage": 30},
-            {"kra": "Project Delivery", "per_weightage": 25},
-            {"kra": "Process Improvement", "per_weightage": 20},
-            {"kra": "Innovation", "per_weightage": 15},
-            {"kra": "Compliance", "per_weightage": 10}
-        ]
+        "rate_goals_manually": 1,
+        "goals": [
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Team Management",
+                "per_weightage": 30,
+                "score": 4.6,
+                "score_earned": 1.38
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Project Delivery",
+                "per_weightage": 25,
+                "score": 4.4,
+                "score_earned": 1.1
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Process Improvement",
+                "per_weightage": 20,
+                "score": 4.2,
+                "score_earned": 0.84
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Innovation",
+                "per_weightage": 15,
+                "score": 4.3,
+                "score_earned": 0.65
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Compliance",
+                "per_weightage": 10,
+                "score": 4.7,
+                "score_earned": 0.47
+            }
+        ],
+        "total_score": 4.44,
+        "final_score": 4.44,
+        "remarks": "Demo appraisal includes manager-rated goals for review analytics."
     },
     {
         "doctype": "Appraisal",
         "naming_series": "HR-APR-.YYYY.-",
-        "employee": "Sarah Johnson",
-        "company": "__DEMO_COMPANY__",
+        "employee": "HR-EMP-00002",
+        "company": "Sparrow Tech Pvt Ltd",
         "appraisal_cycle": "Q4 2025 Review",
         "start_date": "2025-10-01",
         "end_date": "2025-12-31",
         "appraisal_template": "Management Review",
-        "appraisal_kra": [
-            {"kra": "Team Management", "per_weightage": 30},
-            {"kra": "Project Delivery", "per_weightage": 25},
-            {"kra": "Process Improvement", "per_weightage": 20},
-            {"kra": "Innovation", "per_weightage": 15},
-            {"kra": "Compliance", "per_weightage": 10}
-        ]
+        "rate_goals_manually": 1,
+        "goals": [
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Team Management",
+                "per_weightage": 30,
+                "score": 4.2,
+                "score_earned": 1.26
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Project Delivery",
+                "per_weightage": 25,
+                "score": 4.0,
+                "score_earned": 1.0
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Process Improvement",
+                "per_weightage": 20,
+                "score": 3.9,
+                "score_earned": 0.78
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Innovation",
+                "per_weightage": 15,
+                "score": 4.1,
+                "score_earned": 0.61
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Compliance",
+                "per_weightage": 10,
+                "score": 4.5,
+                "score_earned": 0.45
+            }
+        ],
+        "total_score": 4.1,
+        "final_score": 4.1,
+        "remarks": "Demo appraisal includes manager-rated goals for review analytics."
     },
     {
         "doctype": "Appraisal",
         "naming_series": "HR-APR-.YYYY.-",
-        "employee": "Ahmed Al-Rashid",
-        "company": "__DEMO_COMPANY__",
+        "employee": "HR-EMP-00003",
+        "company": "Sparrow Tech Pvt Ltd",
         "appraisal_cycle": "Q4 2025 Review",
         "start_date": "2025-10-01",
         "end_date": "2025-12-31",
         "appraisal_template": "Standard Performance Review",
-        "appraisal_kra": [
-            {"kra": "Project Delivery", "per_weightage": 30},
-            {"kra": "Code Quality", "per_weightage": 25},
-            {"kra": "Team Collaboration", "per_weightage": 20},
-            {"kra": "Innovation", "per_weightage": 15},
-            {"kra": "Communication", "per_weightage": 10}
-        ]
+        "rate_goals_manually": 1,
+        "goals": [
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Project Delivery",
+                "per_weightage": 30,
+                "score": 4.3,
+                "score_earned": 1.29
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Code Quality",
+                "per_weightage": 25,
+                "score": 4.1,
+                "score_earned": 1.02
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Team Collaboration",
+                "per_weightage": 20,
+                "score": 4.0,
+                "score_earned": 0.8
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Innovation",
+                "per_weightage": 15,
+                "score": 3.8,
+                "score_earned": 0.57
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Communication",
+                "per_weightage": 10,
+                "score": 4.2,
+                "score_earned": 0.42
+            }
+        ],
+        "total_score": 4.1,
+        "final_score": 4.1,
+        "remarks": "Demo appraisal includes manager-rated goals for review analytics."
     },
     {
         "doctype": "Appraisal",
         "naming_series": "HR-APR-.YYYY.-",
-        "employee": "James Williams",
-        "company": "__DEMO_COMPANY__",
+        "employee": "HR-EMP-00004",
+        "company": "Sparrow Tech Pvt Ltd",
         "appraisal_cycle": "Q4 2025 Review",
         "start_date": "2025-10-01",
         "end_date": "2025-12-31",
         "appraisal_template": "Sales Team Review",
-        "appraisal_kra": [
-            {"kra": "Sales Targets", "per_weightage": 40},
-            {"kra": "Client Satisfaction", "per_weightage": 25},
-            {"kra": "Team Collaboration", "per_weightage": 15},
-            {"kra": "Communication", "per_weightage": 10},
-            {"kra": "Process Improvement", "per_weightage": 10}
-        ]
+        "rate_goals_manually": 1,
+        "goals": [
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Sales Targets",
+                "per_weightage": 40,
+                "score": 4.5,
+                "score_earned": 1.8
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Client Satisfaction",
+                "per_weightage": 25,
+                "score": 4.3,
+                "score_earned": 1.07
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Team Collaboration",
+                "per_weightage": 15,
+                "score": 4.0,
+                "score_earned": 0.6
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Communication",
+                "per_weightage": 10,
+                "score": 4.1,
+                "score_earned": 0.41
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Process Improvement",
+                "per_weightage": 10,
+                "score": 3.8,
+                "score_earned": 0.38
+            }
+        ],
+        "total_score": 4.26,
+        "final_score": 4.26,
+        "remarks": "Demo appraisal includes manager-rated goals for review analytics."
     },
     {
         "doctype": "Appraisal",
         "naming_series": "HR-APR-.YYYY.-",
-        "employee": "Priya Nair",
-        "company": "__DEMO_COMPANY__",
+        "employee": "HR-EMP-00005",
+        "company": "Sparrow Tech Pvt Ltd",
         "appraisal_cycle": "Q4 2025 Review",
         "start_date": "2025-10-01",
         "end_date": "2025-12-31",
         "appraisal_template": "Standard Performance Review",
-        "appraisal_kra": [
-            {"kra": "Project Delivery", "per_weightage": 30},
-            {"kra": "Code Quality", "per_weightage": 25},
-            {"kra": "Team Collaboration", "per_weightage": 20},
-            {"kra": "Innovation", "per_weightage": 15},
-            {"kra": "Communication", "per_weightage": 10}
-        ]
+        "rate_goals_manually": 1,
+        "goals": [
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Project Delivery",
+                "per_weightage": 30,
+                "score": 3.9,
+                "score_earned": 1.17
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Code Quality",
+                "per_weightage": 25,
+                "score": 4.2,
+                "score_earned": 1.05
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Team Collaboration",
+                "per_weightage": 20,
+                "score": 4.1,
+                "score_earned": 0.82
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Innovation",
+                "per_weightage": 15,
+                "score": 4.0,
+                "score_earned": 0.6
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Communication",
+                "per_weightage": 10,
+                "score": 4.3,
+                "score_earned": 0.43
+            }
+        ],
+        "total_score": 4.07,
+        "final_score": 4.07,
+        "remarks": "Demo appraisal includes manager-rated goals for review analytics."
     },
     {
         "doctype": "Appraisal",
         "naming_series": "HR-APR-.YYYY.-",
-        "employee": "Maria Garcia",
-        "company": "__DEMO_COMPANY__",
+        "employee": "HR-EMP-00006",
+        "company": "Sparrow Tech Pvt Ltd",
         "appraisal_cycle": "Q1 2026 Review",
         "start_date": "2026-01-01",
         "end_date": "2026-03-31",
         "appraisal_template": "Standard Performance Review",
-        "appraisal_kra": [
-            {"kra": "Project Delivery", "per_weightage": 30},
-            {"kra": "Code Quality", "per_weightage": 25},
-            {"kra": "Team Collaboration", "per_weightage": 20},
-            {"kra": "Innovation", "per_weightage": 15},
-            {"kra": "Communication", "per_weightage": 10}
-        ]
+        "rate_goals_manually": 1,
+        "goals": [
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Project Delivery",
+                "per_weightage": 30,
+                "score": 4.0,
+                "score_earned": 1.2
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Code Quality",
+                "per_weightage": 25,
+                "score": 4.4,
+                "score_earned": 1.1
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Team Collaboration",
+                "per_weightage": 20,
+                "score": 4.2,
+                "score_earned": 0.84
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Innovation",
+                "per_weightage": 15,
+                "score": 4.1,
+                "score_earned": 0.61
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Communication",
+                "per_weightage": 10,
+                "score": 4.0,
+                "score_earned": 0.4
+            }
+        ],
+        "total_score": 4.15,
+        "final_score": 4.15,
+        "remarks": "Demo appraisal includes manager-rated goals for review analytics."
     },
     {
         "doctype": "Appraisal",
         "naming_series": "HR-APR-.YYYY.-",
-        "employee": "Chen Wei",
-        "company": "__DEMO_COMPANY__",
+        "employee": "HR-EMP-00007",
+        "company": "Sparrow Tech Pvt Ltd",
         "appraisal_cycle": "Q1 2026 Review",
         "start_date": "2026-01-01",
         "end_date": "2026-03-31",
         "appraisal_template": "Standard Performance Review",
-        "appraisal_kra": [
-            {"kra": "Project Delivery", "per_weightage": 30},
-            {"kra": "Code Quality", "per_weightage": 25},
-            {"kra": "Team Collaboration", "per_weightage": 20},
-            {"kra": "Innovation", "per_weightage": 15},
-            {"kra": "Communication", "per_weightage": 10}
-        ]
+        "rate_goals_manually": 1,
+        "goals": [
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Project Delivery",
+                "per_weightage": 30,
+                "score": 4.1,
+                "score_earned": 1.23
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Code Quality",
+                "per_weightage": 25,
+                "score": 4.0,
+                "score_earned": 1.0
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Team Collaboration",
+                "per_weightage": 20,
+                "score": 4.3,
+                "score_earned": 0.86
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Innovation",
+                "per_weightage": 15,
+                "score": 4.2,
+                "score_earned": 0.63
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Communication",
+                "per_weightage": 10,
+                "score": 4.4,
+                "score_earned": 0.44
+            }
+        ],
+        "total_score": 4.16,
+        "final_score": 4.16,
+        "remarks": "Demo appraisal includes manager-rated goals for review analytics."
     },
     {
         "doctype": "Appraisal",
         "naming_series": "HR-APR-.YYYY.-",
-        "employee": "Fatima Hassan",
-        "company": "__DEMO_COMPANY__",
+        "employee": "HR-EMP-00008",
+        "company": "Sparrow Tech Pvt Ltd",
         "appraisal_cycle": "Q1 2026 Review",
         "start_date": "2026-01-01",
         "end_date": "2026-03-31",
         "appraisal_template": "Management Review",
-        "appraisal_kra": [
-            {"kra": "Team Management", "per_weightage": 30},
-            {"kra": "Project Delivery", "per_weightage": 25},
-            {"kra": "Process Improvement", "per_weightage": 20},
-            {"kra": "Innovation", "per_weightage": 15},
-            {"kra": "Compliance", "per_weightage": 10}
-        ]
+        "rate_goals_manually": 1,
+        "goals": [
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Team Management",
+                "per_weightage": 30,
+                "score": 4.4,
+                "score_earned": 1.32
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Project Delivery",
+                "per_weightage": 25,
+                "score": 4.2,
+                "score_earned": 1.05
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Process Improvement",
+                "per_weightage": 20,
+                "score": 4.1,
+                "score_earned": 0.82
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Innovation",
+                "per_weightage": 15,
+                "score": 4.5,
+                "score_earned": 0.68
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Compliance",
+                "per_weightage": 10,
+                "score": 4.3,
+                "score_earned": 0.43
+            }
+        ],
+        "total_score": 4.3,
+        "final_score": 4.3,
+        "remarks": "Demo appraisal includes manager-rated goals for review analytics."
     },
     {
         "doctype": "Appraisal",
         "naming_series": "HR-APR-.YYYY.-",
-        "employee": "Marcus Thompson",
-        "company": "__DEMO_COMPANY__",
+        "employee": "HR-EMP-00009",
+        "company": "Sparrow Tech Pvt Ltd",
         "appraisal_cycle": "Q1 2026 Review",
         "start_date": "2026-01-01",
         "end_date": "2026-03-31",
         "appraisal_template": "Sales Team Review",
-        "appraisal_kra": [
-            {"kra": "Sales Targets", "per_weightage": 40},
-            {"kra": "Client Satisfaction", "per_weightage": 25},
-            {"kra": "Team Collaboration", "per_weightage": 15},
-            {"kra": "Communication", "per_weightage": 10},
-            {"kra": "Process Improvement", "per_weightage": 10}
-        ]
+        "rate_goals_manually": 1,
+        "goals": [
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Sales Targets",
+                "per_weightage": 40,
+                "score": 4.6,
+                "score_earned": 1.84
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Client Satisfaction",
+                "per_weightage": 25,
+                "score": 4.4,
+                "score_earned": 1.1
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Team Collaboration",
+                "per_weightage": 15,
+                "score": 4.2,
+                "score_earned": 0.63
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Communication",
+                "per_weightage": 10,
+                "score": 4.1,
+                "score_earned": 0.41
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Process Improvement",
+                "per_weightage": 10,
+                "score": 4.0,
+                "score_earned": 0.4
+            }
+        ],
+        "total_score": 4.38,
+        "final_score": 4.38,
+        "remarks": "Demo appraisal includes manager-rated goals for review analytics."
     },
     {
         "doctype": "Appraisal",
         "naming_series": "HR-APR-.YYYY.-",
-        "employee": "David Miller",
-        "company": "__DEMO_COMPANY__",
+        "employee": "HR-EMP-00013",
+        "company": "Sparrow Tech Pvt Ltd",
         "appraisal_cycle": "Q1 2026 Review",
         "start_date": "2026-01-01",
         "end_date": "2026-03-31",
         "appraisal_template": "Standard Performance Review",
-        "appraisal_kra": [
-            {"kra": "Project Delivery", "per_weightage": 30},
-            {"kra": "Code Quality", "per_weightage": 25},
-            {"kra": "Team Collaboration", "per_weightage": 20},
-            {"kra": "Innovation", "per_weightage": 15},
-            {"kra": "Communication", "per_weightage": 10}
-        ]
+        "rate_goals_manually": 1,
+        "goals": [
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Project Delivery",
+                "per_weightage": 30,
+                "score": 3.8,
+                "score_earned": 1.14
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Code Quality",
+                "per_weightage": 25,
+                "score": 4.0,
+                "score_earned": 1.0
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Team Collaboration",
+                "per_weightage": 20,
+                "score": 4.1,
+                "score_earned": 0.82
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Innovation",
+                "per_weightage": 15,
+                "score": 3.9,
+                "score_earned": 0.58
+            },
+            {
+                "doctype": "Appraisal Goal",
+                "kra": "Communication",
+                "per_weightage": 10,
+                "score": 4.2,
+                "score_earned": 0.42
+            }
+        ],
+        "total_score": 3.96,
+        "final_score": 3.96,
+        "remarks": "Demo appraisal includes manager-rated goals for review analytics."
     }
 ]

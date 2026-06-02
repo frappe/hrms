@@ -1,0 +1,262 @@
+[
+    {
+        "doctype": "Holiday List",
+        "holiday_list_name": "Holiday List - Mumbai HQ - 2026",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "country": "IN",
+        "subdivision": "MH",
+        "holidays": [
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-01-26",
+                "description": "Republic Day"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-08-15",
+                "description": "Independence Day"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-10-02",
+                "description": "Gandhi Jayanti"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-05-01",
+                "description": "Buddha Purnima; Maharashtra Day"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-11-08",
+                "description": "Diwali"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-09-04",
+                "description": "Janmashtami"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-10-20",
+                "description": "Dussehra"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-03-31",
+                "description": "Mahavir Jayanti"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-02-15",
+                "description": "Maha Shivaratri"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-11-24",
+                "description": "Guru Nanak Jayanti"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-06-26",
+                "description": "Ashura (estimated)"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-08-26",
+                "description": "Prophet's Birthday (estimated)"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-03-21",
+                "description": "Eid al-Fitr (estimated)"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-05-28",
+                "description": "Eid al-Adha (estimated)"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-04-03",
+                "description": "Good Friday"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-12-25",
+                "description": "Christmas"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-03-19",
+                "description": "Gudi Padwa"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-02-19",
+                "description": "Chhatrapati Shivaji Maharaj Jayanti"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-04-14",
+                "description": "Dr. B. R. Ambedkar's Jayanti"
+            }
+        ]
+    },
+    {
+        "doctype": "Holiday List",
+        "holiday_list_name": "Holiday List - New York Office - 2026",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "country": "US",
+        "subdivision": "NY",
+        "holidays": [
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-01-01",
+                "description": "New Year's Day"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-05-25",
+                "description": "Memorial Day"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-06-19",
+                "description": "Juneteenth National Independence Day"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-07-04",
+                "description": "Independence Day"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-07-03",
+                "description": "Independence Day (observed)"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-09-07",
+                "description": "Labor Day"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-11-26",
+                "description": "Thanksgiving Day"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-12-25",
+                "description": "Christmas Day"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-01-19",
+                "description": "Martin Luther King Jr. Day"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-02-16",
+                "description": "Washington's Birthday"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-10-12",
+                "description": "Columbus Day"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-11-11",
+                "description": "Veterans Day"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-02-12",
+                "description": "Lincoln's Birthday"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-02-15",
+                "description": "Susan B. Anthony Day"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-11-03",
+                "description": "Election Day"
+            }
+        ]
+    },
+    {
+        "doctype": "Holiday List",
+        "holiday_list_name": "Holiday List - Dubai Branch - 2026",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "country": "AE",
+        "subdivision": null,
+        "holidays": [
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-01-01",
+                "description": "New Year's Day"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-12-02",
+                "description": "National Day"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-12-03",
+                "description": "National Day"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-03-20",
+                "description": "Eid al-Fitr (estimated)"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-03-21",
+                "description": "Eid al-Fitr Holiday (estimated)"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-03-22",
+                "description": "Eid al-Fitr Holiday (estimated)"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-05-26",
+                "description": "Arafat Day (estimated)"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-05-27",
+                "description": "Eid al-Adha (estimated)"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-05-28",
+                "description": "Eid al-Adha Holiday (estimated)"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-05-29",
+                "description": "Eid al-Adha Holiday (estimated)"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-06-16",
+                "description": "Islamic New Year (estimated)"
+            },
+            {
+                "doctype": "Holiday",
+                "holiday_date": "2026-08-25",
+                "description": "Prophet's Birthday (estimated)"
+            }
+        ]
+    }
+]
