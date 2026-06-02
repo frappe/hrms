@@ -137,6 +137,7 @@ def clear_hrms_masters(company):
 	# First delete records that TDR skips (company_data_to_be_ignored) to unblock master deletion
 	clear_company_ignored_hrms_data(company)
 	clear_expense_claim_type_accounts(company)
+	clear_demo_appraisal_feedback()
 	for hook_name in (
 		"hrms_demo_background_transaction_doctypes",
 		"hrms_demo_transaction_doctypes",
@@ -281,7 +282,7 @@ def setup_demo(args):
 	setup_employees()
 	setup_expense_claim_type_accounts()
 	process_transactions()
-	submit_approved_expense_claims()
+	submit_decided_expense_claims()
 	enqueue_dynamic_demo_data()
 
 
@@ -334,6 +335,7 @@ def setup_demo_appraisals():
 	"""Step 2 — appraisals (background transactions)."""
 	try:
 		process_background_transactions()
+		setup_appraisal_feedback()
 	except Exception:
 		frappe.log_error("Failed to create demo appraisals")
 		raise
@@ -396,6 +398,7 @@ def setup_demo_payroll():
 	from frappe.utils.telemetry import capture
 
 	try:
+		setup_payroll_accounts()
 		setup_payroll_runs()
 	except Exception:
 		capture("dynamic_demo_data_creation_failed", "hrms", properties={"exception": frappe.get_traceback()})
@@ -447,6 +450,74 @@ def create_demo_record(record):
 		frappe.flags.in_import = previous_in_import
 
 
+def setup_appraisal_feedback():
+	for record in get_appraisal_feedback_records():
+		create_appraisal_feedback(record)
+
+
+def create_appraisal_feedback(record):
+	record = record.copy()
+	appraisal = get_appraisal_for_feedback(record)
+	if not appraisal:
+		return
+
+	if frappe.db.exists(
+		"Employee Performance Feedback",
+		{
+			"employee": record.get("employee"),
+			"reviewer": record.get("reviewer"),
+			"appraisal": appraisal,
+			"docstatus": ("!=", 2),
+		},
+	):
+		return
+
+	record["appraisal"] = appraisal
+	create_demo_record(record)
+
+
+def clear_demo_appraisal_feedback():
+	for record in get_appraisal_feedback_records():
+		appraisal = get_appraisal_for_feedback(record)
+		if not appraisal:
+			continue
+
+		for feedback in frappe.get_all(
+			"Employee Performance Feedback",
+			filters={
+				"employee": record.get("employee"),
+				"reviewer": record.get("reviewer"),
+				"appraisal": appraisal,
+				"docstatus": ("!=", 2),
+			},
+			pluck="name",
+		):
+			delete_demo_doc("Employee Performance Feedback", feedback)
+
+
+def get_appraisal_feedback_records():
+	try:
+		data = read_data_file_using_hooks("employee_performance_feedback")
+	except FileNotFoundError:
+		return []
+
+	return json.loads(data or "[]")
+
+
+def get_appraisal_for_feedback(record):
+	if record.get("appraisal"):
+		return record["appraisal"]
+
+	filters = {
+		"employee": record.get("employee"),
+		"docstatus": ("!=", 2),
+	}
+	if record.get("appraisal_cycle"):
+		filters["appraisal_cycle"] = record["appraisal_cycle"]
+
+	return frappe.db.get_value("Appraisal", filters, "name")
+
+
 def read_data_file_using_hooks(doctype):
 	with open(get_data_path(doctype)) as f:
 		return f.read()
@@ -464,8 +535,11 @@ def setup_payroll_runs():
 	run_payroll()
 
 
-def submit_approved_expense_claims():
-	for ec in frappe.get_all("Expense Claim", {"approval_status": "Approved", "docstatus": 0}):
+def submit_decided_expense_claims():
+	for ec in frappe.get_all(
+		"Expense Claim",
+		{"approval_status": ("in", ["Approved", "Rejected"]), "docstatus": 0},
+	):
 		try:
 			frappe.get_doc("Expense Claim", ec.name).submit()
 		except Exception:
@@ -530,6 +604,33 @@ def setup_payroll_accounts():
 
 	if accounts:
 		frappe.db.set_value("Account", accounts[0], "account_type", "Payable")
+
+	setup_salary_component_accounts(company)
+
+
+def setup_salary_component_accounts(company):
+	salary_account = frappe.db.get_value(
+		"Account",
+		{"company": company, "account_name": "Salary", "root_type": "Expense", "is_group": 0},
+		"name",
+	)
+	if not salary_account:
+		return
+
+	for record in json.loads(read_data_file_using_hooks("salary_component")):
+		salary_component = record.get("salary_component") or record.get("name")
+		if not salary_component or not frappe.db.exists("Salary Component", salary_component):
+			continue
+
+		if frappe.db.exists(
+			"Salary Component Account",
+			{"parent": salary_component, "company": company},
+		):
+			continue
+
+		component = frappe.get_doc("Salary Component", salary_component)
+		component.append("accounts", {"company": company, "account": salary_account})
+		component.save(ignore_permissions=True)
 
 
 def submit_salary_structures():

@@ -6,7 +6,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Engineering - ST",
         "from_date": "2026-01-01",
-        "currency": "USD"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -15,7 +16,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Sales - ST",
         "from_date": "2026-01-01",
-        "currency": "USD"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -24,7 +26,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "HR - ST",
         "from_date": "2026-01-01",
-        "currency": "AED"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -33,7 +36,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Finance - ST",
         "from_date": "2026-01-01",
-        "currency": "USD"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -42,7 +46,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Operations - ST",
         "from_date": "2026-01-01",
-        "currency": "USD"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -51,7 +56,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Business Development - ST",
         "from_date": "2026-01-01",
-        "currency": "AED"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -60,7 +66,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Engineering - ST",
         "from_date": "2026-01-01",
-        "currency": "USD"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -69,7 +76,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Sales - ST",
         "from_date": "2026-01-01",
-        "currency": "AED"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -78,7 +86,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Engineering - ST",
         "from_date": "2026-01-01",
-        "currency": "USD"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -87,7 +96,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Engineering - ST",
         "from_date": "2026-01-01",
-        "currency": "USD"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -96,7 +106,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Engineering - ST",
         "from_date": "2026-01-01",
-        "currency": "USD"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -105,7 +116,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Engineering - ST",
         "from_date": "2026-01-01",
-        "currency": "AED"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -114,7 +126,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Finance - ST",
         "from_date": "2026-01-01",
-        "currency": "USD"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -123,7 +136,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "HR - ST",
         "from_date": "2026-01-01",
-        "currency": "AED"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -132,7 +146,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Operations - ST",
         "from_date": "2026-01-01",
-        "currency": "USD"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -141,7 +156,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Sales - ST",
         "from_date": "2026-01-01",
-        "currency": "USD"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -150,7 +166,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Business Development - ST",
         "from_date": "2026-01-01",
-        "currency": "AED"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -159,7 +176,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Finance - ST",
         "from_date": "2026-01-01",
-        "currency": "USD"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -168,7 +186,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Engineering - ST",
         "from_date": "2026-01-01",
-        "currency": "USD"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -177,7 +196,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Operations - ST",
         "from_date": "2026-01-01",
-        "currency": "USD"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -186,7 +206,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Engineering - ST",
         "from_date": "2026-01-01",
-        "currency": "USD"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -195,7 +216,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Sales - ST",
         "from_date": "2026-01-01",
-        "currency": "AED"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -204,7 +226,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Engineering - ST",
         "from_date": "2026-01-01",
-        "currency": "AED"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -213,7 +236,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Finance - ST",
         "from_date": "2026-01-01",
-        "currency": "USD"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -222,7 +246,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Engineering - ST",
         "from_date": "2026-01-01",
-        "currency": "USD"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -231,7 +256,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Engineering - ST",
         "from_date": "2026-01-01",
-        "currency": "USD"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -240,7 +266,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Sales - ST",
         "from_date": "2026-01-01",
-        "currency": "AED"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -249,7 +276,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "HR - ST",
         "from_date": "2026-01-01",
-        "currency": "AED"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -258,7 +286,8 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Finance - ST",
         "from_date": "2026-01-01",
-        "currency": "USD"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -267,6 +296,7 @@
         "company": "Sparrow Tech Pvt Ltd",
         "department": "Engineering - ST",
         "from_date": "2026-01-01",
-        "currency": "USD"
+        "currency": "USD",
+        "payroll_payable_account": "Payroll Payable - ST"
     }
 ]

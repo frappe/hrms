@@ -29,6 +29,28 @@
                 "per_weightage": 15,
                 "doctype": "Appraisal Template Goal"
             }
+        ],
+        "rating_criteria": [
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Leadership",
+                "per_weightage": 30
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Communication",
+                "per_weightage": 25
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Ownership",
+                "per_weightage": 25
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Collaboration",
+                "per_weightage": 20
+            }
         ]
     },
     {
@@ -61,6 +83,28 @@
                 "per_weightage": 10,
                 "doctype": "Appraisal Template Goal"
             }
+        ],
+        "rating_criteria": [
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Client Focus",
+                "per_weightage": 35
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Communication",
+                "per_weightage": 25
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Ownership",
+                "per_weightage": 20
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Collaboration",
+                "per_weightage": 20
+            }
         ]
     },
     {
@@ -92,6 +136,28 @@
                 "key_result_area": "Communication",
                 "per_weightage": 10,
                 "doctype": "Appraisal Template Goal"
+            }
+        ],
+        "rating_criteria": [
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Problem Solving",
+                "per_weightage": 35
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Quality",
+                "per_weightage": 25
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Collaboration",
+                "per_weightage": 20
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Communication",
+                "per_weightage": 20
             }
         ]
     }

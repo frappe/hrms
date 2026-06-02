@@ -1,0 +1,206 @@
+[
+    {
+        "doctype": "Employee Performance Feedback",
+        "employee": "HR-EMP-00001",
+        "reviewer": "HR-EMP-00003",
+        "appraisal_cycle": "Q4 2025 Review",
+        "added_on": "2026-04-03 10:30:00",
+        "feedback": "<p>Vikram kept delivery risks visible and helped the team remove blockers quickly.</p>",
+        "feedback_ratings": [
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Leadership",
+                "per_weightage": 30,
+                "rating": 0.9
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Communication",
+                "per_weightage": 25,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Ownership",
+                "per_weightage": 25,
+                "rating": 0.9
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Collaboration",
+                "per_weightage": 20,
+                "rating": 0.8
+            }
+        ]
+    },
+    {
+        "doctype": "Employee Performance Feedback",
+        "employee": "HR-EMP-00002",
+        "reviewer": "HR-EMP-00001",
+        "appraisal_cycle": "Q4 2025 Review",
+        "added_on": "2026-04-04 11:00:00",
+        "feedback": "<p>Sarah improved forecast discipline and supported the team through complex renewals.</p>",
+        "feedback_ratings": [
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Leadership",
+                "per_weightage": 30,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Communication",
+                "per_weightage": 25,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Ownership",
+                "per_weightage": 25,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Collaboration",
+                "per_weightage": 20,
+                "rating": 0.7
+            }
+        ]
+    },
+    {
+        "doctype": "Employee Performance Feedback",
+        "employee": "HR-EMP-00003",
+        "reviewer": "HR-EMP-00001",
+        "appraisal_cycle": "Q4 2025 Review",
+        "added_on": "2026-04-05 09:45:00",
+        "feedback": "<p>Ahmed handled employee escalations with clear communication and practical follow-up.</p>",
+        "feedback_ratings": [
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Problem Solving",
+                "per_weightage": 35,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Quality",
+                "per_weightage": 25,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Collaboration",
+                "per_weightage": 20,
+                "rating": 0.9
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Communication",
+                "per_weightage": 20,
+                "rating": 0.8
+            }
+        ]
+    },
+    {
+        "doctype": "Employee Performance Feedback",
+        "employee": "HR-EMP-00004",
+        "reviewer": "HR-EMP-00002",
+        "appraisal_cycle": "Q4 2025 Review",
+        "added_on": "2026-04-06 14:15:00",
+        "feedback": "<p>James kept finance reviews on schedule and gave useful context to cross-functional teams.</p>",
+        "feedback_ratings": [
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Client Focus",
+                "per_weightage": 35,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Communication",
+                "per_weightage": 25,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Ownership",
+                "per_weightage": 20,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Collaboration",
+                "per_weightage": 20,
+                "rating": 0.7
+            }
+        ]
+    },
+    {
+        "doctype": "Employee Performance Feedback",
+        "employee": "HR-EMP-00006",
+        "reviewer": "HR-EMP-00003",
+        "appraisal_cycle": "Q1 2026 Review",
+        "added_on": "2026-04-07 16:00:00",
+        "feedback": "<p>Maria consistently improved release quality and communicated tradeoffs early.</p>",
+        "feedback_ratings": [
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Problem Solving",
+                "per_weightage": 35,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Quality",
+                "per_weightage": 25,
+                "rating": 0.9
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Collaboration",
+                "per_weightage": 20,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Communication",
+                "per_weightage": 20,
+                "rating": 0.8
+            }
+        ]
+    },
+    {
+        "doctype": "Employee Performance Feedback",
+        "employee": "HR-EMP-00009",
+        "reviewer": "HR-EMP-00002",
+        "appraisal_cycle": "Q1 2026 Review",
+        "added_on": "2026-04-08 13:30:00",
+        "feedback": "<p>Priya built strong client relationships and followed up reliably after each review.</p>",
+        "feedback_ratings": [
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Client Focus",
+                "per_weightage": 35,
+                "rating": 0.9
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Communication",
+                "per_weightage": 25,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Ownership",
+                "per_weightage": 20,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Collaboration",
+                "per_weightage": 20,
+                "rating": 0.8
+            }
+        ]
+    }
+]

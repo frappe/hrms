@@ -5,18 +5,8 @@
         "employee_name": "Vikram Sharma",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00001",
-        "employee_name": "Vikram Sharma",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 4,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -25,8 +15,18 @@
         "employee_name": "Vikram Sharma",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 7,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00001",
+        "employee_name": "Vikram Sharma",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -35,18 +35,8 @@
         "employee_name": "Sarah Johnson",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00002",
-        "employee_name": "Sarah Johnson",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 4,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -55,8 +45,18 @@
         "employee_name": "Sarah Johnson",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 7,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00002",
+        "employee_name": "Sarah Johnson",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -65,18 +65,8 @@
         "employee_name": "Ahmed Al-Rashid",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00003",
-        "employee_name": "Ahmed Al-Rashid",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 4,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -85,8 +75,18 @@
         "employee_name": "Ahmed Al-Rashid",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 7,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00003",
+        "employee_name": "Ahmed Al-Rashid",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -95,18 +95,8 @@
         "employee_name": "James Williams",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00004",
-        "employee_name": "James Williams",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 4,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -115,8 +105,18 @@
         "employee_name": "James Williams",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 7,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00004",
+        "employee_name": "James Williams",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -125,18 +125,8 @@
         "employee_name": "Priya Nair",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00005",
-        "employee_name": "Priya Nair",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 4,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -145,8 +135,18 @@
         "employee_name": "Priya Nair",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 7,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00005",
+        "employee_name": "Priya Nair",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -155,18 +155,8 @@
         "employee_name": "Maria Garcia",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00006",
-        "employee_name": "Maria Garcia",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 4,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -175,8 +165,18 @@
         "employee_name": "Maria Garcia",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 7,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00006",
+        "employee_name": "Maria Garcia",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -185,18 +185,8 @@
         "employee_name": "Chen Wei",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00007",
-        "employee_name": "Chen Wei",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 4,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -205,8 +195,18 @@
         "employee_name": "Chen Wei",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 7,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00007",
+        "employee_name": "Chen Wei",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -215,18 +215,8 @@
         "employee_name": "Fatima Hassan",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00008",
-        "employee_name": "Fatima Hassan",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 4,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -235,8 +225,18 @@
         "employee_name": "Fatima Hassan",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 7,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00008",
+        "employee_name": "Fatima Hassan",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -245,18 +245,8 @@
         "employee_name": "Priya Patel",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00009",
-        "employee_name": "Priya Patel",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 4,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -265,8 +255,18 @@
         "employee_name": "Priya Patel",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 7,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00009",
+        "employee_name": "Priya Patel",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -275,18 +275,8 @@
         "employee_name": "Ananya Patel",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00010",
-        "employee_name": "Ananya Patel",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 4,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -295,8 +285,18 @@
         "employee_name": "Ananya Patel",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 7,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00010",
+        "employee_name": "Ananya Patel",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -305,18 +305,8 @@
         "employee_name": "Robert Brown",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00011",
-        "employee_name": "Robert Brown",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 1,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -325,8 +315,18 @@
         "employee_name": "Robert Brown",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 2,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00011",
+        "employee_name": "Robert Brown",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -335,18 +335,8 @@
         "employee_name": "Sophie Dubois",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00012",
-        "employee_name": "Sophie Dubois",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 1,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -355,8 +345,18 @@
         "employee_name": "Sophie Dubois",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 2,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00012",
+        "employee_name": "Sophie Dubois",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -365,18 +365,8 @@
         "employee_name": "David Miller",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00013",
-        "employee_name": "David Miller",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 4,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -385,8 +375,18 @@
         "employee_name": "David Miller",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 7,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00013",
+        "employee_name": "David Miller",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -395,18 +395,8 @@
         "employee_name": "Aisha Khan",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00014",
-        "employee_name": "Aisha Khan",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 1,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -415,8 +405,18 @@
         "employee_name": "Aisha Khan",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 2,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00014",
+        "employee_name": "Aisha Khan",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -425,18 +425,8 @@
         "employee_name": "Karthik Venkataraman",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00015",
-        "employee_name": "Karthik Venkataraman",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 1,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -445,8 +435,18 @@
         "employee_name": "Karthik Venkataraman",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 2,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00015",
+        "employee_name": "Karthik Venkataraman",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -455,18 +455,8 @@
         "employee_name": "Emma Wilson",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00016",
-        "employee_name": "Emma Wilson",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 1,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -475,8 +465,18 @@
         "employee_name": "Emma Wilson",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 2,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00016",
+        "employee_name": "Emma Wilson",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -485,18 +485,8 @@
         "employee_name": "Yusuf Ahmed",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00017",
-        "employee_name": "Yusuf Ahmed",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 1,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -505,8 +495,18 @@
         "employee_name": "Yusuf Ahmed",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 2,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00017",
+        "employee_name": "Yusuf Ahmed",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -515,18 +515,8 @@
         "employee_name": "Daniel Anderson",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00018",
-        "employee_name": "Daniel Anderson",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 1,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -535,8 +525,18 @@
         "employee_name": "Daniel Anderson",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 2,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00018",
+        "employee_name": "Daniel Anderson",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -545,18 +545,8 @@
         "employee_name": "Lisa Taylor",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00019",
-        "employee_name": "Lisa Taylor",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 4,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -565,8 +555,18 @@
         "employee_name": "Lisa Taylor",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 7,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00019",
+        "employee_name": "Lisa Taylor",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -574,19 +574,9 @@
         "employee": "HR-EMP-00020",
         "employee_name": "Oliver Davis",
         "leave_type": "Annual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00020",
-        "employee_name": "Oliver Davis",
-        "leave_type": "Casual Leave",
         "from_date": "2026-01-15",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 1,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -595,8 +585,18 @@
         "employee_name": "Oliver Davis",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-15",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 2,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00020",
+        "employee_name": "Oliver Davis",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-15",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -605,18 +605,8 @@
         "employee_name": "Nisha Bhat",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00021",
-        "employee_name": "Nisha Bhat",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 4,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -625,8 +615,18 @@
         "employee_name": "Nisha Bhat",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 7,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00021",
+        "employee_name": "Nisha Bhat",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -635,18 +635,8 @@
         "employee_name": "Hassan Malik",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00022",
-        "employee_name": "Hassan Malik",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 4,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -655,8 +645,18 @@
         "employee_name": "Hassan Malik",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 7,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00022",
+        "employee_name": "Hassan Malik",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -665,18 +665,8 @@
         "employee_name": "Elena Petrov",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00023",
-        "employee_name": "Elena Petrov",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 1,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -685,8 +675,18 @@
         "employee_name": "Elena Petrov",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 2,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00023",
+        "employee_name": "Elena Petrov",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -695,18 +695,8 @@
         "employee_name": "Wei Zhang",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00024",
-        "employee_name": "Wei Zhang",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 1,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -715,18 +705,28 @@
         "employee_name": "Wei Zhang",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 2,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00024",
+        "employee_name": "Wei Zhang",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
         "doctype": "Leave Allocation",
         "employee": "HR-EMP-00025",
         "employee_name": "Aarav Joshi",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 1,
+        "leave_type": "Annual Leave",
+        "from_date": "2026-02-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -734,19 +734,29 @@
         "employee": "HR-EMP-00025",
         "employee_name": "Aarav Joshi",
         "leave_type": "Sick Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 2,
+        "from_date": "2026-02-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00025",
+        "employee_name": "Aarav Joshi",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-02-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
         "doctype": "Leave Allocation",
         "employee": "HR-EMP-00026",
         "employee_name": "Olivia Martinez",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 1,
+        "leave_type": "Annual Leave",
+        "from_date": "2026-01-15",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -754,19 +764,29 @@
         "employee": "HR-EMP-00026",
         "employee_name": "Olivia Martinez",
         "leave_type": "Sick Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 2,
+        "from_date": "2026-01-15",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00026",
+        "employee_name": "Olivia Martinez",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-15",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
         "doctype": "Leave Allocation",
         "employee": "HR-EMP-00027",
         "employee_name": "Khalid Nasser",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 1,
+        "leave_type": "Annual Leave",
+        "from_date": "2026-03-03",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -774,19 +794,29 @@
         "employee": "HR-EMP-00027",
         "employee_name": "Khalid Nasser",
         "leave_type": "Sick Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 2,
+        "from_date": "2026-03-03",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00027",
+        "employee_name": "Khalid Nasser",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-03-03",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
         "doctype": "Leave Allocation",
         "employee": "HR-EMP-00028",
         "employee_name": "Isabella Rossi",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 1,
+        "leave_type": "Annual Leave",
+        "from_date": "2026-02-17",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -794,19 +824,29 @@
         "employee": "HR-EMP-00028",
         "employee_name": "Isabella Rossi",
         "leave_type": "Sick Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 2,
+        "from_date": "2026-02-17",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00028",
+        "employee_name": "Isabella Rossi",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-02-17",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
         "doctype": "Leave Allocation",
         "employee": "HR-EMP-00029",
         "employee_name": "Arjun Reddy",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 1,
+        "leave_type": "Annual Leave",
+        "from_date": "2026-03-10",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -814,9 +854,19 @@
         "employee": "HR-EMP-00029",
         "employee_name": "Arjun Reddy",
         "leave_type": "Sick Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 2,
+        "from_date": "2026-03-10",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00029",
+        "employee_name": "Arjun Reddy",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-03-10",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -825,18 +875,8 @@
         "employee_name": "Priya Menon",
         "leave_type": "Annual Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 11,
-        "company": "Sparrow Tech Pvt Ltd"
-    },
-    {
-        "doctype": "Leave Allocation",
-        "employee": "HR-EMP-00030",
-        "employee_name": "Priya Menon",
-        "leave_type": "Casual Leave",
-        "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 4,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 12,
         "company": "Sparrow Tech Pvt Ltd"
     },
     {
@@ -845,8 +885,18 @@
         "employee_name": "Priya Menon",
         "leave_type": "Sick Leave",
         "from_date": "2026-01-01",
-        "to_date": "2026-05-20",
-        "new_leaves_allocated": 7,
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 8,
+        "company": "Sparrow Tech Pvt Ltd"
+    },
+    {
+        "doctype": "Leave Allocation",
+        "employee": "HR-EMP-00030",
+        "employee_name": "Priya Menon",
+        "leave_type": "Personal Leave",
+        "from_date": "2026-01-01",
+        "to_date": "2026-12-31",
+        "new_leaves_allocated": 5,
         "company": "Sparrow Tech Pvt Ltd"
     }
 ]

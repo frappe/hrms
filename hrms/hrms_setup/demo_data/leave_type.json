@@ -57,9 +57,9 @@
         "doctype": "Leave Type",
         "leave_type_name": "Unpaid Leave",
         "name": "Unpaid Leave",
-        "is_unpaid": 1,
         "allow_encashment": 0,
         "is_carry_forward": 0,
-        "include_holiday": 0
+        "include_holiday": 0,
+        "is_lwp": 1
     }
 ]

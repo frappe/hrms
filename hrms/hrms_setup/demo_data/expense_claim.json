@@ -148,5 +148,105 @@
         "exchange_rate": 1,
         "currency": "USD",
         "payable_account": "Employee Advances - ST"
+    },
+    {
+        "doctype": "Expense Claim",
+        "employee": "HR-EMP-00007",
+        "company": "Sparrow Tech Pvt Ltd",
+        "expense_approver": "",
+        "posting_date": "2026-04-18",
+        "approval_status": "Approved",
+        "total_claimed_amount": 7850,
+        "total_sanctioned_amount": 7850,
+        "is_paid": 0,
+        "status": "Approved",
+        "expenses": [
+            {
+                "doctype": "Expense Claim Detail",
+                "expense_type": "Others",
+                "expense_date": "2026-04-18",
+                "amount": 7850,
+                "description": "Others expense - Customer workshop supplies",
+                "sanctioned_amount": 7850
+            }
+        ],
+        "exchange_rate": 1,
+        "currency": "USD",
+        "payable_account": "Employee Advances - ST"
+    },
+    {
+        "doctype": "Expense Claim",
+        "employee": "HR-EMP-00008",
+        "company": "Sparrow Tech Pvt Ltd",
+        "expense_approver": "",
+        "posting_date": "2026-04-25",
+        "approval_status": "Draft",
+        "total_claimed_amount": 2460,
+        "total_sanctioned_amount": 0,
+        "is_paid": 0,
+        "status": "Draft",
+        "expenses": [
+            {
+                "doctype": "Expense Claim Detail",
+                "expense_type": "Food",
+                "expense_date": "2026-04-25",
+                "amount": 2460,
+                "description": "Food expense - Team lunch",
+                "sanctioned_amount": 0
+            }
+        ],
+        "exchange_rate": 1,
+        "currency": "USD",
+        "payable_account": "Employee Advances - ST"
+    },
+    {
+        "doctype": "Expense Claim",
+        "employee": "HR-EMP-00009",
+        "company": "Sparrow Tech Pvt Ltd",
+        "expense_approver": "",
+        "posting_date": "2026-05-02",
+        "approval_status": "Rejected",
+        "total_claimed_amount": 16500,
+        "total_sanctioned_amount": 0,
+        "is_paid": 0,
+        "status": "Rejected",
+        "expenses": [
+            {
+                "doctype": "Expense Claim Detail",
+                "expense_type": "Others",
+                "expense_date": "2026-05-02",
+                "amount": 16500,
+                "description": "Others expense - Missing approval documentation",
+                "sanctioned_amount": 0
+            }
+        ],
+        "exchange_rate": 1,
+        "currency": "USD",
+        "payable_account": "Employee Advances - ST"
+    },
+    {
+        "doctype": "Expense Claim",
+        "employee": "HR-EMP-00010",
+        "company": "Sparrow Tech Pvt Ltd",
+        "expense_approver": "",
+        "posting_date": "2026-05-08",
+        "approval_status": "Rejected",
+        "total_claimed_amount": 3920,
+        "total_sanctioned_amount": 0,
+        "is_paid": 0,
+        "status": "Rejected",
+        "expenses": [
+            {
+                "doctype": "Expense Claim Detail",
+                "expense_type": "Medical",
+                "expense_date": "2026-05-08",
+                "amount": 3920,
+                "description": "Medical expense - Policy exception declined",
+                "sanctioned_amount": 0
+            }
+        ],
+        "exchange_rate": 1,
+        "currency": "USD",
+        "payable_account": "Employee Advances - ST"
     }
 ]

@@ -4,42 +4,84 @@
         "salary_component": "Basic",
         "salary_component_abbr": "BASIC",
         "type": "Earning",
-        "amount_based_on_formula": 0
+        "amount_based_on_formula": 0,
+        "accounts": [
+            {
+                "doctype": "Salary Component Account",
+                "company": "Sparrow Tech Pvt Ltd",
+                "account": "Salary - ST"
+            }
+        ]
     },
     {
         "doctype": "Salary Component",
         "salary_component": "House Rent Allowance",
         "salary_component_abbr": "HRA",
         "type": "Earning",
-        "amount_based_on_formula": 0
+        "amount_based_on_formula": 0,
+        "accounts": [
+            {
+                "doctype": "Salary Component Account",
+                "company": "Sparrow Tech Pvt Ltd",
+                "account": "Salary - ST"
+            }
+        ]
     },
     {
         "doctype": "Salary Component",
         "salary_component": "Special Allowance",
         "salary_component_abbr": "SA",
         "type": "Earning",
-        "amount_based_on_formula": 0
+        "amount_based_on_formula": 0,
+        "accounts": [
+            {
+                "doctype": "Salary Component Account",
+                "company": "Sparrow Tech Pvt Ltd",
+                "account": "Salary - ST"
+            }
+        ]
     },
     {
         "doctype": "Salary Component",
         "salary_component": "Conveyance Allowance",
         "salary_component_abbr": "CA",
         "type": "Earning",
-        "amount_based_on_formula": 0
+        "amount_based_on_formula": 0,
+        "accounts": [
+            {
+                "doctype": "Salary Component Account",
+                "company": "Sparrow Tech Pvt Ltd",
+                "account": "Salary - ST"
+            }
+        ]
     },
     {
         "doctype": "Salary Component",
         "salary_component": "Medical Allowance",
         "salary_component_abbr": "MA",
         "type": "Earning",
-        "amount_based_on_formula": 0
+        "amount_based_on_formula": 0,
+        "accounts": [
+            {
+                "doctype": "Salary Component Account",
+                "company": "Sparrow Tech Pvt Ltd",
+                "account": "Salary - ST"
+            }
+        ]
     },
     {
         "doctype": "Salary Component",
         "salary_component": "Performance Bonus",
         "salary_component_abbr": "PB",
         "type": "Earning",
-        "amount_based_on_formula": 0
+        "amount_based_on_formula": 0,
+        "accounts": [
+            {
+                "doctype": "Salary Component Account",
+                "company": "Sparrow Tech Pvt Ltd",
+                "account": "Salary - ST"
+            }
+        ]
     },
     {
         "doctype": "Salary Component",
@@ -47,13 +89,27 @@
         "salary_component_abbr": "PF",
         "type": "Deduction",
         "amount_based_on_formula": 0,
-        "is_tax_applicable": 1
+        "is_tax_applicable": 1,
+        "accounts": [
+            {
+                "doctype": "Salary Component Account",
+                "company": "Sparrow Tech Pvt Ltd",
+                "account": "Salary - ST"
+            }
+        ]
     },
     {
         "doctype": "Salary Component",
         "salary_component": "Professional Tax",
         "salary_component_abbr": "PT",
         "type": "Deduction",
-        "amount_based_on_formula": 0
+        "amount_based_on_formula": 0,
+        "accounts": [
+            {
+                "doctype": "Salary Component Account",
+                "company": "Sparrow Tech Pvt Ltd",
+                "account": "Salary - ST"
+            }
+        ]
     }
 ]

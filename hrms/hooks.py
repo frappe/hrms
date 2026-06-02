@@ -132,6 +132,7 @@ hrms_demo_background_master_doctypes = [
 	"job_applicant",
 	"job_offer",
 	"kra",
+	"employee_feedback_criteria",
 	"appraisal_template",
 	"appraisal_cycle",
 ]

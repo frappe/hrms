@@ -48,7 +48,34 @@
         ],
         "total_score": 4.44,
         "final_score": 4.44,
-        "remarks": "Demo appraisal includes manager-rated goals for review analytics."
+        "remarks": "Demo appraisal includes manager-rated goals for review analytics.",
+        "self_ratings": [
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Leadership",
+                "per_weightage": 30,
+                "rating": 0.9
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Communication",
+                "per_weightage": 25,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Ownership",
+                "per_weightage": 25,
+                "rating": 0.9
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Collaboration",
+                "per_weightage": 20,
+                "rating": 0.8
+            }
+        ],
+        "reflections": "<p>I focused on making delivery risks visible early and coaching leads through project tradeoffs.</p>"
     },
     {
         "doctype": "Appraisal",
@@ -99,7 +126,34 @@
         ],
         "total_score": 4.1,
         "final_score": 4.1,
-        "remarks": "Demo appraisal includes manager-rated goals for review analytics."
+        "remarks": "Demo appraisal includes manager-rated goals for review analytics.",
+        "self_ratings": [
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Leadership",
+                "per_weightage": 30,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Communication",
+                "per_weightage": 25,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Ownership",
+                "per_weightage": 25,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Collaboration",
+                "per_weightage": 20,
+                "rating": 0.7
+            }
+        ],
+        "reflections": "<p>I improved account review cadence and helped the sales team keep forecasts current.</p>"
     },
     {
         "doctype": "Appraisal",
@@ -150,7 +204,34 @@
         ],
         "total_score": 4.1,
         "final_score": 4.1,
-        "remarks": "Demo appraisal includes manager-rated goals for review analytics."
+        "remarks": "Demo appraisal includes manager-rated goals for review analytics.",
+        "self_ratings": [
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Problem Solving",
+                "per_weightage": 35,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Quality",
+                "per_weightage": 25,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Collaboration",
+                "per_weightage": 20,
+                "rating": 0.9
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Communication",
+                "per_weightage": 20,
+                "rating": 0.8
+            }
+        ],
+        "reflections": "<p>I handled employee escalations quickly and documented follow-up actions more consistently.</p>"
     },
     {
         "doctype": "Appraisal",
@@ -201,7 +282,34 @@
         ],
         "total_score": 4.26,
         "final_score": 4.26,
-        "remarks": "Demo appraisal includes manager-rated goals for review analytics."
+        "remarks": "Demo appraisal includes manager-rated goals for review analytics.",
+        "self_ratings": [
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Client Focus",
+                "per_weightage": 35,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Communication",
+                "per_weightage": 25,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Ownership",
+                "per_weightage": 20,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Collaboration",
+                "per_weightage": 20,
+                "rating": 0.7
+            }
+        ],
+        "reflections": "<p>I kept finance reviews on schedule and partnered with teams on clearer budget communication.</p>"
     },
     {
         "doctype": "Appraisal",
@@ -252,7 +360,34 @@
         ],
         "total_score": 4.07,
         "final_score": 4.07,
-        "remarks": "Demo appraisal includes manager-rated goals for review analytics."
+        "remarks": "Demo appraisal includes manager-rated goals for review analytics.",
+        "self_ratings": [
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Problem Solving",
+                "per_weightage": 35,
+                "rating": 0.7
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Quality",
+                "per_weightage": 25,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Collaboration",
+                "per_weightage": 20,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Communication",
+                "per_weightage": 20,
+                "rating": 0.8
+            }
+        ],
+        "reflections": "<p>I contributed to release planning and improved collaboration with QA during handoffs.</p>"
     },
     {
         "doctype": "Appraisal",
@@ -303,7 +438,34 @@
         ],
         "total_score": 4.15,
         "final_score": 4.15,
-        "remarks": "Demo appraisal includes manager-rated goals for review analytics."
+        "remarks": "Demo appraisal includes manager-rated goals for review analytics.",
+        "self_ratings": [
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Problem Solving",
+                "per_weightage": 35,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Quality",
+                "per_weightage": 25,
+                "rating": 0.9
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Collaboration",
+                "per_weightage": 20,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Communication",
+                "per_weightage": 20,
+                "rating": 0.8
+            }
+        ],
+        "reflections": "<p>I improved code review quality and communicated release risks earlier in the cycle.</p>"
     },
     {
         "doctype": "Appraisal",
@@ -354,7 +516,34 @@
         ],
         "total_score": 4.16,
         "final_score": 4.16,
-        "remarks": "Demo appraisal includes manager-rated goals for review analytics."
+        "remarks": "Demo appraisal includes manager-rated goals for review analytics.",
+        "self_ratings": [
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Problem Solving",
+                "per_weightage": 35,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Quality",
+                "per_weightage": 25,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Collaboration",
+                "per_weightage": 20,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Communication",
+                "per_weightage": 20,
+                "rating": 0.8
+            }
+        ],
+        "reflections": "<p>I supported teammates on implementation questions and kept my delivery commitments visible.</p>"
     },
     {
         "doctype": "Appraisal",
@@ -405,7 +594,34 @@
         ],
         "total_score": 4.3,
         "final_score": 4.3,
-        "remarks": "Demo appraisal includes manager-rated goals for review analytics."
+        "remarks": "Demo appraisal includes manager-rated goals for review analytics.",
+        "self_ratings": [
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Leadership",
+                "per_weightage": 30,
+                "rating": 0.9
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Communication",
+                "per_weightage": 25,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Ownership",
+                "per_weightage": 25,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Collaboration",
+                "per_weightage": 20,
+                "rating": 0.8
+            }
+        ],
+        "reflections": "<p>I focused on predictable planning and clearer updates for cross-functional stakeholders.</p>"
     },
     {
         "doctype": "Appraisal",
@@ -456,7 +672,34 @@
         ],
         "total_score": 4.38,
         "final_score": 4.38,
-        "remarks": "Demo appraisal includes manager-rated goals for review analytics."
+        "remarks": "Demo appraisal includes manager-rated goals for review analytics.",
+        "self_ratings": [
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Client Focus",
+                "per_weightage": 35,
+                "rating": 0.9
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Communication",
+                "per_weightage": 25,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Ownership",
+                "per_weightage": 20,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Collaboration",
+                "per_weightage": 20,
+                "rating": 0.8
+            }
+        ],
+        "reflections": "<p>I built stronger client follow-up habits and kept renewal details organized.</p>"
     },
     {
         "doctype": "Appraisal",
@@ -507,6 +750,33 @@
         ],
         "total_score": 3.96,
         "final_score": 3.96,
-        "remarks": "Demo appraisal includes manager-rated goals for review analytics."
+        "remarks": "Demo appraisal includes manager-rated goals for review analytics.",
+        "self_ratings": [
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Problem Solving",
+                "per_weightage": 35,
+                "rating": 0.7
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Quality",
+                "per_weightage": 25,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Collaboration",
+                "per_weightage": 20,
+                "rating": 0.8
+            },
+            {
+                "doctype": "Employee Feedback Rating",
+                "criteria": "Communication",
+                "per_weightage": 20,
+                "rating": 0.8
+            }
+        ],
+        "reflections": "<p>I made steady progress on assigned work and identified areas where I need deeper technical ownership.</p>"
     }
 ]

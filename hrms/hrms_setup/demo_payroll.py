@@ -1,160 +1,120 @@
+import json
+
 import frappe
-from frappe.utils import add_days, getdate
 
 
 def setup_payroll_runs():
-	DEMO_COMPANY = "Sparrow Tech Pvt Ltd"
+	frappe.db.set_single_value("Payroll Settings", "email_salary_slip_to_employee", 0)
 
-	company = frappe.db.exists("Company", DEMO_COMPANY)
-	if not company:
-		first_company = frappe.get_all("Company", pluck="name")
-		if not first_company:
-			return
-		company = first_company[0]
-	else:
-		company = DEMO_COMPANY
+	records = get_payroll_entry_records()
+	clear_stale_draft_payroll_entries(records)
 
-	currencies = frappe.get_all(
-		"Salary Structure",
-		filters={"company": company, "docstatus": 1, "is_active": "Yes"},
-		pluck="currency",
-		distinct=True,
-	)
+	for record in records:
+		if not frappe.db.exists("Company", record.get("company")):
+			continue
 
-	if not currencies:
-		return
-
-	current_date = getdate()
-	months = []
-
-	for i in range(1, 3):
-		month_end = add_days(current_date, -i * 30)
-		month_start = getdate(f"{month_end.year}-{month_end.month:02d}-01")
-		month_end_date = add_days(add_days(month_start, 31), -1)
-		months.append({"start": month_start, "end": min(month_end_date, add_days(current_date, -1))})
-
-	months.reverse()
-
-	for month in months:
-		for currency in currencies:
-			try:
-				payroll_payable_account = get_payroll_payable_account(company, currency)
-				if not payroll_payable_account:
-					continue
-
-				payment_account = get_default_payment_account(company)
-
-				payroll_entry = frappe.get_doc(
-					{
-						"doctype": "Payroll Entry",
-						"company": company,
-						"payroll_frequency": "Monthly",
-						"currency": currency,
-						"start_date": month["start"],
-						"end_date": month["end"],
-						"posting_date": month["end"],
-						"payment_account": payment_account,
-						"payroll_payable_account": payroll_payable_account,
-						"exchange_rate": 1,
-					}
-				)
-
-				payroll_entry.insert(ignore_permissions=True)
-				frappe.db.commit()
-
-				payroll_entry.fill_employee_details()
-				frappe.db.commit()
-
-				payroll_entry.reload()
-
-				from hrms.payroll.doctype.payroll_entry.payroll_entry import create_salary_slips_for_employees
-
-				args = frappe._dict(
-					{
-						"salary_slip_based_on_timesheet": payroll_entry.salary_slip_based_on_timesheet,
-						"payroll_frequency": payroll_entry.payroll_frequency,
-						"start_date": payroll_entry.start_date,
-						"end_date": payroll_entry.end_date,
-						"company": payroll_entry.company,
-						"posting_date": payroll_entry.posting_date,
-						"deduct_tax_for_unsubmitted_tax_exemption_proof": payroll_entry.deduct_tax_for_unsubmitted_tax_exemption_proof,
-						"payroll_entry": payroll_entry.name,
-						"exchange_rate": payroll_entry.exchange_rate,
-						"currency": payroll_entry.currency,
-					}
-				)
-
-				employees = [emp.employee for emp in payroll_entry.employees]
-				if not employees:
-					frappe.delete_doc(
-						"Payroll Entry", payroll_entry.name, ignore_permissions=True, force=True
-					)
-					frappe.db.commit()
-					continue
-
-				create_salary_slips_for_employees(employees, args, publish_progress=False)
-
-				payroll_entry.reload()
-
-				for emp in payroll_entry.employees:
-					salary_slips = frappe.get_all(
-						"Salary Slip",
-						filters={
-							"employee": emp.employee,
-							"payroll_entry": payroll_entry.name,
-							"docstatus": 0,
-						},
-						pluck="name",
-					)
-					for ss_name in salary_slips:
-						frappe.get_doc("Salary Slip", ss_name).submit()
-
-			except Exception as e:
-				frappe.log_error(f"Failed to create payroll for {month['start']} currency {currency}", str(e))
+		try:
+			existing_payroll_entry = get_existing_payroll_entry(record)
+			if existing_payroll_entry:
+				complete_payroll_entry(existing_payroll_entry)
 				continue
 
+			payroll_entry = frappe.get_doc(record)
+			payroll_entry.insert(ignore_permissions=True)
+			frappe.db.commit()
 
-def get_default_payment_account(company):
-	accounts = frappe.get_all(
-		"Account",
-		filters={"company": company, "account_type": "Bank", "is_group": 0},
-		pluck="name",
-		limit=1,
+			complete_payroll_entry(payroll_entry.name)
+		except Exception as e:
+			frappe.log_error(
+				f"Failed to create payroll for {record.get('start_date')} {record.get('currency')}", str(e)
+			)
+			continue
+
+
+def get_payroll_entry_records():
+	data_path = frappe.get_app_path("hrms", "hrms_setup", "demo_data", "payroll_entry.json")
+	with open(data_path) as f:
+		return json.loads(f.read() or "[]")
+
+
+def clear_stale_draft_payroll_entries(records):
+	expected = {
+		(record.get("company"), record.get("currency"), record.get("start_date"), record.get("end_date"))
+		for record in records
+	}
+	companies = [company for company in {record[0] for record in expected} if company]
+	if not companies:
+		return
+
+	for payroll_entry in frappe.get_all(
+		"Payroll Entry",
+		filters={"company": ["in", companies], "docstatus": 0},
+		fields=["name", "company", "currency", "start_date", "end_date"],
+	):
+		key = (
+			payroll_entry.company,
+			payroll_entry.currency,
+			str(payroll_entry.start_date),
+			str(payroll_entry.end_date),
+		)
+		if key in expected:
+			continue
+
+		if frappe.db.exists("Salary Slip", {"payroll_entry": payroll_entry.name, "docstatus": ("!=", 2)}):
+			continue
+
+		frappe.delete_doc("Payroll Entry", payroll_entry.name, ignore_permissions=True, force=True)
+
+	frappe.db.commit()
+
+
+def get_existing_payroll_entry(record):
+	return frappe.db.exists(
+		"Payroll Entry",
+		{
+			"company": record.get("company"),
+			"currency": record.get("currency"),
+			"start_date": record.get("start_date"),
+			"end_date": record.get("end_date"),
+			"docstatus": ("!=", 2),
+		},
 	)
-	if accounts:
-		return accounts[0]
-
-	accounts = frappe.get_all(
-		"Account",
-		filters={"company": company, "is_group": 0},
-		pluck="name",
-		limit=5,
-	)
-	for acc in accounts:
-		if "bank" in acc.lower() or "cash" in acc.lower():
-			return acc
-	return accounts[0] if accounts else None
 
 
-def get_payroll_payable_account(company, currency):
-	ssa_list = frappe.get_all(
-		"Salary Structure Assignment",
-		filters={"company": company, "docstatus": 1},
-		fields=["payroll_payable_account"],
-		distinct=True,
-	)
+def complete_payroll_entry(payroll_entry_name):
+	payroll_entry = frappe.get_doc("Payroll Entry", payroll_entry_name)
 
-	for ssa in ssa_list:
-		if ssa.payroll_payable_account:
-			return ssa.payroll_payable_account
+	if payroll_entry.docstatus == 0:
+		if not payroll_entry.employees:
+			payroll_entry.fill_employee_details()
+			payroll_entry.save(ignore_permissions=True)
+			frappe.db.commit()
+			payroll_entry.reload()
 
-	accounts = frappe.get_all(
-		"Account",
-		filters={"company": company, "account_type": "Payable", "is_group": 0},
-		pluck="name",
-		limit=5,
-	)
-	for acc in accounts:
-		if "payable" in acc.lower() or "salary" in acc.lower() or "wages" in acc.lower():
-			return acc
-	return accounts[0] if accounts else None
+		if not payroll_entry.employees:
+			frappe.delete_doc("Payroll Entry", payroll_entry.name, ignore_permissions=True, force=True)
+			frappe.db.commit()
+			return
+
+		payroll_entry.submit()
+		frappe.db.commit()
+
+	submit_salary_slips(payroll_entry.name)
+
+
+def submit_salary_slips(payroll_entry_name):
+	payroll_entry = frappe.get_doc("Payroll Entry", payroll_entry_name)
+	if payroll_entry.docstatus != 1 or payroll_entry.salary_slips_submitted:
+		return
+
+	payroll_entry.submit_salary_slips()
+	payroll_entry.reload()
+
+	submitted_salary_slips = payroll_entry.get_sal_slip_list(ss_status=1)
+	if submitted_salary_slips and not payroll_entry.salary_slips_submitted:
+		submitted = [frappe.get_doc("Salary Slip", entry[0]) for entry in submitted_salary_slips]
+		payroll_entry.make_accrual_jv_entry(submitted)
+		payroll_entry.email_salary_slip(submitted)
+		payroll_entry.db_set({"salary_slips_submitted": 1, "status": "Submitted", "error_message": ""})
+
+	frappe.db.commit()

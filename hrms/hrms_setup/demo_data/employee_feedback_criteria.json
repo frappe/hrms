@@ -1,0 +1,30 @@
+[
+    {
+        "doctype": "Employee Feedback Criteria",
+        "criteria": "Leadership"
+    },
+    {
+        "doctype": "Employee Feedback Criteria",
+        "criteria": "Communication"
+    },
+    {
+        "doctype": "Employee Feedback Criteria",
+        "criteria": "Ownership"
+    },
+    {
+        "doctype": "Employee Feedback Criteria",
+        "criteria": "Collaboration"
+    },
+    {
+        "doctype": "Employee Feedback Criteria",
+        "criteria": "Client Focus"
+    },
+    {
+        "doctype": "Employee Feedback Criteria",
+        "criteria": "Problem Solving"
+    },
+    {
+        "doctype": "Employee Feedback Criteria",
+        "criteria": "Quality"
+    }
+]

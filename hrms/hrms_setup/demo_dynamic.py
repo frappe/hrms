@@ -1,96 +1,60 @@
 # Copyright (c) 2026, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
+import json
+
 import frappe
 from frappe.utils import getdate
 
 
 def setup_salary_structure_assignments(company):
-	company = frappe.db.exists("Company", company) or company
-	if not frappe.db.exists("Company", company):
-		first_company = frappe.get_all("Company", pluck="name")
-		if not first_company:
-			return
-		company = first_company[0]
-
-	salary_structures = frappe.get_all(
-		"Salary Structure",
-		filters={"company": company, "docstatus": 1, "is_active": "Yes"},
-		pluck="name",
-	)
-
-	if not salary_structures:
-		return
-
-	employees = frappe.get_all(
-		"Employee",
-		filters={"status": "Active", "company": company},
-		fields=["name", "employee_name", "designation", "department"],
-	)
-
-	if not employees:
-		return
-
-	for emp in employees:
-		if not emp.designation:
+	for record in get_demo_records("salary_structure_assignment"):
+		if not frappe.db.exists("Company", record.get("company")):
 			continue
 
-		ss_name = get_salary_structure_for_employee(emp.designation, salary_structures)
-		if not ss_name:
+		if not frappe.db.exists("Employee", record.get("employee")):
 			continue
 
-		if frappe.db.exists("Salary Structure Assignment", {"employee": emp.name, "docstatus": 1}):
+		if not frappe.db.exists("Salary Structure", record.get("salary_structure")):
 			continue
 
-		try:
-			assignment = frappe.get_doc(
-				{
-					"doctype": "Salary Structure Assignment",
-					"employee": emp.name,
-					"salary_structure": ss_name,
-					"company": company,
-					"department": emp.department,
-					"from_date": f"{getdate().year}-01-01",
-					"currency": get_salary_structure_currency(ss_name),
-					"payroll_payable_account": get_payroll_payable_account(company),
-				}
-			)
-			assignment.insert(ignore_permissions=True)
-			assignment.submit()
-		except Exception:
+		if frappe.db.exists(
+			"Salary Structure Assignment",
+			{
+				"employee": record.get("employee"),
+				"from_date": record.get("from_date"),
+				"docstatus": 1,
+			},
+		):
 			continue
 
-
-def get_salary_structure_for_employee(designation, salary_structures):
-	designation = designation.lower()
-	for salary_structure in salary_structures:
-		if salary_structure.lower() in designation or designation in salary_structure.lower():
-			return salary_structure
-
-	return salary_structures[0] if salary_structures else None
+		create_and_submit_doc(record)
 
 
-def get_salary_structure_currency(salary_structure):
-	return frappe.db.get_value("Salary Structure", salary_structure, "currency") or "USD"
+def get_demo_records(doctype):
+	data_path = frappe.get_app_path("hrms", "hrms_setup", "demo_data", f"{doctype}.json")
+	with open(data_path) as f:
+		return json.loads(f.read() or "[]")
 
 
-def get_payroll_payable_account(company):
-	accounts = frappe.get_all(
-		"Account",
-		filters={"company": company, "account_name": ["like", "%Payroll Payable%"]},
-		pluck="name",
-	)
-	return accounts[0] if accounts else None
+def create_and_submit_doc(record):
+	previous_in_import = getattr(frappe.flags, "in_import", False)
+	if record.get("name"):
+		frappe.flags.in_import = True
+
+	try:
+		doc = frappe.get_doc(record)
+		doc.insert(ignore_permissions=True, ignore_if_duplicate=True)
+		if doc.docstatus == 0:
+			doc.submit()
+	except Exception:
+		pass
+	finally:
+		frappe.flags.in_import = previous_in_import
 
 
-def setup_leave_and_attendance(company):
-	from hrms.hrms_setup.demo_attendance import (
-		create_leave_allocations,
-		create_leave_applications,
-		generate_attendance,
-	)
-
-	employees = frappe.get_all(
+def get_employee_records(company):
+	return frappe.get_all(
 		"Employee",
 		filters={"status": "Active", "company": company},
 		fields=[
@@ -102,6 +66,16 @@ def setup_leave_and_attendance(company):
 			"company",
 		],
 	)
+
+
+def setup_leave_and_attendance(company):
+	from hrms.hrms_setup.demo_attendance import (
+		create_leave_allocations,
+		create_leave_applications,
+		generate_attendance,
+	)
+
+	employees = get_employee_records(company)
 
 	leave_period = frappe.db.get_value(
 		"Leave Period",
