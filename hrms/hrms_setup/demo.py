@@ -9,21 +9,12 @@ from frappe import _
 
 DEMO_COMPANY = "Sparrow Tech Pvt Ltd"
 DEMO_COMPANY_ABBR = "ST"
+DEMO_PAYROLL_PAYABLE_ACCOUNT = f"Payroll Payable - {DEMO_COMPANY_ABBR}"
+DEMO_SALARY_ACCOUNT = f"Salary - {DEMO_COMPANY_ABBR}"
 DYNAMIC_DEMO_DATA_JOB_ID = "hrms_demo_dynamic_data_generation"
-DEMO_APPRAISALS_JOB_ID = "hrms_demo_appraisals_setup"
-DEMO_ASSIGNMENTS_JOB_ID = "hrms_demo_assignments_setup"
-DEMO_ATTENDANCE_JOB_ID = "hrms_demo_attendance_setup"
-DEMO_PAYROLL_JOB_ID = "hrms_demo_payroll_setup"
 
 
 def extend_bootinfo(bootinfo):
-	"""Inject the demo company name into the boot payload.
-
-	The frontend JS reads ``frappe.boot.sysdefaults.demo_company`` to decide
-	whether to show the "Demo Company" badge and the "Clear Demo Data" button.
-	We populate it only when the HRMS demo company exists and Global Defaults
-	hasn't already been set to a different value by another app's demo setup.
-	"""
 	if not bootinfo.sysdefaults.get("demo_company") and frappe.db.exists("Company", DEMO_COMPANY):
 		bootinfo.sysdefaults.demo_company = DEMO_COMPANY
 
@@ -88,7 +79,6 @@ def clear_company_transactions(company):
 
 
 def clear_erpnext_masters():
-	"""Clear ERPNext demo master records using force deletion to bypass link validation."""
 	from erpnext.setup.demo import read_data_file_using_hooks as erpnext_read_data_file
 
 	for doctype in frappe.get_hooks("demo_master_doctypes")[::-1]:
@@ -102,17 +92,6 @@ def clear_erpnext_masters():
 
 
 def clear_erpnext_demo_companies():
-	"""Delete ERPNext-style demo companies (those ending with ' (Demo)').
-
-	ERPNext's demo setup creates a company named '<original_company> (Demo)' and
-	stores it in ``Global Defaults.demo_company``.  HRMS's ``create_demo_company``
-	overwrites that field with the HRMS company name, so calling ERPNext's
-	``clear_demo_data()`` directly would read the wrong company.
-
-	Instead we call the same three steps ERPNext's ``clear_demo_data`` performs
-	internally — TDR, ``clear_masters``, ``delete_company`` — but pass the
-	correct company name explicitly.
-	"""
 	from erpnext.setup.demo import (
 		create_transaction_deletion_record,
 	)
@@ -134,7 +113,6 @@ def clear_erpnext_demo_companies():
 
 
 def clear_hrms_masters(company):
-	# First delete records that TDR skips (company_data_to_be_ignored) to unblock master deletion
 	clear_company_ignored_hrms_data(company)
 	clear_expense_claim_type_accounts(company)
 	clear_demo_appraisal_feedback()
@@ -150,11 +128,6 @@ def clear_hrms_masters(company):
 
 
 def clear_company_ignored_hrms_data(company):
-	"""Delete HRMS records that TDR skips (company_data_to_be_ignored hook).
-
-	Uses direct DB deletion (same as ERPNext TDR) to avoid controller-level
-	link validation that would otherwise block deletion and accumulate error messages.
-	"""
 	for doctype in frappe.get_hooks("company_data_to_be_ignored") or []:
 		try:
 			meta = frappe.get_meta(doctype)
@@ -169,11 +142,9 @@ def clear_company_ignored_hrms_data(company):
 			if not names:
 				continue
 
-			# Delete child tables first (same approach as TDR)
 			for child_df in meta.get_table_fields():
 				frappe.db.delete(child_df.options, {"parent": ["in", names]})
 
-			# Direct DB delete — bypasses all controller logic, link checks, and submission state
 			frappe.db.delete(doctype, {"name": ["in", names]})
 		except Exception:
 			frappe.log_error(f"Failed to clear {doctype} for demo company during demo clear")
@@ -217,7 +188,6 @@ def clear_demo_record(record):
 		return
 
 	valid_columns = frappe.get_meta(doctype).get_valid_columns()
-	# Skip child table lists and calculated fields that may differ from creation values
 	skip_fields = {"total_score", "final_score", "total_claimed_amount", "total_sanctioned_amount"}
 	filters = {
 		key: value
@@ -227,8 +197,6 @@ def clear_demo_record(record):
 	if not filters:
 		return
 
-	# Use frappe.db.get_value instead of frappe.get_doc to avoid adding "not found"
-	# messages to frappe's message queue when the record doesn't exist
 	name = frappe.db.get_value(doctype, filters)
 	if name:
 		delete_demo_doc(doctype, name)
@@ -240,9 +208,6 @@ def delete_demo_doc(doctype, name):
 
 	meta = frappe.get_meta(doctype)
 	if meta.is_submittable:
-		# Set docstatus to draft directly — skip cancel() which accumulates
-		# "Cannot cancel because linked" messages in frappe's message queue
-		# even when the exception is caught. This mirrors the TDR force-delete approach.
 		frappe.db.set_value(doctype, name, "docstatus", 0)
 
 	frappe.delete_doc(doctype, name, ignore_permissions=True, force=True)
@@ -303,12 +268,12 @@ def enqueue_dynamic_demo_data():
 
 
 def setup_dynamic_demo_data():
-	"""Step 1 — background masters + recruitment.
-
-	Each step commits its own data and chains the next step as a separate
-	background job so results are visible progressively in the UI.
-	"""
 	from frappe.utils.telemetry import capture
+
+	from hrms.hrms_setup.demo_dynamic import (
+		setup_leave_and_attendance,
+		setup_salary_structure_assignments,
+	)
 
 	capture("dynamic_demo_data_creation_started", "hrms")
 	try:
@@ -316,88 +281,9 @@ def setup_dynamic_demo_data():
 		submit_salary_structures()
 		set_employee_recruitment_links()
 		submit_accepted_job_offers()
-	except Exception:
-		capture("dynamic_demo_data_creation_failed", "hrms", properties={"exception": frappe.get_traceback()})
-		raise
-
-	frappe.enqueue(
-		"hrms.hrms_setup.demo.setup_demo_appraisals",
-		queue="long",
-		timeout=1800,
-		job_id=DEMO_APPRAISALS_JOB_ID,
-		deduplicate=True,
-		enqueue_after_commit=True,
-		now=_is_in_test(),
-	)
-
-
-def setup_demo_appraisals():
-	"""Step 2 — appraisals (background transactions)."""
-	try:
-		process_background_transactions()
-		setup_appraisal_feedback()
-	except Exception:
-		frappe.log_error("Failed to create demo appraisals")
-		raise
-
-	frappe.enqueue(
-		"hrms.hrms_setup.demo.setup_demo_salary_assignments",
-		queue="long",
-		timeout=1800,
-		job_id=DEMO_ASSIGNMENTS_JOB_ID,
-		deduplicate=True,
-		enqueue_after_commit=True,
-		now=_is_in_test(),
-	)
-
-
-def setup_demo_salary_assignments():
-	"""Step 3 — salary structure assignments."""
-	from hrms.hrms_setup.demo_dynamic import setup_salary_structure_assignments
-
-	try:
+		setup_demo_appraisals()
 		setup_salary_structure_assignments(DEMO_COMPANY)
-	except Exception:
-		frappe.log_error("Failed to create demo salary structure assignments")
-		raise
-
-	frappe.enqueue(
-		"hrms.hrms_setup.demo.setup_demo_leave_and_attendance",
-		queue="long",
-		timeout=1800,
-		job_id=DEMO_ATTENDANCE_JOB_ID,
-		deduplicate=True,
-		enqueue_after_commit=True,
-		now=_is_in_test(),
-	)
-
-
-def setup_demo_leave_and_attendance():
-	"""Step 4 — leave allocations, leave applications, attendance records."""
-	from hrms.hrms_setup.demo_dynamic import setup_leave_and_attendance
-
-	try:
 		setup_leave_and_attendance(DEMO_COMPANY)
-	except Exception:
-		frappe.log_error("Failed to create demo leave and attendance")
-		raise
-
-	frappe.enqueue(
-		"hrms.hrms_setup.demo.setup_demo_payroll",
-		queue="long",
-		timeout=1800,
-		job_id=DEMO_PAYROLL_JOB_ID,
-		deduplicate=True,
-		enqueue_after_commit=True,
-		now=_is_in_test(),
-	)
-
-
-def setup_demo_payroll():
-	"""Step 5 — payroll runs (final step)."""
-	from frappe.utils.telemetry import capture
-
-	try:
 		setup_payroll_accounts()
 		setup_payroll_runs()
 	except Exception:
@@ -450,9 +336,32 @@ def create_demo_record(record):
 		frappe.flags.in_import = previous_in_import
 
 
-def setup_appraisal_feedback():
+def setup_demo_appraisals():
+	process_background_transactions()
 	for record in get_appraisal_feedback_records():
-		create_appraisal_feedback(record)
+		submit_demo_appraisal_feedback(create_appraisal_feedback(record))
+
+	submit_demo_appraisals()
+
+
+def submit_demo_appraisal_feedback(feedback):
+	if feedback and frappe.db.get_value("Employee Performance Feedback", feedback, "docstatus") == 0:
+		frappe.get_doc("Employee Performance Feedback", feedback).submit()
+
+
+def submit_demo_appraisals():
+	for record in json.loads(read_data_file_using_hooks("appraisal")):
+		appraisal = frappe.db.get_value(
+			"Appraisal",
+			{
+				"employee": record.get("employee"),
+				"appraisal_cycle": record.get("appraisal_cycle"),
+				"docstatus": 0,
+			},
+			"name",
+		)
+		if appraisal:
+			frappe.get_doc("Appraisal", appraisal).submit()
 
 
 def create_appraisal_feedback(record):
@@ -461,19 +370,27 @@ def create_appraisal_feedback(record):
 	if not appraisal:
 		return
 
-	if frappe.db.exists(
+	feedback_filters = {
+		"employee": record.get("employee"),
+		"reviewer": record.get("reviewer"),
+		"appraisal": appraisal,
+		"docstatus": ("!=", 2),
+	}
+	feedback = frappe.db.get_value(
 		"Employee Performance Feedback",
-		{
-			"employee": record.get("employee"),
-			"reviewer": record.get("reviewer"),
-			"appraisal": appraisal,
-			"docstatus": ("!=", 2),
-		},
-	):
-		return
+		feedback_filters,
+		"name",
+	)
+	if feedback:
+		return feedback
 
 	record["appraisal"] = appraisal
 	create_demo_record(record)
+	return frappe.db.get_value(
+		"Employee Performance Feedback",
+		feedback_filters,
+		"name",
+	)
 
 
 def clear_demo_appraisal_feedback():
@@ -584,37 +501,14 @@ def fiscal_year_exists_for_dates(year_start_date, year_end_date):
 
 
 def setup_payroll_accounts():
-	company = frappe.db.exists("Company", DEMO_COMPANY)
-	if not company:
-		first = frappe.get_all("Company", pluck="name")
-		if not first:
-			return
-		company = first[0]
-	else:
-		company = DEMO_COMPANY
+	if frappe.db.exists("Account", DEMO_PAYROLL_PAYABLE_ACCOUNT):
+		frappe.db.set_value("Account", DEMO_PAYROLL_PAYABLE_ACCOUNT, "account_type", "Payable")
 
-	accounts = frappe.get_all(
-		"Account",
-		filters={
-			"company": company,
-			"account_name": ["like", "%Payroll Payable%"],
-		},
-		pluck="name",
-	)
-
-	if accounts:
-		frappe.db.set_value("Account", accounts[0], "account_type", "Payable")
-
-	setup_salary_component_accounts(company)
+	setup_salary_component_accounts()
 
 
-def setup_salary_component_accounts(company):
-	salary_account = frappe.db.get_value(
-		"Account",
-		{"company": company, "account_name": "Salary", "root_type": "Expense", "is_group": 0},
-		"name",
-	)
-	if not salary_account:
+def setup_salary_component_accounts():
+	if not frappe.db.exists("Account", DEMO_SALARY_ACCOUNT):
 		return
 
 	for record in json.loads(read_data_file_using_hooks("salary_component")):
@@ -624,12 +518,12 @@ def setup_salary_component_accounts(company):
 
 		if frappe.db.exists(
 			"Salary Component Account",
-			{"parent": salary_component, "company": company},
+			{"parent": salary_component, "company": DEMO_COMPANY},
 		):
 			continue
 
 		component = frappe.get_doc("Salary Component", salary_component)
-		component.append("accounts", {"company": company, "account": salary_account})
+		component.append("accounts", {"company": DEMO_COMPANY, "account": DEMO_SALARY_ACCOUNT})
 		component.save(ignore_permissions=True)
 
 
