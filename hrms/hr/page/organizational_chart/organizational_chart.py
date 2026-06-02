@@ -1,11 +1,12 @@
 import frappe
+from frappe import _
 from frappe.query_builder.functions import Count
 
 
 @frappe.whitelist()
 def get_children(parent: str | None = None, company: str | None = None, exclude_node: str | None = None):
 	filters = [["status", "=", "Active"]]
-	if company and company != "All Companies":
+	if company and not is_all_companies(company):
 		filters.append(["company", "=", company])
 
 	if parent and company and parent != company:
@@ -32,18 +33,27 @@ def get_children(parent: str | None = None, company: str | None = None, exclude_
 	)
 
 	for employee in employees:
-		employee.connections = get_connections(employee.id, employee.lft, employee.rgt)
+		employee.connections = get_connections(employee.id, employee.lft, employee.rgt, company)
 		employee.expandable = bool(employee.connections)
 
 	return employees
 
 
-def get_connections(employee: str, lft: int, rgt: int) -> int:
+def is_all_companies(company: str | None) -> bool:
+	return company in ("All Companies", _("All Companies"))
+
+
+def get_connections(employee: str, lft: int, rgt: int, company: str | None = None) -> int:
 	Employee = frappe.qb.DocType("Employee")
 	query = (
 		frappe.qb.from_(Employee)
 		.select(Count(Employee.name))
 		.where((Employee.lft > lft) & (Employee.rgt < rgt) & (Employee.status == "Active"))
-	).run()
+	)
+
+	if company and not is_all_companies(company):
+		query = query.where(Employee.company == company)
+
+	query = query.run()
 
 	return query[0][0]

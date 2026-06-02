@@ -1,12 +1,16 @@
 hrms.organizational_chart = hrms.organizational_chart || {};
 
 Object.assign(hrms.organizational_chart, {
+	is_all_companies(company) {
+		return company === "All Companies" || company === __("All Companies");
+	},
+
 	get_employee_count(company) {
 		const args = {
 			doctype: "Employee",
 		};
 
-		if (company) {
+		if (company && !this.is_all_companies(company)) {
 			args.filters = { company };
 		}
 

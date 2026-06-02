@@ -64,40 +64,68 @@ hrms.HierarchyChart = class {
 		node.$link = $(`[id="${node.id}"]`);
 	}
 
+	get_company_options() {
+		return frappe
+			.call({
+				method: "frappe.client.get_list",
+				args: {
+					doctype: "Company",
+					fields: ["name"],
+					limit_page_length: 0,
+					order_by: "name",
+				},
+			})
+			.then((r) => {
+				const companies = (r.message || []).map((company) => company.name);
+				return [__("All Companies"), ...companies].join("\n");
+			});
+	}
+
+	get_default_company() {
+		return __("All Companies");
+	}
+
 	show() {
 		this.setup_actions();
 		if (this.page.main.find('[data-fieldname="company"]').length) return;
 		let me = this;
 
-		let company = this.page.add_field({
-			fieldtype: "Link",
-			options: "Company",
-			fieldname: "company",
-			placeholder: __("Select Company"),
-			default: frappe.defaults.get_default("company"),
-			only_select: true,
-			reqd: 1,
-			change: () => {
-				me.company = "";
-				$("#hierarchy-chart-wrapper").remove();
+		this.get_company_options().then((options) => {
+			let company = this.page.add_field({
+				fieldtype: "Autocomplete",
+				options,
+				fieldname: "company",
+				placeholder: __("Select Company"),
+				default: this.get_default_company(),
+				reqd: 1,
+				change: () => {
+					const selected_company = company.get_value();
 
-				if (company.get_value()) {
-					me.company = company.get_value();
+					if (!selected_company) {
+						if (me.company) {
+							company.set_input_value(me.company);
+						}
+						return;
+					}
+
+					if (me.company === selected_company) return;
+
+					me.company = selected_company;
+					$("#hierarchy-chart-wrapper").remove();
 
 					// svg for connectors
 					me.make_svg_markers();
 					me.setup_hierarchy();
 					me.render_root_nodes();
 					me.all_nodes_expanded = false;
-				} else {
-					frappe.throw(__("Please select a company first."));
-				}
-			},
-		});
+					me.setup_actions();
+				},
+			});
 
-		company.refresh();
-		$(`[data-fieldname="company"]`).trigger("change");
-		$(`[data-fieldname="company"] .link-field`).addClass("hierarchy-company-link-field");
+			company.refresh();
+			$(`[data-fieldname="company"]`).trigger("change");
+			$(`[data-fieldname="company"] .control-input`).addClass("hierarchy-company-link-field");
+		});
 	}
 
 	set_main_state(state) {
@@ -117,17 +145,23 @@ hrms.HierarchyChart = class {
 		});
 
 		this.page.add_inner_button(__("Expand All"), function () {
-			me.load_children(me.root_node, true);
+			const selected_company = me.page.fields_dict.company?.get_value() || me.company;
+			if (!selected_company) {
+				frappe.throw(__("Please select a company first."));
+			}
+
+			me.company = selected_company;
 			me.all_nodes_expanded = true;
+			me.load_children(me.root_node, true).then(() => {
+				me.page.remove_inner_button(__("Expand All"));
+				me.page.add_inner_button(__("Collapse All"), function () {
+					me.setup_hierarchy();
+					me.render_root_nodes();
+					me.all_nodes_expanded = false;
 
-			me.page.remove_inner_button(__("Expand All"));
-			me.page.add_inner_button(__("Collapse All"), function () {
-				me.setup_hierarchy();
-				me.render_root_nodes();
-				me.all_nodes_expanded = false;
-
-				me.page.remove_inner_button(__("Collapse All"));
-				me.setup_actions();
+					me.page.remove_inner_button(__("Collapse All"));
+					me.setup_actions();
+				});
 			});
 		});
 	}
@@ -294,12 +328,12 @@ hrms.HierarchyChart = class {
 		}
 
 		if (!deep) {
-			frappe.run_serially([
+			return frappe.run_serially([
 				() => this.get_child_nodes(node.id),
 				(child_nodes) => this.render_child_nodes(node, child_nodes),
 			]);
 		} else {
-			frappe.run_serially([
+			return frappe.run_serially([
 				() => frappe.dom.freeze(),
 				() => this.setup_hierarchy(),
 				() => this.render_root_nodes(true),
@@ -376,18 +410,24 @@ hrms.HierarchyChart = class {
 	}
 
 	render_children_of_all_nodes(data_list) {
-		let entry;
-		let node;
+		let pending = data_list || [];
 
-		while (data_list.length) {
-			// to avoid overlapping connectors
-			entry = data_list.shift();
-			node = this.nodes[entry.parent];
-			if (node) {
-				this.render_child_nodes_for_expanded_view(node, entry.data);
-			} else if (data_list.length) {
-				data_list.push(entry);
-			}
+		while (pending.length) {
+			let rendered = false;
+			let deferred = [];
+
+			pending.forEach((entry) => {
+				const node = this.nodes[entry.parent];
+				if (node) {
+					this.render_child_nodes_for_expanded_view(node, entry.data);
+					rendered = true;
+				} else {
+					deferred.push(entry);
+				}
+			});
+
+			if (!rendered) break;
+			pending = deferred;
 		}
 	}
 

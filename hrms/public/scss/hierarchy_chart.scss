@@ -267,6 +267,7 @@
 #arrows {
 	position: absolute;
 	overflow: visible;
+	pointer-events: none;
 }
 
 .active-connector {

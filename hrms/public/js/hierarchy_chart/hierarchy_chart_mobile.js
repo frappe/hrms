@@ -60,23 +60,52 @@ hrms.HierarchyChartMobile = class {
 		node.$link.addClass("mobile-node");
 	}
 
+	get_company_options() {
+		return frappe
+			.call({
+				method: "frappe.client.get_list",
+				args: {
+					doctype: "Company",
+					fields: ["name"],
+					limit_page_length: 0,
+					order_by: "name",
+				},
+			})
+			.then((r) => {
+				const companies = (r.message || []).map((company) => company.name);
+				return [__("All Companies"), ...companies].join("\n");
+			});
+	}
+
+	get_default_company() {
+		return __("All Companies");
+	}
+
 	show() {
 		if (this.page.main.find('[data-fieldname="company"]').length) return;
 		let me = this;
 
-		let company = this.page.add_field({
-			fieldtype: "Link",
-			options: "Company",
-			fieldname: "company",
-			placeholder: __("Select Company"),
-			default: frappe.defaults.get_default("company"),
-			only_select: true,
-			reqd: 1,
-			change: () => {
-				me.company = "";
+		this.get_company_options().then((options) => {
+			let company = this.page.add_field({
+				fieldtype: "Autocomplete",
+				options,
+				fieldname: "company",
+				placeholder: __("Select Company"),
+				default: this.get_default_company(),
+				reqd: 1,
+				change: () => {
+					const selected_company = company.get_value();
 
-				if (company.get_value() && me.company != company.get_value()) {
-					me.company = company.get_value();
+					if (!selected_company) {
+						if (me.company) {
+							company.set_input_value(me.company);
+						}
+						return;
+					}
+
+					if (me.company === selected_company) return;
+
+					me.company = selected_company;
 
 					// svg for connectors
 					me.make_svg_markers();
@@ -89,13 +118,13 @@ hrms.HierarchyChartMobile = class {
 
 					me.setup_hierarchy();
 					me.render_root_nodes();
-				}
-			},
-		});
+				},
+			});
 
-		company.refresh();
-		$(`[data-fieldname="company"]`).trigger("change");
-		$(`[data-fieldname="company"] .link-field`).addClass("hierarchy-company-link-field");
+			company.refresh();
+			$(`[data-fieldname="company"]`).trigger("change");
+			$(`[data-fieldname="company"] .control-input`).addClass("hierarchy-company-link-field");
+		});
 	}
 
 	set_main_state(state) {
