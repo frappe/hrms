@@ -147,7 +147,12 @@ def make_loan_repayment_entry(doc: "SalarySlip"):
 		)
 
 		repayment_entry.save()
+
+		if not process_payroll_accounting_entry_based_on_employee:
+			frappe.flags.party_not_required = True
+
 		repayment_entry.submit()
+		frappe.flags.party_not_required = False
 
 		frappe.db.set_value("Salary Slip Loan", loan.name, "loan_repayment_entry", repayment_entry.name)
 
