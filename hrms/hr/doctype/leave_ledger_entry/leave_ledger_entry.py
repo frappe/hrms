@@ -1,6 +1,8 @@
 # Copyright (c) 2019, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
+import datetime
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -195,7 +197,7 @@ def get_remaining_leaves(allocation):
 
 
 @frappe.whitelist()
-def expire_allocation(allocation, expiry_date=None):
+def expire_allocation(allocation: str | Document | frappe._dict, expiry_date: datetime.date | None = None):
 	"""expires non-carry forwarded allocation"""
 	import json
 
@@ -219,7 +221,11 @@ def expire_allocation(allocation, expiry_date=None):
 		)
 		create_leave_ledger_entry(allocation, args)
 
-	frappe.db.set_value("Leave Allocation", allocation.name, "expired", 1)
+	frappe.db.set_value(
+		"Leave Allocation",
+		allocation.name,
+		{"expired": 1, "new_leaves_allocated": 0, "total_leaves_allocated": 0},
+	)
 
 
 def expire_carried_forward_allocation(allocation):

@@ -61,6 +61,9 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		if self.task and not self.project:
 			self.project = frappe.db.get_value("Task", self.task, "project")
 
+		if flt(self.grand_total) > 0 and self.total_advance_amount:
+			self.is_paid = 0
+
 	def set_status(self, update=False):
 		status = {"0": "Draft", "1": "Submitted", "2": "Cancelled"}[cstr(self.docstatus or 0)]
 
