@@ -64,13 +64,12 @@
 							{{ __("Login") }}
 						</Button>
 						<div class="text-center mt-4">
-							<button
-								type="button"
+							<router-link
+								:to="{ name: 'ForgotPassword', query: email ? { email } : {} }"
 								class="text-sm text-gray-600 hover:text-gray-900 underline"
-								@click="openForgotPassword"
 							>
 								{{ __("Forgot Password?") }}
-							</button>
+							</router-link>
 						</div>
 					</form>
 
@@ -92,9 +91,6 @@
 					<div v-else-if="user_pass_login_disabled.data" class="text-center text-gray-600 py-8">{{ __("No login methods are available. Please contact your administrator.") }}</div>
 				</div>
 			</div>
-
-
-
 			<Dialog v-model="otp.showDialog">
 				<template #body-title>
 					<h2 class="text-lg font-bold">{{ __("OTP Verification") }}</h2>
@@ -123,49 +119,14 @@
 					</form>
 				</template>
 			</Dialog>
-
-			<ion-modal
-				ref="forgotPasswordModal"
-				:is-open="showForgotPasswordModal"
-				@didDismiss="closeForgotPasswordModal"
-				:initial-breakpoint="1"
-				:breakpoints="[0, 1]"
-			>
-				<div class="h-120 w-full flex flex-col items-center justify-center gap-5 p-4 mb-5">
-					<div class="flex flex-col gap-1.5 mt-2 items-center justify-center text-center">
-						<h2 class="font-bold text-xl">{{ __("Reset Password") }}</h2>
-						<p class="font-medium text-gray-500 text-sm">
-							{{ __("Enter your email address and we'll send you a link to reset your password.") }}
-						</p>
-					</div>
-					<Input
-						:label="__('Email')"
-						type="email"
-						placeholder="johndoe@mail.com"
-						v-model="forgotPasswordEmail"
-						autocomplete="username"
-						required
-						class="w-full"
-					/>
-					<ErrorMessage :message="forgotPasswordError" />
-					<Button
-						:loading="forgotPasswordResource.loading"
-						variant="solid"
-						class="w-full py-5 text-base disabled:bg-gray-700 disabled:text-white"
-						@click="sendPasswordReset"
-					>
-						{{ __("Send Reset Link") }}
-					</Button>
-				</div>
-			</ion-modal>
 		</ion-content>
 	</ion-page>
 </template>
 
 <script setup>
-import { IonPage, IonContent, IonModal } from "@ionic/vue"
+import { IonPage, IonContent } from "@ionic/vue"
 import { inject, reactive, ref } from "vue"
-import { Input, Button, ErrorMessage, Dialog, createResource, toast } from "frappe-ui"
+import { Input, Button, ErrorMessage, Dialog, createResource } from "frappe-ui"
 
 import FrappeHRLogo from "@/components/icons/FrappeHRLogo.vue"
 
@@ -183,62 +144,6 @@ const otp = reactive({
 	code: "",
 	verification: {},
 })
-
-const showForgotPasswordModal = ref(false)
-const forgotPasswordEmail = ref("")
-const forgotPasswordError = ref("")
-
-const forgotPasswordResource = createResource({
-	url: "frappe.core.doctype.user.user.reset_password",
-	method: "POST",
-	onSuccess() {
-		toast({
-			title: __("Success"),
-			text: __("Password reset link has been sent to your email."),
-			icon: "check-circle",
-			position: "bottom-center",
-			iconClasses: "text-green-500",
-		})
-		showForgotPasswordModal.value = false
-		forgotPasswordEmail.value = ""
-		forgotPasswordError.value = ""
-	},
-	onError(error) {
-		forgotPasswordError.value = error.messages?.[0] || __("Failed to send reset link")
-	},
-})
-
-function openForgotPassword() {
-	forgotPasswordEmail.value = email.value || ""
-	forgotPasswordError.value = ""
-	showForgotPasswordModal.value = true
-}
-
-function closeForgotPasswordModal() {
-	showForgotPasswordModal.value = false
-	forgotPasswordError.value = ""
-}
-
-function isValidEmail(email) {
-	return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-}
-
-function sendPasswordReset() {
-	const emailValue = (forgotPasswordEmail.value || "").trim()
-
-	if (!emailValue) {
-		forgotPasswordError.value = __("Please enter your email address")
-		return
-	}
-
-	if (!isValidEmail(emailValue)) {
-		forgotPasswordError.value = __("Please enter a valid email address")
-		return
-	}
-
-	forgotPasswordError.value = ""
-	forgotPasswordResource.submit({ user: emailValue })
-}
 
 const session = inject("$session")
 const __ = inject("$translate")
