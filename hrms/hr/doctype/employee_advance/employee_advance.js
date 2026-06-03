@@ -86,6 +86,14 @@ frappe.ui.form.on("Employee Advance", {
 				);
 			}
 		}
+		if (frm.doc.status === "Returned") {
+			frm.dashboard.clear_headline();
+			return;
+		}
+
+		if (frm.doc.docstatus === 1) {
+			frm.trigger("render_employee_advance_return_banner");
+		}
 	},
 
 	make_deduction_via_additional_salary: function (frm) {
@@ -161,5 +169,44 @@ frappe.ui.form.on("Employee Advance", {
 		}
 		frm.toggle_display("base_paid_amount", frm.doc.currency != company_currency);
 		frm.refresh_fields();
+	},
+
+	render_employee_advance_return_banner(frm) {
+		frappe.call({
+			method: "hrms.hr.doctype.employee_advance.employee_advance.get_employee_advance_return",
+			args: {
+				employee_advance: frm.doc.name,
+			},
+			callback(r) {
+				const advance_return_data = r.message || {};
+
+				if (!advance_return_data.has_return_scheduled) {
+					frm.dashboard.clear_headline();
+					return;
+				}
+
+				const filters = {
+					ref_doctype: "Employee Advance",
+					ref_docname: frm.doc.name,
+					docstatus: 1,
+				};
+
+				const url =
+					"/app/list/additional-salary?" + new URLSearchParams(filters).toString();
+
+				frm.dashboard.set_headline(
+					__(
+						"Employee Advance return is scheduled via Additional Salary: {0} | <a href='{1}'>View deductions</a>",
+						[
+							format_currency(
+								advance_return_data.total_return_scheduled,
+								frm.doc.currency,
+							),
+							url,
+						],
+					),
+				);
+			},
+		});
 	},
 });
