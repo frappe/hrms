@@ -873,6 +873,63 @@ class TestPayrollEntry(HRMSTestSuite):
 		self.assertEqual(total_debit, expected_bank_entry_amount)
 		self.assertEqual(total_credit, expected_bank_entry_amount)
 
+	@if_lending_app_installed
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0}
+	)
+	def test_loan_repayment_value_date_for_future_payroll(self):
+		from lending.tests.test_utils import create_loan
+		from lending.loan_management.doctype.loan.test_loan import make_loan_disbursement_entry
+
+		frappe.db.delete("Loan")
+		applicant, branch, currency, payroll_payable_account = setup_lending()
+
+		loan = create_loan(
+			applicant,
+			"Car Loan",
+			280000,
+			"Repay Over Number of Periods",
+			20,
+			applicant_type="Employee",
+			posting_date="2026-06-02",
+			repayment_start_date="2026-07-05",
+		)
+		loan.repay_from_salary = 1
+		loan.submit()
+
+		make_loan_disbursement_entry(
+			loan.name,
+			loan.loan_amount,
+			disbursement_date="2026-06-02",
+			repayment_start_date="2026-07-05",
+		)
+
+		# July 2026 payroll — end_date 2026-07-31 covers the 2026-07-05 demand
+		payroll_entry = make_payroll_entry(
+			company="_Test Company",
+			start_date="2026-07-01",
+			end_date="2026-07-31",
+			payable_account=payroll_payable_account,
+			currency=currency,
+			branch=branch,
+			cost_center="Main - _TC",
+			payment_account="Cash - _TC",
+		)
+
+		salary_slip_name = frappe.db.get_value(
+			"Salary Slip", {"payroll_entry": payroll_entry.name, "employee": applicant}, "name"
+		)
+		loan_repayment_name = frappe.db.get_value(
+			"Salary Slip Loan", {"parent": salary_slip_name}, "loan_repayment_entry"
+		)
+
+		lr_value_date, lr_interest_payable = frappe.db.get_value(
+			"Loan Repayment", loan_repayment_name, ["value_date", "interest_payable"]
+		)
+
+		self.assertEqual(getdate(lr_value_date), getdate("2026-07-31"))
+		self.assertGreater(flt(lr_interest_payable), 0)
+
 	@HRMSTestSuite.change_settings(
 		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0}
 	)

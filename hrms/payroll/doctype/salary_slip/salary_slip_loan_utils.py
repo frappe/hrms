@@ -144,6 +144,7 @@ def make_loan_repayment_entry(doc: "SalarySlip"):
 			loan.total_payment,
 			payroll_payable_account=payroll_payable_account,
 			process_payroll_accounting_entry_based_on_employee=process_payroll_accounting_entry_based_on_employee,
+			value_date=doc.end_date,
 		)
 
 		repayment_entry.save()
