@@ -258,6 +258,8 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 		sick = create_leave_type(
 			leave_type_name="_Test Sick Leave", non_encashable_leaves=0, max_leaves_allowed=2
 		)
+		sick.allow_negative = 1
+		sick.save()
 		casual = create_leave_type(
 			leave_type_name="_Test Casual Leave", non_encashable_leaves=0, max_leaves_allowed=12
 		)
@@ -304,17 +306,18 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 			fields=["content"],
 		)
 
-		self.assertEqual(len(comments), 2)
+		self.assertEqual(len(comments), 1)
 		self.assertIn(casual.name, comments[0]["content"])
-		self.assertIn(sick.name, comments[1]["content"])
 
 		allocations = frappe.get_all(
 			"Leave Allocation",
 			filters={"leave_policy_assignment": assignment.name},
-			fields=["leave_type", "new_leaves_allocated"],
+			fields=["leave_type", "new_leaves_allocated", "total_leaves_allocated"],
 		)
+		allocations = {allocation["leave_type"]: allocation for allocation in allocations}
 
-		self.assertEqual(allocations[0]["leave_type"], compoff.name)
-		self.assertEqual(allocations[0]["new_leaves_allocated"], 3)
-		self.assertEqual(allocations[1]["leave_type"], annual.name)
-		self.assertEqual(allocations[1]["new_leaves_allocated"], 3)
+		self.assertEqual(allocations[sick.name]["new_leaves_allocated"], 0)
+		self.assertEqual(allocations[sick.name]["total_leaves_allocated"], 0)
+		self.assertEqual(allocations[compoff.name]["new_leaves_allocated"], 3)
+		self.assertEqual(allocations[annual.name]["new_leaves_allocated"], 3)
+		self.assertNotIn(casual.name, allocations)

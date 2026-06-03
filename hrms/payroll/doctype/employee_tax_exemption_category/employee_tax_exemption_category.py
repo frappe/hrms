@@ -14,6 +14,7 @@ class EmployeeTaxExemptionCategory(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		description: DF.SmallText | None
 		is_active: DF.Check
 		max_amount: DF.Currency
 	# end: auto-generated types

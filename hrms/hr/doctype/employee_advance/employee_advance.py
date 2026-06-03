@@ -51,11 +51,6 @@ class EmployeeAdvance(Document):
 		]
 	# end: auto-generated types
 
-	def onload(self):
-		self.get("__onload").make_payment_via_journal_entry = frappe.db.get_single_value(
-			"Accounts Settings", "make_payment_via_journal_entry"
-		)
-
 	def validate(self):
 		validate_active_employee(self.employee)
 		self.validate_advance_account_currency()
@@ -284,47 +279,6 @@ class EmployeeAdvance(Document):
 		if frappe.db.get_single_value("HR Settings", "unlink_payment_on_cancellation_of_employee_advance"):
 			remove_ref_doc_link_from_pe(self.doctype, self.name)
 			update_accounting_ledgers_after_reference_removal(self.doctype, self.name)
-
-
-@frappe.whitelist()
-def make_bank_entry(dt: str, dn: str) -> dict:
-	doc = frappe.get_doc(dt, dn)
-	payment_account = get_same_currency_bank_cash_account(doc.company, doc.currency, doc.mode_of_payment)
-
-	je = frappe.new_doc("Journal Entry")
-	je.posting_date = nowdate()
-	je.voucher_type = "Bank Entry"
-	je.company = doc.company
-	je.remark = "Payment against Employee Advance: " + dn + "\n" + doc.purpose
-	je.multi_currency = 1 if doc.currency != erpnext.get_company_currency(doc.company) else 0
-
-	je.append(
-		"accounts",
-		{
-			"account": doc.advance_account,
-			"account_currency": doc.currency,
-			"debit_in_account_currency": flt(doc.advance_amount),
-			"reference_type": "Employee Advance",
-			"reference_name": doc.name,
-			"party_type": "Employee",
-			"cost_center": erpnext.get_default_cost_center(doc.company),
-			"party": doc.employee,
-			"is_advance": "Yes",
-		},
-	)
-
-	je.append(
-		"accounts",
-		{
-			"account": payment_account.account or payment_account.name,
-			"cost_center": erpnext.get_default_cost_center(doc.company),
-			"credit_in_account_currency": flt(doc.advance_amount),
-			"account_currency": doc.currency,
-			"account_type": payment_account.account_type,
-		},
-	)
-
-	return je.as_dict()
 
 
 @frappe.whitelist()

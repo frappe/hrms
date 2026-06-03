@@ -23,4 +23,34 @@ frappe.ui.form.on("Attendance Request", {
 			});
 		}
 	},
+
+	employee(frm) {
+		if (frm.doc.employee && frm.doc.from_date && !frm.doc.shift) {
+			frm.trigger("set_employee_shift");
+		}
+	},
+
+	from_date(frm) {
+		if (frm.doc.employee && frm.doc.from_date && !frm.doc.shift) {
+			frm.trigger("set_employee_shift");
+		}
+	},
+
+	set_employee_shift(frm) {
+		if (!frm.doc.employee || !frm.doc.from_date) return;
+
+		frappe.call({
+			method: "hrms.hr.doctype.attendance.attendance.get_employee_shift",
+			args: {
+				employee: frm.doc.employee,
+				for_date: frm.doc.from_date,
+				consider_default_shift: true,
+			},
+			callback(r) {
+				if (r.message && !frm.doc.shift) {
+					frm.set_value("shift", r.message);
+				}
+			},
+		});
+	},
 });

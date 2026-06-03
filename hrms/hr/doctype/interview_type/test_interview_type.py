@@ -4,6 +4,8 @@
 # import frappe
 from hrms.tests.utils import HRMSTestSuite
 
+# import frappe
+
 
 class TestInterviewType(HRMSTestSuite):
 	pass

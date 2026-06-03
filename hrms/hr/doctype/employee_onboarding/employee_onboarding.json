@@ -174,7 +174,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-05 13:46:25.874832",
+ "modified": "2026-03-24 17:13:19.990319",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Onboarding",
@@ -206,6 +206,13 @@
    "role": "HR Manager",
    "share": 1,
    "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
    "write": 1
   }
  ],

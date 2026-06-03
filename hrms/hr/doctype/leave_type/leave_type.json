@@ -58,10 +58,10 @@
    "label": "Maximum Leave Allocation Allowed per Leave Period"
   },
   {
-   "description": "Minimum working days required since Date of Joining to apply for this leave",
+   "description": "Minimum calendar days required since Date of Joining to apply for this leave",
    "fieldname": "applicable_after",
    "fieldtype": "Int",
-   "label": "Allow Leave Application After (Working Days)"
+   "label": "Allow Leave Application After (Calendar Days)"
   },
   {
    "fieldname": "max_continuous_days_allowed",
@@ -258,7 +258,7 @@
  "icon": "fa fa-flag",
  "idx": 1,
  "links": [],
- "modified": "2026-02-06 18:26:27.583525",
+ "modified": "2026-05-07 18:26:27.583525",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Type",

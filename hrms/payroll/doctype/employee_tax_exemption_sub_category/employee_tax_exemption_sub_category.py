@@ -17,6 +17,7 @@ class EmployeeTaxExemptionSubCategory(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		description: DF.SmallText | None
 		exemption_category: DF.Link
 		is_active: DF.Check
 		max_amount: DF.Currency

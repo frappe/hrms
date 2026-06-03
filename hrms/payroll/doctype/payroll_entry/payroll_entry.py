@@ -218,9 +218,13 @@ class PayrollEntry(Document):
 			)
 			# cancel linked payment ledger entry
 			for pl in journal_entry_payment_ledgers:
-				frappe.get_doc("Payment Ledger Entry", pl).cancel()
+				payment_ledger_entry = frappe.get_doc("Payment Ledger Entry", pl)
+				payment_ledger_entry.flags.ignore_permissions = True
+				payment_ledger_entry.cancel()
 
-			frappe.get_doc("Journal Entry", je).cancel()
+			journal_entry = frappe.get_doc("Journal Entry", je)
+			journal_entry.flags.ignore_permissions = True
+			journal_entry.cancel()
 
 	def cancel_linked_payment_ledger_entries(self):
 		payment_ledgers = frappe.get_all(
@@ -231,7 +235,9 @@ class PayrollEntry(Document):
 
 		# cancel payment ledger entry
 		for pl in payment_ledgers:
-			frappe.get_doc("Payment Ledger Entry", pl).cancel()
+			payment_ledger_entry = frappe.get_doc("Payment Ledger Entry", pl)
+			payment_ledger_entry.flags.ignore_permissions = True
+			payment_ledger_entry.cancel()
 
 	def get_linked_salary_slips(self):
 		return frappe.get_all("Salary Slip", {"payroll_entry": self.name}, ["name", "docstatus"])

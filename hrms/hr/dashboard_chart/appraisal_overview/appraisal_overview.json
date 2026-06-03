@@ -11,7 +11,7 @@
  "idx": 0,
  "is_public": 0,
  "is_standard": 1,
- "modified": "2026-01-10 15:16:33.659637",
+ "modified": "2026-03-26 15:50:08.184379",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal Overview",
@@ -19,7 +19,21 @@
  "owner": "Administrator",
  "report_name": "Appraisal Overview",
  "roles": [
-  {}
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HR Manager"
+  },
+  {
+   "role": "HR User"
+  },
+  {
+   "role": "Employee Self Service"
+  },
+  {
+   "role": "Employee"
+  }
  ],
  "show_values_over_chart": 0,
  "time_interval": "Yearly",

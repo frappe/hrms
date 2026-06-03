@@ -7,7 +7,8 @@
  "engine": "InnoDB",
  "field_order": [
   "employee_advance",
-  "payment_entry",
+  "reference_type",
+  "reference_name",
   "posting_date",
   "advance_paid",
   "base_advance_paid",
@@ -80,7 +81,6 @@
    "oldfieldtype": "Currency",
    "options": "currency",
    "print_width": "120px",
-   "read_only": 1,
    "width": "120px"
   },
   {
@@ -155,14 +155,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "payment_entry",
-   "fieldtype": "Link",
-   "label": "Payment Entry",
-   "no_copy": 1,
-   "options": "Payment Entry",
-   "read_only": 1
-  },
-  {
    "fieldname": "payment_entry_reference",
    "fieldtype": "Data",
    "hidden": 1,
@@ -170,11 +162,27 @@
    "no_copy": 1,
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "reference_type",
+   "fieldtype": "Select",
+   "label": "Reference Type",
+   "no_copy": 1,
+   "options": "\nPayment Entry\nJournal Entry",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reference_name",
+   "fieldtype": "Dynamic Link",
+   "label": "Reference Name",
+   "no_copy": 1,
+   "options": "reference_type",
+   "read_only": 1
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2025-11-12 19:48:47.708734",
+ "modified": "2026-05-08 15:51:23.314675",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claim Advance",

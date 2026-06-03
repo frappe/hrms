@@ -70,6 +70,22 @@ frappe.ui.form.on("Salary Structure Assignment", {
 		frm.page.set_inner_btn_group_as_primary(__("Create"));
 
 		frm.add_custom_button(
+			__("See CTC Break-up"),
+			function () {
+				if (!frm.doc.ctc) {
+					frm.scroll_to_field("ctc");
+					frappe.throw(
+						__("Please set employee's total cost to company to see CTC breakup."),
+					);
+				}
+				frappe.set_route("query-report", "Employee CTC Break-up", {
+					employee: frm.doc.employee,
+					salary_structure_assignment: frm.doc.name,
+				});
+			},
+			__("Actions"),
+		);
+		frm.add_custom_button(
 			__("Preview Salary Slip"),
 			function () {
 				frm.trigger("preview_salary_slip");

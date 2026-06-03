@@ -98,7 +98,6 @@ jinja = {
 
 # before_install = "hrms.install.before_install"
 after_install = "hrms.install.after_install"
-before_migrate = "hrms.setup.make_people_workspace_standard"
 after_migrate = "hrms.setup.update_select_perm_after_install"
 
 setup_wizard_complete = "hrms.subscription_utils.update_erpnext_access"
@@ -378,3 +377,4 @@ ignore_translatable_strings_from = ["frappe", "erpnext"]
 employee_holiday_list = ["hrms.utils.holiday_list.get_holiday_list_for_employee"]
 export_python_type_annotations = True
 require_type_annotated_api_methods = True
+repost_allowed_doctypes = ["Expense Claim"]

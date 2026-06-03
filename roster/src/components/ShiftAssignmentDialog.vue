@@ -295,18 +295,13 @@ const showShiftScheduleSettings = computed(() => {
 	return true;
 });
 
-const employees = computed(() => {
-	return props.employees.map((employee) => ({
-		label: `${employee.name}: ${employee.employee_name}`,
-		value: employee.name,
-		employee_name: employee.employee_name,
-	}));
-});
-
 watch(
 	() => props.isDialogOpen,
 	(val) => {
-		if (!val) return;
+		if (!val) {
+			Object.assign(form, formObject);
+			return;
+		}
 
 		showDeleteDialog.value = false;
 

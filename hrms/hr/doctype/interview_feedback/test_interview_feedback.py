@@ -19,7 +19,7 @@ class TestInterviewFeedback(HRMSTestSuite):
 		interview = create_interview_and_dependencies(
 			job_applicant.name, scheduled_on=add_days(getdate(), -1)
 		)
-		skill_ratings = get_skills_rating(interview.interview_round)
+		skill_ratings = get_skills_rating(interview.interview_type)
 
 		interviewer = "test_interviewer1@example.com"
 		create_skill_set(["Leadership"])
@@ -37,7 +37,7 @@ class TestInterviewFeedback(HRMSTestSuite):
 		interview = create_interview_and_dependencies(
 			job_applicant.name, scheduled_on=add_days(getdate(), -1)
 		)
-		skill_ratings = get_skills_rating(interview.interview_round)
+		skill_ratings = get_skills_rating(interview.interview_type)
 
 		# For First Interviewer Feedback
 		interviewer = "test_interviewer1@example.com"
@@ -85,10 +85,10 @@ def create_interview_feedback(interview, interviewer, skills_ratings):
 	return interview_feedback
 
 
-def get_skills_rating(interview_round):
+def get_skills_rating(interview_type):
 	import random
 
-	skills = frappe.get_all("Expected Skill Set", filters={"parent": interview_round}, fields=["skill"])
+	skills = frappe.get_all("Expected Skill Set", filters={"parent": interview_type}, fields=["skill"])
 	for d in skills:
 		d["rating"] = random.random()
 	return skills

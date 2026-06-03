@@ -30,6 +30,7 @@ class SalaryStructureAssignment(Document):
 		amended_from: DF.Link | None
 		base: DF.Currency
 		company: DF.Link
+		ctc: DF.Currency
 		currency: DF.Link
 		department: DF.Link | None
 		designation: DF.Link | None

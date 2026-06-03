@@ -37,11 +37,11 @@
   "job_application_route",
   "section_break_14",
   "description",
-  "section_break_16",
+  "pay_details_tab",
   "currency",
   "lower_range",
   "upper_range",
-  "column_break_20",
+  "column_break_pfir",
   "salary_per",
   "publish_salary_range"
  ],
@@ -56,6 +56,8 @@
   {
    "fieldname": "company",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Company",
    "options": "Company",
    "reqd": 1
@@ -75,6 +77,8 @@
   {
    "fieldname": "designation",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Designation",
    "options": "Designation",
    "reqd": 1
@@ -82,6 +86,8 @@
   {
    "fieldname": "department",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Department",
    "options": "Department"
   },
@@ -107,6 +113,8 @@
    "default": "0",
    "fieldname": "publish",
    "fieldtype": "Check",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Publish on website"
   },
   {
@@ -132,11 +140,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "collapsible": 1,
-   "fieldname": "section_break_16",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "currency",
    "fieldtype": "Link",
    "label": "Currency",
@@ -157,15 +160,11 @@
    "precision": "0"
   },
   {
-   "fieldname": "column_break_20",
-   "fieldtype": "Column Break"
-  },
-  {
    "depends_on": "publish",
    "description": "Route to the custom Job Application Webform",
    "fieldname": "job_application_route",
    "fieldtype": "Data",
-   "label": "Job Application Route"
+   "label": "Application Web Form Route"
   },
   {
    "default": "0",
@@ -210,6 +209,8 @@
   {
    "fieldname": "employment_type",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Employment Type",
    "options": "Employment Type"
   },
@@ -258,6 +259,15 @@
    "fieldtype": "Link",
    "label": "Job Opening Template",
    "options": "Job Opening Template"
+  },
+  {
+   "fieldname": "pay_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Pay Details"
+  },
+  {
+   "fieldname": "column_break_pfir",
+   "fieldtype": "Column Break"
   }
  ],
  "has_web_view": 1,
@@ -265,21 +275,44 @@
  "idx": 1,
  "is_published_field": "publish",
  "links": [],
- "modified": "2025-12-11 19:18:36.145062",
+ "modified": "2026-04-14 15:47:13.527606",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
- "naming_rule": "Expression (old style)",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
    "create": 1,
    "delete": 1,
    "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
    "print": 1,
    "read": 1,
    "report": 1,
    "role": "HR User",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
    "share": 1,
    "write": 1
   }

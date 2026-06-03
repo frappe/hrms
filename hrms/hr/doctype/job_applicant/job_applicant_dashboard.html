@@ -5,7 +5,7 @@
 	<thead>
 		<tr>
 			<th style="width: 14%" class="text-left">{{ __("Interview") }}</th>
-			<th style="width: 16%" class="text-left">{{ __("Interview Round") }}</th>
+			<th style="width: 16%" class="text-left">{{ __("Interview Type") }}</th>
 			<th style="width: 12%" class="text-left">{{ __("Date") }}</th>
 			<th style="width: 12%" class="text-left">{{ __("Status") }}</th>
 			<th style="width: 14%" class="text-left">{{ __("Rating") }}</th>
@@ -17,7 +17,7 @@
 				<td class="text-left">
                     <a href="/app/interview/{%= key %}"  target="_blank">{%= key %}</a>
                 </td>
-				<td class="text-left"> {%= value["interview_round"] %} </td>
+				<td class="text-left"> {%= value["interview_type"] %} </td>
 				<td class="text-left"> {%= frappe.datetime.str_to_user(value["scheduled_on"]) %} </td>
 				<td class="text-left"> {%= value["status"] %} </td>
 				{% let right_class = ''; %}

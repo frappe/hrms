@@ -12,9 +12,9 @@
 				</div>
 				<div class="text-xs font-normal text-gray-500">
 					<span>{{ props.doc.attendance_dates || getDates(props.doc) }}</span>
-					<span v-if="props.doc.to_date">
+					<span v-if="getTotalDays(props.doc) > 0">
 						<span class="whitespace-pre"> &middot; </span>
-						<span class="whitespace-nowrap">{{ __("{0}d", [props.doc.total_attendance_days]) }}</span>
+						<span class="whitespace-nowrap">{{ __("{0}d", [getTotalDays(props.doc)]) }}</span>
 					</span>
 				</div>
 			</div>

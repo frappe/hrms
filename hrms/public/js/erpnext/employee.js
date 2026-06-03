@@ -27,6 +27,11 @@ frappe.ui.form.on("Employee", {
 			});
 		}
 		frm.set_df_property("holiday_list", "hidden", 1);
+
+		// hide naming series field based on hr settings
+		frappe.db.get_single_value("HR Settings", "emp_created_by").then((value) => {
+			frm.toggle_display("naming_series", value === "Naming Series");
+		});
 	},
 
 	date_of_birth(frm) {

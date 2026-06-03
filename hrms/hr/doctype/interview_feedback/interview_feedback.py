@@ -24,7 +24,7 @@ class InterviewFeedback(Document):
 		average_rating: DF.Rating
 		feedback: DF.Text | None
 		interview: DF.Link
-		interview_round: DF.Link
+		interview_type: DF.Link
 		interviewer: DF.Link
 		job_applicant: DF.Link | None
 		result: DF.Literal["", "Cleared", "Rejected"]

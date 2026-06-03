@@ -17,7 +17,7 @@
 
 <script setup>
 import { createResource, Autocomplete, debounce } from "frappe-ui";
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 
 const props = defineProps({
 	doctype: {
@@ -69,7 +69,12 @@ const options = createResource({
 	method: "POST",
 	transform: (data) => {
 		return data.map((doc) => {
-			const title = doc?.description?.split(",")?.[0];
+			let title = null;
+			if (doc.label && doc.label !== doc.value) {
+				title = doc.label;
+			} else if (doc.description) {
+				title = doc.description.split(",")[0];
+			}
 			return {
 				label: title ? `${title} : ${doc.value}` : doc.value,
 				value: doc.value,
@@ -95,13 +100,16 @@ const handleQueryUpdate = debounce((newQuery) => {
 	reloadOptions(val);
 }, 300);
 
+onMounted(() => {
+	reloadOptions(props.modelValue || "");
+});
+
 watch(
 	() => props.doctype,
 	() => {
 		if (!props.doctype || props.doctype === options.doctype) return;
 		reloadOptions("");
 	},
-	{ immediate: true },
 );
 
 watch(

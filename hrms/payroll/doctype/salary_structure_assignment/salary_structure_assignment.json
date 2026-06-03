@@ -22,6 +22,7 @@
   "currency",
   "section_break_7",
   "base",
+  "ctc",
   "column_break_9",
   "variable",
   "amended_from",
@@ -242,11 +243,17 @@
    "fieldtype": "Currency",
    "label": "Leave Encashment Amount Per Day",
    "options": "currency"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "ctc",
+   "fieldtype": "Currency",
+   "label": "Total Cost To Company (CTC)"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-26 14:37:43.779340",
+ "modified": "2026-05-14 13:33:55.869281",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure Assignment",

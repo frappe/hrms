@@ -14,60 +14,10 @@
  "for_user": "",
  "hide_custom": 0,
  "icon": "users",
- "idx": 4,
+ "idx": 7,
  "is_hidden": 0,
  "label": "Recruitment",
  "links": [
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Interviews",
-   "link_count": 4,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Interview Type",
-   "link_count": 0,
-   "link_to": "Interview Type",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Interview Round",
-   "link_count": 0,
-   "link_to": "Interview Round",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "Interview Type, Interview Round",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Interview",
-   "link_count": 0,
-   "link_to": "Interview",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "Interview",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Interview Feedback",
-   "link_count": 0,
-   "link_to": "Interview Feedback",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
   {
    "hidden": 0,
    "is_query_report": 0,
@@ -182,9 +132,50 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Interviews",
+   "link_count": 3,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Interview Type",
+   "link_count": 0,
+   "link_to": "Interview Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Interview Type",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Interview",
+   "link_count": 0,
+   "link_to": "Interview",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Interview",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Interview Feedback",
+   "link_count": 0,
+   "link_to": "Interview Feedback",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2026-01-09 18:00:59.928738",
+ "modified": "2026-02-19 16:36:49.582837",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Recruitment",

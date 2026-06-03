@@ -37,11 +37,15 @@ class JobRequisition(Document):
 	# end: auto-generated types
 
 	def validate(self):
-		self.validate_duplicates()
 		self.set_time_to_fill()
 
-	def validate_duplicates(self):
-		duplicate = frappe.db.exists(
+	def set_time_to_fill(self):
+		if self.status == "Filled" and self.completed_on:
+			self.time_to_fill = time_diff_in_seconds(self.completed_on, self.posting_date)
+
+	@frappe.whitelist()
+	def check_duplicate_job_requisition(self):
+		return frappe.db.exists(
 			"Job Requisition",
 			{
 				"designation": self.designation,
@@ -51,20 +55,6 @@ class JobRequisition(Document):
 				"name": ("!=", self.name),
 			},
 		)
-
-		if duplicate:
-			frappe.throw(
-				_("A Job Requisition for {0} requested by {1} already exists: {2}").format(
-					frappe.bold(self.designation),
-					frappe.bold(self.requested_by),
-					get_link_to_form("Job Requisition", duplicate),
-				),
-				title=_("Duplicate Job Requisition"),
-			)
-
-	def set_time_to_fill(self):
-		if self.status == "Filled" and self.completed_on:
-			self.time_to_fill = time_diff_in_seconds(self.completed_on, self.posting_date)
 
 	@frappe.whitelist()
 	def associate_job_opening(self, job_opening: str) -> None:

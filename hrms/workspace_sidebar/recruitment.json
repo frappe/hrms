@@ -33,6 +33,18 @@
   {
    "child": 0,
    "collapsible": 1,
+   "icon": "user-round-plus",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Job Opening",
+   "link_to": "Job Opening",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
    "icon": "circle-user-round",
    "indent": 0,
    "keep_closed": 0,
@@ -43,7 +55,7 @@
    "type": "Link"
   },
   {
-   "child": 1,
+   "child": 0,
    "collapsible": 1,
    "icon": "videotape",
    "indent": 0,
@@ -55,7 +67,7 @@
    "type": "Link"
   },
   {
-   "child": 1,
+   "child": 0,
    "collapsible": 1,
    "icon": "user-round-check",
    "indent": 0,
@@ -67,13 +79,59 @@
    "type": "Link"
   },
   {
-   "child": 1,
+   "child": 0,
    "collapsible": 1,
-   "icon": "file",
+   "icon": "file-text",
    "indent": 0,
    "keep_closed": 0,
    "label": "Appointment Letter",
    "link_to": "Appointment Letter",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "align-start-horizontal",
+   "indent": 1,
+   "keep_closed": 1,
+   "label": "Planning",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Section Break"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
+   "icon": "",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Job Requisition",
+   "link_to": "Job Requisition",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
+   "icon": "",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Staffing Plan",
+   "link_to": "Staffing Plan",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Employee Referral",
+   "link_to": "Employee Referral",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
@@ -118,42 +176,6 @@
    "icon": "",
    "indent": 0,
    "keep_closed": 0,
-   "label": "Staffing Plan",
-   "link_to": "Staffing Plan",
-   "link_type": "DocType",
-   "show_arrow": 0,
-   "type": "Link"
-  },
-  {
-   "child": 1,
-   "collapsible": 1,
-   "icon": "",
-   "indent": 0,
-   "keep_closed": 0,
-   "label": "Job Requisition",
-   "link_to": "Job Requisition",
-   "link_type": "DocType",
-   "show_arrow": 0,
-   "type": "Link"
-  },
-  {
-   "child": 1,
-   "collapsible": 1,
-   "icon": "",
-   "indent": 0,
-   "keep_closed": 0,
-   "label": "Job Opening",
-   "link_to": "Job Opening",
-   "link_type": "DocType",
-   "show_arrow": 0,
-   "type": "Link"
-  },
-  {
-   "child": 1,
-   "collapsible": 1,
-   "icon": "",
-   "indent": 0,
-   "keep_closed": 0,
    "label": "Interview Type",
    "link_to": "Interview Type",
    "link_type": "DocType",
@@ -163,11 +185,10 @@
   {
    "child": 1,
    "collapsible": 1,
-   "icon": "",
    "indent": 0,
    "keep_closed": 0,
-   "label": "Interview Round",
-   "link_to": "Interview Round",
+   "label": "Job Opening Template",
+   "link_to": "Job Opening Template",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
@@ -185,6 +206,29 @@
    "type": "Link"
   },
   {
+   "child": 1,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Job Offer Term Template",
+   "link_to": "Job Offer Term Template",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "web",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Job Portal",
+   "link_type": "URL",
+   "show_arrow": 0,
+   "type": "Link",
+   "url": "/jobs"
+  },
+  {
    "child": 0,
    "collapsible": 1,
    "icon": "settings",
@@ -193,12 +237,11 @@
    "label": "Settings",
    "link_to": "HR Settings",
    "link_type": "DocType",
-   "navigate_to_tab": "recruitment_tab",
    "show_arrow": 0,
    "type": "Link"
   }
  ],
- "modified": "2026-01-08 14:16:38.419516",
+ "modified": "2026-04-14 12:19:55.146861",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Recruitment",

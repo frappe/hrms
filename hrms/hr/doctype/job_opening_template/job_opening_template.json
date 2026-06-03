@@ -8,9 +8,17 @@
  "field_order": [
   "template_title",
   "department",
+  "designation",
   "column_break_wkcr",
   "employment_type",
   "location",
+  "pay_details_section",
+  "currency",
+  "upper_range",
+  "lower_range",
+  "column_break_vqyu",
+  "salary_per",
+  "publish_salary_range",
   "section_break_dwfh",
   "description"
  ],
@@ -54,12 +62,56 @@
    "fieldname": "description",
    "fieldtype": "Text Editor",
    "label": "Description"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "fieldname": "pay_details_section",
+   "fieldtype": "Section Break",
+   "label": "Pay Details"
+  },
+  {
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency"
+  },
+  {
+   "fieldname": "upper_range",
+   "fieldtype": "Currency",
+   "label": "Upper Range"
+  },
+  {
+   "fieldname": "lower_range",
+   "fieldtype": "Currency",
+   "label": "Lower Range"
+  },
+  {
+   "fieldname": "column_break_vqyu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Month",
+   "fieldname": "salary_per",
+   "fieldtype": "Select",
+   "label": "Salary Paid Per",
+   "options": "Month\nYear"
+  },
+  {
+   "default": "0",
+   "fieldname": "publish_salary_range",
+   "fieldtype": "Check",
+   "label": "Publish Salary Range"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-12 12:52:12.217926",
+ "modified": "2026-04-16 13:05:04.934642",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening Template",
@@ -76,6 +128,19 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "HR Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "HR User",
    "write": 1
   }
  ],

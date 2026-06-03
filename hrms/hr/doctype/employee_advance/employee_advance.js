@@ -32,12 +32,7 @@ frappe.ui.form.on("Employee Advance", {
 			frm.doc.docstatus === 1 &&
 			flt(frm.doc.paid_amount) < flt(frm.doc.advance_amount) &&
 			frappe.model.can_create("Payment Entry") &&
-			!(
-				(frm.doc.repay_unclaimed_amount_from_salary == 1 && frm.doc.paid_amount) ||
-				(frm.doc.__onload &&
-					frm.doc.__onload.make_payment_via_journal_entry == 1 &&
-					frm.doc.paid_amount)
-			)
+			!(frm.doc.repay_unclaimed_amount_from_salary == 1 && frm.doc.paid_amount)
 		) {
 			frm.add_custom_button(
 				__("Payment"),
@@ -105,12 +100,8 @@ frappe.ui.form.on("Employee Advance", {
 	},
 
 	make_payment_entry: function (frm) {
-		let method = "hrms.overrides.employee_payment_entry.get_payment_entry_for_employee";
-		if (frm.doc.__onload && frm.doc.__onload.make_payment_via_journal_entry) {
-			method = "hrms.hr.doctype.employee_advance.employee_advance.make_bank_entry";
-		}
 		return frappe.call({
-			method: method,
+			method: "hrms.overrides.employee_payment_entry.get_payment_entry_for_employee",
 			args: {
 				dt: frm.doc.doctype,
 				dn: frm.doc.name,
@@ -127,7 +118,6 @@ frappe.ui.form.on("Employee Advance", {
 			method: "hrms.hr.doctype.expense_claim.expense_claim.get_expense_claim",
 			args: {
 				employee_advance: frm.doc.name,
-				payment_via_journal_entry: frm.doc.__onload.make_payment_via_journal_entry,
 			},
 			callback: function (r) {
 				const doclist = frappe.model.sync(r.message);

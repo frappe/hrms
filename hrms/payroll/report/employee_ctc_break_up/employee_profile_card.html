@@ -1,0 +1,167 @@
+<style>
+@media(max-width: 1000px){
+    .employee-summary{
+        justify-content: space-around !important;
+        align-items: start !important;
+    }
+    .ctc-summary {
+        width: 100%;
+        flex-direction: column;
+		align-items: flex-start !important;
+        justify-content: space-around !important;
+        gap:0px !important;
+	}
+    .ctc-summary > div {
+        width: 100%;
+        justify-content: flex-start !important;
+    }
+    .ctc-summary > div:last-child > div{
+        margin-top: 30px;
+    }
+    .summary-cards{
+        gap: 30px !important;
+    }
+    .summary-card {
+        width: 50%;
+    }
+
+}
+@media (max-width: 768px) {
+	.employee-summary {
+		flex-direction: column;
+		align-items: center !important;
+        justify-content: space-around !important;
+	}
+
+	.profile-card {
+        width: 100%;
+	}
+    .ctc-summary {
+        width: 100%;
+        margin-left:0px !important;
+	}
+    .summary-card {
+        margin-left: 0px !important;
+        margin-top: 30px;
+    }
+}
+@media (max-width: 400px){
+    .image-card{
+        display:none;
+    }
+    .ctc-summary{
+        margin-left:0px !important;
+    }
+}
+.employee-summary{
+    padding:15px;
+    width:100%;
+    max-width: 1440px;
+}
+.image{
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.avatar{
+    font-size: 32px;
+    font-weight: 600;
+    color: rgb(168, 168, 168);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+}
+.summary-cards{
+    gap: 80px;
+}
+.ctc-summary{
+    gap: 80px;
+    margin-left:30px;
+}
+.no-wrap{
+    white-space: nowrap;
+}
+</style>
+
+<div class="employee-summary d-flex align-items-start justify-content-between m-2">
+
+	<div class="profile-card d-flex align-items-start">
+		<div class="image-card mr-4">
+            {% if image %}
+			<img src={{image}} class="image">
+            {% else %}
+		    <div class="image avatar"> {{frappe.utils.get_abbr(employee_name)}}</div>
+		    {% endif %}
+		</div>
+
+		<div>
+            <span class="text-dark text-large mb-1">{{ employee_name }}</span>
+            {% if designation %}
+                <span class="mx-1">·</span>
+                <span class="text-small" style="white-space: nowrap;">{{designation}}</span>
+            {% endif %}
+            <div class="text-small">
+            <div style="white-space: nowrap; margin-right: 4px;"> {{_("Salary Structure: ") + salary_structure}}</div>
+            {% if income_tax_slab %}<div style="white-space: nowrap;">{{_("Income Tax Slab: ") + income_tax_slab}}</div>{% endif %}
+            <div style="white-space: nowrap;">{{ _("Assignment Date: ") + assignment_date}} </div>
+            </div>
+		</div>
+	</div>
+
+	<div class="ctc-summary d-flex justify-content-between">
+
+		<div class="d-flex summary-cards align-items-start justify-content-between">
+            <div class="summary-card d-flex flex-column align-items-start justify-content-center">
+                <div
+                    class="text-dark text-large no-wrap"
+                >
+                    {{ annual_ctc }}
+                </div>
+                <div class="mt-1 text-small no-wrap">
+                   {{_("Annual CTC")}}
+                </div>
+		    </div>
+
+            <div class="summary-card d-flex flex-column align-items-start justify-content-center">
+                <div
+                    class="text-dark text-large no-wrap"
+                >
+                    {{ per_cycle_ctc }}
+                </div>
+
+                <div class="mt-1 text-small no-wrap">
+                    {{_(per_cycle + " CTC")}}
+                </div>
+		    </div>
+        </div>
+        <div  class="summary-cards d-flex align-items-start justify-content-between">
+            <div class="summary-card d-flex flex-column align-items-start justify-content-center">
+			<div
+				class="text-dark text-large no-wrap"
+			>
+				{{ per_cycle_gross_pay }}
+			</div>
+
+			<div class="mt-1 text-small no-wrap">
+				{{_(per_cycle +" Gross Pay")}}
+			</div>
+		    </div>
+
+            <div class="summary-card d-flex flex-column align-items-start justify-content-center">
+                <div
+                    class="text-dark text-large no-wrap"
+                >
+                    {{ per_cycle_net_pay }}
+                </div>
+
+                <div class="mt-1 text-small no-wrap">
+                    {{_(per_cycle + " Net Pay")}}
+                </div>
+            </div>
+
+        </div>
+
+	</div>
+</div>

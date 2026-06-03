@@ -202,7 +202,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-09-02 13:28:45.007397",
+ "modified": "2026-03-26 15:37:55.573986",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Settings",
@@ -215,6 +215,11 @@
    "read": 1,
    "role": "System Manager",
    "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "HR Manager",
    "write": 1
   }
  ],

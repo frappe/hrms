@@ -147,7 +147,7 @@
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-01-13 13:48:46.095481",
+ "modified": "2026-03-26 15:09:09.658299",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Bulk Salary Structure Assignment",
@@ -161,8 +161,18 @@
    "role": "HR User",
    "share": 1,
    "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": []

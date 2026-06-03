@@ -10,7 +10,8 @@
  "field_order": [
   "exemption_category",
   "max_amount",
-  "is_active"
+  "is_active",
+  "description"
  ],
  "fields": [
   {
@@ -35,10 +36,15 @@
    "fieldname": "is_active",
    "fieldtype": "Check",
    "label": "Is Active"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
   }
  ],
  "links": [],
- "modified": "2024-03-27 13:09:42.420982",
+ "modified": "2026-05-27 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Tax Exemption Sub Category",

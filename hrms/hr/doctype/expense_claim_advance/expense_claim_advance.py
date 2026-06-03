@@ -26,9 +26,10 @@ class ExpenseClaimAdvance(Document):
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
-		payment_entry: DF.Link | None
 		payment_entry_reference: DF.Data | None
 		posting_date: DF.Date | None
+		reference_name: DF.DynamicLink | None
+		reference_type: DF.Literal["", "Payment Entry", "Journal Entry"]
 		return_amount: DF.Currency
 		unclaimed_amount: DF.Currency
 	# end: auto-generated types

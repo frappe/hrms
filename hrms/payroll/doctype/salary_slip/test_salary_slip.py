@@ -1932,6 +1932,7 @@ class TestSalarySlip(HRMSTestSuite):
 				"type": "Earning",
 				"is_income_tax_component": 0,
 				"amount": 350,
+				"remove_if_zero_valued": 0,
 			},
 		]
 		make_salary_component(data, False, company_list=["_Test Company"])
@@ -2229,16 +2230,6 @@ def make_earning_salary_component(
 	if setup or test_tax:
 		make_salary_component(data, test_tax, company_list)
 
-	data.append(
-		{
-			"salary_component": "Basic Salary",
-			"abbr": "BS",
-			"condition": "base < 10000",
-			"formula": "base*.2",
-			"type": "Earning",
-			"amount_based_on_formula": 1,
-		}
-	)
 	return data
 
 
@@ -2516,6 +2507,8 @@ def make_leave_application(
 	company=None,
 	half_day=False,
 	half_day_date=None,
+	status=None,
+	leave_approver=None,
 	submit=True,
 ):
 	create_user("test@example.com")
@@ -2529,8 +2522,8 @@ def make_leave_application(
 		half_day=half_day,
 		half_day_date=half_day_date,
 		company=company or "_Test Company" or "_Test Company",
-		status="Approved",
-		leave_approver="test@example.com",
+		status=status or "Approved",
+		leave_approver=leave_approver or "test@example.com",
 	).insert()
 
 	if submit:

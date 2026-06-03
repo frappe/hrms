@@ -15,6 +15,7 @@
    "label": "Home",
    "link_to": "Payroll",
    "link_type": "Workspace",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -27,6 +28,7 @@
    "label": "Dashboard",
    "link_to": "Payroll",
    "link_type": "Dashboard",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -39,6 +41,7 @@
    "label": "Payroll Entry",
    "link_to": "Payroll Entry",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -51,6 +54,7 @@
    "label": "Salary Structure Assignment",
    "link_to": "Salary Structure Assignment",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -63,6 +67,7 @@
    "label": "Salary Slip",
    "link_to": "Salary Slip",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -75,6 +80,7 @@
    "label": "Additional Salary",
    "link_to": "Additional Salary",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -87,6 +93,7 @@
    "label": "Salary Withholding",
    "link_to": "Salary Withholding",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -98,8 +105,21 @@
    "keep_closed": 1,
    "label": "Reports",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Section Break"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Employee CTC Break-up",
+   "link_to": "Employee CTC Break-up",
+   "link_type": "Report",
+   "open_in_new_tab": 1,
+   "show_arrow": 0,
+   "type": "Link"
   },
   {
    "child": 1,
@@ -110,6 +130,7 @@
    "label": "Salary Register",
    "link_to": "Salary Register",
    "link_type": "Report",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -122,6 +143,7 @@
    "label": "Income Tax Deductions",
    "link_to": "Income Tax Deductions",
    "link_type": "Report",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -134,6 +156,7 @@
    "label": "Professional Tax Deductions",
    "link_to": "Professional Tax Deductions",
    "link_type": "Report",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -146,6 +169,7 @@
    "label": "General Ledger",
    "link_to": "General Ledger",
    "link_type": "Report",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -158,6 +182,7 @@
    "label": "Accounts Payable",
    "link_to": "Accounts Payable",
    "link_type": "Report",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -169,6 +194,7 @@
    "keep_closed": 1,
    "label": "Setup",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Section Break"
   },
@@ -181,6 +207,7 @@
    "label": "Salary Component",
    "link_to": "Salary Component",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -193,6 +220,7 @@
    "label": "Salary Structure",
    "link_to": "Salary Structure",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -205,11 +233,12 @@
    "label": "Settings",
    "link_to": "Payroll Settings",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   }
  ],
- "modified": "2026-01-08 14:16:38.399025",
+ "modified": "2026-05-14 12:18:07.894971",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll",

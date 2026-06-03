@@ -270,16 +270,7 @@ frappe.ui.form.on("Expense Claim", {
 		}
 
 		if (!frm.doc.__islocal && frm.doc.docstatus === 1) {
-			let entry_doctype, entry_reference_doctype, entry_reference_name;
-			if (frm.doc.__onload.make_payment_via_journal_entry) {
-				entry_doctype = "Journal Entry";
-				entry_reference_doctype = "Journal Entry Account.reference_type";
-				entry_reference_name = "Journal Entry.reference_name";
-			} else {
-				entry_doctype = "Payment Entry";
-				entry_reference_doctype = "Payment Entry Reference.reference_doctype";
-				entry_reference_name = "Payment Entry Reference.reference_name";
-			}
+			const entry_doctype = "Payment Entry";
 
 			if (
 				cint(frm.doc.total_amount_reimbursed) > 0 &&
@@ -366,12 +357,8 @@ frappe.ui.form.on("Expense Claim", {
 		});
 	},
 	make_payment_entry: function (frm) {
-		let method = "hrms.overrides.employee_payment_entry.get_payment_entry_for_employee";
-		if (frm.doc.__onload && frm.doc.__onload.make_payment_via_journal_entry) {
-			method = "hrms.hr.doctype.expense_claim.expense_claim.make_bank_entry";
-		}
 		return frappe.call({
-			method: method,
+			method: "hrms.overrides.employee_payment_entry.get_payment_entry_for_employee",
 			args: {
 				dt: frm.doc.doctype,
 				dn: frm.doc.name,
@@ -486,8 +473,8 @@ frappe.ui.form.on("Expense Claim", {
 							row.return_amount = flt(d.return_amount);
 							row.allocated_amount = d.allocated_amount;
 							row.exchange_rate = d.exchange_rate;
-							row.payment_entry = d.payment_entry;
-							row.payment_entry_reference = d.payment_entry_reference;
+							row.reference_type = d.reference_type;
+							row.reference_name = d.reference_name;
 						});
 						refresh_field("advances");
 					}
@@ -589,8 +576,8 @@ frappe.ui.form.on("Expense Claim Advance", {
 						child.return_amount = flt(r.message[0].return_amount);
 						child.allocated_amount = flt(r.message[0].allocated_amount);
 						child.exchange_rate = r.message[0].exchange_rate;
-						child.payment_entry = r.message[0].payment_entry;
-						child.payment_entry_reference = r.message[0].payment_entry_reference;
+						child.reference_type = r.message[0].reference_type;
+						child.reference_name = r.message[0].reference_name;
 						set_in_company_currency(
 							frm,
 							child,

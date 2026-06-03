@@ -42,7 +42,7 @@ class JobApplicant(Document):
 		resume_link: DF.Data | None
 		source: DF.Link | None
 		source_name: DF.Link | None
-		status: DF.Literal["Open", "Replied", "Rejected", "Hold", "Accepted"]
+		status: DF.Literal["Open", "Replied", "Shortlisted", "Rejected", "Hold", "Accepted"]
 		upper_range: DF.Currency
 	# end: auto-generated types
 
@@ -86,26 +86,26 @@ class JobApplicant(Document):
 
 
 @frappe.whitelist()
-def create_interview(job_applicant: str, interview_round: str) -> Document:
+def create_interview(job_applicant: str, interview_type: str) -> Document:
 	doc = frappe.get_doc("Job Applicant", job_applicant)
 
-	round_designation = frappe.db.get_value("Interview Round", interview_round, "designation")
+	round_designation = frappe.db.get_value("Interview Type", interview_type, "designation")
 
 	if round_designation and doc.designation and round_designation != doc.designation:
 		frappe.throw(
-			_("Interview Round {0} is only applicable for the Designation {1}").format(
-				interview_round, round_designation
+			_("Interview Type {0} is only applicable for the Designation {1}").format(
+				interview_type, round_designation
 			)
 		)
 
 	interview = frappe.new_doc("Interview")
-	interview.interview_round = interview_round
+	interview.interview_type = interview_type
 	interview.job_applicant = doc.name
 	interview.designation = doc.designation
 	interview.resume_link = doc.resume_link
 	interview.job_opening = doc.job_title
 
-	interviewers = get_interviewers(interview_round)
+	interviewers = get_interviewers(interview_type)
 	for d in interviewers:
 		interview.append("interview_details", {"interviewer": d.interviewer})
 
@@ -117,8 +117,11 @@ def get_interview_details(job_applicant: str) -> dict:
 	interview_details = frappe.db.get_all(
 		"Interview",
 		filters={"job_applicant": job_applicant, "docstatus": ["!=", 2]},
-		fields=["name", "interview_round", "scheduled_on", "average_rating", "status"],
+		fields=["name", "interview_type", "scheduled_on", "average_rating", "status"],
 	)
+	if not interview_details:
+		return None
+
 	interview_detail_map = {}
 	meta = frappe.get_meta("Interview")
 	number_of_stars = meta.get_options("average_rating") or 5

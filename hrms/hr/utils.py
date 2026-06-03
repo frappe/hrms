@@ -417,38 +417,48 @@ def calculate_upcoming_earned_leave(allocation, e_leave_type, date_of_joining):
 
 def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type, earned_leaves, today):
 	allocation = frappe.get_doc("Leave Allocation", allocation.name)
-	annual_allocation = flt(annual_allocation, allocation.precision("total_leaves_allocated"))
-
-	new_allocation = flt(allocation.total_leaves_allocated) + flt(earned_leaves)
-	new_allocation_without_cf = flt(
-		flt(allocation.get_existing_leave_count()) + flt(earned_leaves),
-		allocation.precision("total_leaves_allocated"),
+	precision = allocation.precision("total_leaves_allocated")
+	annual_allocation = flt(annual_allocation, precision)
+	earned_leaves = flt(earned_leaves, precision)
+	new_leaves_to_allocate_without_cf = flt(
+		flt(allocation.get_existing_leave_count()) + earned_leaves,
+		precision,
 	)
-
-	if new_allocation > e_leave_type.max_leaves_allowed and e_leave_type.max_leaves_allowed > 0:
-		frappe.throw(
-			_(
-				"Allocation was skipped due to maximum leave allocation limit set in leave type. Please increase the limit and retry failed allocation."
-			),
-			OverAllocationError,
-		)
 	if (
 		# annual allocation as per policy should not be exceeded except for yearly leaves
-		new_allocation_without_cf > annual_allocation and e_leave_type.earned_leave_frequency != "Yearly"
+		new_leaves_to_allocate_without_cf > annual_allocation
+		and e_leave_type.earned_leave_frequency != "Yearly"
 	):
 		frappe.throw(
 			_("Allocation was skipped due to exceeding annual allocation set in leave policy"),
 			OverAllocationError,
 		)
 
-	allocation.db_set("total_leaves_allocated", new_allocation, update_modified=False)
+	if e_leave_type.max_leaves_allowed:
+		leaves_quota = flt(e_leave_type.max_leaves_allowed - allocation.total_leaves_allocated, precision)
+		if leaves_quota <= 0:
+			frappe.throw(
+				_(
+					"Allocation was skipped due to maximum leave allocation limit set in leave type. Please increase the limit and retry failed allocation."
+				),
+				OverAllocationError,
+			)
+		else:
+			if leaves_quota < earned_leaves:
+				earned_leaves = leaves_quota
+
+	allocation.db_set(
+		"total_leaves_allocated",
+		earned_leaves + allocation.total_leaves_allocated,
+		update_modified=False,
+	)
 	create_additional_leave_ledger_entry(allocation, earned_leaves, today)
 	earned_leave_schedule = qb.DocType("Earned Leave Schedule")
 	qb.update(earned_leave_schedule).where(
 		(earned_leave_schedule.parent == allocation.name) & (earned_leave_schedule.allocation_date == today)
 	).set(earned_leave_schedule.is_allocated, 1).set(earned_leave_schedule.attempted, 1).set(
 		earned_leave_schedule.allocated_via, "Scheduler"
-	).run()
+	).set(earned_leave_schedule.number_of_leaves, earned_leaves).run()
 
 
 def log_allocation_error(allocation_name, error):

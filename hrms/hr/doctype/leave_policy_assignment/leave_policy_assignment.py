@@ -147,7 +147,11 @@ class LeavePolicyAssignment(Document):
 			else []
 		)
 
-		if new_leaves_allocated == 0 and not leave_details.is_earned_leave:
+		if (
+			new_leaves_allocated == 0
+			and not leave_details.is_earned_leave
+			and not leave_details.allow_negative
+		):
 			text = _(
 				"Leave allocation is skipped for {0}, because number of leaves to be allocated is 0."
 			).format(frappe.bold(leave_details.name))
@@ -507,6 +511,7 @@ def get_leave_type_details():
 			"is_lwp",
 			"is_earned_leave",
 			"is_compensatory",
+			"allow_negative",
 			"allocate_on_day",
 			"is_carry_forward",
 			"expire_carry_forwarded_leaves_after_days",

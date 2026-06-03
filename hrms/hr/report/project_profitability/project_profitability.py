@@ -100,7 +100,7 @@ def get_standard_working_hours() -> float | None:
 		frappe.throw(
 			_("The metrics for this report are calculated based on the {0}. Please set {0} in {1}.").format(
 				frappe.bold(_("Standard Working Hours")),
-				frappe.utils.get_link_to_form("HR Settings", "HR Settings"),
+				frappe.utils.get_link_to_form("HR Settings", "HR Settings", _("HR Settings")),
 			)
 		)
 
