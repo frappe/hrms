@@ -5,7 +5,7 @@
 import frappe
 from frappe import _, bold
 from frappe.model.document import Document
-from frappe.utils import comma_and, date_diff, formatdate, get_link_to_form, getdate
+from frappe.utils import comma_and, date_diff, flt, formatdate, get_link_to_form, getdate
 
 from hrms.hr.utils import validate_active_employee
 
@@ -62,6 +62,9 @@ class AdditionalSalary(Document):
 
 		if self.amount < 0:
 			frappe.throw(_("Amount should not be less than zero"))
+
+		if self.ref_doctype == "Employee Advance":
+			self.validate_employee_advance_return()
 
 	def validate_salary_structure(self):
 		salary_structure = frappe.db.get_value(
@@ -250,6 +253,42 @@ class AdditionalSalary(Document):
 				).format(frappe.bold(self.salary_component)),
 				title=_("Warning"),
 				indicator="orange",
+			)
+
+	def validate_employee_advance_return(self):
+		if self.ref_doctype != "Employee Advance" or not self.ref_docname:
+			return
+		precision = self.precision("amount")
+		advance = frappe.get_doc("Employee Advance", self.ref_docname)
+		available_return_amount = flt(advance.paid_amount - advance.claimed_amount, precision)
+
+		AdditionalSalary = frappe.qb.DocType("Additional Salary")
+		scheduled_deductions = (
+			frappe.qb.from_(AdditionalSalary)
+			.select(
+				AdditionalSalary.name,
+				AdditionalSalary.amount,
+			)
+			.where(
+				(AdditionalSalary.ref_doctype == "Employee Advance")
+				& (AdditionalSalary.ref_docname == self.ref_docname)
+				& (AdditionalSalary.docstatus == 1)
+				& (AdditionalSalary.name != self.name)
+			)
+		).run(as_dict=True) or []
+
+		scheduled_return_amount = sum(flt(d.amount, precision) for d in scheduled_deductions)
+		remaining_return_amount = available_return_amount - scheduled_return_amount
+
+		if flt(self.amount, precision) > flt(remaining_return_amount, precision):
+			frappe.throw(
+				_(
+					"The available balance for Employee Advance {0} has already been scheduled for deduction in {1}."
+				).format(
+					get_link_to_form("Employee Advance", self.ref_docname),
+					comma_and([get_link_to_form("Additional Salary", d.name) for d in scheduled_deductions]),
+				),
+				title=_("Amount Exceeds Available Balance"),
 			)
 
 	def update_employee_referral(self, cancel=False):
