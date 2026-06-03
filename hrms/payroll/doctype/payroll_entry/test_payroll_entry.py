@@ -878,8 +878,8 @@ class TestPayrollEntry(HRMSTestSuite):
 		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0}
 	)
 	def test_loan_repayment_value_date_for_future_payroll(self):
-		from lending.tests.test_utils import create_loan
 		from lending.loan_management.doctype.loan.test_loan import make_loan_disbursement_entry
+		from lending.tests.test_utils import create_loan
 
 		frappe.db.delete("Loan")
 		applicant, branch, currency, payroll_payable_account = setup_lending()
