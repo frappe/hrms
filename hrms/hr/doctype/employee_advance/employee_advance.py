@@ -373,3 +373,26 @@ def get_voucher_type(mode_of_payment=None):
 			voucher_type = "Bank Entry"
 
 	return voucher_type
+
+
+@frappe.whitelist()
+def get_employee_advance_return(employee_advance: str):
+	AdditionalSalary = frappe.qb.DocType("Additional Salary")
+	return_entries = (
+		frappe.qb.from_(AdditionalSalary)
+		.select(
+			AdditionalSalary.name,
+			AdditionalSalary.amount,
+		)
+		.where(
+			(AdditionalSalary.ref_doctype == "Employee Advance")
+			& (AdditionalSalary.ref_docname == employee_advance)
+			& (AdditionalSalary.docstatus == 1)
+		)
+	).run(as_dict=True) or []
+
+	total_return_scheduled = sum(flt(d.amount) for d in return_entries)
+	return {
+		"total_return_scheduled": total_return_scheduled,
+		"has_return_scheduled": len(return_entries) > 0,
+	}
