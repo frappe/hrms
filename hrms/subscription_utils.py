@@ -27,7 +27,7 @@ STANDARD_ROLES = [
 ]
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def get_add_on_details(plan: str) -> dict[str, int]:
 	"""
 	Returns the number of employees to be billed under add-ons for SAAS subscription
@@ -63,7 +63,7 @@ def get_active_employees() -> int:
 	return frappe.db.count("Employee", {"status": "Active"})
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def subscription_updated(app: str, plan: str):
 	if app in ["hrms", "erpnext"] and plan:
 		update_erpnext_access()

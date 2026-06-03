@@ -2230,16 +2230,6 @@ def make_earning_salary_component(
 	if setup or test_tax:
 		make_salary_component(data, test_tax, company_list)
 
-	data.append(
-		{
-			"salary_component": "Basic Salary",
-			"abbr": "BS",
-			"condition": "base < 10000",
-			"formula": "base*.2",
-			"type": "Earning",
-			"amount_based_on_formula": 1,
-		}
-	)
 	return data
 
 

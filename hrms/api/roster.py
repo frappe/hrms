@@ -8,6 +8,39 @@ from hrms.hr.doctype.shift_assignment.shift_assignment import ShiftAssignment
 from hrms.hr.doctype.shift_assignment_tool.shift_assignment_tool import create_shift_assignment
 from hrms.hr.doctype.shift_schedule.shift_schedule import get_or_insert_shift_schedule
 
+ALLOWED_EMPLOYEE_FILTERS = {
+	"status",
+	"company",
+	"department",
+	"branch",
+	"designation",
+	"employee_name",
+}
+
+ALLOWED_SHIFT_FILTERS = {
+	"shift_type",
+	"status",
+	"shift_location",
+}
+
+
+def _validate_employee_filters(employee_filters: dict[str, str]) -> None:
+	for key in employee_filters:
+		if key not in ALLOWED_EMPLOYEE_FILTERS:
+			frappe.throw(
+				_("Invalid employee filter: {0}").format(frappe.bold(key)),
+				frappe.PermissionError,
+			)
+
+
+def _validate_shift_filters(shift_filters: dict[str, str]) -> None:
+	for key in shift_filters:
+		if key not in ALLOWED_SHIFT_FILTERS:
+			frappe.throw(
+				_("Invalid shift filter: {0}").format(frappe.bold(key)),
+				frappe.PermissionError,
+			)
+
 
 @frappe.whitelist()
 def get_default_company() -> str:
@@ -18,6 +51,8 @@ def get_default_company() -> str:
 def get_events(
 	month_start: str, month_end: str, employee_filters: dict[str, str], shift_filters: dict[str, str]
 ) -> dict[str, list[dict]]:
+	_validate_employee_filters(employee_filters)
+	_validate_shift_filters(shift_filters)
 	holidays = get_holidays(month_start, month_end, employee_filters)
 	leaves = get_leaves(month_start, month_end, employee_filters)
 	shifts = get_shifts(month_start, month_end, employee_filters, shift_filters)
@@ -54,6 +89,8 @@ def create_shift_schedule_assignment(
 	frequency: str,
 	shift_location: str | None = None,
 ) -> None:
+	frappe.has_permission("Employee", "read", employee, throw=True)
+	frappe.has_permission("Shift Schedule Assignment", "create", throw=True)
 	shift_schedule = get_or_insert_shift_schedule(shift_type, frequency, repeat_on_days)
 	shift_schedule_assignment = frappe.get_doc(
 		{
@@ -77,14 +114,19 @@ def create_shift_schedule_assignment(
 
 @frappe.whitelist()
 def delete_shift_schedule_assignment(shift_schedule_assignment: str) -> None:
-	for shift_assignment in frappe.get_all(
+	shift_schedule_assignment_doc = frappe.get_doc("Shift Schedule Assignment", shift_schedule_assignment)
+	shift_schedule_assignment_doc.check_permission("delete")
+
+	for shift_assignment_name in frappe.get_all(
 		"Shift Assignment", {"shift_schedule_assignment": shift_schedule_assignment}, pluck="name"
 	):
-		doc = frappe.get_doc("Shift Assignment", shift_assignment)
-		if doc.docstatus == 1:
-			doc.cancel()
-		frappe.delete_doc("Shift Assignment", shift_assignment)
-	frappe.delete_doc("Shift Schedule Assignment", shift_schedule_assignment)
+		shift_assignment_doc = frappe.get_doc("Shift Assignment", shift_assignment_name)
+		frappe.has_permission("Employee", "read", shift_assignment_doc.employee, throw=True)
+		shift_assignment_doc.check_permission("cancel" if shift_assignment_doc.docstatus == 1 else "delete")
+		if shift_assignment_doc.docstatus == 1:
+			shift_assignment_doc.cancel()
+		frappe.delete_doc("Shift Assignment", shift_assignment_name, ignore_permissions=True)
+	frappe.delete_doc("Shift Schedule Assignment", shift_schedule_assignment, ignore_permissions=True)
 
 
 @frappe.whitelist()
@@ -94,14 +136,22 @@ def swap_shift(
 	if src_shift == tgt_shift:
 		frappe.throw(_("Source and target shifts cannot be the same"))
 
+	src_shift_doc = frappe.get_doc("Shift Assignment", src_shift)
+	frappe.has_permission("Employee", "read", src_shift_doc.employee, throw=True)
+	src_shift_doc.check_permission("write")
+
+	frappe.has_permission("Employee", "read", tgt_employee, throw=True)
+	frappe.has_permission("Shift Assignment", "create", throw=True)
+
 	if tgt_shift:
 		tgt_shift_doc = frappe.get_doc("Shift Assignment", tgt_shift)
+		frappe.has_permission("Employee", "read", tgt_shift_doc.employee, throw=True)
+		tgt_shift_doc.check_permission("write")
 		tgt_company = tgt_shift_doc.company
 		break_shift(tgt_shift_doc, tgt_date)
 	else:
 		tgt_company = frappe.db.get_value("Employee", tgt_employee, "company")
 
-	src_shift_doc = frappe.get_doc("Shift Assignment", src_shift)
 	break_shift(src_shift_doc, src_date)
 	insert_shift(
 		tgt_employee,
@@ -129,6 +179,9 @@ def swap_shift(
 def break_shift(assignment: str | ShiftAssignment, date: str) -> None:
 	if isinstance(assignment, str):
 		assignment = frappe.get_doc("Shift Assignment", assignment)
+
+	frappe.has_permission("Employee", "read", assignment.employee, throw=True)
+	assignment.check_permission("write")
 
 	if assignment.end_date and date_diff(assignment.end_date, date) < 0:
 		frappe.throw(_("Cannot break shift after end date"))
@@ -165,6 +218,8 @@ def insert_shift(
 	status: str,
 	shift_location: str | None = None,
 ) -> None:
+	frappe.has_permission("Employee", "read", employee, throw=True)
+	frappe.has_permission("Shift Assignment", "create", throw=True)
 	filters = {
 		"doctype": "Shift Assignment",
 		"employee": employee,
@@ -193,6 +248,7 @@ def insert_shift(
 
 
 def get_holidays(month_start: str, month_end: str, employee_filters: dict[str, str]) -> dict[str, list[dict]]:
+	_validate_employee_filters(employee_filters)
 	holidays = {}
 	holiday_lists = {}
 
@@ -213,8 +269,11 @@ def get_holidays(month_start: str, month_end: str, employee_filters: dict[str, s
 
 
 def get_leaves(month_start: str, month_end: str, employee_filters: dict[str, str]) -> dict[str, list[dict]]:
+	_validate_employee_filters(employee_filters)
 	LeaveApplication = frappe.qb.DocType("Leave Application")
 	Employee = frappe.qb.DocType("Employee")
+
+	frappe.has_permission("Leave Application", "read", throw=True)
 
 	query = (
 		frappe.qb.select(
@@ -244,6 +303,8 @@ def get_leaves(month_start: str, month_end: str, employee_filters: dict[str, str
 def get_shifts(
 	month_start: str, month_end: str, employee_filters: dict[str, str], shift_filters: dict[str, str]
 ) -> dict[str, list[dict]]:
+	_validate_employee_filters(employee_filters)
+	_validate_shift_filters(shift_filters)
 	ShiftAssignment = frappe.qb.DocType("Shift Assignment")
 	ShiftType = frappe.qb.DocType("Shift Type")
 	Employee = frappe.qb.DocType("Employee")

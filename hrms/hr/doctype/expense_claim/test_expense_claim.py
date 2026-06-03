@@ -255,26 +255,47 @@ class TestExpenseClaim(HRMSTestSuite):
 
 	def test_expense_claim_partially_paid_via_advance(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (
-			get_advances_for_claim,
 			make_employee_advance,
 			make_payment_entry,
 		)
+		from hrms.hr.doctype.expense_claim.expense_claim import get_expense_claim
 
 		frappe.db.delete("Employee Advance")
 
-		payable_account = get_payable_account("_Test Company")
-		claim = make_expense_claim(
-			payable_account, 1000, 1000, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
-		)
-
-		# link advance for partial amount
-		advance = make_employee_advance(claim.employee, {"advance_amount": 500})
+		employee = make_employee("test_partial_advance_claim@expenseclaim.com", "_Test Company")
+		advance = make_employee_advance(employee, {"advance_amount": 500})
 		make_payment_entry(advance)
 
-		claim = get_advances_for_claim(claim, advance.name)
+		currency, cost_center = frappe.db.get_value(
+			"Company", "_Test Company", ["default_currency", "cost_center"]
+		)
+		claim = get_expense_claim(advance.name)  # function call to create claim from employee advance form
+		claim.update(
+			{
+				"payable_account": get_payable_account("_Test Company"),
+				"currency": currency,
+				"exchange_rate": 1,
+				"approval_status": "Approved",
+			}
+		)
+		claim.append(
+			"expenses",
+			{
+				"expense_type": "Travel",
+				"default_account": "Travel Expenses - _TC",
+				"amount": 1000,
+				"sanctioned_amount": 1000,
+				"cost_center": cost_center,
+			},
+		)
+
+		# assert is_paid to be checked true as claim is done via advance actions button
+		self.assertTrue(claim.is_paid)
 		claim.save()
 		claim.submit()
 
+		# assert is_paid to be checked false as claim amount is greater than advance
+		self.assertFalse(claim.is_paid)
 		self.assertEqual(claim.grand_total, 500)
 		self.assertEqual(claim.status, "Unpaid")
 

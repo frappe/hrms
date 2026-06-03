@@ -857,15 +857,24 @@ def get_salary_slip_loan_fields():
 
 # Add default permission for hr roles
 def add_default_hr_permissions():
+	# Project and Task perms are needed for the Employee Onboarding / Separation flow,
+	# which creates a Project and Tasks and assigns them to users. assign_to.add() does a
+	# read check on Task, and on_cancel deletes the Project and its Tasks.
+	project_task_perms = {
+		"Project": {"read": 1, "write": 1, "create": 1, "delete": 1},
+		"Task": {"read": 1, "write": 1, "create": 1, "delete": 1},
+	}
 	role_permissions = {
 		"HR User": {
 			"Role": {"read": 1},
 			"Currency": {"read": 1},
+			**project_task_perms,
 		},
 		"HR Manager": {
 			"Role": {"read": 1},
 			"Currency": {"read": 1},
 			"Email Account": {"read": 1},
+			**project_task_perms,
 		},
 	}
 

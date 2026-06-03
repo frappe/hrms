@@ -67,11 +67,13 @@ class AttendanceRequest(Document):
 				)
 
 	def get_active_shifts(self):
+		# Attendance requests are typically posted after the shift period for corrections.
+		# Expired shift assignments are auto-marked Inactive, but should still be considered
+		# here so that the shift is auto-fetched for backdated requests.
 		shifts = frappe.get_all(
 			"Shift Assignment",
 			filters={
 				"docstatus": 1,
-				"status": "Active",
 				"employee": self.employee,
 				"start_date": ("<=", self.from_date),
 				"end_date": (">=", self.to_date),
@@ -163,6 +165,25 @@ class AttendanceRequest(Document):
 					),
 					title=_("Attendance Updated"),
 				)
+			elif status == "Half Day" and doc.half_day_status == "Absent" and self.half_day:
+				old_half_day_status = doc.half_day_status
+				doc.db_set({"half_day_status": "Present", "attendance_request": self.name})
+				text = _(
+					"Changed the Status for Other Half from {0} to {1} via Attendance Request as the status is Half Day"
+				).format(frappe.bold(old_half_day_status), frappe.bold("Present"))
+				doc.add_comment(comment_type="Info", text=text)
+
+				frappe.msgprint(
+					_(
+						"Updated Status for Other Half from {0} to {1} for date {2} in the attendance record {3}"
+					).format(
+						frappe.bold(old_half_day_status),
+						frappe.bold("Present"),
+						frappe.bold(format_date(date)),
+						get_link_to_form("Attendance", doc.name),
+					),
+					title=_("Attendance Updated"),
+				)
 		else:
 			# submit a new attendance record
 			doc = frappe.new_doc("Attendance")
@@ -198,6 +219,19 @@ class AttendanceRequest(Document):
 		return True
 
 	def has_leave_record(self, attendance_date: str) -> str | None:
+		filters = {
+			"employee": self.employee,
+			"docstatus": 1,
+			"from_date": ("<=", attendance_date),
+			"to_date": (">=", attendance_date),
+			"status": "Approved",
+		}
+		if self.half_day_date == attendance_date:
+			filters["half_day"] = 0
+
+		return frappe.db.exists("Leave Application", filters)
+
+	def has_half_day_leave_record(self, attendance_date: str) -> str | None:
 		return frappe.db.exists(
 			"Leave Application",
 			{
@@ -206,6 +240,8 @@ class AttendanceRequest(Document):
 				"from_date": ("<=", attendance_date),
 				"to_date": (">=", attendance_date),
 				"status": "Approved",
+				"half_day": 1,
+				"half_day_date": attendance_date,
 			},
 		)
 
@@ -233,6 +269,8 @@ class AttendanceRequest(Document):
 		new_status = self.get_attendance_status(attendance_date)
 		attendance_doc = self.get_attendance_doc(attendance_date)
 		if attendance_doc and attendance_doc.status == new_status:
+			if new_status == "Half Day" and self.half_day and attendance_doc.half_day_status == "Absent":
+				return False
 			return True
 		return False
 
@@ -254,7 +292,6 @@ class AttendanceRequest(Document):
 
 		for day in range(request_days):
 			attendance_date = add_days(self.from_date, day)
-
 			if not self.include_holidays and is_holiday(self.employee, attendance_date):
 				attendance_warnings.append({"date": attendance_date, "reason": "Holiday", "action": "Skip"})
 			elif self.has_leave_record(attendance_date):
