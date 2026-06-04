@@ -37,6 +37,7 @@ class TestExpenseClaim(HRMSTestSuite):
 
 			frappe.db.set_value("Company", company_name, "default_cost_center", cost_center)
 		frappe.db.set_value("Account", "Employee Advances - _TC", "account_type", "Receivable")
+		frappe.db.set_value("Account", "Payroll Payable - _TC", "account_type", "Payable")
 		frappe.set_user("Administrator")
 
 	def test_total_expense_claim_for_project(self):
@@ -314,45 +315,34 @@ class TestExpenseClaim(HRMSTestSuite):
 
 	def test_expense_claim_with_deducted_returned_advance(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (
-			create_return_through_additional_salary,
+			create_payroll_for_advance_return,
 			get_advances_for_claim,
 			make_employee_advance,
 			make_payment_entry,
 		)
 		from hrms.hr.doctype.expense_claim.expense_claim import get_allocation_amount
-		from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
-		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
+		company_doc = frappe.get_doc("Company", "_Test Company")
 		# create employee and employee advance
-		employee_name = make_employee("_T@employee.advance", "_Test Company")
+		employee_name = make_employee("_T@employee.advance", company_doc.name)
 		advance = make_employee_advance(employee_name, {"repay_unclaimed_amount_from_salary": 1})
 		make_payment_entry(advance)
 		advance.reload()
 
-		# set up salary components and structure
-		create_salary_component("Advance Salary - Deduction", type="Deduction")
-		make_salary_structure(
-			"Test Additional Salary for Advance Return",
-			"Monthly",
-			employee=employee_name,
-			company="_Test Company",
-		)
-
-		# create additional salary for advance return
-		additional_salary = create_return_through_additional_salary(advance)
-		additional_salary.salary_component = "Advance Salary - Deduction"
-		additional_salary.payroll_date = nowdate()
-		additional_salary.amount = 400
-		additional_salary.insert()
-		additional_salary.submit()
+		create_payroll_for_advance_return(employee_name, company_doc, advance, return_amount=400)
 		advance.reload()
-
 		self.assertEqual(advance.return_amount, 400)
 
 		# create an expense claim
-		payable_account = get_payable_account("_Test Company")
+		payable_account = get_payable_account(company_doc.name)
 		claim = make_expense_claim(
-			payable_account, 200, 200, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
+			payable_account,
+			200,
+			200,
+			company_doc.name,
+			"Travel Expenses - _TC",
+			do_not_submit=True,
+			employee=employee_name,
 		)
 
 		# link advance to the claim

@@ -2,6 +2,7 @@
 # See license.txt
 
 import frappe
+from frappe import _dict
 from frappe.utils import flt, nowdate
 
 import erpnext
@@ -32,6 +33,7 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		self.update_company_in_fiscal_year()
 		frappe.db.set_value("Account", "Employee Advances - _TC", "account_type", "Receivable")
 		frappe.db.set_value("Account", "_Test Employee Advance - _TC", "account_type", "Receivable")
+		frappe.db.set_value("Account", "Payroll Payable - _TC", "account_type", "Payable")
 
 	def test_paid_amount_and_status(self):
 		employee_name = make_employee("_T@employee.advance", "_Test Company")
@@ -204,10 +206,7 @@ class TestEmployeeAdvance(HRMSTestSuite):
 
 	def test_advance_return_on_payroll_submission(self):
 		company_doc = frappe.get_doc("Company", "_Test Company")
-		frappe.db.set_value("Account", company_doc.default_payroll_payable_account, "account_type", "Payable")
 		employee = make_employee("test_repay_unclaimed_amount@payroll.com", company=company_doc.name)
-
-		setup_salary_structure(employee, company_doc)
 
 		advance = make_employee_advance(
 			employee,
@@ -216,42 +215,11 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		make_payment_entry(advance)
 		advance.reload()
 
-		# Advance deduction component
-		component = create_salary_component(
-			"Advance Salary",
-			**{"type": "Deduction"},
-		)
-		component.append(
-			"accounts",
-			{
-				"company": company_doc.name,
-				"account": "Employee Advances - _TC",
-			},
-		)
-		component.save()
-
-		# Create Additional Salary for repayment
-		additional_salary = create_return_through_additional_salary(advance)
-		additional_salary.salary_component = component.name
-		additional_salary.payroll_date = nowdate()
-		additional_salary.amount = advance.paid_amount
-		additional_salary.submit()
-
-		# Process payroll
-		dates = get_start_end_dates("Monthly", nowdate())
-		payroll_entry = make_payroll_entry(
-			start_date=dates.start_date,
-			end_date=dates.end_date,
-			payable_account=company_doc.default_payroll_payable_account,
-			currency=company_doc.default_currency,
-			company=company_doc.name,
-			cost_center="Main - _TC",
-		)
-
+		payroll_details = create_payroll_for_advance_return(employee, company_doc, advance)
 		salary_slip_name = frappe.db.get_value(
 			"Salary Slip",
 			{
-				"payroll_entry": payroll_entry.name,
+				"payroll_entry": payroll_details.payroll_entry,
 				"employee": employee,
 			},
 			"name",
@@ -261,14 +229,19 @@ class TestEmployeeAdvance(HRMSTestSuite):
 
 		# Verify advance deduction in salary slip
 		deduction_row = next(
-			(row for row in salary_slip.deductions if row.salary_component == component.name), None
+			(
+				row
+				for row in salary_slip.deductions
+				if row.salary_component == payroll_details.advance_component
+			),
+			None,
 		)
 		self.assertIsNotNone(
 			deduction_row,
 			"Salary advance deduction not found",
 		)
 		self.assertEqual(flt(deduction_row.amount), flt(advance.paid_amount))
-		self.assertEqual(deduction_row.additional_salary, additional_salary.name)
+		self.assertEqual(deduction_row.additional_salary, payroll_details.additional_salary)
 		advance.reload()
 		self.assertEqual(advance.status, "Returned")
 
@@ -600,4 +573,47 @@ def create_advance_account(account_name, account_currency):
 		company="_Test Company",
 		account_currency=account_currency,
 		account_type="Receivable",
+	)
+
+
+def create_payroll_for_advance_return(employee, company, advance, return_amount=None):
+	# Advance deduction component
+	component = create_salary_component(
+		"Advance Salary",
+		**{"type": "Deduction"},
+	)
+	component.append(
+		"accounts",
+		{
+			"company": company.name,
+			"account": "Employee Advances - _TC",
+		},
+	)
+	component.save()
+
+	setup_salary_structure(employee, company)
+
+	# Create Additional Salary for repayment
+	additional_salary = create_return_through_additional_salary(advance)
+	additional_salary.salary_component = component.name
+	additional_salary.payroll_date = nowdate()
+	additional_salary.amount = return_amount or advance.paid_amount
+	additional_salary.submit()
+
+	# Process payroll
+	dates = get_start_end_dates("Monthly", nowdate())
+	payroll_entry = make_payroll_entry(
+		start_date=dates.start_date,
+		end_date=dates.end_date,
+		payable_account=company.default_payroll_payable_account,
+		currency=company.default_currency,
+		company=company.name,
+		cost_center="Main - _TC",
+	)
+	return _dict(
+		{
+			"payroll_entry": payroll_entry.name,
+			"advance_component": component.name,
+			"additional_salary": additional_salary.name,
+		}
 	)
