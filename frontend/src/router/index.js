@@ -53,6 +53,11 @@ const routes = [
 		component: () => import("@/views/Login.vue"),
 	},
 	{
+		path: "/forgot-password",
+		name: "ForgotPassword",
+		component: () => import("@/views/ForgotPassword.vue"),
+	},
+	{
 		path: "/profile",
 		name: "Profile",
 		component: () => import("@/views/Profile.vue"),
@@ -66,6 +71,11 @@ const routes = [
 		path: "/settings",
 		name: "Settings",
 		component: () => import("@/views/AppSettings.vue"),
+	},
+	{
+		path: "/change-password",
+		name: "ChangePassword",
+		component: () => import("@/views/ChangePassword.vue"),
 	},
 	{
 		path: "/invalid-employee",
