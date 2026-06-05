@@ -2208,6 +2208,10 @@ def get_salary_component_data(component):
 			"is_tax_applicable",
 			"is_flexible_benefit",
 			"variable_based_on_taxable_salary",
+<<<<<<< HEAD
+=======
+			"accrual_component",
+>>>>>>> f184d452d (fix: Deduction using additional salary with tax exempt)
 			"exempted_from_income_tax",
 		),
 		as_dict=1,
