@@ -136,48 +136,50 @@ class Goal(NestedSet):
 
 @frappe.whitelist()
 def get_children(doctype: str, parent: str, is_root: bool = False, **filters) -> list[dict]:
-	Goal = frappe.qb.DocType(doctype)
-
-	query = (
-		frappe.qb.from_(Goal)
-		.select(
-			Goal.name.as_("value"),
-			Goal.goal_name.as_("title"),
-			Goal.is_group.as_("expandable"),
-			Goal.status,
-			Goal.employee,
-			Goal.employee_name,
-			Goal.appraisal_cycle,
-			Goal.progress,
-			Goal.kra,
-		)
-		.where(Goal.status != "Archived")
-	)
+	query_filters = [["status", "!=", "Archived"]]
+	query_or_filters = []
 
 	if filters.get("employee"):
-		query = query.where(Goal.employee == filters.get("employee"))
+		query_filters.append(["employee", "=", filters.get("employee")])
 
 	if filters.get("appraisal_cycle"):
-		query = query.where(Goal.appraisal_cycle == filters.get("appraisal_cycle"))
+		query_filters.append(["appraisal_cycle", "=", filters.get("appraisal_cycle")])
 
 	if filters.get("goal"):
-		query = query.where(Goal.parent_goal == filters.get("goal"))
+		query_filters.append(["parent_goal", "=", filters.get("goal")])
+
 	elif parent and not is_root:
-		# via expand child
-		query = query.where(Goal.parent_goal == parent)
+		query_filters.append(["parent_goal", "=", parent])
+
 	else:
-		ifnull = CustomFunction("IFNULL", ["value", "default"])
-		query = query.where(ifnull(Goal.parent_goal, "") == "")
+		query_filters.append(["parent_goal", "in", ["", None]])
 
 	if filters.get("date_range"):
-		date_range = frappe.parse_json(filters.get("date_range"))
+		from_date, to_date = frappe.parse_json(filters.get("date_range"))
+		query_filters.append(["start_date", "between", [from_date, to_date]])
 
-		query = query.where(
-			(Goal.start_date.between(date_range[0], date_range[1]))
-			& ((Goal.end_date.isnull()) | (Goal.end_date.between(date_range[0], date_range[1])))
-		)
+		# or_filters
+		query_or_filters.append(["end_date", "is", "not set"])
+		query_or_filters.append(["end_date", "between", [from_date, to_date]])
 
-	goals = query.orderby(Goal.employee, Goal.kra).run(as_dict=True)
+	goals = frappe.get_list(
+		doctype,
+		fields=[
+			"name as value",
+			"goal_name as title",
+			"is_group as expandable",
+			"status",
+			"employee",
+			"employee_name",
+			"appraisal_cycle",
+			"progress",
+			"kra",
+		],
+		filters=query_filters,
+		or_filters=query_or_filters if query_or_filters else None,
+		order_by="employee, kra",
+	)
+
 	_update_goal_completion_status(goals)
 
 	return goals
