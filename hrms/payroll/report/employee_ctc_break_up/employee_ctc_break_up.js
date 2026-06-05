@@ -69,15 +69,6 @@ frappe.query_reports["Employee CTC Break-up"] = {
 		const employee = await hrms.get_current_employee();
 		if (!employee) return;
 		report.set_filter_value("employee", employee);
-		const result = await frappe.db.get_list("Salary Structure Assignment", {
-			filters: { employee: employee, docstatus: 1 },
-			fields: ["name"],
-			order_by: "from_date desc",
-			limit: 1,
-		});
-		if (result && result[0]) {
-			report.set_filter_value("salary_structure_assignment", result[0].name);
-		}
 	},
 	formatter: function (value, row, column, data, default_formatter) {
 		value = default_formatter(value, row, column, data);
