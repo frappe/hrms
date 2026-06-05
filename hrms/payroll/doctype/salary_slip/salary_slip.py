@@ -2460,6 +2460,7 @@ def get_salary_component_data(component):
 			"is_flexible_benefit",
 			"variable_based_on_taxable_salary",
 			"accrual_component",
+			"exempted_from_income_tax",
 		),
 		as_dict=1,
 		cache=True,

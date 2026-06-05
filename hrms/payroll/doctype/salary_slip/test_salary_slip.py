@@ -1533,6 +1533,178 @@ class TestSalarySlip(HRMSTestSuite):
 		self.assertEqual(flt(salary_slip.future_income_tax_deductions, 2), 124843.25)  # as 136843.25 - 12000
 		self.assertEqual(flt(salary_slip.total_income_tax, 2), 136843.25)
 
+	def test_income_tax_unchanged_on_submit_with_exempted_additional_deduction(self):
+		from hrms.payroll.doctype.payroll_entry.test_payroll_entry import make_payroll_entry
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+			create_salary_structure_assignment,
+			make_salary_structure,
+		)
+		from hrms.tests.test_utils import create_department
+
+		frappe.db.delete("Income Tax Slab", {"currency": "INR"})
+		# Two dedicated departments so the Payroll Entry below can filter to only emp2.
+		emp1_department = create_department("Issue 70232 Direct Submission Department")
+		emp2_department = create_department("Issue 70232 Payroll Entry Department")
+
+		emp = make_employee(
+			"test_employee_ss_exempted_addnl_deduction@salary.com",
+			company="_Test Company",
+			department=emp1_department,
+			date_of_joining="2021-01-01",
+		)
+		# Force the department even if the employee existed from a prior test run.
+		frappe.db.set_value("Employee", emp, "department", emp1_department)
+
+		# Clean up any state left from prior runs of this test so the slip/payroll-entry
+		# inserts below don't collide with the "already created for this period" check.
+		for table in ("Salary Slip", "Additional Salary", "Salary Structure Assignment"):
+			frappe.db.sql(f"DELETE FROM `tab{table}` WHERE employee=%s", emp)
+
+		payroll_period = frappe.get_doc("Payroll Period", "_Test Payroll Period")
+
+		create_tax_slab(
+			payroll_period,
+			effective_date=payroll_period.start_date,
+			allow_tax_exemption=True,
+			currency="INR",
+		)
+
+		salary_structure_name = "Test Salary Structure - Exempted Additional Deduction"
+		if frappe.db.exists("Salary Structure", salary_structure_name):
+			frappe.db.delete("Salary Structure", salary_structure_name)
+
+		salary_structure_doc = make_salary_structure(
+			salary_structure_name,
+			"Monthly",
+			company="_Test Company",
+			employee=emp,
+			from_date=payroll_period.start_date,
+			payroll_period=payroll_period,
+			test_tax=True,
+			base=200000,  # high base so TDS is non-zero under the default slabs
+		)
+
+		# Deduction component marked as exempted from income tax (e.g., Car Lease Deduction).
+		exempted_component = "Car Lease Deduction"
+		make_salary_component(
+			[
+				{
+					"salary_component": exempted_component,
+					"abbr": "CLD",
+					"type": "Deduction",
+					"exempted_from_income_tax": 1,
+					"depends_on_payment_days": 0,
+				}
+			],
+			False,
+			company_list=["_Test Company"],
+		)
+
+		def create_exempted_additional_salary(employee):
+			frappe.get_doc(
+				{
+					"doctype": "Additional Salary",
+					"employee": employee,
+					"company": "_Test Company",
+					"salary_component": exempted_component,
+					"amount": 25000,
+					"type": "Deduction",
+					"payroll_date": payroll_period.start_date,
+					"currency": "INR",
+				}
+			).submit()
+
+		create_exempted_additional_salary(emp)
+
+		salary_slip = make_salary_slip(
+			salary_structure_doc.name, employee=emp, posting_date=payroll_period.start_date
+		)
+
+		def get_tds(doc):
+			for d in doc.deductions:
+				if d.salary_component == "TDS":
+					return flt(d.amount, 2)
+			return 0.0
+
+		salary_slip.submit()
+		salary_slip.reload()
+
+		tds_after_save = get_tds(salary_slip)
+		current_month_tax_after = flt(salary_slip.current_month_income_tax, 2)
+		total_income_tax_after = flt(salary_slip.total_income_tax, 2)
+		annual_taxable_after = flt(salary_slip.annual_taxable_amount, 2)
+		deductions_before_tax_after = flt(salary_slip.deductions_before_tax_calculation, 2)
+
+		# Reproduce the same scenario via Payroll Entry for a second employee
+		# and verify both submitted slips produce identical income tax values.
+		default_payable = frappe.db.get_value("Company", "_Test Company", "default_payroll_payable_account")
+		if not default_payable:
+			create_account(
+				account_name="_Test Payroll Payable",
+				company="_Test Company",
+				parent_account="Current Liabilities - _TC",
+				account_type="Payable",
+			)
+			default_payable = "_Test Payroll Payable - _TC"
+			frappe.db.set_value(
+				"Company", "_Test Company", "default_payroll_payable_account", default_payable
+			)
+		if frappe.db.get_value("Account", default_payable, "account_type") != "Payable":
+			frappe.db.set_value("Account", default_payable, "account_type", "Payable")
+
+		emp2 = make_employee(
+			"test_employee2_ss_exempted_addnl_deduction@salary.com",
+			company="_Test Company",
+			department=emp2_department,
+			date_of_joining="2021-01-01",
+		)
+		# Force the department even if the employee existed from a prior test run.
+		frappe.db.set_value("Employee", emp2, "department", emp2_department)
+
+		# Clean up any state left from prior runs of this test for emp2 too.
+		for table in ("Salary Slip", "Additional Salary", "Salary Structure Assignment"):
+			frappe.db.sql(f"DELETE FROM `tab{table}` WHERE employee=%s", emp2)
+
+		create_salary_structure_assignment(
+			emp2,
+			salary_structure_doc.name,
+			from_date=payroll_period.start_date,
+			company="_Test Company",
+			currency="INR",
+			payroll_period=payroll_period,
+			base=200000,
+		)
+		create_exempted_additional_salary(emp2)
+
+		payroll_entry = make_payroll_entry(
+			start_date=payroll_period.start_date,
+			end_date=get_last_day(payroll_period.start_date),
+			payable_account=default_payable,
+			currency="INR",
+			company="_Test Company",
+			department=emp2_department,
+			cost_center="Main - _TC",
+		)
+
+		emp2_slip_name = frappe.db.get_value(
+			"Salary Slip", {"payroll_entry": payroll_entry.name, "employee": emp2}
+		)
+		self.assertTrue(
+			emp2_slip_name,
+			"Payroll Entry did not create a Salary Slip for the second employee",
+		)
+		emp2_slip = frappe.get_doc("Salary Slip", emp2_slip_name)
+
+		self.assertEqual(
+			get_tds(emp2_slip),
+			tds_after_save,
+			"TDS on Payroll-Entry-submitted slip does not match the directly-submitted slip",
+		)
+		self.assertEqual(flt(emp2_slip.current_month_income_tax, 2), current_month_tax_after)
+		self.assertEqual(flt(emp2_slip.total_income_tax, 2), total_income_tax_after)
+		self.assertEqual(flt(emp2_slip.annual_taxable_amount, 2), annual_taxable_after)
+		self.assertEqual(flt(emp2_slip.deductions_before_tax_calculation, 2), deductions_before_tax_after)
+
 	def test_consistent_future_earnings_irrespective_of_payment_days(self):
 		"""
 		For CTC calculation, verifies that future non taxable earnings remain
