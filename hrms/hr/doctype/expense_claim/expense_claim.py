@@ -689,6 +689,7 @@ def get_advances(expense_claim: str | dict | Document, advance_id: str | None = 
 		advance.claimed_amount,
 		advance.return_amount,
 		advance.advance_account,
+		advance.currency,
 	)
 
 	if not advance_id:
@@ -775,14 +776,22 @@ def get_expense_claim_advances(expense_claim, employee_advance):
 			adjustment_entry["amount"]
 		)
 
+	advance_currency = employee_advance.get("currency")
+	claim_currency = expense_claim.get("currency")
+	claim_exchange_rate = flt(expense_claim.get("exchange_rate")) or 1.0
+	convert = bool(advance_currency and claim_currency and advance_currency != claim_currency)
+
 	for advance in advance_payments:
 		paid_amount = flt(advance["amount"])
 		claimed_amount = adjustment_map.get((advance["voucher_type"], advance["voucher_no"]), 0)
 		unclaimed_amount = paid_amount - claimed_amount
 		return_amount = flt(employee_advance.return_amount)
 		allocated_amount = get_allocation_amount(
-			paid_amount=(paid_amount), claimed_amount=(claimed_amount), return_amount=(return_amount)
+			paid_amount=paid_amount, claimed_amount=claimed_amount, return_amount=return_amount
 		)
+
+		conversion_rate = flt(advance["exchange_rate"]) / claim_exchange_rate if convert else 1.0
+		row_exchange_rate = claim_exchange_rate if convert else flt(advance["exchange_rate"])
 
 		expense_claim.append(
 			"advances",
@@ -790,12 +799,12 @@ def get_expense_claim_advances(expense_claim, employee_advance):
 				"advance_account": employee_advance.advance_account,
 				"employee_advance": employee_advance.name,
 				"posting_date": employee_advance.posting_date,
-				"advance_paid": paid_amount,
+				"advance_paid": flt(paid_amount * conversion_rate),
 				"base_advance_paid": flt(advance["base_amount"]),
-				"unclaimed_amount": unclaimed_amount,
-				"allocated_amount": allocated_amount,
-				"return_amount": return_amount,
-				"exchange_rate": advance["exchange_rate"],
+				"unclaimed_amount": flt(unclaimed_amount * conversion_rate),
+				"allocated_amount": flt(allocated_amount * conversion_rate),
+				"return_amount": flt(return_amount * conversion_rate),
+				"exchange_rate": row_exchange_rate,
 				"reference_type": advance["voucher_type"],
 				"reference_name": advance["voucher_no"],
 			},
