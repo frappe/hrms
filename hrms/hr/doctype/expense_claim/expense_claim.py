@@ -580,6 +580,7 @@ def get_advances(employee: str, advance_id: str | None = None):
 		advance.claimed_amount,
 		advance.return_amount,
 		advance.advance_account,
+		advance.currency,
 	)
 
 	if not advance_id:
@@ -627,6 +628,85 @@ def get_expense_claim(
 	return expense_claim
 
 
+<<<<<<< HEAD
+=======
+def get_expense_claim_advances(expense_claim, employee_advance):
+	advance_payments = frappe.get_all(
+		"Advance Payment Ledger Entry",
+		filters={
+			"company": expense_claim.company,
+			"against_voucher_type": "Employee Advance",
+			"against_voucher_no": employee_advance.name,
+			"event": "Submit",
+			"delinked": False,
+		},
+		fields=["voucher_type", "voucher_no", "amount", "base_amount", "exchange_rate", "creation"],
+	)
+
+	if not advance_payments:
+		return
+
+	advance_payments.sort(key=lambda x: x.get("creation"))
+	advance_payment_voucher_nos = [payment["voucher_no"] for payment in advance_payments]
+
+	claimed_payments = frappe.get_all(
+		"Advance Payment Ledger Entry",
+		filters={
+			"company": expense_claim.company,
+			"event": "Adjustment",
+			"against_voucher_no": ["in", advance_payment_voucher_nos],
+			"delinked": False,
+		},
+		fields=[
+			"against_voucher_type",
+			"against_voucher_no",
+			"amount",
+		],
+	)
+
+	adjustment_map = {}
+	for adjustment_entry in claimed_payments:
+		payment_reference = (adjustment_entry["against_voucher_type"], adjustment_entry["against_voucher_no"])
+		adjustment_map[payment_reference] = adjustment_map.get(payment_reference, 0) + abs(
+			adjustment_entry["amount"]
+		)
+
+	advance_currency = employee_advance.get("currency")
+	claim_currency = expense_claim.get("currency")
+	claim_exchange_rate = flt(expense_claim.get("exchange_rate")) or 1.0
+	convert = bool(advance_currency and claim_currency and advance_currency != claim_currency)
+
+	for advance in advance_payments:
+		paid_amount = flt(advance["amount"])
+		claimed_amount = adjustment_map.get((advance["voucher_type"], advance["voucher_no"]), 0)
+		unclaimed_amount = paid_amount - claimed_amount
+		return_amount = flt(employee_advance.return_amount)
+		allocated_amount = get_allocation_amount(
+			paid_amount=paid_amount, claimed_amount=claimed_amount, return_amount=return_amount
+		)
+
+		conversion_rate = flt(advance["exchange_rate"]) / claim_exchange_rate if convert else 1.0
+		row_exchange_rate = claim_exchange_rate if convert else flt(advance["exchange_rate"])
+
+		expense_claim.append(
+			"advances",
+			{
+				"advance_account": employee_advance.advance_account,
+				"employee_advance": employee_advance.name,
+				"posting_date": employee_advance.posting_date,
+				"advance_paid": flt(paid_amount * conversion_rate),
+				"base_advance_paid": flt(advance["base_amount"]),
+				"unclaimed_amount": flt(unclaimed_amount * conversion_rate),
+				"allocated_amount": flt(allocated_amount * conversion_rate),
+				"return_amount": flt(return_amount * conversion_rate),
+				"exchange_rate": row_exchange_rate,
+				"reference_type": advance["voucher_type"],
+				"reference_name": advance["voucher_no"],
+			},
+		)
+
+
+>>>>>>> 3a28f6959 (fix(expense-claim): convert advance amounts to the claim currency)
 def update_payment_for_expense_claim(doc, method=None):
 	"""
 	Updates payment/reimbursed amount in Expense Claim
