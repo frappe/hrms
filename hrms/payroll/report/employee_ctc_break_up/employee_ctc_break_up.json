@@ -9,13 +9,13 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2026-05-14 12:08:50.414476",
+ "modified": "2026-06-05 13:31:09.038894",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee CTC Break-up",
  "owner": "Administrator",
  "prepared_report": 0,
- "ref_doctype": "Salary Structure Assignment",
+ "ref_doctype": "Salary Slip",
  "report_name": "Employee CTC Break-up",
  "report_type": "Script Report",
  "roles": [
@@ -27,6 +27,9 @@
   },
   {
    "role": "HR User"
+  },
+  {
+   "role": "Employee"
   }
  ],
  "timeout": 0

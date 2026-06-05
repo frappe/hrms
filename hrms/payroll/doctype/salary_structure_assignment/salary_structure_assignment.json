@@ -262,7 +262,11 @@
  ],
  "is_submittable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2026-06-08 17:40:49.118187",
+=======
+ "modified": "2026-06-05 13:20:40.794089",
+>>>>>>> 24a47405b (feat: allow employee view ctc break up of employee records they have access to)
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure Assignment",
@@ -307,6 +311,11 @@
    "share": 1,
    "submit": 1,
    "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Employee",
+   "select": 1
   }
  ],
  "row_format": "Dynamic",
