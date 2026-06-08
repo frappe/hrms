@@ -61,6 +61,41 @@ class TestVehicleLog(HRMSTestSuite):
 		frappe.delete_doc("Expense Claim", expense_claim.name)
 		frappe.delete_doc("Vehicle Log", vehicle_log.name)
 
+	def test_cancel_vehicle_log_linked_to_draft_expense_claim(self):
+		vehicle_log = make_vehicle_log(self.license_plate, self.employee_id)
+		currency, cost_center = frappe.db.get_value(
+			"Company", "_Test Company", ["default_currency", "cost_center"]
+		)
+		expense_claim = frappe.get_doc(
+			{
+				"doctype": "Expense Claim",
+				"employee": self.employee_id,
+				"company": "_Test Company",
+				"currency": currency,
+				"exchange_rate": 1,
+				"payable_account": frappe.db.get_value("Company", "_Test Company", "default_payable_account"),
+				"vehicle_log": vehicle_log.name,
+				"expenses": [
+					{
+						"expense_type": "Travel",
+						"default_account": "Travel Expenses - _TC",
+						"currency": currency,
+						"amount": 100,
+						"sanctioned_amount": 100,
+						"cost_center": cost_center,
+					}
+				],
+			}
+		).insert()
+
+		self.assertRaises(frappe.ValidationError, vehicle_log.cancel)
+		vehicle_log.reload()
+		self.assertEqual(vehicle_log.docstatus, 1)
+
+		expense_claim.delete()
+		vehicle_log.cancel()
+		frappe.delete_doc("Vehicle Log", vehicle_log.name)
+
 
 def get_vehicle(employee_id):
 	license_plate = random_string(10).upper()
