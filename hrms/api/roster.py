@@ -273,16 +273,9 @@ def get_leaves(month_start: str, month_end: str, employee_filters: dict[str, str
 	LeaveApplication = frappe.qb.DocType("Leave Application")
 	Employee = frappe.qb.DocType("Employee")
 
-<<<<<<< HEAD
-	frappe.has_permission("Leave Application", "read", throw=True)
-
-	query = (
-		frappe.qb.select(
-=======
 	query = frappe.qb.get_query(
 		"Leave Application",
 		fields=[
->>>>>>> 65e04cc5 (fix: Better perm check in roster)
 			LeaveApplication.name.as_("leave"),
 			LeaveApplication.employee,
 			LeaveApplication.leave_type,
