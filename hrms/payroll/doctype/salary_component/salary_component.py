@@ -141,3 +141,7 @@ class SalaryComponent(Document):
 				"label": _("via Salary Component sync"),
 			}
 			salary_structure.save_version()
+			# db_update_all() does not invalidate cached Salary Structure documents.
+			# Clear the cache so salary slip generation picks up updated formulas
+			# and conditions immediately.
+			salary_structure.clear_cache()
