@@ -196,13 +196,14 @@ frappe.ui.form.on("Employee Advance", {
 
 				frm.dashboard.set_headline(
 					__(
-						"Employee Advance return is scheduled via Additional Salary: {0} | <a href='{1}'>View deductions</a>",
+						"Employee Advance return is scheduled via Additional Salary: {0} | <a href='{1}'> {2} </a>",
 						[
 							format_currency(
 								advance_return_data.total_return_scheduled,
 								frm.doc.currency,
 							),
 							url,
+							__("View Additional Salary entries").bold(),
 						],
 					),
 				);
