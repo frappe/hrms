@@ -20,6 +20,21 @@ class VehicleLog(Document):
 	def on_submit(self):
 		frappe.db.set_value("Vehicle", self.license_plate, "last_odometer", self.odometer)
 
+	def before_cancel(self):
+		expense_claim = frappe.db.exists(
+			"Expense Claim",
+			{
+				"vehicle_log": self.name,
+				"docstatus": ["!=", 2],
+			},
+		)
+		if expense_claim:
+			frappe.throw(
+				_("Cannot cancel Vehicle Log {0} because it is linked to Expense Claim {1}").format(
+					self.name, expense_claim
+				)
+			)
+
 	def on_cancel(self):
 		distance_travelled = self.odometer - self.last_odometer
 		if distance_travelled > 0:
