@@ -181,11 +181,6 @@ def get_data(filters):
 
 
 @frappe.whitelist()
-<<<<<<< HEAD
-def get_years():
-	year_list = frappe.db.sql_list(
-		"""select distinct YEAR(end_date) from `tabSalary Slip` ORDER BY YEAR(end_date) DESC"""
-=======
 def get_years() -> str:
 	SalarySlip = DocType("Salary Slip")
 	year_list = (
@@ -194,7 +189,6 @@ def get_years() -> str:
 		.distinct()
 		.orderby(Extract("year", SalarySlip.end_date), order=frappe.qb.desc)
 		.run(pluck=True)
->>>>>>> 816a45182 (refactor: optimize database queries using query builder in payroll reports (#4488))
 	)
 	if not year_list:
 		year_list = [getdate().year]
