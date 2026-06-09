@@ -249,6 +249,8 @@ class TestEmployeeCTCBreakup(HRMSTestSuite):
 		salary_structure_assignment = create_salary_structure_assignment(
 			employee, salary_structure.name, base=60000, currency="INR", from_date=get_year_start(getdate())
 		)
+		# salary structure assignment auto calculates ctc on save, removing it manually for the test
+		salary_structure_assignment.db_set("ctc", 0)
 		self.assertRaises(
 			frappe.ValidationError, SalaryBreakupReport, employee, salary_structure_assignment.name
 		)
