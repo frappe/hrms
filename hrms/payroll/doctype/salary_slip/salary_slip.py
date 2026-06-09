@@ -743,7 +743,7 @@ class SalarySlip(TransactionBase):
 		return payment_days
 
 	def get_holidays_for_employee(self, start_date, end_date):
-		holiday_list = get_holiday_list_for_employee(self.employee)
+		holiday_list = get_holiday_list_for_employee(self.employee, as_on = start_date)
 		key = f"{holiday_list}:{start_date}:{end_date}"
 		holiday_dates = frappe.cache().hget(HOLIDAYS_BETWEEN_DATES, key)
 
