@@ -305,6 +305,46 @@ class TestSalarySlip(HRMSTestSuite):
 		# half day (when absent) from checkins is considered as 0.5 lwp but half day (absent) from leave application is considered as absent
 		self.assertEqual(rounded(ss.gross_pay), rounded(gross_pay))
 
+	@change_settings(
+		"Payroll Settings",
+		{
+			"payroll_based_on": "Attendance",
+			"daily_wages_fraction_for_half_day": 0.5,
+		},
+	)
+	def test_absent_attendance_with_half_day_status(self):
+		"""
+		Tests if attendance with status 'Absent' but 'half_day_status' as 'Present'
+		is correctly handled as 0.5 absent days.
+		"""
+		no_of_days = get_no_of_days()
+		emp_id = make_employee("test_absent_half_day@salary.com")
+		frappe.db.set_value("Employee", emp_id, {"relieving_date": None, "status": "Active"})
+
+		first_sunday = get_first_sunday()
+
+		# Absent but half day present (should count as 0.5 absent)
+		mark_attendance(
+			emp_id, add_days(first_sunday, 1), "Absent", half_day_status="Present", ignore_validate=True
+		)
+		# Absent and half day absent (should count as 1.0 absent)
+		mark_attendance(
+			emp_id, add_days(first_sunday, 2), "Absent", half_day_status="Absent", ignore_validate=True
+		)
+		# Absent with no half day status (should count as 1.0 absent)
+		mark_attendance(emp_id, add_days(first_sunday, 3), "Absent", ignore_validate=True)
+
+		ss = make_employee_salary_slip(emp_id, "Monthly")
+
+		# Total absent days = 0.5 + 1.0 + 1.0 = 2.5
+		self.assertEqual(ss.absent_days, 2.5)
+
+		days_in_month = no_of_days[0]
+		no_of_holidays = no_of_days[1]
+
+		# payment_days = total_working_days - absent_days - lwp
+		self.assertEqual(ss.payment_days, days_in_month - no_of_holidays - 2.5)
+
 	@HRMSTestSuite.change_settings(
 		"Payroll Settings",
 		{

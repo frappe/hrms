@@ -878,7 +878,10 @@ class SalarySlip(TransactionBase):
 				lwp += equivalent_lwp
 
 			elif d.status == "Absent":
-				absent += 1
+				if d.half_day_status == "Present":
+					absent += 0.5
+				else:
+					absent += 1
 
 		return lwp, absent
 
