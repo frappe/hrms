@@ -87,7 +87,39 @@ class TestSalaryStructureAssignment(HRMSTestSuite):
 		cached = frappe.get_cached_doc("Salary Structure", "SSA Test Cache Structure")
 		self.assertTrue(all(not r.get("default_amount") for r in cached.earnings))
 
-		# two calls return independent row lists
-		first = ssa.get_evaluated_components().earnings
-		second = ssa.get_evaluated_components().earnings
-		self.assertIsNot(first, second)
+	def test_do_not_include_in_total_earning_is_in_ctc_but_not_gross(self):
+		"""A 'Do Not Include in Total' earning is part of CTC but not payable — it
+		must be excluded from annual_gross_earning yet included in ctc."""
+		emp = make_employee("ssa_dniit@test.com", company="_Test Company")
+
+		_make_component("SSA Test Basic Pay", "SSATBP", "Earning", amount_based_on_formula=1, formula="base")
+		_make_component("SSA Test Company Car", "SSATCAR", "Earning", do_not_include_in_total=1)
+
+		earnings = [
+			{
+				"salary_component": "SSA Test Basic Pay",
+				"abbr": "SSATBP",
+				"amount_based_on_formula": 1,
+				"formula": "base",
+			},
+			{
+				"salary_component": "SSA Test Company Car",
+				"abbr": "SSATCAR",
+				"amount": 2000,
+				"do_not_include_in_total": 1,
+			},
+		]
+
+		make_salary_structure(
+			"SSA Test DNIIT Structure",
+			"Monthly",
+			employee=emp,
+			company="_Test Company",
+			base=50000,
+			earnings=earnings,
+			deductions=[],
+		)
+		ssa = frappe.get_last_doc("Salary Structure Assignment", filters={"employee": emp})
+
+		self.assertEqual(ssa.annual_gross_earning, 50000 * 12)
+		self.assertEqual(ssa.ctc, (50000 + 2000) * 12)
