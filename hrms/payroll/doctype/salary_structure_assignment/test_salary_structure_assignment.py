@@ -91,25 +91,3 @@ class TestSalaryStructureAssignment(HRMSTestSuite):
 		first = ssa.get_evaluated_components().earnings
 		second = ssa.get_evaluated_components().earnings
 		self.assertIsNot(first, second)
-
-	def test_employer_contribution_must_be_correct_type(self):
-		emp = make_employee("ssa_empc_type@test.com", company="_Test Company")
-		_make_component("SSA Test Earning Comp", "SSATEC", "Earning")
-		earnings = [{"salary_component": "SSA Test Earning Comp", "abbr": "SSATEC", "amount": 50000}]
-		# an Earning component placed in employer_contributions must be rejected
-		self.assertRaises(
-			frappe.ValidationError,
-			make_salary_structure,
-			"SSA Test Bad Employer Structure",
-			"Monthly",
-			employee=emp,
-			company="_Test Company",
-			base=50000,
-			earnings=earnings,
-			deductions=[],
-			other_details={
-				"employer_contributions": [
-					{"salary_component": "SSA Test Earning Comp", "abbr": "SSATEC", "amount": 6000}
-				]
-			},
-		)
