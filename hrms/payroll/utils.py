@@ -3,7 +3,7 @@ from datetime import date
 
 import frappe
 from frappe import _
-from frappe.utils import ceil, floor, flt, get_first_day, get_last_day, get_link_to_form, getdate, rounded
+from frappe.utils import ceil, floor, get_first_day, get_last_day, get_link_to_form, getdate, rounded
 
 
 def sanitize_expression(string: str | None = None) -> str | None:
@@ -61,21 +61,17 @@ def get_component_abbr_map() -> dict:
 	return frappe.cache().get_value("salary_component_values", generator=_fetch_component_values)
 
 
-def get_component_eval_context(employee: str, ssa_as_dict: dict, abbr_map: dict) -> frappe._dict:
+def get_component_eval_context(employee: str, ssa_as_dict: dict) -> frappe._dict:
 	"""Build the base evaluation context for salary component formulas.
 
-	Merges component abbreviation defaults, SSA fields (base, variable) and
-	employee fields so that formulas can reference any of them by name.
-	SSA fields are applied before employee fields so that employee attributes
-	(employment_type, date_of_joining, …) take precedence over any same-named
-	SSA fields.  base and variable are pinned last to guarantee correct values.
+	Merges component abbreviation defaults, Salary Structure Assignment fields
+	(base, variable, ...) and employee fields so that formulas can reference any
+	of them by name.
 	"""
 	data = frappe._dict()
-	data.update(abbr_map)
+	data.update(get_component_abbr_map())
 	data.update(ssa_as_dict)
 	data.update(frappe.get_cached_doc("Employee", employee).as_dict())
-	data["base"] = flt(ssa_as_dict.get("base") or 0)
-	data["variable"] = flt(ssa_as_dict.get("variable") or 0)
 	return data
 
 
