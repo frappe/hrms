@@ -47,7 +47,8 @@ frappe.ui.form.on("Employee Incentive", {
 		if (!frm.doc.company) return;
 		frm.set_query("salary_component", function () {
 			return {
-				filters: { type: "earning" },
+				filters: { type: "earning", company: frm.doc.company },
+				query: "hrms.payroll.doctype.salary_structure.salary_structure.get_salary_component",
 			};
 		});
 	},
