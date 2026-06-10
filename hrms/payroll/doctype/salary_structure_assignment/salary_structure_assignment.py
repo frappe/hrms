@@ -250,16 +250,16 @@ class SalaryStructureAssignment(Document):
 		each formula once against its prorated context for the actual ``amount``).
 		"""
 		_data, rows_by_type = self._evaluate_all_components()
-		ts_config = self.get_timesheet_config()
+		timesheet_config = self.get_timesheet_config()
 
-		if ts_config.based_on_timesheet and ts_config.timesheet_component:
-			self._apply_timesheet_wage(rows_by_type["earnings"], ts_config, flt(total_working_hours))
+		if timesheet_config.based_on_timesheet and timesheet_config.timesheet_component:
+			self._apply_timesheet_wage(rows_by_type["earnings"], timesheet_config, flt(total_working_hours))
 
 		return frappe._dict(
 			earnings=rows_by_type["earnings"],
 			deductions=rows_by_type["deductions"],
 			employer_contributions=rows_by_type["employer_contributions"],
-			timesheet_component=ts_config.timesheet_component,
+			timesheet_component=timesheet_config.timesheet_component,
 		)
 
 	def get_timesheet_config(self) -> frappe._dict:
@@ -419,15 +419,15 @@ class SalaryStructureAssignment(Document):
 		return resolved
 
 	def _apply_timesheet_wage(
-		self, earnings: list, ts_config: frappe._dict, total_working_hours: float
+		self, earnings: list, timesheet_config: frappe._dict, total_working_hours: float
 	) -> None:
 		"""Add the timesheet wage earning (hour_rate * total_working_hours) as the
 		first earning. Any copy of the wage component declared in the structure
 		earnings is dropped first, mirroring legacy behaviour where the hourly-wage
 		row was added before the structure components."""
-		wages_amount = flt(ts_config.hour_rate) * flt(total_working_hours)
-		earnings[:] = [r for r in earnings if r.salary_component != ts_config.timesheet_component]
-		earnings.insert(0, self._build_wage_row(ts_config.timesheet_component, wages_amount))
+		wages_amount = flt(timesheet_config.hour_rate) * flt(total_working_hours)
+		earnings[:] = [r for r in earnings if r.salary_component != timesheet_config.timesheet_component]
+		earnings.insert(0, self._build_wage_row(timesheet_config.timesheet_component, wages_amount))
 
 	def _build_wage_row(self, component: str, amount: float) -> frappe._dict:
 		"""Build a resolved earning row for a timesheet wage component that is not
