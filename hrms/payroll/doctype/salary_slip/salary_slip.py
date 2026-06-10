@@ -53,7 +53,6 @@ from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import (
 from hrms.payroll.utils import (
 	COMPONENT_EVAL_GLOBALS,
 	_safe_eval,
-	get_component_abbr_map,
 	get_component_eval_context,
 	throw_error_message,
 )
@@ -62,7 +61,6 @@ from hrms.utils.holiday_list import get_holiday_dates_between
 # cache keys
 HOLIDAYS_BETWEEN_DATES = "holidays_between_dates"
 LEAVE_TYPE_MAP = "leave_type_map"
-# NOTE: must match the key used in hrms.payroll.utils.get_component_abbr_map
 SALARY_COMPONENT_VALUES = "salary_component_values"
 TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
 
@@ -364,35 +362,39 @@ class SalarySlip(TransactionBase):
 			struct = self.check_sal_struct()
 
 			if struct:
+				from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
+
 				timesheet_config = self._get_ssa_doc().get_timesheet_config()
 				self.salary_slip_based_on_timesheet = timesheet_config.based_on_timesheet
-				self._timesheet_component = timesheet_config.timesheet_component
-				self.set_time_sheet()
-				self.pull_sal_struct(timesheet_config)
+				if self.salary_slip_based_on_timesheet:
+					self._timesheet_component = timesheet_config.timesheet_component
+					self.set_time_sheet()
+					self.add_timesheet_earning_component(timesheet_config)
+				make_salary_slip(self.salary_structure, self)
 
 			process_loan_interest_accrual_and_demand(self)
 
 	def set_time_sheet(self):
-		if self.salary_slip_based_on_timesheet:
-			self.set("timesheets", [])
+		# caller (get_emp_and_working_day_details) gates this on salary_slip_based_on_timesheet
+		self.set("timesheets", [])
 
-			Timesheet = frappe.qb.DocType("Timesheet")
-			timesheets = (
-				frappe.qb.from_(Timesheet)
-				.select(Timesheet.star)
-				.where(
-					(Timesheet.employee == self.employee)
-					& (Timesheet.start_date.between(self.start_date, self.end_date))
-					& (
-						(Timesheet.status == "Submitted")
-						| (Timesheet.status == "Billed")
-						| (Timesheet.status == "Partially Billed")
-					)
+		Timesheet = frappe.qb.DocType("Timesheet")
+		timesheets = (
+			frappe.qb.from_(Timesheet)
+			.select(Timesheet.star)
+			.where(
+				(Timesheet.employee == self.employee)
+				& (Timesheet.start_date.between(self.start_date, self.end_date))
+				& (
+					(Timesheet.status == "Submitted")
+					| (Timesheet.status == "Billed")
+					| (Timesheet.status == "Partially Billed")
 				)
-			).run(as_dict=1)
+			)
+		).run(as_dict=1)
 
-			for data in timesheets:
-				self.append("timesheets", {"time_sheet": data.name, "working_hours": data.total_hours})
+		for data in timesheets:
+			self.append("timesheets", {"time_sheet": data.name, "working_hours": data.total_hours})
 
 	def check_sal_struct(self):
 		ss = frappe.qb.DocType("Salary Structure")
@@ -436,18 +438,13 @@ class SalarySlip(TransactionBase):
 				title=_("Salary Structure Missing"),
 			)
 
-	def pull_sal_struct(self, timesheet_config=None):
-		from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
+	def add_timesheet_earning_component(self, timesheet_config):
+		self.hour_rate = flt(timesheet_config.hour_rate)
+		self.base_hour_rate = flt(self.hour_rate) * flt(self.exchange_rate)
+		self.total_working_hours = sum([d.working_hours or 0.0 for d in self.timesheets]) or 0.0
+		wages_amount = self.hour_rate * self.total_working_hours
 
-		if self.salary_slip_based_on_timesheet:
-			self.hour_rate = flt(timesheet_config.hour_rate)
-			self.base_hour_rate = flt(self.hour_rate) * flt(self.exchange_rate)
-			self.total_working_hours = sum([d.working_hours or 0.0 for d in self.timesheets]) or 0.0
-			wages_amount = self.hour_rate * self.total_working_hours
-
-			self.add_earning_for_hourly_wages(self, timesheet_config.timesheet_component, wages_amount)
-
-		make_salary_slip(self.salary_structure, self)
+		self.add_earning_for_hourly_wages(self, timesheet_config.timesheet_component, wages_amount)
 
 	def add_earning_for_hourly_wages(self, doc, salary_component, amount):
 		row_exists = False
@@ -1200,7 +1197,7 @@ class SalarySlip(TransactionBase):
 
 	def add_structure_component(self, struct_row, component_type):
 		# the timesheet wage component is added separately (hour_rate * hours) in
-		# pull_sal_struct, so skip it here to avoid double-adding
+		# add_timesheet_earning_component, so skip it here to avoid double-adding
 		if self.salary_slip_based_on_timesheet and struct_row.salary_component == getattr(
 			self, "_timesheet_component", None
 		):
@@ -1278,11 +1275,7 @@ class SalarySlip(TransactionBase):
 		if not hasattr(self, "_salary_structure_assignment"):
 			self.set_salary_structure_assignment()
 
-		data = get_component_eval_context(
-			self.employee,
-			self._salary_structure_assignment,
-			get_component_abbr_map(),
-		)
+		data = get_component_eval_context(self.employee, self._salary_structure_assignment)
 		# Overlay salary-slip fields (payment_days, gross_pay, start_date, …) last, so the
 		# actual period context wins. Note: this means on a name collision a Salary Slip
 		# field takes precedence over an Employee field (employee is layered earlier in
@@ -1305,7 +1298,7 @@ class SalarySlip(TransactionBase):
 			if condition and not _safe_eval(condition, self.whitelisted_globals, data):
 				return None
 			if struct_row.amount_based_on_formula and formula:
-				# struct_row is a resolved row (frappe._dict) from the SSA; precision is carried as an int
+				# struct_row is a evaluated row (frappe._dict) from the SSA; precision is carried as an int
 				amount = flt(_safe_eval(formula, self.whitelisted_globals, data), struct_row.precision)
 			if amount:
 				data[struct_row.abbr] = amount

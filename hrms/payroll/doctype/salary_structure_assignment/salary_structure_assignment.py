@@ -5,22 +5,21 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cint, flt, get_link_to_form, getdate
+from frappe.utils import cint, date_diff, flt, get_link_to_form, getdate
 
 from hrms.payroll.doctype.payroll_period.payroll_period import get_payroll_period
 from hrms.payroll.doctype.salary_structure.salary_structure import validate_max_benefit_for_flexible_benefit
 from hrms.payroll.utils import (
 	COMPONENT_EVAL_GLOBALS,
 	_safe_eval,
-	get_component_abbr_map,
 	get_component_eval_context,
 	sanitize_expression,
 	throw_error_message,
 )
 
-# Fields copied from the salary structure component row onto each resolved row
+# Fields copied from the salary structure component row onto each evaluated row
 # handed to the salary slip. The slip reads these to build/identify slip rows.
-RESOLVED_ROW_FLAGS = (
+SALARY_COMPONENT_FLAGS = (
 	"salary_component",
 	"abbr",
 	"amount_based_on_formula",
@@ -239,7 +238,7 @@ class SalaryStructureAssignment(Document):
 
 	def get_evaluated_components(self) -> frappe._dict:
 		"""Evaluate all salary structure components for this assignment and return
-		fully-resolved rows the salary slip can consume directly.
+		fully-evaluated rows the salary slip can consume directly.
 
 		Earnings, deductions and employer contributions are evaluated in one
 		shared pass (so a deduction formula can reference an earning abbr), each
@@ -313,7 +312,7 @@ class SalaryStructureAssignment(Document):
 
 	def _evaluate_all_components(self) -> tuple[frappe._dict, dict]:
 		"""Single shared-context pass over earnings -> deductions ->
-		employer_contributions. Returns the final context and resolved rows by
+		employer_contributions. Returns the final context and evaluated rows by
 		type. Does not mutate the cached salary structure doc."""
 		salary_structure = frappe.get_cached_doc("Salary Structure", self.salary_structure)
 		data = self._get_component_eval_context()
@@ -341,14 +340,18 @@ class SalaryStructureAssignment(Document):
 		return data, rows_by_type
 
 	def _get_component_eval_context(self) -> frappe._dict:
-		data = get_component_eval_context(self.employee, self.as_dict(), get_component_abbr_map())
+		from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
+
+		data = get_component_eval_context(self.employee, self.as_dict())
 
 		# Full-cycle / preview seeding: SSA has no attendance, so it evaluates as a
 		# full period -- payment_days == total_working_days (proration ratio 1) and no
 		# LWP -- so formulas referencing slip-runtime fields resolve and yield
-		# full-cycle values (definitionally a for_preview slip's value).
+		# full-cycle values. Compute the period day-count the same way the salary
+		# slip's for_preview does (days in the period containing from_date).
 		frequency = frappe.get_cached_value("Salary Structure", self.salary_structure, "payroll_frequency")
-		period_days = round(365 / PERIODS_PER_YEAR.get(frequency, 12))
+		dates = get_start_end_dates(frequency, self.from_date, self.company)
+		period_days = date_diff(dates.end_date, dates.start_date) + 1
 		data.payment_days = period_days
 		data.total_working_days = period_days
 		data.leave_without_pay = 0
@@ -360,7 +363,7 @@ class SalaryStructureAssignment(Document):
 		with each component's full-cycle amount). Returns fresh ``frappe._dict``
 		rows (cache-safe copies). Raises a clear error on a bad formula/condition.
 		Rows whose condition is falsey are skipped (not added to the slip)."""
-		resolved = []
+		evaluated_components = []
 		for struct_row in rows:
 			condition = sanitize_expression(struct_row.condition)
 			formula = sanitize_expression(struct_row.formula)
@@ -401,18 +404,18 @@ class SalaryStructureAssignment(Document):
 
 			data[struct_row.abbr] = default_amount
 
-			resolved_row = frappe._dict(
+			evaluated_component_row = frappe._dict(
 				default_amount=default_amount,
 				amount=amount,
 				condition=condition,
 				formula=formula,
 				precision=struct_row.precision("amount"),
 			)
-			for field in RESOLVED_ROW_FLAGS:
-				resolved_row[field] = struct_row.get(field)
-			resolved.append(resolved_row)
+			for field in SALARY_COMPONENT_FLAGS:
+				evaluated_component_row[field] = struct_row.get(field)
+			evaluated_components.append(evaluated_component_row)
 
-		return resolved
+		return evaluated_components
 
 	@frappe.whitelist()
 	def are_opening_entries_required(self) -> bool:
