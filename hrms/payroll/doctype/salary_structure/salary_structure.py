@@ -29,7 +29,24 @@ class SalaryStructure(Document):
 		self.validate_payment_days_based_dependent_component()
 		self.validate_timesheet_component()
 		self.validate_formula_setup()
+		self.validate_employer_contributions()
 		validate_max_benefit_for_flexible_benefit(self.employee_benefits, self.max_benefits)
+
+	def validate_employer_contributions(self):
+		for row in self.get("employer_contributions") or []:
+			component_type = frappe.get_cached_value("Salary Component", row.salary_component, "type")
+			if component_type != "Employer Contribution":
+				frappe.throw(
+					_(
+						"Row #{0}: Salary Component {1} in Employer Contributions must be of type {2}, not {3}."
+					).format(
+						row.idx,
+						frappe.bold(row.salary_component),
+						frappe.bold(_("Employer Contribution")),
+						frappe.bold(_(component_type)),
+					),
+					title=_("Invalid Employer Contribution Component"),
+				)
 
 	def on_update(self):
 		self.reset_condition_and_formula_fields()

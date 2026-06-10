@@ -52,6 +52,7 @@ from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import (
 from hrms.payroll.utils import (
 	COMPONENT_EVAL_GLOBALS,
 	_safe_eval,
+	get_component_abbr_map,
 	get_component_eval_context,
 	throw_error_message,
 )
@@ -60,6 +61,7 @@ from hrms.utils.holiday_list import get_holiday_dates_between
 # cache keys
 HOLIDAYS_BETWEEN_DATES = "holidays_between_dates"
 LEAVE_TYPE_MAP = "leave_type_map"
+# NOTE: must match the key used in hrms.payroll.utils.get_component_abbr_map
 SALARY_COMPONENT_VALUES = "salary_component_values"
 TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
 
@@ -1232,7 +1234,9 @@ class SalarySlip(TransactionBase):
 				or (struct_row.amount_based_on_formula and amount is not None)
 				or (not remove_if_zero_valued and amount is not None and not self.data[struct_row.abbr])
 			):
-				default_amount = self.eval_condition_and_formula(struct_row, self.default_data)
+				# full-cycle default comes from SSA (period-independent); the slip only
+				# computes the prorated `amount` above (proration is a period concern)
+				default_amount = flt(struct_row.default_amount)
 				self.update_component_row(
 					struct_row,
 					amount,
@@ -1250,9 +1254,12 @@ class SalarySlip(TransactionBase):
 		data = get_component_eval_context(
 			self.employee,
 			self._salary_structure_assignment,
-			self.get_component_abbr_map(),
+			get_component_abbr_map(),
 		)
-		# overlay salary-slip fields (payment_days, start_date, end_date, etc.)
+		# Overlay salary-slip fields (payment_days, gross_pay, start_date, …) last, so the
+		# actual period context wins. Note: this means on a name collision a Salary Slip
+		# field takes precedence over an Employee field (employee is layered earlier in
+		# get_component_eval_context); no current formula relies on the reverse.
 		data.update(self.as_dict())
 
 		# shallow copy to store default amounts (without payment-days proration) for tax calculation
@@ -1264,15 +1271,6 @@ class SalarySlip(TransactionBase):
 				data[d.abbr] = d.amount or 0
 
 		return data, default_data
-
-	def get_component_abbr_map(self):
-		def _fetch_component_values():
-			return {
-				component_abbr: 0
-				for component_abbr in frappe.get_all("Salary Component", pluck="salary_component_abbr")
-			}
-
-		return frappe.cache().get_value(SALARY_COMPONENT_VALUES, generator=_fetch_component_values)
 
 	def eval_condition_and_formula(self, struct_row, data):
 		try:
