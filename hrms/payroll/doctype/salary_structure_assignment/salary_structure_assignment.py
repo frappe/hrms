@@ -289,21 +289,31 @@ class SalaryStructureAssignment(Document):
 		salary_structure = frappe.get_cached_doc("Salary Structure", self.salary_structure)
 		periods = PERIODS_PER_YEAR.get(salary_structure.payroll_frequency, 12)
 
-		_data, rows_by_type = self._evaluate_all_components()
+		data, rows_by_type = self._evaluate_all_components()
 
-		# Statistical components are notional (referenced by formulas only); they
-		# must not contribute to gross or CTC.
-		monthly_gross = sum(
-			flt(r.default_amount) for r in rows_by_type["earnings"] if not r.statistical_component
+		# Reuse the per-period gross already computed in the eval context: payable
+		# earnings only (excludes statistical and do_not_include_in_total), matching
+		# the salary slip's gross_pay.
+		gross_per_period = flt(data.get("gross_pay"))
+
+		# CTC also includes costs that are part of CTC but not payable: do_not_include_in_total
+		# earnings (shown on the slip, excluded from gross) and employer contributions (off-slip).
+		non_payable_earnings_per_period = sum(
+			flt(r.default_amount)
+			for r in rows_by_type["earnings"]
+			if not r.statistical_component and r.do_not_include_in_total
 		)
-		monthly_employer = sum(
+		employer_per_period = sum(
 			flt(r.default_amount)
 			for r in rows_by_type["employer_contributions"]
 			if not r.statistical_component
 		)
 
-		self.annual_gross_earning = flt(monthly_gross * periods, self.precision("annual_gross_earning"))
-		self.ctc = flt((monthly_gross + monthly_employer) * periods, self.precision("ctc"))
+		self.annual_gross_earning = flt(gross_per_period * periods, self.precision("annual_gross_earning"))
+		self.ctc = flt(
+			(gross_per_period + non_payable_earnings_per_period + employer_per_period) * periods,
+			self.precision("ctc"),
+		)
 
 	def _evaluate_all_components(self) -> tuple[frappe._dict, dict]:
 		"""Single shared-context pass over earnings -> deductions ->
