@@ -12,6 +12,7 @@ from hrms.payroll.doctype.salary_structure.salary_structure import validate_max_
 from hrms.payroll.utils import (
 	COMPONENT_EVAL_GLOBALS,
 	_safe_eval,
+	get_component_abbr_map,
 	get_component_eval_context,
 	sanitize_expression,
 	throw_error_message,
@@ -244,10 +245,11 @@ class SalaryStructureAssignment(Document):
 		shared pass (so a deduction formula can reference an earning abbr), each
 		row carrying its full-cycle ``default_amount`` plus the flags the slip
 		needs. For timesheet-based structures the hourly-wage earning is set to
-		``hour_rate * total_working_hours``. The slip applies payment-days
-		proration and tax computation on top; it does not re-evaluate formulas.
+		``hour_rate * total_working_hours``. The slip consumes ``default_amount``
+		directly and applies payment-days proration / tax on top (it re-evaluates
+		each formula once against its prorated context for the actual ``amount``).
 		"""
-		data, rows_by_type = self._evaluate_all_components()
+		_data, rows_by_type = self._evaluate_all_components()
 		ts_config = self.get_timesheet_config()
 
 		if ts_config.based_on_timesheet and ts_config.timesheet_component:
@@ -257,9 +259,6 @@ class SalaryStructureAssignment(Document):
 			earnings=rows_by_type["earnings"],
 			deductions=rows_by_type["deductions"],
 			employer_contributions=rows_by_type["employer_contributions"],
-			data=data,
-			based_on_timesheet=ts_config.based_on_timesheet,
-			hour_rate=ts_config.hour_rate,
 			timesheet_component=ts_config.timesheet_component,
 		)
 
@@ -283,6 +282,8 @@ class SalaryStructureAssignment(Document):
 
 	def calculate_ctc_and_gross(self) -> None:
 		if not self.base or not self.salary_structure:
+			self.annual_gross_earning = 0
+			self.ctc = 0
 			return
 
 		salary_structure = frappe.get_cached_doc("Salary Structure", self.salary_structure)
@@ -334,8 +335,19 @@ class SalaryStructureAssignment(Document):
 		return data, rows_by_type
 
 	def _get_component_eval_context(self) -> frappe._dict:
-		abbr_map = {abbr: 0 for abbr in frappe.get_all("Salary Component", pluck="salary_component_abbr")}
-		return get_component_eval_context(self.employee, self.as_dict(), abbr_map)
+		data = get_component_eval_context(self.employee, self.as_dict(), get_component_abbr_map())
+
+		# Full-cycle / preview seeding: SSA has no attendance, so it evaluates as a
+		# full period -- payment_days == total_working_days (proration ratio 1) and no
+		# LWP -- so formulas referencing slip-runtime fields resolve and yield
+		# full-cycle values (definitionally a for_preview slip's value).
+		frequency = frappe.get_cached_value("Salary Structure", self.salary_structure, "payroll_frequency")
+		period_days = round(365 / PERIODS_PER_YEAR.get(frequency, 12))
+		data.payment_days = period_days
+		data.total_working_days = period_days
+		data.leave_without_pay = 0
+		data.absent_days = 0
+		return data
 
 	def _evaluate_component_table(self, rows, data: frappe._dict) -> list:
 		"""Evaluate one component table against the shared ``data`` (mutating it

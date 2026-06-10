@@ -48,6 +48,19 @@ COMPONENT_EVAL_GLOBALS = {
 }
 
 
+def get_component_abbr_map() -> dict:
+	"""Cached {salary_component_abbr: 0} map, seeded into the formula eval context
+	so any component abbreviation referenced in a formula resolves (default 0).
+
+	Cache key matches salary_slip.SALARY_COMPONENT_VALUES (shared entry, invalidated
+	on Salary Component save)."""
+
+	def _fetch_component_values():
+		return {abbr: 0 for abbr in frappe.get_all("Salary Component", pluck="salary_component_abbr")}
+
+	return frappe.cache().get_value("salary_component_values", generator=_fetch_component_values)
+
+
 def get_component_eval_context(employee: str, ssa_as_dict: dict, abbr_map: dict) -> frappe._dict:
 	"""Build the base evaluation context for salary component formulas.
 
@@ -88,10 +101,13 @@ def _check_attributes(code: str) -> None:
 
 
 def _safe_eval(code: str, eval_globals: dict | None = None, eval_locals: dict | None = None):
-	"""Safe eval for salary component conditions and formulas.
+	"""Safe eval for **trusted** salary component conditions and formulas only.
 
 	Uses AST-based attribute checking instead of frappe.safe_eval to avoid
-	recursion limit issues with deeply nested formulas.
+	recursion limit issues with the large/deeply-nested formulas some countries'
+	payroll needs. It is a lighter (denylist-based) sandbox than frappe.safe_eval,
+	so it is safe only for admin-authored salary-structure formulas, not arbitrary
+	or end-user input. For anything else, use frappe.safe_eval.
 	"""
 	code = unicodedata.normalize("NFKC", code)
 
