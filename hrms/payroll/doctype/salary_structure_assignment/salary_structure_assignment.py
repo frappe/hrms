@@ -237,29 +237,25 @@ class SalaryStructureAssignment(Document):
 				title=_("Missing Opening Entries"),
 			)
 
-	def get_evaluated_components(self, total_working_hours: float = 0) -> frappe._dict:
+	def get_evaluated_components(self) -> frappe._dict:
 		"""Evaluate all salary structure components for this assignment and return
 		fully-resolved rows the salary slip can consume directly.
 
 		Earnings, deductions and employer contributions are evaluated in one
 		shared pass (so a deduction formula can reference an earning abbr), each
 		row carrying its full-cycle ``default_amount`` plus the flags the slip
-		needs. For timesheet-based structures the hourly-wage earning is set to
-		``hour_rate * total_working_hours``. The slip consumes ``default_amount``
-		directly and applies payment-days proration / tax on top (it re-evaluates
-		each formula once against its prorated context for the actual ``amount``).
+		needs. This is period-independent: the (period-dependent) timesheet wage
+		is built by the salary slip itself, not here. The slip consumes
+		``default_amount`` directly and applies payment-days proration / tax on
+		top (it re-evaluates each formula once against its prorated context for
+		the actual ``amount``).
 		"""
 		_data, rows_by_type = self._evaluate_all_components()
-		timesheet_config = self.get_timesheet_config()
-
-		if timesheet_config.based_on_timesheet and timesheet_config.timesheet_component:
-			self._apply_timesheet_wage(rows_by_type["earnings"], timesheet_config, flt(total_working_hours))
 
 		return frappe._dict(
 			earnings=rows_by_type["earnings"],
 			deductions=rows_by_type["deductions"],
 			employer_contributions=rows_by_type["employer_contributions"],
-			timesheet_component=timesheet_config.timesheet_component,
 		)
 
 	def get_timesheet_config(self) -> frappe._dict:
@@ -417,56 +413,6 @@ class SalaryStructureAssignment(Document):
 			resolved.append(resolved_row)
 
 		return resolved
-
-	def _apply_timesheet_wage(
-		self, earnings: list, timesheet_config: frappe._dict, total_working_hours: float
-	) -> None:
-		"""Add the timesheet wage earning (hour_rate * total_working_hours) as the
-		first earning. Any copy of the wage component declared in the structure
-		earnings is dropped first, mirroring legacy behaviour where the hourly-wage
-		row was added before the structure components."""
-		wages_amount = flt(timesheet_config.hour_rate) * flt(total_working_hours)
-		earnings[:] = [r for r in earnings if r.salary_component != timesheet_config.timesheet_component]
-		earnings.insert(0, self._build_wage_row(timesheet_config.timesheet_component, wages_amount))
-
-	def _build_wage_row(self, component: str, amount: float) -> frappe._dict:
-		"""Build a resolved earning row for a timesheet wage component that is not
-		declared in the structure earnings, from the Salary Component master."""
-		comp = (
-			frappe.db.get_value(
-				"Salary Component",
-				component,
-				(
-					"name as salary_component",
-					"salary_component_abbr as abbr",
-					"depends_on_payment_days",
-					"do_not_include_in_total",
-					"do_not_include_in_accounts",
-					"is_tax_applicable",
-					"is_flexible_benefit",
-					"variable_based_on_taxable_salary",
-					"accrual_component",
-					"exempted_from_income_tax",
-					"statistical_component",
-					"deduct_full_tax_on_selected_payroll_date",
-				),
-				as_dict=True,
-				cache=True,
-			)
-			or frappe._dict()
-		)
-		row = frappe._dict(
-			default_amount=amount,
-			amount=amount,
-			condition=None,
-			formula=None,
-			precision=2,
-		)
-		for field in RESOLVED_ROW_FLAGS:
-			row[field] = comp.get(field)
-		row.amount_based_on_formula = 0
-		row.salary_component = comp.get("salary_component") or component
-		return row
 
 	@frappe.whitelist()
 	def are_opening_entries_required(self) -> bool:

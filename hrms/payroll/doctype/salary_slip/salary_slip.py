@@ -363,10 +363,11 @@ class SalarySlip(TransactionBase):
 			struct = self.check_sal_struct()
 
 			if struct:
-				ts_config = self._get_ssa_doc().get_timesheet_config()
-				self.salary_slip_based_on_timesheet = ts_config.based_on_timesheet
+				timesheet_config = self._get_ssa_doc().get_timesheet_config()
+				self.salary_slip_based_on_timesheet = timesheet_config.based_on_timesheet
+				self._timesheet_component = timesheet_config.timesheet_component
 				self.set_time_sheet()
-				self.pull_sal_struct(ts_config)
+				self.pull_sal_struct(timesheet_config)
 
 			process_loan_interest_accrual_and_demand(self)
 
@@ -434,17 +435,37 @@ class SalarySlip(TransactionBase):
 				title=_("Salary Structure Missing"),
 			)
 
-	def pull_sal_struct(self, ts_config=None):
+	def pull_sal_struct(self, timesheet_config=None):
 		from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
 
 		if self.salary_slip_based_on_timesheet:
-			self.hour_rate = flt(ts_config.hour_rate)
+			self.hour_rate = flt(timesheet_config.hour_rate)
 			self.base_hour_rate = flt(self.hour_rate) * flt(self.exchange_rate)
 			self.total_working_hours = sum([d.working_hours or 0.0 for d in self.timesheets]) or 0.0
-			# the hourly-wage earning row (hour_rate * total_working_hours) is built by the
-			# Salary Structure Assignment in get_evaluated_components
+			wages_amount = self.hour_rate * self.total_working_hours
+
+			self.add_earning_for_hourly_wages(self, timesheet_config.timesheet_component, wages_amount)
 
 		make_salary_slip(self.salary_structure, self)
+
+	def add_earning_for_hourly_wages(self, doc, salary_component, amount):
+		row_exists = False
+		for row in doc.earnings:
+			if row.salary_component == salary_component:
+				row.amount = amount
+				row_exists = True
+				break
+
+		if not row_exists:
+			wages_row = get_salary_component_data(salary_component)
+			wages_amount = self.hour_rate * self.total_working_hours
+
+			self.update_component_row(
+				wages_row,
+				wages_amount,
+				"earnings",
+				default_amount=wages_amount,
+			)
 
 	def get_working_days_details(self, lwp=None, for_preview=0, lwp_days_corrected=None):
 		payroll_settings = frappe.get_cached_value(
@@ -1159,9 +1180,7 @@ class SalarySlip(TransactionBase):
 		once and return fully-resolved rows (with default_amount + flags). Shared
 		across the earnings and deductions passes so cross-component references
 		(e.g. a deduction referencing an earning abbr) resolve correctly."""
-		comps = self._get_ssa_doc().get_evaluated_components(self.total_working_hours)
-		self._evaluated_components = comps
-		self._timesheet_component = comps.timesheet_component
+		self._evaluated_components = self._get_ssa_doc().get_evaluated_components()
 
 	def _get_ssa_doc(self):
 		if not getattr(self, "_ssa_doc", None):
@@ -1179,6 +1198,13 @@ class SalarySlip(TransactionBase):
 			self.add_structure_component(struct_row, component_type)
 
 	def add_structure_component(self, struct_row, component_type):
+		# the timesheet wage component is added separately (hour_rate * hours) in
+		# pull_sal_struct, so skip it here to avoid double-adding
+		if self.salary_slip_based_on_timesheet and struct_row.salary_component == getattr(
+			self, "_timesheet_component", None
+		):
+			return
+
 		# struct_row is a resolved row from the Salary Structure Assignment carrying the
 		# component's formula/condition/flags. The slip evaluates it against its own context:
 		#   - self.data:         payment-days prorated values -> the actual `amount`
