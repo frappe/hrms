@@ -21,7 +21,7 @@ def _make_component(name, abbr, comp_type="Earning", **flags):
 
 class TestSalaryStructureAssignment(HRMSTestSuite):
 	def test_ctc_and_annual_gross_exclude_statistical_and_include_employer(self):
-		"""base=50000; gross = Basic (50000) only — statistical earning (1000) is
+		"""base=50000; gross = Basic (50000) only - statistical earning (1000) is
 		excluded; CTC = gross + employer contribution (6000)."""
 		emp = make_employee("ssa_ctc_calc@test.com", company="_Test Company")
 
@@ -88,7 +88,7 @@ class TestSalaryStructureAssignment(HRMSTestSuite):
 		self.assertTrue(all(not r.get("default_amount") for r in cached.earnings))
 
 	def test_do_not_include_in_total_earning_is_in_ctc_but_not_gross(self):
-		"""A 'Do Not Include in Total' earning is part of CTC but not payable — it
+		"""A 'Do Not Include in Total' earning is part of CTC but not payable - it
 		must be excluded from annual_gross_earning yet included in ctc."""
 		emp = make_employee("ssa_dniit@test.com", company="_Test Company")
 
@@ -162,3 +162,41 @@ class TestSalaryStructureAssignment(HRMSTestSuite):
 		# base-driven earning evaluates normally; the variable hourly wage is excluded from CTC
 		self.assertEqual(ssa.annual_gross_earning, 50000 * 12)
 		self.assertEqual(ssa.ctc, 50000 * 12)
+
+	def test_get_evaluated_components_excludes_timesheet_wage(self):
+		"""SSA evaluation is period-independent: the timesheet wage (hour_rate * hours)
+		is built by the salary slip, not SSA. get_evaluated_components must return only
+		the structure's declared components, never an injected wage row."""
+		emp = make_employee("ssa_ts_eval@test.com", company="_Test Company")
+
+		_make_component("SSA TS2 Wage", "SSATS2W", "Earning")
+		_make_component("SSA TS2 Basic", "SSATS2B", "Earning", amount_based_on_formula=1, formula="base")
+
+		earnings = [
+			{
+				"salary_component": "SSA TS2 Basic",
+				"abbr": "SSATS2B",
+				"amount_based_on_formula": 1,
+				"formula": "base",
+			},
+		]
+
+		make_salary_structure(
+			"SSA Timesheet Eval Structure",
+			"Monthly",
+			employee=emp,
+			company="_Test Company",
+			base=50000,
+			earnings=earnings,
+			deductions=[],
+			other_details={
+				"salary_slip_based_on_timesheet": 1,
+				"hour_rate": 50,
+				"salary_component": "SSA TS2 Wage",
+			},
+		)
+		ssa = frappe.get_last_doc("Salary Structure Assignment", filters={"employee": emp})
+
+		components = [r.salary_component for r in ssa.get_evaluated_components().earnings]
+		self.assertNotIn("SSA TS2 Wage", components)
+		self.assertIn("SSA TS2 Basic", components)
