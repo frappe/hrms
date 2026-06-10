@@ -123,3 +123,42 @@ class TestSalaryStructureAssignment(HRMSTestSuite):
 
 		self.assertEqual(ssa.annual_gross_earning, 50000 * 12)
 		self.assertEqual(ssa.ctc, (50000 + 2000) * 12)
+
+	def test_ctc_for_timesheet_structure_evaluates_base_driven_components(self):
+		"""For a timesheet-based structure, only the wage component is paid as
+		hour_rate * hours (variable, excluded from CTC). The rest of the structure
+		(base-driven components) must still evaluate normally into gross / ctc."""
+		emp = make_employee("ssa_ts_ctc@test.com", company="_Test Company")
+
+		# wage component is the structure-level timesheet component, NOT an earning row
+		_make_component("SSA TS Wage", "SSATSW", "Earning")
+		_make_component("SSA TS Basic", "SSATSB", "Earning", amount_based_on_formula=1, formula="base")
+
+		earnings = [
+			{
+				"salary_component": "SSA TS Basic",
+				"abbr": "SSATSB",
+				"amount_based_on_formula": 1,
+				"formula": "base",
+			},
+		]
+
+		make_salary_structure(
+			"SSA Timesheet Structure",
+			"Monthly",
+			employee=emp,
+			company="_Test Company",
+			base=50000,
+			earnings=earnings,
+			deductions=[],
+			other_details={
+				"salary_slip_based_on_timesheet": 1,
+				"hour_rate": 50,
+				"salary_component": "SSA TS Wage",
+			},
+		)
+		ssa = frappe.get_last_doc("Salary Structure Assignment", filters={"employee": emp})
+
+		# base-driven earning evaluates normally; the variable hourly wage is excluded from CTC
+		self.assertEqual(ssa.annual_gross_earning, 50000 * 12)
+		self.assertEqual(ssa.ctc, 50000 * 12)
