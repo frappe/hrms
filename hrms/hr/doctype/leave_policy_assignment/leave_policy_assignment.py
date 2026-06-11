@@ -324,6 +324,7 @@ class LeavePolicyAssignment(Document):
 			leave_details.allocate_on_day,
 			from_date,
 			date_of_joining,
+			effective_from=self.effective_from,
 		)
 		schedule = []
 		if new_leaves_allocated:
@@ -412,9 +413,9 @@ def is_earned_leave_applicable_for_current_period(
 	# For Half-Yearly, compute preiod relative to effective_from
 	# instead of calendar year
 	if earned_leave_frequency == "Half-Yearly" and effective_from:
-		from hrms.hr.utils import get_period_relative_half_year
+		from hrms.hr.utils import get_half_year_periods
 
-		period_start, period_end = get_period_relative_half_year(date, effective_from)
+		period_start, period_end = get_half_year_periods(date, effective_from)
 		half_yearly_condition = (allocate_on_day == "First Day" and date >= period_start) or (
 			allocate_on_day == "Last Day" and date == period_end
 		)
