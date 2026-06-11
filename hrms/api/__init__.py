@@ -155,7 +155,7 @@ def get_attendance_for_calendar(employee: str, from_date: str, to_date: str) -> 
 
 
 def get_holidays_for_calendar(employee: str, from_date: str, to_date: str) -> list[str]:
-	if holiday_list := get_holiday_list_for_employee(employee, raise_exception=False):
+	if holiday_list := get_holiday_list_for_employee(employee, raise_exception=False, as_on=to_date):
 		return frappe.get_all(
 			"Holiday",
 			filters={"parent": holiday_list, "holiday_date": ["between", [from_date, to_date]]},
@@ -406,8 +406,8 @@ def get_leave_balance_map() -> dict[str, dict[str, float]]:
 
 
 @frappe.whitelist()
-def get_holidays_for_employee(employee: str) -> list[dict]:
-	holiday_list = get_holiday_list_for_employee(employee, raise_exception=False)
+def get_holidays_for_employee(employee: str, as_on: str | None = None) -> list[dict]:
+	holiday_list = get_holiday_list_for_employee(employee, raise_exception=False, as_on=as_on)
 	if not holiday_list:
 		return []
 

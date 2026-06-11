@@ -376,7 +376,7 @@ class OvertimeSlip(Document):
 
 		from hrms.utils.holiday_list import get_holiday_dates_between
 
-		holiday_list = get_holiday_list_for_employee(self.employee)
+		holiday_list = get_holiday_list_for_employee(self.employee, as_on=self.end_date)
 		holiday_dates = get_holiday_dates_between(
 			holiday_list, self.start_date, self.end_date, select_weekly_off=True, as_dict=True
 		)
