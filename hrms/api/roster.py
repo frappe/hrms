@@ -273,26 +273,25 @@ def get_leaves(month_start: str, month_end: str, employee_filters: dict[str, str
 	LeaveApplication = frappe.qb.DocType("Leave Application")
 	Employee = frappe.qb.DocType("Employee")
 
-	frappe.has_permission("Leave Application", "read", throw=True)
-
-	query = (
-		frappe.qb.select(
+	query = frappe.qb.get_query(
+		"Leave Application",
+		fields=[
 			LeaveApplication.name.as_("leave"),
 			LeaveApplication.employee,
 			LeaveApplication.leave_type,
 			LeaveApplication.from_date,
 			LeaveApplication.to_date,
-		)
-		.from_(LeaveApplication)
-		.left_join(Employee)
-		.on(LeaveApplication.employee == Employee.name)
-		.where(
-			(LeaveApplication.docstatus == 1)
-			& (LeaveApplication.status == "Approved")
-			& (LeaveApplication.from_date <= month_end)
-			& (LeaveApplication.to_date >= month_start)
-		)
+		],
+		filters={
+			"docstatus": 1,
+			"status": "Approved",
+			"from_date": ("<=", month_end),
+			"to_date": (">=", month_start),
+		},
+		ignore_permissions=False,
 	)
+
+	query = query.left_join(Employee).on(LeaveApplication.employee == Employee.name)
 
 	for filter in employee_filters:
 		query = query.where(Employee[filter] == employee_filters[filter])
@@ -309,8 +308,9 @@ def get_shifts(
 	ShiftType = frappe.qb.DocType("Shift Type")
 	Employee = frappe.qb.DocType("Employee")
 
-	query = (
-		frappe.qb.select(
+	query = frappe.qb.get_query(
+		"Shift Assignment",
+		fields=[
 			ShiftAssignment.name,
 			ShiftAssignment.employee,
 			ShiftAssignment.shift_type,
@@ -322,17 +322,23 @@ def get_shifts(
 			ShiftType.start_time,
 			ShiftType.end_time,
 			ShiftType.color,
-		)
-		.from_(ShiftAssignment)
-		.left_join(ShiftType)
+		],
+		filters={
+			"docstatus": 1,
+			"start_date": ("<=", month_end),
+		},
+		ignore_permissions=False,
+	)
+
+	# end_date is open-ended (None for shifts with no defined end) — must be
+	# expressed as an OR, which the filters dict can't represent cleanly.
+	query = query.where((ShiftAssignment.end_date >= month_start) | (ShiftAssignment.end_date.isnull()))
+
+	query = (
+		query.left_join(ShiftType)
 		.on(ShiftAssignment.shift_type == ShiftType.name)
 		.left_join(Employee)
 		.on(ShiftAssignment.employee == Employee.name)
-		.where(
-			(ShiftAssignment.docstatus == 1)
-			& (ShiftAssignment.start_date <= month_end)
-			& ((ShiftAssignment.end_date >= month_start) | (ShiftAssignment.end_date.isnull()))
-		)
 	)
 
 	for filter in employee_filters:
