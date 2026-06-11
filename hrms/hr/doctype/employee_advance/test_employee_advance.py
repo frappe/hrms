@@ -227,13 +227,41 @@ class TestEmployeeAdvance(HRMSTestSuite):
 
 		self.assertEqual(advance.status, "Partially Paid")
 
-		claim = get_expense_claim(advance.name)
+		currency, cost_center = frappe.db.get_value(
+			"Company", "_Test Company", ["default_currency", "cost_center"]
+		)
+		claim = get_expense_claim(advance.name)  # create claim from employee advance form
+		claim.update(
+			{
+				"payable_account": get_payable_account("_Test Company"),
+				"currency": currency,
+				"exchange_rate": 1,
+				"approval_status": "Approved",
+			}
+		)
+		claim.append(
+			"expenses",
+			{
+				"expense_type": "Travel",
+				"default_account": "Travel Expenses - _TC",
+				"amount": 1000,
+				"sanctioned_amount": 1000,
+				"cost_center": cost_center,
+			},
+		)
 		claim.save()
+		claim.submit()
 
 		self.assertEqual(len(claim.advances), 1)
 		self.assertEqual(claim.advances[0].employee_advance, advance.name)
 		self.assertEqual(claim.advances[0].advance_paid, 700)
 		self.assertEqual(claim.advances[0].allocated_amount, 700)
+		self.assertEqual(claim.total_claimed_amount, 1000)
+		self.assertEqual(claim.grand_total, 300)
+
+		advance.reload()
+		self.assertEqual(advance.claimed_amount, 700)
+		self.assertEqual(advance.status, "Claimed")
 
 	def test_precision(self):
 		employee_name = make_employee("_T@employee.advance", "_Test Company")
