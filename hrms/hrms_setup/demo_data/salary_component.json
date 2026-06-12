@@ -8,8 +8,8 @@
         "accounts": [
             {
                 "doctype": "Salary Component Account",
-                "company": "Sparrow Tech Pvt Ltd",
-                "account": "Salary - ST"
+                "company": "{{ demo_company }}",
+                "account": "{{ demo_salary_account }}"
             }
         ]
     },
@@ -22,8 +22,8 @@
         "accounts": [
             {
                 "doctype": "Salary Component Account",
-                "company": "Sparrow Tech Pvt Ltd",
-                "account": "Salary - ST"
+                "company": "{{ demo_company }}",
+                "account": "{{ demo_salary_account }}"
             }
         ]
     },
@@ -36,8 +36,8 @@
         "accounts": [
             {
                 "doctype": "Salary Component Account",
-                "company": "Sparrow Tech Pvt Ltd",
-                "account": "Salary - ST"
+                "company": "{{ demo_company }}",
+                "account": "{{ demo_salary_account }}"
             }
         ]
     },
@@ -50,8 +50,8 @@
         "accounts": [
             {
                 "doctype": "Salary Component Account",
-                "company": "Sparrow Tech Pvt Ltd",
-                "account": "Salary - ST"
+                "company": "{{ demo_company }}",
+                "account": "{{ demo_salary_account }}"
             }
         ]
     },
@@ -64,8 +64,8 @@
         "accounts": [
             {
                 "doctype": "Salary Component Account",
-                "company": "Sparrow Tech Pvt Ltd",
-                "account": "Salary - ST"
+                "company": "{{ demo_company }}",
+                "account": "{{ demo_salary_account }}"
             }
         ]
     },
@@ -78,8 +78,8 @@
         "accounts": [
             {
                 "doctype": "Salary Component Account",
-                "company": "Sparrow Tech Pvt Ltd",
-                "account": "Salary - ST"
+                "company": "{{ demo_company }}",
+                "account": "{{ demo_salary_account }}"
             }
         ]
     },
@@ -93,8 +93,8 @@
         "accounts": [
             {
                 "doctype": "Salary Component Account",
-                "company": "Sparrow Tech Pvt Ltd",
-                "account": "Salary - ST"
+                "company": "{{ demo_company }}",
+                "account": "{{ demo_salary_account }}"
             }
         ]
     },
@@ -107,8 +107,8 @@
         "accounts": [
             {
                 "doctype": "Salary Component Account",
-                "company": "Sparrow Tech Pvt Ltd",
-                "account": "Salary - ST"
+                "company": "{{ demo_company }}",
+                "account": "{{ demo_salary_account }}"
             }
         ]
     }

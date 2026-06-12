@@ -1,5 +1,3 @@
-import json
-
 import frappe
 
 
@@ -32,9 +30,9 @@ def setup_payroll_runs():
 
 
 def get_payroll_entry_records():
-	data_path = frappe.get_app_path("hrms", "hrms_setup", "demo_data", "payroll_entry.json")
-	with open(data_path) as f:
-		return json.loads(f.read() or "[]")
+	from hrms.hrms_setup.demo import get_demo_records
+
+	return get_demo_records("payroll_entry")
 
 
 def clear_stale_draft_payroll_entries(records):

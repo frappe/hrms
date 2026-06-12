@@ -1,19 +1,19 @@
 # Copyright (c) 2026, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
-import json
-
 import frappe
 from frappe.utils import getdate
 
 
 def setup_salary_structure_assignments(company):
 	for record in get_demo_records("salary_structure_assignment"):
-		if not frappe.db.exists("Company", record.get("company")):
+		if record.get("company") != company or not frappe.db.exists("Company", record.get("company")):
 			continue
 
 		if not frappe.db.exists("Employee", record.get("employee")):
 			continue
+
+		record = get_valid_salary_structure_assignment_record(record)
 
 		if not frappe.db.exists("Salary Structure", record.get("salary_structure")):
 			continue
@@ -31,10 +31,19 @@ def setup_salary_structure_assignments(company):
 		create_and_submit_doc(record)
 
 
+def get_valid_salary_structure_assignment_record(record):
+	record = record.copy()
+	joining_date = frappe.db.get_value("Employee", record.get("employee"), "date_of_joining")
+	if joining_date and getdate(record.get("from_date")) < getdate(joining_date):
+		record["from_date"] = joining_date
+
+	return record
+
+
 def get_demo_records(doctype):
-	data_path = frappe.get_app_path("hrms", "hrms_setup", "demo_data", f"{doctype}.json")
-	with open(data_path) as f:
-		return json.loads(f.read() or "[]")
+	from hrms.hrms_setup.demo import get_demo_records as get_records
+
+	return get_records(doctype)
 
 
 def create_and_submit_doc(record):
@@ -48,7 +57,10 @@ def create_and_submit_doc(record):
 		if doc.docstatus == 0:
 			doc.submit()
 	except Exception:
-		pass
+		frappe.log_error(
+			title=f"Failed to create HR demo {record.get('doctype')}",
+			message=frappe.get_traceback(),
+		)
 	finally:
 		frappe.flags.in_import = previous_in_import
 

@@ -2,7 +2,7 @@
     {
         "doctype": "Job Offer",
         "job_applicant": "HR-APP-2026-00001",
-        "company": "Sparrow Tech Pvt Ltd",
+        "company": "{{ demo_company }}",
         "offer_date": "2026-03-25",
         "status": "Accepted",
         "currency": "USD",

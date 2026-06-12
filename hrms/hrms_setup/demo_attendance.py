@@ -1,4 +1,3 @@
-import json
 import random
 
 import frappe
@@ -58,9 +57,9 @@ def get_leave_application_records():
 
 
 def get_demo_records(doctype):
-	data_path = frappe.get_app_path("hrms", "hrms_setup", "demo_data", f"{doctype}.json")
-	with open(data_path) as f:
-		return json.loads(f.read() or "[]")
+	from hrms.hrms_setup.demo import get_demo_records as get_records
+
+	return get_records(doctype)
 
 
 def create_and_submit_doc(record):
@@ -74,13 +73,16 @@ def create_and_submit_doc(record):
 		if doc.docstatus == 0:
 			doc.submit()
 	except Exception:
-		pass
+		log_demo_attendance_error(record)
 	finally:
 		frappe.flags.in_import = previous_in_import
 
 
 def create_leave_application(record):
 	if record.get("name") and frappe.db.exists("Leave Application", record["name"]):
+		return
+
+	if not has_leave_days(record):
 		return
 
 	previous_in_import = getattr(frappe.flags, "in_import", False)
@@ -94,9 +96,25 @@ def create_leave_application(record):
 		if application.status in ["Approved", "Rejected"] and application.docstatus == 0:
 			application.submit()
 	except Exception:
-		pass
+		log_demo_attendance_error(record)
 	finally:
 		frappe.flags.in_import = previous_in_import
+
+
+def has_leave_days(record):
+	from hrms.hr.doctype.leave_application.leave_application import get_number_of_leave_days
+
+	return (
+		get_number_of_leave_days(
+			record.get("employee"),
+			record.get("leave_type"),
+			record.get("from_date"),
+			record.get("to_date"),
+			record.get("half_day"),
+			record.get("half_day_date"),
+		)
+		> 0
+	)
 
 
 def generate_attendance(employees, leave_period):
@@ -124,8 +142,10 @@ def generate_attendance(employees, leave_period):
 			date_str = current_day.strftime("%Y-%m-%d")
 
 			if date_str in holidays:
-				status = "Holiday"
 				consecutive_absences = 0
+				current_day = add_days(current_day, 1)
+				days_since_start += 1
+				continue
 			elif date_str in emp_approved_leaves:
 				leave_type = emp_approved_leaves[date_str]
 				if leave_type == "Half Day":
@@ -178,7 +198,15 @@ def generate_attendance(employees, leave_period):
 					attendance.insert(ignore_permissions=True)
 					attendance.submit()
 				except Exception:
-					pass
+					log_demo_attendance_error(
+						{
+							"doctype": "Attendance",
+							"employee": emp.name,
+							"attendance_date": date_str,
+							"status": status,
+							"company": emp_doc.company,
+						}
+					)
 
 			current_day = add_days(current_day, 1)
 			days_since_start += 1
@@ -237,3 +265,10 @@ def get_employee_holidays(employee, from_date, to_date):
 				holidays[holiday.holiday_date.strftime("%Y-%m-%d")] = True
 
 	return holidays
+
+
+def log_demo_attendance_error(record):
+	frappe.log_error(
+		title=f"Failed to create HR demo {record.get('doctype')}",
+		message=frappe.get_traceback(),
+	)

@@ -2,31 +2,31 @@
     {
         "doctype": "Department",
         "department_name": "Engineering",
-        "company": "Sparrow Tech Pvt Ltd"
+        "company": "{{ demo_company }}"
     },
     {
         "doctype": "Department",
         "department_name": "Sales",
-        "company": "Sparrow Tech Pvt Ltd"
+        "company": "{{ demo_company }}"
     },
     {
         "doctype": "Department",
         "department_name": "HR",
-        "company": "Sparrow Tech Pvt Ltd"
+        "company": "{{ demo_company }}"
     },
     {
         "doctype": "Department",
         "department_name": "Finance",
-        "company": "Sparrow Tech Pvt Ltd"
+        "company": "{{ demo_company }}"
     },
     {
         "doctype": "Department",
         "department_name": "Operations",
-        "company": "Sparrow Tech Pvt Ltd"
+        "company": "{{ demo_company }}"
     },
     {
         "doctype": "Department",
         "department_name": "Business Development",
-        "company": "Sparrow Tech Pvt Ltd"
+        "company": "{{ demo_company }}"
     }
 ]

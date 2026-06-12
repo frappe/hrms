@@ -2,7 +2,7 @@
     {
         "doctype": "Expense Claim",
         "employee": "HR-EMP-00003",
-        "company": "Sparrow Tech Pvt Ltd",
+        "company": "{{ demo_company }}",
         "expense_approver": "",
         "posting_date": "2026-03-29",
         "approval_status": "Draft",
@@ -22,12 +22,12 @@
         ],
         "exchange_rate": 1,
         "currency": "USD",
-        "payable_account": "Employee Advances - ST"
+        "payable_account": "{{ demo_expense_payable_account }}"
     },
     {
         "doctype": "Expense Claim",
         "employee": "HR-EMP-00006",
-        "company": "Sparrow Tech Pvt Ltd",
+        "company": "{{ demo_company }}",
         "expense_approver": "",
         "posting_date": "2026-03-09",
         "approval_status": "Approved",
@@ -47,12 +47,12 @@
         ],
         "exchange_rate": 1,
         "currency": "USD",
-        "payable_account": "Employee Advances - ST"
+        "payable_account": "{{ demo_expense_payable_account }}"
     },
     {
         "doctype": "Expense Claim",
         "employee": "HR-EMP-00005",
-        "company": "Sparrow Tech Pvt Ltd",
+        "company": "{{ demo_company }}",
         "expense_approver": "",
         "posting_date": "2026-04-12",
         "approval_status": "Approved",
@@ -72,12 +72,12 @@
         ],
         "exchange_rate": 1,
         "currency": "USD",
-        "payable_account": "Employee Advances - ST"
+        "payable_account": "{{ demo_expense_payable_account }}"
     },
     {
         "doctype": "Expense Claim",
         "employee": "HR-EMP-00002",
-        "company": "Sparrow Tech Pvt Ltd",
+        "company": "{{ demo_company }}",
         "expense_approver": "",
         "posting_date": "2026-03-10",
         "approval_status": "Approved",
@@ -97,12 +97,12 @@
         ],
         "exchange_rate": 1,
         "currency": "USD",
-        "payable_account": "Employee Advances - ST"
+        "payable_account": "{{ demo_expense_payable_account }}"
     },
     {
         "doctype": "Expense Claim",
         "employee": "HR-EMP-00001",
-        "company": "Sparrow Tech Pvt Ltd",
+        "company": "{{ demo_company }}",
         "expense_approver": "",
         "posting_date": "2026-03-22",
         "approval_status": "Approved",
@@ -122,12 +122,12 @@
         ],
         "exchange_rate": 1,
         "currency": "USD",
-        "payable_account": "Employee Advances - ST"
+        "payable_account": "{{ demo_expense_payable_account }}"
     },
     {
         "doctype": "Expense Claim",
         "employee": "HR-EMP-00004",
-        "company": "Sparrow Tech Pvt Ltd",
+        "company": "{{ demo_company }}",
         "expense_approver": "",
         "posting_date": "2026-04-07",
         "approval_status": "Rejected",
@@ -147,12 +147,12 @@
         ],
         "exchange_rate": 1,
         "currency": "USD",
-        "payable_account": "Employee Advances - ST"
+        "payable_account": "{{ demo_expense_payable_account }}"
     },
     {
         "doctype": "Expense Claim",
         "employee": "HR-EMP-00007",
-        "company": "Sparrow Tech Pvt Ltd",
+        "company": "{{ demo_company }}",
         "expense_approver": "",
         "posting_date": "2026-04-18",
         "approval_status": "Approved",
@@ -172,12 +172,12 @@
         ],
         "exchange_rate": 1,
         "currency": "USD",
-        "payable_account": "Employee Advances - ST"
+        "payable_account": "{{ demo_expense_payable_account }}"
     },
     {
         "doctype": "Expense Claim",
         "employee": "HR-EMP-00008",
-        "company": "Sparrow Tech Pvt Ltd",
+        "company": "{{ demo_company }}",
         "expense_approver": "",
         "posting_date": "2026-04-25",
         "approval_status": "Draft",
@@ -197,12 +197,12 @@
         ],
         "exchange_rate": 1,
         "currency": "USD",
-        "payable_account": "Employee Advances - ST"
+        "payable_account": "{{ demo_expense_payable_account }}"
     },
     {
         "doctype": "Expense Claim",
         "employee": "HR-EMP-00009",
-        "company": "Sparrow Tech Pvt Ltd",
+        "company": "{{ demo_company }}",
         "expense_approver": "",
         "posting_date": "2026-05-02",
         "approval_status": "Rejected",
@@ -222,12 +222,12 @@
         ],
         "exchange_rate": 1,
         "currency": "USD",
-        "payable_account": "Employee Advances - ST"
+        "payable_account": "{{ demo_expense_payable_account }}"
     },
     {
         "doctype": "Expense Claim",
         "employee": "HR-EMP-00010",
-        "company": "Sparrow Tech Pvt Ltd",
+        "company": "{{ demo_company }}",
         "expense_approver": "",
         "posting_date": "2026-05-08",
         "approval_status": "Rejected",
@@ -247,6 +247,6 @@
         ],
         "exchange_rate": 1,
         "currency": "USD",
-        "payable_account": "Employee Advances - ST"
+        "payable_account": "{{ demo_expense_payable_account }}"
     }
 ]

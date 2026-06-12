@@ -14,7 +14,9 @@ def get_setup_stages(args=None):
 		{
 			"status": _("Creating Demo Company and Organization"),
 			"fail_msg": _("Failed to create Demo Company and Organization"),
-			"tasks": [{"fn": create_demo_company, "fail_msg": _("Failed to create Demo Company")}],
+			"tasks": [
+				{"fn": create_demo_company, "args": args, "fail_msg": _("Failed to create Demo Company")}
+			],
 		}
 	)
 

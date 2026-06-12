@@ -2,7 +2,7 @@
     {
         "doctype": "Appraisal Cycle",
         "cycle_name": "Q4 2025 Review",
-        "company": "Sparrow Tech Pvt Ltd",
+        "company": "{{ demo_company }}",
         "status": "In Progress",
         "start_date": "2025-10-01",
         "end_date": "2025-12-31",
@@ -14,7 +14,7 @@
     {
         "doctype": "Appraisal Cycle",
         "cycle_name": "Q1 2026 Review",
-        "company": "Sparrow Tech Pvt Ltd",
+        "company": "{{ demo_company }}",
         "status": "In Progress",
         "start_date": "2026-01-01",
         "end_date": "2026-03-31",

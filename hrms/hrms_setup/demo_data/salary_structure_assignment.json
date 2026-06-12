@@ -3,300 +3,300 @@
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00001",
         "salary_structure": "Engineering Manager",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Engineering - ST",
+        "company": "{{ demo_company }}",
+        "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00002",
         "salary_structure": "Sales Manager",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Sales - ST",
+        "company": "{{ demo_company }}",
+        "department": "Sales - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00003",
         "salary_structure": "HR Manager",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "HR - ST",
+        "company": "{{ demo_company }}",
+        "department": "HR - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00004",
         "salary_structure": "Finance Manager",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Finance - ST",
+        "company": "{{ demo_company }}",
+        "department": "Finance - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00005",
         "salary_structure": "Operations Manager",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Operations - ST",
+        "company": "{{ demo_company }}",
+        "department": "Operations - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00006",
         "salary_structure": "Business Development Manager",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Business Development - ST",
+        "company": "{{ demo_company }}",
+        "department": "Business Development - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00007",
         "salary_structure": "Tech Lead",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Engineering - ST",
+        "company": "{{ demo_company }}",
+        "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00008",
         "salary_structure": "Sales Executive",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Sales - ST",
+        "company": "{{ demo_company }}",
+        "department": "Sales - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00009",
         "salary_structure": "Senior Software Engineer",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Engineering - ST",
+        "company": "{{ demo_company }}",
+        "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00010",
         "salary_structure": "Software Engineer",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Engineering - ST",
+        "company": "{{ demo_company }}",
+        "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00011",
         "salary_structure": "Software Engineer",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Engineering - ST",
+        "company": "{{ demo_company }}",
+        "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00012",
         "salary_structure": "Junior Software Engineer",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Engineering - ST",
+        "company": "{{ demo_company }}",
+        "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00013",
         "salary_structure": "Finance Executive",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Finance - ST",
+        "company": "{{ demo_company }}",
+        "department": "Finance - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00014",
         "salary_structure": "HR Executive",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "HR - ST",
+        "company": "{{ demo_company }}",
+        "department": "HR - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00015",
         "salary_structure": "Operations Executive",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Operations - ST",
+        "company": "{{ demo_company }}",
+        "department": "Operations - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00016",
         "salary_structure": "Sales Executive",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Sales - ST",
+        "company": "{{ demo_company }}",
+        "department": "Sales - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00017",
         "salary_structure": "Business Development Executive",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Business Development - ST",
+        "company": "{{ demo_company }}",
+        "department": "Business Development - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00018",
         "salary_structure": "Finance Executive",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Finance - ST",
+        "company": "{{ demo_company }}",
+        "department": "Finance - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00019",
         "salary_structure": "Software Engineer",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Engineering - ST",
+        "company": "{{ demo_company }}",
+        "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00020",
         "salary_structure": "Operations Executive",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Operations - ST",
+        "company": "{{ demo_company }}",
+        "department": "Operations - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00021",
         "salary_structure": "Senior Software Engineer",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Engineering - ST",
+        "company": "{{ demo_company }}",
+        "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00022",
         "salary_structure": "Sales Executive",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Sales - ST",
+        "company": "{{ demo_company }}",
+        "department": "Sales - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00023",
         "salary_structure": "Software Engineer",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Engineering - ST",
+        "company": "{{ demo_company }}",
+        "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00024",
         "salary_structure": "Finance Executive",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Finance - ST",
+        "company": "{{ demo_company }}",
+        "department": "Finance - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00025",
         "salary_structure": "Software Engineer",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Engineering - ST",
+        "company": "{{ demo_company }}",
+        "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00026",
         "salary_structure": "Software Engineer",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Engineering - ST",
+        "company": "{{ demo_company }}",
+        "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00027",
         "salary_structure": "Sales Executive",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Sales - ST",
+        "company": "{{ demo_company }}",
+        "department": "Sales - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00028",
         "salary_structure": "HR Executive",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "HR - ST",
+        "company": "{{ demo_company }}",
+        "department": "HR - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00029",
         "salary_structure": "Finance Executive",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Finance - ST",
+        "company": "{{ demo_company }}",
+        "department": "Finance - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     },
     {
         "doctype": "Salary Structure Assignment",
         "employee": "HR-EMP-00030",
         "salary_structure": "Software Engineer",
-        "company": "Sparrow Tech Pvt Ltd",
-        "department": "Engineering - ST",
+        "company": "{{ demo_company }}",
+        "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "Payroll Payable - ST"
+        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
     }
 ]

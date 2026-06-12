@@ -7,16 +7,15 @@ import os
 import frappe
 from frappe import _
 
-DEMO_COMPANY = "Sparrow Tech Pvt Ltd"
-DEMO_COMPANY_ABBR = "ST"
-DEMO_PAYROLL_PAYABLE_ACCOUNT = f"Payroll Payable - {DEMO_COMPANY_ABBR}"
-DEMO_SALARY_ACCOUNT = f"Salary - {DEMO_COMPANY_ABBR}"
+DEMO_COMPANY_SUFFIX = " (Demo)"
+DEMO_FISCAL_YEAR = "2026"
 DYNAMIC_DEMO_DATA_JOB_ID = "hrms_demo_dynamic_data_generation"
 
 
 def extend_bootinfo(bootinfo):
-	if not bootinfo.sysdefaults.get("demo_company") and frappe.db.exists("Company", DEMO_COMPANY):
-		bootinfo.sysdefaults.demo_company = DEMO_COMPANY
+	demo_company = get_demo_company_from_global_defaults()
+	if not bootinfo.sysdefaults.get("demo_company") and demo_company:
+		bootinfo.sysdefaults.demo_company = demo_company
 
 
 def setup_demo_data(args=None):
@@ -48,10 +47,10 @@ def clear_demo_data():
 			return
 
 		clear_company_transactions(company)
-		if company == DEMO_COMPANY:
-			clear_hrms_masters(company)
+		clear_hrms_masters(company)
 		clear_erpnext_masters()
-		clear_erpnext_demo_companies()
+		clear_erpnext_demo_companies(exclude={company})
+		clear_demo_fiscal_years(company)
 		delete_company(company)
 
 		default_company = frappe.db.get_single_value("Global Defaults", "default_company")
@@ -66,8 +65,8 @@ def clear_demo_data():
 
 
 def get_demo_company_to_clear():
-	return frappe.db.get_single_value("Global Defaults", "demo_company") or frappe.db.exists(
-		"Company", DEMO_COMPANY
+	return get_demo_company_from_global_defaults() or frappe.db.exists(
+		"Company", {"company_name": ["like", "% (Demo)"]}
 	)
 
 
@@ -91,7 +90,7 @@ def clear_erpnext_masters():
 				clear_demo_record(item)
 
 
-def clear_erpnext_demo_companies():
+def clear_erpnext_demo_companies(exclude=None):
 	from erpnext.setup.demo import (
 		create_transaction_deletion_record,
 	)
@@ -104,7 +103,11 @@ def clear_erpnext_demo_companies():
 		filters={"company_name": ["like", "% (Demo)"]},
 		pluck="name",
 	)
+	exclude = exclude or set()
 	for company in erpnext_demo_companies:
+		if company in exclude:
+			continue
+
 		try:
 			create_transaction_deletion_record(company)
 			erpnext_delete_company(company)
@@ -125,6 +128,19 @@ def clear_hrms_masters(company):
 
 	clear_demo_records("employee")
 	clear_demo_records_from_hook("hrms_demo_master_doctypes")
+
+
+def clear_demo_fiscal_years(company):
+	context = get_demo_company_context()
+	for record in get_demo_records("demo_company", context):
+		if record.get("doctype") != "Fiscal Year":
+			continue
+
+		fiscal_year = record.get("year")
+		if not frappe.db.exists("Fiscal Year Company", {"parent": fiscal_year, "company": company}):
+			continue
+
+		frappe.delete_doc("Fiscal Year", fiscal_year, ignore_permissions=True, force=True)
 
 
 def clear_company_ignored_hrms_data(company):
@@ -215,7 +231,8 @@ def delete_demo_doc(doctype, name):
 
 def delete_company(company):
 	frappe.db.set_single_value("Global Defaults", "demo_company", "")
-	frappe.delete_doc("Company", company, ignore_permissions=True)
+	if frappe.db.exists("Company", company):
+		frappe.delete_doc("Company", company, ignore_permissions=True)
 
 
 def log_demo_data_failed_notification(error_log):
@@ -256,18 +273,21 @@ def _is_in_test():
 
 
 def enqueue_dynamic_demo_data():
+	company = get_demo_company()
+	company_key = "".join(c for c in frappe.scrub(company) if c.isalnum() or c == "_")
 	frappe.enqueue(
 		"hrms.hrms_setup.demo.setup_dynamic_demo_data",
 		queue="long",
 		timeout=3600,
-		job_id=DYNAMIC_DEMO_DATA_JOB_ID,
+		job_id=f"{DYNAMIC_DEMO_DATA_JOB_ID}:{company_key}",
 		deduplicate=True,
 		enqueue_after_commit=True,
 		now=_is_in_test(),
+		company=company,
 	)
 
 
-def setup_dynamic_demo_data():
+def setup_dynamic_demo_data(company=None):
 	from frappe.utils.telemetry import capture
 
 	from hrms.hrms_setup.demo_dynamic import (
@@ -277,16 +297,18 @@ def setup_dynamic_demo_data():
 
 	capture("dynamic_demo_data_creation_started", "hrms")
 	try:
+		company = company or get_demo_company()
 		process_background_masters()
 		submit_salary_structures()
 		set_employee_recruitment_links()
 		submit_accepted_job_offers()
 		setup_demo_appraisals()
-		setup_salary_structure_assignments(DEMO_COMPANY)
-		setup_leave_and_attendance(DEMO_COMPANY)
+		setup_salary_structure_assignments(company)
+		setup_leave_and_attendance(company)
 		setup_payroll_accounts()
 		setup_payroll_runs()
 	except Exception:
+		frappe.log_error("Failed to create HR dynamic demo data")
 		capture("dynamic_demo_data_creation_failed", "hrms", properties={"exception": frappe.get_traceback()})
 		raise
 
@@ -435,9 +457,21 @@ def get_appraisal_for_feedback(record):
 	return frappe.db.get_value("Appraisal", filters, "name")
 
 
-def read_data_file_using_hooks(doctype):
+def read_data_file_using_hooks(doctype, context=None):
 	with open(get_data_path(doctype)) as f:
-		return f.read()
+		return render_demo_template(f.read(), context)
+
+
+def get_demo_records(doctype, context=None):
+	data = read_data_file_using_hooks(doctype, context)
+	return json.loads(data or "[]")
+
+
+def render_demo_template(data, context=None):
+	if not data:
+		return data
+
+	return frappe.render_template(data, context or get_demo_company_context())
 
 
 def setup_expense_claim_type_accounts():
@@ -464,77 +498,108 @@ def submit_decided_expense_claims():
 
 
 def create_demo_company(args=None):
-	from frappe.desk.page.setup_wizard.setup_wizard import make_records
+	from erpnext.setup.demo import create_demo_company as create_erpnext_demo_company
 
-	records = []
-	for record in json.loads(read_data_file_using_hooks("demo_company")):
-		if record.get("doctype") == "Fiscal Year":
-			fiscal_year = record.get("name") or record.get("year")
-			if frappe.db.exists("Fiscal Year", fiscal_year):
-				continue
-			if fiscal_year_exists_for_dates(record.get("year_start_date"), record.get("year_end_date")):
-				continue
+	context = get_demo_company_context(args)
+	if not frappe.db.exists("Company", context.demo_company):
+		create_erpnext_demo_company(context.base_company)
+		context = get_demo_company_context(args)
 
-		if record.get("doctype") == "Company" and frappe.db.exists("Company", record.get("company_name")):
+	frappe.db.set_single_value("Global Defaults", "demo_company", context.demo_company)
+	frappe.db.set_default("company", context.demo_company)
+	setup_demo_fiscal_years(context)
+	setup_demo_company_defaults(context)
+
+	return context.demo_company
+
+
+def setup_demo_fiscal_years(context=None):
+	context = context or get_demo_company_context()
+	for record in get_demo_records("demo_company", context):
+		if record.get("doctype") != "Fiscal Year":
 			continue
 
-		records.append(record)
+		if fiscal_year_exists_for_company(
+			record.get("year_start_date"), record.get("year_end_date"), context.demo_company
+		):
+			continue
 
-	if records:
-		make_records(records)
-
-	if frappe.db.exists("Company", DEMO_COMPANY):
-		frappe.db.set_single_value("Global Defaults", "demo_company", DEMO_COMPANY)
-		frappe.db.set_default("company", DEMO_COMPANY)
+		frappe.get_doc(record).insert(ignore_permissions=True)
 
 
-def fiscal_year_exists_for_dates(year_start_date, year_end_date):
-	return bool(
-		frappe.db.exists(
-			"Fiscal Year",
-			{
-				"year_start_date": ["<=", year_end_date],
-				"year_end_date": [">=", year_start_date],
-			},
-		)
+def fiscal_year_exists_for_company(year_start_date, year_end_date, company):
+	for fiscal_year in frappe.get_all(
+		"Fiscal Year",
+		filters={"year_start_date": year_start_date, "year_end_date": year_end_date},
+		pluck="name",
+	):
+		if frappe.db.exists("Fiscal Year Company", {"parent": fiscal_year, "company": company}):
+			return True
+
+	return False
+
+
+def setup_demo_company_defaults(context):
+	set_company_default_if_missing(
+		context.demo_company,
+		"default_expense_claim_payable_account",
+		context.demo_expense_payable_account,
+	)
+	set_company_default_if_missing(
+		context.demo_company,
+		"default_payroll_payable_account",
+		context.demo_payroll_payable_account,
 	)
 
 
+def set_company_default_if_missing(company, fieldname, account):
+	if not account or not frappe.db.exists("Account", account):
+		return
+
+	if not frappe.db.get_value("Company", company, fieldname):
+		frappe.db.set_value("Company", company, fieldname, account)
+
+
 def setup_payroll_accounts():
-	if frappe.db.exists("Account", DEMO_PAYROLL_PAYABLE_ACCOUNT):
-		frappe.db.set_value("Account", DEMO_PAYROLL_PAYABLE_ACCOUNT, "account_type", "Payable")
+	context = get_demo_company_context()
+
+	if frappe.db.exists("Account", context.demo_payroll_payable_account):
+		frappe.db.set_value("Account", context.demo_payroll_payable_account, "account_type", "Payable")
 
 	setup_salary_component_accounts()
 
 
 def setup_salary_component_accounts():
-	if not frappe.db.exists("Account", DEMO_SALARY_ACCOUNT):
+	context = get_demo_company_context()
+	if not frappe.db.exists("Account", context.demo_salary_account):
 		return
 
-	for record in json.loads(read_data_file_using_hooks("salary_component")):
+	for record in get_demo_records("salary_component"):
 		salary_component = record.get("salary_component") or record.get("name")
 		if not salary_component or not frappe.db.exists("Salary Component", salary_component):
 			continue
 
 		if frappe.db.exists(
 			"Salary Component Account",
-			{"parent": salary_component, "company": DEMO_COMPANY},
+			{"parent": salary_component, "company": context.demo_company},
 		):
 			continue
 
 		component = frappe.get_doc("Salary Component", salary_component)
-		component.append("accounts", {"company": DEMO_COMPANY, "account": DEMO_SALARY_ACCOUNT})
+		component.append(
+			"accounts", {"company": context.demo_company, "account": context.demo_salary_account}
+		)
 		component.save(ignore_permissions=True)
 
 
 def submit_salary_structures():
-	for ss in frappe.get_all("Salary Structure", {"company": DEMO_COMPANY, "docstatus": 0}):
+	for ss in frappe.get_all("Salary Structure", {"company": get_demo_company(), "docstatus": 0}):
 		frappe.get_doc("Salary Structure", ss.name).submit()
 
 
 def submit_holiday_list_assignments():
 	for hla in frappe.get_all(
-		"Holiday List Assignment", {"assigned_to": DEMO_COMPANY, "docstatus": 0}, pluck="name"
+		"Holiday List Assignment", {"assigned_to": get_demo_company(), "docstatus": 0}, pluck="name"
 	):
 		frappe.get_doc("Holiday List Assignment", hla).submit()
 
@@ -608,3 +673,123 @@ def submit_accepted_job_offers():
 
 def get_data_path(doctype):
 	return os.path.join(os.path.dirname(__file__), "demo_data", f"{doctype}.json")
+
+
+def get_demo_company():
+	return get_demo_company_context().demo_company
+
+
+def get_demo_company_from_global_defaults():
+	demo_company = frappe.db.get_single_value("Global Defaults", "demo_company")
+	if demo_company and frappe.db.exists("Company", demo_company):
+		return demo_company
+
+
+def get_demo_company_context(args=None):
+	demo_company = get_demo_company_from_global_defaults()
+	if demo_company:
+		demo_company_abbr = frappe.db.get_value("Company", demo_company, "abbr")
+		base_company = None
+	else:
+		base_company = get_base_company(args)
+		company_doc = frappe.get_doc("Company", base_company)
+		demo_company = get_erpnext_demo_company_name(company_doc.company_name)
+		demo_company_abbr = f"{company_doc.abbr}D"
+
+	context = frappe._dict(
+		base_company=base_company,
+		demo_company=demo_company,
+		demo_company_abbr=demo_company_abbr,
+		demo_fiscal_year=f"{DEMO_FISCAL_YEAR} - {demo_company_abbr}",
+	)
+	context.demo_payroll_payable_account = get_demo_payroll_payable_account(context)
+	context.demo_salary_account = get_demo_salary_account(context)
+	context.demo_expense_payable_account = get_demo_expense_payable_account(context)
+	context.demo_cash_account = get_demo_cash_account(context)
+
+	return context
+
+
+def get_demo_payroll_payable_account(context):
+	return (
+		get_company_default_account(context.demo_company, "default_payroll_payable_account")
+		or get_company_account(
+			context.demo_company, account_names=("Payroll Payable",), account_type="Payable"
+		)
+		or f"Payroll Payable - {context.demo_company_abbr}"
+	)
+
+
+def get_demo_salary_account(context):
+	return (
+		get_company_account(
+			context.demo_company,
+			account_names=("Salary", "Salaries", "Salary Expenses"),
+			root_type="Expense",
+		)
+		or f"Salary - {context.demo_company_abbr}"
+	)
+
+
+def get_demo_expense_payable_account(context):
+	return (
+		get_company_default_account(context.demo_company, "default_expense_claim_payable_account")
+		or get_company_default_account(context.demo_company, "default_payable_account")
+		or get_company_account(
+			context.demo_company,
+			account_names=("Employee Advances", "Creditors", "Accounts Payable"),
+			account_type="Payable",
+		)
+		or f"Employee Advances - {context.demo_company_abbr}"
+	)
+
+
+def get_demo_cash_account(context):
+	return (
+		get_company_account(context.demo_company, account_names=("Cash",), account_type="Cash")
+		or f"Cash - {context.demo_company_abbr}"
+	)
+
+
+def get_company_default_account(company, fieldname):
+	if not frappe.db.exists("Company", company):
+		return
+
+	account = frappe.db.get_value("Company", company, fieldname)
+	if account and frappe.db.exists("Account", account):
+		return account
+
+
+def get_company_account(company, account_names=(), account_type=None, root_type=None):
+	if not frappe.db.exists("Company", company):
+		return
+
+	filters = {"company": company, "is_group": 0}
+	if account_names:
+		filters["account_name"] = ["in", account_names]
+	if account_type:
+		filters["account_type"] = account_type
+	if root_type:
+		filters["root_type"] = root_type
+
+	return frappe.db.get_value("Account", filters, "name", order_by="lft")
+
+
+def get_base_company(args=None):
+	args = frappe._dict(args or {})
+	company = args.get("company_name") or frappe.db.get_single_value("Global Defaults", "default_company")
+	if company and frappe.db.exists("Company", company):
+		return company
+
+	company = frappe.db.get_value("Company", {"company_name": ["not like", f"%{DEMO_COMPANY_SUFFIX}"]})
+	if company:
+		return company
+
+	frappe.throw(_("Please set up a company before creating HR demo data."))
+
+
+def get_erpnext_demo_company_name(company_name):
+	if company_name.endswith(DEMO_COMPANY_SUFFIX):
+		return company_name
+
+	return f"{company_name}{DEMO_COMPANY_SUFFIX}"
