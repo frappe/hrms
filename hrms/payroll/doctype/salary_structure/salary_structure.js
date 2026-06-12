@@ -69,6 +69,12 @@ frappe.ui.form.on("Salary Structure", {
 				query: "hrms.payroll.doctype.salary_structure.salary_structure.get_salary_component",
 			};
 		});
+		frm.set_query("salary_component", "employer_contributions", function () {
+			return {
+				filters: { component_type: "employer contribution", company: frm.doc.company },
+				query: "hrms.payroll.doctype.salary_structure.salary_structure.get_salary_component",
+			};
+		});
 	},
 
 	company: function (frm) {

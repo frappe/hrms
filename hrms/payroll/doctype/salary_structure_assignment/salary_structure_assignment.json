@@ -22,9 +22,10 @@
   "currency",
   "section_break_7",
   "base",
-  "ctc",
+  "annual_gross_earning",
   "column_break_9",
   "variable",
+  "ctc",
   "amended_from",
   "column_break_kjvm",
   "leave_encashment_amount_per_day",
@@ -116,6 +117,20 @@
    "fieldtype": "Currency",
    "label": "Base",
    "options": "currency"
+  },
+  {
+   "fieldname": "annual_gross_earning",
+   "fieldtype": "Currency",
+   "label": "Annual Gross Earning",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "ctc",
+   "fieldtype": "Currency",
+   "label": "Total Cost To Company (CTC)",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_9",
@@ -243,17 +258,11 @@
    "fieldtype": "Currency",
    "label": "Leave Encashment Amount Per Day",
    "options": "currency"
-  },
-  {
-   "allow_on_submit": 1,
-   "fieldname": "ctc",
-   "fieldtype": "Currency",
-   "label": "Total Cost To Company (CTC)"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-06-05 13:20:40.794089",
+ "modified": "2026-06-08 17:40:49.118187",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure Assignment",

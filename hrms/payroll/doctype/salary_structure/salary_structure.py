@@ -169,7 +169,7 @@ class SalaryStructure(Document):
 				break
 
 	def sanitize_condition_and_formula_fields(self):
-		for table in ("earnings", "deductions"):
+		for table in ("earnings", "deductions", "employer_contributions"):
 			for row in self.get(table):
 				row.condition = row.condition.strip() if row.condition else ""
 				row.formula = row.formula.strip() if row.formula else ""
@@ -178,7 +178,7 @@ class SalaryStructure(Document):
 
 	def reset_condition_and_formula_fields(self):
 		# set old values (allowing multiline strings for better readability in the doctype form)
-		for table in ("earnings", "deductions"):
+		for table in ("earnings", "deductions", "employer_contributions"):
 			for row in self.get(table):
 				row.condition = row._condition
 				row.formula = row._formula

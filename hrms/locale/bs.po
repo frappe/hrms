@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2026-06-07 10:18+0000\n"
-"PO-Revision-Date: 2026-06-08 15:41\n"
+"PO-Revision-Date: 2026-06-09 15:37\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -6490,7 +6490,7 @@ msgstr "Obavezna polja potrebna za ovu radnju:"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:213
 msgid "Mandatory fields required in {0}"
-msgstr "Obavezna polja nedostaju u {0}"
+msgstr "Obavezna polja su obavezna u {0}"
 
 #. Option for the 'KRA Evaluation Method' (Select) field in DocType 'Appraisal
 #. Cycle'
