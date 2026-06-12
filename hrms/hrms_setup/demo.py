@@ -12,12 +12,6 @@ DEMO_FISCAL_YEAR = "2026"
 DYNAMIC_DEMO_DATA_JOB_ID = "hrms_demo_dynamic_data_generation"
 
 
-def extend_bootinfo(bootinfo):
-	demo_company = get_demo_company_from_global_defaults()
-	if not bootinfo.sysdefaults.get("demo_company") and demo_company:
-		bootinfo.sysdefaults.demo_company = demo_company
-
-
 def setup_demo_data(args=None):
 	from frappe.utils.telemetry import capture
 
@@ -38,23 +32,19 @@ def setup_demo_data(args=None):
 def clear_demo_data():
 	from frappe.utils.telemetry import capture
 
+	from erpnext.setup.demo import clear_demo_data as clear_erpnext_demo_data
+
 	frappe.only_for("System Manager")
 
 	capture("demo_data_erased", "hrms")
 	try:
-		company = get_demo_company_to_clear()
+		company = get_demo_company_from_global_defaults()
 		if not company:
 			return
 
-		clear_company_transactions(company)
 		clear_hrms_masters(company)
-		clear_erpnext_masters()
-		clear_erpnext_demo_companies(exclude={company})
 		clear_demo_fiscal_years(company)
-		delete_company(company)
-
-		default_company = frappe.db.get_single_value("Global Defaults", "default_company")
-		frappe.db.set_default("company", default_company)
+		clear_erpnext_demo_data()
 	except Exception:
 		frappe.db.rollback()
 		frappe.log_error("Failed to erase demo data")
@@ -62,57 +52,6 @@ def clear_demo_data():
 			_("Failed to erase demo data, please delete the demo company manually."),
 			title=_("Could Not Delete Demo Data"),
 		)
-
-
-def get_demo_company_to_clear():
-	return get_demo_company_from_global_defaults() or frappe.db.exists(
-		"Company", {"company_name": ["like", "% (Demo)"]}
-	)
-
-
-def clear_company_transactions(company):
-	from erpnext.setup.demo import create_transaction_deletion_record
-
-	if frappe.db.exists("Company", company):
-		create_transaction_deletion_record(company)
-
-
-def clear_erpnext_masters():
-	from erpnext.setup.demo import read_data_file_using_hooks as erpnext_read_data_file
-
-	for doctype in frappe.get_hooks("demo_master_doctypes")[::-1]:
-		try:
-			data = erpnext_read_data_file(doctype)
-		except (FileNotFoundError, OSError):
-			continue
-		if data:
-			for item in json.loads(data):
-				clear_demo_record(item)
-
-
-def clear_erpnext_demo_companies(exclude=None):
-	from erpnext.setup.demo import (
-		create_transaction_deletion_record,
-	)
-	from erpnext.setup.demo import (
-		delete_company as erpnext_delete_company,
-	)
-
-	erpnext_demo_companies = frappe.get_all(
-		"Company",
-		filters={"company_name": ["like", "% (Demo)"]},
-		pluck="name",
-	)
-	exclude = exclude or set()
-	for company in erpnext_demo_companies:
-		if company in exclude:
-			continue
-
-		try:
-			create_transaction_deletion_record(company)
-			erpnext_delete_company(company)
-		except Exception:
-			frappe.log_error(f"Failed to delete ERPNext demo company: {company}")
 
 
 def clear_hrms_masters(company):
@@ -227,12 +166,6 @@ def delete_demo_doc(doctype, name):
 		frappe.db.set_value(doctype, name, "docstatus", 0)
 
 	frappe.delete_doc(doctype, name, ignore_permissions=True, force=True)
-
-
-def delete_company(company):
-	frappe.db.set_single_value("Global Defaults", "demo_company", "")
-	if frappe.db.exists("Company", company):
-		frappe.delete_doc("Company", company, ignore_permissions=True)
 
 
 def log_demo_data_failed_notification(error_log):

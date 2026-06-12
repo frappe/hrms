@@ -108,8 +108,6 @@ setup_wizard_stages = "hrms.hrms_setup.setup_wizard.get_setup_stages"
 
 setup_wizard_complete = "hrms.subscription_utils.update_erpnext_access"
 
-extend_bootinfo = ["hrms.hrms_setup.demo.extend_bootinfo"]
-
 hrms_demo_master_doctypes = [
 	"gender",
 	"salutation",
