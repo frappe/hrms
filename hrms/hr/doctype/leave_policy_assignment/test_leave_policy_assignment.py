@@ -176,6 +176,7 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 		).submit()
 
 		today_date = getdate()
+		frappe.flags.pop("current_date", None)
 
 		leave_policy_assignment = frappe.new_doc("Leave Policy Assignment")
 		leave_policy_assignment.employee = self.employee.name
