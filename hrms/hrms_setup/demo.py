@@ -10,6 +10,12 @@ from frappe import _
 DEMO_COMPANY_SUFFIX = " (Demo)"
 DEMO_FISCAL_YEAR = "2026"
 DYNAMIC_DEMO_DATA_JOB_ID = "hrms_demo_dynamic_data_generation"
+HRMS_DEMO_CLEAR_HOOKS = (
+	"hrms_demo_background_transaction_doctypes",
+	"hrms_demo_transaction_doctypes",
+	"hrms_demo_background_master_doctypes",
+)
+SKIP_CLEAR_DOCTYPES = {"gender", "salutation"}
 
 
 def setup_demo_data(args=None):
@@ -42,8 +48,8 @@ def clear_demo_data():
 		if not company:
 			return
 
-		clear_hrms_masters(company)
-		clear_demo_fiscal_years(company)
+		clear_hrms_demo_data(company)
+		frappe.db.commit()
 		clear_erpnext_demo_data()
 	except Exception:
 		frappe.db.rollback()
@@ -54,24 +60,20 @@ def clear_demo_data():
 		)
 
 
-def clear_hrms_masters(company):
-	clear_company_ignored_hrms_data(company)
-	clear_expense_claim_type_accounts(company)
+def clear_hrms_demo_data(company):
+	clear_company_linked_hrms_data(company)
 	clear_demo_appraisal_feedback()
-	for hook_name in (
-		"hrms_demo_background_transaction_doctypes",
-		"hrms_demo_transaction_doctypes",
-		"hrms_demo_background_master_doctypes",
-	):
-		clear_demo_records_from_hook(hook_name)
+
+	for hook_name in HRMS_DEMO_CLEAR_HOOKS:
+		for doctype in frappe.get_hooks(hook_name)[::-1]:
+			clear_demo_records(doctype)
 
 	clear_demo_records("employee")
-	clear_demo_records_from_hook("hrms_demo_master_doctypes")
 
+	for doctype in frappe.get_hooks("hrms_demo_master_doctypes")[::-1]:
+		clear_demo_records(doctype)
 
-def clear_demo_fiscal_years(company):
-	context = get_demo_company_context()
-	for record in get_demo_records("demo_company", context):
+	for record in get_demo_records("demo_company"):
 		if record.get("doctype") != "Fiscal Year":
 			continue
 
@@ -82,7 +84,7 @@ def clear_demo_fiscal_years(company):
 		frappe.delete_doc("Fiscal Year", fiscal_year, ignore_permissions=True, force=True)
 
 
-def clear_company_ignored_hrms_data(company):
+def clear_company_linked_hrms_data(company):
 	for doctype in frappe.get_hooks("company_data_to_be_ignored") or []:
 		try:
 			meta = frappe.get_meta(doctype)
@@ -104,8 +106,6 @@ def clear_company_ignored_hrms_data(company):
 		except Exception:
 			frappe.log_error(f"Failed to clear {doctype} for demo company during demo clear")
 
-
-def clear_expense_claim_type_accounts(company):
 	for expense_claim_type in frappe.get_all("Expense Claim Type", pluck="name"):
 		doc = frappe.get_doc("Expense Claim Type", expense_claim_type)
 		original_count = len(doc.accounts)
@@ -114,13 +114,8 @@ def clear_expense_claim_type_accounts(company):
 			doc.save(ignore_permissions=True)
 
 
-def clear_demo_records_from_hook(hook_name):
-	for doctype in frappe.get_hooks(hook_name)[::-1]:
-		clear_demo_records(doctype)
-
-
 def clear_demo_records(doctype):
-	if doctype in ("gender", "salutation"):
+	if doctype in SKIP_CLEAR_DOCTYPES:
 		return
 
 	data = read_data_file_using_hooks(doctype)
@@ -128,33 +123,29 @@ def clear_demo_records(doctype):
 		return
 
 	for record in json.loads(data)[::-1]:
-		clear_demo_record(record)
+		record = record.copy()
+		record_doctype = record.pop("doctype")
 
+		if record_doctype in ("Company", "Fiscal Year"):
+			continue
 
-def clear_demo_record(record):
-	record = record.copy()
-	doctype = record.pop("doctype")
+		if record.get("name"):
+			delete_demo_doc(record_doctype, record["name"])
+			continue
 
-	if doctype in ("Company", "Fiscal Year"):
-		return
+		valid_columns = frappe.get_meta(record_doctype).get_valid_columns()
+		skip_fields = {"total_score", "final_score", "total_claimed_amount", "total_sanctioned_amount"}
+		filters = {
+			key: value
+			for key, value in record.items()
+			if key in valid_columns and key not in skip_fields and not isinstance(value, list)
+		}
+		if not filters:
+			continue
 
-	if record.get("name"):
-		delete_demo_doc(doctype, record["name"])
-		return
-
-	valid_columns = frappe.get_meta(doctype).get_valid_columns()
-	skip_fields = {"total_score", "final_score", "total_claimed_amount", "total_sanctioned_amount"}
-	filters = {
-		key: value
-		for key, value in record.items()
-		if key in valid_columns and key not in skip_fields and not isinstance(value, list)
-	}
-	if not filters:
-		return
-
-	name = frappe.db.get_value(doctype, filters)
-	if name:
-		delete_demo_doc(doctype, name)
+		name = frappe.db.get_value(record_doctype, filters)
+		if name:
+			delete_demo_doc(record_doctype, name)
 
 
 def delete_demo_doc(doctype, name):
