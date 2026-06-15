@@ -58,8 +58,6 @@
    "read_only": 1
   },
   {
-   "fetch_from": "expense_type.description",
-   "fetch_if_empty": 1,
    "fieldname": "description",
    "fieldtype": "Text Editor",
    "in_list_view": 1,
@@ -131,7 +129,11 @@
  "idx": 1,
  "istable": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2024-10-10 14:58:36.316268",
+=======
+ "modified": "2026-06-15 16:46:22.402968",
+>>>>>>> 3cf53cabd (fix(vehicle_log): improve cancellation logic to handle linked draft Expense Claims and update description handling)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claim Detail",

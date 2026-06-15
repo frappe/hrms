@@ -27,7 +27,7 @@ frappe.ui.form.on("Vehicle Log", {
 	before_cancel: function (frm) {
 		return new Promise((resolve, reject) => {
 			frappe.call({
-				method: "hrms.hr.doctype.vehicle_log.vehicle_log.get_draft_expense_claims",
+				method: "hrms.hr.doctype.vehicle_log.vehicle_log.get_draft_expense_claim_cancellation_actions",
 				args: {
 					vehicle_log: frm.doc.name,
 				},
@@ -38,15 +38,8 @@ frappe.ui.form.on("Vehicle Log", {
 						return;
 					}
 
-					const expense_claim_links = expense_claims
-						.map((name) => frappe.utils.get_form_link("Expense Claim", name, true))
-						.join(", ");
-
 					frappe.confirm(
-						__(
-							"Draft Expense Claim {0} will be unlinked once Vehicle Log {1} is cancelled. Do you want to proceed?",
-							[expense_claim_links, frm.doc.name.bold()],
-						),
+						get_expense_claim_cancellation_message(expense_claims, frm.doc.name),
 						() => resolve(),
 						() => reject(),
 						__("Yes"),
@@ -70,3 +63,33 @@ frappe.ui.form.on("Vehicle Log", {
 		});
 	},
 });
+
+function get_expense_claim_cancellation_message(expense_claims, vehicle_log) {
+	const message_parts = [];
+	const claims_to_delete = get_expense_claim_links(expense_claims, "delete");
+	const claims_to_unlink = get_expense_claim_links(expense_claims, "unlink");
+
+	if (claims_to_delete) {
+		message_parts.push(__("Will be deleted: {0}", [claims_to_delete]));
+	}
+
+	if (claims_to_unlink) {
+		message_parts.push(
+			__("Will be unlinked, and Vehicle Expenses will be removed: {0}", [claims_to_unlink]),
+		);
+	}
+
+	return __(
+		"Cancelling Vehicle Log {0} will affect linked draft Expense Claims:<br><br>{1}<br><br>Do you want to proceed?",
+		[vehicle_log.bold(), message_parts.join("<br>")],
+	);
+}
+
+function get_expense_claim_links(expense_claims, action) {
+	return expense_claims
+		.filter((expense_claim) => expense_claim.action === action)
+		.map((expense_claim) =>
+			frappe.utils.get_form_link("Expense Claim", expense_claim.name, true),
+		)
+		.join(", ");
+}

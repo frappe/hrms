@@ -21,8 +21,16 @@ class VehicleLog(Document):
 		frappe.db.set_value("Vehicle", self.license_plate, "last_odometer", self.odometer)
 
 	def before_cancel(self):
-		for expense_claim in _get_draft_expense_claims(self.name):
-			frappe.db.set_value("Expense Claim", expense_claim, "vehicle_log", None)
+		for expense_claim_name in _get_draft_expense_claims(self.name):
+			expense_claim = frappe.get_doc("Expense Claim", expense_claim_name)
+
+			remaining_expenses = _get_non_vehicle_log_expenses(expense_claim)
+			if remaining_expenses:
+				expense_claim.expenses = remaining_expenses
+				expense_claim.vehicle_log = None
+				expense_claim.save()
+			else:
+				expense_claim.delete()
 
 	def on_cancel(self):
 		distance_travelled = self.odometer - self.last_odometer
@@ -64,6 +72,19 @@ def get_draft_expense_claims(vehicle_log: str) -> list[str]:
 	return _get_draft_expense_claims(vehicle_log)
 
 
+@frappe.whitelist()
+def get_draft_expense_claim_cancellation_actions(vehicle_log: str) -> list[dict[str, str]]:
+	frappe.has_permission("Vehicle Log", doc=vehicle_log, throw=True)
+
+	return [
+		{
+			"name": expense_claim.name,
+			"action": "unlink" if _get_non_vehicle_log_expenses(expense_claim) else "delete",
+		}
+		for expense_claim in _get_draft_expense_claim_docs(vehicle_log)
+	]
+
+
 def _get_draft_expense_claims(vehicle_log: str) -> list[str]:
 	return frappe.get_all(
 		"Expense Claim",
@@ -71,3 +92,15 @@ def _get_draft_expense_claims(vehicle_log: str) -> list[str]:
 		pluck="name",
 		order_by="creation asc",
 	)
+
+
+def _get_draft_expense_claim_docs(vehicle_log: str) -> list[Document]:
+	return [
+		frappe.get_doc("Expense Claim", expense_claim_name)
+		for expense_claim_name in _get_draft_expense_claims(vehicle_log)
+	]
+
+
+def _get_non_vehicle_log_expenses(expense_claim: Document) -> list[Document]:
+	vehicle_log_description = _("Vehicle Expenses")
+	return [row for row in expense_claim.expenses if row.description != vehicle_log_description]

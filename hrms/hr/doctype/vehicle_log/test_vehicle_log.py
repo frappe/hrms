@@ -14,9 +14,17 @@ from frappe.utils import cstr, flt, nowdate, random_string
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 from hrms.hr.doctype.vehicle_log.vehicle_log import make_expense_claim
 =======
 from hrms.hr.doctype.vehicle_log.vehicle_log import get_draft_expense_claims, make_expense_claim
+=======
+from hrms.hr.doctype.vehicle_log.vehicle_log import (
+	get_draft_expense_claim_cancellation_actions,
+	get_draft_expense_claims,
+	make_expense_claim,
+)
+>>>>>>> 3cf53cabd (fix(vehicle_log): improve cancellation logic to handle linked draft Expense Claims and update description handling)
 from hrms.tests.utils import HRMSTestSuite
 >>>>>>> 5f229848d (fix(vehicle_log): enhance cancellation logic to handle linked submitted and draft Expense Claims)
 
@@ -62,7 +70,6 @@ class TestVehicleLog(FrappeTestCase):
 		self.assertEqual(fuel_expense, 50 * 500)
 
 		vehicle_log.cancel()
-		frappe.delete_doc("Expense Claim", expense_claim.name)
 		frappe.delete_doc("Vehicle Log", vehicle_log.name)
 
 	def test_vehicle_log_with_service_expenses(self):
@@ -73,7 +80,6 @@ class TestVehicleLog(FrappeTestCase):
 		self.assertEqual(expenses, 27000)
 
 		vehicle_log.cancel()
-		frappe.delete_doc("Expense Claim", expense_claim.name)
 		frappe.delete_doc("Vehicle Log", vehicle_log.name)
 
 	def test_cancel_vehicle_log_unlinks_draft_expense_claim(self):
@@ -105,6 +111,10 @@ class TestVehicleLog(FrappeTestCase):
 		).insert()
 
 		self.assertIn(expense_claim.name, get_draft_expense_claims(vehicle_log.name))
+		self.assertEqual(
+			get_draft_expense_claim_cancellation_actions(vehicle_log.name),
+			[{"name": expense_claim.name, "action": "unlink"}],
+		)
 
 		vehicle_log.reload()
 		vehicle_log.cancel()
@@ -113,9 +123,115 @@ class TestVehicleLog(FrappeTestCase):
 		self.assertEqual(vehicle_log.docstatus, 2)
 		self.assertIsNone(expense_claim.vehicle_log)
 		self.assertNotIn(expense_claim.name, get_draft_expense_claims(vehicle_log.name))
+		# non-Vehicle-Log expense rows remain intact
+		self.assertEqual(len(expense_claim.expenses), 1)
+		self.assertEqual(expense_claim.expenses[0].expense_type, "Travel")
 
 		expense_claim.submit()
 
+		expense_claim.cancel()
+		frappe.delete_doc("Vehicle Log", vehicle_log.name)
+
+	def test_cancel_vehicle_log_deletes_claim_with_only_vehicle_log_expenses(self):
+		vehicle_log = make_vehicle_log(self.license_plate, self.employee_id)
+		currency, cost_center = frappe.db.get_value(
+			"Company", "_Test Company", ["default_currency", "cost_center"]
+		)
+
+		expense_claim = frappe.get_doc(
+			{
+				"doctype": "Expense Claim",
+				"employee": self.employee_id,
+				"company": "_Test Company",
+				"currency": currency,
+				"exchange_rate": 1,
+				"approval_status": "Approved",
+				"payable_account": frappe.db.get_value("Company", "_Test Company", "default_payable_account"),
+				"vehicle_log": vehicle_log.name,
+				"expenses": [
+					{
+						"expense_date": nowdate(),
+						"expense_type": "Travel",
+						"default_account": "Travel Expenses - _TC",
+						"currency": currency,
+						"description": "Vehicle Expenses",
+						"amount": 25000,
+						"sanctioned_amount": 25000,
+						"cost_center": cost_center,
+					}
+				],
+			}
+		).insert()
+
+		self.assertIn(expense_claim.name, get_draft_expense_claims(vehicle_log.name))
+		self.assertEqual(
+			get_draft_expense_claim_cancellation_actions(vehicle_log.name),
+			[{"name": expense_claim.name, "action": "delete"}],
+		)
+
+		vehicle_log.reload()
+		vehicle_log.cancel()
+
+		self.assertFalse(frappe.db.exists("Expense Claim", expense_claim.name))
+		frappe.delete_doc("Vehicle Log", vehicle_log.name)
+
+	def test_cancel_vehicle_log_removes_only_vehicle_log_rows_from_mixed_claim(self):
+		vehicle_log = make_vehicle_log(self.license_plate, self.employee_id)
+		currency, cost_center = frappe.db.get_value(
+			"Company", "_Test Company", ["default_currency", "cost_center"]
+		)
+
+		expense_claim = frappe.get_doc(
+			{
+				"doctype": "Expense Claim",
+				"employee": self.employee_id,
+				"company": "_Test Company",
+				"currency": currency,
+				"exchange_rate": 1,
+				"approval_status": "Approved",
+				"payable_account": frappe.db.get_value("Company", "_Test Company", "default_payable_account"),
+				"vehicle_log": vehicle_log.name,
+				"expenses": [
+					{
+						"expense_date": nowdate(),
+						"expense_type": "Travel",
+						"default_account": "Travel Expenses - _TC",
+						"currency": currency,
+						"description": "Vehicle Expenses",
+						"amount": 25000,
+						"sanctioned_amount": 25000,
+						"cost_center": cost_center,
+					},
+					{
+						"expense_date": nowdate(),
+						"expense_type": "Travel",
+						"default_account": "Travel Expenses - _TC",
+						"currency": currency,
+						"description": "Accident Repair",
+						"amount": 5000,
+						"sanctioned_amount": 5000,
+						"cost_center": cost_center,
+					},
+				],
+			}
+		).insert()
+
+		self.assertIn(expense_claim.name, get_draft_expense_claims(vehicle_log.name))
+		self.assertEqual(len(expense_claim.expenses), 2)
+		self.assertEqual(
+			get_draft_expense_claim_cancellation_actions(vehicle_log.name),
+			[{"name": expense_claim.name, "action": "unlink"}],
+		)
+
+		vehicle_log.reload()
+		vehicle_log.cancel()
+
+		expense_claim.reload()
+		self.assertEqual(len(expense_claim.expenses), 1)
+		self.assertEqual(expense_claim.expenses[0].description, "Accident Repair")
+		self.assertIsNone(expense_claim.vehicle_log)
+
+		expense_claim.submit()
 		expense_claim.cancel()
 		frappe.delete_doc("Vehicle Log", vehicle_log.name)
 
