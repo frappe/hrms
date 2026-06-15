@@ -87,6 +87,44 @@ class TestSalaryStructureAssignment(HRMSTestSuite):
 		cached = frappe.get_cached_doc("Salary Structure", "SSA Test Cache Structure")
 		self.assertTrue(all(not r.get("default_amount") for r in cached.earnings))
 
+	def test_get_evaluated_components_resolves_salary_slip_fields(self):
+		"""A component formula may reference any salary slip field (e.g. start_date),
+		since the slip evaluates formulas against its own as_dict. SSA evaluation has
+		no slip, so it must mirror a full-cycle preview slip's field set; otherwise the
+		formula raises a NameError on the missing slip field."""
+		emp = make_employee("ssa_slip_field@test.com", company="_Test Company")
+
+		# formula references start_date -- a salary-slip field, absent from the SSA itself
+		formula = "base * getdate(start_date).month"
+		_make_component(
+			"SSA Test Period Bonus", "SSATPB", "Earning", amount_based_on_formula=1, formula=formula
+		)
+		earnings = [
+			{
+				"salary_component": "SSA Test Period Bonus",
+				"abbr": "SSATPB",
+				"amount_based_on_formula": 1,
+				"formula": formula,
+			},
+		]
+
+		make_salary_structure(
+			"SSA Test Slip Field Structure",
+			"Monthly",
+			employee=emp,
+			company="_Test Company",
+			base=1000,
+			earnings=earnings,
+			deductions=[],
+		)
+		ssa = frappe.get_last_doc("Salary Structure Assignment", filters={"employee": emp})
+
+		# full-cycle start_date is the first of the SSA's from_date month, so the
+		# component resolves to base * that month (proving start_date was seeded correctly)
+		expected = 1000 * get_first_day(ssa.from_date).month
+		components = {r.salary_component: r.default_amount for r in ssa.get_evaluated_components().earnings}
+		self.assertEqual(components["SSA Test Period Bonus"], expected)
+
 	def test_do_not_include_in_total_earning_is_in_ctc_but_not_gross(self):
 		"""A 'Do Not Include in Total' earning is part of CTC but not payable - it
 		must be excluded from annual_gross_earning yet included in ctc."""
