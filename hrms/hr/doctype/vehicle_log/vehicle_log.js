@@ -24,6 +24,39 @@ frappe.ui.form.on("Vehicle Log", {
 		}
 	},
 
+	before_cancel: function (frm) {
+		return new Promise((resolve, reject) => {
+			frappe.call({
+				method: "hrms.hr.doctype.vehicle_log.vehicle_log.get_draft_expense_claims",
+				args: {
+					vehicle_log: frm.doc.name,
+				},
+				callback: function (r) {
+					const expense_claims = r.message || [];
+					if (!expense_claims.length) {
+						resolve();
+						return;
+					}
+
+					const expense_claim_links = expense_claims
+						.map((name) => frappe.utils.get_form_link("Expense Claim", name, true))
+						.join(", ");
+
+					frappe.confirm(
+						__(
+							"Draft Expense Claim {0} will be unlinked once Vehicle Log {1} is cancelled. Do you want to proceed?",
+							[expense_claim_links, frm.doc.name.bold()],
+						),
+						() => resolve(),
+						() => reject(),
+						__("Yes"),
+						__("No"),
+					);
+				},
+			});
+		});
+	},
+
 	expense_claim: function (frm) {
 		frappe.call({
 			method: "hrms.hr.doctype.vehicle_log.vehicle_log.make_expense_claim",

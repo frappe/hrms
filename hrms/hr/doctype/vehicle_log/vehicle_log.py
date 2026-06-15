@@ -21,25 +21,7 @@ class VehicleLog(Document):
 		frappe.db.set_value("Vehicle", self.license_plate, "last_odometer", self.odometer)
 
 	def before_cancel(self):
-		submitted_expense_claim = frappe.db.exists(
-			"Expense Claim",
-			{
-				"vehicle_log": self.name,
-				"docstatus": 1,
-			},
-		)
-		if submitted_expense_claim:
-			frappe.throw(
-				_("Cannot cancel Vehicle Log {0} because it is linked to submitted Expense Claim {1}").format(
-					self.name, submitted_expense_claim
-				)
-			)
-
-		for expense_claim in frappe.get_all(
-			"Expense Claim",
-			filters={"vehicle_log": self.name, "docstatus": 0},
-			pluck="name",
-		):
+		for expense_claim in _get_draft_expense_claims(self.name):
 			frappe.db.set_value("Expense Claim", expense_claim, "vehicle_log", None)
 
 	def on_cancel(self):
@@ -73,3 +55,19 @@ def make_expense_claim(docname: str) -> dict:
 		{"expense_date": vehicle_log.date, "description": _("Vehicle Expenses"), "amount": claim_amount},
 	)
 	return exp_claim.as_dict()
+
+
+@frappe.whitelist()
+def get_draft_expense_claims(vehicle_log: str) -> list[str]:
+	frappe.has_permission("Vehicle Log", doc=vehicle_log, throw=True)
+
+	return _get_draft_expense_claims(vehicle_log)
+
+
+def _get_draft_expense_claims(vehicle_log: str) -> list[str]:
+	return frappe.get_all(
+		"Expense Claim",
+		filters={"vehicle_log": vehicle_log, "docstatus": 0},
+		pluck="name",
+		order_by="creation asc",
+	)
