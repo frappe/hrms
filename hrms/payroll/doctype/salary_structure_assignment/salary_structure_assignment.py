@@ -5,7 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cint, flt, get_link_to_form, getdate
+from frappe.utils import cint, date_diff, flt, get_link_to_form, getdate
 
 from hrms.payroll.doctype.payroll_period.payroll_period import get_payroll_period
 from hrms.payroll.doctype.salary_structure.salary_structure import validate_max_benefit_for_flexible_benefit
@@ -342,30 +342,21 @@ class SalaryStructureAssignment(Document):
 	def _get_component_eval_context(self) -> frappe._dict:
 		from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
 
-		# Formulas can reference any salary slip field (the slip evaluates them against
-		# its own as_dict). The SSA has no slip, so mirror a full-cycle for_preview slip
-		# to expose the same field set -- start_date, payment_days, posting_date, etc. --
-		# with full-period values. No components are evaluated, so there is no recursion.
+		data = get_component_eval_context(self.employee, self.as_dict())
+
+		# The SSA has no salary slip, so formulas referencing slip period fields (e.g.
+		# start_date) would raise NameError. Seed a full cycle -- the period containing
+		# from_date -- with no LWP/absence so proration-based formulas yield full-cycle
+		# values (payment_days == total_working_days, ratio 1).
 		frequency = frappe.get_cached_value("Salary Structure", self.salary_structure, "payroll_frequency")
 		dates = get_start_end_dates(frequency, self.from_date, self.company)
-
-		preview_slip = frappe.new_doc("Salary Slip")
-		preview_slip.update(
-			{
-				"employee": self.employee,
-				"company": self.company,
-				"salary_structure": self.salary_structure,
-				"payroll_frequency": frequency,
-				"start_date": dates.start_date,
-				"end_date": dates.end_date,
-			}
-		)
-		preview_slip.get_working_days_details(for_preview=1)  # payment_days == total_working_days
-		preview_slip.leave_without_pay = 0  # SSA has no attendance: full cycle, no LWP/absence
-		preview_slip.absent_days = 0
-
-		data = get_component_eval_context(self.employee, self.as_dict())
-		data.update(preview_slip.as_dict())  # slip fields win, as in Salary Slip.get_data_for_eval
+		period_days = date_diff(dates.end_date, dates.start_date) + 1
+		data.start_date = dates.start_date
+		data.end_date = dates.end_date
+		data.payment_days = period_days
+		data.total_working_days = period_days
+		data.leave_without_pay = 0
+		data.absent_days = 0
 		return data
 
 	def _evaluate_component_table(self, rows, data: frappe._dict) -> list:
