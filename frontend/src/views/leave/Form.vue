@@ -18,7 +18,7 @@
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
 import { createResource } from "frappe-ui"
-import { ref, watch, inject } from "vue"
+import { ref, watch, inject, nextTick } from "vue"
 
 import FormView from "@/components/FormView.vue"
 
@@ -38,6 +38,23 @@ const currEmployee = ref(sessionEmployee.data.name)
 
 // reactive object to store form data
 const leaveApplication = ref({})
+
+// For existing docs, watchers fire during initial data population from the DB.
+// This flag prevents setLeaveBalance() from overwriting the stored
+// "leave balance before application" value during that initial load.
+const isFormInitialized = ref(!props.id)
+if (props.id) {
+	watch(
+		() => leaveApplication.value.name,
+		(name) => {
+			if (name && !isFormInitialized.value) {
+				nextTick(() => {
+					isFormInitialized.value = true
+				})
+			}
+		}
+	)
+}
 
 // get form fields
 const formFields = createResource({
@@ -207,6 +224,7 @@ function setTotalLeaveDays() {
 
 function setLeaveBalance() {
 	if (!areValuesSet()) return
+	if (!isFormInitialized.value) return
 
 	const leaveBalance = createResource({
 		url: "hrms.hr.doctype.leave_application.leave_application.get_leave_balance_on",
