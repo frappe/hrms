@@ -38,7 +38,9 @@ jobs:
         with:
           node-version: 24
           cache: yarn
-          cache-dependency-path: apps/frappe/yarn.lock
+          cache-dependency-path: |
+            apps/frappe/yarn.lock
+            apps/hrms/yarn.lock
 
       - name: Install frappe JS dependencies
         working-directory: apps/frappe
@@ -46,7 +48,7 @@ jobs:
 
       - name: Install hrms JS dependencies
         working-directory: apps/hrms
-        run: yarn install --frozen-lockfile --ignore-scripts
+        run: yarn install --frozen-lockfile
 
       - name: Link node_modules into public/
         working-directory: apps/frappe
@@ -56,9 +58,13 @@ jobs:
         working-directory: apps/frappe
         run: yarn run production
 
+      - name: Build hrms frontend and roster
+        working-directory: apps/hrms
+        run: yarn build
+
       - name: Package assets
         working-directory: apps/hrms
-        run: tar czf hrms-assets.tar.gz -C ../../sites/assets/hrms dist
+        run: tar czf hrms-assets.tar.gz -C ../../sites/assets/hrms dist frontend roster
 
       - name: Upload to rolling release
         working-directory: apps/hrms

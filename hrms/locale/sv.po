@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2026-06-07 10:18+0000\n"
-"PO-Revision-Date: 2026-06-08 15:41\n"
+"PO-Revision-Date: 2026-06-14 18:05\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -1536,22 +1536,22 @@ msgstr "Tillgänglig Frånvaro"
 #: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.js:84
 msgid "Average Feedback Score"
-msgstr "Genomsnittlig Återkoppling Resultat"
+msgstr "Medel Återkoppling Resultat"
 
 #. Label of the average_rating (Rating) field in DocType 'Interview Feedback'
 #: hrms/hr/doctype/interview_feedback/interview_feedback.json
 #: hrms/public/js/templates/feedback_summary.html:5
 msgid "Average Rating"
-msgstr "Genomsnittlig Betyg"
+msgstr "Medel Betyg"
 
 #. Description of the 'Final Score' (Float) field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json
 msgid "Average of Goal Score, Feedback Score, and Self Appraisal Score"
-msgstr "Genomsnitt av Målsättning Resultat, Återkoppling Resultat och Självbedömning Resultat"
+msgstr "Medel av Målsättning Resultat, Återkoppling Resultat och Självbedömning Resultat"
 
 #: hrms/public/js/templates/interview_feedback.html:16
 msgid "Average rating of demonstrated skills"
-msgstr "Genomsnittlig bedömning av uppvisade färdigheter"
+msgstr "Medel bedömning av uppvisade färdigheter"
 
 #: hrms/hr/report/appraisal_overview/appraisal_overview.py:52
 msgid "Avg Feedback Score"
@@ -1765,7 +1765,7 @@ msgstr "Massnärvaro anmälan är i kö med bakgrundsjobb. Det kan ta ett tag. �
 #. DocType 'Appraisal Cycle'
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json
 msgid "By default, the Final Score is calculated as the average of Goal Score, Feedback Score, and Self Appraisal Score. Enable this to set a different formula"
-msgstr "Som standard beräknas slut resultat som genomsnitt av mål resultat, återkoppling resultat och själv bedömning resultat. Aktivera detta för att ange en annan formel"
+msgstr "Som standard beräknas slut resultat som medel av mål resultat, återkoppling resultat och självbedömning resultat. Aktivera detta för att ange annan formel"
 
 #. Label of the ctc (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
@@ -3930,7 +3930,7 @@ msgstr "Avgångar (Denna Månad)"
 #: hrms/hr/doctype/interview/interview.json
 #: hrms/hr/doctype/interview_type/interview_type.json
 msgid "Expected Average Rating"
-msgstr "Förväntat Genomsnittlig Betyg"
+msgstr "Förväntad Medel Betyg"
 
 #. Label of the expected_by (Date) field in DocType 'Job Requisition'
 #: hrms/hr/doctype/job_requisition/job_requisition.json
@@ -7244,7 +7244,7 @@ msgstr "UT"
 #. Label of the average_rating (Rating) field in DocType 'Interview'
 #: hrms/hr/doctype/interview/interview.json
 msgid "Obtained Average Rating"
-msgstr "Erhållet medel Bedömning"
+msgstr "Medel Betyg"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:45
 #: hrms/public/js/salary_slip_deductions_report_filters.js:28
@@ -7422,7 +7422,7 @@ msgstr "Övertildelning"
 
 #: hrms/public/js/templates/interview_feedback.html:4
 msgid "Overall Average Rating"
-msgstr "Övergripande Genomsnittlig Betyg"
+msgstr "Övergripande Medel Betyg"
 
 #: hrms/hr/doctype/attendance_request/attendance_request.py:140
 msgid "Overlapping Attendance Request"

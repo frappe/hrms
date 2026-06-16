@@ -660,7 +660,7 @@ def get_employee_advance_balance() -> list[dict]:
 			& (Advance.paid_amount)
 			& (Advance.employee == employee)
 			# don't need claimed & returned advances, only partly or completely paid ones
-			& (Advance.status.isin(["Paid", "Unpaid"]))
+			& (Advance.status.isin(["Paid", "Partially Paid", "Unpaid"]))
 		)
 		.orderby(Advance.posting_date, order=Order.desc)
 	).run(as_dict=True)
