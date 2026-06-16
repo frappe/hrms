@@ -45,13 +45,16 @@ from hrms.payroll.doctype.salary_slip.salary_slip import (
 	make_salary_slip_from_timesheet,
 )
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
-from hrms.tests.test_utils import get_email_by_subject, get_first_sunday
+from hrms.tests.test_utils import create_company, get_email_by_subject, get_first_sunday
 from hrms.tests.utils import HRMSTestSuite
 
 
 class TestSalarySlip(HRMSTestSuite):
 	def setUp(self):
 		make_payroll_period(company="_Test Company")
+		ensure_company_holiday_list_assignment(
+			"Test Salary Company HLA 2023-2024", "2023-01-01", "2024-12-31"
+		)
 		frappe.db.set_single_value("Payroll Settings", "email_salary_slip_to_employee", 0)
 		frappe.db.set_single_value("HR Settings", "leave_status_notification_template", None)
 		frappe.db.set_single_value("HR Settings", "leave_approval_notification_template", None)
@@ -669,6 +672,96 @@ class TestSalarySlip(HRMSTestSuite):
 		self.assertEqual(ss.earnings[0].default_amount, 50000)
 		self.assertEqual(ss.earnings[1].amount, 3000)
 		self.assertEqual(ss.gross_pay, 78000)
+
+	def test_holiday_list_assignment_for_salary_period(self):
+		company = create_company("Test Salary HLA Company").name
+		emp_id = make_employee("test_salary_hla_as_on@salary.com", company=company)
+		period_start = getdate("2026-01-01")
+		period_end = getdate("2026-01-31")
+		holiday_list_a = make_holiday_list(
+			"Test Salary HLA A", from_date=period_start, to_date=period_end, add_weekly_offs=False
+		)
+		holiday_list_b = make_holiday_list(
+			"Test Salary HLA B",
+			from_date=period_start,
+			to_date=getdate("2026-12-31"),
+			add_weekly_offs=False,
+		)
+		company_holiday_list = make_holiday_list(
+			"Test Salary Company HLA", from_date=period_start, to_date=period_end, add_weekly_offs=False
+		)
+		employee_default = make_holiday_list(
+			"Test Salary HLA Employee Default",
+			from_date=period_start,
+			to_date=period_end,
+			add_weekly_offs=False,
+		)
+		company_default = make_holiday_list(
+			"Test Salary HLA Company Default",
+			from_date=period_start,
+			to_date=period_end,
+			add_weekly_offs=False,
+		)
+		add_holiday(holiday_list_a, "2026-01-01")
+		add_holiday(holiday_list_b, "2026-01-02")
+		add_holiday(company_holiday_list, "2026-01-03")
+		add_holiday(employee_default, "2026-01-04")
+		add_holiday(company_default, "2026-01-05")
+		frappe.db.set_value("Employee", emp_id, "holiday_list", employee_default)
+		frappe.db.set_value("Company", company, "default_holiday_list", company_default)
+		create_holiday_list_assignment(
+			"Company",
+			assigned_to=company,
+			holiday_list=company_holiday_list,
+			company=company,
+			from_date=period_start,
+		)
+		create_holiday_list_assignment(
+			"Employee", assigned_to=emp_id, holiday_list=holiday_list_a, from_date=period_start
+		)
+		create_holiday_list_assignment(
+			"Employee", assigned_to=emp_id, holiday_list=holiday_list_b, from_date=getdate("2026-06-01")
+		)
+
+		ss = frappe.new_doc("Salary Slip")
+		ss.employee = emp_id
+
+		self.assertEqual(ss.get_holidays_for_employee(period_start, period_end), [getdate("2026-01-01")])
+
+	def test_salary_period_holiday_list_default_fallback_order(self):
+		company = create_company("Test Salary HLA Default Company").name
+		emp_id = make_employee("test_salary_hla_default@salary.com", company=company)
+		period_start = getdate("2026-01-01")
+		period_end = getdate("2026-01-31")
+		employee_default = make_holiday_list(
+			"Test Salary Employee Default", from_date=period_start, to_date=period_end, add_weekly_offs=False
+		)
+		company_default = make_holiday_list(
+			"Test Salary Company Default", from_date=period_start, to_date=period_end, add_weekly_offs=False
+		)
+		add_holiday(employee_default, "2026-01-03")
+		add_holiday(company_default, "2026-01-04")
+		frappe.db.set_value("Employee", emp_id, "holiday_list", employee_default)
+		frappe.db.set_value("Company", company, "default_holiday_list", company_default)
+
+		ss = frappe.new_doc("Salary Slip")
+		ss.employee = emp_id
+
+		with self.assertRaises(frappe.ValidationError):
+			ss.get_holidays_for_employee(period_start, period_end)
+
+		from hrms.utils.holiday_list import get_holiday_list_for_employee
+
+		self.assertEqual(
+			get_holiday_list_for_employee(emp_id, as_on=period_start, include_default_holiday_list=True),
+			employee_default,
+		)
+
+		frappe.db.set_value("Employee", emp_id, "holiday_list", None)
+		self.assertEqual(
+			get_holiday_list_for_employee(emp_id, as_on=period_start, include_default_holiday_list=True),
+			company_default,
+		)
 
 	@HRMSTestSuite.change_settings(
 		"Payroll Settings",
@@ -2752,6 +2845,41 @@ def make_holiday_list(
 	holiday_list = holiday_list.name
 
 	return holiday_list
+
+
+def add_holiday(holiday_list, holiday_date, description="Test Holiday"):
+	doc = frappe.get_doc("Holiday List", holiday_list)
+	doc.append("holidays", {"holiday_date": holiday_date, "description": description})
+	doc.save()
+
+
+def ensure_company_holiday_list_assignment(holiday_list_name, from_date, to_date, company="_Test Company"):
+	if frappe.db.exists(
+		"Holiday List Assignment",
+		{"assigned_to": company, "from_date": from_date, "docstatus": 1},
+	):
+		return
+
+	holiday_list = make_holiday_list(holiday_list_name, from_date=from_date, to_date=to_date)
+	create_holiday_list_assignment("Company", company, holiday_list, company=company, from_date=from_date)
+
+
+def create_holiday_list_assignment(
+	applicable_for,
+	assigned_to,
+	holiday_list,
+	company="_Test Company",
+	from_date=None,
+):
+	hla = frappe.new_doc("Holiday List Assignment")
+	hla.applicable_for = applicable_for
+	hla.assigned_to = assigned_to
+	hla.holiday_list = holiday_list
+	hla.employee_company = company
+	hla.from_date = from_date or frappe.db.get_value("Holiday List", holiday_list, "from_date")
+	hla.save()
+	hla.submit()
+	return hla
 
 
 def make_salary_structure_for_payment_days_based_component_dependency(test_statistical_comp=False):

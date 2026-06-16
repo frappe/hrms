@@ -100,11 +100,14 @@ class EmployeeBoardingController(Document):
 				self.assign_task_to_users(task, users)
 
 	def get_holiday_list(self):
+		as_on = (
+			self.date_of_joining if self.doctype == "Employee Onboarding" else self.resignation_letter_date
+		)
 		if self.doctype == "Employee Separation":
-			return get_holiday_list_for_employee(self.employee)
+			return get_holiday_list_for_employee(self.employee, as_on=as_on)
 		else:
 			if self.employee:
-				return get_holiday_list_for_employee(self.employee)
+				return get_holiday_list_for_employee(self.employee, as_on=as_on)
 			else:
 				if not self.holiday_list:
 					frappe.throw(_("Please set the Holiday List."), frappe.MandatoryError)

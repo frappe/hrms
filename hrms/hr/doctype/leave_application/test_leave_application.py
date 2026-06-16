@@ -29,6 +29,7 @@ from hrms.hr.doctype.leave_application.leave_application import (
 	LeaveDayBlockedError,
 	NotAnOptionalHoliday,
 	OverlapError,
+	add_holidays,
 	get_leave_allocation_records,
 	get_leave_balance_on,
 	get_leave_details,
@@ -43,7 +44,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
 )
-from hrms.tests.test_utils import add_date_to_holiday_list, get_first_sunday
+from hrms.tests.test_utils import add_date_to_holiday_list, create_company, get_first_sunday
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -64,12 +65,34 @@ class TestLeaveApplication(HRMSTestSuite):
 		make_holiday_list(
 			"Holiday List w/o Weekly Offs", from_date=from_date, to_date=to_date, add_weekly_offs=False
 		)
+		self.ensure_company_holiday_list_assignment(
+			"Test Leave Company HLA 2013-2019", "2013-01-01", "2019-12-31"
+		)
+		self.ensure_company_holiday_list_assignment(
+			"Test Leave Company HLA 2025-2026", "2025-01-01", "2026-12-31"
+		)
 
 	def _clear_roles(self):
 		frappe.db.sql(
 			"""delete from `tabHas Role` where parent in
 			('test@example.com', 'test1@example.com', 'test2@example.com')"""
 		)
+
+	def ensure_company_holiday_list_assignment(self, holiday_list_name, from_date, to_date):
+		holiday_list = make_holiday_list(holiday_list_name, from_date=from_date, to_date=to_date)
+		if frappe.db.exists(
+			"Holiday List Assignment",
+			{"assigned_to": "_Test Company", "from_date": from_date, "docstatus": 1},
+		):
+			return
+
+		hla = frappe.new_doc("Holiday List Assignment")
+		hla.applicable_for = "Company"
+		hla.assigned_to = "_Test Company"
+		hla.employee_company = "_Test Company"
+		hla.holiday_list = holiday_list
+		hla.from_date = from_date
+		hla.submit()
 
 	def get_application(self, doc):
 		application = frappe.copy_doc(frappe.get_doc("Leave Application", doc))
@@ -81,6 +104,98 @@ class TestLeaveApplication(HRMSTestSuite):
 		while is_holiday(employee=employee, date=date):
 			date = add_days(date, -1)
 		return date
+
+	def test_leave_holidays_use_application_period_holiday_list(self):
+		company = create_company("Test Leave HLA Company").name
+		employee = make_employee("test_leave_hla_as_on@example.com", company=company)
+		period_start = getdate("2026-01-01")
+		holiday_list_a = make_holiday_list(
+			"Test Leave HLA A", from_date=period_start, to_date=getdate("2026-01-31"), add_weekly_offs=False
+		)
+		holiday_list_b = make_holiday_list(
+			"Test Leave HLA B",
+			from_date=period_start,
+			to_date=getdate("2026-12-31"),
+			add_weekly_offs=False,
+		)
+		company_holiday_list = make_holiday_list(
+			"Test Leave Company HLA",
+			from_date=period_start,
+			to_date=getdate("2026-01-31"),
+			add_weekly_offs=False,
+		)
+		employee_default = make_holiday_list(
+			"Test Leave HLA Employee Default",
+			from_date=period_start,
+			to_date=getdate("2026-01-31"),
+			add_weekly_offs=False,
+		)
+		company_default = make_holiday_list(
+			"Test Leave HLA Company Default",
+			from_date=period_start,
+			to_date=getdate("2026-01-31"),
+			add_weekly_offs=False,
+		)
+		add_date_to_holiday_list("2026-01-01", holiday_list_a)
+		add_date_to_holiday_list("2026-01-02", holiday_list_b)
+		add_date_to_holiday_list("2026-01-03", company_holiday_list)
+		add_date_to_holiday_list("2026-01-04", employee_default)
+		add_date_to_holiday_list("2026-01-05", company_default)
+		frappe.db.set_value("Employee", employee, "holiday_list", employee_default)
+		frappe.db.set_value("Company", company, "default_holiday_list", company_default)
+		create_holiday_list_assignment(
+			"Company",
+			assigned_to=company,
+			holiday_list=company_holiday_list,
+			company=company,
+			from_date=period_start,
+		)
+		create_holiday_list_assignment(
+			"Employee", assigned_to=employee, holiday_list=holiday_list_a, from_date=period_start
+		)
+		create_holiday_list_assignment(
+			"Employee", assigned_to=employee, holiday_list=holiday_list_b, from_date=getdate("2026-06-01")
+		)
+
+		events = []
+		add_holidays(events, "2026-01-01", "2026-01-31", employee, company)
+
+		self.assertEqual(len(events), 1)
+		self.assertEqual(events[0]["from_date"], getdate("2026-01-01"))
+
+	def test_leave_holidays_use_employee_default_before_company_default(self):
+		company = create_company("Test Leave HLA Default Company").name
+		employee = make_employee("test_leave_hla_default@example.com", company=company)
+		employee_default = make_holiday_list(
+			"Test Leave Employee Default",
+			from_date=getdate("2026-01-01"),
+			to_date=getdate("2026-01-31"),
+			add_weekly_offs=False,
+		)
+		company_default = make_holiday_list(
+			"Test Leave Company Default",
+			from_date=getdate("2026-01-01"),
+			to_date=getdate("2026-01-31"),
+			add_weekly_offs=False,
+		)
+		add_date_to_holiday_list("2026-01-03", employee_default)
+		add_date_to_holiday_list("2026-01-04", company_default)
+		frappe.db.set_value("Employee", employee, "holiday_list", employee_default)
+		frappe.db.set_value("Company", company, "default_holiday_list", company_default)
+
+		from hrms.utils.holiday_list import get_holiday_list_for_employee
+
+		self.assertIsNone(get_holiday_list_for_employee(employee, as_on="2026-01-01", raise_exception=False))
+		self.assertEqual(
+			get_holiday_list_for_employee(employee, as_on="2026-01-01", include_default_holiday_list=True),
+			employee_default,
+		)
+
+		frappe.db.set_value("Employee", employee, "holiday_list", None)
+		self.assertEqual(
+			get_holiday_list_for_employee(employee, as_on="2026-01-01", include_default_holiday_list=True),
+			company_default,
+		)
 
 	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_validate_application_across_allocations(self):

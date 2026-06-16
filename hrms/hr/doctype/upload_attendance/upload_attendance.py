@@ -78,9 +78,7 @@ def add_data(w, args):
 def get_data(args):
 	dates = get_dates(args)
 	employees = get_active_employees()
-	holidays = get_holidays_for_employees(
-		[employee.name for employee in employees], args["from_date"], args["to_date"]
-	)
+	holidays = get_holidays_for_employees([employee.name for employee in employees], dates)
 	existing_attendance_records = get_existing_attendance_records(args)
 	data = []
 	for date in dates:
@@ -99,8 +97,6 @@ def get_data(args):
 			):
 				existing_attendance = existing_attendance_records[tuple([getdate(date), employee.name])]
 
-			employee_holiday_list = get_holiday_list_for_employee(employee.name)
-
 			row = [
 				existing_attendance and existing_attendance.name or "",
 				employee.name,
@@ -111,20 +107,22 @@ def get_data(args):
 				employee.company,
 				existing_attendance and existing_attendance.naming_series or get_naming_series(),
 			]
-			if date in holidays[employee_holiday_list]:
+			if date in holidays.get(employee.name, ()):
 				row[4] = "Holiday"
 			data.append(row)
 
 	return data
 
 
-def get_holidays_for_employees(employees, from_date, to_date):
+def get_holidays_for_employees(employees, dates):
 	holidays = {}
 	for employee in employees:
-		holiday_list = get_holiday_list_for_employee(employee)
-		holiday = get_holiday_dates_for_employee(employee, getdate(from_date), getdate(to_date))
-		if holiday_list not in holidays:
-			holidays[holiday_list] = holiday
+		holidays[employee] = []
+		for date in dates:
+			if get_holiday_list_for_employee(employee, as_on=date):
+				holidays[employee].extend(
+					get_holiday_dates_for_employee(employee, getdate(date), getdate(date))
+				)
 
 	return holidays
 

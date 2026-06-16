@@ -94,25 +94,92 @@ def get_holiday_dates_between_range(
 
 
 def get_holiday_list_for_employee(
-	employee: str, raise_exception: bool = True, as_on: date | str | None = None, as_dict: bool = False
+	employee: str,
+	raise_exception: bool = True,
+	as_on: date | str | None = None,
+	as_dict: bool = False,
+	include_default_holiday_list: bool = False,
+	shift_type: str | None = None,
 ) -> str:
 	as_on = frappe.utils.getdate(as_on)
+	holiday_list = get_shift_holiday_list(shift_type, as_on, as_dict)
+	if holiday_list:
+		return holiday_list
+
 	holiday_list = get_assigned_holiday_list(employee, as_on, as_dict)
+	company = frappe.db.get_value("Employee", employee, "company")
 	if not holiday_list:
-		company = frappe.db.get_value("Employee", employee, "company")
 		holiday_list = get_assigned_holiday_list(company, as_on, as_dict)
 
+	if include_default_holiday_list and not holiday_list:
+		holiday_list = get_default_holiday_list(employee, as_on, as_dict)
+
+	if include_default_holiday_list and not holiday_list:
+		holiday_list = get_default_holiday_list(company, as_on, as_dict, fieldname="default_holiday_list")
+
 	if not holiday_list and raise_exception:
+		message = (
+			"No Holiday List Assignment was found for Employee {0} or their company {1} for date {2}. "
+			"Please assign through {3}"
+		)
+		if include_default_holiday_list:
+			message = (
+				"No Holiday List was found for Employee {0} or their company {1} for date {2}. "
+				"Please assign through {3} or set a default Holiday List"
+			)
+
 		frappe.throw(
-			_(
-				"No Holiday List was found for Employee {0} or their company {1} for date {2}. Please assign through {3}"
-			).format(
+			_(message).format(
 				frappe.bold(employee),
 				frappe.bold(company),
 				frappe.bold(formatdate(as_on)),
 				get_link_to_form("Holiday List Assignment", label="Holiday List Assignment"),
 			)
 		)
+	return holiday_list
+
+
+def get_shift_holiday_list(
+	shift_type: str | dict | None, as_on: date | str | None = None, as_dict: bool = False
+) -> str:
+	if not shift_type:
+		return None
+
+	if not isinstance(shift_type, str):
+		shift_type_doc = shift_type
+		shift_type = getattr(shift_type_doc, "name", None)
+		if not shift_type and hasattr(shift_type_doc, "get"):
+			shift_type = shift_type_doc.get("name")
+
+	if not shift_type:
+		return None
+
+	holiday_list = frappe.db.get_value("Shift Type", shift_type, "holiday_list")
+	return format_holiday_list_result(holiday_list, as_on, as_dict)
+
+
+def get_default_holiday_list(
+	docname: str | None,
+	as_on: date | str | None = None,
+	as_dict: bool = False,
+	fieldname: str = "holiday_list",
+) -> str:
+	if not docname:
+		return None
+
+	holiday_list = frappe.db.get_value(
+		"Employee" if fieldname == "holiday_list" else "Company", docname, fieldname
+	)
+	return format_holiday_list_result(holiday_list, as_on, as_dict)
+
+
+def format_holiday_list_result(holiday_list: str | None, as_on: date | str | None, as_dict: bool = False):
+	if not holiday_list:
+		return None
+
+	if as_dict:
+		return frappe._dict({"holiday_list": holiday_list, "from_date": getdate(as_on)})
+
 	return holiday_list
 
 

@@ -192,10 +192,12 @@ class TestCompensatoryLeaveRequest(HRMSTestSuite):
 
 	def test_request_on_leave_period_boundary(self):
 		frappe.db.delete("Leave Period")
+		frappe.db.delete("Holiday List Assignment", {"assigned_to": get_employee().name})
 		create_leave_period("2023-01-01", "2023-12-31", "_Test Company")
 		create_holiday_list("2023-01-01", "2023-12-31")
-
 		employee = get_employee()
+		create_holiday_list_assignment("Employee", employee.name, self.holiday_list, from_date="2023-01-01")
+
 		boundary_date = "2023-12-31"
 		add_date_to_holiday_list(boundary_date, self.holiday_list)
 		mark_attendance(employee, boundary_date, "Present")
