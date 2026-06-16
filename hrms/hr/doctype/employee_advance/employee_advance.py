@@ -20,47 +20,6 @@ class EmployeeAdvanceOverPayment(frappe.ValidationError):
 
 
 class EmployeeAdvance(Document):
-<<<<<<< HEAD
-=======
-	# begin: auto-generated types
-	# This code is auto-generated. Do not modify anything in this block.
-
-	from typing import TYPE_CHECKING
-
-	if TYPE_CHECKING:
-		from frappe.types import DF
-
-		advance_account: DF.Link | None
-		advance_amount: DF.Currency
-		amended_from: DF.Link | None
-		base_paid_amount: DF.Currency
-		claimed_amount: DF.Currency
-		company: DF.Link
-		currency: DF.Link
-		department: DF.Link | None
-		employee: DF.Link
-		employee_name: DF.ReadOnly | None
-		mode_of_payment: DF.Link | None
-		naming_series: DF.Literal["HR-EAD-.YYYY.-"]
-		paid_amount: DF.Currency
-		pending_amount: DF.Currency
-		posting_date: DF.Date
-		purpose: DF.SmallText
-		repay_unclaimed_amount_from_salary: DF.Check
-		return_amount: DF.Currency
-		status: DF.Literal[
-			"Draft",
-			"Paid",
-			"Partially Paid",
-			"Unpaid",
-			"Claimed",
-			"Returned",
-			"Partly Claimed and Returned",
-			"Cancelled",
-		]
-	# end: auto-generated types
-
->>>>>>> 03d75ae4 (feat: add partially paid status in employee advance)
 	def validate(self):
 		validate_active_employee(self.employee)
 		self.validate_advance_account_currency()
