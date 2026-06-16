@@ -319,9 +319,6 @@ def get_shifts(
 			ShiftAssignment.end_date,
 			ShiftAssignment.status,
 			ShiftAssignment.shift_schedule_assignment,
-			ShiftType.start_time,
-			ShiftType.end_time,
-			ShiftType.color,
 		],
 		filters={
 			"docstatus": 1,
@@ -337,6 +334,7 @@ def get_shifts(
 	query = (
 		query.left_join(ShiftType)
 		.on(ShiftAssignment.shift_type == ShiftType.name)
+		.select(ShiftType.start_time, ShiftType.end_time, ShiftType.color)
 		.left_join(Employee)
 		.on(ShiftAssignment.employee == Employee.name)
 	)
