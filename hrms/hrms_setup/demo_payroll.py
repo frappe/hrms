@@ -2,9 +2,11 @@ import frappe
 
 
 def setup_payroll_runs():
+	from hrms.hrms_setup.demo import get_demo_records
+
 	frappe.db.set_single_value("Payroll Settings", "email_salary_slip_to_employee", 0)
 
-	records = get_payroll_entry_records()
+	records = get_demo_records("payroll_entry")
 	clear_stale_draft_payroll_entries(records)
 
 	for record in records:
@@ -27,12 +29,6 @@ def setup_payroll_runs():
 				f"Failed to create payroll for {record.get('start_date')} {record.get('currency')}", str(e)
 			)
 			continue
-
-
-def get_payroll_entry_records():
-	from hrms.hrms_setup.demo import get_demo_records
-
-	return get_demo_records("payroll_entry")
 
 
 def clear_stale_draft_payroll_entries(records):

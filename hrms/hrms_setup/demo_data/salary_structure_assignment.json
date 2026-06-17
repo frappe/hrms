@@ -7,7 +7,7 @@
         "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -17,7 +17,7 @@
         "department": "Sales - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -27,7 +27,7 @@
         "department": "HR - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -37,7 +37,7 @@
         "department": "Finance - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -47,7 +47,7 @@
         "department": "Operations - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -57,7 +57,7 @@
         "department": "Business Development - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -67,7 +67,7 @@
         "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -77,7 +77,7 @@
         "department": "Sales - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -87,7 +87,7 @@
         "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -97,7 +97,7 @@
         "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -107,7 +107,7 @@
         "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -117,7 +117,7 @@
         "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -127,7 +127,7 @@
         "department": "Finance - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -137,7 +137,7 @@
         "department": "HR - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -147,7 +147,7 @@
         "department": "Operations - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -157,7 +157,7 @@
         "department": "Sales - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -167,7 +167,7 @@
         "department": "Business Development - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -177,7 +177,7 @@
         "department": "Finance - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -187,7 +187,7 @@
         "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -197,7 +197,7 @@
         "department": "Operations - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -207,7 +207,7 @@
         "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -217,7 +217,7 @@
         "department": "Sales - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -227,7 +227,7 @@
         "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -237,7 +237,7 @@
         "department": "Finance - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -247,7 +247,7 @@
         "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -257,7 +257,7 @@
         "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -267,7 +267,7 @@
         "department": "Sales - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -277,7 +277,7 @@
         "department": "HR - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -287,7 +287,7 @@
         "department": "Finance - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Salary Structure Assignment",
@@ -297,6 +297,6 @@
         "department": "Engineering - {{ demo_company_abbr }}",
         "from_date": "2026-01-01",
         "currency": "USD",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}"
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     }
 ]

@@ -7,8 +7,8 @@
         "start_date": "2026-05-01",
         "end_date": "2026-05-31",
         "posting_date": "2026-05-31",
-        "payment_account": "{{ demo_cash_account }}",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}",
+        "payment_account": "{{ 'Cash - ' + demo_company_abbr }}",
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}",
         "exchange_rate": 1
     },
     {
@@ -19,8 +19,8 @@
         "start_date": "2026-04-01",
         "end_date": "2026-04-30",
         "posting_date": "2026-04-30",
-        "payment_account": "{{ demo_cash_account }}",
-        "payroll_payable_account": "{{ demo_payroll_payable_account }}",
+        "payment_account": "{{ 'Cash - ' + demo_company_abbr }}",
+        "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}",
         "exchange_rate": 1
     }
 ]

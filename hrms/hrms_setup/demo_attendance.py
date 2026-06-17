@@ -5,6 +5,8 @@ from frappe.utils import add_days, getdate
 
 
 def create_leave_allocations(employees, leave_period, company):
+	from hrms.hrms_setup.demo import get_demo_records
+
 	employee_names = {employee.name for employee in employees}
 	leave_period_start = getdate(leave_period.from_date)
 	leave_period_end = getdate(leave_period.to_date)
@@ -36,11 +38,13 @@ def create_leave_allocations(employees, leave_period, company):
 
 
 def create_leave_applications(employees, leave_period):
+	from hrms.hrms_setup.demo import get_demo_records
+
 	employee_names = {employee.name for employee in employees}
 	leave_period_start = getdate(leave_period.from_date)
 	leave_period_end = getdate(leave_period.to_date)
 
-	for record in get_leave_application_records():
+	for record in get_demo_records("leave_application"):
 		if record.get("employee") not in employee_names:
 			continue
 
@@ -50,16 +54,6 @@ def create_leave_applications(employees, leave_period):
 			continue
 
 		create_leave_application(record)
-
-
-def get_leave_application_records():
-	return get_demo_records("leave_application")
-
-
-def get_demo_records(doctype):
-	from hrms.hrms_setup.demo import get_demo_records as get_records
-
-	return get_records(doctype)
 
 
 def create_and_submit_doc(record):

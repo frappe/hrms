@@ -6,6 +6,8 @@ from frappe.utils import getdate
 
 
 def setup_salary_structure_assignments(company):
+	from hrms.hrms_setup.demo import get_demo_records
+
 	for record in get_demo_records("salary_structure_assignment"):
 		if record.get("company") != company or not frappe.db.exists("Company", record.get("company")):
 			continue
@@ -38,12 +40,6 @@ def get_valid_salary_structure_assignment_record(record):
 		record["from_date"] = joining_date
 
 	return record
-
-
-def get_demo_records(doctype):
-	from hrms.hrms_setup.demo import get_demo_records as get_records
-
-	return get_records(doctype)
 
 
 def create_and_submit_doc(record):

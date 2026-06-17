@@ -9,7 +9,7 @@
             {
                 "doctype": "Salary Component Account",
                 "company": "{{ demo_company }}",
-                "account": "{{ demo_salary_account }}"
+                "account": "{{ 'Salary - ' + demo_company_abbr }}"
             }
         ]
     },
@@ -23,7 +23,7 @@
             {
                 "doctype": "Salary Component Account",
                 "company": "{{ demo_company }}",
-                "account": "{{ demo_salary_account }}"
+                "account": "{{ 'Salary - ' + demo_company_abbr }}"
             }
         ]
     },
@@ -37,7 +37,7 @@
             {
                 "doctype": "Salary Component Account",
                 "company": "{{ demo_company }}",
-                "account": "{{ demo_salary_account }}"
+                "account": "{{ 'Salary - ' + demo_company_abbr }}"
             }
         ]
     },
@@ -51,7 +51,7 @@
             {
                 "doctype": "Salary Component Account",
                 "company": "{{ demo_company }}",
-                "account": "{{ demo_salary_account }}"
+                "account": "{{ 'Salary - ' + demo_company_abbr }}"
             }
         ]
     },
@@ -65,7 +65,7 @@
             {
                 "doctype": "Salary Component Account",
                 "company": "{{ demo_company }}",
-                "account": "{{ demo_salary_account }}"
+                "account": "{{ 'Salary - ' + demo_company_abbr }}"
             }
         ]
     },
@@ -79,7 +79,7 @@
             {
                 "doctype": "Salary Component Account",
                 "company": "{{ demo_company }}",
-                "account": "{{ demo_salary_account }}"
+                "account": "{{ 'Salary - ' + demo_company_abbr }}"
             }
         ]
     },
@@ -94,7 +94,7 @@
             {
                 "doctype": "Salary Component Account",
                 "company": "{{ demo_company }}",
-                "account": "{{ demo_salary_account }}"
+                "account": "{{ 'Salary - ' + demo_company_abbr }}"
             }
         ]
     },
@@ -108,7 +108,7 @@
             {
                 "doctype": "Salary Component Account",
                 "company": "{{ demo_company }}",
-                "account": "{{ demo_salary_account }}"
+                "account": "{{ 'Salary - ' + demo_company_abbr }}"
             }
         ]
     }

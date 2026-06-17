@@ -22,7 +22,7 @@
         ],
         "exchange_rate": 1,
         "currency": "USD",
-        "payable_account": "{{ demo_expense_payable_account }}"
+        "payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Expense Claim",
@@ -47,7 +47,7 @@
         ],
         "exchange_rate": 1,
         "currency": "USD",
-        "payable_account": "{{ demo_expense_payable_account }}"
+        "payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Expense Claim",
@@ -72,7 +72,7 @@
         ],
         "exchange_rate": 1,
         "currency": "USD",
-        "payable_account": "{{ demo_expense_payable_account }}"
+        "payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Expense Claim",
@@ -97,7 +97,7 @@
         ],
         "exchange_rate": 1,
         "currency": "USD",
-        "payable_account": "{{ demo_expense_payable_account }}"
+        "payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Expense Claim",
@@ -122,7 +122,7 @@
         ],
         "exchange_rate": 1,
         "currency": "USD",
-        "payable_account": "{{ demo_expense_payable_account }}"
+        "payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Expense Claim",
@@ -147,7 +147,7 @@
         ],
         "exchange_rate": 1,
         "currency": "USD",
-        "payable_account": "{{ demo_expense_payable_account }}"
+        "payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Expense Claim",
@@ -172,7 +172,7 @@
         ],
         "exchange_rate": 1,
         "currency": "USD",
-        "payable_account": "{{ demo_expense_payable_account }}"
+        "payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Expense Claim",
@@ -197,7 +197,7 @@
         ],
         "exchange_rate": 1,
         "currency": "USD",
-        "payable_account": "{{ demo_expense_payable_account }}"
+        "payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Expense Claim",
@@ -222,7 +222,7 @@
         ],
         "exchange_rate": 1,
         "currency": "USD",
-        "payable_account": "{{ demo_expense_payable_account }}"
+        "payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Expense Claim",
@@ -247,6 +247,6 @@
         ],
         "exchange_rate": 1,
         "currency": "USD",
-        "payable_account": "{{ demo_expense_payable_account }}"
+        "payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     }
 ]
