@@ -141,6 +141,7 @@ hrms_demo_transaction_doctypes = [
 
 hrms_demo_background_transaction_doctypes = [
 	"appraisal",
+	"employee_performance_feedback",
 ]
 
 # Uninstallation

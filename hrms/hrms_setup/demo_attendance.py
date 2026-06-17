@@ -5,7 +5,7 @@ from frappe.utils import add_days, getdate
 
 
 def create_leave_allocations(employees, leave_period, company):
-	from hrms.hrms_setup.demo import get_demo_records
+	from hrms.hrms_setup.demo import create_demo_record, get_demo_records
 
 	employee_names = {employee.name for employee in employees}
 	leave_period_start = getdate(leave_period.from_date)
@@ -34,7 +34,7 @@ def create_leave_allocations(employees, leave_period, company):
 		):
 			continue
 
-		create_and_submit_doc(record)
+		create_demo_record(record)
 
 
 def create_leave_applications(employees, leave_period):
@@ -56,43 +56,16 @@ def create_leave_applications(employees, leave_period):
 		create_leave_application(record)
 
 
-def create_and_submit_doc(record):
-	previous_in_import = getattr(frappe.flags, "in_import", False)
-	if record.get("name"):
-		frappe.flags.in_import = True
-
-	try:
-		doc = frappe.get_doc(record)
-		doc.insert(ignore_permissions=True, ignore_if_duplicate=True)
-		if doc.docstatus == 0:
-			doc.submit()
-	except Exception:
-		log_demo_attendance_error(record)
-	finally:
-		frappe.flags.in_import = previous_in_import
-
-
 def create_leave_application(record):
+	from hrms.hrms_setup.demo import create_demo_record
+
 	if record.get("name") and frappe.db.exists("Leave Application", record["name"]):
 		return
 
 	if not has_leave_days(record):
 		return
 
-	previous_in_import = getattr(frappe.flags, "in_import", False)
-	if record.get("name"):
-		frappe.flags.in_import = True
-
-	try:
-		application = frappe.get_doc(record)
-		application.insert(ignore_permissions=True, ignore_if_duplicate=True)
-
-		if application.status in ["Approved", "Rejected"] and application.docstatus == 0:
-			application.submit()
-	except Exception:
-		log_demo_attendance_error(record)
-	finally:
-		frappe.flags.in_import = previous_in_import
+	create_demo_record(record)
 
 
 def has_leave_days(record):

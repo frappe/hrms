@@ -64,7 +64,6 @@ def clear_demo_data():
 
 def clear_hrms_demo_data(company):
 	clear_company_linked_hrms_data(company)
-	clear_demo_appraisal_feedback()
 
 	for hook_name in HRMS_DEMO_CLEAR_HOOKS:
 		for doctype in frappe.get_hooks(hook_name)[::-1]:
@@ -136,7 +135,13 @@ def clear_demo_records(doctype):
 			continue
 
 		valid_columns = frappe.get_meta(record_doctype).get_valid_columns()
-		skip_fields = {"total_score", "final_score", "total_claimed_amount", "total_sanctioned_amount"}
+		skip_fields = {
+			"status",
+			"total_score",
+			"final_score",
+			"total_claimed_amount",
+			"total_sanctioned_amount",
+		}
 		filters = {
 			key: value
 			for key, value in record.items()
@@ -184,13 +189,12 @@ def log_demo_data_failed_notification(error_log):
 
 
 def setup_demo(args):
-	process_masters()
+	process_demo_records("hrms_demo_master_doctypes")
+	setup_demo_fiscal_years()
 	setup_payroll_accounts()
-	submit_holiday_list_assignments()
 	setup_employees()
 	setup_expense_claim_type_accounts()
-	process_transactions()
-	submit_decided_expense_claims()
+	process_demo_records("hrms_demo_transaction_doctypes")
 	enqueue_dynamic_demo_data()
 
 
@@ -224,11 +228,9 @@ def setup_dynamic_demo_data(company=None):
 	capture("dynamic_demo_data_creation_started", "hrms")
 	try:
 		company = company or get_demo_company()
-		process_background_masters()
-		submit_salary_structures()
+		process_demo_records("hrms_demo_background_master_doctypes")
 		set_employee_recruitment_links()
-		submit_accepted_job_offers()
-		setup_demo_appraisals()
+		process_demo_records("hrms_demo_background_transaction_doctypes")
 		setup_salary_structure_assignments(company)
 		setup_leave_and_attendance(company)
 		setup_payroll_accounts()
@@ -239,22 +241,6 @@ def setup_dynamic_demo_data(company=None):
 		raise
 
 	capture("dynamic_demo_data_creation_completed", "hrms")
-
-
-def process_masters():
-	process_demo_records("hrms_demo_master_doctypes")
-
-
-def process_transactions():
-	process_demo_records("hrms_demo_transaction_doctypes")
-
-
-def process_background_masters():
-	process_demo_records("hrms_demo_background_master_doctypes")
-
-
-def process_background_transactions():
-	process_demo_records("hrms_demo_background_transaction_doctypes")
 
 
 def process_demo_records(hook_name):
@@ -284,105 +270,6 @@ def create_demo_record(record):
 		frappe.flags.in_import = previous_in_import
 
 
-def setup_demo_appraisals():
-	process_background_transactions()
-	for record in get_appraisal_feedback_records():
-		submit_demo_appraisal_feedback(create_appraisal_feedback(record))
-
-	submit_demo_appraisals()
-
-
-def submit_demo_appraisal_feedback(feedback):
-	if feedback and frappe.db.get_value("Employee Performance Feedback", feedback, "docstatus") == 0:
-		frappe.get_doc("Employee Performance Feedback", feedback).submit()
-
-
-def submit_demo_appraisals():
-	for record in json.loads(read_data_file_using_hooks("appraisal")):
-		appraisal = frappe.db.get_value(
-			"Appraisal",
-			{
-				"employee": record.get("employee"),
-				"appraisal_cycle": record.get("appraisal_cycle"),
-				"docstatus": 0,
-			},
-			"name",
-		)
-		if appraisal:
-			frappe.get_doc("Appraisal", appraisal).submit()
-
-
-def create_appraisal_feedback(record):
-	record = record.copy()
-	appraisal = get_appraisal_for_feedback(record)
-	if not appraisal:
-		return
-
-	feedback_filters = {
-		"employee": record.get("employee"),
-		"reviewer": record.get("reviewer"),
-		"appraisal": appraisal,
-		"docstatus": ("!=", 2),
-	}
-	feedback = frappe.db.get_value(
-		"Employee Performance Feedback",
-		feedback_filters,
-		"name",
-	)
-	if feedback:
-		return feedback
-
-	record["appraisal"] = appraisal
-	create_demo_record(record)
-	return frappe.db.get_value(
-		"Employee Performance Feedback",
-		feedback_filters,
-		"name",
-	)
-
-
-def clear_demo_appraisal_feedback():
-	for record in get_appraisal_feedback_records():
-		appraisal = get_appraisal_for_feedback(record)
-		if not appraisal:
-			continue
-
-		for feedback in frappe.get_all(
-			"Employee Performance Feedback",
-			filters={
-				"employee": record.get("employee"),
-				"reviewer": record.get("reviewer"),
-				"appraisal": appraisal,
-				"docstatus": ("!=", 2),
-			},
-			pluck="name",
-		):
-			delete_demo_doc("Employee Performance Feedback", feedback)
-
-
-def get_appraisal_feedback_records():
-	try:
-		data = read_data_file_using_hooks("employee_performance_feedback")
-	except FileNotFoundError:
-		return []
-
-	return json.loads(data or "[]")
-
-
-def get_appraisal_for_feedback(record):
-	if record.get("appraisal"):
-		return record["appraisal"]
-
-	filters = {
-		"employee": record.get("employee"),
-		"docstatus": ("!=", 2),
-	}
-	if record.get("appraisal_cycle"):
-		filters["appraisal_cycle"] = record["appraisal_cycle"]
-
-	return frappe.db.get_value("Appraisal", filters, "name")
-
-
 def read_data_file_using_hooks(doctype, context=None):
 	with open(get_data_path(doctype)) as f:
 		return render_demo_template(f.read(), context)
@@ -398,17 +285,6 @@ def render_demo_template(data, context=None):
 		return data
 
 	return frappe.render_template(data, context or get_demo_company_context())
-
-
-def submit_decided_expense_claims():
-	for ec in frappe.get_all(
-		"Expense Claim",
-		{"approval_status": ("in", ["Approved", "Rejected"]), "docstatus": 0},
-	):
-		try:
-			frappe.get_doc("Expense Claim", ec.name).submit()
-		except Exception:
-			continue
 
 
 def setup_demo_fiscal_years(context=None):
@@ -490,18 +366,6 @@ def setup_salary_component_accounts():
 		component.save(ignore_permissions=True)
 
 
-def submit_salary_structures():
-	for ss in frappe.get_all("Salary Structure", {"company": get_demo_company(), "docstatus": 0}):
-		frappe.get_doc("Salary Structure", ss.name).submit()
-
-
-def submit_holiday_list_assignments():
-	for hla in frappe.get_all(
-		"Holiday List Assignment", {"assigned_to": get_demo_company(), "docstatus": 0}, pluck="name"
-	):
-		frappe.get_doc("Holiday List Assignment", hla).submit()
-
-
 def setup_employees():
 	records = json.loads(read_data_file_using_hooks("employee"))
 	if not records:
@@ -559,16 +423,6 @@ def set_employee_recruitment_links():
 			employee_doc.save(ignore_permissions=True)
 
 
-def submit_accepted_job_offers():
-	for job_offer in frappe.get_all("Job Offer", {"status": "Accepted", "docstatus": 0}, pluck="name"):
-		try:
-			offer = frappe.get_doc("Job Offer", job_offer)
-			offer.flags.ignore_mandatory = True
-			offer.submit()
-		except Exception:
-			continue
-
-
 def get_data_path(doctype):
 	return os.path.join(os.path.dirname(__file__), "demo_data", f"{doctype}.json")
 
@@ -588,12 +442,15 @@ def get_demo_company_context(args=None):
 	if not demo_company:
 		frappe.throw(_("Demo company is not set. Please run ERPNext demo setup first."))
 
-	demo_company_abbr = frappe.db.get_value("Company", demo_company, "abbr")
+	demo_company_abbr, demo_company_currency = frappe.db.get_value(
+		"Company", demo_company, ["abbr", "default_currency"]
+	)
 
 	context = frappe._dict(
 		base_company=None,
 		demo_company=demo_company,
 		demo_company_abbr=demo_company_abbr,
+		demo_company_currency=demo_company_currency,
 		demo_fiscal_year=f"{DEMO_FISCAL_YEAR} - {demo_company_abbr}",
 	)
 

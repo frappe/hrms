@@ -1,6 +1,8 @@
 [
     {
         "doctype": "Appraisal",
+        "name": "HR-APR-DEMO-00001",
+        "docstatus": 1,
         "naming_series": "HR-APR-.YYYY.-",
         "employee": "HR-EMP-00001",
         "company": "{{ demo_company }}",
@@ -79,6 +81,8 @@
     },
     {
         "doctype": "Appraisal",
+        "name": "HR-APR-DEMO-00002",
+        "docstatus": 1,
         "naming_series": "HR-APR-.YYYY.-",
         "employee": "HR-EMP-00002",
         "company": "{{ demo_company }}",
@@ -157,6 +161,8 @@
     },
     {
         "doctype": "Appraisal",
+        "name": "HR-APR-DEMO-00003",
+        "docstatus": 1,
         "naming_series": "HR-APR-.YYYY.-",
         "employee": "HR-EMP-00003",
         "company": "{{ demo_company }}",
@@ -235,6 +241,8 @@
     },
     {
         "doctype": "Appraisal",
+        "name": "HR-APR-DEMO-00004",
+        "docstatus": 1,
         "naming_series": "HR-APR-.YYYY.-",
         "employee": "HR-EMP-00004",
         "company": "{{ demo_company }}",
@@ -313,6 +321,8 @@
     },
     {
         "doctype": "Appraisal",
+        "name": "HR-APR-DEMO-00005",
+        "docstatus": 1,
         "naming_series": "HR-APR-.YYYY.-",
         "employee": "HR-EMP-00005",
         "company": "{{ demo_company }}",
@@ -391,6 +401,8 @@
     },
     {
         "doctype": "Appraisal",
+        "name": "HR-APR-DEMO-00006",
+        "docstatus": 1,
         "naming_series": "HR-APR-.YYYY.-",
         "employee": "HR-EMP-00006",
         "company": "{{ demo_company }}",
@@ -469,6 +481,8 @@
     },
     {
         "doctype": "Appraisal",
+        "name": "HR-APR-DEMO-00007",
+        "docstatus": 1,
         "naming_series": "HR-APR-.YYYY.-",
         "employee": "HR-EMP-00007",
         "company": "{{ demo_company }}",
@@ -547,6 +561,8 @@
     },
     {
         "doctype": "Appraisal",
+        "name": "HR-APR-DEMO-00008",
+        "docstatus": 1,
         "naming_series": "HR-APR-.YYYY.-",
         "employee": "HR-EMP-00008",
         "company": "{{ demo_company }}",
@@ -625,6 +641,8 @@
     },
     {
         "doctype": "Appraisal",
+        "name": "HR-APR-DEMO-00009",
+        "docstatus": 1,
         "naming_series": "HR-APR-.YYYY.-",
         "employee": "HR-EMP-00009",
         "company": "{{ demo_company }}",
@@ -703,6 +721,8 @@
     },
     {
         "doctype": "Appraisal",
+        "name": "HR-APR-DEMO-00010",
+        "docstatus": 1,
         "naming_series": "HR-APR-.YYYY.-",
         "employee": "HR-EMP-00013",
         "company": "{{ demo_company }}",

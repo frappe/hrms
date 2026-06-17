@@ -6,7 +6,7 @@ from frappe.utils import getdate
 
 
 def setup_salary_structure_assignments(company):
-	from hrms.hrms_setup.demo import get_demo_records
+	from hrms.hrms_setup.demo import create_demo_record, get_demo_records
 
 	for record in get_demo_records("salary_structure_assignment"):
 		if record.get("company") != company or not frappe.db.exists("Company", record.get("company")):
@@ -30,7 +30,7 @@ def setup_salary_structure_assignments(company):
 		):
 			continue
 
-		create_and_submit_doc(record)
+		create_demo_record(record)
 
 
 def get_valid_salary_structure_assignment_record(record):
@@ -40,25 +40,6 @@ def get_valid_salary_structure_assignment_record(record):
 		record["from_date"] = joining_date
 
 	return record
-
-
-def create_and_submit_doc(record):
-	previous_in_import = getattr(frappe.flags, "in_import", False)
-	if record.get("name"):
-		frappe.flags.in_import = True
-
-	try:
-		doc = frappe.get_doc(record)
-		doc.insert(ignore_permissions=True, ignore_if_duplicate=True)
-		if doc.docstatus == 0:
-			doc.submit()
-	except Exception:
-		frappe.log_error(
-			title=f"Failed to create HR demo {record.get('doctype')}",
-			message=frappe.get_traceback(),
-		)
-	finally:
-		frappe.flags.in_import = previous_in_import
 
 
 def get_employee_records(company):

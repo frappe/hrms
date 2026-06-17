@@ -21,11 +21,12 @@
             }
         ],
         "exchange_rate": 1,
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Expense Claim",
+        "docstatus": 1,
         "employee": "HR-EMP-00006",
         "company": "{{ demo_company }}",
         "expense_approver": "",
@@ -34,6 +35,8 @@
         "total_claimed_amount": 11287,
         "total_sanctioned_amount": 11287,
         "is_paid": 1,
+        "mode_of_payment": "Cash",
+        "cost_center": "{{ 'Main - ' + demo_company_abbr }}",
         "status": "Approved",
         "expenses": [
             {
@@ -42,15 +45,17 @@
                 "expense_date": "2026-03-09",
                 "amount": 11287,
                 "description": "Food expense - Training",
-                "sanctioned_amount": 11287
+                "sanctioned_amount": 11287,
+                "cost_center": "{{ 'Main - ' + demo_company_abbr }}"
             }
         ],
         "exchange_rate": 1,
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Expense Claim",
+        "docstatus": 1,
         "employee": "HR-EMP-00005",
         "company": "{{ demo_company }}",
         "expense_approver": "",
@@ -59,6 +64,8 @@
         "total_claimed_amount": 13452,
         "total_sanctioned_amount": 13452,
         "is_paid": 1,
+        "mode_of_payment": "Cash",
+        "cost_center": "{{ 'Main - ' + demo_company_abbr }}",
         "status": "Approved",
         "expenses": [
             {
@@ -67,15 +74,17 @@
                 "expense_date": "2026-04-12",
                 "amount": 13452,
                 "description": "Others expense - Field work",
-                "sanctioned_amount": 13452
+                "sanctioned_amount": 13452,
+                "cost_center": "{{ 'Main - ' + demo_company_abbr }}"
             }
         ],
         "exchange_rate": 1,
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Expense Claim",
+        "docstatus": 1,
         "employee": "HR-EMP-00002",
         "company": "{{ demo_company }}",
         "expense_approver": "",
@@ -84,6 +93,8 @@
         "total_claimed_amount": 12034,
         "total_sanctioned_amount": 12034,
         "is_paid": 1,
+        "mode_of_payment": "Cash",
+        "cost_center": "{{ 'Main - ' + demo_company_abbr }}",
         "status": "Approved",
         "expenses": [
             {
@@ -92,15 +103,17 @@
                 "expense_date": "2026-03-10",
                 "amount": 12034,
                 "description": "Others expense - Office work",
-                "sanctioned_amount": 12034
+                "sanctioned_amount": 12034,
+                "cost_center": "{{ 'Main - ' + demo_company_abbr }}"
             }
         ],
         "exchange_rate": 1,
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Expense Claim",
+        "docstatus": 1,
         "employee": "HR-EMP-00001",
         "company": "{{ demo_company }}",
         "expense_approver": "",
@@ -109,6 +122,8 @@
         "total_claimed_amount": 9147,
         "total_sanctioned_amount": 9147,
         "is_paid": 1,
+        "mode_of_payment": "Cash",
+        "cost_center": "{{ 'Main - ' + demo_company_abbr }}",
         "status": "Approved",
         "expenses": [
             {
@@ -117,15 +132,17 @@
                 "expense_date": "2026-03-22",
                 "amount": 9147,
                 "description": "Medical expense - Client visit",
-                "sanctioned_amount": 9147
+                "sanctioned_amount": 9147,
+                "cost_center": "{{ 'Main - ' + demo_company_abbr }}"
             }
         ],
         "exchange_rate": 1,
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Expense Claim",
+        "docstatus": 1,
         "employee": "HR-EMP-00004",
         "company": "{{ demo_company }}",
         "expense_approver": "",
@@ -134,6 +151,7 @@
         "total_claimed_amount": 13842,
         "total_sanctioned_amount": 0,
         "is_paid": 0,
+        "cost_center": "{{ 'Main - ' + demo_company_abbr }}",
         "status": "Rejected",
         "expenses": [
             {
@@ -142,15 +160,17 @@
                 "expense_date": "2026-04-07",
                 "amount": 13842,
                 "description": "Medical expense - Field work",
-                "sanctioned_amount": 0
+                "sanctioned_amount": 0,
+                "cost_center": "{{ 'Main - ' + demo_company_abbr }}"
             }
         ],
         "exchange_rate": 1,
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Expense Claim",
+        "docstatus": 1,
         "employee": "HR-EMP-00007",
         "company": "{{ demo_company }}",
         "expense_approver": "",
@@ -159,6 +179,7 @@
         "total_claimed_amount": 7850,
         "total_sanctioned_amount": 7850,
         "is_paid": 0,
+        "cost_center": "{{ 'Main - ' + demo_company_abbr }}",
         "status": "Approved",
         "expenses": [
             {
@@ -167,11 +188,12 @@
                 "expense_date": "2026-04-18",
                 "amount": 7850,
                 "description": "Others expense - Customer workshop supplies",
-                "sanctioned_amount": 7850
+                "sanctioned_amount": 7850,
+                "cost_center": "{{ 'Main - ' + demo_company_abbr }}"
             }
         ],
         "exchange_rate": 1,
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
@@ -196,11 +218,12 @@
             }
         ],
         "exchange_rate": 1,
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Expense Claim",
+        "docstatus": 1,
         "employee": "HR-EMP-00009",
         "company": "{{ demo_company }}",
         "expense_approver": "",
@@ -209,6 +232,7 @@
         "total_claimed_amount": 16500,
         "total_sanctioned_amount": 0,
         "is_paid": 0,
+        "cost_center": "{{ 'Main - ' + demo_company_abbr }}",
         "status": "Rejected",
         "expenses": [
             {
@@ -217,15 +241,17 @@
                 "expense_date": "2026-05-02",
                 "amount": 16500,
                 "description": "Others expense - Missing approval documentation",
-                "sanctioned_amount": 0
+                "sanctioned_amount": 0,
+                "cost_center": "{{ 'Main - ' + demo_company_abbr }}"
             }
         ],
         "exchange_rate": 1,
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
     {
         "doctype": "Expense Claim",
+        "docstatus": 1,
         "employee": "HR-EMP-00010",
         "company": "{{ demo_company }}",
         "expense_approver": "",
@@ -234,6 +260,7 @@
         "total_claimed_amount": 3920,
         "total_sanctioned_amount": 0,
         "is_paid": 0,
+        "cost_center": "{{ 'Main - ' + demo_company_abbr }}",
         "status": "Rejected",
         "expenses": [
             {
@@ -242,11 +269,12 @@
                 "expense_date": "2026-05-08",
                 "amount": 3920,
                 "description": "Medical expense - Policy exception declined",
-                "sanctioned_amount": 0
+                "sanctioned_amount": 0,
+                "cost_center": "{{ 'Main - ' + demo_company_abbr }}"
             }
         ],
         "exchange_rate": 1,
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     }
 ]

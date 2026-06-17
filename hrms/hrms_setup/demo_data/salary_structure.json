@@ -1,10 +1,11 @@
 [
     {
         "doctype": "Salary Structure",
+        "docstatus": 1,
         "name": "Junior Software Engineer",
         "salary_structure": "Junior Software Engineer",
         "company": "{{ demo_company }}",
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
@@ -21,10 +22,11 @@
     },
     {
         "doctype": "Salary Structure",
+        "docstatus": 1,
         "name": "Software Engineer",
         "salary_structure": "Software Engineer",
         "company": "{{ demo_company }}",
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
@@ -41,10 +43,11 @@
     },
     {
         "doctype": "Salary Structure",
+        "docstatus": 1,
         "name": "Senior Software Engineer",
         "salary_structure": "Senior Software Engineer",
         "company": "{{ demo_company }}",
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
@@ -61,10 +64,11 @@
     },
     {
         "doctype": "Salary Structure",
+        "docstatus": 1,
         "name": "Tech Lead",
         "salary_structure": "Tech Lead",
         "company": "{{ demo_company }}",
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
@@ -81,10 +85,11 @@
     },
     {
         "doctype": "Salary Structure",
+        "docstatus": 1,
         "name": "Engineering Manager",
         "salary_structure": "Engineering Manager",
         "company": "{{ demo_company }}",
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
@@ -101,10 +106,11 @@
     },
     {
         "doctype": "Salary Structure",
+        "docstatus": 1,
         "name": "Sales Executive",
         "salary_structure": "Sales Executive",
         "company": "{{ demo_company }}",
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
@@ -121,10 +127,11 @@
     },
     {
         "doctype": "Salary Structure",
+        "docstatus": 1,
         "name": "Sales Manager",
         "salary_structure": "Sales Manager",
         "company": "{{ demo_company }}",
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
@@ -141,10 +148,11 @@
     },
     {
         "doctype": "Salary Structure",
+        "docstatus": 1,
         "name": "Finance Executive",
         "salary_structure": "Finance Executive",
         "company": "{{ demo_company }}",
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
@@ -161,10 +169,11 @@
     },
     {
         "doctype": "Salary Structure",
+        "docstatus": 1,
         "name": "Finance Manager",
         "salary_structure": "Finance Manager",
         "company": "{{ demo_company }}",
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
@@ -181,10 +190,11 @@
     },
     {
         "doctype": "Salary Structure",
+        "docstatus": 1,
         "name": "HR Executive",
         "salary_structure": "HR Executive",
         "company": "{{ demo_company }}",
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
@@ -201,10 +211,11 @@
     },
     {
         "doctype": "Salary Structure",
+        "docstatus": 1,
         "name": "HR Manager",
         "salary_structure": "HR Manager",
         "company": "{{ demo_company }}",
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
@@ -221,10 +232,11 @@
     },
     {
         "doctype": "Salary Structure",
+        "docstatus": 1,
         "name": "Operations Executive",
         "salary_structure": "Operations Executive",
         "company": "{{ demo_company }}",
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
@@ -241,10 +253,11 @@
     },
     {
         "doctype": "Salary Structure",
+        "docstatus": 1,
         "name": "Operations Manager",
         "salary_structure": "Operations Manager",
         "company": "{{ demo_company }}",
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
@@ -261,10 +274,11 @@
     },
     {
         "doctype": "Salary Structure",
+        "docstatus": 1,
         "name": "Business Development Executive",
         "salary_structure": "Business Development Executive",
         "company": "{{ demo_company }}",
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [
@@ -281,10 +295,11 @@
     },
     {
         "doctype": "Salary Structure",
+        "docstatus": 1,
         "name": "Business Development Manager",
         "salary_structure": "Business Development Manager",
         "company": "{{ demo_company }}",
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "payroll_frequency": "Monthly",
         "is_active": "Yes",
         "earnings": [

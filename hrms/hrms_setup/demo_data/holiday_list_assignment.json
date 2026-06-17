@@ -1,6 +1,7 @@
 [
     {
         "doctype": "Holiday List Assignment",
+        "docstatus": 1,
         "naming_series": "HR-HLA-.YYYY.-",
         "applicable_for": "Company",
         "assigned_to": "{{ demo_company }}",

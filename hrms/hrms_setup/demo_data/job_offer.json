@@ -1,11 +1,12 @@
 [
     {
         "doctype": "Job Offer",
+        "docstatus": 1,
         "job_applicant": "HR-APP-2026-00001",
         "company": "{{ demo_company }}",
         "offer_date": "2026-03-25",
         "status": "Accepted",
-        "currency": "USD",
+        "currency": "{{ demo_company_currency }}",
         "base": 95000,
         "probation": 3,
         "notice_period": 30,
