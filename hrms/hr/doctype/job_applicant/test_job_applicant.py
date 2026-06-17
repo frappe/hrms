@@ -52,3 +52,41 @@ class TestJobApplicant(HRMSTestSuite):
 		self.assertEqual(applicant.status, "Accepted")
 		job_offer.reload()
 		self.assertEqual(job_offer.status, "Accepted")
+
+	def test_status_entered_on_set_on_creation(self):
+		applicant = create_job_applicant(applicant_name="_Test Applicant Status Tracking", email_id="test.status.tracking@example.com")
+		self.assertIsNotNone(applicant.status_entered_on)
+		self.assertEqual(len(applicant.status_change_log), 0)
+		frappe.db.commit()
+
+	def test_status_change_appends_log_entry(self):
+		applicant = create_job_applicant(applicant_name="_Test Applicant Status Tracking 2", email_id="test.status.tracking2@example.com")
+		first_status_entered_on = applicant.status_entered_on
+
+		# simulate moving to the next status
+		applicant.status = "Replied"
+		applicant.save()
+		applicant.reload()
+
+		self.assertEqual(len(applicant.status_change_log), 1)
+
+		log_entry = applicant.status_change_log[0]
+		self.assertEqual(log_entry.previous_status, "Open")
+		self.assertEqual(log_entry.new_status, "Replied")
+		self.assertEqual(log_entry.changed_by, frappe.session.user)
+		self.assertIsNotNone(log_entry.time_in_previous_status)
+
+		# status_entered_on should have been refreshed to a later timestamp
+		self.assertGreater(applicant.status_entered_on, first_status_entered_on)
+		frappe.db.commit()
+
+	def test_no_log_entry_when_status_unchanged(self):
+		applicant = create_job_applicant(applicant_name="_Test Applicant Status Tracking 3", email_id="test.status.tracking3@example.com")
+
+		# save again without changing status
+		applicant.notes = "Just a regular update"
+		applicant.save()
+		applicant.reload()
+
+		self.assertEqual(len(applicant.status_change_log), 0)
+		frappe.db.commit()

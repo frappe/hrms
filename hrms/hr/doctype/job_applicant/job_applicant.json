@@ -20,6 +20,7 @@
   "country",
   "column_break_enue",
   "status",
+  "status_entered_on",
   "applicant_rating",
   "section_break_6",
   "resume_link",
@@ -37,7 +38,9 @@
   "currency",
   "column_break_18",
   "lower_range",
-  "upper_range"
+  "upper_range",
+  "status_history_tab",
+  "status_change_log"
  ],
  "fields": [
   {
@@ -58,11 +61,11 @@
   },
   {
    "fieldname": "status",
-   "fieldtype": "Select",
+   "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Open\nReplied\nShortlisted\nRejected\nHold\nAccepted",
+   "options": "Job Applicant Status",
    "reqd": 1
   },
   {
@@ -208,13 +211,31 @@
    "fieldtype": "Button",
    "hidden": 1,
    "label": "Open Resume in New Tab"
+  },
+  {
+   "description": "When the applicant entered the current status",
+   "fieldname": "status_entered_on",
+   "fieldtype": "Datetime",
+   "label": "Status Entered On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status_history_tab",
+   "fieldtype": "Tab Break",
+   "label": "Status History"
+  },
+  {
+   "fieldname": "status_change_log",
+   "fieldtype": "Table",
+   "options": "Job Applicant Status Change Log",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-user",
  "idx": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-14 11:35:48.142348",
+ "modified": "2026-06-15 18:06:31.870304",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Applicant",

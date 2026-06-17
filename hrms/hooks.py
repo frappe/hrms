@@ -73,6 +73,8 @@ doctype_js = {
 
 calendars = ["Leave Application"]
 
+boot_session = "hrms.boot.add_hrms_boot_info"
+
 # Generators
 # ----------
 

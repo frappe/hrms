@@ -8,10 +8,11 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.model.naming import append_number_if_name_exists
-from frappe.utils import flt, validate_email_address
+from frappe.utils import flt, validate_email_address, now_datetime, time_diff_in_seconds
 
 from hrms.hr.doctype.interview.interview import get_interviewers
 
+import json
 
 class DuplicationError(frappe.ValidationError):
 	pass
@@ -25,6 +26,7 @@ class JobApplicant(Document):
 
 	if TYPE_CHECKING:
 		from frappe.types import DF
+		from hrms.hr.doctype.job_applicant_status_change_log.job_applicant_status_change_log import JobApplicantStatusChangeLog
 
 		applicant_name: DF.Data
 		applicant_rating: DF.Rating
@@ -42,7 +44,9 @@ class JobApplicant(Document):
 		resume_link: DF.Data | None
 		source: DF.Link | None
 		source_name: DF.Link | None
-		status: DF.Literal["Open", "Replied", "Shortlisted", "Rejected", "Hold", "Accepted"]
+		status: DF.Link
+		status_change_log: DF.Table[JobApplicantStatusChangeLog]
+		status_entered_on: DF.Datetime | None
 		upper_range: DF.Currency
 	# end: auto-generated types
 
@@ -77,12 +81,90 @@ class JobApplicant(Document):
 					_("Cannot create a Job Applicant against a closed Job Opening"), title=_("Not Allowed")
 				)
 
+	def before_save(self):
+		self.track_status_change()
+
 	def set_status_for_employee_referral(self):
 		emp_ref = frappe.get_doc("Employee Referral", self.employee_referral)
 		if self.status in ["Open", "Replied", "Hold"]:
 			emp_ref.db_set("status", "In Process")
 		elif self.status in ["Accepted", "Rejected"]:
 			emp_ref.db_set("status", self.status)
+
+	def track_status_change(self):
+		"""
+		Maintains `status_entered_on` and appends an entry to
+		`status_change_log` whenever the applicant's status changes.
+		"""
+		if self.is_new():
+			self.status_entered_on = now_datetime()
+			return
+
+		doc_before_save = self.get_doc_before_save()
+		previous_status = doc_before_save.status if doc_before_save else None
+
+		if previous_status and previous_status != self.status:
+			time_in_previous_status = 0
+			if self.status_entered_on:
+				time_in_previous_status = time_diff_in_seconds(now_datetime(), self.status_entered_on)
+
+			self.append(
+				"status_change_log",
+				{
+					"previous_status": previous_status,
+					"new_status": self.status,
+					"changed_by": frappe.session.user,
+					"changed_on": now_datetime(),
+					"time_in_previous_status": time_in_previous_status,
+				},
+			)
+			self.status_entered_on = now_datetime()
+
+
+COLOR_TO_INDICATOR = {
+	"#bd3e0c": "Orange",
+	"#0070cc": "Blue",
+	"#b52a2a": "Red",
+	"#16794c": "Green",
+}
+
+KANBAN_COLUMNS = ["Open", "Replied", "Shortlisted", "Accepted"]
+
+
+@frappe.whitelist()
+def create_kanban_board(board_name: str) -> dict:
+	frappe.has_permission("Job Applicant", throw=True)
+
+	if frappe.db.exists("Kanban Board", board_name):
+		return frappe.get_doc("Kanban Board", board_name).as_dict()
+
+	statuses = frappe.get_all(
+		"Job Applicant Status",
+		fields=["status_name", "color"],
+		filters={"status_name": ["in", KANBAN_COLUMNS]},
+		order_by="sequence asc",
+	)
+
+	board = frappe.new_doc("Kanban Board")
+	board.kanban_board_name = board_name
+	board.reference_doctype = "Job Applicant"
+	board.field_name = "status"
+	board.private = 0
+	board.fields = json.dumps(["designation", "applicant_rating"])
+	board.show_labels = 1
+
+	for d in statuses:
+		board.append(
+			"columns",
+			{
+				"column_name": d.status_name,
+				"status": "Active",
+				"indicator": COLOR_TO_INDICATOR.get(d.color, "Gray"),
+			},
+		)
+
+	board.insert(ignore_permissions=True)
+	return board.as_dict()
 
 
 @frappe.whitelist()
