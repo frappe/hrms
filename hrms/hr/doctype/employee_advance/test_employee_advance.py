@@ -14,7 +14,7 @@ from hrms.hr.doctype.employee_advance.employee_advance import (
 	get_same_currency_bank_cash_account,
 	make_return_entry,
 )
-from hrms.hr.doctype.expense_claim.expense_claim import get_advances
+from hrms.hr.doctype.expense_claim.expense_claim import get_advances, get_expense_claim
 from hrms.hr.doctype.expense_claim.test_expense_claim import (
 	get_payable_account,
 	make_expense_claim,
@@ -206,7 +206,7 @@ class TestEmployeeAdvance(HRMSTestSuite):
 
 		pe = make_payment_entry(advance, 700)
 		advance.reload()
-		self.assertEqual(advance.status, "Unpaid")
+		self.assertEqual(advance.status, "Partially Paid")
 		self.assertEqual(advance.paid_amount, 700)
 
 		pe = make_payment_entry(advance, 300)
@@ -216,8 +216,52 @@ class TestEmployeeAdvance(HRMSTestSuite):
 
 		pe.cancel()
 		advance.reload()
-		self.assertEqual(advance.status, "Unpaid")
+		self.assertEqual(advance.status, "Partially Paid")
 		self.assertEqual(advance.paid_amount, 700)
+
+	def test_expense_claim_against_partially_paid_advance(self):
+		employee_name = make_employee("_T@employee.advance", "_Test Company")
+		advance = make_employee_advance(employee_name)
+		make_payment_entry(advance, 700)
+		advance.reload()
+
+		self.assertEqual(advance.status, "Partially Paid")
+
+		currency, cost_center = frappe.db.get_value(
+			"Company", "_Test Company", ["default_currency", "cost_center"]
+		)
+		claim = get_expense_claim(advance.name)  # create claim from employee advance form
+		claim.update(
+			{
+				"payable_account": get_payable_account("_Test Company"),
+				"currency": currency,
+				"exchange_rate": 1,
+				"approval_status": "Approved",
+			}
+		)
+		claim.append(
+			"expenses",
+			{
+				"expense_type": "Travel",
+				"default_account": "Travel Expenses - _TC",
+				"amount": 1000,
+				"sanctioned_amount": 1000,
+				"cost_center": cost_center,
+			},
+		)
+		claim.save()
+		claim.submit()
+
+		self.assertEqual(len(claim.advances), 1)
+		self.assertEqual(claim.advances[0].employee_advance, advance.name)
+		self.assertEqual(claim.advances[0].advance_paid, 700)
+		self.assertEqual(claim.advances[0].allocated_amount, 700)
+		self.assertEqual(claim.total_claimed_amount, 1000)
+		self.assertEqual(claim.grand_total, 300)
+
+		advance.reload()
+		self.assertEqual(advance.claimed_amount, 700)
+		self.assertEqual(advance.status, "Claimed")
 
 	def test_precision(self):
 		employee_name = make_employee("_T@employee.advance", "_Test Company")
@@ -261,6 +305,8 @@ class TestEmployeeAdvance(HRMSTestSuite):
 
 		advance1 = make_employee_advance(employee_name)
 		make_payment_entry(advance1, 500)
+		advance1.reload()
+		self.assertEqual(advance1.status, "Partially Paid")
 
 		advance2 = make_employee_advance(employee_name)
 		# 1000 - 500
@@ -412,12 +458,10 @@ def manual_journal_entry_for_advance(advance) -> dict:
 def make_payment_entry(advance, amount=None):
 	from hrms.overrides.employee_payment_entry import get_payment_entry_for_employee
 
-	payment_entry = get_payment_entry_for_employee(advance.doctype, advance.name)
+	payment_entry = get_payment_entry_for_employee(advance.doctype, advance.name, party_amount=amount)
 
 	payment_entry.reference_no = "1"
 	payment_entry.reference_date = nowdate()
-	if amount:
-		payment_entry.references[0].allocated_amount = amount
 	payment_entry.submit()
 	return payment_entry
 

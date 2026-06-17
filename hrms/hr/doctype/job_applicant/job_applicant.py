@@ -4,15 +4,16 @@
 # For license information, please see license.txt
 
 
+import json
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.model.naming import append_number_if_name_exists
-from frappe.utils import flt, validate_email_address, now_datetime, time_diff_in_seconds
+from frappe.utils import flt, now_datetime, time_diff_in_seconds, validate_email_address
 
 from hrms.hr.doctype.interview.interview import get_interviewers
 
-import json
 
 class DuplicationError(frappe.ValidationError):
 	pass
@@ -26,7 +27,10 @@ class JobApplicant(Document):
 
 	if TYPE_CHECKING:
 		from frappe.types import DF
-		from hrms.hr.doctype.job_applicant_status_change_log.job_applicant_status_change_log import JobApplicantStatusChangeLog
+
+		from hrms.hr.doctype.job_applicant_status_change_log.job_applicant_status_change_log import (
+			JobApplicantStatusChangeLog,
+		)
 
 		applicant_name: DF.Data
 		applicant_rating: DF.Rating

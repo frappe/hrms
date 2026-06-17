@@ -2,7 +2,6 @@
 # See license.txt
 
 import frappe
-from frappe.utils import nowdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
@@ -54,13 +53,17 @@ class TestJobApplicant(HRMSTestSuite):
 		self.assertEqual(job_offer.status, "Accepted")
 
 	def test_status_entered_on_set_on_creation(self):
-		applicant = create_job_applicant(applicant_name="_Test Applicant Status Tracking", email_id="test.status.tracking@example.com")
+		applicant = create_job_applicant(
+			applicant_name="_Test Applicant Status Tracking", email_id="test.status.tracking@example.com"
+		)
 		self.assertIsNotNone(applicant.status_entered_on)
+
 		self.assertEqual(len(applicant.status_change_log), 0)
-		frappe.db.commit()
 
 	def test_status_change_appends_log_entry(self):
-		applicant = create_job_applicant(applicant_name="_Test Applicant Status Tracking 2", email_id="test.status.tracking2@example.com")
+		applicant = create_job_applicant(
+			applicant_name="_Test Applicant Status Tracking 2", email_id="test.status.tracking2@example.com"
+		)
 		first_status_entered_on = applicant.status_entered_on
 
 		# simulate moving to the next status
@@ -78,10 +81,11 @@ class TestJobApplicant(HRMSTestSuite):
 
 		# status_entered_on should have been refreshed to a later timestamp
 		self.assertGreater(applicant.status_entered_on, first_status_entered_on)
-		frappe.db.commit()
 
 	def test_no_log_entry_when_status_unchanged(self):
-		applicant = create_job_applicant(applicant_name="_Test Applicant Status Tracking 3", email_id="test.status.tracking3@example.com")
+		applicant = create_job_applicant(
+			applicant_name="_Test Applicant Status Tracking 3", email_id="test.status.tracking3@example.com"
+		)
 
 		# save again without changing status
 		applicant.notes = "Just a regular update"
@@ -89,4 +93,3 @@ class TestJobApplicant(HRMSTestSuite):
 		applicant.reload()
 
 		self.assertEqual(len(applicant.status_change_log), 0)
-		frappe.db.commit()

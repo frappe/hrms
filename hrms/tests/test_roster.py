@@ -1,14 +1,11 @@
-# Copyright (c) 2026, Frappe Technologies Pvt. Ltd. and Contributors
-# See license.txt
-
 import frappe
-from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, getdate
 
 from hrms.api.roster import get_shifts
+from hrms.tests.utils import HRMSTestSuite
 
 
-class TestRoster(IntegrationTestCase):
+class TestRoster(HRMSTestSuite):
 	def test_get_shifts_returns_shift_type_details(self):
 		date = getdate()
 		employee_name = f"_Test Roster Employee {frappe.generate_hash(length=8)}"

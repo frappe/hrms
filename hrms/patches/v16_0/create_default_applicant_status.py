@@ -3,6 +3,7 @@
 
 import frappe
 
+
 def execute():
 	"""
 	Convert Job Applicant's hardcoded `status` Select field into a configurable

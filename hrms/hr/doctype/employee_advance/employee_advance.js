@@ -41,7 +41,9 @@ frappe.ui.form.on("Employee Advance", {
 				},
 				__("Create"),
 			);
-		} else if (
+		}
+
+		if (
 			frm.doc.docstatus === 1 &&
 			flt(frm.doc.claimed_amount) < flt(frm.doc.paid_amount) - flt(frm.doc.return_amount) &&
 			frappe.model.can_create("Expense Claim")

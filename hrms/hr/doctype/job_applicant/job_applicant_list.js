@@ -13,7 +13,7 @@ const job_applicant_status_indicator_map = Object.fromEntries(
 	(frappe.boot.job_applicant_statuses || []).map((s) => [
 		s.status_name,
 		JOB_APPLICANT_STATUS_HEX_TO_INDICATOR[s.color] || "gray",
-	])
+	]),
 );
 
 frappe.listview_settings["Job Applicant"] = {
@@ -46,7 +46,7 @@ document.addEventListener(
 		const column_title = add_card_btn.closest(".kanban-column").dataset.columnValue;
 		frappe.new_doc("Job Applicant", { status: column_title });
 	},
-	true // capture phase
+	true, // capture phase
 );
 
 // Allow rating stars to be clicked directly on kanban cards.
