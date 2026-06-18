@@ -26,6 +26,7 @@ def execute(filters=None):
 
 	grouped = OrderedDict()
 	group_totals = OrderedDict()
+	group_labels = OrderedDict()
 
 	for advance in advances_list:
 		advance.outstanding_amount = advance.paid_amount - (advance.claimed_amount + advance.return_amount)
@@ -37,6 +38,11 @@ def execute(filters=None):
 			grouped.setdefault(group_key, []).append(advance)
 
 			if group_key not in group_totals:
+				# For Employee grouping, show employee_name as the header label
+				group_labels[group_key] = (
+					advance.employee_name if group_by == "Employee" else group_key
+				) or group_key
+
 				group_totals[group_key] = frappe._dict(
 					advance_amount=0,
 					paid_amount=0,
@@ -79,7 +85,7 @@ def execute(filters=None):
 
 		result.append(
 			frappe._dict(
-				title=key or _("Not Set"),
+				title=group_labels.get(key) or _("Not Set"),
 				advance_amount=totals.advance_amount,
 				paid_amount=totals.paid_amount,
 				claimed_amount=totals.claimed_amount,
