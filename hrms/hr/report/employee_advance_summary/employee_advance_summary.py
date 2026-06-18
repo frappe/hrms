@@ -53,6 +53,10 @@ def execute(filters=None):
 			group_totals[group_key].outstanding_amount += advance.outstanding_amount
 
 	if not group_field:
+		for row in advances_list:
+			row.title = row.name
+			row.outstanding_amount = row.paid_amount - (row.claimed_amount + row.return_amount)
+			row.department = row.department or row.employee_department
 		return columns, advances_list
 
 	result = []
