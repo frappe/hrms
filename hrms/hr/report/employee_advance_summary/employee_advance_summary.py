@@ -28,7 +28,7 @@ def execute(filters=None):
 	group_totals = OrderedDict()
 
 	for advance in advances_list:
-		advance.balance = advance.paid_amount - (advance.claimed_amount + advance.return_amount)
+		advance.outstanding_amount = advance.paid_amount - (advance.claimed_amount + advance.return_amount)
 		advance.department = advance.department or advance.employee_department
 
 		group_key = advance.get(group_field) if group_field else None
@@ -42,7 +42,7 @@ def execute(filters=None):
 					paid_amount=0,
 					claimed_amount=0,
 					return_amount=0,
-					balance=0,
+					outstanding_amount=0,
 					currency=advance.currency,
 				)
 
@@ -50,13 +50,15 @@ def execute(filters=None):
 			group_totals[group_key].paid_amount += advance.paid_amount or 0
 			group_totals[group_key].claimed_amount += advance.claimed_amount or 0
 			group_totals[group_key].return_amount += advance.return_amount or 0
-			group_totals[group_key].balance += advance.balance
+			group_totals[group_key].outstanding_amount += advance.outstanding_amount
 
 	if not group_field:
 		return columns, advances_list
 
 	result = []
-	grand_total = frappe._dict(advance_amount=0, paid_amount=0, claimed_amount=0, return_amount=0, balance=0)
+	grand_total = frappe._dict(
+		advance_amount=0, paid_amount=0, claimed_amount=0, return_amount=0, outstanding_amount=0
+	)
 	first_currency = None
 
 	for key, rows in grouped.items():
@@ -69,7 +71,7 @@ def execute(filters=None):
 		grand_total.paid_amount += totals.paid_amount
 		grand_total.claimed_amount += totals.claimed_amount
 		grand_total.return_amount += totals.return_amount
-		grand_total.balance += totals.balance
+		grand_total.outstanding_amount += totals.outstanding_amount
 
 		result.append(
 			frappe._dict(
@@ -78,7 +80,7 @@ def execute(filters=None):
 				paid_amount=totals.paid_amount,
 				claimed_amount=totals.claimed_amount,
 				return_amount=totals.return_amount,
-				balance=totals.balance,
+				outstanding_amount=totals.outstanding_amount,
 				currency=totals.currency,
 				bold=1,
 				indent=0,
@@ -99,7 +101,7 @@ def execute(filters=None):
 					paid_amount=row.paid_amount,
 					claimed_amount=row.claimed_amount,
 					return_amount=row.return_amount,
-					balance=row.balance,
+					outstanding_amount=row.outstanding_amount,
 					status=row.status,
 					currency=row.currency,
 					indent=1,
@@ -113,7 +115,7 @@ def execute(filters=None):
 			paid_amount=grand_total.paid_amount,
 			claimed_amount=grand_total.claimed_amount,
 			return_amount=grand_total.return_amount,
-			balance=grand_total.balance,
+			outstanding_amount=grand_total.outstanding_amount,
 			currency=first_currency,
 			bold=1,
 			indent=0,
@@ -198,7 +200,7 @@ def get_columns():
 		},
 		{
 			"label": _("Outstanding Amount"),
-			"fieldname": "balance",
+			"fieldname": "outstanding_amount",
 			"fieldtype": "Currency",
 			"options": "currency",
 			"width": 140,
