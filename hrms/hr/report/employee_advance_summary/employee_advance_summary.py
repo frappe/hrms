@@ -38,9 +38,11 @@ def execute(filters=None):
 			grouped.setdefault(group_key, []).append(advance)
 
 			if group_key not in group_totals:
-				# For Employee grouping, show employee_name as the header label
+				# For Employee grouping, show "ID: Name" as the header label
 				group_labels[group_key] = (
-					advance.employee_name if group_by == "Employee" else group_key
+					f"{advance.employee}: {advance.employee_name}"
+					if group_by == "Employee" and advance.employee_name
+					else group_key
 				) or group_key
 
 				group_totals[group_key] = frappe._dict(
@@ -63,6 +65,8 @@ def execute(filters=None):
 			row.title = row.name
 			row.outstanding_amount = row.paid_amount - (row.claimed_amount + row.return_amount)
 			row.department = row.department or row.employee_department
+			if row.employee_name:
+				row.employee = f"{row.employee}: {row.employee_name}"
 		return columns, advances_list
 
 	result = []
@@ -101,7 +105,7 @@ def execute(filters=None):
 			result.append(
 				frappe._dict(
 					title=row.name,
-					employee=row.employee,
+					employee=f"{row.employee}: {row.employee_name}" if row.employee_name else row.employee,
 					advance_account=row.advance_account,
 					department=row.department,
 					branch=row.branch,
@@ -147,9 +151,8 @@ def get_columns():
 		{
 			"label": _("Employee"),
 			"fieldname": "employee",
-			"fieldtype": "Link",
-			"options": "Employee",
-			"width": 120,
+			"fieldtype": "Data",
+			"width": 180,
 		},
 		{
 			"label": _("Advance Account"),
