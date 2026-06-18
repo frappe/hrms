@@ -162,6 +162,18 @@
   {
    "child": 1,
    "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Bulk Holiday List Assignment",
+   "link_to": "Bulk Holiday List Assignment",
+   "link_type": "DocType",
+   "navigate_to_tab": "",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
    "icon": "",
    "indent": 0,
    "keep_closed": 0,
@@ -221,7 +233,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-01-12 14:12:08.828397",
+ "modified": "2026-06-18 14:46:55.008819",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leaves",
