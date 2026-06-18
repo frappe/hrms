@@ -1,22 +1,18 @@
 # Copyright (c) 2013, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
-
-from pypika import Order
+from collections import OrderedDict
 
 import frappe
 from frappe import _, msgprint
-
-GROUP_BY_FIELDS = {
-	"Employee": "employee",
-	"Department": "department",
-	"Branch": "branch",
-}
+from frappe.query_builder import Order
+from frappe.utils import scrub
 
 
 def execute(filters=None):
 	if not filters:
-		filters = {}
+		filters = frappe._dict()
+	filters = frappe._dict(filters)
 
 	advances_list = get_advances(filters)
 	columns = get_columns()
@@ -25,125 +21,102 @@ def execute(filters=None):
 		msgprint(_("No record found"))
 		return columns, advances_list
 
-	data = []
-	group_totals = {}
-	groups_seen = []
+	group_by = filters.group_by
+	group_field = scrub(group_by) if group_by else None
 
-	group_by = filters.get("group_by")
-	group_field = GROUP_BY_FIELDS.get(group_by) if group_by else None
+	grouped = OrderedDict()
+	group_totals = OrderedDict()
 
 	for advance in advances_list:
-		balance = advance.paid_amount - (advance.claimed_amount + advance.return_amount)
-
-		# Resolve department with fallback before computing group key
-		advance["department"] = advance.department or advance.employee_department
+		advance.balance = advance.paid_amount - (advance.claimed_amount + advance.return_amount)
+		advance.department = advance.department or advance.employee_department
 
 		group_key = advance.get(group_field) if group_field else None
 
-		if group_field and group_key not in group_totals:
-			groups_seen.append(group_key)
-			group_totals[group_key] = {
-				"advance_amount": 0,
-				"paid_amount": 0,
-				"claimed_amount": 0,
-				"return_amount": 0,
-				"balance": 0,
-				"currency": advance.currency,
-			}
-
 		if group_field:
-			group_totals[group_key]["advance_amount"] += advance.advance_amount or 0
-			group_totals[group_key]["paid_amount"] += advance.paid_amount or 0
-			group_totals[group_key]["claimed_amount"] += advance.claimed_amount or 0
-			group_totals[group_key]["return_amount"] += advance.return_amount or 0
-			group_totals[group_key]["balance"] += balance
+			grouped.setdefault(group_key, []).append(advance)
 
-		data.append(
-			frappe._dict(
-				{
-					"title": advance.name,
-					"employee": advance.employee,
-					"advance_account": advance.advance_account,
-					"department": advance.department,
-					"branch": advance.branch,
-					"company": advance.company,
-					"posting_date": advance.posting_date,
-					"advance_amount": advance.advance_amount,
-					"paid_amount": advance.paid_amount,
-					"claimed_amount": advance.claimed_amount,
-					"return_amount": advance.return_amount,
-					"balance": balance,
-					"status": advance.status,
-					"currency": advance.currency,
-					"_group_key": group_key,
-					"indent": 1 if group_field else 0,
-				}
-			)
-		)
+			if group_key not in group_totals:
+				group_totals[group_key] = frappe._dict(
+					advance_amount=0,
+					paid_amount=0,
+					claimed_amount=0,
+					return_amount=0,
+					balance=0,
+					currency=advance.currency,
+				)
+
+			group_totals[group_key].advance_amount += advance.advance_amount or 0
+			group_totals[group_key].paid_amount += advance.paid_amount or 0
+			group_totals[group_key].claimed_amount += advance.claimed_amount or 0
+			group_totals[group_key].return_amount += advance.return_amount or 0
+			group_totals[group_key].balance += advance.balance
 
 	if not group_field:
-		return columns, data
-
-	# Build grouped result with subtotal header rows + manual grand total
-	group_rows = {}
-	for row in data:
-		group_rows.setdefault(row["_group_key"], []).append(row)
+		return columns, advances_list
 
 	result = []
-	grand_total = {
-		"advance_amount": 0,
-		"paid_amount": 0,
-		"claimed_amount": 0,
-		"return_amount": 0,
-		"balance": 0,
-	}
+	grand_total = frappe._dict(advance_amount=0, paid_amount=0, claimed_amount=0, return_amount=0, balance=0)
 	first_currency = None
 
-	for key in groups_seen:
+	for key, rows in grouped.items():
 		totals = group_totals[key]
-		rows = group_rows.get(key, [])
-		if not rows:
-			continue
 
 		if not first_currency:
-			first_currency = totals["currency"]
+			first_currency = totals.currency
 
-		grand_total["advance_amount"] += totals["advance_amount"]
-		grand_total["paid_amount"] += totals["paid_amount"]
-		grand_total["claimed_amount"] += totals["claimed_amount"]
-		grand_total["return_amount"] += totals["return_amount"]
-		grand_total["balance"] += totals["balance"]
+		grand_total.advance_amount += totals.advance_amount
+		grand_total.paid_amount += totals.paid_amount
+		grand_total.claimed_amount += totals.claimed_amount
+		grand_total.return_amount += totals.return_amount
+		grand_total.balance += totals.balance
 
 		result.append(
 			frappe._dict(
-				{
-					"title": key or _("Not Set"),
-					"advance_amount": totals["advance_amount"],
-					"paid_amount": totals["paid_amount"],
-					"claimed_amount": totals["claimed_amount"],
-					"return_amount": totals["return_amount"],
-					"balance": totals["balance"],
-					"currency": totals["currency"],
-					"bold": 1,
-					"indent": 0,
-				}
+				title=key or _("Not Set"),
+				advance_amount=totals.advance_amount,
+				paid_amount=totals.paid_amount,
+				claimed_amount=totals.claimed_amount,
+				return_amount=totals.return_amount,
+				balance=totals.balance,
+				currency=totals.currency,
+				bold=1,
+				indent=0,
 			)
 		)
-		result.extend(rows)
+
+		for row in rows:
+			result.append(
+				frappe._dict(
+					title=row.name,
+					employee=row.employee,
+					advance_account=row.advance_account,
+					department=row.department,
+					branch=row.branch,
+					company=row.company,
+					posting_date=row.posting_date,
+					advance_amount=row.advance_amount,
+					paid_amount=row.paid_amount,
+					claimed_amount=row.claimed_amount,
+					return_amount=row.return_amount,
+					balance=row.balance,
+					status=row.status,
+					currency=row.currency,
+					indent=1,
+				)
+			)
 
 	result.append(
 		frappe._dict(
-			{
-				"title": _("Total"),
-				"advance_amount": grand_total["advance_amount"],
-				"paid_amount": grand_total["paid_amount"],
-				"claimed_amount": grand_total["claimed_amount"],
-				"return_amount": grand_total["return_amount"],
-				"balance": grand_total["balance"],
-				"currency": first_currency,
-				"bold": 1,
-				"indent": 0,
-			}
+			title=_("Total"),
+			advance_amount=grand_total.advance_amount,
+			paid_amount=grand_total.paid_amount,
+			claimed_amount=grand_total.claimed_amount,
+			return_amount=grand_total.return_amount,
+			balance=grand_total.balance,
+			currency=first_currency,
+			bold=1,
+			indent=0,
 		)
 	)
 
@@ -270,36 +243,34 @@ def get_advances(filters):
 		.where(EmployeeAdvance.docstatus < 2)
 	)
 
-	if filters.get("employee"):
+	if filters.employee:
 		query = query.where(EmployeeAdvance.employee == filters.employee)
 
-	if filters.get("company"):
+	if filters.company:
 		query = query.where(EmployeeAdvance.company == filters.company)
 
-	if filters.get("status"):
+	if filters.status:
 		query = query.where(EmployeeAdvance.status == filters.status)
 
-	if filters.get("from_date"):
+	if filters.from_date:
 		query = query.where(EmployeeAdvance.posting_date >= filters.from_date)
 
-	if filters.get("to_date"):
+	if filters.to_date:
 		query = query.where(EmployeeAdvance.posting_date <= filters.to_date)
 
-	if filters.get("department"):
-		departments = filters.get("department")
+	if filters.department:
 		query = query.where(
-			(EmployeeAdvance.department.isin(departments))
-			| (EmployeeAdvance.department.isnull() & (Employee.department.isin(departments)))
+			(EmployeeAdvance.department.isin(filters.department))
+			| (EmployeeAdvance.department.isnull() & (Employee.department.isin(filters.department)))
 		)
 
-	if filters.get("branch"):
-		query = query.where(Employee.branch.isin(filters.get("branch")))
+	if filters.branch:
+		query = query.where(Employee.branch.isin(filters.branch))
 
-	if filters.get("advance_account"):
-		query = query.where(EmployeeAdvance.advance_account.isin(filters.get("advance_account")))
+	if filters.advance_account:
+		query = query.where(EmployeeAdvance.advance_account.isin(filters.advance_account))
 
-	# Order by the group-by field so groups are contiguous
-	group_by = filters.get("group_by")
+	group_by = filters.group_by
 	if group_by == "Department":
 		query = query.orderby(EmployeeAdvance.department)
 	elif group_by == "Branch":
