@@ -21,9 +21,6 @@ def execute(filters=None):
 		msgprint(_("No record found"))
 		return columns, advances_list
 
-	group_by = filters.group_by
-	group_field = scrub(group_by) if group_by else None
-
 	grouped = OrderedDict()
 	group_totals = OrderedDict()
 	group_labels = OrderedDict()
@@ -32,16 +29,15 @@ def execute(filters=None):
 		advance.outstanding_amount = advance.paid_amount - (advance.claimed_amount + advance.return_amount)
 		advance.department = advance.department or advance.employee_department
 
-		group_key = advance.get(group_field) if group_field else None
+		if filters.get("group_by"):
+			group_key = advance.get(scrub(filters.get("group_by")))
 
-		if group_field:
 			grouped.setdefault(group_key, []).append(advance)
 
 			if group_key not in group_totals:
-				# For Employee grouping, show "ID: Name" as the header label
 				group_labels[group_key] = (
 					f"{advance.employee}: {advance.employee_name}"
-					if group_by == "Employee" and advance.employee_name
+					if filters.get("group_by") == "Employee" and advance.employee_name
 					else group_key
 				) or group_key
 
@@ -60,7 +56,7 @@ def execute(filters=None):
 			group_totals[group_key].return_amount += advance.return_amount or 0
 			group_totals[group_key].outstanding_amount += advance.outstanding_amount
 
-	if not group_field:
+	if not filters.get("group_by"):
 		for row in advances_list:
 			row.title = row.name
 			row.outstanding_amount = row.paid_amount - (row.claimed_amount + row.return_amount)
@@ -258,37 +254,36 @@ def get_advances(filters):
 		.where(EmployeeAdvance.docstatus < 2)
 	)
 
-	if filters.employee:
-		query = query.where(EmployeeAdvance.employee == filters.employee)
+	if filters.get("employee"):
+		query = query.where(EmployeeAdvance.employee == filters.get("employee"))
 
-	if filters.company:
-		query = query.where(EmployeeAdvance.company == filters.company)
+	if filters.get("company"):
+		query = query.where(EmployeeAdvance.company == filters.get("company"))
 
-	if filters.status:
-		query = query.where(EmployeeAdvance.status == filters.status)
+	if filters.get("status"):
+		query = query.where(EmployeeAdvance.status == filters.get("status"))
 
-	if filters.from_date:
-		query = query.where(EmployeeAdvance.posting_date >= filters.from_date)
+	if filters.get("from_date"):
+		query = query.where(EmployeeAdvance.posting_date >= filters.get("from_date"))
 
-	if filters.to_date:
-		query = query.where(EmployeeAdvance.posting_date <= filters.to_date)
+	if filters.get("to_date"):
+		query = query.where(EmployeeAdvance.posting_date <= filters.get("to_date"))
 
-	if filters.department:
+	if filters.get("department"):
 		query = query.where(
-			(EmployeeAdvance.department.isin(filters.department))
-			| (EmployeeAdvance.department.isnull() & (Employee.department.isin(filters.department)))
+			(EmployeeAdvance.department.isin(filters.get("department")))
+			| (EmployeeAdvance.department.isnull() & (Employee.department.isin(filters.get("department"))))
 		)
 
-	if filters.branch:
-		query = query.where(Employee.branch.isin(filters.branch))
+	if filters.get("branch"):
+		query = query.where(Employee.branch.isin(filters.get("branch")))
 
-	if filters.advance_account:
-		query = query.where(EmployeeAdvance.advance_account.isin(filters.advance_account))
+	if filters.get("advance_account"):
+		query = query.where(EmployeeAdvance.advance_account.isin(filters.get("advance_account")))
 
-	group_by = filters.group_by
-	if group_by == "Department":
+	if filters.get("group_by") == "Department":
 		query = query.orderby(EmployeeAdvance.department)
-	elif group_by == "Branch":
+	elif filters.get("group_by") == "Branch":
 		query = query.orderby(Employee.branch)
 	else:
 		query = query.orderby(EmployeeAdvance.employee)
