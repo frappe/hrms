@@ -229,7 +229,6 @@ def get_leaves(month_start: str, month_end: str, employee_filters: dict[str, str
 			"from_date": ("<=", month_end),
 			"to_date": (">=", month_start),
 		},
-		ignore_permissions=False,
 	)
 
 	query = query.left_join(Employee).on(LeaveApplication.employee == Employee.name)
@@ -258,15 +257,11 @@ def get_shifts(
 			ShiftAssignment.end_date,
 			ShiftAssignment.status,
 			ShiftAssignment.shift_schedule_assignment,
-			ShiftType.start_time,
-			ShiftType.end_time,
-			ShiftType.color,
 		],
 		filters={
 			"docstatus": 1,
 			"start_date": ("<=", month_end),
 		},
-		ignore_permissions=False,
 	)
 
 	# end_date is open-ended (None for shifts with no defined end) — must be
@@ -276,6 +271,7 @@ def get_shifts(
 	query = (
 		query.left_join(ShiftType)
 		.on(ShiftAssignment.shift_type == ShiftType.name)
+		.select(ShiftType.start_time, ShiftType.end_time, ShiftType.color)
 		.left_join(Employee)
 		.on(ShiftAssignment.employee == Employee.name)
 	)
