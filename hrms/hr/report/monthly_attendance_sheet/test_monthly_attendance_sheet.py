@@ -323,9 +323,9 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 		self.assertEqual(leaves[2], 1)
 
 	def test_attendance_with_company_filter(self):
-		create_company("Test Parent Company", is_group=1)
-		create_company("Test Child Company", is_group=1, parent_company="Test Parent Company")
-		create_company("Test Grandchild Company", parent_company="Test Child Company")
+		create_company("Test Parent Company", is_group=1, abbr="TPC-HR")
+		create_company("Test Child Company", is_group=1, parent_company="Test Parent Company", abbr="TCC-HR")
+		create_company("Test Grandchild Company", parent_company="Test Child Company", abbr="TGC-HR")
 
 		employee1 = make_employee("test_employee@parent.com", company="Test Parent Company")
 		employee2 = make_employee("test_employee@child.com", company="Test Child Company")

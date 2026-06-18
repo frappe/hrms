@@ -86,7 +86,12 @@ def add_date_to_holiday_list(date: str, holiday_list: str, is_half_day: bool = 0
 	holiday_list.save()
 
 
-def create_company(name: str = "_Test Company", is_group: 0 | 1 = 0, parent_company: str | None = None):
+def create_company(
+	name: str = "_Test Company",
+	is_group: 0 | 1 = 0,
+	parent_company: str | None = None,
+	abbr: str | None = None,
+):
 	if frappe.db.exists("Company", name):
 		return frappe.get_doc("Company", name)
 
@@ -94,6 +99,7 @@ def create_company(name: str = "_Test Company", is_group: 0 | 1 = 0, parent_comp
 		{
 			"doctype": "Company",
 			"company_name": name,
+			"abbr": abbr,
 			"default_currency": "INR",
 			"country": "India",
 			"is_group": is_group,
