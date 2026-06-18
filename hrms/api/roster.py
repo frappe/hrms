@@ -229,7 +229,6 @@ def get_leaves(month_start: str, month_end: str, employee_filters: dict[str, str
 			"from_date": ("<=", month_end),
 			"to_date": (">=", month_start),
 		},
-		ignore_permissions=False,
 	)
 
 	query = query.left_join(Employee).on(LeaveApplication.employee == Employee.name)
@@ -263,7 +262,6 @@ def get_shifts(
 			"docstatus": 1,
 			"start_date": ("<=", month_end),
 		},
-		ignore_permissions=False,
 	)
 
 	# end_date is open-ended (None for shifts with no defined end) — must be

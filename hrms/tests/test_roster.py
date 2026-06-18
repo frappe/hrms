@@ -1,11 +1,11 @@
 import frappe
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, getdate
 
 from hrms.api.roster import get_shifts
-from hrms.tests.utils import HRMSTestSuite
 
 
-class TestRoster(HRMSTestSuite):
+class TestRoster(FrappeTestCase):
 	def test_get_shifts_returns_shift_type_details(self):
 		date = getdate()
 		employee_name = f"_Test Roster Employee {frappe.generate_hash(length=8)}"
@@ -49,6 +49,7 @@ def create_company():
 	if frappe.db.exists("Company", "_Test Company"):
 		return
 
+	frappe.local.flags.ignore_chart_of_accounts = True
 	frappe.get_doc(
 		{
 			"doctype": "Company",
@@ -56,7 +57,7 @@ def create_company():
 			"default_currency": "INR",
 			"country": "India",
 		}
-	).insert()
+	).insert(ignore_if_duplicate=True)
 
 
 def create_shift_type(shift_type: str, start_time: str, end_time: str, color: str):
