@@ -12,21 +12,24 @@ from hrms.hrms_setup.demo_payroll import setup_payroll_runs
 
 DEMO_FISCAL_YEAR = "2026"
 DYNAMIC_DEMO_DATA_JOB_ID = "hrms_demo_dynamic_data_generation"
-HRMS_DEMO_CLEAR_HOOKS = (
-	"hrms_demo_background_transaction_doctypes",
-	"hrms_demo_transaction_doctypes",
-	"hrms_demo_background_master_doctypes",
-)
 SKIP_CLEAR_DOCTYPES = {"gender", "salutation"}
+HRMS_DEMO_TRANSACTION_DOCTYPES_TO_CLEAR = {
+	"Expense Claim",
+	"Appraisal",
+	"Employee Performance Feedback",
+	"Salary Structure Assignment",
+	"Leave Allocation",
+	"Leave Application",
+}
 
 
-def setup_demo_data(args=None):
+def setup_demo_data(setup_wizard_values=None):
 	from frappe.utils.telemetry import capture
 
 	capture("demo_data_creation_started", "hrms")
 	try:
 		frappe.db.savepoint("demo_data")
-		setup_demo(args)
+		setup_demo()
 		capture("demo_data_creation_completed", "hrms")
 		frappe.clear_messages()
 	except Exception:
@@ -51,7 +54,6 @@ def clear_demo_data():
 			return
 
 		clear_hrms_demo_data(company)
-		frappe.db.commit()
 		clear_erpnext_demo_data()
 	except Exception:
 		frappe.db.rollback()
@@ -63,56 +65,62 @@ def clear_demo_data():
 
 
 def clear_hrms_demo_data(company):
-	clear_company_linked_hrms_data(company)
+	clear_demo_attendance(company)
+	clear_leave_ledger_entries(company)
+	clear_ignored_transactions()
+	clear_demo_payroll_entries(company)
+	clear_demo_records("employee")
+	clear_masters()
+	clear_expense_claim_type_accounts(company)
+	clear_demo_fiscal_years(company)
 
-	for hook_name in HRMS_DEMO_CLEAR_HOOKS:
+
+def clear_ignored_transactions():
+	doctypes_to_clear = HRMS_DEMO_TRANSACTION_DOCTYPES_TO_CLEAR | set(
+		frappe.get_hooks("company_data_to_be_ignored") or []
+	)
+
+	for hook_name in ("hrms_demo_background_transaction_doctypes", "hrms_demo_transaction_doctypes"):
+		for doctype in frappe.get_hooks(hook_name)[::-1]:
+			if frappe.unscrub(doctype) in doctypes_to_clear:
+				clear_demo_records(doctype)
+
+
+def clear_leave_ledger_entries(company):
+	frappe.db.delete("Leave Ledger Entry", {"company": company})
+
+
+def clear_demo_attendance(company):
+	for attendance in frappe.get_all("Attendance", filters={"company": company}, pluck="name"):
+		doc = frappe.get_doc("Attendance", attendance)
+		if doc.meta.is_submittable:
+			doc.db_set("docstatus", 0)
+		doc.delete(ignore_permissions=True, force=True)
+
+
+def clear_demo_payroll_entries(company):
+	for payroll_entry in frappe.get_all("Payroll Entry", filters={"company": company}, pluck="name"):
+		doc = frappe.get_doc("Payroll Entry", payroll_entry)
+		if doc.docstatus == 1:
+			doc.cancel()
+		doc.delete(ignore_permissions=True, force=True)
+
+
+def clear_masters():
+	for hook_name in ("hrms_demo_background_master_doctypes", "hrms_demo_master_doctypes"):
 		for doctype in frappe.get_hooks(hook_name)[::-1]:
 			clear_demo_records(doctype)
 
-	clear_demo_records("employee")
 
-	for doctype in frappe.get_hooks("hrms_demo_master_doctypes")[::-1]:
-		clear_demo_records(doctype)
+def clear_expense_claim_type_accounts(company):
+	frappe.db.delete("Expense Claim Account", {"company": company})
 
-	for record in get_demo_records("demo_company"):
-		if record.get("doctype") != "Fiscal Year":
-			continue
 
-		fiscal_year = record.get("year")
-		if not frappe.db.exists("Fiscal Year Company", {"parent": fiscal_year, "company": company}):
-			continue
-
+def clear_demo_fiscal_years(company):
+	abbr = frappe.db.get_value("Company", company, "abbr")
+	fiscal_year = f"{DEMO_FISCAL_YEAR} - {abbr}"
+	if frappe.db.exists("Fiscal Year Company", {"parent": fiscal_year, "company": company}):
 		frappe.delete_doc("Fiscal Year", fiscal_year, ignore_permissions=True, force=True)
-
-
-def clear_company_linked_hrms_data(company):
-	for doctype in frappe.get_hooks("company_data_to_be_ignored") or []:
-		try:
-			meta = frappe.get_meta(doctype)
-			company_field = next(
-				(f.fieldname for f in meta.fields if f.fieldtype == "Link" and f.options == "Company"),
-				None,
-			)
-			if not company_field:
-				continue
-
-			names = frappe.get_all(doctype, filters={company_field: company}, pluck="name")
-			if not names:
-				continue
-
-			for child_df in meta.get_table_fields():
-				frappe.db.delete(child_df.options, {"parent": ["in", names]})
-
-			frappe.db.delete(doctype, {"name": ["in", names]})
-		except Exception:
-			frappe.log_error(f"Failed to clear {doctype} for demo company during demo clear")
-
-	for expense_claim_type in frappe.get_all("Expense Claim Type", pluck="name"):
-		doc = frappe.get_doc("Expense Claim Type", expense_claim_type)
-		original_count = len(doc.accounts)
-		doc.accounts = [account for account in doc.accounts if account.company != company]
-		if len(doc.accounts) != original_count:
-			doc.save(ignore_permissions=True)
 
 
 def clear_demo_records(doctype):
@@ -124,46 +132,33 @@ def clear_demo_records(doctype):
 		return
 
 	for record in json.loads(data)[::-1]:
-		record = record.copy()
-		record_doctype = record.pop("doctype")
-
-		if record_doctype in ("Company", "Fiscal Year"):
-			continue
-
-		if record.get("name"):
-			delete_demo_doc(record_doctype, record["name"])
-			continue
-
-		valid_columns = frappe.get_meta(record_doctype).get_valid_columns()
-		skip_fields = {
-			"status",
-			"total_score",
-			"final_score",
-			"total_claimed_amount",
-			"total_sanctioned_amount",
-		}
-		filters = {
-			key: value
-			for key, value in record.items()
-			if key in valid_columns and key not in skip_fields and not isinstance(value, list)
-		}
-		if not filters:
-			continue
-
-		name = frappe.db.get_value(record_doctype, filters)
-		if name:
-			delete_demo_doc(record_doctype, name)
+		clear_demo_record(record)
 
 
-def delete_demo_doc(doctype, name):
-	if not frappe.db.exists(doctype, name):
+def clear_demo_record(record):
+	document_type = record.get("doctype")
+	del record["doctype"]
+
+	if document_type in ("Company", "Fiscal Year"):
 		return
 
-	meta = frappe.get_meta(doctype)
-	if meta.is_submittable:
-		frappe.db.set_value(doctype, name, "docstatus", 0)
+	valid_columns = frappe.get_meta(document_type).get_valid_columns()
+	filters = record
+	for key in list(filters):
+		if key not in valid_columns or isinstance(filters[key], list):
+			filters.pop(key, None)
 
-	frappe.delete_doc(doctype, name, ignore_permissions=True, force=True)
+	try:
+		doc = frappe.get_doc(document_type, filters)
+		if doc.meta.is_submittable:
+			if document_type == "Expense Claim" and doc.docstatus == 1:
+				doc.cancel()
+			else:
+				doc.db_set("docstatus", 0)
+		frappe.delete_doc(document_type, doc.name, ignore_permissions=True, force=True)
+	except frappe.exceptions.DoesNotExistError:
+		frappe.clear_last_message()
+		pass
 
 
 def log_demo_data_failed_notification(error_log):
@@ -188,7 +183,7 @@ def log_demo_data_failed_notification(error_log):
 	make_notification_logs(notif_log_doc, users)
 
 
-def setup_demo(args):
+def setup_demo():
 	process_demo_records("hrms_demo_master_doctypes")
 	setup_demo_fiscal_years()
 	setup_payroll_accounts()
@@ -220,10 +215,7 @@ def enqueue_dynamic_demo_data():
 def setup_dynamic_demo_data(company=None):
 	from frappe.utils.telemetry import capture
 
-	from hrms.hrms_setup.demo_dynamic import (
-		setup_leave_and_attendance,
-		setup_salary_structure_assignments,
-	)
+	from hrms.hrms_setup.demo_dynamic import setup_leave_and_attendance
 
 	capture("dynamic_demo_data_creation_started", "hrms")
 	try:
@@ -231,7 +223,6 @@ def setup_dynamic_demo_data(company=None):
 		process_demo_records("hrms_demo_background_master_doctypes")
 		set_employee_recruitment_links()
 		process_demo_records("hrms_demo_background_transaction_doctypes")
-		setup_salary_structure_assignments(company)
 		setup_leave_and_attendance(company)
 		setup_payroll_accounts()
 		setup_payroll_runs()
@@ -244,30 +235,12 @@ def setup_dynamic_demo_data(company=None):
 
 
 def process_demo_records(hook_name):
+	from frappe.desk.page.setup_wizard.setup_wizard import make_records
+
 	for doctype in frappe.get_hooks(hook_name):
 		data = read_data_file_using_hooks(doctype)
 		if data:
-			for item in json.loads(data):
-				create_demo_record(item)
-
-
-def create_demo_record(record):
-	from frappe.modules import scrub
-
-	doc = frappe.get_doc(record)
-
-	parent_link_field = "parent_" + scrub(doc.doctype)
-	if doc.meta.get_field(parent_link_field) and not doc.get(parent_link_field):
-		doc.flags.ignore_mandatory = True
-
-	previous_in_import = getattr(frappe.flags, "in_import", False)
-	if record.get("name"):
-		frappe.flags.in_import = True
-
-	try:
-		doc.insert(ignore_permissions=True, ignore_if_duplicate=True)
-	finally:
-		frappe.flags.in_import = previous_in_import
+			make_records(json.loads(data))
 
 
 def read_data_file_using_hooks(doctype, context=None):
@@ -313,27 +286,6 @@ def fiscal_year_exists_for_company(year_start_date, year_end_date, company):
 	return False
 
 
-def setup_demo_company_defaults(context):
-	set_company_default_if_missing(
-		context.demo_company,
-		"default_expense_claim_payable_account",
-		f"Employee Advances - {context.demo_company_abbr}",
-	)
-	set_company_default_if_missing(
-		context.demo_company,
-		"default_payroll_payable_account",
-		f"Payroll Payable - {context.demo_company_abbr}",
-	)
-
-
-def set_company_default_if_missing(company, fieldname, account):
-	if not account or not frappe.db.exists("Account", account):
-		return
-
-	if not frappe.db.get_value("Company", company, fieldname):
-		frappe.db.set_value("Company", company, fieldname, account)
-
-
 def setup_payroll_accounts():
 	context = get_demo_company_context()
 	payroll_payable_account = f"Payroll Payable - {context.demo_company_abbr}"
@@ -367,6 +319,8 @@ def setup_salary_component_accounts():
 
 
 def setup_employees():
+	from frappe.desk.page.setup_wizard.setup_wizard import make_records
+
 	records = json.loads(read_data_file_using_hooks("employee"))
 	if not records:
 		return
@@ -387,7 +341,7 @@ def setup_employees():
 		if record.get("create_user_automatically") and record.get("create_user_permission") is None:
 			record["create_user_permission"] = 0
 
-		create_demo_record(record)
+	make_records(records)
 
 	set_employee_approvers(employee_approvers)
 
@@ -437,7 +391,7 @@ def get_demo_company_from_global_defaults():
 		return demo_company
 
 
-def get_demo_company_context(args=None):
+def get_demo_company_context():
 	demo_company = get_demo_company_from_global_defaults()
 	if not demo_company:
 		frappe.throw(_("Demo company is not set. Please run ERPNext demo setup first."))
@@ -447,7 +401,6 @@ def get_demo_company_context(args=None):
 	)
 
 	context = frappe._dict(
-		base_company=None,
 		demo_company=demo_company,
 		demo_company_abbr=demo_company_abbr,
 		demo_company_currency=demo_company_currency,

@@ -215,7 +215,7 @@
         "salary_structure": "Operations Executive",
         "company": "{{ demo_company }}",
         "department": "Operations - {{ demo_company_abbr }}",
-        "from_date": "2026-01-01",
+        "from_date": "2026-01-15",
         "currency": "{{ demo_company_currency }}",
         "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
@@ -270,7 +270,7 @@
         "salary_structure": "Software Engineer",
         "company": "{{ demo_company }}",
         "department": "Engineering - {{ demo_company_abbr }}",
-        "from_date": "2026-01-01",
+        "from_date": "2026-02-01",
         "currency": "{{ demo_company_currency }}",
         "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
@@ -281,7 +281,7 @@
         "salary_structure": "Software Engineer",
         "company": "{{ demo_company }}",
         "department": "Engineering - {{ demo_company_abbr }}",
-        "from_date": "2026-01-01",
+        "from_date": "2026-01-15",
         "currency": "{{ demo_company_currency }}",
         "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
@@ -292,7 +292,7 @@
         "salary_structure": "Sales Executive",
         "company": "{{ demo_company }}",
         "department": "Sales - {{ demo_company_abbr }}",
-        "from_date": "2026-01-01",
+        "from_date": "2026-03-03",
         "currency": "{{ demo_company_currency }}",
         "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
@@ -303,7 +303,7 @@
         "salary_structure": "HR Executive",
         "company": "{{ demo_company }}",
         "department": "HR - {{ demo_company_abbr }}",
-        "from_date": "2026-01-01",
+        "from_date": "2026-02-17",
         "currency": "{{ demo_company_currency }}",
         "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },
@@ -314,7 +314,7 @@
         "salary_structure": "Finance Executive",
         "company": "{{ demo_company }}",
         "department": "Finance - {{ demo_company_abbr }}",
-        "from_date": "2026-01-01",
+        "from_date": "2026-03-10",
         "currency": "{{ demo_company_currency }}",
         "payroll_payable_account": "{{ 'Payroll Payable - ' + demo_company_abbr }}"
     },

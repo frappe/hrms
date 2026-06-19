@@ -1,9 +1,8 @@
 [
     {
         "doctype": "Appraisal",
-        "name": "HR-APR-DEMO-00001",
-        "docstatus": 1,
         "naming_series": "HR-APR-.YYYY.-",
+        "docstatus": 1,
         "employee": "HR-EMP-00001",
         "company": "{{ demo_company }}",
         "appraisal_cycle": "Q4 2025 Review",
@@ -48,8 +47,6 @@
                 "score_earned": 0.47
             }
         ],
-        "total_score": 4.44,
-        "final_score": 4.44,
         "remarks": "Demo appraisal includes manager-rated goals for review analytics.",
         "self_ratings": [
             {
@@ -81,9 +78,8 @@
     },
     {
         "doctype": "Appraisal",
-        "name": "HR-APR-DEMO-00002",
-        "docstatus": 1,
         "naming_series": "HR-APR-.YYYY.-",
+        "docstatus": 1,
         "employee": "HR-EMP-00002",
         "company": "{{ demo_company }}",
         "appraisal_cycle": "Q4 2025 Review",
@@ -128,8 +124,6 @@
                 "score_earned": 0.45
             }
         ],
-        "total_score": 4.1,
-        "final_score": 4.1,
         "remarks": "Demo appraisal includes manager-rated goals for review analytics.",
         "self_ratings": [
             {
@@ -161,9 +155,8 @@
     },
     {
         "doctype": "Appraisal",
-        "name": "HR-APR-DEMO-00003",
-        "docstatus": 1,
         "naming_series": "HR-APR-.YYYY.-",
+        "docstatus": 1,
         "employee": "HR-EMP-00003",
         "company": "{{ demo_company }}",
         "appraisal_cycle": "Q4 2025 Review",
@@ -208,8 +201,6 @@
                 "score_earned": 0.42
             }
         ],
-        "total_score": 4.1,
-        "final_score": 4.1,
         "remarks": "Demo appraisal includes manager-rated goals for review analytics.",
         "self_ratings": [
             {
@@ -241,9 +232,8 @@
     },
     {
         "doctype": "Appraisal",
-        "name": "HR-APR-DEMO-00004",
-        "docstatus": 1,
         "naming_series": "HR-APR-.YYYY.-",
+        "docstatus": 1,
         "employee": "HR-EMP-00004",
         "company": "{{ demo_company }}",
         "appraisal_cycle": "Q4 2025 Review",
@@ -288,8 +278,6 @@
                 "score_earned": 0.38
             }
         ],
-        "total_score": 4.26,
-        "final_score": 4.26,
         "remarks": "Demo appraisal includes manager-rated goals for review analytics.",
         "self_ratings": [
             {
@@ -321,9 +309,8 @@
     },
     {
         "doctype": "Appraisal",
-        "name": "HR-APR-DEMO-00005",
-        "docstatus": 1,
         "naming_series": "HR-APR-.YYYY.-",
+        "docstatus": 1,
         "employee": "HR-EMP-00005",
         "company": "{{ demo_company }}",
         "appraisal_cycle": "Q4 2025 Review",
@@ -368,8 +355,6 @@
                 "score_earned": 0.43
             }
         ],
-        "total_score": 4.07,
-        "final_score": 4.07,
         "remarks": "Demo appraisal includes manager-rated goals for review analytics.",
         "self_ratings": [
             {
@@ -401,9 +386,8 @@
     },
     {
         "doctype": "Appraisal",
-        "name": "HR-APR-DEMO-00006",
-        "docstatus": 1,
         "naming_series": "HR-APR-.YYYY.-",
+        "docstatus": 1,
         "employee": "HR-EMP-00006",
         "company": "{{ demo_company }}",
         "appraisal_cycle": "Q1 2026 Review",
@@ -448,8 +432,6 @@
                 "score_earned": 0.4
             }
         ],
-        "total_score": 4.15,
-        "final_score": 4.15,
         "remarks": "Demo appraisal includes manager-rated goals for review analytics.",
         "self_ratings": [
             {
@@ -481,9 +463,8 @@
     },
     {
         "doctype": "Appraisal",
-        "name": "HR-APR-DEMO-00007",
-        "docstatus": 1,
         "naming_series": "HR-APR-.YYYY.-",
+        "docstatus": 1,
         "employee": "HR-EMP-00007",
         "company": "{{ demo_company }}",
         "appraisal_cycle": "Q1 2026 Review",
@@ -528,8 +509,6 @@
                 "score_earned": 0.44
             }
         ],
-        "total_score": 4.16,
-        "final_score": 4.16,
         "remarks": "Demo appraisal includes manager-rated goals for review analytics.",
         "self_ratings": [
             {
@@ -561,9 +540,8 @@
     },
     {
         "doctype": "Appraisal",
-        "name": "HR-APR-DEMO-00008",
-        "docstatus": 1,
         "naming_series": "HR-APR-.YYYY.-",
+        "docstatus": 1,
         "employee": "HR-EMP-00008",
         "company": "{{ demo_company }}",
         "appraisal_cycle": "Q1 2026 Review",
@@ -608,8 +586,6 @@
                 "score_earned": 0.43
             }
         ],
-        "total_score": 4.3,
-        "final_score": 4.3,
         "remarks": "Demo appraisal includes manager-rated goals for review analytics.",
         "self_ratings": [
             {
@@ -641,9 +617,8 @@
     },
     {
         "doctype": "Appraisal",
-        "name": "HR-APR-DEMO-00009",
-        "docstatus": 1,
         "naming_series": "HR-APR-.YYYY.-",
+        "docstatus": 1,
         "employee": "HR-EMP-00009",
         "company": "{{ demo_company }}",
         "appraisal_cycle": "Q1 2026 Review",
@@ -688,8 +663,6 @@
                 "score_earned": 0.4
             }
         ],
-        "total_score": 4.38,
-        "final_score": 4.38,
         "remarks": "Demo appraisal includes manager-rated goals for review analytics.",
         "self_ratings": [
             {
@@ -721,9 +694,8 @@
     },
     {
         "doctype": "Appraisal",
-        "name": "HR-APR-DEMO-00010",
-        "docstatus": 1,
         "naming_series": "HR-APR-.YYYY.-",
+        "docstatus": 1,
         "employee": "HR-EMP-00013",
         "company": "{{ demo_company }}",
         "appraisal_cycle": "Q1 2026 Review",
@@ -768,8 +740,6 @@
                 "score_earned": 0.42
             }
         ],
-        "total_score": 3.96,
-        "final_score": 3.96,
         "remarks": "Demo appraisal includes manager-rated goals for review analytics.",
         "self_ratings": [
             {

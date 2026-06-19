@@ -2,7 +2,7 @@
     {
         "doctype": "Job Offer",
         "docstatus": 1,
-        "job_applicant": "HR-APP-2026-00001",
+        "job_applicant": "priya.patel@email.com",
         "company": "{{ demo_company }}",
         "offer_date": "2026-03-25",
         "status": "Accepted",

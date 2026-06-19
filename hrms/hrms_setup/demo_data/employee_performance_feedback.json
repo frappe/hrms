@@ -1,9 +1,8 @@
 [
     {
         "doctype": "Employee Performance Feedback",
-        "name": "HR-EPF-DEMO-00001",
         "docstatus": 1,
-        "appraisal": "HR-APR-DEMO-00001",
+        "appraisal": "HR-APR-2026-00001",
         "employee": "HR-EMP-00001",
         "reviewer": "HR-EMP-00003",
         "appraisal_cycle": "Q4 2025 Review",
@@ -38,9 +37,8 @@
     },
     {
         "doctype": "Employee Performance Feedback",
-        "name": "HR-EPF-DEMO-00002",
         "docstatus": 1,
-        "appraisal": "HR-APR-DEMO-00002",
+        "appraisal": "HR-APR-2026-00002",
         "employee": "HR-EMP-00002",
         "reviewer": "HR-EMP-00001",
         "appraisal_cycle": "Q4 2025 Review",
@@ -75,9 +73,8 @@
     },
     {
         "doctype": "Employee Performance Feedback",
-        "name": "HR-EPF-DEMO-00003",
         "docstatus": 1,
-        "appraisal": "HR-APR-DEMO-00003",
+        "appraisal": "HR-APR-2026-00003",
         "employee": "HR-EMP-00003",
         "reviewer": "HR-EMP-00001",
         "appraisal_cycle": "Q4 2025 Review",
@@ -112,9 +109,8 @@
     },
     {
         "doctype": "Employee Performance Feedback",
-        "name": "HR-EPF-DEMO-00004",
         "docstatus": 1,
-        "appraisal": "HR-APR-DEMO-00004",
+        "appraisal": "HR-APR-2026-00004",
         "employee": "HR-EMP-00004",
         "reviewer": "HR-EMP-00002",
         "appraisal_cycle": "Q4 2025 Review",
@@ -149,9 +145,8 @@
     },
     {
         "doctype": "Employee Performance Feedback",
-        "name": "HR-EPF-DEMO-00005",
         "docstatus": 1,
-        "appraisal": "HR-APR-DEMO-00006",
+        "appraisal": "HR-APR-2026-00006",
         "employee": "HR-EMP-00006",
         "reviewer": "HR-EMP-00003",
         "appraisal_cycle": "Q1 2026 Review",
@@ -186,9 +181,8 @@
     },
     {
         "doctype": "Employee Performance Feedback",
-        "name": "HR-EPF-DEMO-00006",
         "docstatus": 1,
-        "appraisal": "HR-APR-DEMO-00009",
+        "appraisal": "HR-APR-2026-00009",
         "employee": "HR-EMP-00009",
         "reviewer": "HR-EMP-00002",
         "appraisal_cycle": "Q1 2026 Review",

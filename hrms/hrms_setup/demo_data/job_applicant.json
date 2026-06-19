@@ -1,7 +1,6 @@
 [
     {
         "doctype": "Job Applicant",
-        "name": "HR-APP-2026-00001",
         "applicant_name": "Priya Patel",
         "email_id": "priya.patel@email.com",
         "phone_number": "+1-415-555-0101",
@@ -17,7 +16,6 @@
     },
     {
         "doctype": "Job Applicant",
-        "name": "HR-APP-2026-00002",
         "applicant_name": "James Wilson",
         "email_id": "james.wilson@email.com",
         "phone_number": "+1-212-555-0202",
@@ -33,7 +31,6 @@
     },
     {
         "doctype": "Job Applicant",
-        "name": "HR-APP-2026-00003",
         "applicant_name": "Omar Hassan",
         "email_id": "omar.hassan@email.com",
         "phone_number": "+971-50-123-4567",
@@ -49,7 +46,6 @@
     },
     {
         "doctype": "Job Applicant",
-        "name": "HR-APP-2026-00004",
         "applicant_name": "Jennifer Martinez",
         "email_id": "jennifer.martinez@email.com",
         "phone_number": "+1-310-555-0303",
@@ -65,7 +61,6 @@
     },
     {
         "doctype": "Job Applicant",
-        "name": "HR-APP-2026-00005",
         "applicant_name": "Rajesh Kumar",
         "email_id": "rajesh.kumar@email.com",
         "phone_number": "+91-98765-43210",
@@ -81,7 +76,6 @@
     },
     {
         "doctype": "Job Applicant",
-        "name": "HR-APP-2026-00006",
         "applicant_name": "Fatima Al-Sayed",
         "email_id": "fatima.alsayed@email.com",
         "phone_number": "+971-55-987-6543",
@@ -97,7 +91,6 @@
     },
     {
         "doctype": "Job Applicant",
-        "name": "HR-APP-2026-00007",
         "applicant_name": "Robert Chen",
         "email_id": "robert.chen@email.com",
         "phone_number": "+1-650-555-0404",
@@ -113,7 +106,6 @@
     },
     {
         "doctype": "Job Applicant",
-        "name": "HR-APP-2026-00008",
         "applicant_name": "Anita Sharma",
         "email_id": "anita.sharma@email.com",
         "phone_number": "+91-99887-76655",
@@ -129,7 +121,6 @@
     },
     {
         "doctype": "Job Applicant",
-        "name": "HR-APP-2026-00009",
         "applicant_name": "Michael Brown",
         "email_id": "michael.brown@email.com",
         "phone_number": "+1-415-555-0505",
@@ -145,7 +136,6 @@
     },
     {
         "doctype": "Job Applicant",
-        "name": "HR-APP-2026-00010",
         "applicant_name": "Lisa Wong",
         "email_id": "lisa.wong@email.com",
         "phone_number": "+1-415-555-0606",
@@ -161,7 +151,6 @@
     },
     {
         "doctype": "Job Applicant",
-        "name": "HR-APP-2026-00011",
         "applicant_name": "Ahmed Ali",
         "email_id": "ahmed.ali@email.com",
         "phone_number": "+971-55-111-2222",
@@ -177,7 +166,6 @@
     },
     {
         "doctype": "Job Applicant",
-        "name": "HR-APP-2026-00012",
         "applicant_name": "Sara Khan",
         "email_id": "sara.khan@email.com",
         "phone_number": "+971-55-333-4444",

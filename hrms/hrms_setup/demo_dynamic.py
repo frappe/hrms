@@ -5,43 +5,6 @@ import frappe
 from frappe.utils import getdate
 
 
-def setup_salary_structure_assignments(company):
-	from hrms.hrms_setup.demo import create_demo_record, get_demo_records
-
-	for record in get_demo_records("salary_structure_assignment"):
-		if record.get("company") != company or not frappe.db.exists("Company", record.get("company")):
-			continue
-
-		if not frappe.db.exists("Employee", record.get("employee")):
-			continue
-
-		record = get_valid_salary_structure_assignment_record(record)
-
-		if not frappe.db.exists("Salary Structure", record.get("salary_structure")):
-			continue
-
-		if frappe.db.exists(
-			"Salary Structure Assignment",
-			{
-				"employee": record.get("employee"),
-				"from_date": record.get("from_date"),
-				"docstatus": 1,
-			},
-		):
-			continue
-
-		create_demo_record(record)
-
-
-def get_valid_salary_structure_assignment_record(record):
-	record = record.copy()
-	joining_date = frappe.db.get_value("Employee", record.get("employee"), "date_of_joining")
-	if joining_date and getdate(record.get("from_date")) < getdate(joining_date):
-		record["from_date"] = joining_date
-
-	return record
-
-
 def get_employee_records(company):
 	return frappe.get_all(
 		"Employee",
@@ -58,11 +21,7 @@ def get_employee_records(company):
 
 
 def setup_leave_and_attendance(company):
-	from hrms.hrms_setup.demo_attendance import (
-		create_leave_allocations,
-		create_leave_applications,
-		generate_attendance,
-	)
+	from hrms.hrms_setup.demo_attendance import generate_attendance
 
 	employees = get_employee_records(company)
 
@@ -76,8 +35,6 @@ def setup_leave_and_attendance(company):
 		leave_period = create_current_year_leave_period(company)
 
 	leave_period_doc = frappe.get_doc("Leave Period", leave_period)
-	create_leave_allocations(employees, leave_period_doc, company)
-	create_leave_applications(employees, leave_period_doc)
 	generate_attendance(employees, leave_period_doc)
 
 

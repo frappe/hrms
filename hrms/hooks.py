@@ -142,6 +142,9 @@ hrms_demo_transaction_doctypes = [
 hrms_demo_background_transaction_doctypes = [
 	"appraisal",
 	"employee_performance_feedback",
+	"salary_structure_assignment",
+	"leave_allocation",
+	"leave_application",
 ]
 
 # Uninstallation

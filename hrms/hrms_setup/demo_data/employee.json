@@ -412,7 +412,7 @@
         "company": "{{ demo_company }}",
         "department": "Engineering - {{ demo_company_abbr }}",
         "designation": "Senior Software Engineer",
-        "job_applicant": "HR-APP-2026-00001",
+        "job_applicant": "priya.patel@email.com",
         "branch": "New York Office",
         "employment_type": "Full-time",
         "cell_number": "+1-415-555-0101",

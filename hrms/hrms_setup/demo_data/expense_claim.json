@@ -1,15 +1,13 @@
 [
     {
         "doctype": "Expense Claim",
+        "naming_series": "HR-EXP-.YYYY.-",
         "employee": "HR-EMP-00003",
         "company": "{{ demo_company }}",
         "expense_approver": "",
         "posting_date": "2026-03-29",
         "approval_status": "Draft",
-        "total_claimed_amount": 8243,
-        "total_sanctioned_amount": 0,
         "is_paid": 0,
-        "status": "Draft",
         "expenses": [
             {
                 "doctype": "Expense Claim Detail",
@@ -26,18 +24,16 @@
     },
     {
         "doctype": "Expense Claim",
+        "naming_series": "HR-EXP-.YYYY.-",
         "docstatus": 1,
         "employee": "HR-EMP-00006",
         "company": "{{ demo_company }}",
         "expense_approver": "",
         "posting_date": "2026-03-09",
         "approval_status": "Approved",
-        "total_claimed_amount": 11287,
-        "total_sanctioned_amount": 11287,
         "is_paid": 1,
         "mode_of_payment": "Cash",
         "cost_center": "{{ 'Main - ' + demo_company_abbr }}",
-        "status": "Approved",
         "expenses": [
             {
                 "doctype": "Expense Claim Detail",
@@ -55,18 +51,16 @@
     },
     {
         "doctype": "Expense Claim",
+        "naming_series": "HR-EXP-.YYYY.-",
         "docstatus": 1,
         "employee": "HR-EMP-00005",
         "company": "{{ demo_company }}",
         "expense_approver": "",
         "posting_date": "2026-04-12",
         "approval_status": "Approved",
-        "total_claimed_amount": 13452,
-        "total_sanctioned_amount": 13452,
         "is_paid": 1,
         "mode_of_payment": "Cash",
         "cost_center": "{{ 'Main - ' + demo_company_abbr }}",
-        "status": "Approved",
         "expenses": [
             {
                 "doctype": "Expense Claim Detail",
@@ -84,18 +78,16 @@
     },
     {
         "doctype": "Expense Claim",
+        "naming_series": "HR-EXP-.YYYY.-",
         "docstatus": 1,
         "employee": "HR-EMP-00002",
         "company": "{{ demo_company }}",
         "expense_approver": "",
         "posting_date": "2026-03-10",
         "approval_status": "Approved",
-        "total_claimed_amount": 12034,
-        "total_sanctioned_amount": 12034,
         "is_paid": 1,
         "mode_of_payment": "Cash",
         "cost_center": "{{ 'Main - ' + demo_company_abbr }}",
-        "status": "Approved",
         "expenses": [
             {
                 "doctype": "Expense Claim Detail",
@@ -113,18 +105,16 @@
     },
     {
         "doctype": "Expense Claim",
+        "naming_series": "HR-EXP-.YYYY.-",
         "docstatus": 1,
         "employee": "HR-EMP-00001",
         "company": "{{ demo_company }}",
         "expense_approver": "",
         "posting_date": "2026-03-22",
         "approval_status": "Approved",
-        "total_claimed_amount": 9147,
-        "total_sanctioned_amount": 9147,
         "is_paid": 1,
         "mode_of_payment": "Cash",
         "cost_center": "{{ 'Main - ' + demo_company_abbr }}",
-        "status": "Approved",
         "expenses": [
             {
                 "doctype": "Expense Claim Detail",
@@ -142,17 +132,15 @@
     },
     {
         "doctype": "Expense Claim",
+        "naming_series": "HR-EXP-.YYYY.-",
         "docstatus": 1,
         "employee": "HR-EMP-00004",
         "company": "{{ demo_company }}",
         "expense_approver": "",
         "posting_date": "2026-04-07",
         "approval_status": "Rejected",
-        "total_claimed_amount": 13842,
-        "total_sanctioned_amount": 0,
         "is_paid": 0,
         "cost_center": "{{ 'Main - ' + demo_company_abbr }}",
-        "status": "Rejected",
         "expenses": [
             {
                 "doctype": "Expense Claim Detail",
@@ -170,17 +158,15 @@
     },
     {
         "doctype": "Expense Claim",
+        "naming_series": "HR-EXP-.YYYY.-",
         "docstatus": 1,
         "employee": "HR-EMP-00007",
         "company": "{{ demo_company }}",
         "expense_approver": "",
         "posting_date": "2026-04-18",
         "approval_status": "Approved",
-        "total_claimed_amount": 7850,
-        "total_sanctioned_amount": 7850,
         "is_paid": 0,
         "cost_center": "{{ 'Main - ' + demo_company_abbr }}",
-        "status": "Approved",
         "expenses": [
             {
                 "doctype": "Expense Claim Detail",
@@ -198,15 +184,13 @@
     },
     {
         "doctype": "Expense Claim",
+        "naming_series": "HR-EXP-.YYYY.-",
         "employee": "HR-EMP-00008",
         "company": "{{ demo_company }}",
         "expense_approver": "",
         "posting_date": "2026-04-25",
         "approval_status": "Draft",
-        "total_claimed_amount": 2460,
-        "total_sanctioned_amount": 0,
         "is_paid": 0,
-        "status": "Draft",
         "expenses": [
             {
                 "doctype": "Expense Claim Detail",
@@ -223,17 +207,15 @@
     },
     {
         "doctype": "Expense Claim",
+        "naming_series": "HR-EXP-.YYYY.-",
         "docstatus": 1,
         "employee": "HR-EMP-00009",
         "company": "{{ demo_company }}",
         "expense_approver": "",
         "posting_date": "2026-05-02",
         "approval_status": "Rejected",
-        "total_claimed_amount": 16500,
-        "total_sanctioned_amount": 0,
         "is_paid": 0,
         "cost_center": "{{ 'Main - ' + demo_company_abbr }}",
-        "status": "Rejected",
         "expenses": [
             {
                 "doctype": "Expense Claim Detail",
@@ -251,17 +233,15 @@
     },
     {
         "doctype": "Expense Claim",
+        "naming_series": "HR-EXP-.YYYY.-",
         "docstatus": 1,
         "employee": "HR-EMP-00010",
         "company": "{{ demo_company }}",
         "expense_approver": "",
         "posting_date": "2026-05-08",
         "approval_status": "Rejected",
-        "total_claimed_amount": 3920,
-        "total_sanctioned_amount": 0,
         "is_paid": 0,
         "cost_center": "{{ 'Main - ' + demo_company_abbr }}",
-        "status": "Rejected",
         "expenses": [
             {
                 "doctype": "Expense Claim Detail",

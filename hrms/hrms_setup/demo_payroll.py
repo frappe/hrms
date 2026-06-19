@@ -21,7 +21,7 @@ def setup_payroll_runs():
 
 			payroll_entry = frappe.get_doc(record)
 			payroll_entry.insert(ignore_permissions=True)
-			frappe.db.commit()
+			commit_demo_payroll_progress()
 
 			complete_payroll_entry(payroll_entry.name)
 		except Exception as e:
@@ -59,7 +59,7 @@ def clear_stale_draft_payroll_entries(records):
 
 		frappe.delete_doc("Payroll Entry", payroll_entry.name, ignore_permissions=True, force=True)
 
-	frappe.db.commit()
+	commit_demo_payroll_progress()
 
 
 def get_existing_payroll_entry(record):
@@ -82,16 +82,16 @@ def complete_payroll_entry(payroll_entry_name):
 		if not payroll_entry.employees:
 			payroll_entry.fill_employee_details()
 			payroll_entry.save(ignore_permissions=True)
-			frappe.db.commit()
+			commit_demo_payroll_progress()
 			payroll_entry.reload()
 
 		if not payroll_entry.employees:
 			frappe.delete_doc("Payroll Entry", payroll_entry.name, ignore_permissions=True, force=True)
-			frappe.db.commit()
+			commit_demo_payroll_progress()
 			return
 
 		payroll_entry.submit()
-		frappe.db.commit()
+		commit_demo_payroll_progress()
 
 	submit_salary_slips(payroll_entry.name)
 
@@ -111,4 +111,9 @@ def submit_salary_slips(payroll_entry_name):
 		payroll_entry.email_salary_slip(submitted)
 		payroll_entry.db_set({"salary_slips_submitted": 1, "status": "Submitted", "error_message": ""})
 
-	frappe.db.commit()
+	commit_demo_payroll_progress()
+
+
+def commit_demo_payroll_progress():
+	# Demo payroll generation submits dependent documents; committing each stage lets reruns resume cleanly.
+	frappe.db.commit()  # nosemgrep
