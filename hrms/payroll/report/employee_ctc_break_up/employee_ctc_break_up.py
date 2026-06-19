@@ -66,7 +66,7 @@ class SalaryBreakupReport:
 		self.calculate_yearly_amounts_and_percent_of_ctc()
 		self.indent_salary_components()
 		self.separate_salary_components_by_type()
-		self.set_type_and_formula()
+		self.set_abbr_type_and_formula()
 		self.set_totals_row_for_component_types()
 		self.set_net_and_gross_earning_rows()
 
@@ -130,8 +130,9 @@ class SalaryBreakupReport:
 			component for component in self.salary_components if component.get("is_tax_component")
 		]
 
-	def set_type_and_formula(self):
+	def set_abbr_type_and_formula(self):
 		for component in self.earning_components + self.deduction_components:
+			component["salary_component"] = f"{component.get("salary_component")} ({component.get("abbr")})"
 			component["type"] = "Formula" if component.get("amount_based_on_formula") else "Fixed"
 			component["formula"] = (
 				component.get("formula") or "-"

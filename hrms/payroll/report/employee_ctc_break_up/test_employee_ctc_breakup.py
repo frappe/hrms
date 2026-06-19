@@ -160,7 +160,7 @@ class TestEmployeeCTCBreakup(HRMSTestSuite):
 		self.assertEqual(earning_components_totals.get("percent_of_ctc"), 100)
 
 		basic_earning_component = earning_components[1]
-		self.assertEqual(basic_earning_component.get("salary_component"), "Basic Salary")
+		self.assertEqual(basic_earning_component.get("salary_component"), "Basic Salary (BS)")
 		self.assertEqual(basic_earning_component.get("type"), "Formula")
 		self.assertEqual(basic_earning_component.get("formula"), "base")
 		self.assertEqual(basic_earning_component.get("per_cycle"), 60000)
@@ -168,7 +168,7 @@ class TestEmployeeCTCBreakup(HRMSTestSuite):
 		self.assertEqual(basic_earning_component.get("percent_of_ctc"), 64.52)
 
 		hra_earning_component = earning_components[2]
-		self.assertEqual(hra_earning_component.get("salary_component"), "HRA")
+		self.assertEqual(hra_earning_component.get("salary_component"), "HRA (H)")
 		self.assertEqual(hra_earning_component.get("type"), "Fixed")
 		self.assertEqual(hra_earning_component.get("formula"), 3000)
 		self.assertEqual(hra_earning_component.get("per_cycle"), 3000)
@@ -176,7 +176,9 @@ class TestEmployeeCTCBreakup(HRMSTestSuite):
 		self.assertEqual(hra_earning_component.get("percent_of_ctc"), 3.23)
 
 		special_allowance_earning_component = earning_components[3]
-		self.assertEqual(special_allowance_earning_component.get("salary_component"), "Special Allowance")
+		self.assertEqual(
+			special_allowance_earning_component.get("salary_component"), "Special Allowance (SA)"
+		)
 		self.assertEqual(special_allowance_earning_component.get("type"), "Formula")
 		self.assertEqual(special_allowance_earning_component.get("formula"), "BS\n*.5")
 		self.assertEqual(special_allowance_earning_component.get("per_cycle"), 30000)
@@ -192,7 +194,9 @@ class TestEmployeeCTCBreakup(HRMSTestSuite):
 		self.assertEqual(deduction_components_totals.get("percent_of_ctc"), 0.22)
 
 		professional_tax_deduction_component = deduction_components[1]
-		self.assertEqual(professional_tax_deduction_component.get("salary_component"), "Professional Tax")
+		self.assertEqual(
+			professional_tax_deduction_component.get("salary_component"), "Professional Tax (PT)"
+		)
 		self.assertEqual(professional_tax_deduction_component.get("type"), "Fixed")
 		self.assertEqual(professional_tax_deduction_component.get("formula"), 200)
 		self.assertEqual(professional_tax_deduction_component.get("per_cycle"), 200)
