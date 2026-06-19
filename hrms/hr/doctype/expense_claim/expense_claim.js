@@ -13,6 +13,7 @@ frappe.ui.form.on("Expense Claim", {
 					["employee", "=", frm.doc.employee],
 					["paid_amount", ">", 0],
 					["status", "not in", ["Claimed", "Returned", "Partly Claimed and Returned"]],
+					["currency", "=", frm.doc.currency],
 				],
 			};
 		});

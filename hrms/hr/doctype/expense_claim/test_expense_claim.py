@@ -12,6 +12,7 @@ from erpnext.setup.utils import get_exchange_rate
 
 from hrms.hr.doctype.expense_claim.expense_claim import (
 	MismatchError,
+	get_advances,
 	get_outstanding_amount_for_claim,
 	make_expense_claim_for_delivery_trip,
 )
@@ -753,11 +754,9 @@ class TestExpenseClaim(HRMSTestSuite):
 
 		self.assertEqual(1, expense_claim.docstatus)
 
-	def test_advance_in_different_currency_converted_in_claim(self):
-		"""An advance in a currency different from the claim must be converted (#4402)."""
+	def test_advance_in_different_currency_excluded_from_claim(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (
 			create_advance_account,
-			get_advances_for_claim,
 			make_employee_advance,
 			make_payment_entry,
 		)
@@ -786,12 +785,10 @@ class TestExpenseClaim(HRMSTestSuite):
 			employee=employee,
 			do_not_submit=True,
 		)
-		claim = get_advances_for_claim(claim, advance.name)
-		claim_advance = claim.advances[0]
 
-		# converted into the claim (company) currency == the advance's base paid amount
-		self.assertNotEqual(flt(claim_advance.advance_paid, 2), flt(advance.advance_amount, 2))
-		self.assertEqual(flt(claim_advance.advance_paid, 2), flt(advance.base_paid_amount, 2))
+		# mismatched-currency advance is excluded from both the bulk and explicit fetch
+		self.assertEqual(get_advances(claim), [])
+		self.assertEqual(get_advances(claim, advance.name), [])
 
 	def test_multicurrency_claim(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (
