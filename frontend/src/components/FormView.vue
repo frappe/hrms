@@ -99,7 +99,8 @@
 									v-else
 									:fieldtype="field.fieldtype"
 									:fieldname="field.fieldname"
-									v-model="formModel[field.fieldname]"
+									:modelValue="formModel[field.fieldname]"
+									@update:modelValue="(v) => onFieldInput(field.fieldname, v)"
 									:default="field.default"
 									:label="__(field.label, null, props.doctype)"
 									:options="field.options"
@@ -140,7 +141,8 @@
 						:key="field.name"
 						:fieldtype="field.fieldtype"
 						:fieldname="field.fieldname"
-						v-model="formModel[field.fieldname]"
+						:modelValue="formModel[field.fieldname]"
+						@update:modelValue="(v) => onFieldInput(field.fieldname, v)"
 						:default="field.default"
 						:label="__(field.label, null, props.doctype)"
 						:options="field.options"
@@ -386,7 +388,12 @@ const props = defineProps({
 		default: false,
 	},
 })
-const emit = defineEmits(["validateForm", "update:modelValue", "formReloaded"])
+const emit = defineEmits([
+	"validateForm",
+	"update:modelValue",
+	"formReloaded",
+	"fieldChange",
+])
 const router = useRouter()
 const { downloadPDF } = useDownloadPDF()
 
@@ -412,6 +419,14 @@ const formModel = computed({
 		emit("update:modelValue", newValue)
 	},
 })
+
+// Surfaces user-driven field edits as an explicit event. A programmatic load
+// (formModel = { ...doc }) writes via the :modelValue prop and never lands here,
+// so listeners can react to user intent without confusing it with form population.
+function onFieldInput(fieldname, value) {
+	formModel.value[fieldname] = value
+	emit("fieldChange", fieldname, value)
+}
 
 const status = computed(() => {
 	if (!props.id) return ""

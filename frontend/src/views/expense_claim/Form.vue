@@ -14,6 +14,7 @@
 				@validateForm="validateForm"
 				:showDownloadPDFButton="true"
 				@formReloaded="onFormReloaded"
+				@fieldChange="onFieldChange"
 			>
 				<!-- Child Tables -->
 				<template #expenses="{ isFormReadOnly }">
@@ -105,11 +106,16 @@ const formFields = createResource({
 		})
 	},
 	onSuccess(_data) {
+		// approver list is reloaded for its dropdown options; the approver value
+		// itself is only defaulted when empty (see setExpenseApprover).
 		expenseApproverDetails.reload()
-		if (!expenseClaim.value.currency) {
+		// currency / cost center / payable account are defaults that only make
+		// sense for a new claim. On an existing doc these resources would
+		// overwrite the stored values during load, so skip them.
+		if (!props.id) {
 			employeeCurrency.reload()
+			companyDetails.reload()
 		}
-		companyDetails.reload()
 	},
 })
 formFields.reload()
@@ -190,6 +196,7 @@ const employeeCurrency = createResource({
 	onSuccess(data) {
 		if (data?.salary_currency) {
 			expenseClaim.value.currency = data.salary_currency;
+			setExchangeRate()
 		}
 	}
 });
@@ -212,6 +219,17 @@ const exchangeRate = createResource({
 })
 
 // form scripts
+// Recompute defaults only on a user edit. A programmatic load writes through
+// the :modelValue prop and never emits fieldChange, so the stored currency,
+// exchange rate, cost center and payable account are preserved on load.
+function onFieldChange(fieldname) {
+	if (fieldname === "employee") employeeCurrency.fetch()
+	else if (fieldname === "company")
+		companyDetails.fetch({ company: expenseClaim.value.company })
+	else if (fieldname === "currency") setExchangeRate()
+	else if (fieldname === "cost_center") stampCostCenterOnExpenses()
+}
+
 watch(
 	() => expenseClaim.value.employee,
 	(employee_id) => {
@@ -220,8 +238,9 @@ watch(
 			setFormReadOnly()
 		}
 		currEmployee.value = employee_id
+		// refresh approver options for this employee (the approver value is
+		// only defaulted when empty, so this does not clobber a saved doc)
 		expenseApproverDetails.fetch({ employee: currEmployee.value })
-		employeeCurrency.fetch()
 	},
 )
 
@@ -229,13 +248,7 @@ watch(
 	() => expenseClaim.value.company,
 	(company) => {
 		employeeCompany.value = company
-		companyDetails.fetch({ company: employeeCompany.value })
 	}
-)
-
-watch(
-	() => expenseClaim.value.currency,
-	() => setExchangeRate()
 )
 
 watch(
@@ -252,15 +265,6 @@ watch(
 		calculateTotalAdvance()
 	},
 	{ deep: true }
-)
-
-watch(
-	() => expenseClaim.value.cost_center,
-	() => {
-		expenseClaim?.value?.expenses?.forEach((expense) => {
-			expense.cost_center = expenseClaim.value.cost_center
-		})
-	}
 )
 
 // helper functions
@@ -332,8 +336,27 @@ function setExpenseApprover(data) {
 		})
 	)
 
-	expenseClaim.value.expense_approver = data?.expense_approver
-	expenseClaim.value.expense_approver_name = data?.expense_approver_name
+	// keep the approver saved on THIS claim selectable, even if the employee's
+	// master approver has since changed and dropped it from the list
+	const savedApprover = expenseClaim.value.expense_approver
+	if (
+		savedApprover &&
+		!expense_approver.documentList.some((opt) => opt.value === savedApprover)
+	) {
+		expense_approver.documentList.push({
+			label: expenseClaim.value.expense_approver_name
+				? `${savedApprover} : ${expenseClaim.value.expense_approver_name}`
+				: savedApprover,
+			value: savedApprover,
+		})
+	}
+
+	// only default the approver when one isn't already set, so reloading the
+	// options for an existing doc doesn't overwrite the stored approver
+	if (!expenseClaim.value.expense_approver) {
+		expenseClaim.value.expense_approver = data?.expense_approver
+		expenseClaim.value.expense_approver_name = data?.expense_approver_name
+	}
 }
 
 function addExpenseItem(item) {
@@ -468,6 +491,10 @@ function validateForm() {
 	expenseClaim.value.advances = expenseClaim?.value?.advances?.filter(
 		(advance) => advance.selected
 	)
+	stampCostCenterOnExpenses()
+}
+
+function stampCostCenterOnExpenses() {
 	expenseClaim?.value?.expenses?.forEach((expense) => {
 		expense.cost_center = expenseClaim.value.cost_center
 	})

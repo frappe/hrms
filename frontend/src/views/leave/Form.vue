@@ -10,6 +10,7 @@
 				:id="props.id"
 				:showAttachmentView="true"
 				@validateForm="validateForm"
+				@fieldChange="onFieldChange"
 			/>
 		</ion-content>
 	</ion-page>
@@ -94,11 +95,6 @@ watch(
 	}
 )
 watch(
-	() => leaveApplication.value.leave_type,
-	(leave_type) => setLeaveBalance(leave_type)
-)
-
-watch(
 	() => leaveApplication.value.half_day,
 	(half_day) => setHalfDayDate(half_day)
 )
@@ -113,6 +109,8 @@ watch(
 	(from_date) => {
 		if (!leaveApplication.value.to_date) {
 			leaveApplication.value.to_date = from_date
+			// recompute for the auto-filled range (user action, not form load)
+			setLeaveBalance()
 		}
 
 		// fetch leave types for the selected date
@@ -202,7 +200,6 @@ function setTotalLeaveDays() {
 		},
 	})
 	leaveDays.reload()
-	setLeaveBalance()
 }
 
 function setLeaveBalance() {
@@ -259,11 +256,27 @@ function setLeaveApprovers(data) {
 			: approver.name,
 		value: approver.name,
 	}))
+
+	// keep the approver saved on THIS application selectable, even if the
+	// employee's master approver has since changed and dropped it from the list
+	const savedApprover = leaveApplication.value.leave_approver
+	if (
+		savedApprover &&
+		!leave_approver.documentList.some((opt) => opt.value === savedApprover)
+	) {
+		leave_approver.documentList.push({
+			label: leaveApplication.value.leave_approver_name
+				? `${savedApprover} : ${leaveApplication.value.leave_approver_name}`
+				: savedApprover,
+			value: savedApprover,
+		})
+	}
+
 	if (!leaveApplication.value.leave_approver){
 		leaveApplication.value.leave_approver = data?.leave_approver
 		leaveApplication.value.leave_approver_name = data?.leave_approver_name
 	}
-	
+
 }
 
 function setLeaveTypes(data) {
@@ -287,5 +300,11 @@ function areValuesSet() {
 function validateForm() {
 	setHalfDayDate(leaveApplication.value.half_day)
 	leaveApplication.value.employee = currEmployee.value
+}
+
+// Recompute the "leave balance before application" only on a user edit.
+// A programmatic form load never emits fieldChange, so the stored value is preserved.
+function onFieldChange(fieldname) {
+	if (["leave_type", "from_date", "to_date"].includes(fieldname)) setLeaveBalance()
 }
 </script>
