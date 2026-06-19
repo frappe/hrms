@@ -9,9 +9,18 @@
 		"build": "vite build --base=/assets/hr_app/frontend/ && yarn copy-html-entry",
 		"ionic:build": "npm run build",
 		"ionic:serve": "vite dev --host",
-		"copy-html-entry": "cp ../hr_app/public/frontend/index.html ../hr_app/www/hr-app.html"
+		"copy-html-entry": "cp ../hr_app/public/frontend/index.html ../hr_app/www/hr-app.html",
+		"cap:sync": "cap sync android",
+		"cap:open": "cap open android",
+		"apk:debug": "cd android && ./gradlew assembleDebug",
+		"apk:release": "cd android && ./gradlew assembleRelease"
 	},
 	"dependencies": {
+		"@capacitor-community/background-geolocation": "^1.2.20",
+		"@capacitor/android": "^5.7.0",
+		"@capacitor/app": "^5.0.7",
+		"@capacitor/core": "^5.7.0",
+		"@capacitor/geolocation": "^5.0.7",
 		"@ionic/vue": "^7.4.3",
 		"@ionic/vue-router": "^7.4.3",
 		"@vitejs/plugin-vue": "^4.4.0",
@@ -30,6 +39,7 @@
 		"workbox-precaching": "^7.0.0"
 	},
 	"devDependencies": {
+		"@capacitor/cli": "^5.7.0",
 		"eslint": "^8.39.0",
 		"eslint-plugin-vue": "^9.11.0",
 		"prettier": "^2.8.8"

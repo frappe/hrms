@@ -20,3 +20,9 @@ hrms/public/frontend
 hrms/www/hrms.html
 hrms/public/roster
 hrms/www/roster.html
+
+# Generated frontend build output (produced by `bench build`)
+hr_app/public/frontend
+hr_app/www/hr-app.html
+hr_app/public/roster
+hr_app/www/roster.html

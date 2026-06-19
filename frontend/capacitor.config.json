@@ -1,0 +1,13 @@
+{
+  "appId": "com.hortigroup.hortiapp",
+  "appName": "HortiApp",
+  "webDir": "capacitor-www",
+  "server": {
+    "url": "https://hortigroup.erpnext.com/hr-app",
+    "androidScheme": "https",
+    "allowNavigation": ["hortigroup.erpnext.com"]
+  },
+  "plugins": {
+    "BackgroundGeolocation": {}
+  }
+}

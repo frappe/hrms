@@ -120,6 +120,7 @@ import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
 
 import { formatTimestamp } from "@/utils/formatters"
+import { startTracking, stopTracking } from "@/composables/locationTracking"
 
 const DOCTYPE = "Employee Checkin"
 
@@ -251,6 +252,14 @@ const submitLog = (logType) => {
 				}
 				photoDataUrl.value = null
 				modalController.dismiss()
+
+				// Start / stop live location tracking around the shift.
+				if (logType === "IN") {
+					startTracking(settings.data || {})
+				} else {
+					stopTracking()
+				}
+
 				toast({
 					title: __("Success"),
 					text: __("{0} successful!", [actionLabel]),
@@ -276,13 +285,19 @@ const submitLog = (logType) => {
 	)
 }
 
-onMounted(() => {
+onMounted(async () => {
 	socket.emit("doctype_subscribe", DOCTYPE)
 	socket.on("list_update", (data) => {
 		if (data.doctype == DOCTYPE) {
 			checkins.reload()
 		}
 	})
+
+	// Resume tracking if the app (re)starts while the employee is still checked in.
+	await Promise.all([checkins.list.promise, settings.promise])
+	if (settings.data?.enable_live_tracking && lastLog.value?.log_type === "IN") {
+		startTracking(settings.data)
+	}
 })
 
 onBeforeUnmount(() => {

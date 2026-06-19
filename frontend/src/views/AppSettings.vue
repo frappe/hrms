@@ -66,6 +66,29 @@
 									:disabled="savingSettings"
 									@update:model-value="(val) => updateHRSetting('hide_accounting_features', val)"
 								/>
+								<Switch
+									size="md"
+									:label="__('Enable Live Location Tracking')"
+									:description="__('Track location while employees are checked in')"
+									class="p-2"
+									:model-value="hrSettings.enable_live_tracking"
+									:disabled="savingSettings"
+									@update:model-value="(val) => updateHRSetting('enable_live_tracking', val)"
+								/>
+								<div v-if="hrSettings.enable_live_tracking" class="flex items-center justify-between p-2 gap-3">
+									<div class="flex flex-col">
+										<span class="text-sm text-gray-900">{{ __("Tracking Interval") }}</span>
+										<span class="text-xs text-gray-500">{{ __("Seconds between location pings") }}</span>
+									</div>
+									<input
+										type="number"
+										min="10"
+										class="w-20 border border-gray-300 rounded px-2 py-1 text-sm text-right focus:outline-none focus:ring-2 focus:ring-green-700"
+										:value="hrSettings.tracking_interval"
+										:disabled="savingSettings"
+										@change="onIntervalChange"
+									/>
+								</div>
 							</div>
 							<div
 								v-if="savingSettings"
@@ -98,6 +121,14 @@
 									/>
 									<span>{{ __("Accounting features hidden") }}</span>
 								</div>
+								<div class="flex items-center gap-2">
+									<FeatherIcon
+										:name="hrSettings.enable_live_tracking ? 'map-pin' : 'circle'"
+										class="h-4 w-4"
+										:class="hrSettings.enable_live_tracking ? 'text-green-500' : 'text-gray-400'"
+									/>
+									<span>{{ hrSettings.enable_live_tracking ? __("Location tracked while checked in") : __("Location tracking off") }}</span>
+								</div>
 							</div>
 						</template>
 					</div>
@@ -129,6 +160,8 @@ const hrSettingsLoaded = ref(false)
 const hrSettings = reactive({
 	require_checkin_photo: false,
 	hide_accounting_features: true,
+	enable_live_tracking: false,
+	tracking_interval: 60,
 })
 
 const isHRManager = computed(() => {
@@ -159,11 +192,53 @@ onMounted(async () => {
 		const data = await frappeRequest({ url: "hr_app.api.get_hr_settings" })
 		hrSettings.require_checkin_photo = !!data.require_checkin_photo
 		hrSettings.hide_accounting_features = !!data.hide_accounting_features
+		hrSettings.enable_live_tracking = !!data.enable_live_tracking
+		hrSettings.tracking_interval = data.tracking_interval || 60
 		hrSettingsLoaded.value = true
 	} catch (err) {
 		console.error("Failed to load HR settings", err)
 	}
 })
+
+async function saveHRSetting(fieldname, value) {
+	savingSettings.value = true
+	try {
+		await frappeRequest({
+			url: "hr_app.api.update_horthub_settings",
+			method: "POST",
+			params: { fieldname, value },
+		})
+		toast({
+			title: __("Saved"),
+			text: __("Setting updated"),
+			icon: "check-circle",
+			position: "bottom-center",
+			iconClasses: "text-green-500",
+		})
+	} catch (err) {
+		toast({
+			title: __("Error"),
+			text: __("Failed to save setting"),
+			icon: "alert-circle",
+			position: "bottom-center",
+			iconClasses: "text-red-500",
+		})
+		throw err
+	} finally {
+		savingSettings.value = false
+	}
+}
+
+async function onIntervalChange(event) {
+	const value = Math.max(10, parseInt(event.target.value, 10) || 60)
+	const previous = hrSettings.tracking_interval
+	hrSettings.tracking_interval = value
+	try {
+		await saveHRSetting("tracking_interval", value)
+	} catch (err) {
+		hrSettings.tracking_interval = previous
+	}
+}
 
 async function updateHRSetting(fieldname, value) {
 	savingSettings.value = true

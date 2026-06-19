@@ -94,12 +94,19 @@ def get_hr_settings() -> dict:
 		allow_geolocation_tracking=settings.allow_geolocation_tracking,
 		require_checkin_photo=settings.require_checkin_photo,
 		hide_accounting_features=settings.hide_accounting_features,
+		enable_live_tracking=settings.enable_live_tracking,
+		tracking_interval=settings.tracking_interval or 60,
 	)
 
 
 @frappe.whitelist()
 def update_horthub_settings(fieldname: str, value: int) -> None:
-	allowed_fields = {"require_checkin_photo", "hide_accounting_features"}
+	allowed_fields = {
+		"require_checkin_photo",
+		"hide_accounting_features",
+		"enable_live_tracking",
+		"tracking_interval",
+	}
 	if fieldname not in allowed_fields:
 		frappe.throw(_("Invalid setting: {0}").format(fieldname), frappe.PermissionError)
 
@@ -849,5 +856,81 @@ def get_daily_reports(limit: int = 50) -> list[dict]:
 		filters={"employee": employee},
 		fields=["name", "date", "employee_name", "status", "file"],
 		order_by="date desc",
+		limit=limit,
+	)
+
+
+# Live Location Tracking
+@frappe.whitelist(methods=["POST"])
+def log_locations(pings: str | list) -> dict:
+	"""Bulk-ingest a batch of location pings for the current employee.
+
+	`pings` is a JSON list of dicts:
+	{timestamp, latitude, longitude, accuracy?, speed?, source?}
+	"""
+	if not frappe.db.get_single_value("HR Settings", "enable_live_tracking"):
+		frappe.throw(_("Live location tracking is not enabled."), frappe.PermissionError)
+
+	employee = get_current_employee()
+
+	if isinstance(pings, str):
+		pings = frappe.parse_json(pings)
+	if not isinstance(pings, list):
+		frappe.throw(_("Invalid payload: expected a list of pings."))
+
+	inserted = 0
+	for ping in pings:
+		latitude = ping.get("latitude")
+		longitude = ping.get("longitude")
+		timestamp = ping.get("timestamp")
+		# skip malformed pings instead of failing the whole batch
+		if latitude is None or longitude is None or not timestamp:
+			continue
+
+		source = ping.get("source") or "Background"
+		if source not in ("Background", "Foreground", "Manual"):
+			source = "Background"
+
+		frappe.get_doc(
+			{
+				"doctype": "Employee Location Log",
+				"employee": employee,
+				"timestamp": timestamp,
+				"latitude": latitude,
+				"longitude": longitude,
+				"accuracy": ping.get("accuracy"),
+				"speed": ping.get("speed"),
+				"source": source,
+			}
+		).insert(ignore_permissions=False)
+		inserted += 1
+
+	return {"inserted": inserted}
+
+
+@frappe.whitelist()
+def get_recent_locations(
+	employee: str | None = None,
+	from_time: str | None = None,
+	to_time: str | None = None,
+	limit: int = 500,
+) -> list[dict]:
+	"""Return recent location logs. HR can query any employee; a regular
+	user is restricted to their own logs (enforced by row-level permissions)."""
+	filters = {}
+	if employee:
+		filters["employee"] = employee
+	if from_time and to_time:
+		filters["timestamp"] = ["between", [from_time, to_time]]
+	elif from_time:
+		filters["timestamp"] = [">=", from_time]
+	elif to_time:
+		filters["timestamp"] = ["<=", to_time]
+
+	return frappe.get_list(
+		"Employee Location Log",
+		filters=filters,
+		fields=["employee", "employee_name", "timestamp", "latitude", "longitude", "accuracy"],
+		order_by="timestamp desc",
 		limit=limit,
 	)
