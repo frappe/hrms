@@ -46,6 +46,9 @@ frappe.ui.form.on("Vehicle Log", {
 						__("No"),
 					);
 				},
+				error: function (err) {
+					reject(err);
+				},
 			});
 		});
 	},
