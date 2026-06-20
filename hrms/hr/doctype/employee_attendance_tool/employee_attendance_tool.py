@@ -208,7 +208,7 @@ def mark_employee_attendance(
 		Attendance = frappe.qb.DocType("Attendance")
 		for employee in half_day_employee_list:
 			attendance_name = frappe.db.get_value(
-				"Attendance", {"employee": employee, "attendance_date": date}
+				"Attendance", {"employee": employee, "attendance_date": date, "docstatus": 1}
 			)
 			if attendance_name:
 				frappe.has_permission("Attendance", "write", attendance_name, throw=True)
