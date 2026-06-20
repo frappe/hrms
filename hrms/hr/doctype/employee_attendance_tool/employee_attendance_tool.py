@@ -208,6 +208,11 @@ def mark_employee_attendance(
 			half_day_employee_list = json.loads(half_day_employee_list)
 		Attendance = frappe.qb.DocType("Attendance")
 		for employee in half_day_employee_list:
+			attendance_name = frappe.db.get_value(
+				"Attendance", {"employee": employee, "attendance_date": date}
+			)
+			if attendance_name:
+				frappe.has_permission("Attendance", "write", attendance_name, throw=True)
 			frappe.qb.update(Attendance).where(
 				(Attendance.employee == employee) & (Attendance.attendance_date == date)
 			).set(Attendance.half_day_status, half_day_status).set(Attendance.shift, shift).set(
