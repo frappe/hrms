@@ -779,6 +779,7 @@ def upload_base64_file(
 
 @frappe.whitelist()
 def delete_attachment(filename: str):
+	frappe.has_permission("File", "delete", filename, throw=True)
 	frappe.delete_doc("File", filename)
 
 
