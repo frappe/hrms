@@ -283,5 +283,20 @@ $.extend(hrms, {
 });
 
 frappe.realtime.on("completed_bulk_holiday_list_assignment", (message) => {
-	hrms.notify_bulk_action_status("Holiday List Assignment", message.failure, message.success);
+	if (message.success && message.success.length) {
+		frappe.show_alert({
+			message: __("{0} Holiday List Assignment(s) created", [message.success.length]),
+			indicator: "green",
+		});
+	}
+
+	if (message.failure && message.failure.length) {
+		frappe.msgprint({
+			message: __("Failed to create Holiday List Assignment for employees: {0}", [
+				frappe.utils.comma_and(message.failure),
+			]),
+			title: __("Failure"),
+			indicator: "red",
+		});
+	}
 });
