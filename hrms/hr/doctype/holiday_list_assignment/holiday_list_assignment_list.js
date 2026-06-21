@@ -14,6 +14,8 @@ frappe.listview_settings["Holiday List Assignment"] = {
 frappe.provide("hrms");
 
 $.extend(hrms, {
+	EMPLOYEE_FETCH_LIMIT: 500,
+
 	show_bulk_holiday_list_assignment_dialog(list_view) {
 		const dialog = new frappe.ui.Dialog({
 			title: __("Bulk Holiday List Assignment"),
@@ -193,6 +195,16 @@ $.extend(hrms, {
 				<button type="button" class="btn btn-xs btn-default deselect-all">${__("Unselect All")}</button>
 			</div>
 		`).appendTo($wrapper);
+
+		if (employees.length >= hrms.EMPLOYEE_FETCH_LIMIT) {
+			$(`
+				<div class="text-muted small" style="margin-bottom: 0.5em;">
+					${__("Showing the first {0} matching employees. Use filters to narrow down the list.", [
+						hrms.EMPLOYEE_FETCH_LIMIT,
+					])}
+				</div>
+			`).appendTo($wrapper);
+		}
 
 		const $checkbox_area = $(`
 			<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5em; max-height: 300px; overflow-y: auto;">

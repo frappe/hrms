@@ -11,6 +11,8 @@ from frappe.utils import format_date, get_link_to_form, getdate
 
 from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import DuplicateAssignment
 
+EMPLOYEE_FETCH_LIMIT = 500
+
 
 def parse_filters(filters: dict | str) -> frappe._dict:
 	if isinstance(filters, str):
@@ -77,6 +79,8 @@ class HolidayListAssignment(Document):
 
 @frappe.whitelist()
 def get_employees_for_bulk_assignment(filters: dict | str) -> list:
+	frappe.has_permission("Holiday List Assignment", "create", throw=True)
+
 	filters = parse_filters(filters)
 	quick_filter_fields = [
 		"company",
@@ -101,16 +105,22 @@ def get_employees_for_bulk_assignment(filters: dict | str) -> list:
 	)
 
 	Employee = frappe.qb.DocType("Employee")
-	query = frappe.qb.get_query(
-		Employee,
-		fields=[Employee.employee, Employee.employee_name, Employee.department, Employee.branch],
-		filters=employee_filters,
-	).where((Employee.status == "Active") & (Employee.employee.notin(employees_with_assignments)))
+	query = (
+		frappe.qb.get_query(
+			Employee,
+			fields=[Employee.employee, Employee.employee_name, Employee.department, Employee.branch],
+			filters=employee_filters,
+		)
+		.where((Employee.status == "Active") & (Employee.employee.notin(employees_with_assignments)))
+		.limit(EMPLOYEE_FETCH_LIMIT)
+	)
 	return query.run(as_dict=True)
 
 
 @frappe.whitelist()
 def bulk_assign_holiday_list(filters: dict | str, employees: list | str) -> None:
+	frappe.has_permission("Holiday List Assignment", "create", throw=True)
+
 	filters = parse_filters(filters)
 	if isinstance(employees, str):
 		employees = json.loads(employees)
@@ -179,5 +189,6 @@ def _bulk_assign_holiday_list(filters: dict, employees: list) -> None:
 		"completed_bulk_holiday_list_assignment",
 		message={"success": success, "failure": failure},
 		doctype="Holiday List Assignment",
+		user=frappe.session.user,
 		after_commit=True,
 	)
