@@ -76,14 +76,20 @@ class InterviewFeedback(Document):
 			)
 
 	def calculate_average_rating(self):
-		total_rating = 0
-		for d in self.skill_assessment:
-			if d.rating:
-				total_rating += flt(d.rating)
-
-		self.average_rating = flt(
-			total_rating / len(self.skill_assessment) if len(self.skill_assessment) else 0
-		)
+		has_weightage = any(flt(skill.weightage) for skill in self.skill_assessment)
+		if has_weightage:
+			weighted_ratings = 0.0
+			total_weightage = 0.0
+			for skill in self.skill_assessment:
+				if skill.rating and skill.weightage:
+					weighted_ratings += flt(skill.rating) * flt(skill.weightage)
+					total_weightage += flt(skill.weightage)
+			self.average_rating = flt(weighted_ratings / total_weightage) if total_weightage else 0.0
+		else:
+			total_rating = sum(flt(skill.rating) for skill in self.skill_assessment if skill.rating)
+			self.average_rating = flt(
+				total_rating / len(self.skill_assessment) if self.skill_assessment else 0
+			)
 
 	def update_interview_average_rating(self):
 		interview_feedback = frappe.qb.DocType("Interview Feedback")

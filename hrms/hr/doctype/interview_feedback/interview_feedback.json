@@ -13,7 +13,7 @@
   "column_break_3",
   "interviewer",
   "result",
-  "section_break_4",
+  "assessment_section",
   "skill_assessment",
   "average_rating",
   "section_break_7",
@@ -21,6 +21,11 @@
   "amended_from"
  ],
  "fields": [
+  {
+   "fieldname": "details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
   {
    "allow_in_quick_entry": 1,
    "fieldname": "interview",
@@ -33,6 +38,32 @@
   },
   {
    "allow_in_quick_entry": 1,
+   "fetch_from": "interview.interview_type",
+   "fieldname": "interview_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Interview Type",
+   "options": "Interview Type",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "interview.job_applicant",
+   "fieldname": "job_applicant",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Job Applicant",
+   "options": "Job Applicant",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_in_quick_entry": 1,
    "fieldname": "interviewer",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -42,14 +73,23 @@
    "reqd": 1
   },
   {
-   "fieldname": "section_break_4",
+   "fieldname": "result",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Result",
+   "options": "\nCleared\nRejected",
+   "reqd": 1
+  },
+  {
+   "fieldname": "assessment_section",
    "fieldtype": "Section Break",
    "label": "Skill Assessment"
   },
   {
-   "allow_in_quick_entry": 1,
    "fieldname": "skill_assessment",
    "fieldtype": "Table",
+   "label": "Skill Assessment",
    "options": "Skill Assessment",
    "reqd": 1
   },
@@ -66,8 +106,9 @@
    "label": "Feedback"
   },
   {
-   "fieldname": "column_break_3",
-   "fieldtype": "Column Break"
+   "allow_in_quick_entry": 1,
+   "fieldname": "feedback",
+   "fieldtype": "Text"
   },
   {
    "fieldname": "amended_from",
@@ -77,53 +118,12 @@
    "options": "Interview Feedback",
    "print_hide": 1,
    "read_only": 1
-  },
-  {
-   "allow_in_quick_entry": 1,
-   "fieldname": "feedback",
-   "fieldtype": "Text"
-  },
-  {
-   "fieldname": "result",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Result",
-   "options": "\nCleared\nRejected",
-   "reqd": 1
-  },
-  {
-   "fieldname": "details_section",
-   "fieldtype": "Section Break",
-   "label": "Details"
-  },
-  {
-   "fetch_from": "interview.job_applicant",
-   "fieldname": "job_applicant",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Job Applicant",
-   "options": "Job Applicant",
-   "read_only": 1
-  },
-  {
-   "allow_in_quick_entry": 1,
-   "fetch_from": "interview.interview_type",
-   "fieldname": "interview_type",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Interview Type",
-   "options": "Interview Type",
-   "read_only": 1,
-   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-19 16:31:33.463199",
+ "modified": "2026-06-18 14:51:02.276670",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview Feedback",
@@ -131,13 +131,16 @@
  "owner": "Administrator",
  "permissions": [
   {
+   "create": 1,
    "email": 1,
    "export": 1,
    "print": 1,
    "read": 1,
    "report": 1,
    "role": "HR Manager",
-   "share": 1
+   "share": 1,
+   "submit": 1,
+   "write": 1
   },
   {
    "cancel": 1,

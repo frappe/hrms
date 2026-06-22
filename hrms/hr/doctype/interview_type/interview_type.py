@@ -5,7 +5,9 @@
 import json
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
+from frappe.utils import flt
 
 
 class InterviewType(Document):
@@ -20,7 +22,15 @@ class InterviewType(Document):
 		description: DF.Text | None
 	# end: auto-generated types
 
-	pass
+	def validate(self):
+		self.validate_skill_weightages()
+
+	def validate_skill_weightages(self):
+		total = sum(flt(skill.weightage) for skill in self.expected_skill_set)
+		if total and abs(total - 100) > 0.01:
+			frappe.throw(
+				_("Skill weightages must sum to 100%. Current total: {0}%").format(frappe.bold(flt(total, 2)))
+			)
 
 
 @frappe.whitelist()

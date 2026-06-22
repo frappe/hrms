@@ -6,6 +6,7 @@
  "engine": "InnoDB",
  "field_order": [
   "skill",
+  "weightage",
   "rating"
  ],
  "fields": [
@@ -17,6 +18,13 @@
    "options": "Skill",
    "read_only": 1,
    "reqd": 1
+  },
+  {
+   "fieldname": "weightage",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Weightage",
+   "read_only": 1
   },
   {
    "fieldname": "rating",

@@ -6,6 +6,7 @@
  "engine": "InnoDB",
  "field_order": [
   "skill",
+  "weightage",
   "description"
  ],
  "fields": [
@@ -16,6 +17,12 @@
    "label": "Skill",
    "options": "Skill",
    "reqd": 1
+  },
+  {
+   "fieldname": "weightage",
+   "fieldtype": "Percent",
+   "in_list_view": 1,
+   "label": "Weightage"
   },
   {
    "fetch_from": "skill.description",

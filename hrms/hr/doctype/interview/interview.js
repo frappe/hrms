@@ -35,11 +35,7 @@ frappe.ui.form.on("Interview", {
 		frappe.confirm(
 			__(
 				"{0} {1} not yet submitted feedback. Are you sure you want to mark this interview as {2}?",
-				[
-					names,
-					pending.length === 1 ? __("has") : __("have"),
-					__(frm.doc.status),
-				],
+				[names, pending.length === 1 ? __("has") : __("have"), __(frm.doc.status)],
 			),
 			() => {},
 			() => frm.set_value("status", "Under Review"),
@@ -61,7 +57,6 @@ frappe.ui.form.on("Interview", {
 		}
 
 		if (frm.doc.status === "Under Review") {
-
 			const has_submitted_feedback = await frappe.db.get_value(
 				"Interview Feedback",
 				{
@@ -290,7 +285,10 @@ frappe.ui.form.on("Interview", {
 			$(html).appendTo(wrapper);
 			frm.set_df_property("feedback_status_html", "hidden", 0);
 
-			if (submitted < total && frappe.user.has_role(["HR Manager", "HR User", "System Manager"])) {
+			if (
+				submitted < total &&
+				frappe.user.has_role(["HR Manager", "HR User", "System Manager"])
+			) {
 				frm.add_custom_button(
 					__("Remind to Submit Feedback"),
 					function () {

@@ -336,9 +336,7 @@ def send_interview_reminder():
 	for d in interviews:
 		doc = frappe.get_doc("Interview", d.name)
 		context = doc.as_dict()
-		context["applicant_name"] = frappe.db.get_value(
-			"Job Applicant", doc.job_applicant, "applicant_name"
-		)
+		context["applicant_name"] = frappe.db.get_value("Job Applicant", doc.job_applicant, "applicant_name")
 		company = frappe.db.get_default("company")
 		context["company"] = company
 		context["company_address"] = get_company_address(company).get("company_address_display") or ""
