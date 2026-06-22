@@ -68,31 +68,22 @@ frappe.ui.form.on("Vehicle Log", {
 });
 
 function get_expense_claim_cancellation_message(expense_claims, vehicle_log) {
-	const message_parts = [];
-	const claims_to_delete = get_expense_claim_links(expense_claims, "delete");
-	const claims_to_unlink = get_expense_claim_links(expense_claims, "unlink");
+	const expense_claim = expense_claims[0];
+	const expense_claim_link = frappe.utils.get_form_link(
+		"Expense Claim",
+		expense_claim.name,
+		true,
+	);
 
-	if (claims_to_delete) {
-		message_parts.push(__("Will be deleted: {0}", [claims_to_delete]));
-	}
-
-	if (claims_to_unlink) {
-		message_parts.push(
-			__("Will be unlinked, and Vehicle Expenses will be removed: {0}", [claims_to_unlink]),
+	if (expense_claim.action === "delete") {
+		return __(
+			"Cancelling Vehicle Log {0} will delete draft Expense Claim {1} because it only contains Vehicle Expenses.<br><br>Do you want to continue?",
+			[vehicle_log.bold(), expense_claim_link],
 		);
 	}
 
 	return __(
-		"Cancelling Vehicle Log {0} will affect linked draft Expense Claims:<br><br>{1}<br><br>Do you want to proceed?",
-		[vehicle_log.bold(), message_parts.join("<br>")],
+		"Cancelling Vehicle Log {0} will update draft Expense Claim {1}.<br><br>Vehicle Expenses rows will be removed. Other expenses will remain.<br><br>Do you want to continue?",
+		[vehicle_log.bold(), expense_claim_link],
 	);
-}
-
-function get_expense_claim_links(expense_claims, action) {
-	return expense_claims
-		.filter((expense_claim) => expense_claim.action === action)
-		.map((expense_claim) =>
-			frappe.utils.get_form_link("Expense Claim", expense_claim.name, true),
-		)
-		.join(", ");
 }
