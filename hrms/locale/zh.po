@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-06-07 10:18+0000\n"
-"PO-Revision-Date: 2026-06-09 15:37\n"
+"POT-Creation-Date: 2026-06-14 10:34+0000\n"
+"PO-Revision-Date: 2026-06-15 18:54\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Chinese Simplified\n"
 "MIME-Version: 1.0\n"
@@ -525,7 +525,7 @@ msgstr "添加上次未使用假期"
 msgid "Add unused leaves from previous leave period's allocation to this allocation"
 msgstr "将上一假期周期未使用的假期添加至本次分配"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1686
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1675
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
 msgstr "薪资结构未配置税费组件，已自动从主薪资组件中添加税费项"
 
@@ -870,6 +870,12 @@ msgstr "超出年度分配额度"
 
 #: hrms/payroll/report/employee_ctc_break_up/employee_profile_card.html:123
 msgid "Annual CTC"
+msgstr ""
+
+#. Label of the annual_gross_earning (Currency) field in DocType 'Salary
+#. Structure Assignment'
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
+msgid "Annual Gross Earning"
 msgstr ""
 
 #: hrms/setup.py:410
@@ -1737,7 +1743,7 @@ msgstr "奖金发放日期不能为过去日期"
 msgid "Branch: {0}"
 msgstr "分支机构：{0}"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.js:131
+#: hrms/payroll/doctype/salary_structure/salary_structure.js:137
 msgid "Bulk Assignments"
 msgstr "批量分配"
 
@@ -1839,11 +1845,11 @@ msgstr "无法取消班次分配{0}，因其关联考勤记录{1}"
 msgid "Cannot cancel Shift Assignment: {0} as it is linked to Employee Checkin: {1}"
 msgstr "无法取消班次分配{0}，因其关联员工签到{1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:390
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:380
 msgid "Cannot create Salary Slip for Employee joining after Payroll Period"
 msgstr "无法为薪资周期后入职员工创建工资条"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:393
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:383
 msgid "Cannot create Salary Slip for Employee who has left before Payroll Period"
 msgstr "无法为薪资周期前离职员工创建工资条"
 
@@ -2305,7 +2311,7 @@ msgstr "绩效反馈与自评的评分依据标准"
 msgid "Currency "
 msgstr "币种"
 
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:128
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:163
 msgid "Currency of selected Income Tax Slab should be {0} instead of {1}"
 msgstr "所选所得税税级的币种应为{0}而非{1}"
 
@@ -3433,7 +3439,7 @@ msgstr "员工{0}存在活动班次{1}:{2}与本期间重叠"
 msgid "Employee {0} already submitted an application {1} for the payroll period {2}"
 msgstr "员工{0}已提交薪资期间{2}的申请{1}"
 
-#: hrms/hr/doctype/shift_request/shift_request.py:148
+#: hrms/hr/doctype/shift_request/shift_request.py:149
 msgid "Employee {0} has already applied for Shift {1}: {2} that overlaps within this period"
 msgstr "员工{0}已申请与本期间重叠的班次{1}:{2}"
 
@@ -3461,7 +3467,7 @@ msgstr "未在培训参与者中找到员工{0}"
 msgid "Employee {0} on Half day on {1}"
 msgstr "员工{0}在{1}为半日假"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:732
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:738
 msgid "Employee {0} relieved on {1} must be set as 'Left'"
 msgstr "员工{0}于{1}离职需标记为'已离职'"
 
@@ -3525,6 +3531,17 @@ msgstr "未设置目标员工：{0}"
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Employees working on a holiday"
 msgstr "节假日工作员工"
+
+#. Option for the 'Type' (Select) field in DocType 'Salary Component'
+#: hrms/payroll/doctype/salary_component/salary_component.json
+msgid "Employer Contribution"
+msgstr ""
+
+#. Label of the employer_contributions (Table) field in DocType 'Salary
+#. Structure'
+#: hrms/payroll/doctype/salary_structure/salary_structure.json
+msgid "Employer Contributions"
+msgstr ""
 
 #. Label of the employment_type (Link) field in DocType 'Employee Attendance
 #. Tool'
@@ -3679,7 +3696,8 @@ msgstr "删除{0}时出错"
 msgid "Error downloading PDF"
 msgstr "下载 PDF 时出错"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1408
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1397
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:400
 msgid "Error in formula or condition"
 msgstr "公式或条件错误"
 
@@ -3695,7 +3713,7 @@ msgstr "部分行数据错误"
 msgid "Error updating {0}"
 msgstr "更新{0}时出错"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2640
+#: hrms/payroll/utils.py:134
 msgid "Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
 msgstr "评估{doctype}{doclink}第{row_id}行时出错。<br><br><b>错误：</b>{error}<br><br><b>提示：</b>{description}"
 
@@ -4424,7 +4442,7 @@ msgstr "起始日期必须早于截止日期"
 msgid "From Date {0} cannot be after Payroll Period end date {1}"
 msgstr "起始日期{0}不能晚于薪资期间结束日期{1}"
 
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:93
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:128
 msgid "From Date {0} cannot be after employee's relieving Date {1}"
 msgstr "起始日期{0}不能晚于员工离职日期{1}"
 
@@ -4432,7 +4450,7 @@ msgstr "起始日期{0}不能晚于员工离职日期{1}"
 msgid "From Date {0} cannot be before Payroll Period start date {1}"
 msgstr "起始日期{0}不能早于薪资期间开始日期{1}"
 
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:85
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:120
 msgid "From Date {0} cannot be before employee's joining Date {1}"
 msgstr "起始日期{0}不能早于员工入职日期{1}"
 
@@ -5198,7 +5216,7 @@ msgstr "所得税扣除项"
 #. Label of a Workspace Sidebar Item
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
-#: hrms/payroll/doctype/salary_structure/salary_structure.js:142
+#: hrms/payroll/doctype/salary_structure/salary_structure.js:148
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.py:623
 #: hrms/payroll/workspace/payroll/payroll.json
@@ -5212,15 +5230,15 @@ msgstr "所得税税级"
 msgid "Income Tax Slab Other Charges"
 msgstr "所得税税级其他费用"
 
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:113
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:148
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr "薪资结构{0}包含税费组件{1}，必须设置所得税税级"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1963
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1952
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr "所得税税级生效日期不得晚于薪资周期开始日期{0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1951
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1940
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr "薪资结构分配{0}未设置所得税税级"
 
@@ -5228,7 +5246,7 @@ msgstr "薪资结构分配{0}未设置所得税税级"
 msgid "Income Tax Slab: "
 msgstr "所得税税级: "
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1959
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1948
 msgid "Income Tax Slab: {0} is disabled"
 msgstr "所得税税级{0}已禁用"
 
@@ -5464,7 +5482,7 @@ msgstr "无效福利金额"
 msgid "Invalid Dates"
 msgstr "无效日期"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2672
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2642
 msgid "Invalid LWP Days Reversed"
 msgstr "无效LWP天数冲销"
 
@@ -5836,7 +5854,7 @@ msgstr "关键责任区"
 msgid "Key Result Area"
 msgstr "关键成果领域"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2669
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2639
 msgid "LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
 msgstr "员工{2}从{3}到{4}的LWP天数冲销（{0}）与实际薪资调整总额（{1}）不匹配"
 
@@ -6253,7 +6271,7 @@ msgstr "假期类型{0}不可折现"
 msgid "Leave Without Pay"
 msgstr "无薪假"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:597
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:603
 msgid "Leave Without Pay does not match with approved {} records"
 msgstr "无薪假与已批准的{}记录不符"
 
@@ -6740,11 +6758,11 @@ msgstr ""
 msgid "Missing Advance Account"
 msgstr "缺少预支账户"
 
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:119
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:154
 msgid "Missing Mandatory Field"
 msgstr "缺少必填字段"
 
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:201
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:236
 msgid "Missing Opening Entries"
 msgstr "缺少期初分录"
 
@@ -6756,7 +6774,7 @@ msgstr "缺失离职日期"
 msgid "Missing Salary Components"
 msgstr "缺少工资组件"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1954
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1943
 msgid "Missing Tax Slab"
 msgstr "缺失税级"
 
@@ -6829,7 +6847,8 @@ msgid "My Requests"
 msgstr "我的申请"
 
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.py:123
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1394
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1383
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:386
 msgid "Name error"
 msgstr "名称错误"
 
@@ -6857,7 +6876,7 @@ msgstr "净工资（公司币种）"
 msgid "Net Pay Info"
 msgstr "净工资信息"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:293
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:283
 msgid "Net Pay cannot be less than 0"
 msgstr "净工资不能小于零"
 
@@ -6988,7 +7007,7 @@ msgstr "未找到员工{0}在欠薪起始日期{2}或之后有效的薪资结构
 msgid "No active employee found associated with the email ID {0}. Try logging in with your employee email ID or contact your HR manager for access."
 msgstr "未找到与邮箱ID {0}关联的有效员工，请使用员工邮箱登录或联系HR获取权限"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:523
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:516
 msgid "No active or default Salary Structure found for employee {0} for the given dates"
 msgstr "员工{0}在指定日期范围内未找到有效或默认薪资结构"
 
@@ -7169,7 +7188,7 @@ msgstr "注意：现有考勤记录中的班次不会被覆盖"
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr "注意：期间总分配假期{0}不得少于已批准假期{1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2263
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2252
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr "注意：工资条PDF密码格式为{0}"
 
@@ -7314,7 +7333,7 @@ msgstr "入职活动"
 msgid "Onboarding Begins On"
 msgstr "入职流程开始日期"
 
-#: hrms/hr/doctype/shift_request/shift_request.py:115
+#: hrms/hr/doctype/shift_request/shift_request.py:116
 msgid "Only Approvers can Approve this Request."
 msgstr "仅审批人可批准此请求"
 
@@ -7338,7 +7357,7 @@ msgstr "仅通过或拒绝状态的面试可提交"
 msgid "Only Leave Applications with status 'Approved' and 'Rejected' can be submitted"
 msgstr "仅'已批准'或'已拒绝'状态的请假申请可提交"
 
-#: hrms/hr/doctype/shift_request/shift_request.py:66
+#: hrms/hr/doctype/shift_request/shift_request.py:67
 msgid "Only Shift Request with status 'Approved' and 'Rejected' can be submitted"
 msgstr "仅'已批准'或'已拒绝'状态的班次申请可提交"
 
@@ -7432,7 +7451,7 @@ msgstr "重叠考勤申请"
 msgid "Overlapping Shift Attendance"
 msgstr "重叠班次考勤"
 
-#: hrms/hr/doctype/shift_request/shift_request.py:156
+#: hrms/hr/doctype/shift_request/shift_request.py:157
 msgid "Overlapping Shift Requests"
 msgstr "重叠班次申请"
 
@@ -7956,7 +7975,7 @@ msgstr "请先启用自动考勤并完成设置"
 msgid "Please Select Company First"
 msgstr "请先选择公司"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:920
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:907
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 msgstr "请先为员工{0}分配自{1}或之前生效的薪资结构"
 
@@ -8000,7 +8019,7 @@ msgstr "请在获取加班明细前填写员工、过账日期和公司。"
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr "请调整{0}以避免班次时间重叠"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2252
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2241
 msgid "Please see attachment"
 msgstr "请查看附件"
 
@@ -8127,7 +8146,7 @@ msgstr "请为假期类型{0}设置收入组件"
 msgid "Please set Leave Approver for the Employee: {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:581
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:587
 msgid "Please set Payroll based on in Payroll settings"
 msgstr "请在薪资设置中选择薪资计算依据"
 
@@ -8172,7 +8191,7 @@ msgstr "请为所有{0}设置考核模板，或在下方员工表中选择模板
 msgid "Please set the Company"
 msgstr "请设置公司"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:386
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:376
 msgid "Please set the Date Of Joining for employee {0}"
 msgstr "请设置员工{0}的入职日期"
 
@@ -8226,7 +8245,7 @@ msgstr "请点击'培训反馈'后点击'新建'提交反馈"
 msgid "Please specify the job applicant to be updated."
 msgstr "请指定要更新的职位申请人"
 
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:192
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:227
 msgid "Please specify {0} and {1} (if any), for the correct tax calculation in future salary slips."
 msgstr "请填写{0}及{1}(如有)，以确保未来工资条正确计税"
 
@@ -8284,8 +8303,8 @@ msgstr "即使用户具有权限，也阻止费用报销的自我审批"
 msgid "Prevent self approval for leaves even if user has permissions"
 msgstr "即使有权限也禁止自我审批假期"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.js:155
-#: hrms/payroll/doctype/salary_structure/salary_structure.js:193
+#: hrms/payroll/doctype/salary_structure/salary_structure.js:161
+#: hrms/payroll/doctype/salary_structure/salary_structure.js:199
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.js:89
 msgid "Preview Salary Slip"
 msgstr "预览工资条"
@@ -9159,11 +9178,11 @@ msgstr "工资条创建已加入队列，可能需要几分钟"
 msgid "Salary Slip not found."
 msgstr "未找到工资条。"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:420
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:410
 msgid "Salary Slip of employee {0} already created for this period"
 msgstr "员工{0}的工资条已在本周期创建"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:426
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:416
 msgid "Salary Slip of employee {0} already created for time sheet {1}"
 msgstr "员工{0}的工资条已关联工时表{1}"
 
@@ -9236,7 +9255,7 @@ msgstr "薪资结构分配"
 msgid "Salary Structure Assignment field"
 msgstr "薪资结构分配字段"
 
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:80
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:115
 msgid "Salary Structure Assignment for Employee already exists"
 msgstr "员工薪资结构分配已存在"
 
@@ -9244,7 +9263,7 @@ msgstr "员工薪资结构分配已存在"
 msgid "Salary Structure Assignment not found for employee {0} on date {1}"
 msgstr "未找到员工{0}在日期{1}的薪资结构分配"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:526
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:519
 msgid "Salary Structure Missing"
 msgstr "缺失薪资结构"
 
@@ -9256,7 +9275,7 @@ msgstr "提交{0}前需先提交薪资结构"
 msgid "Salary Structure not assigned for employee {0} for date {1}"
 msgstr "员工{0}在日期{1}未分配薪资结构"
 
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:104
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:139
 msgid "Salary Structure {0} does not belong to company {1}"
 msgstr "薪资结构{0}不属于公司{1}"
 
@@ -9310,7 +9329,7 @@ msgstr "未设置公积金、附加公积金或公积金贷款类型的工资组
 msgid "Salary components should be part of the Salary Structure."
 msgstr "薪资组件应属于薪资结构的一部分"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2736
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2662
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr "工资条邮件已加入发送队列，查看{0}了解状态"
 
@@ -9715,7 +9734,7 @@ msgstr "班次分配历史"
 msgid "Shift Assignment Tool"
 msgstr "班次分配工具"
 
-#: hrms/hr/doctype/shift_request/shift_request.py:81
+#: hrms/hr/doctype/shift_request/shift_request.py:82
 msgid "Shift Assignment: {0} created for Employee: {1}"
 msgstr "已为员工{1}创建班次分配{0}"
 
@@ -9923,7 +9942,7 @@ msgstr "工资条显示假期余额"
 msgid "Show Leaves Of All Department Members In Calendar"
 msgstr "日历显示部门全体成员假期"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.js:204
+#: hrms/payroll/doctype/salary_structure/salary_structure.js:210
 msgid "Show Salary Slip"
 msgstr "显示工资条"
 
@@ -9935,7 +9954,7 @@ msgstr "显示中"
 msgid "Sick Leave"
 msgstr "病假"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.js:120
+#: hrms/payroll/doctype/salary_structure/salary_structure.js:126
 msgid "Single Assignment"
 msgstr "单次分配"
 
@@ -10044,7 +10063,7 @@ msgstr "标准免税额度"
 msgid "Standard Working Hours"
 msgstr "标准工时"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1890
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1879
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}."
 msgstr "起止日期不在有效薪资周期内，无法计算{0}"
 
@@ -10188,7 +10207,8 @@ msgstr "汇总视图"
 msgid "Sync {0}"
 msgstr "同步{0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1401
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1390
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:393
 msgid "Syntax error"
 msgstr "语法错误"
 
@@ -10214,7 +10234,7 @@ msgstr "税务与福利"
 #. Label of the tax_deducted_till_date (Currency) field in DocType 'Salary
 #. Structure Assignment'
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:196
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:231
 msgid "Tax Deducted Till Date"
 msgstr "截至当前已扣税款"
 
@@ -10259,7 +10279,7 @@ msgstr "弹性福利税费"
 #. Label of the taxable_earnings_till_date (Currency) field in DocType 'Salary
 #. Structure Assignment'
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:195
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:230
 msgid "Taxable Earnings Till Date"
 msgstr "截至当前应税收入"
 
@@ -10406,7 +10426,7 @@ msgstr "班次开始前允许签到的时间范围"
 msgid "Theory"
 msgstr "理论"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:578
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:584
 msgid "There are more holidays than working days this month."
 msgstr "本月节假日多于工作日"
 
@@ -10424,7 +10444,7 @@ msgstr "人员配置计划{0}下无空缺岗位"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:82
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:39
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:241
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:457
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
 msgstr ""
 
@@ -10454,15 +10474,18 @@ msgstr "本补休假自{0}起生效"
 msgid "This employee already has a log with the same timestamp.{0}"
 msgstr "该员工已有相同时间戳记录{0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1409
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1398
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:401
 msgid "This error can be due to invalid formula or condition."
 msgstr "可能由无效公式或条件导致"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1402
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1391
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:394
 msgid "This error can be due to invalid syntax."
 msgstr "可能由语法错误导致"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1395
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1384
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:387
 msgid "This error can be due to missing or deleted field."
 msgstr "可能由字段缺失或删除导致"
 
@@ -10917,7 +10940,7 @@ msgstr "所有{0}的总权重必须为100%。当前为{1}%"
 msgid "Total working Days Per Year"
 msgstr "年总工作日数"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:263
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:253
 msgid "Total working hours should not be greater than max working hours {0}"
 msgstr "总工时不可超过最大工时{0}"
 
@@ -11621,7 +11644,7 @@ msgstr "调休申请日期间您未全天出勤"
 msgid "You can not define multiple slabs if you have a slab with no lower and upper limits."
 msgstr "存在无上下限的税率段时不可定义多个税率段"
 
-#: hrms/hr/doctype/shift_request/shift_request.py:102
+#: hrms/hr/doctype/shift_request/shift_request.py:103
 msgid "You can not request for your Default Shift: {0}"
 msgstr "不可申请默认班次{0}"
 
@@ -11640,6 +11663,10 @@ msgstr "仅可上传JPG、PNG、PDF、TXT或Microsoft文档"
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.py:78
 msgid "You cannot reverse more than the total LWP days {0}. You have already reversed {1} days for this employee."
 msgstr "您不能冲销超过总LWP天数{0}。您已为该员工冲销{1}天。"
+
+#: hrms/hr/doctype/shift_request/shift_request.py:165
+msgid "You do not have permission to change the Status of a Shift Request."
+msgstr ""
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:458
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:621
@@ -11817,7 +11844,7 @@ msgstr "缺失{0}"
 msgid "{0} Row #{1}: Formula is set but {2} is disabled for the Salary Component {3}."
 msgstr "{0} 行#{1}：已设置公式但薪资组件{3}的{2}未启用"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.js:319
+#: hrms/payroll/doctype/salary_structure/salary_structure.js:325
 msgid "{0} Row #{1}: {2} needs to be enabled for the formula to be considered."
 msgstr "{0} 行#{1}：需启用{2}才能使公式生效"
 
@@ -11904,7 +11931,7 @@ msgstr "{1}于{2}手动分配了{0}天假期"
 msgid "{0} must be submitted"
 msgstr "必须提交{0}"
 
-#: hrms/hr/doctype/goal/goal.py:221
+#: hrms/hr/doctype/goal/goal.py:223
 msgid "{0} of {1} Completed"
 msgstr "已完成{1}中的{0}"
 
@@ -11940,7 +11967,7 @@ msgstr "{0} {1} {2}?"
 msgid "{0}. Check error log for more details."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2286
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2275
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr "{0}：未找到员工邮箱，邮件未发送"
 

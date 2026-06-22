@@ -701,6 +701,10 @@ def get_advances(expense_claim: str | dict | Document, advance_id: str | None = 
 	else:
 		query = query.where((advance.name == advance_id) & (advance.employee == expense_claim_doc.employee))
 
+	# advance can only be adjusted in its own currency
+	if expense_claim_doc.currency:
+		query = query.where(advance.currency == expense_claim_doc.currency)
+
 	advances = query.run(as_dict=True)
 
 	for advance in advances:
@@ -781,7 +785,7 @@ def get_expense_claim_advances(expense_claim, employee_advance):
 		unclaimed_amount = paid_amount - claimed_amount
 		return_amount = flt(employee_advance.return_amount)
 		allocated_amount = get_allocation_amount(
-			paid_amount=(paid_amount), claimed_amount=(claimed_amount), return_amount=(return_amount)
+			paid_amount=paid_amount, claimed_amount=claimed_amount, return_amount=return_amount
 		)
 
 		expense_claim.append(
