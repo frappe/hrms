@@ -1,0 +1,27 @@
+<div style="margin-top: var(--margin-sm);">
+	<div style="font-size: var(--text-sm); color: var(--text-muted); margin-bottom: var(--margin-xs);">
+		{%= submitted %} {{ __("of") }} {%= total %} {{ __("interviewers have submitted feedback") }}
+	</div>
+	{% for (const interviewer of statuses) { %}
+	<div style="padding: var(--padding-xs) 0; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color);">
+		<span style="font-size: var(--text-base);">{%= frappe.utils.escape_html(interviewer.interviewer_name) %}</span>
+		<div style="display: flex; align-items: center; gap: var(--margin-sm);">
+			{% if (interviewer.feedback_submitted && interviewer.feedback_name) { %}
+			<a href="/app/interview-feedback/{%= interviewer.feedback_name %}"
+				style="font-size: var(--text-sm); color: var(--text-muted);">
+				{{ __("View Feedback") }}
+			</a>
+			<a href="/app/interview-feedback/{%= interviewer.feedback_name %}"
+				style="font-size: var(--text-sm); color: var(--text-muted); white-space: nowrap;">
+				&#9733; {%= interviewer.feedback_rating %}/5
+			</a>
+			{% } %}
+			{% if (interviewer.feedback_submitted) { %}
+			<span class="indicator-pill green no-margin no-indicator-dot">{{ __("Submitted") }}</span>
+			{% } else { %}
+			<span class="indicator-pill orange no-margin no-indicator-dot">{{ __("Pending") }}</span>
+			{% } %}
+		</div>
+	</div>
+	{% } %}
+</div>

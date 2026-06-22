@@ -20,7 +20,30 @@ frappe.ui.form.on("Interview", {
 		frappe.run_serially([
 			() => frm.trigger("load_skills_average_rating"),
 			() => frm.trigger("load_feedback"),
+			() => frm.trigger("load_feedback_status"),
 		]);
+	},
+
+	status(frm) {
+		const terminal_statuses = ["Cleared", "Rejected", "Cancelled"];
+		if (!terminal_statuses.includes(frm.doc.status)) return;
+
+		const pending = (frm.feedback_statuses || []).filter((s) => !s.feedback_submitted);
+		if (!pending.length) return;
+
+		const names = pending.map((s) => s.interviewer_name).join(", ");
+		frappe.confirm(
+			__(
+				"{0} {1} not yet submitted feedback. Are you sure you want to mark this interview as {2}?",
+				[
+					names,
+					pending.length === 1 ? __("has") : __("have"),
+					__(frm.doc.status),
+				],
+			),
+			() => {},
+			() => frm.set_value("status", "Under Review"),
+		);
 	},
 
 	add_custom_buttons: async function (frm) {
@@ -37,34 +60,37 @@ frappe.ui.form.on("Interview", {
 			);
 		}
 
-		const has_submitted_feedback = await frappe.db.get_value(
-			"Interview Feedback",
-			{
-				interviewer: frappe.session.user,
-				interview: frm.doc.name,
-				docstatus: ["!=", 2],
-			},
-			"name",
-		);
+		if (frm.doc.status === "Under Review") {
 
-		if (has_submitted_feedback?.message?.name) return;
+			const has_submitted_feedback = await frappe.db.get_value(
+				"Interview Feedback",
+				{
+					interviewer: frappe.session.user,
+					interview: frm.doc.name,
+					docstatus: ["!=", 2],
+				},
+				"name",
+			);
 
-		const allow_feedback_submission = frm.doc.interview_details.some(
-			(interviewer) => interviewer.interviewer === frappe.session.user,
-		);
+			if (has_submitted_feedback?.message?.name) return;
 
-		if (allow_feedback_submission) {
-			frm.page.set_primary_action(__("Submit Feedback"), () => {
-				frm.trigger("submit_feedback");
-			});
-		} else {
-			const button = frm.add_custom_button(__("Submit Feedback"), () => {
-				frm.trigger("submit_feedback");
-			});
-			button
-				.prop("disabled", true)
-				.attr("title", __("Only interviewers can submit feedback"))
-				.tooltip({ delay: { show: 600, hide: 100 }, trigger: "hover" });
+			const allow_feedback_submission = frm.doc.interview_details.some(
+				(interviewer) => interviewer.interviewer === frappe.session.user,
+			);
+
+			if (allow_feedback_submission) {
+				frm.page.set_primary_action(__("Submit Feedback"), () => {
+					frm.trigger("submit_feedback");
+				});
+			} else {
+				const button = frm.add_custom_button(__("Submit Feedback"), () => {
+					frm.trigger("submit_feedback");
+				});
+				button
+					.prop("disabled", true)
+					.attr("title", __("Only interviewers can submit feedback"))
+					.tooltip({ delay: { show: 600, hide: 100 }, trigger: "hover" });
+			}
 		}
 	},
 
@@ -180,7 +206,7 @@ frappe.ui.form.on("Interview", {
 	},
 
 	get_fields_for_feedback: async function () {
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			frappe.model.with_doctype("Skill Assessment", () => {
 				let meta = frappe.get_meta("Skill Assessment");
 				let fields = meta.fields.map((field) => {
@@ -221,12 +247,67 @@ frappe.ui.form.on("Interview", {
 				interview_type: frm.doc.interview_type || "",
 			},
 			callback: function (r) {
-				frm.clear_table("interview_details");
-				r.message.forEach((interviewer) =>
-					frm.add_child("interview_details", interviewer),
+				frm.set_value(
+					"interview_details",
+					(r.message || []).map((i) => ({ interviewer: i.interviewer })),
 				);
-				refresh_field("interview_details");
 			},
+		});
+	},
+
+	load_feedback_status(frm) {
+		frm.set_df_property("feedback_status_html", "hidden", 1);
+
+		if (frm.doc.__islocal) return;
+		if (frm.doc.status !== "Under Review") return;
+		if (!frappe.user.has_role(["HR Manager", "HR User", "System Manager"])) return;
+
+		frappe
+			.call({
+				method: "hrms.hr.doctype.interview.interview.get_interviewer_feedback_status",
+				args: { interview: frm.doc.name },
+			})
+			.then((r) => {
+				frm.feedback_statuses = r.message || [];
+				frm.events.render_feedback_status(frm);
+			});
+	},
+
+	render_feedback_status(frm) {
+		if (!frm.feedback_statuses?.length) return;
+
+		frappe.require("interview.bundle.js", () => {
+			const statuses = frm.feedback_statuses;
+			const submitted = statuses.filter((s) => s.feedback_submitted).length;
+			const total = statuses.length;
+			const wrapper = $(frm.fields_dict.feedback_status_html.wrapper);
+			const html = frappe.render_template("interview_feedback_status", {
+				statuses,
+				submitted,
+				total,
+			});
+			$(wrapper).empty();
+			$(html).appendTo(wrapper);
+			frm.set_df_property("feedback_status_html", "hidden", 0);
+
+			if (submitted < total && frappe.user.has_role(["HR Manager", "HR User", "System Manager"])) {
+				frm.add_custom_button(
+					__("Remind to Submit Feedback"),
+					function () {
+						frappe.call({
+							method: "hrms.hr.doctype.job_applicant.job_applicant.send_feedback_pending_notification",
+							args: { interview_name: frm.doc.name },
+							callback() {
+								frappe.show_alert({
+									message: __("Reminder sent to pending interviewers"),
+									indicator: "green",
+								});
+							},
+						});
+					},
+					__("Actions"),
+				);
+			}
 		});
 	},
 

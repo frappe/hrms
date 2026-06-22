@@ -156,7 +156,11 @@ class Interview(Document):
 
 @frappe.whitelist()
 def get_interviewers(interview_type: str) -> list[dict]:
-	return frappe.get_all("Interviewer", filters={"parent": interview_type}, fields=["user as interviewer"])
+	return frappe.get_all(
+		"Interviewer",
+		filters={"parent": interview_type, "parenttype": "Interview Type"},
+		fields=["user as interviewer"],
+	)
 
 
 def get_recipients(name, for_feedback=0):
@@ -173,6 +177,62 @@ def get_recipients(name, for_feedback=0):
 		recipients.append(frappe.db.get_value("Job Applicant", interview.job_applicant, "email_id"))
 
 	return recipients
+
+
+@frappe.whitelist()
+def get_interviewer_feedback_status(interview: str) -> list[dict]:
+	"""Returns interviewer feedback status."""
+	frappe.has_permission("Interview", "read", throw=True)
+
+	hr_roles = {"HR Manager", "HR User", "System Manager"}
+	is_hr = bool(hr_roles & set(frappe.get_roles()))
+
+	filters = {"parent": interview}
+	if not is_hr:
+		filters["interviewer"] = frappe.session.user
+
+	assigned_interviewers = frappe.db.get_all(
+		"Interview Detail",
+		filters=filters,
+		fields=["interviewer"],
+		order_by="idx asc",
+	)
+
+	submitted_feedback_map = {
+		feedback.interviewer: feedback
+		for feedback in frappe.db.get_all(
+			"Interview Feedback",
+			filters={"interview": interview, "docstatus": 1},
+			fields=["interviewer", "average_rating", "name"],
+		)
+	}
+
+	interviewers = [detail.interviewer for detail in assigned_interviewers]
+	if not interviewers:
+		return []
+
+	full_names = {
+		user.name: user.full_name
+		for user in frappe.db.get_all(
+			"User",
+			filters={"name": ["in", interviewers]},
+			fields=["name", "full_name"],
+		)
+	}
+
+	result = []
+	for detail in assigned_interviewers:
+		feedback = submitted_feedback_map.get(detail.interviewer)
+		result.append(
+			frappe._dict(
+				interviewer=detail.interviewer,
+				interviewer_name=full_names.get(detail.interviewer, detail.interviewer),
+				feedback_submitted=bool(feedback),
+				feedback_rating=frappe.utils.flt((feedback.average_rating or 0) * 5, 1) if feedback else None,
+				feedback_name=feedback.name if feedback else None,
+			)
+		)
+	return result
 
 
 @frappe.whitelist()
@@ -243,6 +303,8 @@ def update_job_applicant_status(status: str, job_applicant: str):
 
 
 def send_interview_reminder():
+	from frappe.contacts.doctype.address.address import get_company_address
+
 	reminder_settings = frappe.db.get_value(
 		"HR Settings",
 		"HR Settings",
@@ -274,6 +336,12 @@ def send_interview_reminder():
 	for d in interviews:
 		doc = frappe.get_doc("Interview", d.name)
 		context = doc.as_dict()
+		context["applicant_name"] = frappe.db.get_value(
+			"Job Applicant", doc.job_applicant, "applicant_name"
+		)
+		company = frappe.db.get_default("company")
+		context["company"] = company
+		context["company_address"] = get_company_address(company).get("company_address_display") or ""
 		message = frappe.render_template(interview_template.response, context)
 		recipients = get_recipients(doc.name)
 
@@ -290,6 +358,8 @@ def send_interview_reminder():
 
 
 def send_daily_feedback_reminder():
+	from frappe.desk.doctype.notification_log.notification_log import make_notification_logs
+
 	reminder_settings = frappe.db.get_value(
 		"HR Settings",
 		"HR Settings",
@@ -321,27 +391,46 @@ def send_daily_feedback_reminder():
 
 	for interview in interviews:
 		recipients = get_recipients(interview, for_feedback=1)
+		if not recipients:
+			continue
 
 		doc = frappe.get_doc("Interview", interview)
+		applicant_name = frappe.db.get_value("Job Applicant", doc.job_applicant, "applicant_name")
 		context = doc.as_dict()
+		context["applicant_name"] = applicant_name
 
 		message = frappe.render_template(interview_feedback_template.response, context)
 
-		if len(recipients):
-			frappe.sendmail(
-				sender=reminder_settings.hiring_sender_email,
-				recipients=recipients,
-				subject=interview_feedback_template.subject,
-				message=message,
-				reference_doctype="Interview",
-				reference_name=interview,
-			)
+		frappe.sendmail(
+			sender=reminder_settings.hiring_sender_email,
+			recipients=recipients,
+			subject=interview_feedback_template.subject,
+			message=message,
+			reference_doctype="Interview",
+			reference_name=interview,
+		)
+
+		make_notification_logs(
+			frappe._dict(
+				type="Alert",
+				document_type="Interview",
+				document_name=interview,
+				subject=_("Please submit your feedback for {0}'s {1} interview").format(
+					applicant_name, doc.interview_type
+				),
+				from_user=frappe.session.user,
+			),
+			recipients,
+		)
 
 
 @frappe.whitelist()
 def get_expected_skill_set(interview_type: str):
 	return frappe.get_all(
-		"Expected Skill Set", filters={"parent": interview_type}, fields=["skill"], order_by="idx"
+		"Expected Skill Set",
+		filters={"parent": interview_type},
+		fields=["skill", "weightage"],
+		order_by="idx",
 	)
 
 
