@@ -1751,6 +1751,36 @@ class TestSalarySlip(HRMSTestSuite):
 		# to handle cases like 16th Jul 2024 - 15th Jul 2025
 		self.assertEqual(period_factor, 12)
 
+	def test_variable_tax_with_zero_remaining_sub_periods(self):
+		# regression: when an employee has no remaining sub-periods in the payroll period
+		# (e.g. relieved before the period started), remaining_sub_periods is 0 and the
+		# structured tax calculation must not raise ZeroDivisionError
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		payroll_period = create_payroll_period(company="_Test Company")
+		create_tax_slab(payroll_period, allow_tax_exemption=True, currency="INR")
+		employee = make_employee("test_zero_remaining_period@salary.slip", company="_Test Company")
+
+		salary_structure = make_salary_structure(
+			"Structure to test zero remaining sub periods",
+			"Monthly",
+			test_tax=True,
+			employee=employee,
+			payroll_period=payroll_period,
+			company="_Test Company",
+		)
+
+		salary_slip = make_salary_slip(salary_structure.name, employee=employee)
+
+		# force the boundary condition and re-run the variable tax calculation
+		salary_slip.remaining_sub_periods = 0
+		salary_slip.calculate_variable_tax("TDS")
+
+		# no structured tax to spread over future periods => 0, and no ZeroDivisionError
+		self.assertEqual(salary_slip.current_structured_tax_amount, 0.0)
+
+		frappe.db.rollback()
+
 	@HRMSTestSuite.change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
 	def test_lwp_calculation_based_on_relieving_date(self):
 		emp_id = make_employee("test_lwp_based_on_relieving_date@salary.com", company="_Test Company")
