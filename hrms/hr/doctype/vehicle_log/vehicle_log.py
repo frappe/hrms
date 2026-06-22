@@ -24,9 +24,11 @@ class VehicleLog(Document):
 		for expense_claim_name in _get_draft_expense_claims(self.name):
 			expense_claim = frappe.get_doc("Expense Claim", expense_claim_name)
 
-			remaining_expenses = _get_non_vehicle_log_expenses(expense_claim)
-			if remaining_expenses:
-				expense_claim.expenses = remaining_expenses
+			if _has_non_vehicle_log_expenses(expense_claim):
+				for row in list(expense_claim.expenses):
+					if row.description == _("Vehicle Expenses"):
+						expense_claim.remove(row)
+
 				expense_claim.vehicle_log = None
 				expense_claim.save()
 			else:
@@ -79,7 +81,7 @@ def get_draft_expense_claim_cancellation_actions(vehicle_log: str) -> list[dict[
 	return [
 		{
 			"name": expense_claim.name,
-			"action": "unlink" if _get_non_vehicle_log_expenses(expense_claim) else "delete",
+			"action": "unlink" if _has_non_vehicle_log_expenses(expense_claim) else "delete",
 		}
 		for expense_claim in _get_draft_expense_claim_docs(vehicle_log)
 	]
@@ -101,6 +103,6 @@ def _get_draft_expense_claim_docs(vehicle_log: str) -> list[Document]:
 	]
 
 
-def _get_non_vehicle_log_expenses(expense_claim: Document) -> list[Document]:
+def _has_non_vehicle_log_expenses(expense_claim: Document) -> bool:
 	vehicle_log_description = _("Vehicle Expenses")
-	return [row for row in expense_claim.expenses if row.description != vehicle_log_description]
+	return any(row.description != vehicle_log_description for row in expense_claim.expenses)
