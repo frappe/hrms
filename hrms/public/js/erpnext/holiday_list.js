@@ -1,24 +1,25 @@
 // Copyright (c) 2026, Frappe Technologies Pvt. Ltd. and contributors
 // For license information, please see license.txt
 
-frappe.listview_settings["Holiday List"] = {
-	onload(list_view) {
-		if (frappe.perm.has_perm("Holiday List Assignment", 0, "create")) {
-			list_view.page.add_inner_button(__("Bulk Assignment"), () => {
-				hrms.show_bulk_holiday_list_assignment_dialog(list_view);
-			});
-		}
+frappe.ui.form.on("Holiday List", {
+	refresh(frm) {
+		if (frm.is_new()) return;
+		if (!frappe.perm.has_perm("Holiday List Assignment", 0, "create")) return;
+
+		frm.add_custom_button(__("Bulk Holiday Assignment"), () => {
+			hrms.show_bulk_holiday_list_assignment_dialog(frm);
+		});
 	},
-};
+});
 
 frappe.provide("hrms");
 
 $.extend(hrms, {
 	EMPLOYEE_FETCH_LIMIT: 500,
 
-	show_bulk_holiday_list_assignment_dialog(list_view) {
+	show_bulk_holiday_list_assignment_dialog(frm) {
 		const dialog = new frappe.ui.Dialog({
-			title: __("Bulk Holiday List Assignment"),
+			title: __("Bulk Holiday Assignment"),
 			size: "large",
 			fields: [
 				{
@@ -27,16 +28,15 @@ $.extend(hrms, {
 					label: __("Holiday List"),
 					options: "Holiday List",
 					reqd: 1,
-					onchange: () => {
-						hrms.set_holiday_list_dates(dialog);
-						hrms.get_employees_for_bulk_assignment(dialog);
-					},
+					read_only: 1,
+					default: frm.doc.name,
 				},
 				{
 					fieldname: "from_date",
 					fieldtype: "Date",
 					label: __("Assignment Starts From"),
 					reqd: 1,
+					default: frm.doc.from_date,
 				},
 				{ fieldtype: "Column Break" },
 				{
@@ -101,12 +101,32 @@ $.extend(hrms, {
 				},
 			],
 			primary_action_label: __("Assign Holiday List"),
-			primary_action: () => hrms.bulk_assign_holiday_list(dialog, list_view),
+			primary_action: () => hrms.bulk_assign_holiday_list(dialog, frm),
 		});
 
 		dialog.show();
 		hrms.render_clear_filters_button(dialog);
-		hrms.set_employee_options(dialog, []);
+		hrms.set_default_company(dialog);
+	},
+
+	set_default_company(dialog) {
+		const company = dialog.get_value("company");
+		if (company) {
+			return frappe.db.exists("Company", company).then((exists) => {
+				if (exists) return hrms.get_employees_for_bulk_assignment(dialog);
+				return hrms.fetch_and_set_company(dialog);
+			});
+		}
+		return hrms.fetch_and_set_company(dialog);
+	},
+
+	fetch_and_set_company(dialog) {
+		return frappe.db.get_list("Company", { limit: 2 }).then((companies) => {
+			if (companies.length === 1) {
+				dialog.set_value("company", companies[0].name);
+			}
+			hrms.get_employees_for_bulk_assignment(dialog);
+		});
 	},
 
 	render_clear_filters_button(dialog) {
@@ -121,15 +141,6 @@ $.extend(hrms, {
 			.appendTo($wrapper)
 			.find(".clear-filters")
 			.on("click", () => hrms.clear_quick_filters(dialog));
-	},
-
-	set_holiday_list_dates(dialog) {
-		const holiday_list = dialog.get_value("holiday_list");
-		if (!holiday_list) return dialog.set_value("from_date", null);
-
-		frappe.db.get_value("Holiday List", holiday_list, "from_date", (r) => {
-			dialog.set_value("from_date", r.from_date);
-		});
 	},
 
 	clear_quick_filters(dialog) {
@@ -244,7 +255,7 @@ $.extend(hrms, {
 			.get();
 	},
 
-	bulk_assign_holiday_list(dialog, list_view) {
+	bulk_assign_holiday_list(dialog, frm) {
 		const filters = hrms.get_filter_values(dialog);
 		const missing_fields = [];
 		if (!filters.holiday_list) missing_fields.push(__("Holiday List"));
@@ -286,7 +297,7 @@ $.extend(hrms, {
 					freeze_message: __("Assigning Holiday List"),
 					callback: () => {
 						dialog.hide();
-						list_view.refresh();
+						frm.refresh();
 					},
 				});
 			},
