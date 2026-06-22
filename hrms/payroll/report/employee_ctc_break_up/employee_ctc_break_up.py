@@ -3,7 +3,7 @@
 
 import frappe
 from frappe import _
-from frappe.utils import flt, get_link_to_form
+from frappe.utils import flt, get_link_to_form, has_common
 from frappe.utils.formatters import fmt_money
 from frappe.utils.jinja import render_template
 
@@ -23,9 +23,6 @@ class SalaryBreakupReport:
 			)
 		)
 		self.validate_ctc()
-		# Access is already gated by validate_employee_access() in execute();
-		# bypass doctype-level permissions to build the preview on the
-		# employee's behalf (they cannot read Salary Structure directly).
 		self.salary_slip = _make_salary_slip(
 			self.salary_structure,
 			employee=self.employee,
@@ -326,22 +323,14 @@ def execute(filters: dict | None = None):
 	return columns, data, message, None, None
 
 
-# Roles allowed to view any employee's CTC report. Everyone else can only
-# view their own.
-CTC_REPORT_PRIVILEGED_ROLES = ("System Manager", "HR Manager", "HR User")
+ROLES_ALLOWED_TO_VIEW_ANY_EMPLOYEE = ("System Manager", "HR Manager", "HR User")
 
 
 def validate_employee_access(employee: str):
-	"""Restrict the report to the logged-in employee's own record.
+	can_view_any_employee = has_common(ROLES_ALLOWED_TO_VIEW_ANY_EMPLOYEE, frappe.get_roles())
+	is_own_record = frappe.db.get_value("Employee", employee, "user_id") == frappe.session.user
 
-	Users holding a privileged role can view any employee's report; everyone
-	else may only view the Employee record linked to their own user account.
-	"""
-	if set(CTC_REPORT_PRIVILEGED_ROLES) & set(frappe.get_roles()):
-		return
-
-	linked_user = frappe.db.get_value("Employee", employee, "user_id")
-	if linked_user != frappe.session.user:
+	if not can_view_any_employee and not is_own_record:
 		frappe.throw(
 			_("You are not permitted to access the CTC report of another employee."),
 			frappe.PermissionError,
