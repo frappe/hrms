@@ -1,10 +1,6 @@
 import frappe
-<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
-from frappe.utils import getdate
-=======
 from frappe.utils import add_days, getdate
->>>>>>> d5d5d1523 (fix: filter employees in the selected payroll period for income tax report)
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
@@ -115,8 +111,6 @@ class TestIncomeTaxComputation(FrappeTestCase):
 
 		for key, val in expected_data.items():
 			self.assertEqual(result[1][0].get(key), val)
-<<<<<<< HEAD
-=======
 
 	def test_employee_joined_after_payroll_period_is_excluded(self):
 		# employee joins after the payroll period ends -> employment does not overlap
@@ -217,4 +211,3 @@ class TestIncomeTaxComputation(FrappeTestCase):
 		)
 		result = execute(filters)[1]
 		self.assertEqual(len(result), 4)
->>>>>>> d5d5d1523 (fix: filter employees in the selected payroll period for income tax report)

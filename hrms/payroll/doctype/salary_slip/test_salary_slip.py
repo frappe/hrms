@@ -1726,9 +1726,6 @@ class TestSalarySlip(FrappeTestCase):
 		# to handle cases like 16th Jul 2024 - 15th Jul 2025
 		self.assertEqual(period_factor, 12)
 
-<<<<<<< HEAD
-	@change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
-=======
 	def test_variable_tax_with_zero_remaining_sub_periods(self):
 		# regression: when an employee has no remaining sub-periods in the payroll period
 		# (e.g. relieved before the period started), remaining_sub_periods is 0 and the
@@ -1759,8 +1756,7 @@ class TestSalarySlip(FrappeTestCase):
 
 		frappe.db.rollback()
 
-	@HRMSTestSuite.change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
->>>>>>> d5d5d1523 (fix: filter employees in the selected payroll period for income tax report)
+	@change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
 	def test_lwp_calculation_based_on_relieving_date(self):
 		emp_id = make_employee("test_lwp_based_on_relieving_date@salary.com")
 		frappe.db.set_value("Employee", emp_id, {"relieving_date": None, "status": "Active"})
