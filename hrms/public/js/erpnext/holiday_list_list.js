@@ -1,7 +1,7 @@
 // Copyright (c) 2026, Frappe Technologies Pvt. Ltd. and contributors
 // For license information, please see license.txt
 
-frappe.listview_settings["Holiday List Assignment"] = {
+frappe.listview_settings["Holiday List"] = {
 	onload(list_view) {
 		if (frappe.perm.has_perm("Holiday List Assignment", 0, "create")) {
 			list_view.page.add_inner_button(__("Bulk Assignment"), () => {

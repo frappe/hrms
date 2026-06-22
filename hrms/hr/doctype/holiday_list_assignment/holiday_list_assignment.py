@@ -92,15 +92,26 @@ def get_employees_for_bulk_assignment(filters: dict | str) -> list:
 	]
 	employee_filters = [[d, "=", filters.get(d)] for d in quick_filter_fields if filters.get(d)]
 
+	if not filters.holiday_list:
+		return []
+
+	selected_from_date, selected_to_date = frappe.db.get_value(
+		"Holiday List", filters.holiday_list, ["from_date", "to_date"]
+	)
+
 	HolidayListAssignment = frappe.qb.DocType("Holiday List Assignment")
+	HolidayList = frappe.qb.DocType("Holiday List")
 	employees_with_assignments = SubQuery(
 		frappe.qb.from_(HolidayListAssignment)
+		.join(HolidayList)
+		.on(HolidayList.name == HolidayListAssignment.holiday_list)
 		.select(HolidayListAssignment.assigned_to)
 		.distinct()
 		.where(
 			(HolidayListAssignment.applicable_for == "Employee")
-			& (HolidayListAssignment.holiday_list == filters.holiday_list)
 			& (HolidayListAssignment.docstatus == 1)
+			& (HolidayList.from_date <= selected_to_date)
+			& (HolidayList.to_date >= selected_from_date)
 		)
 	)
 
