@@ -1280,6 +1280,17 @@ class SalarySlip(TransactionBase):
 		#   - self.default_data: full-cycle values            -> the `default_amount`
 		# (proration cascades through dependent formulas, e.g. SA = BS * 0.5 inherits BS's proration).
 		amount = self.eval_condition_and_formula(struct_row, self.data)
+		if amount is None:
+			self.set(
+				component_type,
+				[
+					d
+					for d in self.get(component_type)
+					if not (d.salary_component == struct_row.salary_component and not d.additional_salary)
+				],
+			)
+			self.data[struct_row.abbr] = 0
+			return
 		if struct_row.statistical_component or struct_row.accrual_component:
 			# update statistical component amount in reference data based on payment days
 			# since row for statistical component is not added to salary slip

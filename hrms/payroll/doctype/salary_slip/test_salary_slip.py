@@ -2171,6 +2171,73 @@ class TestSalarySlip(HRMSTestSuite):
 		self.assertIn("Allowance", earnings)
 		self.assertEqual(earnings["Allowance"], 0.0)
 
+	def test_remove_component_when_condition_becomes_false(self):
+		emp_id = make_employee(
+			"test_condition_change@salary.com",
+			company="_Test Company",
+			**{"date_of_joining": add_days(nowdate(), -30)},
+		)
+
+		ss = make_employee_salary_slip(emp_id, "Monthly")
+		ss.save()
+
+		self.assertTrue(
+			frappe.db.exists(
+				"Salary Detail",
+				{
+					"parent": ss.name,
+					"parenttype": "Salary Slip",
+					"parentfield": "earnings",
+					"salary_component": "Basic Salary",
+				},
+			),
+			msg="Basic Salary should be present when condition is True",
+		)
+
+		salary_structure = frappe.db.get_value(
+			"Salary Structure Assignment",
+			{"employee": emp_id, "docstatus": 1},
+			"salary_structure",
+		)
+
+		row_name = frappe.db.get_value(
+			"Salary Detail",
+			{
+				"parent": salary_structure,
+				"parenttype": "Salary Structure",
+				"parentfield": "earnings",
+				"salary_component": "Basic Salary",
+			},
+		)
+
+		# make the component's condition evaluate to False
+		frappe.db.set_value(
+			"Salary Detail",
+			row_name,
+			"condition",
+			"False",
+		)
+		# clear cached structure so recalculation sees the new condition
+		frappe.clear_document_cache("Salary Structure", salary_structure)
+
+		# fresh doc (not reload()) so cached components are re-evaluated
+		ss = frappe.get_doc("Salary Slip", ss.name)
+		ss.get_emp_and_working_day_details()
+		ss.save()
+
+		self.assertFalse(
+			frappe.db.exists(
+				"Salary Detail",
+				{
+					"parent": ss.name,
+					"parenttype": "Salary Slip",
+					"parentfield": "earnings",
+					"salary_component": "Basic Salary",
+				},
+			),
+			msg="Basic Salary should be removed when condition becomes False",
+		)
+
 
 class TestSalarySlipSafeEval(HRMSTestSuite):
 	def test_safe_eval_for_salary_slip(self):
