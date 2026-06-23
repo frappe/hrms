@@ -1,5 +1,25 @@
-<h1>Interview Feedback Reminder</h1>
+<p>Dear Interviewer,</p>
 
 <p>
-	Interview Feedback for Interview {{ name }} is not submitted yet. Please submit your feedback. Thank you, good day!
+	This is a reminder to submit your feedback for the interview listed below.
+	Your timely feedback helps us move the hiring process forward.
 </p>
+
+<table class="table table-bordered small" style="max-width: 500px;">
+	<tr>
+		<td>{{ _("Candidate") }}</td>
+		<td><b>{{ applicant_name }}</b></td>
+	</tr>
+	<tr>
+		<td>{{ _("Interview Type") }}</td>
+		<td><b>{{ interview_type }}</b></td>
+	</tr>
+	<tr>
+		<td>{{ _("Date") }}</td>
+		<td><b>{{ frappe.utils.formatdate(scheduled_on) }}</b></td>
+	</tr>
+</table>
+
+{% set interview_link = frappe.utils.get_url_to_form("Interview", name) %}
+<br>
+<a class="btn btn-primary" href="{{ interview_link }}" target="_blank">{{ _("Submit Feedback") }}</a>

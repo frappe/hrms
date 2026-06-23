@@ -1,5 +1,43 @@
-<h1>Interview Reminder</h1>
+<p>Dear {{ applicant_name }},</p>
 
 <p>
-	Interview: {{name}} is scheduled on {{scheduled_on}} from {{from_time}} to {{to_time}}
+	We are pleased to inform you that an interview has been scheduled for you. Please find the details below.
 </p>
+
+<table class="table table-bordered small" style="max-width: 500px;">
+	<tr>
+		<td>{{ _("Interview Type") }}</td>
+		<td><b>{{ interview_type }}</b></td>
+	</tr>
+	<tr>
+		<td>{{ _("Date") }}</td>
+		<td><b>{{ frappe.utils.formatdate(scheduled_on) }}</b></td>
+	</tr>
+	{% if from_time %}
+	<tr>
+		<td>{{ _("Time") }}</td>
+		<td><b>{{ from_time }}{% if to_time %} – {{ to_time }}{% endif %}</b></td>
+	</tr>
+	{% endif %}
+	{% if company %}
+	<tr>
+		<td>{{ _("Company") }}</td>
+		<td><b>{{ company }}</b></td>
+	</tr>
+	{% endif %}
+	{% if company_address %}
+	<tr>
+		<td>{{ _("Address") }}</td>
+		<td>{{ company_address }}</td>
+	</tr>
+	{% endif %}
+</table>
+
+{% if show_interview_link %}
+{% set interview_link = frappe.utils.get_url_to_form("Interview", name) %}
+<br>
+<a class="btn btn-primary" href="{{ interview_link }}" target="_blank">{{ _("View Interview") }}</a>
+<br><br>
+{% endif %}
+
+<p>{{ _("We look forward to speaking with you. Please reach out if you have any questions.") }}</p>

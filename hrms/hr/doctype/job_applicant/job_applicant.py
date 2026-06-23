@@ -360,9 +360,7 @@ def send_feedback_pending_notification(interview_name: str) -> None:
 
 	try:
 		if settings.feedback_reminder_notification_template:
-			template = frappe.get_doc(
-				"Email Template", settings.feedback_reminder_notification_template
-			)
+			template = frappe.get_doc("Email Template", settings.feedback_reminder_notification_template)
 			body = template.response_html if template.use_html else template.response
 			context = interview.as_dict()
 			context["applicant_name"] = applicant_name
