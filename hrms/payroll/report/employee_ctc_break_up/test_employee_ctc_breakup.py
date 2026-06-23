@@ -254,16 +254,17 @@ class TestEmployeeCTCBreakup(HRMSTestSuite):
 	def test_employer_contributions_section(self):
 		employee = make_employee("test_ctc@example.com", company="_Test Company")
 
-		if frappe.db.exists("Salary Component", "Test CTC Employer PF"):
-			frappe.delete_doc("Salary Component", "Test CTC Employer PF", force=True)
-		frappe.get_doc(
-			{
-				"doctype": "Salary Component",
-				"salary_component": "Test CTC Employer PF",
-				"salary_component_abbr": "TCEPF",
-				"type": "Employer Contribution",
-			}
-		).insert()
+		for component, abbr in (("Test CTC Employer PF", "TCEPF"), ("Test CTC Employer NPS", "TCENPS")):
+			if frappe.db.exists("Salary Component", component):
+				frappe.delete_doc("Salary Component", component, force=True)
+			frappe.get_doc(
+				{
+					"doctype": "Salary Component",
+					"salary_component": component,
+					"salary_component_abbr": abbr,
+					"type": "Employer Contribution",
+				}
+			).insert()
 
 		salary_structure = make_salary_structure(
 			"Test CTC Breakup with Employer Contribution",
@@ -272,13 +273,19 @@ class TestEmployeeCTCBreakup(HRMSTestSuite):
 			other_details={
 				"employer_contributions": [
 					{"salary_component": "Test CTC Employer PF", "abbr": "TCEPF", "amount": 6000},
+					{
+						"salary_component": "Test CTC Employer NPS",
+						"abbr": "TCENPS",
+						"amount_based_on_formula": 1,
+						"formula": "BS * 0.12",
+					},
 				]
 			},
 		)
 		salary_structure_assignment = create_salary_structure_assignment(
 			employee, salary_structure.name, base=60000, currency="INR", from_date=get_year_start(getdate())
 		)
-		salary_structure_assignment.ctc = 1188000
+		salary_structure_assignment.ctc = 1274400
 		salary_structure_assignment.save()
 
 		frappe.flags.posting_date = get_year_start(getdate())
@@ -293,15 +300,23 @@ class TestEmployeeCTCBreakup(HRMSTestSuite):
 		totals_row = employer_components[0]
 		self.assertEqual(totals_row.get("salary_component"), "Employer Contributions")
 		self.assertTrue(totals_row.get("bold"))
-		self.assertEqual(totals_row.get("per_cycle"), 6000)
-		self.assertEqual(totals_row.get("annual"), 72000)
+		self.assertEqual(totals_row.get("per_cycle"), 13200)
+		self.assertEqual(totals_row.get("annual"), 158400)
 
 		pf_row = employer_components[1]
 		self.assertEqual(pf_row.get("salary_component"), "Test CTC Employer PF (TCEPF)")
 		self.assertEqual(pf_row.get("type"), "Fixed")
 		self.assertEqual(pf_row.get("per_cycle"), 6000)
 		self.assertEqual(pf_row.get("annual"), 72000)
-		self.assertEqual(pf_row.get("percent_of_ctc"), flt(72000 * 100 / 1188000, 2))
+		self.assertEqual(pf_row.get("percent_of_ctc"), flt(72000 * 100 / 1274400, 2))
+
+		nps_row = employer_components[2]
+		self.assertEqual(nps_row.get("salary_component"), "Test CTC Employer NPS (TCENPS)")
+		self.assertEqual(nps_row.get("type"), "Formula")
+		self.assertEqual(nps_row.get("formula"), "BS * 0.12")
+		self.assertEqual(nps_row.get("per_cycle"), 7200)
+		self.assertEqual(nps_row.get("annual"), 86400)
+		self.assertEqual(nps_row.get("percent_of_ctc"), flt(86400 * 100 / 1274400, 2))
 
 	def test_ctc_validation(self):
 		employee = make_employee("test_ctc@example.com", company="_Test Company")
