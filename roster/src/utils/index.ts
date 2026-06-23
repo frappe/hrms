@@ -2,6 +2,7 @@ import { toast } from "frappe-ui";
 
 export { default as dayjs } from "./dayjs";
 
+const TOAST_DEDUP_WINDOW_MS = 500;
 let lastToast: { type: string; message: string; timestamp: number } | null = null;
 
 export const raiseToast = (type: "success" | "error", message: string) => {
@@ -10,27 +11,29 @@ export const raiseToast = (type: "success" | "error", message: string) => {
 		lastToast &&
 		lastToast.type === type &&
 		lastToast.message === message &&
-		now - lastToast.timestamp < 500
+		now - lastToast.timestamp < TOAST_DEDUP_WINDOW_MS
 	) {
 		return;
 	}
-	lastToast = { type, message, timestamp: now };
 
-	if (type === "success")
-		return toast({
+	if (type === "success") {
+		const id = toast({
 			title: "Success",
 			text: message,
 			icon: "check-circle",
 			position: "bottom-right",
 			iconClasses: "text-green-500",
 		});
+		lastToast = { type, message, timestamp: now };
+		return id;
+	}
 
 	const div = document.createElement("div");
 	div.innerHTML = message;
 	// strip html tags
 	const text =
 		div.textContent || div.innerText || "Failed to perform action. Please try again later.";
-	toast({
+	const id = toast({
 		title: "Error",
 		text: text,
 		icon: "alert-circle",
@@ -38,6 +41,8 @@ export const raiseToast = (type: "success" | "error", message: string) => {
 		iconClasses: "text-red-500",
 		timeout: 7,
 	});
+	lastToast = { type, message, timestamp: now };
+	return id;
 };
 
 export const goTo = (path: string) => {
