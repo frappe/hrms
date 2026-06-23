@@ -5,7 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.query_builder.functions import Abs, Sum
+from frappe.query_builder.functions import Abs, Count, Sum
 from frappe.utils import flt, get_link_to_form, nowdate
 
 import erpnext
@@ -405,18 +405,17 @@ def get_employee_advance_return(employee_advance: str):
 	return_entries = (
 		frappe.qb.from_(AdditionalSalary)
 		.select(
-			AdditionalSalary.name,
-			AdditionalSalary.amount,
+			Sum(AdditionalSalary.amount).as_("total_return_scheduled"),
+			Count(AdditionalSalary.name).as_("return_entry_count"),
 		)
 		.where(
 			(AdditionalSalary.ref_doctype == "Employee Advance")
 			& (AdditionalSalary.ref_docname == employee_advance)
 			& (AdditionalSalary.docstatus == 1)
 		)
-	).run(as_dict=True) or []
+	).run(as_dict=True)
 
-	total_return_scheduled = sum(flt(d.amount) for d in return_entries)
 	return {
-		"total_return_scheduled": total_return_scheduled,
-		"has_return_scheduled": len(return_entries) > 0,
+		"total_return_scheduled": flt(return_entries[0].total_return_scheduled),
+		"has_return_scheduled": bool(return_entries[0].return_entry_count),
 	}
