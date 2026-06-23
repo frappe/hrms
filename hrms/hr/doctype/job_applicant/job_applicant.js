@@ -18,7 +18,6 @@ frappe.ui.form.on("Job Applicant", {
 		frm.events.show_resume(frm);
 		frm.events.create_custom_buttons(frm);
 		frm.events.get_interview_for_dashboard(frm);
-		frm.toolbar.make_navigation();
 	},
 
 	show_resume: function (frm) {
