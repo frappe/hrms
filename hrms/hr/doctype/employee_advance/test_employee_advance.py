@@ -402,6 +402,25 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		self.assertEqual(advance.base_paid_amount, expected_base_paid)
 		self.assertEqual(payment_entry.paid_amount, expected_base_paid)
 
+	def test_no_exchange_gain_loss_for_same_currency_advance_payment(self):
+		from hrms.overrides.employee_payment_entry import get_payment_entry_for_employee
+
+		gain_loss_account = frappe.db.get_value("Company", "_Test Company", "exchange_gain_loss_account")
+		frappe.db.set_value("Company", "_Test Company", "exchange_gain_loss_account", None)
+
+		try:
+			employee_name = make_employee("_T@employee.advance", "_Test Company")
+			advance = make_employee_advance(employee_name)
+
+			# should not raise error even without exchange_gain_loss_account set at time of payment
+			pe = get_payment_entry_for_employee(advance.doctype, advance.name)
+
+			self.assertEqual(flt(pe.source_exchange_rate), 1.0)
+			self.assertEqual(flt(pe.target_exchange_rate), 1.0)
+			self.assertFalse(any(d.is_exchange_gain_loss for d in pe.deductions))
+		finally:
+			frappe.db.set_value("Company", "_Test Company", "exchange_gain_loss_account", gain_loss_account)
+
 	def test_status_on_discard(self):
 		employee_name = make_employee("Test_status@employee.advance", "_Test Company")
 		advance = make_employee_advance(employee_name, do_not_submit=True)
