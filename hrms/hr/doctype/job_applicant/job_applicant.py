@@ -199,25 +199,253 @@ def create_interview(job_applicant: str, interview_type: str) -> Document:
 
 
 @frappe.whitelist()
+def schedule_interview(
+	job_applicant: str,
+	interview_type: str,
+	scheduled_on: str,
+	from_time: str | None = None,
+	to_time: str | None = None,
+	interviewers: str | list | None = None,
+) -> str:
+	frappe.has_permission("Interview", ptype="create", throw=True)
+
+	applicant = frappe.get_doc("Job Applicant", job_applicant)
+
+	round_designation = frappe.db.get_value("Interview Type", interview_type, "designation")
+	if round_designation and applicant.designation and round_designation != applicant.designation:
+		frappe.throw(
+			_("Interview Type {0} is only applicable for Designation {1}").format(
+				frappe.bold(interview_type), frappe.bold(round_designation)
+			)
+		)
+
+	interview = frappe.new_doc("Interview")
+	interview.interview_type = interview_type
+	interview.job_applicant = applicant.name
+	interview.designation = applicant.designation
+	interview.resume_link = applicant.resume_link
+	interview.job_opening = applicant.job_title
+	interview.scheduled_on = scheduled_on
+	interview.from_time = from_time
+	interview.to_time = to_time
+
+	if isinstance(interviewers, str):
+		interviewers = json.loads(interviewers)
+
+	for entry in interviewers or []:
+		if entry.get("interviewer"):
+			interview.append("interview_details", {"interviewer": entry["interviewer"]})
+
+	interview.insert(ignore_permissions=True)
+	send_interview_invitation(interview, applicant)
+	send_interview_scheduled_notification(interview, applicant)
+
+	return interview.name
+
+
+def send_interview_invitation(interview, applicant) -> None:
+	from frappe.contacts.doctype.address.address import get_company_address
+
+	settings = frappe.get_cached_doc("HR Settings")
+	template_name = settings.get("interview_reminder_template")
+	sender = settings.get("hiring_sender_email") or None
+
+	interviewers = [d.interviewer for d in interview.interview_details]
+	if not interviewers and not applicant.email_id:
+		return
+
+	context = interview.as_dict()
+	context["applicant_name"] = applicant.applicant_name
+	company = frappe.db.get_default("company")
+	context["company"] = company
+	context["company_address"] = get_company_address(company).get("company_address_display") or ""
+
+	if template_name:
+		template = frappe.get_doc("Email Template", template_name)
+		subject = frappe.render_template(template.subject, context)
+		body = template.response_html if template.use_html else template.response
+		message = frappe.render_template(body, context)
+	else:
+		subject = _("Interview Scheduled: {0} on {1}").format(
+			interview.interview_type, interview.scheduled_on
+		)
+		message = _("Your interview for {0} has been scheduled on {1}.").format(
+			interview.interview_type, interview.scheduled_on
+		)
+
+	try:
+		if interviewers:
+			interviewer_context = dict(context, show_interview_link=True)
+			interviewer_message = (
+				frappe.render_template(body, interviewer_context) if template_name else message
+			)
+			frappe.sendmail(
+				recipients=interviewers,
+				sender=sender,
+				subject=subject,
+				message=interviewer_message,
+				reference_doctype="Interview",
+				reference_name=interview.name,
+			)
+
+		if applicant.email_id:
+			frappe.sendmail(
+				recipients=[applicant.email_id],
+				sender=sender,
+				subject=subject,
+				message=message,
+				reference_doctype="Interview",
+				reference_name=interview.name,
+			)
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Interview Invitation Email Failed")
+		frappe.msgprint(
+			_(
+				"Interview scheduled but invitation email could not be sent. "
+				"Please configure your email account in HR Settings."
+			),
+			indicator="orange",
+			alert=True,
+		)
+
+
+def send_interview_scheduled_notification(interview, applicant) -> None:
+	from frappe.desk.doctype.notification_log.notification_log import make_notification_logs
+
+	applicant_name = applicant.applicant_name
+	subject = _("You have been assigned to interview {0} on {1}").format(
+		applicant_name, interview.scheduled_on
+	)
+	notification = frappe._dict(
+		type="Alert",
+		document_type="Interview",
+		document_name=interview.name,
+		subject=subject,
+		from_user=frappe.session.user,
+	)
+	interviewers = [d.interviewer for d in interview.interview_details]
+	make_notification_logs(notification, interviewers)
+
+
+@frappe.whitelist()
+def send_feedback_pending_notification(interview_name: str) -> None:
+	from frappe.desk.doctype.notification_log.notification_log import make_notification_logs
+
+	from hrms.hr.doctype.interview.interview import get_recipients
+
+	frappe.has_permission("Interview", "write", throw=True)
+
+	pending = get_recipients(interview_name, for_feedback=1)
+	if not pending:
+		return
+
+	interview = frappe.get_doc("Interview", interview_name)
+	applicant_name = frappe.db.get_value("Job Applicant", interview.job_applicant, "applicant_name")
+	subject = _("Please submit your feedback for {0}'s {1} interview").format(
+		applicant_name, interview.interview_type
+	)
+
+	make_notification_logs(
+		frappe._dict(
+			type="Alert",
+			document_type="Interview",
+			document_name=interview_name,
+			subject=subject,
+			from_user=frappe.session.user,
+		),
+		pending,
+	)
+
+	settings = frappe.get_cached_doc("HR Settings")
+
+	try:
+		if settings.feedback_reminder_notification_template:
+			template = frappe.get_doc(
+				"Email Template", settings.feedback_reminder_notification_template
+			)
+			body = template.response_html if template.use_html else template.response
+			context = interview.as_dict()
+			context["applicant_name"] = applicant_name
+			message = frappe.render_template(body, context)
+		else:
+			message = subject
+
+		frappe.sendmail(
+			recipients=pending,
+			sender=settings.hiring_sender_email or None,
+			subject=subject,
+			message=message,
+			reference_doctype="Interview",
+			reference_name=interview_name,
+		)
+	except Exception:
+		frappe.log_error(frappe.get_traceback(), "Interview Feedback Reminder Email Failed")
+
+
+@frappe.whitelist()
 def get_interview_details(job_applicant: str) -> dict:
-	interview_details = frappe.db.get_all(
+	interviews = frappe.db.get_all(
 		"Interview",
 		filters={"job_applicant": job_applicant, "docstatus": ["!=", 2]},
-		fields=["name", "interview_type", "scheduled_on", "average_rating", "status"],
+		fields=["name", "interview_type", "scheduled_on", "from_time", "to_time", "status", "average_rating"],
+		order_by="scheduled_on asc, creation asc",
 	)
-	if not interview_details:
+	if not interviews:
 		return None
 
-	interview_detail_map = {}
-	meta = frappe.get_meta("Interview")
-	number_of_stars = meta.get_options("average_rating") or 5
+	interview_names = [i.name for i in interviews]
 
-	for detail in interview_details:
-		detail.average_rating = detail.average_rating * number_of_stars if detail.average_rating else 0
+	assigned = frappe.db.get_all(
+		"Interview Detail",
+		filters={"parent": ["in", interview_names]},
+		fields=["parent", "interviewer"],
+		order_by="idx asc",
+	)
 
-		interview_detail_map[detail.name] = detail
+	submitted_feedbacks = frappe.db.get_all(
+		"Interview Feedback",
+		filters={"interview": ["in", interview_names], "docstatus": 1},
+		fields=["interview", "interviewer", "average_rating", "name"],
+	)
 
-	return {"interviews": interview_detail_map, "stars": number_of_stars}
+	feedback_map = {(f.interview, f.interviewer): f for f in submitted_feedbacks}
+
+	details_map = {}
+	for detail in assigned:
+		details_map.setdefault(detail.parent, []).append(detail.interviewer)
+
+	all_interviewers = list({detail.interviewer for detail in assigned})
+	user_name_map = {}
+	if all_interviewers:
+		user_name_map = {
+			u.name: u.full_name
+			for u in frappe.db.get_all(
+				"User",
+				filters={"name": ["in", all_interviewers]},
+				fields=["name", "full_name"],
+			)
+		}
+
+	rounds = []
+	for interview in interviews:
+		interviewers_data = []
+		for interviewer in details_map.get(interview.name, []):
+			feedback = feedback_map.get((interview.name, interviewer))
+			interviewers_data.append(
+				frappe._dict(
+					interviewer=interviewer,
+					interviewer_name=user_name_map.get(interviewer, interviewer),
+					feedback_submitted=bool(feedback),
+					feedback_rating=flt((feedback.average_rating or 0) * 5, 1) if feedback else None,
+					feedback_name=feedback.name if feedback else None,
+				)
+			)
+		interview.average_rating = flt(interview.average_rating * 5, 1) if interview.average_rating else 0
+		interview.interviewers = interviewers_data
+		interview.feedback_count = sum(1 for i in interviewers_data if i.feedback_submitted)
+		rounds.append(interview)
+
+	return {"rounds": rounds}
 
 
 @frappe.whitelist()

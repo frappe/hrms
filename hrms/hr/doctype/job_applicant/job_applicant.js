@@ -65,7 +65,7 @@ frappe.ui.form.on("Job Applicant", {
 				});
 			}
 			if (frm.doc.status !== "Rejected" && frm.doc.status !== "Accepted") {
-				frm.add_custom_button(__("Create Interview"), function () {
+				frm.add_custom_button(__("Schedule Interview"), function () {
 					frm.events.create_dialog(frm);
 				});
 			}
@@ -111,49 +111,102 @@ frappe.ui.form.on("Job Applicant", {
 	make_dashboard: function (frm, message) {
 		frm.dashboard.add_section(
 			frappe.render_template("job_applicant_dashboard", {
-				data: message.interviews,
-				number_of_stars: message.stars,
+				rounds: message.rounds,
 			}),
 			__("Interview Summary"),
 		);
 	},
 
 	create_dialog: function (frm) {
+		frappe.model.with_doctype("Interview Detail", () => frm.events.show_schedule_dialog(frm));
+	},
+
+	show_schedule_dialog: function (frm) {
 		let d = new frappe.ui.Dialog({
-			title: __("Enter Interview Type"),
+			title: __("Schedule Interview"),
 			fields: [
 				{
-					label: "Interview Type",
+					label: __("Interview Type"),
 					fieldname: "interview_type",
 					fieldtype: "Link",
 					options: "Interview Type",
-					get_query: function () {
-						return {
-							filters: [["designation", "=", frm.doc.designation]],
-						};
+					reqd: 1,
+					get_query: () => ({
+						filters: frm.doc.designation
+							? [["designation", "in", [frm.doc.designation, ""]]]
+							: [],
+					}),
+					onchange() {
+						const interview_type = d.get_value("interview_type");
+						if (!interview_type) return;
+						frappe.call({
+							method: "hrms.hr.doctype.interview.interview.get_interviewers",
+							args: { interview_type },
+							callback(r) {
+								d.set_value(
+									"interviewers",
+									(r.message || []).map((i) => ({ interviewer: i.interviewer })),
+								);
+							},
+						});
 					},
 				},
+				{ fieldtype: "Column Break" },
+				{
+					label: __("Scheduled On"),
+					fieldname: "scheduled_on",
+					fieldtype: "Date",
+					reqd: 1,
+					default: frappe.datetime.get_today(),
+				},
+				{ fieldtype: "Section Break" },
+				{
+					label: __("From Time"),
+					fieldname: "from_time",
+					fieldtype: "Time",
+				},
+				{ fieldtype: "Column Break" },
+				{
+					label: __("To Time"),
+					fieldname: "to_time",
+					fieldtype: "Time",
+				},
+				{
+					fieldtype: "Section Break",
+					label: __("Interviewers"),
+				},
+				{
+					fieldname: "interviewers",
+					fieldtype: "Table MultiSelect",
+					options: "Interview Detail",
+					label: __("Interviewers"),
+				},
 			],
-			primary_action_label: __("Create Interview"),
+			primary_action_label: __("Schedule & Notify"),
 			primary_action(values) {
-				frm.events.create_interview(frm, values);
-				d.hide();
+				frappe.call({
+					method: "hrms.hr.doctype.job_applicant.job_applicant.schedule_interview",
+					args: {
+						job_applicant: frm.doc.name,
+						interview_type: values.interview_type,
+						scheduled_on: values.scheduled_on,
+						from_time: values.from_time || null,
+						to_time: values.to_time || null,
+						interviewers: values.interviewers || [],
+					},
+					callback(r) {
+						if (r.message) {
+							frappe.show_alert({
+								message: __("Interview scheduled and invitations sent"),
+								indicator: "green",
+							});
+							d.hide();
+							frm.events.get_interview_for_dashboard(frm);
+						}
+					},
+				});
 			},
 		});
 		d.show();
-	},
-
-	create_interview: function (frm, values) {
-		frappe.call({
-			method: "hrms.hr.doctype.job_applicant.job_applicant.create_interview",
-			args: {
-				job_applicant: frm.doc.name,
-				interview_type: values.interview_type,
-			},
-			callback: function (r) {
-				var doclist = frappe.model.sync(r.message);
-				frappe.set_route("Form", doclist[0].doctype, doclist[0].name);
-			},
-		});
 	},
 });
