@@ -58,7 +58,7 @@ def get_columns() -> list[dict]:
 			"width": 150,
 		},
 		{
-			"label": _("New Leave(s) Allocated"),
+			"label": _("Leave(s) Allocated"),
 			"fieldtype": "float",
 			"fieldname": "leaves_allocated",
 			"width": 200,
@@ -116,9 +116,14 @@ def get_data(filters: Filters) -> list:
 			new_allocation, expired_leaves, carry_forwarded_leaves = get_allocated_and_expired_leaves(
 				filters.from_date, filters.to_date, employee.name, leave_type
 			)
-			opening = get_opening_balance(employee.name, leave_type, filters, carry_forwarded_leaves)
+			on_allocation_boundary = is_opening_balance_on_allocation_boundary(
+				employee.name, leave_type, filters
+			)
+			opening = get_opening_balance(
+				employee.name, leave_type, filters, carry_forwarded_leaves, on_allocation_boundary
+			)
 			allocated_leaves = new_allocation + carry_forwarded_leaves
-			if is_opening_balance_on_allocation_boundary(employee.name, leave_type, filters):
+			if on_allocation_boundary:
 				allocated_leaves -= carry_forwarded_leaves
 
 			row.leaves_allocated = flt(allocated_leaves, precision)
@@ -161,13 +166,17 @@ def get_employees(filters: Filters) -> list[dict]:
 
 
 def get_opening_balance(
-	employee: str, leave_type: str, filters: Filters, carry_forwarded_leaves: float
+	employee: str,
+	leave_type: str,
+	filters: Filters,
+	carry_forwarded_leaves: float,
+	on_allocation_boundary: bool,
 ) -> float:
 	# allocation boundary condition
 	# opening balance is the closing leave balance 1 day before the filter start date
 	opening_balance_date = add_days(filters.from_date, -1)
 
-	if is_opening_balance_on_allocation_boundary(employee, leave_type, filters):
+	if on_allocation_boundary:
 		# if opening balance date is same as the previous allocation's expiry
 		# then opening balance should only consider carry forwarded leaves
 		opening_balance = carry_forwarded_leaves
