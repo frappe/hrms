@@ -2,7 +2,20 @@ import { toast } from "frappe-ui";
 
 export { default as dayjs } from "./dayjs";
 
+let lastToast: { type: string; message: string; timestamp: number } | null = null;
+
 export const raiseToast = (type: "success" | "error", message: string) => {
+	const now = Date.now();
+	if (
+		lastToast &&
+		lastToast.type === type &&
+		lastToast.message === message &&
+		now - lastToast.timestamp < 500
+	) {
+		return;
+	}
+	lastToast = { type, message, timestamp: now };
+
 	if (type === "success")
 		return toast({
 			title: "Success",
