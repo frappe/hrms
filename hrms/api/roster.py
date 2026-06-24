@@ -234,13 +234,17 @@ def insert_shift(
 	)
 
 	if prev_shift:
+		frappe.has_permission("Shift Assignment", "write", prev_shift, throw=True)
 		if next_shift:
+			frappe.has_permission("Shift Assignment", "write", next_shift, throw=True)
 			end_date = frappe.db.get_value("Shift Assignment", next_shift, "end_date")
+			frappe.has_permission("Shift Assignment", "delete", next_shift, throw=True)
 			frappe.db.set_value("Shift Assignment", next_shift, "docstatus", 2)
 			frappe.delete_doc("Shift Assignment", next_shift)
 		frappe.db.set_value("Shift Assignment", prev_shift, "end_date", end_date or None)
 
 	elif next_shift:
+		frappe.has_permission("Shift Assignment", "write", next_shift, throw=True)
 		frappe.db.set_value("Shift Assignment", next_shift, "start_date", start_date)
 
 	else:
