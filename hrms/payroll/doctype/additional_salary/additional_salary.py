@@ -5,7 +5,7 @@
 import frappe
 from frappe import _, bold
 from frappe.model.document import Document
-from frappe.utils import comma_and, date_diff, flt, formatdate, get_link_to_form, getdate
+from frappe.utils import comma_and, date_diff, flt, fmt_money, formatdate, get_link_to_form, getdate
 
 from hrms.hr.utils import validate_active_employee
 
@@ -258,17 +258,14 @@ class AdditionalSalary(Document):
 	def validate_employee_advance_return(self):
 		if self.ref_doctype != "Employee Advance" or not self.ref_docname:
 			return
+
 		precision = self.precision("amount")
 		advance = frappe.get_doc("Employee Advance", self.ref_docname)
-		available_return_amount = flt(advance.paid_amount - advance.claimed_amount, precision)
 
 		AdditionalSalary = frappe.qb.DocType("Additional Salary")
 		scheduled_deductions = (
 			frappe.qb.from_(AdditionalSalary)
-			.select(
-				AdditionalSalary.name,
-				AdditionalSalary.amount,
-			)
+			.select(AdditionalSalary.name, AdditionalSalary.amount)
 			.where(
 				(AdditionalSalary.ref_doctype == "Employee Advance")
 				& (AdditionalSalary.ref_docname == self.ref_docname)
@@ -277,19 +274,34 @@ class AdditionalSalary(Document):
 			)
 		).run(as_dict=True) or []
 
-		scheduled_return_amount = sum(flt(d.amount, precision) for d in scheduled_deductions)
-		remaining_return_amount = available_return_amount - scheduled_return_amount
+		available_return_amount = flt(advance.paid_amount - advance.claimed_amount, precision)
+		scheduled_return_amount = flt(sum(flt(d.amount, precision) for d in scheduled_deductions), precision)
+		remaining_return_amount = flt(available_return_amount - scheduled_return_amount, precision)
 
-		if flt(self.amount, precision) > flt(remaining_return_amount, precision):
-			frappe.throw(
-				_(
-					"The available balance for Employee Advance {0} has already been scheduled for deduction in {1}."
-				).format(
-					get_link_to_form("Employee Advance", self.ref_docname),
-					comma_and([get_link_to_form("Additional Salary", d.name) for d in scheduled_deductions]),
-				),
-				title=_("Amount Exceeds Available Balance"),
+		if flt(self.amount, precision) <= remaining_return_amount:
+			return
+
+		# scheduled via AS but not yet processed through payroll
+		pending_scheduled = max(0, flt(scheduled_return_amount - advance.return_amount, precision))
+
+		if pending_scheduled > 0:
+			msg = _(
+				"Employee Advance {0} has {1} available for return. {2} has already been scheduled for deduction in {3}."
+			).format(
+				get_link_to_form("Employee Advance", self.ref_docname),
+				fmt_money(remaining_return_amount, currency=self.currency),
+				fmt_money(pending_scheduled, currency=self.currency),
+				comma_and([get_link_to_form("Additional Salary", d.name) for d in scheduled_deductions]),
 			)
+		else:
+			msg = _(
+				"The amount exceeds the available balance for Employee Advance {0}. Available amount for return: {1}."
+			).format(
+				get_link_to_form("Employee Advance", self.ref_docname),
+				fmt_money(remaining_return_amount, currency=self.currency),
+			)
+
+		frappe.throw(msg, title=_("Amount Exceeds Available Balance"))
 
 	def update_employee_referral(self, cancel=False):
 		if self.ref_doctype == "Employee Referral":
