@@ -315,17 +315,10 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 			fields=["leave_type", "new_leaves_allocated"],
 		)
 
-<<<<<<< HEAD
 		self.assertEqual(allocations[0]["leave_type"], compoff.name)
 		self.assertEqual(allocations[0]["new_leaves_allocated"], 3)
 		self.assertEqual(allocations[1]["leave_type"], annual.name)
 		self.assertEqual(allocations[1]["new_leaves_allocated"], 3)
-=======
-		self.assertEqual(allocations[sick.name]["new_leaves_allocated"], 0)
-		self.assertEqual(allocations[sick.name]["total_leaves_allocated"], 0)
-		self.assertEqual(allocations[compoff.name]["new_leaves_allocated"], 3)
-		self.assertEqual(allocations[annual.name]["new_leaves_allocated"], 3)
-		self.assertNotIn(casual.name, allocations)
 
 	def test_half_yearly_earned_leave_schedule_based_on_leave_period(self):
 		"""
@@ -424,4 +417,3 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 		self.assertIn(getdate("2027-03-31"), allocation_dates)
 		self.assertNotIn(getdate("2026-06-30"), allocation_dates)
 		self.assertEqual(len(allocation_dates), 2)
->>>>>>> 7f36a9a3c (test: add tests to assert earned leave schedule based on leave period and joining date)
