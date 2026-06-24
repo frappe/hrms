@@ -1162,6 +1162,79 @@ class TestPayrollEntry(HRMSTestSuite):
 		payroll_entry.reload()
 		self.assertEqual(payroll_entry.status, "Cancelled")
 
+	def test_holiday_list_assignment_in_payroll_entry(self):
+		from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+			create_holiday_list_assignment,
+		)
+		from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
+
+		company = frappe.get_doc("Company", "_Test Company")
+		employee = frappe.db.get_value("Employee", {"company": "_Test Company"})
+		setup_salary_structure(employee, company)
+
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = get_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company.default_payroll_payable_account,
+			currency=company.default_currency,
+			company=company.name,
+			cost_center="Main - _TC",
+		)
+
+		# 1. Clear any existing Holiday List Assignments to avoid clash
+		frappe.db.delete("Holiday List Assignment", {"assigned_to": employee})
+
+		# 2. Create two holiday lists: Company Default and Employee Assigned
+		company_holiday_list = make_holiday_list(
+			list_name="Company Default Holiday List",
+			from_date=dates.start_date,
+			to_date=dates.end_date,
+			add_weekly_offs=True,
+			weekly_off_days=["Sunday"],
+		)
+		employee_holiday_list = make_holiday_list(
+			list_name="Employee Specific Holiday List",
+			from_date=dates.start_date,
+			to_date=dates.end_date,
+			add_weekly_offs=True,
+			weekly_off_days=["Saturday", "Sunday"],
+		)
+
+		frappe.db.set_value("Company", company.name, "default_holiday_list", company_holiday_list)
+
+		# Make sure employee document has no direct holiday list set (so it uses HLA)
+		frappe.db.set_value("Employee", employee, "holiday_list", None)
+
+		# Assign employee_holiday_list via Holiday List Assignment
+		create_holiday_list_assignment(
+			applicable_for="Employee",
+			assigned_to=employee,
+			holiday_list=employee_holiday_list,
+			from_date=dates.start_date,
+		)
+
+		# Calculate holidays using both lists to find the expected difference
+		company_holidays = payroll_entry.get_holidays_count(company_holiday_list, dates.start_date, dates.end_date)
+		employee_holidays = payroll_entry.get_holidays_count(employee_holiday_list, dates.start_date, dates.end_date)
+
+		self.assertNotEqual(company_holidays, employee_holidays)
+
+		# 3. Fetch unmarked attendance
+		payroll_entry.validate_attendance = True
+		employees = payroll_entry.get_employees_with_unmarked_attendance()
+
+		# Compare unmarked days.
+		payroll_days = date_diff(dates.end_date, dates.start_date) + 1
+		expected_unmarked_days = payroll_days - employee_holidays
+
+		emp_unmarked = next((x for x in employees if x["employee"] == employee), None)
+		self.assertIsNotNone(emp_unmarked)
+		self.assertEqual(emp_unmarked["unmarked_days"], expected_unmarked_days)
+
+		# Cleanup
+		frappe.db.delete("Holiday List Assignment", {"assigned_to": employee})
+
 
 def get_payroll_entry(**args):
 	args = frappe._dict(args)
