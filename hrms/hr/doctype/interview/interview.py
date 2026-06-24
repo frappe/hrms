@@ -156,6 +156,7 @@ class Interview(Document):
 
 @frappe.whitelist()
 def get_interviewers(interview_type: str) -> list[dict]:
+	frappe.has_permission("Interview Type", "read", interview_type, throw=True)
 	return frappe.get_all("Interviewer", filters={"parent": interview_type}, fields=["user as interviewer"])
 
 
@@ -202,6 +203,7 @@ def get_feedback(interview: str) -> list[dict]:
 
 @frappe.whitelist()
 def get_skill_wise_average_rating(interview: str) -> list[dict]:
+	frappe.has_permission("Interview", "read", interview, throw=True)
 	skill_assessment = frappe.qb.DocType("Skill Assessment")
 	interview_feedback = frappe.qb.DocType("Interview Feedback")
 	return (
@@ -339,7 +341,12 @@ def send_daily_feedback_reminder():
 
 
 @frappe.whitelist()
+<<<<<<< HEAD
 def get_expected_skill_set(interview_type: str) -> list[dict]:
+=======
+def get_expected_skill_set(interview_type: str):
+	frappe.has_permission("Interview Type", "read", interview_type, throw=True)
+>>>>>>> 94ed07a05 (fix: permission check for whitelisted methods)
 	return frappe.get_all(
 		"Expected Skill Set", filters={"parent": interview_type}, fields=["skill"], order_by="idx"
 	)

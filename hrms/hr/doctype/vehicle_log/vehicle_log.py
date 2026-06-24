@@ -31,6 +31,8 @@ class VehicleLog(Document):
 
 @frappe.whitelist()
 def make_expense_claim(docname: str) -> dict:
+	frappe.has_permission("Vehicle Log", "read", docname, throw=True)
+
 	expense_claim = frappe.db.exists("Expense Claim", {"vehicle_log": docname})
 	if expense_claim:
 		frappe.throw(_("Expense Claim {0} already exists for the Vehicle Log").format(expense_claim))

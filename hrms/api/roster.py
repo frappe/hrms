@@ -69,6 +69,7 @@ def get_events(
 
 @frappe.whitelist()
 def get_schedule_from_assignment(shift_schedule_assignment: str):
+	frappe.has_permission("Shift Schedule Assignment", "read", shift_schedule_assignment, throw=True)
 	shift_schedule = frappe.db.get_value(
 		"Shift Schedule Assignment", shift_schedule_assignment, "shift_schedule"
 	)
