@@ -143,10 +143,9 @@ def get_payment_entry_for_employee(
 	pe.received_amount = received_amount
 
 	if party_account and bank:
-		if dt == "Employee Advance":
+		pe.set_exchange_rate()  # always set source & target exchange rate
+		if dt == "Employee Advance" and pe.paid_to_account_currency != pe.paid_from_account_currency:
 			pe.target_exchange_rate = current_exchange_rate
-		else:
-			pe.set_exchange_rate()
 		pe.set_amounts()
 
 	return pe
