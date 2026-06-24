@@ -38,5 +38,50 @@ frappe.query_reports["Employee Advance Summary"] = {
 			fieldtype: "Select",
 			options: "\nDraft\nPaid\nPartially Paid\nUnpaid\nClaimed\nCancelled",
 		},
+		{
+			fieldname: "department",
+			label: __("Department"),
+			fieldtype: "MultiSelectList",
+			options: "Department",
+			get_data: function (txt) {
+				return frappe.db.get_link_options("Department", txt);
+			},
+		},
+		{
+			fieldname: "branch",
+			label: __("Branch"),
+			fieldtype: "MultiSelectList",
+			options: "Branch",
+			get_data: function (txt) {
+				return frappe.db.get_link_options("Branch", txt);
+			},
+		},
+		{
+			fieldname: "advance_account",
+			label: __("Advance Account"),
+			fieldtype: "MultiSelectList",
+			options: "Account",
+			get_data: function (txt) {
+				var company = frappe.query_report.get_filter_value("company");
+				return frappe.db.get_link_options("Account", txt, {
+					company: company,
+					account_type: "Receivable",
+				});
+			},
+		},
+		{
+			fieldname: "group_by",
+			label: __("Group By"),
+			fieldtype: "Select",
+			options: "\nEmployee\nDepartment\nBranch",
+		},
 	],
+
+	formatter: function (value, row, column, data, default_formatter) {
+		value = default_formatter(value, row, column, data);
+		if (data && data.bold) {
+			value = `<strong>${value}</strong>`;
+		}
+		return value;
+	},
 };
