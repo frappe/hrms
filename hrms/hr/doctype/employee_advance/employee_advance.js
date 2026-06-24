@@ -187,13 +187,25 @@ frappe.ui.form.on("Employee Advance", {
 				company_currency = erpnext.get_currency(frm.doc.company);
 			}
 			if (from_currency != company_currency) {
-				frm.events.set_exchange_rate(frm, from_currency, company_currency);
+				frappe.confirm(
+					__(
+						"The selected currency {0} differs from the company's default currency {1}. This advance will not be available for Expense Claims. Do you want to proceed?",
+						[from_currency.bold(), company_currency.bold()],
+					),
+					() => {
+						frm.events.set_exchange_rate(frm, from_currency, company_currency);
+						frm.refresh_fields();
+					},
+					() => {
+						frm.set_value("currency", company_currency);
+					},
+				);
 			} else {
 				frm.set_value("exchange_rate", 1.0);
 				frm.set_df_property("exchange_rate", "hidden", 1);
 				frm.set_df_property("exchange_rate", "description", "");
+				frm.refresh_fields();
 			}
-			frm.refresh_fields();
 		}
 	},
 
