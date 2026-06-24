@@ -767,227 +767,49 @@ class TestExpenseClaim(FrappeTestCase):
 
 		self.assertEqual(1, expense_claim.docstatus)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-	def test_advance_in_different_currency_converted_in_claim(self):
-		"""An advance in a currency different from the claim must be converted (#4402)."""
-=======
 	def test_advance_in_different_currency_excluded_from_claim(self):
->>>>>>> e7970db75 (fix(expense-claim): filter advances by claim currency)
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (
-			create_advance_account,
 			make_employee_advance,
 			make_payment_entry,
 		)
 
 		company = "_Test Company"
-		company_currency = get_company_currency(company)
-		advance_account = create_advance_account("Employee Advance (USD)", "USD")
-		employee = make_employee(
-			"test_adv_cross_currency@example.com",
-			company,
-			salary_currency="USD",
-			employee_advance_account=advance_account,
+		company_currency = frappe.get_cached_value("Company", company, "default_currency")
+		employee = make_employee("test_adv_cross_currency@example.com", company=company)
+
+		advance_account = create_account(
+			account_name="Employee Advance (USD) - Test",
+			parent_account="Current Assets - _TC",
+			company=company,
+			account_currency="USD",
 		)
-		advance = make_employee_advance(employee)
-		make_payment_entry(advance, advance.advance_amount)
+		advance = make_employee_advance(
+			employee,
+			args={
+				"currency": "USD",
+				"exchange_rate": 80,
+				"advance_amount": 100,
+				"advance_account": advance_account,
+			},
+		)
+		make_payment_entry(advance)
 		advance.reload()
 		self.assertNotEqual(advance.currency, company_currency)
 
 		claim = make_expense_claim(
 			get_payable_account(company),
-			advance.advance_amount,
-			advance.advance_amount,
+			100,
+			100,
 			company,
 			"Travel Expenses - _TC",
-			args={"currency": company_currency, "exchange_rate": 1},
 			employee=employee,
 			do_not_submit=True,
 		)
 
-		# mismatched-currency advance is excluded from both the bulk and explicit fetch
-		self.assertEqual(get_advances(claim), [])
-		self.assertEqual(get_advances(claim, advance.name), [])
+		# advances in a different currency are excluded from both the bulk and explicit fetch
+		self.assertEqual(get_advances(claim.employee, company=company), [])
+		self.assertEqual(get_advances(claim.employee, advance.name, company=company), [])
 
-	def test_multicurrency_claim(self):
-		from hrms.hr.doctype.employee_advance.test_employee_advance import (
-			create_advance_account,
-			get_advances_for_claim,
-			make_employee_advance,
-			make_payment_entry,
-		)
-
-		advance_account = create_advance_account("Employee Advance (USD)", "USD")
-		employee = make_employee(
-			"test_adv_in_multicurrency@example.com",
-			"_Test Company",
-			salary_currency="USD",
-			employee_advance_account=advance_account,
-		)
-		advance = make_employee_advance(employee)
-		self.assertEqual(advance.status, "Unpaid")
-
-		payment_entry = make_payment_entry(advance, advance.advance_amount)
-		advance.reload()
-		self.assertEqual(advance.status, "Paid")
-		self.assertEqual(payment_entry.received_amount, advance.paid_amount)
-
-		expected_base_paid = flt(
-			advance.paid_amount * payment_entry.transaction_exchange_rate,
-			advance.precision("base_paid_amount"),
-		)
-		self.assertEqual(advance.base_paid_amount, expected_base_paid)
-		self.assertEqual(payment_entry.paid_amount, expected_base_paid)
-
-		payable_account = create_account(
-			account_name="Payroll Payable (USD)",
-			parent_account="Accounts Payable - _TC",
-			company="_Test Company",
-			account_currency="USD",
-			account_type="Payable",
-		)
-		claim_account = create_account(
-			account_name="Travel Expenses (USD)",
-			parent_account="Indirect Expenses - _TC",
-			company="_Test Company",
-			account_currency="USD",
-		)
-		claim = make_expense_claim(
-			payable_account,
-			advance.advance_amount,
-			advance.advance_amount,
-			"_Test Company",
-			claim_account,
-			args={
-				"currency": advance.currency,
-				"exchange_rate": get_exchange_rate(
-					advance.currency, get_company_currency("_Test Company"), today()
-				),
-			},
-			employee=employee,
-			do_not_submit=True,
-		)
-
-		claim = get_advances_for_claim(claim, advance.name)
-		claim.save().submit()
-		claim.reload()
-		advance.reload()
-		self.assertEqual(claim.status, "Paid")
-		self.assertEqual(claim.currency, advance.currency)
-		self.assertEqual(advance.status, "Claimed")
-		self.assertEqual(claim.total_sanctioned_amount, advance.advance_amount)
-
-		for expense in claim.expenses:
-			base_amount = flt(expense.amount * claim.exchange_rate, expense.precision("base_amount"))
-			base_sanctioned = flt(
-				expense.sanctioned_amount * claim.exchange_rate, expense.precision("base_sanctioned_amount")
-			)
-			self.assertEqual(expense.base_amount, base_amount)
-			self.assertEqual(expense.base_sanctioned_amount, base_sanctioned)
-
-		for claim_advance in claim.advances:
-			base_advance_paid = flt(
-				claim_advance.advance_paid * claim_advance.exchange_rate,
-				claim_advance.precision("base_advance_paid"),
-			)
-			base_unclaimed_amount = flt(
-				claim_advance.unclaimed_amount * claim_advance.exchange_rate,
-				claim_advance.precision("base_unclaimed_amount"),
-			)
-			base_allocated_amount = flt(
-				claim_advance.allocated_amount * claim.exchange_rate,
-				claim_advance.precision("base_allocated_amount"),
-			)
-			self.assertEqual(claim_advance.base_advance_paid, base_advance_paid)
-			self.assertEqual(claim_advance.base_unclaimed_amount, base_unclaimed_amount)
-			self.assertEqual(claim_advance.base_allocated_amount, base_allocated_amount)
-
-		total_base_sanctioned = flt(
-			claim.total_sanctioned_amount * claim.exchange_rate,
-			claim.precision("base_total_sanctioned_amount"),
-		)
-		total_advance_amount = flt(
-			claim.total_advance_amount * claim.exchange_rate, claim.precision("base_total_advance_amount")
-		)
-		grand_total = flt(claim.grand_total * claim.exchange_rate, claim.precision("base_grand_total"))
-		total_claimed_amount = flt(
-			claim.total_claimed_amount * claim.exchange_rate, claim.precision("base_total_claimed_amount")
-		)
-		self.assertEqual(claim.base_total_sanctioned_amount, total_base_sanctioned)
-		self.assertEqual(claim.base_total_advance_amount, total_advance_amount)
-		self.assertEqual(claim.base_grand_total, grand_total)
-		self.assertEqual(claim.base_total_claimed_amount, total_claimed_amount)
-		self.assertEqual(claim.total_exchange_gain_loss, 0)
-
-	def test_advance_claim_multicurrency_gain_loss(self):
-		from hrms.hr.doctype.employee_advance.test_employee_advance import (
-			create_advance_account,
-			get_advances_for_claim,
-			make_employee_advance,
-			make_payment_entry,
-		)
-
-		advance_account = create_advance_account("Employee Advance (USD)", "USD")
-		employee = make_employee(
-			"test_advance_claim_gain_loss_multicurrency@example.com",
-			"_Test Company",
-			salary_currency="USD",
-			employee_advance_account=advance_account,
-		)
-		advance = make_employee_advance(employee)
-		self.assertEqual(advance.status, "Unpaid")
-
-		make_payment_entry(advance, advance.advance_amount)
-		advance.reload()
-		self.assertEqual(advance.status, "Paid")
-
-		payable_account = create_account(
-			account_name="Payroll Payable (USD)",
-			parent_account="Accounts Payable - _TC",
-			company="_Test Company",
-			account_currency="USD",
-			account_type="Payable",
-		)
-		claim_account = create_account(
-			account_name="Travel Expenses (USD)",
-			parent_account="Indirect Expenses - _TC",
-			company="_Test Company",
-			account_currency="USD",
-		)
-		claim = make_expense_claim(
-			payable_account,
-			advance.advance_amount,
-			advance.advance_amount,
-			"_Test Company",
-			claim_account,
-			args={"currency": advance.currency, "exchange_rate": 65},
-			employee=employee,
-			do_not_submit=True,
-		)
-
-		claim = get_advances_for_claim(claim, advance.name)
-		claim.save().submit()
-		claim.reload()
-		advance.reload()
-		self.assertEqual(claim.status, "Paid")
-		self.assertEqual(advance.status, "Claimed")
-
-		for claim_advance in claim.advances:
-			self.assertEqual(claim_advance.exchange_gain_loss, 2100)
-		self.assertEqual(claim.total_exchange_gain_loss, 2100)
-
-		journal = frappe.db.get_value(
-			"Journal Entry Account",
-			filters={"reference_type": "Expense Claim", "reference_name": claim.name, "docstatus": 1},
-			fieldname="parent",
-		)
-		gain_loss_jv = frappe.get_doc("Journal Entry", journal)
-		self.assertEqual(gain_loss_jv.voucher_type, "Exchange Gain Or Loss")
-		self.assertEqual(gain_loss_jv.total_debit, 2100)
-		self.assertEqual(gain_loss_jv.total_credit, 2100)
-
->>>>>>> 3a28f6959 (fix(expense-claim): convert advance amounts to the claim currency)
 	def test_expense_claim_status_as_payment_after_unreconciliation(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import make_payment_entry
 
