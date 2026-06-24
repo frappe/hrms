@@ -177,6 +177,9 @@ frappe.ui.form.on("Employee Advance", {
 			args: {
 				employee_advance: frm.doc.name,
 			},
+			error() {
+				frm.dashboard.clear_headline();
+			},
 			callback(r) {
 				const advance_return_data = r.message || {};
 
