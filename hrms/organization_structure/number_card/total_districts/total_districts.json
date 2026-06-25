@@ -1,0 +1,20 @@
+{
+ "color": "#7b933d",
+ "creation": "2026-06-23 00:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "document_type": "Organization Unit",
+ "filters_json": "[[\"Organization Unit\",\"location_1\",\"=\",\"District Office\"]]",
+ "function": "Count",
+ "is_public": 1,
+ "is_standard": 1,
+ "label": "Total Districts",
+ "modified": "2026-06-23 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Organization Structure",
+ "name": "Total Districts",
+ "owner": "Administrator",
+ "show_percentage_stats": 1,
+ "stats_time_interval": "Monthly",
+ "type": "Document Type"
+}

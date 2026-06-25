@@ -126,8 +126,8 @@
    "collapsible": 1,
    "indent": 0,
    "keep_closed": 0,
-   "label": "Employee Grade",
-   "link_to": "Employee Grade",
+   "label": "Job Category",
+   "link_to": "Job Category",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"

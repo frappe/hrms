@@ -1,0 +1,147 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:template_name",
+ "creation": "2026-06-22 00:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Setup",
+ "engine": "InnoDB",
+ "field_order": [
+  "template_name",
+  "template_code",
+  "column_break_main",
+  "job_grade",
+  "job_category",
+  "position_family",
+  "section_break_parent",
+  "parent_position_template",
+  "section_break_desc",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "template_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Template Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "description": "Short code used as the prefix when generating position codes (e.g. TEL, CSO, BM).",
+   "fieldname": "template_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Template Code",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "job_grade",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Job Grade",
+   "options": "Job Grade"
+  },
+  {
+   "description": "Default job category applied to positions created from this template.",
+   "fieldname": "job_category",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Job Category",
+   "options": "Job Category"
+  },
+  {
+   "description": "Job family this template belongs to (e.g. Banking Operations, Technology, Security).",
+   "fieldname": "position_family",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Position Family"
+  },
+  {
+   "fieldname": "section_break_parent",
+   "fieldtype": "Section Break"
+  },
+  {
+   "description": "Optional grouping of templates. Does not affect the Position reporting tree.",
+   "fieldname": "parent_position_template",
+   "fieldtype": "Link",
+   "label": "Parent Position Template",
+   "options": "Position Template"
+  },
+  {
+   "fieldname": "section_break_desc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-06-22 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Organization Structure",
+ "name": "Position Template",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Organization Administrator",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "HR User"
+  }
+ ],
+ "row_format": "Dynamic",
+ "search_fields": "template_code,job_grade,position_family",
+ "sort_field": "template_name",
+ "sort_order": "ASC",
+ "states": [],
+ "title_field": "template_name",
+ "track_changes": 1
+}

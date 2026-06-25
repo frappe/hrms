@@ -1,0 +1,354 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "field:unit_name",
+ "creation": "2026-06-18 00:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Setup",
+ "engine": "InnoDB",
+ "field_order": [
+  "unit_name",
+  "unit_code",
+  "unit_type",
+  "column_break_main",
+  "status",
+  "is_group",
+  "organization_level",
+  "section_break_parent",
+  "parent_organization_unit",
+  "column_break_parent",
+  "description",
+  "section_break_location",
+  "location_1",
+  "is_primary_head_office",
+  "column_break_location",
+  "inherit_ho_geography",
+  "section_break_geography",
+  "region",
+  "zone",
+  "column_break_geography",
+  "city",
+  "woreda",
+  "section_break_address",
+  "address_line_1",
+  "address_line_2",
+  "column_break_address",
+  "postal_code",
+  "phone",
+  "email",
+  "section_break_branch",
+  "branch_staffing_template",
+  "auto_create_positions",
+  "section_break_nsm",
+  "lft",
+  "rgt",
+  "old_parent"
+ ],
+ "fields": [
+  {
+   "fieldname": "unit_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Unit Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "unit_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Unit Code",
+   "unique": 1
+  },
+  {
+   "fieldname": "unit_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Unit Type",
+   "options": "\nExecutive\nFunction\nProcess\nSub-Process\nDepartment\nDistrict\nTeam\nBranch\nSub-Team\nOther"
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Active\nInactive"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_group",
+   "fieldtype": "Check",
+   "label": "Is Group"
+  },
+  {
+   "fieldname": "organization_level",
+   "fieldtype": "Int",
+   "label": "Organization Level",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_parent",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "parent_organization_unit",
+   "fieldtype": "Link",
+   "ignore_user_permissions": 1,
+   "label": "Parent Organization Unit",
+   "options": "Organization Unit"
+  },
+  {
+   "fieldname": "column_break_parent",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "section_break_location",
+   "fieldtype": "Section Break",
+   "label": "Physical Location"
+  },
+  {
+   "description": "Operational site type for this unit (leave blank for pure reporting units).",
+   "fieldname": "location_1",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Location 1",
+   "options": "\nHead Office\nDistrict Office\nBranch"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.location_1=='Head Office'",
+   "description": "The primary Head Office whose geography is shared with other Head Office units.",
+   "fieldname": "is_primary_head_office",
+   "fieldtype": "Check",
+   "label": "Primary Head Office"
+  },
+  {
+   "fieldname": "column_break_location",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.location_1=='Head Office' && !doc.is_primary_head_office",
+   "fieldname": "inherit_ho_geography",
+   "fieldtype": "Check",
+   "label": "Inherit Head Office Geography",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.location_1",
+   "fieldname": "section_break_geography",
+   "fieldtype": "Section Break",
+   "label": "Location 2 (Geography)"
+  },
+  {
+   "depends_on": "eval:doc.location_1 && !(doc.location_1=='Head Office' && doc.inherit_ho_geography)",
+   "fieldname": "region",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Region / City Administration",
+   "options": "Region"
+  },
+  {
+   "depends_on": "eval:doc.location_1 && !(doc.location_1=='Head Office' && doc.inherit_ho_geography)",
+   "fieldname": "zone",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Zone / Sub City",
+   "options": "Zone"
+  },
+  {
+   "fieldname": "column_break_geography",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.location_1 && !(doc.location_1=='Head Office' && doc.inherit_ho_geography)",
+   "fieldname": "city",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Town / City",
+   "options": "City"
+  },
+  {
+   "depends_on": "eval:doc.location_1 && !(doc.location_1=='Head Office' && doc.inherit_ho_geography)",
+   "fieldname": "woreda",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Woreda",
+   "options": "Woreda"
+  },
+  {
+   "depends_on": "eval:doc.location_1",
+   "fieldname": "section_break_address",
+   "fieldtype": "Section Break",
+   "label": "Address & Contact"
+  },
+  {
+   "fieldname": "address_line_1",
+   "fieldtype": "Data",
+   "label": "Address Line 1"
+  },
+  {
+   "fieldname": "address_line_2",
+   "fieldtype": "Data",
+   "label": "Address Line 2"
+  },
+  {
+   "fieldname": "column_break_address",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "postal_code",
+   "fieldtype": "Data",
+   "label": "Postal Code"
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "Phone",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "eval:doc.location_1=='Branch'",
+   "fieldname": "section_break_branch",
+   "fieldtype": "Section Break",
+   "label": "Branch Staffing"
+  },
+  {
+   "depends_on": "eval:doc.location_1=='Branch'",
+   "description": "When set, positions are generated automatically from this staffing plan.",
+   "fieldname": "branch_staffing_template",
+   "fieldtype": "Link",
+   "label": "Branch Staffing Template",
+   "options": "Branch Staffing Template"
+  },
+  {
+   "default": "1",
+   "depends_on": "eval:doc.location_1=='Branch'",
+   "description": "Generate the staffing plan's positions automatically when this branch is created.",
+   "fieldname": "auto_create_positions",
+   "fieldtype": "Check",
+   "label": "Auto Create Positions"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_nsm",
+   "fieldtype": "Section Break",
+   "label": "Nested Set"
+  },
+  {
+   "fieldname": "lft",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Left",
+   "no_copy": 1,
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "rgt",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Right",
+   "no_copy": 1,
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "old_parent",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Old Parent",
+   "no_copy": 1,
+   "options": "Organization Unit",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "icon": "fa fa-sitemap",
+ "index_web_pages_for_search": 1,
+ "is_tree": 1,
+ "links": [],
+ "modified": "2026-06-23 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Organization Structure",
+ "name": "Organization Unit",
+ "naming_rule": "By fieldname",
+ "nsm_parent_field": "parent_organization_unit",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Organization Administrator",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "HR User"
+  }
+ ],
+ "row_format": "Dynamic",
+ "search_fields": "unit_code,unit_type,location_1,region,city",
+ "show_title_field_in_link": 1,
+ "sort_field": "lft",
+ "sort_order": "ASC",
+ "states": [],
+ "title_field": "unit_name",
+ "track_changes": 1
+}

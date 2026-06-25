@@ -1,0 +1,265 @@
+/* Full-height location chart page */
+.location-chart-page {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	min-height: calc(100vh - 180px);
+}
+
+.loc-chart {
+	flex: 1;
+	overflow: auto;
+	padding: 24px 16px;
+	min-height: calc(100vh - 220px);
+}
+
+.loc-empty {
+	padding: 48px 0;
+	text-align: center;
+}
+
+.loc-hierarchy-legend {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-bottom: 20px;
+}
+
+.loc-legend-item {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 6px 12px;
+	border-radius: 999px;
+	background: var(--card-bg, #fff);
+	border: 1px solid var(--border-color, #e5e7eb);
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--text-color, #1f2937);
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+.loc-legend-dot {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+}
+
+.loc-theme-head-office .loc-legend-dot {
+	background: linear-gradient(135deg, #c62828, #ef5350);
+}
+
+.loc-theme-district .loc-legend-dot {
+	background: linear-gradient(135deg, #1565c0, #42a5f5);
+}
+
+.loc-theme-branch .loc-legend-dot {
+	background: linear-gradient(135deg, #2e7d32, #66bb6a);
+}
+
+.loc-tree-wrap {
+	display: inline-block;
+	min-width: 100%;
+}
+
+/* Top-down tree with CSS connectors (same pattern as Organization Chart) */
+.loc-tree,
+.loc-tree ul {
+	display: flex;
+	justify-content: center;
+	position: relative;
+	margin: 0;
+	padding: 20px 0 0;
+	list-style: none;
+}
+
+.loc-tree li {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
+	padding: 20px 12px 0;
+	list-style: none;
+}
+
+.loc-tree li::before,
+.loc-tree li::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 50%;
+	width: 50%;
+	height: 20px;
+	border-top: 2px solid var(--gray-300, #c8d1d9);
+}
+
+.loc-tree li::after {
+	right: auto;
+	left: 50%;
+	border-left: 2px solid var(--gray-300, #c8d1d9);
+}
+
+.loc-tree li:only-child::before,
+.loc-tree li:only-child::after {
+	display: none;
+}
+
+.loc-tree li:only-child {
+	padding-top: 0;
+}
+
+.loc-tree li:first-child::before,
+.loc-tree li:last-child::after {
+	border: 0 none;
+}
+
+.loc-tree li:last-child::before {
+	border-right: 2px solid var(--gray-300, #c8d1d9);
+	border-radius: 0 6px 0 0;
+}
+
+.loc-tree li:first-child::after {
+	border-radius: 6px 0 0 0;
+}
+
+.loc-tree ul::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 0;
+	height: 20px;
+	border-left: 2px solid var(--gray-300, #c8d1d9);
+}
+
+.loc-tree > li {
+	padding-top: 0;
+}
+
+.loc-tree > li::before,
+.loc-tree > li::after {
+	display: none;
+}
+
+/* Location node cards */
+.loc-node {
+	display: inline-block;
+	min-width: 200px;
+	max-width: 260px;
+	cursor: pointer;
+	border-radius: 8px;
+	box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.1));
+	transition: box-shadow 0.15s ease, transform 0.15s ease;
+	overflow: hidden;
+}
+
+.loc-node:hover {
+	box-shadow: var(--shadow-md, 0 4px 8px rgba(0, 0, 0, 0.15));
+	transform: translateY(-1px);
+}
+
+.loc-node.is-inactive {
+	opacity: 0.82;
+}
+
+.loc-head {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: #fff;
+	font-weight: 600;
+	font-size: 13px;
+	line-height: 1.3;
+	padding: 8px 10px;
+	border-radius: 8px 8px 0 0;
+}
+
+.loc-abbr {
+	flex: 0 0 auto;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	padding: 2px 6px;
+	border-radius: 4px;
+	background: rgba(255, 255, 255, 0.22);
+	border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.loc-name {
+	flex: 1 1 auto;
+	min-width: 0;
+	word-break: break-word;
+}
+
+.loc-body {
+	background: var(--card-bg, #fff);
+	border: 1px solid var(--gray-300, #c8d1d9);
+	border-top: 0;
+	padding: 8px 10px;
+	border-radius: 0 0 8px 8px;
+}
+
+.loc-code {
+	display: inline-flex;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	color: #475569;
+	background: #f8fafc;
+	border: 1px solid #e2e8f0;
+	border-radius: 6px;
+	padding: 2px 8px;
+	margin-bottom: 4px;
+}
+
+.loc-geo {
+	font-size: 11px;
+	color: var(--text-muted, #6b7b8a);
+	margin-top: 2px;
+	line-height: 1.4;
+}
+
+.loc-stats {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	margin-top: 6px;
+}
+
+.loc-stat-pill {
+	display: inline-flex;
+	font-size: 10px;
+	font-weight: 700;
+	padding: 3px 8px;
+	border-radius: 999px;
+	background: #eff6ff;
+	color: #1d4ed8;
+}
+
+.loc-theme-branch .loc-stat-pill {
+	background: #ecfdf5;
+	color: #047857;
+}
+
+.loc-stat-inactive {
+	background: #fff7ed;
+	color: #c2410c;
+}
+
+/* Header colors by location type */
+.loc-node.loc-theme-head-office .loc-head {
+	background: #c62828;
+}
+
+.loc-node.loc-theme-district .loc-head {
+	background: #1565c0;
+}
+
+.loc-node.loc-theme-branch .loc-head {
+	background: #2e7d32;
+}
+
+.loc-node.loc-theme-unknown .loc-head {
+	background: #607d8b;
+}

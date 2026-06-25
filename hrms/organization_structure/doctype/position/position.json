@@ -1,0 +1,440 @@
+{
+ "actions": [],
+ "allow_import": 1,
+ "allow_rename": 1,
+ "autoname": "",
+ "creation": "2026-06-18 00:00:00.000000",
+ "doctype": "DocType",
+ "document_type": "Setup",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_details",
+  "position_name",
+  "position_code",
+  "position_template",
+  "column_break_main",
+  "position_start_date",
+  "company",
+  "position_status",
+  "section_break_classification",
+  "job_category",
+  "job_grade",
+  "column_break_classification",
+  "incumbent_type",
+  "position_critical",
+  "section_break_placement",
+  "location_1",
+  "site_organization_unit",
+  "section_break_org",
+  "org_function",
+  "org_process",
+  "org_sub_process",
+  "column_break_org",
+  "org_department",
+  "org_district",
+  "org_team",
+  "org_branch",
+  "org_sub_team",
+  "section_break_org_resolved",
+  "organization_unit",
+  "cost_center",
+  "section_break_reporting",
+  "parent_position",
+  "is_group",
+  "is_head_position",
+  "column_break_reporting",
+  "position_level",
+  "occupancy_status",
+  "is_occupied",
+  "current_employee",
+  "section_break_desc",
+  "description",
+  "section_break_nsm",
+  "lft",
+  "rgt",
+  "old_parent"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_details",
+   "fieldtype": "Section Break",
+   "label": "Position Details"
+  },
+  {
+   "description": "Human-friendly label. Defaults from the position template when left blank.",
+   "fieldname": "position_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Position",
+   "reqd": 1
+  },
+  {
+   "description": "Auto-generated from the position template, location/organization code and a running number when left blank.",
+   "fieldname": "position_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Position Code",
+   "unique": 1
+  },
+  {
+   "fieldname": "position_template",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Position Template",
+   "options": "Position Template"
+  },
+  {
+   "fieldname": "column_break_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "position_start_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Position Start Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "default": "Active",
+   "fieldname": "position_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Position Status",
+   "options": "Active\nInactive"
+  },
+  {
+   "fieldname": "section_break_classification",
+   "fieldtype": "Section Break",
+   "label": "Classification"
+  },
+  {
+   "fieldname": "job_category",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Job Category",
+   "options": "Job Category",
+   "reqd": 1
+  },
+  {
+   "description": "Defaults from the position template when left blank.",
+   "fieldname": "job_grade",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Job Grade",
+   "options": "Job Grade",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_classification",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Single",
+   "fieldname": "incumbent_type",
+   "fieldtype": "Select",
+   "label": "Incumbent Type",
+   "options": "Single\nMultiple",
+   "reqd": 1
+  },
+  {
+   "default": "Not Critical",
+   "fieldname": "position_critical",
+   "fieldtype": "Select",
+   "label": "Position Critical",
+   "options": "Critical\nNot Critical",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_placement",
+   "fieldtype": "Section Break",
+   "label": "Placement"
+  },
+  {
+   "description": "Pick the site level first; the site list is filtered to this type.",
+   "fieldname": "location_1",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Location 1",
+   "options": "\nHead Office\nDistrict Office\nBranch",
+   "reqd": 1
+  },
+  {
+   "description": "Physical site (organization unit) where this position is based.",
+   "fieldname": "site_organization_unit",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Site Organization Unit",
+   "options": "Organization Unit",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_org",
+   "fieldtype": "Section Break",
+   "label": "Organization Unit (by hierarchy)"
+  },
+  {
+   "description": "Select the function this position belongs to.",
+   "fieldname": "org_function",
+   "fieldtype": "Link",
+   "label": "Function",
+   "options": "Organization Unit"
+  },
+  {
+   "description": "Processes are filtered to the selected function.",
+   "fieldname": "org_process",
+   "fieldtype": "Link",
+   "label": "Process",
+   "options": "Organization Unit"
+  },
+  {
+   "description": "Sub-processes are filtered to the selected process.",
+   "fieldname": "org_sub_process",
+   "fieldtype": "Link",
+   "label": "Sub-Process",
+   "options": "Organization Unit"
+  },
+  {
+   "fieldname": "column_break_org",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Departments are filtered to the selected sub-process.",
+   "fieldname": "org_department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Organization Unit"
+  },
+  {
+   "description": "Districts sit at the same level as departments (filtered to the selected sub-process).",
+   "fieldname": "org_district",
+   "fieldtype": "Link",
+   "label": "District",
+   "options": "Organization Unit"
+  },
+  {
+   "description": "Teams are filtered to the selected department.",
+   "fieldname": "org_team",
+   "fieldtype": "Link",
+   "label": "Team",
+   "options": "Organization Unit"
+  },
+  {
+   "description": "Branches sit at the same level as teams (filtered to the selected district).",
+   "fieldname": "org_branch",
+   "fieldtype": "Link",
+   "label": "Branch",
+   "options": "Organization Unit"
+  },
+  {
+   "description": "Sub-teams are filtered to the selected team or branch.",
+   "fieldname": "org_sub_team",
+   "fieldtype": "Link",
+   "label": "Sub-Team",
+   "options": "Organization Unit"
+  },
+  {
+   "fieldname": "section_break_org_resolved",
+   "fieldtype": "Section Break"
+  },
+  {
+   "description": "Resolved from the hierarchy above (the deepest unit selected).",
+   "fieldname": "organization_unit",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Organization Unit",
+   "options": "Organization Unit",
+   "read_only": 1
+  },
+  {
+   "description": "Cost centre the position belongs to (an organization unit).",
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Cost Center",
+   "options": "Organization Unit",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_reporting",
+   "fieldtype": "Section Break",
+   "label": "Reporting"
+  },
+  {
+   "fieldname": "parent_position",
+   "fieldtype": "Link",
+   "ignore_user_permissions": 1,
+   "label": "Parent Position (Reports To)",
+   "options": "Position"
+  },
+  {
+   "default": "0",
+   "description": "Allow this position to have reporting (child) positions.",
+   "fieldname": "is_group",
+   "fieldtype": "Check",
+   "label": "Is Group"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_head_position",
+   "fieldtype": "Check",
+   "label": "Is Head Position"
+  },
+  {
+   "fieldname": "column_break_reporting",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "position_level",
+   "fieldtype": "Int",
+   "label": "Position Level",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "default": "Vacant",
+   "fieldname": "occupancy_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Occupancy Status",
+   "no_copy": 1,
+   "options": "Vacant\nOccupied",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_occupied",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Is Occupied",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "current_employee",
+   "fieldtype": "Link",
+   "label": "Current Employee",
+   "no_copy": 1,
+   "options": "Employee",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_desc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_nsm",
+   "fieldtype": "Section Break",
+   "label": "Nested Set"
+  },
+  {
+   "fieldname": "lft",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Left",
+   "no_copy": 1,
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "rgt",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Right",
+   "no_copy": 1,
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "old_parent",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Old Parent",
+   "no_copy": 1,
+   "options": "Position",
+   "print_hide": 1,
+   "read_only": 1
+  }
+ ],
+ "icon": "fa fa-users",
+ "index_web_pages_for_search": 1,
+ "is_tree": 1,
+ "links": [],
+ "modified": "2026-06-22 19:40:00.000000",
+ "modified_by": "Administrator",
+ "module": "Organization Structure",
+ "name": "Position",
+ "nsm_parent_field": "parent_position",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Organization Administrator",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "HR User"
+  }
+ ],
+ "row_format": "Dynamic",
+ "search_fields": "position_code,organization_unit,location_1,site_organization_unit,job_grade",
+ "show_title_field_in_link": 1,
+ "sort_field": "lft",
+ "sort_order": "ASC",
+ "states": [],
+ "title_field": "position_name",
+ "track_changes": 1
+}

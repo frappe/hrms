@@ -1,4 +1,3 @@
-version: "3.8" # Updated version
 services:
   mariadb:
     image: mariadb:10.8
@@ -16,16 +15,25 @@ services:
     image: redis:alpine
 
   frappe:
-    image: frappe/bench:latest
+    # latest ships a broken 0-byte bench binary; pin a working release
+    image: frappe/bench:v5.30.0
+    depends_on:
+      - mariadb
+      - redis
     command: bash /workspace/init.sh
     environment:
       - SHELL=/bin/bash
     working_dir: /home/frappe
     volumes:
       - .:/workspace
+      # Live bind-mount: edits to the Organization Structure module on the host
+      # are reflected instantly inside the container (no docker cp needed).
+      - ../hrms/organization_structure:/home/frappe/frappe-bench/apps/hrms/hrms/organization_structure
+      - frappe-bench:/home/frappe/frappe-bench
     ports:
       - 8000:8000
       - 9000:9000
 
 volumes:
   mariadb-data:
+  frappe-bench:

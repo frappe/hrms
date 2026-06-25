@@ -44,6 +44,10 @@ app_include_css = "hrms.bundle.css"
 
 # include js in page
 # page_js = {"page" : "public/js/file.js"}
+page_css = {
+	"organization-chart": "organization_structure/page/organization_chart/organization_chart.css",
+	"location-chart": "organization_structure/page/location_chart/location_chart.css",
+}
 
 # include js in doctype views
 doctype_js = {

@@ -1,0 +1,252 @@
+.os-chart {
+	overflow: auto;
+	padding: 24px 16px;
+}
+
+.os-empty {
+	padding: 48px 0;
+	text-align: center;
+}
+
+.os-tree-wrap {
+	display: inline-block;
+	min-width: 100%;
+}
+
+/* Top-down org chart built with nested lists + CSS connectors */
+.os-tree,
+.os-tree ul {
+	display: flex;
+	justify-content: center;
+	position: relative;
+	margin: 0;
+	padding: 20px 0 0;
+	list-style: none;
+}
+
+.os-tree li {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	position: relative;
+	padding: 20px 12px 0;
+	list-style: none;
+}
+
+/* connectors from a node up to its siblings' horizontal line */
+.os-tree li::before,
+.os-tree li::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	right: 50%;
+	width: 50%;
+	height: 20px;
+	border-top: 2px solid var(--gray-300, #c8d1d9);
+}
+
+.os-tree li::after {
+	right: auto;
+	left: 50%;
+	border-left: 2px solid var(--gray-300, #c8d1d9);
+}
+
+.os-tree li:only-child::before,
+.os-tree li:only-child::after {
+	display: none;
+}
+
+.os-tree li:only-child {
+	padding-top: 0;
+}
+
+.os-tree li:first-child::before,
+.os-tree li:last-child::after {
+	border: 0 none;
+}
+
+.os-tree li:last-child::before {
+	border-right: 2px solid var(--gray-300, #c8d1d9);
+	border-radius: 0 6px 0 0;
+}
+
+.os-tree li:first-child::after {
+	border-radius: 6px 0 0 0;
+}
+
+/* vertical line from a parent down to its children container */
+.os-tree ul::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 50%;
+	width: 0;
+	height: 20px;
+	border-left: 2px solid var(--gray-300, #c8d1d9);
+}
+
+/* no connectors above the root level */
+.os-tree > li {
+	padding-top: 0;
+}
+
+.os-tree > li::before,
+.os-tree > li::after {
+	display: none;
+}
+
+/* node cards */
+.os-node {
+	display: inline-block;
+	min-width: 190px;
+	max-width: 240px;
+	cursor: pointer;
+	border-radius: 6px;
+	box-shadow: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.1));
+	transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.os-node:hover {
+	box-shadow: var(--shadow-md, 0 4px 8px rgba(0, 0, 0, 0.15));
+	transform: translateY(-1px);
+}
+
+.os-node .os-head {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: #fff;
+	font-weight: 600;
+	font-size: 13px;
+	line-height: 1.3;
+	padding: 8px 10px;
+	border-radius: 6px 6px 0 0;
+}
+
+.os-node .os-abbr {
+	flex: 0 0 auto;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	padding: 2px 6px;
+	border-radius: 4px;
+	background: rgba(255, 255, 255, 0.22);
+	border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.os-node .os-unit-name {
+	flex: 1 1 auto;
+	min-width: 0;
+	word-break: break-word;
+}
+
+.os-node .os-body {
+	background: var(--card-bg, #fff);
+	border: 1px solid var(--gray-300, #c8d1d9);
+	border-top: 0;
+	padding: 8px 10px;
+	border-radius: 0 0 6px 6px;
+}
+
+.os-node .os-emp {
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--text-color, #1f272e);
+}
+
+.os-node .os-pos {
+	font-size: 11px;
+	color: var(--text-muted, #6b7b8a);
+	margin-top: 2px;
+}
+
+.os-node .os-pos.os-vac {
+	color: #e8830c;
+	font-weight: 600;
+}
+
+.os-node.vacant .os-body {
+	background: var(--bg-light-gray, #f4f5f6);
+}
+
+/* hierarchy background colors (unit name header) */
+.os-node.os-type-executive .os-head {
+	background: #c62828; /* red */
+}
+
+.os-node.os-type-function .os-head {
+	background: #ef6c00; /* orange */
+}
+
+.os-node.os-type-process .os-head {
+	background: #2e7d32; /* green */
+}
+
+.os-node.os-type-sub-process .os-head {
+	background: #f9a825; /* yellow */
+	color: #1f272e;
+}
+
+.os-node.os-type-sub-process .os-abbr {
+	background: rgba(0, 0, 0, 0.12);
+	border-color: rgba(0, 0, 0, 0.2);
+}
+
+/* department and district share blue; abbrev distinguishes them */
+.os-node.os-type-dept-district .os-head {
+	background: #1565c0; /* blue */
+}
+
+/* team and branch share black; abbrev distinguishes them */
+.os-node.os-type-team-branch .os-head {
+	background: #212121; /* black */
+}
+
+.os-node.os-type-sub-team .os-head {
+	background: #6d4c41; /* brown */
+}
+
+.os-node.os-type-other .os-head {
+	background: #c9a227; /* golden */
+	color: #1f272e;
+}
+
+.os-node.os-type-other .os-abbr {
+	background: rgba(0, 0, 0, 0.12);
+	border-color: rgba(0, 0, 0, 0.2);
+}
+
+/* unknown unit types */
+.os-node.os-type-unknown .os-head {
+	background: #90a4ae; /* silver */
+	color: #1f272e;
+}
+
+.os-node.os-type-unknown .os-abbr {
+	background: rgba(0, 0, 0, 0.12);
+	border-color: rgba(0, 0, 0, 0.2);
+}
+
+/* Position nodes nested under an organization unit */
+.os-position-tree {
+	margin-top: 4px;
+}
+
+.os-node-position {
+	min-width: 170px;
+	max-width: 220px;
+	border-style: dashed;
+}
+
+.os-node-position .os-head-position {
+	background: #546e7a;
+}
+
+.os-node-position.occupied .os-head-position {
+	background: #2e7d32;
+}
+
+.os-node-position.vacant .os-head-position {
+	background: #ef6c00;
+}

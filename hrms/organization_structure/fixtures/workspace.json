@@ -1,0 +1,278 @@
+{
+ "app": "hrms",
+ "charts": [
+  {
+   "chart_name": "Positions by Occupancy",
+   "label": "Positions by Occupancy"
+  },
+  {
+   "chart_name": "Positions by Job Grade",
+   "label": "Positions by Job Grade"
+  }
+ ],
+ "content": "[{\"id\":\"os_h_overview\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Overview</b></span>\",\"col\":12}},{\"id\":\"os_nc_units\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Organization Units\",\"col\":3}},{\"id\":\"os_nc_locations\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Locations\",\"col\":3}},{\"id\":\"os_nc_branches\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Branches\",\"col\":3}},{\"id\":\"os_nc_positions\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Positions\",\"col\":3}},{\"id\":\"os_nc_occupied\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Occupied Positions\",\"col\":3}},{\"id\":\"os_nc_vacant\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Vacant Positions\",\"col\":3}},{\"id\":\"os_sp1\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"os_h_insights\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Insights</b></span>\",\"col\":12}},{\"id\":\"os_ch_occ\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Positions by Occupancy\",\"col\":6}},{\"id\":\"os_ch_grade\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Positions by Job Grade\",\"col\":6}},{\"id\":\"os_sp2\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"os_h_quick\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Quick Access</b></span>\",\"col\":12}},{\"id\":\"os_sc_unit\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Organization Unit\",\"col\":3}},{\"id\":\"os_sc_loc\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Location Chart\",\"col\":3}},{\"id\":\"os_sc_pos\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Position\",\"col\":3}},{\"id\":\"os_sc_chart\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Organization Chart\",\"col\":3}},{\"id\":\"os_sc_postree\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Position Hierarchy\",\"col\":3}},{\"id\":\"os_sc_orgtree\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Organization Hierarchy\",\"col\":3}},{\"id\":\"os_sp3\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"os_h_masters\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"id\":\"os_card_masters\",\"type\":\"card\",\"data\":{\"card_name\":\"Masters\",\"col\":4}},{\"id\":\"os_card_reports\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":8}}]",
+ "creation": "2026-06-18 00:00:00.000000",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "users",
+ "idx": 0,
+ "is_hidden": 0,
+ "label": "Organization Structure",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Masters",
+   "link_count": 8,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Organization Unit",
+   "link_count": 0,
+   "link_to": "Organization Unit",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Region",
+   "link_count": 0,
+   "link_to": "Region",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Position",
+   "link_count": 0,
+   "link_to": "Position",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Position Template",
+   "link_count": 0,
+   "link_to": "Position Template",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Job Grade",
+   "link_count": 0,
+   "link_to": "Job Grade",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Branch Staffing Template",
+   "link_count": 0,
+   "link_to": "Branch Staffing Template",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Job Category",
+   "link_count": 0,
+   "link_to": "Job Category",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 8,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "Organization Unit",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Organization Hierarchy",
+   "link_count": 0,
+   "link_to": "Organization Hierarchy",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Position",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Position Hierarchy",
+   "link_count": 0,
+   "link_to": "Position Hierarchy",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Position",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Vacant Positions",
+   "link_count": 0,
+   "link_to": "Vacant Positions",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Position",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Positions by Organization Unit",
+   "link_count": 0,
+   "link_to": "Positions by Organization Unit",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Position",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Positions by Location",
+   "link_count": 0,
+   "link_to": "Positions by Location",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Position",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Span of Control",
+   "link_count": 0,
+   "link_to": "Span of Control",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Position",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Position Count by Function",
+   "link_count": 0,
+   "link_to": "Position Count by Function",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Position",
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Job Category Distribution",
+   "link_count": 0,
+   "link_to": "Job Category Distribution",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-06-22 18:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Organization Structure",
+ "name": "Organization Structure",
+ "number_cards": [
+  {
+   "label": "Total Organization Units",
+   "number_card_name": "Total Organization Units"
+  },
+  {
+   "label": "Total Locations",
+   "number_card_name": "Total Locations"
+  },
+  {
+   "label": "Total Branches",
+   "number_card_name": "Total Branches"
+  },
+  {
+   "label": "Total Positions",
+   "number_card_name": "Total Positions"
+  },
+  {
+   "label": "Occupied Positions",
+   "number_card_name": "Occupied Positions"
+  },
+  {
+   "label": "Vacant Positions",
+   "number_card_name": "Vacant Positions"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 20.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "Tree",
+   "label": "Organization Unit",
+   "link_to": "Organization Unit",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "label": "Location Chart",
+   "link_to": "location-chart",
+   "type": "Page"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "Tree",
+   "label": "Position",
+   "link_to": "Position",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "label": "Organization Chart",
+   "link_to": "organization-chart",
+   "type": "Page"
+  },
+  {
+   "color": "Blue",
+   "label": "Position Hierarchy",
+   "link_to": "Position Hierarchy",
+   "type": "Report"
+  },
+  {
+   "color": "Blue",
+   "label": "Organization Hierarchy",
+   "link_to": "Organization Hierarchy",
+   "type": "Report"
+  }
+ ],
+ "title": "Organization Structure",
+ "type": "Workspace"
+}
