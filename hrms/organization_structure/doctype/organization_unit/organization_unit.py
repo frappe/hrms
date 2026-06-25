@@ -2,6 +2,8 @@
 # For license information, please see license.txt
 
 
+import re
+
 import frappe
 from frappe import _
 from frappe.utils import cint
@@ -15,6 +17,23 @@ REQUIRED_PARENT_LOCATION_1 = {
 LOCATION_1_ORDER = {"Head Office": 0, "District Office": 1, "Branch": 2}
 
 GEO_FIELDS = ("region", "zone", "city", "woreda", "address_line_1", "address_line_2", "postal_code", "phone", "email")
+
+# Unit types whose code is just their own short code (the CEO/Executive root is
+# implicit and never prefixed onto a Function code) — see spec §4.1.
+TOP_LEVEL_UNIT_TYPES = {"Executive", "Function"}
+
+# Unit types that embed their type code into the hierarchy path (spec §4.4–4.8).
+# Function / Process / Sub-Process intentionally omit it.
+UNIT_TYPE_PATH_PREFIX = {
+	"Department": "DEP",
+	"District": "DST",
+	"Branch": "BRN",
+	"Team": "TEM",
+	"Sub-Team": "STM",
+}
+
+# Connector words dropped when abbreviating a multi-word unit name (spec §6.3).
+SHORT_CODE_IGNORE_WORDS = {"and", "of", "the", "for", "to", "in", "on", "at", "by", "with"}
 
 
 class OrganizationUnit(NestedSet):
@@ -45,6 +64,7 @@ class OrganizationUnit(NestedSet):
 		postal_code: DF.Data | None
 		region: DF.Link | None
 		rgt: DF.Int
+		short_code: DF.Data | None
 		status: DF.Literal["Active", "Inactive"]
 		unit_code: DF.Data | None
 		unit_name: DF.Data
@@ -57,6 +77,8 @@ class OrganizationUnit(NestedSet):
 
 	def validate(self):
 		validate_circular_reference(self)
+		self.set_short_code()
+		self.set_unit_code()
 		self.set_ho_inheritance_flags()
 		self.apply_inherited_ho_geography()
 		self.validate_location_hierarchy()
@@ -195,6 +217,35 @@ class OrganizationUnit(NestedSet):
 				)
 			)
 
+	def set_short_code(self):
+		"""Use the manual short code when given (cleaned), else abbreviate the unit name."""
+		if self.short_code:
+			self.short_code = clean_short_code(self.short_code)
+		else:
+			self.short_code = generate_short_code(self.unit_name)
+
+	def set_unit_code(self):
+		"""Generate the hierarchy-based unit code once, on creation.
+
+		A code that already exists is left untouched so that renaming or moving a
+		unit never silently rewrites a code that positions / reports depend on
+		(spec §11). Regeneration after a move is a deliberate, separate action.
+		"""
+		if self.unit_code:
+			return
+
+		parent_code = None
+		if self.parent_organization_unit:
+			parent_code = frappe.db.get_value(
+				"Organization Unit", self.parent_organization_unit, "unit_code"
+			)
+
+		proposed = build_unit_code(self.unit_type, parent_code, self.short_code)
+		if not proposed:
+			return
+
+		self.unit_code = make_unique_unit_code(proposed, self.name)
+
 	def set_organization_level(self):
 		if self.parent_organization_unit:
 			parent_level = frappe.db.get_value(
@@ -265,6 +316,90 @@ def get_primary_head_office() -> str | None:
 		"name",
 		order_by="lft asc",
 	)
+
+
+def clean_short_code(value: str | None) -> str:
+	"""Uppercase and strip everything but letters and digits (spec §6.4)."""
+	return re.sub(r"[^A-Za-z0-9]", "", value or "").upper()
+
+
+def generate_short_code(unit_name: str | None) -> str:
+	"""Abbreviate a unit name per spec §6.
+
+	Multi-word names use the first letter of each meaningful word (connector words
+	dropped); single-word names use the first three letters. Always uppercase and
+	alphanumeric.
+	"""
+	words = re.sub(r"[^A-Za-z0-9]", " ", unit_name or "").split()
+	meaningful = [word for word in words if word.lower() not in SHORT_CODE_IGNORE_WORDS]
+	# fall back to all words if the name is made up entirely of connector words
+	meaningful = meaningful or words
+	if not meaningful:
+		return ""
+
+	if len(meaningful) == 1:
+		code = meaningful[0][:3]
+	else:
+		code = "".join(word[0] for word in meaningful)
+	return code.upper()
+
+
+def build_unit_code(unit_type: str | None, parent_code: str | None, short_code: str | None) -> str:
+	"""Compose the hierarchy-based unit code from the parent code and unit type (spec §4)."""
+	short_code = short_code or ""
+	if not short_code:
+		return ""
+
+	# Function (and the implicit Executive/CEO root) carry only their own short code.
+	if unit_type in TOP_LEVEL_UNIT_TYPES or not parent_code:
+		return short_code
+
+	type_prefix = UNIT_TYPE_PATH_PREFIX.get(unit_type)
+	if type_prefix:
+		return f"{parent_code}-{type_prefix}-{short_code}"
+	return f"{parent_code}-{short_code}"
+
+
+def _unit_code_taken(unit_code: str, exclude_name: str | None) -> bool:
+	return bool(
+		frappe.db.get_value(
+			"Organization Unit",
+			{"unit_code": unit_code, "name": ["!=", exclude_name or ""]},
+			"name",
+		)
+	)
+
+
+def make_unique_unit_code(proposed: str, exclude_name: str | None = None) -> str:
+	"""Return the proposed code, appending -02, -03 … if it is already taken (spec §7)."""
+	if not _unit_code_taken(proposed, exclude_name):
+		return proposed
+
+	sequence = 2
+	while _unit_code_taken(f"{proposed}-{sequence:02d}", exclude_name):
+		sequence += 1
+	return f"{proposed}-{sequence:02d}"
+
+
+@frappe.whitelist()
+def preview_unit_code(
+	unit_type: str | None = None,
+	parent_organization_unit: str | None = None,
+	unit_name: str | None = None,
+	short_code: str | None = None,
+) -> dict:
+	"""Compute the short code and unit code for the live form preview (no write, no sequencing)."""
+	resolved_short_code = clean_short_code(short_code) if short_code else generate_short_code(unit_name)
+	parent_code = None
+	if parent_organization_unit:
+		parent_code = frappe.db.get_value("Organization Unit", parent_organization_unit, "unit_code")
+
+	proposed = build_unit_code(unit_type, parent_code, resolved_short_code)
+	return {
+		"short_code": resolved_short_code,
+		# show the same value that will be saved, including any -02 sequence suffix
+		"unit_code": make_unique_unit_code(proposed) if proposed else "",
+	}
 
 
 def generate_positions_for_branch(organization_unit: str) -> list[str]:

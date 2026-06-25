@@ -140,8 +140,46 @@ frappe.ui.form.on("Organization Unit", {
 			frappe.msgprint(__("An Organization Unit cannot be its own parent."));
 			frm.set_value("parent_organization_unit", null);
 		}
+		update_unit_code_preview(frm);
+	},
+
+	unit_name(frm) {
+		update_unit_code_preview(frm);
+	},
+
+	unit_type(frm) {
+		update_unit_code_preview(frm);
+	},
+
+	short_code(frm) {
+		update_unit_code_preview(frm);
 	},
 });
+
+function update_unit_code_preview(frm) {
+	// Fill the read-only Unit Code field live as the user builds a new unit, so
+	// the generated code is visible before saving. Existing units keep their code,
+	// so no preview runs on edit.
+	if (!frm.is_new()) return;
+	if (!frm.doc.unit_name && !frm.doc.short_code) {
+		frm.set_value("unit_code", "");
+		return;
+	}
+
+	frappe.call({
+		method: "hrms.organization_structure.doctype.organization_unit.organization_unit.preview_unit_code",
+		args: {
+			unit_type: frm.doc.unit_type,
+			parent_organization_unit: frm.doc.parent_organization_unit,
+			unit_name: frm.doc.unit_name,
+			short_code: frm.doc.short_code,
+		},
+		callback(r) {
+			if (!r.message) return;
+			frm.set_value("unit_code", r.message.unit_code || r.message.short_code || "");
+		},
+	});
+}
 
 function clear_dependent_geo(frm, changed) {
 	if (changed === "region" && frm.doc.zone) {

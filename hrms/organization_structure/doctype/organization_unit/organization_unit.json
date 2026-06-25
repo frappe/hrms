@@ -9,6 +9,7 @@
  "engine": "InnoDB",
  "field_order": [
   "unit_name",
+  "short_code",
   "unit_code",
   "unit_type",
   "column_break_main",
@@ -55,11 +56,19 @@
    "unique": 1
   },
   {
+   "description": "Abbreviation used to build the Unit Code. Leave blank to auto-generate from the Unit Name.",
+   "fieldname": "short_code",
+   "fieldtype": "Data",
+   "label": "Short Code"
+  },
+  {
+   "description": "Auto-generated from the parent hierarchy, unit type and short code. Generated once on creation and preserved when the unit is renamed.",
    "fieldname": "unit_code",
    "fieldtype": "Data",
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Unit Code",
+   "read_only": 1,
    "unique": 1
   },
   {
@@ -293,7 +302,7 @@
  "index_web_pages_for_search": 1,
  "is_tree": 1,
  "links": [],
- "modified": "2026-06-23 12:00:00.000000",
+ "modified": "2026-06-26 13:00:00.000000",
  "modified_by": "Administrator",
  "module": "Organization Structure",
  "name": "Organization Unit",
