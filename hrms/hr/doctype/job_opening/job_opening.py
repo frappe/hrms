@@ -90,7 +90,26 @@ class JobOpening(WebsiteGenerator):
 		if self.status == "Closed":
 			self.validate_from_to_dates("posted_on", "closed_on")
 
+	@frappe.whitelist()
+	def get_close_warning(self):
+		if not self.is_opening_being_closed():
+			return
+
+		if not self.staffing_plan:
+			return
+
+		return _(
+			"Closing this Job Opening for {1} may not be according to the Staffing Plan {0}.<br><br>"
+			"Do you want to close this Job Opening?"
+		).format(
+			frappe.bold(get_link_to_form("Staffing Plan", self.staffing_plan)),
+			frappe.bold(self.designation),
+		)
+
 	def validate_current_vacancies(self):
+		if self.status == "Closed":
+			return
+
 		if not self.staffing_plan:
 			staffing_plan = get_active_staffing_plan_details(self.company, self.designation)
 			if staffing_plan:
@@ -122,6 +141,12 @@ class JobOpening(WebsiteGenerator):
 					),
 					title=_("Vacancies fulfilled"),
 				)
+
+	def is_opening_being_closed(self):
+		if self.is_new() or self.status != "Closed":
+			return False
+
+		return frappe.db.get_value(self.doctype, self.name, "status") == "Open"
 
 	def update_job_requisition_status(self):
 		if self.status == "Closed" and self.job_requisition:
