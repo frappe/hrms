@@ -8,15 +8,6 @@ user (owner / leave approver / unrelated employee / roleless user) and asserts:
   * an unauthorized user is blocked with `frappe.PermissionError`, and
   * a legitimately authorized user (the owner, the approver, or an admin) is NOT
     blocked by the added check (self-service is preserved).
-
-Coverage maps to the audit findings:
-  - leave_ledger_entry.expire_allocation ............ High (write bypass)
-  - employee_payment_entry.set_exchange_rate_in_advance High (write bypass)
-  - leave_application.get_leave_approver / get_holidays / get_number_of_leave_days
-                                                       self-service read gate
-  - attendance.get_unmarked_days .................... Employee-data read leak
-  - api.get_company_cost_center_and_expense_account .. company-config read leak
-  - team_updates.get_data ........................... restored only_for role gate
 """
 
 import json
@@ -101,12 +92,6 @@ class TestWhitelistPermissions(HRMSTestSuite):
 		allocation.submit()
 		cls.allocation = allocation
 
-	def setUp(self):
-		frappe.set_user("Administrator")
-
-	def tearDown(self):
-		frappe.set_user("Administrator")
-
 	def assert_not_blocked(self, fn, *args, **kwargs):
 		"""The added permission check must NOT raise for an authorized user.
 
@@ -119,8 +104,6 @@ class TestWhitelistPermissions(HRMSTestSuite):
 			self.fail(f"{getattr(fn, '__name__', fn)} blocked an authorized user: {e}")
 		except Exception:
 			pass
-
-	# ------------------------------------------------------------------ High: writes
 
 	def test_expire_allocation_blocks_unauthorized_user(self):
 		payload = self.allocation.as_dict()
@@ -136,17 +119,15 @@ class TestWhitelistPermissions(HRMSTestSuite):
 	def test_set_exchange_rate_in_advance_blocks_unauthorized_user(self):
 		# crafts the Payment-Entry-shaped doc the endpoint accepts; the reference name
 		# need not exist — the write-permission check fires before any DB write.
-		doc = frappe._dict(
-			references=[
-				frappe._dict(reference_doctype="Employee Advance", reference_name="FAKE-ADVANCE-001")
-			],
-			target_exchange_rate=80.0,
+		doc = frappe.new_doc("Payment Entry")
+		doc.set(
+			"references",
+			[frappe._dict(reference_doctype="Employee Advance", reference_name="FAKE-ADVANCE-001")],
 		)
+		doc.set("target_exchange_rate", 80.0)
 
 		frappe.set_user(self.outsider_user)
 		self.assertRaises(frappe.PermissionError, set_exchange_rate_in_advance, doc)
-
-	# --------------------------------------------------- self-service leave endpoints
 
 	def test_leave_endpoints_allow_owner_and_approver(self):
 		from_date = getdate()
@@ -178,8 +159,6 @@ class TestWhitelistPermissions(HRMSTestSuite):
 			to_date,
 		)
 
-	# -------------------------------------------------------------- read-leak: employee
-
 	def test_get_unmarked_days_respects_employee_read_permission(self):
 		from_date = getdate()
 		to_date = add_days(getdate(), 5)
@@ -192,8 +171,6 @@ class TestWhitelistPermissions(HRMSTestSuite):
 		frappe.set_user(self.outsider_user)
 		self.assertRaises(frappe.PermissionError, get_unmarked_days, self.owner_emp, from_date, to_date)
 
-	# ----------------------------------------------------------- read-leak: company config
-
 	def test_company_cost_center_requires_company_read(self):
 		# a user with no Company read permission is blocked
 		frappe.set_user(self.roleless_user)
@@ -202,8 +179,6 @@ class TestWhitelistPermissions(HRMSTestSuite):
 		# an admin is not
 		frappe.set_user("Administrator")
 		self.assert_not_blocked(get_company_cost_center_and_expense_account, self.company)
-
-	# ------------------------------------------------------------- restored only_for gate
 
 	def test_team_updates_enforces_role_gate(self):
 		# user without the Employee / System Manager role is blocked
