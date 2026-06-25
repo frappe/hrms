@@ -181,6 +181,7 @@ bench --site hrms.localhost enable-scheduler
 # module-to-app map is rebuilt before migrate runs.
 bench --site hrms.localhost clear-cache
 bench --site hrms.localhost migrate
+bench --site hrms.localhost clear-cache
 
 bench use hrms.localhost
 
