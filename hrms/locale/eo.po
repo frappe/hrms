@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-06-21 10:42+0000\n"
-"PO-Revision-Date: 2026-06-22 20:41\n"
+"POT-Creation-Date: 2026-06-24 17:40+0000\n"
+"PO-Revision-Date: 2026-06-24 20:43\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Esperanto\n"
 "MIME-Version: 1.0\n"
@@ -562,7 +562,7 @@ msgstr "crwdns140904:0crwdne140904:0"
 msgid "Adjust Allocation"
 msgstr "crwdns159432:0crwdne159432:0"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:453
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:454
 msgid "Adjustment Created Successfully"
 msgstr "crwdns159434:0crwdne159434:0"
 
@@ -684,11 +684,11 @@ msgstr "crwdns159446:0{0}crwdnd159446:0{1}crwdne159446:0"
 msgid "Allocation to Adjust"
 msgstr "crwdns159448:0crwdne159448:0"
 
-#: hrms/hr/utils.py:433
+#: hrms/hr/utils.py:437
 msgid "Allocation was skipped due to exceeding annual allocation set in leave policy"
 msgstr "crwdns160866:0crwdne160866:0"
 
-#: hrms/hr/utils.py:441
+#: hrms/hr/utils.py:445
 msgid "Allocation was skipped due to maximum leave allocation limit set in leave type. Please increase the limit and retry failed allocation."
 msgstr "crwdns160868:0crwdne160868:0"
 
@@ -839,7 +839,7 @@ msgstr "crwdns154209:0crwdne154209:0"
 msgid "Annual Allocation"
 msgstr "crwdns140960:0crwdne140960:0"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:407
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:408
 msgid "Annual Allocation Exceeded"
 msgstr "crwdns149070:0crwdne149070:0"
 
@@ -1489,7 +1489,7 @@ msgstr "crwdns141058:0crwdne141058:0"
 msgid "Automated Based on Goal Progress"
 msgstr "crwdns141060:0crwdne141060:0"
 
-#: hrms/hr/utils.py:494
+#: hrms/hr/utils.py:498
 msgid "Automatic Leave Allocation has failed for the following Earned Leaves: {0}. Please check {1} for more details."
 msgstr "crwdns160872:0{0}crwdnd160872:0{1}crwdne160872:0"
 
@@ -1550,6 +1550,10 @@ msgstr "crwdns105420:0crwdne105420:0"
 #: hrms/hr/doctype/job_offer/job_offer.json
 msgid "Awaiting Response"
 msgstr "crwdns141076:0crwdne141076:0"
+
+#: frontend/src/views/Login.vue:17
+msgid "Back to Login"
+msgstr "crwdns205117:0crwdne205117:0"
 
 #: hrms/hr/doctype/leave_application/leave_application.py:209
 msgid "Backdated Leave Application is restricted. Please set the {} in {}"
@@ -1621,7 +1625,7 @@ msgstr "crwdns159468:0{0}crwdnd159468:0{1}crwdne159468:0"
 msgid "Benefit amount of component {0} should be greater than 0"
 msgstr "crwdns159470:0{0}crwdne159470:0"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:487
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:509
 msgid "Benefit amount {0} for Salary Component {1} should not be greater than maximum benefit amount {2} set in {3}"
 msgstr "crwdns159472:0{0}crwdnd159472:0{1}crwdnd159472:0{2}crwdnd159472:0{3}crwdne159472:0"
 
@@ -1753,7 +1757,7 @@ msgstr "crwdns141114:0crwdne141114:0"
 msgid "CTC"
 msgstr "crwdns105520:0crwdne105520:0"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:62
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:63
 msgid "CTC Missing for Employee"
 msgstr "crwdns201899:0crwdne201899:0"
 
@@ -1792,15 +1796,15 @@ msgstr "crwdns105534:0crwdne105534:0"
 msgid "Cannot Modify Time"
 msgstr "crwdns154211:0crwdne154211:0"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:358
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:359
 msgid "Cannot allocate leaves outside the allocation period {0} - {1}"
 msgstr "crwdns151974:0{0}crwdnd151974:0{1}crwdne151974:0"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:487
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:488
 msgid "Cannot allocate more leaves due to maximum leave allocation limit of {0} in leave policy assignment"
 msgstr "crwdns160874:0{0}crwdne160874:0"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:479
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:480
 msgid "Cannot allocate more leaves due to maximum leaves allowed limit of {0} in {1} leave type."
 msgstr "crwdns160876:0{0}crwdnd160876:0{1}crwdne160876:0"
 
@@ -1921,8 +1925,8 @@ msgstr "crwdns151168:0crwdne151168:0"
 msgid "Check Vacancies On Job Offer Creation"
 msgstr "crwdns141136:0crwdne141136:0"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:492
-#: hrms/hr/utils.py:947
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:516
+#: hrms/hr/utils.py:969
 msgid "Check {0} for more details"
 msgstr "crwdns105598:0{0}crwdne105598:0"
 
@@ -1989,7 +1993,7 @@ msgstr "crwdns141146:0crwdne141146:0"
 #. Label of the claimed_amount (Currency) field in DocType 'Employee Benefit
 #. Claim'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
-#: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:80
+#: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:197
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 msgid "Claimed Amount"
 msgstr "crwdns105612:0crwdne105612:0"
@@ -2259,7 +2263,7 @@ msgstr "crwdns151976:0{0}crwdne151976:0"
 msgid "Creation Date"
 msgstr "crwdns141224:0crwdne141224:0"
 
-#: hrms/hr/utils.py:956
+#: hrms/hr/utils.py:978
 msgid "Creation Failed"
 msgstr "crwdns105938:0crwdne105938:0"
 
@@ -4058,7 +4062,7 @@ msgstr "crwdns107168:0crwdne107168:0"
 msgid "Expire Carry Forwarded Leaves (Days)"
 msgstr "crwdns141476:0crwdne141476:0"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:609
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:610
 msgid "Expire Leaves"
 msgstr "crwdns154407:0crwdne154407:0"
 
@@ -4080,7 +4084,7 @@ msgstr "crwdns141482:0crwdne141482:0"
 msgid "Exporting..."
 msgstr "crwdns107184:0crwdne107184:0"
 
-#: hrms/hr/utils.py:944
+#: hrms/hr/utils.py:966
 msgid "Failed to create/submit {0} for employees:"
 msgstr "crwdns107188:0{0}crwdne107188:0"
 
@@ -4104,7 +4108,7 @@ msgstr "crwdns107194:0crwdne107194:0"
 msgid "Failed to setup defaults for country {0}."
 msgstr "crwdns141488:0{0}crwdne141488:0"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:489
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:513
 msgid "Failed to submit some leave policy assignments:"
 msgstr "crwdns107198:0crwdne107198:0"
 
@@ -4132,7 +4136,7 @@ msgstr "crwdns141494:0crwdne141494:0"
 msgid "Failure Reason"
 msgstr "crwdns160880:0crwdne160880:0"
 
-#: hrms/hr/utils.py:493
+#: hrms/hr/utils.py:497
 msgid "Failure of Automatic Allocation of Earned Leaves"
 msgstr "crwdns160882:0crwdne160882:0"
 
@@ -4366,7 +4370,7 @@ msgstr "crwdns141534:0crwdne141534:0"
 msgid "Formula"
 msgstr "crwdns141536:0crwdne141536:0"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:229
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:260
 msgid "Formula/Amount"
 msgstr "crwdns201903:0crwdne201903:0"
 
@@ -4683,7 +4687,7 @@ msgstr "crwdns141592:0crwdne141592:0"
 msgid "Grievance Type"
 msgstr "crwdns107480:0crwdne107480:0"
 
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:630
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:637
 msgid "Gross Earnings"
 msgstr "crwdns154784:0crwdne154784:0"
 
@@ -5186,7 +5190,7 @@ msgstr "crwdns107716:0crwdne107716:0"
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:148
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:623
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:630
 #: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 #: hrms/workspace_sidebar/tax_&_benefits.json
@@ -5202,11 +5206,11 @@ msgstr "crwdns107724:0crwdne107724:0"
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr "crwdns141690:0{0}crwdnd141690:0{1}crwdne141690:0"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1952
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1954
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr "crwdns107726:0{0}crwdne107726:0"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1940
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1942
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr "crwdns107728:0{0}crwdne107728:0"
 
@@ -5214,7 +5218,7 @@ msgstr "crwdns107728:0{0}crwdne107728:0"
 msgid "Income Tax Slab: "
 msgstr "crwdns201905:0crwdne201905:0"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1948
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1950
 msgid "Income Tax Slab: {0} is disabled"
 msgstr "crwdns107730:0{0}crwdne107730:0"
 
@@ -5442,15 +5446,15 @@ msgstr "crwdns141718:0crwdne141718:0"
 msgid "Invalid Arrear Component"
 msgstr "crwdns160028:0crwdne160028:0"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:503
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:525
 msgid "Invalid Benefit Amounts"
 msgstr "crwdns159568:0crwdne159568:0"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:361
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:362
 msgid "Invalid Dates"
 msgstr "crwdns151982:0crwdne151982:0"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2642
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2644
 msgid "Invalid LWP Days Reversed"
 msgstr "crwdns160264:0crwdne160264:0"
 
@@ -5822,7 +5826,7 @@ msgstr "crwdns141778:0crwdne141778:0"
 msgid "Key Result Area"
 msgstr "crwdns141780:0crwdne141780:0"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2639
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2641
 msgid "LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
 msgstr "crwdns160266:0{0}crwdnd160266:0{1}crwdnd160266:0{2}crwdnd160266:0{3}crwdnd160266:0{4}crwdne160266:0"
 
@@ -6224,7 +6228,7 @@ msgstr "crwdns108188:0crwdne108188:0"
 msgid "Leave Type {0} cannot be allocated since it is leave without pay"
 msgstr "crwdns108190:0{0}crwdne108190:0"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:598
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:599
 msgid "Leave Type {0} cannot be carry-forwarded"
 msgstr "crwdns108192:0{0}crwdne108192:0"
 
@@ -6276,6 +6280,10 @@ msgstr "crwdns200022:0crwdne200022:0"
 msgid "Leave of type {0} cannot be longer than {1}."
 msgstr "crwdns108214:0{0}crwdnd108214:0{1}crwdne108214:0"
 
+#: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:61
+msgid "Leave(s) Allocated"
+msgstr "crwdns205119:0crwdne205119:0"
+
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:73
 msgid "Leave(s) Expired"
 msgstr "crwdns108216:0crwdne108216:0"
@@ -6326,7 +6334,7 @@ msgstr "crwdns159576:0crwdne159576:0"
 msgid "Leaves Allocated"
 msgstr "crwdns141832:0crwdne141832:0"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:603
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:604
 msgid "Leaves Expired"
 msgstr "crwdns154409:0crwdne154409:0"
 
@@ -6401,7 +6409,7 @@ msgstr "crwdns108270:0crwdne108270:0"
 msgid "Loan Repayment Entry"
 msgstr "crwdns141852:0crwdne141852:0"
 
-#: hrms/hr/utils.py:831
+#: hrms/hr/utils.py:853
 msgid "Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
 msgstr "crwdns108274:0{0}crwdnd108274:0{1}crwdne108274:0"
 
@@ -6742,11 +6750,11 @@ msgstr "crwdns108408:0crwdne108408:0"
 msgid "Missing Salary Components"
 msgstr "crwdns159592:0crwdne159592:0"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1943
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1945
 msgid "Missing Tax Slab"
 msgstr "crwdns141918:0crwdne141918:0"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:313
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:344
 msgid "Missing value for filters"
 msgstr "crwdns201907:0crwdne201907:0"
 
@@ -6878,10 +6886,6 @@ msgstr "crwdns141946:0crwdne141946:0"
 msgid "New Hires (This Month)"
 msgstr "crwdns159596:0crwdne159596:0"
 
-#: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:61
-msgid "New Leave(s) Allocated"
-msgstr "crwdns108504:0crwdne108504:0"
-
 #. Label of the new_leaves_allocated (Float) field in DocType 'Leave
 #. Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
@@ -6915,7 +6919,7 @@ msgstr "crwdns108518:0crwdne108518:0"
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "crwdns108520:0crwdne108520:0"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:136 hrms/hr/utils.py:934
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:136 hrms/hr/utils.py:956
 msgid "No Employees Selected"
 msgstr "crwdns108522:0crwdne108522:0"
 
@@ -7044,7 +7048,7 @@ msgstr "crwdns108550:0{0}crwdnd108550:0{1}crwdnd108550:0{2}crwdne108550:0"
 msgid "No employees found for the selected criteria"
 msgstr "crwdns108552:0crwdne108552:0"
 
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:71
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:78
 msgid "No employees found with selected filters and active salary structure"
 msgstr "crwdns108554:0crwdne108554:0"
 
@@ -7156,7 +7160,7 @@ msgstr "crwdns141988:0crwdne141988:0"
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr "crwdns108590:0{0}crwdnd108590:0{1}crwdne108590:0"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2252
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2254
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr "crwdns141990:0{0}crwdne141990:0"
 
@@ -7905,7 +7909,7 @@ msgstr "crwdns108922:0crwdne108922:0"
 msgid "Percent Deduction"
 msgstr "crwdns142100:0crwdne142100:0"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:252
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:283
 msgid "Percent of CTC (%)"
 msgstr "crwdns201909:0crwdne201909:0"
 
@@ -7987,7 +7991,7 @@ msgstr "crwdns159666:0crwdne159666:0"
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr "crwdns152559:0{0}crwdne152559:0"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2241
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2243
 msgid "Please see attachment"
 msgstr "crwdns142108:0crwdne142108:0"
 
@@ -8041,7 +8045,7 @@ msgstr "crwdns108970:0crwdne108970:0"
 msgid "Please select a date."
 msgstr "crwdns108972:0crwdne108972:0"
 
-#: hrms/hr/utils.py:822
+#: hrms/hr/utils.py:844
 msgid "Please select an Applicant"
 msgstr "crwdns108974:0crwdne108974:0"
 
@@ -8053,7 +8057,7 @@ msgstr "crwdns200482:0crwdne200482:0"
 msgid "Please select at least one Shift Request to perform this action."
 msgstr "crwdns142114:0crwdne142114:0"
 
-#: hrms/hr/utils.py:933
+#: hrms/hr/utils.py:955
 msgid "Please select at least one employee to perform this action."
 msgstr "crwdns142116:0crwdne142116:0"
 
@@ -8131,7 +8135,7 @@ msgstr "crwdns160444:0crwdne160444:0"
 msgid "Please set account in Salary Component {0}"
 msgstr "crwdns109004:0{0}crwdne109004:0"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:54
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:55
 msgid "Please set cost to company(CTC) for employee {0} in the {1}"
 msgstr "crwdns201911:0{0}crwdnd201911:0{1}crwdne201911:0"
 
@@ -8188,7 +8192,7 @@ msgstr "crwdns109022:0{0}crwdnd109022:0{1}crwdne109022:0"
 msgid "Please set {0} for the Employee: {1}"
 msgstr "crwdns109024:0{0}crwdnd109024:0{1}crwdne109024:0"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:312
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:343
 msgid "Please set {0} to get CTC report"
 msgstr "crwdns201915:0{0}crwdne201915:0"
 
@@ -8578,7 +8582,7 @@ msgstr "crwdns159676:0crwdne159676:0"
 msgid "Reduction is more than {0}'s available leave balance {1} for leave type {2}"
 msgstr "crwdns159678:0{0}crwdnd159678:0{1}crwdnd159678:0{2}crwdne159678:0"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:406
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:407
 #: hrms/hr/doctype/leave_application/leave_application.py:554
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:218
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:141
@@ -8691,7 +8695,7 @@ msgstr "crwdns142242:0crwdne142242:0"
 msgid "Repay From Salary"
 msgstr "crwdns148910:0crwdne148910:0"
 
-#: hrms/hr/utils.py:837
+#: hrms/hr/utils.py:859
 msgid "Repay From Salary can be selected only for term loans"
 msgstr "crwdns109284:0crwdne109284:0"
 
@@ -8815,8 +8819,8 @@ msgstr "crwdns109342:0crwdne109342:0"
 msgid "Retirement Age (In Years)"
 msgstr "crwdns142276:0crwdne142276:0"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:482
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:490
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:483
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:491
 msgid "Retry Failed"
 msgstr "crwdns160890:0crwdne160890:0"
 
@@ -9010,7 +9014,7 @@ msgstr "crwdns142320:0crwdne142320:0"
 msgid "Salary Component for timesheet based payroll."
 msgstr "crwdns142322:0crwdne142322:0"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:476
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:498
 msgid "Salary Component {0} cannot be selected more than once in Employee Benefits"
 msgstr "crwdns159684:0{0}crwdne159684:0"
 
@@ -9297,7 +9301,7 @@ msgstr "crwdns159696:0crwdne159696:0"
 msgid "Salary components should be part of the Salary Structure."
 msgstr "crwdns142346:0crwdne142346:0"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2662
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2664
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr "crwdns109534:0{0}crwdne109534:0"
 
@@ -9645,7 +9649,7 @@ msgstr "crwdns151342:0crwdne151342:0"
 msgid "Settle all Payables and Receivables before submission"
 msgstr "crwdns109702:0crwdne109702:0"
 
-#: hrms/hr/utils.py:785
+#: hrms/hr/utils.py:807
 msgid "Shared document with the user {0} with 'Submit' permission"
 msgstr "crwdns155426:0{0}crwdne155426:0"
 
@@ -10093,7 +10097,7 @@ msgstr "crwdns109934:0crwdne109934:0"
 msgid "Submission Date"
 msgstr "crwdns142476:0crwdne142476:0"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:500
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:524
 msgid "Submission Failed"
 msgstr "crwdns109942:0crwdne109942:0"
 
@@ -10149,7 +10153,7 @@ msgstr "crwdns109968:0crwdne109968:0"
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
 msgstr "crwdns109970:0{1}crwdnd109970:0{2}crwdnd109970:0{0}crwdnd109970:0{3}crwdne109970:0"
 
-#: hrms/hr/utils.py:961
+#: hrms/hr/utils.py:983
 msgid "Successfully created {0} for employees:"
 msgstr "crwdns142482:0{0}crwdne142482:0"
 
@@ -10416,7 +10420,7 @@ msgstr "crwdns110082:0{0}crwdne110082:0"
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
 msgstr "crwdns162092:0{0}crwdne162092:0"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:426
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:448
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
 msgstr "crwdns110086:0{0}crwdnd110086:0{1}crwdne110086:0"
 
@@ -10870,7 +10874,7 @@ msgstr "crwdns142622:0crwdne142622:0"
 msgid "Total in words (Company Currency)"
 msgstr "crwdns142624:0crwdne142624:0"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:402
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:403
 msgid "Total leaves allocated cannot exceed annual allocation of {0}."
 msgstr "crwdns149072:0{0}crwdne149072:0"
 
@@ -10878,7 +10882,7 @@ msgstr "crwdns149072:0{0}crwdne149072:0"
 msgid "Total leaves allocated is mandatory for Leave Type {0}"
 msgstr "crwdns110314:0{0}crwdne110314:0"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:500
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:522
 msgid "Total of all employee benefits cannot be greater that Max Benefits Amount {0}"
 msgstr "crwdns159730:0{0}crwdne159730:0"
 
@@ -11021,7 +11025,7 @@ msgstr "crwdns142644:0crwdne142644:0"
 msgid "Trainings (This Week)"
 msgstr "crwdns159732:0crwdne159732:0"
 
-#: hrms/hr/utils.py:808
+#: hrms/hr/utils.py:830
 msgid "Transactions cannot be created for an Inactive Employee {0}."
 msgstr "crwdns110398:0{0}crwdne110398:0"
 
@@ -11604,6 +11608,10 @@ msgstr "crwdns110674:0crwdne110674:0"
 msgid "You are not authorized to approve leaves on Block Dates"
 msgstr "crwdns110676:0crwdne110676:0"
 
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:366
+msgid "You are not permitted to access the CTC report of another employee."
+msgstr "crwdns205121:0crwdne205121:0"
+
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:79
 msgid "You are not present all day(s) between compensatory leave request days"
 msgstr "crwdns110678:0crwdne110678:0"
@@ -11636,8 +11644,8 @@ msgstr "crwdns159742:0{0}crwdnd159742:0{1}crwdne159742:0"
 msgid "You do not have permission to change the Status of a Shift Request."
 msgstr "crwdns203957:0crwdne203957:0"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:458
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:621
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:459
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:622
 msgid "You do not have permission to complete this action"
 msgstr "crwdns154411:0crwdne154411:0"
 
@@ -11882,15 +11890,15 @@ msgstr "crwdns110744:0{0}crwdnd110744:0{1}crwdne110744:0"
 msgid "{0} is not in Optional Holiday List"
 msgstr "crwdns110746:0{0}crwdne110746:0"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:396
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:397
 msgid "{0} leaves allocated successfully"
 msgstr "crwdns152000:0{0}crwdne152000:0"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:604
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:605
 msgid "{0} leaves from allocation for {1} leave type have expired and will be processed during the next scheduled job. It is recommended to expire them now before creating new leave policy assignments."
 msgstr "crwdns154413:0{0}crwdnd154413:0{1}crwdne154413:0"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:391
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:392
 msgid "{0} leaves were manually allocated by {1} on {2}"
 msgstr "crwdns149074:0{0}crwdnd149074:0{1}crwdnd149074:0{2}crwdne149074:0"
 
@@ -11931,11 +11939,11 @@ msgstr "crwdns142780:0{0}crwdnd142780:0{1}crwdne142780:0"
 msgid "{0} {1} {2}?"
 msgstr "crwdns110760:0{0}crwdnd110760:0{1}crwdnd110760:0{2}crwdne110760:0"
 
-#: hrms/hr/utils.py:466
+#: hrms/hr/utils.py:470
 msgid "{0}. Check error log for more details."
 msgstr "crwdns160898:0{0}crwdne160898:0"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2275
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2277
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr "crwdns110762:0{0}crwdne110762:0"
 

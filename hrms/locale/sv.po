@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-06-21 10:42+0000\n"
-"PO-Revision-Date: 2026-06-22 20:40\n"
+"POT-Creation-Date: 2026-06-24 17:40+0000\n"
+"PO-Revision-Date: 2026-06-24 20:42\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -587,7 +587,7 @@ msgstr "Arrangör Adress"
 msgid "Adjust Allocation"
 msgstr "Justera Tilldelning"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:453
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:454
 msgid "Adjustment Created Successfully"
 msgstr "Justering Skapad"
 
@@ -709,11 +709,11 @@ msgstr "Tilldelning är högre än det högsta tillåtna {0} för frånvaro typ 
 msgid "Allocation to Adjust"
 msgstr "Tilldelning att Justera"
 
-#: hrms/hr/utils.py:433
+#: hrms/hr/utils.py:437
 msgid "Allocation was skipped due to exceeding annual allocation set in leave policy"
 msgstr "Tilldelning hoppades över på grund av att årlig tilldelning angiven i frånvaro princip överskreds"
 
-#: hrms/hr/utils.py:441
+#: hrms/hr/utils.py:445
 msgid "Allocation was skipped due to maximum leave allocation limit set in leave type. Please increase the limit and retry failed allocation."
 msgstr "Tilldelningen hoppades över på grund av att maximal gräns för frånvaro tilldelning angiven i frånvaro typ. Öka gräns och försök igen med misslyckad tilldelning."
 
@@ -864,7 +864,7 @@ msgstr "Närvaro post är kopplad till denna stämpling. Avbryt närvaro innan d
 msgid "Annual Allocation"
 msgstr "Årlig Tilldelning"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:407
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:408
 msgid "Annual Allocation Exceeded"
 msgstr "Årlig Tilldelning Överskriden"
 
@@ -1514,7 +1514,7 @@ msgstr "Automatiskt Frånvaro Uttag"
 msgid "Automated Based on Goal Progress"
 msgstr "Automatiskt Baserad på Mål Framsteg"
 
-#: hrms/hr/utils.py:494
+#: hrms/hr/utils.py:498
 msgid "Automatic Leave Allocation has failed for the following Earned Leaves: {0}. Please check {1} for more details."
 msgstr "Automatisk frånvaro tilldelning misslyckades för följande intjänad frånvaro: {0}. Kontrollera {1} för mer information."
 
@@ -1575,6 +1575,10 @@ msgstr "Genomsnittlig Användning(Endast Fakturerad) "
 #: hrms/hr/doctype/job_offer/job_offer.json
 msgid "Awaiting Response"
 msgstr "Inväntar Svar"
+
+#: frontend/src/views/Login.vue:17
+msgid "Back to Login"
+msgstr "Tillbaka till Inloggning"
 
 #: hrms/hr/doctype/leave_application/leave_application.py:209
 msgid "Backdated Leave Application is restricted. Please set the {} in {}"
@@ -1646,7 +1650,7 @@ msgstr "Förmån belopp för komponent {0} överstiger {1}"
 msgid "Benefit amount of component {0} should be greater than 0"
 msgstr "Förmån belopp för komponent {0} ska vara högre än 0"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:487
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:509
 msgid "Benefit amount {0} for Salary Component {1} should not be greater than maximum benefit amount {2} set in {3}"
 msgstr "Förmån belopp {0} för Lönekomponent {1} ska inte vara högre än högsta förmån belopp {2} som anges i {3}"
 
@@ -1778,7 +1782,7 @@ msgstr "Som standard beräknas slut resultat som medel av mål resultat, återko
 msgid "CTC"
 msgstr "Årslön"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:62
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:63
 msgid "CTC Missing for Employee"
 msgstr "Årslön Saknas för"
 
@@ -1817,15 +1821,15 @@ msgstr "Annullering i Kö"
 msgid "Cannot Modify Time"
 msgstr "Kan inte ändra tid"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:358
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:359
 msgid "Cannot allocate leaves outside the allocation period {0} - {1}"
 msgstr "Kan inte tilldela frånvaro utanför tilldelning period {0} - {1}"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:487
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:488
 msgid "Cannot allocate more leaves due to maximum leave allocation limit of {0} in leave policy assignment"
 msgstr "Kan inte tilldela mer frånvaro på grund av högsta tillåtna frånvaro tilldelning av {0} i frånvaro tilldelning princip"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:479
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:480
 msgid "Cannot allocate more leaves due to maximum leaves allowed limit of {0} in {1} leave type."
 msgstr "Kan inte tilldela mer frånvaro på grund av högst tillåtna gräns för frånvaro av {0} i {1} frånvaro typ."
 
@@ -1946,8 +1950,8 @@ msgstr "Stämpla Ut"
 msgid "Check Vacancies On Job Offer Creation"
 msgstr "Kontrollera Lediga Jobb vid skapande av Jobb Erbjudande"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:492
-#: hrms/hr/utils.py:947
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:516
+#: hrms/hr/utils.py:969
 msgid "Check {0} for more details"
 msgstr "Se {0} för mer detaljer."
 
@@ -2017,7 +2021,7 @@ msgstr "Begärd"
 #. Label of the claimed_amount (Currency) field in DocType 'Employee Benefit
 #. Claim'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
-#: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:80
+#: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:197
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 msgid "Claimed Amount"
 msgstr "Begärd Belopp"
@@ -2287,7 +2291,7 @@ msgstr "Skapar {0}..."
 msgid "Creation Date"
 msgstr "Skapad Datum"
 
-#: hrms/hr/utils.py:956
+#: hrms/hr/utils.py:978
 msgid "Creation Failed"
 msgstr "Skapande Misslyckades"
 
@@ -4086,7 +4090,7 @@ msgstr "Dra Tilldelning"
 msgid "Expire Carry Forwarded Leaves (Days)"
 msgstr "Ta bort Vidarebefordrad Frånvaro (dagar)"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:609
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:610
 msgid "Expire Leaves"
 msgstr "Utgå Frånvaro"
 
@@ -4108,7 +4112,7 @@ msgstr "Förklaring"
 msgid "Exporting..."
 msgstr "Exporterar..."
 
-#: hrms/hr/utils.py:944
+#: hrms/hr/utils.py:966
 msgid "Failed to create/submit {0} for employees:"
 msgstr "Misslyckades med att skapa/godkänna {0} för personal:"
 
@@ -4132,7 +4136,7 @@ msgstr "Misslyckades att skicka meddelande om ombokning av intervju. Konfigurera
 msgid "Failed to setup defaults for country {0}."
 msgstr "Kunde inte ange standard inställningarna för land {0}."
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:489
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:513
 msgid "Failed to submit some leave policy assignments:"
 msgstr "Misslyckades att godkänna några frånvaro princip tilldelningar:"
 
@@ -4160,7 +4164,7 @@ msgstr "Misslyckande Detaljer"
 msgid "Failure Reason"
 msgstr "Misslyckad Anledning"
 
-#: hrms/hr/utils.py:493
+#: hrms/hr/utils.py:497
 msgid "Failure of Automatic Allocation of Earned Leaves"
 msgstr "Fel vid Automatisk Tilldelning av Intjänad Frånvaro"
 
@@ -4394,7 +4398,7 @@ msgstr "För uttagen frånvaro dag, om du fortfarande betalar (säg) 50 % av dag
 msgid "Formula"
 msgstr "Formel"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:229
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:260
 msgid "Formula/Amount"
 msgstr "Formel/Belopp"
 
@@ -4711,7 +4715,7 @@ msgstr "Klagomål Detaljer"
 msgid "Grievance Type"
 msgstr "Klagomål Typ"
 
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:630
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:637
 msgid "Gross Earnings"
 msgstr "Brutto Inkomst"
 
@@ -5214,7 +5218,7 @@ msgstr "Inkomst Skatt Avdrag"
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:148
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:623
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:630
 #: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 #: hrms/workspace_sidebar/tax_&_benefits.json
@@ -5230,11 +5234,11 @@ msgstr "Inkomst Skatt Tabell Övriga Avgifter"
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr "Inkomst Skatt Tabell erfordras eftersom Löneart {0} har skattkomponent {1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1952
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1954
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr "Inkomst Skatt Tabell måste vara aktiv före eller före start datum för Löneperiod Start Datum: {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1940
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1942
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr "Inkomst Skatt Tabell inte angiven i Löneart Tilldelning: {0}"
 
@@ -5242,7 +5246,7 @@ msgstr "Inkomst Skatt Tabell inte angiven i Löneart Tilldelning: {0}"
 msgid "Income Tax Slab: "
 msgstr "Inkomst Skatt Tabell: "
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1948
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1950
 msgid "Income Tax Slab: {0} is disabled"
 msgstr "Inkomst Skatt Tabell: {0} är inaktiverad"
 
@@ -5470,15 +5474,15 @@ msgstr "Ogiltig Extra Lön"
 msgid "Invalid Arrear Component"
 msgstr "Ogiltig Efterskott Komponent"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:503
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:525
 msgid "Invalid Benefit Amounts"
 msgstr "Ogiltiga Förmån Belopp"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:361
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:362
 msgid "Invalid Dates"
 msgstr "Ogiltiga Datum"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2642
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2644
 msgid "Invalid LWP Days Reversed"
 msgstr "Ogiltiga Obetalda Frånvaro Dagar Återförda"
 
@@ -5850,7 +5854,7 @@ msgstr "Nyckel Ansvar Område"
 msgid "Key Result Area"
 msgstr "Nyckel Resultat Område"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2639
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2641
 msgid "LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
 msgstr "Obetalda Frånvaro Dagar Återförda ({0}) stämmer inte med faktiska totala Lönekorrigeringar ({1}) för {2} från {3} till {4}"
 
@@ -6252,7 +6256,7 @@ msgstr "Frånvaro Typ erfordras"
 msgid "Leave Type {0} cannot be allocated since it is leave without pay"
 msgstr "Frånvaro Typ {0} kan inte tilldelas eftersom det är obetald ledighet"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:598
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:599
 msgid "Leave Type {0} cannot be carry-forwarded"
 msgstr "Frånvaro Typ {0} kan inte vidarebefordras"
 
@@ -6304,6 +6308,10 @@ msgstr "Frånvaro för valfri helgdag"
 msgid "Leave of type {0} cannot be longer than {1}."
 msgstr "Frånvaro av typ {0} får inte vara längre än {1}."
 
+#: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:61
+msgid "Leave(s) Allocated"
+msgstr ""
+
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:73
 msgid "Leave(s) Expired"
 msgstr "Frånvaro har gått ut"
@@ -6354,7 +6362,7 @@ msgstr "Frånvaro Efter Justering"
 msgid "Leaves Allocated"
 msgstr "Frånvaro Tilldelad"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:603
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:604
 msgid "Leaves Expired"
 msgstr "Frånvaro Utgången"
 
@@ -6429,7 +6437,7 @@ msgstr "Låneåterbetalning"
 msgid "Loan Repayment Entry"
 msgstr "Låneåterbetalning Post"
 
-#: hrms/hr/utils.py:831
+#: hrms/hr/utils.py:853
 msgid "Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
 msgstr "Lån kan inte återbetalas från lön för personal {0} eftersom lön är i valuta {1}"
 
@@ -6770,11 +6778,11 @@ msgstr "Saknar Avgång Datum"
 msgid "Missing Salary Components"
 msgstr "Lönekomponenter saknas"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1943
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1945
 msgid "Missing Tax Slab"
 msgstr "Inkomst Skatt Tabell saknas"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:313
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:344
 msgid "Missing value for filters"
 msgstr "Saknar värde för filter"
 
@@ -6906,10 +6914,6 @@ msgstr "Ny Återkoppling"
 msgid "New Hires (This Month)"
 msgstr "Nya Anställningar (Denna Månad)"
 
-#: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:61
-msgid "New Leave(s) Allocated"
-msgstr "Ny Frånvaro Tilldelad"
-
 #. Label of the new_leaves_allocated (Float) field in DocType 'Leave
 #. Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
@@ -6943,7 +6947,7 @@ msgstr "Ingen Personal hittades"
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "Ingen Personal hittades för angiven Personal fält värde. '{}': {}"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:136 hrms/hr/utils.py:934
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:136 hrms/hr/utils.py:956
 msgid "No Employees Selected"
 msgstr "Ingen Personal Vald"
 
@@ -7072,7 +7076,7 @@ msgstr "Ingen personal hittades för angivna kriterier:<br>Bolag: {0}<br> Valuta
 msgid "No employees found for the selected criteria"
 msgstr "Ingen personal hittades för valda kriterier"
 
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:71
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:78
 msgid "No employees found with selected filters and active salary structure"
 msgstr "Ingen personal hittades med valda filter och aktiv löneart"
 
@@ -7184,7 +7188,7 @@ msgstr "Obs! Skift kommer inte att skrivas över i befintliga närvaro poster"
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr "Obs! Totalt antal tilldelad frånvaro {0} ska inte vara lägre än redan godkänd frånvaro {1} för period"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2252
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2254
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr "Obs: Lönespecifikation är lösenord skyddad, lösenord för att låsa upp PDF fil är {0} format."
 
@@ -7241,7 +7245,7 @@ msgstr "Antal Innehållna Perioder"
 #. Encashment'
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
 msgid "Number of leaves eligible for encashment based on leave type settings"
-msgstr "Antal Frånvaro som är berättigad till Uttag baserat på Frånvaro Typ Inställningar"
+msgstr "Antal frånvaro dagar berättigade till Uttag baserat på Frånvaro Typ Inställningar"
 
 #: frontend/src/views/Login.vue:105
 msgid "OTP Code"
@@ -7933,7 +7937,7 @@ msgstr "Pågående Frågeformulär"
 msgid "Percent Deduction"
 msgstr "Procent Avdrag"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:252
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:283
 msgid "Percent of CTC (%)"
 msgstr "Procent av Årslön (%)"
 
@@ -8015,7 +8019,7 @@ msgstr "Ange Personal, Bokföring Datum och Bolag innan du hämtar övertid deta
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr "Minska {0} för att undvika att skifttid överlappar sig själv"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2241
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2243
 msgid "Please see attachment"
 msgstr "Se Bilaga"
 
@@ -8069,7 +8073,7 @@ msgstr "Välj CSV fil"
 msgid "Please select a date."
 msgstr "Välj Datum"
 
-#: hrms/hr/utils.py:822
+#: hrms/hr/utils.py:844
 msgid "Please select an Applicant"
 msgstr "Välj Sökande"
 
@@ -8081,7 +8085,7 @@ msgstr "Välj Personal innan du fortsätter."
 msgid "Please select at least one Shift Request to perform this action."
 msgstr "Välj minst en Skift Begäran för att utföra denna åtgärd."
 
-#: hrms/hr/utils.py:933
+#: hrms/hr/utils.py:955
 msgid "Please select at least one employee to perform this action."
 msgstr "Välj minst en i personal för att utföra denna åtgärd."
 
@@ -8159,7 +8163,7 @@ msgstr "Ange datum intervall som är kortare än 90 dagar."
 msgid "Please set account in Salary Component {0}"
 msgstr "Ange konto i Lönekomponent {0}"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:54
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:55
 msgid "Please set cost to company(CTC) for employee {0} in the {1}"
 msgstr "Ange kostnad för bolag (Årslön) för {0} i {1}"
 
@@ -8216,7 +8220,7 @@ msgstr "Ange {0} för Personal: {1}"
 msgid "Please set {0} for the Employee: {1}"
 msgstr "Ange {0} för Personal: {1}"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:312
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:343
 msgid "Please set {0} to get CTC report"
 msgstr "Ange {0} för att skapa Årslön rapport"
 
@@ -8606,7 +8610,7 @@ msgstr "Att minska maximal antal tillåten frånvaro efter tilldelning kan göra
 msgid "Reduction is more than {0}'s available leave balance {1} for leave type {2}"
 msgstr "Minskning är högre än {0} tillgänglig frånvaro saldo {1} för frånvaro typ {2}"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:406
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:407
 #: hrms/hr/doctype/leave_application/leave_application.py:554
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:218
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:141
@@ -8719,7 +8723,7 @@ msgstr "Hyrbil"
 msgid "Repay From Salary"
 msgstr "Återbetala Från Lön"
 
-#: hrms/hr/utils.py:837
+#: hrms/hr/utils.py:859
 msgid "Repay From Salary can be selected only for term loans"
 msgstr "Återbetalning från Lön kan endast väljas för Långfristiga Lån"
 
@@ -8843,8 +8847,8 @@ msgstr "Bonus"
 msgid "Retirement Age (In Years)"
 msgstr "Pensionsålder"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:482
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:490
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:483
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:491
 msgid "Retry Failed"
 msgstr "Försök Misslyckades"
 
@@ -9038,7 +9042,7 @@ msgstr "Lönekomponent Typ"
 msgid "Salary Component for timesheet based payroll."
 msgstr "Lönekomponent för tidrapport baserad lön."
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:476
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:498
 msgid "Salary Component {0} cannot be selected more than once in Employee Benefits"
 msgstr "Lönekomponent {0} kan inte väljas mer än en gång i Personal Förmåner"
 
@@ -9325,7 +9329,7 @@ msgstr "Lönekomponenter av typ Förmånsfond, Extra Förmånsfond eller Förmå
 msgid "Salary components should be part of the Salary Structure."
 msgstr "Lönekomponenter ska vara en del av Löneart."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2662
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2664
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr "Lönespecifikationer är i e-post kö att skickas. Kontrollera {0} för status."
 
@@ -9673,7 +9677,7 @@ msgstr "Stäm av mot Förskott"
 msgid "Settle all Payables and Receivables before submission"
 msgstr "Stäm av alla skulder och fordringar innan godkännade"
 
-#: hrms/hr/utils.py:785
+#: hrms/hr/utils.py:807
 msgid "Shared document with the user {0} with 'Submit' permission"
 msgstr "Delat dokument med användare {0} med \"Godkänn\" behörighet"
 
@@ -10121,7 +10125,7 @@ msgstr "Lönearter är tilldelade"
 msgid "Submission Date"
 msgstr "Godkännande Datum"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:500
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:524
 msgid "Submission Failed"
 msgstr "Godkännade Misslyckad"
 
@@ -10177,7 +10181,7 @@ msgstr "Godkänner Lönespecifikationer..."
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
 msgstr "Dotterbolag har redan planerat för {1} lediga tjänster till en budget på {2}. Bemanningsplan för {0} ska tilldela fler lediga tjänster och budget för {3} än planerat för dotterbolag"
 
-#: hrms/hr/utils.py:961
+#: hrms/hr/utils.py:983
 msgid "Successfully created {0} for employees:"
 msgstr "Skapad {0} för personal:"
 
@@ -10444,7 +10448,7 @@ msgstr "Det finns inga lediga jobb inom bemanning plan {0}"
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
 msgstr "Det finns ingen Löneart tilldelad till {0}. Tilldela Löneart först."
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:426
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:448
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
 msgstr "Det finns ingen personal med Löneart: {0}. Tilldela {1} till personal för att förhandsgranska Lönespecifikation"
 
@@ -10898,7 +10902,7 @@ msgstr "Totalt i Ord"
 msgid "Total in words (Company Currency)"
 msgstr "Totalt I Ord (Bolag Valuta)"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:402
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:403
 msgid "Total leaves allocated cannot exceed annual allocation of {0}."
 msgstr "Totalt tilldelad frånvaro får inte överstiga årlig tilldelning på {0}."
 
@@ -10906,7 +10910,7 @@ msgstr "Totalt tilldelad frånvaro får inte överstiga årlig tilldelning på {
 msgid "Total leaves allocated is mandatory for Leave Type {0}"
 msgstr "Totalt tilldelad frånvaro erfordras för Frånvaro Typ {0}"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:500
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:522
 msgid "Total of all employee benefits cannot be greater that Max Benefits Amount {0}"
 msgstr "Summan av alla personal förmåner kan inte vara högre än Maximal Förmån Belopp {0}"
 
@@ -11049,7 +11053,7 @@ msgstr "Utbildning"
 msgid "Trainings (This Week)"
 msgstr "Utbildningar (Denna Vecka)"
 
-#: hrms/hr/utils.py:808
+#: hrms/hr/utils.py:830
 msgid "Transactions cannot be created for an Inactive Employee {0}."
 msgstr "Transaktioner kan inte skapas för en inaktiv personal {0}."
 
@@ -11632,6 +11636,10 @@ msgstr "Ja, Fortsätt"
 msgid "You are not authorized to approve leaves on Block Dates"
 msgstr "Behörighet saknas för att godkänna frånvaro på Spärrad Datum"
 
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:366
+msgid "You are not permitted to access the CTC report of another employee."
+msgstr ""
+
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:79
 msgid "You are not present all day(s) between compensatory leave request days"
 msgstr "Du är inte närvarande hela dagen/dagarna mellan de dagar du begär kompensation frånvaro för"
@@ -11664,8 +11672,8 @@ msgstr "Du kan inte återföra mer än total antal obetald frånvaro dagar {0}. 
 msgid "You do not have permission to change the Status of a Shift Request."
 msgstr "Du har inte behörighet att ändra status för Skift Begäran."
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:458
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:621
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:459
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:622
 msgid "You do not have permission to complete this action"
 msgstr "Du har inte behörighet att slutföra denna åtgärd"
 
@@ -11910,15 +11918,15 @@ msgstr "{0} är inte tillåtern att  godkänna Intervju Återoppling för Interv
 msgid "{0} is not in Optional Holiday List"
 msgstr "{0} finns inte i valfri Helg Lista"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:396
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:397
 msgid "{0} leaves allocated successfully"
 msgstr "{0} Frånvaro tilldelad"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:604
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:605
 msgid "{0} leaves from allocation for {1} leave type have expired and will be processed during the next scheduled job. It is recommended to expire them now before creating new leave policy assignments."
 msgstr "{0} frånvaro från tilldelning för {1} frånvaro typ har gått ut och kommer att behandlas under nästa schemalagda jobb. Det rekommenderas att radera dem nu innan du skapar nya frånvaro princip tilldelning."
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:391
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:392
 msgid "{0} leaves were manually allocated by {1} on {2}"
 msgstr "{0} ledigheter tilldelades manuellt av {1} {2}"
 
@@ -11959,11 +11967,11 @@ msgstr "{0} kommer att uppdateras för följande Lönearter: {1}."
 msgid "{0} {1} {2}?"
 msgstr "{0} {1} {2}?"
 
-#: hrms/hr/utils.py:466
+#: hrms/hr/utils.py:470
 msgid "{0}. Check error log for more details."
 msgstr "{0}. Kontrollera fellogg för mer information."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2275
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2277
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr "{0}: Personal E-post hittades inte, därför skickades inte E-post"
 

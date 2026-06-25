@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-06-21 10:42+0000\n"
-"PO-Revision-Date: 2026-06-22 20:40\n"
+"POT-Creation-Date: 2026-06-24 17:40+0000\n"
+"PO-Revision-Date: 2026-06-24 20:42\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Chinese Simplified\n"
 "MIME-Version: 1.0\n"
@@ -587,7 +587,7 @@ msgstr "组织者地址"
 msgid "Adjust Allocation"
 msgstr "调整分配"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:453
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:454
 msgid "Adjustment Created Successfully"
 msgstr "调整项创建成功"
 
@@ -709,11 +709,11 @@ msgstr "分配天数超过假期类型{1}允许的最大值{0}"
 msgid "Allocation to Adjust"
 msgstr "待调整分配"
 
-#: hrms/hr/utils.py:433
+#: hrms/hr/utils.py:437
 msgid "Allocation was skipped due to exceeding annual allocation set in leave policy"
 msgstr ""
 
-#: hrms/hr/utils.py:441
+#: hrms/hr/utils.py:445
 msgid "Allocation was skipped due to maximum leave allocation limit set in leave type. Please increase the limit and retry failed allocation."
 msgstr ""
 
@@ -864,7 +864,7 @@ msgstr "存在关联的考勤记录。修改时间前请先取消考勤记录"
 msgid "Annual Allocation"
 msgstr "年度分配"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:407
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:408
 msgid "Annual Allocation Exceeded"
 msgstr "超出年度分配额度"
 
@@ -1514,7 +1514,7 @@ msgstr "自动假期折现"
 msgid "Automated Based on Goal Progress"
 msgstr "基于目标进度自动化"
 
-#: hrms/hr/utils.py:494
+#: hrms/hr/utils.py:498
 msgid "Automatic Leave Allocation has failed for the following Earned Leaves: {0}. Please check {1} for more details."
 msgstr ""
 
@@ -1575,6 +1575,10 @@ msgstr "平均利用率（仅计费）"
 #: hrms/hr/doctype/job_offer/job_offer.json
 msgid "Awaiting Response"
 msgstr "等待回复"
+
+#: frontend/src/views/Login.vue:17
+msgid "Back to Login"
+msgstr "返回登录"
 
 #: hrms/hr/doctype/leave_application/leave_application.py:209
 msgid "Backdated Leave Application is restricted. Please set the {} in {}"
@@ -1646,7 +1650,7 @@ msgstr "组件{0}的福利金额超过{1}"
 msgid "Benefit amount of component {0} should be greater than 0"
 msgstr "组件{0}的福利金额应大于0"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:487
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:509
 msgid "Benefit amount {0} for Salary Component {1} should not be greater than maximum benefit amount {2} set in {3}"
 msgstr "工资组件{1}的福利金额{0}不应大于在{3}中设置的最大福利金额{2}"
 
@@ -1778,7 +1782,7 @@ msgstr "默认最终得分为目标得分、反馈得分和自评得分的平均
 msgid "CTC"
 msgstr "人力总成本"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:62
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:63
 msgid "CTC Missing for Employee"
 msgstr ""
 
@@ -1817,15 +1821,15 @@ msgstr "取消已排队"
 msgid "Cannot Modify Time"
 msgstr "不可修改时间"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:358
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:359
 msgid "Cannot allocate leaves outside the allocation period {0} - {1}"
 msgstr "不可在分配期间{0}-{1}外分配假期"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:487
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:488
 msgid "Cannot allocate more leaves due to maximum leave allocation limit of {0} in leave policy assignment"
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:479
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:480
 msgid "Cannot allocate more leaves due to maximum leaves allowed limit of {0} in {1} leave type."
 msgstr ""
 
@@ -1946,8 +1950,8 @@ msgstr "签退"
 msgid "Check Vacancies On Job Offer Creation"
 msgstr "创建录用通知时检查空缺"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:492
-#: hrms/hr/utils.py:947
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:516
+#: hrms/hr/utils.py:969
 msgid "Check {0} for more details"
 msgstr "查看{0}获取详情"
 
@@ -2017,7 +2021,7 @@ msgstr "已申报"
 #. Label of the claimed_amount (Currency) field in DocType 'Employee Benefit
 #. Claim'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
-#: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:80
+#: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:197
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 msgid "Claimed Amount"
 msgstr "申报金额"
@@ -2287,7 +2291,7 @@ msgstr "正在创建{0}..."
 msgid "Creation Date"
 msgstr "创建日期"
 
-#: hrms/hr/utils.py:956
+#: hrms/hr/utils.py:978
 msgid "Creation Failed"
 msgstr "创建失败"
 
@@ -4086,7 +4090,7 @@ msgstr "分配到期"
 msgid "Expire Carry Forwarded Leaves (Days)"
 msgstr "结转假期有效期（天）"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:609
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:610
 msgid "Expire Leaves"
 msgstr "过期假期处理"
 
@@ -4108,7 +4112,7 @@ msgstr "说明"
 msgid "Exporting..."
 msgstr "导出中..."
 
-#: hrms/hr/utils.py:944
+#: hrms/hr/utils.py:966
 msgid "Failed to create/submit {0} for employees:"
 msgstr "为员工创建/提交{0}失败："
 
@@ -4132,7 +4136,7 @@ msgstr "无法发送面试改期通知。请配置您的邮箱账户。"
 msgid "Failed to setup defaults for country {0}."
 msgstr "设置国家{0}默认值失败"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:489
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:513
 msgid "Failed to submit some leave policy assignments:"
 msgstr "部分休假政策分配提交失败："
 
@@ -4160,7 +4164,7 @@ msgstr "故障详情"
 msgid "Failure Reason"
 msgstr ""
 
-#: hrms/hr/utils.py:493
+#: hrms/hr/utils.py:497
 msgid "Failure of Automatic Allocation of Earned Leaves"
 msgstr ""
 
@@ -4394,7 +4398,7 @@ msgstr "若员工请假当天仍支付（例如）50%日薪，则在此字段输
 msgid "Formula"
 msgstr "公式"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:229
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:260
 msgid "Formula/Amount"
 msgstr ""
 
@@ -4711,7 +4715,7 @@ msgstr "申诉详情"
 msgid "Grievance Type"
 msgstr "申诉类型"
 
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:630
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:637
 msgid "Gross Earnings"
 msgstr "收益总额"
 
@@ -5214,7 +5218,7 @@ msgstr "所得税扣除项"
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:148
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:623
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:630
 #: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 #: hrms/workspace_sidebar/tax_&_benefits.json
@@ -5230,11 +5234,11 @@ msgstr "所得税税级其他费用"
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr "薪资结构{0}包含税费组件{1}，必须设置所得税税级"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1952
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1954
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr "所得税税级生效日期不得晚于薪资周期开始日期{0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1940
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1942
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr "薪资结构分配{0}未设置所得税税级"
 
@@ -5242,7 +5246,7 @@ msgstr "薪资结构分配{0}未设置所得税税级"
 msgid "Income Tax Slab: "
 msgstr "所得税税级: "
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1948
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1950
 msgid "Income Tax Slab: {0} is disabled"
 msgstr "所得税税级{0}已禁用"
 
@@ -5470,15 +5474,15 @@ msgstr "无效附加薪资"
 msgid "Invalid Arrear Component"
 msgstr "无效欠薪组件"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:503
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:525
 msgid "Invalid Benefit Amounts"
 msgstr "无效福利金额"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:361
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:362
 msgid "Invalid Dates"
 msgstr "无效日期"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2642
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2644
 msgid "Invalid LWP Days Reversed"
 msgstr "无效LWP天数冲销"
 
@@ -5850,7 +5854,7 @@ msgstr "关键责任区"
 msgid "Key Result Area"
 msgstr "关键成果领域"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2639
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2641
 msgid "LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
 msgstr "员工{2}从{3}到{4}的LWP天数冲销（{0}）与实际薪资调整总额（{1}）不匹配"
 
@@ -6252,7 +6256,7 @@ msgstr "必须选择假期类型"
 msgid "Leave Type {0} cannot be allocated since it is leave without pay"
 msgstr "假期类型{0}为无薪假不可分配"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:598
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:599
 msgid "Leave Type {0} cannot be carry-forwarded"
 msgstr "假期类型{0}不可结转"
 
@@ -6304,6 +6308,10 @@ msgstr ""
 msgid "Leave of type {0} cannot be longer than {1}."
 msgstr "{0}类型假期不可超过{1}天"
 
+#: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:61
+msgid "Leave(s) Allocated"
+msgstr ""
+
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:73
 msgid "Leave(s) Expired"
 msgstr "过期假期"
@@ -6354,7 +6362,7 @@ msgstr "调整后假期"
 msgid "Leaves Allocated"
 msgstr "已分配假期"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:603
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:604
 msgid "Leaves Expired"
 msgstr "已过期假期"
 
@@ -6429,7 +6437,7 @@ msgstr "贷款还款"
 msgid "Loan Repayment Entry"
 msgstr "贷款还款分录"
 
-#: hrms/hr/utils.py:831
+#: hrms/hr/utils.py:853
 msgid "Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
 msgstr "员工{0}薪资使用{1}币种处理，无法通过薪资扣款还贷"
 
@@ -6770,11 +6778,11 @@ msgstr "缺失离职日期"
 msgid "Missing Salary Components"
 msgstr "缺少工资组件"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1943
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1945
 msgid "Missing Tax Slab"
 msgstr "缺失税级"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:313
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:344
 msgid "Missing value for filters"
 msgstr ""
 
@@ -6906,10 +6914,6 @@ msgstr "新建反馈"
 msgid "New Hires (This Month)"
 msgstr "新入职人数（本月）"
 
-#: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:61
-msgid "New Leave(s) Allocated"
-msgstr "新分配假期"
-
 #. Label of the new_leaves_allocated (Float) field in DocType 'Leave
 #. Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
@@ -6943,7 +6947,7 @@ msgstr "未找到员工"
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "根据员工字段值'{}': {} 未找到对应员工"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:136 hrms/hr/utils.py:934
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:136 hrms/hr/utils.py:956
 msgid "No Employees Selected"
 msgstr "未选择员工"
 
@@ -7072,7 +7076,7 @@ msgstr "未找到符合以下条件的员工：<br>公司：{0}<br>币种：{1}<
 msgid "No employees found for the selected criteria"
 msgstr "未找到符合筛选条件的员工"
 
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:71
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:78
 msgid "No employees found with selected filters and active salary structure"
 msgstr "未找到符合筛选条件且激活薪资结构的员工"
 
@@ -7184,7 +7188,7 @@ msgstr "注意：现有考勤记录中的班次不会被覆盖"
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr "注意：期间总分配假期{0}不得少于已批准假期{1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2252
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2254
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr "注意：工资条PDF密码格式为{0}"
 
@@ -7933,7 +7937,7 @@ msgstr "待处理问卷"
 msgid "Percent Deduction"
 msgstr "百分比扣除"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:252
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:283
 msgid "Percent of CTC (%)"
 msgstr ""
 
@@ -8015,7 +8019,7 @@ msgstr "请在获取加班明细前填写员工、过账日期和公司。"
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr "请调整{0}以避免班次时间重叠"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2241
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2243
 msgid "Please see attachment"
 msgstr "请查看附件"
 
@@ -8069,7 +8073,7 @@ msgstr "请选择CSV文件"
 msgid "Please select a date."
 msgstr "请选择日期"
 
-#: hrms/hr/utils.py:822
+#: hrms/hr/utils.py:844
 msgid "Please select an Applicant"
 msgstr "请选择申请人"
 
@@ -8081,7 +8085,7 @@ msgstr ""
 msgid "Please select at least one Shift Request to perform this action."
 msgstr "请至少选择一个班次申请执行此操作"
 
-#: hrms/hr/utils.py:933
+#: hrms/hr/utils.py:955
 msgid "Please select at least one employee to perform this action."
 msgstr "请至少选择一名员工执行此操作"
 
@@ -8159,7 +8163,7 @@ msgstr "请设置小于90天的日期范围。"
 msgid "Please set account in Salary Component {0}"
 msgstr "请在薪资组件{0}设置账户"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:54
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:55
 msgid "Please set cost to company(CTC) for employee {0} in the {1}"
 msgstr ""
 
@@ -8216,7 +8220,7 @@ msgstr "请为员工{1}设置{0}"
 msgid "Please set {0} for the Employee: {1}"
 msgstr "请为员工{1}设置{0}"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:312
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:343
 msgid "Please set {0} to get CTC report"
 msgstr ""
 
@@ -8606,7 +8610,7 @@ msgstr "分配后减少允许的最大假期天数可能导致调度程序分配
 msgid "Reduction is more than {0}'s available leave balance {1} for leave type {2}"
 msgstr "减少天数超过{0}在假期类型{2}下的可用假期余额{1}"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:406
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:407
 #: hrms/hr/doctype/leave_application/leave_application.py:554
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:218
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:141
@@ -8719,7 +8723,7 @@ msgstr "租用车辆"
 msgid "Repay From Salary"
 msgstr "从工资中偿还"
 
-#: hrms/hr/utils.py:837
+#: hrms/hr/utils.py:859
 msgid "Repay From Salary can be selected only for term loans"
 msgstr "仅定期贷款可选择从工资中偿还"
 
@@ -8843,8 +8847,8 @@ msgstr "留任奖金"
 msgid "Retirement Age (In Years)"
 msgstr "退休年龄（年）"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:482
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:490
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:483
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:491
 msgid "Retry Failed"
 msgstr ""
 
@@ -9038,7 +9042,7 @@ msgstr "薪资组件类型"
 msgid "Salary Component for timesheet based payroll."
 msgstr "基于工时表的薪资组件"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:476
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:498
 msgid "Salary Component {0} cannot be selected more than once in Employee Benefits"
 msgstr "工资组件{0}在员工福利中不能重复选择"
 
@@ -9325,7 +9329,7 @@ msgstr "未设置公积金、附加公积金或公积金贷款类型的工资组
 msgid "Salary components should be part of the Salary Structure."
 msgstr "薪资组件应属于薪资结构的一部分"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2662
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2664
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr "工资条邮件已加入发送队列，查看{0}了解状态"
 
@@ -9673,7 +9677,7 @@ msgstr "冲抵预支款"
 msgid "Settle all Payables and Receivables before submission"
 msgstr "提交前需结清所有应收应付"
 
-#: hrms/hr/utils.py:785
+#: hrms/hr/utils.py:807
 msgid "Shared document with the user {0} with 'Submit' permission"
 msgstr "已与用户{0}共享文档并授予“提交”权限"
 
@@ -10121,7 +10125,7 @@ msgstr "结构分配成功"
 msgid "Submission Date"
 msgstr "提交日期"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:500
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:524
 msgid "Submission Failed"
 msgstr "提交失败"
 
@@ -10177,7 +10181,7 @@ msgstr "正在提交工资条..."
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
 msgstr "子公司已规划{1}个空缺岗位，预算{2}。{0}的人员配置计划应为{3}分配更多空缺和预算"
 
-#: hrms/hr/utils.py:961
+#: hrms/hr/utils.py:983
 msgid "Successfully created {0} for employees:"
 msgstr "成功为员工创建{0}："
 
@@ -10444,7 +10448,7 @@ msgstr "人员配置计划{0}下无空缺岗位"
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:426
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:448
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
 msgstr "无员工使用薪资结构{0}。分配{1}给员工以预览工资条"
 
@@ -10898,7 +10902,7 @@ msgstr "大写金额"
 msgid "Total in words (Company Currency)"
 msgstr "大写金额（公司币种）"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:402
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:403
 msgid "Total leaves allocated cannot exceed annual allocation of {0}."
 msgstr "分配假期总数不可超过年度分配额{0}"
 
@@ -10906,7 +10910,7 @@ msgstr "分配假期总数不可超过年度分配额{0}"
 msgid "Total leaves allocated is mandatory for Leave Type {0}"
 msgstr "假期类型{0}必须填写分配假期总数"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:500
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:522
 msgid "Total of all employee benefits cannot be greater that Max Benefits Amount {0}"
 msgstr "所有员工福利总额不能大于最大福利金额{0}"
 
@@ -11049,7 +11053,7 @@ msgstr "培训记录"
 msgid "Trainings (This Week)"
 msgstr "培训次数（本周）"
 
-#: hrms/hr/utils.py:808
+#: hrms/hr/utils.py:830
 msgid "Transactions cannot be created for an Inactive Employee {0}."
 msgstr "无法为离职员工{0}创建交易记录"
 
@@ -11632,6 +11636,10 @@ msgstr "确定继续"
 msgid "You are not authorized to approve leaves on Block Dates"
 msgstr "您无权批准禁假日期内的请假"
 
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:366
+msgid "You are not permitted to access the CTC report of another employee."
+msgstr ""
+
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:79
 msgid "You are not present all day(s) between compensatory leave request days"
 msgstr "调休申请日期间您未全天出勤"
@@ -11664,8 +11672,8 @@ msgstr "您不能冲销超过总LWP天数{0}。您已为该员工冲销{1}天。
 msgid "You do not have permission to change the Status of a Shift Request."
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:458
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:621
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:459
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:622
 msgid "You do not have permission to complete this action"
 msgstr "您无权限执行此操作"
 
@@ -11910,15 +11918,15 @@ msgstr "{0}无权提交面试{1}的反馈"
 msgid "{0} is not in Optional Holiday List"
 msgstr "{0}不在可选假期列表中"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:396
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:397
 msgid "{0} leaves allocated successfully"
 msgstr "成功分配{0}天假期"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:604
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:605
 msgid "{0} leaves from allocation for {1} leave type have expired and will be processed during the next scheduled job. It is recommended to expire them now before creating new leave policy assignments."
 msgstr "针对{1}假期类型分配的{0}天假期已过期，系统将在下次计划任务中自动处理。建议在新建假期政策分配前立即执行过期操作。"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:391
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:392
 msgid "{0} leaves were manually allocated by {1} on {2}"
 msgstr "{1}于{2}手动分配了{0}天假期"
 
@@ -11959,11 +11967,11 @@ msgstr "将更新以下薪资结构{1}的{0}"
 msgid "{0} {1} {2}?"
 msgstr "{0} {1} {2}?"
 
-#: hrms/hr/utils.py:466
+#: hrms/hr/utils.py:470
 msgid "{0}. Check error log for more details."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2275
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2277
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr "{0}：未找到员工邮箱，邮件未发送"
 

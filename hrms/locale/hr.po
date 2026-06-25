@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-06-21 10:42+0000\n"
-"PO-Revision-Date: 2026-06-22 20:41\n"
+"POT-Creation-Date: 2026-06-24 17:40+0000\n"
+"PO-Revision-Date: 2026-06-24 20:43\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Croatian\n"
 "MIME-Version: 1.0\n"
@@ -587,7 +587,7 @@ msgstr "Adresa Organizatora"
 msgid "Adjust Allocation"
 msgstr "Podesi Dodjelu"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:453
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:454
 msgid "Adjustment Created Successfully"
 msgstr "Prilagodba uspješno kreirana"
 
@@ -709,11 +709,11 @@ msgstr "Dodjela je veća od maksimalno dopuštenog {0} za vrstu dopusta {1}"
 msgid "Allocation to Adjust"
 msgstr "Dodjela za Prilagodbu"
 
-#: hrms/hr/utils.py:433
+#: hrms/hr/utils.py:437
 msgid "Allocation was skipped due to exceeding annual allocation set in leave policy"
 msgstr "Dodjela je preskočena zbog prekoračenja godišnje dodjele određene u pravilima o dopustu"
 
-#: hrms/hr/utils.py:441
+#: hrms/hr/utils.py:445
 msgid "Allocation was skipped due to maximum leave allocation limit set in leave type. Please increase the limit and retry failed allocation."
 msgstr "Dodjela je preskočena zbog maksimalnog ograničenja dodjele dopusta postavljenog u vrsti dopusta. Povećajte ograničenje i ponovno pokušajte neuspjelu dodjelu."
 
@@ -864,7 +864,7 @@ msgstr "Zapis prisutnosti povezan je s ovom prijavom. Otkaži prisutnost prije i
 msgid "Annual Allocation"
 msgstr "Godišnja Dodjela"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:407
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:408
 msgid "Annual Allocation Exceeded"
 msgstr "Godišnja Dodjela je premašena"
 
@@ -1514,7 +1514,7 @@ msgstr "Automatska Naplata Odsustva"
 msgid "Automated Based on Goal Progress"
 msgstr "Automatizirano na osnovu Napretka Cilja"
 
-#: hrms/hr/utils.py:494
+#: hrms/hr/utils.py:498
 msgid "Automatic Leave Allocation has failed for the following Earned Leaves: {0}. Please check {1} for more details."
 msgstr "Automatska dodjela dopusta nije uspjela za sljedeće zarađene dopuste: {0}. Za više detalja pogledajte {1}."
 
@@ -1575,6 +1575,10 @@ msgstr "Prosječna Iskorištenost (Fakturisano)"
 #: hrms/hr/doctype/job_offer/job_offer.json
 msgid "Awaiting Response"
 msgstr "Čeka se Odgovor"
+
+#: frontend/src/views/Login.vue:17
+msgid "Back to Login"
+msgstr "Nazad na prijavu"
 
 #: hrms/hr/doctype/leave_application/leave_application.py:209
 msgid "Backdated Leave Application is restricted. Please set the {} in {}"
@@ -1646,7 +1650,7 @@ msgstr "Iznos komponente naknade {0} prelazi {1}"
 msgid "Benefit amount of component {0} should be greater than 0"
 msgstr "Iznos komponente naknade {0} trebao bi biti veći od 0"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:487
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:509
 msgid "Benefit amount {0} for Salary Component {1} should not be greater than maximum benefit amount {2} set in {3}"
 msgstr "Iznos naknade {0} za komponentu plaće {1} ne smije biti veći od maksimalnog iznosa naknade {2} postavljenog u {3}"
 
@@ -1778,7 +1782,7 @@ msgstr "Prema standard postavkama, Konačni Rezultat izračunava se kao prosjek 
 msgid "CTC"
 msgstr "Godišnja Plaća"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:62
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:63
 msgid "CTC Missing for Employee"
 msgstr "Nedostaje Godišnja Plaća za Osoblje"
 
@@ -1817,15 +1821,15 @@ msgstr "Otkazivanje u redu za čekanje"
 msgid "Cannot Modify Time"
 msgstr "Nije moguće promijeniti vrijeme"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:358
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:359
 msgid "Cannot allocate leaves outside the allocation period {0} - {1}"
 msgstr "Nije moguće dodijeliti odsustvo izvan perioda dodjele {0} - {1}"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:487
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:488
 msgid "Cannot allocate more leaves due to maximum leave allocation limit of {0} in leave policy assignment"
 msgstr "Nije moguće dodijeliti više dopusta zbog maksimalnog ograničenja dodjele dopusta od {0} u dodjeli pravila o dopustu"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:479
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:480
 msgid "Cannot allocate more leaves due to maximum leaves allowed limit of {0} in {1} leave type."
 msgstr "Nije moguće dodijeliti više dopusta zbog maksimalnog dopuštenog broja dopusta od {0} u vrsti dopusta {1}."
 
@@ -1946,8 +1950,8 @@ msgstr "Odjavi se"
 msgid "Check Vacancies On Job Offer Creation"
 msgstr "Provjeri Slobodna Radna Mjesta kod kreiranja Ponude za Posao"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:492
-#: hrms/hr/utils.py:947
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:516
+#: hrms/hr/utils.py:969
 msgid "Check {0} for more details"
 msgstr "Provjerite {0} za više detalja"
 
@@ -2017,7 +2021,7 @@ msgstr "Zatraženo"
 #. Label of the claimed_amount (Currency) field in DocType 'Employee Benefit
 #. Claim'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
-#: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:80
+#: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:197
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 msgid "Claimed Amount"
 msgstr "Zahtjevani Iznos"
@@ -2287,7 +2291,7 @@ msgstr "Kreiranje {0}..."
 msgid "Creation Date"
 msgstr "Datum Kreiranja"
 
-#: hrms/hr/utils.py:956
+#: hrms/hr/utils.py:978
 msgid "Creation Failed"
 msgstr "Kreiranje nije uspjelo"
 
@@ -4086,7 +4090,7 @@ msgstr "Povuci Dodjelu"
 msgid "Expire Carry Forwarded Leaves (Days)"
 msgstr "Istek Proslijeđenog Odsustva (Dana)"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:609
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:610
 msgid "Expire Leaves"
 msgstr "Istekni Odsustvo"
 
@@ -4108,7 +4112,7 @@ msgstr "Objašnjenje"
 msgid "Exporting..."
 msgstr "Eksportiranje u toku..."
 
-#: hrms/hr/utils.py:944
+#: hrms/hr/utils.py:966
 msgid "Failed to create/submit {0} for employees:"
 msgstr "Nije uspjelo kreiranje/podnošenje {0} za:"
 
@@ -4132,7 +4136,7 @@ msgstr "Nije uspjelo slanje obavještenja o ponovnom rasporedu intervjua. Konfig
 msgid "Failed to setup defaults for country {0}."
 msgstr "Postavljanje standard postavki za zemlju {0} nije uspjelo."
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:489
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:513
 msgid "Failed to submit some leave policy assignments:"
 msgstr "Nije uspjelo slanje nekih dodjela pravila o odsustvu:"
 
@@ -4160,7 +4164,7 @@ msgstr "Detalji o Neuspjehu"
 msgid "Failure Reason"
 msgstr "Razlog Neuspjeha"
 
-#: hrms/hr/utils.py:493
+#: hrms/hr/utils.py:497
 msgid "Failure of Automatic Allocation of Earned Leaves"
 msgstr "Neuspjeh Automatske Dodjele Zarađenog Dopusta"
 
@@ -4394,7 +4398,7 @@ msgstr "Za dan uzetog odsustva, ako i dalje plaćate (recimo) 50% dnevne plate, 
 msgid "Formula"
 msgstr "Formula"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:229
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:260
 msgid "Formula/Amount"
 msgstr "Formula/Iznos"
 
@@ -4711,7 +4715,7 @@ msgstr "Detalji Žalbe"
 msgid "Grievance Type"
 msgstr "Tip Žalbe"
 
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:630
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:637
 msgid "Gross Earnings"
 msgstr "Bruto Zarada"
 
@@ -5214,7 +5218,7 @@ msgstr "Odbici Poreza na Platu"
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:148
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:623
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:630
 #: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 #: hrms/workspace_sidebar/tax_&_benefits.json
@@ -5230,11 +5234,11 @@ msgstr "Tabela Porez na Platu Ostale Naknade"
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr "Tabela Poreza na Platu je obavezna jer Struktura Plate {0} ima poresku komponentu {1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1952
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1954
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr "Tabela Poreza na Platu mora biti na snazi na ili prije datuma početka obračunskog perioda: {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1940
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1942
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr "Tabela Poreza na Plaću nije postavljena u Dodjeli Strukture Plaća: {0}"
 
@@ -5242,7 +5246,7 @@ msgstr "Tabela Poreza na Plaću nije postavljena u Dodjeli Strukture Plaća: {0}
 msgid "Income Tax Slab: "
 msgstr "Tablica Poreza na Plaću: "
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1948
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1950
 msgid "Income Tax Slab: {0} is disabled"
 msgstr "Tabela Poreza na Platu: {0} je onemogućena"
 
@@ -5470,15 +5474,15 @@ msgstr "Nevažeća Dodatna Plata"
 msgid "Invalid Arrear Component"
 msgstr "Nevažeća komponenta zaostataka"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:503
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:525
 msgid "Invalid Benefit Amounts"
 msgstr "Nevažeći Iznosi Pogodnosti"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:361
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:362
 msgid "Invalid Dates"
 msgstr "Nevažeći Datumi"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2642
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2644
 msgid "Invalid LWP Days Reversed"
 msgstr "Nevažeći neplačeni dani su poništeni"
 
@@ -5850,7 +5854,7 @@ msgstr "Ključno Polje Odgovornosti"
 msgid "Key Result Area"
 msgstr "Ključno Polje Rezultata"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2639
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2641
 msgid "LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
 msgstr "Necažeči neplaćeni dani ({0}) ne odgovaraju stvarnom ukupnom iznosu ispravaka plaća ({1}) za {2} od {3} do {4}"
 
@@ -6252,7 +6256,7 @@ msgstr "Tip Odsustva je obavezan"
 msgid "Leave Type {0} cannot be allocated since it is leave without pay"
 msgstr "Tip Odsustva {0} ne može se dodijeliti jer je to neplaćeno odsustvo"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:598
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:599
 msgid "Leave Type {0} cannot be carry-forwarded"
 msgstr "Tip Odsustva {0} ne može se prenijeti naprijed"
 
@@ -6304,6 +6308,10 @@ msgstr "Odsustvo za neobavezni preznik"
 msgid "Leave of type {0} cannot be longer than {1}."
 msgstr "Odsustvo tipa {0} ne može biti duže od {1}."
 
+#: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:61
+msgid "Leave(s) Allocated"
+msgstr ""
+
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:73
 msgid "Leave(s) Expired"
 msgstr "Odsustvo(i) je isteklo"
@@ -6354,7 +6362,7 @@ msgstr "Odsustvo Nakon Prilagodbe"
 msgid "Leaves Allocated"
 msgstr "Odsustvo Dodjeljeno"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:603
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:604
 msgid "Leaves Expired"
 msgstr "Odsustvo Isteklo"
 
@@ -6429,7 +6437,7 @@ msgstr "Otplata Kredita"
 msgid "Loan Repayment Entry"
 msgstr "Upis Otplate Kredita"
 
-#: hrms/hr/utils.py:831
+#: hrms/hr/utils.py:853
 msgid "Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
 msgstr "Kredit se ne može otplatiti od plaće {0} jer je plaća obrađena u valuti {1}"
 
@@ -6770,11 +6778,11 @@ msgstr "Nedostaje Datum Otkaza"
 msgid "Missing Salary Components"
 msgstr "Nedostaju Komponente Plaće"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1943
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1945
 msgid "Missing Tax Slab"
 msgstr "Nedostaje Porezna Tabela"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:313
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:344
 msgid "Missing value for filters"
 msgstr "Nedostaje vrijednost za filtere"
 
@@ -6906,10 +6914,6 @@ msgstr "Nova Povratna Informacija"
 msgid "New Hires (This Month)"
 msgstr "Novi Zaposlenici (Ovaj Mjesec)"
 
-#: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:61
-msgid "New Leave(s) Allocated"
-msgstr "Novo Odsustvo Dodijeljeno"
-
 #. Label of the new_leaves_allocated (Float) field in DocType 'Leave
 #. Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
@@ -6943,7 +6947,7 @@ msgstr "Osoblje nije Pronađeno"
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "Nije pronađeno osoblje za datu vrijednost polja '{}': {}"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:136 hrms/hr/utils.py:934
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:136 hrms/hr/utils.py:956
 msgid "No Employees Selected"
 msgstr "Nema Odabranog Osoblja"
 
@@ -7072,7 +7076,7 @@ msgstr "Nije pronađeo osoblje za navedene kriterije:<br>Tvrtka: {0}<br> Valuta:
 msgid "No employees found for the selected criteria"
 msgstr "Osoblje nije pronađeno za odabrane kriterije"
 
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:71
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:78
 msgid "No employees found with selected filters and active salary structure"
 msgstr "Osoblje nije pronađeno sa odabranim filterima i aktivnom strukturom plaće"
 
@@ -7184,7 +7188,7 @@ msgstr "Napomena: Smjena neće biti prepisana u postojećem zapisu prisutnosti"
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr "Napomena: Ukupan broj dodijeljenog odsustva {0} ne bi trebao biti manji od već odobrenog odsustva {1} za period"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2252
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2254
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr "Napomena: Vaš platni list je zaštićen lozinkom, lozinka za otključavanje PDF-a je formata {0}."
 
@@ -7933,7 +7937,7 @@ msgstr "Upitnici na Čekanju"
 msgid "Percent Deduction"
 msgstr "Postotak Odbitka"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:252
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:283
 msgid "Percent of CTC (%)"
 msgstr "Postotak Godišnje Plaće (%)"
 
@@ -8015,7 +8019,7 @@ msgstr "Ispuni podatke za osoblje, datum registracije i tvrtku prije preuzimanja
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr "Smanji {0} kako biste izbjegli preklapanje vremena smjene sa samom sobom"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2241
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2243
 msgid "Please see attachment"
 msgstr "Pogledaj Prilog"
 
@@ -8069,7 +8073,7 @@ msgstr "Odaberi csv datoteku"
 msgid "Please select a date."
 msgstr "Odaberi Datum."
 
-#: hrms/hr/utils.py:822
+#: hrms/hr/utils.py:844
 msgid "Please select an Applicant"
 msgstr "Odaberi Kandidata"
 
@@ -8081,7 +8085,7 @@ msgstr "Odaberi Osoblje prije nastavka."
 msgid "Please select at least one Shift Request to perform this action."
 msgstr "Odaberi barem jedan Zahtjev Smjene da izvršite ovu radnju."
 
-#: hrms/hr/utils.py:933
+#: hrms/hr/utils.py:955
 msgid "Please select at least one employee to perform this action."
 msgstr "Navedi najmanje jedno iz personala da izvršite ovu radnju."
 
@@ -8159,7 +8163,7 @@ msgstr "Postavi raspon datuma kraći od 90 dana."
 msgid "Please set account in Salary Component {0}"
 msgstr "Postavi Račun u Komponenti Plate {0}"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:54
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:55
 msgid "Please set cost to company(CTC) for employee {0} in the {1}"
 msgstr "Postavi trošak za tvrtku (Godišnja Plaća) za {0} u {1}"
 
@@ -8216,7 +8220,7 @@ msgstr "Postavi {0} za Personal {1}"
 msgid "Please set {0} for the Employee: {1}"
 msgstr "Postavi {0} za Personal {1}"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:312
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:343
 msgid "Please set {0} to get CTC report"
 msgstr "Postavi {0} za preuzimanje izvješća godišnje plaće"
 
@@ -8606,7 +8610,7 @@ msgstr "Smanjenje maksimalnog dopuštenog broja dopusta nakon dodjele može uzro
 msgid "Reduction is more than {0}'s available leave balance {1} for leave type {2}"
 msgstr "Smanjenje je veće od {0} dostupnog stanja dopusta {1} za vrstu dopusta {2}"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:406
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:407
 #: hrms/hr/doctype/leave_application/leave_application.py:554
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:218
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:141
@@ -8719,7 +8723,7 @@ msgstr "Iznajmljeni Automobil"
 msgid "Repay From Salary"
 msgstr "Otplati od Plate"
 
-#: hrms/hr/utils.py:837
+#: hrms/hr/utils.py:859
 msgid "Repay From Salary can be selected only for term loans"
 msgstr "Otplati od Plate može se odabrati samo za oročene kredite"
 
@@ -8843,8 +8847,8 @@ msgstr "Bonus Zadržavanja"
 msgid "Retirement Age (In Years)"
 msgstr "Dob za Penzionisanje (u Godinama)"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:482
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:490
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:483
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:491
 msgid "Retry Failed"
 msgstr "Ponovni pokušaj nije uspio"
 
@@ -9038,7 +9042,7 @@ msgstr "Tip Komponente Plate"
 msgid "Salary Component for timesheet based payroll."
 msgstr "Komponenta Plate za Obračun Plate na osnovu Radnog Lista."
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:476
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:498
 msgid "Salary Component {0} cannot be selected more than once in Employee Benefits"
 msgstr "Komponenta plaće {0} ne može se odabrati više od jednom u Pogodnostima"
 
@@ -9325,7 +9329,7 @@ msgstr "Komponente plaće tipa Provident fond, Dodatni Provident fond ili Zajam 
 msgid "Salary components should be part of the Salary Structure."
 msgstr "Komponente Plate trebaju biti dio Strukture Plate."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2662
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2664
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr "Slanje Platnih Listi e-poštom stavljeni su u red za slanje. Provjerite {0} za status."
 
@@ -9673,7 +9677,7 @@ msgstr "Izmiri naspram Predujma"
 msgid "Settle all Payables and Receivables before submission"
 msgstr "Izmiri sve Obaveze i Potraživanja prije podnošenja"
 
-#: hrms/hr/utils.py:785
+#: hrms/hr/utils.py:807
 msgid "Shared document with the user {0} with 'Submit' permission"
 msgstr "Dokument je podijeljen s korisnikom {0} s dozvolom 'Podnesi'"
 
@@ -10121,7 +10125,7 @@ msgstr "Strukture su uspješno dodijeljene"
 msgid "Submission Date"
 msgstr "Datum Podnošenja"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:500
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:524
 msgid "Submission Failed"
 msgstr "Podnošenje nije uspjelo"
 
@@ -10177,7 +10181,7 @@ msgstr "Podnošenje Platnih Listova u toku..."
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
 msgstr "Podružnice su već planirale {1} slobodnih radnih mjesta sa budžetom od {2}. Plan Zapošljavanja za {0} trebao bi izdvojiti više slobodnih radnih mjesta i budžeta za {3} nego što je planirano za podružnice"
 
-#: hrms/hr/utils.py:961
+#: hrms/hr/utils.py:983
 msgid "Successfully created {0} for employees:"
 msgstr "Uspješno kreirano {0} za personal:"
 
@@ -10444,7 +10448,7 @@ msgstr "Nema slobodnih radnih mjesta prema planu zapošljavanja {0}"
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
 msgstr "Nije dodijeljena struktura plaća za {0}. Prvo dodijelite strukturu plaća."
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:426
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:448
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
 msgstr "Nema personala sa Strukturom Plate: {0}. Dodijeli {1} da pregleda Platni List"
 
@@ -10898,7 +10902,7 @@ msgstr "Ukupno Riječima"
 msgid "Total in words (Company Currency)"
 msgstr "Ukupno Riječima (Valuta Tvrtke)"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:402
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:403
 msgid "Total leaves allocated cannot exceed annual allocation of {0}."
 msgstr "Ukupno dodijeljeno odsustvo ne može premašiti godišnju dodjelu od {0}."
 
@@ -10906,7 +10910,7 @@ msgstr "Ukupno dodijeljeno odsustvo ne može premašiti godišnju dodjelu od {0}
 msgid "Total leaves allocated is mandatory for Leave Type {0}"
 msgstr "Ukupan broj dodijeljenog odsustva je obavezan za vrstu odsustva {0}"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:500
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:522
 msgid "Total of all employee benefits cannot be greater that Max Benefits Amount {0}"
 msgstr "Zbroj svih pogodnosti ne može biti veći od maksimalnog iznosa pogodnosti {0}"
 
@@ -11049,7 +11053,7 @@ msgstr "Obuke"
 msgid "Trainings (This Week)"
 msgstr "Obuka (Ovaj Tjedan)"
 
-#: hrms/hr/utils.py:808
+#: hrms/hr/utils.py:830
 msgid "Transactions cannot be created for an Inactive Employee {0}."
 msgstr "Transakcije se ne mogu kreirati za neaktivan personal {0}."
 
@@ -11632,6 +11636,10 @@ msgstr "Da, Nastavi"
 msgid "You are not authorized to approve leaves on Block Dates"
 msgstr "Niste ovlašteni odobravati odsustva na blokirane datume"
 
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:366
+msgid "You are not permitted to access the CTC report of another employee."
+msgstr ""
+
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:79
 msgid "You are not present all day(s) between compensatory leave request days"
 msgstr "Niste prisutni cijeli dan(e) između dana zahtjeva za kompenzacijsko odsustvo"
@@ -11664,8 +11672,8 @@ msgstr "Ne možete poništiti više od ukupnog broja neplaćenih odsutnih dana {
 msgid "You do not have permission to change the Status of a Shift Request."
 msgstr "Nemate dopuštenje za promjenu statusa zahtjeva za smjenu."
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:458
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:621
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:459
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:622
 msgid "You do not have permission to complete this action"
 msgstr "Nemate dozvolu za dovršetak ove radnje"
 
@@ -11910,15 +11918,15 @@ msgstr "{0} nije dozvoljeno slati Povratne Informacije o intervjuu za intervju: 
 msgid "{0} is not in Optional Holiday List"
 msgstr "{0} nije na listi Opcija Praznika"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:396
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:397
 msgid "{0} leaves allocated successfully"
 msgstr "{0} odsustva su uspješno dodijeljena"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:604
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:605
 msgid "{0} leaves from allocation for {1} leave type have expired and will be processed during the next scheduled job. It is recommended to expire them now before creating new leave policy assignments."
 msgstr "{0} odsustva iz dodjele za {1} tip odsustva su istekla i bit će obrađena tijekom sljedećeg planiranog posla. Preporuča se da im sada istekne prije stvaranja novih dodjela principa odsustva."
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:391
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:392
 msgid "{0} leaves were manually allocated by {1} on {2}"
 msgstr "{0} odsustva je ručno dodijelio {1} na {2}"
 
@@ -11959,11 +11967,11 @@ msgstr "{0} će biti ažuriran za sljedeće Strukture Plaća: {1}."
 msgid "{0} {1} {2}?"
 msgstr "{0} {1} {2}?"
 
-#: hrms/hr/utils.py:466
+#: hrms/hr/utils.py:470
 msgid "{0}. Check error log for more details."
 msgstr "{0}. Za više detalja provjerite zapisnik pogrešaka."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2275
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2277
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr "{0}: E-pošta za personal nije pronađena, stoga e-pošta nije poslana"
 
