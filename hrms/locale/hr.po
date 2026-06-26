@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2026-06-24 17:40+0000\n"
-"PO-Revision-Date: 2026-06-24 20:43\n"
+"PO-Revision-Date: 2026-06-25 20:48\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Croatian\n"
 "MIME-Version: 1.0\n"
@@ -6310,7 +6310,7 @@ msgstr "Odsustvo tipa {0} ne može biti duže od {1}."
 
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:61
 msgid "Leave(s) Allocated"
-msgstr ""
+msgstr "Dodijeljeno Odsustvo"
 
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:73
 msgid "Leave(s) Expired"
@@ -11638,7 +11638,7 @@ msgstr "Niste ovlašteni odobravati odsustva na blokirane datume"
 
 #: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:366
 msgid "You are not permitted to access the CTC report of another employee."
-msgstr ""
+msgstr "Nije vam dopušten pristup izvješću godišnje plaće drugog osoblja."
 
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:79
 msgid "You are not present all day(s) between compensatory leave request days"

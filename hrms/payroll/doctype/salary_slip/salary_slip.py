@@ -31,6 +31,7 @@ from erpnext.accounts.utils import get_fiscal_year
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
 from erpnext.utilities.transaction_base import TransactionBase
 
+import hrms
 from hrms.hr.utils import validate_active_employee
 from hrms.payroll.doctype.additional_salary.additional_salary import get_additional_salaries
 from hrms.payroll.doctype.employee_benefit_ledger.employee_benefit_ledger import (
@@ -941,10 +942,20 @@ class SalarySlip(TransactionBase):
 
 		set_loan_repayment(self)
 
+		# Region-specific deductions (e.g. India statutory deductions) are injected
+		# here so they are reflected in both saved slips and the preview generated
+		# by process_salary_structure, before totals are finalised below.
+		self.apply_regional_deductions()
+
 		self.set_precision_for_component_amounts()
 		self.set_net_pay()
 		if not skip_tax_breakup_computation:
 			self.compute_income_tax_breakup()
+
+	@hrms.allow_regional
+	def apply_regional_deductions(self):
+		"Hook point for region-specific salary slip deductions."
+		pass
 
 	def set_net_pay(self):
 		self.total_deduction = self.get_component_totals("deductions")
