@@ -490,7 +490,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		for d in frappe.db.sql(
 			"""
 			select
-				name, leave_type, posting_date, from_date, to_date, total_leave_days, half_day_date
+				name, leave_type, posting_date, from_date, to_date, total_leave_days, half_day, half_day_date
 			from `tabLeave Application`
 			where employee = %(employee)s and docstatus < 2 and status in ('Open', 'Approved')
 			and to_date >= %(from_date)s and from_date <= %(to_date)s
@@ -505,6 +505,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		):
 			if (
 				cint(self.half_day) == 1
+				and cint(d.half_day) == 1
 				and getdate(self.half_day_date) == getdate(d.half_day_date)
 				and (
 					flt(self.total_leave_days) == 0.5
