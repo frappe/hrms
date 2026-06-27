@@ -206,12 +206,30 @@ def mark_employee_attendance(
 		frappe.has_permission("Attendance", "write", throw=True)
 		if isinstance(half_day_employee_list, str):
 			half_day_employee_list = json.loads(half_day_employee_list)
+
+		frappe.has_permission("Attendance", "write", throw=True)
+
+		eligible_attendance = frappe.get_list(
+			"Attendance",
+			filters={
+				"employee": ["in", half_day_employee_list],
+				"attendance_date": date,
+				"docstatus": 1,
+			},
+			fields=["name", "employee"],
+		)
+		attendance_map = {d.employee: d.name for d in eligible_attendance}
+
+		# Pre-validate all permissions
 		for employee in half_day_employee_list:
-			attendance_name = frappe.db.get_value(
-				"Attendance", {"employee": employee, "attendance_date": date, "docstatus": 1}
-			)
+			attendance_name = attendance_map.get(employee)
 			if attendance_name:
 				frappe.has_permission("Attendance", "write", attendance_name, throw=True)
+
+		# Execute updates after validation
+		for employee in half_day_employee_list:
+			attendance_name = attendance_map.get(employee)
+			if attendance_name:
 				frappe.db.set_value(
 					"Attendance",
 					attendance_name,
