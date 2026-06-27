@@ -254,10 +254,9 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 
 		# Scenario 1 (Security): user without Attendance Write permission
 		frappe.set_user(user_no_role)
-		
+
 		# Precondition: Explicitly verify the unauthorized user lacks write access
 		self.assertFalse(frappe.has_permission(doctype="Attendance", ptype="write", doc=attendance))
-
 
 		try:
 			with self.assertRaises(frappe.PermissionError):
@@ -279,10 +278,9 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 
 		# Scenario 2 (Positive): authorized HR Manager
 		frappe.set_user(user_hr_manager)
-		
+
 		# Precondition: Explicitly verify the HR Manager has write access
 		self.assertTrue(frappe.has_permission(doctype="Attendance", ptype="write", doc=attendance))
-
 
 		try:
 			mark_employee_attendance(
