@@ -3,6 +3,7 @@
 
 import frappe
 from frappe.utils import add_days, getdate
+from frappe.utils.user import add_role
 
 from erpnext.setup.doctype.employee.employee import is_holiday
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -233,6 +234,78 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 		self.assertIn(self.employee1.name, filtered)
 		self.assertIn(self.employee2.name, filtered)
 		self.assertNotIn(self.employee3.name, filtered)
+
+	def test_mark_half_day_attendance_permissions(self):
+		user_no_role = "test_no_role@example.com"
+		user_hr_manager = "test_hr_manager@example.com"
+		make_employee(user_no_role, company="_Test Company")
+		make_employee(user_hr_manager, company="_Test Company")
+		add_role(user_hr_manager, "HR Manager")
+
+		date = add_days(getdate(), -1)
+		while is_holiday(employee=self.employee1, date=date):
+			date = add_days(date, -1)
+
+		# Create an attendance record
+		frappe.set_user("Administrator")
+		attendance = frappe.get_doc(
+			{
+				"doctype": "Attendance",
+				"employee": self.employee1,
+				"attendance_date": date,
+				"status": "Present",
+			}
+		).insert()
+		attendance.submit()
+
+		# Scenario 1 (Security): user without Attendance Write permission
+		frappe.set_user(user_no_role)
+		
+		# Precondition: Explicitly verify the unauthorized user lacks write access
+		self.assertFalse(frappe.has_permission(doctype="Attendance", ptype="write", doc=attendance))
+
+
+		try:
+			with self.assertRaises(frappe.PermissionError):
+				mark_employee_attendance(
+					employee_list=[],
+					status="Present",
+					date=date,
+					mark_half_day=True,
+					half_day_status="Absent",
+					half_day_employee_list=[self.employee1],
+				)
+		finally:
+			# Reset user and verify record was NOT modified
+			frappe.set_user("Administrator")
+
+		attendance.reload()
+		self.assertIsNone(attendance.half_day_status)
+		self.assertEqual(attendance.status, "Present")
+
+		# Scenario 2 (Positive): authorized HR Manager
+		frappe.set_user(user_hr_manager)
+		
+		# Precondition: Explicitly verify the HR Manager has write access
+		self.assertTrue(frappe.has_permission(doctype="Attendance", ptype="write", doc=attendance))
+
+
+		try:
+			mark_employee_attendance(
+				employee_list=[],
+				status="Present",
+				date=date,
+				mark_half_day=True,
+				half_day_status="Absent",
+				half_day_employee_list=[self.employee1],
+			)
+		finally:
+			# Verify attendance was updated correctly
+			frappe.set_user("Administrator")
+
+		attendance.reload()
+		self.assertEqual(attendance.half_day_status, "Absent")
+		self.assertEqual(attendance.status, "Present")
 
 
 def create_leave_allocation(employee, leave_type, date=None):
