@@ -353,6 +353,7 @@ class LeaveAllocation(Document):
 
 	@frappe.whitelist()
 	def allocate_leaves_manually(self, new_leaves: str | float, from_date: str | datetime.date | None = None):
+		self.check_permission("write")
 		if from_date and not (getdate(self.from_date) <= getdate(from_date) <= getdate(self.to_date)):
 			frappe.throw(
 				_("Cannot allocate leaves outside the allocation period {0} - {1}").format(
