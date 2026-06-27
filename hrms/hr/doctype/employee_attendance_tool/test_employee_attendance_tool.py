@@ -238,6 +238,8 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 	def test_mark_half_day_attendance_permissions(self):
 		user_no_role = "test_no_role@example.com"
 		user_hr_manager = "test_hr_manager@example.com"
+		
+		frappe.set_user("Administrator")
 		make_employee(user_no_role, company="_Test Company")
 		make_employee(user_hr_manager, company="_Test Company")
 		add_role(user_hr_manager, "HR Manager")
