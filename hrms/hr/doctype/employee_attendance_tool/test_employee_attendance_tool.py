@@ -288,6 +288,7 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 		frappe.set_user(user_hr_manager)
 
 		# Precondition: Explicitly verify the HR Manager has write access
+		attendance.reload()
 		self.assertTrue(frappe.has_permission(doctype="Attendance", ptype="write", doc=attendance))
 
 		try:
