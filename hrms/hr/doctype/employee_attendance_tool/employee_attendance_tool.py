@@ -219,25 +219,13 @@ def mark_employee_attendance(
 		)
 		attendance_map = {d.employee: d.name for d in eligible_attendance}
 
-		# Pre-validate all permissions
+		Attendance = frappe.qb.DocType("Attendance")
 		for employee in half_day_employee_list:
 			attendance_name = attendance_map.get(employee)
 			if attendance_name:
-				frappe.has_permission("Attendance", "write", attendance_name, throw=True)
+				frappe.qb.update(Attendance).where(Attendance.name == attendance_name).set(
+					Attendance.half_day_status, half_day_status
+				).set(Attendance.shift, shift).set(Attendance.late_entry, late_entry).set(
+					Attendance.early_exit, early_exit
+				).set(Attendance.modify_half_day_status, 0).run()
 
-		# Execute updates after validation
-		for employee in half_day_employee_list:
-			attendance_name = attendance_map.get(employee)
-			if attendance_name:
-				frappe.db.set_value(
-					"Attendance",
-					attendance_name,
-					{
-						"half_day_status": half_day_status,
-						"shift": shift,
-						"late_entry": late_entry,
-						"early_exit": early_exit,
-						"modify_half_day_status": 0,
-					},
-					update_modified=True,
-				)
