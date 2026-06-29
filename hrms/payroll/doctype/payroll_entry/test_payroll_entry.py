@@ -1162,6 +1162,72 @@ class TestPayrollEntry(HRMSTestSuite):
 		payroll_entry.reload()
 		self.assertEqual(payroll_entry.status, "Cancelled")
 
+	def test_create_overtime_slips_requires_write_permission(self):
+		company = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee("test_ot_permission@payroll.com", company=company.name)
+
+		setup_salary_structure(employee, company)
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = get_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company.default_payroll_payable_account,
+			currency=company.default_currency,
+			company=company.name,
+			cost_center="Main - _TC",
+		)
+		payroll_entry.submit()
+
+		# create a user with only read permission on Payroll Entry
+		test_user = frappe.get_doc(
+			{
+				"doctype": "User",
+				"email": "test_ot_readonly@payroll.com",
+				"first_name": "Test OT ReadOnly",
+				"enabled": 1,
+			}
+		).insert(ignore_if_duplicate=True)
+		test_user.add_roles("HR User")
+
+		frappe.set_user(test_user.name)
+		try:
+			self.assertRaises(frappe.PermissionError, payroll_entry.create_overtime_slips)
+		finally:
+			frappe.set_user("Administrator")
+
+	def test_submit_overtime_slips_requires_write_permission(self):
+		company = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee("test_ot_permission2@payroll.com", company=company.name)
+
+		setup_salary_structure(employee, company)
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = get_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company.default_payroll_payable_account,
+			currency=company.default_currency,
+			company=company.name,
+			cost_center="Main - _TC",
+		)
+		payroll_entry.submit()
+
+		# create a user with only read permission on Payroll Entry
+		test_user = frappe.get_doc(
+			{
+				"doctype": "User",
+				"email": "test_ot_readonly2@payroll.com",
+				"first_name": "Test OT ReadOnly2",
+				"enabled": 1,
+			}
+		).insert(ignore_if_duplicate=True)
+		test_user.add_roles("HR User")
+
+		frappe.set_user(test_user.name)
+		try:
+			self.assertRaises(frappe.PermissionError, payroll_entry.submit_overtime_slips)
+		finally:
+			frappe.set_user("Administrator")
+
 
 def get_payroll_entry(**args):
 	args = frappe._dict(args)
