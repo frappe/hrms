@@ -99,6 +99,7 @@ class IncomeTaxComputationReport:
 			},
 			fields=[
 				"employee",
+				"from_date",
 				"income_tax_slab",
 				"salary_structure",
 				"taxable_earnings_till_date",
@@ -115,14 +116,22 @@ class IncomeTaxComputationReport:
 				)
 
 				if tax_slab and not tax_slab.disabled:
+					# opening entries are valid only when the SSA was created within the payroll period
+					opening_entries_applicable = getdate(d.from_date) >= getdate(
+						self.payroll_period_start_date
+					)
 					employee_ss_assignments.setdefault(
 						d.employee,
 						{
 							"salary_structure": d.salary_structure,
 							"income_tax_slab": d.income_tax_slab,
 							"allow_tax_exemption": tax_slab.allow_tax_exemption,
-							"taxable_earnings_till_date": d.taxable_earnings_till_date or 0.0,
-							"tax_deducted_till_date": d.tax_deducted_till_date or 0.0,
+							"taxable_earnings_till_date": flt(d.taxable_earnings_till_date)
+							if opening_entries_applicable
+							else 0.0,
+							"tax_deducted_till_date": flt(d.tax_deducted_till_date)
+							if opening_entries_applicable
+							else 0.0,
 						},
 					)
 		return employee_ss_assignments
