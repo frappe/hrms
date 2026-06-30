@@ -341,12 +341,8 @@ def send_daily_feedback_reminder():
 
 
 @frappe.whitelist()
-<<<<<<< HEAD
 def get_expected_skill_set(interview_type: str) -> list[dict]:
-=======
-def get_expected_skill_set(interview_type: str):
 	frappe.has_permission("Interview Type", "read", interview_type, throw=True)
->>>>>>> 94ed07a05 (fix: permission check for whitelisted methods)
 	return frappe.get_all(
 		"Expected Skill Set", filters={"parent": interview_type}, fields=["skill"], order_by="idx"
 	)
