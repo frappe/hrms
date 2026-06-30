@@ -66,9 +66,14 @@ document.addEventListener("click", function (e) {
 	const current_fraction = kanban_rating_from_stars(rating_el, OUT_OF);
 	const new_fraction = current_fraction === clicked_fraction ? 0 : clicked_fraction;
 
-	frappe.db.set_value("Job Applicant", docname, "applicant_rating", new_fraction).then(() => {
-		kanban_apply_stars(rating_el, new_fraction, OUT_OF);
-	});
+	frappe.db
+		.set_value("Job Applicant", docname, "applicant_rating", new_fraction)
+		.then(() => {
+			kanban_apply_stars(rating_el, new_fraction, OUT_OF);
+		})
+		.catch(() => {
+			kanban_apply_stars(rating_el, current_fraction, OUT_OF);
+		});
 });
 
 function kanban_rating_from_stars(rating_el, out_of) {
@@ -114,7 +119,7 @@ function patch_kanban_dialog_for_job_applicant() {
 		}
 		frappe
 			.xcall("hrms.hr.doctype.job_applicant.job_applicant.create_kanban_board", {
-				board_name: __("Hiring Pipeline"),
+				board_name: "Hiring Pipeline",
 			})
 			.then((board) => {
 				frappe.set_route("List", "Job Applicant", "Kanban", board.kanban_board_name);
