@@ -131,6 +131,7 @@ class SalaryWithholding(Document):
 
 @frappe.whitelist()
 def get_payroll_frequency(employee: str, posting_date: str | date) -> str | None:
+	frappe.has_permission("Employee", "read", employee, throw=True)
 	salary_structure = frappe.db.get_value(
 		"Salary Structure Assignment",
 		{

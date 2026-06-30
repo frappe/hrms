@@ -242,6 +242,8 @@ def get_active_staffing_plan_details(
 	from_date: str | datetime.date | None = None,
 	to_date: str | datetime.date | None = None,
 ) -> list[dict] | None:
+	frappe.has_permission("Staffing Plan", "read", throw=True)
+
 	if from_date is None:
 		from_date = getdate(nowdate())
 	if to_date is None:

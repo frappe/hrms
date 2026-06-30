@@ -375,6 +375,9 @@ def make_salary_slip(
 	for_preview: int = 0,
 	lwp_days_corrected: float | None = None,
 ) -> str | Document:
+	if employee:
+		frappe.has_permission("Employee", "read", employee, throw=True)
+
 	return _make_salary_slip(
 		source_name,
 		target_doc=target_doc,

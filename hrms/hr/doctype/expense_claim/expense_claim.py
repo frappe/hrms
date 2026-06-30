@@ -677,6 +677,7 @@ def get_advances(expense_claim: str | dict | Document, advance_id: str | None = 
 	if isinstance(expense_claim, str):
 		expense_claim = frappe._dict(json.loads(expense_claim))
 	expense_claim_doc = frappe.get_doc(expense_claim)
+	frappe.has_permission("Employee", "read", expense_claim_doc.employee, throw=True)
 	expense_claim_doc.advances = []
 
 	advance = frappe.qb.DocType("Employee Advance")
@@ -714,6 +715,7 @@ def get_advances(expense_claim: str | dict | Document, advance_id: str | None = 
 
 @frappe.whitelist()
 def get_expense_claim(employee_advance: str | dict) -> Document:
+	frappe.has_permission("Employee Advance", "read", employee_advance, throw=True)
 	if isinstance(employee_advance, str):
 		employee_advance = frappe.get_doc("Employee Advance", employee_advance)
 

@@ -165,6 +165,7 @@ class SalaryComponent(Document):
 			structures = self.get_structures_to_be_updated()
 
 		for structure in structures:
+			frappe.has_permission("Salary Structure", "write", structure, throw=True)
 			salary_structure = frappe.get_doc("Salary Structure", structure)
 			# this is only used for versioning and we do not want
 			# to make separate db calls by using load_doc_before_save

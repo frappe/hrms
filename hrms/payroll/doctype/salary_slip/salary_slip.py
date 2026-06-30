@@ -2608,6 +2608,7 @@ def get_lwp_or_ppl_for_date_range(employee, start_date, end_date):
 
 @frappe.whitelist()
 def make_salary_slip_from_timesheet(source_name: str, target_doc: str | Document | None = None) -> Document:
+	frappe.has_permission("Timesheet", "read", source_name, throw=True)
 	target = frappe.new_doc("Salary Slip")
 	set_missing_values(source_name, target)
 	target.run_method("get_emp_and_working_day_details")
@@ -2669,6 +2670,9 @@ def enqueue_email_salary_slips(names: list | str) -> None:
 
 	if isinstance(names, str):
 		names = json.loads(names)
+
+	for name in names:
+		frappe.has_permission("Salary Slip", "read", name, throw=True)
 
 	frappe.enqueue("hrms.payroll.doctype.salary_slip.salary_slip.email_salary_slips", names=names)
 	frappe.msgprint(

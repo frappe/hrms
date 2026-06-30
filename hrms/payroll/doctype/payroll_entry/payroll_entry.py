@@ -1263,6 +1263,8 @@ class PayrollEntry(Document):
 
 	@frappe.whitelist()
 	def create_overtime_slips(self) -> None:
+		self.check_permission("write")
+
 		from hrms.hr.doctype.overtime_slip.overtime_slip import (
 			create_overtime_slips_for_employees,
 			filter_employees_for_overtime_slip_creation,
@@ -1300,6 +1302,8 @@ class PayrollEntry(Document):
 
 	@frappe.whitelist()
 	def submit_overtime_slips(self) -> None:
+		self.check_permission("write")
+
 		from hrms.hr.doctype.overtime_slip.overtime_slip import (
 			submit_overtime_slips_for_employees,
 		)

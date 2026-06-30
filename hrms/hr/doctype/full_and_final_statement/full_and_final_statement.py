@@ -310,6 +310,8 @@ def get_account_and_amount(ref_doctype: str, ref_document: str, company: str) ->
 	if not ref_doctype or not ref_document:
 		return None
 
+	frappe.has_permission(ref_doctype, "read", ref_document, throw=True)
+
 	if ref_doctype == "Salary Slip":
 		salary_details = frappe.db.get_value(
 			"Salary Slip", ref_document, ["payroll_entry", "net_pay"], as_dict=1

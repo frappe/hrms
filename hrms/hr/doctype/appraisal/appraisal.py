@@ -307,6 +307,7 @@ class Appraisal(Document, AppraisalMixin):
 
 @frappe.whitelist()
 def get_feedback_history(employee: str, appraisal: str) -> dict:
+	frappe.has_permission("Appraisal", "read", appraisal, throw=True)
 	data = frappe._dict()
 	data.feedback_history = frappe.get_list(
 		"Employee Performance Feedback",

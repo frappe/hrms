@@ -432,6 +432,7 @@ def process_bulk_attendance_in_batches(data, chunk_size=20):
 def get_unmarked_days(
 	employee: str, from_date: str | date, to_date: str | date, exclude_holidays: str | int = 0
 ) -> list:
+	frappe.has_permission("Employee", "read", employee, throw=True)
 	joining_date, relieving_date = frappe.get_cached_value(
 		"Employee", employee, ["date_of_joining", "relieving_date"]
 	)
