@@ -114,6 +114,7 @@ def create_interview(job_applicant: str, interview_type: str) -> Document:
 
 @frappe.whitelist()
 def get_interview_details(job_applicant: str) -> dict:
+	frappe.has_permission("Job Applicant", "read", job_applicant, throw=True)
 	interview_details = frappe.db.get_all(
 		"Interview",
 		filters={"job_applicant": job_applicant, "docstatus": ["!=", 2]},
