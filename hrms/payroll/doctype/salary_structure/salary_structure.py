@@ -342,35 +342,9 @@ def make_salary_slip(
 	for_preview: int = 0,
 	lwp_days_corrected: float | None = None,
 ) -> str | Document:
-<<<<<<< HEAD
-=======
 	if employee:
 		frappe.has_permission("Employee", "read", employee, throw=True)
 
-	return _make_salary_slip(
-		source_name,
-		target_doc=target_doc,
-		employee=employee,
-		posting_date=posting_date,
-		as_print=as_print,
-		print_format=print_format,
-		for_preview=for_preview,
-		lwp_days_corrected=lwp_days_corrected,
-	)
-
-
-def _make_salary_slip(
-	source_name: str,
-	target_doc: str | Document | None = None,
-	employee: str | None = None,
-	posting_date: str | datetime.date | None = None,
-	as_print: bool = False,
-	print_format: str | None = None,
-	for_preview: int = 0,
-	lwp_days_corrected: float | None = None,
-	ignore_permissions: bool = False,
-) -> str | Document:
->>>>>>> 94ed07a05 (fix: permission check for whitelisted methods)
 	def postprocess(source, target):
 		if employee:
 			target.employee = employee

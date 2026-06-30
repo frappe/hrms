@@ -911,13 +911,7 @@ def get_number_of_leave_days(
 ) -> float:
 	"""Returns number of leave days between 2 dates after considering half day and holidays
 	(Based on the include_holiday setting in Leave Type)"""
-<<<<<<< HEAD
 	number_of_days = 0
-=======
-	validate_leave_access(employee)
-	number_of_days = date_diff(to_date, from_date) + 1
-
->>>>>>> 94ed07a05 (fix: permission check for whitelisted methods)
 	if cint(half_day) == 1:
 		if getdate(from_date) == getdate(to_date):
 			number_of_days = 0.5
