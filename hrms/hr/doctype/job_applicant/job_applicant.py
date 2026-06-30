@@ -4,6 +4,8 @@
 # For license information, please see license.txt
 
 
+import json
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -83,6 +85,31 @@ class JobApplicant(Document):
 			emp_ref.db_set("status", "In Process")
 		elif self.status in ["Accepted", "Rejected"]:
 			emp_ref.db_set("status", self.status)
+
+
+KANBAN_COLUMNS = ["Open", "Replied", "Shortlisted", "Accepted"]
+
+
+@frappe.whitelist()
+def create_kanban_board(board_name: str) -> dict:
+	frappe.has_permission("Job Applicant", throw=True)
+
+	if frappe.db.exists("Kanban Board", board_name):
+		return frappe.get_doc("Kanban Board", board_name).as_dict()
+
+	board = frappe.new_doc("Kanban Board")
+	board.kanban_board_name = board_name
+	board.reference_doctype = "Job Applicant"
+	board.field_name = "status"
+	board.private = 0
+	board.fields = json.dumps(["designation", "applicant_rating"])
+	board.show_labels = 1
+
+	for column_name in KANBAN_COLUMNS:
+		board.append("columns", {"column_name": column_name, "status": "Active"})
+
+	board.insert(ignore_permissions=True)
+	return board.as_dict()
 
 
 @frappe.whitelist()
