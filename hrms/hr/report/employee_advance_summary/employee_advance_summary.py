@@ -6,7 +6,7 @@ from collections import OrderedDict
 import frappe
 from frappe import _, msgprint
 from frappe.query_builder import Order
-from frappe.utils import scrub
+from frappe.utils.data import scrub
 
 
 def execute(filters=None):
