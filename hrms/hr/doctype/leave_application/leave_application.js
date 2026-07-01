@@ -397,8 +397,11 @@ function apply_holiday_highlighting(frm) {
 		control.datepicker.update("onRenderCell", function (date, cellType) {
 			if (cellType !== "day") return {};
 
-			// Skip dates that belong to an adjacent month (shown as greyed-out overflow cells)
-			if (date.getMonth() !== control.datepicker.parsedDate.month) return {};
+			// Skip dates that belong to an adjacent month (shown as greyed-out overflow cells).
+			// parsedDate tracks the selected value, not the viewed month; use viewDate instead
+			// to avoid a TypeError when the field is empty and to correctly follow navigation.
+			const viewDate = control.datepicker.viewDate;
+			if (!viewDate || date.getMonth() !== viewDate.getMonth()) return {};
 
 			const formatted = moment(date).format("YYYY-MM-DD");
 
