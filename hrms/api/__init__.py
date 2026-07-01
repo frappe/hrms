@@ -139,7 +139,7 @@ def get_attendance_calendar_events(from_date: str, to_date: str) -> dict[str, st
 		if date in attendance:
 			events[date_str] = attendance[date]
 		elif date in holidays:
-			events[date_str] = holidays[date]
+			events[date_str] = "Holiday"
 		date = add_days(date, 1)
 
 	return events
@@ -154,16 +154,15 @@ def get_attendance_for_calendar(employee: str, from_date: str, to_date: str) -> 
 	return {d["attendance_date"]: d["status"] for d in attendance}
 
 
-def get_holidays_for_calendar(employee: str, from_date: str, to_date: str) -> dict:
+def get_holidays_for_calendar(employee: str, from_date: str, to_date: str) -> list[str]:
 	if holiday_list := get_holiday_list_for_employee(employee, raise_exception=False):
-		holidays = frappe.get_all(
+		return frappe.get_all(
 			"Holiday",
 			filters={"parent": holiday_list, "holiday_date": ["between", [from_date, to_date]]},
-			fields=["holiday_date", "weekly_off"],
+			pluck="holiday_date",
 		)
-		return {h["holiday_date"]: "Weekly Off" if h["weekly_off"] else "Holiday" for h in holidays}
 
-	return {}
+	return []
 
 
 @frappe.whitelist()
