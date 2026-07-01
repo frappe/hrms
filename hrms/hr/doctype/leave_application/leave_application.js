@@ -3,6 +3,10 @@
 
 frappe.ui.form.on("Leave Application", {
 	setup: function (frm) {
+		frm._holiday_dates = [];
+		frm._weekly_off_dates = [];
+		inject_holiday_datepicker_styles();
+
 		frm.set_query("leave_approver", function () {
 			return {
 				query: "hrms.hr.doctype.department_approver.department_approver.get_approvers",
@@ -90,6 +94,9 @@ frappe.ui.form.on("Leave Application", {
 
 	refresh: function (frm) {
 		hrms.leave_utils.add_view_ledger_button(frm);
+		if (frm.doc.employee) {
+			frm.trigger("fetch_holiday_dates");
+		}
 		if (frm.is_new()) {
 			frm.trigger("calculate_total_days");
 		}
@@ -128,6 +135,38 @@ frappe.ui.form.on("Leave Application", {
 		frm.trigger("make_dashboard");
 		frm.trigger("get_leave_balance");
 		frm.trigger("set_leave_approver");
+		frm.trigger("fetch_holiday_dates");
+	},
+
+	fetch_holiday_dates: function (frm) {
+		if (!frm.doc.employee) {
+			frm._holiday_dates = [];
+			frm._weekly_off_dates = [];
+			apply_holiday_highlighting(frm);
+			return;
+		}
+
+		const start_date = frappe.datetime.add_months(frappe.datetime.get_today(), -12);
+		const end_date = frappe.datetime.add_months(frappe.datetime.get_today(), 24);
+
+		frappe.call({
+			method: "hrms.hr.doctype.leave_application.leave_application.get_holiday_dates_for_datepicker",
+			args: {
+				employee: frm.doc.employee,
+				start_date: start_date,
+				end_date: end_date,
+			},
+			callback: function (r) {
+				if (!r.exc && r.message) {
+					frm._holiday_dates = r.message.holidays || [];
+					frm._weekly_off_dates = r.message.weekly_offs || [];
+				} else {
+					frm._holiday_dates = [];
+					frm._weekly_off_dates = [];
+				}
+				apply_holiday_highlighting(frm);
+			},
+		});
 	},
 
 	leave_approver: function (frm) {
@@ -310,6 +349,66 @@ frappe.ui.form.on("Leave Application", {
 		frm.trigger("get_leave_balance");
 	},
 });
+
+function inject_holiday_datepicker_styles() {
+	if (document.getElementById("leave-app-holiday-highlight-styles")) return;
+
+	const style = document.createElement("style");
+	style.id = "leave-app-holiday-highlight-styles";
+	style.textContent = `
+		.datepicker--cell.holiday-date,
+		.datepicker--cell.weekly-off-date {
+			position: relative;
+			color: #fff !important;
+			z-index: 1;
+		}
+		.datepicker--cell.holiday-date::before,
+		.datepicker--cell.weekly-off-date::before {
+			content: '';
+			position: absolute;
+			width: 28px;
+			height: 28px;
+			border-radius: 50%;
+			z-index: -1;
+		}
+		.datepicker--cell.holiday-date::before {
+			background: #f1948a;
+		}
+		.datepicker--cell.weekly-off-date::before {
+			background: #bdc3c7;
+		}
+		.datepicker--cell.-selected-.holiday-date,
+		.datepicker--cell.-selected-.weekly-off-date {
+			color: #fff !important;
+		}
+		.datepicker--cell.-selected-.holiday-date::before,
+		.datepicker--cell.-selected-.weekly-off-date::before {
+			display: none;
+		}
+	`;
+	document.head.appendChild(style);
+}
+
+function apply_holiday_highlighting(frm) {
+	["from_date", "to_date"].forEach(function (fieldname) {
+		const control = frm.fields_dict[fieldname];
+		if (!control || !control.datepicker) return;
+
+		control.datepicker.update("onRenderCell", function (date, cellType) {
+			if (cellType !== "day") return {};
+
+			const formatted = moment(date).format("YYYY-MM-DD");
+
+			if ((frm._holiday_dates || []).includes(formatted)) {
+				return { classes: "holiday-date" };
+			}
+			if ((frm._weekly_off_dates || []).includes(formatted)) {
+				return { classes: "weekly-off-date" };
+			}
+			return {};
+		});
+	});
+}
 
 frappe.tour["Leave Application"] = [
 	{

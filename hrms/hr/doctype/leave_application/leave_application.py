@@ -1568,3 +1568,27 @@ def validate_leave_access(employee):
 		not frappe.has_permission("Employee", "read", employee)
 	):
 		frappe.throw(_("Not permitted"), frappe.PermissionError)
+
+
+@frappe.whitelist()
+def get_holiday_dates_for_datepicker(employee: str, start_date: str, end_date: str) -> dict:
+	"""Returns holiday and weekly off dates for an employee within a date range for datepicker highlighting."""
+	frappe.has_permission("Employee", "read", employee, throw=True)
+
+	holiday_list = get_holiday_list_for_employee(employee, raise_exception=False)
+	if not holiday_list:
+		return {"holidays": [], "weekly_offs": []}
+
+	holidays = frappe.get_all(
+		"Holiday",
+		filters={
+			"parent": holiday_list,
+			"holiday_date": ("between", [start_date, end_date]),
+		},
+		fields=["holiday_date", "weekly_off"],
+	)
+
+	return {
+		"holidays": [cstr(h.holiday_date) for h in holidays if not h.weekly_off],
+		"weekly_offs": [cstr(h.holiday_date) for h in holidays if h.weekly_off],
+	}
