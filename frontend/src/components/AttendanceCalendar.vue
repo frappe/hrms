@@ -73,7 +73,8 @@ const colorMap = {
 	"Half Day": "bg-yellow-200",
 	Absent: "bg-red-200",
 	"On Leave": "bg-blue-300",
-	Holiday: "bg-gray-300",
+	Holiday: "bg-red-200",
+	"Weekly Off": "bg-gray-300",
 }
 
 // __("Present"), __("Half Day"), __("Absent"), __("On Leave"), __("Work From Home")

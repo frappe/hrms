@@ -397,6 +397,9 @@ function apply_holiday_highlighting(frm) {
 		control.datepicker.update("onRenderCell", function (date, cellType) {
 			if (cellType !== "day") return {};
 
+			// Skip dates that belong to an adjacent month (shown as greyed-out overflow cells)
+			if (date.getMonth() !== control.datepicker.parsedDate.month) return {};
+
 			const formatted = moment(date).format("YYYY-MM-DD");
 
 			if ((frm._holiday_dates || []).includes(formatted)) {
