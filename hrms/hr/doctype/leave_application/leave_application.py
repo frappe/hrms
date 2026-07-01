@@ -1586,6 +1586,7 @@ def get_holiday_dates_for_datepicker(employee: str, start_date: str, end_date: s
 			"holiday_date": ("between", [start_date, end_date]),
 		},
 		fields=["holiday_date", "weekly_off"],
+		limit=0,
 	)
 
 	return {
