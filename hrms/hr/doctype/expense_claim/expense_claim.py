@@ -749,6 +749,7 @@ def get_expense_claim_advances(expense_claim, employee_advance):
 			"against_voucher_no": employee_advance.name,
 			"event": "Submit",
 			"delinked": False,
+			"amount": [">", 0],
 		},
 		fields=["voucher_type", "voucher_no", "amount", "base_amount", "exchange_rate", "creation"],
 	)
