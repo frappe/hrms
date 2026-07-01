@@ -20,6 +20,20 @@ class VehicleLog(Document):
 	def on_submit(self):
 		frappe.db.set_value("Vehicle", self.license_plate, "last_odometer", self.odometer)
 
+	def before_cancel(self):
+		for expense_claim_name in _get_draft_expense_claims(self.name):
+			expense_claim = frappe.get_doc("Expense Claim", expense_claim_name)
+
+			if _has_non_vehicle_log_expenses(expense_claim):
+				for row in list(expense_claim.expenses):
+					if row.description == _("Vehicle Expenses"):
+						expense_claim.remove(row)
+
+				expense_claim.vehicle_log = None
+				expense_claim.save()
+			else:
+				expense_claim.delete()
+
 	def on_cancel(self):
 		distance_travelled = self.odometer - self.last_odometer
 		if distance_travelled > 0:
@@ -31,6 +45,8 @@ class VehicleLog(Document):
 
 @frappe.whitelist()
 def make_expense_claim(docname: str) -> dict:
+	frappe.has_permission("Vehicle Log", "read", docname, throw=True)
+
 	expense_claim = frappe.db.exists("Expense Claim", {"vehicle_log": docname})
 	if expense_claim:
 		frappe.throw(_("Expense Claim {0} already exists for the Vehicle Log").format(expense_claim))
@@ -51,3 +67,44 @@ def make_expense_claim(docname: str) -> dict:
 		{"expense_date": vehicle_log.date, "description": _("Vehicle Expenses"), "amount": claim_amount},
 	)
 	return exp_claim.as_dict()
+
+
+@frappe.whitelist()
+def get_draft_expense_claims(vehicle_log: str) -> list[str]:
+	frappe.has_permission("Vehicle Log", doc=vehicle_log, throw=True)
+
+	return _get_draft_expense_claims(vehicle_log)
+
+
+@frappe.whitelist()
+def get_draft_expense_claim_cancellation_actions(vehicle_log: str) -> list[dict[str, str]]:
+	frappe.has_permission("Vehicle Log", doc=vehicle_log, throw=True)
+
+	return [
+		{
+			"name": expense_claim.name,
+			"action": "unlink" if _has_non_vehicle_log_expenses(expense_claim) else "delete",
+		}
+		for expense_claim in _get_draft_expense_claim_docs(vehicle_log)
+	]
+
+
+def _get_draft_expense_claims(vehicle_log: str) -> list[str]:
+	return frappe.get_all(
+		"Expense Claim",
+		filters={"vehicle_log": vehicle_log, "docstatus": 0},
+		pluck="name",
+		order_by="creation asc",
+	)
+
+
+def _get_draft_expense_claim_docs(vehicle_log: str) -> list[Document]:
+	return [
+		frappe.get_doc("Expense Claim", expense_claim_name)
+		for expense_claim_name in _get_draft_expense_claims(vehicle_log)
+	]
+
+
+def _has_non_vehicle_log_expenses(expense_claim: Document) -> bool:
+	vehicle_log_description = _("Vehicle Expenses")
+	return any(row.description != vehicle_log_description for row in expense_claim.expenses)

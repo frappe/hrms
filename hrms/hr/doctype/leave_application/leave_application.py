@@ -963,7 +963,7 @@ def get_leave_details(employee: str, date: str | datetime.date, for_salary_slip:
 
 	return {
 		"leave_allocation": leave_allocation,
-		"leave_approver": get_leave_approver(employee),
+		"leave_approver": get_employee_leave_approver(employee),
 		"lwps": lwp,
 	}
 
@@ -1281,6 +1281,7 @@ def get_leave_entries(employee, leave_type, from_date, to_date):
 @frappe.whitelist()
 def get_holidays(employee: str, from_date: str | datetime.date, to_date: str | datetime.date) -> int:
 	"""get holidays between two dates for the given employee"""
+	validate_leave_access(employee)
 	holidays = get_holiday_dates_between_range(employee, from_date, to_date)
 	return len(holidays)
 
@@ -1469,6 +1470,11 @@ def get_approved_leaves_for_period(employee, leave_type, from_date, to_date):
 
 @frappe.whitelist()
 def get_leave_approver(employee: str) -> str:
+	validate_leave_access(employee)
+	return get_employee_leave_approver(employee)
+
+
+def get_employee_leave_approver(employee: str) -> str:
 	leave_approver, department = frappe.db.get_value("Employee", employee, ["leave_approver", "department"])
 
 	if not leave_approver and department:
@@ -1492,13 +1498,13 @@ def get_leave_approver_and_mandatory(employee: str) -> dict:
 
 	return {
 		"is_mandatory": 1 if mandatory else 0,
-		"leave_approver": get_leave_approver(employee),
+		"leave_approver": get_employee_leave_approver(employee),
 	}
 
 
 def validate_leave_access(employee):
 	employee_user = frappe.db.get_value("Employee", employee, "user_id")
-	leave_approver = get_leave_approver(employee)
+	leave_approver = get_employee_leave_approver(employee)
 
 	if frappe.session.user not in (employee_user, leave_approver) and (
 		not frappe.has_permission("Employee", "read", employee)

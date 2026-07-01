@@ -373,3 +373,28 @@ def get_voucher_type(mode_of_payment=None):
 			voucher_type = "Bank Entry"
 
 	return voucher_type
+
+
+@frappe.whitelist()
+def get_employee_advance_return(employee_advance: str):
+	frappe.has_permission("Employee Advance", ptype="read", doc=employee_advance, throw=True)
+
+	AdditionalSalary = frappe.qb.DocType("Additional Salary")
+	return_entries = (
+		frappe.qb.from_(AdditionalSalary)
+		.select(Sum(AdditionalSalary.amount).as_("total_return_scheduled"))
+		.where(
+			(AdditionalSalary.ref_doctype == "Employee Advance")
+			& (AdditionalSalary.ref_docname == employee_advance)
+			& (AdditionalSalary.docstatus == 1)
+		)
+	).run(as_dict=True)
+
+	total_return_scheduled = flt(return_entries[0].total_return_scheduled)
+	already_returned = flt(frappe.db.get_value("Employee Advance", employee_advance, "return_amount"))
+	pending_scheduled = max(0, total_return_scheduled - already_returned)
+
+	return {
+		"total_return_scheduled": pending_scheduled,
+		"has_return_scheduled": bool(pending_scheduled),
+	}
