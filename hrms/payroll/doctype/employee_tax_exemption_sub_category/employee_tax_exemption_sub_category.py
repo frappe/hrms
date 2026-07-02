@@ -9,8 +9,6 @@ from frappe.utils import flt
 
 
 class EmployeeTaxExemptionSubCategory(Document):
-<<<<<<< HEAD
-=======
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -25,7 +23,6 @@ class EmployeeTaxExemptionSubCategory(Document):
 		max_amount: DF.Currency
 	# end: auto-generated types
 
->>>>>>> dee44d5b3 (feat(minor): description field for exemption categories and sub categories.)
 	def validate(self):
 		category_max_amount = frappe.db.get_value(
 			"Employee Tax Exemption Category", self.exemption_category, "max_amount"
