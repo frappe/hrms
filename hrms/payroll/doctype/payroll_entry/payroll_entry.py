@@ -399,6 +399,7 @@ class PayrollEntry(Document):
 		salary_components = self.get_salary_components(component_type)
 		if salary_components:
 			component_dict = {}
+			accounting_dimensions = get_accounting_dimensions() or []
 
 			for item in salary_components:
 				employee_cost_centers = self.get_payroll_cost_centers_for_employee(
@@ -406,15 +407,18 @@ class PayrollEntry(Document):
 				)
 				employee_advance = self.get_advance_deduction(component_type, item)
 
-				for cost_center, percentage in employee_cost_centers.items():
+				for cc_detail in employee_cost_centers:
+					cost_center = cc_detail["cost_center"]
+					percentage = cc_detail["percentage"]
 					amount_against_cost_center = flt(item.amount) * percentage / 100
 
 					if employee_advance:
 						self.add_advance_deduction_entry(
-							item, amount_against_cost_center, cost_center, employee_advance
+							item, amount_against_cost_center, cost_center, employee_advance, cc_detail
 						)
 					else:
-						key = (item.salary_component, cost_center)
+						dim_values = tuple(cc_detail.get(d) for d in accounting_dimensions)
+						key = (item.salary_component, cost_center) + dim_values
 						component_dict[key] = component_dict.get(key, 0) + amount_against_cost_center
 
 					if employee_wise_accounting_enabled:
@@ -444,6 +448,7 @@ class PayrollEntry(Document):
 		amount: float,
 		cost_center: str,
 		employee_advance: str,
+		cc_detail: dict = None,
 	) -> None:
 		self._advance_deduction_entries.append(
 			{
@@ -453,6 +458,7 @@ class PayrollEntry(Document):
 				"cost_center": cost_center,
 				"reference_type": "Employee Advance",
 				"reference_name": employee_advance,
+				"cc_detail": cc_detail or {},
 			}
 		)
 
@@ -466,6 +472,9 @@ class PayrollEntry(Document):
 		payable_amount: float,
 	):
 		for entry in self._advance_deduction_entries:
+			cc_detail = entry.get("cc_detail") or {}
+			dimension_overrides = {d: cc_detail.get(d) for d in accounting_dimensions}
+
 			payable_amount = self.get_accounting_entries_and_payable_amount(
 				entry.get("account"),
 				entry.get("cost_center"),
@@ -481,6 +490,7 @@ class PayrollEntry(Document):
 				reference_type="Employee Advance",
 				reference_name=entry.get("reference_name"),
 				is_advance="Yes",
+				dimension_overrides=dimension_overrides,
 			)
 
 		return payable_amount
@@ -500,7 +510,9 @@ class PayrollEntry(Document):
 		if not hasattr(self, "employee_cost_centers"):
 			self.employee_cost_centers = {}
 
-		if not self.employee_cost_centers.get(employee):
+		if employee not in self.employee_cost_centers:
+			accounting_dimensions = get_accounting_dimensions() or []
+
 			SalaryStructureAssignment = frappe.qb.DocType("Salary Structure Assignment")
 			EmployeeCostCenter = frappe.qb.DocType("Employee Cost Center")
 			assignment_subquery = (
@@ -515,15 +527,18 @@ class PayrollEntry(Document):
 				.orderby(SalaryStructureAssignment.from_date, order=frappe.qb.desc)
 				.limit(1)
 			)
-			cost_centers = dict(
-				(
-					frappe.qb.from_(EmployeeCostCenter)
-					.select(EmployeeCostCenter.cost_center, EmployeeCostCenter.percentage)
-					.where(EmployeeCostCenter.parent == assignment_subquery)
-				).run(as_list=True)
-			)
 
-			if not cost_centers:
+			fields_to_select = [EmployeeCostCenter.cost_center, EmployeeCostCenter.percentage]
+			for dim in accounting_dimensions:
+				fields_to_select.append(EmployeeCostCenter[dim])
+
+			rows = (
+				frappe.qb.from_(EmployeeCostCenter)
+				.select(*fields_to_select)
+				.where(EmployeeCostCenter.parent == assignment_subquery)
+			).run(as_dict=True)
+
+			if not rows:
 				default_cost_center, department = frappe.get_cached_value(
 					"Employee", employee, ["payroll_cost_center", "department"]
 				)
@@ -536,18 +551,20 @@ class PayrollEntry(Document):
 				if not default_cost_center:
 					default_cost_center = self.cost_center
 
-				cost_centers = {default_cost_center: 100}
+				rows = [{"cost_center": default_cost_center, "percentage": 100}]
 
-			self.employee_cost_centers.setdefault(employee, cost_centers)
+			self.employee_cost_centers[employee] = rows
 
-		return self.employee_cost_centers.get(employee, {})
+		return self.employee_cost_centers.get(employee, [])
 
 	def get_account(self, component_dict=None):
 		account_dict = {}
 		for key, amount in component_dict.items():
-			component, cost_center = key
+			component = key[0]
+			cost_center = key[1]
+			dim_values = key[2:]
 			account = self.get_salary_component_account(component)
-			accounting_key = (account, cost_center)
+			accounting_key = (account, cost_center) + dim_values
 
 			account_dict[accounting_key] = account_dict.get(accounting_key, 0) + amount
 
@@ -691,10 +708,11 @@ class PayrollEntry(Document):
 		employee_wise_accounting_enabled,
 	):
 		# Earnings
-		for acc_cc, amount in earnings.items():
+		for acc_cc_dims, amount in earnings.items():
+			dim_overrides = dict(zip(accounting_dimensions, acc_cc_dims[2:])) if len(acc_cc_dims) > 2 else {}
 			payable_amount = self.get_accounting_entries_and_payable_amount(
-				acc_cc[0],
-				acc_cc[1] or self.cost_center,
+				acc_cc_dims[0],
+				acc_cc_dims[1] or self.cost_center,
 				amount,
 				currencies,
 				company_currency,
@@ -703,13 +721,15 @@ class PayrollEntry(Document):
 				precision,
 				entry_type="debit",
 				accounts=accounts,
+				dimension_overrides=dim_overrides,
 			)
 
 		# Deductions
-		for acc_cc, amount in deductions.items():
+		for acc_cc_dims, amount in deductions.items():
+			dim_overrides = dict(zip(accounting_dimensions, acc_cc_dims[2:])) if len(acc_cc_dims) > 2 else {}
 			payable_amount = self.get_accounting_entries_and_payable_amount(
-				acc_cc[0],
-				acc_cc[1] or self.cost_center,
+				acc_cc_dims[0],
+				acc_cc_dims[1] or self.cost_center,
 				amount,
 				currencies,
 				company_currency,
@@ -718,6 +738,7 @@ class PayrollEntry(Document):
 				precision,
 				entry_type="credit",
 				accounts=accounts,
+				dimension_overrides=dim_overrides,
 			)
 
 		return payable_amount
@@ -795,6 +816,7 @@ class PayrollEntry(Document):
 		reference_type=None,
 		reference_name=None,
 		is_advance=None,
+		dimension_overrides=None,
 	):
 		exchange_rate, amt = self.get_amount_and_exchange_rate_for_journal_entry(
 			account, amount, company_currency, currencies
@@ -850,6 +872,7 @@ class PayrollEntry(Document):
 		self.update_accounting_dimensions(
 			row,
 			accounting_dimensions,
+			dimension_overrides=dimension_overrides,
 		)
 
 		if amt:
@@ -857,9 +880,12 @@ class PayrollEntry(Document):
 
 		return payable_amount
 
-	def update_accounting_dimensions(self, row, accounting_dimensions):
+	def update_accounting_dimensions(self, row, accounting_dimensions, dimension_overrides=None):
 		for dimension in accounting_dimensions:
-			row.update({dimension: self.get(dimension)})
+			if dimension_overrides and dimension_overrides.get(dimension) is not None:
+				row[dimension] = dimension_overrides[dimension]
+			else:
+				row[dimension] = self.get(dimension)
 
 		return row
 
@@ -1055,8 +1081,11 @@ class PayrollEntry(Document):
 					employee, employee_details.get("salary_structure")
 				)
 
-				for cost_center, percentage in cost_centers.items():
+				for cc_detail in cost_centers:
+					cost_center = cc_detail["cost_center"]
+					percentage = cc_detail["percentage"]
 					amount_against_cost_center = flt(amount) * percentage / 100
+					dim_overrides = {d: cc_detail.get(d) for d in accounting_dimensions}
 					accounts.append(
 						self.update_accounting_dimensions(
 							{
@@ -1070,6 +1099,7 @@ class PayrollEntry(Document):
 								"cost_center": cost_center,
 							},
 							accounting_dimensions,
+							dimension_overrides=dim_overrides,
 						)
 					)
 		else:

@@ -260,6 +260,7 @@ accounting_dimension_doctypes = [
 	"Expense Taxes and Charges",
 	"Payroll Entry",
 	"Leave Encashment",
+	"Employee Cost Center",
 ]
 
 bank_reconciliation_doctypes = ["Expense Claim"]

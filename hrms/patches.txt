@@ -38,3 +38,4 @@ hrms.patches.v15_0.add_leave_type_permission_for_ess
 hrms.patches.v16_0.create_custom_field_for_employee_advance_in_employee_master
 hrms.patches.v16_0.delete_old_workspaces #2026-01-09
 hrms.patches.v16_0.create_holiday_list_assignments
+hrms.patches.v16_0.create_accounting_dimensions_in_employee_cost_center

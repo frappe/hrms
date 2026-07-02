@@ -33,8 +33,8 @@ class AdditionalSalary(Document):
 		self.validate_tax_component_overwrite()
 		self.validate_accrual_component()
 
-		if self.amount < 0:
-			frappe.throw(_("Amount should not be less than zero"))
+		# if self.amount < 0:
+		# 	frappe.throw(_("Amount should not be less than zero"))
 
 	def validate_salary_structure(self):
 		salary_structure = frappe.db.get_value(

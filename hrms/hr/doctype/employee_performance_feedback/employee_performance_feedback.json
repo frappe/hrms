@@ -81,6 +81,7 @@
    "reqd": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "appraisal",
    "fieldtype": "Link",
    "label": "Appraisal",
@@ -183,11 +184,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-27 13:09:40.430183",
+ "modified": "2026-06-23 16:26:50.992614",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Performance Feedback",
- "naming_rule": "Expression",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
@@ -241,6 +242,7 @@
    "share": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "employee_name, reviewer_name, appraisal_cycle",
  "sort_field": "creation",
  "sort_order": "DESC",
