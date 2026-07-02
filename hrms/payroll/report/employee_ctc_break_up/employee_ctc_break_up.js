@@ -26,7 +26,24 @@ frappe.query_reports["Employee CTC Break-up"] = {
 				};
 			},
 			on_change: function () {
-				frappe.query_report.set_filter_value("salary_structure_assignment", "");
+				let employee = frappe.query_report.get_filter_value("employee");
+				if (!employee) {
+					frappe.query_report.set_filter_value("salary_structure_assignment", "");
+					return;
+				}
+				frappe.db
+					.get_list("Salary Structure Assignment", {
+						filters: { employee: employee, docstatus: 1 },
+						fields: ["name"],
+						order_by: "from_date desc",
+						limit: 1,
+					})
+					.then(function (result) {
+						frappe.query_report.set_filter_value(
+							"salary_structure_assignment",
+							(result[0] && result[0].name) || "",
+						);
+					});
 			},
 		},
 		{
@@ -43,10 +60,16 @@ frappe.query_reports["Employee CTC Break-up"] = {
 						employee: employee,
 						docstatus: 1,
 					},
+					order_by: "from_date desc",
 				};
 			},
 		},
 	],
+	onload: async function (report) {
+		const employee = await hrms.get_current_employee();
+		if (!employee) return;
+		report.set_filter_value("employee", employee);
+	},
 	formatter: function (value, row, column, data, default_formatter) {
 		value = default_formatter(value, row, column, data);
 		if (data?.bold && value) value = `<strong>${value}</strong>`;
