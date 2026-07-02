@@ -307,6 +307,11 @@
    "share": 1,
    "submit": 1,
    "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Employee",
+   "select": 1
   }
  ],
  "row_format": "Dynamic",

@@ -29,6 +29,7 @@ class SalaryBreakupReport:
 			for_preview=1,
 			as_print=False,
 			posting_date=frappe.flags.posting_date if frappe.flags.in_test else None,
+			ignore_permissions=True,
 		)
 		self.net_pay = self.salary_slip.net_pay
 		self.gross_pay = self.salary_slip.gross_pay
