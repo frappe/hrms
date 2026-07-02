@@ -148,9 +148,11 @@ def make_salary_structure(
 	test_accrual_component=False,
 	test_arrear=False,
 	test_salary_structure_arrear=False,
+	earnings=None,
+	deductions=None,
 ):
 	if not currency:
-		currency = "INR" or "INR"
+		currency = "INR"
 
 	if frappe.db.exists("Salary Structure", salary_structure):
 		frappe.db.delete("Salary Structure", salary_structure)
@@ -167,14 +169,18 @@ def make_salary_structure(
 		"doctype": "Salary Structure",
 		"name": salary_structure,
 		"company": company or "_Test Company",
-		"earnings": make_earning_salary_component(
+		"earnings": earnings
+		if earnings is not None
+		else make_earning_salary_component(
 			setup=True,
 			test_tax=test_tax,
 			company_list=["_Test Company"],
 			test_accrual_component=test_accrual_component,
 			test_arrear=test_arrear,
 		),
-		"deductions": make_deduction_salary_component(
+		"deductions": deductions
+		if deductions is not None
+		else make_deduction_salary_component(
 			setup=True,
 			test_tax=test_tax,
 			company_list=["_Test Company"],
