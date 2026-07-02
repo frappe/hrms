@@ -124,7 +124,7 @@
 							const [label, fieldtype] = getFieldInfo(field)
 							return {
 								fieldname: field,
-								value: employeeDoc.doc[field],
+								value: getFieldValue(field),
 								label: label,
 								fieldtype: fieldtype,
 							}
@@ -138,7 +138,7 @@
 </template>
 
 <script setup>
-import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
+import { computed, inject, ref, watch, onMounted, onBeforeUnmount } from "vue"
 import { useRouter } from "vue-router"
 import { IonPage, IonContent } from "@ionic/vue"
 import { FeatherIcon, createDocumentResource, createResource, toast } from "frappe-ui"
@@ -244,6 +244,19 @@ const employeeDoc = createDocumentResource({
 	},
 })
 
+const reportsToName = createResource({
+	url: "hrms.api.get_reports_to_employee_name",
+})
+
+watch(
+	() => employeeDoc.doc?.reports_to,
+	(reports_to) => {
+		if (reports_to) {
+			reportsToName.submit({ employee: reports_to })
+		}
+	}
+)
+
 const employeeDocType = createResource({
 	url: "hrms.api.get_doctype_fields",
 	params: { doctype: DOCTYPE },
@@ -255,6 +268,16 @@ const getFieldInfo = (fieldname) => {
 		(field) => field.fieldname === fieldname
 	)
 	return [__(field?.label, null, "Employee"), field?.fieldtype]
+}
+
+const getFieldValue = (fieldname) => {
+	if (fieldname === "employee_number" && !employeeDoc.doc[fieldname]) {
+		return employeeDoc.doc["name"]
+	}
+	if (fieldname === "reports_to") {
+		return reportsToName.data || employeeDoc.doc[fieldname]
+	}
+	return employeeDoc.doc[fieldname]
 }
 
 const logout = async () => {
