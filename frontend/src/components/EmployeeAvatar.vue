@@ -7,7 +7,7 @@
 			:size="props.size"
 		/>
 		<div class="text-base text-gray-800 grow">
-			{{ employee?.employee_name }}
+			{{ employee?.employee_name || props.employeeID }}
 		</div>
 	</div>
 
