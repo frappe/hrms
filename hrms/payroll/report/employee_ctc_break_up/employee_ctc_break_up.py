@@ -3,11 +3,11 @@
 
 import frappe
 from frappe import _
-from frappe.utils import flt, get_link_to_form
+from frappe.utils import flt, get_link_to_form, has_common
 from frappe.utils.formatters import fmt_money
 from frappe.utils.jinja import render_template
 
-from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
+from hrms.payroll.doctype.salary_structure.salary_structure import _make_salary_slip
 
 
 class SalaryBreakupReport:
@@ -23,7 +23,7 @@ class SalaryBreakupReport:
 			)
 		)
 		self.validate_ctc()
-		self.salary_slip = make_salary_slip(
+		self.salary_slip = _make_salary_slip(
 			self.salary_structure,
 			employee=self.employee,
 			for_preview=1,
@@ -313,9 +313,26 @@ def execute(filters: dict | None = None):
 			title=_("Missing value for filters"),
 		)
 
+	validate_employee_access(employee)
+
 	salary_breakup_report = SalaryBreakupReport(employee, salary_structure_assignment)
 
 	data = salary_breakup_report.get_data()
 	columns = salary_breakup_report.get_columns()
 	message = salary_breakup_report.get_message()
 	return columns, data, message, None, None
+
+
+ROLES_ALLOWED_TO_VIEW_ANY_EMPLOYEE = ("System Manager", "HR Manager", "HR User")
+
+
+def validate_employee_access(employee: str):
+	can_view_any_employee = has_common(ROLES_ALLOWED_TO_VIEW_ANY_EMPLOYEE, frappe.get_roles())
+	is_own_record = frappe.db.get_value("Employee", employee, "user_id") == frappe.session.user
+
+	if not can_view_any_employee and not is_own_record:
+		frappe.throw(
+			_("You are not permitted to access the CTC report of another employee."),
+			frappe.PermissionError,
+			title=_("Not Permitted"),
+		)
