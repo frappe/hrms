@@ -567,7 +567,7 @@ def get_expense_claim_account(expense_claim_type, company):
 
 
 @frappe.whitelist()
-def get_advances(employee: str, advance_id: str | None = None):
+def get_advances(employee: str, advance_id: str | None = None, company: str | None = None):
 	frappe.has_permission("Employee", "read", employee, throw=True)
 
 	advance = frappe.qb.DocType("Employee Advance")
@@ -592,6 +592,11 @@ def get_advances(employee: str, advance_id: str | None = None):
 	else:
 		query = query.where((advance.name == advance_id) & (advance.employee == employee))
 
+	if company:
+		company_currency = frappe.get_cached_value("Company", company, "default_currency")
+		if company_currency:
+			query = query.where(advance.currency == company_currency)
+
 	return query.run(as_dict=True)
 
 
@@ -599,6 +604,19 @@ def get_advances(employee: str, advance_id: str | None = None):
 def get_expense_claim(
 	employee_name, company, employee_advance_name, posting_date, paid_amount, claimed_amount, return_amount
 ):
+	advance_currency = frappe.db.get_value("Employee Advance", employee_advance_name, "currency")
+	company_currency = frappe.get_cached_value("Company", company, "default_currency")
+	if advance_currency and advance_currency != company_currency:
+		frappe.throw(
+			_(
+				"Cannot create Expense Claim for Employee Advance {0}. The advance currency {1} differs from the company's default currency {2}."
+			).format(
+				frappe.bold(employee_advance_name),
+				frappe.bold(advance_currency),
+				frappe.bold(company_currency),
+			)
+		)
+
 	default_payable_account = frappe.get_cached_value(
 		"Company", company, "default_expense_claim_payable_account"
 	)

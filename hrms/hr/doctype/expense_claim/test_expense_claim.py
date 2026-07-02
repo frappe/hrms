@@ -11,6 +11,7 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.expense_claim.expense_claim import (
 	MismatchError,
+	get_advances,
 	get_outstanding_amount_for_claim,
 	make_bank_entry,
 	make_expense_claim_for_delivery_trip,
@@ -765,6 +766,49 @@ class TestExpenseClaim(FrappeTestCase):
 		expense_claim.submit()
 
 		self.assertEqual(1, expense_claim.docstatus)
+
+	def test_advance_in_different_currency_excluded_from_claim(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			make_employee_advance,
+			make_payment_entry,
+		)
+
+		company = "_Test Company"
+		company_currency = frappe.get_cached_value("Company", company, "default_currency")
+		employee = make_employee("test_adv_cross_currency@example.com", company=company)
+
+		advance_account = create_account(
+			account_name="Employee Advance (USD) - Test",
+			parent_account="Current Assets - _TC",
+			company=company,
+			account_currency="USD",
+		)
+		advance = make_employee_advance(
+			employee,
+			args={
+				"currency": "USD",
+				"exchange_rate": 80,
+				"advance_amount": 100,
+				"advance_account": advance_account,
+			},
+		)
+		make_payment_entry(advance)
+		advance.reload()
+		self.assertNotEqual(advance.currency, company_currency)
+
+		claim = make_expense_claim(
+			get_payable_account(company),
+			100,
+			100,
+			company,
+			"Travel Expenses - _TC",
+			employee=employee,
+			do_not_submit=True,
+		)
+
+		# advances in a different currency are excluded from both the bulk and explicit fetch
+		self.assertEqual(get_advances(claim.employee, company=company), [])
+		self.assertEqual(get_advances(claim.employee, advance.name, company=company), [])
 
 	def test_expense_claim_status_as_payment_after_unreconciliation(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import make_payment_entry

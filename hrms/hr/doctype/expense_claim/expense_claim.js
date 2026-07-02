@@ -13,6 +13,7 @@ frappe.ui.form.on("Expense Claim", {
 					["employee", "=", frm.doc.employee],
 					["paid_amount", ">", 0],
 					["status", "not in", ["Claimed", "Returned", "Partly Claimed and Returned"]],
+					["currency", "=", erpnext.get_currency(frm.doc.company)],
 				],
 			};
 		});
@@ -310,6 +311,7 @@ frappe.ui.form.on("Expense Claim", {
 				method: "hrms.hr.doctype.expense_claim.expense_claim.get_advances",
 				args: {
 					employee: frm.doc.employee,
+					company: frm.doc.company,
 				},
 				callback: function (r, rt) {
 					if (r.message) {
@@ -418,6 +420,7 @@ frappe.ui.form.on("Expense Claim Advance", {
 				args: {
 					employee: frm.doc.employee,
 					advance_id: child.employee_advance,
+					company: frm.doc.company,
 				},
 				callback: function (r, rt) {
 					if (r.message && r.message.length > 0) {
