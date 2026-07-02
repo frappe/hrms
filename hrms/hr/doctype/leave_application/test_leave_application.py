@@ -491,6 +491,16 @@ class TestLeaveApplication(HRMSTestSuite):
 		add_role("test@example.com", "Employee")
 		frappe.set_user("test@example.com")
 
+		# allocate leave covering today so the applications aren't rejected for
+		# being outside the allocation period
+		date = getdate()
+		make_allocation_record(
+			employee=get_employee().name,
+			leave_type="_Test Leave Type",
+			from_date=get_year_start(date),
+			to_date=get_year_ending(date),
+		)
+
 		# full day leave on today (half_day_date stays NULL)
 		application = self.get_application(self.leave_application)
 		application.from_date = application.to_date = nowdate()
