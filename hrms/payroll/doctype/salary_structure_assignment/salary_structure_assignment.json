@@ -262,11 +262,7 @@
  ],
  "is_submittable": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2026-05-14 13:33:55.869281",
-=======
  "modified": "2026-06-08 17:40:49.118187",
->>>>>>> 5b1e1cdfe (feat: employer contribution type in salary component)
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure Assignment",
