@@ -27,6 +27,7 @@
   "column_break_besp",
   "earnings",
   "deductions",
+  "employer_contributions",
   "employee_benefits",
   "conditions_and_formula_variable_and_example",
   "net_pay_detail",
@@ -163,6 +164,12 @@
    "options": "Salary Detail"
   },
   {
+   "fieldname": "employer_contributions",
+   "fieldtype": "Table",
+   "label": "Employer Contributions",
+   "options": "Salary Detail"
+  },
+  {
    "fieldname": "net_pay_detail",
    "fieldtype": "Section Break",
    "options": "Simple"
@@ -255,7 +262,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-15 15:56:52.814944",
+ "modified": "2026-06-08 17:39:39.847210",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure",
