@@ -27,10 +27,8 @@ frappe.query_reports["Employee CTC Break-up"] = {
 			},
 			on_change: function () {
 				let employee = frappe.query_report.get_filter_value("employee");
-				if (!employee) {
-					frappe.query_report.set_filter_value("salary_structure_assignment", "");
-					return;
-				}
+				frappe.query_report.set_filter_value("salary_structure_assignment", "");
+				if (!employee) return;
 				frappe.db
 					.get_list("Salary Structure Assignment", {
 						filters: { employee: employee, docstatus: 1 },
@@ -39,6 +37,8 @@ frappe.query_reports["Employee CTC Break-up"] = {
 						limit: 1,
 					})
 					.then(function (result) {
+						if (frappe.query_report.get_filter_value("salary_structure_assignment"))
+							return;
 						frappe.query_report.set_filter_value(
 							"salary_structure_assignment",
 							(result[0] && result[0].name) || "",
@@ -66,6 +66,8 @@ frappe.query_reports["Employee CTC Break-up"] = {
 		},
 	],
 	onload: async function (report) {
+		if (report.get_filter_value("employee")) return;
+
 		const employee = await hrms.get_current_employee();
 		if (!employee) return;
 		report.set_filter_value("employee", employee);
