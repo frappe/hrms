@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2026-06-24 17:40+0000\n"
-"PO-Revision-Date: 2026-06-28 22:01\n"
+"PO-Revision-Date: 2026-07-01 22:37\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -729,7 +729,7 @@ msgstr "اجازه تراز منفی"
 #. Label of the allow_over_allocation (Check) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Allow Over Allocation"
-msgstr "اجازه بیش از تخصیص"
+msgstr "اجازه تخصیص بیش از حد"
 
 #. Label of the allow_tax_exemption (Check) field in DocType 'Income Tax Slab'
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
@@ -1260,7 +1260,7 @@ msgstr ""
 #. Label of the from_date (Date) field in DocType 'Holiday List Assignment'
 #: hrms/hr/doctype/holiday_list_assignment/holiday_list_assignment.json
 msgid "Assignment Starts From"
-msgstr ""
+msgstr "تخصیص شروع می‌شود از"
 
 #. Label of the assignment_based_on (Select) field in DocType 'Leave Policy
 #. Assignment'
@@ -1270,7 +1270,7 @@ msgstr "تخصیص بر اساس"
 
 #: hrms/hr/doctype/holiday_list_assignment/holiday_list_assignment.py:66
 msgid "Assignment start date cannot be outside holiday list dates"
-msgstr ""
+msgstr "تاریخ شروع تخصیص نمی‌تواند خارج از تاریخ‌های لیست تعطیلات باشد"
 
 #: hrms/hr/doctype/job_requisition/job_requisition.js:50
 #: hrms/hr/doctype/job_requisition/job_requisition.js:74
@@ -1491,7 +1491,7 @@ msgstr "خودکار بر اساس پیشرفت هدف"
 
 #: hrms/hr/utils.py:498
 msgid "Automatic Leave Allocation has failed for the following Earned Leaves: {0}. Please check {1} for more details."
-msgstr ""
+msgstr "تخصیص خودکار مرخصی برای مرخصی‌های استحقاقی زیر ناموفق بوده است: {0}. لطفاً برای جزئیات بیشتر {1} را بررسی کنید."
 
 #. Description of the 'Assets Allocated' (Section Break) field in DocType 'Full
 #. and Final Statement'
@@ -2680,7 +2680,7 @@ msgstr "داخلی"
 
 #: hrms/hr/doctype/holiday_list_assignment/holiday_list_assignment.py:57
 msgid "Duplicate Assignment"
-msgstr ""
+msgstr "تخصیص تکراری"
 
 #: hrms/hr/doctype/attendance/attendance.py:114
 msgid "Duplicate Attendance"
@@ -2730,12 +2730,12 @@ msgstr "خروج های زودهنگام"
 #. Label of the earned_leave (Section Break) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Earned Leave"
-msgstr "مرخصی کسب شده"
+msgstr "مرخصی استحقاقی"
 
 #. Label of the earned_leave_frequency (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Earned Leave Frequency"
-msgstr "فرکانس مرخصی کسب شده"
+msgstr "فرکانس مرخصی استحقاقی"
 
 #. Name of a DocType
 #. Label of the earned_leave_schedule_section (Section Break) field in DocType
@@ -2743,23 +2743,23 @@ msgstr "فرکانس مرخصی کسب شده"
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 msgid "Earned Leave Schedule"
-msgstr ""
+msgstr "زمان‌بندی مرخصی استحقاقی"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:175
 msgid "Earned Leaves"
-msgstr "مرخصی‌های به دست آمده"
+msgstr "مرخصی‌های استحقاقی"
 
 #: hrms/hr/doctype/leave_type/leave_type.py:68
 msgid "Earned Leaves are allocated as per the configured frequency via scheduler."
-msgstr "مرخصی‌های به دست آمده طبق فرکانس پیکربندی شده از طریق زمان‌بندی تخصیص داده می‌شوند."
+msgstr "مرخصی‌های استحقاقی طبق فرکانس پیکربندی شده از طریق زمان‌بندی تخصیص داده می‌شوند."
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:178
 msgid "Earned Leaves are auto-allocated via scheduler based on the annual allocation set in the Leave Policy: {0}"
-msgstr "مرخصی‌های کسب‌شده به‌طور خودکار از طریق زمان‌بندی بر اساس تخصیص سالانه تنظیم‌شده در سیاست مرخصی تخصیص می‌یابند: {0}"
+msgstr "مرخصی‌های استحقاقی به‌طور خودکار از طریق زمان‌بندی بر اساس تخصیص سالانه تنظیم‌شده در سیاست مرخصی تخصیص می‌یابند: {0}"
 
 #: hrms/hr/doctype/leave_type/leave_type.js:59
 msgid "Earned Leaves are leaves earned by an Employee after working with the company for a certain amount of time. Enabling this will allocate leaves on pro-rata basis by automatically updating Leave Allocation for leaves of this type at intervals set by 'Earned Leave Frequency."
-msgstr "مرخصی‌های کسب‌شده، مرخصی‌هایی هستند که یک کارمند پس از کار کردن در شرکت برای مدت زمان معینی به دست می‌آورد. فعال کردن این گزینه، مرخصی‌ها را بر اساس نسبت کارکرد تخصیص داده و به‌صورت خودکار تخصیص مرخصی را در فواصل زمانی تعیین‌شده توسط 'تناوب مرخصی کسب‌شده' به‌روزرسانی می‌کند."
+msgstr "مرخصی‌های استحقاقی، مرخصی‌هایی هستند که یک کارمند پس از مدت زمان مشخصی کار در شرکت، دریافت می‌کند. فعال کردن این گزینه، مرخصی‌ها را به صورت تناسبی و با به‌روزرسانی خودکار تخصیص مرخصی برای این نوع مرخصی‌ها در فواصل زمانی تعیین‌شده توسط «فرکانس مرخصی استحقاقی» اختصاص می‌دهد."
 
 #. Option for the 'Type' (Select) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
@@ -3476,7 +3476,7 @@ msgstr ""
 #. Label of a number card in the Leaves Workspace
 #: hrms/hr/workspace/leaves/leaves.json
 msgid "Employees on leave this month"
-msgstr ""
+msgstr "کارمندانی که این ماه در مرخصی هستند"
 
 #. Label of a number card in the Leaves Workspace
 #: hrms/hr/workspace/leaves/leaves.json
@@ -4138,7 +4138,7 @@ msgstr "دلیل شکست"
 
 #: hrms/hr/utils.py:497
 msgid "Failure of Automatic Allocation of Earned Leaves"
-msgstr ""
+msgstr "عدم تخصیص خودکار مرخصی‌های استحقاقی"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:37
 #: hrms/public/js/salary_slip_deductions_report_filters.js:20
@@ -4279,7 +4279,7 @@ msgstr "اولین ورود و آخرین خروج"
 #. Option for the 'Allocate on Day' (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "First Day"
-msgstr "اولین روز"
+msgstr "روز اول"
 
 #. Label of the first_name (Data) field in DocType 'Employee Referral'
 #: hrms/hr/doctype/employee_referral/employee_referral.json
@@ -4361,7 +4361,7 @@ msgstr "برای کارمند"
 #: hrms/hr/doctype/leave_type/leave_type.json
 #, python-format
 msgid "For a day of leave taken, if you still pay (say) 50% of the daily salary, then enter 0.50 in this field."
-msgstr "برای یک روز مرخصی گرفته شده، اگر باز هم (مثلا) 50 درصد حقوق روزانه را پرداخت می‌کنید، در این قسمت 0.50 را وارد کنید."
+msgstr "برای یک روز مرخصی گرفته شده، اگر همچنان (مثلا) 50% حقوق روزانه را پرداخت می‌کنید، در این فیلد 0.50 را وارد کنید."
 
 #. Label of the formula (Code) field in DocType 'Salary Component'
 #. Label of the formula (Code) field in DocType 'Salary Detail'
@@ -4625,7 +4625,7 @@ msgstr "اهداف با موفقیت به روز شدند"
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 #: hrms/setup.py:203
 msgid "Grade"
-msgstr "مقطع تحصیلی"
+msgstr "درجه"
 
 #. Name of a DocType
 #. Label of the details_tab (Tab Break) field in DocType 'Gratuity'
@@ -4854,11 +4854,11 @@ msgstr "تنظیمات استخدام"
 #: hrms/hr/doctype/holiday_list_assignment/holiday_list_assignment.json
 #: hrms/workspace_sidebar/leaves.json
 msgid "Holiday List Assignment"
-msgstr ""
+msgstr "تخصیص لیست تعطیلات"
 
 #: hrms/hr/doctype/holiday_list_assignment/holiday_list_assignment.py:51
 msgid "Holiday List Assignment for {0} already exists for date {1}: {2}"
-msgstr ""
+msgstr "تخصیص لیست تعطیلات برای {0} از قبل برای تاریخ {1} وجود دارد: {2}"
 
 #. Label of the holiday_list_end (Date) field in DocType 'Holiday List
 #. Assignment'
@@ -5060,7 +5060,7 @@ msgstr ""
 #. Block List'
 #: hrms/hr/doctype/leave_block_list/leave_block_list.json
 msgid "If not checked, the list will have to be added to each Department where it has to be applied."
-msgstr "اگر علامت زده نشود، فهرست باید به هر بخش که باید اعمال شود اضافه شود."
+msgstr "اگر علامت زده نشود، لیست باید به هر دپارتمانی که باید اعمال شود اضافه شود."
 
 #. Description of the 'Statistical Component' (Check) field in DocType 'Salary
 #. Detail'
@@ -5534,7 +5534,7 @@ msgstr "مرخصی جبرانی است"
 #: hrms/hr/doctype/leave_type/leave_type.json
 #: hrms/hr/doctype/leave_type/leave_type.py:74
 msgid "Is Earned Leave"
-msgstr "مرخصی به دست آمده است"
+msgstr "مرخصی استحقاقی است"
 
 #. Label of the is_expired (Check) field in DocType 'Leave Ledger Entry'
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.json
@@ -5969,7 +5969,7 @@ msgstr "تأیید کننده مرخصی"
 #. DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Leave Approver Mandatory In Leave Application"
-msgstr "تأیید کننده مرخصی اجباری در درخواست مرخصی"
+msgstr "تاییدکننده مرخصی در درخواست مرخصی الزامی است"
 
 #: hrms/hr/doctype/leave_application/leave_application_calendar.js:493
 msgid "Leave Approver Missing"
@@ -6045,7 +6045,7 @@ msgstr "مرخصی مسدود شده"
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 #: hrms/hr/workspace/leaves/leaves.json hrms/workspace_sidebar/leaves.json
 msgid "Leave Control Panel"
-msgstr "کنترل پنل مرخصی"
+msgstr "پنل کنترل مرخصی"
 
 #. Label of the leave_details (Table) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
@@ -6214,7 +6214,7 @@ msgstr "نام نوع مرخصی"
 
 #: hrms/hr/doctype/leave_type/leave_type.py:67
 msgid "Leave Type can either be compensatory or earned leave."
-msgstr "نوع مرخصی می‌تواند مرخصی جبرانی یا اکتسابی باشد."
+msgstr "نوع مرخصی می‌تواند مرخصی جبرانی یا استحقاقی باشد."
 
 #: hrms/hr/doctype/leave_type/leave_type.py:79
 msgid "Leave Type can either be without pay or partial pay"
@@ -8576,7 +8576,7 @@ msgstr "کاهش"
 
 #: hrms/hr/doctype/leave_type/leave_type.py:102
 msgid "Reducing maximum leaves allowed after allocation may cause scheduler to allocate incorrect number of earned leaves. Proceed with caution."
-msgstr ""
+msgstr "کاهش حداکثر مرخصی مجاز پس از تخصیص ممکن است باعث شود زمانبند تعداد نادرستی از مرخصی‌های استحقاقی را اختصاص دهد. با احتیاط عمل کنید."
 
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.py:101
 msgid "Reduction is more than {0}'s available leave balance {1} for leave type {2}"
@@ -9621,7 +9621,7 @@ msgstr "تنظیم حساب پیش‌فرض برای {0} {1}"
 #. Label of the frequency (Select) field in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Set the frequency for holiday reminders"
-msgstr "فرکانس یادآوری تعطیلات را تنظیم کنید"
+msgstr "تنظیم فرکانس یادآوری تعطیلات"
 
 #. Description of the 'Employee Promotion Details' (Section Break) field in
 #. DocType 'Employee Promotion'

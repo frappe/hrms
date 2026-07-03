@@ -79,6 +79,9 @@ class JobApplicant(Document):
 					_("Cannot create a Job Applicant against a closed Job Opening"), title=_("Not Allowed")
 				)
 
+		if frappe.flags.in_web_form and not self.source:
+			self.source = "Website Listing"
+
 	def set_status_for_employee_referral(self):
 		emp_ref = frappe.get_doc("Employee Referral", self.employee_referral)
 		if self.status in ["Open", "Replied", "Hold"]:

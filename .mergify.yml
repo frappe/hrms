@@ -2,20 +2,20 @@ pull_request_rules:
   - name: Auto-close PRs on stable branch
     conditions:
       - and:
-        - and:
-          - author!=ruchamahabal
-          - author!=asmitahase
-          - author!=frappe-pr-bot
-          - author!=mergify[bot]
-        - or:
-          - base=version-16
-          - base=version-15
-          - base=version-14
+          - and:
+              - author!=ruchamahabal
+              - author!=asmitahase
+              - author!=frappe-pr-bot
+              - author!=mergify[bot]
+          - or:
+              - base=version-16
+              - base=version-15
+              - base=version-14
     actions:
       close:
       comment:
-          message: |
-            @{{author}}, thanks for the contribution, but we do not accept pull requests on a stable branch. Please raise PR on an appropriate hotfix branch or the develop branch.
+        message: |
+          @{{author}}, thanks for the contribution, but we do not accept pull requests on a stable branch. Please raise PR on an appropriate hotfix branch or the develop branch.
 
   - name: Automatic merge on CI success and review
     conditions:
@@ -43,11 +43,9 @@ pull_request_rules:
     actions:
       merge:
         method: squash
-        commit_message_template: |
-            {{ title }} (#{{ number }})
-
-            {{ body }}
-
+        commit_message_format:
+          title: pr-title
+          body: pr-body
   - name: backport to develop
     conditions:
       - label="backport develop"
