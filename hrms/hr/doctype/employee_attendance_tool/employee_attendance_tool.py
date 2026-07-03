@@ -228,4 +228,3 @@ def mark_employee_attendance(
 				).set(Attendance.shift, shift).set(Attendance.late_entry, late_entry).set(
 					Attendance.early_exit, early_exit
 				).set(Attendance.modify_half_day_status, 0).run()
-
