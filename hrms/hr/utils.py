@@ -625,11 +625,13 @@ def get_expected_allocation_date_for_period(
 		half_yearly_dates = {
 			"First Day": period_start,
 			"Last Day": period_end,
+			"Date of Joining": doj,
 		}
 	else:
 		half_yearly_dates = {
 			"First Day": get_semester_start(date),
 			"Last Day": get_semester_end(date),
+			"Date of Joining": doj,
 		}
 
 	return {
@@ -641,6 +643,7 @@ def get_expected_allocation_date_for_period(
 		"Quarterly": {
 			"First Day": get_quarter_start(date),
 			"Last Day": get_quarter_ending(date),
+			"Date of Joining": doj,
 		},
 		"Half-Yearly": half_yearly_dates,
 		"Yearly": {"First Day": get_year_start(date), "Last Day": get_year_ending(date)},

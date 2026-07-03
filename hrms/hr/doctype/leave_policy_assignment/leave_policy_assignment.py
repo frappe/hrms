@@ -416,14 +416,18 @@ def is_earned_leave_applicable_for_current_period(
 		from hrms.hr.utils import get_half_year_periods
 
 		period_start, period_end = get_half_year_periods(date, effective_from)
-		half_yearly_condition = (allocate_on_day == "First Day" and date >= period_start) or (
-			allocate_on_day == "Last Day" and date == period_end
+		half_yearly_condition = (
+			(allocate_on_day == "First Day" and date >= period_start)
+			or (allocate_on_day == "Last Day" and date == period_end)
+			or (allocate_on_day == "Date of Joining" and date.day >= date_of_joining.day)
 		)
 	else:
 		from hrms.hr.utils import get_semester_end, get_semester_start
 
-		half_yearly_condition = (allocate_on_day == "First Day" and date >= get_semester_start(date)) or (
-			allocate_on_day == "Last Day" and date == get_semester_end(date)
+		half_yearly_condition = (
+			(allocate_on_day == "First Day" and date >= get_semester_start(date))
+			or (allocate_on_day == "Last Day" and date == get_semester_end(date))
+			or (allocate_on_day == "Date of Joining" and date.day >= date_of_joining.day)
 		)
 
 	condition_map = {
@@ -435,6 +439,7 @@ def is_earned_leave_applicable_for_current_period(
 		"Quarterly": (
 			(allocate_on_day == "First Day" and date >= get_quarter_start(date))
 			or (allocate_on_day == "Last Day" and date == get_quarter_ending(date))
+			or (allocate_on_day == "Date of Joining" and date.day >= date_of_joining.day)
 		),
 		"Half-Yearly": half_yearly_condition,
 		"Yearly": (
