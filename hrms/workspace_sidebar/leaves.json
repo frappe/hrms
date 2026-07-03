@@ -9,7 +9,7 @@
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "home",
+   "icon": "house",
    "indent": 0,
    "keep_closed": 0,
    "label": "Home",
@@ -33,7 +33,7 @@
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "money-coins-1",
+   "icon": "coins",
    "indent": 0,
    "keep_closed": 0,
    "label": "Leave Encashment",
@@ -45,7 +45,7 @@
   {
    "child": 1,
    "collapsible": 1,
-   "icon": "setting",
+   "icon": "sliders-horizontal",
    "indent": 0,
    "keep_closed": 0,
    "label": "Leave Control Panel",
@@ -221,7 +221,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-01-12 14:12:08.828397",
+ "modified": "2026-07-03 14:12:08.828397",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leaves",
