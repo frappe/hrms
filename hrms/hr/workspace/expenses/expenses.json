@@ -13,7 +13,7 @@
  "doctype": "Workspace",
  "for_user": "",
  "hide_custom": 1,
- "icon": "expenses",
+ "icon": "receipt-text",
  "idx": 0,
  "is_hidden": 0,
  "label": "Expenses",
@@ -257,7 +257,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-06-14 13:44:08.158384",
+ "modified": "2026-07-03 13:44:08.158384",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expenses",
@@ -273,7 +273,7 @@
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "home",
+   "icon": "house",
    "indent": 0,
    "keep_closed": 0,
    "label": "Home",
@@ -376,7 +376,7 @@
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "money-coins-1",
+   "icon": "coins",
    "indent": 1,
    "keep_closed": 1,
    "label": "Accounting Entries",

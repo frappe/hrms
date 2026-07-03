@@ -10,7 +10,7 @@
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "home",
+   "icon": "house",
    "indent": 0,
    "keep_closed": 0,
    "label": "Home",
@@ -46,7 +46,7 @@
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "organization",
+   "icon": "building-2",
    "indent": 0,
    "keep_closed": 0,
    "label": "Organizational Chart",
@@ -148,7 +148,7 @@
    "url": "/desk/hr-settings#employee_tab"
   }
  ],
- "modified": "2026-03-23 15:16:39.465712",
+ "modified": "2026-07-03 15:16:39.465712",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Setup",

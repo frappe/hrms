@@ -9,7 +9,7 @@
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "home",
+   "icon": "house",
    "indent": 0,
    "keep_closed": 0,
    "label": "Home",
@@ -45,7 +45,7 @@
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "tool",
+   "icon": "wrench",
    "indent": 0,
    "keep_closed": 0,
    "label": "Employee Attendance Tool",
@@ -269,7 +269,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-01-08 14:16:38.373198",
+ "modified": "2026-07-03 14:16:38.373198",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift & Attendance",

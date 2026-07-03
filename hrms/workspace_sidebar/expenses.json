@@ -9,7 +9,7 @@
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "home",
+   "icon": "house",
    "indent": 0,
    "keep_closed": 0,
    "label": "Home",
@@ -104,7 +104,7 @@
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "money-coins-1",
+   "icon": "coins",
    "indent": 1,
    "keep_closed": 1,
    "label": "Accounting Entries",
@@ -268,7 +268,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-01-08 14:16:38.878865",
+ "modified": "2026-07-03 14:16:38.878865",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expenses",
