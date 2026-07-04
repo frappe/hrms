@@ -207,8 +207,6 @@ def mark_employee_attendance(
 		if isinstance(half_day_employee_list, str):
 			half_day_employee_list = json.loads(half_day_employee_list)
 
-		frappe.has_permission("Attendance", "write", throw=True)
-
 		eligible_attendance = frappe.get_list(
 			"Attendance",
 			filters={
@@ -217,6 +215,7 @@ def mark_employee_attendance(
 				"docstatus": 1,
 			},
 			fields=["name", "employee"],
+			limit=0,
 		)
 		attendance_map = {d.employee: d.name for d in eligible_attendance}
 
@@ -224,8 +223,9 @@ def mark_employee_attendance(
 		for employee in half_day_employee_list:
 			attendance_name = attendance_map.get(employee)
 			if attendance_name:
-				frappe.qb.update(Attendance).where(Attendance.name == attendance_name).set(
-					Attendance.half_day_status, half_day_status
-				).set(Attendance.shift, shift).set(Attendance.late_entry, late_entry).set(
-					Attendance.early_exit, early_exit
-				).set(Attendance.modify_half_day_status, 0).run()
+				frappe.has_permission("Attendance", "write", attendance_name, throw=True)
+				frappe.qb.update(Attendance).where(
+					(Attendance.employee == employee) & (Attendance.attendance_date == date)
+				).set(Attendance.half_day_status, half_day_status).set(Attendance.shift, shift).set(
+					Attendance.late_entry, late_entry
+				).set(Attendance.early_exit, early_exit).set(Attendance.modify_half_day_status, 0).run()
