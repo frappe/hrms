@@ -163,6 +163,7 @@ class TestAttendanceRequest(HRMSTestSuite):
 		)
 
 	def test_validate_no_attendance_to_create(self):
+		frappe.db.delete("Holiday", {"parent": self.holiday_list})
 		today = getdate()
 		yesterday = add_days(today, -1)
 		# marking absent for two days

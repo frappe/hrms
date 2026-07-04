@@ -136,7 +136,7 @@ class SalaryStructure(Document):
 				break
 
 	def sanitize_condition_and_formula_fields(self):
-		for table in ("earnings", "deductions"):
+		for table in ("earnings", "deductions", "employer_contributions"):
 			for row in self.get(table):
 				row.condition = row.condition.strip() if row.condition else ""
 				row.formula = row.formula.strip() if row.formula else ""
@@ -145,7 +145,7 @@ class SalaryStructure(Document):
 
 	def reset_condition_and_formula_fields(self):
 		# set old values (allowing multiline strings for better readability in the doctype form)
-		for table in ("earnings", "deductions"):
+		for table in ("earnings", "deductions", "employer_contributions"):
 			for row in self.get(table):
 				row.condition = row._condition
 				row.formula = row._formula
@@ -342,6 +342,29 @@ def make_salary_slip(
 	for_preview: int = 0,
 	lwp_days_corrected: float | None = None,
 ) -> str | Document:
+	return _make_salary_slip(
+		source_name,
+		target_doc=target_doc,
+		employee=employee,
+		posting_date=posting_date,
+		as_print=as_print,
+		print_format=print_format,
+		for_preview=for_preview,
+		lwp_days_corrected=lwp_days_corrected,
+	)
+
+
+def _make_salary_slip(
+	source_name: str,
+	target_doc: str | Document | None = None,
+	employee: str | None = None,
+	posting_date: str | datetime.date | None = None,
+	as_print: bool = False,
+	print_format: str | None = None,
+	for_preview: int = 0,
+	lwp_days_corrected: float | None = None,
+	ignore_permissions: bool = False,
+) -> str | Document:
 	if employee:
 		frappe.has_permission("Employee", "read", employee, throw=True)
 
@@ -370,6 +393,7 @@ def make_salary_slip(
 		},
 		target_doc,
 		postprocess,
+		ignore_permissions=ignore_permissions,
 		ignore_child_tables=True,
 		cached=True,
 	)

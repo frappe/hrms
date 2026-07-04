@@ -3,11 +3,11 @@
 
 import frappe
 from frappe import _
-from frappe.utils import flt, get_link_to_form
+from frappe.utils import flt, get_link_to_form, has_common
 from frappe.utils.formatters import fmt_money
 from frappe.utils.jinja import render_template
 
-from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
+from hrms.payroll.doctype.salary_structure.salary_structure import _make_salary_slip
 
 
 class SalaryBreakupReport:
@@ -23,12 +23,13 @@ class SalaryBreakupReport:
 			)
 		)
 		self.validate_ctc()
-		self.salary_slip = make_salary_slip(
+		self.salary_slip = _make_salary_slip(
 			self.salary_structure,
 			employee=self.employee,
 			for_preview=1,
 			as_print=False,
 			posting_date=frappe.flags.posting_date if frappe.flags.in_test else None,
+			ignore_permissions=True,
 		)
 		self.net_pay = self.salary_slip.net_pay
 		self.gross_pay = self.salary_slip.gross_pay
@@ -44,6 +45,7 @@ class SalaryBreakupReport:
 		self.earning_components = []
 		self.deduction_components = []
 		self.tax_components = []
+		self.employer_contribution_components = []
 		self.total_net_earnings = []
 		self.total_gross_earnings = []
 
@@ -63,6 +65,7 @@ class SalaryBreakupReport:
 
 	def get_data(self):
 		self.set_salary_component_details()
+		self.set_employer_contribution_details()
 		self.calculate_yearly_amounts_and_percent_of_ctc()
 		self.indent_salary_components()
 		self.separate_salary_components_by_type()
@@ -74,6 +77,7 @@ class SalaryBreakupReport:
 			self.earning_components
 			+ self.deduction_components
 			+ self.tax_components
+			+ self.employer_contribution_components
 			+ self.total_net_earnings
 			+ self.total_gross_earnings
 		)
@@ -107,6 +111,26 @@ class SalaryBreakupReport:
 			)
 			component.update(component_details)
 
+	def set_employer_contribution_details(self):
+		evaluated_components = getattr(self.salary_slip, "_evaluated_components", None)
+		if evaluated_components is None:
+			evaluated_components = frappe.get_cached_doc(
+				"Salary Structure Assignment", self.salary_structure_assignment
+			).get_evaluated_components()
+
+		self.salary_components += [
+			{
+				"salary_component": component.salary_component,
+				"per_cycle": flt(component.default_amount),
+				"abbr": component.abbr,
+				"amount_based_on_formula": component.amount_based_on_formula,
+				"formula": component.formula,
+				"component_type": "employer_contributions",
+			}
+			for component in evaluated_components["employer_contributions"]
+			if not component.statistical_component
+		]
+
 	def calculate_yearly_amounts_and_percent_of_ctc(self):
 		for component in self.salary_components:
 			annual_amount = component.get("per_cycle", 0) * self.cycle_multiplier
@@ -129,9 +153,16 @@ class SalaryBreakupReport:
 		self.tax_components = [
 			component for component in self.salary_components if component.get("is_tax_component")
 		]
+		self.employer_contribution_components = [
+			component
+			for component in self.salary_components
+			if component.get("component_type") == "employer_contributions"
+		]
 
 	def set_abbr_type_and_formula(self):
-		for component in self.earning_components + self.deduction_components:
+		for component in (
+			self.earning_components + self.deduction_components + self.employer_contribution_components
+		):
 			component["salary_component"] = f"{component.get("salary_component")} ({component.get("abbr")})"
 			component["type"] = "Formula" if component.get("amount_based_on_formula") else "Fixed"
 			component["formula"] = (
@@ -152,6 +183,7 @@ class SalaryBreakupReport:
 				"Earnings": self.earning_components,
 				"Deductions": self.deduction_components,
 				"Tax Deductions": self.tax_components,
+				"Employer Contributions": self.employer_contribution_components,
 			}.get(component_type)
 			totals_row = {
 				"salary_component": component_type,
@@ -164,7 +196,7 @@ class SalaryBreakupReport:
 			}
 			components.insert(0, totals_row)
 
-		for component_type in ("Earnings", "Deductions", "Tax Deductions"):
+		for component_type in ("Earnings", "Deductions", "Tax Deductions", "Employer Contributions"):
 			set_totals_row(component_type)
 
 	def set_net_and_gross_earning_rows(self):
@@ -312,9 +344,26 @@ def execute(filters: dict | None = None):
 			title=_("Missing value for filters"),
 		)
 
+	validate_employee_access(employee)
+
 	salary_breakup_report = SalaryBreakupReport(employee, salary_structure_assignment)
 
 	data = salary_breakup_report.get_data()
 	columns = salary_breakup_report.get_columns()
 	message = salary_breakup_report.get_message()
 	return columns, data, message, None, None
+
+
+ROLES_ALLOWED_TO_VIEW_ANY_EMPLOYEE = ("System Manager", "HR Manager", "HR User")
+
+
+def validate_employee_access(employee: str):
+	can_view_any_employee = has_common(ROLES_ALLOWED_TO_VIEW_ANY_EMPLOYEE, frappe.get_roles())
+	is_own_record = frappe.db.get_value("Employee", employee, "user_id") == frappe.session.user
+
+	if not can_view_any_employee and not is_own_record:
+		frappe.throw(
+			_("You are not permitted to access the CTC report of another employee."),
+			frappe.PermissionError,
+			title=_("Not Permitted"),
+		)
