@@ -26,9 +26,6 @@ frappe.query_reports["Employee CTC Break-up"] = {
 				};
 			},
 			on_change: function () {
-<<<<<<< HEAD
-				frappe.query_report.set_filter_value("salary_structure_assignment", "");
-=======
 				let employee = frappe.query_report.get_filter_value("employee");
 				frappe.query_report.set_filter_value("salary_structure_assignment", "");
 				if (!employee) return;
@@ -47,7 +44,6 @@ frappe.query_reports["Employee CTC Break-up"] = {
 							(result[0] && result[0].name) || "",
 						);
 					});
->>>>>>> fd669c84 (feat: show employer contributions in CTC breakup report)
 			},
 		},
 		{
@@ -68,8 +64,6 @@ frappe.query_reports["Employee CTC Break-up"] = {
 			},
 		},
 	],
-<<<<<<< HEAD
-=======
 	onload: async function (report) {
 		if (report.get_filter_value("employee")) return;
 
@@ -77,7 +71,6 @@ frappe.query_reports["Employee CTC Break-up"] = {
 		if (!employee) return;
 		report.set_filter_value("employee", employee);
 	},
->>>>>>> fd669c84 (feat: show employer contributions in CTC breakup report)
 	formatter: function (value, row, column, data, default_formatter) {
 		value = default_formatter(value, row, column, data);
 		if (data?.bold && value) value = `<strong>${value}</strong>`;
