@@ -224,7 +224,9 @@ def mark_employee_attendance(
 			if attendance_name:
 				frappe.has_permission("Attendance", "write", attendance_name, throw=True)
 				frappe.qb.update(Attendance).where(
-					(Attendance.employee == employee) & (Attendance.attendance_date == date)
+					(Attendance.employee == employee)
+					& (Attendance.attendance_date == date)
+					& (Attendance.docstatus == 1)
 				).set(Attendance.half_day_status, half_day_status).set(Attendance.shift, shift).set(
 					Attendance.late_entry, late_entry or 0
 				).set(Attendance.early_exit, early_exit or 0).set(Attendance.modify_half_day_status, 0).run()
