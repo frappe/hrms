@@ -1079,7 +1079,8 @@ def get_semester_end(date):
 def get_complete_month_count(date, effective_from):
 	"""Returns count of complete months from effective_from to date, accounting for day-of-month."""
 	month_count = (date.year - effective_from.year) * 12 + (date.month - effective_from.month)
-	if date.day < effective_from.day:
+	# ignore a smaller day caused by a shorter month (e.g. 31st -> 28th)
+	if date.day < effective_from.day and date != get_last_day(date):
 		month_count -= 1
 	return month_count
 
