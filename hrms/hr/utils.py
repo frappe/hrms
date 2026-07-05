@@ -370,7 +370,11 @@ def allocate_earned_leaves():
 			else:
 				date_of_joining = frappe.db.get_value("Employee", allocation.employee, "date_of_joining")
 				allocation_date = get_expected_allocation_date_for_period(
-					e_leave_type.earned_leave_frequency, e_leave_type.allocate_on_day, today, date_of_joining
+					e_leave_type.earned_leave_frequency,
+					e_leave_type.allocate_on_day,
+					today,
+					date_of_joining,
+					effective_from=None,
 				)
 				annual_allocation = get_annual_allocation_from_policy(allocation, e_leave_type)
 				earned_leaves = calculate_upcoming_earned_leave(allocation, e_leave_type, date_of_joining)
@@ -526,11 +530,14 @@ def get_monthly_earned_leave(
 	return earned_leaves
 
 
-def get_sub_period_start_and_end(date, frequency):
+def get_sub_period_start_and_end(date, frequency, effective_from=None):
+	if frequency == "Half-Yearly" and effective_from:
+		return get_half_year_periods(date, effective_from)
+
 	return {
 		"Monthly": (get_first_day(date), get_last_day(date)),
 		"Quarterly": (get_quarter_start(date), get_quarter_ending(date)),
-		"Half-Yearly": (get_semester_start(date), get_semester_end(date)),
+		"Half-Yearly": (get_semester_start(date), get_semester_end(date)),  # fallback only
 		"Yearly": (get_year_start(date), get_year_ending(date)),
 	}.get(frequency)
 
@@ -605,11 +612,26 @@ def create_additional_leave_ledger_entry(allocation, leaves, date):
 	allocation.create_leave_ledger_entry()
 
 
-def get_expected_allocation_date_for_period(frequency, allocate_on_day, date, date_of_joining=None):
+def get_expected_allocation_date_for_period(
+	frequency, allocate_on_day, date, date_of_joining=None, effective_from=None
+):
 	try:
 		doj = date_of_joining.replace(month=date.month, year=date.year)
-	except ValueError:
+	except (ValueError, AttributeError):
 		doj = datetime.date(date.year, date.month, calendar.monthrange(date.year, date.month)[1])
+
+	if frequency == "Half-Yearly" and effective_from:
+		period_start, period_end = get_half_year_periods(date, effective_from)
+		half_yearly_dates = {
+			"First Day": period_start,
+			"Last Day": period_end,
+		}
+	else:
+		half_yearly_dates = {
+			"First Day": get_semester_start(date),
+			"Last Day": get_semester_end(date),
+		}
+
 	return {
 		"Monthly": {
 			"First Day": get_first_day(date),
@@ -620,7 +642,7 @@ def get_expected_allocation_date_for_period(frequency, allocate_on_day, date, da
 			"First Day": get_quarter_start(date),
 			"Last Day": get_quarter_ending(date),
 		},
-		"Half-Yearly": {"First Day": get_semester_start(date), "Last Day": get_semester_end(date)},
+		"Half-Yearly": half_yearly_dates,
 		"Yearly": {"First Day": get_year_start(date), "Last Day": get_year_ending(date)},
 	}[frequency][allocate_on_day]
 
@@ -1050,3 +1072,29 @@ def get_semester_end(date):
 		return get_year_ending(date)
 	else:
 		return add_months(get_year_ending(date), -6)
+
+
+def get_half_year_periods(date, effective_from):
+	"""
+	Compute the half-year period relative to effective_from,
+	NOT relative to the calendar year.
+
+	Example:
+		effective_from = 01-Apr-2026
+		date           = 01-Apr-2026
+		→ period_start = 01-Apr-2026, period_end = 30-Sep-2026
+
+		date           = 01-Oct-2026
+		→ period_start = 01-Oct-2026, period_end = 31-Mar-2027
+	"""
+	effective_from = getdate(effective_from)
+	date = getdate(date)
+
+	# Find how many full 6-month periods have elapsed since effective_from
+	months_elapsed = (date.year - effective_from.year) * 12 + (date.month - effective_from.month)
+	periods_elapsed = months_elapsed // 6
+
+	half_year_start = add_months(effective_from, periods_elapsed * 6)
+	half_year_end = add_days(add_months(half_year_start, 6), -1)
+
+	return half_year_start, half_year_end

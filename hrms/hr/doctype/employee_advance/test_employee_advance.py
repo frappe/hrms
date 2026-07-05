@@ -2,6 +2,7 @@
 # See license.txt
 
 import frappe
+from frappe import _dict
 from frappe.utils import flt, nowdate
 
 import erpnext
@@ -19,6 +20,8 @@ from hrms.hr.doctype.expense_claim.test_expense_claim import (
 	get_payable_account,
 	make_expense_claim,
 )
+from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
+from hrms.payroll.doctype.payroll_entry.test_payroll_entry import make_payroll_entry, setup_salary_structure
 from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 from hrms.tests.utils import HRMSTestSuite
@@ -30,6 +33,7 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		self.update_company_in_fiscal_year()
 		frappe.db.set_value("Account", "Employee Advances - _TC", "account_type", "Receivable")
 		frappe.db.set_value("Account", "_Test Employee Advance - _TC", "account_type", "Receivable")
+		frappe.db.set_value("Account", "Payroll Payable - _TC", "account_type", "Payable")
 
 	def test_paid_amount_and_status(self):
 		employee_name = make_employee("_T@employee.advance", "_Test Company")
@@ -156,7 +160,7 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		advances = [entry.employee_advance for entry in advances]
 		self.assertTrue(advance.name in advances)
 
-	def test_repay_unclaimed_amount_from_salary(self):
+	def test_additional_salary_based_advance_repayment_flow(self):
 		employee_name = make_employee("_T@employee.advance", "_Test Company")
 		advance = make_employee_advance(employee_name, {"repay_unclaimed_amount_from_salary": 1})
 		make_payment_entry(advance)
@@ -179,9 +183,6 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		additional_salary.insert()
 		additional_salary.submit()
 
-		advance.reload()
-		self.assertEqual(advance.return_amount, 700)
-
 		# additional salary for remaining 300
 		additional_salary = create_return_through_additional_salary(advance)
 		additional_salary.salary_component = "Advance Salary - Deduction"
@@ -190,15 +191,59 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		additional_salary.insert()
 		additional_salary.submit()
 
+		# Employee Advance should not be updated directly
 		advance.reload()
-		self.assertEqual(advance.return_amount, 1000)
-		self.assertEqual(advance.status, "Returned")
-
-		# update advance return amount on additional salary cancellation
-		additional_salary.cancel()
-		advance.reload()
-		self.assertEqual(advance.return_amount, 700)
+		self.assertEqual(advance.return_amount, 0)
 		self.assertEqual(advance.status, "Paid")
+
+		# should not allow scheduling more than available amount
+		additional_salary = create_return_through_additional_salary(advance)
+		additional_salary.salary_component = "Advance Salary - Deduction"
+		additional_salary.payroll_date = nowdate()
+		additional_salary.amount = 100
+
+		self.assertRaises(frappe.ValidationError, additional_salary.insert)
+
+	def test_advance_return_on_payroll_submission(self):
+		company_doc = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee("test_repay_unclaimed_amount@payroll.com", company=company_doc.name)
+
+		advance = make_employee_advance(
+			employee,
+			{"repay_unclaimed_amount_from_salary": 1},
+		)
+		make_payment_entry(advance)
+		advance.reload()
+
+		payroll_details = create_payroll_for_advance_return(employee, company_doc, advance)
+		salary_slip_name = frappe.db.get_value(
+			"Salary Slip",
+			{
+				"payroll_entry": payroll_details.payroll_entry,
+				"employee": employee,
+			},
+			"name",
+		)
+		self.assertIsNotNone(salary_slip_name)
+		salary_slip = frappe.get_doc("Salary Slip", salary_slip_name)
+
+		# Verify advance deduction in salary slip
+		deduction_row = next(
+			(
+				row
+				for row in salary_slip.deductions
+				if row.salary_component == payroll_details.advance_component
+			),
+			None,
+		)
+		self.assertIsNotNone(
+			deduction_row,
+			"Salary advance deduction not found",
+		)
+		self.assertEqual(flt(deduction_row.amount), flt(advance.paid_amount))
+		self.assertEqual(deduction_row.additional_salary, payroll_details.additional_salary)
+		advance.reload()
+		self.assertEqual(advance.status, "Returned")
 
 	def test_payment_entry_against_advance(self):
 		employee_name = make_employee("_T@employee.advance", "_Test Company")
@@ -402,6 +447,25 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		self.assertEqual(advance.base_paid_amount, expected_base_paid)
 		self.assertEqual(payment_entry.paid_amount, expected_base_paid)
 
+	def test_no_exchange_gain_loss_for_same_currency_advance_payment(self):
+		from hrms.overrides.employee_payment_entry import get_payment_entry_for_employee
+
+		gain_loss_account = frappe.db.get_value("Company", "_Test Company", "exchange_gain_loss_account")
+		frappe.db.set_value("Company", "_Test Company", "exchange_gain_loss_account", None)
+
+		try:
+			employee_name = make_employee("_T@employee.advance", "_Test Company")
+			advance = make_employee_advance(employee_name)
+
+			# should not raise error even without exchange_gain_loss_account set at time of payment
+			pe = get_payment_entry_for_employee(advance.doctype, advance.name)
+
+			self.assertEqual(flt(pe.source_exchange_rate), 1.0)
+			self.assertEqual(flt(pe.target_exchange_rate), 1.0)
+			self.assertFalse(any(d.is_exchange_gain_loss for d in pe.deductions))
+		finally:
+			frappe.db.set_value("Company", "_Test Company", "exchange_gain_loss_account", gain_loss_account)
+
 	def test_status_on_discard(self):
 		employee_name = make_employee("Test_status@employee.advance", "_Test Company")
 		advance = make_employee_advance(employee_name, do_not_submit=True)
@@ -509,4 +573,47 @@ def create_advance_account(account_name, account_currency):
 		company="_Test Company",
 		account_currency=account_currency,
 		account_type="Receivable",
+	)
+
+
+def create_payroll_for_advance_return(employee, company, advance, return_amount=None):
+	# Advance deduction component
+	component = create_salary_component(
+		"Advance Salary",
+		**{"type": "Deduction"},
+	)
+	component.append(
+		"accounts",
+		{
+			"company": company.name,
+			"account": "Employee Advances - _TC",
+		},
+	)
+	component.save()
+
+	setup_salary_structure(employee, company)
+
+	# Create Additional Salary for repayment
+	additional_salary = create_return_through_additional_salary(advance)
+	additional_salary.salary_component = component.name
+	additional_salary.payroll_date = nowdate()
+	additional_salary.amount = return_amount or advance.paid_amount
+	additional_salary.submit()
+
+	# Process payroll
+	dates = get_start_end_dates("Monthly", nowdate())
+	payroll_entry = make_payroll_entry(
+		start_date=dates.start_date,
+		end_date=dates.end_date,
+		payable_account=company.default_payroll_payable_account,
+		currency=company.default_currency,
+		company=company.name,
+		cost_center="Main - _TC",
+	)
+	return _dict(
+		{
+			"payroll_entry": payroll_entry.name,
+			"advance_component": component.name,
+			"additional_salary": additional_salary.name,
+		}
 	)

@@ -203,6 +203,7 @@ def mark_employee_attendance(
 		attendance.insert()
 		attendance.submit()
 	if mark_half_day:
+		frappe.has_permission("Attendance", "write", throw=True)
 		if isinstance(half_day_employee_list, str):
 			half_day_employee_list = json.loads(half_day_employee_list)
 		Attendance = frappe.qb.DocType("Attendance")

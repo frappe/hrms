@@ -92,6 +92,7 @@ class EmployeeOnboarding(EmployeeBoardingController):
 
 	@frappe.whitelist()
 	def mark_onboarding_as_completed(self):
+		self.check_permission("write")
 		for activity in self.activities:
 			frappe.db.set_value("Task", activity.task, "status", "Completed")
 		frappe.db.set_value("Project", self.project, "status", "Completed")

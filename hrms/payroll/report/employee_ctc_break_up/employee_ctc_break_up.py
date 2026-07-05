@@ -45,6 +45,7 @@ class SalaryBreakupReport:
 		self.earning_components = []
 		self.deduction_components = []
 		self.tax_components = []
+		self.employer_contribution_components = []
 		self.total_net_earnings = []
 		self.total_gross_earnings = []
 
@@ -64,6 +65,7 @@ class SalaryBreakupReport:
 
 	def get_data(self):
 		self.set_salary_component_details()
+		self.set_employer_contribution_details()
 		self.calculate_yearly_amounts_and_percent_of_ctc()
 		self.indent_salary_components()
 		self.separate_salary_components_by_type()
@@ -75,6 +77,7 @@ class SalaryBreakupReport:
 			self.earning_components
 			+ self.deduction_components
 			+ self.tax_components
+			+ self.employer_contribution_components
 			+ self.total_net_earnings
 			+ self.total_gross_earnings
 		)
@@ -108,6 +111,26 @@ class SalaryBreakupReport:
 			)
 			component.update(component_details)
 
+	def set_employer_contribution_details(self):
+		evaluated_components = getattr(self.salary_slip, "_evaluated_components", None)
+		if evaluated_components is None:
+			evaluated_components = frappe.get_cached_doc(
+				"Salary Structure Assignment", self.salary_structure_assignment
+			).get_evaluated_components()
+
+		self.salary_components += [
+			{
+				"salary_component": component.salary_component,
+				"per_cycle": flt(component.default_amount),
+				"abbr": component.abbr,
+				"amount_based_on_formula": component.amount_based_on_formula,
+				"formula": component.formula,
+				"component_type": "employer_contributions",
+			}
+			for component in evaluated_components["employer_contributions"]
+			if not component.statistical_component
+		]
+
 	def calculate_yearly_amounts_and_percent_of_ctc(self):
 		for component in self.salary_components:
 			annual_amount = component.get("per_cycle", 0) * self.cycle_multiplier
@@ -130,9 +153,16 @@ class SalaryBreakupReport:
 		self.tax_components = [
 			component for component in self.salary_components if component.get("is_tax_component")
 		]
+		self.employer_contribution_components = [
+			component
+			for component in self.salary_components
+			if component.get("component_type") == "employer_contributions"
+		]
 
 	def set_abbr_type_and_formula(self):
-		for component in self.earning_components + self.deduction_components:
+		for component in (
+			self.earning_components + self.deduction_components + self.employer_contribution_components
+		):
 			component["salary_component"] = f"{component.get("salary_component")} ({component.get("abbr")})"
 			component["type"] = "Formula" if component.get("amount_based_on_formula") else "Fixed"
 			component["formula"] = (
@@ -153,6 +183,7 @@ class SalaryBreakupReport:
 				"Earnings": self.earning_components,
 				"Deductions": self.deduction_components,
 				"Tax Deductions": self.tax_components,
+				"Employer Contributions": self.employer_contribution_components,
 			}.get(component_type)
 			totals_row = {
 				"salary_component": component_type,
@@ -165,7 +196,7 @@ class SalaryBreakupReport:
 			}
 			components.insert(0, totals_row)
 
-		for component_type in ("Earnings", "Deductions", "Tax Deductions"):
+		for component_type in ("Earnings", "Deductions", "Tax Deductions", "Employer Contributions"):
 			set_totals_row(component_type)
 
 	def set_net_and_gross_earning_rows(self):

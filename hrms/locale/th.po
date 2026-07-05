@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-06-14 10:34+0000\n"
-"PO-Revision-Date: 2026-06-15 18:55\n"
+"POT-Creation-Date: 2026-06-24 17:40+0000\n"
+"PO-Revision-Date: 2026-06-24 20:43\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Thai\n"
 "MIME-Version: 1.0\n"
@@ -587,7 +587,7 @@ msgstr "ที่อยู่ของผู้จัด"
 msgid "Adjust Allocation"
 msgstr "ปรับการจัดสรร"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:453
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:454
 msgid "Adjustment Created Successfully"
 msgstr "การปรับตั้งค่าสำเร็จแล้ว"
 
@@ -601,15 +601,15 @@ msgstr "ประเภทการปรับปรุง"
 msgid "Advance"
 msgstr "เงินทดรอง"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:78
+#: hrms/hr/doctype/employee_advance/employee_advance.py:85
 msgid "Advance Account Required"
 msgstr "ต้องใช้บัญชีล่วงหน้า"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:82
+#: hrms/hr/doctype/employee_advance/employee_advance.py:89
 msgid "Advance Account is mandatory. Please set the {0} in the Company {1} and submit this document."
 msgstr "{1} บัญชีล่วงหน้าเป็นสิ่งที่จำเป็น กรุณาตั้งค่า {0} ในบัญชีบริษัท และส่งเอกสารนี้"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:125
+#: hrms/hr/doctype/employee_advance/employee_advance.py:132
 msgid "Advance Account {} currency should be same as Salary Currency of Employee {}. Please select same currency Advance Account"
 msgstr "บัญชีเงินกู้ล่วงหน้า {} ควรใช้สกุลเงินเดียวกับเงินเดือนของพนักงาน {}. กรุณาเลือกสกุลเงินเดียวกันสำหรับบัญชีเงินกู้ล่วงหน้า"
 
@@ -709,11 +709,11 @@ msgstr "การจัดสรรมากกว่าจำนวนสูง
 msgid "Allocation to Adjust"
 msgstr "การจัดสรรเพื่อปรับปรุง"
 
-#: hrms/hr/utils.py:433
+#: hrms/hr/utils.py:437
 msgid "Allocation was skipped due to exceeding annual allocation set in leave policy"
 msgstr "การจัดสรรถูกข้ามไปเนื่องจากเกินการจัดสรรประจำปีที่กำหนดไว้ในนโยบายการลา"
 
-#: hrms/hr/utils.py:441
+#: hrms/hr/utils.py:445
 msgid "Allocation was skipped due to maximum leave allocation limit set in leave type. Please increase the limit and retry failed allocation."
 msgstr "การจัดสรรถูกข้ามเนื่องจากขีดจำกัดการจัดสรรสูงสุดที่ตั้งไว้สำหรับประเภทการลา กรุณาเพิ่มขีดจำกัดและลองจัดสรรอีกครั้ง"
 
@@ -864,7 +864,7 @@ msgstr "มีบันทึกการเข้างานเชื่อม
 msgid "Annual Allocation"
 msgstr "การจัดสรรประจำปี"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:407
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:408
 msgid "Annual Allocation Exceeded"
 msgstr "เกินการจัดสรรประจำปี"
 
@@ -1514,7 +1514,7 @@ msgstr "การแลกวันลาเป็นเงินสดอัต
 msgid "Automated Based on Goal Progress"
 msgstr "อัตโนมัติตามความคืบหน้าของเป้าหมาย"
 
-#: hrms/hr/utils.py:494
+#: hrms/hr/utils.py:498
 msgid "Automatic Leave Allocation has failed for the following Earned Leaves: {0}. Please check {1} for more details."
 msgstr "การจัดสรรวันหยุดโดยอัตโนมัติล้มเหลวสำหรับวันหยุดที่ได้รับสิทธิ์ดังต่อไปนี้: {0}กรุณาตรวจสอบ {1} สำหรับรายละเอียดเพิ่มเติม"
 
@@ -1576,11 +1576,15 @@ msgstr "การใช้งานเฉลี่ย (เฉพาะที่�
 msgid "Awaiting Response"
 msgstr "รอการตอบกลับ"
 
+#: frontend/src/views/Login.vue:17
+msgid "Back to Login"
+msgstr "กลับสู่หน้าเข้าสู่ระบบ"
+
 #: hrms/hr/doctype/leave_application/leave_application.py:209
 msgid "Backdated Leave Application is restricted. Please set the {} in {}"
 msgstr "การยื่นใบลาย้อนหลังถูกจำกัด โปรดตั้งค่า {} ใน {}"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:281
+#: hrms/hr/doctype/expense_claim/expense_claim.js:282
 msgid "Bank Entries"
 msgstr "รายการธนาคาร"
 
@@ -1646,7 +1650,7 @@ msgstr "จำนวนผลประโยชน์ของส่วนปร
 msgid "Benefit amount of component {0} should be greater than 0"
 msgstr "จำนวนผลประโยชน์ของส่วนประกอบ {0} ควรมากกว่า 0"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:487
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:509
 msgid "Benefit amount {0} for Salary Component {1} should not be greater than maximum benefit amount {2} set in {3}"
 msgstr "จำนวนเงินผลประโยชน์ {0} สำหรับส่วนเงินเดือน {1} ไม่ควรมากกว่าจำนวนเงินผลประโยชน์สูงสุด {2} ที่กำหนดไว้ใน {3}"
 
@@ -1778,7 +1782,7 @@ msgstr "โดยค่าเริ่มต้น คะแนนสุดท�
 msgid "CTC"
 msgstr "CTC"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:62
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:63
 msgid "CTC Missing for Employee"
 msgstr ""
 
@@ -1817,15 +1821,15 @@ msgstr "การยกเลิกอยู่ในคิว"
 msgid "Cannot Modify Time"
 msgstr "ไม่สามารถแก้ไขเวลาได้"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:358
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:359
 msgid "Cannot allocate leaves outside the allocation period {0} - {1}"
 msgstr "ไม่สามารถจัดสรรวันลานอกช่วงเวลาการจัดสรร {0} - {1} ได้"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:487
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:488
 msgid "Cannot allocate more leaves due to maximum leave allocation limit of {0} in leave policy assignment"
 msgstr "ไม่สามารถจัดสรรวันหยุดเพิ่มเติมได้เนื่องจากข้อจำกัดการจัดสรรวันหยุดสูงสุดของ {0} ในนโยบายการกำหนดวันหยุด"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:479
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:480
 msgid "Cannot allocate more leaves due to maximum leaves allowed limit of {0} in {1} leave type."
 msgstr "ไม่สามารถจัดสรรวันหยุดเพิ่มเติมได้เนื่องจากถึงขีดจำกัดสูงสุดของวันหยุดที่อนุญาตสำหรับประเภทวันหยุด {0} ใน {1}"
 
@@ -1946,8 +1950,8 @@ msgstr "บันทึกเวลาออก"
 msgid "Check Vacancies On Job Offer Creation"
 msgstr "ตรวจสอบตำแหน่งงานว่างเมื่อสร้างการเสนอจ้างงาน"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:492
-#: hrms/hr/utils.py:947
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:516
+#: hrms/hr/utils.py:969
 msgid "Check {0} for more details"
 msgstr "ตรวจสอบ {0} สำหรับรายละเอียดเพิ่มเติม"
 
@@ -2008,7 +2012,7 @@ msgid "Claim an Expense"
 msgstr "เบิกค่าใช้จ่าย"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Advance'
-#: frontend/src/views/employee_advance/List.vue:42
+#: frontend/src/views/employee_advance/List.vue:43
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 msgid "Claimed"
 msgstr "เบิกแล้ว"
@@ -2017,7 +2021,7 @@ msgstr "เบิกแล้ว"
 #. Label of the claimed_amount (Currency) field in DocType 'Employee Benefit
 #. Claim'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
-#: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:80
+#: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:197
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 msgid "Claimed Amount"
 msgstr "จำนวนเงินที่เบิก"
@@ -2287,7 +2291,7 @@ msgstr "กำลังสร้าง {0}..."
 msgid "Creation Date"
 msgstr "วันที่สร้าง"
 
-#: hrms/hr/utils.py:956
+#: hrms/hr/utils.py:978
 msgid "Creation Failed"
 msgstr "การสร้างล้มเหลว"
 
@@ -2534,7 +2538,7 @@ msgstr "ค้างชำระค่าหัก ณ ที่จ่าย"
 msgid "Deduction Reports"
 msgstr "รายงานการหัก"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.js:79
+#: hrms/hr/doctype/employee_advance/employee_advance.js:81
 msgid "Deduction from Salary"
 msgstr "การหักจากเงินเดือน"
 
@@ -2593,10 +2597,6 @@ msgstr "กะเริ่มต้น"
 #: frontend/src/components/FileUploaderView.vue:49
 msgid "Delete Attachment"
 msgstr "ลบไฟล์แนบ"
-
-#: frontend/src/components/FormView.vue:224
-msgid "Delete {0}"
-msgstr "ลบ {0}"
 
 #. Name of a DocType
 #: hrms/hr/doctype/department_approver/department_approver.json
@@ -3387,8 +3387,8 @@ msgstr "รายละเอียดการย้ายพนักงาน
 msgid "Employee Transfer cannot be submitted before Transfer Date"
 msgstr "ไม่สามารถส่งการย้ายพนักงานก่อนวันที่ย้ายได้"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:115
-#: hrms/hr/doctype/employee_advance/employee_advance.py:185
+#: hrms/hr/doctype/employee_advance/employee_advance.py:122
+#: hrms/hr/doctype/employee_advance/employee_advance.py:193
 msgid "Employee advance account {0} should be of type {1}."
 msgstr "บัญชีเงินกู้ล่วงหน้าของพนักงาน {0} ควรเป็นประเภท {1}"
 
@@ -3697,7 +3697,7 @@ msgid "Error downloading PDF"
 msgstr "เกิดข้อผิดพลาดในการดาวน์โหลด PDF"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1397
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:400
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:401
 msgid "Error in formula or condition"
 msgstr "เกิดข้อผิดพลาดในสูตรหรือเงื่อนไข"
 
@@ -4090,7 +4090,7 @@ msgstr "การจัดสรรหมดอายุ"
 msgid "Expire Carry Forwarded Leaves (Days)"
 msgstr "วันลายกไปหมดอายุ (วัน)"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:609
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:610
 msgid "Expire Leaves"
 msgstr "วันลาหมดอายุ"
 
@@ -4112,7 +4112,7 @@ msgstr "คำอธิบาย"
 msgid "Exporting..."
 msgstr "กำลังส่งออก..."
 
-#: hrms/hr/utils.py:944
+#: hrms/hr/utils.py:966
 msgid "Failed to create/submit {0} for employees:"
 msgstr "ไม่สามารถสร้าง/ส่ง {0} สำหรับพนักงานได้:"
 
@@ -4136,7 +4136,7 @@ msgstr "ไม่สามารถส่งการแจ้งเตือน
 msgid "Failed to setup defaults for country {0}."
 msgstr "ไม่สามารถตั้งค่าเริ่มต้นสำหรับประเทศ {0} ได้"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:489
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:513
 msgid "Failed to submit some leave policy assignments:"
 msgstr "ไม่สามารถส่งการมอบหมายนโยบายการลาบางรายการได้:"
 
@@ -4164,7 +4164,7 @@ msgstr "รายละเอียดความล้มเหลว"
 msgid "Failure Reason"
 msgstr "สาเหตุของความล้มเหลว"
 
-#: hrms/hr/utils.py:493
+#: hrms/hr/utils.py:497
 msgid "Failure of Automatic Allocation of Earned Leaves"
 msgstr "ความล้มเหลวของการจัดสรรวันลาที่ได้รับโดยอัตโนมัติ"
 
@@ -4398,7 +4398,7 @@ msgstr "สำหรับการลา 1 วัน หากคุณยั�
 msgid "Formula"
 msgstr "สูตร"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:229
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:260
 msgid "Formula/Amount"
 msgstr ""
 
@@ -4715,7 +4715,7 @@ msgstr "รายละเอียดความคับข้องใจ"
 msgid "Grievance Type"
 msgstr "ประเภทความคับข้องใจ"
 
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:630
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:637
 msgid "Gross Earnings"
 msgstr "รายรับรวม"
 
@@ -5218,7 +5218,7 @@ msgstr "รายการหักลดหย่อนภาษีเงิน
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:148
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:623
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:630
 #: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 #: hrms/workspace_sidebar/tax_&_benefits.json
@@ -5234,11 +5234,11 @@ msgstr "ค่าธรรมเนียมอื่น ๆ ของขั้�
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr "ต้องระบุขั้นภาษีเงินได้เนื่องจากโครงสร้างเงินเดือน {0} มีองค์ประกอบภาษี {1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1952
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1954
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr "ขั้นภาษีเงินได้ต้องมีผลบังคับใช้ในหรือก่อนวันที่เริ่มต้นรอบการจ่ายเงินเดือน: {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1940
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1942
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr "ไม่ได้ตั้งค่าขั้นภาษีเงินได้ในการมอบหมายโครงสร้างเงินเดือน: {0}"
 
@@ -5246,7 +5246,7 @@ msgstr "ไม่ได้ตั้งค่าขั้นภาษีเงิ
 msgid "Income Tax Slab: "
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1948
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1950
 msgid "Income Tax Slab: {0} is disabled"
 msgstr "ขั้นภาษีเงินได้: {0} ถูกปิดใช้งาน"
 
@@ -5474,15 +5474,15 @@ msgstr "เงินเดือนเพิ่มเติมไม่ถูก
 msgid "Invalid Arrear Component"
 msgstr "ส่วนประกอบค้างชำระไม่ถูกต้อง"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:503
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:525
 msgid "Invalid Benefit Amounts"
 msgstr "จำนวนผลประโยชน์ที่ไม่ถูกต้อง"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:361
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:362
 msgid "Invalid Dates"
 msgstr "วันที่ไม่ถูกต้อง"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2642
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2644
 msgid "Invalid LWP Days Reversed"
 msgstr "วัน LWP ที่ไม่ถูกต้องถูกยกเลิก"
 
@@ -5503,7 +5503,7 @@ msgstr "เวลาของกะไม่ถูกต้อง"
 msgid "Invalid employee filter: {0}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:879
+#: hrms/hr/doctype/expense_claim/expense_claim.py:883
 msgid "Invalid parameters provided. Please pass the required arguments."
 msgstr "พารามิเตอร์ที่ให้มาไม่ถูกต้อง โปรดส่งอาร์กิวเมนต์ที่จำเป็น"
 
@@ -5854,7 +5854,7 @@ msgstr "พื้นที่ความรับผิดชอบหลัก
 msgid "Key Result Area"
 msgstr "ตัวชี้วัดผลงานหลัก"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2639
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2641
 msgid "LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
 msgstr "LWP Days Reversed ({0}) ไม่ตรงกับยอดรวมการแก้ไขเงินเดือนจริง ({1}) สำหรับพนักงาน {2} จาก {3} ถึง {4}"
 
@@ -6256,7 +6256,7 @@ msgstr "ประเภทการลาเป็นสิ่งจำเป็
 msgid "Leave Type {0} cannot be allocated since it is leave without pay"
 msgstr "ไม่สามารถจัดสรรประเภทการลา {0} ได้เนื่องจากเป็นการลาโดยไม่ได้รับค่าจ้าง"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:598
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:599
 msgid "Leave Type {0} cannot be carry-forwarded"
 msgstr "ไม่สามารถย้ายยอดประเภทการลา {0} ไปได้"
 
@@ -6308,6 +6308,10 @@ msgstr ""
 msgid "Leave of type {0} cannot be longer than {1}."
 msgstr "การลาประเภท {0} ไม่สามารถนานเกิน {1} ได้"
 
+#: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:61
+msgid "Leave(s) Allocated"
+msgstr ""
+
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:73
 msgid "Leave(s) Expired"
 msgstr "วันลาหมดอายุ"
@@ -6358,7 +6362,7 @@ msgstr "ใบหลังการปรับ"
 msgid "Leaves Allocated"
 msgstr "วันลาที่จัดสรร"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:603
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:604
 msgid "Leaves Expired"
 msgstr "วันลาหมดอายุ"
 
@@ -6433,7 +6437,7 @@ msgstr "การชำระคืนเงินกู้"
 msgid "Loan Repayment Entry"
 msgstr "รายการชำระคืนเงินกู้"
 
-#: hrms/hr/utils.py:831
+#: hrms/hr/utils.py:853
 msgid "Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
 msgstr "ไม่สามารถชำระคืนเงินกู้จากเงินเดือนสำหรับพนักงาน {0} ได้ เนื่องจากเงินเดือนถูกประมวลผลในสกุลเงิน {1}"
 
@@ -6754,7 +6758,7 @@ msgstr "จำนวนปีขั้นต่ำสำหรับเงิน
 msgid "Minimum calendar days required since Date of Joining to apply for this leave"
 msgstr ""
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:90
+#: hrms/hr/doctype/employee_advance/employee_advance.py:97
 msgid "Missing Advance Account"
 msgstr "บัญชีล่วงหน้าสูญหาย"
 
@@ -6774,11 +6778,11 @@ msgstr "ไม่พบวันที่พ้นสภาพ"
 msgid "Missing Salary Components"
 msgstr "ส่วนประกอบเงินเดือนที่ขาดหาย"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1943
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1945
 msgid "Missing Tax Slab"
 msgstr "ไม่พบขั้นภาษี"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:313
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:344
 msgid "Missing value for filters"
 msgstr ""
 
@@ -6848,7 +6852,7 @@ msgstr "คำขอของฉัน"
 
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.py:123
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1383
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:386
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:387
 msgid "Name error"
 msgstr "ชื่อผิดพลาด"
 
@@ -6910,10 +6914,6 @@ msgstr "ข้อเสนอแนะใหม่"
 msgid "New Hires (This Month)"
 msgstr "พนักงานใหม่ (ประจำเดือนนี้)"
 
-#: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:61
-msgid "New Leave(s) Allocated"
-msgstr "จัดสรรวันลาใหม่แล้ว"
-
 #. Label of the new_leaves_allocated (Float) field in DocType 'Leave
 #. Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
@@ -6935,7 +6935,7 @@ msgstr ""
 msgid "New shift assignments will be created after this date."
 msgstr "การมอบหมายกะใหม่จะถูกสร้างขึ้นหลังวันที่นี้"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:380
+#: hrms/hr/doctype/employee_advance/employee_advance.py:394
 msgid "No Bank/Cash Account found for currency {0}. Please create one under company {1}."
 msgstr "ไม่พบบัญชีธนาคาร/เงินสดสำหรับสกุลเงิน {0}. กรุณาสร้างบัญชีภายใต้บริษัท {1}."
 
@@ -6947,7 +6947,7 @@ msgstr "ไม่พบพนักงาน"
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "ไม่พบพนักงานสำหรับค่าฟิลด์พนักงานที่ระบุ '{}': {}"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:136 hrms/hr/utils.py:934
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:136 hrms/hr/utils.py:956
 msgid "No Employees Selected"
 msgstr "ไม่ได้เลือกพนักงาน"
 
@@ -7076,7 +7076,7 @@ msgstr "ไม่พบข้อมูลพนักงานสำหรับ
 msgid "No employees found for the selected criteria"
 msgstr "ไม่พบพนักงานสำหรับเกณฑ์ที่เลือก"
 
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:71
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:78
 msgid "No employees found with selected filters and active salary structure"
 msgstr "ไม่พบพนักงานที่มีตัวกรองที่เลือกและโครงสร้างเงินเดือนที่ใช้งานอยู่"
 
@@ -7188,7 +7188,7 @@ msgstr "หมายเหตุ: กะจะไม่ถูกเขียน�
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr "หมายเหตุ: จำนวนวันลาที่จัดสรรทั้งหมด {0} ไม่ควรน้อยกว่าจำนวนวันลาที่อนุมัติแล้ว {1} สำหรับรอบเวลานั้น"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2252
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2254
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr "หมายเหตุ: สลิปเงินเดือนของคุณมีการป้องกันด้วยรหัสผ่าน รหัสผ่านเพื่อปลดล็อก PDF อยู่ในรูปแบบ {0}"
 
@@ -7637,7 +7637,7 @@ msgid "Partially Sponsored, Require Partial Funding"
 msgstr "ได้รับการสนับสนุนบางส่วน ต้องการเงินทุนบางส่วน"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Advance'
-#: frontend/src/views/employee_advance/List.vue:42
+#: frontend/src/views/employee_advance/List.vue:43
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 msgid "Partly Claimed and Returned"
 msgstr "เบิกและคืนบางส่วนแล้ว"
@@ -7937,7 +7937,7 @@ msgstr "แบบสอบถามที่รอดำเนินการ"
 msgid "Percent Deduction"
 msgstr "การหักเป็นเปอร์เซ็นต์"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:252
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:283
 msgid "Percent of CTC (%)"
 msgstr ""
 
@@ -8019,7 +8019,7 @@ msgstr "กรุณากรอกข้อมูลพนักงาน ว�
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr "โปรดลด {0} เพื่อหลีกเลี่ยงเวลาทับซ้อนของกะ"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2241
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2243
 msgid "Please see attachment"
 msgstr "โปรดดูไฟล์แนบ"
 
@@ -8073,7 +8073,7 @@ msgstr "โปรดเลือกไฟล์ csv"
 msgid "Please select a date."
 msgstr "โปรดเลือกวันที่"
 
-#: hrms/hr/utils.py:822
+#: hrms/hr/utils.py:844
 msgid "Please select an Applicant"
 msgstr "โปรดเลือกผู้สมัคร"
 
@@ -8085,7 +8085,7 @@ msgstr ""
 msgid "Please select at least one Shift Request to perform this action."
 msgstr "โปรดเลือกคำขอกะอย่างน้อยหนึ่งรายการเพื่อดำเนินการนี้"
 
-#: hrms/hr/utils.py:933
+#: hrms/hr/utils.py:955
 msgid "Please select at least one employee to perform this action."
 msgstr "โปรดเลือกพนักงานอย่างน้อยหนึ่งคนเพื่อดำเนินการนี้"
 
@@ -8163,7 +8163,7 @@ msgstr "กรุณาตั้งช่วงวันที่ให้ไม
 msgid "Please set account in Salary Component {0}"
 msgstr "โปรดตั้งค่าบัญชีในองค์ประกอบเงินเดือน {0}"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:54
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:55
 msgid "Please set cost to company(CTC) for employee {0} in the {1}"
 msgstr ""
 
@@ -8179,7 +8179,7 @@ msgstr "โปรดตั้งค่าแม่แบบเริ่มต้
 msgid "Please set employee's total cost to company to see CTC breakup."
 msgstr ""
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:74
+#: hrms/hr/doctype/employee_advance/employee_advance.py:81
 msgid "Please set the Advance Account {0} or in {1}"
 msgstr "กรุณาตั้งค่าบัญชีล่วงหน้าได้ที่ {0} หรือที่ {1}"
 
@@ -8187,7 +8187,7 @@ msgstr "กรุณาตั้งค่าบัญชีล่วงหน้
 msgid "Please set the Appraisal Template for all the {0} or select the template in the Employees table below."
 msgstr "โปรดตั้งค่าแม่แบบการประเมินผลสำหรับ {0} ทั้งหมดหรือเลือกแม่แบบในตารางพนักงานด้านล่าง"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:514
+#: hrms/hr/doctype/expense_claim/expense_claim.js:515
 msgid "Please set the Company"
 msgstr "โปรดตั้งค่าบริษัท"
 
@@ -8220,7 +8220,7 @@ msgstr "โปรดตั้งค่า {0} สำหรับพนักง�
 msgid "Please set {0} for the Employee: {1}"
 msgstr "โปรดตั้งค่า {0} สำหรับพนักงาน: {1}"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:312
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:343
 msgid "Please set {0} to get CTC report"
 msgstr ""
 
@@ -8610,7 +8610,7 @@ msgstr "การลดจำนวนวันลาสูงสุดที่
 msgid "Reduction is more than {0}'s available leave balance {1} for leave type {2}"
 msgstr "การลดน้อยลงมากกว่ายอดคงเหลือการลาที่ {0}มีอยู่ {1} สำหรับประเภทการลา {2}"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:406
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:407
 #: hrms/hr/doctype/leave_application/leave_application.py:554
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:218
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:141
@@ -8723,7 +8723,7 @@ msgstr "รถเช่า"
 msgid "Repay From Salary"
 msgstr "ชำระคืนจากเงินเดือน"
 
-#: hrms/hr/utils.py:837
+#: hrms/hr/utils.py:859
 msgid "Repay From Salary can be selected only for term loans"
 msgstr "สามารถเลือก 'ชำระคืนจากเงินเดือน' ได้เฉพาะสำหรับสินเชื่อระยะยาวเท่านั้น"
 
@@ -8847,8 +8847,8 @@ msgstr "โบนัสเพื่อรักษาพนักงาน"
 msgid "Retirement Age (In Years)"
 msgstr "อายุเกษียณ (เป็นปี)"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:482
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:490
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:483
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:491
 msgid "Retry Failed"
 msgstr "ลองใหม่ ล้มเหลว"
 
@@ -8866,7 +8866,7 @@ msgstr "ลองใหม่สำเร็จ"
 msgid "Retrying allocations"
 msgstr "ลองจัดสรรทรัพยากรใหม่"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:231
+#: hrms/hr/doctype/employee_advance/employee_advance.py:239
 msgid "Return amount cannot be greater than unclaimed amount"
 msgstr "จำนวนเงินที่คืนไม่สามารถมากกว่าจำนวนเงินที่ไม่ได้เบิก"
 
@@ -8944,7 +8944,7 @@ msgstr "แถวที่ #{0}: องค์ประกอบ {1} มีตั
 msgid "Row #{0}: Timesheet amount will overwrite the Earning component amount for the Salary Component {1}"
 msgstr "แถวที่ #{0}: จำนวนเงินในไทม์ชีทจะเขียนทับจำนวนเงินขององค์ประกอบรายรับสำหรับองค์ประกอบเงินเดือน {1}"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:847
+#: hrms/hr/doctype/expense_claim/expense_claim.py:851
 msgid "Row No {0}: Amount cannot be greater than the Outstanding Amount against Expense Claim {1}. Outstanding Amount is {2}"
 msgstr "แถวที่ {0}: จำนวนเงินไม่สามารถมากกว่าจำนวนเงินค้างชำระของการเบิกค่าใช้จ่าย {1} ได้ โดยจำนวนเงินค้างชำระคือ {2}"
 
@@ -8960,7 +8960,7 @@ msgstr "แถวที่ {0}# จำนวนเงินที่จ่าย
 msgid "Row {0}# Paid Amount cannot be greater than Total amount"
 msgstr "แถวที่ {0}# จำนวนเงินที่จ่ายไม่สามารถมากกว่าจำนวนเงินทั้งหมดได้"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:223
+#: hrms/hr/doctype/employee_advance/employee_advance.py:231
 msgid "Row {0}# Paid Amount cannot be greater than requested advance amount"
 msgstr "แถว {0}# จำนวนเงินที่จ่ายไม่สามารถมากกว่าจำนวนเงินล่วงหน้าที่ร้องขอได้"
 
@@ -9042,7 +9042,7 @@ msgstr "ประเภทองค์ประกอบเงินเดือ
 msgid "Salary Component for timesheet based payroll."
 msgstr "องค์ประกอบเงินเดือนสำหรับบัญชีเงินเดือนตามไทม์ชีท"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:476
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:498
 msgid "Salary Component {0} cannot be selected more than once in Employee Benefits"
 msgstr "ส่วนประกอบเงินเดือน {0} ไม่สามารถเลือกได้มากกว่าหนึ่งครั้งในสวัสดิการพนักงาน"
 
@@ -9329,7 +9329,7 @@ msgstr "ส่วนประกอบเงินเดือนประเภ
 msgid "Salary components should be part of the Salary Structure."
 msgstr "องค์ประกอบเงินเดือนควรเป็นส่วนหนึ่งของโครงสร้างเงินเดือน"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2662
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2664
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr "อีเมลสลิปเงินเดือนได้เข้าคิวเพื่อรอส่งแล้ว ตรวจสอบสถานะที่ {0}"
 
@@ -9426,7 +9426,7 @@ msgstr "เลือกข้อกำหนดและเงื่อนไข
 msgid "Select Users"
 msgstr "เลือกผู้ใช้"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:559
+#: hrms/hr/doctype/expense_claim/expense_claim.js:560
 msgid "Select an employee to get the employee advance."
 msgstr "เลือกพนักงานเพื่อรับเงินทดรองของพนักงาน"
 
@@ -9484,7 +9484,7 @@ msgstr "เลือกประเภทการลาที่พนักง
 msgid "Select your Leave Approver i.e. the person who approves or rejects your leaves."
 msgstr "เลือกผู้อนุมัติการลาของคุณ คือบุคคลที่อนุมัติหรือปฏิเสธการลาของคุณ"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:594
+#: hrms/hr/doctype/expense_claim/expense_claim.js:595
 msgid "Selected employee advance is not of employee {0}"
 msgstr ""
 
@@ -9677,7 +9677,7 @@ msgstr "ชำระเงินทดรอง"
 msgid "Settle all Payables and Receivables before submission"
 msgstr "ชำระเจ้าหนี้และลูกหนี้ทั้งหมดก่อนส่ง"
 
-#: hrms/hr/utils.py:785
+#: hrms/hr/utils.py:807
 msgid "Shared document with the user {0} with 'Submit' permission"
 msgstr "แบ่งปันเอกสารกับผู้ใช้ {0} พร้อมสิทธิ์ 'ส่ง'"
 
@@ -10125,7 +10125,7 @@ msgstr "กำหนดโครงสร้างสำเร็จแล้ว
 msgid "Submission Date"
 msgstr "วันที่ส่ง"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:500
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:524
 msgid "Submission Failed"
 msgstr "การส่งล้มเหลว"
 
@@ -10181,7 +10181,7 @@ msgstr "กำลังส่งสลิปเงินเดือน..."
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
 msgstr "บริษัทในเครือได้วางแผนสำหรับตำแหน่งงานว่าง {1} ตำแหน่งด้วยงบประมาณ {2} แล้ว แผนการจัดหาบุคลากรสำหรับ {0} ควรกำหนดตำแหน่งงานว่างและงบประมาณสำหรับ {3} มากกว่าที่วางแผนไว้สำหรับบริษัทในเครือ"
 
-#: hrms/hr/utils.py:961
+#: hrms/hr/utils.py:983
 msgid "Successfully created {0} for employees:"
 msgstr "สร้าง {0} สำหรับพนักงานสำเร็จ:"
 
@@ -10208,7 +10208,7 @@ msgid "Sync {0}"
 msgstr "ซิงค์ {0}"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1390
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:393
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:394
 msgid "Syntax error"
 msgstr "ข้อผิดพลาดทางไวยากรณ์"
 
@@ -10444,11 +10444,11 @@ msgstr "ไม่มีตำแหน่งงานว่างภายใต
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:82
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:39
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:457
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:458
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
 msgstr "ไม่มีโครงสร้างเงินเดือนที่กำหนดไว้สำหรับ {0}กรุณาเลือกโครงสร้างเงินเดือนก่อน"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:426
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:448
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
 msgstr "ไม่มีพนักงานที่มีโครงสร้างเงินเดือน: {0} โปรดกำหนด {1} ให้กับพนักงานเพื่อดูตัวอย่างสลิปเงินเดือน"
 
@@ -10475,17 +10475,17 @@ msgid "This employee already has a log with the same timestamp.{0}"
 msgstr "พนักงานนี้มีบันทึกที่มีการประทับเวลาเดียวกันอยู่แล้ว {0}"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1398
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:401
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:402
 msgid "This error can be due to invalid formula or condition."
 msgstr "ข้อผิดพลาดนี้อาจเกิดจากสูตรหรือเงื่อนไขที่ไม่ถูกต้อง"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1391
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:394
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:395
 msgid "This error can be due to invalid syntax."
 msgstr "ข้อผิดพลาดนี้อาจเกิดจากไวยากรณ์ที่ไม่ถูกต้อง"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1384
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:387
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:388
 msgid "This error can be due to missing or deleted field."
 msgstr "ข้อผิดพลาดนี้อาจเกิดจากฟิลด์ที่หายไปหรือถูกลบ"
 
@@ -10902,7 +10902,7 @@ msgstr "ยอดรวมเป็นตัวอักษร"
 msgid "Total in words (Company Currency)"
 msgstr "ยอดรวมเป็นตัวอักษร (สกุลเงินบริษัท)"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:402
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:403
 msgid "Total leaves allocated cannot exceed annual allocation of {0}."
 msgstr "จำนวนวันลาที่จัดสรรทั้งหมดไม่สามารถเกินการจัดสรรประจำปีของ {0} ได้"
 
@@ -10910,7 +10910,7 @@ msgstr "จำนวนวันลาที่จัดสรรทั้งห
 msgid "Total leaves allocated is mandatory for Leave Type {0}"
 msgstr "จำเป็นต้องระบุจำนวนวันลาที่จัดสรรทั้งหมดสำหรับประเภทการลา {0}"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:500
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:522
 msgid "Total of all employee benefits cannot be greater that Max Benefits Amount {0}"
 msgstr "ผลรวมของผลประโยชน์พนักงานทั้งหมดไม่สามารถมากกว่าจำนวนผลประโยชน์สูงสุดได้ {0}"
 
@@ -11053,7 +11053,7 @@ msgstr "การฝึกอบรม"
 msgid "Trainings (This Week)"
 msgstr "การฝึกอบรม (สัปดาห์นี้)"
 
-#: hrms/hr/utils.py:808
+#: hrms/hr/utils.py:830
 msgid "Transactions cannot be created for an Inactive Employee {0}."
 msgstr "ไม่สามารถสร้างธุรกรรมสำหรับพนักงานที่ไม่ใช้งาน {0} ได้"
 
@@ -11636,6 +11636,10 @@ msgstr "ใช่ ดำเนินการต่อ"
 msgid "You are not authorized to approve leaves on Block Dates"
 msgstr "คุณไม่ได้รับอนุญาตให้อนุมัติการลาในวันที่ถูกบล็อก"
 
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:366
+msgid "You are not permitted to access the CTC report of another employee."
+msgstr ""
+
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:79
 msgid "You are not present all day(s) between compensatory leave request days"
 msgstr "คุณไม่ได้มาทำงานตลอดทั้งวันระหว่างวันที่ขอลาชดเชย"
@@ -11668,8 +11672,8 @@ msgstr "คุณไม่สามารถย้อนกลับได้ม
 msgid "You do not have permission to change the Status of a Shift Request."
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:458
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:621
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:459
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:622
 msgid "You do not have permission to complete this action"
 msgstr "คุณไม่มีสิทธิ์ในการดำเนินการนี้ให้เสร็จสิ้น"
 
@@ -11753,7 +11757,7 @@ msgstr "สร้าง/ส่ง"
 msgid "created"
 msgstr "สร้างแล้ว"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:75
+#: hrms/hr/doctype/employee_advance/employee_advance.py:82
 msgid "here"
 msgstr "ที่นี่"
 
@@ -11914,15 +11918,15 @@ msgstr "{0} ไม่ได้รับอนุญาตให้ส่งข�
 msgid "{0} is not in Optional Holiday List"
 msgstr "{0} ไม่อยู่ในรายการวันหยุดที่เลือกได้"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:396
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:397
 msgid "{0} leaves allocated successfully"
 msgstr "จัดสรรวันลา {0} สำเร็จ"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:604
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:605
 msgid "{0} leaves from allocation for {1} leave type have expired and will be processed during the next scheduled job. It is recommended to expire them now before creating new leave policy assignments."
 msgstr "วันลา {0} วันจากการจัดสรรสำหรับประเภทการลา {1} ได้หมดอายุและจะถูกประมวลผลในงานที่กำหนดไว้ถัดไป แนะนำให้ทำให้หมดอายุตอนนี้ก่อนที่จะสร้างการกำหนดนโยบายการลาใหม่"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:391
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:392
 msgid "{0} leaves were manually allocated by {1} on {2}"
 msgstr "{0} วันลาถูกจัดสรรด้วยตนเองโดย {1} ในวันที่ {2}"
 
@@ -11963,11 +11967,11 @@ msgstr "{0} จะได้รับการอัปเดตสำหรั�
 msgid "{0} {1} {2}?"
 msgstr "{0} {1} {2}?"
 
-#: hrms/hr/utils.py:466
+#: hrms/hr/utils.py:470
 msgid "{0}. Check error log for more details."
 msgstr "{0}ตรวจสอบบันทึกข้อผิดพลาดเพื่อดูรายละเอียดเพิ่มเติม"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2275
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2277
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr "{0}: ไม่พบอีเมลพนักงาน ดังนั้นจึงยังไม่ได้ส่งอีเมล"
 

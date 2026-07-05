@@ -452,6 +452,7 @@ def get_assigned_salary_structure(employee, on_date):
 
 @frappe.whitelist()
 def get_employee_currency(employee: str) -> str:
+	frappe.has_permission("Employee", "read", employee, throw=True)
 	employee_currency = frappe.db.get_value("Salary Structure Assignment", {"employee": employee}, "currency")
 	if not employee_currency:
 		frappe.throw(

@@ -16,7 +16,7 @@ def get_children(parent: str | None = None, company: str | None = None, exclude_
 	if exclude_node:
 		filters.append(["name", "!=", exclude_node])
 
-	employees = frappe.get_all(
+	employees = frappe.get_list(
 		"Employee",
 		fields=[
 			"employee_name as name",

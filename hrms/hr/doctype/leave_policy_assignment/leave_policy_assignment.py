@@ -216,7 +216,10 @@ class LeavePolicyAssignment(Document):
 
 	def get_leaves_for_passed_period(self, annual_allocation, leave_details, date_of_joining):
 		consider_current_period = is_earned_leave_applicable_for_current_period(
-			date_of_joining, leave_details.allocate_on_day, leave_details.earned_leave_frequency
+			date_of_joining,
+			leave_details.allocate_on_day,
+			leave_details.earned_leave_frequency,
+			effective_from=self.effective_from,
 		)
 		current_date, from_date = self.get_current_and_from_date(date_of_joining)
 		periods_passed = self.get_periods_passed(
@@ -276,7 +279,9 @@ class LeavePolicyAssignment(Document):
 			# calculate pro-rated leave for that month
 			# and normal monthly earned leave for remaining passed months
 			start_date, end_date = get_sub_period_start_and_end(
-				date_of_joining, leave_details.earned_leave_frequency
+				date_of_joining,
+				leave_details.earned_leave_frequency,
+				effective_from=self.effective_from,
 			)
 			leaves = get_periodically_earned_leave(
 				date_of_joining,
@@ -319,6 +324,7 @@ class LeavePolicyAssignment(Document):
 			leave_details.allocate_on_day,
 			from_date,
 			date_of_joining,
+			effective_from=self.effective_from,
 		)
 		schedule = []
 		if new_leaves_allocated:
@@ -331,7 +337,11 @@ class LeavePolicyAssignment(Document):
 					"attempted": 1,
 				}
 			)
-			last_allocated_date = get_sub_period_start_and_end(today, leave_details.earned_leave_frequency)[1]
+			last_allocated_date = get_sub_period_start_and_end(
+				today,
+				leave_details.earned_leave_frequency,
+				effective_from=self.effective_from,
+			)[1]
 
 		while date <= to_date:
 			date_already_passed = today > date
@@ -349,6 +359,7 @@ class LeavePolicyAssignment(Document):
 				leave_details.allocate_on_day,
 				add_to_date(date, months=months_to_add),
 				date_of_joining,
+				effective_from=self.effective_from,
 			)
 		if from_date < getdate(date_of_joining):
 			pro_rated_period_start, pro_rated_period_end = get_sub_period_start_and_end(
@@ -394,13 +405,26 @@ def calculate_periods_passed(
 	return periods_passed
 
 
-def is_earned_leave_applicable_for_current_period(date_of_joining, allocate_on_day, earned_leave_frequency):
-	from hrms.hr.utils import get_semester_end, get_semester_start
-
+def is_earned_leave_applicable_for_current_period(
+	date_of_joining, allocate_on_day, earned_leave_frequency, effective_from=None
+):
 	date = getdate(frappe.flags.current_date) or getdate()
-	# If the date of assignment creation is >= the leave type's "Allocate On" date,
-	# then the current month should be considered
-	# because the employee is already entitled for the leave of that month
+
+	# For Half-Yearly, compute preiod relative to effective_from
+	# instead of calendar year
+	if earned_leave_frequency == "Half-Yearly" and effective_from:
+		from hrms.hr.utils import get_half_year_periods
+
+		period_start, period_end = get_half_year_periods(date, effective_from)
+		half_yearly_condition = (allocate_on_day == "First Day" and date >= period_start) or (
+			allocate_on_day == "Last Day" and date == period_end
+		)
+	else:
+		from hrms.hr.utils import get_semester_end, get_semester_start
+
+		half_yearly_condition = (allocate_on_day == "First Day" and date >= get_semester_start(date)) or (
+			allocate_on_day == "Last Day" and date == get_semester_end(date)
+		)
 
 	condition_map = {
 		"Monthly": (
@@ -408,16 +432,16 @@ def is_earned_leave_applicable_for_current_period(date_of_joining, allocate_on_d
 			or (allocate_on_day == "First Day" and date >= get_first_day(date))
 			or (allocate_on_day == "Last Day" and date == get_last_day(date))
 		),
-		"Quarterly": (allocate_on_day == "First Day" and date >= get_quarter_start(date))
-		or (allocate_on_day == "Last Day" and date == get_quarter_ending(date)),
-		"Half-Yearly": (allocate_on_day == "First Day" and date >= get_semester_start(date))
-		or (allocate_on_day == "Last Day" and date == get_semester_end(date)),
+		"Quarterly": (
+			(allocate_on_day == "First Day" and date >= get_quarter_start(date))
+			or (allocate_on_day == "Last Day" and date == get_quarter_ending(date))
+		),
+		"Half-Yearly": half_yearly_condition,
 		"Yearly": (
 			(allocate_on_day == "First Day" and date >= get_year_start(date))
 			or (allocate_on_day == "Last Day" and date == get_year_ending(date))
 		),
 	}
-
 	return condition_map.get(earned_leave_frequency)
 
 

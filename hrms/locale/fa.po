@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-06-14 10:34+0000\n"
-"PO-Revision-Date: 2026-06-16 19:12\n"
+"POT-Creation-Date: 2026-06-24 17:40+0000\n"
+"PO-Revision-Date: 2026-07-01 22:37\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -562,7 +562,7 @@ msgstr "آدرس سازمان دهنده"
 msgid "Adjust Allocation"
 msgstr "تعدیل تخصیص"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:453
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:454
 msgid "Adjustment Created Successfully"
 msgstr "تعدیل با موفقیت ایجاد شد"
 
@@ -576,15 +576,15 @@ msgstr "نوع تعدیل"
 msgid "Advance"
 msgstr "پیشرفت"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:78
+#: hrms/hr/doctype/employee_advance/employee_advance.py:85
 msgid "Advance Account Required"
 msgstr "حساب پیش پرداخت مورد نیاز است"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:82
+#: hrms/hr/doctype/employee_advance/employee_advance.py:89
 msgid "Advance Account is mandatory. Please set the {0} in the Company {1} and submit this document."
 msgstr ""
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:125
+#: hrms/hr/doctype/employee_advance/employee_advance.py:132
 msgid "Advance Account {} currency should be same as Salary Currency of Employee {}. Please select same currency Advance Account"
 msgstr ""
 
@@ -684,11 +684,11 @@ msgstr "تخصیص از حداکثر مجاز {0} برای نوع مرخصی {1}
 msgid "Allocation to Adjust"
 msgstr "تخصیص جهت تعدیل"
 
-#: hrms/hr/utils.py:433
+#: hrms/hr/utils.py:437
 msgid "Allocation was skipped due to exceeding annual allocation set in leave policy"
 msgstr ""
 
-#: hrms/hr/utils.py:441
+#: hrms/hr/utils.py:445
 msgid "Allocation was skipped due to maximum leave allocation limit set in leave type. Please increase the limit and retry failed allocation."
 msgstr ""
 
@@ -729,7 +729,7 @@ msgstr "اجازه تراز منفی"
 #. Label of the allow_over_allocation (Check) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Allow Over Allocation"
-msgstr "اجازه بیش از تخصیص"
+msgstr "اجازه تخصیص بیش از حد"
 
 #. Label of the allow_tax_exemption (Check) field in DocType 'Income Tax Slab'
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
@@ -839,7 +839,7 @@ msgstr "سابقه حضور و غیاب به این ورود پیوند داده
 msgid "Annual Allocation"
 msgstr "تخصیص سالانه"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:407
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:408
 msgid "Annual Allocation Exceeded"
 msgstr ""
 
@@ -1260,7 +1260,7 @@ msgstr ""
 #. Label of the from_date (Date) field in DocType 'Holiday List Assignment'
 #: hrms/hr/doctype/holiday_list_assignment/holiday_list_assignment.json
 msgid "Assignment Starts From"
-msgstr ""
+msgstr "تخصیص شروع می‌شود از"
 
 #. Label of the assignment_based_on (Select) field in DocType 'Leave Policy
 #. Assignment'
@@ -1270,7 +1270,7 @@ msgstr "تخصیص بر اساس"
 
 #: hrms/hr/doctype/holiday_list_assignment/holiday_list_assignment.py:66
 msgid "Assignment start date cannot be outside holiday list dates"
-msgstr ""
+msgstr "تاریخ شروع تخصیص نمی‌تواند خارج از تاریخ‌های لیست تعطیلات باشد"
 
 #: hrms/hr/doctype/job_requisition/job_requisition.js:50
 #: hrms/hr/doctype/job_requisition/job_requisition.js:74
@@ -1489,9 +1489,9 @@ msgstr "بازخرید خودکار مرخصی"
 msgid "Automated Based on Goal Progress"
 msgstr "خودکار بر اساس پیشرفت هدف"
 
-#: hrms/hr/utils.py:494
+#: hrms/hr/utils.py:498
 msgid "Automatic Leave Allocation has failed for the following Earned Leaves: {0}. Please check {1} for more details."
-msgstr ""
+msgstr "تخصیص خودکار مرخصی برای مرخصی‌های استحقاقی زیر ناموفق بوده است: {0}. لطفاً برای جزئیات بیشتر {1} را بررسی کنید."
 
 #. Description of the 'Assets Allocated' (Section Break) field in DocType 'Full
 #. and Final Statement'
@@ -1551,11 +1551,15 @@ msgstr "میانگین استفاده (فقط صورتحساب)"
 msgid "Awaiting Response"
 msgstr "در انتظار پاسخ"
 
+#: frontend/src/views/Login.vue:17
+msgid "Back to Login"
+msgstr "بازگشت به صفحه ورود"
+
 #: hrms/hr/doctype/leave_application/leave_application.py:209
 msgid "Backdated Leave Application is restricted. Please set the {} in {}"
 msgstr "برنامه مرخصی قدیمی محدود شده است. لطفاً {} را در {} تنظیم کنید"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:281
+#: hrms/hr/doctype/expense_claim/expense_claim.js:282
 msgid "Bank Entries"
 msgstr "ورودی های بانکی"
 
@@ -1621,7 +1625,7 @@ msgstr ""
 msgid "Benefit amount of component {0} should be greater than 0"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:487
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:509
 msgid "Benefit amount {0} for Salary Component {1} should not be greater than maximum benefit amount {2} set in {3}"
 msgstr ""
 
@@ -1753,7 +1757,7 @@ msgstr "به طور پیش‌فرض، امتیاز نهایی به صورت می
 msgid "CTC"
 msgstr "CTC"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:62
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:63
 msgid "CTC Missing for Employee"
 msgstr ""
 
@@ -1792,15 +1796,15 @@ msgstr "در صف لغو"
 msgid "Cannot Modify Time"
 msgstr "نمی‌توان زمان را تغییر داد"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:358
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:359
 msgid "Cannot allocate leaves outside the allocation period {0} - {1}"
 msgstr "نمی‌توان مرخصی را خارج از دوره تخصیص {0} - {1} اختصاص داد"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:487
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:488
 msgid "Cannot allocate more leaves due to maximum leave allocation limit of {0} in leave policy assignment"
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:479
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:480
 msgid "Cannot allocate more leaves due to maximum leaves allowed limit of {0} in {1} leave type."
 msgstr ""
 
@@ -1921,8 +1925,8 @@ msgstr "ثبت خروج"
 msgid "Check Vacancies On Job Offer Creation"
 msgstr "موقعیت های خالی را در ایجاد پیشنهاد شغلی بررسی کنید"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:492
-#: hrms/hr/utils.py:947
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:516
+#: hrms/hr/utils.py:969
 msgid "Check {0} for more details"
 msgstr "برای جزئیات بیشتر، {0} را بررسی کنید"
 
@@ -1980,7 +1984,7 @@ msgid "Claim an Expense"
 msgstr "مطالبه یک هزینه"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Advance'
-#: frontend/src/views/employee_advance/List.vue:42
+#: frontend/src/views/employee_advance/List.vue:43
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 msgid "Claimed"
 msgstr "مطالبه شده"
@@ -1989,7 +1993,7 @@ msgstr "مطالبه شده"
 #. Label of the claimed_amount (Currency) field in DocType 'Employee Benefit
 #. Claim'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
-#: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:80
+#: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:197
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 msgid "Claimed Amount"
 msgstr "مبلغ مطالبه شده"
@@ -2259,7 +2263,7 @@ msgstr "ایجاد {0}..."
 msgid "Creation Date"
 msgstr "تاریخ ایجاد"
 
-#: hrms/hr/utils.py:956
+#: hrms/hr/utils.py:978
 msgid "Creation Failed"
 msgstr "ایجاد ناموفق بود"
 
@@ -2506,7 +2510,7 @@ msgstr ""
 msgid "Deduction Reports"
 msgstr "گزارش‌های کسر"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.js:79
+#: hrms/hr/doctype/employee_advance/employee_advance.js:81
 msgid "Deduction from Salary"
 msgstr "کسر از حقوق"
 
@@ -2565,10 +2569,6 @@ msgstr "شیفت پیش‌فرض"
 #: frontend/src/components/FileUploaderView.vue:49
 msgid "Delete Attachment"
 msgstr "حذف پیوست"
-
-#: frontend/src/components/FormView.vue:224
-msgid "Delete {0}"
-msgstr "حذف {0}"
 
 #. Name of a DocType
 #: hrms/hr/doctype/department_approver/department_approver.json
@@ -2680,7 +2680,7 @@ msgstr "داخلی"
 
 #: hrms/hr/doctype/holiday_list_assignment/holiday_list_assignment.py:57
 msgid "Duplicate Assignment"
-msgstr ""
+msgstr "تخصیص تکراری"
 
 #: hrms/hr/doctype/attendance/attendance.py:114
 msgid "Duplicate Attendance"
@@ -2730,12 +2730,12 @@ msgstr "خروج های زودهنگام"
 #. Label of the earned_leave (Section Break) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Earned Leave"
-msgstr "مرخصی کسب شده"
+msgstr "مرخصی استحقاقی"
 
 #. Label of the earned_leave_frequency (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Earned Leave Frequency"
-msgstr "فرکانس مرخصی کسب شده"
+msgstr "فرکانس مرخصی استحقاقی"
 
 #. Name of a DocType
 #. Label of the earned_leave_schedule_section (Section Break) field in DocType
@@ -2743,23 +2743,23 @@ msgstr "فرکانس مرخصی کسب شده"
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 msgid "Earned Leave Schedule"
-msgstr ""
+msgstr "زمان‌بندی مرخصی استحقاقی"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:175
 msgid "Earned Leaves"
-msgstr "مرخصی‌های به دست آمده"
+msgstr "مرخصی‌های استحقاقی"
 
 #: hrms/hr/doctype/leave_type/leave_type.py:68
 msgid "Earned Leaves are allocated as per the configured frequency via scheduler."
-msgstr "مرخصی‌های به دست آمده طبق فرکانس پیکربندی شده از طریق زمان‌بندی تخصیص داده می‌شوند."
+msgstr "مرخصی‌های استحقاقی طبق فرکانس پیکربندی شده از طریق زمان‌بندی تخصیص داده می‌شوند."
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:178
 msgid "Earned Leaves are auto-allocated via scheduler based on the annual allocation set in the Leave Policy: {0}"
-msgstr "مرخصی‌های کسب‌شده به‌طور خودکار از طریق زمان‌بندی بر اساس تخصیص سالانه تنظیم‌شده در سیاست مرخصی تخصیص می‌یابند: {0}"
+msgstr "مرخصی‌های استحقاقی به‌طور خودکار از طریق زمان‌بندی بر اساس تخصیص سالانه تنظیم‌شده در سیاست مرخصی تخصیص می‌یابند: {0}"
 
 #: hrms/hr/doctype/leave_type/leave_type.js:59
 msgid "Earned Leaves are leaves earned by an Employee after working with the company for a certain amount of time. Enabling this will allocate leaves on pro-rata basis by automatically updating Leave Allocation for leaves of this type at intervals set by 'Earned Leave Frequency."
-msgstr "مرخصی‌های کسب‌شده، مرخصی‌هایی هستند که یک کارمند پس از کار کردن در شرکت برای مدت زمان معینی به دست می‌آورد. فعال کردن این گزینه، مرخصی‌ها را بر اساس نسبت کارکرد تخصیص داده و به‌صورت خودکار تخصیص مرخصی را در فواصل زمانی تعیین‌شده توسط 'تناوب مرخصی کسب‌شده' به‌روزرسانی می‌کند."
+msgstr "مرخصی‌های استحقاقی، مرخصی‌هایی هستند که یک کارمند پس از مدت زمان مشخصی کار در شرکت، دریافت می‌کند. فعال کردن این گزینه، مرخصی‌ها را به صورت تناسبی و با به‌روزرسانی خودکار تخصیص مرخصی برای این نوع مرخصی‌ها در فواصل زمانی تعیین‌شده توسط «فرکانس مرخصی استحقاقی» اختصاص می‌دهد."
 
 #. Option for the 'Type' (Select) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
@@ -3359,8 +3359,8 @@ msgstr "جزئیات انتقال کارکنان"
 msgid "Employee Transfer cannot be submitted before Transfer Date"
 msgstr "انتقال کارمند را نمی‌توان قبل از تاریخ انتقال ارسال کرد"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:115
-#: hrms/hr/doctype/employee_advance/employee_advance.py:185
+#: hrms/hr/doctype/employee_advance/employee_advance.py:122
+#: hrms/hr/doctype/employee_advance/employee_advance.py:193
 msgid "Employee advance account {0} should be of type {1}."
 msgstr "حساب پیش‌پرداخت کارمند {0} باید از نوع {1} باشد."
 
@@ -3476,7 +3476,7 @@ msgstr ""
 #. Label of a number card in the Leaves Workspace
 #: hrms/hr/workspace/leaves/leaves.json
 msgid "Employees on leave this month"
-msgstr ""
+msgstr "کارمندانی که این ماه در مرخصی هستند"
 
 #. Label of a number card in the Leaves Workspace
 #: hrms/hr/workspace/leaves/leaves.json
@@ -3669,7 +3669,7 @@ msgid "Error downloading PDF"
 msgstr "خطا در دانلود فایل PDF"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1397
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:400
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:401
 msgid "Error in formula or condition"
 msgstr "خطا در فرمول یا شرایط"
 
@@ -4062,7 +4062,7 @@ msgstr "منقضی تخصیص"
 msgid "Expire Carry Forwarded Leaves (Days)"
 msgstr "انقضای مرخصی‌های منتقل شده به دوره بعد (بر حسب روز)"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:609
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:610
 msgid "Expire Leaves"
 msgstr ""
 
@@ -4084,7 +4084,7 @@ msgstr "توضیح"
 msgid "Exporting..."
 msgstr "در حال برون‌بُرد..."
 
-#: hrms/hr/utils.py:944
+#: hrms/hr/utils.py:966
 msgid "Failed to create/submit {0} for employees:"
 msgstr "ایجاد/ارائه {0} برای کارمندان انجام نشد:"
 
@@ -4108,7 +4108,7 @@ msgstr "اعلان زمان‌بندی مجدد مصاحبه ارسال نشد. 
 msgid "Failed to setup defaults for country {0}."
 msgstr "تنظیم پیش‌فرض‌ها برای کشور {0} ناموفق بود."
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:489
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:513
 msgid "Failed to submit some leave policy assignments:"
 msgstr "ناموفق در ارسال برخی از تخصیص‌های سیاست مرخصی:"
 
@@ -4136,9 +4136,9 @@ msgstr "جزئیات شکست"
 msgid "Failure Reason"
 msgstr "دلیل شکست"
 
-#: hrms/hr/utils.py:493
+#: hrms/hr/utils.py:497
 msgid "Failure of Automatic Allocation of Earned Leaves"
-msgstr ""
+msgstr "عدم تخصیص خودکار مرخصی‌های استحقاقی"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:37
 #: hrms/public/js/salary_slip_deductions_report_filters.js:20
@@ -4279,7 +4279,7 @@ msgstr "اولین ورود و آخرین خروج"
 #. Option for the 'Allocate on Day' (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "First Day"
-msgstr "اولین روز"
+msgstr "روز اول"
 
 #. Label of the first_name (Data) field in DocType 'Employee Referral'
 #: hrms/hr/doctype/employee_referral/employee_referral.json
@@ -4361,7 +4361,7 @@ msgstr "برای کارمند"
 #: hrms/hr/doctype/leave_type/leave_type.json
 #, python-format
 msgid "For a day of leave taken, if you still pay (say) 50% of the daily salary, then enter 0.50 in this field."
-msgstr "برای یک روز مرخصی گرفته شده، اگر باز هم (مثلا) 50 درصد حقوق روزانه را پرداخت می‌کنید، در این قسمت 0.50 را وارد کنید."
+msgstr "برای یک روز مرخصی گرفته شده، اگر همچنان (مثلا) 50% حقوق روزانه را پرداخت می‌کنید، در این فیلد 0.50 را وارد کنید."
 
 #. Label of the formula (Code) field in DocType 'Salary Component'
 #. Label of the formula (Code) field in DocType 'Salary Detail'
@@ -4370,7 +4370,7 @@ msgstr "برای یک روز مرخصی گرفته شده، اگر باز هم (
 msgid "Formula"
 msgstr "فرمول"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:229
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:260
 msgid "Formula/Amount"
 msgstr ""
 
@@ -4625,7 +4625,7 @@ msgstr "اهداف با موفقیت به روز شدند"
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 #: hrms/setup.py:203
 msgid "Grade"
-msgstr "مقطع تحصیلی"
+msgstr "درجه"
 
 #. Name of a DocType
 #. Label of the details_tab (Tab Break) field in DocType 'Gratuity'
@@ -4687,7 +4687,7 @@ msgstr "جزئیات شکایت"
 msgid "Grievance Type"
 msgstr "نوع شکایت"
 
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:630
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:637
 msgid "Gross Earnings"
 msgstr ""
 
@@ -4854,11 +4854,11 @@ msgstr "تنظیمات استخدام"
 #: hrms/hr/doctype/holiday_list_assignment/holiday_list_assignment.json
 #: hrms/workspace_sidebar/leaves.json
 msgid "Holiday List Assignment"
-msgstr ""
+msgstr "تخصیص لیست تعطیلات"
 
 #: hrms/hr/doctype/holiday_list_assignment/holiday_list_assignment.py:51
 msgid "Holiday List Assignment for {0} already exists for date {1}: {2}"
-msgstr ""
+msgstr "تخصیص لیست تعطیلات برای {0} از قبل برای تاریخ {1} وجود دارد: {2}"
 
 #. Label of the holiday_list_end (Date) field in DocType 'Holiday List
 #. Assignment'
@@ -5060,7 +5060,7 @@ msgstr ""
 #. Block List'
 #: hrms/hr/doctype/leave_block_list/leave_block_list.json
 msgid "If not checked, the list will have to be added to each Department where it has to be applied."
-msgstr "اگر علامت زده نشود، فهرست باید به هر بخش که باید اعمال شود اضافه شود."
+msgstr "اگر علامت زده نشود، لیست باید به هر دپارتمانی که باید اعمال شود اضافه شود."
 
 #. Description of the 'Statistical Component' (Check) field in DocType 'Salary
 #. Detail'
@@ -5190,7 +5190,7 @@ msgstr "کسر مالیات بر درآمد"
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:148
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:623
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:630
 #: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 #: hrms/workspace_sidebar/tax_&_benefits.json
@@ -5206,11 +5206,11 @@ msgstr "سایر هزینه های طبقه مالیات بر درآمد"
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1952
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1954
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr "طبقه مالیات بر درآمد باید در تاریخ شروع دوره حقوق و دستمزد یا قبل از آن مؤثر باشد: {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1940
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1942
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr "صفحه مالیات بر درآمد در تخصیص ساختار حقوق تنظیم نشده است: {0}"
 
@@ -5218,7 +5218,7 @@ msgstr "صفحه مالیات بر درآمد در تخصیص ساختار حق�
 msgid "Income Tax Slab: "
 msgstr "طبقه مالیات بر درآمد: "
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1948
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1950
 msgid "Income Tax Slab: {0} is disabled"
 msgstr "طبقه مالیات بر درآمد: {0} غیرفعال است"
 
@@ -5446,15 +5446,15 @@ msgstr "حقوق اضافی نامعتبر"
 msgid "Invalid Arrear Component"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:503
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:525
 msgid "Invalid Benefit Amounts"
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:361
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:362
 msgid "Invalid Dates"
 msgstr "تاریخ‌های نامعتبر"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2642
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2644
 msgid "Invalid LWP Days Reversed"
 msgstr ""
 
@@ -5475,7 +5475,7 @@ msgstr "زمان‌های شیفت نامعتبر است"
 msgid "Invalid employee filter: {0}"
 msgstr "فیلتر کارمند نامعتبر: {0}"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:879
+#: hrms/hr/doctype/expense_claim/expense_claim.py:883
 msgid "Invalid parameters provided. Please pass the required arguments."
 msgstr "پارامترهای نامعتبر ارائه شده است. لطفا آرگومان های مورد نیاز را ارسال کنید."
 
@@ -5534,7 +5534,7 @@ msgstr "مرخصی جبرانی است"
 #: hrms/hr/doctype/leave_type/leave_type.json
 #: hrms/hr/doctype/leave_type/leave_type.py:74
 msgid "Is Earned Leave"
-msgstr "مرخصی به دست آمده است"
+msgstr "مرخصی استحقاقی است"
 
 #. Label of the is_expired (Check) field in DocType 'Leave Ledger Entry'
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.json
@@ -5826,7 +5826,7 @@ msgstr "حوزه مسئولیت کلیدی"
 msgid "Key Result Area"
 msgstr "حوزه نتایج کلیدی"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2639
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2641
 msgid "LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
 msgstr ""
 
@@ -5969,7 +5969,7 @@ msgstr "تأیید کننده مرخصی"
 #. DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Leave Approver Mandatory In Leave Application"
-msgstr "تأیید کننده مرخصی اجباری در درخواست مرخصی"
+msgstr "تاییدکننده مرخصی در درخواست مرخصی الزامی است"
 
 #: hrms/hr/doctype/leave_application/leave_application_calendar.js:493
 msgid "Leave Approver Missing"
@@ -6045,7 +6045,7 @@ msgstr "مرخصی مسدود شده"
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 #: hrms/hr/workspace/leaves/leaves.json hrms/workspace_sidebar/leaves.json
 msgid "Leave Control Panel"
-msgstr "کنترل پنل مرخصی"
+msgstr "پنل کنترل مرخصی"
 
 #. Label of the leave_details (Table) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
@@ -6214,7 +6214,7 @@ msgstr "نام نوع مرخصی"
 
 #: hrms/hr/doctype/leave_type/leave_type.py:67
 msgid "Leave Type can either be compensatory or earned leave."
-msgstr "نوع مرخصی می‌تواند مرخصی جبرانی یا اکتسابی باشد."
+msgstr "نوع مرخصی می‌تواند مرخصی جبرانی یا استحقاقی باشد."
 
 #: hrms/hr/doctype/leave_type/leave_type.py:79
 msgid "Leave Type can either be without pay or partial pay"
@@ -6228,7 +6228,7 @@ msgstr "نوع مرخصی اجباری است"
 msgid "Leave Type {0} cannot be allocated since it is leave without pay"
 msgstr "نوع مرخصی {0} قابل تخصیص نیست زیرا مرخصی بدون حقوق است"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:598
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:599
 msgid "Leave Type {0} cannot be carry-forwarded"
 msgstr "نوع مرخصی {0} قابل انتقال به دوره بعد نیست"
 
@@ -6280,6 +6280,10 @@ msgstr "مرخصی برای تعطیلات اختیاری"
 msgid "Leave of type {0} cannot be longer than {1}."
 msgstr "خروج از نوع {0} نمی‌تواند بیشتر از {1} باشد."
 
+#: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:61
+msgid "Leave(s) Allocated"
+msgstr "مرخصی(ها) اختصاص داده شد"
+
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:73
 msgid "Leave(s) Expired"
 msgstr "مرخصی (ها) منقضی شده است"
@@ -6330,7 +6334,7 @@ msgstr "مرخصی‌ها پس از تعدیل"
 msgid "Leaves Allocated"
 msgstr "مرخصی اختصاص داده شده است"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:603
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:604
 msgid "Leaves Expired"
 msgstr "مرخصی‌ها منقضی شده‌اند"
 
@@ -6405,7 +6409,7 @@ msgstr "بازپرداخت وام"
 msgid "Loan Repayment Entry"
 msgstr "ثبت بازپرداخت وام"
 
-#: hrms/hr/utils.py:831
+#: hrms/hr/utils.py:853
 msgid "Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
 msgstr "وام از حقوق کارمند {0} قابل بازپرداخت نیست زیرا حقوق به ارز {1} پردازش می‌شود"
 
@@ -6726,7 +6730,7 @@ msgstr "حداقل سال برای حق سنوات"
 msgid "Minimum calendar days required since Date of Joining to apply for this leave"
 msgstr "حداقل روزهای تقویمی مورد نیاز از تاریخ پیوستن برای درخواست این مرخصی"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:90
+#: hrms/hr/doctype/employee_advance/employee_advance.py:97
 msgid "Missing Advance Account"
 msgstr ""
 
@@ -6746,11 +6750,11 @@ msgstr "از دست رفته تاریخ برکناری"
 msgid "Missing Salary Components"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1943
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1945
 msgid "Missing Tax Slab"
 msgstr "طبقه مالیاتی گم شده"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:313
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:344
 msgid "Missing value for filters"
 msgstr ""
 
@@ -6820,7 +6824,7 @@ msgstr "درخواست‌های من"
 
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.py:123
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1383
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:386
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:387
 msgid "Name error"
 msgstr "خطای نام"
 
@@ -6882,10 +6886,6 @@ msgstr "بازخورد جدید"
 msgid "New Hires (This Month)"
 msgstr "استخدام‌های جدید (این ماه)"
 
-#: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:61
-msgid "New Leave(s) Allocated"
-msgstr "مرخصی(های) جدید اختصاص داده شد"
-
 #. Label of the new_leaves_allocated (Float) field in DocType 'Leave
 #. Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
@@ -6907,7 +6907,7 @@ msgstr "گذرواژه‌های جدید مطابقت ندارند"
 msgid "New shift assignments will be created after this date."
 msgstr "تخصیص‌های شیفت جدید پس از این تاریخ ایجاد خواهد شد."
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:380
+#: hrms/hr/doctype/employee_advance/employee_advance.py:394
 msgid "No Bank/Cash Account found for currency {0}. Please create one under company {1}."
 msgstr ""
 
@@ -6919,7 +6919,7 @@ msgstr "هیچ کارمندی پیدا نشد"
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "هیچ کارمندی برای مقدار فیلد کارمند داده شده پیدا نشد. '{}': {}"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:136 hrms/hr/utils.py:934
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:136 hrms/hr/utils.py:956
 msgid "No Employees Selected"
 msgstr "هیچ کارمندی انتخاب نشد"
 
@@ -7048,7 +7048,7 @@ msgstr "هیچ کارمندی برای معیارهای ذکر شده یافت �
 msgid "No employees found for the selected criteria"
 msgstr "هیچ کارمندی برای معیارهای انتخابی یافت نشد"
 
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:71
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:78
 msgid "No employees found with selected filters and active salary structure"
 msgstr "هیچ کارمندی با فیلترهای انتخابی و ساختار حقوق فعال یافت نشد"
 
@@ -7160,7 +7160,7 @@ msgstr "توجه: شیفت در رکوردهای حضور و غیاب موجود
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr "توجه: مجموع مرخصی‌های تخصیص‌یافته {0} نباید کمتر از مرخصی‌های تأیید شده قبلی {1} برای دوره باشد"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2252
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2254
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr ""
 
@@ -7609,7 +7609,7 @@ msgid "Partially Sponsored, Require Partial Funding"
 msgstr "تا حدی حمایت مالی شده است، نیاز به بودجه جزئی دارد"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Advance'
-#: frontend/src/views/employee_advance/List.vue:42
+#: frontend/src/views/employee_advance/List.vue:43
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 msgid "Partly Claimed and Returned"
 msgstr "تا حدی مطالبه شده و بازگردانده شده است"
@@ -7909,7 +7909,7 @@ msgstr "پرسشنامه های در انتظار"
 msgid "Percent Deduction"
 msgstr "درصد کسر"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:252
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:283
 msgid "Percent of CTC (%)"
 msgstr ""
 
@@ -7991,7 +7991,7 @@ msgstr ""
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2241
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2243
 msgid "Please see attachment"
 msgstr "لطفا پیوست را ببینید"
 
@@ -8045,7 +8045,7 @@ msgstr "لطفا یک فایل csv انتخاب کنید"
 msgid "Please select a date."
 msgstr "لطفا تاریخ را انتخاب کنید"
 
-#: hrms/hr/utils.py:822
+#: hrms/hr/utils.py:844
 msgid "Please select an Applicant"
 msgstr "لطفاً یک متقاضی را انتخاب کنید"
 
@@ -8057,7 +8057,7 @@ msgstr "لطفا قبل از ادامه، یک کارمند انتخاب کنی�
 msgid "Please select at least one Shift Request to perform this action."
 msgstr "لطفا حداقل یک درخواست شیفت برای انجام این کار انتخاب کنید."
 
-#: hrms/hr/utils.py:933
+#: hrms/hr/utils.py:955
 msgid "Please select at least one employee to perform this action."
 msgstr "لطفا حداقل یک کارمند را برای انجام این کار انتخاب کنید."
 
@@ -8135,7 +8135,7 @@ msgstr ""
 msgid "Please set account in Salary Component {0}"
 msgstr "لطفاً حساب را در مؤلفه حقوق و دستمزد {0} تنظیم کنید"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:54
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:55
 msgid "Please set cost to company(CTC) for employee {0} in the {1}"
 msgstr ""
 
@@ -8151,7 +8151,7 @@ msgstr "لطفاً الگوی پیش‌فرض را برای اعلان وضعی�
 msgid "Please set employee's total cost to company to see CTC breakup."
 msgstr ""
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:74
+#: hrms/hr/doctype/employee_advance/employee_advance.py:81
 msgid "Please set the Advance Account {0} or in {1}"
 msgstr ""
 
@@ -8159,7 +8159,7 @@ msgstr ""
 msgid "Please set the Appraisal Template for all the {0} or select the template in the Employees table below."
 msgstr "لطفاً الگوی ارزیابی را برای همه {0} تنظیم کنید یا الگو را در جدول کارکنان زیر انتخاب کنید."
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:514
+#: hrms/hr/doctype/expense_claim/expense_claim.js:515
 msgid "Please set the Company"
 msgstr "لطفا شرکت را تنظیم کنید"
 
@@ -8192,7 +8192,7 @@ msgstr "لطفاً {0} را برای کارمند {1} تنظیم کنید"
 msgid "Please set {0} for the Employee: {1}"
 msgstr "لطفاً {0} را برای کارمند تنظیم کنید: {1}"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:312
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:343
 msgid "Please set {0} to get CTC report"
 msgstr ""
 
@@ -8576,13 +8576,13 @@ msgstr "کاهش"
 
 #: hrms/hr/doctype/leave_type/leave_type.py:102
 msgid "Reducing maximum leaves allowed after allocation may cause scheduler to allocate incorrect number of earned leaves. Proceed with caution."
-msgstr ""
+msgstr "کاهش حداکثر مرخصی مجاز پس از تخصیص ممکن است باعث شود زمانبند تعداد نادرستی از مرخصی‌های استحقاقی را اختصاص دهد. با احتیاط عمل کنید."
 
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.py:101
 msgid "Reduction is more than {0}'s available leave balance {1} for leave type {2}"
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:406
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:407
 #: hrms/hr/doctype/leave_application/leave_application.py:554
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:218
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:141
@@ -8695,7 +8695,7 @@ msgstr "ماشین اجاره ای"
 msgid "Repay From Salary"
 msgstr "بازپرداخت از حقوق"
 
-#: hrms/hr/utils.py:837
+#: hrms/hr/utils.py:859
 msgid "Repay From Salary can be selected only for term loans"
 msgstr "بازپرداخت از حقوق فقط برای وام های مدت دار قابل انتخاب است"
 
@@ -8819,8 +8819,8 @@ msgstr "پاداش نگهداشت"
 msgid "Retirement Age (In Years)"
 msgstr "سن بازنشستگی (به سال)"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:482
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:490
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:483
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:491
 msgid "Retry Failed"
 msgstr ""
 
@@ -8838,7 +8838,7 @@ msgstr ""
 msgid "Retrying allocations"
 msgstr ""
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:231
+#: hrms/hr/doctype/employee_advance/employee_advance.py:239
 msgid "Return amount cannot be greater than unclaimed amount"
 msgstr "مبلغ برگشتی نمی‌تواند بیشتر از مبلغ مطالبه نشده باشد"
 
@@ -8916,7 +8916,7 @@ msgstr "ردیف #{0}: مؤلفه {1} دارای گزینه‌های {2} و {3} 
 msgid "Row #{0}: Timesheet amount will overwrite the Earning component amount for the Salary Component {1}"
 msgstr "ردیف #{0}: مقدار برگه زمانی، مقدار مؤلفه درآمد را برای مؤلفه حقوق و دستمزد بازنویسی می‌کند {1}"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:847
+#: hrms/hr/doctype/expense_claim/expense_claim.py:851
 msgid "Row No {0}: Amount cannot be greater than the Outstanding Amount against Expense Claim {1}. Outstanding Amount is {2}"
 msgstr "ردیف شماره {0}: مبلغ نمی‌تواند بیشتر از مبلغ معوق در برابر مطالبه هزینه {1} باشد. مبلغ معوقه {2} است"
 
@@ -8932,7 +8932,7 @@ msgstr ""
 msgid "Row {0}# Paid Amount cannot be greater than Total amount"
 msgstr "ردیف {0}# مبلغ پرداختی نمی‌تواند بیشتر از مبلغ کل باشد"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:223
+#: hrms/hr/doctype/employee_advance/employee_advance.py:231
 msgid "Row {0}# Paid Amount cannot be greater than requested advance amount"
 msgstr "ردیف {0}# مبلغ پرداختی نمی‌تواند بیشتر از مبلغ پیش‌پرداخت درخواستی باشد"
 
@@ -9014,7 +9014,7 @@ msgstr "نوع مؤلفه حقوق"
 msgid "Salary Component for timesheet based payroll."
 msgstr "مؤلفه حقوق و دستمزد برای لیست حقوق و دستمزد بر اساس جدول زمانی."
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:476
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:498
 msgid "Salary Component {0} cannot be selected more than once in Employee Benefits"
 msgstr ""
 
@@ -9301,7 +9301,7 @@ msgstr ""
 msgid "Salary components should be part of the Salary Structure."
 msgstr "مؤلفه‌های حقوق باید بخشی از ساختار حقوق و دستمزد باشد."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2662
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2664
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr "ایمیل های فیش حقوقی برای ارسال در نوبت قرار گرفته اند. وضعیت {0} را بررسی کنید."
 
@@ -9398,7 +9398,7 @@ msgstr "انتخاب شرایط و ضوابط"
 msgid "Select Users"
 msgstr "کاربران را انتخاب کنید"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:559
+#: hrms/hr/doctype/expense_claim/expense_claim.js:560
 msgid "Select an employee to get the employee advance."
 msgstr "یک کارمند را برای پیش‌پرداخت کارمند انتخاب کنید."
 
@@ -9456,7 +9456,7 @@ msgstr "نوع مرخصی مورد نظر کارمند را انتخاب کنی�
 msgid "Select your Leave Approver i.e. the person who approves or rejects your leaves."
 msgstr "تأیید کننده مرخصی خود را انتخاب کنید، یعنی شخصی که مرخصی‌های شما را تأیید یا رد می‌کند."
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:594
+#: hrms/hr/doctype/expense_claim/expense_claim.js:595
 msgid "Selected employee advance is not of employee {0}"
 msgstr ""
 
@@ -9621,7 +9621,7 @@ msgstr "تنظیم حساب پیش‌فرض برای {0} {1}"
 #. Label of the frequency (Select) field in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Set the frequency for holiday reminders"
-msgstr "فرکانس یادآوری تعطیلات را تنظیم کنید"
+msgstr "تنظیم فرکانس یادآوری تعطیلات"
 
 #. Description of the 'Employee Promotion Details' (Section Break) field in
 #. DocType 'Employee Promotion'
@@ -9649,7 +9649,7 @@ msgstr ""
 msgid "Settle all Payables and Receivables before submission"
 msgstr "همه پرداختنی‌ها و دریافتنی‌ها را قبل از ارسال تسویه کنید"
 
-#: hrms/hr/utils.py:785
+#: hrms/hr/utils.py:807
 msgid "Shared document with the user {0} with 'Submit' permission"
 msgstr ""
 
@@ -10097,7 +10097,7 @@ msgstr "ساختارها با موفقیت تخصیص یافتند"
 msgid "Submission Date"
 msgstr "تاریخ ارسال"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:500
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:524
 msgid "Submission Failed"
 msgstr "ارسال ناموفق بود"
 
@@ -10153,7 +10153,7 @@ msgstr "ارسال فیش حقوقی..."
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
 msgstr "شرکت های تابعه قبلاً برای {1} جای خالی با بودجه {2} برنامه‌ریزی کرده اند. طرح کارکنان برای {0} باید تعداد بیشتری از مشاغل و بودجه برای {3} نسبت به شرکت های تابعه خود اختصاص دهد"
 
-#: hrms/hr/utils.py:961
+#: hrms/hr/utils.py:983
 msgid "Successfully created {0} for employees:"
 msgstr ""
 
@@ -10180,7 +10180,7 @@ msgid "Sync {0}"
 msgstr "همگام سازی {0}"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1390
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:393
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:394
 msgid "Syntax error"
 msgstr "اشتباه نوشتاری"
 
@@ -10416,11 +10416,11 @@ msgstr "هیچ جای خالی در طرح کارگزینی وجود ندارد 
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:82
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:39
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:457
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:458
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:426
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:448
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
 msgstr "هیچ کارمندی با ساختار حقوق و دستمزد وجود ندارد: {0}. برای پیش‌نمایش فیش حقوقی، {1} را به یک کارمند اختصاص دهید"
 
@@ -10447,17 +10447,17 @@ msgid "This employee already has a log with the same timestamp.{0}"
 msgstr "این کارمند قبلاً یک لاگ با همان مهر زمانی دارد.{0}"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1398
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:401
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:402
 msgid "This error can be due to invalid formula or condition."
 msgstr "این خطا می‌تواند به دلیل فرمول یا شرایط نامعتبر باشد."
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1391
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:394
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:395
 msgid "This error can be due to invalid syntax."
 msgstr "این خطا می‌تواند به دلیل نحو نامعتبر باشد."
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1384
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:387
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:388
 msgid "This error can be due to missing or deleted field."
 msgstr "این خطا می‌تواند به دلیل گم شدن یا حذف شدن فیلد باشد."
 
@@ -10874,7 +10874,7 @@ msgstr "مجموع به حروف"
 msgid "Total in words (Company Currency)"
 msgstr "مجموع به حروف (ارز شرکت)"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:402
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:403
 msgid "Total leaves allocated cannot exceed annual allocation of {0}."
 msgstr "کل مرخصی‌های اختصاص داده شده نمی‌تواند از تخصیص سالانه {0} تجاوز کند."
 
@@ -10882,7 +10882,7 @@ msgstr "کل مرخصی‌های اختصاص داده شده نمی‌توان�
 msgid "Total leaves allocated is mandatory for Leave Type {0}"
 msgstr "مجموع مرخصی‌های تخصیص یافته برای نوع مرخصی {0} اجباری است"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:500
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:522
 msgid "Total of all employee benefits cannot be greater that Max Benefits Amount {0}"
 msgstr ""
 
@@ -11025,7 +11025,7 @@ msgstr "آموزش ها"
 msgid "Trainings (This Week)"
 msgstr ""
 
-#: hrms/hr/utils.py:808
+#: hrms/hr/utils.py:830
 msgid "Transactions cannot be created for an Inactive Employee {0}."
 msgstr "تراکنش‌ها را نمی‌توان برای یک کارمند غیرفعال {0} ایجاد کرد."
 
@@ -11608,6 +11608,10 @@ msgstr "بله، ادامه دهید"
 msgid "You are not authorized to approve leaves on Block Dates"
 msgstr "شما مجاز به تأیید مرخصی در تاریخ‌های مسدود نیستید"
 
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:366
+msgid "You are not permitted to access the CTC report of another employee."
+msgstr "شما مجاز به دسترسی به گزارش CTC کارمند دیگری نیستید."
+
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:79
 msgid "You are not present all day(s) between compensatory leave request days"
 msgstr "شما در تمام روز(های) بین روزهای درخواست مرخصی جبرانی حضور ندارید"
@@ -11640,8 +11644,8 @@ msgstr ""
 msgid "You do not have permission to change the Status of a Shift Request."
 msgstr "شما اجازه تغییر وضعیت درخواست شیفت را ندارید."
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:458
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:621
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:459
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:622
 msgid "You do not have permission to complete this action"
 msgstr "شما مجوز تکمیل این عمل را ندارید"
 
@@ -11725,7 +11729,7 @@ msgstr "ایجاد/ارسال"
 msgid "created"
 msgstr "ایجاد شده"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:75
+#: hrms/hr/doctype/employee_advance/employee_advance.py:82
 msgid "here"
 msgstr "اینجا"
 
@@ -11886,15 +11890,15 @@ msgstr "{0} مجاز به ارسال بازخورد مصاحبه برای مصا
 msgid "{0} is not in Optional Holiday List"
 msgstr "{0} در فهرست تعطیلات اختیاری نیست"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:396
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:397
 msgid "{0} leaves allocated successfully"
 msgstr "{0} مرخصی با موفقیت اختصاص داده شدند"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:604
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:605
 msgid "{0} leaves from allocation for {1} leave type have expired and will be processed during the next scheduled job. It is recommended to expire them now before creating new leave policy assignments."
 msgstr "{0} مرخصی از تخصیص مربوط به نوع مرخصی {1} منقضی شده‌اند و در هنگام اجرای برنامه زمان‌بندی‌شده بعدی پردازش خواهند شد. توصیه می‌شود پیش از ایجاد سیاست‌های تخصیص مرخصی جدید، آن‌ها را همین حالا منقضی کنید."
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:391
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:392
 msgid "{0} leaves were manually allocated by {1} on {2}"
 msgstr "{0} مرخصی به‌صورت دستی توسط {1} در {2} تخصیص داده شد"
 
@@ -11935,11 +11939,11 @@ msgstr "{0} برای ساختارهای حقوق و دستمزد زیر به‌�
 msgid "{0} {1} {2}?"
 msgstr "{0} {1} {2}؟"
 
-#: hrms/hr/utils.py:466
+#: hrms/hr/utils.py:470
 msgid "{0}. Check error log for more details."
 msgstr "{0}. برای جزئیات بیشتر، لاگ خطا را بررسی کنید."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2275
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2277
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr "{0}: ایمیل کارمند یافت نشد، بنابراین ایمیل ارسال نشد"
 

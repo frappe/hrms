@@ -69,6 +69,7 @@ def get_events(
 
 @frappe.whitelist()
 def get_schedule_from_assignment(shift_schedule_assignment: str):
+	frappe.has_permission("Shift Schedule Assignment", "read", shift_schedule_assignment, throw=True)
 	shift_schedule = frappe.db.get_value(
 		"Shift Schedule Assignment", shift_schedule_assignment, "shift_schedule"
 	)
@@ -234,13 +235,17 @@ def insert_shift(
 	)
 
 	if prev_shift:
+		frappe.has_permission("Shift Assignment", "write", prev_shift, throw=True)
 		if next_shift:
+			frappe.has_permission("Shift Assignment", "write", next_shift, throw=True)
 			end_date = frappe.db.get_value("Shift Assignment", next_shift, "end_date")
+			frappe.has_permission("Shift Assignment", "delete", next_shift, throw=True)
 			frappe.db.set_value("Shift Assignment", next_shift, "docstatus", 2)
 			frappe.delete_doc("Shift Assignment", next_shift)
 		frappe.db.set_value("Shift Assignment", prev_shift, "end_date", end_date or None)
 
 	elif next_shift:
+		frappe.has_permission("Shift Assignment", "write", next_shift, throw=True)
 		frappe.db.set_value("Shift Assignment", next_shift, "start_date", start_date)
 
 	else:

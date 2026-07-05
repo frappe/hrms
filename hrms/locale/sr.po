@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-06-14 10:34+0000\n"
-"PO-Revision-Date: 2026-06-15 18:54\n"
+"POT-Creation-Date: 2026-06-24 17:40+0000\n"
+"PO-Revision-Date: 2026-06-24 20:42\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Serbian (Cyrillic)\n"
 "MIME-Version: 1.0\n"
@@ -587,7 +587,7 @@ msgstr "Адреса организатора"
 msgid "Adjust Allocation"
 msgstr "Коригуј доделу"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:453
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:454
 msgid "Adjustment Created Successfully"
 msgstr "Корекција успешно креирана"
 
@@ -601,15 +601,15 @@ msgstr "Врста корекције"
 msgid "Advance"
 msgstr "Аконтација"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:78
+#: hrms/hr/doctype/employee_advance/employee_advance.py:85
 msgid "Advance Account Required"
 msgstr "Аконтациони рачун је обавезан"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:82
+#: hrms/hr/doctype/employee_advance/employee_advance.py:89
 msgid "Advance Account is mandatory. Please set the {0} in the Company {1} and submit this document."
 msgstr "Аконтациони рачун је обавезан. Молимо Вас да подесите {0} у компанији {1} и поднесете овај документ."
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:125
+#: hrms/hr/doctype/employee_advance/employee_advance.py:132
 msgid "Advance Account {} currency should be same as Salary Currency of Employee {}. Please select same currency Advance Account"
 msgstr "Валута аконтационог рачуна {} мора бити иста као валута зараде запосленог лица. Молимо Вас да изаберете аконтациони рачун са истом валутом"
 
@@ -709,11 +709,11 @@ msgstr "Додељени износ је већи од дозвољеног ма
 msgid "Allocation to Adjust"
 msgstr "Додела за корекцију"
 
-#: hrms/hr/utils.py:433
+#: hrms/hr/utils.py:437
 msgid "Allocation was skipped due to exceeding annual allocation set in leave policy"
 msgstr "Додела је прескочена због прекорачења годишње доделе дефинисане политиком одсуства"
 
-#: hrms/hr/utils.py:441
+#: hrms/hr/utils.py:445
 msgid "Allocation was skipped due to maximum leave allocation limit set in leave type. Please increase the limit and retry failed allocation."
 msgstr "Додела је прескочена због максималног ограничења доделе одсуства постављеног за врсту одсуства. Молимо Вас да повећате ограничење и покушате поново неуспешну доделу."
 
@@ -864,7 +864,7 @@ msgstr "Евиденција присуства је повезана са ов�
 msgid "Annual Allocation"
 msgstr "Годишња расподела"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:407
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:408
 msgid "Annual Allocation Exceeded"
 msgstr "Годишња расподела је премашена"
 
@@ -1514,7 +1514,7 @@ msgstr "Аутоматска накнада за неискоришћено од
 msgid "Automated Based on Goal Progress"
 msgstr "Аутоматски на основу напретка циља"
 
-#: hrms/hr/utils.py:494
+#: hrms/hr/utils.py:498
 msgid "Automatic Leave Allocation has failed for the following Earned Leaves: {0}. Please check {1} for more details."
 msgstr "Аутоматска додела одсуства за следећа стечена одсуства: {0} није успела. Погледајте {1} за више детаља."
 
@@ -1576,11 +1576,15 @@ msgstr "Просечна искоришћеност (само фактуриса
 msgid "Awaiting Response"
 msgstr "Чека се одговор"
 
+#: frontend/src/views/Login.vue:17
+msgid "Back to Login"
+msgstr "Назад на пријављивање"
+
 #: hrms/hr/doctype/leave_application/leave_application.py:209
 msgid "Backdated Leave Application is restricted. Please set the {} in {}"
 msgstr "Захтеви за одсуство са ретроактивним датумима су ограничени. Молимо Вас да поставите {} у {}"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:281
+#: hrms/hr/doctype/expense_claim/expense_claim.js:282
 msgid "Bank Entries"
 msgstr "Банкарско књижење"
 
@@ -1646,7 +1650,7 @@ msgstr "Износ бенефиције компоненте {0} прелази 
 msgid "Benefit amount of component {0} should be greater than 0"
 msgstr "Износ бенефиције компоненте {0} треба бити већи од 0"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:487
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:509
 msgid "Benefit amount {0} for Salary Component {1} should not be greater than maximum benefit amount {2} set in {3}"
 msgstr "Износ бенефиције {0} за компоненту зараде {1} не сме бити већи од максималног износа бенефиције {2} подешеног у {3}"
 
@@ -1778,7 +1782,7 @@ msgstr "Подразумевано, коначна оцена се израчу�
 msgid "CTC"
 msgstr "Укупни трошак по запосленом лицу"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:62
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:63
 msgid "CTC Missing for Employee"
 msgstr ""
 
@@ -1817,15 +1821,15 @@ msgstr "Отказивање је стављено у ред"
 msgid "Cannot Modify Time"
 msgstr "Није могуће изменити време"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:358
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:359
 msgid "Cannot allocate leaves outside the allocation period {0} - {1}"
 msgstr "Није могуће доделити одсуство ван периода доделе {0} - {1}"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:487
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:488
 msgid "Cannot allocate more leaves due to maximum leave allocation limit of {0} in leave policy assignment"
 msgstr "Није могуће доделити више одсустава због максималног ограничења доделе одсустава од {0} у додели политике одсуства"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:479
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:480
 msgid "Cannot allocate more leaves due to maximum leaves allowed limit of {0} in {1} leave type."
 msgstr "Није могуће доделити више одсустава због максималног дозвољеног ограничења од {0} у врсти доделе {1}."
 
@@ -1946,8 +1950,8 @@ msgstr "Одјава"
 msgid "Check Vacancies On Job Offer Creation"
 msgstr "Провера непопуњених радних места приликом креирање понуде за посао"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:492
-#: hrms/hr/utils.py:947
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:516
+#: hrms/hr/utils.py:969
 msgid "Check {0} for more details"
 msgstr "Проверите {0} за више детаља"
 
@@ -2006,7 +2010,7 @@ msgid "Claim an Expense"
 msgstr "Захтевај надокнаду трошкова"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Advance'
-#: frontend/src/views/employee_advance/List.vue:42
+#: frontend/src/views/employee_advance/List.vue:43
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 msgid "Claimed"
 msgstr "Захтевано"
@@ -2015,7 +2019,7 @@ msgstr "Захтевано"
 #. Label of the claimed_amount (Currency) field in DocType 'Employee Benefit
 #. Claim'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
-#: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:80
+#: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:197
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 msgid "Claimed Amount"
 msgstr "Захтевани износ"
@@ -2285,7 +2289,7 @@ msgstr "Креирање {0}..."
 msgid "Creation Date"
 msgstr "Датум креирања"
 
-#: hrms/hr/utils.py:956
+#: hrms/hr/utils.py:978
 msgid "Creation Failed"
 msgstr "Креирање је неуспешно"
 
@@ -2532,7 +2536,7 @@ msgstr "Заостатак одбитака"
 msgid "Deduction Reports"
 msgstr "Извештаји о одбицима"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.js:79
+#: hrms/hr/doctype/employee_advance/employee_advance.js:81
 msgid "Deduction from Salary"
 msgstr "Одбитак од зараде"
 
@@ -2591,10 +2595,6 @@ msgstr "Подразумевана смена"
 #: frontend/src/components/FileUploaderView.vue:49
 msgid "Delete Attachment"
 msgstr "Обриши прилог"
-
-#: frontend/src/components/FormView.vue:224
-msgid "Delete {0}"
-msgstr "Обриши {0}"
 
 #. Name of a DocType
 #: hrms/hr/doctype/department_approver/department_approver.json
@@ -3385,8 +3385,8 @@ msgstr "Детаљи о премештају запосленог лица"
 msgid "Employee Transfer cannot be submitted before Transfer Date"
 msgstr "Премештај запосленог лица не може бити поднет пре датума премештаја"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:115
-#: hrms/hr/doctype/employee_advance/employee_advance.py:185
+#: hrms/hr/doctype/employee_advance/employee_advance.py:122
+#: hrms/hr/doctype/employee_advance/employee_advance.py:193
 msgid "Employee advance account {0} should be of type {1}."
 msgstr "Аконтациони рачун запосленог лица {0} треба да буде врсте {1}."
 
@@ -3695,7 +3695,7 @@ msgid "Error downloading PDF"
 msgstr "Грешка приликом преузимања PDF"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1397
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:400
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:401
 msgid "Error in formula or condition"
 msgstr "Грешка у формули или услову"
 
@@ -4088,7 +4088,7 @@ msgstr "Истек доделе"
 msgid "Expire Carry Forwarded Leaves (Days)"
 msgstr "Истичу пренесени дани одсуства (у данима)"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:609
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:610
 msgid "Expire Leaves"
 msgstr "Истекло одсуство"
 
@@ -4110,7 +4110,7 @@ msgstr "Образложење"
 msgid "Exporting..."
 msgstr "Извоз..."
 
-#: hrms/hr/utils.py:944
+#: hrms/hr/utils.py:966
 msgid "Failed to create/submit {0} for employees:"
 msgstr "Неуспешно креирање/подношење {0} за запослена лица:"
 
@@ -4134,7 +4134,7 @@ msgstr "Неуспешно слање обавештења о промени т�
 msgid "Failed to setup defaults for country {0}."
 msgstr "Неуспешне поставке подразумеваних вредности за државу {0}."
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:489
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:513
 msgid "Failed to submit some leave policy assignments:"
 msgstr "Неке доделе политике одсуства није било могуће поднети:"
 
@@ -4162,7 +4162,7 @@ msgstr "Детаљи о неуспеху"
 msgid "Failure Reason"
 msgstr "Разлог неуспеха"
 
-#: hrms/hr/utils.py:493
+#: hrms/hr/utils.py:497
 msgid "Failure of Automatic Allocation of Earned Leaves"
 msgstr "Неуспех аутоматске доделе стечених одсустава"
 
@@ -4396,7 +4396,7 @@ msgstr "За један дан одсуства, уколико се ипак и
 msgid "Formula"
 msgstr "Формула"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:229
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:260
 msgid "Formula/Amount"
 msgstr ""
 
@@ -4713,7 +4713,7 @@ msgstr "Детаљи притужбе"
 msgid "Grievance Type"
 msgstr "Врста притужбе"
 
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:630
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:637
 msgid "Gross Earnings"
 msgstr "Бруто приходи"
 
@@ -5216,7 +5216,7 @@ msgstr "Одбици пореза на доходак"
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:148
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:623
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:630
 #: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 #: hrms/workspace_sidebar/tax_&_benefits.json
@@ -5232,11 +5232,11 @@ msgstr "Остали намети у пореском разреду порез�
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr "Порески разред пореза на доходак је обавезан с обзиром да структура зараде {0} садржи пореску компоненту {1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1952
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1954
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr "Порески разред пореза на доходак мора бити важећи на или пре почетка обрачунског периода: {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1940
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1942
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr "Порески разред пореза на доходак није постављен у додели структуре зараде: {0}"
 
@@ -5244,7 +5244,7 @@ msgstr "Порески разред пореза на доходак није п
 msgid "Income Tax Slab: "
 msgstr "Порески разред пореза на доходак: "
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1948
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1950
 msgid "Income Tax Slab: {0} is disabled"
 msgstr "Порески разред пореза на доходак: {0} је онемогућен"
 
@@ -5472,15 +5472,15 @@ msgstr "Неважећа додатна зарада"
 msgid "Invalid Arrear Component"
 msgstr "Неважећа компонента заостатка"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:503
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:525
 msgid "Invalid Benefit Amounts"
 msgstr "Неважећи износ бенефиција"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:361
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:362
 msgid "Invalid Dates"
 msgstr "Неважећи датуми"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2642
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2644
 msgid "Invalid LWP Days Reversed"
 msgstr "Неважећи број сторнираних дана одсуства без накнаде"
 
@@ -5501,7 +5501,7 @@ msgstr "Неважећи термини смене"
 msgid "Invalid employee filter: {0}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:879
+#: hrms/hr/doctype/expense_claim/expense_claim.py:883
 msgid "Invalid parameters provided. Please pass the required arguments."
 msgstr "Прослеђени су неважећи параметри. Молимо Вас да унесте неопходне аргументе."
 
@@ -5852,7 +5852,7 @@ msgstr "Кључна област одговорности"
 msgid "Key Result Area"
 msgstr "Кључна област резултата"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2639
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2641
 msgid "LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
 msgstr "Број сторнираних дана одсуства без накнаде ({0}) се не поклапа са укупним износом корекције обрачуна зараде ({1}) за запослено лице {2} у периоду од {3} до {4}"
 
@@ -6254,7 +6254,7 @@ msgstr "Врста одсуства је обавезна"
 msgid "Leave Type {0} cannot be allocated since it is leave without pay"
 msgstr "Врста одсуства {0} не може бити додељена јер је одсуство без накнаде"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:598
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:599
 msgid "Leave Type {0} cannot be carry-forwarded"
 msgstr "Врста одсуства {0} не може бити пренета у наредни период"
 
@@ -6306,6 +6306,10 @@ msgstr "Одсуство за факултативни празник"
 msgid "Leave of type {0} cannot be longer than {1}."
 msgstr "Врста одсуства {0} не може трајати дуже од {1}."
 
+#: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:61
+msgid "Leave(s) Allocated"
+msgstr ""
+
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:73
 msgid "Leave(s) Expired"
 msgstr "Одсуство истекло"
@@ -6356,7 +6360,7 @@ msgstr "Одсуства након корекције"
 msgid "Leaves Allocated"
 msgstr "Додељена одсуства"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:603
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:604
 msgid "Leaves Expired"
 msgstr "Истекли дани одсуства"
 
@@ -6431,7 +6435,7 @@ msgstr "Отплата зајма"
 msgid "Loan Repayment Entry"
 msgstr "Унос отплате зајма"
 
-#: hrms/hr/utils.py:831
+#: hrms/hr/utils.py:853
 msgid "Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
 msgstr "Зајам не може бити отплаћен од зараде запосленог лица {0} јер се зарада обрачунава у валути {1}"
 
@@ -6752,7 +6756,7 @@ msgstr "Минимални број година за отпремнину"
 msgid "Minimum calendar days required since Date of Joining to apply for this leave"
 msgstr ""
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:90
+#: hrms/hr/doctype/employee_advance/employee_advance.py:97
 msgid "Missing Advance Account"
 msgstr "Недостаје аконтациони рачун"
 
@@ -6772,11 +6776,11 @@ msgstr "Недостаје датум престанка радног однос
 msgid "Missing Salary Components"
 msgstr "Недостаје компонента зараде"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1943
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1945
 msgid "Missing Tax Slab"
 msgstr "Недостаје порески разред"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:313
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:344
 msgid "Missing value for filters"
 msgstr ""
 
@@ -6846,7 +6850,7 @@ msgstr "Моји захтеви"
 
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.py:123
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1383
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:386
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:387
 msgid "Name error"
 msgstr "Назив грешке"
 
@@ -6908,10 +6912,6 @@ msgstr "Нова повратна информација"
 msgid "New Hires (This Month)"
 msgstr "Нова запослена лица (овај месец)"
 
-#: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:61
-msgid "New Leave(s) Allocated"
-msgstr "Ново додељено одсуство"
-
 #. Label of the new_leaves_allocated (Float) field in DocType 'Leave
 #. Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
@@ -6933,7 +6933,7 @@ msgstr ""
 msgid "New shift assignments will be created after this date."
 msgstr "Нова додела смене биће креирана након овог датума."
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:380
+#: hrms/hr/doctype/employee_advance/employee_advance.py:394
 msgid "No Bank/Cash Account found for currency {0}. Please create one under company {1}."
 msgstr "Није пронађен текући рачун/благајна за валуту {0}. Молимо Вас да га креирате у оквиру компаније {1}."
 
@@ -6945,7 +6945,7 @@ msgstr "Није пронађено запослено лице"
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "Није пронађено запослено лице за унету вредност поља. '{}': {}"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:136 hrms/hr/utils.py:934
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:136 hrms/hr/utils.py:956
 msgid "No Employees Selected"
 msgstr "Није изабрано ниједно запослено лице"
 
@@ -7074,7 +7074,7 @@ msgstr "Не постоје запослена лица која одговар�
 msgid "No employees found for the selected criteria"
 msgstr "Нису пронађена запослена лица за изабране критеријуме"
 
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:71
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:78
 msgid "No employees found with selected filters and active salary structure"
 msgstr "Није пронађено ниједно запослено лице са изабраним филтерима и активном структуром зараде"
 
@@ -7186,7 +7186,7 @@ msgstr "Напомена: Смена неће бити преписана у п�
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr "Напомена: Укупно додељених одсуства {0} не може бити мање од већ одобрених одсуства {1} за период"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2252
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2254
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr "Напомена: Ваш обрачунски листић је заштићен лозинком, лозинка за откључавање PDF-а има формат {0}."
 
@@ -7635,7 +7635,7 @@ msgid "Partially Sponsored, Require Partial Funding"
 msgstr "Делимично спонзорисано, неопходан је додатни део средстава"
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Advance'
-#: frontend/src/views/employee_advance/List.vue:42
+#: frontend/src/views/employee_advance/List.vue:43
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 msgid "Partly Claimed and Returned"
 msgstr "Делимично потраживано и враћено"
@@ -7935,7 +7935,7 @@ msgstr "Упитници на чекању"
 msgid "Percent Deduction"
 msgstr "Одбитак у процентима"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:252
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:283
 msgid "Percent of CTC (%)"
 msgstr ""
 
@@ -8017,7 +8017,7 @@ msgstr "Молимо Вас да унесете запослено лице, д�
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr "Молимо Вас да смањите {0} да бисте избегли преклапање времена смене"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2241
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2243
 msgid "Please see attachment"
 msgstr "Молимо Вас да погледате прилог"
 
@@ -8071,7 +8071,7 @@ msgstr "Молимо Вас да изаберете CSV фајл"
 msgid "Please select a date."
 msgstr "Молимо Вас да изаберете датум."
 
-#: hrms/hr/utils.py:822
+#: hrms/hr/utils.py:844
 msgid "Please select an Applicant"
 msgstr "Молимо Вас да изаберете кандидата"
 
@@ -8083,7 +8083,7 @@ msgstr ""
 msgid "Please select at least one Shift Request to perform this action."
 msgstr "Молимо Вас да изаберете барем један захтев за радну смену да бисте извршили ову радњу."
 
-#: hrms/hr/utils.py:933
+#: hrms/hr/utils.py:955
 msgid "Please select at least one employee to perform this action."
 msgstr "Молимо Вас да изаберете најмање једно запослено лице за ову радњу."
 
@@ -8161,7 +8161,7 @@ msgstr "Молимо Вас да поставите опсег датума кр
 msgid "Please set account in Salary Component {0}"
 msgstr "Молимо Вас да подесите рачун у компоненти зараде {0}"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:54
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:55
 msgid "Please set cost to company(CTC) for employee {0} in the {1}"
 msgstr ""
 
@@ -8177,7 +8177,7 @@ msgstr "Молимо Вас да поставите подразумевани �
 msgid "Please set employee's total cost to company to see CTC breakup."
 msgstr ""
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:74
+#: hrms/hr/doctype/employee_advance/employee_advance.py:81
 msgid "Please set the Advance Account {0} or in {1}"
 msgstr "Молимо Вас да подесите аконтациони рачун {0} или у {1}"
 
@@ -8185,7 +8185,7 @@ msgstr "Молимо Вас да подесите аконтациони рач�
 msgid "Please set the Appraisal Template for all the {0} or select the template in the Employees table below."
 msgstr "Молимо Вас да подесите шаблон евалуације за све {0} или да изаберете шаблон у табели запослених лица испод."
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:514
+#: hrms/hr/doctype/expense_claim/expense_claim.js:515
 msgid "Please set the Company"
 msgstr "Молимо Вас да поставите компанију"
 
@@ -8218,7 +8218,7 @@ msgstr "Молимо Вас да поставите {0} за запослено 
 msgid "Please set {0} for the Employee: {1}"
 msgstr "Молимо Вас да поставите {0} за запослено лице: {1}"
 
-#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:312
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:343
 msgid "Please set {0} to get CTC report"
 msgstr ""
 
@@ -8608,7 +8608,7 @@ msgstr "Смањење максималног броја дозвољених о
 msgid "Reduction is more than {0}'s available leave balance {1} for leave type {2}"
 msgstr "Смањење је веће од расположивог салда одсуства {1} за запослено лице {0} за врсту одсуства {2}"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:406
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:407
 #: hrms/hr/doctype/leave_application/leave_application.py:554
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:218
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:141
@@ -8721,7 +8721,7 @@ msgstr "Изнајмљено возило"
 msgid "Repay From Salary"
 msgstr "Отплата из зараде"
 
-#: hrms/hr/utils.py:837
+#: hrms/hr/utils.py:859
 msgid "Repay From Salary can be selected only for term loans"
 msgstr "Отплата из зараде може се изабрати само за зајмове на одређени рок"
 
@@ -8845,8 +8845,8 @@ msgstr "Бонус за задржавање"
 msgid "Retirement Age (In Years)"
 msgstr "Старосна граница за пензију (у годинама)"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:482
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:490
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:483
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:491
 msgid "Retry Failed"
 msgstr "Поновни покушај није успео"
 
@@ -8864,7 +8864,7 @@ msgstr "Поновни покушај је успео"
 msgid "Retrying allocations"
 msgstr "Покушај поновне доделе"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:231
+#: hrms/hr/doctype/employee_advance/employee_advance.py:239
 msgid "Return amount cannot be greater than unclaimed amount"
 msgstr "Износ за повраћај не може бити већи од неискоришћеног износа"
 
@@ -8942,7 +8942,7 @@ msgstr "Ред #{0}: Компонента {1} има омогућене опци
 msgid "Row #{0}: Timesheet amount will overwrite the Earning component amount for the Salary Component {1}"
 msgstr "Ред #{0}: Износ из евиденције времена ће заменити износ компоненте прихода са износом компоненте зараде {1}"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:847
+#: hrms/hr/doctype/expense_claim/expense_claim.py:851
 msgid "Row No {0}: Amount cannot be greater than the Outstanding Amount against Expense Claim {1}. Outstanding Amount is {2}"
 msgstr "Ред број {0}: Износ не може бити већи од неизмиреног износа у захтеву за надокнаду трошкова {1}. Неизмирени износ је {2}"
 
@@ -8958,7 +8958,7 @@ msgstr "Ред {0}# исплаћени износ не може бити већ�
 msgid "Row {0}# Paid Amount cannot be greater than Total amount"
 msgstr "Ред {0}# исплаћени износ не може бити већи од укупног износа"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:223
+#: hrms/hr/doctype/employee_advance/employee_advance.py:231
 msgid "Row {0}# Paid Amount cannot be greater than requested advance amount"
 msgstr "Ред {0}# исплаћени износ не може бити већи од захтеваног износа аконтације"
 
@@ -9040,7 +9040,7 @@ msgstr "Врста компоненте зараде"
 msgid "Salary Component for timesheet based payroll."
 msgstr "Компонента зараде за евиденцију времена на основу обрачуна зараде."
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:476
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:498
 msgid "Salary Component {0} cannot be selected more than once in Employee Benefits"
 msgstr "Компонента зараде {0} не може бити изабрана више од једном у бенефицијама запосленог лица"
 
@@ -9327,7 +9327,7 @@ msgstr "Компоненте зараде врсте пензиони фонд, 
 msgid "Salary components should be part of the Salary Structure."
 msgstr "Компонента зараде би требало да буде део структуре зараде."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2662
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2664
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr "Имејлови са обрачунским листићима су стављени у ред за слање. Проверите {0} за статус."
 
@@ -9424,7 +9424,7 @@ msgstr "Изаберите услове и одредбе"
 msgid "Select Users"
 msgstr "Изаберите кориснике"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:559
+#: hrms/hr/doctype/expense_claim/expense_claim.js:560
 msgid "Select an employee to get the employee advance."
 msgstr "Изаберите запослено лице за исплату аконтације."
 
@@ -9482,7 +9482,7 @@ msgstr "Изаберите врсту одсуства за коју запос�
 msgid "Select your Leave Approver i.e. the person who approves or rejects your leaves."
 msgstr "Изаберите одобраваоца одсуства, тј. особу која одобрава или одбија Ваше захтеве за одсуство."
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:594
+#: hrms/hr/doctype/expense_claim/expense_claim.js:595
 msgid "Selected employee advance is not of employee {0}"
 msgstr "Изабрана аконтација запосленог лица не припада запосленом лицу {0}"
 
@@ -9675,7 +9675,7 @@ msgstr "Поравнајте против аконтације"
 msgid "Settle all Payables and Receivables before submission"
 msgstr "Поравнајте све обавезе и потраживања пре подношења"
 
-#: hrms/hr/utils.py:785
+#: hrms/hr/utils.py:807
 msgid "Shared document with the user {0} with 'Submit' permission"
 msgstr "Документ је са корисником {0} са дозволом за 'Поднеси'"
 
@@ -10123,7 +10123,7 @@ msgstr "Структуре су успешно додељене"
 msgid "Submission Date"
 msgstr "Датум подношења"
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:500
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:524
 msgid "Submission Failed"
 msgstr "Подношење неуспешно"
 
@@ -10179,7 +10179,7 @@ msgstr "Подношење обрачунских листића..."
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
 msgstr "Подружнице су већ планирале {1} непопуњених радних места са буџетом од {2}. План особља за {0} треба да расподели више непопуњених радних места и већи буџет за {3} него што је планирано за њихове подружнице"
 
-#: hrms/hr/utils.py:961
+#: hrms/hr/utils.py:983
 msgid "Successfully created {0} for employees:"
 msgstr "Успешно је креиран {0} за запослена лица:"
 
@@ -10206,7 +10206,7 @@ msgid "Sync {0}"
 msgstr "Синхронизуј {0}"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1390
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:393
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:394
 msgid "Syntax error"
 msgstr "Грешка синтаксе"
 
@@ -10442,11 +10442,11 @@ msgstr "Нема непопуњених радних места према пл�
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:82
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:39
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:457
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:458
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
 msgstr "Структура зараде није додељена за {0}. Прво морате доделити структуру зараде."
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:426
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:448
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
 msgstr "Не постоји запослено лице са структуром зараде: {0}. Додели {1} запосленом лицу да би могао да прегледа обрачунски листић"
 
@@ -10473,17 +10473,17 @@ msgid "This employee already has a log with the same timestamp.{0}"
 msgstr "Ово запослено лице већ има евидентиран унос са истим временом.{0}"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1398
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:401
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:402
 msgid "This error can be due to invalid formula or condition."
 msgstr "Грешка може бити узрокована неисправном формулом или условом."
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1391
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:394
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:395
 msgid "This error can be due to invalid syntax."
 msgstr "Грешка може бити узрокована неисправном синтаксом."
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1384
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:387
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:388
 msgid "This error can be due to missing or deleted field."
 msgstr "Грешка може бити узрокована недостајућим или обрисаним пољем."
 
@@ -10900,7 +10900,7 @@ msgstr "Укупно словима"
 msgid "Total in words (Company Currency)"
 msgstr "Укупно словима (валута компаније)"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:402
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:403
 msgid "Total leaves allocated cannot exceed annual allocation of {0}."
 msgstr "Укупан број додељених одсуства не може премашити годишњу доделу од {0}."
 
@@ -10908,7 +10908,7 @@ msgstr "Укупан број додељених одсуства не може 
 msgid "Total leaves allocated is mandatory for Leave Type {0}"
 msgstr "Укупан број додељених одсуства је обавезан за врсту одсуства {0}"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:500
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:522
 msgid "Total of all employee benefits cannot be greater that Max Benefits Amount {0}"
 msgstr "Збир свих износа бенефиција запосленог лица не може бити већи од максималног износа бенефиција {0}"
 
@@ -11051,7 +11051,7 @@ msgstr "Обуке"
 msgid "Trainings (This Week)"
 msgstr "Обуке (ове недеље)"
 
-#: hrms/hr/utils.py:808
+#: hrms/hr/utils.py:830
 msgid "Transactions cannot be created for an Inactive Employee {0}."
 msgstr "Трансакције не могу бити креиране за неактивно запослено лице {0}."
 
@@ -11634,6 +11634,10 @@ msgstr "Да, настави"
 msgid "You are not authorized to approve leaves on Block Dates"
 msgstr "Немате дозволу да одобравате одсуства током блокираних датума"
 
+#: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:366
+msgid "You are not permitted to access the CTC report of another employee."
+msgstr ""
+
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:79
 msgid "You are not present all day(s) between compensatory leave request days"
 msgstr "Нисте били присутни током свих дана у периоду за који сте поднели захтев за компензационо одсуство"
@@ -11666,8 +11670,8 @@ msgstr "Није могуће сторнирати више од укупног 
 msgid "You do not have permission to change the Status of a Shift Request."
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:458
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:621
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:459
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:622
 msgid "You do not have permission to complete this action"
 msgstr "Немате дозволу да извршите ову радњу"
 
@@ -11751,7 +11755,7 @@ msgstr "креирај/поднеси"
 msgid "created"
 msgstr "креирано"
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:75
+#: hrms/hr/doctype/employee_advance/employee_advance.py:82
 msgid "here"
 msgstr "овде"
 
@@ -11912,15 +11916,15 @@ msgstr "{0} нема дозволу да поднесе повратну инф�
 msgid "{0} is not in Optional Holiday List"
 msgstr "{0} се не налази на листи опционих празника"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:396
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:397
 msgid "{0} leaves allocated successfully"
 msgstr "{0} одсуства успешно додељена"
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:604
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:605
 msgid "{0} leaves from allocation for {1} leave type have expired and will be processed during the next scheduled job. It is recommended to expire them now before creating new leave policy assignments."
 msgstr "{0} дана одсуства из расподеле за врсту одсуства {1} је истекло и биће обрађено током следећег заказаног процеса. Препоручује се да их сада означите као истекле пре него што креирате нове доделе политике одсуства."
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:391
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:392
 msgid "{0} leaves were manually allocated by {1} on {2}"
 msgstr "{0} одсуства су ручно додељена од стране {1} на {2}"
 
@@ -11961,11 +11965,11 @@ msgstr "{0} ће бити ажурирано за следеће структу�
 msgid "{0} {1} {2}?"
 msgstr "{0} {1} {2}?"
 
-#: hrms/hr/utils.py:466
+#: hrms/hr/utils.py:470
 msgid "{0}. Check error log for more details."
 msgstr "{0}. Проверите евиденцију грешака за више детаља."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2275
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2277
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr "{0}: Имејл запосленог лица није пронађен, због чега имејл није ни послат"
 

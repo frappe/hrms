@@ -88,7 +88,7 @@ class PayrollEntry(Document):
 			return
 
 		# check if salary slips were manually submitted
-		entries = frappe.db.count("Salary Slip", {"payroll_entry": self.name, "docstatus": 1}, ["name"])
+		entries = frappe.db.count("Salary Slip", {"payroll_entry": self.name, "docstatus": 1})
 		if cint(entries) == len(self.employees):
 			self.set_onload("submitted_ss", True)
 
@@ -1265,6 +1265,8 @@ class PayrollEntry(Document):
 
 	@frappe.whitelist()
 	def create_overtime_slips(self) -> None:
+		self.check_permission("write")
+
 		from hrms.hr.doctype.overtime_slip.overtime_slip import (
 			create_overtime_slips_for_employees,
 			filter_employees_for_overtime_slip_creation,
@@ -1302,6 +1304,8 @@ class PayrollEntry(Document):
 
 	@frappe.whitelist()
 	def submit_overtime_slips(self) -> None:
+		self.check_permission("write")
+
 		from hrms.hr.doctype.overtime_slip.overtime_slip import (
 			submit_overtime_slips_for_employees,
 		)
