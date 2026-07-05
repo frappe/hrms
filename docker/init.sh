@@ -14,7 +14,7 @@ bench init --skip-redis-config-generation frappe-bench
 cd frappe-bench
 
 # Install Node dependencies (required for socket.io)
-cd apps/frappe && yarn install && cd ../..
+(cd apps/frappe && yarn install) || exit 1
 
 # Use containers instead of localhost
 bench set-mariadb-host mariadb
