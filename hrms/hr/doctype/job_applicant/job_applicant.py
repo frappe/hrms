@@ -152,6 +152,7 @@ def schedule_interview(
 	interviewers: str | list | None = None,
 ) -> str:
 	frappe.has_permission("Interview", ptype="create", throw=True)
+	frappe.has_permission("Job Applicant", ptype="read", doc=job_applicant, throw=True)
 
 	applicant = frappe.get_doc("Job Applicant", job_applicant)
 
