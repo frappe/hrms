@@ -3,6 +3,7 @@
 if [ -d "/home/frappe/frappe-bench/apps/frappe" ]; then
     echo "Bench already exists, skipping init"
     cd frappe-bench
+    [ -d apps/frappe/node_modules ] || (cd apps/frappe && yarn install) || exit 1
     bench start
     exit 0
 fi
