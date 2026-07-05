@@ -339,7 +339,7 @@ class LeavePolicyAssignment(Document):
 			and self.assignment_based_on == "Joining Date"
 			and to_date >= add_months(from_date, 12)
 		):
-			max_allocations = get_complete_month_count(to_date, from_date) // months_to_add
+			max_allocations = get_complete_month_count(to_date, from_date) // months_to_add + 1
 		else:
 			max_allocations = 0
 		schedule = []
