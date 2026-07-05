@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export PATH="${NVM_DIR}/versions/node/v${NODE_VERSION_DEVELOP}/bin/:${PATH}"
+
 # Install Node dependencies (required for socket.io, among others)
 install_node_deps() {
     (cd apps/frappe && yarn install) || exit 1
@@ -12,8 +14,6 @@ if [ -d "/home/frappe/frappe-bench/apps/frappe" ]; then
     bench start
     exit 0
 fi
-
-export PATH="${NVM_DIR}/versions/node/v${NODE_VERSION_DEVELOP}/bin/:${PATH}"
 
 bench init --skip-redis-config-generation frappe-bench
 
