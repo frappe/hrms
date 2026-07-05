@@ -170,12 +170,14 @@ frappe.ui.form.on("Job Applicant", {
 					label: __("From Time"),
 					fieldname: "from_time",
 					fieldtype: "Time",
+					reqd: 1,
 				},
 				{ fieldtype: "Column Break" },
 				{
 					label: __("To Time"),
 					fieldname: "to_time",
 					fieldtype: "Time",
+					reqd: 1,
 				},
 				{
 					fieldtype: "Section Break",
