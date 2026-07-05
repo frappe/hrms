@@ -1,9 +1,14 @@
 #!/bin/bash
 
+# Install Node dependencies (required for socket.io, among others)
+install_node_deps() {
+    (cd apps/frappe && yarn install) || exit 1
+}
+
 if [ -d "/home/frappe/frappe-bench/apps/frappe" ]; then
     echo "Bench already exists, skipping init"
     cd frappe-bench
-    [ -d apps/frappe/node_modules ] || (cd apps/frappe && yarn install) || exit 1
+    install_node_deps
     bench start
     exit 0
 fi
@@ -14,8 +19,7 @@ bench init --skip-redis-config-generation frappe-bench
 
 cd frappe-bench
 
-# Install Node dependencies (required for socket.io)
-(cd apps/frappe && yarn install) || exit 1
+install_node_deps
 
 # Use containers instead of localhost
 bench set-mariadb-host mariadb
