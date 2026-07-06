@@ -18,9 +18,8 @@ frappe.ui.form.on("Leave Policy", {
 		frm.add_custom_button(
 			__("Bulk Assignment"),
 			function () {
-				frappe.set_route("Form", "Leave Control Panel").then(() => {
-					cur_frm.set_value("leave_policy", frm.doc.name);
-				});
+				frappe.route_options = { leave_policy: frm.doc.name };
+				frappe.set_route("Form", "Leave Control Panel");
 			},
 			__("Create"),
 		);
