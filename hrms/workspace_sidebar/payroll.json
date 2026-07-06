@@ -9,7 +9,7 @@
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "home",
+   "icon": "house",
    "indent": 0,
    "keep_closed": 0,
    "label": "Home",
@@ -48,7 +48,7 @@
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "loan",
+   "icon": "hand-coins",
    "indent": 0,
    "keep_closed": 0,
    "label": "Salary Structure Assignment",
@@ -61,7 +61,7 @@
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "accounting",
+   "icon": "wallet",
    "indent": 0,
    "keep_closed": 0,
    "label": "Salary Slip",
@@ -238,7 +238,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-05-14 12:18:07.894971",
+ "modified": "2026-07-03 12:18:07.894971",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll",
