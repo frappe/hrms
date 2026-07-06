@@ -2268,13 +2268,20 @@ class SalarySlip(TransactionBase):
 
 		if receiver:
 			posting_date = getdate(self.posting_date)
+			print_format = get_salary_slip_print_format(self.company, self.salary_slip_based_on_timesheet)
 			email_args = {
 				"sender": payroll_settings.sender_email,
 				"recipients": [receiver],
 				"message": message,
 				"subject": subject,
 				"attachments": [
-					frappe.attach_print(self.doctype, self.name, file_name=self.name, password=password)
+					frappe.attach_print(
+						self.doctype,
+						self.name,
+						file_name=self.name,
+						print_format=print_format,
+						password=password,
+					)
 				],
 				"reference_doctype": self.doctype,
 				"reference_name": self.name,
@@ -2528,6 +2535,26 @@ def unlink_ref_doc_from_salary_slip(doc, method=None):
 def generate_password_for_pdf(policy_template, employee):
 	employee = frappe.get_cached_doc("Employee", employee)
 	return policy_template.format(**employee.as_dict())
+
+
+def get_salary_slip_print_format(company: str | None = None, based_on_timesheet: bool = False) -> str:
+	"""Return the Print Format to use when printing or emailing a Salary Slip.
+
+	Prefers the print format configured on the Company master (custom fields added
+	by HRMS), falling back to the standard print formats shipped with HRMS.
+	"""
+	if cint(based_on_timesheet):
+		company_fieldname = "timesheet_salary_slip_print_format"
+		default_print_format = "Salary Slip based on Timesheet"
+	else:
+		company_fieldname = "standard_salary_slip_print_format"
+		default_print_format = "Salary Slip Standard"
+
+	print_format = None
+	if company:
+		print_format = frappe.get_cached_value("Company", company, company_fieldname)
+
+	return print_format or default_print_format
 
 
 def get_salary_component_data(component):

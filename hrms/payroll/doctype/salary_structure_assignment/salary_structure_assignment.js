@@ -132,31 +132,21 @@ frappe.ui.form.on("Salary Structure Assignment", {
 	},
 
 	preview_salary_slip: function (frm) {
-		frappe.db.get_value(
-			"Salary Structure",
-			frm.doc.salary_structure,
-			"salary_slip_based_on_timesheet",
-			(r) => {
-				const print_format = r.salary_slip_based_on_timesheet
-					? "Salary Slip based on Timesheet"
-					: "Salary Slip Standard";
-				frappe.call({
-					method: "hrms.payroll.doctype.salary_structure.salary_structure.make_salary_slip",
-					args: {
-						source_name: frm.doc.salary_structure,
-						employee: frm.doc.employee,
-						posting_date: frm.doc.from_date,
-						as_print: 1,
-						print_format: print_format,
-						for_preview: 1,
-					},
-					callback: function (r) {
-						const new_window = window.open();
-						new_window.document.write(r.message);
-					},
-				});
+		// The print format is resolved server-side (Company setting, else HRMS default).
+		frappe.call({
+			method: "hrms.payroll.doctype.salary_structure.salary_structure.make_salary_slip",
+			args: {
+				source_name: frm.doc.salary_structure,
+				employee: frm.doc.employee,
+				posting_date: frm.doc.from_date,
+				as_print: 1,
+				for_preview: 1,
 			},
-		);
+			callback: function (r) {
+				const new_window = window.open();
+				new_window.document.write(r.message);
+			},
+		});
 	},
 
 	set_payroll_cost_centers: function (frm) {

@@ -100,6 +100,35 @@ def get_custom_fields():
 				"options": "Account",
 				"insert_after": "column_break_10",
 			},
+			{
+				"fieldname": "salary_slip_print_formats_section",
+				"fieldtype": "Section Break",
+				"label": _("Salary Slip Print Formats"),
+				"insert_after": "default_payroll_payable_account",
+			},
+			{
+				"fieldname": "standard_salary_slip_print_format",
+				"fieldtype": "Link",
+				"label": _("Standard Salary Slip Print Format"),
+				"options": "Print Format",
+				"link_filters": '[["Print Format", "doc_type", "=", "Salary Slip"]]',
+				"description": _('Defaults to "Salary Slip Standard" if not set.'),
+				"insert_after": "salary_slip_print_formats_section",
+			},
+			{
+				"fieldname": "column_break_salary_slip_print_formats",
+				"fieldtype": "Column Break",
+				"insert_after": "standard_salary_slip_print_format",
+			},
+			{
+				"fieldname": "timesheet_salary_slip_print_format",
+				"fieldtype": "Link",
+				"label": _("Timesheet-based Salary Slip Print Format"),
+				"options": "Print Format",
+				"link_filters": '[["Print Format", "doc_type", "=", "Salary Slip"]]',
+				"description": _('Defaults to "Salary Slip based on Timesheet" if not set.'),
+				"insert_after": "column_break_salary_slip_print_formats",
+			},
 		],
 		"Department": [
 			{

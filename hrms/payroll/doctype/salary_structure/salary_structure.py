@@ -433,6 +433,10 @@ def _make_salary_slip(
 
 	if cint(as_print):
 		doc.name = f"Preview for {employee}"
+		if not print_format:
+			from hrms.payroll.doctype.salary_slip.salary_slip import get_salary_slip_print_format
+
+			print_format = get_salary_slip_print_format(doc.company, doc.salary_slip_based_on_timesheet)
 		return frappe.get_print(doc.doctype, doc.name, doc=doc, print_format=print_format)
 	else:
 		return doc

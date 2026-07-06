@@ -224,16 +224,13 @@ frappe.ui.form.on("Salary Structure", {
 	},
 
 	open_salary_slip: function (frm, employee) {
-		var print_format = frm.doc.salary_slip_based_on_timesheet
-			? "Salary Slip based on Timesheet"
-			: "Salary Slip Standard";
+		// The print format is resolved server-side (Company setting, else HRMS default).
 		frappe.call({
 			method: "hrms.payroll.doctype.salary_structure.salary_structure.make_salary_slip",
 			args: {
 				source_name: frm.doc.name,
 				employee: employee,
 				as_print: 1,
-				print_format: print_format,
 				for_preview: 1,
 			},
 			callback: function (r) {
