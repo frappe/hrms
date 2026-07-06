@@ -1,7 +1,31 @@
 // Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on("Leave Policy", {});
+frappe.ui.form.on("Leave Policy", {
+	refresh: function (frm) {
+		if (frm.is_new()) return;
+
+		frm.add_custom_button(
+			__("Single Assignment"),
+			function () {
+				frappe.new_doc("Leave Policy Assignment", {
+					leave_policy: frm.doc.name,
+				});
+			},
+			__("Create"),
+		);
+
+		frm.add_custom_button(
+			__("Bulk Assignment"),
+			function () {
+				frappe.set_route("Form", "Leave Control Panel").then(() => {
+					cur_frm.set_value("leave_policy", frm.doc.name);
+				});
+			},
+			__("Create"),
+		);
+	},
+});
 
 frappe.ui.form.on("Leave Policy Detail", {
 	leave_type: function (frm, cdt, cdn) {
