@@ -542,9 +542,6 @@ class TestLeaveApplication(FrappeTestCase):
 		application.half_day_date = "2013-01-05"
 		application.insert()
 
-<<<<<<< HEAD
-	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
-=======
 	def test_overlap_with_half_day_on_today(self):
 		self._clear_roles()
 
@@ -578,8 +575,7 @@ class TestLeaveApplication(FrappeTestCase):
 
 		self.assertRaises(OverlapError, application.insert)
 
-	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
->>>>>>> 67a8cba64 (test: add overlap test for half day leave on today)
+	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_optional_leave(self):
 		leave_period = get_leave_period()
 		today = nowdate()
