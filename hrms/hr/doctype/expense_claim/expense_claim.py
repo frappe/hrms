@@ -248,8 +248,16 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 			).run()[0][0]
 
 			task.save()
-		elif self.project:
-			frappe.get_doc("Project", self.project).update_project()
+
+		for project in self.get_linked_projects():
+			frappe.get_doc("Project", project).update_project()
+
+	def get_linked_projects(self):
+		projects = set()
+		if self.project:
+			projects.add(self.project)
+		projects.update(expense.project for expense in self.expenses if expense.project)
+		return projects
 
 	def make_gl_entries(self, cancel=False):
 		if flt(self.total_sanctioned_amount) > 0:
