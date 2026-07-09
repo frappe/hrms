@@ -106,8 +106,6 @@ watch(
 	},
 	{ immediate: true }
 )
-<<<<<<< HEAD
-=======
 
 watch(
 	() => props.filters,
@@ -128,5 +126,4 @@ watch(
 		}
 	}
 )
->>>>>>> 212367bd2 (fix(pwa): preserve link field value when value is outside default options)
 </script>
