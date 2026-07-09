@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-06-28 10:19+0000\n"
-"PO-Revision-Date: 2026-07-02 22:34\n"
+"POT-Creation-Date: 2026-07-05 10:16+0000\n"
+"PO-Revision-Date: 2026-07-09 10:41\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Uzbek\n"
 "MIME-Version: 1.0\n"
@@ -44,6 +44,10 @@ msgstr "Foydalanish foizi (B / T)"
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:183
 msgid "'employee_field_value' and 'timestamp' are required."
 msgstr "'employee_field_value' va 'timestamp' talab qilinadi."
+
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:188
+msgid "'employee_fieldname' must be one of {0}."
+msgstr ""
 
 #: hrms/hr/utils.py:254
 #: hrms/payroll/doctype/payroll_period/payroll_period.py:69
@@ -566,15 +570,15 @@ msgstr "Qo'shimcha ish haqi"
 msgid "Additional Salary "
 msgstr "Qo'shimcha ish haqi "
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:179
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:180
 msgid "Additional Salary for referral bonus can only be created against Employee Referral with status {0}"
 msgstr "Yo'llanma bonusi uchun qo'shimcha ish haqi faqat {0} holatiga ega bo'lgan xodimning yo'llanmasi asosida yaratilishi mumkin."
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:214
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:215
 msgid "Additional Salary for this salary component with {0} enabled already exists for this date"
 msgstr "{0} yoqilgan ushbu ish haqi komponenti uchun qo'shimcha ish haqi ushbu sana uchun allaqachon mavjud"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:126
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:127
 msgid "Additional Salary: {0} already exist for Salary Component: {1} for period {2} and {3}"
 msgstr "Qo'shimcha ish haqi: {0} ish haqi komponenti uchun allaqachon mavjud: {1} {2} va {3} davrlari uchun"
 
@@ -804,6 +808,10 @@ msgstr "Xuddi shu smenada kirish va chiqish sifatida navbatma-navbat kirishlar"
 msgid "Amount Based on Formula"
 msgstr "Formula asosidagi miqdor"
 
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:304
+msgid "Amount Exceeds Available Balance"
+msgstr ""
+
 #. Label of the amount_based_on_formula (Check) field in DocType 'Salary
 #. Component'
 #. Label of the amount_based_on_formula (Check) field in DocType 'Salary
@@ -838,7 +846,7 @@ msgstr "Ushbu inkassatsiya uchun to'langan summa"
 msgid "Amount scheduled for deduction via salary"
 msgstr "Ish haqi orqali ushlab qolinishi rejalashtirilgan summa"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:66
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:64
 msgid "Amount should not be less than zero"
 msgstr "Miqdor noldan kam bo'lmasligi kerak"
 
@@ -1099,7 +1107,7 @@ msgstr "Baholash shabloni"
 msgid "Appraisal Template Goal"
 msgstr "Baholash shablonining maqsadi"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:167
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:168
 msgid "Appraisal Template Missing"
 msgstr "Baholash shabloni yo'q"
 
@@ -1108,11 +1116,11 @@ msgstr "Baholash shabloni yo'q"
 msgid "Appraisal Template Title"
 msgstr "Baholash shabloni sarlavhasi"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:160
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:161
 msgid "Appraisal Template not found for some designations."
 msgstr "Ba'zi belgilar uchun baholash shabloni topilmadi."
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:150
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:151
 msgid "Appraisal creation is queued. It may take a few minutes."
 msgstr "Baholash jarayoni navbatga qo'yilgan. Bu bir necha daqiqa vaqt olishi mumkin."
 
@@ -1436,7 +1444,7 @@ msgstr "{0} xodimining davomati allaqachon bir-birining ustiga chiqadigan smena 
 msgid "Attendance for employee {0} is already marked for the date {1}: {2}"
 msgstr "{0} xodimining davomati {1}sanasi uchun allaqachon belgilangan: {2}"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:634
+#: hrms/hr/doctype/leave_application/leave_application.py:635
 msgid "Attendance for employee {0} is already marked for the following dates: {1}"
 msgstr "Quyidagi sanalar uchun {0} xodimning davomati allaqachon belgilangan: {1}"
 
@@ -1650,7 +1658,7 @@ msgstr "{0} komponentining foyda miqdori {1} dan oshadi"
 msgid "Benefit amount of component {0} should be greater than 0"
 msgstr "{0} komponentining foyda miqdori 0 dan katta bo'lishi kerak"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:509
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:512
 msgid "Benefit amount {0} for Salary Component {1} should not be greater than maximum benefit amount {2} set in {3}"
 msgstr "Ish haqi komponenti uchun {0} nafaqa miqdori {1} {3} da belgilangan maksimal nafaqa miqdoridan {2} ko'p bo'lmasligi kerak"
 
@@ -1817,6 +1825,14 @@ msgstr "Qo'ng'iroqlar"
 msgid "Cancellation Queued"
 msgstr "Bekor qilish navbatga qo'yildi"
 
+#: hrms/hr/doctype/vehicle_log/vehicle_log.js:81
+msgid "Cancelling Vehicle Log {0} will delete draft Expense Claim {1} because it only contains Vehicle Expenses.<br><br>Do you want to continue?"
+msgstr ""
+
+#: hrms/hr/doctype/vehicle_log/vehicle_log.js:87
+msgid "Cancelling Vehicle Log {0} will update draft Expense Claim {1}.<br><br>Vehicle Expenses rows will be removed. Other expenses will remain.<br><br>Do you want to continue?"
+msgstr ""
+
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:81
 msgid "Cannot Modify Time"
 msgstr "Vaqtni o'zgartirib bo'lmaydi"
@@ -1833,11 +1849,11 @@ msgstr "Ta'til siyosati topshirig'idagi maksimal ta'til ajratish chegarasi {0} b
 msgid "Cannot allocate more leaves due to maximum leaves allowed limit of {0} in {1} leave type."
 msgstr "{1} ta'til turida ruxsat etilgan maksimal barglar chegarasi {0} bo'lgani uchun ko'proq barg ajratib bo'lmaydi."
 
-#: hrms/api/roster.py:187
+#: hrms/api/roster.py:188
 msgid "Cannot break shift after end date"
 msgstr "Tugash sanasidan keyin smenani buzib bo'lmaydi"
 
-#: hrms/api/roster.py:189
+#: hrms/api/roster.py:190
 msgid "Cannot break shift before start date"
 msgstr "Smena boshlanish sanasidan oldin uzilib bo'lmaydi"
 
@@ -1857,15 +1873,15 @@ msgstr "Ish haqi davridan keyin ishga kirgan xodim uchun ish haqi varaqasini yar
 msgid "Cannot create Salary Slip for Employee who has left before Payroll Period"
 msgstr "Ish haqi muddatidan oldin ishdan ketgan xodim uchun ish haqi varaqasi yaratib bo'lmadi"
 
-#: hrms/hr/doctype/job_applicant/job_applicant.py:77
+#: hrms/hr/doctype/job_applicant/job_applicant.py:79
 msgid "Cannot create a Job Applicant against a closed Job Opening"
 msgstr "Yopiq ish o'rni uchun ishga ariza beruvchini yaratib bo'lmaydi"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:226
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:227
 msgid "Cannot create or change transactions against an Appraisal Cycle with status {0}."
 msgstr "{0} holatiga ega bo'lgan baholash sikliga qarshi tranzaksiyalarni yaratish yoki o'zgartirish mumkin emas."
 
-#: hrms/hr/doctype/leave_application/leave_application.py:651
+#: hrms/hr/doctype/leave_application/leave_application.py:652
 msgid "Cannot find active Leave Period"
 msgstr "Faol ta'til davri topilmadi"
 
@@ -1933,7 +1949,7 @@ msgstr "Ushbu ota-ona maqsadida KRA ni o'zgartirish barcha bolalar maqsadlarini,
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
 msgstr "Batafsil ma'lumot uchun <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> ni tekshiring"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1588
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1592
 msgid "Check Error Log {0} for more details."
 msgstr "Qo'shimcha ma'lumot olish uchun Xatolar jurnalini {0} tekshiring."
 
@@ -2169,7 +2185,7 @@ msgstr "Aloqa raqami"
 msgid "Copy of Invitation/Announcement"
 msgstr "Taklifnoma/eʼlon nusxasi"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1653
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1657
 msgid "Could not submit some Salary Slips: {}"
 msgstr "Ba'zi ish haqi varaqalarini topshirib bo'lmadi: {}"
 
@@ -2218,8 +2234,8 @@ msgid "Create Appraisals"
 msgstr "Baholashlarni yarating"
 
 #: hrms/hr/doctype/interview_type/interview_type.js:7
-#: hrms/hr/doctype/job_applicant/job_applicant.js:68
-#: hrms/hr/doctype/job_applicant/job_applicant.js:137
+#: hrms/hr/doctype/job_applicant/job_applicant.js:71
+#: hrms/hr/doctype/job_applicant/job_applicant.js:140
 msgid "Create Interview"
 msgstr "Suhbat yarating"
 
@@ -2227,7 +2243,7 @@ msgstr "Suhbat yarating"
 msgid "Create Job Applicant"
 msgstr "Ishga ariza beruvchini yarating"
 
-#: hrms/hr/doctype/job_applicant/job_applicant.js:84
+#: hrms/hr/doctype/job_applicant/job_applicant.js:87
 msgid "Create Job Offer"
 msgstr "Ish taklifini yarating"
 
@@ -2271,7 +2287,7 @@ msgstr "Keyinroq smenalar yarating"
 msgid "Create {0}"
 msgstr "{0} ni yarating"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:217
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:218
 msgid "Creating Appraisals"
 msgstr "Baholashlarni yaratish"
 
@@ -2279,7 +2295,7 @@ msgstr "Baholashlarni yaratish"
 msgid "Creating Payment Entries......"
 msgstr "To'lov yozuvlarini yaratish......"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1611
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1615
 msgid "Creating Salary Slips..."
 msgstr "Ish haqi varaqalarini yaratish..."
 
@@ -2722,7 +2738,7 @@ msgstr "Takroriy da'vo aniqlandi"
 msgid "Duplicate Leave Adjustment"
 msgstr "Takroriy ta'tilni sozlash"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:221
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:222
 msgid "Duplicate Overwritten Salary"
 msgstr "Qayta yozilgan ish haqi nusxasi"
 
@@ -2814,7 +2830,7 @@ msgstr "Qarzdorliklarni olish"
 msgid "Earning Component"
 msgstr "Daromad komponenti"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:175
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:176
 msgid "Earning Salary Component is required for Employee Referral Bonus."
 msgstr "Xodimlarni tavsiya qilish bonusi uchun ish haqi komponenti talab qilinadi."
 
@@ -2900,6 +2916,14 @@ msgstr "Xodimning avans balansi"
 #: hrms/hr/workspace/hr_setup/hr_setup.json
 msgid "Employee Advance Summary"
 msgstr "Xodimlarning avans xulosasi"
+
+#: hrms/hr/doctype/employee_advance/employee_advance.js:209
+msgid "Employee Advance return is scheduled via Additional Salary: {0} | <a href='{1}'> {2} </a>"
+msgstr ""
+
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:288
+msgid "Employee Advance {0} has {1} available for return. {2} has already been scheduled for deduction in {3}."
+msgstr ""
 
 #. Name of a report
 #. Label of a Link in the HR Setup Workspace
@@ -3254,7 +3278,7 @@ msgstr "Xodimlarni tavsiya qilish"
 msgid "Employee Referral {0} already exists for email: {1}"
 msgstr "Xodim tavsiyasi {0} elektron pochta uchun allaqachon mavjud: {1}"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:171
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:172
 msgid "Employee Referral {0} is not applicable for referral bonus."
 msgstr "Xodim tavsiyasi {0} tavsiya bonusi uchun amal qilmaydi."
 
@@ -3415,7 +3439,7 @@ msgstr "Xodimlar yozuvlari tanlangan variant yordamida yaratiladi"
 msgid "Employee was marked Absent due to missing Employee Checkins."
 msgstr "Xodim ro'yxatdan o'tmaganligi sababli, u \"Yo'q\" deb belgilandi."
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:274
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:280
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr "Xodim ish vaqti chegarasiga rioya qilmagani uchun ishdan bo'shatilgan deb e'lon qilindi."
 
@@ -3443,7 +3467,7 @@ msgstr "Xodim {0} allaqachon ish haqi davri uchun {1} ariza topshirgan {2}"
 msgid "Employee {0} has already applied for Shift {1}: {2} that overlaps within this period"
 msgstr "{0} xodim allaqachon ushbu davr ichida mos keladigan {1}: {2} smenasiga ariza topshirgan"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:523
+#: hrms/hr/doctype/leave_application/leave_application.py:524
 msgid "Employee {0} has already applied for {1} between {2} and {3} : {4}"
 msgstr "{0} xodimi allaqachon {2} va {3} oralig'idagi {1} ga ariza topshirgan: {4}"
 
@@ -3647,7 +3671,7 @@ msgstr "Tugash sanasi: {0}"
 msgid "End time cannot be before start time"
 msgstr "Tugash vaqti boshlanish vaqtidan oldin bo'lmasligi kerak"
 
-#: hrms/hr/doctype/job_applicant/job_applicant.js:123
+#: hrms/hr/doctype/job_applicant/job_applicant.js:126
 msgid "Enter Interview Type"
 msgstr "Suhbat turini kiriting"
 
@@ -4023,11 +4047,11 @@ msgstr "Xarajatlar bo'yicha da'vo xulosasi"
 msgid "Expense Claim Type"
 msgstr "Xarajatlarni talab qilish turi"
 
-#: hrms/hr/doctype/vehicle_log/vehicle_log.py:74
+#: hrms/hr/doctype/vehicle_log/vehicle_log.py:90
 msgid "Expense Claim for Vehicle Log {0}"
 msgstr "Transport vositasi jurnali uchun xarajatlar da'vosi {0}"
 
-#: hrms/hr/doctype/vehicle_log/vehicle_log.py:62
+#: hrms/hr/doctype/vehicle_log/vehicle_log.py:78
 msgid "Expense Claim {0} already exists for the Vehicle Log"
 msgstr "Avtomobil jurnali uchun xarajatlar da'vosi {0} allaqachon mavjud"
 
@@ -4120,7 +4144,7 @@ msgstr "Xodimlar uchun {0} yaratish/yuborish amalga oshmadi:"
 msgid "Failed to delete defaults for country {0}."
 msgstr "{0} mamlakati uchun standart sozlamalarni o'chirib bo'lmadi."
 
-#: hrms/api/__init__.py:796
+#: hrms/api/__init__.py:802
 msgid "Failed to download PDF: {0}"
 msgstr "PDF faylini yuklab olishda xatolik yuz berdi: {0}"
 
@@ -4144,7 +4168,7 @@ msgstr "Ba'zi ta'til siyosati topshiriqlarini yuborib bo'lmadi:"
 msgid "Failed to update password"
 msgstr "Parolni yangilashda xatolik yuz berdi"
 
-#: hrms/hr/doctype/interview/interview.py:239
+#: hrms/hr/doctype/interview/interview.py:241
 msgid "Failed to update the Job Applicant status"
 msgstr "Ishga ariza beruvchi holatini yangilashda xatolik yuz berdi"
 
@@ -4258,7 +4282,7 @@ msgid "File Preview"
 msgstr "Faylni oldindan ko'rish"
 
 #: hrms/hr/doctype/leave_application/leave_application.js:99
-#: hrms/hr/doctype/leave_encashment/leave_encashment.js:50
+#: hrms/hr/doctype/leave_encashment/leave_encashment.js:60
 msgid "Fill the form and save it"
 msgstr "Shaklni to'ldiring va saqlang"
 
@@ -4314,7 +4338,7 @@ msgstr "Birinchi kun"
 msgid "First Name "
 msgstr "Ism "
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1571
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1575
 msgid "Fiscal Year {0} not found"
 msgstr "Moliyaviy yil {0} topilmadi"
 
@@ -4454,7 +4478,7 @@ msgstr "{0} sanasidan boshlab ish haqi davri boshlanish sanasidan {1} oldin bo'l
 msgid "From Date {0} cannot be before employee's joining Date {1}"
 msgstr "{0} sanasidan boshlab xodimning ishga kirish sanasidan {1} oldin bo'lishi mumkin emas."
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:144
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:145
 msgid "From and to dates are madatory for recurring type additional salaries."
 msgstr "Doimiy qo'shimcha ish haqi uchun ishdan bo'shatish sanalari shart."
 
@@ -4462,7 +4486,7 @@ msgstr "Doimiy qo'shimcha ish haqi uchun ishdan bo'shatish sanalari shart."
 msgid "From date can not be less than employee's joining date"
 msgstr "Ishga qabul qilingan kundan boshlab sana xodimning ishga qabul qilingan kundan kam bo'lmasligi kerak"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:152
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:153
 msgid "From date can not be less than employee's joining date."
 msgstr "Ishga qabul qilingan kundan boshlab sana xodimning ishga qabul qilingan kundan kam bo'lmasligi kerak."
 
@@ -4715,7 +4739,7 @@ msgstr "Shikoyat tafsilotlari"
 msgid "Grievance Type"
 msgstr "Shikoyat turi"
 
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:637
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:646
 msgid "Gross Earnings"
 msgstr "Yalpi daromad"
 
@@ -4806,7 +4830,7 @@ msgstr "Yarim kun"
 msgid "Half Day Date"
 msgstr "Yarim kunlik sana"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:909
+#: hrms/hr/doctype/leave_application/leave_application.py:910
 msgid "Half Day Date cannot be a holiday"
 msgstr "Yarim kunlik sana bayram bo'lishi mumkin emas"
 
@@ -4814,7 +4838,7 @@ msgstr "Yarim kunlik sana bayram bo'lishi mumkin emas"
 msgid "Half Day Date is mandatory"
 msgstr "Yarim kunlik sana majburiy"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:912
+#: hrms/hr/doctype/leave_application/leave_application.py:913
 msgid "Half Day Date should be between From Date and To Date"
 msgstr "Yarim kunlik sana Boshlanish sanasi va Oxirgi sana oralig'ida bo'lishi kerak"
 
@@ -4870,6 +4894,11 @@ msgstr "Salom, {0}👋"
 #: hrms/hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:55
 msgid "Hiring Count"
 msgstr "Yollash soni"
+
+#. Label of a Workspace Sidebar Item
+#: hrms/workspace_sidebar/recruitment.json
+msgid "Hiring Pipeline"
+msgstr ""
 
 #. Label of the hiring_settings_section (Section Break) field in DocType 'HR
 #. Settings'
@@ -5218,7 +5247,7 @@ msgstr "Daromad solig'i chegirmalari"
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:148
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:630
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:639
 #: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 #: hrms/workspace_sidebar/tax_&_benefits.json
@@ -5352,7 +5381,7 @@ msgstr "Intervyu bo'yicha fikr-mulohazalar"
 msgid "Interview Feedback Reminder"
 msgstr "Suhbat bo'yicha fikr-mulohazalar haqida eslatma"
 
-#: hrms/hr/doctype/interview/interview.py:374
+#: hrms/hr/doctype/interview/interview.py:377
 msgid "Interview Feedback {0} submitted successfully"
 msgstr "Intervyu bo'yicha fikr-mulohaza {0} muvaffaqiyatli yuborildi"
 
@@ -5392,7 +5421,7 @@ msgstr "Suhbat holati"
 #. Label of the section_break_13 (Section Break) field in DocType 'Interview'
 #: hrms/hr/doctype/exit_interview/exit_interview.json
 #: hrms/hr/doctype/interview/interview.json
-#: hrms/hr/doctype/job_applicant/job_applicant.js:117
+#: hrms/hr/doctype/job_applicant/job_applicant.js:120
 msgid "Interview Summary"
 msgstr "Suhbat xulosasi"
 
@@ -5415,7 +5444,7 @@ msgstr "Suhbat turi"
 msgid "Interview Type Name"
 msgstr "Suhbat turi nomi"
 
-#: hrms/hr/doctype/job_applicant/job_applicant.py:96
+#: hrms/hr/doctype/job_applicant/job_applicant.py:126
 msgid "Interview Type {0} is only applicable for the Designation {1}"
 msgstr "Suhbat turi {0} faqat {1} yorlig'i uchun amal qiladi"
 
@@ -5466,7 +5495,7 @@ msgstr "Suhbatlar (Bu hafta)"
 msgid "Invalid Accrual Component"
 msgstr "Noto'g'ri hisoblash komponenti"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:245
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:246
 msgid "Invalid Additional Salary"
 msgstr "Noto'g'ri qo'shimcha ish haqi"
 
@@ -5474,7 +5503,7 @@ msgstr "Noto'g'ri qo'shimcha ish haqi"
 msgid "Invalid Arrear Component"
 msgstr "Noto'g'ri qarz komponenti"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:525
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:528
 msgid "Invalid Benefit Amounts"
 msgstr "Noto'g'ri nafaqa miqdori"
 
@@ -5482,7 +5511,7 @@ msgstr "Noto'g'ri nafaqa miqdori"
 msgid "Invalid Dates"
 msgstr "Noto'g'ri sanalar"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2655
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2656
 msgid "Invalid LWP Days Reversed"
 msgstr "Noto'g'ri LWP kunlari bekor qilindi"
 
@@ -5503,7 +5532,7 @@ msgstr "Noto'g'ri smena vaqtlari"
 msgid "Invalid employee filter: {0}"
 msgstr "Xodimlar filtri noto'g'ri: {0}"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:883
+#: hrms/hr/doctype/expense_claim/expense_claim.py:886
 msgid "Invalid parameters provided. Please pass the required arguments."
 msgstr "Noto'g'ri parametrlar ko'rsatilgan. Iltimos, kerakli argumentlarni uzating."
 
@@ -5732,7 +5761,7 @@ msgstr "Ish taklifi: {0} allaqachon ishga nomzodlar uchun mavjud: {1}"
 msgid "Job Opening"
 msgstr "Ish o'rinlari ochilishi"
 
-#: hrms/hr/doctype/job_requisition/job_requisition.py:68
+#: hrms/hr/doctype/job_requisition/job_requisition.py:69
 msgid "Job Opening Associated"
 msgstr "Ish ochish bilan bog'liq"
 
@@ -5769,7 +5798,7 @@ msgstr "Ish portali"
 msgid "Job Requisition"
 msgstr "Ishga joylashish uchun ariza"
 
-#: hrms/hr/doctype/job_requisition/job_requisition.py:65
+#: hrms/hr/doctype/job_requisition/job_requisition.py:66
 msgid "Job Requisition {0} has been associated with Job Opening {1}"
 msgstr "Ishga kirish uchun talabnoma {0} bo'sh ish o'rni {1} bilan bog'liq"
 
@@ -5854,7 +5883,7 @@ msgstr "Asosiy mas'uliyat sohasi"
 msgid "Key Result Area"
 msgstr "Asosiy natijalar maydoni"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2652
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2653
 msgid "LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
 msgstr "LWP kunlarining teskari o'zgarishi ({0}) {2} xodim uchun {3} dan {4} gacha bo'lgan haqiqiy ish haqi tuzatishlari jami summasiga ({1}) mos kelmaydi."
 
@@ -5970,7 +5999,7 @@ msgstr "Tashlab ketish uchun ajratmalar"
 msgid "Leave Application"
 msgstr "Arizani tark etish"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:804
+#: hrms/hr/doctype/leave_application/leave_application.py:805
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
 msgstr "Ta'tilga ariza berish muddati ketma-ket bo'lmagan ikkita ta'til taqsimoti {0} va {1} oralig'ida bo'lmasligi kerak."
 
@@ -6063,7 +6092,7 @@ msgstr "Bloklash ro'yxatidan chiqish sanalari"
 msgid "Leave Block List Name"
 msgstr "Bloklash ro'yxati nomini tark etish"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:1440
+#: hrms/hr/doctype/leave_application/leave_application.py:1443
 msgid "Leave Blocked"
 msgstr "Bloklangan holda qoldirish"
 
@@ -6304,7 +6333,7 @@ msgstr "Ta'til qoldig'i kelajakdagi ta'tilni taqsimlash yozuviga {0}dan oldin qo
 msgid "Leave for optional holiday"
 msgstr "Ixtiyoriy ta'tilga chiqish"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:550
+#: hrms/hr/doctype/leave_application/leave_application.py:551
 msgid "Leave of type {0} cannot be longer than {1}."
 msgstr "{0} turdagi ta'til {1} dan uzun bo'lmasligi kerak."
 
@@ -6669,7 +6698,7 @@ msgstr "Maksimal olib o'tiladigan barglar"
 msgid "Maximum Consecutive Leaves Allowed"
 msgstr "Ketma-ket ruxsat etilgan maksimal barglar soni"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:560
+#: hrms/hr/doctype/leave_application/leave_application.py:561
 msgid "Maximum Consecutive Leaves Exceeded"
 msgstr "Ketma-ket maksimal barglar soni oshdi"
 
@@ -6820,7 +6849,7 @@ msgstr "Oylik davomat jadvali"
 msgid "More than one selection for {0} not allowed"
 msgstr "{0} uchun bir nechta tanlovga ruxsat berilmaydi"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:348
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:384
 msgid "Multiple Additional Salaries with overwrite property exist for Salary Component {0} between {1} and {2}."
 msgstr "{1} va {2} oralig'idagi {0} ish haqi komponenti uchun qayta yozish xususiyatiga ega bir nechta qo'shimcha ish haqi mavjud."
 
@@ -6943,11 +6972,11 @@ msgstr "{0}valyutasi uchun bank/naqd pul hisobi topilmadi. Iltimos, {1} kompaniy
 msgid "No Employee Found"
 msgstr "Xodim topilmadi"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:195
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:201
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "Berilgan xodim maydoni qiymati uchun xodim topilmadi. '{}': {}"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:136 hrms/hr/utils.py:956
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:137 hrms/hr/utils.py:956
 msgid "No Employees Selected"
 msgstr "Hech qanday xodim tanlanmagan"
 
@@ -6979,7 +7008,7 @@ msgstr "Ish haqi davri {2} uchun {0} ko'rsatilgan ish haqi varaqalari {1} xodim 
 msgid "No Salary Structure Assignment found for employee {0} on date {1}"
 msgstr "{1} sanasida {0} xodim uchun ish haqi tuzilmasi bo'yicha topshiriq topilmadi"
 
-#: hrms/payroll/doctype/salary_withholding/salary_withholding.py:147
+#: hrms/payroll/doctype/salary_withholding/salary_withholding.py:148
 msgid "No Salary Structure Assignment found for employee {0} on or before {1}"
 msgstr "{1} yoki undan oldingi {0} xodim uchun ish haqi tuzilmasi bo'yicha topshiriq topilmadi"
 
@@ -7011,7 +7040,7 @@ msgstr "{0}elektron pochta manzili bilan bog'liq faol xodim topilmadi. Kirish uc
 msgid "No active or default Salary Structure found for employee {0} for the given dates"
 msgstr "Berilgan sanalar uchun {0} xodim uchun faol yoki standart ish haqi tuzilmasi topilmadi"
 
-#: hrms/hr/doctype/vehicle_log/vehicle_log.py:69
+#: hrms/hr/doctype/vehicle_log/vehicle_log.py:85
 msgid "No additional expenses has been added"
 msgstr "Qo'shimcha xarajatlar qo'shilmagan"
 
@@ -7072,7 +7101,7 @@ msgstr "Hech qanday xodim topilmadi"
 msgid "No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>Payroll Payable Account: {2}"
 msgstr "Yuqorida ko'rsatilgan mezonlarga javob beradigan xodimlar topilmadi:<br>Kompaniya: {0}<br> Valyuta: {1}<br>Ish haqi bo'yicha to'lanadigan hisob raqami: {2}"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:92
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:93
 msgid "No employees found for the selected criteria"
 msgstr "Tanlangan mezonlarga muvofiq xodimlar topilmadi"
 
@@ -7121,7 +7150,7 @@ msgstr "Lavozimlar soni"
 msgid "No replies from"
 msgstr "Javob yo'q"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1639
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1643
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
 msgstr "Yuqoridagi tanlangan mezonlarga muvofiq topshirish uchun ish haqi varaqasi topilmadi YOKI ish haqi varaqasi allaqachon topshirilgan"
 
@@ -7345,7 +7374,7 @@ msgstr "Faqat to'ldirilgan hujjatlar topshirilishi mumkin"
 msgid "Only Employee Grievance with status {0} or {1} can be submitted"
 msgstr "Faqat {0} yoki {1} holatiga ega xodimning shikoyati yuborilishi mumkin"
 
-#: hrms/hr/doctype/interview/interview.py:356
+#: hrms/hr/doctype/interview/interview.py:359
 msgid "Only Interviewer Are allowed to submit Interview Feedback"
 msgstr "Faqat suhbatdoshga suhbatga fikr-mulohazalarini yuborishga ruxsat beriladi"
 
@@ -7404,7 +7433,7 @@ msgstr "Rezyumeni yangi yorliqda oching"
 msgid "Opening closed."
 msgstr "Ochilish yopiq."
 
-#: hrms/hr/doctype/leave_application/leave_application.py:657
+#: hrms/hr/doctype/leave_application/leave_application.py:658
 msgid "Optional Holiday List not set for leave period {0}"
 msgstr "Ta'til davri uchun ixtiyoriy ta'til ro'yxati belgilanmagan {0}"
 
@@ -7538,11 +7567,11 @@ msgstr "Qo'shimcha vaqt uchun varaq yuborildi"
 msgid "Overtime Slip created for {0} employee(s)"
 msgstr "{0} xodim(lar) uchun qo'shimcha ish vaqti uchun varaq yaratildi"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1296
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1298
 msgid "Overtime Slip creation is queued. It may take a few minutes"
 msgstr "Qo'shimcha vaqt slipini yaratish navbatga qo'yilgan. Bu bir necha daqiqa vaqt olishi mumkin"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1320
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1324
 msgid "Overtime Slip submission is queued. It may take a few minutes"
 msgstr "Qo'shimcha ish vaqti uchun varaqni topshirish navbatga qo'yilgan. Bu bir necha daqiqa vaqt olishi mumkin"
 
@@ -7586,12 +7615,12 @@ msgstr "Qo'shimcha ish vaqtidan olinadigan daromad ushbu ish haqi komponenti bo'
 #. Label of the overwrite_salary_structure_amount (Check) field in DocType
 #. 'Additional Salary'
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:216
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:244
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:217
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:245
 msgid "Overwrite Salary Structure Amount"
 msgstr "Ish haqi tuzilmasi miqdorini qayta yozing"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:100
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:101
 msgid "Overwrite Salary Structure Amount is disabled as the Salary Component: {0} not part of the Salary Structure: {1}"
 msgstr "Ish haqi tarkibini qayta yozish Miqdori o'chirilgan, chunki ish haqi komponenti: {0} ish haqi tarkibiga kirmaydi: {1}"
 
@@ -7893,11 +7922,11 @@ msgstr "Ish haqi hisobotlari"
 msgid "Payroll Settings"
 msgstr "Ish haqi sozlamalari"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:158
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:159
 msgid "Payroll date can not be greater than employee's relieving date."
 msgstr "Ish haqini to'lash sanasi xodimning ishdan bo'shatilgan kunidan katta bo'lmasligi kerak."
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:150
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:151
 msgid "Payroll date can not be less than employee's joining date."
 msgstr "Ish haqi to'lanadigan sana xodimning ishga qabul qilingan kunidan kam bo'lmasligi kerak."
 
@@ -7905,7 +7934,7 @@ msgstr "Ish haqi to'lanadigan sana xodimning ishga qabul qilingan kunidan kam bo
 msgid "Payroll date cannot be in the past. This is to ensure that claims are made for the current or future payroll cycles."
 msgstr "Ish haqi sanasi o'tmishda bo'lishi mumkin emas. Bu joriy yoki kelajakdagi ish haqi sikllari uchun da'volar qilinishini ta'minlash uchun."
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:146
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:147
 msgid "Payroll date is mandatory for non-recurring type additional salaries."
 msgstr "Bir martalik bo'lmagan qo'shimcha ish haqi uchun ish haqi sanasi majburiydir."
 
@@ -8023,7 +8052,7 @@ msgstr "Smena vaqti o'zi bilan bir-biriga mos kelmasligi uchun {0} ni kamaytirin
 msgid "Please see attachment"
 msgstr "Iltimos, ilovaga qarang"
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:250
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:252
 msgid "Please select Company and Designation"
 msgstr "Iltimos, Kompaniya va Belgilanishni tanlang"
 
@@ -8102,7 +8131,7 @@ msgstr "Iltimos, kompaniyani tanlang."
 msgid "Please select employee first"
 msgstr "Avval xodimni tanlang"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:136
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:137
 msgid "Please select employees to create appraisals for"
 msgstr "Iltimos, baholash uchun xodimlarni tanlang"
 
@@ -8167,11 +8196,11 @@ msgstr "Iltimos, ish haqi komponentida hisobni o'rnating {0}"
 msgid "Please set cost to company(CTC) for employee {0} in the {1}"
 msgstr "Iltimos, {1} maydonida {0} xodim uchun kompaniya (CTC) xarajatlarini belgilang"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:712
+#: hrms/hr/doctype/leave_application/leave_application.py:713
 msgid "Please set default template for Leave Approval Notification in HR Settings."
 msgstr "Iltimos, HR sozlamalarida Tasdiqlash bildirishnomasi uchun standart shablonni o'rnating."
 
-#: hrms/hr/doctype/leave_application/leave_application.py:687
+#: hrms/hr/doctype/leave_application/leave_application.py:688
 msgid "Please set default template for Leave Status Notification in HR Settings."
 msgstr "Iltimos, HR sozlamalarida Ishdan bo'shatish holati haqida bildirishnoma uchun standart shablonni o'rnating."
 
@@ -8183,7 +8212,7 @@ msgstr "CTC ajralishini ko'rish uchun xodimning umumiy xarajatlarini kompaniyaga
 msgid "Please set the Advance Account {0} or in {1}"
 msgstr "Iltimos, avans hisobini {0} yoki {1} ga o'rnating"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:162
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:163
 msgid "Please set the Appraisal Template for all the {0} or select the template in the Employees table below."
 msgstr "Iltimos, barcha {0} uchun Baholash shablonini o'rnating yoki quyidagi Xodimlar jadvalidan shablonni tanlang."
 
@@ -8241,7 +8270,7 @@ msgstr "Iltimos, Sozlamalar > Raqamlash Seriyalari orqali Davomat uchun raqamlas
 msgid "Please share your feedback to the training by clicking on 'Training Feedback' and then 'New'"
 msgstr "Iltimos, trening haqidagi fikr-mulohazalaringizni “Trening bo‘yicha fikr-mulohaza” va keyin “Yangi” tugmasini bosish orqali ulashing."
 
-#: hrms/hr/doctype/interview/interview.py:225
+#: hrms/hr/doctype/interview/interview.py:227
 msgid "Please specify the job applicant to be updated."
 msgstr "Iltimos, yangilanib turadigan ishga nomzodni ko'rsating."
 
@@ -8249,7 +8278,7 @@ msgstr "Iltimos, yangilanib turadigan ishga nomzodni ko'rsating."
 msgid "Please specify {0} and {1} (if any), for the correct tax calculation in future salary slips."
 msgstr "Kelajakdagi ish haqi varaqalarida soliqni to'g'ri hisoblash uchun {0} va {1} (agar mavjud bo'lsa) ni ko'rsating."
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:182
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:183
 msgid "Please submit the {0} before marking the cycle as Completed"
 msgstr "Tsiklni tugallangan deb belgilashdan oldin {0} ni yuboring"
 
@@ -8543,7 +8572,7 @@ msgstr "So'rov berish sababi"
 msgid "Reason for Withholding Salary"
 msgstr "Ish haqini ushlab qolish sababi"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:470
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:476
 msgid "Reason for skipping auto attendance:"
 msgstr "Avtomatik ishtirokni o'tkazib yuborish sababi:"
 
@@ -8611,8 +8640,8 @@ msgid "Reduction is more than {0}'s available leave balance {1} for leave type {
 msgstr "Ta'til turi {2} uchun kamayish {0}ning mavjud ta'til balansidan {1} ko'proq."
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:407
-#: hrms/hr/doctype/leave_application/leave_application.py:554
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:218
+#: hrms/hr/doctype/leave_application/leave_application.py:555
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:219
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:141
 msgid "Reference: {0}"
 msgstr "Malumotnoma: {0}"
@@ -8653,7 +8682,7 @@ msgid "Refuelling Details"
 msgstr "Yoqilg'i quyish tafsilotlari"
 
 #: frontend/src/components/RequestActionSheet.vue:96
-#: hrms/hr/doctype/job_applicant/job_applicant.js:61
+#: hrms/hr/doctype/job_applicant/job_applicant.js:64
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:126
 msgid "Reject"
 msgstr "Rad etish"
@@ -8944,7 +8973,7 @@ msgstr "#{0}qatori: {1} komponentida {2} va {3} parametrlari yoqilgan."
 msgid "Row #{0}: Timesheet amount will overwrite the Earning component amount for the Salary Component {1}"
 msgstr "#{0}qatori: Ish vaqti jadvali miqdori ish haqi komponenti uchun daromad komponenti miqdorini {1} ustiga yozib qo'yadi."
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:851
+#: hrms/hr/doctype/expense_claim/expense_claim.py:854
 msgid "Row No {0}: Amount cannot be greater than the Outstanding Amount against Expense Claim {1}. Outstanding Amount is {2}"
 msgstr "Qator raqami {0}: Miqdor xarajatlar da'vosiga qarshi qarzdor summadan {1}ortiq bo'lmasligi kerak. Qarzdor summa {2} dir."
 
@@ -9042,7 +9071,7 @@ msgstr "Ish haqi komponenti turi"
 msgid "Salary Component for timesheet based payroll."
 msgstr "Ish vaqti jadvaliga asoslangan ish haqi uchun ish haqi komponenti."
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:498
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:501
 msgid "Salary Component {0} cannot be selected more than once in Employee Benefits"
 msgstr "Ish haqi komponenti {0} ni Xodimlar uchun imtiyozlar bo'limida bir martadan ortiq tanlash mumkin emas"
 
@@ -9190,7 +9219,7 @@ msgstr "Xodimning ish haqi varaqasi {0} ish vaqti jadvali uchun allaqachon yarat
 msgid "Salary Slip submission is queued. It may take a few minutes"
 msgstr "Ish haqi varaqasini topshirish navbatga qo'yilgan. Bu bir necha daqiqa vaqt olishi mumkin"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1576
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1580
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr "Ish haqi varaqasi {0} ish haqi yozuvi {1} uchun bajarilmadi"
 
@@ -9212,11 +9241,11 @@ msgstr "Ish haqi varaqalari yaratildi"
 msgid "Salary Slips Submitted"
 msgstr "Ish haqi varaqalari topshirildi"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1618
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1622
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
 msgstr "Xodimlar uchun ish haqi varaqalari allaqachon mavjud {} va ushbu ish haqi byurosi tomonidan qayta ishlanmaydi."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1645
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1649
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr "{0} dan {1} gacha bo'lgan davr uchun taqdim etilgan ish haqi varaqalari"
 
@@ -9259,7 +9288,7 @@ msgstr "Ish haqi tuzilishini tayinlash maydoni"
 msgid "Salary Structure Assignment for Employee already exists"
 msgstr "Xodim uchun ish haqi tuzilmasini tayinlash allaqachon mavjud"
 
-#: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:247
+#: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:248
 msgid "Salary Structure Assignment not found for employee {0} on date {1}"
 msgstr "{1} sanasidagi {0} xodim uchun ish haqi tuzilmasi topshirig'i topilmadi"
 
@@ -9329,7 +9358,7 @@ msgstr "Ta'minot jamg'armasi, qo'shimcha ta'minot jamg'armasi yoki ta'minot jamg
 msgid "Salary components should be part of the Salary Structure."
 msgstr "Ish haqi tarkibiy qismlari ish haqi tuzilmasining bir qismi bo'lishi kerak."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2675
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2679
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr "Ish haqi varaqasi elektron pochta xabarlari jo'natish uchun navbatga qo'yildi. Holatini bilish uchun {0} ni tekshiring."
 
@@ -9399,7 +9428,7 @@ msgstr "LWP ni bekor qilish uchun oyni tanlang"
 msgid "Select Payment Account to make Bank Entry"
 msgstr "Bankka kirish uchun to'lov hisobini tanlang"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1789
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1793
 msgid "Select Payroll Frequency."
 msgstr "Ish haqi chastotasini tanlang."
 
@@ -9426,7 +9455,7 @@ msgstr "Shartlar va qoidalarni tanlang"
 msgid "Select Users"
 msgstr "Foydalanuvchilarni tanlang"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:560
+#: hrms/hr/doctype/expense_claim/expense_claim.js:570
 msgid "Select an employee to get the employee advance."
 msgstr "Xodimga avans olish uchun xodimni tanlang."
 
@@ -9484,7 +9513,7 @@ msgstr "Xodim murojaat qilmoqchi bo'lgan ta'til turini tanlang, masalan, kasalli
 msgid "Select your Leave Approver i.e. the person who approves or rejects your leaves."
 msgstr "Ta'tilingizni tasdiqlovchi shaxsni, ya'ni ta'tilingizni tasdiqlovchi yoki rad etuvchi shaxsni tanlang."
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:595
+#: hrms/hr/doctype/expense_claim/expense_claim.js:605
 msgid "Selected employee advance is not of employee {0}"
 msgstr "Tanlangan xodimning avans to'lovi {0} xodimiga tegishli emas"
 
@@ -9520,7 +9549,7 @@ msgstr "O'z-o'zini o'rganish"
 msgid "Self-approval for Expense Claims is not allowed"
 msgstr "Xarajatlar bo'yicha da'volarni o'z-o'zidan tasdiqlashga ruxsat berilmaydi"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:895
+#: hrms/hr/doctype/leave_application/leave_application.py:896
 msgid "Self-approval for leaves is not allowed"
 msgstr "Barglar uchun o'z-o'zini tasdiqlashga yo'l qo'yilmaydi"
 
@@ -9657,7 +9686,7 @@ msgstr "Bayram eslatmalari uchun chastotani sozlang"
 msgid "Set the properties that should be updated in the Employee master on promotion submission"
 msgstr "Rag'batlantirishni yuborishda Xodimlar masterida yangilanishi kerak bo'lgan xususiyatlarni o'rnating"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:230
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:231
 msgid "Set the status to {0} if required."
 msgstr "Agar kerak bo'lsa, holatni {0} ga o'rnating."
 
@@ -9917,7 +9946,7 @@ msgstr "Shift muvaffaqiyatli ravishda {0} ga yangilandi."
 msgid "Shifts"
 msgstr "Smena"
 
-#: hrms/hr/doctype/job_applicant/job_applicant.js:56
+#: hrms/hr/doctype/job_applicant/job_applicant.js:59
 msgid "Shortlist"
 msgstr "Qisqa ro'yxat"
 
@@ -10001,7 +10030,7 @@ msgstr "Avtomatik ishtirokni o'tkazib yuborish"
 msgid "Skipping Salary Structure Assignment for the following employees, as Salary Structure Assignment records already exists against them. {0}"
 msgstr "Quyidagi xodimlar uchun ish haqi tuzilmasini tayinlashni o'tkazib yuborish, chunki ularga qarshi ish haqi tuzilmasini tayinlash yozuvlari allaqachon mavjud. {0}"
 
-#: hrms/api/roster.py:137
+#: hrms/api/roster.py:138
 msgid "Source and target shifts cannot be the same"
 msgstr "Manba va maqsadli siljishlar bir xil bo'lishi mumkin emas"
 
@@ -10173,7 +10202,7 @@ msgstr "Ish haqi yozuvi orqali yuborildi"
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr "Ish haqi varaqalarini topshirish va jurnal yozuvini yaratish..."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1700
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1704
 msgid "Submitting Salary Slips..."
 msgstr "Ish haqi varaqalarini topshirish..."
 
@@ -10352,6 +10381,10 @@ msgstr "Muddati"
 msgid "Thank you for applying."
 msgstr "Murojaat qilganingiz uchun tashakkur."
 
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:297
+msgid "The amount exceeds the available balance for Employee Advance {0}. Available amount for return: {1}."
+msgstr ""
+
 #: hrms/overrides/company.py:131
 msgid "The currency of {0} should be same as the company's default currency. Please select another account."
 msgstr "{0} valyutasi kompaniyaning standart valyutasi bilan bir xil bo'lishi kerak. Iltimos, boshqa hisobni tanlang."
@@ -10442,13 +10475,13 @@ msgstr "Mavjud va yangi ish haqi tuzilmasi komponentlari o'rtasida qarzdorlik fa
 msgid "There are no vacancies under staffing plan {0}"
 msgstr "Xodimlar rejasi bo'yicha bo'sh ish o'rinlari yo'q {0}"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:82
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:83
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:39
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:458
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:459
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
 msgstr "{0}ga ish haqi tuzilmasi tayinlanmagan. Avval ish haqi tuzilmasini tayinlang."
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:448
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:451
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
 msgstr "Ish haqi tuzilmasiga ega xodim yo'q: {0}. Ish haqi varaqasini oldindan ko'rish uchun xodimga {1} ni tayinlang."
 
@@ -10501,7 +10534,7 @@ msgstr "Bu maydon sizga Ta'til siyosatini yaratishda ushbu Ta'til turi uchun yil
 msgid "This is based on the attendance of this Employee"
 msgstr "Bu ushbu xodimning ishtirokiga asoslanadi"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:231
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:232
 msgid "This will overwrite the tax component {0} in the salary slip and tax won't be calculated based on the Income Tax Slabs"
 msgstr "Bu ish haqi varaqasidagi soliq komponenti {0} ni o'zgartiradi va soliq daromad solig'i plitalari asosida hisoblanmaydi."
 
@@ -10568,7 +10601,7 @@ msgstr "Yarim kunlik ish uchun ariza berish uchun \"Yarim kun\" ni belgilang va 
 msgid "To date can not be equal or less than from date"
 msgstr "Bugungi kunga qadar bo'lgan vaqt ushbu sanadan teng yoki undan kam bo'lmasligi kerak"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:156
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:157
 msgid "To date can not be greater than employee's relieving date."
 msgstr "Bugungi kungacha bo'lgan muddat xodimning ishdan bo'shatilgan kunidan oshmasligi kerak."
 
@@ -10585,7 +10618,7 @@ msgstr "Bugungi kungacha bo'lgan muddat xodimning ishdan bo'shatilgan kunidan os
 msgid "To date cannot be before from date"
 msgstr "Bugungi kungacha bo'lgan sana keyingi sanadan oldin bo'lishi mumkin emas"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:242
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:243
 msgid "To overwrite the salary component amount for a tax component, please enable {0}"
 msgstr "Soliq komponenti uchun ish haqi komponenti miqdorini qayta yozish uchun {0} ni yoqing"
 
@@ -10910,7 +10943,7 @@ msgstr "Ajratilgan barglarning umumiy miqdori yillik ajratilgan {0} dan oshmasli
 msgid "Total leaves allocated is mandatory for Leave Type {0}"
 msgstr "Ta'til turi uchun ajratilgan jami ta'tillar majburiy {0}"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:522
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:525
 msgid "Total of all employee benefits cannot be greater that Max Benefits Amount {0}"
 msgstr "Barcha xodimlar uchun beriladigan imtiyozlarning umumiy miqdori maksimal imtiyozlar miqdoridan {0} ortiq bo'lmasligi kerak."
 
@@ -11216,7 +11249,7 @@ msgstr "Beqaror"
 msgid "Unsettled Transactions"
 msgstr "Hisobga olinmagan bitimlar"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:183
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:184
 msgid "Unsubmitted Appraisals"
 msgstr "Taqdim etilmagan baholashlar"
 
@@ -11281,7 +11314,7 @@ msgstr ""
 msgid "Updated status from {0} to {1} for date {2} in the attendance record {3}"
 msgstr ""
 
-#: hrms/hr/doctype/interview/interview.py:232
+#: hrms/hr/doctype/interview/interview.py:234
 msgid "Updated the Job Applicant status to {0}"
 msgstr "Ishga da'vogar holati {0} ga yangilandi"
 
@@ -11366,7 +11399,7 @@ msgstr "Qiymat yo'q"
 #. 'Salary Component'
 #. Label of the variable_based_on_taxable_salary (Check) field in DocType
 #. 'Salary Detail'
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:240
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:241
 #: hrms/payroll/doctype/salary_component/salary_component.json
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 msgid "Variable Based On Taxable Salary"
@@ -11381,7 +11414,9 @@ msgstr "Vegetarian"
 #. Name of a report
 #. Label of a Link in the Expenses Workspace
 #. Label of a Workspace Sidebar Item
-#: hrms/hr/doctype/vehicle_log/vehicle_log.py:77
+#: hrms/hr/doctype/vehicle_log/vehicle_log.py:55
+#: hrms/hr/doctype/vehicle_log/vehicle_log.py:93
+#: hrms/hr/doctype/vehicle_log/vehicle_log.py:135
 #: hrms/hr/report/vehicle_expenses/vehicle_expenses.json
 #: hrms/hr/workspace/expenses/expenses.json
 #: hrms/workspace_sidebar/expenses.json
@@ -11417,7 +11452,7 @@ msgstr "Avtomobilga xizmat ko'rsatish elementi"
 msgid "View Goals"
 msgstr "Maqsadlarni ko'rish"
 
-#: hrms/hr/doctype/job_applicant/job_applicant.js:78
+#: hrms/hr/doctype/job_applicant/job_applicant.js:81
 msgid "View Job Offer"
 msgstr "Ish taklifini ko'rish"
 
@@ -11660,7 +11695,7 @@ msgstr ""
 msgid "You can only submit Leave Encashment for a valid encashment amount"
 msgstr "Siz faqat amal qiladigan naqd pul miqdori uchun ta'til inkassatsiyasini topshirishingiz mumkin"
 
-#: hrms/api/__init__.py:751
+#: hrms/api/__init__.py:752
 msgid "You can only upload JPG, PNG, PDF, TXT or Microsoft documents."
 msgstr "Siz faqat JPG, PNG, PDF, TXT yoki Microsoft hujjatlarini yuklashingiz mumkin."
 
@@ -11802,7 +11837,7 @@ msgstr "topshirildi"
 msgid "the selected company"
 msgstr "tanlangan kompaniya"
 
-#: hrms/payroll/doctype/salary_component/salary_component.py:187
+#: hrms/payroll/doctype/salary_component/salary_component.py:188
 msgid "via Salary Component sync"
 msgstr "Ish haqi komponentini sinxronlashtirish orqali"
 
@@ -11832,7 +11867,7 @@ msgstr "{0} : {1}"
 msgid "{0} <br> This error can be due to missing or deleted field."
 msgstr "{0} <br> Bu xato maydonning yo'qligi yoki o'chirilganligi sababli bo'lishi mumkin."
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:180
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:181
 msgid "{0} Appraisal(s) are not submitted yet"
 msgstr "{0} Baholash(lar) hali topshirilmagan"
 
@@ -11894,15 +11929,15 @@ msgstr "{0} muvaffaqiyatli o'chirildi!"
 msgid "{0} failed!"
 msgstr "{0} bajarilmadi!"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:238
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:239
 msgid "{0} has {1} enabled"
 msgstr "{0} {1} yoqilgan"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:250
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:251
 msgid "{0} is an Accrual Component and this will be recorded as a payout in Employee Benefits Ledger"
 msgstr "{0} hisoblash komponenti bo'lib, bu Xodimlar uchun imtiyozlar daftarida to'lov sifatida qayd etiladi"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:254
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:260
 msgid "{0} is an invalid Attendance Status."
 msgstr "{0} yaroqsiz davomat holati."
 
@@ -11914,7 +11949,7 @@ msgstr "{0} bayram emas."
 msgid "{0} is not allowed to submit Interview Feedback for the Interview: {1}"
 msgstr "{0} suhbat uchun intervyu bo'yicha fikr-mulohazalarni yuborishga ruxsat berilmagan: {1}"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:665
+#: hrms/hr/doctype/leave_application/leave_application.py:666
 msgid "{0} is not in Optional Holiday List"
 msgstr "{0} ixtiyoriy bayramlar ro'yxatida yo'q"
 
