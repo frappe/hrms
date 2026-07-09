@@ -45,6 +45,35 @@ frappe.ui.form.on("Job Opening", {
 	company: function (frm) {
 		frm.set_value("designation", "");
 	},
+	status: function (frm) {
+		frm.close_warning_confirmed = false;
+	},
+	before_save: function (frm) {
+		frm.trigger("confirm_close_if_needed");
+	},
+	after_save: function (frm) {
+		frm.close_warning_confirmed = false;
+	},
+	confirm_close_if_needed: function (frm) {
+		if (frm.is_new() || frm.close_warning_confirmed || frm.doc.status !== "Closed") {
+			return;
+		}
+
+		frappe.validated = false;
+
+		frm.call("get_close_warning").then((r) => {
+			if (!r.message) {
+				frm.close_warning_confirmed = true;
+				frm.save();
+				return;
+			}
+
+			frappe.confirm(r.message, () => {
+				frm.close_warning_confirmed = true;
+				frm.save();
+			});
+		});
+	},
 
 	job_opening_template: function (frm) {
 		if (!frm.doc.job_opening_template) return;
