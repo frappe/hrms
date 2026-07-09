@@ -70,6 +70,56 @@ class TestExpenseClaim(HRMSTestSuite):
 		self.assertEqual(frappe.db.get_value("Task", task, "total_expense_claim"), 200)
 		self.assertEqual(frappe.db.get_value("Project", project, "total_expense_claim"), 200)
 
+	def test_total_expense_claim_for_project_set_on_expense_line(self):
+		project = create_project("_Test Project Line 1", company="_Test Company")
+
+		payable_account = get_payable_account(company_name)
+
+		expense_claim = make_expense_claim(
+			payable_account, 300, 200, company_name, "Travel Expenses - _TC3", do_not_submit=True
+		)
+		expense_claim.expenses[0].project = project
+		expense_claim.submit()
+
+		self.assertEqual(frappe.db.get_value("Project", project, "total_expense_claim"), 200)
+
+		expense_claim.cancel()
+
+		self.assertEqual(frappe.db.get_value("Project", project, "total_expense_claim"), 0)
+
+	def test_total_expense_claim_for_project_at_document_and_line_level(self):
+		document_project = create_project("_Test Project Doc Level", company="_Test Company")
+		line_project = create_project("_Test Project Line 2", company="_Test Company")
+
+		payable_account = get_payable_account(company_name)
+		cost_center = frappe.db.get_value("Company", company_name, "cost_center")
+
+		expense_claim = make_expense_claim(
+			payable_account,
+			300,
+			200,
+			company_name,
+			"Travel Expenses - _TC3",
+			project=document_project,
+			do_not_submit=True,
+		)
+		expense_claim.append(
+			"expenses",
+			{
+				"expense_type": "Travel",
+				"default_account": "Travel Expenses - _TC3",
+				"currency": expense_claim.currency,
+				"amount": 500,
+				"sanctioned_amount": 500,
+				"cost_center": cost_center,
+				"project": line_project,
+			},
+		)
+		expense_claim.submit()
+
+		self.assertEqual(frappe.db.get_value("Project", document_project, "total_expense_claim"), 200)
+		self.assertEqual(frappe.db.get_value("Project", line_project, "total_expense_claim"), 500)
+
 	def test_expense_claim_status_as_payment_from_journal_entry(self):
 		# Via Journal Entry
 		payable_account = get_payable_account(company_name)
