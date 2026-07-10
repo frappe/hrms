@@ -27,6 +27,7 @@ from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.employee_checkin.employee_checkin import (
 	calculate_working_hours,
 	mark_attendance_and_link_log,
+	update_attendance_in_checkins,
 )
 from hrms.hr.doctype.shift_assignment.shift_assignment import get_employee_shift, get_shift_details
 from hrms.utils import get_date_range
@@ -444,23 +445,61 @@ class ShiftType(Document):
 		for attendance in half_day_attendances:
 			timestamp = datetime.combine(attendance.attendance_date, start_time)
 			shift_details = get_employee_shift(employee, timestamp, True)
-			if shift_details and shift_details.shift_type.name == self.name:
+			if not (shift_details and shift_details.shift_type.name == self.name):
+				continue
+
+			logs = frappe.get_all(
+				"Employee Checkin",
+				filters={
+					"employee": employee,
+					"shift": self.name,
+					"shift_start": shift_details.start_datetime,
+				},
+				fields=["name", "time", "log_type", "shift_start", "shift_end"],
+				order_by="time",
+			)
+			if logs:
+				# unreconciled checkins exist, use them instead of assuming Absent
+				attendance_status, working_hours, late_entry, early_exit, in_time, out_time = (
+					self.get_attendance(
+						logs,
+						flt(self.working_hours_threshold_for_absent),
+						flt(self.working_hours_threshold_for_half_day),
+					)
+				)
 				frappe.db.set_value(
 					"Attendance",
 					attendance.name,
-					{"shift": self.name, "half_day_status": "Absent", "modify_half_day_status": 0},
-				)
-				frappe.get_doc(
 					{
-						"doctype": "Comment",
-						"comment_type": "Comment",
-						"reference_doctype": "Attendance",
-						"reference_name": attendance.name,
-						"content": frappe._(
-							"Employee was marked Absent for other half due to missing Employee Checkins."
-						),
-					}
-				).insert(ignore_permissions=True)
+						"shift": self.name,
+						"half_day_status": "Absent" if attendance_status == "Absent" else "Present",
+						"modify_half_day_status": 0,
+						"working_hours": working_hours,
+						"late_entry": late_entry,
+						"early_exit": early_exit,
+						"in_time": in_time,
+						"out_time": out_time,
+					},
+				)
+				update_attendance_in_checkins([log.name for log in logs], attendance.name)
+				continue
+
+			frappe.db.set_value(
+				"Attendance",
+				attendance.name,
+				{"shift": self.name, "half_day_status": "Absent", "modify_half_day_status": 0},
+			)
+			frappe.get_doc(
+				{
+					"doctype": "Comment",
+					"comment_type": "Comment",
+					"reference_doctype": "Attendance",
+					"reference_name": attendance.name,
+					"content": frappe._(
+						"Employee was marked Absent for other half due to missing Employee Checkins."
+					),
+				}
+			).insert(ignore_permissions=True)
 
 
 def update_last_sync_of_checkin():
