@@ -342,6 +342,85 @@ class TestShiftType(HRMSTestSuite):
 		attendance = frappe.db.get_value("Attendance", {"shift": shift_type.name}, "status")
 		self.assertEqual(attendance, "Absent")
 
+	def test_mark_absent_for_half_day_dates_with_existing_checkins(self):
+		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
+
+		employee = make_employee("test_half_day_reconcile@example.com", company="_Test Company")
+		shift_type = setup_shift_type(shift_type="Half Day Reconcile Test")
+		date = getdate()
+		make_shift_assignment(shift_type.name, employee, date)
+
+		make_checkin(employee, datetime.combine(date, get_time("08:00:00")))
+		make_checkin(employee, datetime.combine(date, get_time("11:00:00")))
+
+		attendance = frappe.get_doc(
+			{
+				"doctype": "Attendance",
+				"employee": employee,
+				"attendance_date": date,
+				"status": "Absent",
+				"company": "_Test Company",
+			}
+		).insert()
+		attendance.submit()
+		# simulate a half day leave getting approved after the whole day was already marked absent,
+		# leaving the checkins unreconciled with the attendance
+		attendance.db_set(
+			{
+				"status": "Half Day",
+				"leave_type": "_Test Leave Type",
+				"half_day_status": "Present",
+				"modify_half_day_status": 1,
+			}
+		)
+
+		shift_type.mark_absent_for_half_day_dates(employee)
+
+		attendance.reload()
+		self.assertEqual(attendance.half_day_status, "Present")
+		self.assertEqual(attendance.modify_half_day_status, 0)
+		self.assertFalse(
+			frappe.db.exists(
+				"Comment",
+				{
+					"reference_doctype": "Attendance",
+					"reference_name": attendance.name,
+					"content": ["like", "%missing Employee Checkins%"],
+				},
+			)
+		)
+
+	def test_mark_absent_for_half_day_dates_without_checkins(self):
+		employee = make_employee("test_half_day_no_checkin@example.com", company="_Test Company")
+		shift_type = setup_shift_type(shift_type="Half Day No Checkin Test")
+		date = getdate()
+		make_shift_assignment(shift_type.name, employee, date)
+
+		attendance = frappe.get_doc(
+			{
+				"doctype": "Attendance",
+				"employee": employee,
+				"attendance_date": date,
+				"status": "Absent",
+				"company": "_Test Company",
+			}
+		).insert()
+		attendance.submit()
+		attendance.db_set(
+			{
+				"status": "Half Day",
+				"leave_type": "_Test Leave Type",
+				"half_day_status": "Present",
+				"modify_half_day_status": 1,
+			}
+		)
+
+		shift_type.mark_absent_for_half_day_dates(employee)
+
+		attendance.reload()
+		self.assertEqual(attendance.half_day_status, "Absent")
+		self.assertEqual(attendance.modify_half_day_status, 0)
+
 	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_mark_auto_attendance_on_holiday_enabled(self):
 		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
