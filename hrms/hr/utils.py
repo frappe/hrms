@@ -441,12 +441,14 @@ def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type
 	if e_leave_type.max_leaves_allowed:
 		leaves_quota = flt(e_leave_type.max_leaves_allowed - allocation.total_leaves_allocated, precision)
 		if leaves_quota <= 0:
-			frappe.throw(
-				_(
-					"Allocation was skipped due to maximum leave allocation limit set in leave type. Please increase the limit and retry failed allocation."
-				),
-				OverAllocationError,
-			)
+			earned_leave_schedule = qb.DocType("Earned Leave Schedule")
+			qb.update(earned_leave_schedule).where(
+				(earned_leave_schedule.parent == allocation.name)
+				& (earned_leave_schedule.allocation_date == today)
+			).set(earned_leave_schedule.attempted, 1).set(
+				earned_leave_schedule.allocated_via, "Scheduler"
+			).set(earned_leave_schedule.number_of_leaves, 0).run()
+			return
 		else:
 			if leaves_quota < earned_leaves:
 				earned_leaves = leaves_quota
