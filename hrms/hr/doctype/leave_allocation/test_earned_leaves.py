@@ -1009,6 +1009,10 @@ class TestLeaveAllocation(HRMSTestSuite):
 		email_count = frappe.db.count(
 			"Email Queue", {"message": ("like", "%Failure of Automatic Allocation of Earned Leaves%")}
 		)
+		max_leaves_allowed = frappe.db.get_value("Leave Type", self.leave_type, "max_leaves_allowed")
+		self.addCleanup(
+			frappe.db.set_value, "Leave Type", self.leave_type, "max_leaves_allowed", max_leaves_allowed
+		)
 		frappe.db.set_value("Leave Type", self.leave_type, "max_leaves_allowed", 2)
 		frappe.flags.current_date = add_months(get_year_start(getdate()), 1)
 		allocate_earned_leaves()
