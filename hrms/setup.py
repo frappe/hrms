@@ -491,6 +491,18 @@ def setup_notifications():
 		}
 	]
 
+	# Job Offer
+	response = frappe.read_file(os.path.join(base_path, "job_offer/job_offer_email_template.html"))
+	records += [
+		{
+			"doctype": "Email Template",
+			"name": _("Job Offer Letter"),
+			"response": response,
+			"subject": "Job Offer: {{ designation }} at {{ company }}",
+			"owner": frappe.session.user,
+		}
+	]
+
 	make_records(records)
 
 

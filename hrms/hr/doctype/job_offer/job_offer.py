@@ -4,9 +4,11 @@
 
 import frappe
 from frappe import _
+from frappe.core.doctype.communication.email import make as make_communication
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe.utils import cint, flt, get_link_to_form
+from frappe.utils.print_utils import get_print
 
 
 class JobOffer(Document):
@@ -39,6 +41,13 @@ class JobOffer(Document):
 	def onload(self):
 		employee = frappe.db.get_value("Employee", {"job_applicant": self.job_applicant}, "name") or ""
 		self.set_onload("employee", employee)
+		self.set_onload(
+			"offer_letter_sent",
+			frappe.db.exists(
+				"Communication",
+				{"reference_doctype": "Job Offer", "reference_name": self.name, "sent_or_received": "Sent"},
+			),
+		)
 
 	def validate(self):
 		self.validate_vacancies()
@@ -111,6 +120,54 @@ def get_staffing_plan_detail(designation, company, offer_date):
 	)
 
 	return frappe._dict(detail[0]) if (detail and detail[0].parent) else None
+
+
+@frappe.whitelist()
+def send_offer_letter(
+	job_offer: str,
+	email_template: str | None = None,
+	print_format: str | None = None,
+) -> None:
+	frappe.has_permission("Job Offer", "write", job_offer, throw=True)
+
+	doc = frappe.get_doc("Job Offer", job_offer)
+	if not doc.applicant_email:
+		frappe.throw(_("Cannot send offer letter: applicant email is not set on this Job Offer."))
+
+	sender = frappe.db.get_single_value("HR Settings", "hiring_sender_email")
+	if not sender:
+		frappe.throw(_("Please configure Hiring Sender Email in HR Settings before sending offer letters."))
+
+	args = doc.as_dict()
+	if email_template:
+		template = frappe.get_doc("Email Template", email_template)
+		subject = frappe.render_template(template.subject, args)
+		message = frappe.render_template(template.response_, args)
+	else:
+		subject = _("Job Offer: {0} at {1}").format(doc.designation, doc.company)
+		message = frappe.render_template(
+			"hrms/hr/doctype/job_offer/job_offer_email_template.html",
+			args,
+		)
+
+	effective_print_format = print_format or frappe.get_meta("Job Offer").default_print_format or None
+	# Remove pdf_generator from the request form_dict so get_print uses our explicit arg
+	frappe.local.form_dict.pop("pdf_generator", None)
+	pdf_content = get_print(
+		"Job Offer", doc.name, print_format=effective_print_format, as_pdf=True, pdf_generator="chrome"
+	)
+	attachment = {"fname": f"Job Offer - {doc.name}.pdf", "fcontent": pdf_content}
+
+	make_communication(
+		doctype="Job Offer",
+		name=doc.name,
+		content=message,
+		subject=subject,
+		sender=sender,
+		recipients=doc.applicant_email,
+		send_email=True,
+		attachments=[attachment],
+	)
 
 
 @frappe.whitelist()

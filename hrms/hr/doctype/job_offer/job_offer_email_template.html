@@ -1,0 +1,22 @@
+<p>Dear {{ applicant_name }},</p>
+
+<p>
+	We are pleased to extend this offer of employment. Please find the details below.
+</p>
+
+<table class="table table-bordered small" style="max-width: 500px;">
+	<tr>
+		<td>{{ _("Designation") }}</td>
+		<td><b>{{ designation }}</b></td>
+	</tr>
+	<tr>
+		<td>{{ _("Company") }}</td>
+		<td><b>{{ company }}</b></td>
+	</tr>
+	<tr>
+		<td>{{ _("Offer Date") }}</td>
+		<td><b>{{ frappe.utils.formatdate(offer_date) }}</b></td>
+	</tr>
+</table>
+
+<p>{{ _("Please reach out if you have any questions.") }}</p>
