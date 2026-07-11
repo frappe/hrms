@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2026-07-05 10:16+0000\n"
-"PO-Revision-Date: 2026-07-10 10:53\n"
+"PO-Revision-Date: 2026-07-11 10:59\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Bosnian\n"
 "MIME-Version: 1.0\n"
@@ -8959,7 +8959,7 @@ msgstr "Zaokruživanje"
 #. Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json
 msgid "Route to the custom Job Application Webform"
-msgstr "Usmjeri na prilagođenu Web Formu Zahtjeva za Posao"
+msgstr "Usmjeri na prilagođenu Web Obrazac Zahtjeva za Posao"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:120
 msgid "Row #{0}: Cannot set amount or formula for Salary Component {1} with Variable Based On Taxable Salary"
