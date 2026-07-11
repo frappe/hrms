@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2026-07-05 10:16+0000\n"
-"PO-Revision-Date: 2026-07-09 10:40\n"
+"PO-Revision-Date: 2026-07-11 10:59\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Persian\n"
 "MIME-Version: 1.0\n"
@@ -389,7 +389,7 @@ msgstr ""
 #: hrms/payroll/doctype/salary_component/salary_component.json
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 msgid "Accrual Component"
-msgstr ""
+msgstr "مؤلفه تعهدی"
 
 #: hrms/payroll/doctype/salary_component/salary_component.py:112
 msgid "Accrual Component can only be set for Earning Salary Components."
@@ -754,7 +754,7 @@ msgstr "کاربران مجاز"
 #. 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Allow check-out after shift end time (in minutes)"
-msgstr "اجازه خروج پس از پایان نوبت (بر حسب دقیقه)"
+msgstr "اجازه خروج پس از پایان شیفت (برحسب دقیقه)"
 
 #. Option for the 'Payout Method' (Select) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
@@ -777,7 +777,7 @@ msgstr "امکان تخصیص مرخصی‌های بیشتر از تعداد ر�
 #. 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Alternating entries as IN and OUT during the same shift"
-msgstr "ورودی های متناوب به صورت IN و OUT در همان شیفت"
+msgstr "ثبت متناوب ورود و خروج در طول یک شیفت"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:83
 msgid "Amount Based on Formula"
@@ -884,7 +884,7 @@ msgstr "هرگونه اظهار نظر، تلاش قابل توجه دیگری �
 #. DocType 'Gratuity Rule'
 #: hrms/payroll/doctype/gratuity_rule/gratuity_rule.json
 msgid "Applicable Earnings Component"
-msgstr "جزء سود قابل اجرا"
+msgstr "مؤلفه درآمد قابل اعمال"
 
 #. Label of the applicable_salary_component (Table MultiSelect) field in
 #. DocType 'Overtime Type'
@@ -1510,7 +1510,7 @@ msgstr "به طور خودکار تمام دارایی‌های تخصیص یا�
 #. Label of the auto_update_last_sync (Check) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Automatically update Last Sync of Checkin"
-msgstr ""
+msgstr "به‌روزرسانی خودکار آخرین همگام‌سازی ثبت ورود"
 
 #. Label of the available_leaves (Float) field in DocType 'Salary Slip Leave'
 #: hrms/payroll/doctype/salary_slip_leave/salary_slip_leave.json
@@ -1594,7 +1594,7 @@ msgstr ""
 #. 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Begin check-in before shift start time (in minutes)"
-msgstr "شروع اعلام حضور قبل از زمان شروع شیفت (بر حسب دقیقه)"
+msgstr "شروع ثبت ورود قبل از شروع شیفت (برحسب دقیقه)"
 
 #: hrms/controllers/employee_reminders.py:75
 msgid "Below is the list of upcoming holidays for you:"
@@ -2083,7 +2083,7 @@ msgstr "در حال تکمیل آشناسازی"
 #. Detail'
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 msgid "Component properties and references "
-msgstr " خواص و مراجع کامپوننت"
+msgstr "ویژگی‌ها و ارجاعات مؤلفه "
 
 #. Label of the configure_component_tab (Tab Break) field in DocType 'Salary
 #. Component'
@@ -2126,7 +2126,7 @@ msgstr "دوره مهلت را در نظر بگیرید"
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.js:287
 msgid "Consider Marked Attendance on Holidays"
-msgstr "حضور مشخص در روزهای تعطیل را در نظر بگیرید"
+msgstr "احتساب حضور علامت‌گذاری‌شده در روزهای تعطیل"
 
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.js:49
 msgid "Consider Tax Exemption Declaration"
@@ -2646,7 +2646,7 @@ msgstr "جزئیات حامی مالی (نام، مکان)"
 #. 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Determine Check-in and Check-out"
-msgstr "ورود و خروج را تعیین کنید"
+msgstr "تعیین ورود و خروج"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:145
 msgid "Disable {0} for the {1} component, to prevent the amount from being deducted twice, as its formula already uses a payment-days-based component."
@@ -2737,7 +2737,7 @@ msgstr "خروج زود هنگام توسط"
 #. Label of the early_exit_grace_period (Int) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Early Exit Grace Period"
-msgstr "دوره مهلت خروج زودهنگام"
+msgstr "بازه ارفاق برای خروج زودهنگام"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.py:190
 msgid "Early Exits"
@@ -2800,7 +2800,7 @@ msgstr ""
 #: hrms/payroll/doctype/employee_benefit_application_detail/employee_benefit_application_detail.json
 #: hrms/payroll/doctype/employee_benefit_detail/employee_benefit_detail.json
 msgid "Earning Component"
-msgstr "جزء کسب درآمد"
+msgstr "مؤلفه درآمد"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:176
 msgid "Earning Salary Component is required for Employee Referral Bonus."
@@ -3868,7 +3868,7 @@ msgstr ""
 
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.py:55
 msgid "Existing Shift Assignments"
-msgstr ""
+msgstr "تخصیص‌های شیفت موجود"
 
 #. Option for the 'Final Decision' (Select) field in DocType 'Exit Interview'
 #: hrms/hr/doctype/exit_interview/exit_interview.json
@@ -4732,13 +4732,13 @@ msgstr "دستمزد ناخالص (ارز شرکت)"
 #. Label of the gross_year_to_date (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Gross Year To Date"
-msgstr "سال ناخالص تا به امروز"
+msgstr "درآمد ناخالص از ابتدای سال تا به امروز"
 
 #. Label of the base_gross_year_to_date (Currency) field in DocType 'Salary
 #. Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Gross Year To Date(Company Currency)"
-msgstr "سال ناخالص تا به امروز (ارز شرکت)"
+msgstr "درآمد ناخالص از ابتدای سال تا به امروز (واحد پول شرکت)"
 
 #: hrms/hr/doctype/goal/goal.js:13
 msgid "Group goal's progress is auto-calculated based on the child goals."
@@ -5014,7 +5014,7 @@ msgstr "در صورت فعال بودن، اظهارنامه معافیت مال
 #. DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "If enabled, auto attendance will be marked on holidays if Employee Checkins exist"
-msgstr "در صورت فعال بودن، حضور و غیاب خودکار در روزهای تعطیل در صورت وجود اعلام حضور کارکنان مشخص می‌شود"
+msgstr "در صورت فعال بودن، در صورت وجود ورودهای کارمند، حضور خودکار در روزهای تعطیل علامت گذاری خواهد شد"
 
 #. Description of the 'Consider Marked Attendance on Holidays' (Check) field in
 #. DocType 'Payroll Settings'
@@ -5047,7 +5047,7 @@ msgstr "اگر فعال باشد، جزء در گزارش کسر مالیات ب
 #. Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "If enabled, the component will not be displayed in the salary slip if the amount is zero"
-msgstr "در صورت فعال بودن، در صورت صفر بودن مبلغ، جزء در فیش حقوقی نمایش داده نمی‌شود"
+msgstr "در صورت فعال بودن، اگر مبلغ صفر باشد، این مؤلفه در فیش حقوقی نمایش داده نمی‌شود"
 
 #. Description of the 'Publish Applications Received' (Check) field in DocType
 #. 'Job Opening'
@@ -5095,7 +5095,7 @@ msgstr "اگر علامت زده نشود، لیست باید به هر دپار
 #. Detail'
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 msgid "If selected, the value specified or calculated in this component will not contribute to the earnings or deductions. However, it's value can be referenced by other components that can be added or deducted. "
-msgstr " در صورت انتخاب، مقدار مشخص شده یا محاسبه شده در این جزء به درآمد یا کسر کمک نمی‌کند. با این حال، ارزش آن را می‌توان با مؤلفه های دیگری که می‌توان اضافه یا کسر کرد، ارجاع داد."
+msgstr "در صورت انتخاب، مقدار مشخص شده یا محاسبه شده در این مؤلفه در درآمد یا کسورات نقشی نخواهد داشت. با این حال، می‌توان به مقدار آن توسط سایر مؤلفه‌هایی که می‌توانند اضافه یا کسر شوند، ارجاع داد. "
 
 #. Description of the 'Closes On' (Date) field in DocType 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json
@@ -5465,7 +5465,7 @@ msgstr "مصاحبه‌ها (این هفته)"
 #: hrms/payroll/doctype/salary_component/salary_component.py:127
 #: hrms/payroll/doctype/salary_component/salary_component.py:135
 msgid "Invalid Accrual Component"
-msgstr ""
+msgstr "مؤلفه تعهدی نامعتبر"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:246
 msgid "Invalid Additional Salary"
@@ -5473,7 +5473,7 @@ msgstr "حقوق اضافی نامعتبر"
 
 #: hrms/payroll/doctype/salary_component/salary_component.py:142
 msgid "Invalid Arrear Component"
-msgstr ""
+msgstr "مؤلفه معوقه نامعتبر"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:528
 msgid "Invalid Benefit Amounts"
@@ -5868,7 +5868,7 @@ msgstr "روز آخر"
 #. Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Last Known Successful Sync of Employee Checkin. Reset this only if you are sure that all Logs are synced from all the locations. Please don't modify this if you are unsure."
-msgstr "آخرین همگام‌سازی موفقیت‌آمیز شناسایی کارمند. این را فقط در صورتی بازنشانی کنید که مطمئن باشید همه گزارش‌ها از همه مکان‌ها همگام‌سازی شده‌اند. لطفاً اگر مطمئن نیستید این را اصلاح نکنید."
+msgstr "آخرین همگام‌سازی موفق ثبت ورود کارمند. این گزینه را فقط در صورتی که مطمئن هستید همه گزارش‌ها از همه مکان‌ها همگام‌سازی شده‌اند، بازنشانی کنید. لطفاً اگر مطمئن نیستید، آن را تغییر ندهید."
 
 #. Label of the last_odometer (Int) field in DocType 'Vehicle Log'
 #: hrms/hr/doctype/vehicle_log/vehicle_log.json
@@ -5909,7 +5909,7 @@ msgstr "ورود دیرهنگام توسط"
 #. Label of the late_entry_grace_period (Int) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Late Entry Grace Period"
-msgstr "دوره مهلت ورود دیرهنگام"
+msgstr "بازه ارفاق برای ورود دیرهنگام"
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:127
 msgid "Latitude and longitude values are required for checking in."
@@ -6096,7 +6096,7 @@ msgstr "بازخرید مرخصی"
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 msgid "Leave Encashment Amount Per Day"
-msgstr "مبلغ بازخرید مرخصی در روز"
+msgstr "مبلغ بازخرید هر روز مرخصی"
 
 #: frontend/src/views/leave/List.vue:5
 msgid "Leave History"
@@ -6544,7 +6544,7 @@ msgstr "حضور و غیاب را علامت بزنید"
 #. 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Mark Auto Attendance on Holidays"
-msgstr "حضور خودکار در روزهای تعطیل را علامت بزنید"
+msgstr "علامت‌گذاری خودکار حضور و غیاب در روزهای تعطیل"
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.js:58
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.js:62
@@ -6799,7 +6799,7 @@ msgstr "نحوه پرداخت برای پرداخت الزامی است"
 #. Label of the month_to_date (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Month To Date"
-msgstr "ماه به تاریخ"
+msgstr "ابتدای ماه تا کنون"
 
 #. Label of the base_month_to_date (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
@@ -7576,7 +7576,7 @@ msgstr ""
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 #: hrms/workspace_sidebar/shift_&_attendance.json
 msgid "Overtime Type"
-msgstr ""
+msgstr "نوع اضافه کاری"
 
 #. Description of the 'Overtime Salary Component' (Link) field in DocType
 #. 'Overtime Type'
@@ -8568,7 +8568,7 @@ msgstr "درخواست‌های شیفت اخیر"
 #. in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Recommended for a single biometric device / checkins via mobile app"
-msgstr ""
+msgstr "توصیه شده برای دستگاه بیومتریک تکی / ثبت ورود از طریق اپلیکیشن موبایل"
 
 #. Option for the 'Action' (Select) field in DocType 'Full and Final Asset'
 #: hrms/hr/doctype/full_and_final_asset/full_and_final_asset.json
@@ -8713,7 +8713,7 @@ msgstr "یادآوری ها"
 #. Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Remove if Zero Valued"
-msgstr "در صورت داشتن ارزش صفر حذف کنید"
+msgstr "حذف در صورت داشتن مقدار صفر"
 
 #. Option for the 'Mode of Travel' (Select) field in DocType 'Travel Itinerary'
 #: hrms/hr/doctype/travel_itinerary/travel_itinerary.json
@@ -8920,7 +8920,7 @@ msgstr "گرد کردن تجربه کاری"
 #. Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Round to the Nearest Integer"
-msgstr "به نزدیکترین عدد صحیح گرد کنید"
+msgstr "گرد کردن به نزدیکترین عدد صحیح"
 
 #. Label of the rounding (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
@@ -9332,7 +9332,7 @@ msgstr "مؤلفه‌های حقوق باید بخشی از ساختار حقو�
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:2679
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
-msgstr "ایمیل های فیش حقوقی برای ارسال در نوبت قرار گرفته اند. وضعیت {0} را بررسی کنید."
+msgstr "ایمیل‌های فیش حقوقی برای ارسال در صف قرار گرفته‌اند. برای اطلاع از وضعیت {0} را بررسی کنید."
 
 #. Label of the sanctioned_amount (Currency) field in DocType 'Expense Claim
 #. Detail'
@@ -9629,7 +9629,7 @@ msgstr "تنظیم تاریخ تخفیف برای کارمند: {0}"
 #. 'Employee Attendance Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgid "Set filters to fetch employees"
-msgstr "فیلترهایی را برای واکشی کارمندان تنظیم کنید"
+msgstr "تنظیم فیلترها برای واکشی کارمندان"
 
 #. Description of the 'Opening Balances' (Section Break) field in DocType
 #. 'Salary Structure Assignment'
@@ -10114,7 +10114,7 @@ msgstr "جلوگیری از ثبت درخواست مرخصی توسط کاربر
 #. 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Strictly based on Log Type in Employee Checkin"
-msgstr "به شدت بر اساس نوع لاگ ورود کارکنان است"
+msgstr "صرفاً بر اساس نوع لاگ ورود و خروج کارمند"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:301
 msgid "Structures have been assigned successfully"
@@ -10424,7 +10424,7 @@ msgstr "زمان قبل از پایان شیفت زمانی که خروج زود
 #. (Int) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "The time before the shift start time during which Employee Check-in is considered for attendance."
-msgstr "زمان قبل از زمان شروع شیفت که طی آن ورود کارکنان برای حضور و غیاب در نظر گرفته می‌شود."
+msgstr "زمان قبل از شروع شیفت که در طی آن، ورود کارمند برای حضور و غیاب در نظر گرفته می‌شود."
 
 #. Option for the 'Type' (Select) field in DocType 'Training Event'
 #: hrms/hr/doctype/training_event/training_event.json
@@ -10518,7 +10518,7 @@ msgstr "این برگه های حقوق و دستمزد را ارسال می‌�
 #. field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Time after the end of shift during which check-out is considered for attendance."
-msgstr "زمان پس از پایان شیفت که در طی آن خروج برای حضور و غیاب در نظر گرفته می‌شود."
+msgstr "زمان پس از پایان شیفت که در طی آن، خروج برای حضور و غیاب در نظر گرفته می‌شود."
 
 #. Description of the 'Time to Fill' (Duration) field in DocType 'Job
 #. Requisition'
@@ -10923,7 +10923,7 @@ msgstr ""
 #. Detail'
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 msgid "Total salary booked against this component for this employee from the beginning of the year (payroll period or fiscal year) up to the current salary slip's end date."
-msgstr "کل حقوق ثبت شده در مقابل این جزء برای این کارمند از ابتدای سال (دوره حقوق و دستمزد یا سال مالی) تا تاریخ پایان فیش حقوقی فعلی."
+msgstr "کل حقوق ثبت شده در این مؤلفه برای این کارمند از ابتدای سال (دوره حقوق و دستمزد یا سال مالی) تا تاریخ پایان فیش حقوقی فعلی."
 
 #. Description of the 'Month To Date' (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
@@ -11596,13 +11596,13 @@ msgstr "آستانه ساعات کاری برای نیم روز"
 #. DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Working hours below which Absent is marked. (Zero to disable)"
-msgstr "ساعات کاری که زیر آن غایب مشخص شده است. (صفر برای غیرفعال کردن)"
+msgstr "ساعات کاری که کمتر از آن به عنوان غیبت علامت‌گذاری شده‌است. (صفر برای غیرفعال کردن)"
 
 #. Description of the 'Working Hours Threshold for Half Day' (Float) field in
 #. DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Working hours below which Half Day is marked. (Zero to disable)"
-msgstr "ساعات کاری که کمتر از آن نیم روز مشخص شده است. (صفر برای غیرفعال کردن)"
+msgstr "ساعات کاری که کمتر از آن به عنوان نیم روز علامت گذاری شده‌است. (صفر برای غیرفعال کردن)"
 
 #. Option for the 'Type' (Select) field in DocType 'Training Event'
 #: hrms/hr/doctype/training_event/training_event.json
@@ -11615,12 +11615,12 @@ msgstr "کارگاه"
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Year To Date"
-msgstr "سال تا به امروز"
+msgstr "از ابتدای سال تاکنون"
 
 #. Label of the base_year_to_date (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Year To Date(Company Currency)"
-msgstr "سال تا به امروز (ارز شرکت)"
+msgstr "از ابتدای سال تاکنون (واحد پول شرکت)"
 
 #. Label of the yearly_benefit (Currency) field in DocType 'Employee Benefit
 #. Claim'
