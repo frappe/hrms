@@ -231,6 +231,8 @@ frappe.ui.form.on("Interview", {
 	},
 
 	load_skills_average_rating(frm) {
+		if (frm.doc.__islocal) return;
+
 		frappe
 			.call({
 				method: "hrms.hr.doctype.interview.interview.get_skill_wise_average_rating",
@@ -242,6 +244,8 @@ frappe.ui.form.on("Interview", {
 	},
 
 	load_feedback(frm) {
+		if (frm.doc.__islocal) return;
+
 		frappe
 			.call({
 				method: "hrms.hr.doctype.interview.interview.get_feedback",
