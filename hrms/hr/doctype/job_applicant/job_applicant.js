@@ -97,6 +97,8 @@ frappe.ui.form.on("Job Applicant", {
 	},
 
 	get_interview_for_dashboard: function (frm) {
+		if (frm.doc.__islocal) return;
+
 		$("div").remove(".form-dashboard-section.custom");
 		frappe.call({
 			method: "hrms.hr.doctype.job_applicant.job_applicant.get_interview_details",

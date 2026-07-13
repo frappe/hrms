@@ -16,6 +16,7 @@ frappe.ui.form.on("Interview", {
 		});
 
 		frm.trigger("add_custom_buttons");
+		if (frm.doc.__islocal) return;
 
 		frappe.run_serially([
 			() => frm.trigger("load_skills_average_rating"),
