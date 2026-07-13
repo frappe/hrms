@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("Leave Policy", {
 	refresh: function (frm) {
-		if (frm.is_new()) return;
+		if (frm.doc.docstatus !== 1) return;
 
 		frm.add_custom_button(
 			__("Single Assignment"),
@@ -18,9 +18,11 @@ frappe.ui.form.on("Leave Policy", {
 		frm.add_custom_button(
 			__("Bulk Assignment"),
 			function () {
-				const doc = frappe.model.get_new_doc("Leave Control Panel");
-				doc.leave_policy = frm.doc.name;
-				frappe.set_route("Form", "Leave Control Panel", doc.name);
+				frappe.model.with_doctype("Leave Control Panel", () => {
+					const doc = frappe.model.get_new_doc("Leave Control Panel");
+					doc.leave_policy = frm.doc.name;
+					frappe.set_route("Form", "Leave Control Panel", doc.name);
+				});
 			},
 			__("Create"),
 		);
