@@ -168,20 +168,14 @@ class EmployeeHoursReport:
 				self.stats_by_employee[emp]["non_billed_hours"] += flt(hours, 2)
 
 	def set_employee_department_and_name(self):
-		if not self.stats_by_employee:
-			return
-
-		employee_details = frappe.get_all(
-			"Employee",
-			filters={"name": ("in", list(self.stats_by_employee))},
-			fields=["name", "employee_name", "department"],
-		)
-		details_by_employee = {d.name: d for d in employee_details}
-
 		for emp, stats in self.stats_by_employee.items():
-			details = details_by_employee.get(emp, frappe._dict())
-			stats["department"] = details.get("department")
+			details = (
+				frappe.get_value("Employee", emp, ["employee_name", "department"], as_dict=True)
+				or frappe._dict()
+			)
+
 			stats["employee_name"] = details.get("employee_name")
+			stats["department"] = details.get("department")
 
 	def calculate_utilizations(self):
 		TOTAL_HOURS = flt(self.standard_working_hours * self.day_span, 2)
