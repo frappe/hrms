@@ -125,6 +125,50 @@ class TestSalaryStructureAssignment(HRMSTestSuite):
 		components = {r.salary_component: r.default_amount for r in ssa.get_evaluated_components().earnings}
 		self.assertEqual(components["SSA Test Period Bonus"], expected)
 
+	def test_get_evaluated_components_resolves_uncovered_slip_fields(self):
+		emp = make_employee("ssa_uncovered_field@test.com", company="_Test Company")
+
+		condition = "gross_year_to_date < 74600"
+		formula = "base + gross_year_to_date + month_to_date + year_to_date + unmarked_days"
+		_make_component(
+			"SSA Test Basic YTD", "SSATBYTD", "Earning", amount_based_on_formula=1, formula="base"
+		)
+		_make_component(
+			"SSA Test YTD Guard", "SSATYG", "Deduction", amount_based_on_formula=1, formula=formula
+		)
+
+		earnings = [
+			{
+				"salary_component": "SSA Test Basic YTD",
+				"abbr": "SSATBYTD",
+				"amount_based_on_formula": 1,
+				"formula": "base",
+			},
+		]
+		deductions = [
+			{
+				"salary_component": "SSA Test YTD Guard",
+				"abbr": "SSATYG",
+				"amount_based_on_formula": 1,
+				"formula": formula,
+				"condition": condition,
+			},
+		]
+
+		make_salary_structure(
+			"SSA Test Uncovered Field Structure",
+			"Monthly",
+			employee=emp,
+			company="_Test Company",
+			base=50000,
+			earnings=earnings,
+			deductions=deductions,
+		)
+		ssa = frappe.get_last_doc("Salary Structure Assignment", filters={"employee": emp})
+
+		components = {r.salary_component: r.default_amount for r in ssa.get_evaluated_components().deductions}
+		self.assertEqual(components["SSA Test YTD Guard"], 50000)
+
 	def test_do_not_include_in_total_earning_is_in_ctc_but_not_gross(self):
 		"""A 'Do Not Include in Total' earning is part of CTC but not payable - it
 		must be excluded from annual_gross_earning yet included in ctc."""
