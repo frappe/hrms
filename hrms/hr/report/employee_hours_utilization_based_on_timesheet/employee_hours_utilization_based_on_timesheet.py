@@ -167,13 +167,9 @@ class EmployeeHoursReport:
 
 	def set_employee_department_and_name(self):
 		for emp, stats in self.stats_by_employee.items():
-			details = (
-				frappe.get_value("Employee", emp, ["employee_name", "department"], as_dict=True)
-				or frappe._dict()
+			stats["employee_name"], stats["department"] = frappe.get_value(
+				"Employee", emp, ["employee_name", "department"]
 			)
-
-			stats["employee_name"] = details.get("employee_name")
-			stats["department"] = details.get("department")
 
 	def calculate_utilizations(self):
 		TOTAL_HOURS = flt(self.standard_working_hours * self.day_span, 2)
