@@ -61,6 +61,31 @@ def get_component_abbr_map() -> dict:
 	return frappe.cache().get_value("salary_component_values", generator=_fetch_component_values)
 
 
+SALARY_SLIP_EVAL_DEFAULTS = {
+	"gross_pay": 0,
+	"net_pay": 0,
+	"total_deduction": 0,
+	"rounded_total": 0,
+	"total_working_hours": 0,
+	"hour_rate": 0,
+	"year_to_date": 0,
+	"month_to_date": 0,
+	"gross_year_to_date": 0,
+	"ctc": 0,
+	"total_earnings": 0,
+	"income_from_other_sources": 0,
+	"non_taxable_earnings": 0,
+	"deductions_before_tax_calculation": 0,
+	"tax_exemption_declaration": 0,
+	"standard_tax_exemption_amount": 0,
+	"annual_taxable_amount": 0,
+	"income_tax_deducted_till_date": 0,
+	"future_income_tax_deductions": 0,
+	"current_month_income_tax": 0,
+	"total_income_tax": 0,
+}
+
+
 def get_component_eval_context(employee: str, ssa_as_dict: dict) -> frappe._dict:
 	"""Build the base evaluation context for salary component formulas.
 
@@ -70,6 +95,7 @@ def get_component_eval_context(employee: str, ssa_as_dict: dict) -> frappe._dict
 	"""
 	data = frappe._dict()
 	data.update(get_component_abbr_map())
+	data.update(SALARY_SLIP_EVAL_DEFAULTS)
 	data.update(ssa_as_dict)
 	data.update(frappe.get_cached_doc("Employee", employee).as_dict())
 	return data
