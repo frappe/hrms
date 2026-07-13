@@ -561,14 +561,14 @@ class TestLeaveApplication(FrappeTestCase):
 		)
 
 		# full day leave on today (half_day_date stays NULL)
-		application = self.get_application(self.leave_application)
+		application = self.get_application(_test_records[0])
 		application.from_date = application.to_date = nowdate()
 		application.insert()
 
 		# half day leave on the same day must overlap regardless of the date:
 		# a NULL half_day_date on the existing full day leave coerces to today via
 		# getdate(None), so the date must not be the only thing distinguishing them
-		application = self.get_application(self.leave_application)
+		application = self.get_application(_test_records[0])
 		application.from_date = application.to_date = nowdate()
 		application.half_day = 1
 		application.half_day_date = nowdate()
