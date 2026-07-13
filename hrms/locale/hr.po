@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2026-07-05 10:16+0000\n"
-"PO-Revision-Date: 2026-07-09 10:41\n"
+"PO-Revision-Date: 2026-07-10 10:53\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Croatian\n"
 "MIME-Version: 1.0\n"
@@ -47,7 +47,7 @@ msgstr "'employee_field_value' i 'timestamp' su obavezni."
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:188
 msgid "'employee_fieldname' must be one of {0}."
-msgstr ""
+msgstr "Osoblje mora biti jedno od {0}."
 
 #: hrms/hr/utils.py:254
 #: hrms/payroll/doctype/payroll_period/payroll_period.py:69
@@ -810,7 +810,7 @@ msgstr "Iznos na osnovu Formule"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:304
 msgid "Amount Exceeds Available Balance"
-msgstr ""
+msgstr "Iznos Premašuje Raspoloživi Saldo"
 
 #. Label of the amount_based_on_formula (Check) field in DocType 'Salary
 #. Component'
@@ -1827,11 +1827,11 @@ msgstr "Otkazivanje u redu za čekanje"
 
 #: hrms/hr/doctype/vehicle_log/vehicle_log.js:81
 msgid "Cancelling Vehicle Log {0} will delete draft Expense Claim {1} because it only contains Vehicle Expenses.<br><br>Do you want to continue?"
-msgstr ""
+msgstr "Otkazivanje Zapisa Vozila {0} će izbrisati nacrt zahtjeva za naknadu troškova {1} jer sadrži samo troškove vozila.<br><br>Želite li nastaviti?"
 
 #: hrms/hr/doctype/vehicle_log/vehicle_log.js:87
 msgid "Cancelling Vehicle Log {0} will update draft Expense Claim {1}.<br><br>Vehicle Expenses rows will be removed. Other expenses will remain.<br><br>Do you want to continue?"
-msgstr ""
+msgstr "Otkazivanje Zapisa Vozila {0} će ažurirati nacrt zahtjeva za naknadu troškova {1}.<br><br>Troškovi vozila će biti uklonjeni. Ostali troškovi će ostati.<br><br>Želite li nastaviti?"
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:81
 msgid "Cannot Modify Time"
@@ -2919,11 +2919,11 @@ msgstr "Sažetak Predujma"
 
 #: hrms/hr/doctype/employee_advance/employee_advance.js:209
 msgid "Employee Advance return is scheduled via Additional Salary: {0} | <a href='{1}'> {2} </a>"
-msgstr ""
+msgstr "Povrat predujma zakazuje se putem Dodatne Plaće: {0} | <a href='{1}'> {2} </a>"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:288
 msgid "Employee Advance {0} has {1} available for return. {2} has already been scheduled for deduction in {3}."
-msgstr ""
+msgstr "Predujam {0} ima {1} dostupno za povrat. {2} je već zakazan za odbitak u {3}."
 
 #. Name of a report
 #. Label of a Link in the HR Setup Workspace
@@ -4898,7 +4898,7 @@ msgstr "Zapošljavanje"
 #. Label of a Workspace Sidebar Item
 #: hrms/workspace_sidebar/recruitment.json
 msgid "Hiring Pipeline"
-msgstr ""
+msgstr "Proces Zapošljavanja"
 
 #. Label of the hiring_settings_section (Section Break) field in DocType 'HR
 #. Settings'
@@ -10383,7 +10383,7 @@ msgstr "Hvala na prijavi."
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:297
 msgid "The amount exceeds the available balance for Employee Advance {0}. Available amount for return: {1}."
-msgstr ""
+msgstr "Iznos premašuje raspoloživi saldo za predujam {0}. Dostupan iznos za povrat je: {1}."
 
 #: hrms/overrides/company.py:131
 msgid "The currency of {0} should be same as the company's default currency. Please select another account."
