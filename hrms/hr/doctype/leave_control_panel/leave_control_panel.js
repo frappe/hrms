@@ -108,13 +108,8 @@ frappe.ui.form.on("Leave Control Panel", {
 				allocate_based_on_leave_policy: 1,
 				leave_type: null,
 				no_of_days: 0,
-<<<<<<< HEAD
-				leave_policy: null,
-				company: frappe.defaults.get_default("company"),
-=======
 				leave_policy: leave_policy || null,
 				company: frm.doc.company,
->>>>>>> d02832203 (fix: pre-fill leave policy in bulk assignment)
 			});
 		});
 	},
