@@ -186,17 +186,19 @@ class LeaveAllocation(Document):
 			)
 
 	def validate_allocation_overlap(self):
-		leave_allocation = frappe.db.sql(
-			"""
-			SELECT
-				name
-			FROM `tabLeave Allocation`
-			WHERE
-				employee=%s AND leave_type=%s
-				AND name <> %s AND docstatus=1
-				AND to_date >= %s AND from_date <= %s""",
-			(self.employee, self.leave_type, self.name, self.from_date, self.to_date),
-		)
+		LeaveAllocation = frappe.qb.DocType("Leave Allocation")
+		leave_allocation = (
+			frappe.qb.from_(LeaveAllocation)
+			.select(LeaveAllocation.name)
+			.where(
+				(LeaveAllocation.employee == self.employee)
+				& (LeaveAllocation.leave_type == self.leave_type)
+				& (LeaveAllocation.name != self.name)
+				& (LeaveAllocation.docstatus == 1)
+				& (LeaveAllocation.to_date >= self.from_date)
+				& (LeaveAllocation.from_date <= self.to_date)
+			)
+		).run()
 
 		if leave_allocation:
 			frappe.msgprint(
