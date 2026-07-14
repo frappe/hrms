@@ -64,6 +64,9 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		if flt(self.grand_total) > 0 and self.total_advance_amount:
 			self.is_paid = 0
 
+		if not self.payable_account and not self.is_paid:
+			frappe.throw(_("Payable Account is mandatory to submit an Expense Claim"))
+
 	def set_status(self, update=False):
 		status = {"0": "Draft", "1": "Submitted", "2": "Cancelled"}[cstr(self.docstatus or 0)]
 
@@ -127,9 +130,6 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		self.publish_update()
 
 	def before_submit(self):
-		if not self.payable_account and not self.is_paid:
-			frappe.throw(_("Payable Account is mandatory to submit an Expense Claim"))
-
 		self.validate_for_self_approval()
 
 	def publish_update(self):
