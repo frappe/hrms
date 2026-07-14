@@ -240,9 +240,9 @@ def get_doc_condition(doctype):
 		or work_end_date between %(from_date)s and %(to_date)s \
 		or (work_from_date < %(from_date)s and work_end_date > %(to_date)s))"
 	elif doctype == "Leave Period":
-		return "and company = %(company)s and (from_date between %(from_date)s and %(to_date)s \
-			or to_date between %(from_date)s and %(to_date)s \
-			or (from_date < %(from_date)s and to_date > %(to_date)s))"
+		return "and company = %(company)s and (`from_date` between %(from_date)s and %(to_date)s \
+			or `to_date` between %(from_date)s and %(to_date)s \
+			or (`from_date` < %(from_date)s and `to_date` > %(to_date)s))"
 
 
 def throw_overlap_error(doc, exists_for, overlap_doc, from_date, to_date):
@@ -310,18 +310,20 @@ def get_total_exemption_amount(declarations):
 
 @frappe.whitelist()
 def get_leave_period(from_date: str | datetime.date, to_date: str | datetime.date, company: str):
-	leave_period = frappe.db.sql(
-		"""
-		select name, from_date, to_date
-		from `tabLeave Period`
-		where company=%(company)s and is_active=1
-			and (from_date between %(from_date)s and %(to_date)s
-				or to_date between %(from_date)s and %(to_date)s
-				or (from_date < %(from_date)s and to_date > %(to_date)s))
-	""",
-		{"from_date": from_date, "to_date": to_date, "company": company},
-		as_dict=1,
-	)
+	LeavePeriod = frappe.qb.DocType("Leave Period")
+	leave_period = (
+		frappe.qb.from_(LeavePeriod)
+		.select(LeavePeriod.name, LeavePeriod.from_date, LeavePeriod.to_date)
+		.where(
+			(LeavePeriod.company == company)
+			& (LeavePeriod.is_active == 1)
+			& (
+				LeavePeriod.from_date[from_date:to_date]
+				| LeavePeriod.to_date[from_date:to_date]
+				| ((LeavePeriod.from_date < from_date) & (LeavePeriod.to_date > to_date))
+			)
+		)
+	).run(as_dict=1)
 
 	if leave_period:
 		return leave_period
