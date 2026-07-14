@@ -16,7 +16,7 @@ add_to_apps_screen = [
 		"title": "Frappe HR",
 		"route": app_home,
 		"has_permission": "hrms.hr.utils.check_app_permission",
-  		"sequence_id": 2,
+		"sequence_id": 2,
 	}
 ]
 
