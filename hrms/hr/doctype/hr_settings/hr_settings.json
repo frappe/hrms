@@ -51,6 +51,8 @@
   "recruitment_tab",
   "hiring_settings_section",
   "check_vacancies",
+  "send_interview_confirmation",
+  "interview_confirmation_template",
   "send_interview_reminder",
   "interview_reminder_template",
   "remind_before",
@@ -179,6 +181,20 @@
   {
    "fieldname": "column_break_11",
    "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "send_interview_confirmation",
+   "fieldtype": "Check",
+   "label": "Send Interview Confirmation"
+  },
+  {
+   "depends_on": "send_interview_confirmation",
+   "fieldname": "interview_confirmation_template",
+   "fieldtype": "Link",
+   "label": "Interview Confirmation Template",
+   "mandatory_depends_on": "send_interview_confirmation",
+   "options": "Email Template"
   },
   {
    "default": "0",

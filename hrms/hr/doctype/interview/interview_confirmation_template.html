@@ -1,0 +1,40 @@
+<p>Your interview has been scheduled. Please find the details below.</p>
+
+<table class="table table-bordered small" style="max-width: 500px;">
+	<tr>
+		<td>{{ _("Candidate") }}</td>
+		<td><b>{{ applicant_name }}</b></td>
+	</tr>
+	{% if job_opening_title %}
+	<tr>
+		<td>{{ _("Job Opening") }}</td>
+		<td><b>{{ job_opening_title }}</b></td>
+	</tr>
+	{% endif %}
+	<tr>
+		<td>{{ _("Interview Type") }}</td>
+		<td><b>{{ interview_type }}</b></td>
+	</tr>
+	<tr>
+		<td>{{ _("Date") }}</td>
+		<td><b>{{ frappe.utils.formatdate(scheduled_on) }}</b></td>
+	</tr>
+	<tr>
+		<td>{{ _("Time") }}</td>
+		<td><b>{{ from_time }}{% if to_time %} – {{ to_time }}{% endif %}</b></td>
+	</tr>
+	{% if company %}
+	<tr>
+		<td>{{ _("Company") }}</td>
+		<td><b>{{ company }}</b></td>
+	</tr>
+	{% endif %}
+	{% if company_address %}
+	<tr>
+		<td>{{ _("Address") }}</td>
+		<td>{{ company_address }}</td>
+	</tr>
+	{% endif %}
+</table>
+
+<p>{{ _("Please reach out if you have any questions or need to make any changes.") }}</p>

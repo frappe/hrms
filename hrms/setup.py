@@ -453,6 +453,18 @@ def setup_notifications():
 
 	# Interview
 	response = frappe.read_file(
+		os.path.join(base_path, "interview/interview_confirmation_template.html")
+	)
+	records += [
+		{
+			"doctype": "Email Template",
+			"name": _("Interview Confirmation"),
+			"response": response,
+			"subject": _("Interview Scheduled: {{ interview_type }} on {{ frappe.utils.formatdate(scheduled_on) }}"),
+			"owner": frappe.session.user,
+		}
+	]
+	response = frappe.read_file(
 		os.path.join(base_path, "interview/interview_reminder_notification_template.html")
 	)
 	records += [
@@ -511,6 +523,9 @@ def update_hr_defaults():
 	hr_settings.emp_created_by = "Naming Series"
 	hr_settings.leave_approval_notification_template = _("Leave Approval Notification")
 	hr_settings.leave_status_notification_template = _("Leave Status Notification")
+
+	hr_settings.send_interview_confirmation = 1
+	hr_settings.interview_confirmation_template = _("Interview Confirmation")
 
 	hr_settings.send_interview_reminder = 1
 	hr_settings.interview_reminder_template = _("Interview Reminder")

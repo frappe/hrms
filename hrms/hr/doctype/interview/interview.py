@@ -43,6 +43,9 @@ class Interview(Document):
 		to_time: DF.Time
 	# end: auto-generated types
 
+	def after_insert(self):
+		send_interview_confirmation(self.name)
+
 	def validate(self):
 		self.validate_duplicate_interview()
 		self.validate_designation()
@@ -289,6 +292,63 @@ def send_interview_reminder():
 		)
 
 		doc.db_set("reminded", 1)
+
+
+def send_interview_confirmation(interview: str):
+	from frappe.contacts.doctype.address.address import get_company_address
+	from frappe.desk.doctype.notification_log.notification_log import make_notification_logs
+
+	confirmation_settings = frappe.db.get_value(
+		"HR Settings",
+		"HR Settings",
+		["send_interview_confirmation", "interview_confirmation_template", "hiring_sender_email"],
+		as_dict=True,
+	)
+
+	if not cint(confirmation_settings.send_interview_confirmation):
+		return
+
+	doc = frappe.get_doc("Interview", interview)
+	confirmation_template = frappe.get_doc(
+		"Email Template", confirmation_settings.interview_confirmation_template
+	)
+	company = frappe.db.get_default("company")
+
+	applicant_name = frappe.db.get_value("Job Applicant", doc.job_applicant, "applicant_name")
+	context = doc.as_dict()
+	context["applicant_name"] = applicant_name
+	context["job_opening_title"] = (
+		frappe.db.get_value("Job Opening", doc.job_opening, "job_title") if doc.job_opening else ""
+	)
+	context["company"] = company
+	context["company_address"] = get_company_address(company).get("company_address_display") or ""
+
+	message = frappe.render_template(confirmation_template.response_, context)
+	subject = frappe.render_template(confirmation_template.subject, context)
+	recipients = get_recipients(doc.name)
+
+	frappe.sendmail(
+		sender=confirmation_settings.hiring_sender_email,
+		recipients=recipients,
+		subject=subject,
+		message=message,
+		reference_doctype=doc.doctype,
+		reference_name=doc.name,
+	)
+
+	interviewers = [d.interviewer for d in doc.interview_details]
+	make_notification_logs(
+		frappe._dict(
+			type="Alert",
+			document_type="Interview",
+			document_name=doc.name,
+			subject=_("Interview with {0} scheduled on {1}").format(
+				applicant_name, frappe.utils.formatdate(doc.scheduled_on)
+			),
+			from_user=frappe.session.user,
+		),
+		interviewers,
+	)
 
 
 def send_daily_feedback_reminder():
