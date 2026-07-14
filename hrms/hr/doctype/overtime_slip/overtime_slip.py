@@ -472,7 +472,9 @@ def create_overtime_slips_for_employees(employees, args):
 	for emp in employees:
 		emp_args = args.copy()
 		relieving_date = frappe.db.get_value("Employee", emp, "relieving_date")
-		if relieving_date and getdate(relieving_date) < getdate(emp_args.get("end_date")):
+		relieving_date = getdate(relieving_date) if relieving_date else None
+		if relieving_date and relieving_date < getdate(emp_args.get("end_date")):
+			emp_args["start_date"] = getdate(emp_args.get("start_date"))
 			emp_args["end_date"] = relieving_date
 		emp_args.update({"doctype": "Overtime Slip", "employee": emp})
 		try:

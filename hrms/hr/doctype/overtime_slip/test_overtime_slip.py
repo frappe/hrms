@@ -137,6 +137,7 @@ class TestOvertimeSlip(HRMSTestSuite):
 
 	def test_overtime_slip_creation_via_payroll_entry_mid_month_leaver(self):
 		"""OT slip `end_date` must be capped at `relieving_date` so the resulting Additional Salary `payroll_date` falls within the employee's employment window."""
+		from hrms.hr.doctype.overtime_slip.overtime_slip import create_overtime_slips_for_employees
 		from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
 		from hrms.payroll.doctype.payroll_entry.test_payroll_entry import get_payroll_entry
 
@@ -210,6 +211,34 @@ class TestOvertimeSlip(HRMSTestSuite):
 			getdate(additional_salary),
 			getdate(relieving_date),
 			"Additional Salary payroll_date must equal relieving_date",
+		)
+
+		# creating slips from the client sends the payroll entry dates as strings,
+		# so the capped end_date must stay comparable with start_date in validate()
+		frappe.db.delete("Additional Salary", {"ref_docname": slip.name})
+		slip.cancel()
+		frappe.delete_doc("Overtime Slip", slip.name, force=True)
+
+		create_overtime_slips_for_employees(
+			[employee],
+			frappe._dict(
+				{
+					"posting_date": str(dates.end_date),
+					"start_date": str(dates.start_date),
+					"end_date": str(dates.end_date),
+					"company": "_Test Company",
+					"currency": company.default_currency,
+					"payroll_entry": payroll_entry.name,
+				}
+			),
+		)
+
+		slip_name = frappe.db.get_value("Overtime Slip", {"employee": employee}, "name")
+		self.assertTrue(slip_name, "Overtime Slip not created when dates are passed as strings")
+		self.assertEqual(
+			getdate(frappe.db.get_value("Overtime Slip", slip_name, "end_date")),
+			getdate(relieving_date),
+			"end_date must be capped at relieving_date when dates are passed as strings",
 		)
 
 
