@@ -43,14 +43,16 @@ class TestRoster(FrappeTestCase):
 		)
 
 		# Create a shift assignment with a date range, submit it, then cancel it
-		original = frappe.get_doc({
-			"doctype": "Shift Assignment",
-			"employee": employee.name,
-			"company": "_Test Company",
-			"shift_type": shift_type.name,
-			"start_date": "2026-07-01",
-			"end_date": "2026-07-10",
-		})
+		original = frappe.get_doc(
+			{
+				"doctype": "Shift Assignment",
+				"employee": employee.name,
+				"company": "_Test Company",
+				"shift_type": shift_type.name,
+				"start_date": "2026-07-01",
+				"end_date": "2026-07-10",
+			}
+		)
 		original.submit()
 		original.cancel()
 		original.reload()
