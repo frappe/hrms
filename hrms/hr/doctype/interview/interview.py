@@ -6,6 +6,7 @@ import datetime
 
 import frappe
 from frappe import _
+from frappe.desk.doctype.notification_log.notification_log import make_notification_logs
 from frappe.model.document import Document
 from frappe.query_builder.functions import Avg
 from frappe.utils import cint, cstr, get_datetime, get_link_to_form, getdate, nowtime
@@ -251,15 +252,16 @@ def send_interview_reminder():
 	reminder_settings = frappe.db.get_value(
 		"HR Settings",
 		"HR Settings",
-		["send_interview_reminder", "interview_reminder_template", "hiring_sender_email"],
+		["send_interview_reminder", "interview_reminder_template", "hiring_sender_email", "remind_before"],
 		as_dict=True,
 	)
 
 	if not cint(reminder_settings.send_interview_reminder):
 		return
 
-	remind_before = cstr(frappe.db.get_single_value("HR Settings", "remind_before")) or "01:00:00"
-	remind_before = datetime.datetime.strptime(remind_before, "%H:%M:%S")
+	remind_before = datetime.datetime.strptime(
+		cstr(reminder_settings.remind_before) or "01:00:00", "%H:%M:%S"
+	)
 	reminder_date_time = datetime.datetime.now() + datetime.timedelta(
 		hours=remind_before.hour, minutes=remind_before.minute, seconds=remind_before.second
 	)
@@ -275,11 +277,13 @@ def send_interview_reminder():
 	)
 
 	interview_template = frappe.get_doc("Email Template", reminder_settings.interview_reminder_template)
+	company = frappe.db.get_default("company")
 
 	for d in interviews:
 		doc = frappe.get_doc("Interview", d.name)
 		context = doc.as_dict()
-		message = frappe.render_template(interview_template.response, context)
+		context["company"] = company
+		message = frappe.render_template(interview_template.response_, context)
 		recipients = get_recipients(doc.name)
 
 		frappe.sendmail(
@@ -296,7 +300,6 @@ def send_interview_reminder():
 
 def send_interview_confirmation(interview: str):
 	from frappe.contacts.doctype.address.address import get_company_address
-	from frappe.desk.doctype.notification_log.notification_log import make_notification_logs
 
 	confirmation_settings = frappe.db.get_value(
 		"HR Settings",
@@ -383,21 +386,37 @@ def send_daily_feedback_reminder():
 
 	for interview in interviews:
 		recipients = get_recipients(interview, for_feedback=1)
+		if not recipients:
+			continue
 
 		doc = frappe.get_doc("Interview", interview)
+		applicant_name = frappe.db.get_value("Job Applicant", doc.job_applicant, "applicant_name")
 		context = doc.as_dict()
+		context["applicant_name"] = applicant_name
 
-		message = frappe.render_template(interview_feedback_template.response, context)
+		message = frappe.render_template(interview_feedback_template.response_, context)
 
-		if len(recipients):
-			frappe.sendmail(
-				sender=reminder_settings.hiring_sender_email,
-				recipients=recipients,
-				subject=interview_feedback_template.subject,
-				message=message,
-				reference_doctype="Interview",
-				reference_name=interview,
-			)
+		frappe.sendmail(
+			sender=reminder_settings.hiring_sender_email,
+			recipients=recipients,
+			subject=interview_feedback_template.subject,
+			message=message,
+			reference_doctype="Interview",
+			reference_name=interview,
+		)
+
+		make_notification_logs(
+			frappe._dict(
+				type="Alert",
+				document_type="Interview",
+				document_name=interview,
+				subject=_("Please submit your feedback for {0}'s {1} interview").format(
+					applicant_name, doc.interview_type
+				),
+				from_user=frappe.session.user,
+			),
+			recipients,
+		)
 
 
 @frappe.whitelist()

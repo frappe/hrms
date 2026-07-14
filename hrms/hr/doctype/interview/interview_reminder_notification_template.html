@@ -1,5 +1,3 @@
-<h1>Interview Reminder</h1>
+<p>This is a reminder about your <b>{{ interview_type }}</b> interview scheduled on <b>{{ frappe.utils.formatdate(scheduled_on) }}</b> at <b>{{ from_time }}{% if to_time %} to {{ to_time }}{% endif %}</b>{% if company %} at <b>{{ company }}</b>{% endif %}.</p>
 
-<p>
-	Interview: {{name}} is scheduled on {{scheduled_on}} from {{from_time}} to {{to_time}}
-</p>
+<p>{{ _("Please make sure you are prepared and reach out if anything comes up before then.") }}</p>
