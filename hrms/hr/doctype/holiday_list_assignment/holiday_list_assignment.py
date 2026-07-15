@@ -129,7 +129,7 @@ def get_employees_for_bulk_assignment(filters: dict | str) -> list:
 
 
 @frappe.whitelist()
-def bulk_assign_holiday_list(filters: dict | str, employees: list | str) -> None:
+def bulk_assign_holiday_list(filters: dict | str, employees: list | str) -> dict | None:
 	frappe.has_permission("Holiday List Assignment", "create", throw=True)
 
 	filters = parse_filters(filters)
@@ -162,7 +162,7 @@ def bulk_assign_holiday_list(filters: dict | str, employees: list | str) -> None
 	)
 
 
-def _bulk_assign_holiday_list(filters: dict, employees: list) -> None:
+def _bulk_assign_holiday_list(filters: dict, employees: list) -> dict:
 	filters = frappe._dict(filters)
 	success, failure = [], []
 	count = 0
@@ -203,3 +203,5 @@ def _bulk_assign_holiday_list(filters: dict, employees: list) -> None:
 		user=frappe.session.user,
 		after_commit=True,
 	)
+
+	return {"success": success, "failure": failure}
