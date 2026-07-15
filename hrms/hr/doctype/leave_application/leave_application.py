@@ -1260,23 +1260,33 @@ def get_leaves_for_period(
 
 def get_leave_entries(employee, leave_type, from_date, to_date):
 	"""Returns leave entries between from_date and to_date."""
-	return frappe.db.sql(
-		"""
-		SELECT
-			employee, leave_type, from_date, to_date, leaves, transaction_name, transaction_type, holiday_list,
-			is_carry_forward, is_expired
-		FROM `tabLeave Ledger Entry`
-		WHERE employee=%(employee)s AND leave_type=%(leave_type)s
-			AND docstatus=1
-			AND (leaves<0
-				OR is_expired=1)
-			AND (from_date between %(from_date)s AND %(to_date)s
-				OR to_date between %(from_date)s AND %(to_date)s
-				OR (from_date < %(from_date)s AND to_date > %(to_date)s))
-	""",
-		{"from_date": from_date, "to_date": to_date, "employee": employee, "leave_type": leave_type},
-		as_dict=1,
-	)
+	Ledger = frappe.qb.DocType("Leave Ledger Entry")
+	return (
+		frappe.qb.from_(Ledger)
+		.select(
+			Ledger.employee,
+			Ledger.leave_type,
+			Ledger.from_date,
+			Ledger.to_date,
+			Ledger.leaves,
+			Ledger.transaction_name,
+			Ledger.transaction_type,
+			Ledger.holiday_list,
+			Ledger.is_carry_forward,
+			Ledger.is_expired,
+		)
+		.where(
+			(Ledger.employee == employee)
+			& (Ledger.leave_type == leave_type)
+			& (Ledger.docstatus == 1)
+			& ((Ledger.leaves < 0) | (Ledger.is_expired == 1))
+			& (
+				Ledger.from_date[from_date:to_date]
+				| Ledger.to_date[from_date:to_date]
+				| ((Ledger.from_date < from_date) & (Ledger.to_date > to_date))
+			)
+		)
+	).run(as_dict=1)
 
 
 @frappe.whitelist()
