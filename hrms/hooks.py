@@ -209,12 +209,30 @@ doc_events = {
 			"hrms.overrides.employee_master.update_approver_role",
 			"hrms.overrides.employee_master.publish_update",
 		],
-		"after_insert": "hrms.overrides.employee_master.update_job_applicant_and_offer",
+		"after_insert": [
+			"hrms.overrides.employee_master.update_job_applicant_and_offer",
+			"hrms.telemetry.on_milestone_insert",
+		],
 		"on_trash": "hrms.overrides.employee_master.update_employee_transfer",
 		"after_delete": "hrms.overrides.employee_master.publish_update",
 	},
 	"Project": {"validate": "hrms.controllers.employee_boarding_controller.update_employee_boarding_status"},
 	"Task": {"on_update": "hrms.controllers.employee_boarding_controller.update_task"},
+	# ---- Usage telemetry: recurring feature usage (see hrms/telemetry.py) ----
+	"Leave Application": {"on_submit": "hrms.telemetry.on_leave_application_submit"},
+	"Expense Claim": {"on_submit": "hrms.telemetry.on_expense_claim_submit"},
+	"Attendance Request": {"on_submit": "hrms.telemetry.on_attendance_request_submit"},
+	"Shift Request": {"on_submit": "hrms.telemetry.on_shift_request_submit"},
+	"Employee Checkin": {"after_insert": "hrms.telemetry.on_employee_checkin"},
+	# ---- Activation telemetry: post-install setup funnel (first-time milestones) ----
+	"Shift Type": {"after_insert": "hrms.telemetry.on_milestone_insert"},
+	"Leave Type": {"after_insert": "hrms.telemetry.on_milestone_insert"},
+	"Salary Structure": {"after_insert": "hrms.telemetry.on_milestone_insert"},
+	"Job Opening": {"after_insert": "hrms.telemetry.on_milestone_insert"},
+	"Appraisal Cycle": {"after_insert": "hrms.telemetry.on_milestone_insert"},
+	"Employee Onboarding": {"after_insert": "hrms.telemetry.on_milestone_insert"},
+	"Salary Slip": {"on_submit": "hrms.telemetry.on_milestone_submit"},
+	"Payroll Entry": {"on_submit": "hrms.telemetry.on_milestone_submit"},
 }
 
 # Scheduled Tasks
@@ -239,6 +257,7 @@ scheduler_events = {
 		"hrms.hr.doctype.interview.interview.send_daily_feedback_reminder",
 		"hrms.hr.doctype.shift_assignment.shift_assignment.mark_expired_shift_assignments_as_inactive",
 		"hrms.hr.doctype.job_opening.job_opening.close_expired_job_openings",
+		"hrms.telemetry.capture_daily_attendance_pulse",
 	],
 	"daily_long": [
 		"hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry.process_expired_allocation",
