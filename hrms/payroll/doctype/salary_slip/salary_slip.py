@@ -2165,7 +2165,7 @@ class SalarySlip(TransactionBase):
 		return total
 
 	def email_salary_slip(self):
-		receiver = frappe.db.get_value("Employee", self.employee, "prefered_email", cache=True)
+		receiver = frappe.db.get_value("Employee", self.employee, "preferred_email", cache=True)
 		payroll_settings = frappe.get_single("Payroll Settings")
 
 		subject = f"Salary Slip - from {self.start_date} to {self.end_date}"

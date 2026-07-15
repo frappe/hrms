@@ -16,7 +16,7 @@
   "employee",
   "employee_name",
   "cell_number",
-  "prefered_email",
+  "preferred_email",
   "company",
   "column_break_7",
   "date_of_birth",
@@ -114,8 +114,8 @@
    "label": "Contact Number"
   },
   {
-   "fetch_from": "employee.prefered_email",
-   "fieldname": "prefered_email",
+   "fetch_from": "employee.preferred_email",
+   "fieldname": "preferred_email",
    "fieldtype": "Data",
    "label": "Contact Email"
   },
