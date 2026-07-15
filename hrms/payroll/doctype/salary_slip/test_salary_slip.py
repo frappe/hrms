@@ -1856,6 +1856,37 @@ class TestSalarySlip(FrappeTestCase):
 
 				self.assertEqual(earning.default_amount, 19000)
 
+	@change_settings("Payroll Settings", {"payroll_based_on": "Attendance"})
+	def test_default_amount_unaffected_by_leave_without_pay(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+			create_salary_structure_assignment,
+		)
+
+		emp = make_employee("test_default_amount_lwp@salary.com", company="_Test Company")
+		first_sunday = get_first_sunday()
+		mark_attendance(emp, add_days(first_sunday, 1), "Absent", ignore_validate=True)
+
+		# base = 50000
+		salary_structure = make_salary_structure_for_payment_days_based_component_dependency(
+			test_payment_days_in_formula=True
+		)
+		create_salary_structure_assignment(
+			emp, salary_structure.name, company="_Test Company", currency="INR"
+		)
+
+		ss = make_salary_slip_for_payment_days_dependency_test(
+			"test_default_amount_lwp@salary.com", salary_structure.name
+		)
+		self.assertLess(ss.payment_days, ss.total_working_days)
+
+		other_allowance = next(
+			e for e in ss.earnings if e.salary_component == "Other Allowance - Payment Days"
+		)
+
+		# default_amount = base - P_HRA = 50000 - (50000 * 0.20) = 40000, unaffected by lwp
+		self.assertEqual(other_allowance.default_amount, 40000)
+		self.assertLess(other_allowance.amount, other_allowance.default_amount)
+
 	def test_variable_tax_component(self):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
@@ -2740,7 +2771,9 @@ def make_holiday_list(
 	return holiday_list
 
 
-def make_salary_structure_for_payment_days_based_component_dependency(test_statistical_comp=False):
+def make_salary_structure_for_payment_days_based_component_dependency(
+	test_statistical_comp=False, test_payment_days_in_formula=False
+):
 	earnings = [
 		{
 			"salary_component": "Basic Salary - Payment Days",
@@ -2778,6 +2811,17 @@ def make_salary_structure_for_payment_days_based_component_dependency(test_stati
 					"depends_on_payment_days": 0,
 				},
 			]
+		)
+	if test_payment_days_in_formula:
+		earnings.append(
+			{
+				"salary_component": "Other Allowance - Payment Days",
+				"abbr": "P_OA",
+				"type": "Earning",
+				"amount_based_on_formula": 1,
+				"depends_on_payment_days": 0,
+				"formula": "(base/total_working_days*payment_days) - P_HRA",
+			}
 		)
 
 	make_salary_component(earnings, False, company_list=["_Test Company"])

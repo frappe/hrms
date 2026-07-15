@@ -1230,6 +1230,11 @@ class SalarySlip(TransactionBase):
 
 		# shallow copy of data to store default amounts (without payment days) for tax calculation
 		default_data = data.copy()
+		# reset to a full, un-prorated cycle so formulas like base/total_working_days*payment_days
+		# resolve consistently with the un-prorated component defaults set below
+		default_data.payment_days = default_data.total_working_days
+		default_data.leave_without_pay = 0
+		default_data.absent_days = 0
 
 		for key in ("earnings", "deductions"):
 			for d in self.get(key):
