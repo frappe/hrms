@@ -95,6 +95,9 @@ frappe.ui.form.on("Leave Control Panel", {
 	},
 
 	set_leave_details(frm) {
+		// the policy may be pre-filled by the caller (eg. Leave Policy > Create > Bulk Assignment)
+		const leave_policy = frm.doc.leave_policy;
+
 		frm.call("get_latest_leave_period").then((r) => {
 			frm.set_value({
 				dates_based_on: "Leave Period",
@@ -105,8 +108,8 @@ frappe.ui.form.on("Leave Control Panel", {
 				allocate_based_on_leave_policy: 1,
 				leave_type: null,
 				no_of_days: 0,
-				leave_policy: null,
-				company: frappe.defaults.get_default("company"),
+				leave_policy: leave_policy || null,
+				company: frm.doc.company,
 			});
 		});
 	},
