@@ -6,6 +6,7 @@ import datetime
 
 import frappe
 from frappe import _
+from frappe.core.doctype.communication.email import make as make_communication
 from frappe.desk.doctype.notification_log.notification_log import make_notification_logs
 from frappe.model.document import Document
 from frappe.query_builder.functions import Avg
@@ -44,8 +45,14 @@ class Interview(Document):
 		to_time: DF.Time
 	# end: auto-generated types
 
-	def after_insert(self):
-		send_interview_confirmation(self.name)
+	def onload(self):
+		self.set_onload(
+			"confirmation_sent",
+			frappe.db.exists(
+				"Communication",
+				{"reference_doctype": "Interview", "reference_name": self.name, "sent_or_received": "Sent"},
+			),
+		)
 
 	def validate(self):
 		self.validate_duplicate_interview()
@@ -298,8 +305,11 @@ def send_interview_reminder():
 		doc.db_set("reminded", 1)
 
 
+@frappe.whitelist()
 def send_interview_confirmation(interview: str):
 	from frappe.contacts.doctype.address.address import get_company_address
+
+	frappe.has_permission("Interview", "write", interview, throw=True)
 
 	confirmation_settings = frappe.db.get_value(
 		"HR Settings",
@@ -309,7 +319,12 @@ def send_interview_confirmation(interview: str):
 	)
 
 	if not cint(confirmation_settings.send_interview_confirmation):
-		return
+		frappe.throw(
+			_("Please enable {0} in HR Settings.").format(frappe.bold(_("Send Interview Confirmation")))
+		)
+
+	if not confirmation_settings.hiring_sender_email:
+		frappe.throw(_("Please set a {0} in HR Settings.").format(frappe.bold(_("Hiring Sender Email"))))
 
 	doc = frappe.get_doc("Interview", interview)
 	confirmation_template = frappe.get_doc(
@@ -330,13 +345,14 @@ def send_interview_confirmation(interview: str):
 	subject = frappe.render_template(confirmation_template.subject, context)
 	recipients = get_recipients(doc.name)
 
-	frappe.sendmail(
+	make_communication(
+		doctype=doc.doctype,
+		name=doc.name,
+		content=message,
+		subject=subject,
 		sender=confirmation_settings.hiring_sender_email,
 		recipients=recipients,
-		subject=subject,
-		message=message,
-		reference_doctype=doc.doctype,
-		reference_name=doc.name,
+		send_email=True,
 	)
 
 	interviewers = [d.interviewer for d in doc.interview_details]

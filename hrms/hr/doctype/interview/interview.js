@@ -28,6 +28,33 @@ frappe.ui.form.on("Interview", {
 		if (frm.doc.docstatus === 2 || frm.doc.__islocal) return;
 
 		if (frm.doc.status === "Pending") {
+			const confirmation_sent = frm.doc.__onload?.confirmation_sent;
+			frm.add_custom_button(
+				confirmation_sent ? __("Resend Confirmation") : __("Send Confirmation"),
+				() => {
+					frappe.confirm(
+						__("Send interview confirmation email to the candidate and interviewers?"),
+						() => {
+							frappe.call({
+								method: "hrms.hr.doctype.interview.interview.send_interview_confirmation",
+								args: { interview: frm.doc.name },
+								callback(r) {
+									if (!r.exc) {
+										frm.reload_doc();
+										frappe.show_alert({
+											message: __(
+												"Interview confirmation sent successfully",
+											),
+											indicator: "green",
+										});
+									}
+								},
+							});
+						},
+					);
+				},
+				__("Actions"),
+			);
 			frm.add_custom_button(
 				__("Reschedule Interview"),
 				function () {
