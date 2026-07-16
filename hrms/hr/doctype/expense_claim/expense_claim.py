@@ -484,9 +484,21 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 					)
 				)
 
+		if self.grand_total and not self.payable_account:
+			frappe.throw(
+				_("{0} is mandatory to book this expense claim.").format(frappe.bold(_("Payable Account")))
+			)
+
 		if self.is_paid:
 			if not self.mode_of_payment:
 				frappe.throw(_("Mode of payment is required to make a payment").format(self.employee))
+
+			if self.grand_total and not get_bank_cash_account(self.mode_of_payment, self.company).get("account"):
+				frappe.throw(
+					_("{0} could not be determined for Mode of Payment {1}.").format(
+						frappe.bold(_("Bank/Cash Account")), frappe.bold(self.mode_of_payment)
+					)
+				)
 
 	def calculate_total_amount(self):
 		self.total_claimed_amount = 0
