@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-06-24 17:40+0000\n"
-"PO-Revision-Date: 2026-06-24 20:42\n"
+"POT-Creation-Date: 2026-07-05 10:16+0000\n"
+"PO-Revision-Date: 2026-07-09 10:41\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -44,6 +44,10 @@ msgstr "% Утилизация (В / Т)"
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:183
 msgid "'employee_field_value' and 'timestamp' are required."
 msgstr "Обязательны поля «employee_field_value» и «timestamp»."
+
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:188
+msgid "'employee_fieldname' must be one of {0}."
+msgstr ""
 
 #: hrms/hr/utils.py:254
 #: hrms/payroll/doctype/payroll_period/payroll_period.py:69
@@ -525,7 +529,7 @@ msgstr "Добавить неиспользованные дни отпуска 
 msgid "Add unused leaves from previous leave period's allocation to this allocation"
 msgstr "Добавьте неиспользованные отпуска из предыдущего отпускного периода к этому распределению"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1675
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1686
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
 msgstr "Добавлены налоговые компоненты из мастера «Компоненты зарплаты», поскольку структура зарплаты не имела налоговых компонентов."
 
@@ -566,15 +570,15 @@ msgstr "Дополнительная зарплата"
 msgid "Additional Salary "
 msgstr "Дополнительная зарплата "
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:179
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:180
 msgid "Additional Salary for referral bonus can only be created against Employee Referral with status {0}"
 msgstr "Дополнительная зарплата за реферальный бонус может быть создана только для «Реферальной программы сотрудников» со статусом {0}"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:214
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:215
 msgid "Additional Salary for this salary component with {0} enabled already exists for this date"
 msgstr "Дополнительная зарплата для этого компонента зарплаты с включенным {0} уже существует на эту дату"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:126
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:127
 msgid "Additional Salary: {0} already exist for Salary Component: {1} for period {2} and {3}"
 msgstr "Дополнительная зарплата: {0} уже существует для компонента зарплаты: {1} для периодов {2} и {3}"
 
@@ -804,6 +808,10 @@ msgstr "Чередование отметок как «Вход» и «Выхо�
 msgid "Amount Based on Formula"
 msgstr "Сумма на основе формулы"
 
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:304
+msgid "Amount Exceeds Available Balance"
+msgstr ""
+
 #. Label of the amount_based_on_formula (Check) field in DocType 'Salary
 #. Component'
 #. Label of the amount_based_on_formula (Check) field in DocType 'Salary
@@ -838,7 +846,7 @@ msgstr "Сумма, выплаченная по данному обналичи�
 msgid "Amount scheduled for deduction via salary"
 msgstr "Сумма, запланированная к удержанию из зарплаты"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:66
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:64
 msgid "Amount should not be less than zero"
 msgstr "Сумма не должна быть меньше нуля"
 
@@ -1099,7 +1107,7 @@ msgstr "Шаблон оценки"
 msgid "Appraisal Template Goal"
 msgstr "Цель по шаблону оценки"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:167
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:168
 msgid "Appraisal Template Missing"
 msgstr "Отсутствует шаблон оценки"
 
@@ -1108,11 +1116,11 @@ msgstr "Отсутствует шаблон оценки"
 msgid "Appraisal Template Title"
 msgstr "Название шаблона оценки"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:160
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:161
 msgid "Appraisal Template not found for some designations."
 msgstr "Для некоторых обозначений шаблон оценки не найден."
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:150
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:151
 msgid "Appraisal creation is queued. It may take a few minutes."
 msgstr "Создание оценки поставлено в очередь. Это может занять несколько минут."
 
@@ -1436,7 +1444,7 @@ msgstr "Посещаемость сотрудника {0} уже отмечен�
 msgid "Attendance for employee {0} is already marked for the date {1}: {2}"
 msgstr "Явка сотрудника {0} уже отмечена на дату {1}: {2}"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:634
+#: hrms/hr/doctype/leave_application/leave_application.py:635
 msgid "Attendance for employee {0} is already marked for the following dates: {1}"
 msgstr "Посещаемость для сотрудника {0} уже отмечена на следующие даты: {1}"
 
@@ -1650,7 +1658,7 @@ msgstr "Сумма выгоды компонента {0} превышает {1}"
 msgid "Benefit amount of component {0} should be greater than 0"
 msgstr "Сумма выгоды компонента {0} должна быть больше 0"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:509
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:512
 msgid "Benefit amount {0} for Salary Component {1} should not be greater than maximum benefit amount {2} set in {3}"
 msgstr "Сумма пособия {0} для компонента заработной платы {1} не должна превышать максимальную сумму пособия {2}  установленную в {3}"
 
@@ -1817,6 +1825,14 @@ msgstr "Звонки"
 msgid "Cancellation Queued"
 msgstr "Отмена поставлена в очередь"
 
+#: hrms/hr/doctype/vehicle_log/vehicle_log.js:81
+msgid "Cancelling Vehicle Log {0} will delete draft Expense Claim {1} because it only contains Vehicle Expenses.<br><br>Do you want to continue?"
+msgstr ""
+
+#: hrms/hr/doctype/vehicle_log/vehicle_log.js:87
+msgid "Cancelling Vehicle Log {0} will update draft Expense Claim {1}.<br><br>Vehicle Expenses rows will be removed. Other expenses will remain.<br><br>Do you want to continue?"
+msgstr ""
+
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:81
 msgid "Cannot Modify Time"
 msgstr "Невозможно изменить время"
@@ -1833,11 +1849,11 @@ msgstr "Невозможно выделить больше отпусков из
 msgid "Cannot allocate more leaves due to maximum leaves allowed limit of {0} in {1} leave type."
 msgstr "Невозможно выделить больше листов из-за максимально допустимого количества листьев {0} в типе отпуска {1}."
 
-#: hrms/api/roster.py:187
+#: hrms/api/roster.py:188
 msgid "Cannot break shift after end date"
 msgstr "Невозможно прервать смену после даты окончания"
 
-#: hrms/api/roster.py:189
+#: hrms/api/roster.py:190
 msgid "Cannot break shift before start date"
 msgstr "Невозможно прервать смену до даты начала"
 
@@ -1849,23 +1865,23 @@ msgstr "Невозможно отменить назначение смены: {
 msgid "Cannot cancel Shift Assignment: {0} as it is linked to Employee Checkin: {1}"
 msgstr "Невозможно отменить назначение смены: {0}, так как оно связано с проверкой сотрудника: {1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:380
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:381
 msgid "Cannot create Salary Slip for Employee joining after Payroll Period"
 msgstr "Невозможно создать расчетный листок для сотрудника, пришедшего на работу после расчетного периода"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:383
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:384
 msgid "Cannot create Salary Slip for Employee who has left before Payroll Period"
 msgstr "Невозможно создать расчетный листок для сотрудника, который уволился до расчетного периода"
 
-#: hrms/hr/doctype/job_applicant/job_applicant.py:77
+#: hrms/hr/doctype/job_applicant/job_applicant.py:79
 msgid "Cannot create a Job Applicant against a closed Job Opening"
 msgstr "Невозможно создать соискателя на закрытую вакансию"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:226
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:227
 msgid "Cannot create or change transactions against an Appraisal Cycle with status {0}."
 msgstr "Невозможно создать или изменить транзакции по циклу оценки со статусом {0}."
 
-#: hrms/hr/doctype/leave_application/leave_application.py:651
+#: hrms/hr/doctype/leave_application/leave_application.py:652
 msgid "Cannot find active Leave Period"
 msgstr "Невозможно найти активный период отпуска"
 
@@ -1933,7 +1949,7 @@ msgstr "Изменение KRA в этой родительской цели п�
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
 msgstr "Проверьте <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> для более подробной информации"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1588
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1592
 msgid "Check Error Log {0} for more details."
 msgstr "Более подробную информацию смотрите в журнале ошибок {0}."
 
@@ -2169,7 +2185,7 @@ msgstr "Контактный номер"
 msgid "Copy of Invitation/Announcement"
 msgstr "Копия приглашения/объявления"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1653
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1657
 msgid "Could not submit some Salary Slips: {}"
 msgstr "Не удалось отправить некоторые расчетные листки: {}"
 
@@ -2218,8 +2234,8 @@ msgid "Create Appraisals"
 msgstr "Создать Оценки"
 
 #: hrms/hr/doctype/interview_type/interview_type.js:7
-#: hrms/hr/doctype/job_applicant/job_applicant.js:68
-#: hrms/hr/doctype/job_applicant/job_applicant.js:137
+#: hrms/hr/doctype/job_applicant/job_applicant.js:71
+#: hrms/hr/doctype/job_applicant/job_applicant.js:140
 msgid "Create Interview"
 msgstr "Создать интервью"
 
@@ -2227,7 +2243,7 @@ msgstr "Создать интервью"
 msgid "Create Job Applicant"
 msgstr "Создать кандидата на вакансию"
 
-#: hrms/hr/doctype/job_applicant/job_applicant.js:84
+#: hrms/hr/doctype/job_applicant/job_applicant.js:87
 msgid "Create Job Offer"
 msgstr ""
 
@@ -2271,7 +2287,7 @@ msgstr "Создать смены после"
 msgid "Create {0}"
 msgstr ""
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:217
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:218
 msgid "Creating Appraisals"
 msgstr "Создание оценки"
 
@@ -2279,7 +2295,7 @@ msgstr "Создание оценки"
 msgid "Creating Payment Entries......"
 msgstr "Создание платежных записей......"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1611
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1615
 msgid "Creating Salary Slips..."
 msgstr "Создание расчетных листков..."
 
@@ -2722,7 +2738,7 @@ msgstr "Обнаружено дубликат заявления"
 msgid "Duplicate Leave Adjustment"
 msgstr "Корректировка дубликата отпуска"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:221
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:222
 msgid "Duplicate Overwritten Salary"
 msgstr "Дублировать перезаписанную зарплату"
 
@@ -2814,7 +2830,7 @@ msgstr "Задолженность по доходам"
 msgid "Earning Component"
 msgstr "Компонент Начислений"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:175
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:176
 msgid "Earning Salary Component is required for Employee Referral Bonus."
 msgstr "Компонент заработной платы необходим для реферального бонуса сотрудника."
 
@@ -2900,6 +2916,14 @@ msgstr "Авансовый баланс сотрудника"
 #: hrms/hr/workspace/hr_setup/hr_setup.json
 msgid "Employee Advance Summary"
 msgstr "Итоги авансов сотрудника"
+
+#: hrms/hr/doctype/employee_advance/employee_advance.js:209
+msgid "Employee Advance return is scheduled via Additional Salary: {0} | <a href='{1}'> {2} </a>"
+msgstr ""
+
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:288
+msgid "Employee Advance {0} has {1} available for return. {2} has already been scheduled for deduction in {3}."
+msgstr ""
 
 #. Name of a report
 #. Label of a Link in the HR Setup Workspace
@@ -3254,7 +3278,7 @@ msgstr "Рекомендация сотрудника"
 msgid "Employee Referral {0} already exists for email: {1}"
 msgstr "Реферальная ссылка для сотрудника {0} уже существует для адреса электронной почты: {1}"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:171
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:172
 msgid "Employee Referral {0} is not applicable for referral bonus."
 msgstr "Бонус за рекомендацию сотрудника {0} не применяется."
 
@@ -3415,7 +3439,7 @@ msgstr "Записи сотрудников создаются с помощью
 msgid "Employee was marked Absent due to missing Employee Checkins."
 msgstr "Сотрудник был отмечен как отсутствующий из-за отсутствия отметок о входе."
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:274
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:280
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr "Сотрудник был отмечен как отсутствующий за неполное выполнение установленного рабочего времени."
 
@@ -3443,7 +3467,7 @@ msgstr "Сотрудник {0} уже подал заявку {1} на расч�
 msgid "Employee {0} has already applied for Shift {1}: {2} that overlaps within this period"
 msgstr "Сотрудник {0} уже подал заявку на смену {1}: {2}, которая пересекается с этим периодом"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:523
+#: hrms/hr/doctype/leave_application/leave_application.py:524
 msgid "Employee {0} has already applied for {1} between {2} and {3} : {4}"
 msgstr "Сотрудник {0} уже подал заявку на {1} в период с {2} по {3}: {4}"
 
@@ -3467,7 +3491,7 @@ msgstr "Сотрудник {0} не найден среди участников
 msgid "Employee {0} on Half day on {1}"
 msgstr "Сотрудник {0} на половине дня {1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:738
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:739
 msgid "Employee {0} relieved on {1} must be set as 'Left'"
 msgstr "Сотрудник {0}, освобожденный {1}, должен быть установлен как \"Уволен\""
 
@@ -3647,7 +3671,7 @@ msgstr "Дата окончания: {0}"
 msgid "End time cannot be before start time"
 msgstr "Время окончания не может быть раньше времени начала"
 
-#: hrms/hr/doctype/job_applicant/job_applicant.js:123
+#: hrms/hr/doctype/job_applicant/job_applicant.js:126
 msgid "Enter Interview Type"
 msgstr ""
 
@@ -3696,7 +3720,7 @@ msgstr "Ошибка удаления {0}"
 msgid "Error downloading PDF"
 msgstr "Ошибка загрузки PDF"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1397
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1408
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:401
 msgid "Error in formula or condition"
 msgstr "Ошибка в формуле или условия"
@@ -4023,11 +4047,11 @@ msgstr "Итоги заявки на возмещение расходов"
 msgid "Expense Claim Type"
 msgstr "Тип заявки на возмещение расходов"
 
-#: hrms/hr/doctype/vehicle_log/vehicle_log.py:74
+#: hrms/hr/doctype/vehicle_log/vehicle_log.py:90
 msgid "Expense Claim for Vehicle Log {0}"
 msgstr "Заявка на возмещение расходов для учета транспортных средств {0}"
 
-#: hrms/hr/doctype/vehicle_log/vehicle_log.py:62
+#: hrms/hr/doctype/vehicle_log/vehicle_log.py:78
 msgid "Expense Claim {0} already exists for the Vehicle Log"
 msgstr "Заявка на возмещение расходов {0} уже существует для учета транспортных средств"
 
@@ -4120,7 +4144,7 @@ msgstr "Не удалось создать/отправить {0} для сот�
 msgid "Failed to delete defaults for country {0}."
 msgstr "Не удалось удалить настройки по умолчанию для страны {0}."
 
-#: hrms/api/__init__.py:796
+#: hrms/api/__init__.py:802
 msgid "Failed to download PDF: {0}"
 msgstr "Не удалось загрузить PDF: {0}"
 
@@ -4144,7 +4168,7 @@ msgstr "Не удалось отправить некоторые задания
 msgid "Failed to update password"
 msgstr "Не удалось обновить пароль"
 
-#: hrms/hr/doctype/interview/interview.py:239
+#: hrms/hr/doctype/interview/interview.py:241
 msgid "Failed to update the Job Applicant status"
 msgstr "Не удалось обновить статус соискателя"
 
@@ -4258,7 +4282,7 @@ msgid "File Preview"
 msgstr "Предпросмотр файла"
 
 #: hrms/hr/doctype/leave_application/leave_application.js:99
-#: hrms/hr/doctype/leave_encashment/leave_encashment.js:50
+#: hrms/hr/doctype/leave_encashment/leave_encashment.js:60
 msgid "Fill the form and save it"
 msgstr "Заполните форму и сохраните ее"
 
@@ -4314,7 +4338,7 @@ msgstr "Первый день"
 msgid "First Name "
 msgstr "Имя "
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1571
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1575
 msgid "Fiscal Year {0} not found"
 msgstr "Финансовый год {0} не найден"
 
@@ -4454,7 +4478,7 @@ msgstr "Дата {0} не может быть раньше даты начала
 msgid "From Date {0} cannot be before employee's joining Date {1}"
 msgstr "Дата \"С\" {0} не может быть раньше даты присоединения сотрудника {1}"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:144
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:145
 msgid "From and to dates are madatory for recurring type additional salaries."
 msgstr ""
 
@@ -4462,7 +4486,7 @@ msgstr ""
 msgid "From date can not be less than employee's joining date"
 msgstr "Дата \"С\" не может быть раньше даты присоединения сотрудника"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:152
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:153
 msgid "From date can not be less than employee's joining date."
 msgstr "Дата \"С\" не может быть раньше даты присоединения сотрудника."
 
@@ -4715,7 +4739,7 @@ msgstr "Подробности жалобы"
 msgid "Grievance Type"
 msgstr "Тип жалобы"
 
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:637
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:646
 msgid "Gross Earnings"
 msgstr "Валовые доходы"
 
@@ -4806,7 +4830,7 @@ msgstr "Полдня"
 msgid "Half Day Date"
 msgstr "Полдня Дата"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:909
+#: hrms/hr/doctype/leave_application/leave_application.py:910
 msgid "Half Day Date cannot be a holiday"
 msgstr ""
 
@@ -4814,7 +4838,7 @@ msgstr ""
 msgid "Half Day Date is mandatory"
 msgstr "Дата половины дня обязательна"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:912
+#: hrms/hr/doctype/leave_application/leave_application.py:913
 msgid "Half Day Date should be between From Date and To Date"
 msgstr "Дата половины дня должна находиться между датами \"С\" и \"По\""
 
@@ -4870,6 +4894,11 @@ msgstr "Привет, {0}👋"
 #: hrms/hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:55
 msgid "Hiring Count"
 msgstr "Количество найма"
+
+#. Label of a Workspace Sidebar Item
+#: hrms/workspace_sidebar/recruitment.json
+msgid "Hiring Pipeline"
+msgstr ""
 
 #. Label of the hiring_settings_section (Section Break) field in DocType 'HR
 #. Settings'
@@ -5218,7 +5247,7 @@ msgstr "Удержания подоходного налога"
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:148
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:630
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:639
 #: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 #: hrms/workspace_sidebar/tax_&_benefits.json
@@ -5234,11 +5263,11 @@ msgstr "Прочие сборы налоговой категории"
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr "Налоговая категория обязательна, так как структура зарплаты {0} имеет налоговый компонент {1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1954
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1965
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr "Налоговая категория должна вступать в силу не позднее даты начала расчетного периода зарплаты: {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1942
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1953
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr "Налоговая категория не установлена в назначении структуры зарплаты: {0}"
 
@@ -5246,7 +5275,7 @@ msgstr "Налоговая категория не установлена в н�
 msgid "Income Tax Slab: "
 msgstr "Налоговая категория: "
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1950
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1961
 msgid "Income Tax Slab: {0} is disabled"
 msgstr "Налоговая категория: {0} отключена"
 
@@ -5352,7 +5381,7 @@ msgstr "Отзыв об интервью"
 msgid "Interview Feedback Reminder"
 msgstr "Напоминание об отзыве на интервью"
 
-#: hrms/hr/doctype/interview/interview.py:374
+#: hrms/hr/doctype/interview/interview.py:377
 msgid "Interview Feedback {0} submitted successfully"
 msgstr "Отзыв об интервью {0} успешно отправлен"
 
@@ -5392,7 +5421,7 @@ msgstr "Статус интервью"
 #. Label of the section_break_13 (Section Break) field in DocType 'Interview'
 #: hrms/hr/doctype/exit_interview/exit_interview.json
 #: hrms/hr/doctype/interview/interview.json
-#: hrms/hr/doctype/job_applicant/job_applicant.js:117
+#: hrms/hr/doctype/job_applicant/job_applicant.js:120
 msgid "Interview Summary"
 msgstr "Резюме интервью"
 
@@ -5415,7 +5444,7 @@ msgstr "Тип интервью"
 msgid "Interview Type Name"
 msgstr ""
 
-#: hrms/hr/doctype/job_applicant/job_applicant.py:96
+#: hrms/hr/doctype/job_applicant/job_applicant.py:126
 msgid "Interview Type {0} is only applicable for the Designation {1}"
 msgstr ""
 
@@ -5466,7 +5495,7 @@ msgstr "Интервью (на этой неделе)"
 msgid "Invalid Accrual Component"
 msgstr "Неверный компонент начисления"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:245
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:246
 msgid "Invalid Additional Salary"
 msgstr "Недопустимая дополнительная зарплата"
 
@@ -5474,7 +5503,7 @@ msgstr "Недопустимая дополнительная зарплата"
 msgid "Invalid Arrear Component"
 msgstr "Неверный компонент просроченной задолженности"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:525
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:528
 msgid "Invalid Benefit Amounts"
 msgstr "Недействительные суммы пособий"
 
@@ -5482,7 +5511,7 @@ msgstr "Недействительные суммы пособий"
 msgid "Invalid Dates"
 msgstr "Недопустимые даты"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2644
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2656
 msgid "Invalid LWP Days Reversed"
 msgstr "Недействительные дни LWP отменены"
 
@@ -5503,7 +5532,7 @@ msgstr "Недопустимое время смены"
 msgid "Invalid employee filter: {0}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:883
+#: hrms/hr/doctype/expense_claim/expense_claim.py:886
 msgid "Invalid parameters provided. Please pass the required arguments."
 msgstr "Предоставлены неверные параметры. Пожалуйста, передайте необходимые аргументы."
 
@@ -5732,7 +5761,7 @@ msgstr "Предложение работы: {0} уже отправлено к�
 msgid "Job Opening"
 msgstr "Вакансия"
 
-#: hrms/hr/doctype/job_requisition/job_requisition.py:68
+#: hrms/hr/doctype/job_requisition/job_requisition.py:69
 msgid "Job Opening Associated"
 msgstr "Связанная вакансия"
 
@@ -5769,7 +5798,7 @@ msgstr ""
 msgid "Job Requisition"
 msgstr "Заявка на работу"
 
-#: hrms/hr/doctype/job_requisition/job_requisition.py:65
+#: hrms/hr/doctype/job_requisition/job_requisition.py:66
 msgid "Job Requisition {0} has been associated with Job Opening {1}"
 msgstr "Заявка на работу {0} была связана с вакансией {1}"
 
@@ -5854,7 +5883,7 @@ msgstr "Ключевая область ответственности"
 msgid "Key Result Area"
 msgstr "Ключевая область результатов"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2641
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2653
 msgid "LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
 msgstr "Отмененные дни LWP ({0}) не соответствуют фактической сумме корректировок заработной платы ({1}) для сотрудника {2} с {3} по {4}"
 
@@ -5970,7 +5999,7 @@ msgstr "Распределения отпусков"
 msgid "Leave Application"
 msgstr "Заявка на отпуск"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:804
+#: hrms/hr/doctype/leave_application/leave_application.py:805
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
 msgstr "Период заявки на отпуск не может приходиться на два непоследовательных отпуска {0} и {1}."
 
@@ -6063,7 +6092,7 @@ msgstr "Даты списка заблокированных отпусков"
 msgid "Leave Block List Name"
 msgstr "Название списка заблокированных отпусков"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:1440
+#: hrms/hr/doctype/leave_application/leave_application.py:1443
 msgid "Leave Blocked"
 msgstr "Отпуск заблокирован"
 
@@ -6271,7 +6300,7 @@ msgstr "Тип отпуска {0} не подлежит денежной ком�
 msgid "Leave Without Pay"
 msgstr "Отпуск без сохранения заработной платы"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:603
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:604
 msgid "Leave Without Pay does not match with approved {} records"
 msgstr "Отпуск без сохранения заработной платы не соответствует утвержденным записям {}"
 
@@ -6304,7 +6333,7 @@ msgstr "Отпуск не может быть использован/отмен�
 msgid "Leave for optional holiday"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:550
+#: hrms/hr/doctype/leave_application/leave_application.py:551
 msgid "Leave of type {0} cannot be longer than {1}."
 msgstr "Отпуск типа {0} не может быть дольше {1}."
 
@@ -6669,7 +6698,7 @@ msgstr "Максимальное количество перенесенных �
 msgid "Maximum Consecutive Leaves Allowed"
 msgstr "Максимально допустимое количество последовательных отпусков"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:560
+#: hrms/hr/doctype/leave_application/leave_application.py:561
 msgid "Maximum Consecutive Leaves Exceeded"
 msgstr "Превышено максимальное количество последовательных отпусков"
 
@@ -6778,7 +6807,7 @@ msgstr "Отсутствует дата смены"
 msgid "Missing Salary Components"
 msgstr "Отсутствующие компоненты заработной платы"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1945
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1956
 msgid "Missing Tax Slab"
 msgstr "Отсутствует налоговая плита"
 
@@ -6820,7 +6849,7 @@ msgstr "Ежемесячный табель посещаемости"
 msgid "More than one selection for {0} not allowed"
 msgstr "Не допускается более одного выбора для {0}"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:348
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:384
 msgid "Multiple Additional Salaries with overwrite property exist for Salary Component {0} between {1} and {2}."
 msgstr "Для компонента зарплаты {0} между {1} ​​и {2} существует несколько дополнительных зарплат со свойством перезаписи."
 
@@ -6851,7 +6880,7 @@ msgid "My Requests"
 msgstr "Мои запросы"
 
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.py:123
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1383
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1394
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:387
 msgid "Name error"
 msgstr "Ошибка имени"
@@ -6880,7 +6909,7 @@ msgstr "Чистая заработная плата (валюта компан�
 msgid "Net Pay Info"
 msgstr "Информация о чистой оплате"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:283
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:284
 msgid "Net Pay cannot be less than 0"
 msgstr "Чистая заработная плата не может быть меньше 0"
 
@@ -6943,11 +6972,11 @@ msgstr "Не найден банковский/денежный счёт для 
 msgid "No Employee Found"
 msgstr "Сотрудник не найден"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:195
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:201
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "Для указанного значения поля «Сотрудник» не найдено. '{}': {}"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:136 hrms/hr/utils.py:956
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:137 hrms/hr/utils.py:956
 msgid "No Employees Selected"
 msgstr "Сотрудники не выбраны"
 
@@ -6979,7 +7008,7 @@ msgstr "Не найдено расчетных листков с {0} для со
 msgid "No Salary Structure Assignment found for employee {0} on date {1}"
 msgstr "Назначение структуры заработной платы для сотрудника {0} на дату {1}не найдено"
 
-#: hrms/payroll/doctype/salary_withholding/salary_withholding.py:147
+#: hrms/payroll/doctype/salary_withholding/salary_withholding.py:148
 msgid "No Salary Structure Assignment found for employee {0} on or before {1}"
 msgstr "Назначение структуры заработной платы для сотрудника {0} не найдено до {1}"
 
@@ -7007,11 +7036,11 @@ msgstr "Не найдено активного назначения структ
 msgid "No active employee found associated with the email ID {0}. Try logging in with your employee email ID or contact your HR manager for access."
 msgstr "Не найдено ни одного активного сотрудника, связанного с идентификатором электронной почты {0}. Попробуйте войти, используя идентификатор электронной почты сотрудника, или обратитесь к менеджеру по персоналу для получения доступа."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:516
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:517
 msgid "No active or default Salary Structure found for employee {0} for the given dates"
 msgstr "Для сотрудника {0} на указанные даты не найдено активной или стандартной структуры заработной платы"
 
-#: hrms/hr/doctype/vehicle_log/vehicle_log.py:69
+#: hrms/hr/doctype/vehicle_log/vehicle_log.py:85
 msgid "No additional expenses has been added"
 msgstr "Никаких дополнительных расходов не было добавлено"
 
@@ -7072,7 +7101,7 @@ msgstr "Сотрудники не найдены"
 msgid "No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>Payroll Payable Account: {2}"
 msgstr "Не найдено сотрудников по указанным критериям:<br>Компания: {0}<br> Валюта: {1}<br>Счет к выплате заработной платы: {2}"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:92
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:93
 msgid "No employees found for the selected criteria"
 msgstr "По выбранным критериям сотрудники не найдены"
 
@@ -7121,7 +7150,7 @@ msgstr "Количество должностей"
 msgid "No replies from"
 msgstr "Нет ответов от"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1639
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1643
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
 msgstr "Не найдено расчетного листа по зарплате для отправки по выбранным выше критериям ИЛИ расчетный лист уже отправлен"
 
@@ -7188,7 +7217,7 @@ msgstr "Примечание: смена не будет перезаписан�
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr "Примечание: общее количество выделенных отпусков {0} не должно быть меньше уже утвержденных отпусков {1} за этот период"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2254
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2265
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr "Примечание: Ваша зарплатная квитанция защищена паролем, пароль для разблокировки PDF-файла имеет формат {0}."
 
@@ -7345,7 +7374,7 @@ msgstr "Только заполненные документы могут быт
 msgid "Only Employee Grievance with status {0} or {1} can be submitted"
 msgstr "Можно подать только жалобу сотрудника со статусом {0} или {1}"
 
-#: hrms/hr/doctype/interview/interview.py:356
+#: hrms/hr/doctype/interview/interview.py:359
 msgid "Only Interviewer Are allowed to submit Interview Feedback"
 msgstr "Только интервьюеру разрешено оставлять отзыв об интервью"
 
@@ -7404,7 +7433,7 @@ msgstr ""
 msgid "Opening closed."
 msgstr "Открытие закрыто."
 
-#: hrms/hr/doctype/leave_application/leave_application.py:657
+#: hrms/hr/doctype/leave_application/leave_application.py:658
 msgid "Optional Holiday List not set for leave period {0}"
 msgstr "Дополнительный список праздников не установлен для периода отпуска {0}"
 
@@ -7538,11 +7567,11 @@ msgstr "Подана заявка на сверхурочную работу"
 msgid "Overtime Slip created for {0} employee(s)"
 msgstr "Создан талон сверхурочной работы для {0} сотрудников"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1296
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1298
 msgid "Overtime Slip creation is queued. It may take a few minutes"
 msgstr "Создание заявки на сверхурочную работу поставлено в очередь. Это может занять несколько минут"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1320
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1324
 msgid "Overtime Slip submission is queued. It may take a few minutes"
 msgstr "Подача заявления на сверхурочную работу поставлена в очередь. Это может занять несколько минут"
 
@@ -7586,12 +7615,12 @@ msgstr "Заработок за сверхурочную работу будет
 #. Label of the overwrite_salary_structure_amount (Check) field in DocType
 #. 'Additional Salary'
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:216
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:244
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:217
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:245
 msgid "Overwrite Salary Structure Amount"
 msgstr "Перезаписать сумму структуры заработной платы"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:100
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:101
 msgid "Overwrite Salary Structure Amount is disabled as the Salary Component: {0} not part of the Salary Structure: {1}"
 msgstr ""
 
@@ -7893,11 +7922,11 @@ msgstr "Отчеты по заработной плате"
 msgid "Payroll Settings"
 msgstr "Настройки Платежей"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:158
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:159
 msgid "Payroll date can not be greater than employee's relieving date."
 msgstr "Дата выплаты заработной платы не может быть позже даты увольнения сотрудника."
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:150
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:151
 msgid "Payroll date can not be less than employee's joining date."
 msgstr "Дата выплаты заработной платы не может быть раньше даты приема сотрудника на работу."
 
@@ -7905,7 +7934,7 @@ msgstr "Дата выплаты заработной платы не может 
 msgid "Payroll date cannot be in the past. This is to ensure that claims are made for the current or future payroll cycles."
 msgstr "Дата выплаты заработной платы не может быть в прошлом. Это необходимо для того, чтобы заявки можно было подавать как за текущий, так и за будущий период выплаты заработной платы."
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:146
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:147
 msgid "Payroll date is mandatory for non-recurring type additional salaries."
 msgstr ""
 
@@ -7975,7 +8004,7 @@ msgstr "Сначала включите функцию «Автопосещен�
 msgid "Please Select Company First"
 msgstr "Пожалуйста, сначала выберите компанию"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:907
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:908
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 msgstr "Пожалуйста, сначала назначьте структуру заработной платы для сотрудника {0}, применимую с или до {1}"
 
@@ -8019,11 +8048,11 @@ msgstr "Прежде чем получать данные о сверхуроч�
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr "Пожалуйста, уменьшите {0}, чтобы избежать наложения времени сдвига на себя."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2243
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2254
 msgid "Please see attachment"
 msgstr "Пожалуйста, смотрите приложение."
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:250
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:252
 msgid "Please select Company and Designation"
 msgstr "Выберите компанию и должность"
 
@@ -8102,7 +8131,7 @@ msgstr "Пожалуйста, выберите компанию."
 msgid "Please select employee first"
 msgstr "Пожалуйста, сначала выберите сотрудника"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:136
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:137
 msgid "Please select employees to create appraisals for"
 msgstr "Выберите сотрудников, для которых необходимо создать оценки"
 
@@ -8146,7 +8175,7 @@ msgstr "Установите компонент заработка для тип
 msgid "Please set Leave Approver for the Employee: {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:587
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:588
 msgid "Please set Payroll based on in Payroll settings"
 msgstr "Пожалуйста, установите расчет заработной платы на основе настроек расчета заработной платы"
 
@@ -8167,11 +8196,11 @@ msgstr "Пожалуйста, установите счет в компонен�
 msgid "Please set cost to company(CTC) for employee {0} in the {1}"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:712
+#: hrms/hr/doctype/leave_application/leave_application.py:713
 msgid "Please set default template for Leave Approval Notification in HR Settings."
 msgstr "Установите шаблон по умолчанию для уведомления об утверждении отпуска в настройках отдела кадров."
 
-#: hrms/hr/doctype/leave_application/leave_application.py:687
+#: hrms/hr/doctype/leave_application/leave_application.py:688
 msgid "Please set default template for Leave Status Notification in HR Settings."
 msgstr "Установите шаблон по умолчанию для уведомления о статусе отпуска в настройках отдела кадров."
 
@@ -8183,7 +8212,7 @@ msgstr ""
 msgid "Please set the Advance Account {0} or in {1}"
 msgstr ""
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:162
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:163
 msgid "Please set the Appraisal Template for all the {0} or select the template in the Employees table below."
 msgstr "Пожалуйста, установите Шаблон оценки для всех {0} или выберите шаблон в таблице «Сотрудники» ниже."
 
@@ -8191,7 +8220,7 @@ msgstr "Пожалуйста, установите Шаблон оценки д�
 msgid "Please set the Company"
 msgstr "Пожалуйста, укажите компанию"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:376
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:377
 msgid "Please set the Date Of Joining for employee {0}"
 msgstr "Пожалуйста, установите дату вступления в должность для сотрудника {0}"
 
@@ -8241,7 +8270,7 @@ msgstr "Пожалуйста, настройте серию нумерации �
 msgid "Please share your feedback to the training by clicking on 'Training Feedback' and then 'New'"
 msgstr "Пожалуйста, оставьте свой отзыв об обучении, нажав «Отзыв об обучении», а затем «Новый»."
 
-#: hrms/hr/doctype/interview/interview.py:225
+#: hrms/hr/doctype/interview/interview.py:227
 msgid "Please specify the job applicant to be updated."
 msgstr "Пожалуйста, укажите соискателя, данные о котором необходимо обновить."
 
@@ -8249,7 +8278,7 @@ msgstr "Пожалуйста, укажите соискателя, данные 
 msgid "Please specify {0} and {1} (if any), for the correct tax calculation in future salary slips."
 msgstr "Пожалуйста, укажите {0} и {1} (если есть) для правильного расчета налога в будущих зарплатных ведомостях."
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:182
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:183
 msgid "Please submit the {0} before marking the cycle as Completed"
 msgstr "Пожалуйста, отправьте {0} прежде чем отметить цикл как завершенный."
 
@@ -8543,7 +8572,7 @@ msgstr "Причина запроса"
 msgid "Reason for Withholding Salary"
 msgstr "Причина удержания зарплаты"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:470
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:476
 msgid "Reason for skipping auto attendance:"
 msgstr "Причина пропуска автопосещения:"
 
@@ -8611,8 +8640,8 @@ msgid "Reduction is more than {0}'s available leave balance {1} for leave type {
 msgstr "Сокращение составляет более чем {0}доступный остаток отпуска {1} для типа отпуска {2}"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:407
-#: hrms/hr/doctype/leave_application/leave_application.py:554
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:218
+#: hrms/hr/doctype/leave_application/leave_application.py:555
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:219
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:141
 msgid "Reference: {0}"
 msgstr "Ссылка: {0}"
@@ -8653,7 +8682,7 @@ msgid "Refuelling Details"
 msgstr "Подробности заправки"
 
 #: frontend/src/components/RequestActionSheet.vue:96
-#: hrms/hr/doctype/job_applicant/job_applicant.js:61
+#: hrms/hr/doctype/job_applicant/job_applicant.js:64
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:126
 msgid "Reject"
 msgstr "Отклонять"
@@ -8944,7 +8973,7 @@ msgstr "Строка #{0}: компонент {1} имеет включенны�
 msgid "Row #{0}: Timesheet amount will overwrite the Earning component amount for the Salary Component {1}"
 msgstr "Строка #{0}: Сумма табеля учета рабочего времени заменит сумму компонента заработка для компонента зарплаты {1}"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:851
+#: hrms/hr/doctype/expense_claim/expense_claim.py:854
 msgid "Row No {0}: Amount cannot be greater than the Outstanding Amount against Expense Claim {1}. Outstanding Amount is {2}"
 msgstr "Номер строки {0}: Сумма не может быть больше суммы задолженности по претензии на возмещение расходов {1}. Сумма задолженности составляет {2}"
 
@@ -9042,7 +9071,7 @@ msgstr "Тип компонента зарплаты"
 msgid "Salary Component for timesheet based payroll."
 msgstr "Компонент «зарплата» для расчета заработной платы на основе табеля учета рабочего времени."
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:498
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:501
 msgid "Salary Component {0} cannot be selected more than once in Employee Benefits"
 msgstr "Компонент зарплаты {0} не может быть выбран более одного раза в разделе «Льготы сотрудникам»"
 
@@ -9178,11 +9207,11 @@ msgstr "Создание зарплатной расписки поставле�
 msgid "Salary Slip not found."
 msgstr "Расчетный листок не найден."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:410
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:411
 msgid "Salary Slip of employee {0} already created for this period"
 msgstr "Расчетный листок сотрудника {0} уже создан за этот период"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:416
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:417
 msgid "Salary Slip of employee {0} already created for time sheet {1}"
 msgstr "Расчетный лист сотрудника {0} уже создан для табеля учета рабочего времени {1}"
 
@@ -9190,7 +9219,7 @@ msgstr "Расчетный лист сотрудника {0} уже создан
 msgid "Salary Slip submission is queued. It may take a few minutes"
 msgstr "Подача заявления о зарплате поставлена в очередь. Это может занять несколько минут"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1576
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1580
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr "Расчетный листок {0} не подошел для ввода заработной платы {1}"
 
@@ -9212,11 +9241,11 @@ msgstr "Созданы зарплатные листки"
 msgid "Salary Slips Submitted"
 msgstr "Представленные расчетные листы"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1618
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1622
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
 msgstr "Зарплатные листки уже существуют для сотрудников {} и не будут обработаны этой платежной ведомостью."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1645
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1649
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr "Расчетные листки, представленные за период с {0} по {1}"
 
@@ -9259,11 +9288,11 @@ msgstr "Поле назначения структуры заработной п
 msgid "Salary Structure Assignment for Employee already exists"
 msgstr "Назначение структуры заработной платы для сотрудника уже существует"
 
-#: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:247
+#: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:248
 msgid "Salary Structure Assignment not found for employee {0} on date {1}"
 msgstr "Назначение структуры заработной платы не найдено для сотрудника {0} на дату {1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:519
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:520
 msgid "Salary Structure Missing"
 msgstr "Структура заработной платы отсутствует"
 
@@ -9329,7 +9358,7 @@ msgstr "Компоненты заработной платы типа «Фонд
 msgid "Salary components should be part of the Salary Structure."
 msgstr "Компоненты заработной платы должны быть частью структуры заработной платы."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2664
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2679
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr "Письма с зарплатными расписками поставлены в очередь на отправку. Проверьте статус {0}."
 
@@ -9399,7 +9428,7 @@ msgstr "Выберите месяц для отмены LWP"
 msgid "Select Payment Account to make Bank Entry"
 msgstr "Выберите счет для совершения банковского перевода"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1789
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1793
 msgid "Select Payroll Frequency."
 msgstr "Выберите периодичность выплаты заработной платы."
 
@@ -9426,7 +9455,7 @@ msgstr "Выберите положения и условия"
 msgid "Select Users"
 msgstr "Выбрать пользователей"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:560
+#: hrms/hr/doctype/expense_claim/expense_claim.js:570
 msgid "Select an employee to get the employee advance."
 msgstr "Выберите сотрудника, чтобы получить аванс."
 
@@ -9484,7 +9513,7 @@ msgstr "Выберите тип отпуска, на который хочет �
 msgid "Select your Leave Approver i.e. the person who approves or rejects your leaves."
 msgstr "Выберите утверждающего отпуск, т.е. человека, который одобряет или отклоняет ваши отпуска."
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:595
+#: hrms/hr/doctype/expense_claim/expense_claim.js:605
 msgid "Selected employee advance is not of employee {0}"
 msgstr ""
 
@@ -9520,7 +9549,7 @@ msgstr "Самостоятельное обучение"
 msgid "Self-approval for Expense Claims is not allowed"
 msgstr "Самостоятельное одобрение заявок на возмещение расходов не допускается."
 
-#: hrms/hr/doctype/leave_application/leave_application.py:895
+#: hrms/hr/doctype/leave_application/leave_application.py:896
 msgid "Self-approval for leaves is not allowed"
 msgstr "Самостоятельное одобрение отпусков не допускается"
 
@@ -9657,7 +9686,7 @@ msgstr "Установите частоту напоминаний о празд
 msgid "Set the properties that should be updated in the Employee master on promotion submission"
 msgstr "Установите свойства, которые следует обновить в мастере сотрудников при подаче заявления на повышение"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:230
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:231
 msgid "Set the status to {0} if required."
 msgstr "При необходимости установите статус на {0}."
 
@@ -9917,7 +9946,7 @@ msgstr "Shift успешно обновлен до {0}."
 msgid "Shifts"
 msgstr "Смены"
 
-#: hrms/hr/doctype/job_applicant/job_applicant.js:56
+#: hrms/hr/doctype/job_applicant/job_applicant.js:59
 msgid "Shortlist"
 msgstr ""
 
@@ -10001,7 +10030,7 @@ msgstr "Пропустить автоматическое присутствие
 msgid "Skipping Salary Structure Assignment for the following employees, as Salary Structure Assignment records already exists against them. {0}"
 msgstr "Пропускаем назначение структуры заработной платы для следующих сотрудников, так как записи о назначении структуры заработной платы для них уже существуют. {0}"
 
-#: hrms/api/roster.py:137
+#: hrms/api/roster.py:138
 msgid "Source and target shifts cannot be the same"
 msgstr "Исходные и целевые сдвиги не могут быть одинаковыми"
 
@@ -10063,7 +10092,7 @@ msgstr "Стандартная сумма налогового вычета"
 msgid "Standard Working Hours"
 msgstr "Стандартные рабочие часы"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1879
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1890
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}."
 msgstr "Даты начала и окончания не попадают в допустимый расчетный период, невозможно рассчитать {0}."
 
@@ -10173,7 +10202,7 @@ msgstr "Подано через Payroll Entry"
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr "Отправка расчетных листков и создание журнальных записей..."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1700
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1704
 msgid "Submitting Salary Slips..."
 msgstr "Отправка расчетных листков..."
 
@@ -10207,7 +10236,7 @@ msgstr "Обобщенный вид"
 msgid "Sync {0}"
 msgstr "Синхронизация {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1390
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1401
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:394
 msgid "Syntax error"
 msgstr "Синтаксическая ошибка"
@@ -10352,6 +10381,10 @@ msgstr "Срок полномочий"
 msgid "Thank you for applying."
 msgstr "Спасибо за заявку."
 
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:297
+msgid "The amount exceeds the available balance for Employee Advance {0}. Available amount for return: {1}."
+msgstr ""
+
 #: hrms/overrides/company.py:131
 msgid "The currency of {0} should be same as the company's default currency. Please select another account."
 msgstr "Валюта {0} должна совпадать с валютой компании по умолчанию. Выберите другой счёт."
@@ -10426,7 +10459,7 @@ msgstr "Время до начала смены, в течение которо�
 msgid "Theory"
 msgstr "Теория"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:584
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:585
 msgid "There are more holidays than working days this month."
 msgstr "В этом месяце праздников больше, чем рабочих дней."
 
@@ -10442,13 +10475,13 @@ msgstr "Разницы в выплате задолженности по сущ�
 msgid "There are no vacancies under staffing plan {0}"
 msgstr "В штатном расписании вакансий нет {0}"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:82
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:83
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:39
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:458
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:459
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
 msgstr "Для {0} не назначена структура заработной платы. Сначала назначьте структуру заработной платы."
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:448
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:451
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
 msgstr "Нет сотрудника с указанием структуры зарплаты: {0}. Назначьте сотруднику {1}, чтобы просмотреть зарплатный листок"
 
@@ -10474,17 +10507,17 @@ msgstr "Этот компенсационный отпуск будет прим
 msgid "This employee already has a log with the same timestamp.{0}"
 msgstr "У этого сотрудника уже есть журнал с такой же временной меткой.{0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1398
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1409
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:402
 msgid "This error can be due to invalid formula or condition."
 msgstr "Эта ошибка может быть вызвана неверной формулой или условием."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1391
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1402
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:395
 msgid "This error can be due to invalid syntax."
 msgstr "Эта ошибка может быть вызвана неверным синтаксисом."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1384
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1395
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:388
 msgid "This error can be due to missing or deleted field."
 msgstr "Эта ошибка может быть вызвана отсутствием или удалением поля."
@@ -10501,7 +10534,7 @@ msgstr "Это поле позволяет вам установить макс�
 msgid "This is based on the attendance of this Employee"
 msgstr "Это основано на посещаемости данного сотрудника"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:231
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:232
 msgid "This will overwrite the tax component {0} in the salary slip and tax won't be calculated based on the Income Tax Slabs"
 msgstr "Это приведет к перезаписи налогового компонента {0} в расчетном листке, и налог не будет рассчитываться на основе налоговых ведомостей"
 
@@ -10568,7 +10601,7 @@ msgstr "Чтобы подать заявку на неполный рабочи�
 msgid "To date can not be equal or less than from date"
 msgstr "Дата \"до\" не может быть равна или меньше даты \"от\""
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:156
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:157
 msgid "To date can not be greater than employee's relieving date."
 msgstr "Дата не может быть позже даты увольнения сотрудника."
 
@@ -10585,7 +10618,7 @@ msgstr "Дата не может быть позже даты увольнени
 msgid "To date cannot be before from date"
 msgstr "До даты не может быть раньше с даты"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:242
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:243
 msgid "To overwrite the salary component amount for a tax component, please enable {0}"
 msgstr "Чтобы перезаписать сумму компонента зарплаты для налогового компонента, включите {0}"
 
@@ -10910,7 +10943,7 @@ msgstr "Общее количество выделенных отпусков н
 msgid "Total leaves allocated is mandatory for Leave Type {0}"
 msgstr "Общее количество выделенных отпусков является обязательным для типа отпуска {0}"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:522
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:525
 msgid "Total of all employee benefits cannot be greater that Max Benefits Amount {0}"
 msgstr "Общая сумма всех льгот для сотрудников не может превышать максимальную сумму льгот {0}"
 
@@ -10940,7 +10973,7 @@ msgstr "Суммарный вес всех {0} должен составлять
 msgid "Total working Days Per Year"
 msgstr "Всего рабочих дней в году"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:253
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:254
 msgid "Total working hours should not be greater than max working hours {0}"
 msgstr "Общее количество рабочих часов не должно превышать максимальное количество рабочих часов {0}"
 
@@ -11216,7 +11249,7 @@ msgstr "Неустроенный"
 msgid "Unsettled Transactions"
 msgstr "Неурегулированные транзакции"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:183
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:184
 msgid "Unsubmitted Appraisals"
 msgstr "Неотправленные оценки"
 
@@ -11281,7 +11314,7 @@ msgstr ""
 msgid "Updated status from {0} to {1} for date {2} in the attendance record {3}"
 msgstr "Обновлен статус с {0} на {1} для даты {2} в записи посещаемости {3}"
 
-#: hrms/hr/doctype/interview/interview.py:232
+#: hrms/hr/doctype/interview/interview.py:234
 msgid "Updated the Job Applicant status to {0}"
 msgstr "Статус соискателя вакансии обновлен до {0}"
 
@@ -11366,7 +11399,7 @@ msgstr "Значение отсутствует"
 #. 'Salary Component'
 #. Label of the variable_based_on_taxable_salary (Check) field in DocType
 #. 'Salary Detail'
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:240
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:241
 #: hrms/payroll/doctype/salary_component/salary_component.json
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 msgid "Variable Based On Taxable Salary"
@@ -11381,7 +11414,9 @@ msgstr "Вегетарианец"
 #. Name of a report
 #. Label of a Link in the Expenses Workspace
 #. Label of a Workspace Sidebar Item
-#: hrms/hr/doctype/vehicle_log/vehicle_log.py:77
+#: hrms/hr/doctype/vehicle_log/vehicle_log.py:55
+#: hrms/hr/doctype/vehicle_log/vehicle_log.py:93
+#: hrms/hr/doctype/vehicle_log/vehicle_log.py:135
 #: hrms/hr/report/vehicle_expenses/vehicle_expenses.json
 #: hrms/hr/workspace/expenses/expenses.json
 #: hrms/workspace_sidebar/expenses.json
@@ -11417,7 +11452,7 @@ msgstr "Элемент технического обслуживания тра�
 msgid "View Goals"
 msgstr "Просмотреть цели"
 
-#: hrms/hr/doctype/job_applicant/job_applicant.js:78
+#: hrms/hr/doctype/job_applicant/job_applicant.js:81
 msgid "View Job Offer"
 msgstr ""
 
@@ -11660,7 +11695,7 @@ msgstr "Вы можете запланировать не более {0} вак�
 msgid "You can only submit Leave Encashment for a valid encashment amount"
 msgstr "Вы можете подать заявку на получение Leave Encashment только на допустимую сумму инкассации"
 
-#: hrms/api/__init__.py:751
+#: hrms/api/__init__.py:752
 msgid "You can only upload JPG, PNG, PDF, TXT or Microsoft documents."
 msgstr "Вы можете загружать только документы в формате JPG, PNG, PDF, TXT или Microsoft."
 
@@ -11802,7 +11837,7 @@ msgstr "утвержден"
 msgid "the selected company"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_component/salary_component.py:187
+#: hrms/payroll/doctype/salary_component/salary_component.py:188
 msgid "via Salary Component sync"
 msgstr "через синхронизацию компонентов зарплаты"
 
@@ -11832,7 +11867,7 @@ msgstr "{0} : {1}"
 msgid "{0} <br> This error can be due to missing or deleted field."
 msgstr "{0} <br> Эта ошибка может быть вызвана отсутствием или удалением поля."
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:180
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:181
 msgid "{0} Appraisal(s) are not submitted yet"
 msgstr "{0} Оценка(и) еще не поданы"
 
@@ -11894,15 +11929,15 @@ msgstr "{0} успешно удален!"
 msgid "{0} failed!"
 msgstr "{0} не удалось!"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:238
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:239
 msgid "{0} has {1} enabled"
 msgstr "{0} имеет включенный {1}"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:250
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:251
 msgid "{0} is an Accrual Component and this will be recorded as a payout in Employee Benefits Ledger"
 msgstr "{0} — это компонент начисления, который будет зафиксирован как выплата в книге учета льгот сотрудников"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:254
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:260
 msgid "{0} is an invalid Attendance Status."
 msgstr "{0} — недействительный статус посещения."
 
@@ -11914,7 +11949,7 @@ msgstr "{0} не является праздником."
 msgid "{0} is not allowed to submit Interview Feedback for the Interview: {1}"
 msgstr "{0} не разрешено отправлять отзыв об интервью для интервью: {1}"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:665
+#: hrms/hr/doctype/leave_application/leave_application.py:666
 msgid "{0} is not in Optional Holiday List"
 msgstr "{0} не в списке дополнительных праздников"
 
@@ -11971,7 +12006,7 @@ msgstr "{0} {1} {2}?"
 msgid "{0}. Check error log for more details."
 msgstr "{0}. Проверьте журнал ошибок для получения более подробной информации."
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2277
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2288
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr "{0}: Email сотрудника не найден, поэтому письмо не отправлено"
 

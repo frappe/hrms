@@ -240,9 +240,9 @@ def get_doc_condition(doctype):
 		or work_end_date between %(from_date)s and %(to_date)s \
 		or (work_from_date < %(from_date)s and work_end_date > %(to_date)s))"
 	elif doctype == "Leave Period":
-		return "and company = %(company)s and (from_date between %(from_date)s and %(to_date)s \
-			or to_date between %(from_date)s and %(to_date)s \
-			or (from_date < %(from_date)s and to_date > %(to_date)s))"
+		return "and company = %(company)s and (`from_date` between %(from_date)s and %(to_date)s \
+			or `to_date` between %(from_date)s and %(to_date)s \
+			or (`from_date` < %(from_date)s and `to_date` > %(to_date)s))"
 
 
 def throw_overlap_error(doc, exists_for, overlap_doc, from_date, to_date):
@@ -310,18 +310,20 @@ def get_total_exemption_amount(declarations):
 
 @frappe.whitelist()
 def get_leave_period(from_date: str | datetime.date, to_date: str | datetime.date, company: str):
-	leave_period = frappe.db.sql(
-		"""
-		select name, from_date, to_date
-		from `tabLeave Period`
-		where company=%(company)s and is_active=1
-			and (from_date between %(from_date)s and %(to_date)s
-				or to_date between %(from_date)s and %(to_date)s
-				or (from_date < %(from_date)s and to_date > %(to_date)s))
-	""",
-		{"from_date": from_date, "to_date": to_date, "company": company},
-		as_dict=1,
-	)
+	LeavePeriod = frappe.qb.DocType("Leave Period")
+	leave_period = (
+		frappe.qb.from_(LeavePeriod)
+		.select(LeavePeriod.name, LeavePeriod.from_date, LeavePeriod.to_date)
+		.where(
+			(LeavePeriod.company == company)
+			& (LeavePeriod.is_active == 1)
+			& (
+				LeavePeriod.from_date[from_date:to_date]
+				| LeavePeriod.to_date[from_date:to_date]
+				| ((LeavePeriod.from_date < from_date) & (LeavePeriod.to_date > to_date))
+			)
+		)
+	).run(as_dict=1)
 
 	if leave_period:
 		return leave_period
@@ -1074,27 +1076,23 @@ def get_semester_end(date):
 		return add_months(get_year_ending(date), -6)
 
 
+def get_complete_month_count(date, effective_from):
+	"""Returns count of complete months from effective_from to date, accounting for day-of-month."""
+	month_count = (date.year - effective_from.year) * 12 + (date.month - effective_from.month)
+	# ignore a smaller day caused by a shorter month (e.g. 31st -> 28th)
+	if date.day < effective_from.day and date != get_last_day(date):
+		month_count -= 1
+	return month_count
+
+
 def get_half_year_periods(date, effective_from):
-	"""
-	Compute the half-year period relative to effective_from,
-	NOT relative to the calendar year.
-
-	Example:
-		effective_from = 01-Apr-2026
-		date           = 01-Apr-2026
-		→ period_start = 01-Apr-2026, period_end = 30-Sep-2026
-
-		date           = 01-Oct-2026
-		→ period_start = 01-Oct-2026, period_end = 31-Mar-2027
-	"""
+	"""Return (start, end) of the half-year period containing date, relative to effective_from."""
 	effective_from = getdate(effective_from)
 	date = getdate(date)
 
-	# Find how many full 6-month periods have elapsed since effective_from
-	months_elapsed = (date.year - effective_from.year) * 12 + (date.month - effective_from.month)
-	periods_elapsed = months_elapsed // 6
+	half_years_passed = get_complete_month_count(date, effective_from) // 6
 
-	half_year_start = add_months(effective_from, periods_elapsed * 6)
+	half_year_start = add_months(effective_from, half_years_passed * 6)
 	half_year_end = add_days(add_months(half_year_start, 6), -1)
 
 	return half_year_start, half_year_end

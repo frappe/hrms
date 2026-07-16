@@ -7,6 +7,7 @@ from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employe
 from hrms.hr.doctype.shift_assignment.shift_assignment import ShiftAssignment
 from hrms.hr.doctype.shift_assignment_tool.shift_assignment_tool import create_shift_assignment
 from hrms.hr.doctype.shift_schedule.shift_schedule import get_or_insert_shift_schedule
+from hrms.telemetry import capture
 
 ALLOWED_EMPLOYEE_FILTERS = {
 	"status",
@@ -105,6 +106,16 @@ def create_shift_schedule_assignment(
 		}
 	).insert()
 
+	capture(
+		"shift_schedule_assignment_created",
+		{
+			"frequency": frequency,
+			"status": status,
+			"has_end_date": bool(end_date),
+			"repeat_on_days": len(repeat_on_days or []),
+		},
+	)
+
 	if not end_date or date_diff(end_date, start_date) <= 90:
 		return shift_schedule_assignment.create_shifts(start_date, end_date)
 
@@ -152,6 +163,9 @@ def swap_shift(
 		break_shift(tgt_shift_doc, tgt_date)
 	else:
 		tgt_company = frappe.db.get_value("Employee", tgt_employee, "company")
+
+	# All guards passed and the swap is proceeding — capture only successful attempts.
+	capture("shift_swapped", {"mutual_swap": bool(tgt_shift)})
 
 	break_shift(src_shift_doc, src_date)
 	insert_shift(
@@ -228,6 +242,7 @@ def insert_shift(
 		"shift_type": shift_type,
 		"status": status,
 		"shift_location": shift_location,
+		"docstatus": ["!=", 2],
 	}
 	prev_shift = frappe.db.exists(dict({"end_date": add_days(start_date, -1)}, **filters))
 	next_shift = (
