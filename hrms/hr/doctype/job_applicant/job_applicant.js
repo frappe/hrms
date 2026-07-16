@@ -157,6 +157,12 @@ frappe.ui.form.on("Job Applicant", {
 						});
 					},
 				},
+				{
+					label: __("From Time"),
+					fieldname: "from_time",
+					fieldtype: "Time",
+					reqd: 1,
+				},
 				{ fieldtype: "Column Break" },
 				{
 					label: __("Scheduled On"),
@@ -165,14 +171,6 @@ frappe.ui.form.on("Job Applicant", {
 					reqd: 1,
 					default: frappe.datetime.get_today(),
 				},
-				{ fieldtype: "Section Break" },
-				{
-					label: __("From Time"),
-					fieldname: "from_time",
-					fieldtype: "Time",
-					reqd: 1,
-				},
-				{ fieldtype: "Column Break" },
 				{
 					label: __("To Time"),
 					fieldname: "to_time",
@@ -187,7 +185,6 @@ frappe.ui.form.on("Job Applicant", {
 					fieldname: "interviewers",
 					fieldtype: "Table MultiSelect",
 					options: "Interview Detail",
-					label: __("Interviewers"),
 				},
 			],
 			primary_action_label: __("Schedule"),
