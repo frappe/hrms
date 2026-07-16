@@ -90,18 +90,22 @@ def get_approvers(doctype: str, txt: str, searchfield: str, start: int, page_len
 		parentfield = "shift_request_approver"
 		field_name = "Shift Request Approver"
 	if department_list:
+		User = frappe.qb.DocType("User")
+		DeptApprover = frappe.qb.DocType("Department Approver")
+
 		for d in department_list:
-			approvers += frappe.db.sql(
-				"""select user.name, user.first_name, user.last_name from
-				tabUser user, `tabDepartment Approver` approver where
-				approver.parent = %s
-				and user.name like %s
-				and user.enabled = 1
-				and approver.parentfield = %s
-				and approver.approver=user.name""",
-				(d, "%" + txt + "%", parentfield),
-				as_list=True,
-			)
+			approvers += (
+				frappe.qb.from_(DeptApprover)
+				.join(User)
+				.on(DeptApprover.approver == User.name)
+				.select(User.name, User.first_name, User.last_name)
+				.where(
+					(DeptApprover.parent == d[0])
+					& (DeptApprover.parentfield == parentfield)
+					& (User.name.like(f"%{txt}%"))
+					& (User.enabled == 1)
+				)
+			).run(as_list=True)
 
 	if len(approvers) == 0:
 		error_msg = _("Please set {0} for the Employee: {1}").format(
