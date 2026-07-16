@@ -3,99 +3,31 @@
 
 frappe.ui.form.on("Leave Policy", {
 	refresh: function (frm) {
-		if (frm.doc.docstatus === 1) {
-			frm.add_custom_button(
-				__("Assign to Employees"),
-				() => frm.events.assign_to_employees(frm),
-				__("Actions"),
-			);
-		}
-	},
+		if (frm.doc.docstatus !== 1) return;
 
-	assign_to_employees: function (frm) {
-		// Bulk-assign this leave policy to many employees at once. The picker also
-		// collects the assignment parameters the Leave Policy master doesn't carry.
-		hrms.assign_to_employees({
-			title: __("Assign Leave Policy to Employees"),
-			data_fields: [
-				{
-					fieldname: "assignment_based_on",
-					label: __("Assignment Based On"),
-					fieldtype: "Select",
-					options: ["", "Leave Period", "Joining Date"].join("\n"),
-				},
-				{
-					fieldname: "leave_period",
-					label: __("Leave Period"),
-					fieldtype: "Link",
-					options: "Leave Period",
-					depends_on: "eval:doc.assignment_based_on == 'Leave Period'",
-					get_query: () => {
-						return { filters: { is_active: 1 } };
-					},
-				},
-				{
-					fieldname: "effective_from",
-					label: __("Effective From"),
-					fieldtype: "Date",
-					depends_on: "eval:doc.assignment_based_on != 'Leave Period'",
-				},
-				{
-					fieldname: "effective_to",
-					label: __("Effective To"),
-					fieldtype: "Date",
-					depends_on: "eval:doc.assignment_based_on != 'Leave Period'",
-				},
-				{
-					fieldname: "carry_forward",
-					label: __("Carry Forward"),
-					fieldtype: "Check",
-				},
-			],
-			on_assign: (employees, values) => {
-				// validate assignment parameters before hitting the server
-				if (values.assignment_based_on === "Leave Period" && !values.leave_period) {
-					frappe.msgprint(__("Please select a Leave Period."));
-					return false;
-				}
-				if (
-					!["Leave Period", "Joining Date"].includes(values.assignment_based_on) &&
-					(!values.effective_from || !values.effective_to)
-				) {
-					frappe.msgprint(__("Please set Effective From and Effective To dates."));
-					return false;
-				}
-
-				return frappe
-					.call({
-						method: "hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment.create_assignment_for_multiple_employees",
-						args: {
-							employees: employees,
-							data: {
-								assignment_based_on: values.assignment_based_on || "",
-								leave_policy: frm.doc.name,
-								effective_from: values.effective_from,
-								effective_to: values.effective_to,
-								leave_period: values.leave_period,
-								carry_forward: values.carry_forward ? 1 : 0,
-							},
-						},
-						freeze: true,
-						freeze_message: __("Assigning Leave Policy to employees…"),
-					})
-					.then((r) => {
-						const assigned = (r.message || []).length;
-						if (assigned) {
-							frappe.show_alert({
-								message: __("Leave Policy assigned to {0} employee(s)", [
-									assigned,
-								]),
-								indicator: "green",
-							});
-						}
-					});
+		frm.add_custom_button(
+			__("Single Assignment"),
+			function () {
+				frappe.new_doc("Leave Policy Assignment", {
+					leave_policy: frm.doc.name,
+				});
 			},
-		});
+			__("Create"),
+		);
+
+		frm.add_custom_button(
+			__("Bulk Assignment"),
+			function () {
+				frappe.model.with_doctype("Leave Control Panel", () => {
+					const doc = frappe.model.get_new_doc("Leave Control Panel");
+					doc.leave_policy = frm.doc.name;
+					frappe.set_route("Form", "Leave Control Panel", doc.name);
+				});
+			},
+			__("Create"),
+		);
+
+		frm.page.set_inner_btn_group_as_primary(__("Create"));
 	},
 });
 

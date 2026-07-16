@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Frappe HR VERSION\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-07-05 10:16+0000\n"
-"PO-Revision-Date: 2026-07-05 10:16+0000\n"
+"POT-Creation-Date: 2026-07-12 10:04+0000\n"
+"PO-Revision-Date: 2026-07-12 10:04+0000\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: contact@frappe.io\n"
 "MIME-Version: 1.0\n"
@@ -607,7 +607,7 @@ msgstr ""
 msgid "Advanced Filters"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:467
+#: hrms/hr/doctype/expense_claim/expense_claim.py:475
 msgid "All Exchange Gain/Loss amount of {0} has been booked through {1}"
 msgstr ""
 
@@ -615,7 +615,7 @@ msgstr ""
 msgid "All Goals"
 msgstr ""
 
-#: hrms/hr/doctype/job_opening/job_opening.py:137
+#: hrms/hr/doctype/job_opening/job_opening.py:162
 msgid "All Jobs"
 msgstr ""
 
@@ -1795,10 +1795,6 @@ msgstr ""
 msgid "Calculated in days"
 msgstr ""
 
-#: hrms/setup.py:338
-msgid "Calls"
-msgstr ""
-
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:189
 msgid "Cancellation Queued"
 msgstr ""
@@ -2059,6 +2055,10 @@ msgstr ""
 #: hrms/hr/doctype/appointment_letter/appointment_letter.json
 #: hrms/hr/doctype/appointment_letter_template/appointment_letter_template.json
 msgid "Closing Notes"
+msgstr ""
+
+#: hrms/hr/doctype/job_opening/job_opening.py:101
+msgid "Closing this Job Opening for {1} may not be according to the Staffing Plan {0}.<br><br>Do you want to close this Job Opening?"
 msgstr ""
 
 #: frontend/src/views/Profile.vue:178
@@ -3402,7 +3402,7 @@ msgstr ""
 msgid "Employee name"
 msgstr ""
 
-#: hrms/api/__init__.py:84
+#: hrms/api/__init__.py:95
 msgid "Employee not found"
 msgstr ""
 
@@ -4016,7 +4016,7 @@ msgstr ""
 #. Label of the expense_type (Data) field in DocType 'Expense Claim Type'
 #. Label of a Link in the Expenses Workspace
 #. Label of a Workspace Sidebar Item
-#: hrms/hr/doctype/expense_claim/expense_claim.py:665
+#: hrms/hr/doctype/expense_claim/expense_claim.py:673
 #: hrms/hr/doctype/expense_claim_detail/expense_claim_detail.json
 #: hrms/hr/doctype/expense_claim_type/expense_claim_type.json
 #: hrms/hr/workspace/expenses/expenses.json
@@ -4121,7 +4121,7 @@ msgstr ""
 msgid "Failed to delete defaults for country {0}."
 msgstr ""
 
-#: hrms/api/__init__.py:802
+#: hrms/api/__init__.py:813
 msgid "Failed to download PDF: {0}"
 msgstr ""
 
@@ -5509,7 +5509,7 @@ msgstr ""
 msgid "Invalid employee filter: {0}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:886
+#: hrms/hr/doctype/expense_claim/expense_claim.py:894
 msgid "Invalid parameters provided. Please pass the required arguments."
 msgstr ""
 
@@ -5755,7 +5755,7 @@ msgstr ""
 msgid "Job Openings"
 msgstr ""
 
-#: hrms/hr/doctype/job_opening/job_opening.py:118
+#: hrms/hr/doctype/job_opening/job_opening.py:137
 msgid "Job Openings for the designation {0} are already open or the hiring is complete as per the Staffing Plan {1}"
 msgstr ""
 
@@ -6797,7 +6797,7 @@ msgstr ""
 msgid "Mode of Travel"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:484
+#: hrms/hr/doctype/expense_claim/expense_claim.py:492
 msgid "Mode of payment is required to make a payment"
 msgstr ""
 
@@ -8952,11 +8952,11 @@ msgstr ""
 msgid "Row #{0}: Timesheet amount will overwrite the Earning component amount for the Salary Component {1}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:854
+#: hrms/hr/doctype/expense_claim/expense_claim.py:862
 msgid "Row No {0}: Amount cannot be greater than the Outstanding Amount against Expense Claim {1}. Outstanding Amount is {2}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:552
+#: hrms/hr/doctype/expense_claim/expense_claim.py:560
 msgid "Row {0}# Allocated amount {1} cannot be greater than unclaimed amount {2}"
 msgstr ""
 
@@ -8988,7 +8988,7 @@ msgstr ""
 msgid "Row {0}: {1}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:477
+#: hrms/hr/doctype/expense_claim/expense_claim.py:485
 msgid "Row {0}: {1} is required in the expenses table to book an expense claim."
 msgstr ""
 
@@ -9354,7 +9354,7 @@ msgstr ""
 msgid "Sanctioned Amount (Company Currency)"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:576
+#: hrms/hr/doctype/expense_claim/expense_claim.py:584
 msgid "Sanctioned Amount cannot be greater than Claim Amount in Row {0}."
 msgstr ""
 
@@ -9496,7 +9496,7 @@ msgstr ""
 msgid "Selected employee advance is not of employee {0}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:545
+#: hrms/hr/doctype/expense_claim/expense_claim.py:553
 msgid "Selected employee advance is not of employee {}"
 msgstr ""
 
@@ -9650,7 +9650,7 @@ msgstr ""
 msgid "Set optional filters to fetch employees in the appraisee list"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:664
+#: hrms/hr/doctype/expense_claim/expense_claim.py:672
 msgid "Set the default account for the {0} {1}"
 msgstr ""
 
@@ -10892,7 +10892,7 @@ msgstr ""
 msgid "Total Self Score"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:570
+#: hrms/hr/doctype/expense_claim/expense_claim.py:578
 msgid "Total advance amount cannot be greater than total sanctioned amount"
 msgstr ""
 
@@ -11352,7 +11352,7 @@ msgstr ""
 msgid "Vacancies cannot be lower than the current openings"
 msgstr ""
 
-#: hrms/hr/doctype/job_opening/job_opening.py:123
+#: hrms/hr/doctype/job_opening/job_opening.py:142
 msgid "Vacancies fulfilled"
 msgstr ""
 
@@ -11674,7 +11674,7 @@ msgstr ""
 msgid "You can only submit Leave Encashment for a valid encashment amount"
 msgstr ""
 
-#: hrms/api/__init__.py:752
+#: hrms/api/__init__.py:763
 msgid "You can only upload JPG, PNG, PDF, TXT or Microsoft documents."
 msgstr ""
 
