@@ -172,6 +172,7 @@ def insert_shift(
 		"shift_type": shift_type,
 		"status": status,
 		"shift_location": shift_location,
+		"docstatus": ["!=", 2],
 	}
 	prev_shift = frappe.db.exists(dict({"end_date": add_days(start_date, -1)}, **filters))
 	next_shift = (
