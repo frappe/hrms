@@ -58,19 +58,27 @@ def get_approvers(doctype: str, txt: str, searchfield: str, start: int, page_len
 		)
 
 	if filters.get("doctype") == "Leave Application" and employee.leave_approver:
-		approvers.append(
-			frappe.db.get_value("User", employee.leave_approver, ["name", "first_name", "last_name"])
+		approver = frappe.db.get_value(
+			"User", {"name": employee.leave_approver, "enabled": 1}, ["name", "first_name", "last_name"]
 		)
+		if approver:
+			approvers.append(approver)
 
 	if filters.get("doctype") == "Expense Claim" and employee.expense_approver:
-		approvers.append(
-			frappe.db.get_value("User", employee.expense_approver, ["name", "first_name", "last_name"])
+		approver = frappe.db.get_value(
+			"User", {"name": employee.expense_approver, "enabled": 1}, ["name", "first_name", "last_name"]
 		)
+		if approver:
+			approvers.append(approver)
 
 	if filters.get("doctype") == "Shift Request" and employee.shift_request_approver:
-		approvers.append(
-			frappe.db.get_value("User", employee.shift_request_approver, ["name", "first_name", "last_name"])
+		approver = frappe.db.get_value(
+			"User",
+			{"name": employee.shift_request_approver, "enabled": 1},
+			["name", "first_name", "last_name"],
 		)
+		if approver:
+			approvers.append(approver)
 
 	if filters.get("doctype") == "Leave Application":
 		parentfield = "leave_approvers"
@@ -88,6 +96,7 @@ def get_approvers(doctype: str, txt: str, searchfield: str, start: int, page_len
 				tabUser user, `tabDepartment Approver` approver where
 				approver.parent = %s
 				and user.name like %s
+				and user.enabled = 1
 				and approver.parentfield = %s
 				and approver.approver=user.name""",
 				(d, "%" + txt + "%", parentfield),
