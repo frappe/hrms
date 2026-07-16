@@ -21,6 +21,20 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 		self.original_doj = employee.date_of_joining
 		self.employee = employee
 
+	def test_cannot_create_assignment_for_draft_leave_policy(self):
+		leave_period = get_leave_period(current=True)
+		leave_policy = create_leave_policy(annual_allocation=10)
+		leave_policy.insert()  # saved but not submitted (docstatus=0)
+
+		data = frappe._dict(
+			{
+				"assignment_based_on": "Leave Period",
+				"leave_policy": leave_policy.name,
+				"leave_period": leave_period.name,
+			}
+		)
+		self.assertRaises(frappe.ValidationError, create_assignment, self.employee.name, data)
+
 	def test_grant_leaves(self):
 		leave_period = get_leave_period(current=True)
 		leave_policy = create_leave_policy(annual_allocation=10)

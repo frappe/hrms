@@ -50,9 +50,20 @@ class LeavePolicyAssignment(Document):
 	# end: auto-generated types
 
 	def validate(self):
+		self.validate_leave_policy_submission()
 		self.set_dates()
 		self.validate_policy_assignment_overlap()
 		self.warn_about_carry_forwarding()
+
+	def validate_leave_policy_submission(self):
+		docstatus = frappe.db.get_value("Leave Policy", self.leave_policy, "docstatus")
+		if docstatus != 1:
+			frappe.throw(
+				_("Leave Policy {0} must be submitted before creating a Leave Policy Assignment.").format(
+					bold(self.leave_policy)
+				),
+				title=_("Leave Policy Not Submitted"),
+			)
 
 	def on_submit(self):
 		self.grant_leave_alloc_for_employee()
