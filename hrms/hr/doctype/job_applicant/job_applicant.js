@@ -186,32 +186,118 @@ frappe.ui.form.on("Job Applicant", {
 					fieldtype: "Table MultiSelect",
 					options: "Interview Detail",
 				},
+				{
+					fieldname: "send_confirmation",
+					fieldtype: "Check",
+					label: __("Send confirmation email to candidate and interviewers"),
+					onchange() {
+						d.get_primary_btn().text(
+							d.get_value("send_confirmation")
+								? __("Schedule & Notify")
+								: __("Schedule"),
+						);
+					},
+				},
 			],
 			primary_action_label: __("Schedule"),
 			primary_action(values) {
-				frappe.call({
-					method: "hrms.hr.doctype.job_applicant.job_applicant.schedule_interview",
-					args: {
-						job_applicant: frm.doc.name,
-						interview_type: values.interview_type,
-						scheduled_on: values.scheduled_on,
-						from_time: values.from_time || null,
-						to_time: values.to_time || null,
-						interviewers: values.interviewers || [],
-					},
-					callback(r) {
-						if (r.message) {
-							frappe.show_alert({
-								message: __("Interview scheduled successfully"),
-								indicator: "green",
-							});
-							d.hide();
-							frm.events.get_interview_for_dashboard(frm);
-						}
-					},
-				});
+				if (values.send_confirmation) {
+					frappe.db
+						.get_value("HR Settings", "HR Settings", [
+							"send_interview_confirmation",
+							"hiring_sender_email",
+						])
+						.then((r) => {
+							const settings = r.message;
+							const hr_settings_link = `<a href="${frappe.utils.get_form_link(
+								"HR Settings",
+								"HR Settings",
+							)}#recruitment_tab" target="_blank">${__("HR Settings")}</a>`;
+
+							if (
+								!settings.send_interview_confirmation &&
+								!settings.hiring_sender_email
+							) {
+								frappe.msgprint({
+									title: __("Email Not Configured"),
+									message: __(
+										"Please enable {0} and set a {1} in {2}.",
+										[
+											frappe.utils.bold(__("Send Interview Confirmation")),
+											frappe.utils.bold(__("Hiring Sender Email")),
+											hr_settings_link,
+										],
+									),
+									indicator: "orange",
+								});
+								return;
+							} else if (!settings.send_interview_confirmation) {
+								frappe.msgprint({
+									title: __("Email Not Configured"),
+									message: __("Please enable {0} in {1}.", [
+										frappe.utils.bold(__("Send Interview Confirmation")),
+										hr_settings_link,
+									]),
+									indicator: "orange",
+								});
+								return;
+							} else if (!settings.hiring_sender_email) {
+								frappe.msgprint({
+									title: __("Email Not Configured"),
+									message: __("Please set a {0} in {1}.", [
+										frappe.utils.bold(__("Hiring Sender Email")),
+										hr_settings_link,
+									]),
+									indicator: "orange",
+								});
+								return;
+							}
+							frm.events.do_schedule_interview(frm, d, values);
+						});
+					return;
+				}
+				frm.events.do_schedule_interview(frm, d, values);
 			},
 		});
 		d.show();
+	},
+
+	do_schedule_interview: function (frm, d, values) {
+		frappe.call({
+			method: "hrms.hr.doctype.job_applicant.job_applicant.schedule_interview",
+			args: {
+				job_applicant: frm.doc.name,
+				interview_type: values.interview_type,
+				scheduled_on: values.scheduled_on,
+				from_time: values.from_time,
+				to_time: values.to_time,
+				interviewers: values.interviewers || [],
+			},
+			callback(r) {
+				if (r.message) {
+					if (values.send_confirmation) {
+						frappe.call({
+							method: "hrms.hr.doctype.interview.interview.send_interview_confirmation",
+							args: { interview: r.message },
+							callback(res) {
+								if (!res.exc) {
+									frappe.show_alert({
+										message: __("Interview scheduled and confirmation sent"),
+										indicator: "green",
+									});
+								}
+							},
+						});
+					} else {
+						frappe.show_alert({
+							message: __("Interview scheduled successfully"),
+							indicator: "green",
+						});
+					}
+					d.hide();
+					frm.events.get_interview_for_dashboard(frm);
+				}
+			},
+		});
 	},
 });
