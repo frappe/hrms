@@ -50,6 +50,7 @@ doctype_js = {
 	"Employee": "public/js/erpnext/employee.js",
 	"Company": "public/js/erpnext/company.js",
 	"Department": "public/js/erpnext/department.js",
+	"Holiday List": "public/js/erpnext/holiday_list.js",
 	"Timesheet": "public/js/erpnext/timesheet.js",
 	"Payment Entry": "public/js/erpnext/payment_entry.js",
 	"Journal Entry": "public/js/erpnext/journal_entry.js",
