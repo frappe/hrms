@@ -246,6 +246,7 @@
    "fieldname": "payable_account",
    "fieldtype": "Link",
    "label": "Payable Account",
+   "mandatory_depends_on": "eval:!doc.is_paid",
    "options": "Account"
   },
   {
@@ -390,7 +391,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-12-16 16:16:47.975814",
+ "modified": "2026-07-15 16:43:28.006860",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claim",
