@@ -12,6 +12,34 @@ from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import create_leave_l
 
 
 class LeaveAdjustment(Document):
+<<<<<<< HEAD
+=======
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		adjustment_type: DF.Literal["", "Allocate", "Reduce"]
+		allocated_leaves: DF.Float
+		amended_from: DF.Link | None
+		company: DF.Link | None
+		employee: DF.Link
+		employee_name: DF.Data | None
+		from_date: DF.Date | None
+		leave_allocation: DF.Link
+		leave_type: DF.Link
+		leaves_after_adjustment: DF.Float
+		leaves_to_adjust: DF.Float
+		naming_series: DF.Literal["HR-LAD-.YYYY.-"]
+		posting_date: DF.Date
+		reason_for_adjustment: DF.SmallText | None
+		to_date: DF.Date | None
+	# end: auto-generated types
+
+>>>>>>> 27c7252 (fix: More cleanups)
 	def before_validate(self):
 		system_precision = cint(frappe.db.get_single_value("System Settings", "float_precision")) or 3
 		precision = self.precision("leaves_to_adjust") or system_precision
