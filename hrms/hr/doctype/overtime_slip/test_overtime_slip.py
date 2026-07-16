@@ -135,6 +135,112 @@ class TestOvertimeSlip(HRMSTestSuite):
 
 		self.assertTrue(overtime_slip)
 
+	def test_overtime_slip_creation_via_payroll_entry_mid_month_leaver(self):
+		"""OT slip `end_date` must be capped at `relieving_date` so the resulting Additional Salary `payroll_date` falls within the employee's employment window."""
+		from hrms.hr.doctype.overtime_slip.overtime_slip import create_overtime_slips_for_employees
+		from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
+		from hrms.payroll.doctype.payroll_entry.test_payroll_entry import get_payroll_entry
+
+		date = getdate()
+		month_start_date = get_first_day(date)
+		relieving_date = add_days(month_start_date, 14)  # mid-month, day 15
+
+		company = frappe.get_doc("Company", "_Test Company")
+		make_earning_salary_component(setup=True, company_list=["_Test Company"])
+		employee = make_employee(
+			"test_overtime_slip_mid_leaver@example.com",
+			company="_Test Company",
+			relieving_date=relieving_date,
+			status="Left",
+		)
+		overtime_type = create_overtime_type(overtime_calculation_method="Fixed Hourly Rate")
+		shift_type = setup_shift_type(
+			company="_Test Company",
+			shift_type="_Test Overtime Shift Mid Leaver",
+			allow_overtime=1,
+			overtime_type=overtime_type.name,
+			last_sync_of_checkin=f"{add_days(date, 10)} 15:00:00",
+			process_attendance_after=add_days(month_start_date, -1),
+			mark_auto_attendance_on_holidays=1,
+		)
+		frappe.db.set_single_value("Payroll Settings", "create_overtime_slip", 1)
+
+		make_salary_structure(
+			"Test Overtime Salary Slip", "Monthly", employee=employee, company="_Test Company"
+		)
+		make_shift_assignment(
+			shift_type=shift_type.name, employee=employee, start_date=add_days(month_start_date, -1)
+		)
+		create_checkin_records_for_overtime(employee)
+		shift_type.process_auto_attendance()
+
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = get_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company.default_payroll_payable_account,
+			currency=company.default_currency,
+			company=company.name,
+			cost_center="Main - _TC",
+		)
+
+		payroll_entry.create_overtime_slips()
+
+		slip_name = frappe.db.get_value(
+			"Overtime Slip",
+			{"employee": employee, "payroll_entry": payroll_entry.name, "docstatus": 0},
+			"name",
+		)
+		self.assertTrue(slip_name, "Overtime Slip not created for mid-month leaver")
+
+		slip = frappe.get_doc("Overtime Slip", slip_name)
+		self.assertEqual(
+			getdate(slip.end_date),
+			getdate(relieving_date),
+			"end_date must be capped at relieving_date, not PE.end_date",
+		)
+
+		# submission must succeed as payroll_date = relieving_date is valid
+		slip.submit()
+		self.assertEqual(slip.docstatus, 1)
+
+		additional_salary = frappe.db.get_value(
+			"Additional Salary", {"ref_docname": slip.name}, "payroll_date"
+		)
+		self.assertEqual(
+			getdate(additional_salary),
+			getdate(relieving_date),
+			"Additional Salary payroll_date must equal relieving_date",
+		)
+
+		# creating slips from the client sends the payroll entry dates as strings,
+		# so the capped end_date must stay comparable with start_date in validate()
+		frappe.db.delete("Additional Salary", {"ref_docname": slip.name})
+		slip.cancel()
+		frappe.delete_doc("Overtime Slip", slip.name, force=True)
+
+		create_overtime_slips_for_employees(
+			[employee],
+			frappe._dict(
+				{
+					"posting_date": str(dates.end_date),
+					"start_date": str(dates.start_date),
+					"end_date": str(dates.end_date),
+					"company": "_Test Company",
+					"currency": company.default_currency,
+					"payroll_entry": payroll_entry.name,
+				}
+			),
+		)
+
+		slip_name = frappe.db.get_value("Overtime Slip", {"employee": employee}, "name")
+		self.assertTrue(slip_name, "Overtime Slip not created when dates are passed as strings")
+		self.assertEqual(
+			getdate(frappe.db.get_value("Overtime Slip", slip_name, "end_date")),
+			getdate(relieving_date),
+			"end_date must be capped at relieving_date when dates are passed as strings",
+		)
+
 
 def create_overtime_slip(employee):
 	date = getdate()

@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: frappe\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-06-24 17:40+0000\n"
-"PO-Revision-Date: 2026-06-24 20:42\n"
+"POT-Creation-Date: 2026-07-05 10:16+0000\n"
+"PO-Revision-Date: 2026-07-09 10:41\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Arabic\n"
 "MIME-Version: 1.0\n"
@@ -44,6 +44,10 @@ msgstr ""
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:183
 msgid "'employee_field_value' and 'timestamp' are required."
 msgstr "مطلوب &quot;employee_field_value&quot; و &quot;الطابع الزمني&quot;."
+
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:188
+msgid "'employee_fieldname' must be one of {0}."
+msgstr ""
 
 #: hrms/hr/utils.py:254
 #: hrms/payroll/doctype/payroll_period/payroll_period.py:69
@@ -500,7 +504,7 @@ msgstr "إضافة الاجازات غير المستخدمة من المخصص�
 msgid "Add unused leaves from previous leave period's allocation to this allocation"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1675
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1686
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
 msgstr ""
 
@@ -541,15 +545,15 @@ msgstr "راتب إضافي"
 msgid "Additional Salary "
 msgstr "الراتب الإضافي"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:179
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:180
 msgid "Additional Salary for referral bonus can only be created against Employee Referral with status {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:214
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:215
 msgid "Additional Salary for this salary component with {0} enabled already exists for this date"
 msgstr ""
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:126
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:127
 msgid "Additional Salary: {0} already exist for Salary Component: {1} for period {2} and {3}"
 msgstr "الراتب الإضافي: {0} موجود بالفعل لمكون الراتب: {1} للفترة {2} و {3}"
 
@@ -779,6 +783,10 @@ msgstr "بالتناوب إدخالات مثل IN و OUT خلال نفس الت�
 msgid "Amount Based on Formula"
 msgstr ""
 
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:304
+msgid "Amount Exceeds Available Balance"
+msgstr ""
+
 #. Label of the amount_based_on_formula (Check) field in DocType 'Salary
 #. Component'
 #. Label of the amount_based_on_formula (Check) field in DocType 'Salary
@@ -813,7 +821,7 @@ msgstr ""
 msgid "Amount scheduled for deduction via salary"
 msgstr ""
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:66
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:64
 msgid "Amount should not be less than zero"
 msgstr ""
 
@@ -1074,7 +1082,7 @@ msgstr ""
 msgid "Appraisal Template Goal"
 msgstr "الغاية من قالب التقييم"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:167
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:168
 msgid "Appraisal Template Missing"
 msgstr ""
 
@@ -1083,11 +1091,11 @@ msgstr ""
 msgid "Appraisal Template Title"
 msgstr "عنوان قالب التقييم"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:160
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:161
 msgid "Appraisal Template not found for some designations."
 msgstr ""
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:150
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:151
 msgid "Appraisal creation is queued. It may take a few minutes."
 msgstr ""
 
@@ -1411,7 +1419,7 @@ msgstr ""
 msgid "Attendance for employee {0} is already marked for the date {1}: {2}"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:634
+#: hrms/hr/doctype/leave_application/leave_application.py:635
 msgid "Attendance for employee {0} is already marked for the following dates: {1}"
 msgstr ""
 
@@ -1625,7 +1633,7 @@ msgstr ""
 msgid "Benefit amount of component {0} should be greater than 0"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:509
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:512
 msgid "Benefit amount {0} for Salary Component {1} should not be greater than maximum benefit amount {2} set in {3}"
 msgstr ""
 
@@ -1792,6 +1800,14 @@ msgstr "مكالمات هاتفية"
 msgid "Cancellation Queued"
 msgstr ""
 
+#: hrms/hr/doctype/vehicle_log/vehicle_log.js:81
+msgid "Cancelling Vehicle Log {0} will delete draft Expense Claim {1} because it only contains Vehicle Expenses.<br><br>Do you want to continue?"
+msgstr ""
+
+#: hrms/hr/doctype/vehicle_log/vehicle_log.js:87
+msgid "Cancelling Vehicle Log {0} will update draft Expense Claim {1}.<br><br>Vehicle Expenses rows will be removed. Other expenses will remain.<br><br>Do you want to continue?"
+msgstr ""
+
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:81
 msgid "Cannot Modify Time"
 msgstr ""
@@ -1808,11 +1824,11 @@ msgstr ""
 msgid "Cannot allocate more leaves due to maximum leaves allowed limit of {0} in {1} leave type."
 msgstr ""
 
-#: hrms/api/roster.py:187
+#: hrms/api/roster.py:188
 msgid "Cannot break shift after end date"
 msgstr ""
 
-#: hrms/api/roster.py:189
+#: hrms/api/roster.py:190
 msgid "Cannot break shift before start date"
 msgstr ""
 
@@ -1824,23 +1840,23 @@ msgstr ""
 msgid "Cannot cancel Shift Assignment: {0} as it is linked to Employee Checkin: {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:380
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:381
 msgid "Cannot create Salary Slip for Employee joining after Payroll Period"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:383
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:384
 msgid "Cannot create Salary Slip for Employee who has left before Payroll Period"
 msgstr ""
 
-#: hrms/hr/doctype/job_applicant/job_applicant.py:77
+#: hrms/hr/doctype/job_applicant/job_applicant.py:79
 msgid "Cannot create a Job Applicant against a closed Job Opening"
 msgstr ""
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:226
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:227
 msgid "Cannot create or change transactions against an Appraisal Cycle with status {0}."
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:651
+#: hrms/hr/doctype/leave_application/leave_application.py:652
 msgid "Cannot find active Leave Period"
 msgstr "لا يمكن ايجاد فترة الاجازة النشطة"
 
@@ -1908,7 +1924,7 @@ msgstr ""
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1588
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1592
 msgid "Check Error Log {0} for more details."
 msgstr ""
 
@@ -2141,7 +2157,7 @@ msgstr "رقم جهة الإتصال"
 msgid "Copy of Invitation/Announcement"
 msgstr "نسخة من الدعوة / الإعلان"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1653
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1657
 msgid "Could not submit some Salary Slips: {}"
 msgstr ""
 
@@ -2190,8 +2206,8 @@ msgid "Create Appraisals"
 msgstr ""
 
 #: hrms/hr/doctype/interview_type/interview_type.js:7
-#: hrms/hr/doctype/job_applicant/job_applicant.js:68
-#: hrms/hr/doctype/job_applicant/job_applicant.js:137
+#: hrms/hr/doctype/job_applicant/job_applicant.js:71
+#: hrms/hr/doctype/job_applicant/job_applicant.js:140
 msgid "Create Interview"
 msgstr ""
 
@@ -2199,7 +2215,7 @@ msgstr ""
 msgid "Create Job Applicant"
 msgstr ""
 
-#: hrms/hr/doctype/job_applicant/job_applicant.js:84
+#: hrms/hr/doctype/job_applicant/job_applicant.js:87
 msgid "Create Job Offer"
 msgstr ""
 
@@ -2243,7 +2259,7 @@ msgstr ""
 msgid "Create {0}"
 msgstr ""
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:217
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:218
 msgid "Creating Appraisals"
 msgstr ""
 
@@ -2251,7 +2267,7 @@ msgstr ""
 msgid "Creating Payment Entries......"
 msgstr "إنشاء إدخالات الدفع ......"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1611
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1615
 msgid "Creating Salary Slips..."
 msgstr "إنشاء قسائم الرواتب ..."
 
@@ -2694,7 +2710,7 @@ msgstr ""
 msgid "Duplicate Leave Adjustment"
 msgstr ""
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:221
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:222
 msgid "Duplicate Overwritten Salary"
 msgstr ""
 
@@ -2786,7 +2802,7 @@ msgstr ""
 msgid "Earning Component"
 msgstr "أحدى المستحقات"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:175
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:176
 msgid "Earning Salary Component is required for Employee Referral Bonus."
 msgstr ""
 
@@ -2872,6 +2888,14 @@ msgstr ""
 #: hrms/hr/workspace/hr_setup/hr_setup.json
 msgid "Employee Advance Summary"
 msgstr "ملخص متقدم للموظف"
+
+#: hrms/hr/doctype/employee_advance/employee_advance.js:209
+msgid "Employee Advance return is scheduled via Additional Salary: {0} | <a href='{1}'> {2} </a>"
+msgstr ""
+
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:288
+msgid "Employee Advance {0} has {1} available for return. {2} has already been scheduled for deduction in {3}."
+msgstr ""
 
 #. Name of a report
 #. Label of a Link in the HR Setup Workspace
@@ -3226,7 +3250,7 @@ msgstr "إحالة موظف"
 msgid "Employee Referral {0} already exists for email: {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:171
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:172
 msgid "Employee Referral {0} is not applicable for referral bonus."
 msgstr ""
 
@@ -3387,7 +3411,7 @@ msgstr ""
 msgid "Employee was marked Absent due to missing Employee Checkins."
 msgstr ""
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:274
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:280
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr ""
 
@@ -3415,7 +3439,7 @@ msgstr ""
 msgid "Employee {0} has already applied for Shift {1}: {2} that overlaps within this period"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:523
+#: hrms/hr/doctype/leave_application/leave_application.py:524
 msgid "Employee {0} has already applied for {1} between {2} and {3} : {4}"
 msgstr ""
 
@@ -3439,7 +3463,7 @@ msgstr ""
 msgid "Employee {0} on Half day on {1}"
 msgstr "الموظف {0} لديه اجازة نصف يوم في {1}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:738
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:739
 msgid "Employee {0} relieved on {1} must be set as 'Left'"
 msgstr ""
 
@@ -3619,7 +3643,7 @@ msgstr ""
 msgid "End time cannot be before start time"
 msgstr "لا يمكن أن يكون وقت الانتهاء قبل وقت البدء"
 
-#: hrms/hr/doctype/job_applicant/job_applicant.js:123
+#: hrms/hr/doctype/job_applicant/job_applicant.js:126
 msgid "Enter Interview Type"
 msgstr ""
 
@@ -3668,7 +3692,7 @@ msgstr ""
 msgid "Error downloading PDF"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1397
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1408
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:401
 msgid "Error in formula or condition"
 msgstr ""
@@ -3995,11 +4019,11 @@ msgstr ""
 msgid "Expense Claim Type"
 msgstr "نوع  المطالبة  بالنفقات"
 
-#: hrms/hr/doctype/vehicle_log/vehicle_log.py:74
+#: hrms/hr/doctype/vehicle_log/vehicle_log.py:90
 msgid "Expense Claim for Vehicle Log {0}"
 msgstr "مطالبه المصروفات لسجل المركبات {0}"
 
-#: hrms/hr/doctype/vehicle_log/vehicle_log.py:62
+#: hrms/hr/doctype/vehicle_log/vehicle_log.py:78
 msgid "Expense Claim {0} already exists for the Vehicle Log"
 msgstr "المطالبة بالنفقات {0} بالفعل موجوده في سجل المركبة"
 
@@ -4092,7 +4116,7 @@ msgstr ""
 msgid "Failed to delete defaults for country {0}."
 msgstr ""
 
-#: hrms/api/__init__.py:796
+#: hrms/api/__init__.py:802
 msgid "Failed to download PDF: {0}"
 msgstr ""
 
@@ -4116,7 +4140,7 @@ msgstr ""
 msgid "Failed to update password"
 msgstr ""
 
-#: hrms/hr/doctype/interview/interview.py:239
+#: hrms/hr/doctype/interview/interview.py:241
 msgid "Failed to update the Job Applicant status"
 msgstr ""
 
@@ -4230,7 +4254,7 @@ msgid "File Preview"
 msgstr ""
 
 #: hrms/hr/doctype/leave_application/leave_application.js:99
-#: hrms/hr/doctype/leave_encashment/leave_encashment.js:50
+#: hrms/hr/doctype/leave_encashment/leave_encashment.js:60
 msgid "Fill the form and save it"
 msgstr "قم بتعبئة النموذج وحفظه"
 
@@ -4286,7 +4310,7 @@ msgstr ""
 msgid "First Name "
 msgstr "الاسم الأول "
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1571
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1575
 msgid "Fiscal Year {0} not found"
 msgstr "السنة المالية {0} غير موجودة\\n<br>\\nFiscal Year {0} not found"
 
@@ -4426,7 +4450,7 @@ msgstr ""
 msgid "From Date {0} cannot be before employee's joining Date {1}"
 msgstr "من تاريخ {0} لا يمكن أن يكون قبل تاريخ الانضمام للموظف {1}"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:144
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:145
 msgid "From and to dates are madatory for recurring type additional salaries."
 msgstr ""
 
@@ -4434,7 +4458,7 @@ msgstr ""
 msgid "From date can not be less than employee's joining date"
 msgstr "من تاريخ لا يمكن أن يكون أقل من تاريخ انضمام الموظف"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:152
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:153
 msgid "From date can not be less than employee's joining date."
 msgstr "من التاريخ لا يمكن أن يكون أقل من تاريخ انضمام الموظف."
 
@@ -4687,7 +4711,7 @@ msgstr ""
 msgid "Grievance Type"
 msgstr ""
 
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:637
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:646
 msgid "Gross Earnings"
 msgstr ""
 
@@ -4778,7 +4802,7 @@ msgstr "نصف يوم"
 msgid "Half Day Date"
 msgstr "تاريخ نصف اليوم"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:909
+#: hrms/hr/doctype/leave_application/leave_application.py:910
 msgid "Half Day Date cannot be a holiday"
 msgstr ""
 
@@ -4786,7 +4810,7 @@ msgstr ""
 msgid "Half Day Date is mandatory"
 msgstr "تاريخ نصف اليوم إلزامي"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:912
+#: hrms/hr/doctype/leave_application/leave_application.py:913
 msgid "Half Day Date should be between From Date and To Date"
 msgstr "تاريخ نصف اليوم ينبغي أن يكون بين 'من تاريخ' و 'الى تاريخ'\\n<br>\\nHalf Day Date should be between From Date and To Date"
 
@@ -4841,6 +4865,11 @@ msgstr ""
 
 #: hrms/hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:55
 msgid "Hiring Count"
+msgstr ""
+
+#. Label of a Workspace Sidebar Item
+#: hrms/workspace_sidebar/recruitment.json
+msgid "Hiring Pipeline"
 msgstr ""
 
 #. Label of the hiring_settings_section (Section Break) field in DocType 'HR
@@ -5190,7 +5219,7 @@ msgstr "استقطاعات ضريبة الدخل"
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:148
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:630
+#: hrms/payroll/report/income_tax_computation/income_tax_computation.py:639
 #: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 #: hrms/workspace_sidebar/tax_&_benefits.json
@@ -5206,11 +5235,11 @@ msgstr "لوحة ضريبة الدخل رسوم أخرى"
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1954
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1965
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr "يجب أن يكون لوح ضريبة الدخل ساريًا في أو قبل تاريخ بدء فترة الرواتب: {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1942
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1953
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr "لم يتم تعيين لوح ضريبة الدخل في تعيين هيكل الرواتب: {0}"
 
@@ -5218,7 +5247,7 @@ msgstr "لم يتم تعيين لوح ضريبة الدخل في تعيين هي
 msgid "Income Tax Slab: "
 msgstr "لوح ضريبة الدخل: "
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1950
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1961
 msgid "Income Tax Slab: {0} is disabled"
 msgstr "شريحة ضريبة الدخل: {0} معطل"
 
@@ -5324,7 +5353,7 @@ msgstr ""
 msgid "Interview Feedback Reminder"
 msgstr ""
 
-#: hrms/hr/doctype/interview/interview.py:374
+#: hrms/hr/doctype/interview/interview.py:377
 msgid "Interview Feedback {0} submitted successfully"
 msgstr ""
 
@@ -5364,7 +5393,7 @@ msgstr ""
 #. Label of the section_break_13 (Section Break) field in DocType 'Interview'
 #: hrms/hr/doctype/exit_interview/exit_interview.json
 #: hrms/hr/doctype/interview/interview.json
-#: hrms/hr/doctype/job_applicant/job_applicant.js:117
+#: hrms/hr/doctype/job_applicant/job_applicant.js:120
 msgid "Interview Summary"
 msgstr ""
 
@@ -5387,7 +5416,7 @@ msgstr ""
 msgid "Interview Type Name"
 msgstr ""
 
-#: hrms/hr/doctype/job_applicant/job_applicant.py:96
+#: hrms/hr/doctype/job_applicant/job_applicant.py:126
 msgid "Interview Type {0} is only applicable for the Designation {1}"
 msgstr ""
 
@@ -5438,7 +5467,7 @@ msgstr ""
 msgid "Invalid Accrual Component"
 msgstr ""
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:245
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:246
 msgid "Invalid Additional Salary"
 msgstr ""
 
@@ -5446,7 +5475,7 @@ msgstr ""
 msgid "Invalid Arrear Component"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:525
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:528
 msgid "Invalid Benefit Amounts"
 msgstr ""
 
@@ -5454,7 +5483,7 @@ msgstr ""
 msgid "Invalid Dates"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2644
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2656
 msgid "Invalid LWP Days Reversed"
 msgstr ""
 
@@ -5475,7 +5504,7 @@ msgstr ""
 msgid "Invalid employee filter: {0}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:883
+#: hrms/hr/doctype/expense_claim/expense_claim.py:886
 msgid "Invalid parameters provided. Please pass the required arguments."
 msgstr ""
 
@@ -5704,7 +5733,7 @@ msgstr "عرض الوظيفة: {0} مقدم بالفعل لمقدم طلب وظ�
 msgid "Job Opening"
 msgstr "وظيفة شاغرة"
 
-#: hrms/hr/doctype/job_requisition/job_requisition.py:68
+#: hrms/hr/doctype/job_requisition/job_requisition.py:69
 msgid "Job Opening Associated"
 msgstr ""
 
@@ -5741,7 +5770,7 @@ msgstr ""
 msgid "Job Requisition"
 msgstr ""
 
-#: hrms/hr/doctype/job_requisition/job_requisition.py:65
+#: hrms/hr/doctype/job_requisition/job_requisition.py:66
 msgid "Job Requisition {0} has been associated with Job Opening {1}"
 msgstr ""
 
@@ -5826,7 +5855,7 @@ msgstr "وصف معيار التقييم"
 msgid "Key Result Area"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2641
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2653
 msgid "LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
 msgstr ""
 
@@ -5942,7 +5971,7 @@ msgstr "اترك المخصصات"
 msgid "Leave Application"
 msgstr "طلب اجازة"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:804
+#: hrms/hr/doctype/leave_application/leave_application.py:805
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
 msgstr ""
 
@@ -6035,7 +6064,7 @@ msgstr "التواريخ الممنوع اخذ اجازة فيها"
 msgid "Leave Block List Name"
 msgstr "اسم قائمة الإجازات المحظورة"
 
-#: hrms/hr/doctype/leave_application/leave_application.py:1440
+#: hrms/hr/doctype/leave_application/leave_application.py:1443
 msgid "Leave Blocked"
 msgstr "إجازة محظورة"
 
@@ -6243,7 +6272,7 @@ msgstr "نوع الإجازة {0} غير قابل للضبط"
 msgid "Leave Without Pay"
 msgstr "اجازة من دون راتب"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:603
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:604
 msgid "Leave Without Pay does not match with approved {} records"
 msgstr "لا تتطابق الإجازة بدون أجر مع سجلات {} المعتمدة"
 
@@ -6276,7 +6305,7 @@ msgstr "الاجازة لا يمكن تطبيقها او إلغائها قبل {
 msgid "Leave for optional holiday"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:550
+#: hrms/hr/doctype/leave_application/leave_application.py:551
 msgid "Leave of type {0} cannot be longer than {1}."
 msgstr ""
 
@@ -6641,7 +6670,7 @@ msgstr "الحد الأقصى لحمل الأوراق المعاد توجيهه�
 msgid "Maximum Consecutive Leaves Allowed"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:560
+#: hrms/hr/doctype/leave_application/leave_application.py:561
 msgid "Maximum Consecutive Leaves Exceeded"
 msgstr ""
 
@@ -6750,7 +6779,7 @@ msgstr ""
 msgid "Missing Salary Components"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1945
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1956
 msgid "Missing Tax Slab"
 msgstr ""
 
@@ -6792,7 +6821,7 @@ msgstr "ورقة الحضور الشهرية"
 msgid "More than one selection for {0} not allowed"
 msgstr "أكثر من اختيار واحد لـ {0} غير مسموح به"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:348
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:384
 msgid "Multiple Additional Salaries with overwrite property exist for Salary Component {0} between {1} and {2}."
 msgstr ""
 
@@ -6823,7 +6852,7 @@ msgid "My Requests"
 msgstr ""
 
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.py:123
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1383
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1394
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:387
 msgid "Name error"
 msgstr ""
@@ -6852,7 +6881,7 @@ msgstr ""
 msgid "Net Pay Info"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:283
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:284
 msgid "Net Pay cannot be less than 0"
 msgstr "صافي الأجر لا يمكن أن يكون أقل من 0"
 
@@ -6915,11 +6944,11 @@ msgstr ""
 msgid "No Employee Found"
 msgstr "لم يتم العثور على أي موظف\\n<br>\\nNo employee found"
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:195
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:201
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr "لم يتم العثور على موظف لقيمة حقل الموظف المحدد. &#39;{}&#39;: {}"
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:136 hrms/hr/utils.py:956
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:137 hrms/hr/utils.py:956
 msgid "No Employees Selected"
 msgstr ""
 
@@ -6951,7 +6980,7 @@ msgstr ""
 msgid "No Salary Structure Assignment found for employee {0} on date {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_withholding/salary_withholding.py:147
+#: hrms/payroll/doctype/salary_withholding/salary_withholding.py:148
 msgid "No Salary Structure Assignment found for employee {0} on or before {1}"
 msgstr ""
 
@@ -6979,11 +7008,11 @@ msgstr ""
 msgid "No active employee found associated with the email ID {0}. Try logging in with your employee email ID or contact your HR manager for access."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:516
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:517
 msgid "No active or default Salary Structure found for employee {0} for the given dates"
 msgstr "لم يتم العثور على أي نشاط أو هيكل راتب إفتراضي للموظف {0} للتواريخ المدخلة\\n<br>\\nNo active or default Salary Structure found for employee {0} for the given dates"
 
-#: hrms/hr/doctype/vehicle_log/vehicle_log.py:69
+#: hrms/hr/doctype/vehicle_log/vehicle_log.py:85
 msgid "No additional expenses has been added"
 msgstr "لم يتم إضافة مصاريف إضافية"
 
@@ -7044,7 +7073,7 @@ msgstr ""
 msgid "No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>Payroll Payable Account: {2}"
 msgstr ""
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:92
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:93
 msgid "No employees found for the selected criteria"
 msgstr ""
 
@@ -7093,7 +7122,7 @@ msgstr ""
 msgid "No replies from"
 msgstr "لا توجد ردود من"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1639
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1643
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
 msgstr "لم يتم العثور على أي زلة الراتب لتقديم المعايير المذكورة أعلاه أو زلة الراتب قدمت بالفعل"
 
@@ -7160,7 +7189,7 @@ msgstr ""
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2254
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2265
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr ""
 
@@ -7317,7 +7346,7 @@ msgstr ""
 msgid "Only Employee Grievance with status {0} or {1} can be submitted"
 msgstr ""
 
-#: hrms/hr/doctype/interview/interview.py:356
+#: hrms/hr/doctype/interview/interview.py:359
 msgid "Only Interviewer Are allowed to submit Interview Feedback"
 msgstr ""
 
@@ -7376,7 +7405,7 @@ msgstr ""
 msgid "Opening closed."
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:657
+#: hrms/hr/doctype/leave_application/leave_application.py:658
 msgid "Optional Holiday List not set for leave period {0}"
 msgstr "لم يتم تعيين قائمة العطلات الاختيارية لفترة الإجازة {0}"
 
@@ -7510,11 +7539,11 @@ msgstr ""
 msgid "Overtime Slip created for {0} employee(s)"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1296
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1298
 msgid "Overtime Slip creation is queued. It may take a few minutes"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1320
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1324
 msgid "Overtime Slip submission is queued. It may take a few minutes"
 msgstr ""
 
@@ -7558,12 +7587,12 @@ msgstr ""
 #. Label of the overwrite_salary_structure_amount (Check) field in DocType
 #. 'Additional Salary'
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:216
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:244
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:217
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:245
 msgid "Overwrite Salary Structure Amount"
 msgstr "الكتابة فوق هيكل الهيكل المرتب"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:100
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:101
 msgid "Overwrite Salary Structure Amount is disabled as the Salary Component: {0} not part of the Salary Structure: {1}"
 msgstr ""
 
@@ -7865,11 +7894,11 @@ msgstr ""
 msgid "Payroll Settings"
 msgstr "إعدادات دفع الرواتب"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:158
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:159
 msgid "Payroll date can not be greater than employee's relieving date."
 msgstr "لا يمكن أن يكون تاريخ كشوف المرتبات أكبر من تاريخ إعفاء الموظف."
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:150
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:151
 msgid "Payroll date can not be less than employee's joining date."
 msgstr "لا يمكن أن يكون تاريخ كشوف المرتبات أقل من تاريخ انضمام الموظف."
 
@@ -7877,7 +7906,7 @@ msgstr "لا يمكن أن يكون تاريخ كشوف المرتبات أقل 
 msgid "Payroll date cannot be in the past. This is to ensure that claims are made for the current or future payroll cycles."
 msgstr ""
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:146
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:147
 msgid "Payroll date is mandatory for non-recurring type additional salaries."
 msgstr ""
 
@@ -7947,7 +7976,7 @@ msgstr ""
 msgid "Please Select Company First"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:907
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:908
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 msgstr ""
 
@@ -7991,11 +8020,11 @@ msgstr ""
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2243
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2254
 msgid "Please see attachment"
 msgstr ""
 
-#: hrms/hr/doctype/staffing_plan/staffing_plan.py:250
+#: hrms/hr/doctype/staffing_plan/staffing_plan.py:252
 msgid "Please select Company and Designation"
 msgstr "يرجى تحديد الشركة والتسمية"
 
@@ -8074,7 +8103,7 @@ msgstr ""
 msgid "Please select employee first"
 msgstr ""
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:136
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:137
 msgid "Please select employees to create appraisals for"
 msgstr ""
 
@@ -8118,7 +8147,7 @@ msgstr ""
 msgid "Please set Leave Approver for the Employee: {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:587
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:588
 msgid "Please set Payroll based on in Payroll settings"
 msgstr "يرجى تعيين كشوف المرتبات على أساس إعدادات الرواتب"
 
@@ -8139,11 +8168,11 @@ msgstr ""
 msgid "Please set cost to company(CTC) for employee {0} in the {1}"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:712
+#: hrms/hr/doctype/leave_application/leave_application.py:713
 msgid "Please set default template for Leave Approval Notification in HR Settings."
 msgstr "يرجى تعيين القالب الافتراضي لإشعار إجازة الموافقة في إعدادات الموارد البشرية."
 
-#: hrms/hr/doctype/leave_application/leave_application.py:687
+#: hrms/hr/doctype/leave_application/leave_application.py:688
 msgid "Please set default template for Leave Status Notification in HR Settings."
 msgstr "يرجى تعيين القالب الافتراضي لإشعار حالة الإجازات في إعدادات الموارد البشرية."
 
@@ -8155,7 +8184,7 @@ msgstr ""
 msgid "Please set the Advance Account {0} or in {1}"
 msgstr ""
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:162
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:163
 msgid "Please set the Appraisal Template for all the {0} or select the template in the Employees table below."
 msgstr ""
 
@@ -8163,7 +8192,7 @@ msgstr ""
 msgid "Please set the Company"
 msgstr "يرجى تعيين الشركة"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:376
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:377
 msgid "Please set the Date Of Joining for employee {0}"
 msgstr "يرجى تحديد تاريخ الالتحاق بالموظف {0}"
 
@@ -8213,7 +8242,7 @@ msgstr "يرجى إعداد سلسلة الترقيم للحضور عبر الإ
 msgid "Please share your feedback to the training by clicking on 'Training Feedback' and then 'New'"
 msgstr "يرجى حصة ملاحظاتك للتدريب من خلال النقر على &quot;التدريب ردود الفعل&quot; ثم &quot;جديد&quot;"
 
-#: hrms/hr/doctype/interview/interview.py:225
+#: hrms/hr/doctype/interview/interview.py:227
 msgid "Please specify the job applicant to be updated."
 msgstr ""
 
@@ -8221,7 +8250,7 @@ msgstr ""
 msgid "Please specify {0} and {1} (if any), for the correct tax calculation in future salary slips."
 msgstr ""
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:182
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:183
 msgid "Please submit the {0} before marking the cycle as Completed"
 msgstr ""
 
@@ -8515,7 +8544,7 @@ msgstr ""
 msgid "Reason for Withholding Salary"
 msgstr ""
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:470
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:476
 msgid "Reason for skipping auto attendance:"
 msgstr ""
 
@@ -8583,8 +8612,8 @@ msgid "Reduction is more than {0}'s available leave balance {1} for leave type {
 msgstr ""
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:407
-#: hrms/hr/doctype/leave_application/leave_application.py:554
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:218
+#: hrms/hr/doctype/leave_application/leave_application.py:555
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:219
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:141
 msgid "Reference: {0}"
 msgstr ""
@@ -8625,7 +8654,7 @@ msgid "Refuelling Details"
 msgstr "تفاصيل إعادة التزود بالوقود"
 
 #: frontend/src/components/RequestActionSheet.vue:96
-#: hrms/hr/doctype/job_applicant/job_applicant.js:61
+#: hrms/hr/doctype/job_applicant/job_applicant.js:64
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:126
 msgid "Reject"
 msgstr ""
@@ -8916,7 +8945,7 @@ msgstr ""
 msgid "Row #{0}: Timesheet amount will overwrite the Earning component amount for the Salary Component {1}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:851
+#: hrms/hr/doctype/expense_claim/expense_claim.py:854
 msgid "Row No {0}: Amount cannot be greater than the Outstanding Amount against Expense Claim {1}. Outstanding Amount is {2}"
 msgstr ""
 
@@ -9014,7 +9043,7 @@ msgstr "نوع مكون الراتب"
 msgid "Salary Component for timesheet based payroll."
 msgstr "مكون الراتب لكشف المرتبات المبنية على أساس سجلات التوقيت"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:498
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:501
 msgid "Salary Component {0} cannot be selected more than once in Employee Benefits"
 msgstr ""
 
@@ -9150,11 +9179,11 @@ msgstr ""
 msgid "Salary Slip not found."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:410
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:411
 msgid "Salary Slip of employee {0} already created for this period"
 msgstr "كشف الراتب للموظف {0} تم إنشاؤه لهذه الفترة"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:416
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:417
 msgid "Salary Slip of employee {0} already created for time sheet {1}"
 msgstr "كشف الراتب للموظف {0} تم إنشاؤه لسجل التوقيت {1}"
 
@@ -9162,7 +9191,7 @@ msgstr "كشف الراتب للموظف {0} تم إنشاؤه لسجل التو
 msgid "Salary Slip submission is queued. It may take a few minutes"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1576
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1580
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr ""
 
@@ -9184,11 +9213,11 @@ msgstr "تم استحداث كشوف الرواتب"
 msgid "Salary Slips Submitted"
 msgstr "قسائم الرواتب المقدمة"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1618
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1622
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1645
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1649
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr ""
 
@@ -9231,11 +9260,11 @@ msgstr ""
 msgid "Salary Structure Assignment for Employee already exists"
 msgstr "تعيين هيكل الراتب للموظف موجود بالفعل"
 
-#: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:247
+#: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:248
 msgid "Salary Structure Assignment not found for employee {0} on date {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:519
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:520
 msgid "Salary Structure Missing"
 msgstr "هيكلية الراتب مفقودة"
 
@@ -9301,7 +9330,7 @@ msgstr ""
 msgid "Salary components should be part of the Salary Structure."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2664
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2679
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr ""
 
@@ -9371,7 +9400,7 @@ msgstr ""
 msgid "Select Payment Account to make Bank Entry"
 msgstr "اختار الحساب الذي سوف تدفع منه"
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1789
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1793
 msgid "Select Payroll Frequency."
 msgstr ""
 
@@ -9398,7 +9427,7 @@ msgstr "اختر الشروط والأحكام"
 msgid "Select Users"
 msgstr "حدد المستخدمون"
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:560
+#: hrms/hr/doctype/expense_claim/expense_claim.js:570
 msgid "Select an employee to get the employee advance."
 msgstr "حدد الموظف للحصول على تقدم الموظف."
 
@@ -9456,7 +9485,7 @@ msgstr ""
 msgid "Select your Leave Approver i.e. the person who approves or rejects your leaves."
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:595
+#: hrms/hr/doctype/expense_claim/expense_claim.js:605
 msgid "Selected employee advance is not of employee {0}"
 msgstr ""
 
@@ -9492,7 +9521,7 @@ msgstr "دراسة ذاتية"
 msgid "Self-approval for Expense Claims is not allowed"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:895
+#: hrms/hr/doctype/leave_application/leave_application.py:896
 msgid "Self-approval for leaves is not allowed"
 msgstr ""
 
@@ -9629,7 +9658,7 @@ msgstr ""
 msgid "Set the properties that should be updated in the Employee master on promotion submission"
 msgstr ""
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:230
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:231
 msgid "Set the status to {0} if required."
 msgstr ""
 
@@ -9889,7 +9918,7 @@ msgstr ""
 msgid "Shifts"
 msgstr "الورديات"
 
-#: hrms/hr/doctype/job_applicant/job_applicant.js:56
+#: hrms/hr/doctype/job_applicant/job_applicant.js:59
 msgid "Shortlist"
 msgstr ""
 
@@ -9973,7 +10002,7 @@ msgstr "تخطي الحضور التلقائي"
 msgid "Skipping Salary Structure Assignment for the following employees, as Salary Structure Assignment records already exists against them. {0}"
 msgstr "تخطي تعيين هيكل الرواتب للموظفين التاليين ، لأن سجلات تعيين هيكل الرواتب موجودة بالفعل ضدهم. {0}"
 
-#: hrms/api/roster.py:137
+#: hrms/api/roster.py:138
 msgid "Source and target shifts cannot be the same"
 msgstr ""
 
@@ -10035,7 +10064,7 @@ msgstr "معيار الإعفاء الضريبي"
 msgid "Standard Working Hours"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1879
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1890
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}."
 msgstr "تواريخ البدء والانتهاء ليست في فترة كشوف المرتبات الصالحة ، ولا يمكن حساب {0}."
 
@@ -10145,7 +10174,7 @@ msgstr ""
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr "تقديم قسائم الرواتب وإنشاء قيد دفتر اليومية ..."
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1700
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1704
 msgid "Submitting Salary Slips..."
 msgstr "تقديم قسائم الرواتب ..."
 
@@ -10179,7 +10208,7 @@ msgstr "عرض موجز"
 msgid "Sync {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1390
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1401
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:394
 msgid "Syntax error"
 msgstr ""
@@ -10324,6 +10353,10 @@ msgstr ""
 msgid "Thank you for applying."
 msgstr ""
 
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:297
+msgid "The amount exceeds the available balance for Employee Advance {0}. Available amount for return: {1}."
+msgstr ""
+
 #: hrms/overrides/company.py:131
 msgid "The currency of {0} should be same as the company's default currency. Please select another account."
 msgstr ""
@@ -10398,7 +10431,7 @@ msgstr "الوقت الذي يسبق وقت بدء التحول الذي يتم 
 msgid "Theory"
 msgstr "نظرية"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:584
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:585
 msgid "There are more holidays than working days this month."
 msgstr "أيام العطل لهذا الشهر أكثر من أيام العمل.\\n<br>\\nThere are more holidays than working days this month."
 
@@ -10414,13 +10447,13 @@ msgstr ""
 msgid "There are no vacancies under staffing plan {0}"
 msgstr "لا توجد وظائف شاغرة في إطار خطة التوظيف {0}"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:82
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:83
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:39
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:458
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:459
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:448
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:451
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
 msgstr ""
 
@@ -10446,17 +10479,17 @@ msgstr ""
 msgid "This employee already has a log with the same timestamp.{0}"
 msgstr "هذا الموظف لديه بالفعل سجل بنفس الطابع الزمني. {0}"
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1398
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1409
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:402
 msgid "This error can be due to invalid formula or condition."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1391
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1402
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:395
 msgid "This error can be due to invalid syntax."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1384
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1395
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:388
 msgid "This error can be due to missing or deleted field."
 msgstr ""
@@ -10473,7 +10506,7 @@ msgstr ""
 msgid "This is based on the attendance of this Employee"
 msgstr "هذا يستند على حضور الموظف"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:231
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:232
 msgid "This will overwrite the tax component {0} in the salary slip and tax won't be calculated based on the Income Tax Slabs"
 msgstr ""
 
@@ -10540,7 +10573,7 @@ msgstr ""
 msgid "To date can not be equal or less than from date"
 msgstr "حتى الآن لا يمكن أن يكون مساويا أو أقل من التاريخ"
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:156
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:157
 msgid "To date can not be greater than employee's relieving date."
 msgstr "حتى الآن لا يمكن أن يكون أكبر من تاريخ إعفاء الموظف."
 
@@ -10557,7 +10590,7 @@ msgstr "حتى الآن لا يمكن أن يكون أكبر من تاريخ ت�
 msgid "To date cannot be before from date"
 msgstr ""
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:242
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:243
 msgid "To overwrite the salary component amount for a tax component, please enable {0}"
 msgstr ""
 
@@ -10882,7 +10915,7 @@ msgstr ""
 msgid "Total leaves allocated is mandatory for Leave Type {0}"
 msgstr "إجمالي الإجازات المخصصة إلزامي لنوع الإجازة {0}"
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.py:522
+#: hrms/payroll/doctype/salary_structure/salary_structure.py:525
 msgid "Total of all employee benefits cannot be greater that Max Benefits Amount {0}"
 msgstr ""
 
@@ -10912,7 +10945,7 @@ msgstr ""
 msgid "Total working Days Per Year"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:253
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:254
 msgid "Total working hours should not be greater than max working hours {0}"
 msgstr "عدد ساعات العمل الكلي يجب ألا يكون أكثر من العدد الأقصى لساعات العمل {0}"
 
@@ -11188,7 +11221,7 @@ msgstr ""
 msgid "Unsettled Transactions"
 msgstr ""
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:183
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:184
 msgid "Unsubmitted Appraisals"
 msgstr ""
 
@@ -11253,7 +11286,7 @@ msgstr ""
 msgid "Updated status from {0} to {1} for date {2} in the attendance record {3}"
 msgstr ""
 
-#: hrms/hr/doctype/interview/interview.py:232
+#: hrms/hr/doctype/interview/interview.py:234
 msgid "Updated the Job Applicant status to {0}"
 msgstr ""
 
@@ -11338,7 +11371,7 @@ msgstr "القيمة مفقودة"
 #. 'Salary Component'
 #. Label of the variable_based_on_taxable_salary (Check) field in DocType
 #. 'Salary Detail'
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:240
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:241
 #: hrms/payroll/doctype/salary_component/salary_component.json
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 msgid "Variable Based On Taxable Salary"
@@ -11353,7 +11386,9 @@ msgstr "نباتي"
 #. Name of a report
 #. Label of a Link in the Expenses Workspace
 #. Label of a Workspace Sidebar Item
-#: hrms/hr/doctype/vehicle_log/vehicle_log.py:77
+#: hrms/hr/doctype/vehicle_log/vehicle_log.py:55
+#: hrms/hr/doctype/vehicle_log/vehicle_log.py:93
+#: hrms/hr/doctype/vehicle_log/vehicle_log.py:135
 #: hrms/hr/report/vehicle_expenses/vehicle_expenses.json
 #: hrms/hr/workspace/expenses/expenses.json
 #: hrms/workspace_sidebar/expenses.json
@@ -11389,7 +11424,7 @@ msgstr ""
 msgid "View Goals"
 msgstr ""
 
-#: hrms/hr/doctype/job_applicant/job_applicant.js:78
+#: hrms/hr/doctype/job_applicant/job_applicant.js:81
 msgid "View Job Offer"
 msgstr ""
 
@@ -11632,7 +11667,7 @@ msgstr ""
 msgid "You can only submit Leave Encashment for a valid encashment amount"
 msgstr "يمكنك فقط إرسال ترك الإلغاء لمبلغ سداد صالح"
 
-#: hrms/api/__init__.py:751
+#: hrms/api/__init__.py:752
 msgid "You can only upload JPG, PNG, PDF, TXT or Microsoft documents."
 msgstr ""
 
@@ -11774,7 +11809,7 @@ msgstr "مسجلة"
 msgid "the selected company"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_component/salary_component.py:187
+#: hrms/payroll/doctype/salary_component/salary_component.py:188
 msgid "via Salary Component sync"
 msgstr ""
 
@@ -11804,7 +11839,7 @@ msgstr ""
 msgid "{0} <br> This error can be due to missing or deleted field."
 msgstr ""
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:180
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:181
 msgid "{0} Appraisal(s) are not submitted yet"
 msgstr ""
 
@@ -11866,15 +11901,15 @@ msgstr ""
 msgid "{0} failed!"
 msgstr ""
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:238
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:239
 msgid "{0} has {1} enabled"
 msgstr ""
 
-#: hrms/payroll/doctype/additional_salary/additional_salary.py:250
+#: hrms/payroll/doctype/additional_salary/additional_salary.py:251
 msgid "{0} is an Accrual Component and this will be recorded as a payout in Employee Benefits Ledger"
 msgstr ""
 
-#: hrms/hr/doctype/employee_checkin/employee_checkin.py:254
+#: hrms/hr/doctype/employee_checkin/employee_checkin.py:260
 msgid "{0} is an invalid Attendance Status."
 msgstr ""
 
@@ -11886,7 +11921,7 @@ msgstr ""
 msgid "{0} is not allowed to submit Interview Feedback for the Interview: {1}"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:665
+#: hrms/hr/doctype/leave_application/leave_application.py:666
 msgid "{0} is not in Optional Holiday List"
 msgstr "{0} ليس في قائمة عطلات اختيارية"
 
@@ -11943,7 +11978,7 @@ msgstr ""
 msgid "{0}. Check error log for more details."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2277
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2288
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr "{0}: البريد الإلكتروني للموظف غير موجود، وبالتالي لن يتم إرسال البريد الإلكتروني"
 

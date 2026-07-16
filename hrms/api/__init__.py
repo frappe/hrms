@@ -78,6 +78,17 @@ def get_all_employees() -> list[dict]:
 	)
 
 
+@frappe.whitelist()
+def get_reports_to_employee_name(employee: str) -> str:
+	reports_to = frappe.db.get_value(
+		"Employee", {"user_id": frappe.session.user, "status": "Active"}, "reports_to"
+	)
+	if not reports_to or reports_to != employee:
+		frappe.throw(_("Not permitted"), frappe.PermissionError)
+
+	return frappe.db.get_value("Employee", employee, "employee_name") or ""
+
+
 def get_current_employee() -> str:
 	employee = get_current_employee_info().get("name")
 	if not employee:
