@@ -46,7 +46,7 @@ frappe.listview_settings["Attendance"] = {
 							fieldtype: "Date",
 							fieldname: "from_date",
 							reqd: 1,
-							default: first_day_of_month.toDate(),
+							default: first_day_of_month.format("YYYY-MM-DD"),
 							onchange: () => me.get_unmarked_days(dialog),
 						},
 						{
@@ -65,7 +65,7 @@ frappe.listview_settings["Attendance"] = {
 							fieldtype: "Date",
 							fieldname: "to_date",
 							reqd: 1,
-							default: moment().toDate(),
+							default: moment().format("YYYY-MM-DD"),
 							onchange: () => me.get_unmarked_days(dialog),
 						},
 						{
