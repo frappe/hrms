@@ -385,7 +385,8 @@ def mark_bulk_attendance(data: str | dict):
 	if not data.unmarked_days:
 		frappe.throw(_("Please select a date."))
 		return
-	if any(getdate(d) > getdate(nowdate()) for d in data.unmarked_days):
+	today = getdate()
+	if any(getdate(d) > today for d in data.unmarked_days):
 		frappe.throw(_("Future dates not allowed"))
 	if len(data.unmarked_days) > 10 or frappe.flags.test_bg_job:
 		job_id = f"process_bulk_attendance_for_employee_{data.employee}"
@@ -440,7 +441,7 @@ def get_unmarked_days(
 	)
 
 	from_date = max(getdate(from_date), joining_date or getdate(from_date))
-	to_date = min(getdate(to_date), relieving_date or getdate(to_date), getdate(nowdate()))
+	to_date = min(getdate(to_date), relieving_date or getdate(to_date), getdate())
 
 	records = frappe.get_all(
 		"Attendance",
