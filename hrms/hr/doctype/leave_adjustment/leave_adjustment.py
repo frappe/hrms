@@ -23,6 +23,7 @@ class LeaveAdjustment(Document):
 		adjustment_type: DF.Literal["", "Allocate", "Reduce"]
 		allocated_leaves: DF.Float
 		amended_from: DF.Link | None
+		company: DF.Link | None
 		employee: DF.Link
 		employee_name: DF.Data | None
 		from_date: DF.Date | None

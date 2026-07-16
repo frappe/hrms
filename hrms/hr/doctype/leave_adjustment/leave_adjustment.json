@@ -10,6 +10,7 @@
   "naming_series",
   "employee",
   "employee_name",
+  "company",
   "amended_from",
   "column_break_juxz",
   "leave_type",
@@ -148,13 +149,21 @@
    "fieldname": "reason_for_adjustment",
    "fieldtype": "Small Text",
    "label": "Reason for Adjustment"
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-07 16:28:07.109228",
+ "modified": "2026-07-16 17:41:38.440720",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Adjustment",
