@@ -336,7 +336,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 
 		if self.is_paid and self.grand_total:
 			# payment entry
-			payment_account = get_bank_cash_account(self.mode_of_payment, self.company).get("account")
+			payment_account = self.flags.bank_cash_account or get_bank_cash_account(self.mode_of_payment, self.company).get("account")
 			gl_entry.append(
 				self.get_gl_dict(
 					{
@@ -493,7 +493,8 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 			if not self.mode_of_payment:
 				frappe.throw(_("Mode of payment is required to make a payment").format(self.employee))
 
-			if self.grand_total and not get_bank_cash_account(self.mode_of_payment, self.company).get("account"):
+			self.flags.bank_cash_account = get_bank_cash_account(self.mode_of_payment, self.company).get("account")
+			if self.grand_total and not self.flags.bank_cash_account:
 				frappe.throw(
 					_("{0} could not be determined for Mode of Payment {1}.").format(
 						frappe.bold(_("Bank/Cash Account")), frappe.bold(self.mode_of_payment)
