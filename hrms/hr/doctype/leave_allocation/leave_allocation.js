@@ -30,6 +30,14 @@ frappe.ui.form.on("Leave Allocation", {
 
 	refresh: function (frm) {
 		hrms.leave_utils.add_view_ledger_button(frm);
+		frm.dashboard.transactions_area
+			.find('.document-link[data-report="Employee Leave Balance"] .report-link')
+			.off("click")
+			.on("click", () => {
+				frappe.set_route("query-report", "Employee Leave Balance", {
+					employee: frm.doc.employee,
+				});
+			});
 
 		if (frm.doc.docstatus === 1 && !frm.doc.expired) {
 			var valid_expiry = moment(frappe.datetime.get_today()).isBetween(
