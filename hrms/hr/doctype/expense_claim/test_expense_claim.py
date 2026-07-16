@@ -40,6 +40,41 @@ class TestExpenseClaim(HRMSTestSuite):
 		frappe.db.set_value("Account", "Payroll Payable - _TC", "account_type", "Payable")
 		frappe.set_user("Administrator")
 
+	def test_payable_account_is_mandatory_to_book_expense_claim(self):
+		payable_account = get_payable_account(company_name)
+		expense_claim = make_expense_claim(
+			payable_account, 300, 200, company_name, "Travel Expenses - _TC3", do_not_submit=True
+		)
+		expense_claim.payable_account = None
+
+		self.assertRaisesRegex(
+			frappe.ValidationError,
+			"Payable Account",
+			expense_claim.validate_account_details,
+		)
+
+	def test_bank_or_cash_account_required_when_expense_claim_is_paid(self):
+		payable_account = get_payable_account(company_name)
+		mode_of_payment = frappe.get_doc(
+			{
+				"doctype": "Mode of Payment",
+				"mode_of_payment": f"_Test Mode without Account-{random_string(5)}",
+				"type": "Bank",
+			}
+		).insert()
+
+		expense_claim = make_expense_claim(
+			payable_account, 300, 200, company_name, "Travel Expenses - _TC3", do_not_submit=True
+		)
+		expense_claim.is_paid = 1
+		expense_claim.mode_of_payment = mode_of_payment.name
+
+		self.assertRaisesRegex(
+			frappe.ValidationError,
+			"Bank/Cash Account",
+			expense_claim.validate_account_details,
+		)
+
 	def test_total_expense_claim_for_project(self):
 		project = create_project("_Test Project 1", company="_Test Company")
 
