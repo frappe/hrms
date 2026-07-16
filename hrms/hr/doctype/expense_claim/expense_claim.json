@@ -391,11 +391,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2024-12-16 16:16:47.975814",
-=======
  "modified": "2026-07-15 16:43:28.006860",
->>>>>>> 77e969bf0 (fix: add mandatory depends on for payable account field)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claim",
