@@ -2,12 +2,7 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, getdate
 
-<<<<<<< HEAD
-from hrms.api.roster import get_shifts
-=======
 from hrms.api.roster import get_shifts, insert_shift
-from hrms.tests.utils import HRMSTestSuite
->>>>>>> 3faae9be1 (fix: cancelled Shift Assignments silently block new shift creation via Roster API)
 
 
 class TestRoster(FrappeTestCase):
