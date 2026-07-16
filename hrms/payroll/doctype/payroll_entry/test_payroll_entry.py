@@ -1216,18 +1216,24 @@ class TestPayrollEntry(HRMSTestSuite):
 		)
 
 		# Calculate holidays using both lists to find the expected difference
-		company_holidays = payroll_entry.get_holidays_count(company_holiday_list, dates.start_date, dates.end_date)
-		employee_holidays = payroll_entry.get_holidays_count(employee_holiday_list, dates.start_date, dates.end_date)
+		company_holidays = payroll_entry.get_holidays_count(
+			company_holiday_list, dates.start_date, dates.end_date
+		)
+		employee_holidays = payroll_entry.get_holidays_count(
+			employee_holiday_list, dates.start_date, dates.end_date
+		)
 
 		self.assertNotEqual(company_holidays, employee_holidays)
 
 		# 3. Fetch unmarked attendance
 		payroll_entry.validate_attendance = True
-		employees = payroll_entry.get_employees_with_unmarked_attendance()
+		employees = payroll_entry.get_employees_with_unmarked_attendance() or []
 
-		# Compare unmarked days.
+		# Compare unmarked days — match production formula exactly
 		payroll_days = date_diff(dates.end_date, dates.start_date) + 1
-		expected_unmarked_days = payroll_days - employee_holidays
+		# attendance_count is 0 since no attendance records created in this test
+		attendance_count = 0
+		expected_unmarked_days = payroll_days - (employee_holidays + attendance_count)
 
 		emp_unmarked = next((x for x in employees if x["employee"] == employee), None)
 		self.assertIsNotNone(emp_unmarked)

@@ -31,7 +31,6 @@ from erpnext.accounts.utils import get_fiscal_year
 
 from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import if_lending_app_installed
 from hrms.payroll.doctype.salary_withholding.salary_withholding import link_bank_entry_in_salary_withholdings
-from hrms.utils.holiday_list import get_holiday_list_for_employee
 
 
 class PayrollEntry(Document):
@@ -1168,8 +1167,21 @@ class PayrollEntry(Document):
 		if not self.validate_attendance:
 			return
 
+		from hrms.utils.holiday_list import get_assigned_holiday_lists_to_employee_and_company
+
 		unmarked_attendance = []
 		employee_details = self.get_employee_and_attendance_details()
+
+		# Bulk fetch all holiday list assignments for employees and company
+		employee_names = [emp.employee for emp in self.employees]
+		assigned_lists = get_assigned_holiday_lists_to_employee_and_company(
+			[*employee_names, self.company], self.start_date, self.end_date
+		)
+
+		# Fallback to company default if no HLA records exist
+		default_holiday_list = frappe.db.get_value(
+			"Company", self.company, "default_holiday_list", cache=True
+		)
 
 		for emp in self.employees:
 			details = next((record for record in employee_details if record.name == emp.employee), None)
@@ -1177,9 +1189,24 @@ class PayrollEntry(Document):
 				continue
 
 			start_date, end_date = self.get_payroll_dates_for_employee(details)
-			holiday_list = get_holiday_list_for_employee(
-				emp.employee, raise_exception=False, as_on=getdate(start_date)
-			)
+
+			# Find employee's holiday list: HLA first, then company HLA, then company default
+			holiday_list = None
+			emp_assignments = assigned_lists.get(emp.employee, [])
+			if emp_assignments:
+				for assignment in emp_assignments:
+					if assignment["from_date"] <= getdate(start_date) <= assignment["to_date"]:
+						holiday_list = assignment["holiday_list"]
+						break
+			if not holiday_list:
+				company_assignments = assigned_lists.get(self.company, [])
+				for assignment in company_assignments:
+					if assignment["from_date"] <= getdate(start_date) <= assignment["to_date"]:
+						holiday_list = assignment["holiday_list"]
+						break
+			if not holiday_list:
+				holiday_list = default_holiday_list
+
 			holidays = self.get_holidays_count(holiday_list, start_date, end_date) if holiday_list else 0
 			payroll_days = date_diff(end_date, start_date) + 1
 			unmarked_days = payroll_days - (holidays + details.attendance_count)
@@ -1202,7 +1229,6 @@ class PayrollEntry(Document):
 		                "name": "HREMP00001",
 		                "date_of_joining": "2019-01-01",
 		                "relieving_date": "2022-01-01",
-		                "holiday_list": "Holiday List Company",
 		                "attendance_count": 22
 		        }
 		]
