@@ -41,13 +41,7 @@ class JobOffer(Document):
 	def onload(self):
 		employee = frappe.db.get_value("Employee", {"job_applicant": self.job_applicant}, "name") or ""
 		self.set_onload("employee", employee)
-		self.set_onload(
-			"offer_letter_sent",
-			frappe.db.exists(
-				"Communication",
-				{"reference_doctype": "Job Offer", "reference_name": self.name, "sent_or_received": "Sent"},
-			),
-		)
+		self.set_onload("offer_letter_sent", self.offer_letter_sent)
 
 	def validate(self):
 		self.validate_vacancies()
@@ -168,6 +162,8 @@ def send_offer_letter(
 		send_email=True,
 		attachments=[attachment],
 	)
+
+	doc.db_set("offer_letter_sent", 1)
 
 
 @frappe.whitelist()

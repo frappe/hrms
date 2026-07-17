@@ -310,6 +310,11 @@ def send_interview_confirmation(interview: str):
 	if not confirmation_settings.hiring_sender_email:
 		frappe.throw(_("Please set a {0} in HR Settings.").format(frappe.bold(_("Hiring Sender Email"))))
 
+	if not confirmation_settings.interview_confirmation_template:
+		frappe.throw(
+			_("Please set an {0} in HR Settings.").format(frappe.bold(_("Interview Confirmation Template")))
+		)
+
 	doc = frappe.get_doc("Interview", interview)
 	confirmation_template = frappe.get_doc(
 		"Email Template", confirmation_settings.interview_confirmation_template

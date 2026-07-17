@@ -162,6 +162,13 @@
    "read_only": 1
   },
   {
+   "default": "0",
+   "fieldname": "offer_letter_sent",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Offer Letter Sent"
+  },
+  {
    "fieldname": "job_offer_term_template",
    "fieldtype": "Link",
    "label": "Job Offer Term Template",
