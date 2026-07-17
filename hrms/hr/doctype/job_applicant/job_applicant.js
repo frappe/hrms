@@ -206,6 +206,7 @@ frappe.ui.form.on("Job Applicant", {
 						.get_value("HR Settings", "HR Settings", [
 							"send_interview_confirmation",
 							"hiring_sender_email",
+							"interview_confirmation_template",
 						])
 						.then((r) => {
 							const settings = r.message;
@@ -219,7 +220,7 @@ frappe.ui.form.on("Job Applicant", {
 								!settings.hiring_sender_email
 							) {
 								frappe.msgprint({
-									title: __("Email Not Configured"),
+									title: __("Action Required"),
 									message: __("Please enable {0} and set a {1} in {2}.", [
 										frappe.utils.bold(__("Send Interview Confirmation")),
 										frappe.utils.bold(__("Hiring Sender Email")),
@@ -230,7 +231,7 @@ frappe.ui.form.on("Job Applicant", {
 								return;
 							} else if (!settings.send_interview_confirmation) {
 								frappe.msgprint({
-									title: __("Email Not Configured"),
+									title: __("Interview Confirmations Disabled"),
 									message: __("Please enable {0} in {1}.", [
 										frappe.utils.bold(__("Send Interview Confirmation")),
 										hr_settings_link,
@@ -243,6 +244,16 @@ frappe.ui.form.on("Job Applicant", {
 									title: __("Email Not Configured"),
 									message: __("Please set a {0} in {1}.", [
 										frappe.utils.bold(__("Hiring Sender Email")),
+										hr_settings_link,
+									]),
+									indicator: "orange",
+								});
+								return;
+							} else if (!settings.interview_confirmation_template) {
+								frappe.msgprint({
+									title: __("Template Not Set"),
+									message: __("Please set an {0} in {1}.", [
+										frappe.utils.bold(__("Interview Confirmation Template")),
 										hr_settings_link,
 									]),
 									indicator: "orange",
