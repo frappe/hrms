@@ -135,7 +135,7 @@
 import { computed, inject, ref, watch, onMounted, onBeforeUnmount } from "vue"
 import { useRouter } from "vue-router"
 import { IonPage, IonContent } from "@ionic/vue"
-import { createDocumentResource, createResource, toast } from "frappe-ui"
+import { createDocumentResource, createResource } from "frappe-ui"
 
 import { showErrorAlert } from "@/utils/dialogs"
 import { formatCurrency } from "@/utils/formatters"
