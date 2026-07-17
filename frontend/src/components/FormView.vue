@@ -522,12 +522,8 @@ const docList = createListResource({
 	doctype: props.doctype,
 	insert: {
 		async onSuccess(data) {
-			toast({
-				title: __("Success"),
-				text: __("{0} created successfully!", [__(props.doctype)]),
-				icon: "check-circle",
-				position: "bottom-center",
-				iconClasses: "text-green-500",
+			toast.success(__("Success"), {
+				description: __("{0} created successfully!", [__(props.doctype)]),
 			})
 			await uploadAllAttachments(data.doctype, data.name, fileAttachments.value)
 
@@ -537,12 +533,8 @@ const docList = createListResource({
 			})
 		},
 		onError() {
-			toast({
-				title: __("Error"),
-				text: __("Error creating {0}", [__(props.doctype)]),
-				icon: "alert-circle",
-				position: "bottom-center",
-				iconClasses: "text-red-500",
+			toast.error(__("Error"), {
+				description: __("Error creating {0}", [__(props.doctype)]),
 			})
 			console.log(`Error creating ${props.doctype}`)
 		},
@@ -554,21 +546,13 @@ const documentResource = createDocumentResource({
 	name: props.id,
 	setValue: {
 		onSuccess() {
-			toast({
-				title: __("Success"),
-				text: __("{0} updated successfully!", [__(props.doctype)]),
-				icon: "check-circle",
-				position: "bottom-center",
-				iconClasses: "text-green-500",
+			toast.success(__("Success"), {
+				description: __("{0} updated successfully!", [__(props.doctype)]),
 			})
 		},
 		onError() {
-			toast({
-				title: __("Error"),
-				text: __("Error updating {0}", [__(props.doctype)]),
-				icon: "alert-circle",
-				position: "bottom-center",
-				iconClasses: "text-red-500",
+			toast.error(__("Error"), {
+				description: __("Error updating {0}", [__(props.doctype)]),
 			})
 			console.log(`Error updating ${props.doctype}`)
 		},
@@ -576,21 +560,13 @@ const documentResource = createDocumentResource({
 	delete: {
 		onSuccess() {
 			router.back()
-			toast({
-				title: __("Success"),
-				text: __("{0} deleted successfully!", [__(props.doctype)]),
-				icon: "check-circle",
-				position: "bottom-center",
-				iconClasses: "text-green-500",
+			toast.success(__("Success"), {
+				description: __("{0} deleted successfully!", [__(props.doctype)]),
 			})
 		},
 		onError() {
-			toast({
-				title: __("Error"),
-				text: __("Error deleting {0}", [__(props.doctype)]),
-				icon: "alert-circle",
-				position: "bottom-center",
-				iconClasses: "text-red-500",
+			toast.error(__("Error"), {
+				description: __("Error deleting {0}", [__(props.doctype)]),
 			})
 			console.log(`Error deleting ${props.doctype}`)
 		},

@@ -69,12 +69,8 @@ const forgotPasswordResource = createResource({
 	url: "frappe.core.doctype.user.user.reset_password",
 	method: "POST",
 	onSuccess() {
-		toast({
-			title: __("Success"),
-			text: __("Password reset link has been sent to your email."),
-			icon: "check-circle",
-			position: "bottom-center",
-			iconClasses: "text-green-500",
+		toast.success(__("Success"), {
+			description: __("Password reset link has been sent to your email."),
 		})
 		errorMessage.value = ""
 		router.replace({ name: "Login" })

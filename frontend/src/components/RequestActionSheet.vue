@@ -311,21 +311,13 @@ const updateDocumentStatus = ({ status = "", docstatus = 0 }) => {
 			onSuccess() {
 				if (docstatus !== 0) modalController.dismiss()
 
-				toast({
-					title: __("Success"),
-					text: getSuccessMessage({ status, docstatus }),
-					icon: "check-circle",
-					position: "bottom-center",
-					iconClasses: "text-green-500",
+				toast.success(__("Success"), {
+					description: getSuccessMessage({ status, docstatus }),
 				})
 			},
 			onError() {
-				toast({
-					title: __("Error"),
-					text: getFailureMessage({ status, docstatus }),
-					icon: "alert-circle",
-					position: "bottom-center",
-					iconClasses: "text-red-500",
+				toast.error(__("Error"), {
+					description: getFailureMessage({ status, docstatus }),
 				})
 			},
 		}

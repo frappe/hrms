@@ -114,21 +114,13 @@ const togglePushNotifications = (newValue) => {
 			.disableNotification()
 			.then(() => {
 				pushNotificationState.value = false
-				toast({
-					title: __("Success"),
-					text: __("Push notifications disabled"),
-					icon: "check-circle",
-					position: "bottom-center",
-					iconClasses: "text-green-500",
+				toast.success(__("Success"), {
+					description: __("Push notifications disabled"),
 				})
 			})
 			.catch((error) => {
-				toast({
-					title: __("Error"),
-					text: __(error.message),
-					icon: "alert-circle",
-					position: "bottom-center",
-					iconClasses: "text-red-500",
+				toast.error(__("Error"), {
+					description: __(error.message),
 				})
 			})
 			.finally(() => {
@@ -145,23 +137,15 @@ const enablePushNotifications = () => {
 			if (data.permission_granted) {
 				pushNotificationState.value = true
 			} else {
-				toast({
-					title: __("Error"),
-					text: __("Push Notification permission denied"),
-					icon: "alert-circle",
-					position: "bottom-center",
-					iconClasses: "text-red-500",
+				toast.error(__("Error"), {
+					description: __("Push Notification permission denied"),
 				})
 				pushNotificationState.value = false
 			}
 		})
 		.catch((error) => {
-			toast({
-				title: __("Error"),
-				text: __(error.message),
-				icon: "alert-circle",
-				position: "bottom-center",
-				iconClasses: "text-red-500",
+			toast.error(__("Error"), {
+				description: __(error.message),
 			})
 			pushNotificationState.value = false
 		})

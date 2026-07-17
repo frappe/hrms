@@ -77,12 +77,8 @@ const updatePasswordResource = createResource({
 	url: "frappe.core.doctype.user.user.update_password",
 	method: "POST",
 	onSuccess() {
-		toast({
-			title: __("Success"),
-			text: __("Your password has been updated."),
-			icon: "check-circle",
-			position: "bottom-center",
-			iconClasses: "text-green-500",
+		toast.success(__("Success"), {
+			description: __("Your password has been updated."),
 		})
 		resetForm()
 		router.back()

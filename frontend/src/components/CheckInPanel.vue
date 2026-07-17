@@ -171,24 +171,16 @@ const submitLog = (logType) => {
 		{
 			onSuccess() {
 				modalController.dismiss()
-				toast({
-					title: __("Success"),
-					text: __("{0} successful!", [actionLabel]),
-					icon: "check-circle",
-					position: "bottom-center",
-					iconClasses: "text-green-500",
+				toast.success(__("Success"), {
+					description: __("{0} successful!", [actionLabel]),
 				})
 			},
 			onError(error) {
 				let messages = error.messages || []
 
 				for (const message of messages) {
-					toast({
-						title: __("Error"),
-						text: message || __("{0} failed!", [actionLabel]),
-						icon: "alert-circle",
-						position: "bottom-center",
-						iconClasses: "text-red-500",
+					toast.error(__("Error"), {
+						description: message || __("{0} failed!", [actionLabel]),
 					})
 				}
 			},

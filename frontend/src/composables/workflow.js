@@ -67,21 +67,13 @@ export default function useWorkflow(doctype) {
 			url: "frappe.model.workflow.apply_workflow",
 			params: { doc: doc, action: action },
 			onSuccess() {
-				toast({
-					title: "Success",
-					text: `Workflow action '${action}' applied successfully`,
-					icon: "check-circle",
-					position: "bottom-center",
-					iconClasses: "text-green-500",
+				toast.success("Success", {
+					description: `Workflow action '${action}' applied successfully`,
 				})
 			},
 			onError() {
-				toast({
-					title: "Error",
-					text: `Error applying workflow action: ${action}`,
-					icon: "alert-circle",
-					position: "bottom-center",
-					iconClasses: "text-red-500",
+				toast.error("Error", {
+					description: `Error applying workflow action: ${action}`,
 				})
 				console.log(`Error applying workflow action: ${action}`)
 			},
