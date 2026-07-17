@@ -220,14 +220,11 @@ frappe.ui.form.on("Job Applicant", {
 							) {
 								frappe.msgprint({
 									title: __("Email Not Configured"),
-									message: __(
-										"Please enable {0} and set a {1} in {2}.",
-										[
-											frappe.utils.bold(__("Send Interview Confirmation")),
-											frappe.utils.bold(__("Hiring Sender Email")),
-											hr_settings_link,
-										],
-									),
+									message: __("Please enable {0} and set a {1} in {2}.", [
+										frappe.utils.bold(__("Send Interview Confirmation")),
+										frappe.utils.bold(__("Hiring Sender Email")),
+										hr_settings_link,
+									]),
 									indicator: "orange",
 								});
 								return;

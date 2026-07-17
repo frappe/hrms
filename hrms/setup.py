@@ -450,15 +450,15 @@ def setup_notifications():
 	]
 
 	# Interview
-	response = frappe.read_file(
-		os.path.join(base_path, "interview/interview_confirmation_template.html")
-	)
+	response = frappe.read_file(os.path.join(base_path, "interview/interview_confirmation_template.html"))
 	records += [
 		{
 			"doctype": "Email Template",
 			"name": _("Interview Confirmation"),
 			"response": response,
-			"subject": _("Interview Scheduled: {{ interview_type }} on {{ frappe.utils.formatdate(scheduled_on) }}"),
+			"subject": _(
+				"Interview Scheduled: {{ interview_type }} on {{ frappe.utils.formatdate(scheduled_on) }}"
+			),
 			"owner": frappe.session.user,
 		}
 	]

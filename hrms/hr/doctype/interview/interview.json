@@ -145,6 +145,13 @@
    "label": "Reminded"
   },
   {
+   "default": "0",
+   "fieldname": "confirmation_sent",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Confirmation Sent"
+  },
+  {
    "fieldname": "from_time",
    "fieldtype": "Time",
    "in_list_view": 1,

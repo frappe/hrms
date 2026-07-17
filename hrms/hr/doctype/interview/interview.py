@@ -46,13 +46,7 @@ class Interview(Document):
 	# end: auto-generated types
 
 	def onload(self):
-		self.set_onload(
-			"confirmation_sent",
-			frappe.db.exists(
-				"Communication",
-				{"reference_doctype": "Interview", "reference_name": self.name, "sent_or_received": "Sent"},
-			),
-		)
+		self.set_onload("confirmation_sent", self.confirmation_sent)
 
 	def validate(self):
 		self.validate_duplicate_interview()
@@ -368,6 +362,8 @@ def send_interview_confirmation(interview: str):
 		),
 		interviewers,
 	)
+
+	doc.db_set("confirmation_sent", 1)
 
 
 def send_daily_feedback_reminder():
