@@ -22,7 +22,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Attendance",
-   "link_count": 5,
+   "link_count": 4,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -62,16 +62,6 @@
    "label": "Employee Attendance Tool",
    "link_count": 0,
    "link_to": "Employee Attendance Tool",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Upload Attendance",
-   "link_count": 0,
-   "link_to": "Upload Attendance",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
