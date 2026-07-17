@@ -1,10 +1,10 @@
 <template>
 	<!-- Install PWA dialog -->
-	<Dialog v-model="showDialog">
-		<template #body-title>
+	<Dialog v-model:open="showDialog">
+		<template #title>
 			<h2 class="text-lg font-bold">{{ __("Install Frappe HR") }} </h2>
 		</template>
-		<template #body-content>
+		<template #default>
 			<p>{{ __("Get the app on your device for easy access & a better experience!") }} </p>
 		</template>
 		<template #actions>
@@ -16,8 +16,8 @@
 	</Dialog>
 
 	<!-- iOS installation info message -->
-	<Popover :show="iosInstallMessage" placement="bottom">
-		<template #body>
+	<Popover v-model:open="iosInstallMessage" side="bottom" align="center" bare>
+		<template #default>
 			<div
 				class="mt-[calc(100vh-15rem)] flex flex-col gap-3 mx-2 rounded py-5 bg-blue-100 drop-shadow-xl"
 			>

@@ -44,11 +44,11 @@
 				</li>
 			</ul>
 
-			<Dialog v-model="showDialog">
-				<template #body-title>
+			<Dialog v-model:open="showDialog">
+				<template #title>
 					<h2 class="text-lg font-bold">{{ __("Delete Attachment") }} </h2>
 				</template>
-				<template #body-content>
+				<template #default>
 					<p>
 						{{ __("Are you sure you want to delete the attachment") }}
 						<span class="font-bold">{{ selectedFile.file_name }}</span>

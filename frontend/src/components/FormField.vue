@@ -137,10 +137,10 @@
 		<!-- Datetime -->
 		<DateTimePicker
 			v-else-if="props.fieldtype === 'Datetime'"
-			:value="modelValue"
+			:model-value="modelValue"
 			:placeholder="`Select ${props.label}`"
-			:formatter="(val) => dayjs(val).format('DD-MM-YYYY HH:mm:ss')"
-			@update:modelValue="(v) => emit('update:modelValue', v)"
+			format="DD-MM-YYYY HH:mm:ss"
+			@update:model-value="(v) => emit('update:modelValue', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
 		/>

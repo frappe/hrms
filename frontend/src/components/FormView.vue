@@ -219,11 +219,11 @@
 	</div>
 
 	<!-- Confirmation Dialogs -->
-	<Dialog v-model="showDeleteDialog">
-		<template #body-title>
+	<Dialog v-model:open="showDeleteDialog">
+		<template #title>
 			<h2 class="text-xl font-bold">{{ __("Delete {0}", [__(props.doctype)]) }}</h2>
 		</template>
-		<template #body-content>
+		<template #default>
 			<p>
 				{{ __("Are you sure you want to delete the {0}", [__(props.doctype)])  }}
 				<span class="font-bold">{{ formModel.name }}</span>
@@ -251,11 +251,11 @@
 		</template>
 	</Dialog>
 
-	<Dialog v-model="showSubmitDialog">
-		<template #body-title>
+	<Dialog v-model:open="showSubmitDialog">
+		<template #title>
 			<h2 class="text-xl font-bold">{{ __("Confirm") }} </h2>
 		</template>
-		<template #body-content>
+		<template #default>
 			<p>
 				{{ __("Permanently submit {0}", [__(props.doctype)]) }}
 				<span class="font-bold">{{ formModel.name }}</span>
@@ -282,11 +282,11 @@
 		</template>
 	</Dialog>
 
-	<Dialog v-model="showCancelDialog">
-		<template #body-title>
+	<Dialog v-model:open="showCancelDialog">
+		<template #title>
 			<h2 class="text-xl font-bold">{{ __("Confirm") }} </h2>
 		</template>
-		<template #body-content>
+		<template #default>
 			<p>
 				{{ __("Permanently cancel {0}", [__(props.doctype)]) }}
 				<span class="font-bold">{{ formModel.name }}</span

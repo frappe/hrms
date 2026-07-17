@@ -91,11 +91,11 @@
 					<div v-else-if="user_pass_login_disabled.data" class="text-center text-gray-600 py-8">{{ __("No login methods are available. Please contact your administrator.") }}</div>
 				</div>
 			</div>
-			<Dialog v-model="otp.showDialog">
-				<template #body-title>
+			<Dialog v-model:open="otp.showDialog">
+				<template #title>
 					<h2 class="text-lg font-bold">{{ __("OTP Verification") }}</h2>
 				</template>
-				<template #body-content>
+				<template #default>
 					<p class="mb-4" v-if="otp.verification.prompt">
 						{{ otp.verification.prompt }}
 					</p>
