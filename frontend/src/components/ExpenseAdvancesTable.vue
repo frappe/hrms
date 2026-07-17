@@ -45,11 +45,11 @@
 					<span class="text-normal">
 						{{ currencySymbol }}
 					</span>
-					<Input
+					<TextInput
 						type="number"
 						class="w-20"
 						v-model="advance.allocated_amount"
-						@input="(v) => (advance.selected = v)"
+						@update:model-value="(v) => (advance.selected = Boolean(v))"
 						@click.stop
 						:disabled="isReadOnly"
 						:max="advance.unclaimed_amount"
@@ -65,6 +65,7 @@
 
 <script setup>
 import { computed, inject } from "vue"
+import { TextInput } from "frappe-ui"
 import { getCurrencySymbol } from "@/data/currencies"
 import { formatCurrency } from "@/utils/formatters"
 

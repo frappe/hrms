@@ -21,7 +21,7 @@
 							<p class="text-sm leading-5 text-gray-600">
 								{{ __("Enter your email address and we'll send you a link to reset your password.") }}
 							</p>
-							<Input
+							<TextInput
 								:label="__('Email') + ' *'"
 								type="email"
 								placeholder="johndoe@mail.com"
@@ -54,7 +54,7 @@
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
 import { useRoute, useRouter } from "vue-router"
-import { FeatherIcon, toast, createResource, Input, ErrorMessage, Button } from "frappe-ui"
+import { FeatherIcon, toast, createResource, TextInput, ErrorMessage, Button } from "frappe-ui"
 
 import { inject, ref } from "vue"
 

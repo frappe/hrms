@@ -1,6 +1,5 @@
 <template>
-	<Autocomplete
-		ref="autocompleteRef"
+	<Combobox
 		size="sm"
 		v-model="value"
 		:placeholder="__('Select {0}', [__(doctype)])"
@@ -12,7 +11,7 @@
 </template>
 
 <script setup>
-import { createResource, Autocomplete, debounce } from "frappe-ui"
+import { createResource, Combobox, debounce } from "frappe-ui"
 import { ref, computed, watch } from "vue"
 
 const props = defineProps({
@@ -37,18 +36,11 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"])
 
-const autocompleteRef = ref(null)
 const searchText = ref("")
 
 const value = computed({
 	get: () => props.modelValue,
-	set: (val) => {
-		if (typeof val === "string") {
-			emit("update:modelValue", val)
-		} else {
-			emit("update:modelValue", val?.value || "")
-		}
-	},
+	set: (val) => emit("update:modelValue", val || ""),
 })
 
 const options = createResource({

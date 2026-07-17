@@ -18,23 +18,20 @@
 
 					<div class="bg-white grow overflow-y-auto">
 						<form class="flex flex-col space-y-4 p-4" @submit.prevent="submitPasswordChange">
-							<Input
+							<Password
 								:label="__('Current Password') + ' *'"
-								type="password"
 								v-model="currentPassword"
 								autocomplete="current-password"
 								required
 							/>
-							<Input
+							<Password
 								:label="__('New Password') + ' *'"
-								type="password"
 								v-model="newPassword"
 								autocomplete="new-password"
 								required
 							/>
-							<Input
+							<Password
 								:label="__('Confirm New Password') + ' *'"
-								type="password"
 								v-model="confirmPassword"
 								autocomplete="new-password"
 								required
@@ -64,7 +61,7 @@
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
 import { useRouter } from "vue-router"
-import { FeatherIcon, toast, createResource, Input, ErrorMessage, Button } from "frappe-ui"
+import { FeatherIcon, toast, createResource, Password, ErrorMessage, Button } from "frappe-ui"
 
 import { inject, ref } from "vue"
 

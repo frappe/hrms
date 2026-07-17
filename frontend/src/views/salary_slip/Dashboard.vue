@@ -17,7 +17,7 @@
 						</span>
 					</div>
 
-					<Autocomplete
+					<Combobox
 						:label="__('Payroll Period')"
 						class="w-full"
 						:placeholder="__('Select Payroll Period')"
@@ -56,7 +56,7 @@
 
 <script setup>
 import { inject, ref, computed, watch, onMounted, onBeforeUnmount } from "vue"
-import { Autocomplete, createListResource } from "frappe-ui"
+import { Combobox, createListResource } from "frappe-ui"
 
 import BaseLayout from "@/components/BaseLayout.vue"
 import EmptyState from "@/components/EmptyState.vue"
@@ -64,7 +64,7 @@ import SalarySlipItem from "@/components/SalarySlipItem.vue"
 
 import { formatCurrency } from "@/utils/formatters"
 
-let selectedPeriod = ref({})
+let selectedPeriod = ref(null)
 let periodsByName = ref({})
 
 const employee = inject("$employee")
@@ -90,7 +90,7 @@ const payrollPeriods = createListResource({
 		})
 	},
 	onSuccess: (data) => {
-		selectedPeriod.value = data[0]
+		selectedPeriod.value = data[0]?.value ?? null
 	},
 })
 
@@ -123,7 +123,7 @@ function getPeriodLabel(period) {
 watch(
 	() => selectedPeriod.value,
 	(value) => {
-		let period = periodsByName.value[value?.value]
+		let period = periodsByName.value[value]
 		documents.filters.start_date = [
 			"between",
 			[period?.start_date, period?.end_date],

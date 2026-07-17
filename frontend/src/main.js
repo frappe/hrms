@@ -5,7 +5,6 @@ import { initSocket } from "./socket"
 
 import {
 	Button,
-	Input,
 	setConfig,
 	frappeRequest,
 	resourcesPlugin,
@@ -40,7 +39,6 @@ app.use(resourcesPlugin)
 app.use(translationsPlugin)
 
 app.component("Button", Button)
-app.component("Input", Input)
 app.component("FormControl", FormControl)
 app.component("EmptyState", EmptyState)
 

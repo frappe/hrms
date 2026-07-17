@@ -41,16 +41,15 @@
 
 				<div class="mx-auto mt-10 w-full px-8 sm:w-96">
 					<form v-if="!user_pass_login_disabled.data" class="flex flex-col space-y-4" @submit.prevent="submit">
-						<Input
+						<TextInput
 							:label="__('Email')"
 							:placeholder="__('johndoe@mail.com')"
 							v-model="email"
 							type="text"
 							autocomplete="username"
 						/>
-						<Input
+						<Password
 							:label="__('Password')"
-							type="password"
 							placeholder="••••••"
 							v-model="password"
 							autocomplete="current-password"
@@ -101,7 +100,7 @@
 					</p>
 
 					<form class="flex flex-col space-y-4" @submit.prevent="submit">
-						<Input
+						<TextInput
 							:label="__('OTP Code')"
 							type="text"
 							placeholder="000000"
@@ -126,7 +125,7 @@
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
 import { inject, reactive, ref } from "vue"
-import { Input, Button, ErrorMessage, Dialog, createResource } from "frappe-ui"
+import { TextInput, Password, Button, ErrorMessage, Dialog, createResource } from "frappe-ui"
 
 import FrappeHRLogo from "@/components/icons/FrappeHRLogo.vue"
 
