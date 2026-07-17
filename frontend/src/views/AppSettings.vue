@@ -14,7 +14,7 @@
 							>
 								<FeatherIcon name="chevron-left" class="h-5 w-5" />
 							</Button>
-							<h2 class="text-xl font-semibold text-gray-900">{{ __("Settings") }} </h2>
+							<h2 class="text-2xl-semibold text-gray-900">{{ __("Settings") }} </h2>
 						</div>
 					</header>
 
@@ -32,7 +32,7 @@
 											name="lock"
 											class="h-5 w-5 text-gray-500"
 										/>
-										<div class="text-base font-normal text-gray-800">
+										<div class="text-base text-gray-800">
 											{{ __("Change Password") }}
 										</div>
 									</div>

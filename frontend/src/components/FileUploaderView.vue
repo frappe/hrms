@@ -1,13 +1,13 @@
 <template>
 	<div class="flex flex-col gap-3 py-4">
 		<label class="file-select">
-			<h2 class="text-base font-semibold text-gray-800 pb-4">{{ __("Attachments") }} </h2>
+			<h2 class="text-base-semibold text-gray-800 pb-4">{{ __("Attachments") }} </h2>
 			<div class="select-button cursor-pointer">
 				<div
 					class="flex flex-col w-full border shadow-sm items-center rounded p-3 gap-2"
 				>
 					<FeatherIcon name="upload" class="h-6 w-6 text-gray-700" />
-					<span class="block text-sm font-normal leading-5 text-gray-700">
+					<span class="block text-sm leading-5 text-gray-700">
 						{{ __("Upload images or documents") }}
 					</span>
 				</div>
@@ -46,7 +46,7 @@
 
 			<Dialog v-model:open="showDialog">
 				<template #title>
-					<h2 class="text-lg font-bold">{{ __("Delete Attachment") }} </h2>
+					<h2 class="text-lg-bold">{{ __("Delete Attachment") }} </h2>
 				</template>
 				<template #default>
 					<p>

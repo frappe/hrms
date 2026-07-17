@@ -13,10 +13,10 @@
 				<div class="flex flex-row items-center justify-between">
 					<div class="flex flex-row items-start gap-3 grow">
 						<div class="flex flex-col items-start gap-1.5">
-							<div class="text-base font-normal text-gray-800">
+							<div class="text-base text-gray-800">
 								{{ __(item.expense_type) }}
 							</div>
-							<div class="text-xs font-normal text-gray-500">
+							<div class="text-xs text-gray-500">
 								<span>
 									{{
 										__("{0}: {1}", [
@@ -32,7 +32,7 @@
 							</div>
 						</div>
 					</div>
-					<span class="text-gray-700 font-normal rounded text-base">
+					<span class="text-gray-700 rounded text-base">
 						{{ formatCurrency(item.amount, doc.currency) }}
 					</span>
 				</div>

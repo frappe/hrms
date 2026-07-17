@@ -6,7 +6,7 @@
 				class="flex h-screen w-screen flex-col bg-white"
 			>
 				<header class="flex items-center justify-between px-6 py-4">
-					<div class="text-lg font-semibold text-gray-900">
+					<div class="text-lg-semibold text-gray-900">
 						{{ __("Reset Password") }}
 					</div>
 					<button
@@ -34,7 +34,7 @@
 			<div v-else class="flex h-screen w-screen flex-col justify-center bg-white">
 				<div class="flex flex-col mx-auto gap-3 items-center">
 					<FrappeHRLogo class="h-8 w-8" />
-					<div class="text-3xl font-semibold text-gray-900 text-center">
+					<div class="text-4xl-semibold text-gray-900 text-center">
 						{{ __("Login to Frappe HR") }}
 					</div>
 				</div>
@@ -92,7 +92,7 @@
 			</div>
 			<Dialog v-model:open="otp.showDialog">
 				<template #title>
-					<h2 class="text-lg font-bold">{{ __("OTP Verification") }}</h2>
+					<h2 class="text-lg-bold">{{ __("OTP Verification") }}</h2>
 				</template>
 				<template #default>
 					<p class="mb-4" v-if="otp.verification.prompt">

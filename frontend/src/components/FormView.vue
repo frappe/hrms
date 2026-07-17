@@ -16,7 +16,7 @@
 					class="flex flex-row items-center gap-2 overflow-hidden grow"
 				>
 					<h2
-						class="text-xl font-semibold text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis"
+						class="text-2xl-semibold text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis"
 					>
 						{{ __(props.doctype) }}
 					</h2>
@@ -54,7 +54,7 @@
 						}"
 					/>
 				</div>
-				<h2 v-else class="text-2xl font-semibold text-gray-900">
+				<h2 v-else class="text-3xl-semibold text-gray-900">
 					{{ __('New {0}', [__(doctype)], props.doctype) }}
 				</h2>
 			</header>
@@ -64,7 +64,7 @@
 				<!-- Tabs -->
 				<template v-if="tabbedView">
 					<div
-						class="px-4 sticky top-0 z-[100] bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
+						class="px-4 sticky top-0 z-[100] bg-white text-sm-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
 					>
 						<ul class="flex -mb-px overflow-auto hide-scrollbar">
 							<li class="mr-2 whitespace-nowrap" v-for="tab in tabs">
@@ -221,7 +221,7 @@
 	<!-- Confirmation Dialogs -->
 	<Dialog v-model:open="showDeleteDialog">
 		<template #title>
-			<h2 class="text-xl font-bold">{{ __("Delete {0}", [__(props.doctype)]) }}</h2>
+			<h2 class="text-2xl-bold">{{ __("Delete {0}", [__(props.doctype)]) }}</h2>
 		</template>
 		<template #default>
 			<p>
@@ -253,7 +253,7 @@
 
 	<Dialog v-model:open="showSubmitDialog">
 		<template #title>
-			<h2 class="text-xl font-bold">{{ __("Confirm") }} </h2>
+			<h2 class="text-2xl-bold">{{ __("Confirm") }} </h2>
 		</template>
 		<template #default>
 			<p>
@@ -284,7 +284,7 @@
 
 	<Dialog v-model:open="showCancelDialog">
 		<template #title>
-			<h2 class="text-xl font-bold">{{ __("Confirm") }} </h2>
+			<h2 class="text-2xl-bold">{{ __("Confirm") }} </h2>
 		</template>
 		<template #default>
 			<p>

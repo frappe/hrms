@@ -7,7 +7,7 @@
 		<div
 			class="w-full flex flex-row gap-2 pt-8 pb-5 border-b justify-center items-center sticky top-0 z-[100]"
 		>
-			<span class="text-gray-900 font-bold text-lg text-center">
+			<span class="text-gray-900 text-lg-bold text-center">
 				{{ __(document?.doctype) }}
 			</span>
 			<FeatherIcon
