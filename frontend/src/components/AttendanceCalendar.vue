@@ -6,7 +6,7 @@
 			<!-- Month Change -->
 			<div class="flex flex-row justify-between items-center px-4">
 				<Button
-					icon="chevron-left"
+					icon="lucide-chevron-left"
 					variant="ghost"
 					@click="firstOfMonth = firstOfMonth.subtract(1, 'M')"
 				/>
@@ -14,7 +14,7 @@
 					{{ firstOfMonth.format("MMMM") }} {{ firstOfMonth.format("YYYY") }}
 				</span>
 				<Button
-					icon="chevron-right"
+					icon="lucide-chevron-right"
 					variant="ghost"
 					@click="firstOfMonth = firstOfMonth.add(1, 'M')"
 				/>

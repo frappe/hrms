@@ -19,9 +19,13 @@
 				@click="handleEmployeeCheckin"
 			>
 				<template #prefix>
-					<FeatherIcon
-						:name="nextAction.action === 'IN' ? 'arrow-right-circle' : 'arrow-left-circle'"
-						class="w-4"
+					<span
+						:class="[
+							nextAction.action === 'IN'
+								? 'lucide-arrow-right-circle'
+								: 'lucide-arrow-left-circle',
+							'w-4',
+						]"
 					/>
 				</template>
 				{{ nextAction.label }}
@@ -78,7 +82,7 @@
 </template>
 
 <script setup>
-import { createListResource, toast, FeatherIcon } from "frappe-ui"
+import { createListResource, toast } from "frappe-ui"
 import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
 

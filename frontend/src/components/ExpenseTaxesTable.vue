@@ -10,7 +10,7 @@
 					v-if="!isReadOnly"
 					id="add-taxes-modal"
 					class="text-sm"
-					icon="plus"
+					icon="lucide-plus"
 					variant="subtle"
 					@click="openModal()"
 				/>
@@ -47,7 +47,7 @@
 							<span class="text-gray-700 rounded text-base">
 								{{ formatCurrency(item.total, expenseClaim.currency) }}
 							</span>
-							<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
+							<span class="lucide-chevron-right h-5 w-5 text-gray-500" />
 						</div>
 					</div>
 				</div>
@@ -99,7 +99,7 @@
 								@click="deleteExpenseTax()"
 							>
 								<template #prefix>
-									<FeatherIcon name="trash" class="w-4" />
+									<span class="lucide-trash w-4" />
 								</template>
 								{{ __("Delete") }}
 							</Button>
@@ -110,9 +110,8 @@
 								:disabled="addButtonDisabled"
 							>
 								<template #prefix>
-									<FeatherIcon
-										:name="editingIdx === null ? 'plus' : 'check'"
-										class="w-4"
+									<span
+										:class="[editingIdx === null ? 'lucide-plus' : 'lucide-check', 'w-4']"
 									/>
 								</template>
 								{{ editingIdx === null ? __("Add Tax") : __("Update Tax") }}
@@ -126,7 +125,7 @@
 </template>
 
 <script setup>
-import { FeatherIcon, createResource } from "frappe-ui"
+import { createResource } from "frappe-ui"
 import { computed, ref, watch, inject } from "vue"
 
 import FormField from "@/components/FormField.vue"

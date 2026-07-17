@@ -12,7 +12,7 @@
 								class="!pl-0 hover:bg-white"
 								@click="router.back()"
 							>
-								<FeatherIcon name="chevron-left" class="h-5 w-5" />
+								<span class="lucide-chevron-left h-5 w-5" />
 							</Button>
 							<h2 class="text-2xl-semibold text-gray-900">{{ __("Notifications") }} </h2>
 						</div>
@@ -33,7 +33,7 @@
 									@click="router.push({ name: 'Settings' })"
 								>
 									<template #prefix>
-										<FeatherIcon name="settings" class="w-4" />
+										<span class="lucide-settings w-4" />
 									</template>
 									{{ __("Settings") }}
 								</Button>
@@ -44,7 +44,7 @@
 									:loading="markAllAsRead.loading"
 								>
 									<template #prefix>
-										<FeatherIcon name="check-circle" class="w-4" />
+										<span class="lucide-check-circle w-4" />
 									</template>
 									{{ __("Mark all as read") }}
 								</Button>
@@ -99,7 +99,7 @@
 <script setup>
 import { IonContent, IonPage } from "@ionic/vue"
 import { useRouter } from "vue-router"
-import { createResource, FeatherIcon } from "frappe-ui"
+import { createResource } from "frappe-ui"
 
 import { computed, inject, onMounted, ref } from "vue"
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"

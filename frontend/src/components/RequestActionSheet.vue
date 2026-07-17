@@ -10,10 +10,9 @@
 			<span class="text-gray-900 text-lg-bold text-center">
 				{{ __(document?.doctype) }}
 			</span>
-			<FeatherIcon
+			<span
 				v-if="props.showOpenForm"
-				name="external-link"
-				class="h-4 w-4 text-gray-500 cursor-pointer"
+				class="lucide-external-link h-4 w-4 text-gray-500 cursor-pointer"
 				@click="openFormView"
 			/>
 		</div>
@@ -91,7 +90,7 @@
 				theme="red"
 			>
 				<template #prefix>
-					<FeatherIcon name="x" class="w-4" />
+					<span class="lucide-x w-4" />
 				</template>
 				{{ __("Reject") }}
 			</Button>
@@ -103,7 +102,7 @@
 				theme="green"
 			>
 				<template #prefix>
-					<FeatherIcon name="check" class="w-4" />
+					<span class="lucide-check w-4" />
 				</template>
 				{{ __("Approve") }}
 			</Button>
@@ -138,7 +137,7 @@
 				theme="red"
 			>
 				<template #prefix>
-					<FeatherIcon name="x" class="w-4" />
+					<span class="lucide-x w-4" />
 				</template>
 				{{ __("Cancel") }}
 			</Button>
@@ -163,7 +162,6 @@ import {
 	toast,
 	createDocumentResource,
 	createResource,
-	FeatherIcon,
 } from "frappe-ui"
 
 import FormattedField from "@/components/FormattedField.vue"

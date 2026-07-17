@@ -12,7 +12,7 @@
 								class="!pl-0 hover:bg-white"
 								@click="router.back()"
 							>
-								<FeatherIcon name="chevron-left" class="h-5 w-5" />
+								<span class="lucide-chevron-left h-5 w-5" />
 							</Button>
 							<h2 class="text-2xl-semibold text-gray-900">{{ __("Settings") }} </h2>
 						</div>
@@ -28,17 +28,15 @@
 									class="flex flex-row items-center justify-between w-full"
 								>
 									<div class="flex flex-row items-center gap-3 grow">
-										<FeatherIcon
-											name="lock"
-											class="h-5 w-5 text-gray-500"
+										<span
+											class="lucide-lock h-5 w-5 text-gray-500"
 										/>
 										<div class="text-base text-gray-800">
 											{{ __("Change Password") }}
 										</div>
 									</div>
-									<FeatherIcon
-										name="chevron-right"
-										class="h-5 w-5 text-gray-500"
+									<span
+										class="lucide-chevron-right h-5 w-5 text-gray-500"
 									/>
 								</router-link>
 							</div>
@@ -75,7 +73,7 @@
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
 import { useRouter } from "vue-router"
-import { FeatherIcon, Switch, toast, LoadingIndicator, Button } from "frappe-ui"
+import { Switch, toast, LoadingIndicator, Button } from "frappe-ui"
 
 import { computed, inject, ref } from "vue"
 

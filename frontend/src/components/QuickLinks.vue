@@ -15,14 +15,13 @@
 						{{ link.title }}
 					</div>
 				</div>
-				<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
+				<span class="lucide-chevron-right h-5 w-5 text-gray-500" />
 			</router-link>
 		</div>
 	</div>
 </template>
 
 <script setup>
-import { FeatherIcon } from "frappe-ui"
 
 const props = defineProps({
 	title: {

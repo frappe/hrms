@@ -11,7 +11,7 @@
 							class="!pl-0 hover:bg-white"
 							@click="goBack"
 						>
-							<FeatherIcon name="chevron-left" class="h-5 w-5" />
+							<span class="lucide-chevron-left h-5 w-5" />
 						</Button>
 						<h2 class="text-2xl-semibold text-gray-900">{{ __("Reset Password") }}</h2>
 					</header>
@@ -54,7 +54,7 @@
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
 import { useRoute, useRouter } from "vue-router"
-import { FeatherIcon, toast, createResource, TextInput, ErrorMessage, Button } from "frappe-ui"
+import { toast, createResource, TextInput, ErrorMessage, Button } from "frappe-ui"
 
 import { inject, ref } from "vue"
 

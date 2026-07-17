@@ -18,7 +18,7 @@
 				:key="holiday.holiday_date"
 			>
 				<div class="flex flex-row items-center gap-3 grow">
-					<FeatherIcon name="calendar" class="h-5 w-5 text-gray-500" />
+					<span class="lucide-calendar h-5 w-5 text-gray-500" />
 					<div class="text-base text-gray-800">
 						{{ __(holiday.description) }}
 					</div>
@@ -50,7 +50,7 @@
 					class="flex flex-row items-center justify-between w-full"
 				>
 					<div class="flex flex-row items-center gap-3 grow">
-						<FeatherIcon name="calendar" class="h-5 w-5 text-gray-500" />
+						<span class="lucide-calendar h-5 w-5 text-gray-500" />
 						<div class="text-base text-gray-800">
 							{{ __(holiday.description) }}
 						</div>
@@ -72,7 +72,7 @@
 <script setup>
 import { inject, computed } from "vue"
 import { IonModal } from "@ionic/vue"
-import { FeatherIcon, createResource } from "frappe-ui"
+import { createResource } from "frappe-ui"
 
 const employee = inject("$employee")
 const dayjs = inject("$dayjs")

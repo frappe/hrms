@@ -21,13 +21,13 @@
 		</template>
 		<template #right>
 			<Badge variant="outline" :theme="statusMap[status]" :label="__(status, null, 'Expense Claim')" size="md" />
-			<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
+			<span class="lucide-chevron-right h-5 w-5 text-gray-500" />
 		</template>
 	</ListItem>
 </template>
 
 <script setup>
-import { FeatherIcon, Badge } from "frappe-ui"
+import { Badge } from "frappe-ui"
 import { computed, inject } from "vue"
 
 import ListItem from "@/components/ListItem.vue"

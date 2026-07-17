@@ -19,7 +19,7 @@
 						<span class="text-gray-600 text-sm-medium leading-5">
 							{{ __("Pending") }}
 						</span>
-						<FeatherIcon name="alert-circle" class="text-yellow-500 h-3 w-3" />
+						<span class="lucide-alert-circle text-yellow-500 h-3 w-3" />
 					</div>
 					<span class="text-gray-800 text-base-semibold leading-6">
 						{{
@@ -35,7 +35,7 @@
 						<span class="text-gray-600 text-sm-medium leading-5">
 							{{ __("Approved") }}
 						</span>
-						<FeatherIcon name="check-circle" class="text-green-500 h-3 w-3" />
+						<span class="lucide-check-circle text-green-500 h-3 w-3" />
 					</div>
 					<span class="text-gray-800 text-base-semibold leading-6">
 						{{
@@ -52,7 +52,7 @@
 						<span class="text-gray-600 text-sm-medium leading-5">
 							{{ __("Rejected") }}
 						</span>
-						<FeatherIcon name="x-circle" class="text-red-500 h-3 w-3" />
+						<span class="lucide-x-circle text-red-500 h-3 w-3" />
 					</div>
 					<span class="text-gray-800 text-base-semibold leading-6">
 						{{
@@ -70,7 +70,6 @@
 </template>
 
 <script setup>
-import { FeatherIcon } from "frappe-ui"
 import { computed } from "vue"
 
 import { expenseClaimSummary as summary } from "@/data/claims"
