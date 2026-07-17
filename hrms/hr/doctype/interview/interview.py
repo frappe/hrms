@@ -250,12 +250,7 @@ def update_job_applicant_status(status: str, job_applicant: str):
 
 
 def send_interview_reminder():
-	reminder_settings = frappe.db.get_value(
-		"HR Settings",
-		"HR Settings",
-		["send_interview_reminder", "interview_reminder_template", "hiring_sender_email", "remind_before"],
-		as_dict=True,
-	)
+	reminder_settings = frappe.get_single("HR Settings")
 
 	if not cint(reminder_settings.send_interview_reminder):
 		return
@@ -305,12 +300,7 @@ def send_interview_confirmation(interview: str):
 
 	frappe.has_permission("Interview", "write", interview, throw=True)
 
-	confirmation_settings = frappe.db.get_value(
-		"HR Settings",
-		"HR Settings",
-		["send_interview_confirmation", "interview_confirmation_template", "hiring_sender_email"],
-		as_dict=True,
-	)
+	confirmation_settings = frappe.get_single("HR Settings")
 
 	if not cint(confirmation_settings.send_interview_confirmation):
 		frappe.throw(
@@ -367,16 +357,7 @@ def send_interview_confirmation(interview: str):
 
 
 def send_daily_feedback_reminder():
-	reminder_settings = frappe.db.get_value(
-		"HR Settings",
-		"HR Settings",
-		[
-			"send_interview_feedback_reminder",
-			"feedback_reminder_notification_template",
-			"hiring_sender_email",
-		],
-		as_dict=True,
-	)
+	reminder_settings = frappe.get_single("HR Settings")
 
 	if not cint(reminder_settings.send_interview_feedback_reminder):
 		return
@@ -407,7 +388,6 @@ def send_daily_feedback_reminder():
 		context["applicant_name"] = applicant_name
 
 		message = frappe.render_template(interview_feedback_template.response_, context)
-
 		frappe.sendmail(
 			sender=reminder_settings.hiring_sender_email,
 			recipients=recipients,
