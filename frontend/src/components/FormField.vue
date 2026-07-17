@@ -34,15 +34,23 @@
 			@update:modelValue="(v) => emit('update:modelValue', v)"
 		/>
 
-		<TextEditor
+		<Editor
 			v-else-if="props.fieldtype === 'Text Editor'"
-			:content="modelValue"
+			:model-value="modelValue || ''"
+			:extensions="editorExtensions"
 			:placeholder="__('Enter {0}', [props.label])"
-			@change="(v) => emit('update:modelValue', v)"
-			:fixedMenu="true"
 			:editable="!isReadOnly"
-			editor-class="prose-sm border-b border-x border-gray-200 rounded-b-sm p-1 min-h-[4rem]"
-		/>
+			:upload-function="uploadEditorFile"
+			@update:model-value="(v) => emit('update:modelValue', v)"
+		>
+			<div class="overflow-hidden rounded-sm border border-gray-200">
+				<EditorFixedMenu
+					:items="articleToolbar"
+					class="overflow-x-auto border-b border-gray-200 p-1"
+				/>
+				<EditorContent class="prose-sm p-1 min-h-[4rem]" />
+			</div>
+		</Editor>
 
 		<!-- Text -->
 		<Textarea
@@ -147,9 +155,16 @@ import {
 	DateTimePicker,
 	ErrorMessage,
 	Textarea,
-	TextEditor,
+	useFileUpload,
 	TextInput,
 } from "frappe-ui"
+import {
+	articleToolbar,
+	Editor,
+	EditorContent,
+	EditorFixedMenu,
+	RichTextKit,
+} from "frappe-ui/editor"
 import { computed, onMounted, inject } from "vue"
 
 import Link from "@/components/Link.vue"
@@ -182,6 +197,10 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"])
 const dayjs = inject("$dayjs")
+
+const editorExtensions = [RichTextKit]
+const editorFileUpload = useFileUpload()
+const uploadEditorFile = (file) => editorFileUpload.upload(file, { private: true })
 
 const showField = computed(() => {
 	if (props.readOnly && !isLayoutField.value && !props.modelValue) return false
