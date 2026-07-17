@@ -4,3 +4,5 @@ dev-dist
 dist
 dist-ssr
 *.local
+auto-imports.d.ts
+components.d.ts
