@@ -22,7 +22,7 @@
 			<Button
 				variant="ghost"
 				@click="navigate"
-				class="w-full !text-gray-600 py-6 text-sm border-none bg-white hover:bg-white"
+				class="w-full !text-[#0062a3] py-6 text-sm border-none bg-white hover:bg-white"
 			>
 				{{ __("View List") }}
 			</Button>
@@ -50,11 +50,8 @@ import { IonModal } from "@ionic/vue"
 import RequestActionSheet from "@/components/RequestActionSheet.vue"
 
 import {
-	LEAVE_FIELDS,
 	EXPENSE_CLAIM_FIELDS,
-	ATTENDANCE_REQUEST_FIELDS,
-	SHIFT_REQUEST_FIELDS,
-	SHIFT_FIELDS,
+	DELIVERY_TRIP_FIELDS,
 } from "@/data/config/requestSummaryFields"
 
 const __ = inject("$translate")
@@ -84,11 +81,8 @@ const props = defineProps({
 })
 
 const fieldsMap = {
-	"Leave Application": LEAVE_FIELDS,
 	"Expense Claim": EXPENSE_CLAIM_FIELDS,
-	"Attendance Request": ATTENDANCE_REQUEST_FIELDS,
-	"Shift Request": SHIFT_REQUEST_FIELDS,
-	"Shift Assignment": SHIFT_FIELDS,
+	"Delivery Trip": DELIVERY_TRIP_FIELDS,
 }
 
 const isRequestModalOpen = ref(false)

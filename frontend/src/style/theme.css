@@ -1,0 +1,29 @@
+
+
+:root {
+	/* Raw palette (as provided) */
+	--color-blue-700: #0062a3;  /* primary brand blue */
+	--color-blue-800: #0964a4;  /* primary hover / active */
+	--color-cream-100: #fbf6f1; /* page background */
+	--color-cream-200: #f4f5ed; /* alt section background */
+	--color-blue-100: #d0e0f2;  /* selected / highlighted background */
+	--color-blue-50: #eef3f8;   /* card background */
+	--color-blue-border: #d9e7f8; /* card border */
+	--color-blue-muted: #718cad;  /* muted text / icons on light blue */
+	--color-white: #fefeff;
+
+	/* Semantic aliases — prefer these in components */
+	--color-primary: var(--color-blue-700);
+	--color-primary-hover: var(--color-blue-800);
+	--color-on-primary: var(--color-white);
+
+	--color-bg-page: var(--color-cream-100);
+	--color-bg-alt: var(--color-cream-200);
+
+	--color-surface: var(--color-white);
+	--color-card-bg: var(--color-blue-50);
+	--color-card-selected-bg: var(--color-blue-100);
+	--color-card-border: var(--color-blue-border);
+
+	--color-text-muted: var(--color-blue-muted);
+}

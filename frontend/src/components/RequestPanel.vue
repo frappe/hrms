@@ -19,14 +19,9 @@ import { ref, inject, onMounted, computed, markRaw } from "vue"
 import TabButtons from "@/components/TabButtons.vue"
 import RequestList from "@/components/RequestList.vue"
 
-import { myAttendanceRequests, myShiftRequests, teamShiftRequests, teamAttendanceRequests } from "@/data/attendance"
 import { myClaims, teamClaims } from "@/data/claims"
-import { myLeaves, teamLeaves } from "@/data/leaves"
 
-import AttendanceRequestItem from "@/components/AttendanceRequestItem.vue"
 import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
-import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
-import ShiftRequestItem from "@/components/ShiftRequestItem.vue"
 
 import { useListUpdate } from "@/composables/realtime"
 
@@ -35,25 +30,18 @@ const socket = inject("$socket")
 
 const TAB_BUTTONS = ["My Requests", "Team Requests"] // __("My Requests"), __("Team Requests")
 
-const myRequests = computed(() =>
-	updateRequestDetails(myLeaves, myClaims, myShiftRequests, myAttendanceRequests)
-)
+const myRequests = computed(() => updateRequestDetails(myClaims))
 
-const teamRequests = computed(() =>
-	updateRequestDetails(teamLeaves, teamClaims, teamShiftRequests, teamAttendanceRequests)
-)
+const teamRequests = computed(() => updateRequestDetails(teamClaims))
 
-function updateRequestDetails(leaves, claims, shiftRequests, attendanceRequests) {
-	const requests = [leaves, claims, shiftRequests, attendanceRequests].reduce(
+function updateRequestDetails(claims) {
+	const requests = [claims].reduce(
 		(acc, resource) => acc.concat(resource?.data || []),
 		[]
 	)
 
 	const componentMap = {
-		"Leave Application": LeaveRequestItem,
 		"Expense Claim": ExpenseClaimItem,
-		"Shift Request": ShiftRequestItem,
-		"Attendance Request": AttendanceRequestItem,
 	}
 	requests.forEach((request) => {
 		request.component = markRaw(componentMap[request.doctype])
@@ -72,9 +60,6 @@ function getSortedRequests(list) {
 }
 
 onMounted(() => {
-	useListUpdate(socket, "Leave Application", () => teamLeaves.reload())
 	useListUpdate(socket, "Expense Claim", () => teamClaims.reload())
-	useListUpdate(socket, "Shift Request", () => teamShiftRequests.reload())
-	useListUpdate(socket, "Attendance Request", () => teamAttendanceRequests.reload())
 })
 </script>

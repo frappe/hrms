@@ -254,3 +254,62 @@ export const EMPLOYEE_CHECKIN_FIELDS = [
 		fieldtype: "geolocation",
 	},
 ]
+
+export const DELIVERY_TRIP_FIELDS = [
+	{
+		fieldname: "name",
+		label: "ID",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "status",
+		label: "Status",
+		fieldtype: "Select",
+	},
+	{
+		fieldname: "driver_name",
+		label: "Driver",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "vehicle",
+		label: "Vehicle",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "departure_time",
+		label: "Departure Time",
+		fieldtype: "Datetime",
+	},
+	{
+		fieldname: "lh_source_location",
+		label: "Source Location",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "lh_destination_location",
+		label: "Destination Location",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "lh_customer",
+		label: "Customer",
+		fieldtype: "Data",
+	},
+	{
+		fieldname: "lh_net_weight",
+		label: "Net Weight",
+		fieldtype: "Float",
+	},
+	{
+		fieldname: "lh_route_fee",
+		label: "Route Fee",
+		fieldtype: "Currency",
+	},
+	{
+		fieldname: "employee",
+		label: "Employee",
+		fieldtype: "Link",
+	},
+]
+

@@ -11,7 +11,7 @@
 			:class="[
 				'bg-white text-xs space-y-1.5 !hover:border-gray-300 !hover:text-gray-700 transition active:scale-95',
 				route.path === item.route
-					? 'border-gray-900 text-gray-800 font-semibold'
+					? 'border-[#0062a3] text-[#0062a3] font-semibold'
 					: 'text-gray-600 font-normal',
 			]"
 		>
@@ -27,10 +27,8 @@ import { useRoute } from "vue-router"
 import { IonTabBar, IonTabButton, IonLabel } from "@ionic/vue"
 
 import HomeIcon from "@/components/icons/HomeIcon.vue"
-import LeaveIcon from "@/components/icons/LeaveIcon.vue"
 import ExpenseIcon from "@/components/icons/ExpenseIcon.vue"
-import SalaryIcon from "@/components/icons/SalaryIcon.vue"
-import AttendanceIcon from "@/components/icons/AttendanceIcon.vue"
+import DeliveryTripIcon from "@/components/icons/DeliveryTripIcon.vue"
 import { inject } from "vue"
 
 const __ = inject("$translate")
@@ -44,24 +42,14 @@ const tabItems = [
 		route: "/home",
 	},
 	{
-		icon: AttendanceIcon,
-		title: __("Attendance"),
-		route: "/dashboard/attendance",
-	},
-	{
-		icon: LeaveIcon,
-		title: __("Leaves"),
-		route: "/dashboard/leaves",
-	},
-	{
 		icon: ExpenseIcon,
 		title: __("Expenses"),
 		route: "/dashboard/expense-claims",
 	},
 	{
-		icon: SalaryIcon,
-		title: __("Salary"),
-		route: "/dashboard/salary-slips",
+		icon: DeliveryTripIcon,
+		title: __("Delivery"),
+		route: "/dashboard/delivery_trip",
 	},
 ]
 </script>

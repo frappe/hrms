@@ -12,7 +12,7 @@
 			:key="advance.name"
 			class="flex flex-col bg-white border shadow-sm rounded p-3.5"
 			:class="[
-				advance.selected ? 'border-gray-500' : '',
+				advance.selected ? 'border-[#0062a3] bg-[#eef3f8]' : '',
 				isReadOnly ? '' : 'cursor-pointer',
 			]"
 			@click="toggleAdvanceSelection(advance)"
