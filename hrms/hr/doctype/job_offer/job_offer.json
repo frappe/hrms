@@ -25,6 +25,7 @@
   "letter_head",
   "column_break_16",
   "select_print_heading",
+  "offer_letter_sent",
   "amended_from"
  ],
  "fields": [
@@ -177,7 +178,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-09 18:26:35.285541",
+ "modified": "2026-07-20 02:40:18.401013",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",

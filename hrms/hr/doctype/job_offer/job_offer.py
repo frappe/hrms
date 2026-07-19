@@ -31,6 +31,7 @@ class JobOffer(Document):
 		job_offer_term_template: DF.Link | None
 		letter_head: DF.Link | None
 		offer_date: DF.Date
+		offer_letter_sent: DF.Check
 		offer_terms: DF.Table[JobOfferTerm]
 		select_print_heading: DF.Link | None
 		select_terms: DF.Link | None

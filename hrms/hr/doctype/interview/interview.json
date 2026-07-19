@@ -26,6 +26,7 @@
   "section_break_13",
   "interview_summary",
   "reminded",
+  "confirmation_sent",
   "amended_from",
   "feedback_tab",
   "feedback_html"
@@ -206,7 +207,7 @@
    "link_fieldname": "interview"
   }
  ],
- "modified": "2026-02-19 15:40:38.547112",
+ "modified": "2026-07-20 02:39:18.509079",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview",

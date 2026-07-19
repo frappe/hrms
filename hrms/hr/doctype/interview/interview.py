@@ -30,6 +30,7 @@ class Interview(Document):
 
 		amended_from: DF.Link | None
 		average_rating: DF.Rating
+		confirmation_sent: DF.Check
 		designation: DF.Link | None
 		expected_average_rating: DF.Rating
 		from_time: DF.Time

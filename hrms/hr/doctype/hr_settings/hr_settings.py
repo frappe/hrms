@@ -33,6 +33,7 @@ class HRSettings(Document):
 		frequency: DF.Literal["Weekly", "Monthly"]
 		hiring_sender: DF.Link | None
 		hiring_sender_email: DF.Data | None
+		interview_confirmation_template: DF.Link | None
 		interview_reminder_template: DF.Link | None
 		leave_approval_notification_template: DF.Link | None
 		leave_approver_mandatory_in_leave_application: DF.Check
@@ -45,6 +46,7 @@ class HRSettings(Document):
 		role_allowed_to_create_backdated_leave_application: DF.Link | None
 		send_birthday_reminders: DF.Check
 		send_holiday_reminders: DF.Check
+		send_interview_confirmation: DF.Check
 		send_interview_feedback_reminder: DF.Check
 		send_interview_reminder: DF.Check
 		send_leave_notification: DF.Check
