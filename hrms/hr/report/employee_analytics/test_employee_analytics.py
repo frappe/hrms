@@ -51,7 +51,7 @@ class TestEmployeeAnalytics(HRMSTestSuite):
 		test_data(self, values_to_assert, chart_data)
 
 	def test_group_company(self):
-		parent_company = create_company("_Test Group Company")
+		parent_company = create_company("_Test Group Company", is_group=1)
 		child_company_1 = create_company("_Test Child Company 1", parent_company=parent_company)
 		child_company_2 = create_company("_Test Child Company 2", parent_company=parent_company)
 
@@ -106,7 +106,7 @@ def get_employees_without_set_parameter(parameter, company):
 	return frappe.db.count("Employee", {parameter: ("is", "not set"), "company": company, "status": "Active"})
 
 
-def create_company(company_name, parent_company=None):
+def create_company(company_name, parent_company=None, is_group=0):
 	if frappe.db.exists("Company", company_name):
 		return company_name
 
@@ -117,6 +117,7 @@ def create_company(company_name, parent_company=None):
 		"default_currency": "INR",
 		"create_chart_of_accounts_based_on": "Standard Template",
 		"chart_of_accounts": "Standard",
+		"is_group": is_group,
 	}
 	if parent_company:
 		doc["parent_company"] = parent_company
