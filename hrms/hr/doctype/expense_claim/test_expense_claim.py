@@ -74,7 +74,7 @@ class TestExpenseClaim(FrappeTestCase):
 		self.assertEqual(frappe.db.get_value("Project", project, "total_expense_claim"), 200)
 
 	def test_total_expense_claim_for_project_set_on_expense_line(self):
-		project = create_project("_Test Project Line 1", company="_Test Company")
+		project = create_project("_Test Project Line 1")
 
 		payable_account = get_payable_account(company_name)
 
@@ -91,8 +91,8 @@ class TestExpenseClaim(FrappeTestCase):
 		self.assertEqual(frappe.db.get_value("Project", project, "total_expense_claim"), 0)
 
 	def test_total_expense_claim_for_project_at_document_and_line_level(self):
-		document_project = create_project("_Test Project Doc Level", company="_Test Company")
-		line_project = create_project("_Test Project Line 2", company="_Test Company")
+		document_project = create_project("_Test Project Doc Level")
+		line_project = create_project("_Test Project Line 2")
 
 		payable_account = get_payable_account(company_name)
 		cost_center = frappe.db.get_value("Company", company_name, "cost_center")
