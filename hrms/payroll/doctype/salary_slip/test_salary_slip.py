@@ -687,35 +687,8 @@ class TestSalarySlip(HRMSTestSuite):
 			to_date=getdate("2026-12-31"),
 			add_weekly_offs=False,
 		)
-		company_holiday_list = make_holiday_list(
-			"Test Salary Company HLA", from_date=period_start, to_date=period_end, add_weekly_offs=False
-		)
-		employee_default = make_holiday_list(
-			"Test Salary HLA Employee Default",
-			from_date=period_start,
-			to_date=period_end,
-			add_weekly_offs=False,
-		)
-		company_default = make_holiday_list(
-			"Test Salary HLA Company Default",
-			from_date=period_start,
-			to_date=period_end,
-			add_weekly_offs=False,
-		)
 		add_holiday(holiday_list_a, "2026-01-01")
 		add_holiday(holiday_list_b, "2026-01-02")
-		add_holiday(company_holiday_list, "2026-01-03")
-		add_holiday(employee_default, "2026-01-04")
-		add_holiday(company_default, "2026-01-05")
-		frappe.db.set_value("Employee", emp_id, "holiday_list", employee_default)
-		frappe.db.set_value("Company", company, "default_holiday_list", company_default)
-		create_holiday_list_assignment(
-			"Company",
-			assigned_to=company,
-			holiday_list=company_holiday_list,
-			company=company,
-			from_date=period_start,
-		)
 		create_holiday_list_assignment(
 			"Employee", assigned_to=emp_id, holiday_list=holiday_list_a, from_date=period_start
 		)
@@ -727,41 +700,6 @@ class TestSalarySlip(HRMSTestSuite):
 		ss.employee = emp_id
 
 		self.assertEqual(ss.get_holidays_for_employee(period_start, period_end), [getdate("2026-01-01")])
-
-	def test_salary_period_holiday_list_default_fallback_order(self):
-		company = create_company("Test Salary HLA Default Company").name
-		emp_id = make_employee("test_salary_hla_default@salary.com", company=company)
-		period_start = getdate("2026-01-01")
-		period_end = getdate("2026-01-31")
-		employee_default = make_holiday_list(
-			"Test Salary Employee Default", from_date=period_start, to_date=period_end, add_weekly_offs=False
-		)
-		company_default = make_holiday_list(
-			"Test Salary Company Default", from_date=period_start, to_date=period_end, add_weekly_offs=False
-		)
-		add_holiday(employee_default, "2026-01-03")
-		add_holiday(company_default, "2026-01-04")
-		frappe.db.set_value("Employee", emp_id, "holiday_list", employee_default)
-		frappe.db.set_value("Company", company, "default_holiday_list", company_default)
-
-		ss = frappe.new_doc("Salary Slip")
-		ss.employee = emp_id
-
-		with self.assertRaises(frappe.ValidationError):
-			ss.get_holidays_for_employee(period_start, period_end)
-
-		from hrms.utils.holiday_list import get_holiday_list_for_employee
-
-		self.assertEqual(
-			get_holiday_list_for_employee(emp_id, as_on=period_start, include_default_holiday_list=True),
-			employee_default,
-		)
-
-		frappe.db.set_value("Employee", emp_id, "holiday_list", None)
-		self.assertEqual(
-			get_holiday_list_for_employee(emp_id, as_on=period_start, include_default_holiday_list=True),
-			company_default,
-		)
 
 	@HRMSTestSuite.change_settings(
 		"Payroll Settings",

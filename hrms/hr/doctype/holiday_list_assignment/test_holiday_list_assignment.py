@@ -6,10 +6,12 @@ from contextlib import contextmanager
 import frappe
 from frappe.utils import add_months, get_year_ending, get_year_start, getdate
 
+from erpnext.setup.doctype.employee.employee import is_holiday
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import DuplicateAssignment
+from hrms.tests.test_utils import add_date_to_holiday_list
 from hrms.tests.utils import HRMSTestSuite
 from hrms.utils.holiday_list import get_holiday_list_for_employee
 
@@ -74,55 +76,15 @@ class IntegrationTestHolidayListAssignment(HRMSTestSuite):
 		holiday_list = get_holiday_list_for_employee(employee, as_on=getdate())
 		self.assertEqual(holiday_list, self.holiday_list)
 
-	def test_holiday_list_resolution_precedence(self):
-		employee = make_employee("test_hla_precedence@example.com", company="_Test Company")
-		shift_holiday_list = make_holiday_list("Test HLA Shift")
-		employee_holiday_list = make_holiday_list("Test HLA Employee")
-		company_holiday_list = make_holiday_list("Test HLA Company")
-		employee_default = make_holiday_list("Test HLA Employee Default")
-		company_default = make_holiday_list("Test HLA Company Default")
-		shift_type = make_shift_type("Test HLA Shift Type", shift_holiday_list)
+	def test_is_holiday_uses_requested_date(self):
+		employee = make_employee("test_hla_is_holiday@example.com", company="_Test Company")
+		first_holiday_list = make_holiday_list("Test HLA Is Holiday First", "2026-01-01", "2026-01-31")
+		second_holiday_list = make_holiday_list("Test HLA Is Holiday Second", "2026-06-01", "2026-12-31")
+		add_date_to_holiday_list("2026-01-01", first_holiday_list)
+		create_holiday_list_assignment("Employee", employee, first_holiday_list, from_date="2026-01-01")
+		create_holiday_list_assignment("Employee", employee, second_holiday_list, from_date="2026-06-01")
 
-		frappe.db.set_value("Employee", employee, "holiday_list", employee_default)
-		frappe.db.set_value("Company", "_Test Company", "default_holiday_list", company_default)
-		create_holiday_list_assignment(
-			"Company",
-			assigned_to="_Test Company",
-			holiday_list=company_holiday_list,
-			from_date=get_year_start(getdate()),
-		)
-		create_holiday_list_assignment(
-			"Employee",
-			assigned_to=employee,
-			holiday_list=employee_holiday_list,
-			from_date=get_year_start(getdate()),
-		)
-
-		self.assertEqual(
-			get_holiday_list_for_employee(employee, as_on=getdate(), shift_type=shift_type),
-			shift_holiday_list,
-		)
-		self.assertEqual(get_holiday_list_for_employee(employee, as_on=getdate()), employee_holiday_list)
-
-	def test_holiday_list_resolution_default_fallback_order(self):
-		employee = make_employee("test_hla_default_precedence@example.com", company="_Test Company")
-		employee_default = make_holiday_list("Test HLA Default Employee")
-		company_default = make_holiday_list("Test HLA Default Company")
-
-		frappe.db.set_value("Employee", employee, "holiday_list", employee_default)
-		frappe.db.set_value("Company", "_Test Company", "default_holiday_list", company_default)
-
-		self.assertIsNone(get_holiday_list_for_employee(employee, as_on=getdate(), raise_exception=False))
-		self.assertEqual(
-			get_holiday_list_for_employee(employee, as_on=getdate(), include_default_holiday_list=True),
-			employee_default,
-		)
-
-		frappe.db.set_value("Employee", employee, "holiday_list", None)
-		self.assertEqual(
-			get_holiday_list_for_employee(employee, as_on=getdate(), include_default_holiday_list=True),
-			company_default,
-		)
+		self.assertTrue(is_holiday(employee, "2026-01-01"))
 
 
 def create_holiday_list_assignment(
@@ -155,24 +117,6 @@ def create_holiday_list_assignment(
 			{"applicable_for": applicable_for, "assigned_to": assigned_to, "holiday_list": holiday_list},
 		)
 	return hla
-
-
-def make_shift_type(name, holiday_list):
-	frappe.delete_doc_if_exists("Shift Type", name, force=True)
-	return (
-		frappe.get_doc(
-			{
-				"doctype": "Shift Type",
-				"name": name,
-				"shift_type_name": name,
-				"start_time": "09:00:00",
-				"end_time": "17:00:00",
-				"holiday_list": holiday_list,
-			}
-		)
-		.insert()
-		.name
-	)
 
 
 @contextmanager

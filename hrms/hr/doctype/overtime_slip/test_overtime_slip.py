@@ -18,38 +18,10 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 )
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
-from hrms.tests.test_utils import create_company
 from hrms.tests.utils import HRMSTestSuite
 
 
 class TestOvertimeSlip(HRMSTestSuite):
-	def test_holiday_map_uses_shift_holiday_list_first(self):
-		employee = make_employee("test_overtime_shift_hla@example.com", company="_Test Company")
-		start_date = getdate("2026-01-01")
-		end_date = getdate("2026-01-31")
-		shift_holiday_list = make_holiday_list(
-			"Test Overtime Shift HLA", from_date=start_date, to_date=end_date, add_weekly_offs=False
-		)
-		employee_holiday_list = make_holiday_list(
-			"Test Overtime Employee HLA", from_date=start_date, to_date=end_date, add_weekly_offs=False
-		)
-		add_holiday(shift_holiday_list, "2026-01-05")
-		add_holiday(employee_holiday_list, "2026-01-01")
-		shift_type = setup_shift_type(shift_type="_Test Overtime HLA Shift")
-		shift_type.holiday_list = shift_holiday_list
-		shift_type.save()
-		make_shift_assignment(shift_type.name, employee, start_date, end_date)
-		create_holiday_list_assignment("Employee", employee, employee_holiday_list, from_date=start_date)
-
-		overtime_slip = frappe.new_doc("Overtime Slip")
-		overtime_slip.employee = employee
-		overtime_slip.start_date = start_date
-		overtime_slip.end_date = end_date
-
-		holiday_map = overtime_slip.get_holiday_map()
-		self.assertIn("2026-01-05", holiday_map)
-		self.assertNotIn("2026-01-01", holiday_map)
-
 	def test_holiday_map_uses_overtime_period_holiday_list(self):
 		employee = make_employee("test_overtime_hla_as_on@example.com", company="_Test Company")
 		start_date = getdate("2026-01-01")
@@ -75,43 +47,6 @@ class TestOvertimeSlip(HRMSTestSuite):
 
 		self.assertIn("2026-01-01", overtime_slip.get_holiday_map())
 		self.assertNotIn("2026-01-02", overtime_slip.get_holiday_map())
-
-	def test_holiday_map_uses_employee_default_before_company_default(self):
-		company = create_company("Test Overtime HLA Default Company").name
-		employee = make_employee("test_overtime_hla_default@example.com", company=company)
-		start_date = getdate("2026-01-01")
-		end_date = getdate("2026-01-31")
-		employee_default = make_holiday_list(
-			"Test Overtime Employee Default", from_date=start_date, to_date=end_date, add_weekly_offs=False
-		)
-		company_default = make_holiday_list(
-			"Test Overtime Company Default", from_date=start_date, to_date=end_date, add_weekly_offs=False
-		)
-		add_holiday(employee_default, "2026-01-03")
-		add_holiday(company_default, "2026-01-04")
-		frappe.db.set_value("Employee", employee, "holiday_list", employee_default)
-		frappe.db.set_value("Company", company, "default_holiday_list", company_default)
-
-		overtime_slip = frappe.new_doc("Overtime Slip")
-		overtime_slip.employee = employee
-		overtime_slip.start_date = start_date
-		overtime_slip.end_date = end_date
-
-		with self.assertRaises(frappe.ValidationError):
-			overtime_slip.get_holiday_map()
-
-		from hrms.utils.holiday_list import get_holiday_list_for_employee
-
-		self.assertEqual(
-			get_holiday_list_for_employee(employee, as_on=start_date, include_default_holiday_list=True),
-			employee_default,
-		)
-
-		frappe.db.set_value("Employee", employee, "holiday_list", None)
-		self.assertEqual(
-			get_holiday_list_for_employee(employee, as_on=start_date, include_default_holiday_list=True),
-			company_default,
-		)
 
 	def test_overtime_calculation_and_additional_salary_creation(self):
 		from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip

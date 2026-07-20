@@ -878,7 +878,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 				leaves=leaves * -1,
 				is_lwp=lwp,
 				holiday_list=get_holiday_list_for_employee(
-					self.employee, raise_exception=raise_exception, as_on=self.from_date
+					self.employee, raise_exception=raise_exception, as_on=expiry_date
 				)
 				or "",
 			)

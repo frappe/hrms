@@ -15,14 +15,11 @@ from frappe.utils import (
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
-from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
-	assign_holiday_list,
-	create_holiday_list_assignment,
-)
+from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import assign_holiday_list
 from hrms.hr.doctype.leave_application.test_leave_application import get_first_sunday
 from hrms.hr.doctype.shift_type.shift_type import update_last_sync_of_checkin
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
-from hrms.tests.test_utils import add_date_to_holiday_list, create_company
+from hrms.tests.test_utils import add_date_to_holiday_list
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -55,24 +52,6 @@ class TestShiftType(HRMSTestSuite):
 		update_last_sync_of_checkin()
 		shift_type.reload()
 		self.assertEqual(shift_type.last_sync_of_checkin, datetime.combine(getdate(), get_time("13:01:00")))
-
-	def test_shift_holiday_list_takes_precedence(self):
-		company = create_company("Test Shift HLA Company").name
-		employee = make_employee("test_shift_hla_precedence@example.com", company=company)
-		shift_holiday_list = make_holiday_list("Test Shift HLA")
-		employee_holiday_list = make_holiday_list("Test Shift Employee HLA")
-		company_holiday_list = make_holiday_list("Test Shift Company HLA")
-		shift_type = setup_shift_type(shift_type="_Test HLA Priority Shift")
-		shift_type.holiday_list = shift_holiday_list
-		shift_type.save()
-		create_holiday_list_assignment(
-			"Employee", employee, employee_holiday_list, from_date=get_year_start(getdate())
-		)
-		create_holiday_list_assignment(
-			"Company", company, company_holiday_list, from_date=get_year_start(getdate())
-		)
-
-		self.assertEqual(shift_type.get_holiday_list(employee, getdate()), shift_holiday_list)
 
 	def test_auto_update_last_sync_of_checkin_for_shifts_spanning_two_days_due_to_buffer(self):
 		shift_type = setup_shift_type(

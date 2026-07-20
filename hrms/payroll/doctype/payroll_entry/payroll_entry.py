@@ -1167,11 +1167,10 @@ class PayrollEntry(Document):
 		if not self.validate_attendance:
 			return
 
+		from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
+
 		unmarked_attendance = []
 		employee_details = self.get_employee_and_attendance_details()
-		default_holiday_list = frappe.db.get_value(
-			"Company", self.company, "default_holiday_list", cache=True
-		)
 
 		for emp in self.employees:
 			details = next((record for record in employee_details if record.name == emp.employee), None)
@@ -1179,9 +1178,8 @@ class PayrollEntry(Document):
 				continue
 
 			start_date, end_date = self.get_payroll_dates_for_employee(details)
-			holidays = self.get_holidays_count(
-				details.holiday_list or default_holiday_list, start_date, end_date
-			)
+			holiday_list = get_holiday_list_for_employee(emp.employee, as_on=start_date)
+			holidays = self.get_holidays_count(holiday_list, start_date, end_date)
 			payroll_days = date_diff(end_date, start_date) + 1
 			unmarked_days = payroll_days - (holidays + details.attendance_count)
 
@@ -1203,7 +1201,6 @@ class PayrollEntry(Document):
 		                "name": "HREMP00001",
 		                "date_of_joining": "2019-01-01",
 		                "relieving_date": "2022-01-01",
-		                "holiday_list": "Holiday List Company",
 		                "attendance_count": 22
 		        }
 		]
@@ -1225,7 +1222,6 @@ class PayrollEntry(Document):
 				Employee.name,
 				Employee.date_of_joining,
 				Employee.relieving_date,
-				Employee.holiday_list,
 				Count(Attendance.name).as_("attendance_count"),
 			)
 			.where(Employee.name.isin(employees))

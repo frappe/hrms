@@ -374,11 +374,9 @@ class OvertimeSlip(Document):
 	def get_holiday_map(self):
 		from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
 
-		from hrms.hr.doctype.attendance.attendance import get_employee_shift
 		from hrms.utils.holiday_list import get_holiday_dates_between
 
-		shift = get_employee_shift(self.employee, self.start_date)
-		holiday_list = get_holiday_list_for_employee(self.employee, as_on=self.start_date, shift_type=shift)
+		holiday_list = get_holiday_list_for_employee(self.employee, as_on=self.start_date)
 		holiday_dates = get_holiday_dates_between(
 			holiday_list, self.start_date, self.end_date, select_weekly_off=True, as_dict=True
 		)
