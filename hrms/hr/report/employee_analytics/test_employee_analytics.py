@@ -47,6 +47,32 @@ class TestEmployeeAnalytics(HRMSTestSuite):
 		chart_data = report[3]["data"]
 		test_data(self, values_to_assert, chart_data)
 
+	def test_group_company(self):
+		parent_company = create_company("_Test Group Company")
+		child_company_1 = create_company("_Test Child Company 1", parent_company=parent_company)
+		child_company_2 = create_company("_Test Child Company 2", parent_company=parent_company)
+
+		make_employee("test_group1@example.com", company=parent_company, branch="Test Branch 1")
+		make_employee("test_group2@example.com", company=child_company_1, branch="Test Branch 1")
+		make_employee("test_group3@example.com", company=child_company_2, branch="Test Branch 2")
+
+		filters = frappe._dict({"company": parent_company, "parameter": "Branch"})
+		report = execute(filters=filters)
+		employees_in_report = report[1]
+
+		self.assertEqual(len(employees_in_report), 3)
+
+		chart_data = report[3]["data"]
+		branch_1_idx = chart_data["labels"].index("Test Branch 1")
+		branch_2_idx = chart_data["labels"].index("Test Branch 2")
+		self.assertEqual(chart_data["datasets"][0]["values"][branch_1_idx], 2)
+		self.assertEqual(chart_data["datasets"][0]["values"][branch_2_idx], 1)
+
+		# selecting a child company should show only that company's data
+		filters_child = frappe._dict({"company": child_company_1, "parameter": "Branch"})
+		report_child = execute(filters=filters_child)
+		self.assertEqual(len(report_child[1]), 1)
+
 
 def test_data(self, values_to_assert, chart_data):
 	values = list(zip(chart_data["labels"], chart_data["datasets"][0]["values"], strict=False))
@@ -77,19 +103,19 @@ def get_employees_without_set_parameter(parameter, company):
 	return frappe.db.count("Employee", {parameter: ("is", "not set"), "company": company, "status": "Active"})
 
 
-def create_company(company_name):
+def create_company(company_name, parent_company=None):
 	if frappe.db.exists("Company", company_name):
 		company = frappe.get_doc("Company", company_name)
 	else:
-		company = frappe.get_doc(
-			{
-				"doctype": "Company",
-				"company_name": company_name,
-				"country": "India",
-				"default_currency": "INR",
-				"create_chart_of_accounts_based_on": "Standard Template",
-				"chart_of_accounts": "Standard",
-			}
-		)
-		company = company.save()
+		doc = {
+			"doctype": "Company",
+			"company_name": company_name,
+			"country": "India",
+			"default_currency": "INR",
+			"create_chart_of_accounts_based_on": "Standard Template",
+			"chart_of_accounts": "Standard",
+		}
+		if parent_company:
+			doc["parent_company"] = parent_company
+		company = frappe.get_doc(doc).save()
 	return company.name
