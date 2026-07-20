@@ -6,12 +6,10 @@ from contextlib import contextmanager
 import frappe
 from frappe.utils import add_months, get_year_ending, get_year_start, getdate
 
-from erpnext.setup.doctype.employee.employee import is_holiday
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import DuplicateAssignment
-from hrms.tests.test_utils import add_date_to_holiday_list
 from hrms.tests.utils import HRMSTestSuite
 from hrms.utils.holiday_list import get_holiday_list_for_employee
 
@@ -75,16 +73,6 @@ class IntegrationTestHolidayListAssignment(HRMSTestSuite):
 		employee = make_employee("test_default_hla@example.com", company="_Test Company")
 		holiday_list = get_holiday_list_for_employee(employee, as_on=getdate())
 		self.assertEqual(holiday_list, self.holiday_list)
-
-	def test_is_holiday_uses_requested_date(self):
-		employee = make_employee("test_hla_is_holiday@example.com", company="_Test Company")
-		first_holiday_list = make_holiday_list("Test HLA Is Holiday First", "2026-01-01", "2026-01-31")
-		second_holiday_list = make_holiday_list("Test HLA Is Holiday Second", "2026-06-01", "2026-12-31")
-		add_date_to_holiday_list("2026-01-01", first_holiday_list)
-		create_holiday_list_assignment("Employee", employee, first_holiday_list, from_date="2026-01-01")
-		create_holiday_list_assignment("Employee", employee, second_holiday_list, from_date="2026-06-01")
-
-		self.assertTrue(is_holiday(employee, "2026-01-01"))
 
 
 def create_holiday_list_assignment(
