@@ -12,18 +12,18 @@ class TestEmployeeAnalytics(HRMSTestSuite):
 	def setUp(self):
 		create_branches()
 		create_employee_grade()
-		self.company = "_Test Company"
-		self.company_2 = create_company("_Test Company 2")
 
 	def test_branches(self):
-		make_employee("test_analytics1@example.com", company=self.company, branch="Test Branch 1")
-		make_employee("test_analytics2@example.com", company=self.company, branch="Test Branch 2")
-		make_employee("test_analytics3@example.com", company=self.company, branch="Test Branch 2")
-		make_employee("test_analytics4@Eexample.com", company=self.company_2)
+		# Use a standalone company so the is_group expansion does not pull in other test data
+		standalone_company = create_company("_Test Analytics Standalone Company")
 
-		employees_with_no_branch = get_employees_without_set_parameter("branch", self.company)
+		make_employee("test_analytics1@example.com", company=standalone_company, branch="Test Branch 1")
+		make_employee("test_analytics2@example.com", company=standalone_company, branch="Test Branch 2")
+		make_employee("test_analytics3@example.com", company=standalone_company, branch="Test Branch 2")
 
-		filters = frappe._dict({"company": self.company, "parameter": "Branch"})
+		employees_with_no_branch = get_employees_without_set_parameter("branch", standalone_company)
+
+		filters = frappe._dict({"company": standalone_company, "parameter": "Branch"})
 
 		report = execute(filters=filters)
 		employees_in_report = report[1]
@@ -35,13 +35,16 @@ class TestEmployeeAnalytics(HRMSTestSuite):
 		test_data(self, values_to_assert, chart_data)
 
 	def test_employee_grade(self):
-		make_employee("test_analytics1@example.com", company=self.company, grade="1")
-		make_employee("test_analytics2@example.com", company=self.company, grade="2")
-		make_employee("test_analytics3@example.com", company=self.company, grade="2")
+		# Use a standalone company so the is_group expansion does not pull in other test data
+		standalone_company = create_company("_Test Analytics Standalone Company")
 
-		employees_with_no_grade = get_employees_without_set_parameter("grade", self.company)
+		make_employee("test_analytics1@example.com", company=standalone_company, grade="1")
+		make_employee("test_analytics2@example.com", company=standalone_company, grade="2")
+		make_employee("test_analytics3@example.com", company=standalone_company, grade="2")
+
+		employees_with_no_grade = get_employees_without_set_parameter("grade", standalone_company)
 		values_to_assert = {"1": 1, "2": 2, "Not Set": employees_with_no_grade}
-		filters = frappe._dict({"company": self.company, "parameter": "Grade"})
+		filters = frappe._dict({"company": standalone_company, "parameter": "Grade"})
 		report = execute(filters=filters)
 
 		chart_data = report[3]["data"]
@@ -105,17 +108,17 @@ def get_employees_without_set_parameter(parameter, company):
 
 def create_company(company_name, parent_company=None):
 	if frappe.db.exists("Company", company_name):
-		company = frappe.get_doc("Company", company_name)
-	else:
-		doc = {
-			"doctype": "Company",
-			"company_name": company_name,
-			"country": "India",
-			"default_currency": "INR",
-			"create_chart_of_accounts_based_on": "Standard Template",
-			"chart_of_accounts": "Standard",
-		}
-		if parent_company:
-			doc["parent_company"] = parent_company
-		company = frappe.get_doc(doc).save()
-	return company.name
+		return company_name
+
+	doc = {
+		"doctype": "Company",
+		"company_name": company_name,
+		"country": "India",
+		"default_currency": "INR",
+		"create_chart_of_accounts_based_on": "Standard Template",
+		"chart_of_accounts": "Standard",
+	}
+	if parent_company:
+		doc["parent_company"] = parent_company
+
+	return frappe.get_doc(doc).save().name
