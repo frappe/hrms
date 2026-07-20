@@ -64,7 +64,7 @@ jobs:
 
       - name: Package assets
         working-directory: apps/hrms
-        run: tar czf hrms-assets.tar.gz -C ../../sites/assets/hrms dist frontend roster
+        run: tar czf hrms-assets.tar.gz -C ../../sites/assets/hrms dist -C "$PWD/hrms/public" frontend roster
 
       - name: Upload to rolling release
         working-directory: apps/hrms

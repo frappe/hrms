@@ -13,10 +13,6 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.employee_advance.employee_advance import (
 	create_return_through_additional_salary,
 )
-from hrms.hr.doctype.employee_advance.test_employee_advance import (
-	make_employee_advance,
-	make_payment_entry,
-)
 from hrms.payroll.doctype.payroll_entry.payroll_entry import (
 	PayrollEntry,
 	get_end_date,
@@ -602,6 +598,11 @@ class TestPayrollEntry(HRMSTestSuite):
 					self.assertEqual(account.party, None)
 
 	def test_advance_deduction_in_accrual_journal_entry(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			make_employee_advance,
+			make_payment_entry,
+		)
+
 		company_doc = frappe.get_doc("Company", "_Test Company")
 		employee = make_employee("test_employee@payroll.com", company=company_doc.name)
 

@@ -43,6 +43,16 @@ frappe.ui.form.on("Leave Encashment", {
 				},
 			};
 		});
+
+		frm.set_query("expense_account", function () {
+			return {
+				filters: {
+					is_group: 0,
+					root_type: "Expense",
+					company: frm.doc.company,
+				},
+			};
+		});
 	},
 	refresh: function (frm) {
 		cur_frm.set_intro("");

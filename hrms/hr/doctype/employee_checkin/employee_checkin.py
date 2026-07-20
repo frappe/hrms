@@ -182,6 +182,12 @@ def add_log_based_on_employee_field(
 	if not employee_field_value or not timestamp:
 		frappe.throw(_("'employee_field_value' and 'timestamp' are required."))
 
+	allowed_employee_fieldnames = {"name", "employee", "attendance_device_id"}
+	if employee_fieldname not in allowed_employee_fieldnames:
+		frappe.throw(
+			_("'employee_fieldname' must be one of {0}.").format(", ".join(allowed_employee_fieldnames))
+		)
+
 	employee = frappe.db.get_values(
 		"Employee",
 		{employee_fieldname: employee_field_value},

@@ -13,6 +13,7 @@ frappe.ui.form.on("Expense Claim", {
 					["employee", "=", frm.doc.employee],
 					["paid_amount", ">", 0],
 					["status", "not in", ["Claimed", "Returned", "Partly Claimed and Returned"]],
+					["currency", "=", frm.doc.currency],
 				],
 			};
 		});
@@ -519,6 +520,16 @@ frappe.ui.form.on("Expense Claim Detail", {
 		if (!d.expense_type) {
 			return;
 		}
+
+		// Fetch description only if empty
+		if (!d.description) {
+			frappe.db.get_value("Expense Claim Type", d.expense_type, "description").then((r) => {
+				if (r.message && r.message.description) {
+					frappe.model.set_value(cdt, cdn, "description", r.message.description);
+				}
+			});
+		}
+
 		return frappe.call({
 			method: "hrms.hr.doctype.expense_claim.expense_claim.get_expense_claim_account_and_cost_center",
 			args: {

@@ -58,6 +58,7 @@ class JobRequisition(Document):
 
 	@frappe.whitelist()
 	def associate_job_opening(self, job_opening: str) -> None:
+		frappe.has_permission("Job Opening", "write", job_opening, throw=True)
 		frappe.db.set_value(
 			"Job Opening", job_opening, {"job_requisition": self.name, "vacancies": self.no_of_positions}
 		)

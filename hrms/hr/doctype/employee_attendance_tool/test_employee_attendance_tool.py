@@ -234,6 +234,65 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 		self.assertIn(self.employee2.name, filtered)
 		self.assertNotIn(self.employee3.name, filtered)
 
+	def test_mark_half_day_attendance_permissions(self):
+		user_no_role = "test_no_role@example.com"
+
+		frappe.set_user("Administrator")
+		make_employee(user_no_role, company="_Test Company")
+
+		date = add_days(getdate(), -1)
+		while is_holiday(employee=self.employee1, date=date):
+			date = add_days(date, -1)
+
+		# Create and submit an attendance record as Administrator
+		attendance = frappe.get_doc(
+			{
+				"doctype": "Attendance",
+				"employee": self.employee1,
+				"attendance_date": date,
+				"status": "Present",
+			}
+		).insert()
+		attendance.submit()
+
+		# Scenario 1 (Security): user without Attendance write permission
+		# Verify the unauthorized user cannot update half-day attendance
+		frappe.set_user(user_no_role)
+		try:
+			# Precondition: verify the user lacks doctype-level write access
+			self.assertFalse(frappe.has_permission("Attendance", "write"))
+
+			with self.assertRaises(frappe.PermissionError):
+				mark_employee_attendance(
+					employee_list=[],
+					status="Present",
+					date=date,
+					mark_half_day=True,
+					half_day_status="Absent",
+					half_day_employee_list=[self.employee1],
+				)
+		finally:
+			frappe.set_user("Administrator")
+
+		# Verify the record was NOT modified
+		attendance.reload()
+		self.assertIsNone(attendance.half_day_status)
+		self.assertEqual(attendance.status, "Present")
+
+		# Scenario 2 (Positive): Administrator can update half-day attendance
+		mark_employee_attendance(
+			employee_list=[],
+			status="Present",
+			date=date,
+			mark_half_day=True,
+			half_day_status="Absent",
+			half_day_employee_list=[self.employee1],
+		)
+
+		attendance.reload()
+		self.assertEqual(attendance.half_day_status, "Absent")
+		self.assertEqual(attendance.status, "Present")
+
 
 def create_leave_allocation(employee, leave_type, date=None):
 	from_date = add_days(date or getdate(), -2)

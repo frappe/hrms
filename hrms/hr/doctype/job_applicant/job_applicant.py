@@ -4,6 +4,8 @@
 # For license information, please see license.txt
 
 
+import json
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -77,12 +79,40 @@ class JobApplicant(Document):
 					_("Cannot create a Job Applicant against a closed Job Opening"), title=_("Not Allowed")
 				)
 
+		if frappe.flags.in_web_form and not self.source:
+			self.source = "Website Listing"
+
 	def set_status_for_employee_referral(self):
 		emp_ref = frappe.get_doc("Employee Referral", self.employee_referral)
 		if self.status in ["Open", "Replied", "Hold"]:
 			emp_ref.db_set("status", "In Process")
 		elif self.status in ["Accepted", "Rejected"]:
 			emp_ref.db_set("status", self.status)
+
+
+KANBAN_COLUMNS = ["Open", "Replied", "Shortlisted", "Accepted"]
+
+
+@frappe.whitelist()
+def create_kanban_board(board_name: str) -> dict:
+	frappe.has_permission("Job Applicant", throw=True)
+
+	if frappe.db.exists("Kanban Board", board_name):
+		return frappe.get_doc("Kanban Board", board_name).as_dict()
+
+	board = frappe.new_doc("Kanban Board")
+	board.kanban_board_name = board_name
+	board.reference_doctype = "Job Applicant"
+	board.field_name = "status"
+	board.private = 0
+	board.fields = json.dumps(["designation", "applicant_rating"])
+	board.show_labels = 1
+
+	for column_name in KANBAN_COLUMNS:
+		board.append("columns", {"column_name": column_name, "status": "Active"})
+
+	board.insert(ignore_permissions=True)
+	return board.as_dict()
 
 
 @frappe.whitelist()
@@ -113,7 +143,52 @@ def create_interview(job_applicant: str, interview_type: str) -> Document:
 
 
 @frappe.whitelist()
+def schedule_interview(
+	job_applicant: str,
+	interview_type: str,
+	scheduled_on: str,
+	from_time: str | None = None,
+	to_time: str | None = None,
+	interviewers: str | list | None = None,
+) -> str:
+	frappe.has_permission("Interview", ptype="create", throw=True)
+	frappe.has_permission("Job Applicant", ptype="read", doc=job_applicant, throw=True)
+
+	applicant = frappe.get_doc("Job Applicant", job_applicant)
+
+	round_designation = frappe.db.get_value("Interview Type", interview_type, "designation")
+	if round_designation and applicant.designation and round_designation != applicant.designation:
+		frappe.throw(
+			_("Interview Type {0} is only applicable for Designation {1}").format(
+				frappe.bold(interview_type), frappe.bold(round_designation)
+			)
+		)
+
+	interview = frappe.new_doc("Interview")
+	interview.interview_type = interview_type
+	interview.job_applicant = applicant.name
+	interview.designation = applicant.designation
+	interview.resume_link = applicant.resume_link
+	interview.job_opening = applicant.job_title
+	interview.scheduled_on = scheduled_on
+	interview.from_time = from_time
+	interview.to_time = to_time
+
+	if isinstance(interviewers, str):
+		interviewers = json.loads(interviewers)
+
+	for entry in interviewers or []:
+		if entry.get("interviewer"):
+			interview.append("interview_details", {"interviewer": entry["interviewer"]})
+
+	interview.insert(ignore_permissions=True)
+
+	return interview.name
+
+
+@frappe.whitelist()
 def get_interview_details(job_applicant: str) -> dict:
+	frappe.has_permission("Job Applicant", "read", job_applicant, throw=True)
 	interview_details = frappe.db.get_all(
 		"Interview",
 		filters={"job_applicant": job_applicant, "docstatus": ["!=", 2]},

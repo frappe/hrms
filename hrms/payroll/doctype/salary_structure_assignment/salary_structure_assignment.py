@@ -344,18 +344,20 @@ class SalaryStructureAssignment(Document):
 
 		data = get_component_eval_context(self.employee, self.as_dict())
 
-		# Full-cycle / preview seeding: SSA has no attendance, so it evaluates as a
-		# full period -- payment_days == total_working_days (proration ratio 1) and no
-		# LWP -- so formulas referencing slip-runtime fields resolve and yield
-		# full-cycle values. Compute the period day-count the same way the salary
-		# slip's for_preview does (days in the period containing from_date).
+		# The SSA has no salary slip, so formulas referencing slip period fields (e.g.
+		# start_date) would raise NameError. Seed a full cycle -- the period containing
+		# from_date -- with no LWP/absence so proration-based formulas yield full-cycle
+		# values (payment_days == total_working_days, ratio 1).
 		frequency = frappe.get_cached_value("Salary Structure", self.salary_structure, "payroll_frequency")
 		dates = get_start_end_dates(frequency, self.from_date, self.company)
 		period_days = date_diff(dates.end_date, dates.start_date) + 1
+		data.start_date = dates.start_date
+		data.end_date = dates.end_date
 		data.payment_days = period_days
 		data.total_working_days = period_days
 		data.leave_without_pay = 0
 		data.absent_days = 0
+		data.unmarked_days = 0
 		return data
 
 	def _evaluate_component_table(self, rows, data: frappe._dict) -> list:
@@ -451,6 +453,7 @@ def get_assigned_salary_structure(employee, on_date):
 
 @frappe.whitelist()
 def get_employee_currency(employee: str) -> str:
+	frappe.has_permission("Employee", "read", employee, throw=True)
 	employee_currency = frappe.db.get_value("Salary Structure Assignment", {"employee": employee}, "currency")
 	if not employee_currency:
 		frappe.throw(

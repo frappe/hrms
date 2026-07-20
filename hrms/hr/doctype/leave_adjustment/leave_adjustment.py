@@ -130,7 +130,7 @@ def get_leave_allocation_for_posting_date(
 	"""
 	Returns the leave allocation for the given employee, leave type and posting date.
 	"""
-	return frappe.get_all(
+	return frappe.get_list(
 		"Leave Allocation",
 		{
 			"employee": employee,
@@ -151,7 +151,7 @@ def get_allocated_leave_types(
 	"""
 	Returns the leave types allocated to the given employee
 	"""
-	return frappe.get_all(
+	return frappe.get_list(
 		"Leave Allocation",
 		{
 			"employee": filters.get("employee"),

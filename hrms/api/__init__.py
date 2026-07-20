@@ -78,6 +78,17 @@ def get_all_employees() -> list[dict]:
 	)
 
 
+@frappe.whitelist()
+def get_reports_to_employee_name(employee: str) -> str:
+	reports_to = frappe.db.get_value(
+		"Employee", {"user_id": frappe.session.user, "status": "Active"}, "reports_to"
+	)
+	if not reports_to or reports_to != employee:
+		frappe.throw(_("Not permitted"), frappe.PermissionError)
+
+	return frappe.db.get_value("Employee", employee, "employee_name") or ""
+
+
 def get_current_employee() -> str:
 	employee = get_current_employee_info().get("name")
 	if not employee:
@@ -701,6 +712,7 @@ def get_currency_symbols() -> dict:
 
 @frappe.whitelist()
 def get_company_cost_center_and_expense_account(company: str) -> dict:
+	frappe.has_permission("Company", "read", company, throw=True)
 	return frappe.db.get_value(
 		"Company", company, ["cost_center", "default_expense_claim_payable_account"], as_dict=True
 	)
@@ -779,6 +791,11 @@ def upload_base64_file(
 
 @frappe.whitelist()
 def delete_attachment(filename: str):
+	attached_to_doctype, attached_to_name = frappe.db.get_value(
+		"File", filename, ["attached_to_doctype", "attached_to_name"]
+	)
+	if attached_to_doctype and attached_to_name:
+		frappe.has_permission(attached_to_doctype, "write", attached_to_name, throw=True)
 	frappe.delete_doc("File", filename)
 
 

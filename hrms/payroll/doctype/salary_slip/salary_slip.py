@@ -31,6 +31,7 @@ from erpnext.accounts.utils import get_fiscal_year
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
 from erpnext.utilities.transaction_base import TransactionBase
 
+import hrms
 from hrms.hr.utils import validate_active_employee
 from hrms.payroll.doctype.additional_salary.additional_salary import get_additional_salaries
 from hrms.payroll.doctype.employee_benefit_ledger.employee_benefit_ledger import (
@@ -941,10 +942,20 @@ class SalarySlip(TransactionBase):
 
 		set_loan_repayment(self)
 
+		# Region-specific deductions (e.g. India statutory deductions) are injected
+		# here so they are reflected in both saved slips and the preview generated
+		# by process_salary_structure, before totals are finalised below.
+		self.apply_regional_deductions()
+
 		self.set_precision_for_component_amounts()
 		self.set_net_pay()
 		if not skip_tax_breakup_computation:
 			self.compute_income_tax_breakup()
+
+	@hrms.allow_regional
+	def apply_regional_deductions(self):
+		"Hook point for region-specific salary slip deductions."
+		pass
 
 	def set_net_pay(self):
 		self.total_deduction = self.get_component_totals("deductions")
@@ -1900,10 +1911,12 @@ class SalarySlip(TransactionBase):
 
 		if has_additional_salary_tax_component:
 			self.current_structured_tax_amount = self.additional_salary_amount
-		else:
+		elif self.remaining_sub_periods > 0:
 			self.current_structured_tax_amount = (
 				self.total_structured_tax_amount - self.previous_total_paid_taxes
 			) / self.remaining_sub_periods
+		else:
+			self.current_structured_tax_amount = 0.0
 
 		# Total taxable earnings with additional earnings with full tax
 		self.full_tax_on_additional_earnings = 0.0
@@ -2595,6 +2608,7 @@ def get_lwp_or_ppl_for_date_range(employee, start_date, end_date):
 
 @frappe.whitelist()
 def make_salary_slip_from_timesheet(source_name: str, target_doc: str | Document | None = None) -> Document:
+	frappe.has_permission("Timesheet", "read", source_name, throw=True)
 	target = frappe.new_doc("Salary Slip")
 	set_missing_values(source_name, target)
 	target.run_method("get_emp_and_working_day_details")
@@ -2656,6 +2670,9 @@ def enqueue_email_salary_slips(names: list | str) -> None:
 
 	if isinstance(names, str):
 		names = json.loads(names)
+
+	for name in names:
+		frappe.has_permission("Salary Slip", "read", name, throw=True)
 
 	frappe.enqueue("hrms.payroll.doctype.salary_slip.salary_slip.email_salary_slips", names=names)
 	frappe.msgprint(

@@ -240,9 +240,9 @@ def get_doc_condition(doctype):
 		or work_end_date between %(from_date)s and %(to_date)s \
 		or (work_from_date < %(from_date)s and work_end_date > %(to_date)s))"
 	elif doctype == "Leave Period":
-		return "and company = %(company)s and (from_date between %(from_date)s and %(to_date)s \
-			or to_date between %(from_date)s and %(to_date)s \
-			or (from_date < %(from_date)s and to_date > %(to_date)s))"
+		return "and company = %(company)s and (`from_date` between %(from_date)s and %(to_date)s \
+			or `to_date` between %(from_date)s and %(to_date)s \
+			or (`from_date` < %(from_date)s and `to_date` > %(to_date)s))"
 
 
 def throw_overlap_error(doc, exists_for, overlap_doc, from_date, to_date):
@@ -310,18 +310,20 @@ def get_total_exemption_amount(declarations):
 
 @frappe.whitelist()
 def get_leave_period(from_date: str | datetime.date, to_date: str | datetime.date, company: str):
-	leave_period = frappe.db.sql(
-		"""
-		select name, from_date, to_date
-		from `tabLeave Period`
-		where company=%(company)s and is_active=1
-			and (from_date between %(from_date)s and %(to_date)s
-				or to_date between %(from_date)s and %(to_date)s
-				or (from_date < %(from_date)s and to_date > %(to_date)s))
-	""",
-		{"from_date": from_date, "to_date": to_date, "company": company},
-		as_dict=1,
-	)
+	LeavePeriod = frappe.qb.DocType("Leave Period")
+	leave_period = (
+		frappe.qb.from_(LeavePeriod)
+		.select(LeavePeriod.name, LeavePeriod.from_date, LeavePeriod.to_date)
+		.where(
+			(LeavePeriod.company == company)
+			& (LeavePeriod.is_active == 1)
+			& (
+				LeavePeriod.from_date[from_date:to_date]
+				| LeavePeriod.to_date[from_date:to_date]
+				| ((LeavePeriod.from_date < from_date) & (LeavePeriod.to_date > to_date))
+			)
+		)
+	).run(as_dict=1)
 
 	if leave_period:
 		return leave_period
@@ -370,7 +372,11 @@ def allocate_earned_leaves():
 			else:
 				date_of_joining = frappe.db.get_value("Employee", allocation.employee, "date_of_joining")
 				allocation_date = get_expected_allocation_date_for_period(
-					e_leave_type.earned_leave_frequency, e_leave_type.allocate_on_day, today, date_of_joining
+					e_leave_type.earned_leave_frequency,
+					e_leave_type.allocate_on_day,
+					today,
+					date_of_joining,
+					effective_from=None,
 				)
 				annual_allocation = get_annual_allocation_from_policy(allocation, e_leave_type)
 				earned_leaves = calculate_upcoming_earned_leave(allocation, e_leave_type, date_of_joining)
@@ -526,11 +532,14 @@ def get_monthly_earned_leave(
 	return earned_leaves
 
 
-def get_sub_period_start_and_end(date, frequency):
+def get_sub_period_start_and_end(date, frequency, effective_from=None):
+	if frequency == "Half-Yearly" and effective_from:
+		return get_half_year_periods(date, effective_from)
+
 	return {
 		"Monthly": (get_first_day(date), get_last_day(date)),
 		"Quarterly": (get_quarter_start(date), get_quarter_ending(date)),
-		"Half-Yearly": (get_semester_start(date), get_semester_end(date)),
+		"Half-Yearly": (get_semester_start(date), get_semester_end(date)),  # fallback only
 		"Yearly": (get_year_start(date), get_year_ending(date)),
 	}.get(frequency)
 
@@ -605,11 +614,26 @@ def create_additional_leave_ledger_entry(allocation, leaves, date):
 	allocation.create_leave_ledger_entry()
 
 
-def get_expected_allocation_date_for_period(frequency, allocate_on_day, date, date_of_joining=None):
+def get_expected_allocation_date_for_period(
+	frequency, allocate_on_day, date, date_of_joining=None, effective_from=None
+):
 	try:
 		doj = date_of_joining.replace(month=date.month, year=date.year)
-	except ValueError:
+	except (ValueError, AttributeError):
 		doj = datetime.date(date.year, date.month, calendar.monthrange(date.year, date.month)[1])
+
+	if frequency == "Half-Yearly" and effective_from:
+		period_start, period_end = get_half_year_periods(date, effective_from)
+		half_yearly_dates = {
+			"First Day": period_start,
+			"Last Day": period_end,
+		}
+	else:
+		half_yearly_dates = {
+			"First Day": get_semester_start(date),
+			"Last Day": get_semester_end(date),
+		}
+
 	return {
 		"Monthly": {
 			"First Day": get_first_day(date),
@@ -620,7 +644,7 @@ def get_expected_allocation_date_for_period(frequency, allocate_on_day, date, da
 			"First Day": get_quarter_start(date),
 			"Last Day": get_quarter_ending(date),
 		},
-		"Half-Yearly": {"First Day": get_semester_start(date), "Last Day": get_semester_end(date)},
+		"Half-Yearly": half_yearly_dates,
 		"Yearly": {"First Day": get_year_start(date), "Last Day": get_year_ending(date)},
 	}[frequency][allocate_on_day]
 
@@ -1050,3 +1074,25 @@ def get_semester_end(date):
 		return get_year_ending(date)
 	else:
 		return add_months(get_year_ending(date), -6)
+
+
+def get_complete_month_count(date, effective_from):
+	"""Returns count of complete months from effective_from to date, accounting for day-of-month."""
+	month_count = (date.year - effective_from.year) * 12 + (date.month - effective_from.month)
+	# ignore a smaller day caused by a shorter month (e.g. 31st -> 28th)
+	if date.day < effective_from.day and date != get_last_day(date):
+		month_count -= 1
+	return month_count
+
+
+def get_half_year_periods(date, effective_from):
+	"""Return (start, end) of the half-year period containing date, relative to effective_from."""
+	effective_from = getdate(effective_from)
+	date = getdate(date)
+
+	half_years_passed = get_complete_month_count(date, effective_from) // 6
+
+	half_year_start = add_months(effective_from, half_years_passed * 6)
+	half_year_end = add_days(add_months(half_year_start, 6), -1)
+
+	return half_year_start, half_year_end

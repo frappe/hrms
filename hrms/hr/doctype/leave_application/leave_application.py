@@ -490,7 +490,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		for d in frappe.db.sql(
 			"""
 			select
-				name, leave_type, posting_date, from_date, to_date, total_leave_days, half_day_date
+				name, leave_type, posting_date, from_date, to_date, total_leave_days, half_day, half_day_date
 			from `tabLeave Application`
 			where employee = %(employee)s and docstatus < 2 and status in ('Open', 'Approved')
 			and to_date >= %(from_date)s and from_date <= %(to_date)s
@@ -505,6 +505,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		):
 			if (
 				cint(self.half_day) == 1
+				and cint(d.half_day) == 1
 				and getdate(self.half_day_date) == getdate(d.half_day_date)
 				and (
 					flt(self.total_leave_days) == 0.5
@@ -987,6 +988,7 @@ def get_number_of_leave_days(
 ) -> float:
 	"""Returns number of leave days between 2 dates after considering half day and holidays
 	(Based on the include_holiday setting in Leave Type)"""
+	validate_leave_access(employee)
 	number_of_days = date_diff(to_date, from_date) + 1
 
 	if cint(half_day) == 1:
@@ -1039,7 +1041,7 @@ def get_leave_details(employee: str, date: str | datetime.date, for_salary_slip:
 
 	return {
 		"leave_allocation": leave_allocation,
-		"leave_approver": get_leave_approver(employee),
+		"leave_approver": get_employee_leave_approver(employee),
 		"lwps": lwp,
 	}
 
@@ -1335,28 +1337,39 @@ def get_leaves_for_period(
 
 def get_leave_entries(employee, leave_type, from_date, to_date):
 	"""Returns leave entries between from_date and to_date."""
-	return frappe.db.sql(
-		"""
-		SELECT
-			employee, leave_type, from_date, to_date, leaves, transaction_name, transaction_type, holiday_list,
-			is_carry_forward, is_expired
-		FROM `tabLeave Ledger Entry`
-		WHERE employee=%(employee)s AND leave_type=%(leave_type)s
-			AND docstatus=1
-			AND (leaves<0
-				OR is_expired=1)
-			AND (from_date between %(from_date)s AND %(to_date)s
-				OR to_date between %(from_date)s AND %(to_date)s
-				OR (from_date < %(from_date)s AND to_date > %(to_date)s))
-	""",
-		{"from_date": from_date, "to_date": to_date, "employee": employee, "leave_type": leave_type},
-		as_dict=1,
-	)
+	Ledger = frappe.qb.DocType("Leave Ledger Entry")
+	return (
+		frappe.qb.from_(Ledger)
+		.select(
+			Ledger.employee,
+			Ledger.leave_type,
+			Ledger.from_date,
+			Ledger.to_date,
+			Ledger.leaves,
+			Ledger.transaction_name,
+			Ledger.transaction_type,
+			Ledger.holiday_list,
+			Ledger.is_carry_forward,
+			Ledger.is_expired,
+		)
+		.where(
+			(Ledger.employee == employee)
+			& (Ledger.leave_type == leave_type)
+			& (Ledger.docstatus == 1)
+			& ((Ledger.leaves < 0) | (Ledger.is_expired == 1))
+			& (
+				Ledger.from_date[from_date:to_date]
+				| Ledger.to_date[from_date:to_date]
+				| ((Ledger.from_date < from_date) & (Ledger.to_date > to_date))
+			)
+		)
+	).run(as_dict=1)
 
 
 @frappe.whitelist()
 def get_holidays(employee: str, from_date: str | datetime.date, to_date: str | datetime.date) -> int:
 	"""get holidays between two dates for the given employee"""
+	validate_leave_access(employee)
 	holidays = get_holiday_dates_between_range(employee, from_date, to_date)
 	return len(holidays)
 
@@ -1545,6 +1558,11 @@ def get_approved_leaves_for_period(employee, leave_type, from_date, to_date):
 
 @frappe.whitelist()
 def get_leave_approver(employee: str) -> str:
+	validate_leave_access(employee)
+	return get_employee_leave_approver(employee)
+
+
+def get_employee_leave_approver(employee: str) -> str:
 	leave_approver, department = frappe.db.get_value("Employee", employee, ["leave_approver", "department"])
 
 	if not leave_approver and department:
@@ -1568,13 +1586,13 @@ def get_leave_approver_and_mandatory(employee: str) -> dict:
 
 	return {
 		"is_mandatory": 1 if mandatory else 0,
-		"leave_approver": get_leave_approver(employee),
+		"leave_approver": get_employee_leave_approver(employee),
 	}
 
 
 def validate_leave_access(employee):
 	employee_user = frappe.db.get_value("Employee", employee, "user_id")
-	leave_approver = get_leave_approver(employee)
+	leave_approver = get_employee_leave_approver(employee)
 
 	if frappe.session.user not in (employee_user, leave_approver) and (
 		not frappe.has_permission("Employee", "read", employee)

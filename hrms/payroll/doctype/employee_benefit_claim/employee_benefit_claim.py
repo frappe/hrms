@@ -192,6 +192,7 @@ def get_benefit_components(
 	doctype: str, txt: str, searchfield: str, start: int, page_len: int, filters: dict
 ) -> list:
 	"""Fetch benefit components to choose from based on employee and date filters."""
+	frappe.has_permission("Employee", "read", filters.get("employee"), throw=True)
 	employee = filters.get("employee")
 	date = filters.get("date")
 	company = filters.get("company")

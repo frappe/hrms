@@ -49,6 +49,70 @@ class TestJobOpening(HRMSTestSuite):
 		opening_1.status = "Closed"
 		opening_1.save()
 
+	def test_close_job_opening_after_employee_creation(self):
+		staffing_plan = frappe.get_doc(
+			{
+				"doctype": "Staffing Plan",
+				"company": "_Test Opening Company",
+				"name": "Test",
+				"from_date": getdate(),
+				"to_date": add_days(getdate(), 10),
+			}
+		)
+
+		staffing_plan.append(
+			"staffing_details",
+			{"designation": "Designer", "vacancies": 1, "estimated_cost_per_position": 50000},
+		)
+		staffing_plan.insert()
+		staffing_plan.submit()
+
+		opening = get_job_opening()
+		opening.insert()
+
+		make_employee(
+			"test_job_opening_after_hiring@example.com",
+			company="_Test Opening Company",
+			designation="Designer",
+		)
+
+		opening.status = "Closed"
+		close_warning = opening.get_close_warning()
+		self.assertIn("may not be according to the Staffing Plan", close_warning)
+		self.assertNotIn("<table", close_warning)
+		self.assertIn("Designer", close_warning)
+		self.assertIn("<strong><a", close_warning)
+		opening.save()
+
+		self.assertEqual(opening.status, "Closed")
+
+	def test_close_job_opening_under_staffing_plan_shows_warning(self):
+		staffing_plan = frappe.get_doc(
+			{
+				"doctype": "Staffing Plan",
+				"company": "_Test Opening Company",
+				"name": "Test",
+				"from_date": getdate(),
+				"to_date": add_days(getdate(), 10),
+			}
+		)
+
+		staffing_plan.append(
+			"staffing_details",
+			{"designation": "Designer", "vacancies": 3, "estimated_cost_per_position": 50000},
+		)
+		staffing_plan.insert()
+		staffing_plan.submit()
+
+		opening = get_job_opening(job_title="Designer Under Plan")
+		opening.insert()
+
+		opening.status = "Closed"
+		self.assertIn("may not be according to the Staffing Plan", opening.get_close_warning())
+		opening.save()
+
+		self.assertEqual(opening.status, "Closed")
+
 	def test_close_expired_job_openings(self):
 		today = getdate()
 

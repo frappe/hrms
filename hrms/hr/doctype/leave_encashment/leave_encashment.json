@@ -257,8 +257,17 @@
   }
  ],
  "is_submittable": 1,
- "links": [],
- "modified": "2025-02-21 13:11:01.939992",
+ "links": [
+  {
+   "group": "Payment",
+   "is_child_table": 1,
+   "link_doctype": "Payment Entry Reference",
+   "link_fieldname": "reference_name",
+   "parent_doctype": "Payment Entry",
+   "table_fieldname": "references"
+  }
+ ],
+ "modified": "2026-06-24 11:34:04.610000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Encashment",

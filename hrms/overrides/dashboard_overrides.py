@@ -10,7 +10,12 @@ def get_dashboard_for_employee(data):
 			{"label": _("Attendance"), "items": ["Attendance", "Attendance Request", "Employee Checkin"]},
 			{
 				"label": _("Leave"),
-				"items": ["Leave Application", "Leave Allocation", "Leave Policy Assignment"],
+				"items": [
+					"Leave Application",
+					"Leave Allocation",
+					"Leave Policy Assignment",
+					"Holiday List Assignment",
+				],
 			},
 			{
 				"label": _("Lifecycle"),
@@ -56,7 +61,17 @@ def get_dashboard_for_employee(data):
 		]
 	)
 
-	data["non_standard_fieldnames"].update({"Bank Account": "party", "Employee Grievance": "raised_by"})
+	data["non_standard_fieldnames"].update(
+		{
+			"Bank Account": "party",
+			"Employee Grievance": "raised_by",
+			"Holiday List Assignment": "assigned_to",
+		}
+	)
+
+	if not data.get("dynamic_links"):
+		data["dynamic_links"] = {}
+	data["dynamic_links"]["assigned_to"] = ["Employee", "applicable_for"]
 	data.update(
 		{
 			"heatmap": True,
