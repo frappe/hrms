@@ -40,10 +40,16 @@ def get_columns():
 
 
 def get_companies(company):
-	child_companies = frappe.get_all("Company", filters={"parent_company": company}, pluck="name")
-	if child_companies:
-		return [company, *child_companies]
-	return [company]
+	company_list = [company]
+
+	if company and frappe.db.get_value("Company", company, "is_group"):
+		lft, rgt = frappe.db.get_value("Company", company, ["lft", "rgt"])
+		child_companies = frappe.db.get_list(
+			"Company", filters={"lft": [">", lft], "rgt": ["<", rgt]}, pluck="name"
+		)
+		company_list.extend(child_companies)
+
+	return company_list
 
 
 def get_employees(filters, companies):
@@ -51,8 +57,7 @@ def get_employees(filters, companies):
 	filters_for_employees["status"] = "Active"
 	filters_for_employees[filters.get("parameter").lower().replace(" ", "_")] = ["is", "set"]
 	filters_for_employees.pop("parameter")
-	if len(companies) > 1:
-		filters_for_employees["company"] = ["in", companies]
+	filters_for_employees["company"] = ["in", companies]
 	return frappe.get_list(
 		"Employee",
 		filters=filters_for_employees,
@@ -87,28 +92,21 @@ def get_chart_data(parameters, filters, companies):
 	employee = frappe.qb.DocType("Employee")
 	for parameter in parameters:
 		if parameter:
-			query = (
+			total_employee = (
 				frappe.qb.from_(employee)
 				.select(Count(employee.name).as_("count"))
+				.where(employee.company.isin(companies))
 				.where(employee.status == "Active")
 				.where(employee[parameter_field_name] == parameter)
 				.where(Criterion.all(build_qb_match_conditions("Employee")))
-			)
-			if len(companies) > 1:
-				query = query.where(employee.company.isin(companies))
-			else:
-				query = query.where(employee.company == companies[0])
-			total_employee = query.run()
+			).run()
 			if total_employee[0][0]:
 				label.append(parameter)
 			datasets.append(total_employee[0][0])
 
 	values = [value for value in datasets if value != 0]
 
-	if len(companies) > 1:
-		total_employee = frappe.db.count("Employee", {"status": "Active", "company": ["in", companies]})
-	else:
-		total_employee = frappe.db.count("Employee", {"status": "Active", "company": companies[0]})
+	total_employee = frappe.db.count("Employee", {"status": "Active", "company": ["in", companies]})
 	others = total_employee - sum(values)
 
 	label.append("Not Set")
