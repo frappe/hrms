@@ -2,7 +2,7 @@
 # License: GNU General Public License v3. See license.txt
 
 import frappe
-from frappe.query_builder.functions import Max, Min, Sum
+from frappe.query_builder.functions import Coalesce, Max, Min, NullIf, Sum
 from frappe.utils import flt
 
 from erpnext.projects.doctype.project.project import Project
@@ -24,10 +24,16 @@ class EmployeeProject(Project):
 
 	def update_costing(self):
 		ExpenseClaim = frappe.qb.DocType("Expense Claim")
+		ExpenseClaimDetail = frappe.qb.DocType("Expense Claim Detail")
 		self.total_expense_claim = (
-			frappe.qb.from_(ExpenseClaim)
-			.select(Sum(ExpenseClaim.total_sanctioned_amount))
-			.where((ExpenseClaim.docstatus == 1) & (ExpenseClaim.project == self.name))
+			frappe.qb.from_(ExpenseClaimDetail)
+			.inner_join(ExpenseClaim)
+			.on(ExpenseClaimDetail.parent == ExpenseClaim.name)
+			.select(Sum(ExpenseClaimDetail.sanctioned_amount))
+			.where(
+				(ExpenseClaim.docstatus == 1)
+				& (Coalesce(NullIf(ExpenseClaimDetail.project, ""), ExpenseClaim.project) == self.name)
+			)
 		).run()[0][0]
 
 		TimesheetDetail = frappe.qb.DocType("Timesheet Detail")
