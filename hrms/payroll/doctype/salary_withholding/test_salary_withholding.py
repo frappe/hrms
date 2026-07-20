@@ -6,8 +6,12 @@ from frappe.utils import getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
+from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+	create_holiday_list_assignment,
+)
 from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
 from hrms.payroll.doctype.payroll_entry.test_payroll_entry import make_payroll_entry
+from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 from hrms.tests.utils import HRMSTestSuite
 
@@ -21,6 +25,12 @@ MONTH_2_END = getdate("2024-02-29")
 class TestSalaryWithholding(HRMSTestSuite):
 	def setUp(self):
 		self.company = frappe.get_doc("Company", COMPANY_NAME)
+		holiday_list = make_holiday_list(
+			"Test Salary Withholding Holiday List",
+			from_date=MONTH_1_START,
+			to_date=MONTH_2_END,
+		)
+		create_holiday_list_assignment("Company", COMPANY_NAME, holiday_list, from_date=MONTH_1_START)
 		default_payroll_payble_account = frappe.get_value(
 			"Company", self.company.name, "default_payroll_payable_account"
 		)
