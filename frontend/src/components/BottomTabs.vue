@@ -1,30 +1,24 @@
 <template>
-	<ion-tab-bar
+	<div
 		slot="bottom"
-		class="bg-white shadow-md sm:w-96 py-2 pb-2 standalone:pb-safe-bottom"
+		class="mx-auto mb-3 w-[calc(100%-1.5rem)] max-w-[360px] overflow-hidden rounded-xl border border-outline-gray-2 bg-surface-white shadow-md"
 	>
-		<ion-tab-button
-			v-for="item in tabItems"
-			:key="item.title"
-			:tab="item.title"
-			:href="item.route"
-			:class="[
-				'bg-white text-xs space-y-1.5 !hover:border-gray-300 !hover:text-gray-700 transition active:scale-95',
-				route.path === item.route
-					? 'border-gray-900 text-gray-800 font-semibold'
-					: 'text-gray-600 font-normal',
-			]"
-		>
-			<component :is="item.icon" class="h-5 w-5" />
-			<div>{{ item.title }}</div>
-		</ion-tab-button>
-	</ion-tab-bar>
+		<MobileNav class="w-full !border-t-0">
+			<MobileNavItem
+				v-for="item in tabItems"
+				:key="item.title"
+				:label="item.title"
+				:icon="item.icon"
+				:to="item.route"
+				:active="isActive(item.route)"
+			/>
+		</MobileNav>
+	</div>
 </template>
 
 <script setup>
 import { useRoute } from "vue-router"
-
-import { IonTabBar, IonTabButton, IonLabel } from "@ionic/vue"
+import { MobileNav, MobileNavItem } from "frappe-ui"
 
 import HomeIcon from "@/components/icons/HomeIcon.vue"
 import LeaveIcon from "@/components/icons/LeaveIcon.vue"
@@ -36,6 +30,8 @@ import { inject } from "vue"
 const __ = inject("$translate")
 
 const route = useRoute()
+const isActive = (itemRoute) =>
+	route.path === itemRoute || route.path.startsWith(`${itemRoute}/`)
 
 const tabItems = [
 	{

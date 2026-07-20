@@ -90,8 +90,10 @@
 						>
 							<template v-for="field in fieldList" :key="field.fieldname">
 								<slot
-									v-if="field.fieldtype == 'Table'"
+									v-if="$slots[field.fieldname]"
 									:name="field.fieldname"
+									:field="field"
+									:readOnly="isFieldReadOnly(field)"
 									:isFormReadOnly="isFormReadOnly"
 								></slot>
 
@@ -135,24 +137,32 @@
 				</template>
 
 				<div class="flex flex-col space-y-4 p-4" v-else>
-					<FormField
-						v-for="field in props.fields"
-						:key="field.name"
-						:fieldtype="field.fieldtype"
-						:fieldname="field.fieldname"
-						v-model="formModel[field.fieldname]"
-						:default="field.default"
-						:label="__(field.label, null, props.doctype)"
-						:options="field.options"
-						:linkFilters="field.linkFilters"
-						:documentList="field.documentList"
-						:readOnly="isFieldReadOnly(field)"
-						:reqd="Boolean(field.reqd)"
-						:hidden="Boolean(field.hidden)"
-						:errorMessage="field.error_message"
-						:minDate="field.minDate"
-						:maxDate="field.maxDate"
-					/>
+					<template v-for="field in props.fields" :key="field.name">
+						<slot
+							v-if="$slots[field.fieldname]"
+							:name="field.fieldname"
+							:field="field"
+							:readOnly="isFieldReadOnly(field)"
+							:isFormReadOnly="isFormReadOnly"
+						></slot>
+						<FormField
+							v-else
+							:fieldtype="field.fieldtype"
+							:fieldname="field.fieldname"
+							v-model="formModel[field.fieldname]"
+							:default="field.default"
+							:label="__(field.label, null, props.doctype)"
+							:options="field.options"
+							:linkFilters="field.linkFilters"
+							:documentList="field.documentList"
+							:readOnly="isFieldReadOnly(field)"
+							:reqd="Boolean(field.reqd)"
+							:hidden="Boolean(field.hidden)"
+							:errorMessage="field.error_message"
+							:minDate="field.minDate"
+							:maxDate="field.maxDate"
+						/>
+					</template>
 
 					<!-- Attachment upload -->
 					<div

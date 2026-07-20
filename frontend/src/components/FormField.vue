@@ -2,7 +2,10 @@
 	<div v-if="showField" class="flex flex-col gap-1.5">
 		<!-- Label -->
 		<span
-			v-if="!['Check', 'Section Break', 'Column Break'].includes(props.fieldtype)"
+			v-if="
+				!props.hideLabel &&
+				!['Check', 'Section Break', 'Column Break'].includes(props.fieldtype)
+			"
 			:class="[
 				// mark field as mandatory
 				props.reqd ? `after:content-['_*'] after:text-red-600` : ``,
@@ -119,12 +122,12 @@
 		</div>
 
 		<!-- Date -->
-		<!-- FIXME: default datepicker has poor UI -->
-		<TextInput
+		<DatePicker
 			v-else-if="props.fieldtype === 'Date'"
-			type="date"
 			:model-value="modelValue"
 			:placeholder="__('Select {0}', [props.label])"
+			:format="dateFormat"
+			:typeable="false"
 			@update:model-value="(v) => emit('update:modelValue', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
@@ -133,6 +136,17 @@
 		/>
 
 		<!-- Time -->
+		<TextInput
+			v-else-if="props.fieldtype === 'Time'"
+			type="time"
+			step="60"
+			:model-value="formatTimeValue(modelValue)"
+			:placeholder="__('Select {0}', [props.label])"
+			@update:model-value="(v) => emit('update:modelValue', normalizeTimeValue(v))"
+			v-bind="$attrs"
+			:disabled="isReadOnly"
+		/>
+
 		<!-- Datetime -->
 		<DateTimePicker
 			v-else-if="props.fieldtype === 'Datetime'"
@@ -152,6 +166,7 @@
 import {
 	Checkbox,
 	Combobox,
+	DatePicker,
 	DateTimePicker,
 	ErrorMessage,
 	Textarea,
@@ -177,6 +192,7 @@ const props = defineProps({
 	modelValue: [String, Number, Boolean, Array, Object],
 	default: [String, Number, Boolean, Array, Object],
 	label: String,
+	hideLabel: Boolean,
 	options: [String, Array],
 	linkFilters: Object,
 	documentList: Array,
@@ -197,6 +213,9 @@ const props = defineProps({
 
 const emit = defineEmits(["update:modelValue"])
 const dayjs = inject("$dayjs")
+const dateFormat = (
+	window.frappe?.boot?.sysdefaults?.date_format || "yyyy-mm-dd"
+).toUpperCase()
 
 const editorExtensions = [RichTextKit]
 const editorFileUpload = useFileUpload()
@@ -219,6 +238,18 @@ const isLayoutField = computed(() => {
 const isReadOnly = computed(() => {
 	return Boolean(props.readOnly)
 })
+
+function formatTimeValue(value) {
+	if (!value) return ""
+	return String(value).split(":").slice(0, 2).join(":")
+}
+
+function normalizeTimeValue(value) {
+	if (!value) return ""
+	const time = String(value).split(":")
+	if (time.length === 2) return `${time[0]}:${time[1]}:00`
+	return String(value).split(".")[0]
+}
 
 const selectionList = computed(() => {
 	if (props.fieldtype === "Link" && props.documentList) {
