@@ -41,6 +41,7 @@ class JobOpening(WebsiteGenerator):
 		lower_range: DF.Currency
 		planned_vacancies: DF.Int
 		posted_on: DF.Datetime | None
+		prevent_duplicate_applicant: DF.Check
 		publish: DF.Check
 		publish_applications_received: DF.Check
 		publish_salary_range: DF.Check
