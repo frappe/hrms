@@ -28,7 +28,6 @@ from frappe.utils.background_jobs import enqueue
 
 import erpnext
 from erpnext.accounts.utils import get_fiscal_year
-from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
 from erpnext.utilities.transaction_base import TransactionBase
 
 import hrms
@@ -56,7 +55,7 @@ from hrms.payroll.utils import (
 	get_component_eval_context,
 	throw_error_message,
 )
-from hrms.utils.holiday_list import get_holiday_dates_between
+from hrms.utils.holiday_list import get_holiday_dates_between_range
 
 # cache keys
 HOLIDAYS_BETWEEN_DATES = "holidays_between_dates"
@@ -750,12 +749,11 @@ class SalarySlip(TransactionBase):
 		return payment_days
 
 	def get_holidays_for_employee(self, start_date, end_date):
-		holiday_list = get_holiday_list_for_employee(self.employee, as_on=start_date)
-		key = f"{holiday_list}:{start_date}:{end_date}"
+		key = f"{self.employee}:{start_date}:{end_date}"
 		holiday_dates = frappe.cache().hget(HOLIDAYS_BETWEEN_DATES, key)
 
 		if not holiday_dates:
-			holiday_dates = get_holiday_dates_between(holiday_list, start_date, end_date)
+			holiday_dates = get_holiday_dates_between_range(self.employee, start_date, end_date)
 			frappe.cache().hset(HOLIDAYS_BETWEEN_DATES, key, holiday_dates)
 
 		return holiday_dates

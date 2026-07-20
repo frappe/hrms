@@ -128,8 +128,12 @@ class EmployeeBoardingController(Document):
 		return [start_date, end_date]
 
 	def update_if_holiday(self, date, holiday_list):
+		if self.employee:
+			holiday_list = get_holiday_list_for_employee(self.employee, as_on=date)
 		while is_holiday(holiday_list, date):
 			date = add_days(date, 1)
+			if self.employee:
+				holiday_list = get_holiday_list_for_employee(self.employee, as_on=date)
 		return date
 
 	def assign_task_to_users(self, task, users):

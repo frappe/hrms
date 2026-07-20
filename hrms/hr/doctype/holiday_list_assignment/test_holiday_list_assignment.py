@@ -11,7 +11,7 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import DuplicateAssignment
 from hrms.tests.utils import HRMSTestSuite
-from hrms.utils.holiday_list import get_holiday_list_for_employee
+from hrms.utils.holiday_list import get_holiday_dates_between_range, get_holiday_list_for_employee
 
 
 class IntegrationTestHolidayListAssignment(HRMSTestSuite):
@@ -74,6 +74,52 @@ class IntegrationTestHolidayListAssignment(HRMSTestSuite):
 		holiday_list = get_holiday_list_for_employee(employee, as_on=getdate())
 		self.assertEqual(holiday_list, self.holiday_list)
 
+	def test_default_holiday_list_fallback(self):
+		employee = make_employee("test_hla_default_fallback@example.com", company="_Test Company")
+		employee_holiday_list = make_holiday_list("Test HLA Default Employee", "2024-01-01", "2024-12-31")
+		company_holiday_list = make_holiday_list("Test HLA Default Company", "2024-01-01", "2024-12-31")
+		frappe.db.set_value("Employee", employee, "holiday_list", employee_holiday_list)
+		frappe.db.set_value("Company", "_Test Company", "default_holiday_list", company_holiday_list)
+
+		self.assertEqual(get_holiday_list_for_employee(employee, as_on="2024-01-01"), employee_holiday_list)
+		frappe.db.set_value("Employee", employee, "holiday_list", None)
+		self.assertEqual(get_holiday_list_for_employee(employee, as_on="2024-01-01"), company_holiday_list)
+
+	def test_holidays_across_all_assignment_ranges(self):
+		employee = make_employee("test_hla_ranges@example.com", company="_Test Company")
+		holiday_lists = [
+			make_holiday_list(f"Test HLA Range {index}", "2026-01-01", "2026-01-31") for index in range(1, 4)
+		]
+		for holiday_list, holiday_date, from_date in zip(
+			holiday_lists,
+			["2026-01-05", "2026-01-15", "2026-01-25"],
+			["2026-01-01", "2026-01-11", "2026-01-21"],
+			strict=False,
+		):
+			add_holiday(holiday_list, holiday_date)
+			create_holiday_list_assignment("Employee", employee, holiday_list, from_date=from_date)
+
+		self.assertEqual(
+			get_holiday_dates_between_range(employee, "2026-01-01", "2026-01-31", skip_weekly_offs=True),
+			[getdate("2026-01-05"), getdate("2026-01-15"), getdate("2026-01-25")],
+		)
+
+	def test_company_assignment_fills_employee_assignment_gap(self):
+		employee = make_employee("test_hla_company_gap@example.com", company="_Test Company")
+		company_holiday_list = make_holiday_list("Test HLA Company Gap", "2026-01-01", "2026-01-31")
+		employee_holiday_list = make_holiday_list("Test HLA Employee Gap", "2026-01-01", "2026-01-31")
+		add_holiday(company_holiday_list, "2026-01-05")
+		add_holiday(employee_holiday_list, "2026-01-20")
+		create_holiday_list_assignment(
+			"Company", "_Test Company", company_holiday_list, from_date="2026-01-01"
+		)
+		create_holiday_list_assignment("Employee", employee, employee_holiday_list, from_date="2026-01-16")
+
+		self.assertEqual(
+			get_holiday_dates_between_range(employee, "2026-01-01", "2026-01-31", skip_weekly_offs=True),
+			[getdate("2026-01-05"), getdate("2026-01-20")],
+		)
+
 
 def create_holiday_list_assignment(
 	applicable_for,
@@ -105,6 +151,12 @@ def create_holiday_list_assignment(
 			{"applicable_for": applicable_for, "assigned_to": assigned_to, "holiday_list": holiday_list},
 		)
 	return hla
+
+
+def add_holiday(holiday_list, holiday_date):
+	doc = frappe.get_doc("Holiday List", holiday_list)
+	doc.append("holidays", {"holiday_date": holiday_date, "description": "Test Holiday"})
+	doc.save()
 
 
 @contextmanager

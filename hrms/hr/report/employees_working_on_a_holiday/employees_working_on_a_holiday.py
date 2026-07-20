@@ -5,7 +5,7 @@
 import frappe
 from frappe import _
 
-from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
+from hrms.utils.holiday_list import get_holiday_records_between_range
 
 
 def execute(filters=None):
@@ -51,9 +51,6 @@ def get_columns():
 
 
 def get_data(filters):
-	Attendance = frappe.qb.DocType("Attendance")
-	Holiday = frappe.qb.DocType("Holiday")
-
 	data = []
 
 	employee_filters = {"company": filters.company}
@@ -61,30 +58,40 @@ def get_data(filters):
 		employee_filters["department"] = filters.department
 
 	for employee in frappe.get_list("Employee", filters=employee_filters, pluck="name"):
-		holiday_list = get_holiday_list_for_employee(employee, raise_exception=False, as_on=filters.from_date)
-		if not holiday_list or (filters.holiday_list and filters.holiday_list != holiday_list):
+		holiday_map = {
+			holiday.holiday_date: holiday.description
+			for holiday in get_holiday_records_between_range(
+				employee,
+				filters.from_date,
+				filters.to_date,
+				fields=["parent", "holiday_date", "description"],
+				raise_exception_for_holiday_list=False,
+			)
+			if not filters.holiday_list or holiday.parent == filters.holiday_list
+		}
+		if not holiday_map:
 			continue
 
-		working_days = (
-			frappe.qb.from_(Attendance)
-			.inner_join(Holiday)
-			.on(Attendance.attendance_date == Holiday.holiday_date)
-			.select(
-				Attendance.employee,
-				Attendance.employee_name,
-				Attendance.attendance_date,
-				Attendance.status,
-				Holiday.description,
+		working_days = [
+			(
+				attendance.employee,
+				attendance.employee_name,
+				attendance.attendance_date,
+				attendance.status,
+				holiday_map[attendance.attendance_date],
 			)
-			.where(
-				(Attendance.employee == employee)
-				& (Attendance.attendance_date[filters.from_date : filters.to_date])
-				& (Attendance.status.notin(["Absent", "On Leave"]))
-				& (Attendance.docstatus == 1)
-				& (Holiday.parent == holiday_list)
+			for attendance in frappe.get_all(
+				"Attendance",
+				filters={
+					"employee": employee,
+					"attendance_date": ("between", [filters.from_date, filters.to_date]),
+					"status": ("not in", ["Absent", "On Leave"]),
+					"docstatus": 1,
+				},
+				fields=["employee", "employee_name", "attendance_date", "status"],
 			)
-			.run(as_list=True)
-		)
+			if attendance.attendance_date in holiday_map
+		]
 		data.extend(working_days)
 
 	return data

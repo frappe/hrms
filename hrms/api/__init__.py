@@ -7,6 +7,8 @@ from frappe.utils import add_days, date_diff, getdate, strip_html
 
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
 
+from hrms.utils.holiday_list import get_holiday_dates_between_range
+
 SUPPORTED_FIELD_TYPES = [
 	"Link",
 	"Select",
@@ -166,14 +168,9 @@ def get_attendance_for_calendar(employee: str, from_date: str, to_date: str) -> 
 
 
 def get_holidays_for_calendar(employee: str, from_date: str, to_date: str) -> list[str]:
-	if holiday_list := get_holiday_list_for_employee(employee, raise_exception=False, as_on=from_date):
-		return frappe.get_all(
-			"Holiday",
-			filters={"parent": holiday_list, "holiday_date": ["between", [from_date, to_date]]},
-			pluck="holiday_date",
-		)
-
-	return []
+	return get_holiday_dates_between_range(
+		employee, from_date, to_date, raise_exception_for_holiday_list=False
+	)
 
 
 @frappe.whitelist()

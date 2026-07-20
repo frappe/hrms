@@ -36,7 +36,7 @@ from hrms.hr.utils import (
 )
 from hrms.mixins.pwa_notifications import PWANotificationsMixin
 from hrms.utils import get_employee_email
-from hrms.utils.holiday_list import get_holiday_dates_between_range
+from hrms.utils.holiday_list import get_holiday_dates_between_range, get_holiday_records_between_range
 
 
 class LeaveDayBlockedError(frappe.ValidationError):
@@ -879,7 +879,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 				leaves=leaves * -1,
 				is_lwp=lwp,
 				holiday_list=get_holiday_list_for_employee(
-					self.employee, raise_exception=raise_exception, as_on=expiry_date
+					self.employee, raise_exception=raise_exception, as_on=self.from_date
 				)
 				or "",
 			)
@@ -1478,15 +1478,12 @@ def add_block_dates(events, start, end, employee, company):
 
 
 def add_holidays(events, start, end, employee, company):
-	applicable_holiday_list = get_holiday_list_for_employee(employee, as_on=start)
-	if not applicable_holiday_list:
-		return
-
-	for holiday in frappe.db.sql(
-		"""select name, holiday_date, description
-		from `tabHoliday` where parent=%s and holiday_date between %s and %s""",
-		(applicable_holiday_list, start, end),
-		as_dict=True,
+	for holiday in get_holiday_records_between_range(
+		employee,
+		start,
+		end,
+		fields=["name", "holiday_date", "description"],
+		raise_exception_for_holiday_list=False,
 	):
 		events.append(
 			{

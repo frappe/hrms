@@ -1,6 +1,8 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
+from unittest.mock import call, patch
+
 import frappe
 from frappe.permissions import add_user_permission, clear_user_permissions_for_doctype
 from frappe.utils import (
@@ -132,6 +134,46 @@ class TestLeaveApplication(HRMSTestSuite):
 
 		self.assertEqual(len(events), 1)
 		self.assertEqual(events[0]["from_date"], getdate("2026-01-01"))
+
+	def test_intermediate_expiry_uses_each_ledger_segment_start_date(self):
+		leave_application = frappe.new_doc("Leave Application")
+		leave_application.employee = get_employee().name
+		leave_application.leave_type = "_Test Leave Type"
+		leave_application.from_date = "2026-01-01"
+		leave_application.to_date = "2026-01-31"
+		leave_application.half_day = 0
+		leave_application.half_day_date = None
+		ledger_entries = []
+
+		with (
+			patch(
+				"hrms.hr.doctype.leave_application.leave_application.get_number_of_leave_days",
+				side_effect=[1, 1],
+			),
+			patch(
+				"hrms.hr.doctype.leave_application.leave_application.get_holiday_list_for_employee",
+				side_effect=["Holiday List A", "Holiday List B"],
+			) as get_holiday_list,
+			patch(
+				"hrms.hr.doctype.leave_application.leave_application.create_leave_ledger_entry",
+				side_effect=lambda _doc, args, _submit: ledger_entries.append(args.copy()),
+			),
+		):
+			leave_application.create_ledger_entry_for_intermediate_allocation_expiry(
+				"2026-01-15", False, False
+			)
+
+		self.assertEqual(
+			get_holiday_list.call_args_list,
+			[
+				call(leave_application.employee, raise_exception=True, as_on="2026-01-01"),
+				call(leave_application.employee, raise_exception=True, as_on="2026-01-16"),
+			],
+		)
+		self.assertEqual(
+			[entry["holiday_list"] for entry in ledger_entries],
+			["Holiday List A", "Holiday List B"],
+		)
 
 	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_validate_application_across_allocations(self):

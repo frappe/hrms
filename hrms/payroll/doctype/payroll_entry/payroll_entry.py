@@ -31,6 +31,7 @@ from erpnext.accounts.utils import get_fiscal_year
 
 from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import if_lending_app_installed
 from hrms.payroll.doctype.salary_withholding.salary_withholding import link_bank_entry_in_salary_withholdings
+from hrms.utils.holiday_list import get_holiday_dates_between_range
 
 
 class PayrollEntry(Document):
@@ -1167,8 +1168,6 @@ class PayrollEntry(Document):
 		if not self.validate_attendance:
 			return
 
-		from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
-
 		unmarked_attendance = []
 		employee_details = self.get_employee_and_attendance_details()
 
@@ -1178,8 +1177,7 @@ class PayrollEntry(Document):
 				continue
 
 			start_date, end_date = self.get_payroll_dates_for_employee(details)
-			holiday_list = get_holiday_list_for_employee(emp.employee, as_on=start_date)
-			holidays = self.get_holidays_count(holiday_list, start_date, end_date)
+			holidays = self.get_holidays_count(emp.employee, start_date, end_date)
 			payroll_days = date_diff(end_date, start_date) + 1
 			unmarked_days = payroll_days - (holidays + details.attendance_count)
 
@@ -1239,25 +1237,21 @@ class PayrollEntry(Document):
 
 		return start_date, end_date
 
-	def get_holidays_count(self, holiday_list: str, start_date: str, end_date: str) -> float:
-		"""Returns number of holidays between start and end dates in the holiday list"""
+	def get_holidays_count(self, employee: str, start_date: str, end_date: str) -> float:
+		"""Returns number of holidays between start and end dates for an employee."""
 		if not hasattr(self, "_holidays_between_dates"):
 			self._holidays_between_dates = {}
 
-		key = f"{start_date}-{end_date}-{holiday_list}"
+		key = f"{start_date}-{end_date}-{employee}"
 		if key in self._holidays_between_dates:
 			return self._holidays_between_dates[key]
 
-		holidays = frappe.db.get_all(
-			"Holiday",
-			filters={"parent": holiday_list, "holiday_date": ("between", [start_date, end_date])},
-			fields=[{"COUNT": "*", "as": "holidays_count"}],
-		)[0]
-
-		if holidays:
-			self._holidays_between_dates[key] = holidays.holidays_count
-
-		return self._holidays_between_dates.get(key) or 0
+		self._holidays_between_dates[key] = len(
+			get_holiday_dates_between_range(
+				employee, start_date, end_date, raise_exception_for_holiday_list=False
+			)
+		)
+		return self._holidays_between_dates[key]
 
 	@frappe.whitelist()
 	def create_overtime_slips(self) -> None:
