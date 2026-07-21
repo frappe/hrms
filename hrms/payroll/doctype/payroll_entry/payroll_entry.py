@@ -1194,16 +1194,11 @@ class PayrollEntry(Document):
 			holiday_list = None
 			emp_assignments = assigned_lists.get(emp.employee, [])
 			if emp_assignments:
-				for assignment in emp_assignments:
-					if assignment["from_date"] <= getdate(start_date) <= assignment["to_date"]:
-						holiday_list = assignment["holiday_list"]
-						break
+				holiday_list = emp_assignments[0]["holiday_list"]
 			if not holiday_list:
 				company_assignments = assigned_lists.get(self.company, [])
-				for assignment in company_assignments:
-					if assignment["from_date"] <= getdate(start_date) <= assignment["to_date"]:
-						holiday_list = assignment["holiday_list"]
-						break
+				if company_assignments:
+					holiday_list = company_assignments[0]["holiday_list"]
 			if not holiday_list:
 				holiday_list = default_holiday_list
 
