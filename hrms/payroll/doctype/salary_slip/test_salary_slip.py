@@ -7,6 +7,7 @@ import random
 import frappe
 from frappe.core.doctype.user_permission.test_user_permission import create_user
 from frappe.model.document import Document
+from frappe.query_builder.functions import Sum
 from frappe.utils import (
 	add_days,
 	add_months,
@@ -101,7 +102,8 @@ class TestSalarySlip(HRMSTestSuite):
 			"Company", employee_doc.company, "default_holiday_list", "Salary Slip Test Holiday List"
 		)
 
-		frappe.db.sql("""delete from `tabSalary Structure` where name='Test Inactive Employee Salary Slip'""")
+		ss = frappe.qb.DocType("Salary Structure")
+		frappe.qb.from_(ss).delete().where(ss.name == "Test Inactive Employee Salary Slip").run()
 		salary_structure = make_salary_structure(
 			"Test Inactive Employee Salary Slip",
 			"Monthly",
@@ -950,7 +952,8 @@ class TestSalarySlip(HRMSTestSuite):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
 		applicant = make_employee("test_multi_currency_salary_slip@salary.com", company="_Test Company")
-		frappe.db.sql("""delete from `tabSalary Structure` where name='Test Multi Currency Salary Slip'""")
+		ss = frappe.qb.DocType("Salary Structure")
+		frappe.qb.from_(ss).delete().where(ss.name == "Test Multi Currency Salary Slip").run()
 		salary_structure = make_salary_structure(
 			"Test Multi Currency Salary Slip",
 			"Monthly",
@@ -990,7 +993,8 @@ class TestSalarySlip(HRMSTestSuite):
 		)
 
 		# clear salary slip for this employee
-		frappe.db.sql("DELETE FROM `tabSalary Slip` where employee_name = 'test_ytd@salary.com'")
+		ss = frappe.qb.DocType("Salary Slip")
+		frappe.qb.from_(ss).delete().where(ss.employee_name == "test_ytd@salary.com").run()
 
 		create_salary_slips_for_payroll_period(
 			applicant, salary_structure.name, payroll_period, deduct_random=False, num=6
@@ -1034,7 +1038,8 @@ class TestSalarySlip(HRMSTestSuite):
 		)
 
 		# clear salary slip for this employee
-		frappe.db.sql("DELETE FROM `tabSalary Slip` where employee_name = '%s'" % employee_name)
+		ss = frappe.qb.DocType("Salary Slip")
+		frappe.qb.from_(ss).delete().where(ss.employee_name == employee_name).run()
 
 		create_salary_slips_for_payroll_period(
 			applicant, salary_structure.name, payroll_period, deduct_random=False, num=3
@@ -1092,7 +1097,8 @@ class TestSalarySlip(HRMSTestSuite):
 		except AssertionError:
 			print("\nSalary Slip - Annual tax calculation failed\n")
 			raise
-		frappe.db.sql("""delete from `tabSalary Slip` where employee=%s""", (employee))
+		ss = frappe.qb.DocType("Salary Slip")
+		frappe.qb.from_(ss).delete().where(ss.employee == employee).run()
 
 		# create exemption declaration so the tax amount varies
 		create_exemption_declaration(employee, payroll_period.name)
@@ -1113,7 +1119,8 @@ class TestSalarySlip(HRMSTestSuite):
 		# Submit proof for total 120000
 		data["proof"] = create_proof_submission(employee, payroll_period, 120000)
 
-		frappe.db.sql("""delete from `tabSalary Slip` where employee=%s""", (employee))
+		ss = frappe.qb.DocType("Salary Slip")
+		frappe.qb.from_(ss).delete().where(ss.employee == employee).run()
 		data["deducted_dates"] = create_salary_slips_for_payroll_period(
 			employee, salary_structure.name, payroll_period
 		)
@@ -1127,7 +1134,8 @@ class TestSalarySlip(HRMSTestSuite):
 			raise
 
 		# create additional salary of 150000
-		frappe.db.sql("""delete from `tabSalary Slip` where employee=%s""", (employee))
+		ss = frappe.qb.DocType("Salary Slip")
+		frappe.qb.from_(ss).delete().where(ss.employee == employee).run()
 		data["additional-1"] = create_additional_salary(employee, payroll_period, 150000, "_Test Company")
 		data["deducted_dates"] = create_salary_slips_for_payroll_period(
 			employee, salary_structure.name, payroll_period
@@ -1141,7 +1149,8 @@ class TestSalarySlip(HRMSTestSuite):
 		except AssertionError:
 			print("\nSalary Slip - Tax calculation failed on following case\n", data, "\n")
 			raise
-		frappe.db.sql("""delete from `tabAdditional Salary` where employee=%s""", (employee))
+		add_sal = frappe.qb.DocType("Additional Salary")
+		frappe.qb.from_(add_sal).delete().where(add_sal.employee == employee).run()
 
 		# undelete fixture data
 		frappe.db.rollback()
@@ -1199,7 +1208,8 @@ class TestSalarySlip(HRMSTestSuite):
 			"Salary Structure Assignment",
 		]
 		for doc in delete_docs:
-			frappe.db.sql(f"DELETE FROM `tab{doc}` WHERE employee='{employee}'")
+			dt = frappe.qb.DocType(doc)
+			frappe.qb.from_(dt).delete().where(dt.employee == employee).run()
 
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
@@ -1222,7 +1232,8 @@ class TestSalarySlip(HRMSTestSuite):
 		annual_tax = 23196.0
 		self.assertEqual(tax_paid, annual_tax)
 
-		frappe.db.sql("""delete from `tabSalary Slip` where employee=%s""", (employee))
+		ss = frappe.qb.DocType("Salary Slip")
+		frappe.qb.from_(ss).delete().where(ss.employee == employee).run()
 
 		# ------------------------------------
 		# Recurring additional salary
@@ -1232,7 +1243,8 @@ class TestSalarySlip(HRMSTestSuite):
 			employee, "Performance Bonus", 20000, start_date, end_date, "_Test Company"
 		)
 
-		frappe.db.sql("""delete from `tabSalary Slip` where employee=%s""", (employee))
+		ss = frappe.qb.DocType("Salary Slip")
+		frappe.qb.from_(ss).delete().where(ss.employee == employee).run()
 
 		create_salary_slips_for_payroll_period(
 			employee, salary_structure.name, payroll_period, deduct_random=False, num=4
@@ -1329,8 +1341,10 @@ class TestSalarySlip(HRMSTestSuite):
 		from hrms.payroll.doctype.payroll_period.payroll_period import get_period_factor
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
-		frappe.db.sql("DELETE FROM `tabPayroll Period` where company = '_Test Company'")
-		frappe.db.sql("DELETE FROM `tabIncome Tax Slab` where currency = 'INR'")
+		payroll_period_dt = frappe.qb.DocType("Payroll Period")
+		frappe.qb.from_(payroll_period_dt).delete().where(payroll_period_dt.company == "_Test Company").run()
+		income_tax_slab_dt = frappe.qb.DocType("Income Tax Slab")
+		frappe.qb.from_(income_tax_slab_dt).delete().where(income_tax_slab_dt.currency == "INR").run()
 
 		payroll_period = create_payroll_period(
 			name="_Test Payroll Period for Tax",
@@ -1417,8 +1431,10 @@ class TestSalarySlip(HRMSTestSuite):
 			if deduction.salary_component == "TDS":
 				self.assertEqual(deduction.amount, 7691.0)
 
-		frappe.db.sql("DELETE FROM `tabPayroll Period` where company = '_Test Company'")
-		frappe.db.sql("DELETE FROM `tabIncome Tax Slab` where currency = 'INR'")
+		payroll_period_dt = frappe.qb.DocType("Payroll Period")
+		frappe.qb.from_(payroll_period_dt).delete().where(payroll_period_dt.company == "_Test Company").run()
+		income_tax_slab_dt = frappe.qb.DocType("Income Tax Slab")
+		frappe.qb.from_(income_tax_slab_dt).delete().where(income_tax_slab_dt.currency == "INR").run()
 
 	def test_income_tax_breakup_fields(self):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
@@ -1558,7 +1574,8 @@ class TestSalarySlip(HRMSTestSuite):
 		# Clean up any state left from prior runs of this test so the slip/payroll-entry
 		# inserts below don't collide with the "already created for this period" check.
 		for table in ("Salary Slip", "Additional Salary", "Salary Structure Assignment"):
-			frappe.db.sql(f"DELETE FROM `tab{table}` WHERE employee=%s", emp)
+			dt = frappe.qb.DocType(table)
+			frappe.qb.from_(dt).delete().where(dt.employee == emp).run()
 
 		payroll_period = frappe.get_doc("Payroll Period", "_Test Payroll Period")
 
@@ -1663,7 +1680,8 @@ class TestSalarySlip(HRMSTestSuite):
 
 		# Clean up any state left from prior runs of this test for emp2 too.
 		for table in ("Salary Slip", "Additional Salary", "Salary Structure Assignment"):
-			frappe.db.sql(f"DELETE FROM `tab{table}` WHERE employee=%s", emp2)
+			dt = frappe.qb.DocType(table)
+			frappe.qb.from_(dt).delete().where(dt.employee == emp2).run()
 
 		create_salary_structure_assignment(
 			emp2,
@@ -2540,12 +2558,15 @@ def make_employee_benefit_earning_components(
 
 
 def get_tax_paid_in_period(employee):
-	tax_paid_amount = frappe.db.sql(
-		"""select sum(sd.amount) from `tabSalary Detail`
-		sd join `tabSalary Slip` ss where ss.name=sd.parent and ss.employee=%s
-		and ss.docstatus=1 and sd.salary_component='TDS'""",
-		(employee),
-	)
+	sd = frappe.qb.DocType("Salary Detail")
+	ss = frappe.qb.DocType("Salary Slip")
+	tax_paid_amount = (
+		frappe.qb.from_(sd)
+		.join(ss)
+		.on(ss.name == sd.parent)
+		.select(Sum(sd.amount))
+		.where((ss.employee == employee) & (ss.docstatus == 1) & (sd.salary_component == "TDS"))
+	).run()
 	return tax_paid_amount[0][0]
 
 

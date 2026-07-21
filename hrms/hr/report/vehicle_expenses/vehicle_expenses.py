@@ -4,6 +4,7 @@
 
 import frappe
 from frappe import _
+from frappe.query_builder.functions import Sum
 from frappe.utils import flt
 
 from erpnext.accounts.report.financial_statements import get_period_list
@@ -61,28 +62,39 @@ def get_columns():
 
 def get_vehicle_log_data(filters):
 	start_date, end_date = get_period_dates(filters)
-	conditions, values = get_conditions(filters)
 
-	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
-	data = frappe.db.sql(
-		f"""
-		SELECT
-			vhcl.license_plate as vehicle, vhcl.make, vhcl.model,
-			vhcl.location, log.name as log_name, log.odometer,
-			log.date, log.employee, log.fuel_qty,
-			log.price as fuel_price,
-			log.fuel_qty * log.price as fuel_expense
-		FROM
-			`tabVehicle` vhcl,`tabVehicle Log` log
-		WHERE
-			vhcl.license_plate = log.license_plate
-			and log.docstatus = 1
-			and date between %(start_date)s and %(end_date)s
-			{conditions}
-		ORDER BY date""",
-		values,
-		as_dict=1,
+	vhcl = frappe.qb.DocType("Vehicle")
+	log = frappe.qb.DocType("Vehicle Log")
+
+	query = (
+		frappe.qb.from_(vhcl)
+		.from_(log)
+		.select(
+			vhcl.license_plate.as_("vehicle"),
+			vhcl.make,
+			vhcl.model,
+			vhcl.location,
+			log.name.as_("log_name"),
+			log.odometer,
+			log.date,
+			log.employee,
+			log.fuel_qty,
+			log.price.as_("fuel_price"),
+			(log.fuel_qty * log.price).as_("fuel_expense"),
+		)
+		.where(vhcl.license_plate == log.license_plate)
+		.where(log.docstatus == 1)
+		.where(log.date[start_date:end_date])
+		.orderby(log.date)
 	)
+
+	if filters.employee:
+		query = query.where(log.employee == filters.employee)
+
+	if filters.vehicle:
+		query = query.where(vhcl.license_plate == filters.vehicle)
+
+	data = query.run(as_dict=True)
 
 	for row in data:
 		row["service_expense"] = get_service_expense(row.log_name)
@@ -118,16 +130,16 @@ def get_period_dates(filters):
 
 
 def get_service_expense(logname):
-	expense_amount = frappe.db.sql(
-		"""
-		SELECT sum(expense_amount)
-		FROM
-			`tabVehicle Log` log, `tabVehicle Service` service
-		WHERE
-			service.parent=log.name and log.name=%s
-	""",
-		logname,
-	)
+	log = frappe.qb.DocType("Vehicle Log")
+	service = frappe.qb.DocType("Vehicle Service")
+
+	expense_amount = (
+		frappe.qb.from_(log)
+		.from_(service)
+		.select(Sum(service.expense_amount))
+		.where(service.parent == log.name)
+		.where(log.name == logname)
+	).run()
 
 	return flt(expense_amount[0][0]) if expense_amount else 0.0
 
