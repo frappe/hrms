@@ -203,6 +203,9 @@ def expire_allocation(allocation: str | Document | frappe._dict, expiry_date: da
 		allocation = json.loads(allocation)
 		allocation = frappe.get_doc("Leave Allocation", allocation["name"])
 
+	if getattr(allocation, "docstatus", 0) == 2:
+		return
+
 	frappe.has_permission("Leave Allocation", "write", allocation.name, throw=True)
 
 	leaves = get_remaining_leaves(allocation)
