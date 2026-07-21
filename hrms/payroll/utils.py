@@ -112,7 +112,7 @@ def _check_attributes(code: str) -> None:
 		if attribute in code:
 			raise SyntaxError(f'Illegal rule {frappe.bold(code)}. Cannot use "{attribute}"')
 
-	BLOCKED_NODES = (ast.NamedExpr,)
+	BLOCKED_NODES = (ast.NamedExpr, ast.Lambda)
 
 	tree = ast.parse(code, mode="eval")
 	for node in ast.walk(tree):
