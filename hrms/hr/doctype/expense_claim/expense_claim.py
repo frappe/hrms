@@ -127,9 +127,6 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		self.publish_update()
 
 	def before_submit(self):
-		if not self.payable_account and not self.is_paid:
-			frappe.throw(_("Payable Account is mandatory to submit an Expense Claim"))
-
 		self.validate_for_self_approval()
 
 	def publish_update(self):
@@ -184,8 +181,16 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 			).run()[0][0]
 
 			task.save()
-		elif self.project:
-			frappe.get_doc("Project", self.project).update_project()
+
+		for project in self.get_linked_projects():
+			frappe.get_doc("Project", project).update_project()
+
+	def get_linked_projects(self):
+		projects = set()
+		if self.project:
+			projects.add(self.project)
+		projects.update(expense.project for expense in self.expenses if expense.project)
+		return projects
 
 	def make_gl_entries(self, cancel=False):
 		if flt(self.total_sanctioned_amount) > 0:

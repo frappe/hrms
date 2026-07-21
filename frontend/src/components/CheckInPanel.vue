@@ -15,6 +15,7 @@
 			<Button
 				class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
 				id="open-checkin-modal"
+				:loading="checkins.list.loading"
 				@click="handleEmployeeCheckin"
 			>
 				<template #prefix>

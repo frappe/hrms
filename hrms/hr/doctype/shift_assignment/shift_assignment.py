@@ -37,6 +37,7 @@ class ShiftAssignment(Document):
 	def on_cancel(self):
 		self.validate_employee_checkin()
 		self.validate_attendance()
+		self.db_set("status", "Inactive", update_modified=False)
 
 	def validate_employee_checkin(self):
 		checkins = frappe.get_all(
