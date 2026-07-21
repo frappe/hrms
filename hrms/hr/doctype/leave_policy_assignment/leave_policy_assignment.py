@@ -228,11 +228,18 @@ class LeavePolicyAssignment(Document):
 			"Yearly": (1, 12),
 		}.get(earned_leave_frequency)
 
-		periods_passed = calculate_periods_passed(
-			current_date, from_date, periods_per_year, months_per_period, consider_current_period
+		effective_from = self.effective_from if earned_leave_frequency == "Half-Yearly" else None
+		return max(
+			calculate_periods_passed(
+				current_date,
+				from_date,
+				periods_per_year,
+				months_per_period,
+				consider_current_period,
+				effective_from=effective_from,
+			),
+			0,
 		)
-
-		return periods_passed
 
 	def calculate_leaves_for_passed_period(
 		self, annual_allocation, leave_details, date_of_joining, periods_passed, consider_current_period
@@ -276,6 +283,7 @@ class LeavePolicyAssignment(Document):
 		self, annual_allocation, leave_details, date_of_joining, new_leaves_allocated
 	):
 		from hrms.hr.utils import (
+			get_complete_month_count,
 			get_expected_allocation_date_for_period,
 			get_monthly_earned_leave,
 			get_sub_period_start_and_end,
@@ -301,7 +309,16 @@ class LeavePolicyAssignment(Document):
 			date_of_joining,
 			effective_from=self.effective_from,
 		)
+		if (
+			leave_details.earned_leave_frequency == "Half-Yearly"
+			and self.assignment_based_on == "Joining Date"
+			and to_date >= add_months(from_date, 12)
+		):
+			max_allocations = get_complete_month_count(to_date, from_date) // months_to_add + 1
+		else:
+			max_allocations = 0
 		schedule = []
+		allocations_added = 0
 		if new_leaves_allocated:
 			schedule.append(
 				{
@@ -312,6 +329,7 @@ class LeavePolicyAssignment(Document):
 					"attempted": 1,
 				}
 			)
+			allocations_added += 1
 			last_allocated_date = get_sub_period_start_and_end(
 				today,
 				leave_details.earned_leave_frequency,
@@ -329,6 +347,9 @@ class LeavePolicyAssignment(Document):
 					"attempted": 1 if date_already_passed else 0,
 				}
 				schedule.append(row)
+				allocations_added += 1
+				if max_allocations and allocations_added >= max_allocations:
+					break
 			date = get_expected_allocation_date_for_period(
 				leave_details.earned_leave_frequency,
 				leave_details.allocate_on_day,
@@ -338,7 +359,7 @@ class LeavePolicyAssignment(Document):
 			)
 		if from_date < getdate(date_of_joining):
 			pro_rated_period_start, pro_rated_period_end = get_sub_period_start_and_end(
-				date_of_joining, leave_details.earned_leave_frequency
+				date_of_joining, leave_details.earned_leave_frequency, effective_from=self.effective_from
 			)
 			pro_rated_earned_leave = get_monthly_earned_leave(
 				date_of_joining,
@@ -366,12 +387,19 @@ def get_pro_rata_period_end_date(consider_current_month):
 
 
 def calculate_periods_passed(
-	current_date, from_date, periods_per_year, months_per_period, consider_current_period
+	current_date, from_date, periods_per_year, months_per_period, consider_current_period, effective_from=None
 ):
-	periods_passed = 0
+	if effective_from:
+		from hrms.hr.utils import get_complete_month_count
 
-	from_period = (from_date.year * periods_per_year) + ((from_date.month - 1) // months_per_period)
-	current_period = (current_date.year * periods_per_year) + ((current_date.month - 1) // months_per_period)
+		effective_from = getdate(effective_from)
+		from_period = get_complete_month_count(from_date, effective_from) // months_per_period
+		current_period = get_complete_month_count(current_date, effective_from) // months_per_period
+	else:
+		from_period = (from_date.year * periods_per_year) + ((from_date.month - 1) // months_per_period)
+		current_period = (current_date.year * periods_per_year) + (
+			(current_date.month - 1) // months_per_period
+		)
 
 	periods_passed = current_period - from_period
 	if consider_current_period:
@@ -385,8 +413,7 @@ def is_earned_leave_applicable_for_current_period(
 ):
 	date = getdate(frappe.flags.current_date) or getdate()
 
-	# For Half-Yearly, compute preiod relative to effective_from
-	# instead of calendar year
+	# For Half-Yearly, compute period relative to effective_from instead of calendar year
 	if earned_leave_frequency == "Half-Yearly" and effective_from:
 		from hrms.hr.utils import get_half_year_periods
 

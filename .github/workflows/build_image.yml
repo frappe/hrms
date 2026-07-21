@@ -40,8 +40,6 @@ jobs:
           
       - name: Set Branch
         run: |
-          export APPS_JSON_PATH='${{ github.workspace }}/.github/helper/apps.json'
-          echo "APPS_JSON_BASE64=$(cat $APPS_JSON_PATH | base64 -w 0)" >> $GITHUB_ENV
           echo "FRAPPE_BRANCH=version-15" >> $GITHUB_ENV
 
       - name: Set Image Tag
@@ -63,4 +61,5 @@ jobs:
             ghcr.io/${{ github.repository }}:${{ env.IMAGE_TAG }}
           build-args: |
             "FRAPPE_BRANCH=${{ env.FRAPPE_BRANCH }}"
-            "APPS_JSON_BASE64=${{ env.APPS_JSON_BASE64 }}"
+          secret-files: |
+            apps_json=${{ github.workspace }}/.github/helper/apps.json

@@ -130,16 +130,27 @@ def get_timeline_data(doctype: str, name: str) -> dict:
 	open_count = get_open_count(doctype, name)
 	out["count"] = open_count["count"]
 
+	from frappe.query_builder import Interval
+	from frappe.query_builder.functions import Count, CurDate
+	from frappe.query_builder.terms import Function
+
+	Attendance = frappe.qb.DocType("Attendance")
+
 	timeline_data = dict(
-		frappe.db.sql(
-			"""
-			select unix_timestamp(attendance_date), count(*)
-			from `tabAttendance` where employee=%s
-			and attendance_date > date_sub(curdate(), interval 1 year)
-			and status in ('Present', 'Half Day')
-			group by attendance_date""",
-			name,
-		)
+		(
+			frappe.qb.from_(Attendance)
+			.select(
+				Function("unix_timestamp", Attendance.attendance_date),
+				Count("*"),
+			)
+			.where(
+				(Attendance.employee == name)
+				& (Attendance.docstatus == 1)
+				& (Attendance.attendance_date > (CurDate() - Interval(years=1)))
+				& (Attendance.status.isin(["Present", "Half Day"]))
+			)
+			.groupby(Attendance.attendance_date)
+		).run()
 	)
 
 	out["timeline_data"] = timeline_data
