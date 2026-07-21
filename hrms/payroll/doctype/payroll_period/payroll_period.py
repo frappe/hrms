@@ -21,28 +21,24 @@ class PayrollPeriod(Document):
 		return super().clear_cache()
 
 	def validate_overlap(self):
-		query = """
-			select name
-			from `tab{0}`
-			where name != %(name)s
-			and company = %(company)s and (start_date between %(start_date)s and %(end_date)s \
-				or end_date between %(start_date)s and %(end_date)s \
-				or (start_date < %(start_date)s and end_date > %(end_date)s))
-			"""
 		if not self.name:
 			# hack! if name is null, it could cause problems with !=
 			self.name = "New " + self.doctype
 
-		overlap_doc = frappe.db.sql(
-			query.format(self.doctype),
-			{
-				"start_date": self.start_date,
-				"end_date": self.end_date,
-				"name": self.name,
-				"company": self.company,
-			},
-			as_dict=1,
-		)
+		DocType = frappe.qb.DocType(self.doctype)
+		overlap_doc = (
+			frappe.qb.from_(DocType)
+			.select(DocType.name)
+			.where(
+				(DocType.name != self.name)
+				& (DocType.company == self.company)
+				& (
+					DocType.start_date.between(self.start_date, self.end_date)
+					| DocType.end_date.between(self.start_date, self.end_date)
+					| ((DocType.start_date < self.start_date) & (DocType.end_date > self.end_date))
+				)
+			)
+		).run(as_dict=1)
 
 		if overlap_doc:
 			msg = (
@@ -58,17 +54,18 @@ class PayrollPeriod(Document):
 def get_payroll_period_days(start_date, end_date, employee, company=None):
 	if not company:
 		company = frappe.db.get_value("Employee", employee, "company")
-	payroll_period = frappe.db.sql(
-		"""
-		select name, start_date, end_date
-		from `tabPayroll Period`
-		where
-			company=%(company)s
-			and %(start_date)s between start_date and end_date
-			and %(end_date)s between start_date and end_date
-	""",
-		{"company": company, "start_date": start_date, "end_date": end_date},
-	)
+	PayrollPeriod = frappe.qb.DocType("Payroll Period")
+	payroll_period = (
+		frappe.qb.from_(PayrollPeriod)
+		.select(PayrollPeriod.name, PayrollPeriod.start_date, PayrollPeriod.end_date)
+		.where(
+			(PayrollPeriod.company == company)
+			& (PayrollPeriod.start_date <= start_date)
+			& (PayrollPeriod.end_date >= start_date)
+			& (PayrollPeriod.start_date <= end_date)
+			& (PayrollPeriod.end_date >= end_date)
+		)
+	).run()
 
 	if len(payroll_period) > 0:
 		actual_no_of_days = date_diff(getdate(payroll_period[0][2]), getdate(payroll_period[0][1])) + 1

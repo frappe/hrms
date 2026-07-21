@@ -75,20 +75,20 @@ class EmployeeBoardingController(Document):
 
 			users = [activity.user] if activity.user else []
 			if activity.role:
-				user_list = frappe.db.sql_list(
-					"""
-					SELECT
-						DISTINCT(has_role.parent)
-					FROM
-						`tabHas Role` has_role
-							LEFT JOIN `tabUser` user
-								ON has_role.parent = user.name
-					WHERE
-						has_role.parenttype = 'User'
-							AND user.enabled = 1
-							AND has_role.role = %s
-				""",
-					activity.role,
+				has_role = frappe.qb.DocType("Has Role")
+				user = frappe.qb.DocType("User")
+				user_list = (
+					frappe.qb.from_(has_role)
+					.left_join(user)
+					.on(has_role.parent == user.name)
+					.select(has_role.parent)
+					.distinct()
+					.where(
+						(has_role.parenttype == "User")
+						& (user.enabled == 1)
+						& (has_role.role == activity.role)
+					)
+					.run(pluck="parent")
 				)
 				users = unique(users + user_list)
 

@@ -139,12 +139,20 @@ def get_active_employees():
 
 
 def get_existing_attendance_records(args):
-	attendance = frappe.db.sql(
-		"""select name, attendance_date, employee, status, leave_type, naming_series
-		from `tabAttendance` where attendance_date between %s and %s and docstatus < 2""",
-		(args["from_date"], args["to_date"]),
-		as_dict=1,
-	)
+	Attendance = frappe.qb.DocType("Attendance")
+	attendance = (
+		frappe.qb.from_(Attendance)
+		.select(
+			Attendance.name,
+			Attendance.attendance_date,
+			Attendance.employee,
+			Attendance.status,
+			Attendance.leave_type,
+			Attendance.naming_series,
+		)
+		.where(Attendance.attendance_date[args["from_date"] : args["to_date"]])
+		.where(Attendance.docstatus < 2)
+	).run(as_dict=1)
 
 	existing_attendance = {}
 	for att in attendance:

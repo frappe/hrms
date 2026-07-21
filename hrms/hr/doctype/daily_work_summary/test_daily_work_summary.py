@@ -60,11 +60,11 @@ class TestDailyWorkSummary(HRMSTestSuite):
 		self.assertTrue("I built Daily Work Summary!" in args.get("replies")[0].content)
 
 	def setup_and_prepare_test(self, hour=None):
-		frappe.db.sql("delete from `tabDaily Work Summary`")
-		frappe.db.sql("delete from `tabEmail Queue`")
-		frappe.db.sql("delete from `tabEmail Queue Recipient`")
-		frappe.db.sql("delete from `tabCommunication`")
-		frappe.db.sql("delete from `tabDaily Work Summary Group`")
+		frappe.qb.from_("Daily Work Summary").delete().run()
+		frappe.qb.from_("Email Queue").delete().run()
+		frappe.qb.from_("Email Queue Recipient").delete().run()
+		frappe.qb.from_("Communication").delete().run()
+		frappe.qb.from_("Daily Work Summary Group").delete().run()
 
 		self.users = frappe.get_all("User", fields=["email"], filters=dict(email=("!=", "test@example.com")))
 		self.setup_groups(hour)
@@ -75,11 +75,18 @@ class TestDailyWorkSummary(HRMSTestSuite):
 
 		# check if emails are created
 
-		self.emails = frappe.db.sql(
-			"""select r.recipient, q.message, q.message_id \
-			from `tabEmail Queue` as q, `tabEmail Queue Recipient` as r \
-			where q.name = r.parent""",
-			as_dict=1,
+		email_queue = frappe.qb.DocType("Email Queue")
+		email_queue_recipient = frappe.qb.DocType("Email Queue Recipient")
+		self.emails = (
+			frappe.qb.from_(email_queue)
+			.join(email_queue_recipient)
+			.on(email_queue.name == email_queue_recipient.parent)
+			.select(
+				email_queue_recipient.recipient,
+				email_queue.message,
+				email_queue.message_id,
+			)
+			.run(as_dict=True)
 		)
 
 	def setup_groups(self, hour=None):

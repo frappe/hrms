@@ -2,6 +2,8 @@
 # For license information, please see license.txt
 import datetime
 
+from pypika.terms import ExistsCriterion
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -89,14 +91,12 @@ def delete_ledger_entry(ledger):
 		validate_leave_allocation_against_leave_application(ledger)
 
 	expired_entry = get_previous_expiry_ledger_entry(ledger)
-	frappe.db.sql(
-		"""DELETE
-		FROM `tabLeave Ledger Entry`
-		WHERE
-			`transaction_name`=%s
-			OR `name`=%s""",
-		(ledger.transaction_name, expired_entry),
-	)
+	Ledger = frappe.qb.DocType("Leave Ledger Entry")
+	(
+		frappe.qb.from_(Ledger)
+		.delete()
+		.where((Ledger.transaction_name == ledger.transaction_name) | (Ledger.name == expired_entry))
+	).run()
 
 
 def get_previous_expiry_ledger_entry(ledger):
@@ -143,29 +143,42 @@ def process_expired_allocation():
 	leave_type = [record[0] for record in leave_type_records] or [""]
 
 	# fetch non expired leave ledger entry of transaction_type allocation
-	expire_allocation = frappe.db.sql(
-		"""
-		SELECT
-			leaves, `to_date`, `from_date`, employee, leave_type,
-			is_carry_forward, transaction_name as name, transaction_type
-		FROM `tabLeave Ledger Entry` l
-		WHERE (NOT EXISTS
-			(SELECT name
-				FROM `tabLeave Ledger Entry`
-				WHERE
-					transaction_name = l.transaction_name
-					AND transaction_type = 'Leave Allocation'
-					AND name<>l.name
-					AND docstatus = 1
-					AND (
-						is_carry_forward=l.is_carry_forward
-						OR (is_carry_forward = 0 AND leave_type not in %s)
-			)))
-			AND transaction_type = 'Leave Allocation'
-			AND `to_date` < %s""",
-		(leave_type, today()),
-		as_dict=1,
+	Ledger = frappe.qb.DocType("Leave Ledger Entry").as_("l")
+	InnerLedger = frappe.qb.DocType("Leave Ledger Entry")
+
+	inner_query = (
+		frappe.qb.from_(InnerLedger)
+		.select(InnerLedger.name)
+		.where(
+			(InnerLedger.transaction_name == Ledger.transaction_name)
+			& (InnerLedger.transaction_type == "Leave Allocation")
+			& (InnerLedger.name != Ledger.name)
+			& (InnerLedger.docstatus == 1)
+			& (
+				(InnerLedger.is_carry_forward == Ledger.is_carry_forward)
+				| ((InnerLedger.is_carry_forward == 0) & (InnerLedger.leave_type.notin(leave_type)))
+			)
+		)
 	)
+
+	expire_allocation = (
+		frappe.qb.from_(Ledger)
+		.select(
+			Ledger.leaves,
+			Ledger.to_date,
+			Ledger.from_date,
+			Ledger.employee,
+			Ledger.leave_type,
+			Ledger.is_carry_forward,
+			Ledger.transaction_name.as_("name"),
+			Ledger.transaction_type,
+		)
+		.where(
+			ExistsCriterion(inner_query).negate()
+			& (Ledger.transaction_type == "Leave Allocation")
+			& (Ledger.to_date < today())
+		)
+	).run(as_dict=1)
 
 	if expire_allocation:
 		create_expiry_ledger_entry(expire_allocation)

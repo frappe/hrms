@@ -209,9 +209,12 @@ class Attendance(Document):
 			self.leave_application = None
 
 	def validate_employee(self):
-		emp = frappe.db.sql(
-			"select name from `tabEmployee` where name = %s and status = 'Active'", self.employee
-		)
+		Employee = frappe.qb.DocType("Employee")
+		emp = (
+			frappe.qb.from_(Employee)
+			.select(Employee.name)
+			.where((Employee.name == self.employee) & (Employee.status == "Active"))
+		).run()
 		if not emp:
 			frappe.throw(_("Employee {0} is not active or does not exist").format(self.employee))
 

@@ -85,9 +85,14 @@ class ShiftRequest(Document, PWANotificationsMixin):
 	def validate_approver(self):
 		department = frappe.get_value("Employee", self.employee, "department")
 		shift_approver = frappe.get_value("Employee", self.employee, "shift_request_approver")
-		approvers = frappe.db.sql(
-			"""select approver from `tabDepartment Approver` where parent= %s and parentfield = 'shift_request_approver'""",
-			(department),
+		dept_approver = frappe.qb.DocType("Department Approver")
+		approvers = (
+			frappe.qb.from_(dept_approver)
+			.select(dept_approver.approver)
+			.where(
+				(dept_approver.parent == department) & (dept_approver.parentfield == "shift_request_approver")
+			)
+			.run()
 		)
 		approvers = [approver[0] for approver in approvers]
 		approvers.append(shift_approver)

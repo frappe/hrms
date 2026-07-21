@@ -214,13 +214,18 @@ class LeaveAllocation(Document):
 			)
 
 	def validate_back_dated_allocation(self):
-		future_allocation = frappe.db.sql(
-			"""select name, from_date from `tabLeave Allocation`
-			where employee=%s and leave_type=%s and docstatus=1 and from_date > %s
-			and carry_forward=1""",
-			(self.employee, self.leave_type, self.to_date),
-			as_dict=1,
-		)
+		LeaveAllocation = frappe.qb.DocType("Leave Allocation")
+		future_allocation = (
+			frappe.qb.from_(LeaveAllocation)
+			.select(LeaveAllocation.name, LeaveAllocation.from_date)
+			.where(
+				(LeaveAllocation.employee == self.employee)
+				& (LeaveAllocation.leave_type == self.leave_type)
+				& (LeaveAllocation.docstatus == 1)
+				& (LeaveAllocation.from_date > self.to_date)
+				& (LeaveAllocation.carry_forward == 1)
+			)
+		).run(as_dict=True)
 
 		if future_allocation:
 			frappe.throw(
