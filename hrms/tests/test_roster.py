@@ -81,6 +81,118 @@ class TestRoster(HRMSTestSuite):
 		self.assertTrue(new_assignment)
 
 
+	def test_insert_shift_rejects_adjacent_submitted_shift(self):
+		"""Submitted Shift Assignments should not be mutated. A new Draft should be created."""
+		employee_name = f"_Test Roster Sub {frappe.generate_hash(length=8)}"
+		employee = create_employee(employee_name)
+		shift_type = create_shift_type(
+			f"_Test Sub Shift {frappe.generate_hash(length=8)}",
+			start_time="08:00:00",
+			end_time="17:00:00",
+			color="Blue",
+		)
+
+		original = frappe.get_doc(
+			{
+				"doctype": "Shift Assignment",
+				"employee": employee.name,
+				"company": "_Test Company",
+				"shift_type": shift_type.name,
+				"start_date": "2026-07-01",
+				"end_date": "2026-07-10",
+				"status": "Active",
+			}
+		)
+		original.submit()
+		original_end_date = original.end_date
+
+		insert_shift(
+			employee=employee.name,
+			company="_Test Company",
+			shift_type=shift_type.name,
+			start_date="2026-07-11",
+			end_date="2026-07-20",
+			status="Active",
+		)
+
+		original.reload()
+		self.assertEqual(getdate(original.end_date), getdate(original_end_date))
+		self.assertEqual(original.docstatus, 1)
+
+		new_assignment = frappe.db.get_value(
+			"Shift Assignment",
+			{
+				"employee": employee.name,
+				"start_date": "2026-07-11",
+				"end_date": "2026-07-20",
+				"docstatus": 1,
+			},
+		)
+		self.assertTrue(new_assignment)
+
+	def test_insert_shift_rejects_merging_two_submitted_shifts(self):
+		"""When inserted between two submitted shifts, neither should be deleted/mutated. A new Draft should be created in between."""
+		employee_name = f"_Test Roster Merge {frappe.generate_hash(length=8)}"
+		employee = create_employee(employee_name)
+		shift_type = create_shift_type(
+			f"_Test Merge Shift {frappe.generate_hash(length=8)}",
+			start_time="08:00:00",
+			end_time="17:00:00",
+			color="Green",
+		)
+
+		left = frappe.get_doc(
+			{
+				"doctype": "Shift Assignment",
+				"employee": employee.name,
+				"company": "_Test Company",
+				"shift_type": shift_type.name,
+				"start_date": "2026-07-01",
+				"end_date": "2026-07-10",
+				"status": "Active",
+			}
+		)
+		left.submit()
+		left_end_date = left.end_date
+
+		right = frappe.get_doc(
+			{
+				"doctype": "Shift Assignment",
+				"employee": employee.name,
+				"company": "_Test Company",
+				"shift_type": shift_type.name,
+				"start_date": "2026-07-21",
+				"end_date": "2026-07-30",
+				"status": "Active",
+			}
+		)
+		right.submit()
+		right_start_date = right.start_date
+
+		insert_shift(
+			employee=employee.name,
+			company="_Test Company",
+			shift_type=shift_type.name,
+			start_date="2026-07-11",
+			end_date="2026-07-20",
+			status="Active",
+		)
+
+		left.reload()
+		right.reload()
+		self.assertEqual(getdate(left.end_date), getdate(left_end_date))
+		self.assertEqual(getdate(right.start_date), getdate(right_start_date))
+
+		new_assignment = frappe.db.get_value(
+			"Shift Assignment",
+			{
+				"employee": employee.name,
+				"start_date": "2026-07-11",
+				"end_date": "2026-07-20",
+				"docstatus": 1,
+			},
+		)
+		self.assertTrue(new_assignment)
 def create_employee(employee_name: str):
 	create_company()
 	if not frappe.db.exists("Gender", "Female"):
@@ -138,3 +250,4 @@ def create_shift_assignment(shift_type: str, employee: str, date: str):
 	)
 	shift_assignment.submit()
 	return shift_assignment
+
