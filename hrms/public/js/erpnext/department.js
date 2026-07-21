@@ -11,5 +11,15 @@ frappe.ui.form.on("Department", {
 				},
 			};
 		});
+
+		["leave_approvers", "expense_approvers", "shift_request_approver"].forEach((table) => {
+			frm.set_query("approver", table, function () {
+				return {
+					filters: {
+						user_type: "System User",
+					},
+				};
+			});
+		});
 	},
 });
