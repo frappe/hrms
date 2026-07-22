@@ -66,7 +66,6 @@ TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
 class SalarySlip(TransactionBase):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-<<<<<<< HEAD
 		self.default_series = f"Sal Slip/{self.employee}/.#####"
 		self.whitelisted_globals = {
 			"int": int,
@@ -81,9 +80,6 @@ class SalarySlip(TransactionBase):
 			"ceil": ceil,
 			"floor": floor,
 		}
-=======
-		self.whitelisted_globals = COMPONENT_EVAL_GLOBALS.copy()
->>>>>>> bcc53de7f (fix: correct salary slip naming when created via data import)
 
 	@property
 	def default_series(self):
