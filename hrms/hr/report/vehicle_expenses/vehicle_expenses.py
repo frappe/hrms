@@ -135,10 +135,10 @@ def get_service_expense(logname):
 
 	expense_amount = (
 		frappe.qb.from_(log)
-		.from_(service)
+		.inner_join(service)
+		.on(service.parent == log.name)
 		.select(Sum(service.expense_amount))
-		.where(service.parent == log.name)
-		.where(log.name == logname)
+		.where((log.name == logname) & (log.docstatus == 1))
 	).run()
 
 	return flt(expense_amount[0][0]) if expense_amount else 0.0

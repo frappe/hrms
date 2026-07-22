@@ -62,19 +62,27 @@ def get_approvers(doctype: str, txt: str, searchfield: str, start: int, page_len
 		).run(as_list=True)
 
 	if filters.get("doctype") == "Leave Application" and employee.leave_approver:
-		approvers.append(
-			frappe.db.get_value("User", employee.leave_approver, ["name", "first_name", "last_name"])
+		approver = frappe.db.get_value(
+			"User", {"name": employee.leave_approver, "enabled": 1}, ["name", "first_name", "last_name"]
 		)
+		if approver:
+			approvers.append(approver)
 
 	if filters.get("doctype") == "Expense Claim" and employee.expense_approver:
-		approvers.append(
-			frappe.db.get_value("User", employee.expense_approver, ["name", "first_name", "last_name"])
+		approver = frappe.db.get_value(
+			"User", {"name": employee.expense_approver, "enabled": 1}, ["name", "first_name", "last_name"]
 		)
+		if approver:
+			approvers.append(approver)
 
 	if filters.get("doctype") == "Shift Request" and employee.shift_request_approver:
-		approvers.append(
-			frappe.db.get_value("User", employee.shift_request_approver, ["name", "first_name", "last_name"])
+		approver = frappe.db.get_value(
+			"User",
+			{"name": employee.shift_request_approver, "enabled": 1},
+			["name", "first_name", "last_name"],
 		)
+		if approver:
+			approvers.append(approver)
 
 	if filters.get("doctype") == "Leave Application":
 		parentfield = "leave_approvers"
@@ -87,17 +95,19 @@ def get_approvers(doctype: str, txt: str, searchfield: str, start: int, page_len
 		field_name = "Shift Request Approver"
 	if department_list:
 		User = frappe.qb.DocType("User")
-		Approver = frappe.qb.DocType("Department Approver")
+		DeptApprover = frappe.qb.DocType("Department Approver")
+
 		for d in department_list:
 			approvers += (
-				frappe.qb.from_(User)
-				.from_(Approver)
+				frappe.qb.from_(DeptApprover)
+				.join(User)
+				.on(DeptApprover.approver == User.name)
 				.select(User.name, User.first_name, User.last_name)
 				.where(
-					(Approver.parent == d)
-					& (User.name.like("%" + txt + "%"))
-					& (Approver.parentfield == parentfield)
-					& (Approver.approver == User.name)
+					(DeptApprover.parent == d[0])
+					& (DeptApprover.parentfield == parentfield)
+					& (User.name.like(f"%{txt}%"))
+					& (User.enabled == 1)
 				)
 			).run(as_list=True)
 
