@@ -102,23 +102,6 @@ def get_vehicle_log_data(filters):
 	return data
 
 
-def get_conditions(filters):
-	conditions = ""
-
-	start_date, end_date = get_period_dates(filters)
-	values = {"start_date": start_date, "end_date": end_date}
-
-	if filters.employee:
-		conditions += " and log.employee = %(employee)s"
-		values["employee"] = filters.employee
-
-	if filters.vehicle:
-		conditions += " and vhcl.license_plate = %(vehicle)s"
-		values["vehicle"] = filters.vehicle
-
-	return conditions, values
-
-
 def get_period_dates(filters):
 	if filters.filter_based_on == "Fiscal Year" and filters.fiscal_year:
 		fy = frappe.db.get_value(
