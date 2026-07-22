@@ -30,12 +30,20 @@
 				</div>
 				<div v-for="_ in firstOfMonth.get('d')" />
 				<div v-for="index in firstOfMonth.endOf('M').get('D')">
-					<div
-						class="h-8 w-8 flex rounded-full mx-auto"
-						:class="getEventOnDate(index) && colorMap[getEventOnDate(index)]"
-					>
-						<span class="text-gray-800 text-sm font-medium m-auto">
-							{{ index }}
+					<div class="flex flex-col items-center gap-0.5">
+						<div
+							class="h-8 w-8 flex rounded-full mx-auto"
+							:class="getEventStatus(getEventOnDate(index)) && colorMap[getEventStatus(getEventOnDate(index))]"
+						>
+							<span class="text-gray-800 text-sm font-medium m-auto">
+								{{ index }}
+							</span>
+						</div>
+						<span
+							v-if="formatHours(getEventHours(getEventOnDate(index)))"
+							class="text-[10px] leading-tight text-gray-600 font-medium truncate max-w-full"
+						>
+							{{ formatHours(getEventHours(getEventOnDate(index))) }}
 						</span>
 					</div>
 				</div>
@@ -79,10 +87,41 @@ const colorMap = {
 // __("Present"), __("Half Day"), __("Absent"), __("On Leave"), __("Work From Home")
 const summaryStatuses = ["Present", "Half Day", "Absent", "On Leave"]
 
+function getEventStatus(event) {
+	return typeof event === "string" ? event : event?.status
+}
+
+function getEventHours(event) {
+	return typeof event === "object" ? event?.working_hours : null
+}
+
+/** Decimal hours (e.g. 5.41) -> "5:25" */
+function formatDecimalHoursToHm(value) {
+	const hours = parseFloat(value)
+	if (isNaN(hours) || hours <= 0) {
+		return ""
+	}
+	const totalMinutes = Math.round(hours * 60)
+	const h = Math.floor(totalMinutes / 60)
+	const m = totalMinutes % 60
+	return `${h}:${String(m).padStart(2, "0")}`
+}
+
+function formatHours(value) {
+	if (value === null || value === undefined || value === "") {
+		return ""
+	}
+	return formatDecimalHoursToHm(value)
+}
+
 const summary = computed(() => {
 	const summary = {}
 
-	for (const status of Object.values(calendarEvents.data)) {
+	for (const event of Object.values(calendarEvents.data)) {
+		const status = getEventStatus(event)
+		if (!status) {
+			continue
+		}
 		let updatedStatus = status === "Work From Home" ? "Present" : status
 		if (updatedStatus in summary) {
 			summary[updatedStatus] += 1
@@ -121,7 +160,7 @@ const DAYS = [
 const calendarEvents = createResource({
 	url: "hrms.api.get_attendance_calendar_events",
 	auto: true,
-	cache: "hrms:attendance_calendar_events",
+	cache: "hrms:attendance_calendar_events_v2",
 	makeParams() {
 		return {
 			from_date: firstOfMonth.value.format("YYYY-MM-DD"),
