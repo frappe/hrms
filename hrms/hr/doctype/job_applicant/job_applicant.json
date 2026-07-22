@@ -37,7 +37,8 @@
   "currency",
   "column_break_18",
   "lower_range",
-  "upper_range"
+  "upper_range",
+  "recaptcha_response"
  ],
  "fields": [
   {
@@ -208,13 +209,19 @@
    "fieldtype": "Button",
    "hidden": 1,
    "label": "Open Resume in New Tab"
+  },
+  {
+   "fieldname": "recaptcha_response",
+   "fieldtype": "Small Text",
+   "hidden": 1,
+   "label": "reCAPTCHA Response"
   }
  ],
  "icon": "fa fa-user",
  "idx": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-14 11:35:48.142348",
+ "modified": "2026-07-21 15:05:36.769287",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Applicant",

@@ -58,7 +58,11 @@
   "feedback_reminder_notification_template",
   "column_break_4",
   "hiring_sender",
-  "hiring_sender_email"
+  "hiring_sender_email",
+  "job_application_section",
+  "enable_recaptcha",
+  "recaptcha_site_key",
+  "recaptcha_secret_key"
  ],
  "fields": [
   {
@@ -271,6 +275,33 @@
    "read_only": 1
   },
   {
+   "fieldname": "job_application_section",
+   "fieldtype": "Section Break",
+   "label": "Job Application Form Settings"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_recaptcha",
+   "fieldtype": "Check",
+   "label": "Enable reCAPTCHA on Job Application Form"
+  },
+  {
+   "depends_on": "eval:doc.enable_recaptcha == 1",
+   "description": "Public site key from Google reCAPTCHA v2.",
+   "fieldname": "recaptcha_site_key",
+   "fieldtype": "Data",
+   "label": "reCAPTCHA Site Key",
+   "mandatory_depends_on": "eval:doc.enable_recaptcha == 1"
+  },
+  {
+   "depends_on": "eval:doc.enable_recaptcha == 1",
+   "description": "Secret key from Google reCAPTCHA v2 used to verify CAPTCHA responses server-side.",
+   "fieldname": "recaptcha_secret_key",
+   "fieldtype": "Password",
+   "label": "reCAPTCHA Secret Key",
+   "mandatory_depends_on": "eval:doc.enable_recaptcha == 1"
+  },
+  {
    "default": "0",
    "fieldname": "allow_multiple_shift_assignments",
    "fieldtype": "Check",
@@ -380,7 +411,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-12-29 16:25:06.271352",
+ "modified": "2026-07-21 20:40:26.351755",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",

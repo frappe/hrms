@@ -26,6 +26,7 @@ class HRSettings(Document):
 		auto_leave_encashment: DF.Check
 		check_vacancies: DF.Check
 		emp_created_by: DF.Literal["Naming Series", "Employee Number", "Full Name"]
+		enable_recaptcha: DF.Check
 		exit_questionnaire_notification_template: DF.Link | None
 		exit_questionnaire_web_form: DF.Link | None
 		expense_approver_mandatory_in_expense_claim: DF.Check
@@ -39,6 +40,8 @@ class HRSettings(Document):
 		leave_status_notification_template: DF.Link | None
 		prevent_self_expense_approval: DF.Check
 		prevent_self_leave_approval: DF.Check
+		recaptcha_secret_key: DF.Password | None
+		recaptcha_site_key: DF.Data | None
 		remind_before: DF.Time | None
 		restrict_backdated_leave_application: DF.Check
 		retirement_age: DF.Data | None

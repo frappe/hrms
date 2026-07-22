@@ -40,6 +40,7 @@ class JobApplicant(Document):
 		lower_range: DF.Currency
 		notes: DF.Data | None
 		phone_number: DF.Data | None
+		recaptcha_response: DF.SmallText | None
 		resume_attachment: DF.Attach | None
 		resume_link: DF.Data | None
 		source: DF.Link | None
@@ -76,25 +77,59 @@ class JobApplicant(Document):
 			job_opening = frappe.db.get_value(
 				"Job Opening", self.job_title, ["status", "prevent_duplicate_applicant"], as_dict=True
 			)
-			if not job_opening:
-				return
-
-			if job_opening.status == "Closed":
-				frappe.throw(
-					_("Cannot create a Job Applicant against a closed Job Opening"), title=_("Not Allowed")
-				)
-			if job_opening.prevent_duplicate_applicant and self.email_id:
-				if frappe.db.exists(
-					"Job Applicant", {"email_id": self.email_id, "job_title": self.job_title}
-				):
+			if job_opening:
+				if job_opening.status == "Closed":
 					frappe.throw(
-						_("You have already applied for this position."),
-						exc=DuplicationError,
-						title=_("Duplicate Application"),
+						_("Cannot create a Job Applicant against a closed Job Opening"),
+						title=_("Not Allowed"),
 					)
+				if job_opening.prevent_duplicate_applicant and self.email_id:
+					if frappe.db.exists(
+						"Job Applicant", {"email_id": self.email_id, "job_title": self.job_title}
+					):
+						frappe.throw(
+							_("You have already applied for this position."),
+							exc=DuplicationError,
+							title=_("Duplicate Application"),
+						)
 
-		if frappe.flags.in_web_form and not self.source:
-			self.source = "Website Listing"
+		if frappe.flags.in_web_form:
+			if not self.source:
+				self.source = "Website Listing"
+			self.verify_recaptcha()
+
+	def verify_recaptcha(self):
+		import requests
+
+		settings = frappe.get_single("HR Settings")
+		if not settings.enable_recaptcha:
+			return
+
+		secret_key = settings.get_password("recaptcha_secret_key", raise_exception=False)
+		if not secret_key:
+			return
+
+		if not self.recaptcha_response:
+			frappe.throw(_("Please complete the reCAPTCHA verification."), title=_("Verification Required"))
+
+		try:
+			result = requests.post(
+				"https://www.google.com/recaptcha/api/siteverify",
+				data={"secret": secret_key, "response": self.recaptcha_response},
+				timeout=10,
+			).json()
+		except (requests.exceptions.RequestException, ValueError):
+			frappe.throw(
+				_("Could not reach reCAPTCHA verification service. Please try again."),
+				title=_("Verification Failed"),
+			)
+
+		if not result.get("success"):
+			frappe.throw(
+				_("reCAPTCHA verification failed. Please try again."), title=_("Verification Failed")
+			)
+
+		self.recaptcha_response = None
 
 	def set_status_for_employee_referral(self):
 		emp_ref = frappe.get_doc("Employee Referral", self.employee_referral)
@@ -221,6 +256,15 @@ def get_interview_details(job_applicant: str) -> dict:
 		interview_detail_map[detail.name] = detail
 
 	return {"interviews": interview_detail_map, "stars": number_of_stars}
+
+
+@frappe.whitelist(allow_guest=True)
+def get_job_application_settings() -> dict:
+	settings = frappe.get_single("HR Settings")
+	return {
+		"enable_recaptcha": settings.enable_recaptcha,
+		"recaptcha_site_key": settings.recaptcha_site_key if settings.enable_recaptcha else None,
+	}
 
 
 @frappe.whitelist()
