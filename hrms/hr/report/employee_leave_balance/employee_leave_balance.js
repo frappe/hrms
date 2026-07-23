@@ -22,6 +22,9 @@ frappe.query_reports["Employee Leave Balance"] = {
 			options: "Company",
 			reqd: 1,
 			default: frappe.defaults.get_user_default("Company"),
+			on_change: () => {
+				frappe.query_report.set_filter_value("employee", "");
+			},
 		},
 		{
 			fieldname: "department",
