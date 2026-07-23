@@ -4,6 +4,7 @@
 
 import frappe
 from frappe import _
+from frappe.query_builder.functions import Sum
 from frappe.utils import flt
 
 from erpnext.accounts.report.financial_statements import get_period_list
@@ -61,50 +62,44 @@ def get_columns():
 
 def get_vehicle_log_data(filters):
 	start_date, end_date = get_period_dates(filters)
-	conditions, values = get_conditions(filters)
 
-	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
-	data = frappe.db.sql(
-		f"""
-		SELECT
-			vhcl.license_plate as vehicle, vhcl.make, vhcl.model,
-			vhcl.location, log.name as log_name, log.odometer,
-			log.date, log.employee, log.fuel_qty,
-			log.price as fuel_price,
-			log.fuel_qty * log.price as fuel_expense
-		FROM
-			`tabVehicle` vhcl,`tabVehicle Log` log
-		WHERE
-			vhcl.license_plate = log.license_plate
-			and log.docstatus = 1
-			and date between %(start_date)s and %(end_date)s
-			{conditions}
-		ORDER BY date""",
-		values,
-		as_dict=1,
+	vhcl = frappe.qb.DocType("Vehicle")
+	log = frappe.qb.DocType("Vehicle Log")
+
+	query = (
+		frappe.qb.from_(vhcl)
+		.from_(log)
+		.select(
+			vhcl.license_plate.as_("vehicle"),
+			vhcl.make,
+			vhcl.model,
+			vhcl.location,
+			log.name.as_("log_name"),
+			log.odometer,
+			log.date,
+			log.employee,
+			log.fuel_qty,
+			log.price.as_("fuel_price"),
+			(log.fuel_qty * log.price).as_("fuel_expense"),
+		)
+		.where(vhcl.license_plate == log.license_plate)
+		.where(log.docstatus == 1)
+		.where(log.date[start_date:end_date])
+		.orderby(log.date)
 	)
+
+	if filters.employee:
+		query = query.where(log.employee == filters.employee)
+
+	if filters.vehicle:
+		query = query.where(vhcl.license_plate == filters.vehicle)
+
+	data = query.run(as_dict=True)
 
 	for row in data:
 		row["service_expense"] = get_service_expense(row.log_name)
 
 	return data
-
-
-def get_conditions(filters):
-	conditions = ""
-
-	start_date, end_date = get_period_dates(filters)
-	values = {"start_date": start_date, "end_date": end_date}
-
-	if filters.employee:
-		conditions += " and log.employee = %(employee)s"
-		values["employee"] = filters.employee
-
-	if filters.vehicle:
-		conditions += " and vhcl.license_plate = %(vehicle)s"
-		values["vehicle"] = filters.vehicle
-
-	return conditions, values
 
 
 def get_period_dates(filters):
@@ -118,8 +113,6 @@ def get_period_dates(filters):
 
 
 def get_service_expense(logname):
-	from frappe.query_builder.functions import Sum
-
 	log = frappe.qb.DocType("Vehicle Log")
 	service = frappe.qb.DocType("Vehicle Service")
 

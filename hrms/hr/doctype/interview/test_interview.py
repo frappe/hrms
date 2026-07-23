@@ -41,7 +41,8 @@ class TestInterview(HRMSTestSuite):
 		)
 
 		previous_scheduled_date = interview.scheduled_on
-		frappe.db.sql("DELETE FROM `tabEmail Queue`")
+		email_queue = frappe.qb.DocType("Email Queue")
+		frappe.qb.from_(email_queue).delete().run()
 
 		interview.reschedule_interview(
 			add_days(getdate(previous_scheduled_date), 2), from_time="11:00:00", to_time="12:00:00"

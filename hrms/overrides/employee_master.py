@@ -4,6 +4,8 @@
 import frappe
 from frappe import _
 from frappe.model.naming import set_name_by_naming_series
+from frappe.query_builder import Interval
+from frappe.query_builder.functions import Count, CurDate, UnixTimestamp
 from frappe.utils import add_years, cint, get_link_to_form, getdate
 
 from erpnext.setup.doctype.employee.employee import Employee
@@ -130,8 +132,6 @@ def get_timeline_data(doctype: str, name: str) -> dict:
 	open_count = get_open_count(doctype, name)
 	out["count"] = open_count["count"]
 
-	from frappe.query_builder import Interval
-	from frappe.query_builder.functions import Count, CurDate
 	from frappe.query_builder.terms import Function
 
 	Attendance = frappe.qb.DocType("Attendance")
