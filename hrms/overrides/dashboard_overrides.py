@@ -89,6 +89,16 @@ def get_dashboard_for_employee(data):
 def get_dashboard_for_holiday_list(data):
 	data["non_standard_fieldnames"].update({"Leave Period": "optional_holiday_list"})
 
+	for section in data["transactions"]:
+		items = section.get("items", [])
+		removed = False
+		for doctype in ("Employee", "Company"):
+			if doctype in items:
+				items.remove(doctype)
+				removed = True
+		if removed:
+			items.append("Holiday List Assignment")
+
 	data["transactions"].append({"items": ["Leave Period", "Shift Type"]})
 
 	return data
