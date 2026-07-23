@@ -25,9 +25,8 @@ frappe.ui.form.on("Full and Final Statement", {
 			};
 		});
 
-		let filters = {};
-
 		frm.set_query("reference_document", type, function (doc, cdt, cdn) {
+			let filters = {};
 			let fnf_doc = frappe.get_doc(cdt, cdn);
 
 			frappe.model.with_doctype(fnf_doc.reference_document_type, function () {
