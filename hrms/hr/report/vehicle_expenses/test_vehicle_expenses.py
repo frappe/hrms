@@ -16,7 +16,10 @@ from hrms.tests.utils import HRMSTestSuite
 
 class TestVehicleExpenses(HRMSTestSuite):
 	def setUp(self):
-		employee_id = frappe.db.sql("""select name from `tabEmployee` where name='testdriver@example.com'""")
+		employee = frappe.qb.DocType("Employee")
+		employee_id = (
+			frappe.qb.from_(employee).select(employee.name).where(employee.name == "testdriver@example.com")
+		).run()
 		self.employee_id = employee_id[0][0] if employee_id else None
 		if not self.employee_id:
 			self.employee_id = make_employee("testdriver@example.com", company="_Test Company")

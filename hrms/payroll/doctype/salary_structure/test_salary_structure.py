@@ -92,10 +92,11 @@ class TestSalaryStructure(HRMSTestSuite):
 		employee = "test_assign_structure@salary.com"
 		employee_doc_name = make_employee(employee, company="_Test Company")
 		# clear the already assigned structures
-		frappe.db.sql(
-			"""delete from `tabSalary Structure Assignment` where employee=%s and salary_structure=%s """,
-			("test_assign_structure@salary.com", salary_structure.name),
-		)
+		ssa = frappe.qb.DocType("Salary Structure Assignment")
+		frappe.qb.from_(ssa).delete().where(
+			(ssa.employee == "test_assign_structure@salary.com")
+			& (ssa.salary_structure == salary_structure.name)
+		).run()
 		# test structure_assignment
 		salary_structure.assign_salary_structure(
 			employee=employee_doc_name, from_date="2013-01-01", base=5000, variable=200
@@ -240,7 +241,8 @@ def create_salary_structure_assignment(
 		currency = "INR"
 
 	if not allow_duplicate and frappe.db.exists("Salary Structure Assignment", {"employee": employee}):
-		frappe.db.sql("""delete from `tabSalary Structure Assignment` where employee=%s""", (employee))
+		ssa = frappe.qb.DocType("Salary Structure Assignment")
+		frappe.qb.from_(ssa).delete().where(ssa.employee == employee).run()
 
 	if not payroll_period:
 		payroll_period = create_payroll_period(company="_Test Company")
