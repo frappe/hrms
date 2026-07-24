@@ -146,11 +146,7 @@ def send_offer_letter(
 		)
 
 	effective_print_format = print_format or frappe.get_meta("Job Offer").default_print_format or None
-	# Remove pdf_generator from the request form_dict so get_print uses our explicit arg
-	frappe.local.form_dict.pop("pdf_generator", None)
-	pdf_content = get_print(
-		"Job Offer", doc.name, print_format=effective_print_format, as_pdf=True, pdf_generator="chrome"
-	)
+	pdf_content = get_print("Job Offer", doc.name, print_format=effective_print_format, as_pdf=True)
 	attachment = {"fname": f"Job Offer - {doc.name}.pdf", "fcontent": pdf_content}
 
 	make_communication(
