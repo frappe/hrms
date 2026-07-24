@@ -4,8 +4,7 @@
 from collections import OrderedDict
 
 import frappe
-from frappe import _, msgprint
-from frappe.query_builder import Order
+from frappe import _
 from frappe.query_builder.functions import Sum
 from frappe.utils import scrub
 
@@ -15,7 +14,6 @@ def execute(filters=None):
 	data = get_unclaimed_expese_claims(filters)
 
 	if not data:
-		msgprint(_("No record found"))
 		return columns, data
 
 	if not filters or not filters.get("group_by"):
