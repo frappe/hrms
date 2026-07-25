@@ -236,6 +236,22 @@ class TestPayrollEntry(HRMSTestSuite):
 		self.assertEqual(get_end_date("2017-02-15", "monthly"), {"end_date": "2017-03-14"})
 		self.assertEqual(get_end_date("2017-02-15", "daily"), {"end_date": "2017-02-15"})
 
+	def test_get_payroll_entries_for_jv_filters_docstatus(self):
+		from hrms.payroll.doctype.payroll_entry.payroll_entry import get_payroll_entries_for_jv
+
+		draft_pe = frappe.new_doc("Payroll Entry")
+		draft_pe.company = "_Test Company"
+		draft_pe.currency = "INR"
+		draft_pe.payroll_frequency = "Monthly"
+		draft_pe.start_date = "2026-07-06"
+		draft_pe.end_date = "2026-07-31"
+		draft_pe.flags.ignore_mandatory = True
+		draft_pe.insert(ignore_permissions=True)
+
+		res = get_payroll_entries_for_jv("Payroll Entry", "%", "name", 0, 100, {})
+		entry_names = [d[0] for d in res]
+		self.assertNotIn(draft_pe.name, entry_names)
+
 	@if_lending_app_installed
 	@HRMSTestSuite.change_settings(
 		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 1}
