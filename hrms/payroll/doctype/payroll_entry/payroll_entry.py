@@ -1717,6 +1717,20 @@ def get_payroll_entries_for_jv(
 		{"txt": "%%%s%%" % txt, "start": start, "page_len": page_len},
 	)
 
+<<<<<<< HEAD
+=======
+	return (
+		frappe.qb.from_(PayrollEntry)
+		.select(PayrollEntry.name)
+		.where(PayrollEntry.docstatus == 1)
+		.where(PayrollEntry[searchfield].like("%%%s%%" % txt))
+		.where(PayrollEntry.name.notin(linked_entries))
+		.orderby(PayrollEntry.name)
+		.limit(page_len)
+		.offset(start)
+	).run()
+
+>>>>>>> 450aa41e5 (fix(payroll): filter submitted records in get_payroll_entries_for_jv)
 
 def get_employee_list(
 	filters: frappe._dict,
