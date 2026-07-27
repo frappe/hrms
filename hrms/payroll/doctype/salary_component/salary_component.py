@@ -164,6 +164,8 @@ class SalaryComponent(Document):
 		if not structures:
 			structures = self.get_structures_to_be_updated()
 
+		table_fieldname = frappe.scrub(self.type) + "s"
+
 		for structure in structures:
 			frappe.has_permission("Salary Structure", "write", structure, throw=True)
 			salary_structure = frappe.get_doc("Salary Structure", structure)
@@ -173,9 +175,13 @@ class SalaryComponent(Document):
 			salary_structure._doc_before_save = copy.deepcopy(salary_structure)
 
 			salary_detail_row = next(
-				(d for d in salary_structure.get(f"{self.type.lower()}s") if d.salary_component == self.name),
+				(d for d in salary_structure.get(table_fieldname) if d.salary_component == self.name),
 				None,
 			)
+
+			if not salary_detail_row:
+				continue
+
 			if is_formula_related:
 				value = value if self.amount_based_on_formula else None
 				salary_detail_row.set("amount_based_on_formula", self.amount_based_on_formula)
