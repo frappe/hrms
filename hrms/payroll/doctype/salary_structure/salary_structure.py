@@ -409,6 +409,9 @@ def _make_salary_slip(
 				target.posting_date = posting_date
 
 		if salary_structure_assignment:
+			frappe.has_permission(
+				"Salary Structure Assignment", "read", salary_structure_assignment, throw=True
+			)
 			ssa_doc = frappe.get_doc("Salary Structure Assignment", salary_structure_assignment)
 			if ssa_doc.employee != target.employee or ssa_doc.salary_structure != target.salary_structure:
 				frappe.throw(
