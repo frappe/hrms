@@ -906,6 +906,14 @@ class SalarySlip(TransactionBase):
 			as_dict=True,
 		)
 
+		if not self._salary_structure_assignment and getattr(self, "_preview_ssa_name", None):
+			self._salary_structure_assignment = frappe.db.get_value(
+				"Salary Structure Assignment",
+				self._preview_ssa_name,
+				"*",
+				as_dict=True,
+			)
+
 		if not self._salary_structure_assignment:
 			frappe.throw(
 				_(
@@ -1139,6 +1147,12 @@ class SalarySlip(TransactionBase):
 		salary_slip = frappe.copy_doc(self)
 		# consider full payment days for future period
 		salary_slip.payment_days = salary_slip.total_working_days
+		if getattr(self, "_preview_ssa_name", None):
+			salary_slip._preview_ssa_name = self._preview_ssa_name
+		if getattr(self, "_ssa_doc", None):
+			salary_slip._ssa_doc = self._ssa_doc
+		if getattr(self, "_salary_structure_assignment", None):
+			salary_slip._salary_structure_assignment = self._salary_structure_assignment
 		salary_slip.calculate_net_pay(skip_tax_breakup_computation=True)
 
 		future_period_non_taxable_earnings = 0

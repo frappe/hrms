@@ -372,6 +372,7 @@ def make_salary_slip(
 	print_format: str | None = None,
 	for_preview: int = 0,
 	lwp_days_corrected: float | None = None,
+	salary_structure_assignment: str | None = None,
 ) -> str | Document:
 	if employee:
 		frappe.has_permission("Employee", "read", employee, throw=True)
@@ -385,6 +386,7 @@ def make_salary_slip(
 		print_format=print_format,
 		for_preview=for_preview,
 		lwp_days_corrected=lwp_days_corrected,
+		salary_structure_assignment=salary_structure_assignment,
 	)
 
 
@@ -398,12 +400,19 @@ def _make_salary_slip(
 	for_preview: int = 0,
 	lwp_days_corrected: float | None = None,
 	ignore_permissions: bool = False,
+	salary_structure_assignment: str | None = None,
 ) -> str | Document:
 	def postprocess(source, target):
 		if employee:
 			target.employee = employee
 			if posting_date:
 				target.posting_date = posting_date
+
+		if salary_structure_assignment:
+			ssa_doc = frappe.get_doc("Salary Structure Assignment", salary_structure_assignment)
+			target._preview_ssa_name = salary_structure_assignment
+			target._salary_structure_assignment = ssa_doc.as_dict()
+			target._ssa_doc = ssa_doc
 
 		target.run_method(
 			"process_salary_structure", for_preview=for_preview, lwp_days_corrected=lwp_days_corrected

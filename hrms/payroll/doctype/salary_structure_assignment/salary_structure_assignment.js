@@ -55,6 +55,16 @@ frappe.ui.form.on("Salary Structure Assignment", {
 	refresh: function (frm) {
 		frm.trigger("toggle_opening_balances_section");
 
+		if (frm.doc.docstatus === 0 && !frm.is_new()) {
+			frm.add_custom_button(
+				__("Preview Salary Slip"),
+				function () {
+					frm.trigger("preview_salary_slip");
+				},
+				__("Actions"),
+			);
+		}
+
 		if (frm.doc.docstatus != 1) return;
 
 		frm.add_custom_button(
@@ -140,16 +150,20 @@ frappe.ui.form.on("Salary Structure Assignment", {
 				const print_format = r.salary_slip_based_on_timesheet
 					? "Salary Slip based on Timesheet"
 					: "Salary Slip Standard";
+				const args = {
+					source_name: frm.doc.salary_structure,
+					employee: frm.doc.employee,
+					posting_date: frm.doc.from_date,
+					as_print: 1,
+					print_format: print_format,
+					for_preview: 1,
+				};
+				if (frm.doc.docstatus === 0) {
+					args.salary_structure_assignment = frm.doc.name;
+				}
 				frappe.call({
 					method: "hrms.payroll.doctype.salary_structure.salary_structure.make_salary_slip",
-					args: {
-						source_name: frm.doc.salary_structure,
-						employee: frm.doc.employee,
-						posting_date: frm.doc.from_date,
-						as_print: 1,
-						print_format: print_format,
-						for_preview: 1,
-					},
+					args: args,
 					callback: function (r) {
 						const new_window = window.open();
 						new_window.document.write(r.message);
