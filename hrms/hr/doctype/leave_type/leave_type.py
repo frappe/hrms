@@ -88,17 +88,26 @@ class LeaveType(Document):
 	def validate_allocated_earned_leave(self):
 		old_configuration = self.get_doc_before_save()
 
-		if (
-			old_configuration
-			and old_configuration.is_earned_leave
-			and old_configuration.max_leaves_allowed > self.max_leaves_allowed
-		):
-			earned_leave_allocation_exists = frappe.db.exists(
-				"Leave Allocation",
-				{"leave_type": self.name, "from_date": ("<=", today()), "to_date": (">=", today())},
-				cache=True,
-			)
-			if earned_leave_allocation_exists:
+		if not old_configuration or not old_configuration.is_earned_leave:
+			return
+
+		active_earned_leave_allocation_exists = frappe.db.exists(
+			"Leave Allocation",
+			{"leave_type": self.name, "from_date": ("<=", today()), "to_date": (">=", today())},
+			cache=True,
+		)
+
+		if old_configuration.earned_leave_eligibility_days != self.earned_leave_eligibility_days:
+			if active_earned_leave_allocation_exists:
+				frappe.throw(
+					_(
+						"Earned Leave Eligibility Days cannot be changed after active earned leave allocations have been created. Please create a new Leave Type or update allocations manually."
+					),
+					title=_("Not Allowed"),
+				)
+
+		if old_configuration.max_leaves_allowed > self.max_leaves_allowed:
+			if active_earned_leave_allocation_exists:
 				frappe.msgprint(
 					title=_("Leave Allocation Exists"),
 					msg=_(

@@ -502,6 +502,24 @@ class TestLeaveAllocation(HRMSTestSuite):
 		)
 		self.assertEqual(leaves_allocated, pro_rated_leave)
 
+	def test_cannot_change_eligibility_days_after_active_allocation(self):
+		frappe.flags.current_date = getdate("2026-07-28")
+		leave_policy_assignments = make_policy_assignment(
+			self.employee,
+			allocate_on_day="First Day",
+			rounding="",
+			start_date=getdate("2026-01-01"),
+			end_date=getdate("2026-12-31"),
+			annual_allocation=30,
+			earned_leave_eligibility_days=120,
+		)
+
+		self.assertTrue(get_allocated_leaves(leave_policy_assignments[0]) is not None)
+		leave_type = frappe.get_doc("Leave Type", self.leave_type)
+		leave_type.earned_leave_eligibility_days = 365
+		self.assertRaises(frappe.ValidationError, leave_type.save)
+
+
 	def test_assignment_catch_up_row_keeps_full_allocated_amount(self):
 		self.employee.date_of_joining = getdate("2025-06-15")
 		self.employee.save()
