@@ -93,7 +93,12 @@ class LeaveType(Document):
 
 		active_earned_leave_allocation_exists = frappe.db.exists(
 			"Leave Allocation",
-			{"leave_type": self.name, "from_date": ("<=", today()), "to_date": (">=", today())},
+			{
+				"leave_type": self.name,
+				"docstatus": 1,
+				"from_date": ("<=", today()),
+				"to_date": (">=", today()),
+			},
 			cache=True,
 		)
 
