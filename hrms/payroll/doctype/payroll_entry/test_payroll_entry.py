@@ -80,6 +80,23 @@ class TestPayrollEntry(HRMSTestSuite):
 			cost_center="Main - _TC",
 		)
 
+	def test_get_unsubmitted_overtime_slips_permission_check(self):
+		payroll_entry = frappe.new_doc("Payroll Entry")
+		payroll_entry.company = "_Test Company"
+		payroll_entry.currency = "INR"
+		payroll_entry.payroll_frequency = "Monthly"
+		payroll_entry.start_date = "2026-07-06"
+		payroll_entry.end_date = "2026-07-31"
+		payroll_entry.flags.ignore_mandatory = True
+		payroll_entry.insert(ignore_permissions=True)
+		self.addCleanup(frappe.set_user, "Administrator")
+		frappe.set_user("Guest")
+		with self.assertRaises(frappe.PermissionError):
+			payroll_entry.get_unsubmitted_overtime_slips()
+
+		with self.assertRaises(frappe.PermissionError):
+			payroll_entry.get_overtime_slip_details()
+
 	def test_multi_currency_payroll_entry(self):
 		company = frappe.get_doc("Company", "_Test Company")
 		create_department("Accounts")

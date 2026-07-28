@@ -1330,6 +1330,7 @@ class PayrollEntry(Document):
 
 	@frappe.whitelist()
 	def get_unsubmitted_overtime_slips(self, limit: int | None = None) -> list[str]:
+		self.check_permission("read")
 		OvertimeSlip = frappe.qb.DocType("Overtime Slip")
 		query = (
 			frappe.qb.from_(OvertimeSlip)
@@ -1343,6 +1344,7 @@ class PayrollEntry(Document):
 
 	@frappe.whitelist()
 	def get_overtime_slip_details(self) -> list[bool]:
+		self.check_permission("read")
 		from hrms.hr.doctype.overtime_slip.overtime_slip import filter_employees_for_overtime_slip_creation
 
 		employee_eligible_for_overtime = unsubmitted_overtime_slips = []
