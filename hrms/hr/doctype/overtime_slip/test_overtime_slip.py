@@ -62,6 +62,33 @@ class TestOvertimeSlip(HRMSTestSuite):
 		)
 		self.assertEqual(flt(expected_overtime_amount, 2), actual_overtime_amount)
 
+	def test_overtime_slip_cancel_cancels_additional_salary(self):
+		employee = make_employee("test_overtime_cancel@example.com", company="_Test Company")
+		make_salary_structure(
+			"Test Overtime Salary Slip", "Monthly", employee=employee, company="_Test Company"
+		)
+		_, overtime_slip, _ = setup_overtime(employee)
+
+		# Confirm Additional Salary was created and submitted
+		additional_salaries = frappe.get_all(
+			"Additional Salary",
+			filters={"ref_doctype": "Overtime Slip", "ref_docname": overtime_slip.name},
+			pluck="docstatus",
+		)
+		self.assertIn(1, additional_salaries)
+
+		# Cancel Overtime Slip
+		overtime_slip.cancel()
+
+		# Verify linked Additional Salary is cancelled (docstatus=2)
+		cancelled_salaries = frappe.get_all(
+			"Additional Salary",
+			filters={"ref_doctype": "Overtime Slip", "ref_docname": overtime_slip.name},
+			pluck="docstatus",
+		)
+		self.assertTrue(cancelled_salaries)
+		self.assertTrue(all(ds == 2 for ds in cancelled_salaries))
+
 	def test_overtime_calculation_for_fixed_hourly_rate(self):
 		employee = make_employee("test_overtime_slip_fixed@example.com", company="_Test Company")
 		make_salary_structure(

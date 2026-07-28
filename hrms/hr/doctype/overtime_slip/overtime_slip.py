@@ -57,6 +57,23 @@ class OvertimeSlip(Document):
 	def on_submit(self):
 		self.process_overtime_slip()
 
+	def on_cancel(self):
+		self.unlink_and_cancel_additional_salary()
+
+	def unlink_and_cancel_additional_salary(self):
+		additional_salaries = frappe.get_all(
+			"Additional Salary",
+			filters={
+				"ref_doctype": "Overtime Slip",
+				"ref_docname": self.name,
+				"docstatus": 1,
+			},
+			pluck="name",
+		)
+		for name in additional_salaries:
+			doc = frappe.get_doc("Additional Salary", name)
+			doc.cancel()
+
 	def validate_overlap(self):
 		overtime_slips = frappe.db.get_all(
 			"Overtime Slip",
