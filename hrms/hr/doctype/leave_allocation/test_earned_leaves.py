@@ -257,6 +257,74 @@ class TestLeaveAllocation(HRMSTestSuite):
 		leaves_allocated = get_allocated_leaves(leave_policy_assignments[0])
 		self.assertEqual(leaves_allocated, 12)
 
+	def test_no_accrual_before_eligibility_period(self):
+		start_date = getdate("2023-01-01")
+		end_date = getdate("2024-12-31")
+		self.employee.date_of_joining = getdate("2023-03-15")
+		self.employee.save()
+
+		frappe.flags.current_date = getdate("2024-03-13")
+		leave_policy_assignments = make_policy_assignment(
+			self.employee,
+			allocate_on_day="Last Day",
+			rounding="",
+			start_date=start_date,
+			end_date=end_date,
+			annual_allocation=30,
+			earned_leave_eligibility_days=365,
+		)
+
+		self.assertEqual(get_allocated_leaves(leave_policy_assignments[0]), 0)
+
+	def test_first_credit_starts_after_eligibility_date(self):
+		start_date = getdate("2023-01-01")
+		end_date = getdate("2024-12-31")
+		eligibility_date = getdate("2024-03-14")
+		self.employee.date_of_joining = getdate("2023-03-15")
+		self.employee.save()
+
+		frappe.flags.current_date = getdate("2024-03-13")
+		leave_policy_assignments = make_policy_assignment(
+			self.employee,
+			allocate_on_day="Last Day",
+			rounding="",
+			start_date=start_date,
+			end_date=end_date,
+			annual_allocation=30,
+			earned_leave_eligibility_days=365,
+		)
+
+		frappe.flags.current_date = getdate("2024-03-31")
+		allocate_earned_leaves()
+		expected = calculate_pro_rated_leaves(
+			2.5, eligibility_date, getdate("2024-03-01"), getdate("2024-03-31"), True
+		)
+		self.assertEqual(get_allocated_leaves(leave_policy_assignments[0]), expected)
+
+	def test_monthly_credit_remains_unchanged_after_eligibility(self):
+		start_date = getdate("2023-01-01")
+		end_date = getdate("2024-12-31")
+		self.employee.date_of_joining = getdate("2023-03-15")
+		self.employee.save()
+
+		frappe.flags.current_date = getdate("2024-03-13")
+		leave_policy_assignments = make_policy_assignment(
+			self.employee,
+			allocate_on_day="Last Day",
+			rounding="",
+			start_date=start_date,
+			end_date=end_date,
+			annual_allocation=30,
+			earned_leave_eligibility_days=365,
+		)
+
+		frappe.flags.current_date = getdate("2024-03-31")
+		allocate_earned_leaves()
+		march_balance = get_allocated_leaves(leave_policy_assignments[0])
+		frappe.flags.current_date = getdate("2024-04-30")
+		allocate_earned_leaves()
+		self.assertEqual(get_allocated_leaves(leave_policy_assignments[0]) - march_balance, 2.5)
+
 	def test_overallocation_with_carry_forwarding(self):
 		"""Tests earned leave allocation with cf leaves does not exceed annual allocation"""
 		year_start = get_year_start(getdate())
@@ -433,6 +501,53 @@ class TestLeaveAllocation(HRMSTestSuite):
 			calculate_pro_rated_leaves(1, doj, start_date, get_last_day(start_date)), "0.5"
 		)
 		self.assertEqual(leaves_allocated, pro_rated_leave)
+
+	def test_assignment_catch_up_row_keeps_full_allocated_amount(self):
+		self.employee.date_of_joining = getdate("2025-06-15")
+		self.employee.save()
+
+		frappe.flags.current_date = getdate("2026-07-28")
+		leave_policy_assignments = make_policy_assignment(
+			self.employee,
+			allocate_on_day="First Day",
+			rounding="",
+			start_date=getdate("2026-01-01"),
+			end_date=getdate("2026-12-31"),
+			annual_allocation=30,
+			earned_leave_eligibility_days=365,
+		)
+
+		self.assertEqual(get_allocated_leaves(leave_policy_assignments[0]), 3.83)
+		allocation = frappe.get_doc(
+			"Leave Allocation", {"leave_policy_assignment": leave_policy_assignments[0]}
+		)
+		self.assertEqual(allocation.earned_leave_schedule[0].allocation_date, getdate("2026-07-28"))
+		self.assertEqual(allocation.earned_leave_schedule[0].number_of_leaves, 3.83)
+
+
+	def test_backdated_assignment_respects_eligibility_date(self):
+		start_date = getdate("2023-01-01")
+		end_date = getdate("2024-12-31")
+		eligibility_date = getdate("2024-03-14")
+		self.employee.date_of_joining = getdate("2023-03-15")
+		self.employee.save()
+
+		frappe.flags.current_date = getdate("2024-05-31")
+		leave_policy_assignments = make_policy_assignment(
+			self.employee,
+			allocate_on_day="Last Day",
+			rounding="",
+			start_date=start_date,
+			end_date=end_date,
+			annual_allocation=30,
+			earned_leave_eligibility_days=365,
+		)
+
+		expected = calculate_pro_rated_leaves(
+			2.5, eligibility_date, getdate("2024-03-01"), getdate("2024-03-31"), True
+		)
+		expected += 5.0
+		self.assertEqual(get_allocated_leaves(leave_policy_assignments[0]), expected)
 
 	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_get_earned_leave_details_for_dashboard(self):
@@ -1153,7 +1268,11 @@ class TestLeaveAllocation(HRMSTestSuite):
 
 
 def create_earned_leave_type(
-	leave_type, allocate_on_day="Last Day", rounding=0.5, earned_leave_frequency="Monthly"
+	leave_type,
+	allocate_on_day="Last Day",
+	rounding=0.5,
+	earned_leave_frequency="Monthly",
+	earned_leave_eligibility_days=0,
 ):
 	if frappe.db.exists("Leave Type", leave_type):
 		doc = frappe.get_doc("Leave Type", leave_type)
@@ -1162,6 +1281,7 @@ def create_earned_leave_type(
 				"allocate_on_day": allocate_on_day,
 				"rounding": rounding,
 				"earned_leave_frequency": earned_leave_frequency,
+				"earned_leave_eligibility_days": earned_leave_eligibility_days,
 			}
 		)
 		doc.save()
@@ -1175,6 +1295,7 @@ def create_earned_leave_type(
 			rounding=rounding,
 			is_carry_forward=1,
 			allocate_on_day=allocate_on_day,
+			earned_leave_eligibility_days=earned_leave_eligibility_days,
 			max_leaves_allowed=0,
 		).insert()
 
@@ -1205,9 +1326,14 @@ def make_policy_assignment(
 	annual_allocation=12,
 	carry_forward=0,
 	assignment_based_on="Leave Period",
+	earned_leave_eligibility_days=0,
 ):
 	leave_type = create_earned_leave_type(
-		"Test Earned Leave", allocate_on_day, rounding, earned_leave_frequency=earned_leave_frequency
+		"Test Earned Leave",
+		allocate_on_day,
+		rounding,
+		earned_leave_frequency=earned_leave_frequency,
+		earned_leave_eligibility_days=earned_leave_eligibility_days,
 	)
 	leave_period = create_leave_period("Test Earned Leave Period", start_date=start_date, end_date=end_date)
 	leave_policy = frappe.get_doc(

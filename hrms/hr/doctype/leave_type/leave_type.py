@@ -5,7 +5,7 @@
 import frappe
 from frappe import _, bold
 from frappe.model.document import Document
-from frappe.utils import today
+from frappe.utils import cint, today
 
 
 class LeaveType(Document):
@@ -22,6 +22,7 @@ class LeaveType(Document):
 		allow_negative: DF.Check
 		allow_over_allocation: DF.Check
 		applicable_after: DF.Int
+		earned_leave_eligibility_days: DF.Int
 		earned_leave_frequency: DF.Literal["Monthly", "Quarterly", "Half-Yearly", "Yearly"]
 		earning_component: DF.Link | None
 		expire_carry_forwarded_leaves_after_days: DF.Int
@@ -45,6 +46,7 @@ class LeaveType(Document):
 	def validate(self):
 		self.validate_lwp()
 		self.validate_leave_types()
+		self.set_earned_leave_defaults()
 		self.validate_allocated_earned_leave()
 
 	def validate_lwp(self):
@@ -103,6 +105,15 @@ class LeaveType(Document):
 						"Reducing maximum leaves allowed after allocation may cause scheduler to allocate incorrect number of earned leaves. Proceed with caution."
 					),
 				)
+
+	def set_earned_leave_defaults(self):
+		self.earned_leave_eligibility_days = cint(self.earned_leave_eligibility_days)
+		if not self.is_earned_leave:
+			self.earned_leave_eligibility_days = 0
+			return
+
+		if self.earned_leave_eligibility_days and cint(self.applicable_after) < self.earned_leave_eligibility_days:
+			self.applicable_after = self.earned_leave_eligibility_days
 
 	def clear_cache(self):
 		from hrms.payroll.doctype.salary_slip.salary_slip import LEAVE_TYPE_MAP

@@ -13,6 +13,7 @@ from frappe.query_builder.functions import Count, Sum
 from frappe.utils import (
 	add_days,
 	add_months,
+	cint,
 	comma_and,
 	cstr,
 	flt,
@@ -368,15 +369,22 @@ def allocate_earned_leaves():
 				annual_allocation = get_annual_allocation_from_policy(allocation, e_leave_type)
 			else:
 				date_of_joining = frappe.db.get_value("Employee", allocation.employee, "date_of_joining")
+				accrual_start_date = get_earned_leave_accrual_start_date(
+					date_of_joining, allocation.from_date, e_leave_type.earned_leave_eligibility_days
+				)
+				if today < accrual_start_date:
+					continue
 				allocation_date = get_expected_allocation_date_for_period(
 					e_leave_type.earned_leave_frequency,
 					e_leave_type.allocate_on_day,
 					today,
-					date_of_joining,
-					effective_from=None,
+					accrual_start_date,
+					effective_from=allocation.from_date,
 				)
 				annual_allocation = get_annual_allocation_from_policy(allocation, e_leave_type)
-				earned_leaves = calculate_upcoming_earned_leave(allocation, e_leave_type, date_of_joining)
+				earned_leaves = calculate_upcoming_earned_leave(
+					allocation, e_leave_type, date_of_joining
+				)
 
 			if not allocation_date or allocation_date != today:
 				continue
@@ -409,8 +417,11 @@ def get_annual_allocation_from_policy(allocation, e_leave_type):
 
 def calculate_upcoming_earned_leave(allocation, e_leave_type, date_of_joining):
 	annual_allocation = get_annual_allocation_from_policy(allocation, e_leave_type)
+	accrual_start_date = get_earned_leave_accrual_start_date(
+		date_of_joining, allocation.from_date, e_leave_type.earned_leave_eligibility_days
+	)
 	earned_leave = get_monthly_earned_leave(
-		date_of_joining,
+		accrual_start_date,
 		annual_allocation,
 		e_leave_type.earned_leave_frequency,
 		e_leave_type.rounding,
@@ -595,12 +606,30 @@ def get_earned_leaves():
 		fields=[
 			"name",
 			"max_leaves_allowed",
+			"earned_leave_eligibility_days",
 			"earned_leave_frequency",
 			"rounding",
 			"allocate_on_day",
 		],
 		filters={"is_earned_leave": 1},
 	)
+
+
+def get_earned_leave_eligibility_date(date_of_joining, eligibility_days=0):
+	if not date_of_joining:
+		return None
+
+	return add_days(getdate(date_of_joining), cint(eligibility_days))
+
+
+def get_earned_leave_accrual_start_date(date_of_joining, effective_from=None, eligibility_days=0):
+	accrual_start_date = getdate(effective_from) if effective_from else getdate(date_of_joining)
+	eligibility_date = get_earned_leave_eligibility_date(date_of_joining, eligibility_days)
+
+	if eligibility_date and eligibility_date > accrual_start_date:
+		accrual_start_date = eligibility_date
+
+	return accrual_start_date
 
 
 def create_additional_leave_ledger_entry(allocation, leaves, date):
