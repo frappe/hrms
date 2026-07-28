@@ -410,6 +410,12 @@ def _make_salary_slip(
 
 		if salary_structure_assignment:
 			ssa_doc = frappe.get_doc("Salary Structure Assignment", salary_structure_assignment)
+			if ssa_doc.employee != target.employee or ssa_doc.salary_structure != target.salary_structure:
+				frappe.throw(
+					_(
+						"Salary Structure Assignment does not match the requested employee or salary structure."
+					)
+				)
 			target._preview_ssa_name = salary_structure_assignment
 			target._salary_structure_assignment = ssa_doc.as_dict()
 			target._ssa_doc = ssa_doc
