@@ -52,6 +52,13 @@ class TestEmployeeReferral(HRMSTestSuite):
 		refarral.reload()
 		self.assertEqual(refarral.status, "Cancelled")
 
+	def test_create_job_applicant_permission_check(self):
+		emp_ref = create_employee_referral()
+		self.addCleanup(frappe.set_user, "Administrator")
+		frappe.set_user("Guest")
+		with self.assertRaises(frappe.PermissionError):
+			create_job_applicant(emp_ref.name)
+
 	def test_unique_referral(self):
 		referral_1 = create_employee_referral(email="test_ref@example.com")
 		self.assertRaises(frappe.DuplicateEntryError, create_employee_referral, email="test_ref@example.com")
