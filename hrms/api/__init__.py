@@ -118,6 +118,8 @@ def get_unread_notifications_count() -> int:
 
 @frappe.whitelist()
 def mark_all_notifications_as_read() -> None:
+	if frappe.session.user == "Guest":
+		return
 	frappe.db.set_value(
 		"PWA Notification",
 		{"to_user": frappe.session.user, "read": 0},

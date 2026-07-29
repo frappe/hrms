@@ -157,3 +157,9 @@ def create_job_applicant(**args):
 
 def get_email_by_subject(subject: str) -> str | None:
 	return frappe.db.exists("Email Queue", {"message": ("like", f"%{subject}%")})
+
+
+def test_mark_all_notifications_as_read_guest_check():
+	from hrms.api import mark_all_notifications_as_read
+	frappe.set_user("Guest")
+	mark_all_notifications_as_read()
