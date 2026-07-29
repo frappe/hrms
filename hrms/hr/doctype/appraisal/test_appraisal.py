@@ -329,7 +329,9 @@ class TestAppraisal(HRMSTestSuite):
 		self.assertEqual(summary, expected_data)
 
 	def test_get_kras_for_employee_permission_check(self):
+		cycle = create_appraisal_cycle(designation="Engineer")
+		cycle.create_appraisals()
 		self.addCleanup(frappe.set_user, "Administrator")
 		frappe.set_user("test@example.com")
 		with self.assertRaises(frappe.PermissionError):
-			get_kras_for_employee("Appraisal KRA", "", "kra", 0, 10, {"appraisal_cycle": "CYC-001", "employee": "EMP-001"})
+			get_kras_for_employee("Appraisal KRA", "", "kra", 0, 10, {"appraisal_cycle": cycle.name, "employee": self.employee1})
