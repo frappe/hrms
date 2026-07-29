@@ -112,13 +112,19 @@ def create_job_applicant(source_name: str, target_doc: str | Document | None = N
 @frappe.whitelist()
 def create_additional_salary(employee_referral: str) -> Document:
 	doc = frappe.get_doc("Employee Referral", employee_referral)
+	doc.check_permission("read")
 
-	if not frappe.db.exists("Additional Salary", {"ref_docname": doc.name}):
-		additional_salary = frappe.new_doc("Additional Salary")
-		additional_salary.employee = doc.referrer
-		additional_salary.company = frappe.db.get_value("Employee", doc.referrer, "company")
-		additional_salary.overwrite_salary_structure_amount = 0
-		additional_salary.ref_doctype = doc.doctype
-		additional_salary.ref_docname = doc.name
+	existing = frappe.db.get_value(
+		"Additional Salary", {"ref_docname": doc.name, "docstatus": ["!=", 2]}, "name"
+	)
+	if existing:
+		return frappe.get_doc("Additional Salary", existing)
+
+	additional_salary = frappe.new_doc("Additional Salary")
+	additional_salary.employee = doc.referrer
+	additional_salary.company = frappe.db.get_value("Employee", doc.referrer, "company")
+	additional_salary.overwrite_salary_structure_amount = 0
+	additional_salary.ref_doctype = doc.doctype
+	additional_salary.ref_docname = doc.name
 
 	return additional_salary

@@ -46,6 +46,10 @@ class TestEmployeeReferral(HRMSTestSuite):
 		add_sal = create_additional_salary(emp_ref.name)
 		self.assertEqual(add_sal.ref_docname, emp_ref.name)
 
+		# calling again when Additional Salary exists must not crash UnboundLocalError
+		add_sal_2 = create_additional_salary(emp_ref.name)
+		self.assertEqual(add_sal_2.ref_docname, emp_ref.name)
+
 	def test_status_on_discard(self):
 		refarral = create_employee_referral(do_not_submit=True)
 		refarral.discard()
