@@ -267,6 +267,9 @@ class TestVehicleLog(HRMSTestSuite):
 		claim.cancel()
 		new_claim = make_expense_claim(v_log.name)
 		self.assertTrue(new_claim)
+		v_log.reload()
+		v_log.cancel()
+		v_log.delete()
 
 
 def get_vehicle(employee_id):
