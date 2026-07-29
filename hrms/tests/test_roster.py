@@ -80,7 +80,6 @@ class TestRoster(HRMSTestSuite):
 		)
 		self.assertTrue(new_assignment)
 
-
 	def test_insert_shift_rejects_adjacent_submitted_shift(self):
 		"""Submitted Shift Assignments should not be mutated. A new Draft should be created."""
 		employee_name = f"_Test Roster Sub {frappe.generate_hash(length=8)}"
@@ -193,6 +192,8 @@ class TestRoster(HRMSTestSuite):
 			},
 		)
 		self.assertTrue(new_assignment)
+
+
 def create_employee(employee_name: str):
 	create_company()
 	if not frappe.db.exists("Gender", "Female"):
