@@ -86,7 +86,9 @@ class TestExitInterview(HRMSTestSuite):
 		self.assertEqual(interview.status, "Cancelled")
 
 	def test_send_exit_questionnaire_permission_check(self):
-		exit_interview = create_exit_interview()
+		employee = make_employee("test_exit_perm@example.com", company="_Test Company")
+		frappe.db.set_value("Employee", employee, "relieving_date", getdate())
+		exit_interview = create_exit_interview(employee)
 		self.addCleanup(frappe.set_user, "Administrator")
 		frappe.set_user("test@example.com")
 		with self.assertRaises(frappe.PermissionError):
