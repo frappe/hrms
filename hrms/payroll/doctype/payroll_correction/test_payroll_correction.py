@@ -103,3 +103,10 @@ class TestPayrollCorrection(HRMSTestSuite):
 				},
 			)
 		)
+
+	def test_fetch_salary_slip_details_permission_check(self):
+		pc = frappe.new_doc("Payroll Correction")
+		self.addCleanup(frappe.set_user, "Administrator")
+		frappe.set_user("test@example.com")
+		with self.assertRaises(frappe.PermissionError):
+			pc.fetch_salary_slip_details()
