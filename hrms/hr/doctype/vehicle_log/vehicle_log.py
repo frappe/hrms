@@ -73,7 +73,7 @@ class VehicleLog(Document):
 def make_expense_claim(docname: str) -> dict:
 	frappe.has_permission("Vehicle Log", "read", docname, throw=True)
 
-	expense_claim = frappe.db.exists("Expense Claim", {"vehicle_log": docname})
+	expense_claim = frappe.db.exists("Expense Claim", {"vehicle_log": docname, "docstatus": ["!=", 2]})
 	if expense_claim:
 		frappe.throw(_("Expense Claim {0} already exists for the Vehicle Log").format(expense_claim))
 
