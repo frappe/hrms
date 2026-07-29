@@ -12,6 +12,15 @@ from hrms.tests.utils import HRMSTestSuite
 
 
 class TestJobApplicant(HRMSTestSuite):
+	def test_get_attachments_parent_permission_check(self):
+		from hrms.api import get_attachments
+
+		applicant = create_job_applicant()
+		self.addCleanup(frappe.set_user, "Administrator")
+		frappe.set_user("Guest")
+		with self.assertRaises(frappe.PermissionError):
+			get_attachments("Job Applicant", applicant.name)
+
 	def test_job_applicant_naming(self):
 		applicant = frappe.get_doc(
 			{
