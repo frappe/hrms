@@ -103,7 +103,9 @@ class TestPayrollEntry(HRMSTestSuite):
 			)
 			user.insert(ignore_permissions=True)
 
+		frappe.clear_cache(user=test_user_email)
 		frappe.set_user(test_user_email)
+		payroll_entry = frappe.get_doc("Payroll Entry", payroll_entry.name)
 		with self.assertRaises(frappe.PermissionError):
 			payroll_entry.get_unsubmitted_overtime_slips()
 
