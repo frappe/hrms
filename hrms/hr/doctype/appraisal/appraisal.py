@@ -369,9 +369,14 @@ def get_kras_for_employee(
 		{
 			"appraisal_cycle": filters.get("appraisal_cycle"),
 			"employee": filters.get("employee"),
+			"docstatus": ["!=", 2],
 		},
 		"name",
 	)
+	if appraisal:
+		frappe.has_permission("Appraisal", "read", appraisal, throw=True)
+	else:
+		return ()
 
 	return frappe.get_all(
 		"Appraisal KRA",

@@ -327,3 +327,9 @@ class TestAppraisal(HRMSTestSuite):
 			"feedback_missing": 1,
 		}
 		self.assertEqual(summary, expected_data)
+
+	def test_get_kras_for_employee_permission_check(self):
+		self.addCleanup(frappe.set_user, "Administrator")
+		frappe.set_user("test@example.com")
+		with self.assertRaises(frappe.PermissionError):
+			get_kras_for_employee("Appraisal KRA", "", "kra", 0, 10, {"appraisal_cycle": "CYC-001", "employee": "EMP-001"})
