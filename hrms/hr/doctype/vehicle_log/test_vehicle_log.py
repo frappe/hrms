@@ -259,21 +259,7 @@ class TestVehicleLog(HRMSTestSuite):
 		self.assertEqual(expense_claim.docstatus, 2)
 
 	def test_make_expense_claim_allows_new_claim_after_cancellation(self):
-		v_log = make_vehicle_log()
-		claim_dict = make_expense_claim(v_log.name)
-		claim = frappe.get_doc(claim_dict)
-		claim.insert()
-		claim.submit()
-		claim.cancel()
-		new_claim = make_expense_claim(v_log.name)
-		self.assertTrue(new_claim)
-
-		vehicle_log.reload()
-		vehicle_log.cancel()
-		self.assertEqual(vehicle_log.docstatus, 2)
-
-	def test_make_expense_claim_allows_new_claim_after_cancellation(self):
-		v_log = make_vehicle_log()
+		v_log = make_vehicle_log(self.license_plate, self.employee_id)
 		claim_dict = make_expense_claim(v_log.name)
 		claim = frappe.get_doc(claim_dict)
 		claim.insert()
