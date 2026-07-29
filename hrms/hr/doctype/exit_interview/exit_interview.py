@@ -101,6 +101,7 @@ def send_exit_questionnaire(interviews: str | list) -> None:
 
 	for exit_interview in interviews:
 		interview = frappe.get_doc("Exit Interview", exit_interview.get("name"))
+		interview.check_permission("write")
 		if interview.get("questionnaire_email_sent"):
 			continue
 

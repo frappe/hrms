@@ -85,6 +85,13 @@ class TestExitInterview(HRMSTestSuite):
 		interview.reload()
 		self.assertEqual(interview.status, "Cancelled")
 
+	def test_send_exit_questionnaire_permission_check(self):
+		exit_interview = create_exit_interview()
+		self.addCleanup(frappe.set_user, "Administrator")
+		frappe.set_user("test@example.com")
+		with self.assertRaises(frappe.PermissionError):
+			send_exit_questionnaire([exit_interview.name])
+
 
 def create_exit_interview(employee, save=True):
 	interviewer = create_user("test_exit_interviewer@example.com")
