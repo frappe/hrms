@@ -251,4 +251,3 @@ def create_shift_assignment(shift_type: str, employee: str, date: str):
 	)
 	shift_assignment.submit()
 	return shift_assignment
-
