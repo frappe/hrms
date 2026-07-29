@@ -111,6 +111,7 @@ class Interview(Document):
 	def reschedule_interview(
 		self, scheduled_on: datetime.date, from_time: datetime.time, to_time: datetime.time
 	) -> None:
+		self.check_permission("write")
 		if scheduled_on == self.scheduled_on and from_time == self.from_time and to_time == self.to_time:
 			frappe.msgprint(
 				_("No changes found in timings."), indicator="orange", title=_("Interview Not Rescheduled")

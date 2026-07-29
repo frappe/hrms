@@ -24,6 +24,14 @@ from hrms.tests.utils import HRMSTestSuite
 
 
 class TestInterview(HRMSTestSuite):
+	def test_reschedule_interview_permission_check(self):
+		job_applicant = create_job_applicant()
+		interview = create_interview_and_dependencies(job_applicant.name)
+		self.addCleanup(frappe.set_user, "Administrator")
+		frappe.set_user("Guest")
+		with self.assertRaises(frappe.PermissionError):
+			interview.reschedule_interview("2026-08-01", "10:00:00", "11:00:00")
+
 	def test_validations_for_designation(self):
 		job_applicant = create_job_applicant()
 		interview = create_interview_and_dependencies(
