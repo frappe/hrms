@@ -738,6 +738,8 @@ def get_doctype_states(doctype: str) -> dict:
 # File
 @frappe.whitelist()
 def get_attachments(dt: str, dn: str):
+	if dt and dn:
+		frappe.has_permission(dt, "read", dn, throw=True)
 	return frappe.get_list(
 		"File",
 		fields=["name", "file_name", "file_url", "is_private"],
