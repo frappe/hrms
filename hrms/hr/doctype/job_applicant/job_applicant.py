@@ -93,52 +93,9 @@ class JobApplicant(Document):
 						title=_("Duplicate Application"),
 					)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-		if frappe.flags.in_web_form:
-			if not self.source:
-				self.source = "Website Listing"
-			self.verify_recaptcha()
-
-	def verify_recaptcha(self):
-		import requests
-
-		settings = frappe.get_single("HR Settings")
-		if not settings.enable_recaptcha:
-			return
-
-		secret_key = settings.get_password("recaptcha_secret_key", raise_exception=False)
-		if not secret_key:
-			return
-
-		if not self.recaptcha_response:
-			frappe.throw(_("Please complete the reCAPTCHA verification."), title=_("Verification Required"))
-
-		try:
-			result = requests.post(
-				"https://www.google.com/recaptcha/api/siteverify",
-				data={"secret": secret_key, "response": self.recaptcha_response},
-				timeout=10,
-			).json()
-		except (requests.exceptions.RequestException, ValueError):
-			frappe.throw(
-				_("Could not reach reCAPTCHA verification service. Please try again."),
-				title=_("Verification Failed"),
-			)
-
-		if not result.get("success"):
-			frappe.throw(
-				_("reCAPTCHA verification failed. Please try again."), title=_("Verification Failed")
-			)
-
-		self.recaptcha_response = None
-=======
 		if frappe.flags.in_web_form and not self.source:
 			self.source = "Website Listing"
->>>>>>> fd430b654 (Revert "feat(job_applicant): add reCAPTCHA verification to job application form")
 
->>>>>>> 2b220b3c3 (feat(job_applicant): add reCAPTCHA verification to job application form)
 	def set_status_for_employee_referral(self):
 		emp_ref = frappe.get_doc("Employee Referral", self.employee_referral)
 		if self.status in ["Open", "Replied", "Hold"]:
