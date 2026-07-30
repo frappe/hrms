@@ -17,45 +17,6 @@ from hrms.hr.doctype.staffing_plan.staffing_plan import (
 
 
 class JobOpening(WebsiteGenerator):
-<<<<<<< HEAD
-=======
-	# begin: auto-generated types
-	# This code is auto-generated. Do not modify anything in this block.
-
-	from typing import TYPE_CHECKING
-
-	if TYPE_CHECKING:
-		from frappe.types import DF
-
-		closed_on: DF.Date | None
-		closes_on: DF.Date | None
-		company: DF.Link
-		currency: DF.Link | None
-		department: DF.Link | None
-		description: DF.TextEditor | None
-		designation: DF.Link
-		employment_type: DF.Link | None
-		job_application_route: DF.Data | None
-		job_opening_template: DF.Link | None
-		job_requisition: DF.Link | None
-		job_title: DF.Data
-		location: DF.Link | None
-		lower_range: DF.Currency
-		planned_vacancies: DF.Int
-		posted_on: DF.Datetime | None
-		prevent_duplicate_applicant: DF.Check
-		publish: DF.Check
-		publish_applications_received: DF.Check
-		publish_salary_range: DF.Check
-		route: DF.Data | None
-		salary_per: DF.Literal["Month", "Year"]
-		staffing_plan: DF.Link | None
-		status: DF.Literal["Open", "Closed"]
-		upper_range: DF.Currency
-		vacancies: DF.Int
-	# end: auto-generated types
-
->>>>>>> dfcc875e9 (feat(recruitment): show job opening title instead of ID and prevent duplicate applications)
 	website = frappe._dict(
 		template="templates/generators/job_opening.html",
 		condition_field="publish",
