@@ -75,10 +75,10 @@ class TestLeaveApplication(HRMSTestSuite):
 		)
 
 	def _clear_roles(self):
-		frappe.db.sql(
-			"""delete from `tabHas Role` where parent in
-			('test@example.com', 'test1@example.com', 'test2@example.com')"""
-		)
+		has_role = frappe.qb.DocType("Has Role")
+		frappe.qb.from_(has_role).delete().where(
+			has_role.parent.isin(["test@example.com", "test1@example.com", "test2@example.com"])
+		).run()
 
 	def ensure_company_holiday_list_assignment(self, holiday_list_name, from_date, to_date):
 		holiday_list = make_holiday_list(holiday_list_name, from_date=from_date, to_date=to_date)

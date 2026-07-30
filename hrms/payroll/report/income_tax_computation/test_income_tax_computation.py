@@ -22,14 +22,15 @@ class TestIncomeTaxComputation(HRMSTestSuite):
 		self.create_records()
 
 	def cleanup_records(self):
-		frappe.db.sql("delete from `tabEmployee Tax Exemption Declaration`")
-		frappe.db.sql("delete from `tabPayroll Period`")
-		frappe.db.sql("delete from `tabIncome Tax Slab`")
-		frappe.db.sql("delete from `tabSalary Component`")
-		frappe.db.sql("delete from `tabEmployee Benefit Application`")
-		frappe.db.sql("delete from `tabEmployee Benefit Claim`")
-		frappe.db.sql("delete from `tabEmployee` where company='_Test Company'")
-		frappe.db.sql("delete from `tabSalary Slip`")
+		frappe.qb.from_("Employee Tax Exemption Declaration").delete().run()
+		frappe.qb.from_("Payroll Period").delete().run()
+		frappe.qb.from_("Income Tax Slab").delete().run()
+		frappe.qb.from_("Salary Component").delete().run()
+		frappe.qb.from_("Employee Benefit Application").delete().run()
+		frappe.qb.from_("Employee Benefit Claim").delete().run()
+		employee = frappe.qb.DocType("Employee")
+		frappe.qb.from_(employee).delete().where(employee.company == "_Test Company").run()
+		frappe.qb.from_("Salary Slip").delete().run()
 
 	def create_records(self):
 		self.employee = make_employee(

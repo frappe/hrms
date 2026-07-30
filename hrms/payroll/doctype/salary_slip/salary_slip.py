@@ -149,8 +149,11 @@ class SalarySlip(TransactionBase):
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-		self.default_series = f"Sal Slip/{self.employee}/.#####"
 		self.whitelisted_globals = COMPONENT_EVAL_GLOBALS.copy()
+
+	@property
+	def default_series(self):
+		return f"Sal Slip/{self.employee}/.#####"
 
 	def autoname(self):
 		if not self.has_custom_naming_series:

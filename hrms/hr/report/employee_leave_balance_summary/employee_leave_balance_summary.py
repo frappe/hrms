@@ -9,7 +9,10 @@ from hrms.hr.doctype.leave_application.leave_application import get_leave_detail
 
 
 def execute(filters=None):
-	leave_types = frappe.db.sql_list("select name from `tabLeave Type` order by name asc")
+	LeaveType = frappe.qb.DocType("Leave Type")
+	leave_types = (
+		frappe.qb.from_(LeaveType).select(LeaveType.name).orderby(LeaveType.name, order=frappe.qb.asc)
+	).run(pluck="name")
 
 	columns = get_columns(leave_types)
 	data = get_data(filters, leave_types)
