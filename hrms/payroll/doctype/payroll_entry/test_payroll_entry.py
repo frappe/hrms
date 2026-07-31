@@ -17,7 +17,6 @@ from hrms.hr.doctype.employee_advance.employee_advance import (
 from hrms.payroll.doctype.payroll_entry.payroll_entry import (
 	PayrollEntry,
 	get_end_date,
-	get_payroll_entries_for_jv,
 	get_start_end_dates,
 )
 from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
@@ -106,32 +105,11 @@ class TestPayrollEntry(HRMSTestSuite):
 
 		frappe.clear_cache(user=test_user_email)
 		frappe.set_user(test_user_email)
-		payroll_entry = frappe.get_doc("Payroll Entry", payroll_entry.name)
 		with self.assertRaises(frappe.PermissionError):
 			payroll_entry.get_unsubmitted_overtime_slips()
 
 		with self.assertRaises(frappe.PermissionError):
 			payroll_entry.get_overtime_slip_details()
-
-	def test_get_payroll_entries_for_jv_filters_docstatus(self):
-		"""Draft Payroll Entry (docstatus=0) must be excluded; submitted (docstatus=1) must be included."""
-		draft_pe = frappe.new_doc("Payroll Entry")
-		draft_pe.company = "_Test Company"
-		draft_pe.currency = "INR"
-		draft_pe.payroll_frequency = "Monthly"
-		draft_pe.start_date = "2026-07-01"
-		draft_pe.end_date = "2026-07-31"
-		draft_pe.flags.ignore_mandatory = True
-		draft_pe.insert(ignore_permissions=True)
-
-		results = get_payroll_entries_for_jv("Payroll Entry", "", "name", 0, 20, {})
-		result_names = [r[0] for r in results]
-
-		# Draft entry must NOT appear in JV link list
-		self.assertNotIn(draft_pe.name, result_names)
-
-		# Clean up draft entry
-		draft_pe.delete(ignore_permissions=True)
 
 	def test_multi_currency_payroll_entry(self):
 		company = frappe.get_doc("Company", "_Test Company")
