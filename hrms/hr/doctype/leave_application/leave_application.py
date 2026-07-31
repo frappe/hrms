@@ -1319,14 +1319,19 @@ def get_leaves_for_period(
 			if leave_entry.to_date > getdate(to_date):
 				leave_entry.to_date = to_date
 
-			half_day = 0
-			half_day_date = None
-			# fetch half day date for leaves with half days
-			if leave_entry.leaves % 1:
-				half_day = 1
-				half_day_date = frappe.db.get_value(
-					"Leave Application", leave_entry.transaction_name, "half_day_date"
-				)
+			leave_application = frappe.db.get_value(
+				"Leave Application",
+				leave_entry.transaction_name,
+				["leave_type", "half_day", "half_day_date"],
+				as_dict=True,
+			)
+
+			if leave_application and leave_application.leave_type != leave_entry.leave_type:
+				leave_days += leave_entry.leaves
+				continue
+
+			half_day = leave_application.half_day if leave_application else 0
+			half_day_date = leave_application.half_day_date if leave_application else None
 
 			leave_days += (
 				get_number_of_leave_days(
