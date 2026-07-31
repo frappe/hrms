@@ -8,6 +8,7 @@ from frappe.utils import add_months, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
+from hrms.payroll.doctype.salary_slip.salary_slip import HOLIDAYS_BETWEEN_DATES
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import DuplicateAssignment
 from hrms.tests.utils import HRMSTestSuite
@@ -73,6 +74,16 @@ class IntegrationTestHolidayListAssignment(HRMSTestSuite):
 		employee = make_employee("test_default_hla@example.com", company="_Test Company")
 		holiday_list = get_holiday_list_for_employee(employee, as_on=getdate())
 		self.assertEqual(holiday_list, self.holiday_list)
+
+	def test_holiday_list_assignment_clears_salary_slip_holiday_cache(self):
+		cache_key = "test-holiday-cache"
+		frappe.cache().hset(HOLIDAYS_BETWEEN_DATES, cache_key, [getdate()])
+		assignment = create_holiday_list_assignment("Company", "_Test Company", self.holiday_list)
+		self.assertIsNone(frappe.cache().hget(HOLIDAYS_BETWEEN_DATES, cache_key))
+
+		frappe.cache().hset(HOLIDAYS_BETWEEN_DATES, cache_key, [getdate()])
+		assignment.cancel()
+		self.assertIsNone(frappe.cache().hget(HOLIDAYS_BETWEEN_DATES, cache_key))
 
 	def test_default_holiday_list_fallback(self):
 		employee = make_employee("test_hla_default_fallback@example.com", company="_Test Company")
