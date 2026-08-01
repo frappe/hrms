@@ -89,14 +89,17 @@ class TestPayrollEntry(HRMSTestSuite):
 		payroll_entry.end_date = "2026-07-31"
 		payroll_entry.flags.ignore_mandatory = True
 		payroll_entry.insert(ignore_permissions=True)
-		self.addCleanup(frappe.set_user, "Administrator")
 
-		frappe.set_user("Guest")
-		with self.assertRaises(frappe.PermissionError):
-			payroll_entry.get_unsubmitted_overtime_slips()
+		try:
+			frappe.set_user("Guest")
+			frappe.clear_cache(user="Guest")
 
-		with self.assertRaises(frappe.PermissionError):
-			payroll_entry.get_overtime_slip_details()
+			with self.assertRaises(frappe.PermissionError):
+				guest_payroll_entry = frappe.get_doc("Payroll Entry", payroll_entry.name)
+				guest_payroll_entry.get_unsubmitted_overtime_slips()
+				guest_payroll_entry.get_overtime_slip_details()
+		finally:
+			frappe.set_user("Administrator")
 
 	def test_multi_currency_payroll_entry(self):
 		company = frappe.get_doc("Company", "_Test Company")
