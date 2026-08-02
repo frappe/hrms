@@ -1,4 +1,3 @@
-version: "3.8" # Updated version
 services:
   mariadb:
     image: mariadb:10.8
@@ -17,15 +16,19 @@ services:
 
   frappe:
     image: frappe/bench:latest
-    command: bash /workspace/init.sh
+    command: bash /workspace/docker/init.sh
     environment:
       - SHELL=/bin/bash
     working_dir: /home/frappe
     volumes:
-      - .:/workspace
+      # Mount the repo root so the bench installs this checkout of hrms
+      - ..:/workspace
+      # Keep apps, venv and site data across container recreation (e.g. image updates)
+      - frappe-bench:/home/frappe/frappe-bench
     ports:
       - 8000:8000
       - 9000:9000
 
 volumes:
   mariadb-data:
+  frappe-bench:
