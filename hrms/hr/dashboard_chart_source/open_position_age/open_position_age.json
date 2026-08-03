@@ -1,0 +1,13 @@
+{
+ "creation": "2026-07-27 15:29:56.456677",
+ "docstatus": 0,
+ "doctype": "Dashboard Chart Source",
+ "idx": 0,
+ "modified": "2026-07-28 03:38:54.734840",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Open Position Age",
+ "owner": "Administrator",
+ "source_name": "Open Position Age",
+ "timeseries": 0
+}

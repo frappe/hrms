@@ -1,0 +1,44 @@
+{
+ "based_on": "",
+ "chart_name": "Open Position Age",
+ "chart_type": "Custom",
+ "creation": "2026-07-27 15:28:19.046679",
+ "custom_options": "{\"fieldtype\": \"Int\", \"axisOptions\": {\"shortenYAxisNumbers\": 0}}",
+ "docstatus": 0,
+ "doctype": "Dashboard Chart",
+ "document_type": "",
+ "dynamic_filters_json": "{\"company\":\"frappe.defaults.get_user_default(\\\"Company\\\")\"}",
+ "filters_json": "[]",
+ "group_by_type": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "last_synced_on": "2026-07-28 03:27:49.540687",
+ "modified": "2026-07-28 03:32:49.613155",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Open Position Age",
+ "number_of_groups": 10,
+ "owner": "Administrator",
+ "parent_document_type": "",
+ "roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HR Manager"
+  },
+  {
+   "role": "HR User"
+  }
+ ],
+ "show_values_over_chart": 0,
+ "source": "Open Position Age",
+ "time_interval": "Yearly",
+ "timeseries": 0,
+ "timespan": "Last Year",
+ "type": "Bar",
+ "use_report_chart": 0,
+ "value_based_on": "",
+ "y_axis": []
+}
