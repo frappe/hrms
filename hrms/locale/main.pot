@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Frappe HR VERSION\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-07-26 10:11+0000\n"
-"PO-Revision-Date: 2026-07-26 10:11+0000\n"
+"POT-Creation-Date: 2026-08-02 10:58+0000\n"
+"PO-Revision-Date: 2026-08-02 10:58+0000\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: contact@frappe.io\n"
 "MIME-Version: 1.0\n"
@@ -615,7 +615,7 @@ msgstr ""
 msgid "All Goals"
 msgstr ""
 
-#: hrms/hr/doctype/job_opening/job_opening.py:162
+#: hrms/hr/doctype/job_opening/job_opening.py:163
 msgid "All Jobs"
 msgstr ""
 
@@ -908,10 +908,8 @@ msgstr ""
 
 #. Label of the applicant_name (Data) field in DocType 'Appointment Letter'
 #. Label of the applicant_name (Data) field in DocType 'Job Offer'
-#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/appointment_letter/appointment_letter.json
 #: hrms/hr/doctype/job_offer/job_offer.json
-#: hrms/hr/web_form/job_application/job_application.json
 msgid "Applicant Name"
 msgstr ""
 
@@ -1837,7 +1835,7 @@ msgstr ""
 msgid "Cannot create Salary Slip for Employee who has left before Payroll Period"
 msgstr ""
 
-#: hrms/hr/doctype/job_applicant/job_applicant.py:79
+#: hrms/hr/doctype/job_applicant/job_applicant.py:84
 msgid "Cannot create a Job Applicant against a closed Job Opening"
 msgstr ""
 
@@ -2047,7 +2045,7 @@ msgstr ""
 msgid "Closing Notes"
 msgstr ""
 
-#: hrms/hr/doctype/job_opening/job_opening.py:101
+#: hrms/hr/doctype/job_opening/job_opening.py:102
 msgid "Closing this Job Opening for {1} may not be according to the Staffing Plan {0}.<br><br>Do you want to close this Job Opening?"
 msgstr ""
 
@@ -2134,7 +2132,7 @@ msgstr ""
 msgid "Consider Unmarked Attendance As"
 msgstr ""
 
-#: hrms/hr/report/employee_leave_balance/employee_leave_balance.js:53
+#: hrms/hr/report/employee_leave_balance/employee_leave_balance.js:63
 msgid "Consolidate Leave Types"
 msgstr ""
 
@@ -2685,6 +2683,10 @@ msgstr ""
 #. Option for the 'Travel Type' (Select) field in DocType 'Travel Request'
 #: hrms/hr/doctype/travel_request/travel_request.json
 msgid "Domestic"
+msgstr ""
+
+#: hrms/hr/doctype/job_applicant/job_applicant.py:93
+msgid "Duplicate Application"
 msgstr ""
 
 #: hrms/hr/doctype/holiday_list_assignment/holiday_list_assignment.py:57
@@ -3306,7 +3308,7 @@ msgid "Employee Skills"
 msgstr ""
 
 #: hrms/hr/report/employee_exits/employee_exits.py:194
-#: hrms/hr/report/employee_leave_balance/employee_leave_balance.js:40
+#: hrms/hr/report/employee_leave_balance/employee_leave_balance.js:50
 #: hrms/hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:36
 #: hrms/hr/report/leave_ledger/leave_ledger.js:34
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.js:41
@@ -3650,7 +3652,7 @@ msgstr ""
 msgid "Enter the number of Leave Without Pay (LWP) days you want to reverse. This value cannot exceed the total LWP days recorded for the selected month"
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.js:259
+#: hrms/hr/doctype/leave_allocation/leave_allocation.js:261
 msgid "Enter the number of leaves you want to allocate for the period."
 msgstr ""
 
@@ -4996,6 +4998,12 @@ msgstr ""
 msgid "If enabled, auto attendance will be marked on holidays if Employee Checkins exist"
 msgstr ""
 
+#. Description of the 'Prevent Duplicate Applications' (Check) field in DocType
+#. 'Job Opening'
+#: hrms/hr/doctype/job_opening/job_opening.json
+msgid "If enabled, candidates who have already applied with the same email address will not be allowed to apply again"
+msgstr ""
+
 #. Description of the 'Consider Marked Attendance on Holidays' (Check) field in
 #. DocType 'Payroll Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
@@ -5319,10 +5327,10 @@ msgstr ""
 msgid "Interview Feedback"
 msgstr ""
 
-#: hrms/hr/doctype/interview/test_interview.py:297
-#: hrms/hr/doctype/interview/test_interview.py:306
-#: hrms/hr/doctype/interview/test_interview.py:308
-#: hrms/hr/doctype/interview/test_interview.py:315 hrms/setup.py:471
+#: hrms/hr/doctype/interview/test_interview.py:309
+#: hrms/hr/doctype/interview/test_interview.py:318
+#: hrms/hr/doctype/interview/test_interview.py:320
+#: hrms/hr/doctype/interview/test_interview.py:327 hrms/setup.py:471
 #: hrms/setup.py:473 hrms/setup.py:506
 msgid "Interview Feedback Reminder"
 msgstr ""
@@ -5335,10 +5343,10 @@ msgstr ""
 msgid "Interview Not Rescheduled"
 msgstr ""
 
-#: hrms/hr/doctype/interview/test_interview.py:281
-#: hrms/hr/doctype/interview/test_interview.py:290
-#: hrms/hr/doctype/interview/test_interview.py:292
-#: hrms/hr/doctype/interview/test_interview.py:314 hrms/setup.py:459
+#: hrms/hr/doctype/interview/test_interview.py:293
+#: hrms/hr/doctype/interview/test_interview.py:302
+#: hrms/hr/doctype/interview/test_interview.py:304
+#: hrms/hr/doctype/interview/test_interview.py:326 hrms/setup.py:459
 #: hrms/setup.py:461 hrms/setup.py:502
 msgid "Interview Reminder"
 msgstr ""
@@ -5391,11 +5399,11 @@ msgstr ""
 msgid "Interview Type Name"
 msgstr ""
 
-#: hrms/hr/doctype/job_applicant/job_applicant.py:162
+#: hrms/hr/doctype/job_applicant/job_applicant.py:176
 msgid "Interview Type {0} is only applicable for Designation {1}"
 msgstr ""
 
-#: hrms/hr/doctype/job_applicant/job_applicant.py:126
+#: hrms/hr/doctype/job_applicant/job_applicant.py:140
 msgid "Interview Type {0} is only applicable for the Designation {1}"
 msgstr ""
 
@@ -5734,7 +5742,7 @@ msgstr ""
 msgid "Job Openings"
 msgstr ""
 
-#: hrms/hr/doctype/job_opening/job_opening.py:137
+#: hrms/hr/doctype/job_opening/job_opening.py:138
 msgid "Job Openings for the designation {0} are already open or the hiring is complete as per the Staffing Plan {1}"
 msgstr ""
 
@@ -6372,7 +6380,7 @@ msgstr ""
 msgid "Leaves you can avail against a holiday you worked on. You can claim Compensatory Off Leave using Compensatory Leave Request. Click {0} to know more"
 msgstr ""
 
-#: hrms/hr/report/employee_leave_balance/employee_leave_balance.js:47
+#: hrms/hr/report/employee_leave_balance/employee_leave_balance.js:57
 #: hrms/hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:43
 #: hrms/hr/report/leave_ledger/leave_ledger.js:41
 msgctxt "Employee"
@@ -8266,6 +8274,12 @@ msgstr ""
 msgid "Present Records"
 msgstr ""
 
+#. Label of the prevent_duplicate_applicant (Check) field in DocType 'Job
+#. Opening'
+#: hrms/hr/doctype/job_opening/job_opening.json
+msgid "Prevent Duplicate Applications"
+msgstr ""
+
 #. Label of the prevent_self_expense_approval (Check) field in DocType 'HR
 #. Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
@@ -9417,7 +9431,7 @@ msgstr ""
 msgid "Select if any of the days selected for request are holidays"
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.js:237
+#: hrms/hr/doctype/leave_allocation/leave_allocation.js:239
 msgid "Select the Employee for which you want to allocate leaves."
 msgstr ""
 
@@ -9425,15 +9439,15 @@ msgstr ""
 msgid "Select the Employee."
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.js:242
+#: hrms/hr/doctype/leave_allocation/leave_allocation.js:244
 msgid "Select the Leave Type like Sick leave, Privilege Leave, Casual Leave, etc."
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.js:254
+#: hrms/hr/doctype/leave_allocation/leave_allocation.js:256
 msgid "Select the date after which this Leave Allocation will expire."
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.js:249
+#: hrms/hr/doctype/leave_allocation/leave_allocation.js:251
 msgid "Select the date from which this Leave Allocation will be valid."
 msgstr ""
 
@@ -11310,7 +11324,7 @@ msgstr ""
 msgid "Vacancies cannot be lower than the current openings"
 msgstr ""
 
-#: hrms/hr/doctype/job_opening/job_opening.py:142
+#: hrms/hr/doctype/job_opening/job_opening.py:143
 msgid "Vacancies fulfilled"
 msgstr ""
 
@@ -11647,6 +11661,10 @@ msgstr ""
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:466
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:629
 msgid "You do not have permission to complete this action"
+msgstr ""
+
+#: hrms/hr/doctype/job_applicant/job_applicant.py:91
+msgid "You have already applied for this position."
 msgstr ""
 
 #: frontend/src/components/EmployeeAdvanceBalance.vue:26
