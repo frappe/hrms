@@ -1,0 +1,13 @@
+{
+ "creation": "2026-07-27 15:52:03.343667",
+ "docstatus": 0,
+ "doctype": "Dashboard Chart Source",
+ "idx": 0,
+ "modified": "2026-07-28 03:39:32.451760",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Interviewer Load",
+ "owner": "Administrator",
+ "source_name": "Interviewer Load",
+ "timeseries": 0
+}
