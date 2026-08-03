@@ -27,12 +27,20 @@
  ],
  "charts": [
   {
+   "chart": "Recruitment Funnel",
+   "width": "Full"
+  },
+  {
    "chart": "Job Applicant Pipeline",
    "width": "Half"
   },
   {
-   "chart": "Job Applicant Source",
+   "chart": "Source to Hire Conversion",
    "width": "Half"
+  },
+  {
+   "chart": "Open Position Age",
+   "width": "Full"
   },
   {
    "chart": "Job Applicants by Country",
@@ -43,15 +51,7 @@
    "width": "Half"
   },
   {
-   "chart": "Job Offer Status",
-   "width": "Half"
-  },
-  {
-   "chart": "Interview Status",
-   "width": "Half"
-  },
-  {
-   "chart": "Job Application Frequency",
+   "chart": "Interviewer Load",
    "width": "Full"
   },
   {
@@ -61,6 +61,10 @@
   {
    "chart": "Designation Wise Openings",
    "width": "Half"
+  },
+  {
+   "chart": "Job Application Frequency",
+   "width": "Full"
   }
  ],
  "creation": "2022-08-20 21:07:07.337973",
@@ -70,7 +74,7 @@
  "idx": 0,
  "is_default": 0,
  "is_standard": 1,
- "modified": "2022-08-29 23:28:26.765572",
+ "modified": "2026-07-29 12:58:51.186000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Recruitment",
