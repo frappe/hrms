@@ -1,0 +1,13 @@
+{
+ "creation": "2026-07-27 16:03:45.433323",
+ "docstatus": 0,
+ "doctype": "Dashboard Chart Source",
+ "idx": 0,
+ "modified": "2026-07-28 16:07:33.447089",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Recruitment Funnel",
+ "owner": "Administrator",
+ "source_name": "Recruitment Funnel",
+ "timeseries": 0
+}
