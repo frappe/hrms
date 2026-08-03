@@ -506,7 +506,7 @@ def get_attendance_status_for_summarized_view(
 
 	for d in total_days:
 		d = getdate(d)
-		if d.day in attendance_days or (joined_in_current_period and d < joined_date):
+		if d in attendance_days or (joined_in_current_period and d < joined_date):
 			continue
 
 		status = get_holiday_status(d, holidays)
@@ -563,7 +563,7 @@ def get_attendance_summary_and_days(employee: str, filters: Filters) -> tuple[di
 
 	days = (
 		frappe.qb.from_(Attendance)
-		.select(Extract("day", Attendance.attendance_date).as_("day_of_month"))
+		.select(Attendance.attendance_date)
 		.distinct()
 		.where(
 			(Attendance.docstatus == 1)
