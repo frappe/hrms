@@ -890,9 +890,10 @@ class TestPayrollEntry(HRMSTestSuite):
 		frappe.db.delete("Loan")
 		applicant, branch, currency, payroll_payable_account = setup_lending()
 
-		payroll_start_date = get_first_day(getdate())
-		payroll_end_date = get_last_day(getdate())
-		loan_posting_date = get_first_day(add_months(getdate(), -1))
+		today = getdate()
+		payroll_start_date = get_first_day(today)
+		payroll_end_date = get_last_day(today)
+		loan_posting_date = get_first_day(add_months(today, -1))
 		repayment_start_date = add_days(payroll_start_date, 4)
 
 		loan = create_loan(
