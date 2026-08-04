@@ -449,6 +449,27 @@ def setup_notifications():
 		}
 	]
 
+	# Expense Claim
+	response = frappe.read_file(os.path.join(base_path, "expense_claim/expense_claim_email_template.html"))
+	records += [
+		{
+			"doctype": "Email Template",
+			"name": _("Expense Claim Approval Notification"),
+			"response": response,
+			"subject": _("Expense Claim Approval Notification"),
+			"owner": frappe.session.user,
+		}
+	]
+	records += [
+		{
+			"doctype": "Email Template",
+			"name": _("Expense Claim Status Notification"),
+			"response": response,
+			"subject": _("Expense Claim Status Notification"),
+			"owner": frappe.session.user,
+		}
+	]
+
 	# Interview
 	response = frappe.read_file(
 		os.path.join(base_path, "interview/interview_reminder_notification_template.html")
@@ -497,6 +518,9 @@ def update_hr_defaults():
 	hr_settings.emp_created_by = "Naming Series"
 	hr_settings.leave_approval_notification_template = _("Leave Approval Notification")
 	hr_settings.leave_status_notification_template = _("Leave Status Notification")
+
+	hr_settings.expense_claim_approval_notification_template = _("Expense Claim Approval Notification")
+	hr_settings.expense_claim_status_notification_template = _("Expense Claim Status Notification")
 
 	hr_settings.send_interview_reminder = 1
 	hr_settings.interview_reminder_template = _("Interview Reminder")

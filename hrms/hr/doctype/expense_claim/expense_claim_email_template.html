@@ -1,0 +1,34 @@
+<h1>Expense Claim Notification</h1>
+<h3>Details:</h3>
+
+	<table class="table table-bordered small" style="max-width: 500px;">
+		<tr>
+			<td>Employee</td>
+			<td>{{employee_name}}</td>
+		</tr>
+		<tr>
+			<td>Posting Date</td>
+			<td>{{posting_date}}</td>
+		</tr>
+		<tr>
+			<td>Total Claimed Amount</td>
+			<td>{{total_claimed_amount}}</td>
+		</tr>
+		<tr>
+			<td>Total Sanctioned Amount</td>
+			<td>{{total_sanctioned_amount}}</td>
+		</tr>
+		<tr>
+			<td>Approval Status</td>
+			<td>{{approval_status}}</td>
+		</tr>
+		<tr>
+			<td>Status</td>
+			<td>{{status}}</td>
+		</tr>
+	</table>
+
+	{% set doc_link = frappe.utils.get_url_to_form('Expense Claim', name) %}
+
+	<br><br>
+	<a class="btn btn-primary" href="{{ doc_link }}" target="_blank">{{ _('Open Now') }}</a>
