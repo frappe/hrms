@@ -90,18 +90,14 @@ class TestPayrollEntry(HRMSTestSuite):
 		payroll_entry.flags.ignore_mandatory = True
 		payroll_entry.insert(ignore_permissions=True)
 
+		payroll_entry_doc = frappe.get_doc("Payroll Entry", payroll_entry.name)
+
 		try:
 			frappe.set_user("Guest")
 			frappe.clear_cache(user="Guest")
 
 			with self.assertRaises(frappe.PermissionError):
-				frappe.get_doc("Payroll Entry", payroll_entry.name).get_unsubmitted_overtime_slips()
-
-			frappe.set_user("Administrator")
-			payroll_entry_doc = frappe.get_doc("Payroll Entry", payroll_entry.name)
-
-			frappe.set_user("Guest")
-			frappe.clear_cache(user="Guest")
+				payroll_entry_doc.get_unsubmitted_overtime_slips()
 
 			with self.assertRaises(frappe.PermissionError):
 				payroll_entry_doc.get_overtime_slip_details()
