@@ -95,9 +95,16 @@ class TestPayrollEntry(HRMSTestSuite):
 			frappe.clear_cache(user="Guest")
 
 			with self.assertRaises(frappe.PermissionError):
-				guest_payroll_entry = frappe.get_doc("Payroll Entry", payroll_entry.name)
-				guest_payroll_entry.get_unsubmitted_overtime_slips()
-				guest_payroll_entry.get_overtime_slip_details()
+				frappe.get_doc("Payroll Entry", payroll_entry.name).get_unsubmitted_overtime_slips()
+
+			frappe.set_user("Administrator")
+			payroll_entry_doc = frappe.get_doc("Payroll Entry", payroll_entry.name)
+
+			frappe.set_user("Guest")
+			frappe.clear_cache(user="Guest")
+
+			with self.assertRaises(frappe.PermissionError):
+				payroll_entry_doc.get_overtime_slip_details()
 		finally:
 			frappe.set_user("Administrator")
 
