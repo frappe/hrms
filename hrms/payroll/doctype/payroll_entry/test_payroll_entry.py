@@ -4,12 +4,7 @@
 from dateutil.relativedelta import relativedelta
 
 import frappe
-<<<<<<< HEAD
-from frappe.utils import add_days, add_months, cstr, date_diff, flt
-=======
-from frappe.query_builder.functions import Coalesce, Sum
 from frappe.utils import add_days, add_months, cstr, date_diff, flt, get_first_day, get_last_day
->>>>>>> 7aeec66d3 (test(payroll_entry): use relative dates for loan repayment value date test)
 
 import erpnext
 from erpnext.accounts.utils import get_fiscal_year, getdate, nowdate
