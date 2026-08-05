@@ -206,6 +206,18 @@ class TestInterview(HRMSTestSuite):
 
 		self.assertEqual(interview.status, "Cancelled")
 
+	def test_update_job_applicant_status_invalid_input(self):
+		# Ensure passing empty or non-existent job applicant string does not raise AttributeError
+		try:
+			update_job_applicant_status("Accepted", "")
+		except AttributeError:
+			self.fail("update_job_applicant_status raised AttributeError on empty job applicant string")
+
+		try:
+			update_job_applicant_status("Accepted", "NON_EXISTENT_JOB_APPLICANT")
+		except AttributeError:
+			self.fail("update_job_applicant_status raised AttributeError on invalid job applicant ID")
+
 
 def create_interview_and_dependencies(
 	job_applicant,
