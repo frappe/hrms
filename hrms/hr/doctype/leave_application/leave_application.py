@@ -90,6 +90,8 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			self.validate_optional_leave()
 		self.validate_applicable_after()
 		self.validate_for_self_approval()
+		self.validate_leave_approver()
+		self.set_leave_approver_name()
 
 	def on_update(self):
 		if self.status == "Open" and self.docstatus < 1:
@@ -885,6 +887,20 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			if leaves:
 				args.update(dict(from_date=start_date, to_date=self.to_date, leaves=leaves * -1))
 				create_leave_ledger_entry(self, args, submit)
+
+	def validate_leave_approver(self):
+		if (
+			self.docstatus != 2
+			and not self.leave_approver
+			and frappe.db.get_single_value("HR Settings", "leave_approver_mandatory_in_leave_application")
+		):
+			frappe.throw(_("Leave Approver is mandatory"))
+
+	def set_leave_approver_name(self):
+		if not self.leave_approver:
+			self.leave_approver_name = None
+		elif not self.leave_approver_name or self.has_value_changed("leave_approver"):
+			self.leave_approver_name = get_fullname(self.leave_approver)
 
 	def validate_for_self_approval(self):
 		self_leave_approval_not_allowed = frappe.db.get_single_value(
