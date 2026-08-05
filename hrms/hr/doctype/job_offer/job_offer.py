@@ -6,6 +6,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
+from frappe.query_builder.functions import Sum
 from frappe.utils import cint, flt, get_link_to_form
 
 
@@ -64,25 +65,30 @@ def update_job_applicant(status, job_applicant):
 
 
 def get_staffing_plan_detail(designation, company, offer_date):
-	detail = frappe.db.sql(
-		"""
-		SELECT DISTINCT spd.parent,
-			sp.from_date as from_date,
-			sp.to_date as to_date,
+	spd = frappe.qb.DocType("Staffing Plan Detail")
+	sp = frappe.qb.DocType("Staffing Plan")
+
+	detail = (
+		frappe.qb.from_(spd)
+		.inner_join(sp)
+		.on(spd.parent == sp.name)
+		.select(
+			spd.parent,
+			sp.from_date.as_("from_date"),
+			sp.to_date.as_("to_date"),
 			sp.name,
-			sum(spd.vacancies) as vacancies,
-			spd.designation
-		FROM `tabStaffing Plan Detail` spd, `tabStaffing Plan` sp
-		WHERE
-			sp.docstatus=1
-			AND spd.designation=%s
-			AND sp.company=%s
-			AND spd.parent = sp.name
-			AND %s between sp.from_date and sp.to_date
-	""",
-		(designation, company, offer_date),
-		as_dict=1,
-	)
+			Sum(spd.vacancies).as_("vacancies"),
+			spd.designation,
+		)
+		.distinct()
+		.where(
+			(sp.docstatus == 1)
+			& (spd.designation == designation)
+			& (sp.company == company)
+			& (sp.from_date <= offer_date)
+			& (offer_date <= sp.to_date)
+		)
+	).run(as_dict=1)
 
 	return frappe._dict(detail[0]) if (detail and detail[0].parent) else None
 

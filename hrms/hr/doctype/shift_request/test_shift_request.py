@@ -21,10 +21,13 @@ class TestShiftRequest(HRMSTestSuite):
 		setup_shift_type(shift_type="Day Shift")
 		department = frappe.get_value("Employee", "_T-Employee-00001", "department")
 		set_shift_approver(department)
-		approver = frappe.db.sql(
-			"""select approver from `tabDepartment Approver` where parent= %s and parentfield = 'shift_request_approver'""",
-			(department),
-		)[0][0]
+		DepartmentApprover = frappe.qb.DocType("Department Approver")
+		approver = (
+			frappe.qb.from_(DepartmentApprover)
+			.select(DepartmentApprover.approver)
+			.where(DepartmentApprover.parent == department)
+			.where(DepartmentApprover.parentfield == "shift_request_approver")
+		).run()[0][0]
 
 		shift_request = make_shift_request(approver)
 
@@ -64,10 +67,13 @@ class TestShiftRequest(HRMSTestSuite):
 		shift_request.reload()
 		department = frappe.get_value("Employee", "_T-Employee-00001", "department")
 		set_shift_approver(department)
-		department_approver = frappe.db.sql(
-			"""select approver from `tabDepartment Approver` where parent= %s and parentfield = 'shift_request_approver'""",
-			(department),
-		)[0][0]
+		DepartmentApprover = frappe.qb.DocType("Department Approver")
+		department_approver = (
+			frappe.qb.from_(DepartmentApprover)
+			.select(DepartmentApprover.approver)
+			.where(DepartmentApprover.parent == department)
+			.where(DepartmentApprover.parentfield == "shift_request_approver")
+		).run()[0][0]
 		shift_request.approver = department_approver
 		shift_request.save()
 		self.assertTrue(shift_request.name not in frappe.share.get_shared("Shift Request", user))
