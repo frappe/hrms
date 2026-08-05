@@ -1899,6 +1899,37 @@ class TestSalarySlip(HRMSTestSuite):
 
 				self.assertEqual(earning.default_amount, 19000)
 
+	def test_ctc_in_statistical_component_formula(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+			create_salary_structure_assignment,
+		)
+
+		emp = make_employee(
+			"test_ctc_statistical_component@salary.com",
+			company="_Test Company",
+			ctc=15000,
+		)
+
+		salary_structure_doc = make_salary_structure_for_statistical_component(
+			"_Test Company", sc_formula="ctc"
+		)
+
+		create_salary_structure_assignment(
+			employee=emp,
+			salary_structure=salary_structure_doc.name,
+			company="_Test Company",
+			currency="INR",
+			base=40000,
+		)
+
+		salary_slip = make_salary_slip(salary_structure_doc.name, employee=emp, posting_date=nowdate())
+
+		for earning in salary_slip.earnings:
+			if earning.salary_component == "Leave Travel Allowance":
+				# SC (statistical) = ctc = 15000
+				# LTA = base - SC = 40000 - 15000 = 25000
+				self.assertEqual(earning.amount, 25000)
+
 	def test_variable_tax_component(self):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
@@ -3041,7 +3072,7 @@ def create_additional_salary_for_income_tax(employee, payroll_period, company):
 	add_sal.submit()
 
 
-def make_salary_structure_for_statistical_component(company):
+def make_salary_structure_for_statistical_component(company, sc_formula="base - BSC - HRAC"):
 	earnings = [
 		{
 			"salary_component": "Basic Component",
@@ -3055,7 +3086,7 @@ def make_salary_structure_for_statistical_component(company):
 			"salary_component": "Statistical Component",
 			"abbr": "SC",
 			"type": "Earning",
-			"formula": "base - BSC - HRAC",
+			"formula": sc_formula,
 			"statistical_component": 1,
 			"amount_based_on_formula": 1,
 			"depends_on_payment_days": 0,
