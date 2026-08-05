@@ -50,6 +50,7 @@ from hrms.tests.utils import HRMSTestSuite
 class TestLeaveApplication(HRMSTestSuite):
 	def setUp(self):
 		frappe.set_user("Administrator")
+		frappe.db.set_single_value("HR Settings", "leave_approver_mandatory_in_leave_application", 0)
 		employee = get_employee()
 		self.leave_application = frappe.get_value(
 			"Leave Application",
@@ -909,6 +910,26 @@ class TestLeaveApplication(HRMSTestSuite):
 		employee.reload()
 		employee.leave_approver = ""
 		employee.save()
+
+	def test_leave_approver_mandatory(self):
+		frappe.db.set_single_value("HR Settings", "leave_approver_mandatory_in_leave_application", 1)
+
+		employee = get_employee()
+		application = frappe.get_doc(
+			doctype="Leave Application",
+			employee=employee.name,
+			leave_type="_Test Leave Type",
+			from_date="2014-06-01",
+			to_date="2014-06-02",
+			posting_date="2014-05-30",
+			description="_Test Reason",
+			company="_Test Company",
+		)
+		self.assertRaises(frappe.ValidationError, application.insert)
+
+		application.leave_approver = "test@example.com"
+		application.insert()
+		self.assertEqual(application.leave_approver_name, frappe.utils.get_fullname("test@example.com"))
 
 	def test_self_leave_approval_allowed(self):
 		frappe.db.set_single_value("HR Settings", "prevent_self_leave_approval", 0)
