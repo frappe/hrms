@@ -4,6 +4,7 @@
 from dateutil.relativedelta import relativedelta
 
 import frappe
+from frappe.query_builder.functions import Coalesce, Sum
 from frappe.utils import add_days, add_months, cstr, date_diff, flt, get_first_day, get_last_day
 
 import erpnext
@@ -110,19 +111,19 @@ class TestPayrollEntry(HRMSTestSuite):
 			self.assertEqual(salary_slip.base_gross_pay, payroll_je_doc.total_debit)
 			self.assertEqual(salary_slip.base_gross_pay, payroll_je_doc.total_credit)
 
-		payment_entry = frappe.db.sql(
-			"""
-			select
-				ifnull(sum(je.total_debit),0) as total_debit,
-				ifnull(sum(je.total_credit),0) as total_credit
-			from `tabJournal Entry` je, `tabJournal Entry Account` jea
-			where je.name = jea.parent
-				and (je.voucher_type = 'Bank Entry' or je.voucher_type = 'Cash Entry')
-				and jea.reference_name = %s
-			""",
-			payroll_entry.name,
-			as_dict=1,
-		)
+		je = frappe.qb.DocType("Journal Entry")
+		jea = frappe.qb.DocType("Journal Entry Account")
+		payment_entry = (
+			frappe.qb.from_(je)
+			.from_(jea)
+			.select(
+				Coalesce(Sum(je.total_debit), 0).as_("total_debit"),
+				Coalesce(Sum(je.total_credit), 0).as_("total_credit"),
+			)
+			.where(je.name == jea.parent)
+			.where((je.voucher_type == "Bank Entry") | (je.voucher_type == "Cash Entry"))
+			.where(jea.reference_name == payroll_entry.name)
+		).run(as_dict=1)
 		self.assertEqual(salary_slip.base_net_pay, payment_entry[0].total_debit)
 		self.assertEqual(salary_slip.base_net_pay, payment_entry[0].total_credit)
 
@@ -154,15 +155,14 @@ class TestPayrollEntry(HRMSTestSuite):
 			cost_center="Main - _TC",
 		)
 		je = frappe.db.get_value("Salary Slip", {"payroll_entry": pe.name}, "journal_entry")
-		je_entries = frappe.db.sql(
-			"""
-			select account, cost_center, debit, credit
-			from `tabJournal Entry Account`
-			where parent=%s
-			order by account, cost_center
-		""",
-			je,
-		)
+		jea = frappe.qb.DocType("Journal Entry Account")
+		je_entries = (
+			frappe.qb.from_(jea)
+			.select(jea.account, jea.cost_center, jea.debit, jea.credit)
+			.where(jea.parent == je)
+			.orderby(jea.account)
+			.orderby(jea.cost_center)
+		).run()
 		expected_je = (
 			("_Test Payroll Payable - _TC", "Main - _TC", 0.0, 155600.0),
 			("Salary - _TC", "_Test Cost Center - _TC", 124800.0, 0.0),
@@ -857,17 +857,18 @@ class TestPayrollEntry(HRMSTestSuite):
 		payroll_entry.make_bank_entry()
 		submit_bank_entry(payroll_entry.name)
 
-		bank_entry = frappe.db.sql(
-			"""
-			SELECT je.total_debit, je.total_credit
-			FROM `tabJournal Entry` je
-			INNER JOIN `tabJournal Entry Account` jea ON je.name = jea.parent
-			WHERE (je.voucher_type = 'Bank Entry' or je.voucher_type = 'Cash Entry') AND jea.reference_type = 'Payroll Entry' AND jea.reference_name = %s
-			LIMIT 1
-			""",
-			payroll_entry.name,
-			as_dict=True,
-		)
+		je = frappe.qb.DocType("Journal Entry")
+		jea = frappe.qb.DocType("Journal Entry Account")
+		bank_entry = (
+			frappe.qb.from_(je)
+			.inner_join(jea)
+			.on(je.name == jea.parent)
+			.select(je.total_debit, je.total_credit)
+			.where((je.voucher_type == "Bank Entry") | (je.voucher_type == "Cash Entry"))
+			.where(jea.reference_type == "Payroll Entry")
+			.where(jea.reference_name == payroll_entry.name)
+			.limit(1)
+		).run(as_dict=True)
 
 		total_debit = bank_entry[0].get("total_debit", 0)
 		total_credit = bank_entry[0].get("total_credit", 0)

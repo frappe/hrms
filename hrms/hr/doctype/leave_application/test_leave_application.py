@@ -65,10 +65,10 @@ class TestLeaveApplication(HRMSTestSuite):
 		)
 
 	def _clear_roles(self):
-		frappe.db.sql(
-			"""delete from `tabHas Role` where parent in
-			('test@example.com', 'test1@example.com', 'test2@example.com')"""
-		)
+		has_role = frappe.qb.DocType("Has Role")
+		frappe.qb.from_(has_role).delete().where(
+			has_role.parent.isin(["test@example.com", "test1@example.com", "test2@example.com"])
+		).run()
 
 	def get_application(self, doc):
 		application = frappe.copy_doc(frappe.get_doc("Leave Application", doc))
