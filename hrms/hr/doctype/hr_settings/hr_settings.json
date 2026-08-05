@@ -38,6 +38,7 @@
   "expense_approver_mandatory_in_expense_claim",
   "prevent_self_expense_approval",
   "unlink_payment_on_cancellation_of_employee_advance",
+  "enable_multi_currency_expense_claim",
   "shift_and_attendance_tab",
   "shift_settings_section",
   "allow_multiple_shift_assignments",
@@ -303,6 +304,13 @@
    "fieldname": "unlink_payment_on_cancellation_of_employee_advance",
    "fieldtype": "Check",
    "label": " Unlink Payment on Cancellation of Employee Advance"
+  },
+  {
+   "default": "0",
+   "description": "Allow expense claims to be raised in a currency other than the company currency. When disabled, all expense claims use the company currency.",
+   "fieldname": "enable_multi_currency_expense_claim",
+   "fieldtype": "Check",
+   "label": "Enable Multi-Currency Expense Claim"
   },
   {
    "default": "0",
