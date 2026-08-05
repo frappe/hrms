@@ -227,6 +227,7 @@ class BootStrapTestData:
 				"leave_type": "_Test Leave Type",
 				"posting_date": "2013-01-02",
 				"to_date": "2013-05-05",
+				"leave_approver": "Administrator",
 			},
 			{
 				"company": "_Test Company",
@@ -237,6 +238,7 @@ class BootStrapTestData:
 				"leave_type": "_Test Leave Type",
 				"posting_date": "2013-01-02",
 				"to_date": "2013-05-05",
+				"leave_approver": "Administrator",
 			},
 			{
 				"company": "_Test Company",
@@ -247,6 +249,7 @@ class BootStrapTestData:
 				"leave_type": "_Test Leave Type LWP",
 				"posting_date": "2013-01-02",
 				"to_date": "2013-01-15",
+				"leave_approver": "Administrator",
 			},
 		]
 		self.make_records(["employee", "from_date"], records)
