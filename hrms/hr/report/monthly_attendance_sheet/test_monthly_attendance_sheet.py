@@ -6,7 +6,6 @@ from frappe.utils import add_days, get_year_ending, get_year_start, getdate
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
-from hrms.hr.doctype.attendance_request.test_attendance_request import create_attendance_request
 from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
 	assign_holiday_list,
 	create_holiday_list_assignment,
@@ -118,40 +117,6 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 			== row_without_shift[date_key(add_days(previous_month_first, 2))]
 			== "L"
 		)
-
-	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
-	def test_on_duty_in_detailed_view(self):
-		previous_month_first = get_first_day_for_prev_month()
-
-		# attendance marked via an "On Duty" attendance request
-		create_attendance_request(
-			employee=self.employee,
-			from_date=previous_month_first,
-			to_date=previous_month_first,
-			reason="On Duty",
-			include_holidays=1,
-		)
-		# plain present attendance, not linked to any attendance request
-		mark_attendance(self.employee, previous_month_first + relativedelta(days=1), "Present")
-
-		filters = frappe._dict(
-			{
-				"month": previous_month_first.month,
-				"year": previous_month_first.year,
-				"company": self.company,
-				"filter_based_on": self.filter_based_on,
-			}
-		)
-		report = execute(filters=filters)
-
-		row = report[1][0]
-		self.assertEqual(row[date_key(previous_month_first)], "OD")  # on duty on the 1st day of the month
-		self.assertEqual(row[date_key(add_days(previous_month_first, 1))], "P")  # present on the 2nd day
-
-		# on duty should still be counted as present in the chart
-		present = report[3]["data"]["datasets"][1]["values"]
-		self.assertEqual(present[0], 1)
-		self.assertEqual(present[1], 1)
 
 	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_single_shift_with_leaves_in_detailed_view(self):

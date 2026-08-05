@@ -30,7 +30,6 @@ status_map = {
 	"Half Day/Other Half Absent": "HD/A",
 	"Half Day/Other Half Present": "HD/P",
 	"Work From Home": "WFH",
-	"On Duty": "OD",
 	"On Leave": "L",
 	"Holiday": "H",
 	"Weekly Off": "WO",
@@ -89,7 +88,6 @@ def get_message() -> str:
 		"red",
 		"orange",
 		"#914EE3",
-		"green",
 		"green",
 		"#3187D8",
 		"#878787",
@@ -321,7 +319,6 @@ def get_attendance_map(filters: Filters) -> dict:
 def get_attendance_records(filters: Filters) -> list[dict]:
 	Attendance = frappe.qb.DocType("Attendance")
 	Employee = frappe.qb.DocType("Employee")
-	AttendanceRequest = frappe.qb.DocType("Attendance Request")
 	attendance_date_condition = get_date_condition(Attendance.attendance_date, filters)
 	status = (
 		frappe.qb.terms.Case()
@@ -333,18 +330,10 @@ def get_attendance_records(filters: Filters) -> list[dict]:
 			((Attendance.status == "Half Day") & (Attendance.half_day_status == "Absent")),
 			"Half Day/Other Half Absent",
 		)
-		# "On Duty" is not an attendance status, it is only available as an
-		# attendance request reason that marks the employee as present
-		.when(
-			((Attendance.status == "Present") & (AttendanceRequest.reason == "On Duty")),
-			"On Duty",
-		)
 		.else_(Attendance.status)
 	)
 	query = (
 		frappe.qb.from_(Attendance)
-		.left_join(AttendanceRequest)
-		.on(Attendance.attendance_request == AttendanceRequest.name)
 		.select(
 			Attendance.employee,
 			Attendance.attendance_date,
@@ -787,7 +776,7 @@ def get_chart_data(attendance_map: dict, filters: Filters) -> dict:
 					break
 				elif attendance_on_day == "Absent":
 					total_absent_on_day += 1
-				elif attendance_on_day in ["Present", "Work From Home", "On Duty"]:
+				elif attendance_on_day in ["Present", "Work From Home"]:
 					total_present_on_day += 1
 				elif attendance_on_day == "Half Day":
 					total_present_on_day += 0.5
