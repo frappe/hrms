@@ -132,9 +132,6 @@ def get_timeline_data(doctype: str, name: str) -> dict:
 	open_count = get_open_count(doctype, name)
 	out["count"] = open_count["count"]
 
-<<<<<<< HEAD
-	from frappe.query_builder import Interval
-	from frappe.query_builder.functions import Count, CurDate
 	from frappe.query_builder.terms import Function
 
 	Attendance = frappe.qb.DocType("Attendance")
@@ -154,17 +151,6 @@ def get_timeline_data(doctype: str, name: str) -> dict:
 			)
 			.groupby(Attendance.attendance_date)
 		).run()
-=======
-	Attendance = frappe.qb.DocType("Attendance")
-	timeline_data = dict(
-		frappe.qb.from_(Attendance)
-		.select(UnixTimestamp(Attendance.attendance_date), Count("*"))
-		.where(Attendance.employee == name)
-		.where(Attendance.attendance_date > (CurDate() - Interval(years=1)))
-		.where(Attendance.status.isin(["Present", "Half Day"]))
-		.groupby(Attendance.attendance_date)
-		.run()
->>>>>>> 286eba0cc (fix: Re-write queries using query builder)
 	)
 
 	out["timeline_data"] = timeline_data

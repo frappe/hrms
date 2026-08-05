@@ -113,27 +113,15 @@ def get_period_dates(filters):
 
 
 def get_service_expense(logname):
-<<<<<<< HEAD
-	from frappe.query_builder.functions import Sum
-
-=======
->>>>>>> 286eba0cc (fix: Re-write queries using query builder)
 	log = frappe.qb.DocType("Vehicle Log")
 	service = frappe.qb.DocType("Vehicle Service")
 
 	expense_amount = (
 		frappe.qb.from_(log)
-<<<<<<< HEAD
 		.inner_join(service)
 		.on(service.parent == log.name)
 		.select(Sum(service.expense_amount))
 		.where((log.name == logname) & (log.docstatus == 1))
-=======
-		.from_(service)
-		.select(Sum(service.expense_amount))
-		.where(service.parent == log.name)
-		.where(log.name == logname)
->>>>>>> 286eba0cc (fix: Re-write queries using query builder)
 	).run()
 
 	return flt(expense_amount[0][0]) if expense_amount else 0.0

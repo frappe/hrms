@@ -81,7 +81,6 @@ def get_approvers(doctype: str, txt: str, searchfield: str, start: int, page_len
 		field_name = "Shift Request Approver"
 	if department_list:
 		User = frappe.qb.DocType("User")
-<<<<<<< HEAD
 		DeptApprover = frappe.qb.DocType("Department Approver")
 
 		for d in department_list:
@@ -95,19 +94,6 @@ def get_approvers(doctype: str, txt: str, searchfield: str, start: int, page_len
 					& (DeptApprover.parentfield == parentfield)
 					& (User.name.like(f"%{txt}%"))
 					& (User.enabled == 1)
-=======
-		Approver = frappe.qb.DocType("Department Approver")
-		for d in department_list:
-			approvers += (
-				frappe.qb.from_(User)
-				.from_(Approver)
-				.select(User.name, User.first_name, User.last_name)
-				.where(
-					(Approver.parent == d)
-					& (User.name.like("%" + txt + "%"))
-					& (Approver.parentfield == parentfield)
-					& (Approver.approver == User.name)
->>>>>>> 286eba0cc (fix: Re-write queries using query builder)
 				)
 			).run(as_list=True)
 
