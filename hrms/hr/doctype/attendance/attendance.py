@@ -38,6 +38,10 @@ class OverlappingShiftAttendanceError(frappe.ValidationError):
 	pass
 
 
+class FutureAttendanceError(frappe.ValidationError):
+	pass
+
+
 class Attendance(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
@@ -92,6 +96,8 @@ class Attendance(Document):
 	def validate_attendance_date(self):
 		date_of_joining = frappe.db.get_value("Employee", self.employee, "date_of_joining")
 
+		self.validate_future_attendance_date()
+
 		if date_of_joining and getdate(self.attendance_date) < getdate(date_of_joining):
 			frappe.throw(
 				_("Attendance date {0} can not be less than employee {1}'s joining date: {2}").format(
@@ -99,6 +105,19 @@ class Attendance(Document):
 					frappe.bold(self.employee),
 					frappe.bold(format_date(date_of_joining)),
 				)
+			)
+
+	def validate_future_attendance_date(self):
+		if self.leave_application or self.attendance_request or self.status == "On Leave":
+			return
+
+		if getdate(self.attendance_date) > getdate():
+			frappe.throw(
+				_("Attendance can not be marked for the future date {0}").format(
+					frappe.bold(format_date(self.attendance_date))
+				),
+				title=_("Future Attendance"),
+				exc=FutureAttendanceError,
 			)
 
 	def validate_duplicate_record(self):
@@ -387,7 +406,11 @@ def mark_bulk_attendance(data: str | dict):
 		return
 	today = getdate()
 	if any(getdate(d) > today for d in data.unmarked_days):
-		frappe.throw(_("Future dates not allowed"))
+		frappe.throw(
+			_("Attendance can not be marked for future dates"),
+			title=_("Future Attendance"),
+			exc=FutureAttendanceError,
+		)
 	if len(data.unmarked_days) > 10 or frappe.flags.test_bg_job:
 		job_id = f"process_bulk_attendance_for_employee_{data.employee}"
 		job = frappe.enqueue(

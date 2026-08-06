@@ -4,6 +4,10 @@ frappe.ui.form.on("Employee Attendance Tool", {
 		frm.trigger("reset_tool_actions");
 		hide_field("select_employees_section");
 		hide_field("marked_attendance_section");
+
+		frm.fields_dict.date.datepicker?.update({
+			maxDate: frappe.datetime.str_to_obj(frappe.datetime.get_today()),
+		});
 	},
 
 	onload(frm) {
