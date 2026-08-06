@@ -1,5 +1,5 @@
 {
- "applies_to_doctype": "Employee Checkin",
+ "applies_to_doctype": "Expense Claim",
  "creation": "2026-07-16 00:00:00.000000",
  "docstatus": 0,
  "doctype": "DocType Settings Map",
@@ -8,21 +8,17 @@
  "is_standard": 1,
  "mappings": [
   {
-   "setting_field": "allow_employee_checkin_from_mobile_app",
+   "setting_field": "expense_approver_mandatory_in_expense_claim",
    "settings_doctype": "HR Settings"
   },
   {
-   "setting_field": "allow_geolocation_tracking",
-   "settings_doctype": "HR Settings"
-  },
-  {
-   "setting_field": "standard_working_hours",
+   "setting_field": "prevent_self_expense_approval",
    "settings_doctype": "HR Settings"
   }
  ],
  "modified": "2026-07-16 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
- "name": "Employee Checkin (Standard)",
+ "name": "Expense Claim - HR",
  "owner": "Administrator"
 }
