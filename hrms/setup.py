@@ -1,7 +1,9 @@
 import os
+from collections import defaultdict
 
 import frappe
 from frappe import N_ as _
+from frappe.custom import hide_customizations, unhide_customizations
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.permissions import add_permission, update_permission_property
@@ -27,6 +29,40 @@ def before_uninstall():
 	delete_custom_fields(get_custom_fields())
 	delete_custom_fields(get_salary_slip_loan_fields())
 	delete_company_fixtures()
+
+
+def before_disable():
+	hide_customizations(get_customizations())
+
+
+def after_enable():
+	unhide_customizations(get_customizations())
+
+
+def get_customizations():
+	field_sources = [get_custom_fields()]
+	if "lending" in frappe.get_installed_apps():
+		field_sources.append(get_salary_slip_loan_fields())
+
+	fieldnames = defaultdict(list)
+	for custom_fields in field_sources:
+		for doctype, fields in custom_fields.items():
+			fieldnames[doctype].extend(field["fieldname"] for field in fields)
+
+	return {
+		"Custom Field": [
+			{"dt": doctype, "fieldname": ("in", fields)} for doctype, fields in fieldnames.items()
+		],
+		"Property Setter": [
+			{"doc_type": "Salary Slip", "field_name": "rounded_total", "property": "hidden"},
+			{"doc_type": "Salary Slip", "field_name": "rounded_total", "property": "print_hide"},
+		],
+		"Custom DocPerm": [
+			{"parent": doctype, "role": role}
+			for role, permissions in HR_ROLE_PERMISSIONS.items()
+			for doctype in permissions
+		],
+	}
 
 
 def after_app_install(app_name):
@@ -853,30 +889,32 @@ def get_salary_slip_loan_fields():
 	}
 
 
-# Add default permission for hr roles
-def add_default_hr_permissions():
-	# Project and Task perms are needed for the Employee Onboarding / Separation flow,
-	# which creates a Project and Tasks and assigns them to users. assign_to.add() does a
-	# read check on Task, and on_cancel deletes the Project and its Tasks.
-	project_task_perms = {
-		"Project": {"read": 1, "write": 1, "create": 1, "delete": 1},
-		"Task": {"read": 1, "write": 1, "create": 1, "delete": 1},
-	}
-	role_permissions = {
-		"HR User": {
-			"Role": {"read": 1},
-			"Currency": {"read": 1},
-			**project_task_perms,
-		},
-		"HR Manager": {
-			"Role": {"read": 1},
-			"Currency": {"read": 1},
-			"Email Account": {"read": 1},
-			**project_task_perms,
-		},
-	}
+# Project and Task perms are needed for the Employee Onboarding / Separation flow, which
+# creates a Project and Tasks and assigns them to users. assign_to.add() does a read check
+# on Task, and on_cancel deletes the Project and its Tasks.
+_PROJECT_TASK_PERMS = {
+	"Project": {"read": 1, "write": 1, "create": 1, "delete": 1},
+	"Task": {"read": 1, "write": 1, "create": 1, "delete": 1},
+}
 
-	for role, permissions in role_permissions.items():
+# permissions this app grants on other apps' doctypes
+HR_ROLE_PERMISSIONS = {
+	"HR User": {
+		"Role": {"read": 1},
+		"Currency": {"read": 1},
+		**_PROJECT_TASK_PERMS,
+	},
+	"HR Manager": {
+		"Role": {"read": 1},
+		"Currency": {"read": 1},
+		"Email Account": {"read": 1},
+		**_PROJECT_TASK_PERMS,
+	},
+}
+
+
+def add_default_hr_permissions():
+	for role, permissions in HR_ROLE_PERMISSIONS.items():
 		for doctype, ptypes in permissions.items():
 			add_permission(doctype, role)
 
