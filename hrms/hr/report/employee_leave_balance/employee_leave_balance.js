@@ -84,10 +84,11 @@ frappe.query_reports["Employee Leave Balance"] = {
 			},
 		});
 
-		const is_restricted_to_specific_employees = frappe.defaults.get_user_permissions()["Employee"];
+		const is_restricted_to_specific_employees =
+			frappe.defaults.get_user_permissions()["Employee"];
 		if (is_restricted_to_specific_employees) {
 			hrms.get_current_employee().then((employee) => {
-				if (employee) {
+				if (employee && !frappe.query_report.get_filter_value("employee")) {
 					frappe.query_report.set_filter_value("employee", employee);
 				}
 			});
