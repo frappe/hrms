@@ -3,7 +3,6 @@ from collections import defaultdict
 
 import frappe
 from frappe import N_ as _
-from frappe.custom import hide_customizations, unhide_customizations
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.permissions import add_permission, update_permission_property
@@ -32,10 +31,14 @@ def before_uninstall():
 
 
 def before_disable():
+	from frappe.custom import hide_customizations
+
 	hide_customizations(get_customizations())
 
 
 def after_enable():
+	from frappe.custom import unhide_customizations
+
 	unhide_customizations(get_customizations())
 
 
