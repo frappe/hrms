@@ -145,24 +145,23 @@ def get_leave_types() -> list[str]:
 
 
 def get_employees(filters: Filters) -> list[dict]:
-	Employee = frappe.qb.DocType("Employee")
-	query = frappe.qb.from_(Employee).select(
-		Employee.name,
-		Employee.employee_name,
-		Employee.department,
-	)
+	conditions = {}
 
 	for field in ["company", "department"]:
 		if filters.get(field):
-			query = query.where(getattr(Employee, field) == filters.get(field))
+			conditions[field] = filters.get(field)
 
 	if filters.get("employee"):
-		query = query.where(Employee.name == filters.get("employee"))
+		conditions["name"] = filters.get("employee")
 
 	if filters.get("employee_status"):
-		query = query.where(Employee.status == filters.get("employee_status"))
+		conditions["status"] = filters.get("employee_status")
 
-	return query.run(as_dict=True)
+	return frappe.get_list(
+		"Employee",
+		filters=conditions,
+		fields=["name", "employee_name", "department"],
+	)
 
 
 def get_opening_balance(
