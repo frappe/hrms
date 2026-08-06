@@ -1,5 +1,5 @@
 {
- "applies_to_doctype": "Shift Assignment",
+ "applies_to_doctype": "Employee",
  "creation": "2026-07-16 00:00:00.000000",
  "docstatus": 0,
  "doctype": "DocType Settings Map",
@@ -8,13 +8,17 @@
  "is_standard": 1,
  "mappings": [
   {
-   "setting_field": "allow_multiple_shift_assignments",
+   "setting_field": "retirement_age",
+   "settings_doctype": "HR Settings"
+  },
+  {
+   "setting_field": "emp_created_by",
    "settings_doctype": "HR Settings"
   }
  ],
  "modified": "2026-07-16 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
- "name": "Shift Assignment (Standard)",
+ "name": "Employee - HR",
  "owner": "Administrator"
 }

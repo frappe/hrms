@@ -1,5 +1,5 @@
 {
- "applies_to_doctype": "Job Offer",
+ "applies_to_doctype": "Overtime Slip",
  "creation": "2026-07-16 00:00:00.000000",
  "docstatus": 0,
  "doctype": "DocType Settings Map",
@@ -8,13 +8,17 @@
  "is_standard": 1,
  "mappings": [
   {
-   "setting_field": "check_vacancies",
+   "setting_field": "create_overtime_slip",
+   "settings_doctype": "Payroll Settings"
+  },
+  {
+   "setting_field": "standard_working_hours",
    "settings_doctype": "HR Settings"
   }
  ],
  "modified": "2026-07-16 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
- "name": "Job Offer (Standard)",
+ "name": "Overtime Slip - HR",
  "owner": "Administrator"
 }
