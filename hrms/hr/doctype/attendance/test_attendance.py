@@ -21,6 +21,7 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.attendance.attendance import (
 	DuplicateAttendanceError,
+	FutureAttendanceError,
 	OverlappingShiftAttendanceError,
 	get_events,
 	get_unmarked_days,
@@ -148,6 +149,57 @@ class TestAttendance(HRMSTestSuite):
 			"Attendance", {"employee": employee, "attendance_date": date, "status": "Absent"}
 		)
 		self.assertEqual(attendance, fetch_attendance)
+
+	def test_future_attendance_not_allowed(self):
+		employee = make_employee("test_future_attendance@example.com", company="_Test Company")
+
+		attendance = frappe.get_doc(
+			{
+				"doctype": "Attendance",
+				"employee": employee,
+				"attendance_date": add_days(getdate(), 1),
+				"status": "Present",
+				"company": "_Test Company",
+			}
+		)
+
+		self.assertRaises(FutureAttendanceError, attendance.insert)
+
+	def test_future_attendance_allowed_via_attendance_request(self):
+		"Attendance requests (WFH/On Duty) can be raised in advance"
+		from hrms.hr.doctype.attendance_request.test_attendance_request import create_attendance_request
+
+		employee = make_employee("test_future_attendance_request@example.com", company="_Test Company")
+		next_day = add_days(getdate(), 1)
+
+		attendance_request = create_attendance_request(
+			employee=employee,
+			reason="Work From Home",
+			company="_Test Company",
+			from_date=next_day,
+			to_date=next_day,
+		)
+
+		attendance = frappe.get_value(
+			"Attendance",
+			{"attendance_request": attendance_request.name, "docstatus": 1},
+			["attendance_date", "status"],
+			as_dict=True,
+		)
+		self.assertEqual(attendance.attendance_date, next_day)
+		self.assertEqual(attendance.status, "Work From Home")
+
+	def test_bulk_attendance_marking_for_future_dates(self):
+		employee = make_employee("test_bulk_future_attendance@example.com", company="_Test Company")
+		data = frappe._dict(
+			unmarked_days=[getdate(), add_days(getdate(), 1)],
+			employee=employee,
+			status="Present",
+			shift="",
+		)
+
+		self.assertRaises(FutureAttendanceError, mark_bulk_attendance, data)
+		self.assertFalse(frappe.db.exists("Attendance", {"employee": employee}))
 
 	def test_unmarked_days(self):
 		first_sunday = get_first_sunday(self.holiday_list, for_date=get_last_day(add_months(getdate(), -1)))
