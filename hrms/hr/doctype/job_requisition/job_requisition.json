@@ -47,6 +47,7 @@
    "fieldtype": "Int",
    "in_list_view": 1,
    "label": "No of. Positions",
+   "non_negative": 1,
    "reqd": 1
   },
   {
@@ -54,6 +55,7 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Expected Compensation",
+   "non_negative": 1,
    "options": "Company:company:default_currency",
    "reqd": 1
   },
@@ -202,7 +204,7 @@
    "link_fieldname": "job_requisition"
   }
  ],
- "modified": "2026-04-09 18:15:35.113740",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Requisition",

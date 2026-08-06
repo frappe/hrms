@@ -139,6 +139,7 @@
    "fieldname": "lower_range",
    "fieldtype": "Currency",
    "label": "Lower Range",
+   "non_negative": 1,
    "options": "currency",
    "precision": "0"
   },
@@ -146,6 +147,7 @@
    "fieldname": "upper_range",
    "fieldtype": "Currency",
    "label": "Upper Range",
+   "non_negative": 1,
    "options": "currency",
    "precision": "0"
   },
@@ -214,7 +216,7 @@
  "idx": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-14 11:35:48.142348",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Applicant",

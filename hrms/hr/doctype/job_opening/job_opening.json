@@ -150,6 +150,7 @@
    "fieldname": "lower_range",
    "fieldtype": "Currency",
    "label": "Lower Range",
+   "non_negative": 1,
    "options": "currency",
    "precision": "0"
   },
@@ -157,6 +158,7 @@
    "fieldname": "upper_range",
    "fieldtype": "Currency",
    "label": "Upper Range",
+   "non_negative": 1,
    "options": "currency",
    "precision": "0"
   },
@@ -284,7 +286,7 @@
  "idx": 1,
  "is_published_field": "publish",
  "links": [],
- "modified": "2026-07-20 18:22:48.627602",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
