@@ -489,18 +489,19 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 		self.assertEqual(row["total_early_exits"], 1)
 
 	def test_detailed_view_with_date_range_filter(self):
-		today = getdate()
-		mark_attendance(self.employee, today, "Absent", "Day Shift")
-		mark_attendance(self.employee, today + relativedelta(days=1), "Present", "Day Shift")
+		# attendance can not be marked for future dates
+		first_date = add_days(getdate(), -3)
+		mark_attendance(self.employee, first_date, "Absent", "Day Shift")
+		mark_attendance(self.employee, first_date + relativedelta(days=1), "Present", "Day Shift")
 
 		# attendance without shift
-		mark_attendance(self.employee, today + relativedelta(days=2), "On Leave")
-		mark_attendance(self.employee, today + relativedelta(days=3), "Present")
+		mark_attendance(self.employee, first_date + relativedelta(days=2), "On Leave")
+		mark_attendance(self.employee, first_date + relativedelta(days=3), "Present")
 		filters = frappe._dict(
 			{
 				"filter_based_on": "Date Range",
-				"start_date": add_days(today, -1),
-				"end_date": add_days(today, 30),
+				"start_date": add_days(first_date, -1),
+				"end_date": add_days(first_date, 30),
 				"company": self.company,
 			}
 		)
@@ -509,16 +510,16 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 		row_without_shift = report[1][1]
 
 		self.assertEqual(day_shift_row["shift"], "Day Shift")
-		self.assertEqual(day_shift_row[date_key(today)], "A")  # absent on the 1st day of the month
-		self.assertEqual(day_shift_row[date_key(add_days(today, 1))], "P")  # present on the 2nd day
+		self.assertEqual(day_shift_row[date_key(first_date)], "A")  # absent on the 1st day of the month
+		self.assertEqual(day_shift_row[date_key(add_days(first_date, 1))], "P")  # present on the 2nd day
 
 		self.assertEqual(row_without_shift["shift"], "")
-		self.assertEqual(row_without_shift[date_key(add_days(today, 3))], "P")  # present on the 4th day
+		self.assertEqual(row_without_shift[date_key(add_days(first_date, 3))], "P")  # present on the 4th day
 
 		# leave should be shown against every shift
 		self.assertTrue(
-			day_shift_row[date_key(add_days(today, 2))]
-			== row_without_shift[date_key(add_days(today, 2))]
+			day_shift_row[date_key(add_days(first_date, 2))]
+			== row_without_shift[date_key(add_days(first_date, 2))]
 			== "L"
 		)
 
@@ -728,18 +729,19 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 		self.assertEqual(row["total_holidays"], 2)
 
 	def test_detailed_view_with_date_range_and_group_by_filter(self):
-		today = getdate()
-		mark_attendance(self.employee, today, "Absent", "Day Shift")
-		mark_attendance(self.employee, today + relativedelta(days=1), "Present", "Day Shift")
+		# attendance can not be marked for future dates
+		first_date = add_days(getdate(), -3)
+		mark_attendance(self.employee, first_date, "Absent", "Day Shift")
+		mark_attendance(self.employee, first_date + relativedelta(days=1), "Present", "Day Shift")
 
 		# attendance without shift
-		mark_attendance(self.employee, today + relativedelta(days=2), "On Leave")
-		mark_attendance(self.employee, today + relativedelta(days=3), "Present")
+		mark_attendance(self.employee, first_date + relativedelta(days=2), "On Leave")
+		mark_attendance(self.employee, first_date + relativedelta(days=3), "Present")
 		filters = frappe._dict(
 			{
 				"filter_based_on": "Date Range",
-				"start_date": add_days(today, -1),
-				"end_date": add_days(today, 30),
+				"start_date": add_days(first_date, -1),
+				"end_date": add_days(first_date, 30),
 				"company": self.company,
 				"group_by": "Department",
 			}
@@ -749,16 +751,16 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 		row_without_shift = report[1][2]
 
 		self.assertEqual(day_shift_row["shift"], "Day Shift")
-		self.assertEqual(day_shift_row[date_key(today)], "A")  # absent on the 1st day of the month
-		self.assertEqual(day_shift_row[date_key(add_days(today, 1))], "P")  # present on the 2nd day
+		self.assertEqual(day_shift_row[date_key(first_date)], "A")  # absent on the 1st day of the month
+		self.assertEqual(day_shift_row[date_key(add_days(first_date, 1))], "P")  # present on the 2nd day
 
 		self.assertEqual(row_without_shift["shift"], "")
-		self.assertEqual(row_without_shift[date_key(add_days(today, 3))], "P")  # present on the 4th day
+		self.assertEqual(row_without_shift[date_key(add_days(first_date, 3))], "P")  # present on the 4th day
 
 		# leave should be shown against every shift
 		self.assertTrue(
-			day_shift_row[date_key(add_days(today, 2))]
-			== row_without_shift[date_key(add_days(today, 2))]
+			day_shift_row[date_key(add_days(first_date, 2))]
+			== row_without_shift[date_key(add_days(first_date, 2))]
 			== "L"
 		)
 

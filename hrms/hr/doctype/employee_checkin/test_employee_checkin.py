@@ -649,13 +649,13 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		shift_start = datetime.combine(getdate(), get_time("08:00:00"))
 		log = make_checkin(emp, timestamp)
 		# when attendance is not linked, shift start changes with time
-		log.time = add_days(timestamp, 1)
+		log.time = add_days(timestamp, -1)
 		log.save()
 		log.reload()
-		self.assertEqual(log.shift_start, add_days(shift_start, 1))
+		self.assertEqual(log.shift_start, add_days(shift_start, -1))
 
 		# when attendance is linked, don't allow to modify either time or shift parameters
-		mark_attendance_and_link_log([log], "Absent", add_days(timestamp, 1))
+		mark_attendance_and_link_log([log], "Absent", add_days(timestamp, -1))
 		log.reload()
 		log.time = timestamp
 		self.assertRaises(frappe.ValidationError, log.save)

@@ -11,7 +11,6 @@ from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import
 )
 from hrms.hr.report.employees_working_on_a_holiday.employees_working_on_a_holiday import execute
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
-from hrms.tests.test_utils import get_first_sunday
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -22,7 +21,10 @@ class TestEmployeesWorkingOnAHoliday(HRMSTestSuite):
 
 	def test_report(self):
 		date = getdate()
-		from_date = get_year_start(date)
+		last_sunday = add_days(date, -((date.weekday() + 1) % 7 or 7))
+		first_sunday = add_days(last_sunday, -14)
+
+		from_date = get_year_start(first_sunday)
 		to_date = get_year_ending(date)
 		sunday_off = make_holiday_list("Sunday Off", from_date, to_date, True)
 		monday_off = make_holiday_list("Monday Off", from_date, to_date, True, ["Monday"])
@@ -35,7 +37,6 @@ class TestEmployeesWorkingOnAHoliday(HRMSTestSuite):
 		emp3 = make_employee("testemp3@tuesday.com", company=self.company)
 		create_holiday_list_assignment("Employee", emp3, tuesday_off)
 
-		first_sunday = get_first_sunday()
 		# i realise this might not be the first monday and tuesday but doesn't matter for this test
 		first_monday = add_days(first_sunday, 1)
 		first_tuesday = add_days(first_monday, 1)
