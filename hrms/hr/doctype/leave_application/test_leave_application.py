@@ -50,7 +50,6 @@ from hrms.tests.utils import HRMSTestSuite
 class TestLeaveApplication(HRMSTestSuite):
 	def setUp(self):
 		frappe.set_user("Administrator")
-		frappe.db.set_single_value("HR Settings", "leave_approver_mandatory_in_leave_application", 0)
 		employee = get_employee()
 		self.leave_application = frappe.get_value(
 			"Leave Application",
