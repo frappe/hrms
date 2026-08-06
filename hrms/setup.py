@@ -31,19 +31,37 @@ def before_uninstall():
 
 
 def before_disable():
+	"""Hide the customizations of this app. The site calls this while the app is still active."""
 	from frappe.custom import hide_customizations
 
 	hide_customizations(get_customizations())
 
 
 def after_enable():
+	"""Show the customizations of this app again. The site calls this after the app is active."""
 	from frappe.custom import unhide_customizations
 
 	unhide_customizations(get_customizations())
 
 
+def get_regional_custom_fields():
+	"""Return the custom fields that the country of each company adds.
+
+	A country with no regional module, or with no function for these fields, adds nothing.
+	"""
+	sources = []
+	for country in frappe.get_all("Company", pluck="country", distinct=True):
+		try:
+			getter = frappe.get_attr(f"hrms.regional.{frappe.scrub(country)}.setup.get_custom_fields")
+		except (ImportError, AttributeError):
+			continue
+		sources.append(getter())
+
+	return sources
+
+
 def get_customizations():
-	field_sources = [get_custom_fields()]
+	field_sources = [get_custom_fields(), *get_regional_custom_fields()]
 	if "lending" in frappe.get_installed_apps():
 		field_sources.append(get_salary_slip_loan_fields())
 
