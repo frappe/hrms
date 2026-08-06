@@ -491,19 +491,24 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		in a different month shares its day-of-month.
 		"""
 		previous_month_first = get_first_day_for_prev_month()
-		year_start = getdate(get_year_start(previous_month_first))
 
 		start_date = previous_month_first.replace(day=5)
 		end_date = start_date + relativedelta(months=1)  # same day-of-month, next month
-		year_end = getdate(get_year_ending(end_date))
 
 		hl = make_holiday_list(
-			"Test Cross Month HL", from_date=year_start, to_date=year_end, add_weekly_offs=False
+			"Test Cross Month HL",
+			from_date=add_days(start_date, -1),
+			to_date=add_days(end_date, 1),
+			add_weekly_offs=False,
 		)
-		add_holiday_to_list(hl, end_date)  # holiday only on the later, colliding day-of-month
 
-		frappe.db.delete("Holiday List Assignment", {"assigned_to": self.employee})
-		create_holiday_list_assignment("Employee", self.employee, hl, from_date=year_start)
+		holiday_list = frappe.get_doc("Holiday List", hl)
+		holiday_list.append(
+			"holidays", {"holiday_date": end_date, "description": "Test Holiday"}
+		)  # holiday only on the later, colliding day-of-month
+		holiday_list.save()
+
+		frappe.db.set_value("Employee", self.employee, "holiday_list", hl)
 
 		# attendance on the earlier date sharing the same day-of-month as the holiday
 		mark_attendance(self.employee, start_date, "Present")
