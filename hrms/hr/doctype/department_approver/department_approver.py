@@ -5,6 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.query_builder import Order
 from frappe.utils import get_link_to_form
 
 
@@ -34,14 +35,17 @@ def get_approvers(doctype: str, txt: str, searchfield: str, start: int, page_len
 			"Department", {"name": employee_department}, ["lft", "rgt"], as_dict=True
 		)
 	if department_details:
-		department_list = frappe.db.sql(
-			"""select name from `tabDepartment` where lft <= %s
-			and rgt >= %s
-			and disabled=0
-			order by lft desc""",
-			(department_details.lft, department_details.rgt),
-			as_list=True,
-		)
+		Department = frappe.qb.DocType("Department")
+		department_list = (
+			frappe.qb.from_(Department)
+			.select(Department.name)
+			.where(
+				(Department.lft <= department_details.lft)
+				& (Department.rgt >= department_details.rgt)
+				& (Department.disabled == 0)
+			)
+			.orderby(Department.lft, order=Order.desc)
+		).run(as_list=True)
 
 	if filters.get("doctype") == "Leave Application" and employee.leave_approver:
 		approver = frappe.db.get_value(

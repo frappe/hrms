@@ -427,13 +427,13 @@ class TestExpenseClaim(HRMSTestSuite):
 		)
 		expense_claim.submit()
 
-		gl_entries = frappe.db.sql(
-			"""select account, debit, credit
-			from `tabGL Entry` where voucher_type='Expense Claim' and voucher_no=%s
-			order by account asc""",
-			expense_claim.name,
-			as_dict=1,
-		)
+		gle = frappe.qb.DocType("GL Entry")
+		gl_entries = (
+			frappe.qb.from_(gle)
+			.select(gle.account, gle.debit, gle.credit)
+			.where((gle.voucher_type == "Expense Claim") & (gle.voucher_no == expense_claim.name))
+			.orderby(gle.account, order=frappe.qb.asc)
+		).run(as_dict=True)
 
 		self.assertTrue(gl_entries)
 

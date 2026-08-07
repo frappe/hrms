@@ -73,11 +73,28 @@ class JobApplicant(Document):
 
 	def before_insert(self):
 		if self.job_title:
-			job_opening_status = frappe.db.get_value("Job Opening", self.job_title, "status")
-			if job_opening_status == "Closed":
+			job_opening = frappe.db.get_value(
+				"Job Opening", self.job_title, ["status", "prevent_duplicate_applicant"], as_dict=True
+			)
+			if not job_opening:
+				return
+
+			if job_opening.status == "Closed":
 				frappe.throw(
 					_("Cannot create a Job Applicant against a closed Job Opening"), title=_("Not Allowed")
 				)
+			if job_opening.prevent_duplicate_applicant and self.email_id:
+				if frappe.db.exists(
+					"Job Applicant", {"email_id": self.email_id, "job_title": self.job_title}
+				):
+					frappe.throw(
+						_("You have already applied for this position."),
+						exc=DuplicationError,
+						title=_("Duplicate Application"),
+					)
+
+		if frappe.flags.in_web_form and not self.source:
+			self.source = "Website Listing"
 
 	def set_status_for_employee_referral(self):
 		emp_ref = frappe.get_doc("Employee Referral", self.employee_referral)
