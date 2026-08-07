@@ -549,6 +549,7 @@ class TestExpenseClaim(HRMSTestSuite):
 		outstanding_amount = get_outstanding_amount_for_claim(expense_claim)
 		self.assertEqual(outstanding_amount, 5000)
 		self.assertEqual(expense_claim.total_amount_reimbursed, 500)
+		self.assertEqual(expense_claim.status, "Partially Paid")
 
 		# Payment entry 2: paying 2000
 		pe2 = make_claim_payment_entry(expense_claim, 2000)
@@ -559,6 +560,7 @@ class TestExpenseClaim(HRMSTestSuite):
 		outstanding_amount = get_outstanding_amount_for_claim(expense_claim)
 		self.assertEqual(outstanding_amount, 3000)
 		self.assertEqual(expense_claim.total_amount_reimbursed, 2500)
+		self.assertEqual(expense_claim.status, "Partially Paid")
 
 		# Payment entry 3: paying 3000
 		pe3 = make_claim_payment_entry(expense_claim, 3000)
@@ -569,6 +571,7 @@ class TestExpenseClaim(HRMSTestSuite):
 		outstanding_amount = get_outstanding_amount_for_claim(expense_claim)
 		self.assertEqual(outstanding_amount, 0)
 		self.assertEqual(expense_claim.total_amount_reimbursed, 5500)
+		self.assertEqual(expense_claim.status, "Paid")
 
 	def test_expense_claim_against_delivery_trip(self):
 		from erpnext.stock.doctype.delivery_trip.test_delivery_trip import (
