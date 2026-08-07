@@ -81,7 +81,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		posting_date: DF.Date
 		project: DF.Link | None
 		remark: DF.SmallText | None
-		status: DF.Literal["Draft", "Paid", "Unpaid", "Rejected", "Submitted", "Cancelled"]
+		status: DF.Literal["Draft", "Paid", "Partially Paid", "Unpaid", "Rejected", "Submitted", "Cancelled"]
 		task: DF.Link | None
 		taxes: DF.Table[ExpenseTaxesandCharges]
 		total_advance_amount: DF.Currency
@@ -141,7 +141,10 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 				):
 					status = "Paid"
 				elif flt(self.total_sanctioned_amount) > 0:
-					status = "Unpaid"
+					if flt(self.total_amount_reimbursed, precision) > 0:
+						status = "Partially Paid"
+					else:
+						status = "Unpaid"
 			elif self.approval_status == "Rejected":
 				status = "Rejected"
 
