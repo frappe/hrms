@@ -12,8 +12,13 @@ from pypika.terms import Criterion
 import frappe
 from frappe import _
 from frappe.query_builder import Case
+<<<<<<< HEAD
 from frappe.query_builder.functions import Count, Extract, Sum
 from frappe.utils import cint, cstr, formatdate, getdate
+=======
+from frappe.query_builder.functions import Coalesce, Count, Extract, Sum
+from frappe.utils import add_days, cint, cstr, formatdate, getdate
+>>>>>>> f6779407c (fix(monthly_attendance_sheet): fix half-day present/absent/leave calculation using half_day_status and leave_application)
 from frappe.utils.nestedset import get_descendants_of
 
 from hrms.utils import date_diff, get_date_range
@@ -516,9 +521,11 @@ def get_attendance_status_for_summarized_view(
 			total_unmarked_days += 1
 
 	return {
-		"total_present": summary.total_present + summary.total_half_days,
-		"total_leaves": summary.total_leaves + summary.total_half_days,
-		"total_absent": summary.total_absent,
+		"total_present": summary.total_present
+		+ summary.total_half_day_present
+		+ summary.total_half_day_worked,
+		"total_leaves": summary.total_leaves + summary.total_half_day_leave,
+		"total_absent": summary.total_absent + summary.total_half_day_absent,
 		"total_holidays": total_holidays,
 		"unmarked_days": total_unmarked_days,
 	}
@@ -540,8 +547,39 @@ def get_attendance_summary_and_days(employee: str, filters: Filters) -> tuple[di
 	leave_case = frappe.qb.terms.Case().when(Attendance.status == "On Leave", 1).else_(0)
 	sum_leave = Sum(leave_case).as_("total_leaves")
 
-	half_day_case = frappe.qb.terms.Case().when(Attendance.status == "Half Day", 0.5).else_(0)
-	sum_half_day = Sum(half_day_case).as_("total_half_days")
+	leave_application_condition = Coalesce(Attendance.leave_application, "") != ""
+
+	# the leave portion of a Half Day only counts as leave when an approved Leave Application
+	# backs it; otherwise it reflects hours actually worked and counts as present
+	half_day_leave_case = (
+		frappe.qb.terms.Case()
+		.when(((Attendance.status == "Half Day") & leave_application_condition), 0.5)
+		.else_(0)
+	)
+	sum_half_day_leave = Sum(half_day_leave_case).as_("total_half_day_leave")
+
+	half_day_worked_case = (
+		frappe.qb.terms.Case()
+		.when(((Attendance.status == "Half Day") & leave_application_condition), 0)
+		.when(Attendance.status == "Half Day", 0.5)
+		.else_(0)
+	)
+	sum_half_day_worked = Sum(half_day_worked_case).as_("total_half_day_worked")
+
+	half_day_absent_case = (
+		frappe.qb.terms.Case()
+		.when(((Attendance.status == "Half Day") & (Attendance.half_day_status == "Absent")), 0.5)
+		.else_(0)
+	)
+	sum_half_day_absent = Sum(half_day_absent_case).as_("total_half_day_absent")
+
+	half_day_present_case = (
+		frappe.qb.terms.Case()
+		.when(((Attendance.status == "Half Day") & (Attendance.half_day_status == "Absent")), 0)
+		.when(Attendance.status == "Half Day", 0.5)
+		.else_(0)
+	)
+	sum_half_day_present = Sum(half_day_present_case).as_("total_half_day_present")
 
 	attendance_date_condition = get_date_condition(Attendance.attendance_date, filters)
 
@@ -551,7 +589,10 @@ def get_attendance_summary_and_days(employee: str, filters: Filters) -> tuple[di
 			sum_present,
 			sum_absent,
 			sum_leave,
-			sum_half_day,
+			sum_half_day_leave,
+			sum_half_day_worked,
+			sum_half_day_present,
+			sum_half_day_absent,
 		)
 		.where(
 			(Attendance.docstatus == 1)
