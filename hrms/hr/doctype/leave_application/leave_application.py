@@ -121,6 +121,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		if frappe.db.get_value("Leave Type", self.leave_type, "is_optional_leave"):
 			self.validate_optional_leave()
 		self.validate_applicable_after()
+		self.validate_notice_period()
 		self.validate_for_self_approval()
 		self.validate_leave_approver()
 		self.set_leave_approver_name()
@@ -184,6 +185,52 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
 		hrms.refetch_resource("hrms:my_leaves", employee_user)
 		hrms.refetch_resource("hrms:team_leaves")
+
+	def validate_notice_period(self):
+		if not self.leave_type or not self.from_date:
+			return
+
+		leave_type = frappe.get_cached_doc("Leave Type", self.leave_type)
+
+		if leave_type.role_allowed_to_override_notice_period:
+			if leave_type.role_allowed_to_override_notice_period in frappe.get_roles(frappe.session.user):
+				return
+
+		today = getdate(nowdate())
+		from_date = getdate(self.from_date)
+		diff_days = date_diff(from_date, today)
+
+		if leave_type.min_advance_notice_days > 0:
+			if leave_type.notice_period_basis == "Working Days":
+				holidays = get_holiday_dates_for_employee(self.employee, today, from_date)
+				actual_diff_days = diff_days - len(holidays)
+			else:
+				actual_diff_days = diff_days
+
+			if actual_diff_days < leave_type.min_advance_notice_days:
+				earliest_date = add_days(today, leave_type.min_advance_notice_days)
+				frappe.throw(
+					_(
+						"{0} must be applied at least {1} days in advance. The earliest start date you can select is {2}."
+					).format(
+						frappe.bold(self.leave_type),
+						leave_type.min_advance_notice_days,
+						frappe.bold(formatdate(earliest_date)),
+					)
+				)
+
+		if leave_type.max_advance_booking_days > 0:
+			if diff_days > leave_type.max_advance_booking_days:
+				latest_date = add_days(today, leave_type.max_advance_booking_days)
+				frappe.throw(
+					_(
+						"{0} cannot be applied more than {1} days in advance. The latest start date you can select is {2}."
+					).format(
+						frappe.bold(self.leave_type),
+						leave_type.max_advance_booking_days,
+						frappe.bold(formatdate(latest_date)),
+					)
+				)
 
 	def validate_applicable_after(self):
 		if self.leave_type:
@@ -269,6 +316,19 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		return allocation_based_on_from_date, allocation_based_on_to_date
 
 	def validate_back_dated_application(self):
+		if self.from_date >= getdate(nowdate()):
+			return
+
+		leave_type = frappe.get_cached_doc("Leave Type", self.leave_type)
+		if leave_type.backdated_application_limit_days > 0:
+			if abs(date_diff(getdate(self.from_date), getdate(nowdate()))) > leave_type.backdated_application_limit_days:
+				frappe.throw(
+					_("{0} cannot be backdated more than {1} days.").format(
+						frappe.bold(self.leave_type), leave_type.backdated_application_limit_days
+					)
+				)
+			return
+
 		LeaveAllocation = frappe.qb.DocType("Leave Allocation")
 		future_allocation = (
 			frappe.qb.from_(LeaveAllocation)

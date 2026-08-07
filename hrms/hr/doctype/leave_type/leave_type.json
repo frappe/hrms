@@ -65,6 +65,41 @@
    "label": "Allow Leave Application After (Calendar Days)"
   },
   {
+   "default": "0",
+   "description": "Application is rejected if From Date is fewer than N days after the application date. 0 = same-day allowed.",
+   "fieldname": "min_advance_notice_days",
+   "fieldtype": "Int",
+   "label": "Minimum Notice Required Before Leave (Days)"
+  },
+  {
+   "default": "Calendar Days",
+   "depends_on": "eval:doc.min_advance_notice_days > 0",
+   "fieldname": "notice_period_basis",
+   "fieldtype": "Select",
+   "label": "Notice Period Basis",
+   "options": "Calendar Days\nWorking Days"
+  },
+  {
+   "default": "0",
+   "description": "Application is rejected if From Date is more than N days in the future. 0 = no limit.",
+   "fieldname": "max_advance_booking_days",
+   "fieldtype": "Int",
+   "label": "Maximum Days Leave Can Be Applied in Advance"
+  },
+  {
+   "default": "0",
+   "description": "Per-type version of the global restriction. 0 = fall back to HR Settings.",
+   "fieldname": "backdated_application_limit_days",
+   "fieldtype": "Int",
+   "label": "Allow Backdated Application Within (Days)"
+  },
+  {
+   "fieldname": "role_allowed_to_override_notice_period",
+   "fieldtype": "Link",
+   "label": "Role Allowed to Override Notice Period",
+   "options": "Role"
+  },
+  {
    "fieldname": "max_continuous_days_allowed",
    "fieldtype": "Int",
    "in_list_view": 1,
