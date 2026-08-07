@@ -327,8 +327,6 @@ class LeaveApplication(Document, PWANotificationsMixin):
 						frappe.bold(self.leave_type), leave_type.backdated_application_limit_days
 					)
 				)
-			return
-
 		LeaveAllocation = frappe.qb.DocType("Leave Allocation")
 		future_allocation = (
 			frappe.qb.from_(LeaveAllocation)
