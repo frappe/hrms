@@ -1,4 +1,5 @@
 import os
+from collections import defaultdict
 
 import frappe
 from frappe import N_ as _
@@ -27,6 +28,62 @@ def before_uninstall():
 	delete_custom_fields(get_custom_fields())
 	delete_custom_fields(get_salary_slip_loan_fields())
 	delete_company_fixtures()
+
+
+def before_disable():
+	"""Hide the customizations of this app. The site calls this while the app is still active."""
+	from frappe.custom import hide_customizations
+
+	hide_customizations(get_customizations())
+
+
+def after_enable():
+	"""Show the customizations of this app again. The site calls this after the app is active."""
+	from frappe.custom import unhide_customizations
+
+	unhide_customizations(get_customizations())
+
+
+def get_regional_custom_fields():
+	"""Return the custom fields that the country of each company adds.
+
+	A country with no regional module, or with no function for these fields, adds nothing.
+	"""
+	sources = []
+	for country in frappe.get_all("Company", pluck="country", distinct=True):
+		try:
+			getter = frappe.get_attr(f"hrms.regional.{frappe.scrub(country)}.setup.get_custom_fields")
+		except (ImportError, AttributeError):
+			continue
+		sources.append(getter())
+
+	return sources
+
+
+def get_customizations():
+	field_sources = [get_custom_fields(), *get_regional_custom_fields()]
+	if "lending" in frappe.get_installed_apps():
+		field_sources.append(get_salary_slip_loan_fields())
+
+	fieldnames = defaultdict(list)
+	for custom_fields in field_sources:
+		for doctype, fields in custom_fields.items():
+			fieldnames[doctype].extend(field["fieldname"] for field in fields)
+
+	return {
+		"Custom Field": [
+			{"dt": doctype, "fieldname": ("in", fields)} for doctype, fields in fieldnames.items()
+		],
+		"Property Setter": [
+			{"doc_type": "Salary Slip", "field_name": "rounded_total", "property": "hidden"},
+			{"doc_type": "Salary Slip", "field_name": "rounded_total", "property": "print_hide"},
+		],
+		"Custom DocPerm": [
+			{"parent": doctype, "role": role}
+			for role, permissions in HR_ROLE_PERMISSIONS.items()
+			for doctype in permissions
+		],
+	}
 
 
 def after_app_install(app_name):
@@ -853,30 +910,32 @@ def get_salary_slip_loan_fields():
 	}
 
 
-# Add default permission for hr roles
-def add_default_hr_permissions():
-	# Project and Task perms are needed for the Employee Onboarding / Separation flow,
-	# which creates a Project and Tasks and assigns them to users. assign_to.add() does a
-	# read check on Task, and on_cancel deletes the Project and its Tasks.
-	project_task_perms = {
-		"Project": {"read": 1, "write": 1, "create": 1, "delete": 1},
-		"Task": {"read": 1, "write": 1, "create": 1, "delete": 1},
-	}
-	role_permissions = {
-		"HR User": {
-			"Role": {"read": 1},
-			"Currency": {"read": 1},
-			**project_task_perms,
-		},
-		"HR Manager": {
-			"Role": {"read": 1},
-			"Currency": {"read": 1},
-			"Email Account": {"read": 1},
-			**project_task_perms,
-		},
-	}
+# Project and Task perms are needed for the Employee Onboarding / Separation flow, which
+# creates a Project and Tasks and assigns them to users. assign_to.add() does a read check
+# on Task, and on_cancel deletes the Project and its Tasks.
+_PROJECT_TASK_PERMS = {
+	"Project": {"read": 1, "write": 1, "create": 1, "delete": 1},
+	"Task": {"read": 1, "write": 1, "create": 1, "delete": 1},
+}
 
-	for role, permissions in role_permissions.items():
+# permissions this app grants on other apps' doctypes
+HR_ROLE_PERMISSIONS = {
+	"HR User": {
+		"Role": {"read": 1},
+		"Currency": {"read": 1},
+		**_PROJECT_TASK_PERMS,
+	},
+	"HR Manager": {
+		"Role": {"read": 1},
+		"Currency": {"read": 1},
+		"Email Account": {"read": 1},
+		**_PROJECT_TASK_PERMS,
+	},
+}
+
+
+def add_default_hr_permissions():
+	for role, permissions in HR_ROLE_PERMISSIONS.items():
 		for doctype, ptypes in permissions.items():
 			add_permission(doctype, role)
 
