@@ -77,6 +77,10 @@ import { FeatherIcon, createResource } from "frappe-ui"
 const employee = inject("$employee")
 const dayjs = inject("$dayjs")
 const __ = inject("$translate")
+const dateFormatter = new Intl.DateTimeFormat(
+	window.frappe?.boot?.lang ?? navigator.language,
+	{ weekday: "short", day: "numeric", month: "short", year: "numeric" },
+)
 
 const holidays = createResource({
 	url: "hrms.api.get_holidays_for_employee",
@@ -88,7 +92,7 @@ const holidays = createResource({
 		return data.map((holiday) => {
 			const holidayDate = dayjs(holiday.holiday_date)
 			holiday.is_upcoming = holidayDate.isAfter(dayjs())
-			holiday.formatted_holiday_date = holidayDate.format("ddd, D MMM YYYY")
+			holiday.formatted_holiday_date = dateFormatter.format(holidayDate.toDate())
 			return holiday
 		})
 	},
