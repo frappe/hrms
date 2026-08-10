@@ -417,8 +417,8 @@ def cap_schedule_to_annual_allocation(schedule, annual_allocation):
 		# leaves allocated already have ledger entries against them, they cannot be trimmed
 		if not row.get("is_allocated"):
 			leaves_left_in_quota = flt(annual_allocation - scheduled_leaves, precision)
-			if leaves_left_in_quota <= 0:
-				break
+			# Keep later dates available if a credit is reduced by the leave type limit.
+			leaves_left_in_quota = max(leaves_left_in_quota, 0)
 			if flt(row["number_of_leaves"], precision) > leaves_left_in_quota:
 				row["number_of_leaves"] = leaves_left_in_quota
 

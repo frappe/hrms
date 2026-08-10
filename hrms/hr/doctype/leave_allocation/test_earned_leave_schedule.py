@@ -352,10 +352,11 @@ class TestLeaveAllocation(HRMSTestSuite):
 			rounding=1.0,
 		)
 
-		self.assertEqual(len(earned_leave_schedule), 10)
+		self.assertEqual(len(earned_leave_schedule), 12)
 		self.assertEqual(sum(row.number_of_leaves for row in earned_leave_schedule), 19)
-		self.assertEqual(earned_leave_schedule[-1].number_of_leaves, 1)
-		self.assertEqual(earned_leave_schedule[-1].allocation_date, add_months(get_year_start(getdate()), 9))
+		self.assertEqual(earned_leave_schedule[9].number_of_leaves, 1)
+		self.assertEqual([row.number_of_leaves for row in earned_leave_schedule[10:]], [0, 0])
+		self.assertEqual(earned_leave_schedule[9].allocation_date, add_months(get_year_start(getdate()), 9))
 
 	def test_schedule_for_yearly_earned_leave_is_exempted_from_annual_allocation(self):
 		"""Tests that a yearly schedule spanning multiple years is not capped to the annual allocation"""
