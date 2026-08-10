@@ -66,6 +66,7 @@
   {
    "fieldname": "status",
    "fieldtype": "Select",
+   "hidden": 1,
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
@@ -284,7 +285,7 @@
  "idx": 1,
  "is_published_field": "publish",
  "links": [],
- "modified": "2026-07-20 18:22:48.627602",
+ "modified": "2026-08-10 12:10:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
