@@ -15,6 +15,7 @@
   "company",
   "column_break_5",
   "expense_approver",
+  "follow_via_email",
   "approval_status",
   "currency_section",
   "currency",
@@ -118,6 +119,14 @@
    "fieldtype": "Link",
    "label": "Expense Approver",
    "options": "User"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "1",
+   "fieldname": "follow_via_email",
+   "fieldtype": "Check",
+   "label": "Follow via Email",
+   "print_hide": 1
   },
   {
    "default": "Draft",

@@ -8,7 +8,7 @@ from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe.model.workflow import get_workflow_name
 from frappe.query_builder.functions import Sum
-from frappe.utils import cstr, flt, get_link_to_form, today
+from frappe.utils import cint, cstr, flt, get_fullname, get_link_to_form, today
 
 import erpnext
 from erpnext.accounts.doctype.repost_accounting_ledger.repost_accounting_ledger import (
@@ -25,6 +25,7 @@ from erpnext.controllers.accounts_controller import AccountsController
 import hrms
 from hrms.hr.utils import set_employee_name, share_doc_with_approver, validate_active_employee
 from hrms.mixins.pwa_notifications import PWANotificationsMixin
+from hrms.utils import get_employee_email
 
 
 class InvalidExpenseApproverError(frappe.ValidationError):
@@ -72,6 +73,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		exchange_rate: DF.Float
 		expense_approver: DF.Link | None
 		expenses: DF.Table[ExpenseClaimDetail]
+		follow_via_email: DF.Check
 		gain_loss_account: DF.Link | None
 		grand_total: DF.Currency
 		is_paid: DF.Check
@@ -101,6 +103,9 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 
 	def after_insert(self):
 		self.notify_approver()
+
+		if frappe.db.get_single_value("HR Settings", "send_expense_notification"):
+			self.notify_expense_approver()
 
 	def validate(self):
 		validate_active_employee(self.employee)
@@ -203,6 +208,9 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		self.update_claimed_amount_in_employee_advance()
 		self.create_exchange_gain_loss_je()
 
+		if frappe.db.get_single_value("HR Settings", "send_expense_notification"):
+			self.notify_employee()
+
 	def on_update_after_submit(self):
 		if self.check_if_fields_updated([], {"taxes": ("account_head",), "expenses": ()}):
 			validate_docs_for_voucher_types(["Expense Claim"])
@@ -222,8 +230,93 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		update_reimbursed_amount(self)
 
 		self.update_claimed_amount_in_employee_advance()
+
+		if frappe.db.get_single_value("HR Settings", "send_expense_notification"):
+			self.notify_employee()
+
 		self.publish_update()
 		unlink_ref_doc_from_payment_entries(self)
+
+	def notify_employee(self):
+		employee_email = get_employee_email(self.employee)
+
+		if not employee_email:
+			return
+
+		template = frappe.db.get_single_value("HR Settings", "expense_claim_status_notification_template")
+		if not template:
+			frappe.msgprint(
+				_("Please set default template for Expense Claim Status Notification in HR Settings.")
+			)
+			return
+
+		args = self.as_dict()
+		email_template = frappe.get_doc("Email Template", template)
+		# nosemgrep: frappe-semgrep-rules.rules.security.frappe-ssti
+		subject = frappe.render_template(email_template.subject, args)
+		# nosemgrep: frappe-semgrep-rules.rules.security.frappe-ssti
+		message = frappe.render_template(email_template.response_, args)
+
+		self.notify(
+			{
+				"message": message,
+				"message_to": employee_email,
+				"subject": subject,
+				"notify": "employee",
+			}
+		)
+
+	def notify_expense_approver(self):
+		if not self.expense_approver:
+			return
+
+		template = frappe.db.get_single_value("HR Settings", "expense_claim_approval_notification_template")
+		if not template:
+			frappe.msgprint(
+				_("Please set default template for Expense Claim Approval Notification in HR Settings.")
+			)
+			return
+
+		args = self.as_dict()
+		email_template = frappe.get_doc("Email Template", template)
+		# nosemgrep: frappe-semgrep-rules.rules.security.frappe-ssti
+		subject = frappe.render_template(email_template.subject, args)
+		# nosemgrep: frappe-semgrep-rules.rules.security.frappe-ssti
+		message = frappe.render_template(email_template.response_, args)
+
+		self.notify(
+			{
+				"message": message,
+				"message_to": self.expense_approver,
+				"subject": subject,
+			}
+		)
+
+	def notify(self, args):
+		args = frappe._dict(args)
+
+		if not cint(self.follow_via_email):
+			return
+
+		contact = args.message_to
+		if not isinstance(contact, list):
+			if not args.notify == "employee":
+				contact = frappe.get_doc("User", contact).email or contact
+
+		sender = dict()
+		sender["email"] = frappe.get_doc("User", frappe.session.user).email
+		sender["full_name"] = get_fullname(sender["email"])
+
+		try:
+			frappe.sendmail(
+				recipients=contact,
+				sender=sender["email"],
+				subject=args.subject,
+				message=args.message,
+			)
+			frappe.msgprint(_("Email sent to {0}").format(contact))
+		except frappe.OutgoingEmailError:
+			pass
 
 	def update_claimed_amount_in_employee_advance(self):
 		for d in self.get("advances"):
