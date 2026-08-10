@@ -54,6 +54,7 @@ import FormView from "@/components/FormView.vue"
 import SalaryDetailTable from "@/components/SalaryDetailTable.vue"
 
 import { getCompanyCurrency } from "@/data/currencies"
+import { downloadPDF as downloadDocumentPDF } from "@/utils/download"
 
 const props = defineProps({
 	id: {
@@ -124,45 +125,16 @@ function getFilteredFields(fields) {
 	return fields.filter((field) => !excludeFields.includes(field.fieldname))
 }
 
-function downloadPDF() {
-	const salarySlipName = salarySlip.value.name
+async function downloadPDF() {
 	loading.value = true
+	downloadError.value = ""
 
-	let headers = { "X-Frappe-Site-Name": window.location.hostname }
-	if (window.csrf_token) {
-		headers["X-Frappe-CSRF-Token"] = window.csrf_token
+	try {
+		await downloadDocumentPDF("Salary Slip", salarySlip.value.name)
+	} catch (error) {
+		downloadError.value = `Failed to download PDF: ${error.message}`
+	} finally {
+		loading.value = false
 	}
-
-	fetch("/api/method/hrms.api._download_pdf", {
-		method: "POST",
-		headers,
-		body: new URLSearchParams({doctype: "Salary Slip" ,docname: salarySlipName }),
-		responseType: "blob",
-	})
-		.then((response) => {
-			if (response.ok) {
-				return response.blob()
-			} else {
-				downloadError.value = "Failed to download PDF"
-			}
-		})
-		.then((blob) => {
-			if (!blob) return
-			const blobUrl = window.URL.createObjectURL(blob)
-			const link = document.createElement("a")
-			link.href = blobUrl
-			link.download = `${salarySlipName}.pdf`
-			link.click()
-
-			setTimeout(() => {
-				window.URL.revokeObjectURL(blobUrl)
-			}, 3000)
-		})
-		.catch((error) => {
-			downloadError.value = `Failed to download PDF: ${error.message}`
-		})
-		.finally(() => {
-			loading.value = false
-		})
 }
 </script>
