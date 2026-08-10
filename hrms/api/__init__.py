@@ -26,6 +26,9 @@ SUPPORTED_FIELD_TYPES = [
 	"Currency",
 ]
 
+# PDFs are merged synchronously, so cap the request size to keep it within the request timeout
+MAX_BULK_PDF_DOCS = 24
+
 
 @frappe.whitelist()
 def get_current_user_info() -> dict:
@@ -816,6 +819,49 @@ def _download_pdf(doctype: str, docname: str) -> str:
 	content_type = frappe.local.response.type
 
 	return f"data:{content_type};base64," + base64content.decode("utf-8")
+
+
+@frappe.whitelist()
+def _download_bulk_pdf(doctype: str, docnames: str | list[str]) -> None:
+	"""Merge the print formats of the given documents into a single PDF and stream it back"""
+	from io import BytesIO
+
+	from pypdf import PdfWriter
+
+	from frappe.www.printview import validate_print_permission
+
+	docnames = frappe.parse_json(docnames)
+	if not docnames:
+		frappe.throw(_("Please select at least one document to download"))
+
+	if len(docnames) > MAX_BULK_PDF_DOCS:
+		frappe.throw(
+			_("Cannot download more than {0} documents at a time").format(MAX_BULK_PDF_DOCS),
+			title=_("Too Many Documents"),
+		)
+
+	default_print_format = frappe.get_meta(doctype).default_print_format or "Standard"
+	pdf_writer = PdfWriter()
+
+	# frappe's download_multi_pdf swallows per document errors and can return an empty PDF,
+	# so the documents are merged here to surface failures instead
+	for docname in docnames:
+		doc = frappe.get_doc(doctype, docname)
+		validate_print_permission(doc)
+
+		try:
+			pdf_writer = frappe.get_print(
+				doctype, docname, default_print_format, doc=doc, as_pdf=True, output=pdf_writer
+			)
+		except Exception as e:
+			frappe.throw(_("Failed to download PDF for {0}: {1}").format(docname, str(e)))
+
+	with BytesIO() as merged_pdf:
+		pdf_writer.write(merged_pdf)
+
+		frappe.local.response.filename = "{doctype}.pdf".format(doctype=doctype.replace(" ", "-"))
+		frappe.local.response.filecontent = merged_pdf.getvalue()
+		frappe.local.response.type = "pdf"
 
 
 # Workflow
