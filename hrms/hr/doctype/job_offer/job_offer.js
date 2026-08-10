@@ -8,6 +8,24 @@ frappe.ui.form.on("Job Offer", {
 		frm.set_query("select_terms", function () {
 			return { filters: { hr: 1 } };
 		});
+
+		frm.set_query("salary_structure", function () {
+			return {
+				filters: {
+					company: frm.doc.company,
+					docstatus: 1,
+					is_active: "Yes",
+				},
+			};
+		});
+
+		frm.set_query("department", function () {
+			return { filters: { company: frm.doc.company } };
+		});
+
+		frm.set_query("reports_to", function () {
+			return { filters: { company: frm.doc.company, status: "Active" } };
+		});
 	},
 
 	setup: function (frm) {

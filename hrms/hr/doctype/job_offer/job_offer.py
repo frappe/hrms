@@ -24,17 +24,35 @@ class JobOffer(Document):
 		amended_from: DF.Link | None
 		applicant_email: DF.Data | None
 		applicant_name: DF.Data
+		base: DF.Currency
+		branch: DF.Link | None
 		company: DF.Link
+		ctc: DF.Currency
+		currency: DF.Link | None
+		date_of_joining: DF.Date | None
+		department: DF.Link | None
 		designation: DF.Link
+		employment_type: DF.Link | None
+		grade: DF.Link | None
+		holiday_list: DF.Link | None
 		job_applicant: DF.Link
 		job_offer_term_template: DF.Link | None
+		leave_policy: DF.Link | None
 		letter_head: DF.Link | None
+		notice_number_of_days: DF.Int
+		notice_period_during_probation: DF.Int
 		offer_date: DF.Date
 		offer_terms: DF.Table[JobOfferTerm]
+		offer_valid_till: DF.Date | None
+		probation_period_days: DF.Int
+		reports_to: DF.Link | None
+		salary_structure: DF.Link | None
 		select_print_heading: DF.Link | None
 		select_terms: DF.Link | None
 		status: DF.Literal["Awaiting Response", "Accepted", "Rejected", "Cancelled"]
 		terms: DF.TextEditor | None
+		variable: DF.Currency
+		working_hours: DF.Float
 	# end: auto-generated types
 
 	def onload(self):
