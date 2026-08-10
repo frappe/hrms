@@ -26,6 +26,7 @@ class BootStrapTestData:
 		self.make_salary_components()
 		self.update_email_account_settings()
 		self.update_system_settings()
+		self.update_hr_settings()
 		# TODO: clean up
 		if frappe.db.get_value("Holiday List Assignment", {"assigned_to": "_Test Company"}, "docstatus") == 0:
 			frappe.get_doc("Holiday List Assignment", {"assigned_to": "_Test Company"}).submit()
@@ -227,6 +228,7 @@ class BootStrapTestData:
 				"leave_type": "_Test Leave Type",
 				"posting_date": "2013-01-02",
 				"to_date": "2013-05-05",
+				"leave_approver": "Administrator",
 			},
 			{
 				"company": "_Test Company",
@@ -237,6 +239,7 @@ class BootStrapTestData:
 				"leave_type": "_Test Leave Type",
 				"posting_date": "2013-01-02",
 				"to_date": "2013-05-05",
+				"leave_approver": "Administrator",
 			},
 			{
 				"company": "_Test Company",
@@ -247,6 +250,7 @@ class BootStrapTestData:
 				"leave_type": "_Test Leave Type LWP",
 				"posting_date": "2013-01-02",
 				"to_date": "2013-01-15",
+				"leave_approver": "Administrator",
 			},
 		]
 		self.make_records(["employee", "from_date"], records)
@@ -338,6 +342,9 @@ class BootStrapTestData:
 		system_settings = frappe.get_doc("System Settings")
 		system_settings.country = "India"
 		system_settings.save()
+
+	def update_hr_settings(self):
+		frappe.db.set_single_value("HR Settings", "leave_approver_mandatory_in_leave_application", 0)
 
 	def make_records(self, key, records):
 		doctype = records[0].get("doctype")
