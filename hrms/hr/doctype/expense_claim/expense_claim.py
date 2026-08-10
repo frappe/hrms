@@ -238,6 +238,9 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		unlink_ref_doc_from_payment_entries(self)
 
 	def notify_employee(self):
+		if not cint(self.follow_via_email):
+			return
+
 		employee_email = get_employee_email(self.employee)
 
 		if not employee_email:
@@ -267,7 +270,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		)
 
 	def notify_expense_approver(self):
-		if not self.expense_approver:
+		if not cint(self.follow_via_email) or not self.expense_approver:
 			return
 
 		template = frappe.db.get_single_value("HR Settings", "expense_claim_approval_notification_template")
@@ -294,9 +297,6 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 
 	def notify(self, args):
 		args = frappe._dict(args)
-
-		if not cint(self.follow_via_email):
-			return
 
 		contact = args.message_to
 		if not isinstance(contact, list):
