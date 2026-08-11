@@ -1,0 +1,49 @@
+{
+ "actions": [],
+ "creation": "2026-08-10 12:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "fixed_component",
+  "per_cycle",
+  "yearly"
+ ],
+ "fields": [
+  {
+   "columns": 4,
+   "fieldname": "fixed_component",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Fixed Component",
+   "reqd": 1
+  },
+  {
+   "columns": 3,
+   "fieldname": "per_cycle",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Per Cycle",
+   "options": "currency"
+  },
+  {
+   "columns": 3,
+   "fieldname": "yearly",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Yearly",
+   "options": "currency"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-08-10 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Job Offer Component",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
