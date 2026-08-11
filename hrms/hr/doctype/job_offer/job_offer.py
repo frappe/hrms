@@ -7,7 +7,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe.query_builder.functions import Sum
-from frappe.utils import cint, flt, get_link_to_form
+from frappe.utils import cint, flt, get_link_to_form, nowdate
 
 
 class JobOffer(Document):
@@ -19,6 +19,7 @@ class JobOffer(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		from hrms.hr.doctype.job_offer_component.job_offer_component import JobOfferComponent
 		from hrms.hr.doctype.job_offer_term.job_offer_term import JobOfferTerm
 
 		amended_from: DF.Link | None
@@ -28,6 +29,7 @@ class JobOffer(Document):
 		branch: DF.Link | None
 		company: DF.Link
 		ctc: DF.Currency
+		ctc_breakup: DF.Table[JobOfferComponent]
 		currency: DF.Link | None
 		date_of_joining: DF.Date | None
 		department: DF.Link | None
@@ -158,6 +160,97 @@ def make_employee(source_name: str, target_doc: str | Document | None = None):
 		set_missing_values,
 	)
 	return doc
+
+
+@frappe.whitelist()
+def get_ctc_breakup(
+	salary_structure: str,
+	company: str,
+	base: float | str | None = None,
+	variable: float | str | None = None,
+	currency: str | None = None,
+	from_date: str | None = None,
+	department: str | None = None,
+	designation: str | None = None,
+	grade: str | None = None,
+	branch: str | None = None,
+	employment_type: str | None = None,
+) -> list[dict]:
+	"""Evaluate a salary structure at the offered base and return the CTC break-up rows.
+
+	Evaluation runs through an unsaved Salary Structure Assignment carrying an unsaved
+	Employee, so the offer and payroll share one evaluator. Component formulas routinely
+	reference employee fields (employment_type, grade, ...), so those are seeded from the
+	offer itself; neither document is ever saved.
+	"""
+	from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
+		PERIODS_PER_YEAR,
+	)
+
+	frappe.has_permission("Job Offer", throw=True)
+
+	if not salary_structure or not flt(base):
+		return []
+
+	structure = frappe.get_cached_value(
+		"Salary Structure", salary_structure, ["currency", "payroll_frequency"], as_dict=True
+	)
+
+	prospective_employee = frappe.new_doc("Employee")
+	prospective_employee.company = company
+	prospective_employee.department = department
+	prospective_employee.designation = designation
+	prospective_employee.grade = grade
+	prospective_employee.branch = branch
+	prospective_employee.employment_type = employment_type
+	prospective_employee.date_of_joining = from_date or nowdate()
+
+	assignment = frappe.new_doc("Salary Structure Assignment")
+	assignment.employee = prospective_employee
+	assignment.salary_structure = salary_structure
+	assignment.company = company
+	assignment.currency = currency or structure.currency
+	assignment.base = flt(base)
+	assignment.variable = flt(variable)
+	assignment.from_date = from_date or nowdate()
+	assignment.department = department
+	assignment.designation = designation
+	assignment.grade = grade
+
+	_data, rows_by_type = assignment._evaluate_all_components()
+
+	periods = PERIODS_PER_YEAR.get(structure.payroll_frequency, 12)
+	breakup = []
+	total_yearly = 0.0
+
+	for component_type in ("earnings", "employer_contributions"):
+		for row in rows_by_type[component_type]:
+			if row.statistical_component:
+				continue
+
+			per_cycle = flt(row.default_amount)
+			yearly = flt(per_cycle * periods)
+			breakup.append(
+				{
+					"fixed_component": row.salary_component,
+					"per_cycle": per_cycle,
+					"yearly": yearly,
+				}
+			)
+			total_yearly += yearly
+
+	if not breakup:
+		return []
+
+	breakup.append(
+		{
+			"fixed_component": _("Total Cost to Company (CTC)"),
+			"per_cycle": flt(total_yearly / periods),
+			"yearly": flt(total_yearly),
+		}
+	)
+
+	return breakup
 
 
 @frappe.whitelist()

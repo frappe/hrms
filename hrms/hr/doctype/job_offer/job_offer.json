@@ -32,6 +32,8 @@
   "base",
   "variable",
   "ctc",
+  "ctc_breakup_section",
+  "ctc_breakup",
   "leave_policy_tab",
   "leave_policy",
   "column_break_leave",
@@ -224,6 +226,17 @@
    "options": "currency"
   },
   {
+   "fieldname": "ctc_breakup_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "salary_structure",
+   "fieldname": "ctc_breakup",
+   "fieldtype": "Table",
+   "label": "CTC Break-up",
+   "options": "Job Offer Component"
+  },
+  {
    "fieldname": "leave_policy_tab",
    "fieldtype": "Tab Break",
    "label": "Leave Policy"
@@ -352,11 +365,11 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-08-10 12:00:00.000000",
+ "modified": "2026-08-11 11:27:52.472482",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",
- "naming_rule": "Expression (old style)",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

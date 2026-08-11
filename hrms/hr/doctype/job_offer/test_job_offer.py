@@ -5,10 +5,15 @@ import frappe
 from frappe.utils import add_days, nowdate
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
+from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.job_applicant.job_applicant import get_applicant_to_hire_percentage
-from hrms.hr.doctype.job_offer.job_offer import get_offer_acceptance_rate
+from hrms.hr.doctype.job_offer.job_offer import get_ctc_breakup, get_offer_acceptance_rate
 from hrms.hr.doctype.staffing_plan.test_staffing_plan import make_company
+from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
+	PERIODS_PER_YEAR,
+)
 from hrms.tests.test_utils import create_job_applicant
 from hrms.tests.utils import HRMSTestSuite
 
@@ -73,6 +78,101 @@ class TestJobOffer(HRMSTestSuite):
 		job_offer.discard()
 		job_offer.reload()
 		self.assertEqual(job_offer.status, "Cancelled")
+
+	def test_ctc_breakup_agrees_with_salary_structure_assignment(self):
+		base = 50000
+		employee = make_employee("test_offer_ctc@example.com", company="_Test Company")
+		structure = make_salary_structure(
+			"Test Offer CTC Structure", "Monthly", employee=employee, base=base, currency="INR"
+		)
+		assignment = frappe.get_last_doc(
+			"Salary Structure Assignment", filters={"employee": employee, "docstatus": 1}
+		)
+
+		breakup = get_ctc_breakup(
+			salary_structure=structure.name, company="_Test Company", base=base, currency="INR"
+		)
+
+		self.assertTrue(breakup)
+		self.assertAlmostEqual(breakup[-1]["yearly"], assignment.ctc, places=2)
+
+	def test_ctc_breakup_rows_sum_to_ctc_row(self):
+		base = 50000
+		structure = make_salary_structure(
+			"Test Offer CTC Sum Structure", "Monthly", base=base, currency="INR"
+		)
+		breakup = get_ctc_breakup(
+			salary_structure=structure.name, company="_Test Company", base=base, currency="INR"
+		)
+
+		component_total = sum(row["yearly"] for row in breakup[:-1])
+		self.assertAlmostEqual(component_total, breakup[-1]["yearly"], places=2)
+
+	def test_ctc_breakup_excludes_deductions(self):
+		base = 50000
+		structure = make_salary_structure(
+			"Test Offer CTC Deduction Structure", "Monthly", base=base, currency="INR"
+		)
+		deduction_components = {row.salary_component for row in structure.deductions}
+		self.assertTrue(deduction_components)
+
+		breakup = get_ctc_breakup(
+			salary_structure=structure.name, company="_Test Company", base=base, currency="INR"
+		)
+		labels = {row["fixed_component"] for row in breakup}
+
+		self.assertFalse(labels & deduction_components)
+
+	def test_ctc_breakup_labels_carry_no_abbreviation(self):
+		base = 50000
+		structure = make_salary_structure(
+			"Test Offer CTC Label Structure", "Monthly", base=base, currency="INR"
+		)
+		breakup = get_ctc_breakup(
+			salary_structure=structure.name, company="_Test Company", base=base, currency="INR"
+		)
+
+		for row in breakup[:-1]:
+			self.assertNotIn("(", row["fixed_component"])
+
+	def test_ctc_breakup_yearly_uses_periods_per_year(self):
+		base = 50000
+		structure = make_salary_structure(
+			"Test Offer CTC Weekly Structure", "Weekly", base=base, currency="INR"
+		)
+		breakup = get_ctc_breakup(
+			salary_structure=structure.name, company="_Test Company", base=base, currency="INR"
+		)
+
+		periods = PERIODS_PER_YEAR["Weekly"]
+		for row in breakup:
+			self.assertAlmostEqual(row["yearly"], row["per_cycle"] * periods, places=2)
+
+	def test_ctc_breakup_without_employer_contributions(self):
+		base = 50000
+		structure = make_salary_structure(
+			"Test Offer CTC No Employer Structure",
+			"Monthly",
+			base=base,
+			currency="INR",
+			deductions=[],
+		)
+		self.assertFalse(structure.employer_contributions)
+
+		breakup = get_ctc_breakup(
+			salary_structure=structure.name, company="_Test Company", base=base, currency="INR"
+		)
+		earnings_total = sum(row["yearly"] for row in breakup[:-1])
+
+		self.assertAlmostEqual(breakup[-1]["yearly"], earnings_total, places=2)
+
+	def test_ctc_breakup_returns_nothing_without_base(self):
+		structure = make_salary_structure(
+			"Test Offer CTC Empty Structure", "Monthly", base=50000, currency="INR"
+		)
+		self.assertEqual(
+			get_ctc_breakup(salary_structure=structure.name, company="_Test Company", base=0), []
+		)
 
 
 def create_job_offer(**args):

@@ -3,6 +3,7 @@ from datetime import date
 
 import frappe
 from frappe import _
+from frappe.model.document import Document
 from frappe.utils import ceil, floor, get_first_day, get_last_day, get_link_to_form, getdate, rounded
 
 
@@ -95,7 +96,7 @@ SALARY_SLIP_EVAL_DEFAULTS = {
 }
 
 
-def get_component_eval_context(employee: str, ssa_as_dict: dict) -> frappe._dict:
+def get_component_eval_context(employee: "str | Document | None", ssa_as_dict: dict) -> frappe._dict:
 	"""Build the base evaluation context for salary component formulas.
 
 	Merges component abbreviation defaults, Salary Structure Assignment fields
@@ -106,7 +107,11 @@ def get_component_eval_context(employee: str, ssa_as_dict: dict) -> frappe._dict
 	data.update(get_component_abbr_map())
 	data.update(SALARY_SLIP_EVAL_DEFAULTS)
 	data.update(ssa_as_dict)
-	data.update(frappe.get_cached_doc("Employee", employee).as_dict())
+	if employee:
+		employee_doc = (
+			employee if isinstance(employee, Document) else frappe.get_cached_doc("Employee", employee)
+		)
+		data.update(employee_doc.as_dict())
 	return data
 
 
