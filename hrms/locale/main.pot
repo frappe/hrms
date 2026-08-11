@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Frappe HR VERSION\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-07-26 10:11+0000\n"
-"PO-Revision-Date: 2026-07-26 10:11+0000\n"
+"POT-Creation-Date: 2026-08-09 10:04+0000\n"
+"PO-Revision-Date: 2026-08-09 10:04+0000\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: contact@frappe.io\n"
 "MIME-Version: 1.0\n"
@@ -464,7 +464,7 @@ msgstr ""
 msgid "Actual Overtime Duration"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:486
+#: hrms/hr/doctype/leave_application/leave_application.py:488
 msgid "Actual balances aren't available because the leave application spans over different leave allocations. You can still apply for leaves which would be compensated during the next allocation."
 msgstr ""
 
@@ -507,7 +507,7 @@ msgstr ""
 msgid "Add unused leaves from previous leave period's allocation to this allocation"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1689
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1692
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
 msgstr ""
 
@@ -615,7 +615,7 @@ msgstr ""
 msgid "All Goals"
 msgstr ""
 
-#: hrms/hr/doctype/job_opening/job_opening.py:162
+#: hrms/hr/doctype/job_opening/job_opening.py:163
 msgid "All Jobs"
 msgstr ""
 
@@ -864,7 +864,7 @@ msgstr ""
 msgid "Annual Gross Earning"
 msgstr ""
 
-#: hrms/setup.py:408
+#: hrms/setup.py:465
 msgid "Annual Salary"
 msgstr ""
 
@@ -908,10 +908,8 @@ msgstr ""
 
 #. Label of the applicant_name (Data) field in DocType 'Appointment Letter'
 #. Label of the applicant_name (Data) field in DocType 'Job Offer'
-#. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/appointment_letter/appointment_letter.json
 #: hrms/hr/doctype/job_offer/job_offer.json
-#: hrms/hr/web_form/job_application/job_application.json
 msgid "Applicant Name"
 msgstr ""
 
@@ -943,11 +941,11 @@ msgstr ""
 msgid "Application Web Form Route"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:242
+#: hrms/hr/doctype/leave_application/leave_application.py:244
 msgid "Application period cannot be across two allocation records"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:239
+#: hrms/hr/doctype/leave_application/leave_application.py:241
 msgid "Application period cannot be outside leave allocation period"
 msgstr ""
 
@@ -1075,7 +1073,7 @@ msgstr ""
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/doctype/appraisal_template/appraisal_template.json
-#: hrms/hr/doctype/appraisee/appraisee.json hrms/setup.py:162
+#: hrms/hr/doctype/appraisee/appraisee.json hrms/setup.py:219
 #: hrms/workspace_sidebar/performance.json
 msgid "Appraisal Template"
 msgstr ""
@@ -1119,7 +1117,7 @@ msgstr ""
 msgid "Appraisees: {0}"
 msgstr ""
 
-#: hrms/setup.py:400
+#: hrms/setup.py:457
 msgid "Apprentice"
 msgstr ""
 
@@ -1164,7 +1162,7 @@ msgstr ""
 msgid "Approver"
 msgstr ""
 
-#: hrms/setup.py:133 hrms/setup.py:236
+#: hrms/setup.py:190 hrms/setup.py:293
 msgid "Approvers"
 msgstr ""
 
@@ -1408,7 +1406,7 @@ msgstr ""
 msgid "Attendance for employee {0} is already marked for the date {1}: {2}"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:663
+#: hrms/hr/doctype/leave_application/leave_application.py:665
 msgid "Attendance for employee {0} is already marked for the following dates: {1}"
 msgstr ""
 
@@ -1552,7 +1550,7 @@ msgstr ""
 msgid "Back to Login"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:210
+#: hrms/hr/doctype/leave_application/leave_application.py:212
 msgid "Backdated Leave Application is restricted. Please set the {} in {}"
 msgstr ""
 
@@ -1837,7 +1835,7 @@ msgstr ""
 msgid "Cannot create Salary Slip for Employee who has left before Payroll Period"
 msgstr ""
 
-#: hrms/hr/doctype/job_applicant/job_applicant.py:79
+#: hrms/hr/doctype/job_applicant/job_applicant.py:84
 msgid "Cannot create a Job Applicant against a closed Job Opening"
 msgstr ""
 
@@ -1845,7 +1843,7 @@ msgstr ""
 msgid "Cannot create or change transactions against an Appraisal Cycle with status {0}."
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:680
+#: hrms/hr/doctype/leave_application/leave_application.py:682
 msgid "Cannot find active Leave Period"
 msgstr ""
 
@@ -1880,7 +1878,7 @@ msgstr ""
 msgid "Carry Forwarded Leaves"
 msgstr ""
 
-#: hrms/setup.py:351 hrms/setup.py:352
+#: hrms/setup.py:408 hrms/setup.py:409
 msgid "Casual Leave"
 msgstr ""
 
@@ -2047,7 +2045,7 @@ msgstr ""
 msgid "Closing Notes"
 msgstr ""
 
-#: hrms/hr/doctype/job_opening/job_opening.py:101
+#: hrms/hr/doctype/job_opening/job_opening.py:102
 msgid "Closing this Job Opening for {1} may not be according to the Staffing Plan {0}.<br><br>Do you want to close this Job Opening?"
 msgstr ""
 
@@ -2066,7 +2064,7 @@ msgstr ""
 msgid "Compensatory Leave Request"
 msgstr ""
 
-#: hrms/setup.py:360 hrms/setup.py:361
+#: hrms/setup.py:417 hrms/setup.py:418
 msgid "Compensatory Off"
 msgstr ""
 
@@ -2134,7 +2132,7 @@ msgstr ""
 msgid "Consider Unmarked Attendance As"
 msgstr ""
 
-#: hrms/hr/report/employee_leave_balance/employee_leave_balance.js:53
+#: hrms/hr/report/employee_leave_balance/employee_leave_balance.js:63
 msgid "Consolidate Leave Types"
 msgstr ""
 
@@ -2441,7 +2439,7 @@ msgstr ""
 msgid "Dates Based On"
 msgstr ""
 
-#: hrms/setup.py:121
+#: hrms/setup.py:178
 msgid "Days for which Holidays are blocked for this department."
 msgstr ""
 
@@ -2552,15 +2550,15 @@ msgstr ""
 msgid "Default Base Pay"
 msgstr ""
 
-#: hrms/setup.py:81
+#: hrms/setup.py:138
 msgid "Default Employee Advance Account"
 msgstr ""
 
-#: hrms/setup.py:73
+#: hrms/setup.py:130
 msgid "Default Expense Claim Payable Account"
 msgstr ""
 
-#: hrms/overrides/company.py:133 hrms/setup.py:96
+#: hrms/overrides/company.py:133 hrms/setup.py:153
 msgid "Default Payroll Payable Account"
 msgstr ""
 
@@ -2571,7 +2569,7 @@ msgid "Default Salary Structure"
 msgstr ""
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:204
-#: hrms/setup.py:208
+#: hrms/setup.py:265
 msgid "Default Shift"
 msgstr ""
 
@@ -2685,6 +2683,10 @@ msgstr ""
 #. Option for the 'Travel Type' (Select) field in DocType 'Travel Request'
 #: hrms/hr/doctype/travel_request/travel_request.json
 msgid "Domestic"
+msgstr ""
+
+#: hrms/hr/doctype/job_applicant/job_applicant.py:93
+msgid "Duplicate Application"
 msgstr ""
 
 #: hrms/hr/doctype/holiday_list_assignment/holiday_list_assignment.py:57
@@ -2865,7 +2867,7 @@ msgid "Employee A/C Number"
 msgstr ""
 
 #: hrms/patches/v16_0/create_custom_field_for_employee_advance_in_employee_master.py:11
-#: hrms/setup.py:271
+#: hrms/setup.py:328
 msgid "Employee Advance Account"
 msgstr ""
 
@@ -2941,7 +2943,7 @@ msgstr ""
 #. Label of the employee_benefits_section (Section Break) field in DocType
 #. 'Salary Structure Assignment'
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/setup.py:410
+#: hrms/setup.py:467
 msgid "Employee Benefits"
 msgstr ""
 
@@ -3162,7 +3164,7 @@ msgstr ""
 msgid "Employee Leave Balance Summary"
 msgstr ""
 
-#: hrms/setup.py:772
+#: hrms/setup.py:829
 msgid "Employee Loan"
 msgstr ""
 
@@ -3234,7 +3236,7 @@ msgstr ""
 #: hrms/hr/doctype/employee_referral/employee_referral.json
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 #: hrms/hr/doctype/job_requisition/job_requisition.js:18
-#: hrms/hr/workspace/recruitment/recruitment.json hrms/setup.py:404
+#: hrms/hr/workspace/recruitment/recruitment.json hrms/setup.py:461
 #: hrms/workspace_sidebar/recruitment.json
 msgid "Employee Referral"
 msgstr ""
@@ -3306,7 +3308,7 @@ msgid "Employee Skills"
 msgstr ""
 
 #: hrms/hr/report/employee_exits/employee_exits.py:194
-#: hrms/hr/report/employee_leave_balance/employee_leave_balance.js:40
+#: hrms/hr/report/employee_leave_balance/employee_leave_balance.js:50
 #: hrms/hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:36
 #: hrms/hr/report/leave_ledger/leave_ledger.js:34
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.js:41
@@ -3432,7 +3434,7 @@ msgstr ""
 msgid "Employee {0} has already applied for Shift {1}: {2} that overlaps within this period"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:549
+#: hrms/hr/doctype/leave_application/leave_application.py:551
 msgid "Employee {0} has already applied for {1} between {2} and {3} : {4}"
 msgstr ""
 
@@ -3549,7 +3551,7 @@ msgstr ""
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
-#: hrms/setup.py:186 hrms/templates/generators/job_opening.html:141
+#: hrms/setup.py:243 hrms/templates/generators/job_opening.html:141
 msgid "Employment Type"
 msgstr ""
 
@@ -3650,7 +3652,7 @@ msgstr ""
 msgid "Enter the number of Leave Without Pay (LWP) days you want to reverse. This value cannot exceed the total LWP days recorded for the selected month"
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.js:259
+#: hrms/hr/doctype/leave_allocation/leave_allocation.js:261
 msgid "Enter the number of leaves you want to allocate for the period."
 msgstr ""
 
@@ -3681,7 +3683,7 @@ msgstr ""
 msgid "Error downloading PDF"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1411
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1414
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:402
 msgid "Error in formula or condition"
 msgstr ""
@@ -3896,8 +3898,8 @@ msgstr ""
 
 #: hrms/hr/doctype/exit_interview/test_exit_interview.py:110
 #: hrms/hr/doctype/exit_interview/test_exit_interview.py:120
-#: hrms/hr/doctype/exit_interview/test_exit_interview.py:122 hrms/setup.py:485
-#: hrms/setup.py:487 hrms/setup.py:508
+#: hrms/hr/doctype/exit_interview/test_exit_interview.py:122 hrms/setup.py:542
+#: hrms/setup.py:544 hrms/setup.py:565
 msgid "Exit Questionnaire Notification"
 msgstr ""
 
@@ -3961,8 +3963,8 @@ msgstr ""
 #. Label of the expense_approver (Link) field in DocType 'Expense Claim'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 #: hrms/hr/doctype/expense_claim/expense_claim.json
-#: hrms/patches/v15_0/update_approver_custom_fields.py:11 hrms/setup.py:153
-#: hrms/setup.py:242
+#: hrms/patches/v15_0/update_approver_custom_fields.py:11 hrms/setup.py:210
+#: hrms/setup.py:299
 msgid "Expense Approver"
 msgstr ""
 
@@ -4349,7 +4351,7 @@ msgstr ""
 msgid "Follow via Email"
 msgstr ""
 
-#: hrms/setup.py:337
+#: hrms/setup.py:394
 msgid "Food"
 msgstr ""
 
@@ -4495,7 +4497,7 @@ msgstr ""
 msgid "Full and Final Outstanding Statement"
 msgstr ""
 
-#: hrms/setup.py:393
+#: hrms/setup.py:450
 msgid "Full-time"
 msgstr ""
 
@@ -4627,7 +4629,7 @@ msgstr ""
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:173
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/setup.py:201
+#: hrms/setup.py:258
 msgid "Grade"
 msgstr ""
 
@@ -4724,22 +4726,22 @@ msgstr ""
 msgid "Group goal's progress is auto-calculated based on the child goals."
 msgstr ""
 
-#: hrms/setup.py:326
+#: hrms/setup.py:383
 msgid "HR"
 msgstr ""
 
-#: hrms/setup.py:59
+#: hrms/setup.py:116
 msgid "HR & Payroll"
 msgstr ""
 
-#: hrms/setup.py:65
+#: hrms/setup.py:122
 msgid "HR & Payroll Settings"
 msgstr ""
 
 #. Name of a DocType
 #. Label of a Link in the HR Setup Workspace
 #: hrms/hr/doctype/hr_settings/hr_settings.json
-#: hrms/hr/doctype/leave_application/leave_application.py:212
+#: hrms/hr/doctype/leave_application/leave_application.py:214
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:37
 #: hrms/hr/report/project_profitability/project_profitability.py:103
 #: hrms/hr/workspace/hr_setup/hr_setup.json
@@ -4782,7 +4784,7 @@ msgstr ""
 msgid "Half Day Date"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:938
+#: hrms/hr/doctype/leave_application/leave_application.py:954
 msgid "Half Day Date cannot be a holiday"
 msgstr ""
 
@@ -4790,7 +4792,7 @@ msgstr ""
 msgid "Half Day Date is mandatory"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:941
+#: hrms/hr/doctype/leave_application/leave_application.py:957
 msgid "Half Day Date should be between From Date and To Date"
 msgstr ""
 
@@ -4817,7 +4819,7 @@ msgstr ""
 msgid "Has Certificate"
 msgstr ""
 
-#: hrms/setup.py:216
+#: hrms/setup.py:273
 msgid "Health Insurance"
 msgstr ""
 
@@ -4827,11 +4829,11 @@ msgstr ""
 msgid "Health Insurance Name"
 msgstr ""
 
-#: hrms/setup.py:230
+#: hrms/setup.py:287
 msgid "Health Insurance No"
 msgstr ""
 
-#: hrms/setup.py:222
+#: hrms/setup.py:279
 msgid "Health Insurance Provider"
 msgstr ""
 
@@ -4994,6 +4996,12 @@ msgstr ""
 #. DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "If enabled, auto attendance will be marked on holidays if Employee Checkins exist"
+msgstr ""
+
+#. Description of the 'Prevent Duplicate Applications' (Check) field in DocType
+#. 'Job Opening'
+#: hrms/hr/doctype/job_opening/job_opening.json
+msgid "If enabled, candidates who have already applied with the same email address will not be allowed to apply again"
 msgstr ""
 
 #. Description of the 'Consider Marked Attendance on Holidays' (Check) field in
@@ -5209,11 +5217,11 @@ msgstr ""
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1968
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1971
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1956
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1959
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr ""
 
@@ -5221,7 +5229,7 @@ msgstr ""
 msgid "Income Tax Slab: "
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1964
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1967
 msgid "Income Tax Slab: {0} is disabled"
 msgstr ""
 
@@ -5255,11 +5263,11 @@ msgstr ""
 msgid "Install Frappe HR"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:499
+#: hrms/hr/doctype/leave_application/leave_application.py:501
 msgid "Insufficient Balance"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:497
+#: hrms/hr/doctype/leave_application/leave_application.py:499
 msgid "Insufficient leave balance for Leave Type {0}"
 msgstr ""
 
@@ -5274,7 +5282,7 @@ msgstr ""
 msgid "Interest Income Account"
 msgstr ""
 
-#: hrms/setup.py:399
+#: hrms/setup.py:456
 msgid "Intern"
 msgstr ""
 
@@ -5319,11 +5327,11 @@ msgstr ""
 msgid "Interview Feedback"
 msgstr ""
 
-#: hrms/hr/doctype/interview/test_interview.py:297
-#: hrms/hr/doctype/interview/test_interview.py:306
-#: hrms/hr/doctype/interview/test_interview.py:308
-#: hrms/hr/doctype/interview/test_interview.py:315 hrms/setup.py:471
-#: hrms/setup.py:473 hrms/setup.py:506
+#: hrms/hr/doctype/interview/test_interview.py:309
+#: hrms/hr/doctype/interview/test_interview.py:318
+#: hrms/hr/doctype/interview/test_interview.py:320
+#: hrms/hr/doctype/interview/test_interview.py:327 hrms/setup.py:528
+#: hrms/setup.py:530 hrms/setup.py:563
 msgid "Interview Feedback Reminder"
 msgstr ""
 
@@ -5335,11 +5343,11 @@ msgstr ""
 msgid "Interview Not Rescheduled"
 msgstr ""
 
-#: hrms/hr/doctype/interview/test_interview.py:281
-#: hrms/hr/doctype/interview/test_interview.py:290
-#: hrms/hr/doctype/interview/test_interview.py:292
-#: hrms/hr/doctype/interview/test_interview.py:314 hrms/setup.py:459
-#: hrms/setup.py:461 hrms/setup.py:502
+#: hrms/hr/doctype/interview/test_interview.py:293
+#: hrms/hr/doctype/interview/test_interview.py:302
+#: hrms/hr/doctype/interview/test_interview.py:304
+#: hrms/hr/doctype/interview/test_interview.py:326 hrms/setup.py:516
+#: hrms/setup.py:518 hrms/setup.py:559
 msgid "Interview Reminder"
 msgstr ""
 
@@ -5391,11 +5399,11 @@ msgstr ""
 msgid "Interview Type Name"
 msgstr ""
 
-#: hrms/hr/doctype/job_applicant/job_applicant.py:162
+#: hrms/hr/doctype/job_applicant/job_applicant.py:176
 msgid "Interview Type {0} is only applicable for Designation {1}"
 msgstr ""
 
-#: hrms/hr/doctype/job_applicant/job_applicant.py:126
+#: hrms/hr/doctype/job_applicant/job_applicant.py:140
 msgid "Interview Type {0} is only applicable for the Designation {1}"
 msgstr ""
 
@@ -5467,7 +5475,7 @@ msgstr ""
 msgid "Invalid Dates"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2659
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2662
 msgid "Invalid LWP Days Reversed"
 msgstr ""
 
@@ -5631,7 +5639,7 @@ msgstr ""
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 #: hrms/hr/doctype/job_offer/job_offer.json
 #: hrms/hr/report/recruitment_analytics/recruitment_analytics.py:38
-#: hrms/hr/workspace/recruitment/recruitment.json hrms/setup.py:194
+#: hrms/hr/workspace/recruitment/recruitment.json hrms/setup.py:251
 #: hrms/workspace_sidebar/recruitment.json
 msgid "Job Applicant"
 msgstr ""
@@ -5657,7 +5665,7 @@ msgstr ""
 #. Label of the job_description_tab (Tab Break) field in DocType 'Job
 #. Requisition'
 #. Label of the description (Text Editor) field in DocType 'Job Requisition'
-#: hrms/hr/doctype/job_requisition/job_requisition.json hrms/setup.py:414
+#: hrms/hr/doctype/job_requisition/job_requisition.json hrms/setup.py:471
 msgid "Job Description"
 msgstr ""
 
@@ -5734,7 +5742,7 @@ msgstr ""
 msgid "Job Openings"
 msgstr ""
 
-#: hrms/hr/doctype/job_opening/job_opening.py:137
+#: hrms/hr/doctype/job_opening/job_opening.py:138
 msgid "Job Openings for the designation {0} are already open or the hiring is complete as per the Staffing Plan {1}"
 msgstr ""
 
@@ -5839,7 +5847,7 @@ msgstr ""
 msgid "Key Result Area"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2656
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2659
 msgid "LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
 msgstr ""
 
@@ -5955,11 +5963,11 @@ msgstr ""
 msgid "Leave Application"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:833
+#: hrms/hr/doctype/leave_application/leave_application.py:835
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
 msgstr ""
 
-#: hrms/setup.py:436 hrms/setup.py:438 hrms/setup.py:498
+#: hrms/setup.py:493 hrms/setup.py:495 hrms/setup.py:555
 msgid "Leave Approval Notification"
 msgstr ""
 
@@ -5973,8 +5981,8 @@ msgstr ""
 #. Name of a role
 #: hrms/hr/doctype/leave_application/leave_application.json
 #: hrms/hr/doctype/overtime_slip/overtime_slip.json
-#: hrms/patches/v15_0/update_approver_custom_fields.py:19 hrms/setup.py:146
-#: hrms/setup.py:250
+#: hrms/patches/v15_0/update_approver_custom_fields.py:19 hrms/setup.py:203
+#: hrms/setup.py:307
 msgid "Leave Approver"
 msgstr ""
 
@@ -5991,6 +5999,10 @@ msgstr ""
 #. Label of the leave_approver_name (Data) field in DocType 'Leave Application'
 #: hrms/hr/doctype/leave_application/leave_application.json
 msgid "Leave Approver Name"
+msgstr ""
+
+#: hrms/hr/doctype/leave_application/leave_application.py:921
+msgid "Leave Approver is mandatory"
 msgstr ""
 
 #. Label of the leave_balance (Float) field in DocType 'Leave Encashment'
@@ -6015,7 +6027,7 @@ msgstr ""
 #. Label of a Link in the Leaves Workspace
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/leave_block_list/leave_block_list.json
-#: hrms/hr/workspace/leaves/leaves.json hrms/setup.py:125
+#: hrms/hr/workspace/leaves/leaves.json hrms/setup.py:182
 #: hrms/workspace_sidebar/leaves.json
 msgid "Leave Block List"
 msgstr ""
@@ -6048,7 +6060,7 @@ msgstr ""
 msgid "Leave Block List Name"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:1482
+#: hrms/hr/doctype/leave_application/leave_application.py:1498
 msgid "Leave Blocked"
 msgstr ""
 
@@ -6173,7 +6185,7 @@ msgstr ""
 msgid "Leave Settings"
 msgstr ""
 
-#: hrms/setup.py:445 hrms/setup.py:447 hrms/setup.py:499
+#: hrms/setup.py:502 hrms/setup.py:504 hrms/setup.py:556
 msgid "Leave Status Notification"
 msgstr ""
 
@@ -6251,8 +6263,8 @@ msgstr ""
 
 #. Label of the leave_without_pay (Float) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/report/salary_register/salary_register.py:179 hrms/setup.py:385
-#: hrms/setup.py:386
+#: hrms/payroll/report/salary_register/salary_register.py:179 hrms/setup.py:442
+#: hrms/setup.py:443
 msgid "Leave Without Pay"
 msgstr ""
 
@@ -6280,7 +6292,7 @@ msgstr ""
 msgid "Leave cannot be allocated before {0}, as leave balance has already been carry-forwarded in the future leave allocation record {1}"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:285
+#: hrms/hr/doctype/leave_application/leave_application.py:287
 msgid "Leave cannot be applied/cancelled before {0}, as leave balance has already been carry-forwarded in the future leave allocation record {1}"
 msgstr ""
 
@@ -6289,7 +6301,7 @@ msgstr ""
 msgid "Leave for optional holiday"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:579
+#: hrms/hr/doctype/leave_application/leave_application.py:581
 msgid "Leave of type {0} cannot be longer than {1}."
 msgstr ""
 
@@ -6359,7 +6371,7 @@ msgstr ""
 msgid "Leaves for the Leave Type {0} won't be carry-forwarded since carry-forwarding is disabled."
 msgstr ""
 
-#: hrms/setup.py:416
+#: hrms/setup.py:473
 msgid "Leaves per Year"
 msgstr ""
 
@@ -6372,7 +6384,7 @@ msgstr ""
 msgid "Leaves you can avail against a holiday you worked on. You can claim Compensatory Off Leave using Compensatory Leave Request. Click {0} to know more"
 msgstr ""
 
-#: hrms/hr/report/employee_leave_balance/employee_leave_balance.js:47
+#: hrms/hr/report/employee_leave_balance/employee_leave_balance.js:57
 #: hrms/hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:43
 #: hrms/hr/report/leave_ledger/leave_ledger.js:41
 msgctxt "Employee"
@@ -6413,7 +6425,7 @@ msgstr ""
 msgid "Loan Product"
 msgstr ""
 
-#: hrms/payroll/report/salary_register/salary_register.py:233 hrms/setup.py:765
+#: hrms/payroll/report/salary_register/salary_register.py:233 hrms/setup.py:822
 msgid "Loan Repayment"
 msgstr ""
 
@@ -6654,7 +6666,7 @@ msgstr ""
 msgid "Maximum Consecutive Leaves Allowed"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:589
+#: hrms/hr/doctype/leave_application/leave_application.py:591
 msgid "Maximum Consecutive Leaves Exceeded"
 msgstr ""
 
@@ -6716,7 +6728,7 @@ msgstr ""
 msgid "Meal Preference"
 msgstr ""
 
-#: hrms/setup.py:338
+#: hrms/setup.py:395
 msgid "Medical"
 msgstr ""
 
@@ -6763,7 +6775,7 @@ msgstr ""
 msgid "Missing Salary Components"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1959
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1962
 msgid "Missing Tax Slab"
 msgstr ""
 
@@ -6838,7 +6850,7 @@ msgid "My Requests"
 msgstr ""
 
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.py:123
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1397
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1400
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:388
 msgid "Name error"
 msgstr ""
@@ -7175,7 +7187,7 @@ msgstr ""
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2268
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2271
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr ""
 
@@ -7183,7 +7195,7 @@ msgstr ""
 msgid "Nothing to change"
 msgstr ""
 
-#: hrms/setup.py:417
+#: hrms/setup.py:474
 msgid "Notice Period"
 msgstr ""
 
@@ -7340,7 +7352,7 @@ msgstr ""
 msgid "Only Interviews with Cleared or Rejected status can be submitted."
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:138
+#: hrms/hr/doctype/leave_application/leave_application.py:140
 msgid "Only Leave Applications with status 'Approved' and 'Rejected' can be submitted"
 msgstr ""
 
@@ -7356,7 +7368,7 @@ msgstr ""
 msgid "Only interviewers can submit feedback"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:218
+#: hrms/hr/doctype/leave_application/leave_application.py:220
 msgid "Only users with the {0} role can create backdated leave applications"
 msgstr ""
 
@@ -7391,7 +7403,7 @@ msgstr ""
 msgid "Opening closed."
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:686
+#: hrms/hr/doctype/leave_application/leave_application.py:688
 msgid "Optional Holiday List not set for leave period {0}"
 msgstr ""
 
@@ -7614,7 +7626,7 @@ msgstr ""
 msgid "Parent Goal"
 msgstr ""
 
-#: hrms/setup.py:394
+#: hrms/setup.py:451
 msgid "Part-time"
 msgstr ""
 
@@ -7756,7 +7768,7 @@ msgstr ""
 msgid "Payroll Correction Child"
 msgstr ""
 
-#: hrms/setup.py:111 hrms/setup.py:285
+#: hrms/setup.py:168 hrms/setup.py:342
 msgid "Payroll Cost Center"
 msgstr ""
 
@@ -7820,7 +7832,7 @@ msgstr ""
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/setup.py:838
+#: hrms/setup.py:895
 msgid "Payroll Payable Account"
 msgstr ""
 
@@ -7941,7 +7953,7 @@ msgstr ""
 msgid "Permanently submit {0}"
 msgstr ""
 
-#: hrms/setup.py:398
+#: hrms/setup.py:455
 msgid "Piecework"
 msgstr ""
 
@@ -8002,7 +8014,7 @@ msgstr ""
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2257
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2260
 msgid "Please see attachment"
 msgstr ""
 
@@ -8146,11 +8158,11 @@ msgstr ""
 msgid "Please set cost to company(CTC) for employee {0} in the {1}"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:741
+#: hrms/hr/doctype/leave_application/leave_application.py:743
 msgid "Please set default template for Leave Approval Notification in HR Settings."
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:716
+#: hrms/hr/doctype/leave_application/leave_application.py:718
 msgid "Please set default template for Leave Status Notification in HR Settings."
 msgstr ""
 
@@ -8266,6 +8278,12 @@ msgstr ""
 msgid "Present Records"
 msgstr ""
 
+#. Label of the prevent_duplicate_applicant (Check) field in DocType 'Job
+#. Opening'
+#: hrms/hr/doctype/job_opening/job_opening.json
+msgid "Prevent Duplicate Applications"
+msgstr ""
+
 #. Label of the prevent_self_expense_approval (Check) field in DocType 'HR
 #. Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
@@ -8293,15 +8311,15 @@ msgstr ""
 msgid "Printed On {0}"
 msgstr ""
 
-#: hrms/setup.py:377 hrms/setup.py:378
+#: hrms/setup.py:434 hrms/setup.py:435
 msgid "Privilege Leave"
 msgstr ""
 
-#: hrms/setup.py:395
+#: hrms/setup.py:452
 msgid "Probation"
 msgstr ""
 
-#: hrms/setup.py:409
+#: hrms/setup.py:466
 msgid "Probationary Period"
 msgstr ""
 
@@ -8313,7 +8331,7 @@ msgstr ""
 #. Label of the process_payroll_accounting_entry_based_on_employee (Check)
 #. field in DocType 'Payroll Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
-#: hrms/setup.py:849
+#: hrms/setup.py:906
 msgid "Process Payroll Accounting Entry based on Employee"
 msgstr ""
 
@@ -8586,7 +8604,7 @@ msgid "Reduction is more than {0}'s available leave balance {1} for leave type {
 msgstr ""
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:414
-#: hrms/hr/doctype/leave_application/leave_application.py:583
+#: hrms/hr/doctype/leave_application/leave_application.py:585
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:219
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:141
 msgid "Reference: {0}"
@@ -8694,7 +8712,7 @@ msgstr ""
 msgid "Rented Car"
 msgstr ""
 
-#: hrms/setup.py:822 hrms/setup.py:831
+#: hrms/setup.py:879 hrms/setup.py:888
 msgid "Repay From Salary"
 msgstr ""
 
@@ -8765,7 +8783,7 @@ msgstr ""
 msgid "Require Full Funding"
 msgstr ""
 
-#: hrms/setup.py:170
+#: hrms/setup.py:227
 msgid "Required Skills"
 msgstr ""
 
@@ -8779,7 +8797,7 @@ msgstr ""
 msgid "Reschedule Interview"
 msgstr ""
 
-#: hrms/setup.py:415
+#: hrms/setup.py:472
 msgid "Responsibilities"
 msgstr ""
 
@@ -8869,7 +8887,7 @@ msgstr ""
 #. Label of the role_allowed_to_create_backdated_leave_application (Link) field
 #. in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
-#: hrms/hr/doctype/leave_application/leave_application.py:211
+#: hrms/hr/doctype/leave_application/leave_application.py:213
 msgid "Role Allowed to Create Backdated Leave Application"
 msgstr ""
 
@@ -9097,7 +9115,7 @@ msgstr ""
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/workspace/payroll/payroll.json hrms/setup.py:313
+#: hrms/payroll/workspace/payroll/payroll.json hrms/setup.py:370
 #: hrms/workspace_sidebar/payroll.json
 msgid "Salary Slip"
 msgstr ""
@@ -9284,7 +9302,7 @@ msgstr ""
 msgid "Salary Withholding {0} already exists for employee {1} for the selected period"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:412
+#: hrms/hr/doctype/leave_application/leave_application.py:414
 msgid "Salary already processed for period between {0} and {1}, Leave application period cannot be between this date range."
 msgstr ""
 
@@ -9304,14 +9322,14 @@ msgstr ""
 msgid "Salary components should be part of the Salary Structure."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2682
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2685
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr ""
 
 #. Label of the sanctioned_amount (Currency) field in DocType 'Expense Claim
 #. Detail'
 #: hrms/hr/doctype/expense_claim_detail/expense_claim_detail.json
-#: hrms/hr/report/unpaid_expense_claim/unpaid_expense_claim.py:22
+#: hrms/hr/report/unpaid_expense_claim/unpaid_expense_claim.py:75
 msgid "Sanctioned Amount"
 msgstr ""
 
@@ -9380,7 +9398,7 @@ msgstr ""
 msgid "Select Payment Account to make Bank Entry"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1815
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1816
 msgid "Select Payroll Frequency."
 msgstr ""
 
@@ -9417,7 +9435,7 @@ msgstr ""
 msgid "Select if any of the days selected for request are holidays"
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.js:237
+#: hrms/hr/doctype/leave_allocation/leave_allocation.js:239
 msgid "Select the Employee for which you want to allocate leaves."
 msgstr ""
 
@@ -9425,15 +9443,15 @@ msgstr ""
 msgid "Select the Employee."
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.js:242
+#: hrms/hr/doctype/leave_allocation/leave_allocation.js:244
 msgid "Select the Leave Type like Sick leave, Privilege Leave, Casual Leave, etc."
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.js:254
+#: hrms/hr/doctype/leave_allocation/leave_allocation.js:256
 msgid "Select the date after which this Leave Allocation will expire."
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.js:249
+#: hrms/hr/doctype/leave_allocation/leave_allocation.js:251
 msgid "Select the date from which this Leave Allocation will be valid."
 msgstr ""
 
@@ -9501,7 +9519,7 @@ msgstr ""
 msgid "Self-approval for Expense Claims is not allowed"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:924
+#: hrms/hr/doctype/leave_application/leave_application.py:940
 msgid "Self-approval for leaves is not allowed"
 msgstr ""
 
@@ -9778,8 +9796,8 @@ msgstr ""
 msgid "Shift Request"
 msgstr ""
 
-#: hrms/patches/v15_0/update_approver_custom_fields.py:27 hrms/setup.py:139
-#: hrms/setup.py:263
+#: hrms/patches/v15_0/update_approver_custom_fields.py:27 hrms/setup.py:196
+#: hrms/setup.py:320
 msgid "Shift Request Approver"
 msgstr ""
 
@@ -9931,7 +9949,7 @@ msgstr ""
 msgid "Showing"
 msgstr ""
 
-#: hrms/setup.py:369 hrms/setup.py:370
+#: hrms/setup.py:426 hrms/setup.py:427
 msgid "Sick Leave"
 msgstr ""
 
@@ -9969,7 +9987,7 @@ msgstr ""
 
 #. Label of the skills_section (Section Break) field in DocType 'Employee Skill
 #. Map'
-#: hrms/hr/doctype/employee_skill_map/employee_skill_map.json hrms/setup.py:176
+#: hrms/hr/doctype/employee_skill_map/employee_skill_map.json hrms/setup.py:233
 msgid "Skills"
 msgstr ""
 
@@ -10045,7 +10063,7 @@ msgstr ""
 msgid "Standard Working Hours"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1893
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1896
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}."
 msgstr ""
 
@@ -10081,7 +10099,7 @@ msgstr ""
 msgid "Status for Other Half"
 msgstr ""
 
-#: hrms/setup.py:412
+#: hrms/setup.py:469
 msgid "Stock Options"
 msgstr ""
 
@@ -10189,7 +10207,7 @@ msgstr ""
 msgid "Sync {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1404
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1407
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:395
 msgid "Syntax error"
 msgstr ""
@@ -10353,7 +10371,7 @@ msgstr ""
 msgid "The day of the month when leaves should be allocated"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:455
+#: hrms/hr/doctype/leave_application/leave_application.py:457
 msgid "The day(s) on which you are applying for leave are holidays. You need not apply for leave."
 msgstr ""
 
@@ -10361,7 +10379,7 @@ msgstr ""
 msgid "The days between {0} to {1} are not valid holidays."
 msgstr ""
 
-#: hrms/setup.py:130
+#: hrms/setup.py:187
 msgid "The first Approver in the list will be set as the default Approver."
 msgstr ""
 
@@ -10460,17 +10478,17 @@ msgstr ""
 msgid "This employee already has a log with the same timestamp.{0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1412
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1415
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:403
 msgid "This error can be due to invalid formula or condition."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1405
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1408
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:396
 msgid "This error can be due to invalid syntax."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1398
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1401
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:389
 msgid "This error can be due to missing or deleted field."
 msgstr ""
@@ -10563,7 +10581,7 @@ msgid "To date can not greater than employee's relieving date"
 msgstr ""
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:214
-#: hrms/hr/doctype/leave_application/leave_application.py:224
+#: hrms/hr/doctype/leave_application/leave_application.py:226
 msgid "To date cannot be before from date"
 msgstr ""
 
@@ -10728,11 +10746,11 @@ msgstr ""
 msgid "Total Exemption Amount"
 msgstr ""
 
-#: hrms/setup.py:303
+#: hrms/setup.py:360
 msgid "Total Expense Claim (via Expense Claim)"
 msgstr ""
 
-#: hrms/setup.py:294
+#: hrms/setup.py:351
 msgid "Total Expense Claim (via Expense Claims)"
 msgstr ""
 
@@ -10755,7 +10773,7 @@ msgstr ""
 msgid "Total Income Tax"
 msgstr ""
 
-#: hrms/setup.py:795
+#: hrms/setup.py:852
 msgid "Total Interest Amount"
 msgstr ""
 
@@ -10788,7 +10806,7 @@ msgstr ""
 msgid "Total Leaves Encashed"
 msgstr ""
 
-#: hrms/setup.py:809
+#: hrms/setup.py:866
 msgid "Total Loan Repayment"
 msgstr ""
 
@@ -10825,7 +10843,7 @@ msgstr ""
 msgid "Total Present"
 msgstr ""
 
-#: hrms/setup.py:786
+#: hrms/setup.py:843
 msgid "Total Principal Amount"
 msgstr ""
 
@@ -11046,7 +11064,7 @@ msgstr ""
 
 #. Label of a Card Break in the Expenses Workspace
 #. Label of a Workspace Sidebar Item
-#: hrms/hr/workspace/expenses/expenses.json hrms/setup.py:340
+#: hrms/hr/workspace/expenses/expenses.json hrms/setup.py:397
 #: hrms/workspace_sidebar/expenses.json
 msgid "Travel"
 msgstr ""
@@ -11310,7 +11328,7 @@ msgstr ""
 msgid "Vacancies cannot be lower than the current openings"
 msgstr ""
 
-#: hrms/hr/doctype/job_opening/job_opening.py:142
+#: hrms/hr/doctype/job_opening/job_opening.py:143
 msgid "Vacancies fulfilled"
 msgstr ""
 
@@ -11410,15 +11428,15 @@ msgstr ""
 msgid "WARNING: Loan Management module has been separated from ERPNext."
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:482
+#: hrms/hr/doctype/leave_application/leave_application.py:484
 msgid "Warning: Insufficient leave balance for Leave Type {0} in this allocation."
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:490
+#: hrms/hr/doctype/leave_application/leave_application.py:492
 msgid "Warning: Insufficient leave balance for Leave Type {0}."
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:428
+#: hrms/hr/doctype/leave_application/leave_application.py:430
 msgid "Warning: Leave application contains following block dates"
 msgstr ""
 
@@ -11426,7 +11444,7 @@ msgstr ""
 msgid "Warning: {0} already has an active Shift Assignment {1} for some/all of these dates."
 msgstr ""
 
-#: hrms/setup.py:402
+#: hrms/setup.py:459
 msgid "Website Listing"
 msgstr ""
 
@@ -11604,7 +11622,7 @@ msgstr ""
 msgid "Yes, Proceed"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:438
+#: hrms/hr/doctype/leave_application/leave_application.py:440
 msgid "You are not authorized to approve leaves on Block Dates"
 msgstr ""
 
@@ -11647,6 +11665,10 @@ msgstr ""
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:466
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:629
 msgid "You do not have permission to complete this action"
+msgstr ""
+
+#: hrms/hr/doctype/job_applicant/job_applicant.py:91
+msgid "You have already applied for this position."
 msgstr ""
 
 #: frontend/src/components/EmployeeAdvanceBalance.vue:26
@@ -11840,7 +11862,7 @@ msgstr ""
 msgid "{0} already has an active Shift Assignment {1} for some/all of these dates."
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:195
+#: hrms/hr/doctype/leave_application/leave_application.py:197
 msgid "{0} applicable after {1} calendar days"
 msgstr ""
 
@@ -11886,7 +11908,7 @@ msgstr ""
 msgid "{0} is not allowed to submit Interview Feedback for the Interview: {1}"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:694
+#: hrms/hr/doctype/leave_application/leave_application.py:696
 msgid "{0} is not in Optional Holiday List"
 msgstr ""
 
@@ -11943,7 +11965,7 @@ msgstr ""
 msgid "{0}. Check error log for more details."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2291
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2294
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr ""
 

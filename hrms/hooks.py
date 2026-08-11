@@ -109,6 +109,12 @@ setup_wizard_complete = "hrms.subscription_utils.update_erpnext_access"
 before_uninstall = "hrms.uninstall.before_uninstall"
 # after_uninstall = "hrms.uninstall.after_uninstall"
 
+# Disable / Enable
+# ----------------
+
+before_disable = "hrms.setup.before_disable"
+after_enable = "hrms.setup.after_enable"
+
 # Integration Setup
 # ------------------
 # To set up dependencies/integrations with other apps
