@@ -4,6 +4,7 @@
 
 import frappe
 from frappe import _
+from frappe.query_builder.functions import Count
 from frappe.utils.dashboard import cache_source
 
 
@@ -27,52 +28,42 @@ def get_data(
 
 	company = filters.get("company")
 
-	base_filters = {"docstatus": ["!=", 2]}
-	offer_filters = {"docstatus": 1, "status": "Accepted"}
+	JobApplicant = frappe.qb.DocType("Job Applicant")
+	JobOffer = frappe.qb.DocType("Job Offer")
+
+	query = (
+		frappe.qb.from_(JobApplicant)
+		.left_join(JobOffer)
+		.on(
+			(JobOffer.job_applicant == JobApplicant.name)
+			& (JobOffer.docstatus == 1)
+			& (JobOffer.status == "Accepted")
+		)
+		.select(JobApplicant.source, Count(JobApplicant.name).as_("total"), Count(JobOffer.job_applicant).distinct().as_("hired"))
+		.where(JobApplicant.docstatus != 2)
+		.groupby(JobApplicant.source)
+	)
 
 	if company:
 		job_openings = frappe.get_all("Job Opening", filters={"company": company}, pluck="name")
-		applicants = frappe.get_all(
-			"Job Applicant",
-			filters=base_filters,
-			or_filters=[
-				["job_title", "in", job_openings or ["__no_match__"]],
-				["job_title", "is", "not set"],
-			],
-			fields=["name", "source"],
-		)
-		if applicants:
-			offer_filters["job_applicant"] = ["in", [a.name for a in applicants]]
-		else:
-			return {"labels": [], "datasets": []}
-	else:
-		applicants = frappe.get_all(
-			"Job Applicant",
-			filters=base_filters,
-			fields=["name", "source"],
-		)
+		if not job_openings:
+			return {
+				"labels": [],
+				"datasets": [
+					{"name": _("Total Applicants"), "values": []},
+					{"name": _("Hired"), "values": []},
+				],
+			}
+		query = query.where(JobApplicant.job_title.isin(job_openings))
 
-	accepted_applicants = set(frappe.get_all("Job Offer", filters=offer_filters, pluck="job_applicant"))
-
-	source_data = {}
-	for applicant in applicants:
-		source = applicant.source or _("Unknown")
-		if source not in source_data:
-			source_data[source] = {"total": 0, "hired": 0}
-		source_data[source]["total"] += 1
-		if applicant.name in accepted_applicants:
-			source_data[source]["hired"] += 1
-
-	sorted_sources = sorted(source_data.items(), key=lambda x: x[1]["total"], reverse=True)[:8]
-
-	labels = [s[0] for s in sorted_sources]
-	totals = [s[1]["total"] for s in sorted_sources]
-	hired = [s[1]["hired"] for s in sorted_sources]
+	rows = query.run(as_dict=True)
+	rows.sort(key=lambda x: x.total, reverse=True)
+	rows = rows[:8]
 
 	return {
-		"labels": labels,
+		"labels": [r.source or _("Unknown") for r in rows],
 		"datasets": [
-			{"name": _("Total Applicants"), "values": totals},
-			{"name": _("Hired"), "values": hired},
+			{"name": _("Total Applicants"), "values": [r.total for r in rows]},
+			{"name": _("Hired"), "values": [r.hired for r in rows]},
 		],
 	}

@@ -4,6 +4,7 @@
 
 import frappe
 from frappe import _
+from frappe.query_builder.functions import Count
 from frappe.utils.dashboard import cache_source
 
 
@@ -27,31 +28,47 @@ def get_data(
 
 	company = filters.get("company")
 
-	interview_detail = frappe.qb.DocType("Interview Detail")
-	interview = frappe.qb.DocType("Interview")
+	InterviewDetail = frappe.qb.DocType("Interview Detail")
+	Interview = frappe.qb.DocType("Interview")
+	InterviewFeedback = frappe.qb.DocType("Interview Feedback")
 
 	query = (
-		frappe.qb.from_(interview_detail)
-		.inner_join(interview)
-		.on(interview_detail.parent == interview.name)
-		.select(interview_detail.interviewer, interview.name.as_("interview_name"), interview.status)
-		.where(interview.docstatus != 2)
-		.where(interview_detail.parenttype == "Interview")
+		frappe.qb.from_(InterviewDetail)
+		.inner_join(Interview)
+		.on(InterviewDetail.parent == Interview.name)
+		.left_join(InterviewFeedback)
+		.on(
+			(InterviewFeedback.interview == Interview.name)
+			& (InterviewFeedback.interviewer == InterviewDetail.interviewer)
+			& (InterviewFeedback.docstatus == 1)
+		)
+		.select(
+			InterviewDetail.interviewer,
+			Interview.name.as_("interview_name"),
+			Count(InterviewFeedback.name).as_("feedback_count"),
+		)
+		.where(Interview.docstatus != 2)
+		.where(InterviewDetail.parenttype == "Interview")
+		.groupby(InterviewDetail.interviewer, Interview.name)
 	)
 
 	if company:
 		job_openings = frappe.get_all("Job Opening", filters={"company": company}, pluck="name")
+		if not job_openings:
+			return {
+				"labels": [],
+				"datasets": [
+					{"name": _("Total Interviews"), "values": []},
+					{"name": _("Feedback Pending"), "values": []},
+				],
+			}
 		company_applicants = frappe.get_all(
 			"Job Applicant",
-			filters={"docstatus": ["!=", 2]},
-			or_filters=[
-				["job_title", "in", job_openings or ["__no_match__"]],
-				["job_title", "is", "not set"],
-			],
+			filters={"docstatus": ["!=", 2], "job_title": ["in", job_openings]},
 			pluck="name",
 		)
 		if company_applicants:
-			query = query.where(interview.job_applicant.isin(company_applicants))
+			query = query.where(Interview.job_applicant.isin(company_applicants))
 		else:
 			return {
 				"labels": [],
@@ -63,22 +80,13 @@ def get_data(
 
 	rows = query.run(as_dict=True)
 
-	feedback_submitted = {
-		(f.interview, f.interviewer)
-		for f in frappe.get_all(
-			"Interview Feedback",
-			filters={"docstatus": 1},
-			fields=["interview", "interviewer"],
-		)
-	}
-
 	interviewer_data = {}
 	for row in rows:
 		iv = row.interviewer
 		if iv not in interviewer_data:
 			interviewer_data[iv] = {"total": 0, "pending": 0}
 		interviewer_data[iv]["total"] += 1
-		if (row.interview_name, iv) not in feedback_submitted:
+		if row.feedback_count == 0:
 			interviewer_data[iv]["pending"] += 1
 
 	sorted_ivs = sorted(
@@ -88,12 +96,14 @@ def get_data(
 	)[:10]
 
 	interviewer_emails = [iv[0] for iv in sorted_ivs]
-	full_names = {
-		u.name: u.full_name
-		for u in frappe.get_all(
-			"User", filters={"name": ["in", interviewer_emails]}, fields=["name", "full_name"]
-		)
-	}
+	full_names = {}
+	if interviewer_emails:
+		full_names = {
+			u.name: u.full_name
+			for u in frappe.get_all(
+				"User", filters={"name": ["in", interviewer_emails]}, fields=["name", "full_name"]
+			)
+		}
 
 	labels = [full_names.get(iv[0], iv[0]) for iv in sorted_ivs]
 	totals = [iv[1]["total"] for iv in sorted_ivs]
