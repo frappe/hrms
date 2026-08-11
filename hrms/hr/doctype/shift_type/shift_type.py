@@ -63,6 +63,7 @@ class ShiftType(Document):
 		holiday_list: DF.Link | None
 		last_sync_of_checkin: DF.Datetime | None
 		late_entry_grace_period: DF.Int
+		mark_absent_same_day: DF.Check
 		mark_auto_attendance_on_holidays: DF.Check
 		overtime_type: DF.Link | None
 		process_attendance_after: DF.Date | None
@@ -80,6 +81,7 @@ class ShiftType(Document):
 		self.validate_same_start_and_end(start, end)
 		self.validate_circular_shift(start, end)
 		self.validate_unlinked_logs()
+		self.validate_mark_absent_same_day()
 
 	def validate_same_start_and_end(self, start_time: datetime.time, end_time: datetime.time):
 		if start_time == end_time:
@@ -134,6 +136,15 @@ class ShiftType(Document):
 			frappe.throw(
 				title=_("Unmarked Check-in Logs Found"),
 				msg=_("Mark attendance for existing check-in/out logs before changing shift settings"),
+			)
+
+	def validate_mark_absent_same_day(self):
+		if self.mark_absent_same_day and not self.auto_update_last_sync:
+			frappe.throw(
+				title=_("Missing Configuration"),
+				msg=_("Enable {0} to mark absent on the same day").format(
+					frappe.bold(_("Automatically update Last Sync of Checkin"))
+				),
 			)
 
 	def is_field_modified(self, fieldname):
@@ -363,9 +374,12 @@ class ShiftType(Document):
 			shift_details.actual_end if shift_details else get_datetime(self.last_sync_of_checkin)
 		)
 
-		# check if shift is found for 1 day before the last sync of checkin
-		# absentees are auto-marked 1 day after the shift to wait for any manual attendance records
-		prev_shift = get_employee_shift(employee, last_shift_time - timedelta(days=1), True, "reverse")
+		# absentees are auto-marked 1 day after the shift to wait for any manual attendance records,
+		# unless `mark_absent_same_day` is enabled, in which case the shift's own actual end is used
+		buffer_days = 0 if self.mark_absent_same_day else 1
+		prev_shift = get_employee_shift(
+			employee, last_shift_time - timedelta(days=buffer_days), True, "reverse"
+		)
 		if prev_shift and prev_shift.shift_type.name == self.name:
 			end_date = (
 				min(prev_shift.start_datetime.date(), relieving_date)

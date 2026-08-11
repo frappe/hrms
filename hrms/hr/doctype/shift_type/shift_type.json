@@ -19,6 +19,7 @@
   "begin_check_in_before_shift_start_time",
   "allow_check_out_after_shift_end_time",
   "mark_auto_attendance_on_holidays",
+  "mark_absent_same_day",
   "column_break_10",
   "working_hours_threshold_for_half_day",
   "working_hours_threshold_for_absent",
@@ -165,6 +166,13 @@
   },
   {
    "default": "0",
+   "description": "If enabled, employees are marked Absent on the same day, right after the shift's checkout window closes, instead of waiting until the next day. Requires 'Automatically update Last Sync of Checkin' to be enabled.",
+   "fieldname": "mark_absent_same_day",
+   "fieldtype": "Check",
+   "label": "Mark Absent on the Same Day"
+  },
+  {
+   "default": "0",
    "fieldname": "enable_late_entry_marking",
    "fieldtype": "Check",
    "label": "Enable Late Entry Marking"
@@ -210,7 +218,7 @@
   }
  ],
  "links": [],
- "modified": "2025-12-16 16:32:49.169920",
+ "modified": "2026-08-11 16:20:55.156231",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Type",
