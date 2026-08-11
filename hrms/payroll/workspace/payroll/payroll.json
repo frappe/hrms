@@ -376,7 +376,11 @@
    "type": "Link"
   }
  ],
+<<<<<<< HEAD
  "modified": "2026-01-09 17:59:39.577284",
+=======
+ "modified": "2026-08-11 15:13:53.803768",
+>>>>>>> 8c1d3277f (fix: remove duplicate links)
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll",
