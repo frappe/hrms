@@ -586,6 +586,34 @@ class TestShiftType(HRMSTestSuite):
 		)
 		self.assertEqual(attendance, "Present")
 
+	def test_mark_absent_on_same_day(self):
+		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
+		today = getdate()
+
+		shift_type = setup_shift_type(
+			shift_type="Test Mark Absent Same Day",
+			process_attendance_after=add_days(today, -2),
+			auto_update_last_sync=1,
+			mark_absent_same_day=1,
+			# last sync is past today's shift actual end (12:00 + 60 min checkout buffer)
+			last_sync_of_checkin=datetime.combine(today, get_time("13:01:00")),
+		)
+		make_shift_assignment(shift_type.name, employee, today)
+
+		shift_type.process_auto_attendance()
+
+		attendance = frappe.db.get_value(
+			"Attendance", {"attendance_date": today, "employee": employee}, "status"
+		)
+		self.assertEqual(attendance, "Absent")
+
+	def test_mark_absent_same_day_requires_auto_update_last_sync(self):
+		shift_type = setup_shift_type(
+			shift_type="Test Mark Absent Same Day Validation", auto_update_last_sync=0
+		)
+		shift_type.mark_absent_same_day = 1
+		self.assertRaises(frappe.ValidationError, shift_type.save)
+
 	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_skip_marking_absent_on_a_holiday(self):
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
