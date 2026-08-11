@@ -41,7 +41,10 @@ def get_data(
 			],
 			fields=["name", "source"],
 		)
-		offer_filters["company"] = company
+		if applicants:
+			offer_filters["job_applicant"] = ["in", [a.name for a in applicants]]
+		else:
+			return {"labels": [], "datasets": []}
 	else:
 		applicants = frappe.get_all(
 			"Job Applicant",
@@ -49,9 +52,7 @@ def get_data(
 			fields=["name", "source"],
 		)
 
-	accepted_applicants = set(
-		frappe.get_all("Job Offer", filters=offer_filters, pluck="job_applicant")
-	)
+	accepted_applicants = set(frappe.get_all("Job Offer", filters=offer_filters, pluck="job_applicant"))
 
 	source_data = {}
 	for applicant in applicants:
