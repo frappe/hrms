@@ -8,7 +8,7 @@ from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe.model.workflow import get_workflow_name
 from frappe.query_builder.functions import Sum
-from frappe.utils import cint, cstr, flt, get_fullname, get_link_to_form, today
+from frappe.utils import cint, cstr, flt, get_link_to_form, today
 
 import erpnext
 from erpnext.accounts.doctype.repost_accounting_ledger.repost_accounting_ledger import (
@@ -301,16 +301,14 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		contact = args.message_to
 		if not isinstance(contact, list):
 			if not args.notify == "employee":
-				contact = frappe.get_doc("User", contact).email or contact
+				contact = frappe.db.get_value("User", contact, "email") or contact
 
-		sender = dict()
-		sender["email"] = frappe.get_doc("User", frappe.session.user).email
-		sender["full_name"] = get_fullname(sender["email"])
+		sender = frappe.db.get_value("User", frappe.session.user, "email")
 
 		try:
 			frappe.sendmail(
 				recipients=contact,
-				sender=sender["email"],
+				sender=sender,
 				subject=args.subject,
 				message=args.message,
 			)
