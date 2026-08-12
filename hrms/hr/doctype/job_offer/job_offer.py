@@ -88,6 +88,7 @@ def get_staffing_plan_detail(designation, company, offer_date):
 			& (sp.from_date <= offer_date)
 			& (offer_date <= sp.to_date)
 		)
+		.groupby(spd.parent, sp.from_date, sp.to_date, sp.name, spd.designation)
 	).run(as_dict=1)
 
 	return frappe._dict(detail[0]) if (detail and detail[0].parent) else None
