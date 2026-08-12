@@ -58,7 +58,8 @@
   {
    "fieldname": "task_weight",
    "fieldtype": "Float",
-   "label": "Task Weight"
+   "label": "Task Weight",
+   "non_negative": 1
   },
   {
    "default": "0",
@@ -82,19 +83,21 @@
    "fieldname": "duration",
    "fieldtype": "Int",
    "in_list_view": 1,
-   "label": "Duration (Days)"
+   "label": "Duration (Days)",
+   "non_negative": 1
   },
   {
    "columns": 2,
    "fieldname": "begin_on",
    "fieldtype": "Int",
    "in_list_view": 1,
-   "label": "Begin On (Days)"
+   "label": "Begin On (Days)",
+   "non_negative": 1
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2024-03-27 13:09:38.088792",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Boarding Activity",

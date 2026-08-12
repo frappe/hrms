@@ -31,6 +31,7 @@
   "vacancies",
   "section_break_6",
   "publish",
+  "prevent_duplicate_applicant",
   "route",
   "publish_applications_received",
   "column_break_12",
@@ -65,6 +66,7 @@
   {
    "fieldname": "status",
    "fieldtype": "Select",
+   "hidden": 1,
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
@@ -149,6 +151,7 @@
    "fieldname": "lower_range",
    "fieldtype": "Currency",
    "label": "Lower Range",
+   "non_negative": 1,
    "options": "currency",
    "precision": "0"
   },
@@ -156,6 +159,7 @@
    "fieldname": "upper_range",
    "fieldtype": "Currency",
    "label": "Upper Range",
+   "non_negative": 1,
    "options": "currency",
    "precision": "0"
   },
@@ -255,6 +259,14 @@
    "label": "Publish Applications Received"
   },
   {
+   "default": "0",
+   "depends_on": "publish",
+   "description": "If enabled, candidates who have already applied with the same email address will not be allowed to apply again",
+   "fieldname": "prevent_duplicate_applicant",
+   "fieldtype": "Check",
+   "label": "Prevent Duplicate Applications"
+  },
+  {
    "fieldname": "job_opening_template",
    "fieldtype": "Link",
    "label": "Job Opening Template",
@@ -275,7 +287,7 @@
  "idx": 1,
  "is_published_field": "publish",
  "links": [],
- "modified": "2026-04-14 15:47:13.527606",
+ "modified": "2026-08-10 12:10:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
@@ -318,6 +330,7 @@
   }
  ],
  "row_format": "Dynamic",
+ "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "ASC",
  "states": [

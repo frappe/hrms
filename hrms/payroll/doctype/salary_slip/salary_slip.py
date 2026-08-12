@@ -150,8 +150,11 @@ class SalarySlip(TransactionBase):
 
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-		self.default_series = f"Sal Slip/{self.employee}/.#####"
 		self.whitelisted_globals = COMPONENT_EVAL_GLOBALS.copy()
+
+	@property
+	def default_series(self):
+		return f"Sal Slip/{self.employee}/.#####"
 
 	def autoname(self):
 		if not self.has_custom_naming_series:
@@ -1359,10 +1362,13 @@ class SalarySlip(TransactionBase):
 
 		data = get_component_eval_context(self.employee, self._salary_structure_assignment)
 		# Overlay salary-slip fields (payment_days, gross_pay, start_date, …) last, so the
-		# actual period context wins. Note: this means on a name collision a Salary Slip
-		# field takes precedence over an Employee field (employee is layered earlier in
-		# get_component_eval_context); no current formula relies on the reverse.
-		data.update(self.as_dict())
+		# actual period context wins on a name collision with an Employee field (e.g. a saved
+		# payslip keeps its own department/branch snapshot, not the employee's current one).
+		slip_data = self.as_dict()
+		# Exception: ctc is computed later by compute_ctc(), so it's still 0/unset here
+		# drop it instead of overwriting the real value from Employee/SSA.
+		slip_data.pop("ctc", None)
+		data.update(slip_data)
 
 		# shallow copy to store default amounts (without payment-days proration) for tax calculation
 		default_data = data.copy()

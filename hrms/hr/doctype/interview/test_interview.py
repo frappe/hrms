@@ -41,7 +41,8 @@ class TestInterview(HRMSTestSuite):
 		)
 
 		previous_scheduled_date = interview.scheduled_on
-		frappe.db.sql("DELETE FROM `tabEmail Queue`")
+		email_queue = frappe.qb.DocType("Email Queue")
+		frappe.qb.from_(email_queue).delete().run()
 
 		interview.reschedule_interview(
 			add_days(getdate(previous_scheduled_date), 2), from_time="11:00:00", to_time="12:00:00"
@@ -204,6 +205,18 @@ class TestInterview(HRMSTestSuite):
 		interview.reload()
 
 		self.assertEqual(interview.status, "Cancelled")
+
+	def test_update_job_applicant_status_invalid_input(self):
+		# Ensure passing empty or non-existent job applicant string does not raise AttributeError
+		try:
+			update_job_applicant_status("Accepted", "")
+		except AttributeError:
+			self.fail("update_job_applicant_status raised AttributeError on empty job applicant string")
+
+		try:
+			update_job_applicant_status("Accepted", "NON_EXISTENT_JOB_APPLICANT")
+		except AttributeError:
+			self.fail("update_job_applicant_status raised AttributeError on invalid job applicant ID")
 
 
 def create_interview_and_dependencies(

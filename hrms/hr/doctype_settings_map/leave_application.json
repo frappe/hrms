@@ -1,0 +1,48 @@
+{
+ "applies_to_doctype": "Leave Application",
+ "creation": "2026-07-16 00:00:00.000000",
+ "docstatus": 0,
+ "doctype": "DocType Settings Map",
+ "idx": 0,
+ "is_active": 1,
+ "is_standard": 1,
+ "mappings": [
+  {
+   "setting_field": "leave_approver_mandatory_in_leave_application",
+   "settings_doctype": "HR Settings"
+  },
+  {
+   "setting_field": "prevent_self_leave_approval",
+   "settings_doctype": "HR Settings"
+  },
+  {
+   "setting_field": "restrict_backdated_leave_application",
+   "settings_doctype": "HR Settings"
+  },
+  {
+   "setting_field": "role_allowed_to_create_backdated_leave_application",
+   "settings_doctype": "HR Settings"
+  },
+  {
+   "setting_field": "show_leaves_of_all_department_members_in_calendar",
+   "settings_doctype": "HR Settings"
+  },
+  {
+   "setting_field": "send_leave_notification",
+   "settings_doctype": "HR Settings"
+  },
+  {
+   "setting_field": "leave_approval_notification_template",
+   "settings_doctype": "HR Settings"
+  },
+  {
+   "setting_field": "leave_status_notification_template",
+   "settings_doctype": "HR Settings"
+  }
+ ],
+ "modified": "2026-07-16 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Leave Application - HR",
+ "owner": "Administrator"
+}

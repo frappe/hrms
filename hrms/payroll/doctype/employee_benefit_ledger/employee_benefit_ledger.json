@@ -71,7 +71,8 @@
   {
    "fieldname": "yearly_benefit",
    "fieldtype": "Currency",
-   "label": "Yearly Benefit"
+   "label": "Yearly Benefit",
+   "non_negative": 1
   },
   {
    "fieldname": "payroll_period",
@@ -94,7 +95,8 @@
    "fieldname": "amount",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Amount"
+   "label": "Amount",
+   "non_negative": 1
   },
   {
    "fieldname": "salary_component",
@@ -137,7 +139,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-24 16:52:52.563748",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Benefit Ledger",

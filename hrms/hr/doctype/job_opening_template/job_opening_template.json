@@ -83,12 +83,14 @@
   {
    "fieldname": "upper_range",
    "fieldtype": "Currency",
-   "label": "Upper Range"
+   "label": "Upper Range",
+   "non_negative": 1
   },
   {
    "fieldname": "lower_range",
    "fieldtype": "Currency",
-   "label": "Lower Range"
+   "label": "Lower Range",
+   "non_negative": 1
   },
   {
    "fieldname": "column_break_vqyu",
@@ -111,7 +113,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-16 13:05:04.934642",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening Template",

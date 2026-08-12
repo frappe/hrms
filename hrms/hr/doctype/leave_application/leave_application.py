@@ -6,7 +6,8 @@ import datetime
 import frappe
 from frappe import _
 from frappe.model.workflow import get_workflow_name
-from frappe.query_builder.functions import Max, Min, Sum
+from frappe.query_builder import Order
+from frappe.query_builder.functions import Count, Max, Min, Sum
 from frappe.utils import (
 	add_days,
 	cint,
@@ -121,6 +122,8 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			self.validate_optional_leave()
 		self.validate_applicable_after()
 		self.validate_for_self_approval()
+		self.validate_leave_approver()
+		self.set_leave_approver_name()
 
 	def on_update(self):
 		if self.status == "Open" and self.docstatus < 1:
@@ -266,13 +269,18 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		return allocation_based_on_from_date, allocation_based_on_to_date
 
 	def validate_back_dated_application(self):
-		future_allocation = frappe.db.sql(
-			"""select name, from_date from `tabLeave Allocation`
-			where employee=%s and leave_type=%s and docstatus=1 and from_date > %s
-			and carry_forward=1""",
-			(self.employee, self.leave_type, self.to_date),
-			as_dict=1,
-		)
+		LeaveAllocation = frappe.qb.DocType("Leave Allocation")
+		future_allocation = (
+			frappe.qb.from_(LeaveAllocation)
+			.select(LeaveAllocation.name, LeaveAllocation.from_date)
+			.where(
+				(LeaveAllocation.employee == self.employee)
+				& (LeaveAllocation.leave_type == self.leave_type)
+				& (LeaveAllocation.docstatus == 1)
+				& (LeaveAllocation.from_date > self.to_date)
+				& (LeaveAllocation.carry_forward == 1)
+			)
+		).run(as_dict=1)
 
 		if future_allocation:
 			frappe.throw(
@@ -367,12 +375,17 @@ class LeaveApplication(Document, PWANotificationsMixin):
 
 	def cancel_attendance(self):
 		if self.docstatus == 2:
-			attendance = frappe.db.sql(
-				"""select name from `tabAttendance` where employee = %s\
-				and (attendance_date between %s and %s) and docstatus < 2 and status in ('On Leave', 'Half Day')""",
-				(self.employee, self.from_date, self.to_date),
-				as_dict=1,
-			)
+			Attendance = frappe.qb.DocType("Attendance")
+			attendance = (
+				frappe.qb.from_(Attendance)
+				.select(Attendance.name)
+				.where(
+					(Attendance.employee == self.employee)
+					& (Attendance.attendance_date.between(self.from_date, self.to_date))
+					& (Attendance.docstatus < 2)
+					& (Attendance.status.isin(["On Leave", "Half Day"]))
+				)
+			).run(as_dict=1)
 			for name in attendance:
 				frappe.db.set_value("Attendance", name, "docstatus", 2)
 
@@ -380,15 +393,21 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		if not frappe.db.get_value("Leave Type", self.leave_type, "is_lwp"):
 			return
 
-		last_processed_pay_slip = frappe.db.sql(
-			"""
-			select start_date, end_date from `tabSalary Slip`
-			where docstatus = 1 and employee = %s
-			and ((%s between start_date and end_date) or (%s between start_date and end_date))
-			order by creation desc limit 1
-		""",
-			(self.employee, self.to_date, self.from_date),
-		)
+		SalarySlip = frappe.qb.DocType("Salary Slip")
+		last_processed_pay_slip = (
+			frappe.qb.from_(SalarySlip)
+			.select(SalarySlip.start_date, SalarySlip.end_date)
+			.where(
+				(SalarySlip.docstatus == 1)
+				& (SalarySlip.employee == self.employee)
+				& (
+					((SalarySlip.start_date <= self.to_date) & (self.to_date <= SalarySlip.end_date))
+					| ((SalarySlip.start_date <= self.from_date) & (self.from_date <= SalarySlip.end_date))
+				)
+			)
+			.orderby(SalarySlip.creation, order=Order.desc)
+			.limit(1)
+		).run()
 
 		if last_processed_pay_slip:
 			frappe.throw(
@@ -487,22 +506,30 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			# hack! if name is null, it could cause problems with !=
 			self.name = "New Leave Application"
 
-		for d in frappe.db.sql(
-			"""
-			select
-				name, leave_type, posting_date, from_date, to_date, total_leave_days, half_day, half_day_date
-			from `tabLeave Application`
-			where employee = %(employee)s and docstatus < 2 and status in ('Open', 'Approved')
-			and to_date >= %(from_date)s and from_date <= %(to_date)s
-			and name != %(name)s""",
-			{
-				"employee": self.employee,
-				"from_date": self.from_date,
-				"to_date": self.to_date,
-				"name": self.name,
-			},
-			as_dict=1,
-		):
+		LeaveApplication = frappe.qb.DocType("Leave Application")
+		overlapping_applications = (
+			frappe.qb.from_(LeaveApplication)
+			.select(
+				LeaveApplication.name,
+				LeaveApplication.leave_type,
+				LeaveApplication.posting_date,
+				LeaveApplication.from_date,
+				LeaveApplication.to_date,
+				LeaveApplication.total_leave_days,
+				LeaveApplication.half_day,
+				LeaveApplication.half_day_date,
+			)
+			.where(
+				(LeaveApplication.employee == self.employee)
+				& (LeaveApplication.docstatus < 2)
+				& (LeaveApplication.status.isin(["Open", "Approved"]))
+				& (LeaveApplication.to_date >= self.from_date)
+				& (LeaveApplication.from_date <= self.to_date)
+				& (LeaveApplication.name != self.name)
+			)
+		).run(as_dict=1)
+
+		for d in overlapping_applications:
 			if (
 				cint(self.half_day) == 1
 				and cint(d.half_day) == 1
@@ -527,16 +554,19 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		frappe.throw(msg, OverlapError)
 
 	def get_total_leaves_on_half_day(self):
-		leave_count_on_half_day_date = frappe.db.sql(
-			"""select count(name) from `tabLeave Application`
-			where employee = %(employee)s
-			and docstatus < 2
-			and status in ('Open', 'Approved')
-			and half_day = 1
-			and half_day_date = %(half_day_date)s
-			and name != %(name)s""",
-			{"employee": self.employee, "half_day_date": self.half_day_date, "name": self.name},
-		)[0][0]
+		LeaveApplication = frappe.qb.DocType("Leave Application")
+		leave_count_on_half_day_date = (
+			frappe.qb.from_(LeaveApplication)
+			.select(Count(LeaveApplication.name))
+			.where(
+				(LeaveApplication.employee == self.employee)
+				& (LeaveApplication.docstatus < 2)
+				& (LeaveApplication.status.isin(["Open", "Approved"]))
+				& (LeaveApplication.half_day == 1)
+				& (LeaveApplication.half_day_date == self.half_day_date)
+				& (LeaveApplication.name != self.name)
+			)
+		).run()[0][0]
 
 		return leave_count_on_half_day_date * 0.5
 
@@ -881,6 +911,20 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			if leaves:
 				args.update(dict(from_date=start_date, to_date=self.to_date, leaves=leaves * -1))
 				create_leave_ledger_entry(self, args, submit)
+
+	def validate_leave_approver(self):
+		if (
+			self.docstatus != 2
+			and not self.leave_approver
+			and frappe.db.get_single_value("HR Settings", "leave_approver_mandatory_in_leave_application")
+		):
+			frappe.throw(_("Leave Approver is mandatory"))
+
+	def set_leave_approver_name(self):
+		if not self.leave_approver:
+			self.leave_approver_name = None
+		elif not self.leave_approver_name or self.has_value_changed("leave_approver"):
+			self.leave_approver_name = get_fullname(self.leave_approver)
 
 	def validate_for_self_approval(self):
 		self_leave_approval_not_allowed = frappe.db.get_single_value(
@@ -1356,7 +1400,8 @@ def get_holidays(employee: str, from_date: str | datetime.date, to_date: str | d
 
 
 def is_lwp(leave_type):
-	lwp = frappe.db.sql("select is_lwp from `tabLeave Type` where name = %s", leave_type)
+	LeaveType = frappe.qb.DocType("Leave Type")
+	lwp = (frappe.qb.from_(LeaveType).select(LeaveType.is_lwp).where(LeaveType.name == leave_type)).run()
 	return lwp and cint(lwp[0][0]) or 0
 
 
@@ -1463,12 +1508,14 @@ def add_holidays(events, start, end, employee, company):
 	if not applicable_holiday_list:
 		return
 
-	for holiday in frappe.db.sql(
-		"""select name, holiday_date, description
-		from `tabHoliday` where parent=%s and holiday_date between %s and %s""",
-		(applicable_holiday_list, start, end),
-		as_dict=True,
-	):
+	Holiday = frappe.qb.DocType("Holiday")
+	holidays = (
+		frappe.qb.from_(Holiday)
+		.select(Holiday.name, Holiday.holiday_date, Holiday.description)
+		.where((Holiday.parent == applicable_holiday_list) & (Holiday.holiday_date.between(start, end)))
+	).run(as_dict=True)
+
+	for holiday in holidays:
 		events.append(
 			{
 				"doctype": "Holiday",

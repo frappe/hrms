@@ -31,6 +31,6 @@ def execute():
 					f"""
 					update `tab{doctype}` dt
 					set department=(select department from `tabEmployee` where name=dt.employee)
-					where coalesce(`tab{doctype}`.`department`, '') = ''
+					where coalesce(dt.`department`, '') = ''
 					"""
 				)
