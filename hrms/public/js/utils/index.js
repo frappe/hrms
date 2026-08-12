@@ -179,43 +179,57 @@ $.extend(hrms, {
 		});
 	},
 
-	fetch_geolocation: async (frm) => {
-		if (!navigator.geolocation) {
-			frappe.msgprint({
-				message: __("Geolocation is not supported by your current browser"),
-				title: __("Geolocation Error"),
-				indicator: "red",
-			});
-			hide_field(["geolocation"]);
-			return;
-		}
-
-		frappe.dom.freeze(__("Fetching your geolocation") + "...");
-
-		navigator.geolocation.getCurrentPosition(
-			async (position) => {
-				frappe.run_serially([
-					() => frm.set_value("latitude", position.coords.latitude),
-					() => frm.set_value("longitude", position.coords.longitude),
-					() => frm.call("set_geolocation"),
-					() => frappe.dom.unfreeze(),
-				]);
-			},
-
-			(error) => {
-				frappe.dom.unfreeze();
-
-				let msg = __("Unable to retrieve your location") + "<br><br>";
-				if (error) {
-					msg += __("ERROR({0}): {1}", [error.code, error.message]);
-				}
+	get_current_position: () => {
+		return new Promise((resolve, reject) => {
+			if (!navigator.geolocation) {
 				frappe.msgprint({
-					message: msg,
+					message: __("Geolocation is not supported by your current browser"),
 					title: __("Geolocation Error"),
 					indicator: "red",
 				});
-			},
-		);
+				reject({ unsupported: true });
+				return;
+			}
+
+			navigator.geolocation.getCurrentPosition(
+				(position) =>
+					resolve({
+						latitude: position.coords.latitude,
+						longitude: position.coords.longitude,
+					}),
+
+				(error) => {
+					let msg = __("Unable to retrieve your location") + "<br><br>";
+					if (error) {
+						msg += __("ERROR({0}): {1}", [error.code, error.message]);
+					}
+					frappe.msgprint({
+						message: msg,
+						title: __("Geolocation Error"),
+						indicator: "red",
+					});
+					reject(error);
+				},
+				{ timeout: 10000 },
+			);
+		});
+	},
+
+	fetch_geolocation: async (frm) => {
+		frappe.dom.freeze(__("Fetching your geolocation") + "...");
+
+		try {
+			const { latitude, longitude } = await hrms.get_current_position();
+			await frappe.run_serially([
+				() => frm.set_value("latitude", latitude),
+				() => frm.set_value("longitude", longitude),
+				() => frm.call("set_geolocation"),
+			]);
+		} catch (error) {
+			if (error?.unsupported) hide_field(["geolocation"]);
+		} finally {
+			frappe.dom.unfreeze();
+		}
 	},
 
 	get_doctype_fields_for_autocompletion: (doctype) => {
