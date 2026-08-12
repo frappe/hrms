@@ -2,6 +2,8 @@
 # License: GNU General Public License v3. See license.txt
 
 
+import datetime
+
 import frappe
 from frappe import _, msgprint
 from frappe.model.document import Document
@@ -16,6 +18,7 @@ from frappe.utils import (
 	date_diff,
 	floor,
 	flt,
+	format_datetime,
 	formatdate,
 	get_first_day,
 	get_last_day,
@@ -2531,9 +2534,43 @@ def unlink_ref_doc_from_salary_slip(doc, method=None):
 			frappe.db.set_value("Salary Slip", ss_doc.name, "journal_entry", "")
 
 
+class SystemFormattedDate(datetime.date):
+	"""Date that renders in the system date format when interpolated into a password policy.
+
+	Subclasses `date` so that policies relying on the underlying object, like
+	`{date_of_birth.year}` or `{date_of_birth:%d%m%Y}`, keep working.
+	"""
+
+	def __str__(self):
+		return formatdate(datetime.date(self.year, self.month, self.day))
+
+
+class SystemFormattedDatetime(datetime.datetime):
+	"""Datetime counterpart of `SystemFormattedDate`."""
+
+	def __str__(self):
+		return format_datetime(
+			datetime.datetime(
+				self.year, self.month, self.day, self.hour, self.minute, self.second, self.microsecond
+			)
+		)
+
+
+def format_dates_in_system_format(value):
+	# datetime is a subclass of date, so it has to be checked first
+	if isinstance(value, datetime.datetime):
+		return SystemFormattedDatetime(
+			value.year, value.month, value.day, value.hour, value.minute, value.second, value.microsecond
+		)
+	if isinstance(value, datetime.date):
+		return SystemFormattedDate(value.year, value.month, value.day)
+	return value
+
+
 def generate_password_for_pdf(policy_template, employee):
 	employee = frappe.get_cached_doc("Employee", employee)
-	return policy_template.format(**employee.as_dict())
+	values = {key: format_dates_in_system_format(value) for key, value in employee.as_dict().items()}
+	return policy_template.format(**values)
 
 
 def get_salary_component_data(component):
