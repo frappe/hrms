@@ -3,7 +3,9 @@
 
 import frappe
 from frappe import _
-from frappe.utils import add_days, add_months, comma_sep, getdate, today
+from frappe.query_builder import DatePart
+from frappe.query_builder.functions import Extract
+from frappe.utils import add_days, add_months, comma_sep, getdate
 
 from erpnext.setup.doctype.employee.employee import get_all_employee_emails, get_employee_email
 
@@ -162,24 +164,28 @@ def get_employees_having_an_event_today(event_type):
 	else:
 		return
 
-	today_date = getdate(today())
+	today_date = getdate()
+	Employee = frappe.qb.DocType("Employee")
+	event_date = Employee[condition_column]
 
-	employees_born_today = frappe.db.sql(
-		f"""
-			SELECT `personal_email`, `company`, `company_email`, `user_id`, `employee_name` AS `name`, `image`, `date_of_joining`
-			FROM `tabEmployee`
-			WHERE
-				EXTRACT(DAY FROM `{condition_column}`) = %(day)s
-			AND
-				EXTRACT(MONTH FROM `{condition_column}`) = %(month)s
-			AND
-				EXTRACT(YEAR FROM `{condition_column}`) < %(year)s
-			AND
-				`status` = 'Active'
-		""",
-		dict(day=today_date.day, month=today_date.month, year=today_date.year),
-		as_dict=1,
-	)
+	employees_born_today = (
+		frappe.qb.from_(Employee)
+		.select(
+			Employee.personal_email,
+			Employee.company,
+			Employee.company_email,
+			Employee.user_id,
+			Employee.employee_name.as_("name"),
+			Employee.image,
+			Employee.date_of_joining,
+		)
+		.where(
+			(Extract(DatePart.day, event_date) == today_date.day)
+			& (Extract(DatePart.month, event_date) == today_date.month)
+			& (Extract(DatePart.year, event_date) < today_date.year)
+			& (Employee.status == "Active")
+		)
+	).run(as_dict=True)
 
 	grouped_employees = defaultdict(lambda: [])
 
