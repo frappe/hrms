@@ -132,15 +132,13 @@ def get_timeline_data(doctype: str, name: str) -> dict:
 	open_count = get_open_count(doctype, name)
 	out["count"] = open_count["count"]
 
-	from frappe.query_builder.terms import Function
-
 	Attendance = frappe.qb.DocType("Attendance")
 
 	timeline_data = dict(
 		(
 			frappe.qb.from_(Attendance)
 			.select(
-				Function("unix_timestamp", Attendance.attendance_date),
+				UnixTimestamp(Attendance.attendance_date),
 				Count("*"),
 			)
 			.where(
