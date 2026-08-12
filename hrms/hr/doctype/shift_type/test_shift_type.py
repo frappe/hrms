@@ -591,10 +591,10 @@ class TestShiftType(HRMSTestSuite):
 		today = getdate()
 
 		shift_type = setup_shift_type(
-			shift_type="Test Mark Absent Same Day",
+			shift_type="Test Absent Buffer Same Day",
 			process_attendance_after=add_days(today, -2),
 			auto_update_last_sync=1,
-			mark_absent_same_day=1,
+			absent_buffer_days=0,
 			# last sync is past today's shift actual end (12:00 + 60 min checkout buffer)
 			last_sync_of_checkin=datetime.combine(today, get_time("13:01:00")),
 		)
@@ -607,12 +607,41 @@ class TestShiftType(HRMSTestSuite):
 		)
 		self.assertEqual(attendance, "Absent")
 
-	def test_mark_absent_same_day_requires_auto_update_last_sync(self):
-		shift_type = setup_shift_type(
-			shift_type="Test Mark Absent Same Day Validation", auto_update_last_sync=0
-		)
-		shift_type.mark_absent_same_day = 1
+	def test_absent_buffer_days_zero_requires_auto_update_last_sync(self):
+		shift_type = setup_shift_type(shift_type="Test Absent Buffer Validation", auto_update_last_sync=0)
+		shift_type.absent_buffer_days = 0
 		self.assertRaises(frappe.ValidationError, shift_type.save)
+
+	def test_mark_absent_after_two_day_buffer(self):
+		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
+		today = getdate()
+
+		shift_type = setup_shift_type(
+			shift_type="Test Two Day Absent Buffer",
+			process_attendance_after=add_days(today, -4),
+			absent_buffer_days=2,
+			last_sync_of_checkin=datetime.combine(today, get_time("15:00:00")),
+		)
+		make_shift_assignment(shift_type.name, employee, add_days(today, -4))
+
+		shift_type.process_auto_attendance()
+
+		# dates up to (today - buffer_days) should be marked absent
+		absent_records = frappe.get_all(
+			"Attendance",
+			{
+				"attendance_date": ["between", [add_days(today, -4), add_days(today, -2)]],
+				"employee": employee,
+				"status": "Absent",
+			},
+		)
+		self.assertEqual(len(absent_records), 3)
+
+		# dates within the buffer window should not be marked yet
+		for date in (add_days(today, -1), today):
+			self.assertIsNone(
+				frappe.db.get_value("Attendance", {"attendance_date": date, "employee": employee})
+			)
 
 	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_skip_marking_absent_on_a_holiday(self):

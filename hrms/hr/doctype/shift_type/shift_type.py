@@ -44,6 +44,7 @@ class ShiftType(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		absent_buffer_days: DF.Int
 		allow_check_out_after_shift_end_time: DF.Int
 		allow_overtime: DF.Check
 		auto_update_last_sync: DF.Check
@@ -63,7 +64,6 @@ class ShiftType(Document):
 		holiday_list: DF.Link | None
 		last_sync_of_checkin: DF.Datetime | None
 		late_entry_grace_period: DF.Int
-		mark_absent_same_day: DF.Check
 		mark_auto_attendance_on_holidays: DF.Check
 		overtime_type: DF.Link | None
 		process_attendance_after: DF.Date | None
@@ -81,7 +81,7 @@ class ShiftType(Document):
 		self.validate_same_start_and_end(start, end)
 		self.validate_circular_shift(start, end)
 		self.validate_unlinked_logs()
-		self.validate_mark_absent_same_day()
+		self.validate_absent_buffer_days()
 
 	def validate_same_start_and_end(self, start_time: datetime.time, end_time: datetime.time):
 		if start_time == end_time:
@@ -138,8 +138,8 @@ class ShiftType(Document):
 				msg=_("Mark attendance for existing check-in/out logs before changing shift settings"),
 			)
 
-	def validate_mark_absent_same_day(self):
-		if self.mark_absent_same_day and not self.auto_update_last_sync:
+	def validate_absent_buffer_days(self):
+		if cint(self.absent_buffer_days) == 0 and not self.auto_update_last_sync:
 			frappe.throw(
 				title=_("Missing Configuration"),
 				msg=_("Enable {0} to mark absent on the same day").format(
@@ -374,9 +374,9 @@ class ShiftType(Document):
 			shift_details.actual_end if shift_details else get_datetime(self.last_sync_of_checkin)
 		)
 
-		# absentees are auto-marked 1 day after the shift to wait for any manual attendance records,
-		# unless `mark_absent_same_day` is enabled, in which case the shift's own actual end is used
-		buffer_days = 0 if self.mark_absent_same_day else 1
+		# wait `absent_buffer_days` days after the shift ends before auto-marking absent, to leave
+		# room for manual attendance records; 0 marks absent the same day, right after the shift ends
+		buffer_days = cint(self.absent_buffer_days)
 		prev_shift = get_employee_shift(
 			employee, last_shift_time - timedelta(days=buffer_days), True, "reverse"
 		)
