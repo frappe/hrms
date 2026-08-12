@@ -104,7 +104,12 @@ class JobApplicant(Document):
 			emp_ref.db_set("status", self.status)
 
 
-KANBAN_COLUMNS = ["Open", "Replied", "Shortlisted", "Accepted"]
+KANBAN_COLUMNS = [
+	{"column_name": "Open",},
+	{"column_name": "Replied", "indicator": "Orange"},
+	{"column_name": "Shortlisted", "indicator": "Blue"},
+	{"column_name": "Accepted", "indicator": "Green"},
+]
 
 
 @frappe.whitelist()
@@ -122,8 +127,8 @@ def create_kanban_board(board_name: str) -> dict:
 	board.fields = json.dumps(["designation", "applicant_rating"])
 	board.show_labels = 1
 
-	for column_name in KANBAN_COLUMNS:
-		board.append("columns", {"column_name": column_name, "status": "Active"})
+	for col in KANBAN_COLUMNS:
+		board.append("columns", {"column_name": col["column_name"], "indicator": col.get("indicator", ""), "status": "Active"})
 
 	board.insert(ignore_permissions=True)
 	return board.as_dict()
