@@ -28,6 +28,12 @@ frappe.listview_settings["Employee Checkin"] = {
 	before_render: function () {
 		refresh_checkin_state(cur_list);
 	},
+	primary_action: function () {
+		const listview = cur_list;
+		if (listview?.checkin_employee) {
+			start_checkin(listview, listview.next_checkin || get_next_checkin());
+		}
+	},
 };
 
 function get_next_checkin(last_log_type) {
@@ -56,6 +62,26 @@ async function setup_checkin_action(listview) {
 			},
 			next.icon,
 		);
+	};
+
+	const default_no_result_message = listview.get_no_result_message.bind(listview);
+	listview.get_no_result_message = () => {
+		if (listview.filter_area?.get()?.length) {
+			return default_no_result_message();
+		}
+
+		return frappe.ui.empty_state.html({
+			icon: "clock",
+			title: __("No check-ins yet"),
+			description: __("Check in to create your first log."),
+			actions: [
+				{
+					label: __("Check In"),
+					icon: "circle-arrow-right",
+					css_class: "btn-new-doc",
+				},
+			],
+		});
 	};
 
 	await refresh_checkin_state(listview);
