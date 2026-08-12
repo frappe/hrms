@@ -78,6 +78,7 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Claimed Amount",
+   "non_negative": 1,
    "options": "currency",
    "reqd": 1
   },
@@ -142,7 +143,7 @@
    "link_fieldname": "ref_docname"
   }
  ],
- "modified": "2025-08-07 15:23:41.784378",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Benefit Claim",

@@ -50,6 +50,7 @@
    "fieldname": "bonus_amount",
    "fieldtype": "Currency",
    "label": "Bonus Amount",
+   "non_negative": 1,
    "options": "currency",
    "reqd": 1
   },
@@ -122,7 +123,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-27 13:10:33.560494",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Retention Bonus",

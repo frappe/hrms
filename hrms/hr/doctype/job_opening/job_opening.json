@@ -151,6 +151,7 @@
    "fieldname": "lower_range",
    "fieldtype": "Currency",
    "label": "Lower Range",
+   "non_negative": 1,
    "options": "currency",
    "precision": "0"
   },
@@ -158,6 +159,7 @@
    "fieldname": "upper_range",
    "fieldtype": "Currency",
    "label": "Upper Range",
+   "non_negative": 1,
    "options": "currency",
    "precision": "0"
   },

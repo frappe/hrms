@@ -163,7 +163,8 @@
    "fieldname": "encashment_days",
    "fieldtype": "Float",
    "label": "Encashment Days",
-   "no_copy": 1
+   "no_copy": 1,
+   "non_negative": 1
   },
   {
    "description": "Number of leaves eligible for encashment based on leave type settings",
@@ -267,7 +268,7 @@
    "table_fieldname": "references"
   }
  ],
- "modified": "2026-07-16 18:23:08.683523",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Encashment",
