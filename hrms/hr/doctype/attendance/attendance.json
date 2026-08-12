@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_bulk_edit": 1,
  "allow_import": 1,
  "autoname": "naming_series:",
  "creation": "2013-01-10 16:34:13",
@@ -162,6 +163,7 @@
    "fieldname": "attendance_request",
    "fieldtype": "Link",
    "label": "Attendance Request",
+   "no_copy": 1,
    "options": "Attendance Request",
    "read_only": 1
   },
@@ -259,7 +261,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-12-16 17:44:13.859387",
+ "modified": "2026-08-06 14:04:47.580547",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Attendance",

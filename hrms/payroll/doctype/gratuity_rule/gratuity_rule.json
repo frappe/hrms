@@ -70,12 +70,14 @@
    "default": "365",
    "fieldname": "total_working_days_per_year",
    "fieldtype": "Float",
-   "label": "Total working Days Per Year"
+   "label": "Total working Days Per Year",
+   "non_negative": 1
   },
   {
    "fieldname": "minimum_year_for_gratuity",
    "fieldtype": "Int",
-   "label": "Minimum Year for Gratuity"
+   "label": "Minimum Year for Gratuity",
+   "non_negative": 1
   },
   {
    "fieldname": "section_break_2",
@@ -93,7 +95,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-07-21 13:59:20.212312",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Gratuity Rule",

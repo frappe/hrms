@@ -15,6 +15,7 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Fraction of Applicable Earnings ",
+   "non_negative": 1,
    "reqd": 1
   },
   {
@@ -32,12 +33,13 @@
    "fieldtype": "Int",
    "in_list_view": 1,
    "label": "To(Year)",
+   "non_negative": 1,
    "reqd": 1
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2024-03-27 13:09:46.394148",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Gratuity Rule Slab",

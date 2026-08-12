@@ -72,7 +72,6 @@
    "fieldname": "applicable_for_weekend",
    "fieldtype": "Check",
    "label": "Apply for Weekend",
-   "non_negative": 1,
    "reqd": 1
   },
   {
@@ -107,7 +106,8 @@
    "fieldname": "hourly_rate",
    "fieldtype": "Currency",
    "label": "Hourly Rate",
-   "mandatory_depends_on": "eval: doc.overtime_calculation_method == \"Fixed Hourly Rate\";"
+   "mandatory_depends_on": "eval: doc.overtime_calculation_method == \"Fixed Hourly Rate\";",
+   "non_negative": 1
   },
   {
    "fieldname": "section_break_xxdv",
@@ -132,7 +132,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-09 19:08:42.248177",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Overtime Type",
