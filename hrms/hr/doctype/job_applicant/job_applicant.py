@@ -105,7 +105,7 @@ class JobApplicant(Document):
 
 
 KANBAN_COLUMNS = [
-	{"column_name": "Open",},
+	{"column_name": "Open"},
 	{"column_name": "Replied", "indicator": "Orange"},
 	{"column_name": "Shortlisted", "indicator": "Blue"},
 	{"column_name": "Accepted", "indicator": "Green"},
@@ -128,7 +128,10 @@ def create_kanban_board(board_name: str) -> dict:
 	board.show_labels = 1
 
 	for col in KANBAN_COLUMNS:
-		board.append("columns", {"column_name": col["column_name"], "indicator": col.get("indicator", ""), "status": "Active"})
+		board.append(
+			"columns",
+			{"column_name": col["column_name"], "indicator": col.get("indicator", ""), "status": "Active"},
+		)
 
 	board.insert(ignore_permissions=True)
 	return board.as_dict()

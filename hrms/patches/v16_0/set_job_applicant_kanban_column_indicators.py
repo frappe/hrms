@@ -10,12 +10,16 @@ INDICATOR_MAP = {
 def execute():
 	columns = frappe.get_all(
 		"Kanban Board Column",
-		filters={"parent": "Hiring Pipeline", "parenttype": "Kanban Board"},
+		filters={
+			"parent": "Hiring Pipeline",
+			"parenttype": "Kanban Board",
+			"column_name": ("in", list(INDICATOR_MAP.keys())),
+		},
 		fields=["name", "column_name"],
 	)
 
 	if not columns:
 		return
 
-	updates = {col.name: {"indicator": INDICATOR_MAP.get(col.column_name, "")} for col in columns}
+	updates = {col.name: {"indicator": INDICATOR_MAP[col.column_name]} for col in columns}
 	frappe.db.bulk_update("Kanban Board Column", updates, update_modified=False)
