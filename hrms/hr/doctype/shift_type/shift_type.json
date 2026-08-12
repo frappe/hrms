@@ -81,6 +81,7 @@
    "fieldname": "working_hours_threshold_for_half_day",
    "fieldtype": "Float",
    "label": "Working Hours Threshold for Half Day",
+   "non_negative": 1,
    "precision": "2"
   },
   {
@@ -88,6 +89,7 @@
    "fieldname": "working_hours_threshold_for_absent",
    "fieldtype": "Float",
    "label": "Working Hours Threshold for Absent",
+   "non_negative": 1,
    "precision": "2"
   },
   {
@@ -95,14 +97,16 @@
    "description": "The time before the shift start time during which Employee Check-in is considered for attendance.",
    "fieldname": "begin_check_in_before_shift_start_time",
    "fieldtype": "Int",
-   "label": "Begin check-in before shift start time (in minutes)"
+   "label": "Begin check-in before shift start time (in minutes)",
+   "non_negative": 1
   },
   {
    "depends_on": "enable_late_entry_marking",
    "description": "The time after the shift start time when check-in is considered as late (in minutes).",
    "fieldname": "late_entry_grace_period",
    "fieldtype": "Int",
-   "label": "Late Entry Grace Period"
+   "label": "Late Entry Grace Period",
+   "non_negative": 1
   },
   {
    "fieldname": "column_break_18",
@@ -113,14 +117,16 @@
    "description": "The time before the shift end time when check-out is considered as early (in minutes).",
    "fieldname": "early_exit_grace_period",
    "fieldtype": "Int",
-   "label": "Early Exit Grace Period"
+   "label": "Early Exit Grace Period",
+   "non_negative": 1
   },
   {
    "default": "60",
    "description": "Time after the end of shift during which check-out is considered for attendance.",
    "fieldname": "allow_check_out_after_shift_end_time",
    "fieldtype": "Int",
-   "label": "Allow check-out after shift end time (in minutes)"
+   "label": "Allow check-out after shift end time (in minutes)",
+   "non_negative": 1
   },
   {
    "depends_on": "enable_auto_attendance",
@@ -210,7 +216,7 @@
   }
  ],
  "links": [],
- "modified": "2025-12-16 16:32:49.169920",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Type",

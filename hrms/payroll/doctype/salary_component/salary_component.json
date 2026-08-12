@@ -137,7 +137,8 @@
    "description": "If greater than zero, this sets the maximum benefit amount assignable to any employee",
    "fieldname": "max_benefit_amount",
    "fieldtype": "Currency",
-   "label": "Max Benefit Amount (Yearly)"
+   "label": "Max Benefit Amount (Yearly)",
+   "non_negative": 1
   },
   {
    "fieldname": "column_break_9",
@@ -192,7 +193,8 @@
    "depends_on": "eval:doc.amount_based_on_formula!==1",
    "fieldname": "amount",
    "fieldtype": "Currency",
-   "label": "Amount"
+   "label": "Amount",
+   "non_negative": 1
   },
   {
    "fieldname": "column_break_28",
@@ -295,7 +297,7 @@
  "icon": "fa fa-flag",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-06-08 17:39:39.847210",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",

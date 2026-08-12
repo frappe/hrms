@@ -106,6 +106,7 @@
    "fieldtype": "Currency",
    "label": "Current CTC",
    "mandatory_depends_on": "revised_ctc",
+   "non_negative": 1,
    "options": "salary_currency"
   },
   {
@@ -113,12 +114,13 @@
    "fieldname": "revised_ctc",
    "fieldtype": "Currency",
    "label": "Revised CTC",
+   "non_negative": 1,
    "options": "salary_currency"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-27 13:09:40.623819",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Promotion",
