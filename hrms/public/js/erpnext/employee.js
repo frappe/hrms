@@ -222,7 +222,11 @@ frappe.ui.form.on("Employee", {
 			if (action.master && !available_masters[action.master]) continue;
 			if (!frappe.model.can_create(action.doctype)) continue;
 
-			frm.add_custom_button(action.label, () => open_assignment(frm, action), __("Assign"));
+			frm.add_custom_button(
+				action.label,
+				() => open_assignment(frm, action),
+				__("Create Assignments"),
+			);
 		}
 	},
 
