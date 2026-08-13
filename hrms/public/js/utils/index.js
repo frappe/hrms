@@ -182,11 +182,6 @@ $.extend(hrms, {
 	get_current_position: () => {
 		return new Promise((resolve, reject) => {
 			if (!navigator.geolocation) {
-				frappe.msgprint({
-					message: __("Geolocation is not supported by your current browser"),
-					title: __("Geolocation Error"),
-					indicator: "red",
-				});
 				reject({ unsupported: true });
 				return;
 			}
@@ -198,21 +193,30 @@ $.extend(hrms, {
 						longitude: position.coords.longitude,
 					}),
 
-				(error) => {
-					let msg = __("Unable to retrieve your location") + "<br><br>";
-					if (error) {
-						msg += __("ERROR({0}): {1}", [error.code, error.message]);
-					}
-					frappe.msgprint({
-						message: msg,
-						title: __("Geolocation Error"),
-						indicator: "red",
-					});
-					reject(error);
-				},
+				(error) => reject(error),
 				{ timeout: 10000 },
 			);
 		});
+	},
+
+	get_geolocation_error_message: (error) => {
+		if (error?.unsupported) {
+			return __("Geolocation is not supported by your current browser");
+		}
+
+		if (error?.code === 1) {
+			return __(
+				"User denied location prompt. Please allow access to your location in your browser settings and try again.",
+			);
+		}
+
+		if (error) {
+			return __("ERROR({0}): {1}", [
+				error.code,
+				frappe.utils.escape_html(error.message || ""),
+			]);
+		}
+		return __("An unknown error occurred while fetching your geolocation");
 	},
 
 	fetch_geolocation: async (frm) => {
@@ -227,6 +231,11 @@ $.extend(hrms, {
 			]);
 		} catch (error) {
 			if (error?.unsupported) hide_field(["geolocation"]);
+			frappe.msgprint({
+				message: hrms.get_geolocation_error_message(error),
+				title: __("Geolocation Error"),
+				indicator: "red",
+			});
 		} finally {
 			frappe.dom.unfreeze();
 		}

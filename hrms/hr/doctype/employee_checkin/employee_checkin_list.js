@@ -114,14 +114,30 @@ async function start_checkin(listview, next) {
 	}
 
 	let coordinates;
+	let failure;
 	frappe.dom.freeze(__("Fetching your geolocation") + "...");
 	try {
 		coordinates = await hrms.get_current_position();
 		await frappe.require(["leaflet.bundle.js", "leaflet.bundle.css"]);
 	} catch (error) {
-		return;
+		failure = error || {};
 	} finally {
 		frappe.dom.unfreeze();
+	}
+
+	if (failure) {
+		return frappe.msgprint({
+			message: hrms.get_geolocation_error_message(failure),
+			title: __("Geolocation Error"),
+			indicator: "red",
+			primary_action: {
+				label: __("Retry"),
+				action: () => {
+					frappe.hide_msgprint(true);
+					start_checkin(listview, next);
+				},
+			},
+		});
 	}
 
 	confirm_checkin_location(listview, next, time, coordinates);
