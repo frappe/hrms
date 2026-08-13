@@ -33,13 +33,14 @@ function get_assignment_actions() {
 			label: __("Salary Structure"),
 			doctype: "Salary Structure Assignment",
 			master: "Salary Structure",
+			prefill: (frm) => ({ employee: frm.doc.name, company: frm.doc.company }),
 			redirect: true,
 		},
 		{
 			label: __("Shift"),
 			doctype: "Shift Assignment",
-			master_field: "shift_type",
 			prefill: (frm) => ({ employee: frm.doc.name, company: frm.doc.company }),
+			redirect: true,
 		},
 		{
 			label: __("Shift Schedule"),
@@ -65,12 +66,7 @@ function get_assignable_masters(company) {
 }
 
 function open_assignment(frm, action) {
-	if (action.redirect) {
-		return frappe.new_doc(action.doctype, {
-			employee: frm.doc.name,
-			company: frm.doc.company,
-		});
-	}
+	if (action.redirect) return frappe.new_doc(action.doctype, action.prefill(frm));
 
 	frappe.model.with_doctype(action.doctype, () => {
 		const doc = Object.assign(
