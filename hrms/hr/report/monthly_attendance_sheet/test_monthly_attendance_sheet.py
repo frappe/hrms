@@ -221,10 +221,7 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		self.assertEqual(row["total_late_entries"], 1)
 		self.assertEqual(row["total_early_exits"], 1)
 
-<<<<<<< HEAD
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
-=======
-	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_summarized_view_with_leave_backed_half_day(self):
 		previous_month_first = get_first_day_for_prev_month()
 
@@ -269,8 +266,7 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		# half day leave 0.5 (leave-backed)
 		self.assertEqual(row["total_leaves"], 0.5)
 
-	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
->>>>>>> fe46f9ba1 (test(monthly_attendance_sheet): add test coverage for leave-backed half-day present/leave split)
+	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_attendance_with_group_by_filter(self):
 		previous_month_first = get_first_day_for_prev_month()
 
