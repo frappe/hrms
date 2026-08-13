@@ -38,8 +38,18 @@ frappe.listview_settings["Employee Checkin"] = {
 
 function get_next_checkin(last_log_type) {
 	return last_log_type === "IN"
-		? { log_type: "OUT", label: __("Check Out"), icon: "circle-arrow-left" }
-		: { log_type: "IN", label: __("Check In"), icon: "circle-arrow-right" };
+		? {
+				log_type: "OUT",
+				label: __("Check Out"),
+				working_label: __("Checking Out..."),
+				icon: "circle-arrow-left",
+		  }
+		: {
+				log_type: "IN",
+				label: __("Check In"),
+				working_label: __("Checking In..."),
+				icon: "circle-arrow-right",
+		  };
 }
 
 async function setup_checkin_action(listview) {
@@ -47,6 +57,10 @@ async function setup_checkin_action(listview) {
 	if (!employee) return;
 
 	listview.checkin_employee = employee;
+	listview.track_geolocation = await frappe.db.get_single_value(
+		"HR Settings",
+		"allow_geolocation_tracking",
+	);
 	listview.set_primary_action = () => {
 		const next = listview.next_checkin;
 		if (!next) return;
@@ -58,9 +72,11 @@ async function setup_checkin_action(listview) {
 		listview.page.set_primary_action(
 			next.label,
 			() => {
-				start_checkin(listview, next);
+				const checkin = start_checkin(listview, next);
+				return listview.track_geolocation ? undefined : checkin;
 			},
 			next.icon,
+			next.working_label,
 		);
 	};
 
@@ -105,11 +121,7 @@ async function refresh_checkin_state(listview) {
 async function start_checkin(listview, next) {
 	const time = frappe.datetime.now_datetime();
 
-	const track_geolocation = await frappe.db.get_single_value(
-		"HR Settings",
-		"allow_geolocation_tracking",
-	);
-	if (!track_geolocation) {
+	if (!listview.track_geolocation) {
 		return submit_checkin(listview, next, time);
 	}
 
@@ -194,9 +206,10 @@ function confirm_checkin_location(listview, next, time, coordinates) {
 			},
 		],
 		primary_action_label: __("Confirm {0}", [next.label]),
-		primary_action: () => {
-			dialog.hide();
-			submit_checkin(listview, next, time, coordinates);
+		primary_action_loading_label: next.working_label,
+		primary_action: async () => {
+			const checkin = await submit_checkin(listview, next, time, coordinates);
+			if (checkin) dialog.hide();
 		},
 	});
 
@@ -205,28 +218,35 @@ function confirm_checkin_location(listview, next, time, coordinates) {
 }
 
 async function submit_checkin(listview, next, time, coordinates) {
-	let checkin;
+	if (listview.checkin_in_progress) return;
+	listview.checkin_in_progress = true;
+
 	try {
-		checkin = await frappe.db.insert({
+		const checkin = await frappe.db.insert({
 			doctype: "Employee Checkin",
 			employee: listview.checkin_employee.name,
 			log_type: next.log_type,
 			time: time,
 			...(coordinates || {}),
 		});
+
+		frappe.show_alert({
+			message: checkin.offshift
+				? __(
+						"{0} recorded outside shift hours. It will not be considered for attendance.",
+						[next.label],
+				  )
+				: __("{0} successful", [next.label]),
+			indicator: checkin.offshift ? "orange" : "green",
+		});
+
+		await refresh_checkin_state(listview);
+		await listview.refresh();
+
+		return checkin;
 	} catch (error) {
 		return;
+	} finally {
+		listview.checkin_in_progress = false;
 	}
-
-	frappe.show_alert({
-		message: checkin.offshift
-			? __("{0} recorded outside shift hours. It will not be considered for attendance.", [
-					next.label,
-			  ])
-			: __("{0} successful", [next.label]),
-		indicator: checkin.offshift ? "orange" : "green",
-	});
-
-	await refresh_checkin_state(listview);
-	await listview.refresh();
 }
