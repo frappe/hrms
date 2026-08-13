@@ -225,6 +225,51 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 		self.assertEqual(row["total_early_exits"], 1)
 
 	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	def test_summarized_view_with_leave_backed_half_day(self):
+		previous_month_first = get_first_day_for_prev_month()
+
+		mark_attendance(self.employee, previous_month_first, "Absent")
+		mark_attendance(self.employee, previous_month_first + relativedelta(days=1), "Present")
+
+		year_start = getdate(get_year_start(previous_month_first))
+		year_end = getdate(get_year_ending(previous_month_first))
+		try:
+			make_allocation_record(employee=self.employee, from_date=year_start, to_date=year_end)
+		except OverlapError:
+			pass
+
+		leave_backed_day = previous_month_first + relativedelta(days=5)
+		make_leave_application(
+			self.employee,
+			leave_backed_day,
+			leave_backed_day,
+			"_Test Leave Type",
+			half_day=True,
+			half_day_date=leave_backed_day,
+		)
+
+		filters = frappe._dict(
+			{
+				"month": previous_month_first.month,
+				"year": previous_month_first.year,
+				"company": self.company,
+				"summarized_view": 1,
+				"filter_based_on": self.filter_based_on,
+			}
+		)
+		report = execute(filters=filters)
+
+		row = report[1][0]
+		self.assertEqual(row["employee"], self.employee)
+
+		# 1 present + half day worked 0.5 (leave-backed)
+		self.assertEqual(row["total_present"], 1.5)
+		# 1 absent, half day doesn't count as absent (leave-backed)
+		self.assertEqual(row["total_absent"], 1)
+		# half day leave 0.5 (leave-backed)
+		self.assertEqual(row["total_leaves"], 0.5)
+
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_attendance_with_group_by_filter(self):
 		previous_month_first = get_first_day_for_prev_month()
 
