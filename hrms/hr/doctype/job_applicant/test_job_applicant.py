@@ -61,9 +61,7 @@ class TestJobApplicant(HRMSTestSuite):
 			designation="Software Developer",
 			company="_Test Company",
 			department="_Test Department - _TC",
-		)
-		if opening.is_new():
-			opening.insert()
+		).insert()
 
 		applicant = frappe.get_doc(
 			{
