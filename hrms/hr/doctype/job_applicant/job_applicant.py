@@ -9,6 +9,7 @@ import json
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.model.mapper import get_mapped_doc
 from frappe.model.naming import append_number_if_name_exists
 from frappe.utils import flt, validate_email_address
 
@@ -105,6 +106,50 @@ class JobApplicant(Document):
 
 
 KANBAN_COLUMNS = ["Open", "Replied", "Shortlisted", "Accepted"]
+
+
+@frappe.whitelist()
+def make_employee(source_name: str, target_doc: str | Document | None = None) -> Document:
+	def set_missing_values(source, target):
+		target.employee_name = source.applicant_name
+
+		if not source.job_title:
+			return
+
+		job_opening = frappe.db.get_value(
+			"Job Opening",
+			source.job_title,
+			["company", "department", "employment_type"],
+			as_dict=True,
+		)
+		if not job_opening:
+			return
+
+		if job_opening.company:
+			target.company = job_opening.company
+		if job_opening.department:
+			target.department = job_opening.department
+		if job_opening.employment_type:
+			target.employment_type = job_opening.employment_type
+
+	return get_mapped_doc(
+		"Job Applicant",
+		source_name,
+		{
+			"Job Applicant": {
+				"doctype": "Employee",
+				"field_map": {
+					"applicant_name": "first_name",
+					"email_id": "personal_email",
+					"phone_number": "cell_number",
+					"currency": "salary_currency",
+				},
+				"field_no_map": ["status"],
+			}
+		},
+		target_doc,
+		set_missing_values,
+	)
 
 
 @frappe.whitelist()

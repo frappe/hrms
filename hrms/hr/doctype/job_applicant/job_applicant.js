@@ -7,6 +7,16 @@
 cur_frm.email_field = "email_id";
 
 frappe.ui.form.on("Job Applicant", {
+	setup: function (frm) {
+		frm.make_methods = {
+			Employee: () =>
+				frappe.model.open_mapped_doc({
+					method: "hrms.hr.doctype.job_applicant.job_applicant.make_employee",
+					frm: frm,
+				}),
+		};
+	},
+
 	refresh: function (frm) {
 		frm.set_query("job_title", function () {
 			return {
