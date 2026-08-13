@@ -12,13 +12,8 @@ from pypika.terms import Criterion
 import frappe
 from frappe import _
 from frappe.query_builder import Case
-<<<<<<< HEAD
-from frappe.query_builder.functions import Count, Extract, Sum
-from frappe.utils import cint, cstr, formatdate, getdate
-=======
 from frappe.query_builder.functions import Coalesce, Count, Extract, Sum
-from frappe.utils import add_days, cint, cstr, formatdate, getdate
->>>>>>> f6779407c (fix(monthly_attendance_sheet): fix half-day present/absent/leave calculation using half_day_status and leave_application)
+from frappe.utils import cint, cstr, formatdate, getdate
 from frappe.utils.nestedset import get_descendants_of
 
 from hrms.utils import date_diff, get_date_range
