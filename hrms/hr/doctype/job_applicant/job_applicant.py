@@ -54,6 +54,9 @@ class JobApplicant(Document):
 		if job_offer:
 			self.get("__onload").job_offer = job_offer[0].name
 
+		employee = frappe.db.get_value("Employee", {"job_applicant": self.name}, "name") or ""
+		self.set_onload("employee", employee)
+
 	def autoname(self):
 		self.name = self.email_id
 
