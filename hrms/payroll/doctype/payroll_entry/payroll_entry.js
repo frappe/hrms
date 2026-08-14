@@ -180,13 +180,20 @@ frappe.ui.form.on("Payroll Entry", {
 
 	add_bank_entry_button: function (frm) {
 		frm.call("has_bank_entries").then((r) => {
-			if (!r.message.has_bank_entries) {
+			const { has_bank_entries, has_withheld_salaries, has_unwithheld_salaries } = r.message;
+
+			if (!has_bank_entries && has_unwithheld_salaries) {
 				frm.add_custom_button(__("Make Bank Entry"), function () {
 					make_bank_entry(frm);
 				}).addClass("btn-primary");
-			} else if (!r.message.has_bank_entries_for_withheld_salaries) {
+			}
+
+			// releasing normally waits for the regular bank entry, but when every employee
+			// is withheld there is no regular entry to wait for and the release would
+			// otherwise be unreachable, leaving the salaries stranded
+			if (has_withheld_salaries && (has_bank_entries || !has_unwithheld_salaries)) {
 				frm.add_custom_button(__("Release Withheld Salaries"), function () {
-					make_bank_entry(frm, (for_withheld_salaries = 1));
+					make_bank_entry(frm, 1);
 				}).addClass("btn-primary");
 			}
 		});

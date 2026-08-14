@@ -945,11 +945,12 @@ class PayrollEntry(Document):
 			)
 		).run(as_dict=True)
 
+		withheld_flags = [bool(employee.is_salary_withheld) for employee in self.employees]
+
 		return {
 			"has_bank_entries": bool(bank_entries),
-			"has_bank_entries_for_withheld_salaries": not any(
-				employee.is_salary_withheld for employee in self.employees
-			),
+			"has_withheld_salaries": any(withheld_flags),
+			"has_unwithheld_salaries": any(not flag for flag in withheld_flags),
 		}
 
 	@frappe.whitelist()
