@@ -27,7 +27,14 @@ function get_assignment_actions() {
 			master: "Leave Policy",
 			master_field: "leave_policy",
 			prefill: (frm) => ({ employee: frm.doc.name }),
-			queries: { leave_policy: { docstatus: 1 } },
+			queries: (frm) => ({
+				leave_policy: { docstatus: 1 },
+				leave_period: { is_active: 1, company: frm.doc.company },
+			}),
+			on_change: {
+				assignment_based_on: set_leave_effective_dates,
+				leave_period: set_leave_effective_dates,
+			},
 		},
 		{
 			label: __("Salary Structure"),
@@ -77,15 +84,15 @@ function open_assignment(frm, action) {
 		frappe.ui.form.make_quick_entry(
 			action.doctype,
 			(created_doc) => notify_assignment_created(action, created_doc),
-			(dialog) => setup_dialog(dialog, action),
+			(dialog) => setup_dialog(dialog, action, frm),
 			doc,
 			true,
 		);
 	});
 }
 
-function setup_dialog(dialog, action) {
-	for (const [fieldname, filters] of Object.entries(action.queries || {}))
+function setup_dialog(dialog, action, frm) {
+	for (const [fieldname, filters] of Object.entries(action.queries?.(frm) || {}))
 		dialog.set_query(fieldname, () => ({ filters }));
 
 	for (const fieldname of action.hide || []) {
@@ -100,7 +107,7 @@ function setup_dialog(dialog, action) {
 		const control = dialog.fields_dict[fieldname];
 		if (!control) continue;
 
-		control.df = { ...control.df, onchange: () => handler(dialog) };
+		control.df = { ...control.df, onchange: () => handler(dialog, frm) };
 	}
 
 	dialog.add_custom_action(__("Edit Full Form"), () => dialog.open_doc(false));
@@ -142,6 +149,37 @@ async function sync_holiday_list_range(dialog) {
 		await dialog.set_value("from_date", range_start);
 
 	flag_start_date_outside_range(dialog);
+}
+
+async function set_leave_effective_dates(dialog, frm) {
+	const assignment_based_on = dialog.get_value("assignment_based_on");
+
+	if (!assignment_based_on) {
+		await dialog.set_value("effective_from", "");
+		await dialog.set_value("effective_to", "");
+		return;
+	}
+
+	if (assignment_based_on === "Joining Date") {
+		await dialog.set_value("effective_from", frm.doc.date_of_joining);
+		await dialog.set_value(
+			"effective_to",
+			frappe.datetime.add_months(frm.doc.date_of_joining, 12),
+		);
+		return;
+	}
+
+	const leave_period = dialog.get_value("leave_period");
+	if (!leave_period) return;
+
+	const response = await frappe.db.get_value("Leave Period", leave_period, [
+		"from_date",
+		"to_date",
+	]);
+	if (!response.message) return;
+
+	await dialog.set_value("effective_from", response.message.from_date);
+	await dialog.set_value("effective_to", response.message.to_date);
 }
 
 function flag_start_date_outside_range(dialog) {
