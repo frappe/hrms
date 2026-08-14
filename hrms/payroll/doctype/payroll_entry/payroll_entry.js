@@ -456,7 +456,24 @@ let make_bank_entry = function (frm, for_withheld_salaries = 0) {
 				dn: frm.doc.name,
 				args: { for_withheld_salaries: for_withheld_salaries },
 			},
-			callback: function () {
+			callback: function (r) {
+				// the server returns nothing when no salary qualifies for payment,
+				// so don't route to an empty Journal Entry list without explanation
+				if (!r.message) {
+					frappe.msgprint({
+						title: __("No Bank Entry Created"),
+						message: for_withheld_salaries
+							? __(
+									"There are no withheld salaries pending release for this Payroll Entry.",
+							  )
+							: __(
+									"There are no salaries pending payment for this Payroll Entry. Withheld salaries have to be paid using the Release Withheld Salaries button.",
+							  ),
+						indicator: "orange",
+					});
+					return;
+				}
+
 				frappe.set_route("List", "Journal Entry", {
 					"Journal Entry Account.reference_name": frm.doc.name,
 				});
