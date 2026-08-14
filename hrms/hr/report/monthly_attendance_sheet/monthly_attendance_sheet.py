@@ -350,12 +350,14 @@ def get_attendance_records(filters: Filters) -> list[dict]:
 	if filters.employee:
 		query = query.where(Attendance.employee == filters.employee)
 
-	if filters.department or filters.branch:
+	if filters.department or filters.branch or filters.status:
 		query = query.join(Employee).on(Attendance.employee == Employee.name)
 		if filters.department and filters.department != "All Departments":
 			query = query.where(Employee.department == filters.department)
 		if filters.branch:
 			query = query.where(Employee.branch == filters.branch)
+		if filters.status:
+			query = query.where(Employee.status == filters.status)
 
 	query = query.orderby(Attendance.employee, Attendance.attendance_date)
 
@@ -400,6 +402,8 @@ def get_employee_related_details(filters: Filters) -> tuple[dict, list]:
 		query = query.where(Employee.department == filters.department)
 	if filters.branch:
 		query = query.where(Employee.branch == filters.branch)
+	if filters.status:
+		query = query.where(Employee.status == filters.status)
 
 	group_by = filters.group_by
 	if group_by:
