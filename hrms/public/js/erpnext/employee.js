@@ -53,8 +53,8 @@ function get_assignment_actions() {
 			label: __("Shift Schedule"),
 			doctype: "Shift Schedule Assignment",
 			master: "Shift Schedule",
-			master_field: "shift_schedule",
 			prefill: (frm) => ({ employee: frm.doc.name, company: frm.doc.company }),
+			redirect: true,
 		},
 	];
 }
