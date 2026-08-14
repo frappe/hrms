@@ -263,6 +263,8 @@ accounting_dimension_doctypes = [
 
 bank_reconciliation_doctypes = ["Expense Claim"]
 
+repost_allowed_doctypes = ["Expense Claim"]
+
 # Testing
 # -------
 

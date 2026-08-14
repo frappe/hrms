@@ -530,6 +530,50 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		self.assertEqual(row["total_late_entries"], 1)
 		self.assertEqual(row["total_early_exits"], 1)
 
+	def test_summarised_view_with_date_range_across_month_boundary(self):
+		"""
+		Total Holidays must count a holiday even if an earlier date
+		in a different month shares its day-of-month.
+		"""
+		previous_month_first = get_first_day_for_prev_month()
+
+		start_date = previous_month_first.replace(day=5)
+		end_date = start_date + relativedelta(months=1)  # same day-of-month, next month
+
+		hl = make_holiday_list(
+			"Test Cross Month HL",
+			from_date=add_days(start_date, -1),
+			to_date=add_days(end_date, 1),
+			add_weekly_offs=False,
+		)
+
+		holiday_list = frappe.get_doc("Holiday List", hl)
+		holiday_list.append(
+			"holidays", {"holiday_date": end_date, "description": "Test Holiday"}
+		)  # holiday only on the later, colliding day-of-month
+		holiday_list.save()
+
+		frappe.db.set_value("Employee", self.employee, "holiday_list", hl)
+
+		# attendance on the earlier date sharing the same day-of-month as the holiday
+		mark_attendance(self.employee, start_date, "Present")
+
+		filters = frappe._dict(
+			{
+				"filter_based_on": "Date Range",
+				"start_date": start_date,
+				"end_date": end_date,
+				"company": self.company,
+				"summarized_view": 1,
+			}
+		)
+		report = execute(filters=filters)
+		row = report[1][0]
+
+		# end_date's holiday must still be counted despite start_date (same day-of-month, different month)
+		# already having an attendance record
+		self.assertEqual(row["total_holidays"], 1)
+
 	def test_detailed_view_with_date_range_filter(self):
 		today = getdate()
 		mark_attendance(self.employee, today, "Absent", "Day Shift")
