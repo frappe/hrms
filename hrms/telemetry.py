@@ -1,4 +1,5 @@
 import frappe
+from frappe.database import savepoint
 from frappe.query_builder.functions import Count
 from frappe.utils import add_days, date_diff, getdate, today
 from frappe.utils.telemetry import capture as _capture
@@ -27,22 +28,17 @@ def capture(event: str, properties: dict | None = None) -> None:
 	_capture(event, APP, properties=properties or {})
 
 
+MILESTONE_DOCTYPE = "HR Telemetry Milestone"
+
+
 def _claim_milestone(event: str) -> bool:
-	"""Claim a once-per-site milestone. Returns False if it already fired.
+	claimed = False
 
-	This used to be inferred by counting existing rows of the doctype, which
-	silently swallowed any milestone whose doctype ships install-time fixtures:
-	`make_fixtures()` seeds five Leave Types at install, so the count was always
-	>1 by the time a user created one and `leave_type_configured` never fired.
-	A claim flag is also immune to bulk imports and to rows being deleted and
-	recreated later.
-	"""
-	key = f"hrms_milestone:{event}"
-	if frappe.db.get_default(key):
-		return False
+	with savepoint(catch=Exception):
+		frappe.get_doc({"doctype": MILESTONE_DOCTYPE, "event": event}).insert(ignore_permissions=True)
+		claimed = True
 
-	frappe.db.set_default(key, "1")
-	return True
+	return claimed
 
 
 def capture_first(event: str, properties: dict | None = None) -> None:
