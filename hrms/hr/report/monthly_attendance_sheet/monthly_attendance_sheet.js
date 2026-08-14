@@ -116,7 +116,6 @@ frappe.query_reports["Monthly Attendance Sheet"] = {
 			label: __("Status"),
 			fieldtype: "Select",
 			options: ["", "Active", "Inactive", "Suspended", "Left"],
-			default: "Active",
 		},
 		{
 			fieldname: "group_by",
