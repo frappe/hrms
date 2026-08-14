@@ -231,6 +231,10 @@ doc_events = {
 	"Attendance Request": {"on_submit": "hrms.telemetry.on_attendance_request_submit"},
 	"Shift Request": {"on_submit": "hrms.telemetry.on_shift_request_submit"},
 	"Employee Checkin": {"after_insert": "hrms.telemetry.on_employee_checkin"},
+	"Payroll Entry": {"on_submit": "hrms.telemetry.on_payroll_entry_submit"},
+	"Job Offer": {"on_submit": "hrms.telemetry.on_job_offer_submit"},
+	"Appraisal": {"on_submit": "hrms.telemetry.on_appraisal_submit"},
+	"Interview": {"on_submit": "hrms.telemetry.on_interview_submit"},
 	# ---- Activation telemetry: post-install setup funnel (first-time milestones) ----
 	"Shift Type": {"after_insert": "hrms.telemetry.on_milestone_insert"},
 	"Leave Type": {"after_insert": "hrms.telemetry.on_milestone_insert"},
@@ -239,7 +243,6 @@ doc_events = {
 	"Appraisal Cycle": {"after_insert": "hrms.telemetry.on_milestone_insert"},
 	"Employee Onboarding": {"after_insert": "hrms.telemetry.on_milestone_insert"},
 	"Salary Slip": {"on_submit": "hrms.telemetry.on_milestone_submit"},
-	"Payroll Entry": {"on_submit": "hrms.telemetry.on_milestone_submit"},
 }
 
 # Scheduled Tasks
