@@ -263,6 +263,8 @@ accounting_dimension_doctypes = [
 
 bank_reconciliation_doctypes = ["Expense Claim"]
 
+repost_allowed_doctypes = ["Expense Claim"]
+
 # Testing
 # -------
 
@@ -369,13 +371,3 @@ company_data_to_be_ignored = [
 	"Employee Onboarding Template",
 	"Employee Separation Template",
 ]
-<<<<<<< HEAD
-=======
-
-# List of apps whose translatable strings should be excluded from this app's translations.
-ignore_translatable_strings_from = ["frappe", "erpnext"]
-employee_holiday_list = ["hrms.utils.holiday_list.get_holiday_list_for_employee"]
-export_python_type_annotations = True
-require_type_annotated_api_methods = True
-repost_allowed_doctypes = ["Expense Claim"]
->>>>>>> 9626ad7fa (refactor: restrict reposting to only supported doctypes)
