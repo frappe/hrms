@@ -635,6 +635,48 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 		self.assertIn(emp_dept1, employees_in_report)
 		self.assertNotIn(emp_dept2, employees_in_report)
 
+	def test_attendance_with_status_filter(self):
+		previous_month_first = get_first_day_for_prev_month()
+
+		active_employee = make_employee("emp_active@example.com", company=self.company)
+		left_employee = make_employee("emp_left@example.com", company=self.company)
+		frappe.db.set_value("Employee", left_employee, "status", "Left")
+
+		mark_attendance(active_employee, previous_month_first, "Present")
+		mark_attendance(left_employee, previous_month_first, "Present")
+
+		filters = frappe._dict(
+			{
+				"month": previous_month_first.month,
+				"year": previous_month_first.year,
+				"company": self.company,
+				"status": "Active",
+				"filter_based_on": self.filter_based_on,
+			}
+		)
+		report = execute(filters=filters)
+		employees_in_report = [row.get("employee") for row in report[1] if row.get("employee")]
+
+		# only the active employee should appear
+		self.assertIn(active_employee, employees_in_report)
+		self.assertNotIn(left_employee, employees_in_report)
+
+		filters.status = "Left"
+		report = execute(filters=filters)
+		employees_in_report = [row.get("employee") for row in report[1] if row.get("employee")]
+
+		# only the left employee should appear
+		self.assertIn(left_employee, employees_in_report)
+		self.assertNotIn(active_employee, employees_in_report)
+
+		filters.status = ""
+		report = execute(filters=filters)
+		employees_in_report = [row.get("employee") for row in report[1] if row.get("employee")]
+
+		# both employees should appear when status filter is blank
+		self.assertIn(active_employee, employees_in_report)
+		self.assertIn(left_employee, employees_in_report)
+
 	def test_attendance_with_branch_filter(self):
 		previous_month_first = get_first_day_for_prev_month()
 
