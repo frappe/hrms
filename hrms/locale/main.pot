@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Frappe HR VERSION\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-08-09 10:04+0000\n"
-"PO-Revision-Date: 2026-08-09 10:04+0000\n"
+"POT-Creation-Date: 2026-08-16 09:40+0000\n"
+"PO-Revision-Date: 2026-08-16 09:40+0000\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: contact@frappe.io\n"
 "MIME-Version: 1.0\n"
@@ -306,8 +306,8 @@ msgstr ""
 msgid "A Job Requisition already exists for {0} requested by {1} for the same department.<br> Do you want to continue?"
 msgstr ""
 
-#: hrms/controllers/employee_reminders.py:123
-#: hrms/controllers/employee_reminders.py:216
+#: hrms/controllers/employee_reminders.py:125
+#: hrms/controllers/employee_reminders.py:210
 msgid "A friendly reminder of an important date for our team."
 msgstr ""
 
@@ -330,7 +330,7 @@ msgstr ""
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:793
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:833
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Absent"
 msgstr ""
@@ -466,6 +466,10 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_application/leave_application.py:488
 msgid "Actual balances aren't available because the leave application spans over different leave allocations. You can still apply for leaves which would be compensated during the next allocation."
+msgstr ""
+
+#: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:21
+msgid "Add Checkin for Another Employee"
 msgstr ""
 
 #. Label of the add_day_wise_dates (Button) field in DocType 'Leave Block List'
@@ -842,6 +846,10 @@ msgstr ""
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:82
 msgid "An attendance record is linked to this checkin. Please cancel the attendance before modifying time."
+msgstr ""
+
+#: hrms/public/js/utils/index.js:219
+msgid "An unknown error occurred while fetching your geolocation"
 msgstr ""
 
 #. Label of the annual_allocation (Float) field in DocType 'Leave Policy
@@ -1277,6 +1285,10 @@ msgstr ""
 msgid "Assignment based on"
 msgstr ""
 
+#: hrms/public/js/erpnext/employee.js:200
+msgid "Assignment must start between {0} and {1}"
+msgstr ""
+
 #: hrms/hr/doctype/holiday_list_assignment/holiday_list_assignment.py:66
 msgid "Assignment start date cannot be outside holiday list dates"
 msgstr ""
@@ -1583,7 +1595,7 @@ msgstr ""
 msgid "Begin check-in before shift start time (in minutes)"
 msgstr ""
 
-#: hrms/controllers/employee_reminders.py:75
+#: hrms/controllers/employee_reminders.py:77
 msgid "Below is the list of upcoming holidays for you:"
 msgstr ""
 
@@ -1660,11 +1672,11 @@ msgstr ""
 msgid "Bimonthly"
 msgstr ""
 
-#: hrms/controllers/employee_reminders.py:134
+#: hrms/controllers/employee_reminders.py:136
 msgid "Birthday Reminder"
 msgstr ""
 
-#: hrms/controllers/employee_reminders.py:141
+#: hrms/controllers/employee_reminders.py:143
 msgid "Birthday Reminder 🎂"
 msgstr ""
 
@@ -1693,6 +1705,12 @@ msgstr ""
 msgid "Boarding Status"
 msgstr ""
 
+#. Label of the body_section (Section Break) field in DocType 'Appointment
+#. Letter'
+#: hrms/hr/doctype/appointment_letter/appointment_letter.json
+msgid "Body"
+msgstr ""
+
 #. Label of the bonus_section (Section Break) field in DocType 'Retention
 #. Bonus'
 #: hrms/payroll/doctype/retention_bonus/retention_bonus.json
@@ -1711,6 +1729,11 @@ msgstr ""
 
 #: hrms/payroll/doctype/retention_bonus/retention_bonus.py:37
 msgid "Bonus Payment Date cannot be a past date"
+msgstr ""
+
+#. Description of a DocType
+#: hrms/hr/doctype/hr_telemetry_milestone/hr_telemetry_milestone.json
+msgid "Bookkeeping for once-per-site activation telemetry. The document name is the event name, so the primary key makes claiming a milestone atomic across concurrent transactions."
 msgstr ""
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:279
@@ -1916,16 +1939,23 @@ msgid "Check Error Log {0} for more details."
 msgstr ""
 
 #: frontend/src/components/CheckInPanel.vue:121
+#: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:49
+#: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:95
 msgid "Check In"
 msgstr ""
 
 #: frontend/src/components/CheckInPanel.vue:120
+#: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:43
 msgid "Check Out"
 msgstr ""
 
 #. Label of the check_vacancies (Check) field in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Check Vacancies On Job Offer Creation"
+msgstr ""
+
+#: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:92
+msgid "Check in to create your first log."
 msgstr ""
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:543
@@ -1954,6 +1984,14 @@ msgstr ""
 #. Label of the checkin_radius (Int) field in DocType 'Shift Location'
 #: hrms/hr/doctype/shift_location/shift_location.json
 msgid "Checkin Radius"
+msgstr ""
+
+#: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:50
+msgid "Checking In..."
+msgstr ""
+
+#: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:44
+msgid "Checking Out..."
 msgstr ""
 
 #: hrms/hr/doctype/goal/goal_tree.js:52
@@ -2019,6 +2057,10 @@ msgstr ""
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.js:300
 msgid "Click {0} to change the configuration and then resave salary slip"
+msgstr ""
+
+#: hrms/hr/doctype/job_opening/job_opening.js:21
+msgid "Close Job Opening"
 msgstr ""
 
 #. Label of the closed_on (Date) field in DocType 'Job Opening'
@@ -2107,6 +2149,7 @@ msgid "Conference"
 msgstr ""
 
 #: frontend/src/components/CheckInPanel.vue:74
+#: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:208
 msgid "Confirm {0}"
 msgstr ""
 
@@ -2196,6 +2239,10 @@ msgstr ""
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.js:34
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.js:38
 msgid "Create Appraisals"
+msgstr ""
+
+#: hrms/public/js/erpnext/employee.js:266
+msgid "Create Assignments"
 msgstr ""
 
 #: hrms/hr/doctype/interview_type/interview_type.js:7
@@ -2416,7 +2463,7 @@ msgstr ""
 msgid "Daily Work Summary Replies"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:187
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:194
 msgid "Date Range Exceeded"
 msgstr ""
 
@@ -2713,7 +2760,7 @@ msgstr ""
 msgid "Duplicate Salary Withholding"
 msgstr ""
 
-#: hrms/public/js/utils/index.js:210
+#: hrms/public/js/utils/index.js:216
 msgid "ERROR({0}): {1}"
 msgstr ""
 
@@ -3772,11 +3819,11 @@ msgstr ""
 msgid "Every Week"
 msgstr ""
 
-#: hrms/controllers/employee_reminders.py:218
+#: hrms/controllers/employee_reminders.py:212
 msgid "Everyone, let’s congratulate them on their work anniversary!"
 msgstr ""
 
-#: hrms/controllers/employee_reminders.py:125
+#: hrms/controllers/employee_reminders.py:127
 msgid "Everyone, let’s congratulate {0} on their birthday."
 msgstr ""
 
@@ -4232,7 +4279,8 @@ msgstr ""
 msgid "Fetching Shift"
 msgstr ""
 
-#: hrms/public/js/utils/index.js:193
+#: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:130
+#: hrms/public/js/utils/index.js:223
 msgid "Fetching your geolocation"
 msgstr ""
 
@@ -4527,12 +4575,13 @@ msgstr ""
 msgid "Gain Loss Account"
 msgstr ""
 
-#: hrms/public/js/utils/index.js:186 hrms/public/js/utils/index.js:214
+#: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:143
+#: hrms/public/js/utils/index.js:236
 msgid "Geolocation Error"
 msgstr ""
 
 #: frontend/src/components/CheckInPanel.vue:141
-#: hrms/public/js/utils/index.js:185
+#: hrms/public/js/utils/index.js:204
 msgid "Geolocation is not supported by your current browser"
 msgstr ""
 
@@ -4756,6 +4805,11 @@ msgstr ""
 msgid "HR Setup"
 msgstr ""
 
+#. Name of a DocType
+#: hrms/hr/doctype/hr_telemetry_milestone/hr_telemetry_milestone.json
+msgid "HR Telemetry Milestone"
+msgstr ""
+
 #: hrms/config/desktop.py:5
 msgid "HRMS"
 msgstr ""
@@ -4837,7 +4891,7 @@ msgstr ""
 msgid "Health Insurance Provider"
 msgstr ""
 
-#: hrms/controllers/employee_reminders.py:72
+#: hrms/controllers/employee_reminders.py:74
 msgid "Hey {}! This email is to remind you about the upcoming holidays."
 msgstr ""
 
@@ -4893,11 +4947,11 @@ msgstr ""
 msgid "Holidays in this month"
 msgstr ""
 
-#: hrms/controllers/employee_reminders.py:65
+#: hrms/controllers/employee_reminders.py:67
 msgid "Holidays this Month."
 msgstr ""
 
-#: hrms/controllers/employee_reminders.py:65
+#: hrms/controllers/employee_reminders.py:67
 msgid "Holidays this Week."
 msgstr ""
 
@@ -5116,7 +5170,7 @@ msgstr ""
 msgid "Incentive Amount"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:122
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:129
 msgid "Include Company Descendants"
 msgstr ""
 
@@ -5913,7 +5967,7 @@ msgstr ""
 
 #. Option for the 'Calculate Payroll Working Days Based On' (Select) field in
 #. DocType 'Payroll Settings'
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:795
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:835
 #: hrms/overrides/dashboard_overrides.py:12
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Leave"
@@ -6143,7 +6197,8 @@ msgstr ""
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 #: hrms/hr/doctype/leave_policy/leave_policy.json
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
-#: hrms/hr/workspace/leaves/leaves.json hrms/workspace_sidebar/leaves.json
+#: hrms/hr/workspace/leaves/leaves.json hrms/public/js/erpnext/employee.js:25
+#: hrms/workspace_sidebar/leaves.json
 msgid "Leave Policy"
 msgstr ""
 
@@ -6994,7 +7049,7 @@ msgstr ""
 msgid "No Shift Requests Selected"
 msgstr ""
 
-#: hrms/hr/doctype/job_opening/job_opening.js:35
+#: hrms/hr/doctype/job_opening/job_opening.js:49
 msgid "No Staffing Plans found for this Designation"
 msgstr ""
 
@@ -7061,6 +7116,10 @@ msgstr ""
 
 #: hrms/hr/doctype/interview/interview.py:116
 msgid "No changes found in timings."
+msgstr ""
+
+#: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:91
+msgid "No check-ins yet"
 msgstr ""
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:288
@@ -8145,7 +8204,7 @@ msgstr ""
 msgid "Please set Relieving Date for employee: {0}"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:186
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:193
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:56
 msgid "Please set a date range less than 90 days."
 msgstr ""
@@ -8269,7 +8328,7 @@ msgstr ""
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:794
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:834
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Present"
 msgstr ""
@@ -8712,6 +8771,10 @@ msgstr ""
 msgid "Rented Car"
 msgstr ""
 
+#: hrms/hr/doctype/job_opening/job_opening.js:21
+msgid "Reopen Job Opening"
+msgstr ""
+
 #: hrms/setup.py:879 hrms/setup.py:888
 msgid "Repay From Salary"
 msgstr ""
@@ -8892,7 +8955,7 @@ msgid "Role Allowed to Create Backdated Leave Application"
 msgstr ""
 
 #. Label of a Workspace Sidebar Item
-#: hrms/public/js/utils/index.js:252 hrms/public/js/utils/index.js:273
+#: hrms/public/js/utils/index.js:275 hrms/public/js/utils/index.js:296
 #: hrms/workspace_sidebar/shift_&_attendance.json
 msgid "Roster"
 msgstr ""
@@ -9229,7 +9292,7 @@ msgstr ""
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 #: hrms/payroll/workspace/payroll/payroll.json
-#: hrms/workspace_sidebar/payroll.json
+#: hrms/public/js/erpnext/employee.js:40 hrms/workspace_sidebar/payroll.json
 msgid "Salary Structure"
 msgstr ""
 
@@ -9729,7 +9792,7 @@ msgstr ""
 #. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
-#: hrms/public/js/utils/index.js:240 hrms/public/js/utils/index.js:262
+#: hrms/public/js/utils/index.js:263 hrms/public/js/utils/index.js:285
 msgid "Shift Assignment Tool"
 msgstr ""
 
@@ -9828,6 +9891,7 @@ msgstr ""
 #: hrms/hr/doctype/shift_schedule/shift_schedule.json
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
+#: hrms/public/js/erpnext/employee.js:53
 #: hrms/workspace_sidebar/shift_&_attendance.json
 msgid "Shift Schedule"
 msgstr ""
@@ -9869,8 +9933,8 @@ msgstr ""
 msgid "Shift Timings"
 msgstr ""
 
-#: hrms/public/js/utils/index.js:248 hrms/public/js/utils/index.js:256
-#: hrms/public/js/utils/index.js:270 hrms/public/js/utils/index.js:277
+#: hrms/public/js/utils/index.js:271 hrms/public/js/utils/index.js:279
+#: hrms/public/js/utils/index.js:293 hrms/public/js/utils/index.js:300
 msgid "Shift Tools"
 msgstr ""
 
@@ -10199,7 +10263,7 @@ msgstr ""
 msgid "Sum of benefit amounts {0} exceeds maximum limit of {1}"
 msgstr ""
 
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:128
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:135
 msgid "Summarized View"
 msgstr ""
 
@@ -10598,15 +10662,15 @@ msgstr ""
 msgid "To(Year) year can not be less than From(year)"
 msgstr ""
 
-#: hrms/controllers/employee_reminders.py:122
+#: hrms/controllers/employee_reminders.py:124
 msgid "Today is {0}'s birthday 🎉"
 msgstr ""
 
-#: hrms/controllers/employee_reminders.py:261
+#: hrms/controllers/employee_reminders.py:255
 msgid "Today {0} at our Company! 🎉"
 msgstr ""
 
-#: hrms/controllers/employee_reminders.py:241
+#: hrms/controllers/employee_reminders.py:235
 msgid "Today {0} completed {1} {2} at our Company! 🎉"
 msgstr ""
 
@@ -11129,10 +11193,6 @@ msgstr ""
 msgid "Unable to load leave allocation details right now."
 msgstr ""
 
-#: hrms/public/js/utils/index.js:208
-msgid "Unable to retrieve your location"
-msgstr ""
-
 #: hrms/hr/doctype/goal/goal.js:55
 msgid "Unarchive"
 msgstr ""
@@ -11237,7 +11297,7 @@ msgstr ""
 msgid "Upcoming Holidays"
 msgstr ""
 
-#: hrms/controllers/employee_reminders.py:69
+#: hrms/controllers/employee_reminders.py:71
 msgid "Upcoming Holidays Reminder"
 msgstr ""
 
@@ -11315,6 +11375,10 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_application/leave_application_dashboard.html:9
 msgid "Used Leaves"
+msgstr ""
+
+#: hrms/public/js/utils/index.js:208
+msgid "User denied location prompt. Please allow access to your location in your browser settings and try again."
 msgstr ""
 
 #. Label of the vacancies (Int) field in DocType 'Job Opening'
@@ -11495,8 +11559,8 @@ msgstr ""
 msgid "Work Anniversaries "
 msgstr ""
 
-#: hrms/controllers/employee_reminders.py:278
-#: hrms/controllers/employee_reminders.py:285
+#: hrms/controllers/employee_reminders.py:272
+#: hrms/controllers/employee_reminders.py:279
 msgid "Work Anniversary Reminder"
 msgstr ""
 
@@ -11800,17 +11864,17 @@ msgstr ""
 msgid "via Salary Component sync"
 msgstr ""
 
-#: hrms/controllers/employee_reminders.py:265
+#: hrms/controllers/employee_reminders.py:259
 msgid "year"
 msgstr ""
 
-#: hrms/controllers/employee_reminders.py:265
+#: hrms/controllers/employee_reminders.py:259
 msgid "years"
 msgstr ""
 
-#: hrms/controllers/employee_reminders.py:120
+#: hrms/controllers/employee_reminders.py:122
+#: hrms/controllers/employee_reminders.py:248
 #: hrms/controllers/employee_reminders.py:254
-#: hrms/controllers/employee_reminders.py:260
 msgid "{0} & {1}"
 msgstr ""
 
@@ -11830,7 +11894,7 @@ msgstr ""
 msgid "{0} Appraisal(s) are not submitted yet"
 msgstr ""
 
-#: hrms/public/js/utils/index.js:231
+#: hrms/public/js/utils/index.js:254
 msgid "{0} Field"
 msgstr ""
 
@@ -11871,7 +11935,7 @@ msgctxt "Leave Type"
 msgid "{0} balance"
 msgstr ""
 
-#: hrms/controllers/employee_reminders.py:253
+#: hrms/controllers/employee_reminders.py:247
 msgid "{0} completed {1} {2}"
 msgstr ""
 
@@ -11933,6 +11997,14 @@ msgstr ""
 msgid "{0} of {1} Completed"
 msgstr ""
 
+#: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:235
+msgid "{0} recorded outside shift hours. It will not be considered for attendance."
+msgstr ""
+
+#: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:239
+msgid "{0} successful"
+msgstr ""
+
 #: frontend/src/components/CheckInPanel.vue:172
 msgid "{0} successful!"
 msgstr ""
@@ -11951,6 +12023,10 @@ msgstr ""
 
 #: hrms/hr/doctype/staffing_plan/staffing_plan.py:169
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
+msgstr ""
+
+#: hrms/public/js/erpnext/employee.js:213
+msgid "{0} was assigned {1}"
 msgstr ""
 
 #: hrms/payroll/doctype/salary_component/salary_component.js:130
