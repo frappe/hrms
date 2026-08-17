@@ -62,7 +62,7 @@ def execute():
 
 			frappe.db.sql(
 				""" UPDATE `tabTaxable Salary Slab`
-				SET parent = %s , parentfield = 'slabs' , parenttype = "Income Tax Slab"
+				SET parent = %s , parentfield = 'slabs' , parenttype = 'Income Tax Slab'
 				WHERE parent = %s
 			""",
 				(income_tax_slab.name, period.name),

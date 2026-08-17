@@ -22,6 +22,9 @@ frappe.query_reports["Employee Leave Balance"] = {
 			options: "Company",
 			reqd: 1,
 			default: frappe.defaults.get_user_default("Company"),
+			on_change: () => {
+				frappe.query_report.set_filter_value("employee", "");
+			},
 		},
 		{
 			fieldname: "department",
@@ -34,6 +37,13 @@ frappe.query_reports["Employee Leave Balance"] = {
 			label: __("Employee"),
 			fieldtype: "Link",
 			options: "Employee",
+			get_query: () => {
+				return {
+					filters: {
+						company: frappe.query_report.get_filter_value("company"),
+					},
+				};
+			},
 		},
 		{
 			fieldname: "employee_status",
@@ -73,5 +83,15 @@ frappe.query_reports["Employee Leave Balance"] = {
 				frappe.query_report.set_filter_value("to_date", data.message[0].to_date);
 			},
 		});
+
+		const is_restricted_to_specific_employees =
+			frappe.defaults.get_user_permissions()["Employee"];
+		if (is_restricted_to_specific_employees) {
+			hrms.get_current_employee().then((employee) => {
+				if (employee && !frappe.query_report.get_filter_value("employee")) {
+					frappe.query_report.set_filter_value("employee", employee);
+				}
+			});
+		}
 	},
 };

@@ -1756,6 +1756,7 @@ def get_payroll_entries_for_jv(
 	return (
 		frappe.qb.from_(PayrollEntry)
 		.select(PayrollEntry.name)
+		.where(PayrollEntry.docstatus == 1)
 		.where(PayrollEntry[searchfield].like("%%%s%%" % txt))
 		.where(PayrollEntry.name.notin(linked_entries))
 		.orderby(PayrollEntry.name)

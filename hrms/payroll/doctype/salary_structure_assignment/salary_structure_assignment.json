@@ -116,6 +116,7 @@
    "fieldname": "base",
    "fieldtype": "Currency",
    "label": "Base",
+   "non_negative": 1,
    "options": "currency"
   },
   {
@@ -140,6 +141,7 @@
    "fieldname": "variable",
    "fieldtype": "Currency",
    "label": "Variable",
+   "non_negative": 1,
    "options": "currency"
   },
   {
@@ -207,6 +209,7 @@
    "fieldname": "tax_deducted_till_date",
    "fieldtype": "Currency",
    "label": "Tax Deducted Till Date",
+   "non_negative": 1,
    "options": "currency"
   },
   {
@@ -218,6 +221,7 @@
    "fieldname": "taxable_earnings_till_date",
    "fieldtype": "Currency",
    "label": "Taxable Earnings Till Date",
+   "non_negative": 1,
    "options": "currency"
   },
   {
@@ -245,6 +249,7 @@
    "fieldname": "max_benefits",
    "fieldtype": "Currency",
    "label": "Maximum Benefit Amount",
+   "non_negative": 1,
    "options": "currency"
   },
   {
@@ -257,12 +262,13 @@
    "fieldname": "leave_encashment_amount_per_day",
    "fieldtype": "Currency",
    "label": "Leave Encashment Amount Per Day",
+   "non_negative": 1,
    "options": "currency"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-06-08 17:40:49.118187",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure Assignment",

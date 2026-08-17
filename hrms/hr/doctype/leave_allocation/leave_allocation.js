@@ -204,12 +204,14 @@ frappe.ui.form.on("Leave Allocation", {
 			frm.doc.name,
 		);
 		df.formatter = function (value, df, options, row) {
+			const formatted_date = frappe.form.formatters.Date(value, df, options, row);
+
 			if (row.attempted && row.failed) {
-				return `<span class="indicator red">${value}</span>`;
+				return `<span class="indicator red">${formatted_date}</span>`;
 			} else if (row.attempted && row.is_allocated) {
-				return `<span class="indicator green">${value}</span>`;
+				return `<span class="indicator green">${formatted_date}</span>`;
 			} else {
-				return value;
+				return formatted_date;
 			}
 		};
 		frm.refresh_field("earned_leave_schedule");

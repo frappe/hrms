@@ -1,5 +1,5 @@
 {
- "applies_to_doctype": "Employee Advance",
+ "applies_to_doctype": "Job Offer",
  "creation": "2026-07-16 00:00:00.000000",
  "docstatus": 0,
  "doctype": "DocType Settings Map",
@@ -8,13 +8,13 @@
  "is_standard": 1,
  "mappings": [
   {
-   "setting_field": "unlink_payment_on_cancellation_of_employee_advance",
+   "setting_field": "check_vacancies",
    "settings_doctype": "HR Settings"
   }
  ],
  "modified": "2026-07-16 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
- "name": "Employee Advance (Standard)",
+ "name": "Job Offer - HR",
  "owner": "Administrator"
 }

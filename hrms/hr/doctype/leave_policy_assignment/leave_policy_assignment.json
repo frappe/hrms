@@ -46,12 +46,14 @@
    "reqd": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "assignment_based_on",
    "fieldtype": "Select",
    "label": "Assignment based on",
    "options": "\nLeave Period\nJoining Date"
   },
   {
+   "allow_in_quick_entry": 1,
    "depends_on": "eval:doc.assignment_based_on == \"Leave Period\"",
    "fieldname": "leave_period",
    "fieldtype": "Link",
@@ -97,6 +99,7 @@
   },
   {
    "default": "0",
+   "allow_in_quick_entry": 1,
    "fieldname": "carry_forward",
    "fieldtype": "Check",
    "label": "Add unused leaves from previous allocations"

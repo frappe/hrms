@@ -213,16 +213,61 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 		row = report[1][0]
 		self.assertEqual(row["employee"], self.employee)
 
-		# 4 present + half day absent 0.5
+		# 4 present + half day worked 0.5 (not leave-backed)
 		self.assertEqual(row["total_present"], 4.5)
-		# 1 present
-		self.assertEqual(row["total_absent"], 1)
-		# leave days + half day leave 0.5
-		self.assertEqual(row["total_leaves"], leave_application.total_leave_days + 0.5)
+		# 1 absent + half day absent 0.5 (not leave-backed, defaults to absent)
+		self.assertEqual(row["total_absent"], 1.5)
+		# leave days only, half day isn't leave-backed
+		self.assertEqual(row["total_leaves"], leave_application.total_leave_days)
 
 		self.assertEqual(row["_test_leave_type"], leave_application.total_leave_days)
 		self.assertEqual(row["total_late_entries"], 1)
 		self.assertEqual(row["total_early_exits"], 1)
+
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	def test_summarized_view_with_leave_backed_half_day(self):
+		previous_month_first = get_first_day_for_prev_month()
+
+		mark_attendance(self.employee, previous_month_first, "Absent")
+		mark_attendance(self.employee, previous_month_first + relativedelta(days=1), "Present")
+
+		year_start = getdate(get_year_start(previous_month_first))
+		year_end = getdate(get_year_ending(previous_month_first))
+		try:
+			make_allocation_record(employee=self.employee, from_date=year_start, to_date=year_end)
+		except OverlapError:
+			pass
+
+		leave_backed_day = previous_month_first + relativedelta(days=5)
+		make_leave_application(
+			self.employee,
+			leave_backed_day,
+			leave_backed_day,
+			"_Test Leave Type",
+			half_day=True,
+			half_day_date=leave_backed_day,
+		)
+
+		filters = frappe._dict(
+			{
+				"month": previous_month_first.month,
+				"year": previous_month_first.year,
+				"company": self.company,
+				"summarized_view": 1,
+				"filter_based_on": self.filter_based_on,
+			}
+		)
+		report = execute(filters=filters)
+
+		row = report[1][0]
+		self.assertEqual(row["employee"], self.employee)
+
+		# 1 present + half day worked 0.5 (leave-backed)
+		self.assertEqual(row["total_present"], 1.5)
+		# 1 absent, half day doesn't count as absent (leave-backed)
+		self.assertEqual(row["total_absent"], 1)
+		# half day leave 0.5 (leave-backed)
+		self.assertEqual(row["total_leaves"], 0.5)
 
 	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_attendance_with_group_by_filter(self):
@@ -477,16 +522,55 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 		row = report[1][0]
 		self.assertEqual(row["employee"], self.employee)
 
-		# 4 present + half day absent 0.5
+		# 4 present + half day worked 0.5 (not leave-backed)
 		self.assertEqual(row["total_present"], 4.5)
-		# 1 present
-		self.assertEqual(row["total_absent"], 1)
-		# leave days + half day leave 0.5
-		self.assertEqual(row["total_leaves"], leave_application.total_leave_days + 0.5)
+		# 1 absent + half day absent 0.5 (not leave-backed, defaults to absent)
+		self.assertEqual(row["total_absent"], 1.5)
+		# leave days only, half day isn't leave-backed
+		self.assertEqual(row["total_leaves"], leave_application.total_leave_days)
 
 		self.assertEqual(row["_test_leave_type"], leave_application.total_leave_days)
 		self.assertEqual(row["total_late_entries"], 1)
 		self.assertEqual(row["total_early_exits"], 1)
+
+	def test_summarised_view_with_date_range_across_month_boundary(self):
+		"""
+		Total Holidays must count a holiday even if an earlier date
+		in a different month shares its day-of-month.
+		"""
+		previous_month_first = get_first_day_for_prev_month()
+		year_start = getdate(get_year_start(previous_month_first))
+
+		start_date = previous_month_first.replace(day=5)
+		end_date = start_date + relativedelta(months=1)  # same day-of-month, next month
+		year_end = getdate(get_year_ending(end_date))
+
+		hl = make_holiday_list(
+			"Test Cross Month HL", from_date=year_start, to_date=year_end, add_weekly_offs=False
+		)
+		add_holiday_to_list(hl, end_date)  # holiday only on the later, colliding day-of-month
+
+		frappe.db.delete("Holiday List Assignment", {"assigned_to": self.employee})
+		create_holiday_list_assignment("Employee", self.employee, hl, from_date=year_start)
+
+		# attendance on the earlier date sharing the same day-of-month as the holiday
+		mark_attendance(self.employee, start_date, "Present")
+
+		filters = frappe._dict(
+			{
+				"filter_based_on": "Date Range",
+				"start_date": start_date,
+				"end_date": end_date,
+				"company": self.company,
+				"summarized_view": 1,
+			}
+		)
+		report = execute(filters=filters)
+		row = report[1][0]
+
+		# end_date's holiday must still be counted despite start_date (same day-of-month, different month)
+		# already having an attendance record
+		self.assertEqual(row["total_holidays"], 1)
 
 	def test_detailed_view_with_date_range_filter(self):
 		today = getdate()
@@ -550,6 +634,48 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 		# only emp_dept1 should appear; emp_dept2 belongs to a different department
 		self.assertIn(emp_dept1, employees_in_report)
 		self.assertNotIn(emp_dept2, employees_in_report)
+
+	def test_attendance_with_status_filter(self):
+		previous_month_first = get_first_day_for_prev_month()
+
+		active_employee = make_employee("emp_active@example.com", company=self.company)
+		left_employee = make_employee("emp_left@example.com", company=self.company)
+		frappe.db.set_value("Employee", left_employee, "status", "Left")
+
+		mark_attendance(active_employee, previous_month_first, "Present")
+		mark_attendance(left_employee, previous_month_first, "Present")
+
+		filters = frappe._dict(
+			{
+				"month": previous_month_first.month,
+				"year": previous_month_first.year,
+				"company": self.company,
+				"status": "Active",
+				"filter_based_on": self.filter_based_on,
+			}
+		)
+		report = execute(filters=filters)
+		employees_in_report = [row.get("employee") for row in report[1] if row.get("employee")]
+
+		# only the active employee should appear
+		self.assertIn(active_employee, employees_in_report)
+		self.assertNotIn(left_employee, employees_in_report)
+
+		filters.status = "Left"
+		report = execute(filters=filters)
+		employees_in_report = [row.get("employee") for row in report[1] if row.get("employee")]
+
+		# only the left employee should appear
+		self.assertIn(left_employee, employees_in_report)
+		self.assertNotIn(active_employee, employees_in_report)
+
+		filters.status = ""
+		report = execute(filters=filters)
+		employees_in_report = [row.get("employee") for row in report[1] if row.get("employee")]
+
+		# both employees should appear when status filter is blank
+		self.assertIn(active_employee, employees_in_report)
+		self.assertIn(left_employee, employees_in_report)
 
 	def test_attendance_with_branch_filter(self):
 		previous_month_first = get_first_day_for_prev_month()

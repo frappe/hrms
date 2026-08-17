@@ -132,15 +132,13 @@ def get_timeline_data(doctype: str, name: str) -> dict:
 	open_count = get_open_count(doctype, name)
 	out["count"] = open_count["count"]
 
-	from frappe.query_builder.terms import Function
-
 	Attendance = frappe.qb.DocType("Attendance")
 
 	timeline_data = dict(
 		(
 			frappe.qb.from_(Attendance)
 			.select(
-				Function("unix_timestamp", Attendance.attendance_date),
+				UnixTimestamp(Attendance.attendance_date),
 				Count("*"),
 			)
 			.where(
@@ -155,6 +153,21 @@ def get_timeline_data(doctype: str, name: str) -> dict:
 
 	out["timeline_data"] = timeline_data
 	return out
+
+
+@frappe.whitelist()
+def get_assignable_masters(company: str) -> dict[str, bool]:
+	"""Return whether a submitted master exists for each gated Employee assignment action"""
+	masters = {
+		"Leave Policy": {"docstatus": 1},
+		"Salary Structure": {"docstatus": 1, "is_active": "Yes", "company": company},
+		"Shift Schedule": {"docstatus": 1},
+	}
+
+	return {
+		doctype: bool(frappe.get_list(doctype, filters=filters, limit=1, pluck="name"))
+		for doctype, filters in masters.items()
+	}
 
 
 @frappe.whitelist()
