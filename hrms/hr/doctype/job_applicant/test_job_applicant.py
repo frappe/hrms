@@ -13,7 +13,29 @@ from hrms.hr.doctype.job_opening.test_job_opening import get_job_opening
 from hrms.tests.test_utils import create_job_applicant
 
 
+<<<<<<< HEAD
 class TestJobApplicant(FrappeTestCase):
+=======
+class TestJobApplicant(HRMSTestSuite):
+	def test_onload_filters_out_cancelled_job_offer(self):
+		applicant = create_job_applicant()
+		job_offer = create_job_offer(job_applicant=applicant.name)
+		job_offer.submit()
+		job_offer.cancel()
+
+		applicant.onload()
+		onload = applicant.get("__onload") or {}
+		self.assertNotIn("job_offer", onload)
+
+		# positive case: active job offer should be loaded
+		active_job_offer = create_job_offer(job_applicant=applicant.name)
+		active_job_offer.submit()
+
+		applicant.onload()
+		onload = applicant.get("__onload") or {}
+		self.assertEqual(onload.get("job_offer"), active_job_offer.name)
+
+>>>>>>> 6d5137e (fix(hr): exclude cancelled Job Offers in JobApplicant.onload)
 	def test_job_applicant_naming(self):
 		applicant = frappe.get_doc(
 			{
