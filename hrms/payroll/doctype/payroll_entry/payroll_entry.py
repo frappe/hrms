@@ -952,8 +952,49 @@ class PayrollEntry(Document):
 			),
 		}
 
+	def get_statistical_components(self) -> set[str]:
+		"""Components that carry no payable amount, fetched once instead of per salary detail"""
+		return set(frappe.get_all("Salary Component", filters={"statistical_component": 1}, pluck="name"))
+
 	@frappe.whitelist()
-	def make_bank_entry(self, for_withheld_salaries: bool = False) -> Document | None:
+	def get_withheld_salaries(self) -> list[dict]:
+		"""Returns the employee wise amount pending release, to be listed in the release dialog"""
+		salary_details = self.get_salary_slip_details(for_withheld_salaries=True)
+		employee_names = {row.employee: row.employee_name for row in self.employees}
+		statistical_components = self.get_statistical_components()
+		amounts = {}
+		loan_repayments = {}
+
+		for salary_detail in salary_details:
+			loan_repayments.setdefault(salary_detail.employee, flt(salary_detail.get("total_loan_repayment")))
+			amounts.setdefault(salary_detail.employee, 0)
+
+			if salary_detail.salary_component in statistical_components:
+				continue
+
+			if salary_detail.parentfield == "earnings":
+				amounts[salary_detail.employee] += salary_detail.amount
+			elif salary_detail.parentfield == "deductions":
+				amounts[salary_detail.employee] -= salary_detail.amount
+
+		return [
+			{
+				"employee": employee,
+				"employee_name": employee_names.get(employee),
+				"amount": flt(amount) - loan_repayments.get(employee, 0),
+			}
+			for employee, amount in sorted(amounts.items())
+		]
+
+	@frappe.whitelist()
+	def make_bank_entry(
+		self, for_withheld_salaries: bool = False, employees: list[str] | str | None = None
+	) -> Document | None:
+		"""Pays out the salaries of `employees`, or of every eligible employee when it is None.
+
+		`employees` is parsed here rather than downstream because whitelisted methods are
+		called over HTTP, where the list arrives as a JSON string.
+		"""
 		self.check_permission("write")
 		self.employee_based_payroll_payable_entries = {}
 		employee_wise_accounting_enabled = frappe.db.get_single_value(
@@ -961,13 +1002,11 @@ class PayrollEntry(Document):
 		)
 
 		salary_slip_total = 0
-		salary_details = self.get_salary_slip_details(for_withheld_salaries)
+		salary_details = self.get_salary_slip_details(for_withheld_salaries, frappe.parse_json(employees))
+		statistical_components = self.get_statistical_components()
 
 		for salary_detail in salary_details:
-			statistical_component = frappe.db.get_value(
-				"Salary Component", salary_detail.salary_component, "statistical_component", cache=True
-			)
-			if not statistical_component:
+			if salary_detail.salary_component not in statistical_components:
 				parent_field = salary_detail.parentfield
 				if parent_field in ("earnings", "deductions"):
 					if employee_wise_accounting_enabled:
@@ -998,7 +1037,35 @@ class PayrollEntry(Document):
 
 		return bank_entry
 
-	def get_salary_slip_details(self, for_withheld_salaries=False):
+	def get_withholding_cycles_pending_release(self) -> list[str]:
+		"""Returns this entry's withholding cycles whose release entry is waiting to be submitted.
+
+		A cycle is only pending while its release entry still exists and can be submitted, so a
+		cycle left pointing at a deleted or cancelled entry stays eligible for another release.
+		"""
+		WithholdingCycle = frappe.qb.DocType("Salary Withholding Cycle")
+		SalarySlip = frappe.qb.DocType("Salary Slip")
+		JournalEntry = frappe.qb.DocType("Journal Entry")
+
+		return (
+			frappe.qb.from_(WithholdingCycle)
+			.inner_join(JournalEntry)
+			.on(JournalEntry.name == WithholdingCycle.journal_entry)
+			.inner_join(SalarySlip)
+			.on(SalarySlip.salary_withholding_cycle == WithholdingCycle.name)
+			.select(WithholdingCycle.name)
+			.distinct()
+			.where(
+				(WithholdingCycle.docstatus == 1)
+				& (WithholdingCycle.is_salary_released != 1)
+				& (JournalEntry.docstatus != 2)
+				& (SalarySlip.payroll_entry == self.name)
+			)
+		).run(pluck=True)
+
+	def get_salary_slip_details(
+		self, for_withheld_salaries: bool = False, employees: list[str] | None = None
+	) -> list[dict]:
 		SalarySlip = frappe.qb.DocType("Salary Slip")
 		SalaryDetail = frappe.qb.DocType("Salary Detail")
 
@@ -1035,8 +1102,17 @@ class PayrollEntry(Document):
 
 		if for_withheld_salaries:
 			query = query.where(SalarySlip.status == "Withheld")
+
+			if pending_release := self.get_withholding_cycles_pending_release():
+				query = query.where(SalarySlip.salary_withholding_cycle.notin(pending_release))
 		else:
 			query = query.where(SalarySlip.status != "Withheld")
+
+		if employees is not None:
+			if not employees:
+				return []
+			query = query.where(SalarySlip.employee.isin(employees))
+
 		return query.run(as_dict=True)
 
 	@if_lending_app_installed
