@@ -50,9 +50,9 @@ class JobApplicant(Document):
 	# end: auto-generated types
 
 	def onload(self):
-		job_offer = frappe.get_all("Job Offer", filters={"job_applicant": self.name})
+		job_offer = frappe.get_all("Job Offer", filters={"job_applicant": self.name, "docstatus": ["!=", 2]})
 		if job_offer:
-			self.get("__onload").job_offer = job_offer[0].name
+			self.set_onload("job_offer", job_offer[0].name)
 
 		employee = frappe.db.get_value("Employee", {"job_applicant": self.name}, "name") or ""
 		self.set_onload("employee", employee)
