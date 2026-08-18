@@ -496,6 +496,8 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 			if self.employee != advance_employee:
 				frappe.throw(_("Selected employee advance is not of employee {}").format(self.employee))
 
+			validate_employee_advance_currency_and_account(self, d.employee_advance)
+
 			self.round_floats_in(d)
 			if d.allocated_amount and flt(d.allocated_amount) > flt(
 				flt(d.unclaimed_amount) - flt(d.return_amount), precision
@@ -622,6 +624,36 @@ def get_expense_claim_account(expense_claim_type: str, company: str) -> dict:
 	return {"account": account}
 
 
+def validate_employee_advance_currency_and_account(expense_claim: Document, employee_advance: str) -> None:
+	advance_details = frappe.db.get_value(
+		"Employee Advance",
+		{"name": employee_advance, "employee": expense_claim.employee},
+		["currency", "advance_account"],
+		as_dict=True,
+	)
+	if not advance_details:
+		return
+
+	if expense_claim.currency and advance_details.currency != expense_claim.currency:
+		frappe.throw(
+			_(
+				"Employee Advance {0} is in currency {1} and can only be claimed in an Expense Claim of the same currency. This Expense Claim is in {2}."
+			).format(
+				frappe.bold(employee_advance),
+				frappe.bold(advance_details.currency),
+				frappe.bold(expense_claim.currency),
+			)
+		)
+
+	account_type = frappe.db.get_value("Account", advance_details.advance_account, "account_type")
+	if account_type != "Receivable":
+		frappe.throw(
+			_(
+				"Employee Advance {0} is linked to account {1}, which is not of type Receivable, so it cannot be claimed against an Expense Claim. Please correct the account type or contact your administrator."
+			).format(frappe.bold(employee_advance), frappe.bold(advance_details.advance_account))
+		)
+
+
 @frappe.whitelist()
 def get_advances(expense_claim: str | dict | Document, advance_id: str | None = None):
 	import json
@@ -651,12 +683,12 @@ def get_advances(expense_claim: str | dict | Document, advance_id: str | None = 
 			& (advance.paid_amount > 0)
 			& (advance.status.notin(["Claimed", "Returned", "Partly Claimed and Returned"]))
 		)
+		# advance can only be adjusted in its own currency
+		if expense_claim_doc.currency:
+			query = query.where(advance.currency == expense_claim_doc.currency)
 	else:
 		query = query.where((advance.name == advance_id) & (advance.employee == expense_claim_doc.employee))
-
-	# advance can only be adjusted in its own currency
-	if expense_claim_doc.currency:
-		query = query.where(advance.currency == expense_claim_doc.currency)
+		validate_employee_advance_currency_and_account(expense_claim_doc, advance_id)
 
 	advances = query.run(as_dict=True)
 
