@@ -14,7 +14,9 @@ class JobOfferComponent(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		fixed_component: DF.Data
+		currency: DF.Link | None
+		fixed_components: DF.Data
+		is_summary: DF.Check
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data

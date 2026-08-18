@@ -33,20 +33,13 @@ frappe.ui.form.on("Job Offer", {
 	},
 
 	salary_structure: function (frm) {
-		erpnext.job_offer.set_per_cycle_label(frm);
-		erpnext.job_offer.fetch_ctc_breakup(frm);
-	},
+		set_per_cycle_label(frm);
 
-	base: function (frm) {
-		erpnext.job_offer.fetch_ctc_breakup(frm);
-	},
-
-	variable: function (frm) {
-		erpnext.job_offer.fetch_ctc_breakup(frm);
-	},
-
-	ctc_breakup_remove: function (frm) {
-		erpnext.job_offer.recalculate_ctc(frm);
+		// Changing the basis triggers the break-up itself, so only recompute when it did not
+		// change (the structure was swapped for another while the basis stayed put).
+		if (!set_calculation_basis(frm)) {
+			update_compensation(frm);
+		}
 	},
 
 	select_terms: function (frm) {
@@ -71,7 +64,8 @@ frappe.ui.form.on("Job Offer", {
 	},
 
 	refresh: function (frm) {
-		erpnext.job_offer.set_per_cycle_label(frm);
+		set_per_cycle_label(frm);
+		bind_regional_inputs(frm);
 
 		if (
 			!frm.doc.__islocal &&
@@ -92,6 +86,8 @@ frappe.ui.form.on("Job Offer", {
 	},
 });
 
+// Kept on the (ERPNext-era) namespace because it predates this work and a site's Client
+// Script may call it. Everything below is new here, so it stays file-scoped.
 erpnext.job_offer.make_employee = function (frm) {
 	frappe.model.open_mapped_doc({
 		method: "hrms.hr.doctype.job_offer.job_offer.make_employee",
@@ -99,55 +95,98 @@ erpnext.job_offer.make_employee = function (frm) {
 	});
 };
 
-erpnext.job_offer.fetch_ctc_breakup = function (frm) {
-	if (!frm.doc.salary_structure || !frm.doc.base) return;
+function set_calculation_basis(frm) {
+	// Follows the salary structure rather than being a stored default: an offer that carries
+	// no structure must not ask for a base at all. Returns whether the value changed, since
+	// changing it already triggers a recompute.
+	const basis = frm.doc.calculate_component_amount_from;
+
+	if (!frm.doc.salary_structure) {
+		if (!basis) return false;
+		frm.set_value("calculate_component_amount_from", "");
+		return true;
+	}
+
+	if (basis) return false;
+
+	frm.set_value("calculate_component_amount_from", "Base and Variable");
+	return true;
+}
+
+function clear_compensation(frm) {
+	if (!(frm.doc.ctc_breakup || []).length && !frm.doc.ctc) return;
+
+	frm.clear_table("ctc_breakup");
+	frm.refresh_field("ctc_breakup");
+	frm.set_value("ctc", 0);
+}
+
+function update_compensation(frm) {
+	if (frm.__updating_compensation) return;
+
+	if (!frm.doc.salary_structure) {
+		clear_compensation(frm);
+		return;
+	}
+
+	if (!frm.doc.calculate_component_amount_from) return;
+
+	const driver = frm.doc.calculate_component_amount_from === "CTC" ? frm.doc.ctc : frm.doc.base;
+	if (!driver) return;
+
+	const release = () => (frm.__updating_compensation = false);
+	frm.__updating_compensation = true;
 
 	frappe.call({
-		method: "hrms.hr.doctype.job_offer.job_offer.get_ctc_breakup",
-		args: {
-			salary_structure: frm.doc.salary_structure,
-			company: frm.doc.company,
-			base: frm.doc.base,
-			variable: frm.doc.variable,
-			currency: frm.doc.currency,
-			from_date: frm.doc.date_of_joining || frm.doc.offer_date,
-			department: frm.doc.department,
-			designation: frm.doc.designation,
-			grade: frm.doc.grade,
-			branch: frm.doc.branch,
-			employment_type: frm.doc.employment_type,
-		},
+		method: "hrms.hr.doctype.job_offer.job_offer.get_compensation_details",
+		args: { offer: frm.doc },
+		error: release,
 		callback: function (r) {
-			if (!r.message || !r.message.length) return;
+			if (!r.message) return release();
 
-			frm.clear_table("ctc_breakup");
-			r.message.forEach((row) => frm.add_child("ctc_breakup", row));
-			frm.refresh_field("ctc_breakup");
-			frm.set_value("ctc", r.message[r.message.length - 1].yearly);
+			const details = r.message;
+			frm.set_value({ base: details.base, ctc: details.ctc }).then(() => {
+				frm.clear_table("ctc_breakup");
+				details.components.forEach((row) => frm.add_child("ctc_breakup", row));
+				frm.refresh_field("ctc_breakup");
+				release();
+
+				if (details.ctc_adjusted) {
+					frappe.show_alert({
+						message: __(
+							"CTC set to {0}, the closest this salary structure can produce.",
+							[format_currency(details.ctc, frm.doc.currency)],
+						),
+						indicator: "orange",
+					});
+				}
+			});
 		},
 	});
-};
+}
 
-erpnext.job_offer.recalculate_ctc = function (frm) {
-	const rows = frm.doc.ctc_breakup || [];
-	if (rows.length < 2) return;
+const bound_regional_inputs = new Set();
 
-	const total_row = rows[rows.length - 1];
-	let per_cycle = 0;
-	let yearly = 0;
+function bind_regional_inputs(frm) {
+	// A regional app adds its own statutory config to the offer (India's EPF Applicable, for
+	// one), and the server carries every shared custom field onto the prospective assignment.
+	// Those fieldnames are unknown here, so any custom field on the offer re-runs the
+	// break-up. Handlers land in a doctype-global registry read at trigger time, hence the
+	// module-level guard rather than a per-form one. Layout fields never fire a change, so
+	// they need no filtering.
+	const handlers = {};
 
-	rows.slice(0, -1).forEach((row) => {
-		per_cycle += flt(row.per_cycle);
-		yearly += flt(row.yearly);
+	(frm.meta.fields || []).forEach((df) => {
+		if (!df.is_custom_field || bound_regional_inputs.has(df.fieldname)) return;
+
+		bound_regional_inputs.add(df.fieldname);
+		handlers[df.fieldname] = (frm) => update_compensation(frm);
 	});
 
-	total_row.per_cycle = per_cycle;
-	total_row.yearly = yearly;
-	frm.refresh_field("ctc_breakup");
-	frm.set_value("ctc", yearly);
-};
+	if (Object.keys(handlers).length) frappe.ui.form.on("Job Offer", handlers);
+}
 
-erpnext.job_offer.set_per_cycle_label = function (frm) {
+function set_per_cycle_label(frm) {
 	if (!frm.doc.salary_structure || !frm.fields_dict.ctc_breakup) return;
 
 	frappe.db
@@ -162,14 +201,26 @@ erpnext.job_offer.set_per_cycle_label = function (frm) {
 				__(frequency),
 			);
 		});
-};
+}
 
-frappe.ui.form.on("Job Offer Component", {
-	per_cycle: function (frm) {
-		erpnext.job_offer.recalculate_ctc(frm);
-	},
+const COMPENSATION_INPUTS = [
+	"calculate_component_amount_from",
+	"base",
+	"variable",
+	"ctc",
+	"company",
+	"grade",
+	"branch",
+	"employment_type",
+	"department",
+	"designation",
+	"date_of_joining",
+	"offer_date",
+];
 
-	yearly: function (frm) {
-		erpnext.job_offer.recalculate_ctc(frm);
-	},
-});
+frappe.ui.form.on(
+	"Job Offer",
+	Object.fromEntries(
+		COMPENSATION_INPUTS.map((fieldname) => [fieldname, (frm) => update_compensation(frm)]),
+	),
+);
