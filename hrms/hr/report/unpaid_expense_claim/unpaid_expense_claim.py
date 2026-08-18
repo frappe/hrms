@@ -3,7 +3,7 @@
 
 
 import frappe
-from frappe import _
+from frappe import _, scrub
 from frappe.query_builder.functions import Sum
 
 
