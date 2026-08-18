@@ -4,7 +4,16 @@ from datetime import date
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import ceil, floor, get_first_day, get_last_day, get_link_to_form, getdate, rounded
+from frappe.utils import (
+	ceil,
+	floor,
+	flt,
+	get_first_day,
+	get_last_day,
+	get_link_to_form,
+	getdate,
+	rounded,
+)
 
 
 def sanitize_expression(string: str | None = None) -> str | None:
@@ -176,6 +185,92 @@ def throw_error_message(row, error, title, description=None):
 	).format(**data)
 
 	frappe.throw(message, title=title)
+
+
+BASE_PRECISION = 2
+CTC_SOLVER_TOLERANCE = 0.01
+CTC_SOLVER_BRACKET_EXPANSIONS = 20
+CTC_SOLVER_MAX_ITERATIONS = 60
+
+
+def solve_base_for_ctc(
+	assignment, target_ctc: float, tolerance: float = CTC_SOLVER_TOLERANCE
+) -> tuple[float, float]:
+	"""Find the ``base`` that makes ``assignment`` cost ``target_ctc`` per year.
+
+	Returns ``(base, achieved_ctc)``. ``achieved_ctc`` is always the CTC the
+	returned base actually produces, which differs from ``target_ctc`` when the
+	target is unreachable -- component rounding makes CTC a staircase, so most
+	arbitrary targets have no exact base. Callers should store the achieved value
+	rather than the requested one.
+
+	CTC(base) is measured, not derived from the formulas. Two probes fit a line,
+	which is solved and then **verified against the real evaluator**; a miss means
+	the answer crossed a statutory cap (``min(BS, 15000) * 0.12``), a condition
+	switching a component off, or a rounding step, and the search falls back to
+	bisection. Parsing the formulas instead would require choosing a branch of
+	``min`` before ``base`` is known, and would be a second evaluator to keep in
+	step with the first.
+
+	Where a plateau makes several bases produce the same CTC, the smallest is
+	returned so that repeated recomputation is stable.
+	"""
+	from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
+		PERIODS_PER_YEAR,
+	)
+
+	target_ctc = flt(target_ctc)
+	if target_ctc <= 0:
+		return 0.0, 0.0
+
+	def ctc_at(base: float) -> float:
+		assignment.base = flt(base, BASE_PRECISION)
+		assignment.calculate_ctc_and_gross()
+		return flt(assignment.ctc)
+
+	frequency = frappe.get_cached_value("Salary Structure", assignment.salary_structure, "payroll_frequency")
+	scale = target_ctc / PERIODS_PER_YEAR.get(frequency, 12)
+
+	low_probe, high_probe = scale / 2, scale
+	low_ctc, high_ctc = ctc_at(low_probe), ctc_at(high_probe)
+	slope = (high_ctc - low_ctc) / (high_probe - low_probe)
+
+	if slope <= 0:
+		base = flt(low_probe, BASE_PRECISION)
+		return base, ctc_at(base)
+
+	intercept = low_ctc - slope * low_probe
+	candidate = flt((target_ctc - intercept) / slope, BASE_PRECISION)
+	if candidate >= 0:
+		achieved = ctc_at(candidate)
+		if abs(achieved - target_ctc) <= tolerance:
+			return candidate, achieved
+
+	return _bisect_base_for_ctc(ctc_at, target_ctc, scale, tolerance)
+
+
+def _bisect_base_for_ctc(ctc_at, target_ctc: float, scale: float, tolerance: float) -> tuple[float, float]:
+	low, high = 0.0, scale or 1.0
+
+	for _expansion in range(CTC_SOLVER_BRACKET_EXPANSIONS):
+		if ctc_at(high) >= target_ctc:
+			break
+		low, high = high, high * 2
+	else:
+		base = flt(high, BASE_PRECISION)
+		return base, ctc_at(base)
+
+	for _iteration in range(CTC_SOLVER_MAX_ITERATIONS):
+		if high - low <= tolerance:
+			break
+		mid = (low + high) / 2
+		if ctc_at(mid) < target_ctc:
+			low = mid
+		else:
+			high = mid
+
+	base = flt(high, BASE_PRECISION)
+	return base, ctc_at(base)
 
 
 @frappe.whitelist()

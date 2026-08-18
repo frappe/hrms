@@ -27,9 +27,10 @@
   "date_of_joining",
   "compensation_tab",
   "salary_structure",
-  "currency",
-  "column_break_compensation",
+  "calculate_component_amount_from",
   "base",
+  "column_break_compensation",
+  "currency",
   "variable",
   "ctc",
   "ctc_breakup_section",
@@ -202,28 +203,43 @@
    "read_only": 1
   },
   {
+   "depends_on": "salary_structure",
+   "fieldname": "calculate_component_amount_from",
+   "fieldtype": "Select",
+   "label": "Calculate Component Amount From",
+   "mandatory_depends_on": "eval:doc.salary_structure",
+   "options": "\nBase and Variable\nCTC"
+  },
+  {
    "fieldname": "column_break_compensation",
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "eval:doc.salary_structure && doc.calculate_component_amount_from",
    "fetch_from": "grade.default_base_pay",
    "fetch_if_empty": 1,
    "fieldname": "base",
    "fieldtype": "Currency",
    "label": "Base",
-   "options": "currency"
+   "mandatory_depends_on": "eval:doc.salary_structure && doc.calculate_component_amount_from=='Base and Variable'",
+   "options": "currency",
+   "read_only_depends_on": "eval:doc.calculate_component_amount_from=='CTC'"
   },
   {
+   "depends_on": "eval:doc.salary_structure && doc.calculate_component_amount_from",
    "fieldname": "variable",
    "fieldtype": "Currency",
    "label": "Variable",
    "options": "currency"
   },
   {
+   "depends_on": "eval:doc.salary_structure && doc.calculate_component_amount_from",
    "fieldname": "ctc",
    "fieldtype": "Currency",
    "label": "Total Cost to Company (CTC)",
-   "options": "currency"
+   "mandatory_depends_on": "eval:doc.salary_structure && doc.calculate_component_amount_from=='CTC'",
+   "options": "currency",
+   "read_only_depends_on": "eval:doc.calculate_component_amount_from=='Base and Variable'"
   },
   {
    "fieldname": "ctc_breakup_section",
@@ -234,7 +250,8 @@
    "fieldname": "ctc_breakup",
    "fieldtype": "Table",
    "label": "CTC Break-up",
-   "options": "Job Offer Component"
+   "options": "Job Offer Component",
+   "read_only": 1
   },
   {
    "fieldname": "leave_policy_tab",
@@ -365,7 +382,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-08-11 11:27:52.472482",
+ "modified": "2026-08-17 12:36:28.786843",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",
