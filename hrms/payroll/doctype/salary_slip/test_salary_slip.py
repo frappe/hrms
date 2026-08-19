@@ -507,6 +507,48 @@ class TestSalarySlip(HRMSTestSuite):
 
 		self.assertEqual(ss.payment_days, days_in_month - no_of_holidays - 3.75)
 
+
+	@HRMSTestSuite.change_settings("Payroll Settings", {"payroll_based_on": "Attendance"})
+	def test_ppl_fraction_is_consistent_based_on_attendance(self):
+		emp_id = make_employee(
+			"test_ppl_fraction_attendance@salary.com", company="_Test Company"
+		)
+		frappe.db.set_value("Employee", emp_id, {"relieving_date": None, "status": "Active"})
+
+		create_leave_type(
+			leave_type_name="Test PPL 60 Percent",
+			is_ppl=1,
+			fraction_of_daily_salary_per_leave=0.60,
+		)
+
+		first_sunday = get_first_sunday()
+
+		alloc = create_leave_allocation(
+			employee=emp_id,
+			from_date=first_sunday,
+			to_date=add_days(first_sunday, 10),
+			new_leaves_allocated=2,
+			leave_type="Test PPL 60 Percent",
+		)
+		alloc.save()
+		alloc.submit()
+
+		make_leave_application(
+			emp_id,
+			first_sunday,
+			add_days(first_sunday, 1),
+			"Test PPL 60 Percent",
+		)
+
+		ss = make_employee_salary_slip(
+			emp_id,
+			"Monthly",
+			"Test Payment Days Based On Attendance",
+		)
+
+		self.assertEqual(ss.leave_without_pay, 0.8)
+		self.assertEqual(ss.payment_days, ss.total_working_days - 0.8)
+
 	@HRMSTestSuite.change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
 	def test_payment_days_calculation_for_lwp_on_month_boundaries(self):
 		from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
