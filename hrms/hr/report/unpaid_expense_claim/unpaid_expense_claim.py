@@ -4,9 +4,8 @@
 from collections import OrderedDict
 
 import frappe
-from frappe import _
+from frappe import _, scrub
 from frappe.query_builder.functions import Sum
-from frappe.utils import scrub
 
 
 def execute(filters=None):
