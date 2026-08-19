@@ -293,8 +293,8 @@ class TestExpenseClaim(HRMSTestSuite):
 			payable_account, 1000, 1000, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
 		)
 
-		# validate_advance_account_type normally blocks a Payable account; ignored here to
-		# simulate one whose type was reclassified after the advance was already submitted
+		# bypasses validate_advance_account_type, simulating an account that was
+		# set to Payable after the advance was submitted
 		advance = make_employee_advance(
 			claim.employee, args={"advance_account": payable_advance_account}, do_not_submit=True
 		)
@@ -302,6 +302,41 @@ class TestExpenseClaim(HRMSTestSuite):
 		advance.insert()
 		advance.submit()
 		make_payment_entry(advance)
+
+		self.assertRaises(frappe.ValidationError, get_advances, claim, advance.name)
+
+	def test_advance_blocked_after_account_reverted_to_receivable(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			make_employee_advance,
+			make_payment_entry,
+		)
+
+		frappe.db.delete("Employee Advance")
+
+		payable_advance_account = create_account(
+			account_name="Payable Employee Advance 3",
+			parent_account="Accounts Payable - _TC",
+			company="_Test Company",
+			account_currency=get_company_currency("_Test Company"),
+			account_type="Payable",
+		)
+
+		payable_account = get_payable_account("_Test Company")
+		claim = make_expense_claim(
+			payable_account, 1000, 1000, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
+		)
+
+		advance = make_employee_advance(
+			claim.employee, args={"advance_account": payable_advance_account}, do_not_submit=True
+		)
+		advance.flags.ignore_validate = True
+		advance.insert()
+		advance.submit()
+		make_payment_entry(advance)
+
+		# account corrected back to Receivable without cancelling and redoing the payment
+		# the existing ledger entry is still recorded as a negative amount
+		frappe.db.set_value("Account", payable_advance_account, "account_type", "Receivable")
 
 		self.assertRaises(frappe.ValidationError, get_advances, claim, advance.name)
 
@@ -334,7 +369,6 @@ class TestExpenseClaim(HRMSTestSuite):
 		advance.submit()
 		make_payment_entry(advance)
 
-		# simulates a row added without going through get_advances(), e.g. a direct API call
 		claim.append(
 			"advances",
 			{
