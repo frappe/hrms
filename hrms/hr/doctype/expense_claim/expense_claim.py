@@ -628,7 +628,7 @@ def validate_employee_advance_currency_and_account(expense_claim: Document, empl
 	advance_details = frappe.db.get_value(
 		"Employee Advance",
 		{"name": employee_advance, "employee": expense_claim.employee},
-		["currency", "advance_account"],
+		["currency", "advance_account", "paid_amount"],
 		as_dict=True,
 	)
 	if not advance_details:
@@ -645,12 +645,45 @@ def validate_employee_advance_currency_and_account(expense_claim: Document, empl
 			)
 		)
 
+	paid_amount = flt(advance_details.paid_amount)
+	redo_payment_msg = _(
+		"Cancel the Payment Entry made against it, correct the advance account to be of type Receivable, and create a new Payment Entry."
+	)
+
 	account_type = frappe.db.get_value("Account", advance_details.advance_account, "account_type")
 	if account_type != "Receivable":
+		if paid_amount:
+			frappe.throw(
+				_(
+					"Employee Advance {0} is linked to account {1}, which is not of type Receivable. {2}"
+				).format(
+					frappe.bold(employee_advance),
+					frappe.bold(advance_details.advance_account),
+					redo_payment_msg,
+				)
+			)
 		frappe.throw(
 			_(
-				"Employee Advance {0} is linked to account {1}, which is not of type Receivable, so it cannot be claimed against an Expense Claim. Please correct the account type or contact your administrator."
+				"Employee Advance {0} is linked to account {1}, which is not of type Receivable. Please correct the account type before making a payment against it."
 			).format(frappe.bold(employee_advance), frappe.bold(advance_details.advance_account))
+		)
+
+	# the account may have been switched back to Receivable after the payment was made
+	# while it was Payable, that entry is still recorded with a negative amount
+	if paid_amount and not frappe.db.exists(
+		"Advance Payment Ledger Entry",
+		{
+			"against_voucher_type": "Employee Advance",
+			"against_voucher_no": employee_advance,
+			"event": "Submit",
+			"delinked": 0,
+			"amount": (">", 0),
+		},
+	):
+		frappe.throw(
+			_(
+				"Employee Advance {0}'s payment does not match its Receivable account. This can happen if the account's type was changed after the payment was made. {1}"
+			).format(frappe.bold(employee_advance), redo_payment_msg)
 		)
 
 
