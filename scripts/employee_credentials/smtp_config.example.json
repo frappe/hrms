@@ -1,0 +1,7 @@
+{
+  "email_id": "noreply@frappe.theclustox.com",
+  "smtp_server": "smtp.sendgrid.net",
+  "smtp_port": 587,
+  "login_id": "apikey",
+  "password": "REPLACE_WITH_REAL_SENDGRID_API_KEY"
+}

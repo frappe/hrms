@@ -20,3 +20,7 @@ hrms/public/frontend
 hrms/www/hrms.html
 hrms/public/roster
 hrms/www/roster.html
+
+# Employee credential rotation scripts -- never commit real secrets/outputs
+scripts/employee_credentials/smtp_config.json
+scripts/employee_credentials/password_audit_DO_NOT_SHARE.json
