@@ -1,14 +1,15 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
+from datetime import date
+
 import frappe
 from frappe import _
 from frappe.desk.form import assign_to
 from frappe.model.document import Document
-from frappe.utils import add_days, flt, unique
+from frappe.utils import add_days, flt, getdate, unique
 
 from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
-from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
 
 
 class EmployeeBoardingController(Document):
@@ -50,13 +51,13 @@ class EmployeeBoardingController(Document):
 
 	def create_task_and_notify_user(self):
 		# create the task for the given project and assign to the concerned person
-		holiday_list = self.get_holiday_list()
+		holidays = self.get_upcoming_holidays(self.get_holiday_list())
 
 		for activity in self.activities:
 			if activity.task:
 				continue
 
-			dates = self.get_task_dates(activity, holiday_list)
+			dates = self.get_task_dates(activity, holidays)
 
 			task = frappe.get_doc(
 				{
@@ -111,21 +112,44 @@ class EmployeeBoardingController(Document):
 				else:
 					return self.holiday_list
 
-	def get_task_dates(self, activity, holiday_list):
+	def get_upcoming_holidays(self, holiday_list: str | None) -> set[date]:
+		"""
+		Full-day holidays on or after the boarding start date, fetched in one go so that
+		shifting task dates past holidays does not query the Holiday table per day.
+		"""
+		if not holiday_list:
+			return set()
+
+		Holiday = frappe.qb.DocType("Holiday")
+		holidays = (
+			frappe.qb.from_(Holiday)
+			.select(Holiday.holiday_date)
+			.where(
+				(Holiday.parent == holiday_list)
+				& (Holiday.is_half_day == 0)
+				& (Holiday.holiday_date >= getdate(self.boarding_begins_on))
+			)
+			.run(pluck=True)
+		)
+
+		return {getdate(holiday) for holiday in holidays}
+
+	def get_task_dates(self, activity, holidays):
 		start_date = end_date = None
 
 		if activity.begin_on is not None:
 			start_date = add_days(self.boarding_begins_on, activity.begin_on)
-			start_date = self.update_if_holiday(start_date, holiday_list)
+			start_date = self.update_if_holiday(start_date, holidays)
 
 			if activity.duration is not None:
 				end_date = add_days(self.boarding_begins_on, activity.begin_on + activity.duration)
-				end_date = self.update_if_holiday(end_date, holiday_list)
+				end_date = self.update_if_holiday(end_date, holidays)
 
 		return [start_date, end_date]
 
-	def update_if_holiday(self, date, holiday_list):
-		while is_holiday(holiday_list, date):
+	def update_if_holiday(self, date, holidays):
+		date = getdate(date)
+		while date in holidays:
 			date = add_days(date, 1)
 		return date
 
