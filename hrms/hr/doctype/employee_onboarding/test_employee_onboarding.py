@@ -1,6 +1,8 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
+from datetime import date
+
 import frappe
 from frappe.utils import add_days, getdate
 
@@ -59,6 +61,32 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		employee.insert()
 		self.assertEqual(employee.employee_name, "Test Engineer")
 
+	def test_task_dates_skip_holidays(self):
+		boarding_begins_on = getdate()
+		onboarding = create_employee_onboarding(
+			boarding_begins_on=boarding_begins_on,
+			holidays=[
+				{"holiday_date": add_days(boarding_begins_on, 1), "description": "Test Holiday"},
+				{"holiday_date": add_days(boarding_begins_on, 2), "description": "Test Holiday"},
+				# half days are working days, so dates should not be pushed past them
+				{
+					"holiday_date": add_days(boarding_begins_on, 3),
+					"description": "Test Half Day Holiday",
+					"is_half_day": 1,
+				},
+			],
+		)
+
+		# first activity begins on day 0 and ends on day 1, which falls in the holiday block
+		start_date, end_date = get_task_dates(onboarding.activities[0].task)
+		self.assertEqual(start_date, boarding_begins_on)
+		self.assertEqual(end_date, add_days(boarding_begins_on, 3))
+
+		# second activity begins on day 1 and ends on day 2, both in the holiday block
+		start_date, end_date = get_task_dates(onboarding.activities[1].task)
+		self.assertEqual(start_date, add_days(boarding_begins_on, 3))
+		self.assertEqual(end_date, add_days(boarding_begins_on, 3))
+
 	def test_mark_onboarding_as_completed(self):
 		onboarding = create_employee_onboarding()
 
@@ -103,19 +131,24 @@ def get_job_offer(applicant_name):
 	return job_offer
 
 
-def create_employee_onboarding():
+def create_employee_onboarding(holidays: list | None = None, boarding_begins_on: date | str | None = None):
 	applicant = get_job_applicant()
 	job_offer = get_job_offer(applicant.name)
 
-	holiday_list = make_holiday_list("_Test Employee Boarding")
+	boarding_begins_on = getdate(boarding_begins_on)
+	holiday_list = make_holiday_list(
+		"_Test Employee Boarding", from_date=boarding_begins_on, to_date=add_days(boarding_begins_on, 30)
+	)
 	holiday_list = frappe.get_doc("Holiday List", holiday_list)
 	holiday_list.holidays = []
+	for holiday in holidays or []:
+		holiday_list.append("holidays", holiday)
 	holiday_list.save()
 
 	onboarding = frappe.new_doc("Employee Onboarding")
 	onboarding.job_applicant = applicant.name
 	onboarding.job_offer = job_offer.name
-	onboarding.date_of_joining = onboarding.boarding_begins_on = getdate()
+	onboarding.date_of_joining = onboarding.boarding_begins_on = boarding_begins_on
 	onboarding.company = "_Test Company"
 	onboarding.holiday_list = holiday_list.name
 	onboarding.designation = "Engineer"
