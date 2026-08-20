@@ -545,11 +545,16 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		precision = self.precision("total_advance_amount")
 
 		for d in self.get("advances"):
-			advance_employee = frappe.db.get_value("Employee Advance", d.employee_advance, "employee")
-			if self.employee != advance_employee:
+			advance_details = frappe.db.get_value(
+				"Employee Advance",
+				d.employee_advance,
+				["employee", "currency", "advance_account", "paid_amount"],
+				as_dict=True,
+			)
+			if not advance_details or self.employee != advance_details.employee:
 				frappe.throw(_("Selected employee advance is not of employee {}").format(self.employee))
 
-			validate_employee_advance_currency_and_account(self, d.employee_advance)
+			validate_employee_advance_currency_and_account(self, d.employee_advance, advance_details)
 
 			self.round_floats_in(d)
 			if d.allocated_amount and flt(d.allocated_amount) > flt(
@@ -677,13 +682,16 @@ def get_expense_claim_account(expense_claim_type: str, company: str) -> dict:
 	return {"account": account}
 
 
-def validate_employee_advance_currency_and_account(expense_claim: Document, employee_advance: str) -> None:
-	advance_details = frappe.db.get_value(
-		"Employee Advance",
-		{"name": employee_advance, "employee": expense_claim.employee},
-		["currency", "advance_account", "paid_amount"],
-		as_dict=True,
-	)
+def validate_employee_advance_currency_and_account(
+	expense_claim: Document, employee_advance: str, advance_details: dict | None = None
+) -> None:
+	if advance_details is None:
+		advance_details = frappe.db.get_value(
+			"Employee Advance",
+			{"name": employee_advance, "employee": expense_claim.employee},
+			["currency", "advance_account", "paid_amount"],
+			as_dict=True,
+		)
 	if not advance_details:
 		return
 
