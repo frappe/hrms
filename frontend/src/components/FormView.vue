@@ -421,7 +421,17 @@ const status = computed(() => {
 		if (stateField) return formModel.value[stateField]
 	}
 
-	return formModel.value.status || formModel.value.approval_status
+	const rawStatus = formModel.value.status || formModel.value.approval_status
+
+	if (
+		props.doctype === "Leave Application" &&
+		!formModel.value.docstatus &&
+		["Approved", "Rejected"].includes(rawStatus)
+	) {
+		return "Draft"
+	}
+
+	return rawStatus
 })
 
 watch(

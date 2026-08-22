@@ -358,6 +358,7 @@ def get_leave_applications(
 		"employee_name",
 		"leave_type",
 		"status",
+		"docstatus",
 		"from_date",
 		"to_date",
 		"half_day",
