@@ -44,6 +44,7 @@
   "attendance_settings_section",
   "allow_employee_checkin_from_mobile_app",
   "allow_geolocation_tracking",
+  "allow_future_date_attendance",
   "tenure_tab",
   "employee_exit_settings_section",
   "exit_questionnaire_web_form",
@@ -295,6 +296,12 @@
    "label": "Allow Geolocation Tracking"
   },
   {
+   "default": "1",
+   "fieldname": "allow_future_date_attendance",
+   "fieldtype": "Check",
+   "label": "Allow Future Date Attendance"
+  },
+  {
    "fieldname": "attendance_settings_section",
    "fieldtype": "Section Break",
    "label": "Attendance Settings"
@@ -381,7 +388,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-08-06 13:01:43.187327",
+ "modified": "2026-08-22 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",

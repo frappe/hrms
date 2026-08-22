@@ -81,6 +81,7 @@ class Attendance(Document):
 		validate_status(self.status, ["Present", "Absent", "On Leave", "Half Day", "Work From Home"])
 		validate_active_employee(self.employee)
 		self.validate_attendance_date()
+		self.validate_future_date()
 		self.validate_duplicate_record()
 		self.validate_overlapping_shift_attendance()
 		self.validate_employee_status()
@@ -100,6 +101,13 @@ class Attendance(Document):
 					frappe.bold(format_date(date_of_joining)),
 				)
 			)
+
+	def validate_future_date(self):
+		if frappe.db.get_single_value("HR Settings", "allow_future_date_attendance"):
+			return
+
+		if getdate(self.attendance_date) > getdate() and self.status != "On Leave":
+			frappe.throw(_("Attendance cannot be marked for a future date."))
 
 	def validate_duplicate_record(self):
 		duplicate = self.get_duplicate_attendance_record()

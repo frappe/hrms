@@ -21,6 +21,7 @@ class HRSettings(Document):
 		from frappe.types import DF
 
 		allow_employee_checkin_from_mobile_app: DF.Check
+		allow_future_date_attendance: DF.Check
 		allow_geolocation_tracking: DF.Check
 		allow_multiple_shift_assignments: DF.Check
 		auto_leave_encashment: DF.Check
