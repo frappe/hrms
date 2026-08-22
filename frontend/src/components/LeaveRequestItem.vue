@@ -51,7 +51,7 @@ const status = computed(() => {
 		? props.doc[props.workflowStateField]
 		: props.doc.status
 
-	if (!props.doc.docstatus && ["Approved", "Rejected"].includes(rawStatus)) return "Draft"
+	if (props.doc.docstatus === 0 && ["Approved", "Rejected"].includes(rawStatus)) return "Draft"
 	return rawStatus
 })
 

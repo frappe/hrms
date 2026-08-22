@@ -425,7 +425,7 @@ const status = computed(() => {
 
 	if (
 		props.doctype === "Leave Application" &&
-		!formModel.value.docstatus &&
+		formModel.value.docstatus === 0 &&
 		["Approved", "Rejected"].includes(rawStatus)
 	) {
 		return "Draft"

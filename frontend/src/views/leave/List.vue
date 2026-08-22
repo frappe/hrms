@@ -26,6 +26,7 @@ const LEAVE_FIELDS = [
 	"to_date",
 	"total_leave_days",
 	"status",
+	"docstatus",
 ]
 const STATUS_FILTER_OPTIONS = ["Open", "Approved", "Rejected"] // __("Open"), __("Approved"), __("Rejected")
 const FILTER_CONFIG = [
