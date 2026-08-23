@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Frappe HR VERSION\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-08-16 09:40+0000\n"
-"PO-Revision-Date: 2026-08-16 09:40+0000\n"
+"POT-Creation-Date: 2026-08-23 09:41+0000\n"
+"PO-Revision-Date: 2026-08-23 09:41+0000\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: contact@frappe.io\n"
 "MIME-Version: 1.0\n"
@@ -1705,12 +1705,6 @@ msgstr ""
 msgid "Boarding Status"
 msgstr ""
 
-#. Label of the body_section (Section Break) field in DocType 'Appointment
-#. Letter'
-#: hrms/hr/doctype/appointment_letter/appointment_letter.json
-msgid "Body"
-msgstr ""
-
 #. Label of the bonus_section (Section Break) field in DocType 'Retention
 #. Bonus'
 #: hrms/payroll/doctype/retention_bonus/retention_bonus.json
@@ -1804,6 +1798,10 @@ msgstr ""
 #. DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Calculated in days"
+msgstr ""
+
+#: hrms/hr/doctype/expense_claim/expense_claim.py:710
+msgid "Cancel the Payment Entry made against it, correct the advance account to be of type Receivable, and create a new Payment Entry."
 msgstr ""
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:189
@@ -2939,6 +2937,22 @@ msgstr ""
 msgid "Employee Advance {0} has {1} available for return. {2} has already been scheduled for deduction in {3}."
 msgstr ""
 
+#: hrms/hr/doctype/expense_claim/expense_claim.py:700
+msgid "Employee Advance {0} is in currency {1} and can only be claimed in an Expense Claim of the same currency. This Expense Claim is in {2}."
+msgstr ""
+
+#: hrms/hr/doctype/expense_claim/expense_claim.py:727
+msgid "Employee Advance {0} is linked to account {1}, which is not of type Receivable. Please correct the account type before making a payment against it."
+msgstr ""
+
+#: hrms/hr/doctype/expense_claim/expense_claim.py:718
+msgid "Employee Advance {0} is linked to account {1}, which is not of type Receivable. {2}"
+msgstr ""
+
+#: hrms/hr/doctype/expense_claim/expense_claim.py:745
+msgid "Employee Advance {0}'s payment does not match its Receivable account. This can happen if the account's type was changed after the payment was made. {1}"
+msgstr ""
+
 #. Name of a report
 #. Label of a Link in the HR Setup Workspace
 #. Label of a Link in the Tenure Workspace
@@ -4045,7 +4059,7 @@ msgstr ""
 #. Label of the expense_type (Data) field in DocType 'Expense Claim Type'
 #. Label of a Link in the Expenses Workspace
 #. Label of a Workspace Sidebar Item
-#: hrms/hr/doctype/expense_claim/expense_claim.py:670
+#: hrms/hr/doctype/expense_claim/expense_claim.py:677
 #: hrms/hr/doctype/expense_claim_detail/expense_claim_detail.json
 #: hrms/hr/doctype/expense_claim_type/expense_claim_type.json
 #: hrms/hr/workspace/expenses/expenses.json
@@ -4891,6 +4905,10 @@ msgstr ""
 msgid "Health Insurance Provider"
 msgstr ""
 
+#: hrms/hr/notification/training_feedback/training_feedback.html:1
+msgid "Hello"
+msgstr ""
+
 #: hrms/controllers/employee_reminders.py:74
 msgid "Hey {}! This email is to remind you about the upcoming holidays."
 msgstr ""
@@ -5453,11 +5471,11 @@ msgstr ""
 msgid "Interview Type Name"
 msgstr ""
 
-#: hrms/hr/doctype/job_applicant/job_applicant.py:176
+#: hrms/hr/doctype/job_applicant/job_applicant.py:184
 msgid "Interview Type {0} is only applicable for Designation {1}"
 msgstr ""
 
-#: hrms/hr/doctype/job_applicant/job_applicant.py:140
+#: hrms/hr/doctype/job_applicant/job_applicant.py:148
 msgid "Interview Type {0} is only applicable for the Designation {1}"
 msgstr ""
 
@@ -5550,7 +5568,7 @@ msgstr ""
 msgid "Invalid employee filter: {0}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:891
+#: hrms/hr/doctype/expense_claim/expense_claim.py:964
 msgid "Invalid parameters provided. Please pass the required arguments."
 msgstr ""
 
@@ -9000,11 +9018,11 @@ msgstr ""
 msgid "Row #{0}: Timesheet amount will overwrite the Earning component amount for the Salary Component {1}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:859
+#: hrms/hr/doctype/expense_claim/expense_claim.py:932
 msgid "Row No {0}: Amount cannot be greater than the Outstanding Amount against Expense Claim {1}. Outstanding Amount is {2}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:557
+#: hrms/hr/doctype/expense_claim/expense_claim.py:564
 msgid "Row {0}# Allocated amount {1} cannot be greater than unclaimed amount {2}"
 msgstr ""
 
@@ -9402,7 +9420,7 @@ msgstr ""
 msgid "Sanctioned Amount (Company Currency)"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:581
+#: hrms/hr/doctype/expense_claim/expense_claim.py:588
 msgid "Sanctioned Amount cannot be greater than Claim Amount in Row {0}."
 msgstr ""
 
@@ -9546,11 +9564,11 @@ msgstr ""
 msgid "Select your Leave Approver i.e. the person who approves or rejects your leaves."
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.js:605
+#: hrms/hr/doctype/expense_claim/expense_claim.js:604
 msgid "Selected employee advance is not of employee {0}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:550
+#: hrms/hr/doctype/expense_claim/expense_claim.py:555
 msgid "Selected employee advance is not of employee {}"
 msgstr ""
 
@@ -9704,7 +9722,7 @@ msgstr ""
 msgid "Set optional filters to fetch employees in the appraisee list"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:669
+#: hrms/hr/doctype/expense_claim/expense_claim.py:676
 msgid "Set the default account for the {0} {1}"
 msgstr ""
 
@@ -10411,6 +10429,10 @@ msgstr ""
 msgid "Tenure"
 msgstr ""
 
+#: hrms/templates/emails/training_event.html:20
+msgid "Thank you"
+msgstr ""
+
 #. Success message of the job-application Web Form
 #: hrms/hr/web_form/job_application/job_application.json
 msgid "Thank you for applying."
@@ -10944,7 +10966,7 @@ msgstr ""
 msgid "Total Self Score"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:575
+#: hrms/hr/doctype/expense_claim/expense_claim.py:582
 msgid "Total advance amount cannot be greater than total sanctioned amount"
 msgstr ""
 
@@ -12047,13 +12069,6 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_application/leave_application.py:104
 msgid "{0}: From {0} of type {1}"
-msgstr ""
-
-#: frontend/src/components/AttendanceRequestItem.vue:17
-#: frontend/src/components/LeaveRequestItem.vue:16
-#: frontend/src/components/ShiftAssignmentItem.vue:12
-#: frontend/src/components/ShiftRequestItem.vue:17
-msgid "{0}d"
 msgstr ""
 
 #: hrms/hr/doctype/job_requisition/job_requisition.js:22
