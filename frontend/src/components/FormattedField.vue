@@ -75,6 +75,7 @@ const colorMap = {
 	Approved: "green",
 	Rejected: "red",
 	Open: "orange",
+	Draft: "red",
 }
 
 const getCoordinates = (value) => {

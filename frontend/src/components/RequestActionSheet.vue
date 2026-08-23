@@ -271,6 +271,14 @@ const fieldsWithValues = computed(() => {
 			}
 			field.value =
 				document?.doc?.[field.fieldname] || props.modelValue[field.fieldname]
+
+			if (
+				field.fieldname === approvalField.value &&
+				document?.doc?.docstatus === 0 &&
+				["Approved", "Rejected"].includes(field.value)
+			) {
+				field.value = "Draft"
+			}
 		}
 
 		return field.value
