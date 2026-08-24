@@ -344,10 +344,10 @@ class SalaryStructureAssignment(Document):
 
 		data = get_component_eval_context(self.employee, self.as_dict())
 
-		# The SSA has no salary slip, so formulas referencing slip period fields (e.g.
-		# start_date) would raise NameError. Seed a full cycle -- the period containing
-		# from_date -- with no LWP/absence so proration-based formulas yield full-cycle
-		# values (payment_days == total_working_days, ratio 1).
+		# The SSA has no salary slip, so slip fields only carry their defaults here.
+		# Seed a full cycle -- the period containing from_date -- with no LWP/absence
+		# so proration-based formulas yield full-cycle values (payment_days ==
+		# total_working_days, ratio 1) rather than the zeroed defaults.
 		frequency = frappe.get_cached_value("Salary Structure", self.salary_structure, "payroll_frequency")
 		dates = get_start_end_dates(frequency, self.from_date, self.company)
 		period_days = date_diff(dates.end_date, dates.start_date) + 1

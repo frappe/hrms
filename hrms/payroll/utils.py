@@ -61,41 +61,52 @@ def get_component_abbr_map() -> dict:
 	return frappe.cache().get_value("salary_component_values", generator=_fetch_component_values)
 
 
-SALARY_SLIP_EVAL_DEFAULTS = {
-	"gross_pay": 0,
-	"net_pay": 0,
-	"total_deduction": 0,
-	"rounded_total": 0,
-	"total_working_hours": 0,
-	"hour_rate": 0,
-	"year_to_date": 0,
-	"month_to_date": 0,
-	"gross_year_to_date": 0,
-	"ctc": 0,
-	"total_earnings": 0,
-	"income_from_other_sources": 0,
-	"non_taxable_earnings": 0,
-	"deductions_before_tax_calculation": 0,
-	"tax_exemption_declaration": 0,
-	"standard_tax_exemption_amount": 0,
-	"annual_taxable_amount": 0,
-	"income_tax_deducted_till_date": 0,
-	"future_income_tax_deductions": 0,
-	"current_month_income_tax": 0,
-	"total_income_tax": 0,
+NUMERIC_FIELDTYPES = {"Currency", "Float", "Int", "Percent", "Check"}
+
+# Fieldtypes that hold no value of their own and must stay out of the formula context.
+NON_VALUE_FIELDTYPES = {
+	"Button",
+	"Column Break",
+	"Fold",
+	"Heading",
+	"HTML",
+	"Image",
+	"Section Break",
+	"Tab Break",
+	"Table",
+	"Table MultiSelect",
 }
+
+
+def get_salary_slip_eval_defaults() -> dict:
+	"""Zero/empty default for every Salary Slip field.
+
+	A formula may reference any Salary Slip field, including a custom one, but the
+	value is not always available when the formula is evaluated: the Salary Structure
+	Assignment pre-pass runs before a slip exists at all. Seeding a default keeps such
+	a formula evaluable instead of failing with a misleading NameError.
+
+	These are only defaults. The real value overrides them whenever there is one --
+	the salary slip overlays its own fields, and the assignment pre-pass seeds the
+	period fields it can derive.
+	"""
+	return {
+		field.fieldname: 0 if field.fieldtype in NUMERIC_FIELDTYPES else ""
+		for field in frappe.get_meta("Salary Slip").fields
+		if field.fieldname and field.fieldtype not in NON_VALUE_FIELDTYPES
+	}
 
 
 def get_component_eval_context(employee: str, ssa_as_dict: dict) -> frappe._dict:
 	"""Build the base evaluation context for salary component formulas.
 
-	Merges component abbreviation defaults, Salary Structure Assignment fields
-	(base, variable, ...) and employee fields so that formulas can reference any
-	of them by name.
+	Merges component abbreviation defaults, Salary Slip field defaults, Salary
+	Structure Assignment fields (base, variable, ...) and employee fields so that
+	formulas can reference any of them by name.
 	"""
 	data = frappe._dict()
 	data.update(get_component_abbr_map())
-	data.update(SALARY_SLIP_EVAL_DEFAULTS)
+	data.update(get_salary_slip_eval_defaults())
 	data.update(ssa_as_dict)
 	data.update(frappe.get_cached_doc("Employee", employee).as_dict())
 	return data
