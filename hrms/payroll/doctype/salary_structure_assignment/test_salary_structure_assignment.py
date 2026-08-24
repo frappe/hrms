@@ -2,6 +2,7 @@
 # See license.txt
 
 import frappe
+from frappe.model import numeric_fieldtypes
 from frappe.utils import get_first_day, nowdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -178,7 +179,7 @@ class TestSalaryStructureAssignment(HRMSTestSuite):
 		meta = frappe.get_meta("Salary Slip")
 
 		for field in meta.fields:
-			if field.fieldtype in ("Currency", "Float", "Int", "Percent", "Check"):
+			if field.fieldtype in numeric_fieldtypes:
 				self.assertIn(field.fieldname, defaults)
 				self.assertEqual(defaults[field.fieldname], 0)
 

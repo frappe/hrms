@@ -3,6 +3,7 @@ from datetime import date
 
 import frappe
 from frappe import _
+from frappe.model import no_value_fields, numeric_fieldtypes
 from frappe.utils import ceil, floor, get_first_day, get_last_day, get_link_to_form, getdate, rounded
 
 
@@ -61,23 +62,6 @@ def get_component_abbr_map() -> dict:
 	return frappe.cache().get_value("salary_component_values", generator=_fetch_component_values)
 
 
-NUMERIC_FIELDTYPES = {"Currency", "Float", "Int", "Percent", "Check"}
-
-# Fieldtypes that hold no value of their own and must stay out of the formula context.
-NON_VALUE_FIELDTYPES = {
-	"Button",
-	"Column Break",
-	"Fold",
-	"Heading",
-	"HTML",
-	"Image",
-	"Section Break",
-	"Tab Break",
-	"Table",
-	"Table MultiSelect",
-}
-
-
 def get_salary_slip_eval_defaults() -> dict:
 	"""Zero/empty default for every Salary Slip field.
 
@@ -89,11 +73,14 @@ def get_salary_slip_eval_defaults() -> dict:
 	These are only defaults. The real value overrides them whenever there is one --
 	the salary slip overlays its own fields, and the assignment pre-pass seeds the
 	period fields it can derive.
+
+	The fieldtype sets come from the framework rather than a local list, so a
+	fieldtype added upstream is classified without another edit here.
 	"""
 	return {
-		field.fieldname: 0 if field.fieldtype in NUMERIC_FIELDTYPES else ""
+		field.fieldname: 0 if field.fieldtype in numeric_fieldtypes else ""
 		for field in frappe.get_meta("Salary Slip").fields
-		if field.fieldname and field.fieldtype not in NON_VALUE_FIELDTYPES
+		if field.fieldname and field.fieldtype not in no_value_fields
 	}
 
 
