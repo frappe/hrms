@@ -450,17 +450,22 @@ hrms.HierarchyChart = class {
 
 		let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
+		const is_rtl = document.documentElement.dir === "rtl";
+
 		// we need to connect right side of the parent to the left side of the child node
-		const pos_parent_right = {
-			x: parent_node.offsetLeft + parent_node.offsetWidth,
+		const pos_parent = {
+			x: is_rtl ? parent_node.offsetLeft : parent_node.offsetLeft + parent_node.offsetWidth,
 			y: parent_node.offsetTop + parent_node.offsetHeight / 2,
 		};
-		const pos_child_left = {
-			x: child_node.offsetLeft - 5,
+
+		const pos_child = {
+			x: is_rtl
+				? child_node.offsetLeft + child_node.offsetWidth + 5
+				: child_node.offsetLeft - 5,
 			y: child_node.offsetTop + child_node.offsetHeight / 2,
 		};
 
-		const connector = this.get_connector(pos_parent_right, pos_child_left);
+		const connector = this.get_connector(pos_parent, pos_child, is_rtl);
 
 		path.setAttribute("d", connector);
 		this.set_path_attributes(path, parent_id, child_id);
@@ -468,64 +473,64 @@ hrms.HierarchyChart = class {
 		document.getElementById("connectors").appendChild(path);
 	}
 
-	get_connector(pos_parent_right, pos_child_left) {
-		if (pos_parent_right.y === pos_child_left.y) {
+	get_connector(pos_parent, pos_child, is_rtl) {
+		if (pos_parent.y === pos_child.y) {
 			// don't add arcs if it's a straight line
 			return (
 				"M" +
-				pos_parent_right.x +
+				pos_parent.x +
 				"," +
-				pos_parent_right.y +
+				pos_parent.y +
 				" " +
 				"L" +
-				pos_child_left.x +
+				pos_child.x +
 				"," +
-				pos_child_left.y
-			);
-		} else {
-			let arc_1 = "";
-			let arc_2 = "";
-			let offset = 0;
-
-			if (pos_parent_right.y > pos_child_left.y) {
-				// if child is above parent on Y axis 1st arc is anticlocwise
-				// second arc is clockwise
-				arc_1 = "a10,10 1 0 0 10,-10 ";
-				arc_2 = "a10,10 0 0 1 10,-10 ";
-				offset = 10;
-			} else {
-				// if child is below parent on Y axis 1st arc is clockwise
-				// second arc is anticlockwise
-				arc_1 = "a10,10 0 0 1 10,10 ";
-				arc_2 = "a10,10 1 0 0 10,10 ";
-				offset = -10;
-			}
-
-			return (
-				"M" +
-				pos_parent_right.x +
-				"," +
-				pos_parent_right.y +
-				" " +
-				"L" +
-				(pos_parent_right.x + 40) +
-				"," +
-				pos_parent_right.y +
-				" " +
-				arc_1 +
-				"L" +
-				(pos_parent_right.x + 50) +
-				"," +
-				(pos_child_left.y + offset) +
-				" " +
-				arc_2 +
-				"L" +
-				pos_child_left.x +
-				"," +
-				pos_child_left.y
+				pos_child.y
 			);
 		}
+
+		let arc_1 = "";
+		let arc_2 = "";
+		let offset = 0;
+		let direction = is_rtl ? -1 : 1;
+
+		if (pos_parent.y > pos_child.y) {
+			// if child is above parent on Y axis
+			arc_1 = `a10,10 1 0 ${is_rtl ? 1 : 0} ${10 * direction},-10 `;
+			arc_2 = `a10,10 0 0 ${is_rtl ? 0 : 1} ${10 * direction},-10 `;
+			offset = 10;
+		} else {
+			// if child is below parent on Y axis
+			arc_1 = `a10,10 0 0 ${is_rtl ? 0 : 1} ${10 * direction},10 `;
+			arc_2 = `a10,10 1 0 ${is_rtl ? 1 : 0} ${10 * direction},10 `;
+			offset = -10;
+		}
+
+		return (
+			"M" +
+			pos_parent.x +
+			"," +
+			pos_parent.y +
+			" " +
+			"L" +
+			(pos_parent.x + 40 * direction) +
+			"," +
+			pos_parent.y +
+			" " +
+			arc_1 +
+			"L" +
+			(pos_parent.x + 50 * direction) +
+			"," +
+			(pos_child.y + offset) +
+			" " +
+			arc_2 +
+			"L" +
+			pos_child.x +
+			"," +
+			pos_child.y
+		);
 	}
+
 
 	set_path_attributes(path, parent_id, child_id) {
 		path.setAttribute("data-parent", parent_id);
