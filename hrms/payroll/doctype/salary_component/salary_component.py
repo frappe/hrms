@@ -8,10 +8,59 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.model.naming import append_number_if_name_exists
 
-from hrms.payroll.utils import sanitize_expression
+from hrms.payroll.utils import COMPONENT_TYPE_TO_PARENTFIELD, sanitize_expression
 
 
 class SalaryComponent(Document):
+<<<<<<< HEAD
+=======
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.payroll.doctype.salary_component_account.salary_component_account import (
+			SalaryComponentAccount,
+		)
+
+		accounts: DF.Table[SalaryComponentAccount]
+		accrual_component: DF.Check
+		amount: DF.Currency
+		amount_based_on_formula: DF.Check
+		arrear_component: DF.Check
+		condition: DF.Code | None
+		deduct_full_tax_on_selected_payroll_date: DF.Check
+		depends_on_payment_days: DF.Check
+		description: DF.SmallText | None
+		disabled: DF.Check
+		do_not_include_in_accounts: DF.Check
+		do_not_include_in_total: DF.Check
+		exempted_from_income_tax: DF.Check
+		final_cycle_accrual_payout: DF.Check
+		formula: DF.Code | None
+		is_flexible_benefit: DF.Check
+		is_income_tax_component: DF.Check
+		is_tax_applicable: DF.Check
+		max_benefit_amount: DF.Currency
+		payout_method: DF.Literal[
+			"",
+			"Accrue and payout at end of payroll period",
+			"Accrue per cycle, pay only on claim",
+			"Allow claim for full benefit amount",
+		]
+		remove_if_zero_valued: DF.Check
+		round_to_the_nearest_integer: DF.Check
+		salary_component: DF.Data
+		salary_component_abbr: DF.Data
+		statistical_component: DF.Check
+		type: DF.Literal["Earning", "Deduction", "Employer Contribution"]
+		variable_based_on_taxable_salary: DF.Check
+	# end: auto-generated types
+
+>>>>>>> 376238d (feat: show employer contribution in salary slip)
 	def before_validate(self):
 		self._condition, self.condition = self.condition, sanitize_expression(self.condition)
 		self._formula, self.formula = self.formula, sanitize_expression(self.formula)
@@ -127,9 +176,16 @@ class SalaryComponent(Document):
 			salary_structure._doc_before_save = copy.deepcopy(salary_structure)
 
 			salary_detail_row = next(
-				(d for d in salary_structure.get(f"{self.type.lower()}s") if d.salary_component == self.name),
+				(
+					d
+					for d in salary_structure.get(COMPONENT_TYPE_TO_PARENTFIELD[self.type])
+					if d.salary_component == self.name
+				),
 				None,
 			)
+			if not salary_detail_row:
+				continue
+
 			if is_formula_related:
 				value = value if self.amount_based_on_formula else None
 				salary_detail_row.set("amount_based_on_formula", self.amount_based_on_formula)

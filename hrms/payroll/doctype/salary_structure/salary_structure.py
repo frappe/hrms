@@ -12,10 +12,47 @@ from frappe.utils import cint, cstr, flt, get_link_to_form
 
 import erpnext
 
-from hrms.payroll.utils import sanitize_expression
+from hrms.payroll.utils import COMPONENT_PARENTFIELDS, sanitize_expression
 
 
 class SalaryStructure(Document):
+<<<<<<< HEAD
+=======
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.payroll.doctype.employee_benefit_detail.employee_benefit_detail import EmployeeBenefitDetail
+		from hrms.payroll.doctype.salary_detail.salary_detail import SalaryDetail
+
+		amended_from: DF.Link | None
+		company: DF.Link
+		currency: DF.Link
+		deductions: DF.Table[SalaryDetail]
+		earnings: DF.Table[SalaryDetail]
+		employee_benefits: DF.Table[EmployeeBenefitDetail]
+		employer_contributions: DF.Table[SalaryDetail]
+		hour_rate: DF.Currency
+		is_active: DF.Literal["", "Yes", "No"]
+		is_default: DF.Literal["Yes", "No"]
+		leave_encashment_amount_per_day: DF.Currency
+		letter_head: DF.Link | None
+		max_benefits: DF.Currency
+		mode_of_payment: DF.Link | None
+		net_pay: DF.Currency
+		payment_account: DF.Link | None
+		payroll_frequency: DF.Literal["", "Monthly", "Fortnightly", "Bimonthly", "Weekly", "Daily"]
+		salary_component: DF.Link | None
+		salary_slip_based_on_timesheet: DF.Check
+		total_deduction: DF.Currency
+		total_earning: DF.Currency
+	# end: auto-generated types
+
+>>>>>>> 376238d (feat: show employer contribution in salary slip)
 	def before_validate(self):
 		self.sanitize_condition_and_formula_fields()
 
@@ -38,7 +75,7 @@ class SalaryStructure(Document):
 		self.reset_condition_and_formula_fields()
 
 	def validate_formula_setup(self):
-		for table in ["earnings", "deductions"]:
+		for table in COMPONENT_PARENTFIELDS:
 			for row in self.get(table):
 				if not row.amount_based_on_formula and row.formula:
 					frappe.msgprint(
@@ -62,7 +99,7 @@ class SalaryStructure(Document):
 			"is_flexible_benefit",
 		]
 		overwritten_fields_if_missing = ["amount_based_on_formula", "formula", "amount"]
-		for table in ["earnings", "deductions"]:
+		for table in COMPONENT_PARENTFIELDS:
 			for d in self.get(table):
 				component_default_value = frappe.db.get_value(
 					"Salary Component",
@@ -95,7 +132,7 @@ class SalaryStructure(Document):
 
 	def validate_payment_days_based_dependent_component(self):
 		abbreviations = self.get_component_abbreviations()
-		for component_type in ("earnings", "deductions"):
+		for component_type in COMPONENT_PARENTFIELDS:
 			for row in self.get(component_type):
 				if (
 					row.formula
@@ -115,8 +152,9 @@ class SalaryStructure(Document):
 					frappe.throw(message, title=_("Payment Days Dependency"))
 
 	def get_component_abbreviations(self):
-		abbr = [d.abbr for d in self.earnings if d.depends_on_payment_days]
-		abbr += [d.abbr for d in self.deductions if d.depends_on_payment_days]
+		abbr = []
+		for table in COMPONENT_PARENTFIELDS:
+			abbr += [d.abbr for d in self.get(table) if d.depends_on_payment_days]
 
 		return abbr
 
@@ -136,7 +174,7 @@ class SalaryStructure(Document):
 				break
 
 	def sanitize_condition_and_formula_fields(self):
-		for table in ("earnings", "deductions", "employer_contributions"):
+		for table in COMPONENT_PARENTFIELDS:
 			for row in self.get(table):
 				row.condition = row.condition.strip() if row.condition else ""
 				row.formula = row.formula.strip() if row.formula else ""
@@ -145,7 +183,7 @@ class SalaryStructure(Document):
 
 	def reset_condition_and_formula_fields(self):
 		# set old values (allowing multiline strings for better readability in the doctype form)
-		for table in ("earnings", "deductions", "employer_contributions"):
+		for table in COMPONENT_PARENTFIELDS:
 			for row in self.get(table):
 				row.condition = row._condition
 				row.formula = row._formula
