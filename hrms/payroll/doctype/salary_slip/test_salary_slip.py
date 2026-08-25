@@ -3402,14 +3402,16 @@ class TestSalarySlipEmployerContributions(HRMSTestSuite):
 
 		additional_salary.cancel()
 
-	def test_employer_contributions_rendered_in_print_format(self):
+	def test_employer_contributions_not_printed(self):
+		"""Employer cost stays on the record, not on the employee's payslip."""
 		slip = self.make_slip("Salary Structure EC Print", "ec_print@salary.com")
 		slip.insert()
+		self.assertEqual(len(slip.employer_contributions), 2)
 
 		html = frappe.get_print("Salary Slip", slip.name, print_format="Salary Slip Standard")
-		self.assertIn('data-fieldname="employer_contributions"', html)
-		self.assertIn("Test Slip Employer PF", html)
-		self.assertIn("Test Slip Employer NPS", html)
+		self.assertNotIn('data-fieldname="employer_contributions"', html)
+		self.assertNotIn("Test Slip Employer PF", html)
+		self.assertNotIn("Test Slip Employer NPS", html)
 
 	def test_employer_contributions_reset_on_reload(self):
 		slip = self.make_slip("Salary Structure EC Reload", "ec_reload@salary.com")
