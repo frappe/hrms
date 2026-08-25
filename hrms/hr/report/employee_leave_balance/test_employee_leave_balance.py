@@ -90,6 +90,7 @@ class TestEmployeeLeaveBalance(HRMSTestSuite):
 				"leave_type": "_Test Leave Type",
 				"employee": self.employee_id,
 				"employee_name": "test_emp_leave_balance@example.com",
+				"branch": None,
 				"leaves_allocated": flt(allocation1.new_leaves_allocated + allocation2.new_leaves_allocated),
 				"leaves_expired": flt(allocation1.new_leaves_allocated),
 				"opening_balance": flt(0),
