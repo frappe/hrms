@@ -8,7 +8,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.model.naming import append_number_if_name_exists
 
-from hrms.payroll.utils import sanitize_expression
+from hrms.payroll.utils import COMPONENT_TYPE_TO_PARENTFIELD, sanitize_expression
 
 
 class SalaryComponent(Document):
@@ -54,7 +54,7 @@ class SalaryComponent(Document):
 		salary_component: DF.Data
 		salary_component_abbr: DF.Data
 		statistical_component: DF.Check
-		type: DF.Literal["Earning", "Deduction"]
+		type: DF.Literal["Earning", "Deduction", "Employer Contribution"]
 		variable_based_on_taxable_salary: DF.Check
 	# end: auto-generated types
 
@@ -173,9 +173,16 @@ class SalaryComponent(Document):
 			salary_structure._doc_before_save = copy.deepcopy(salary_structure)
 
 			salary_detail_row = next(
-				(d for d in salary_structure.get(f"{self.type.lower()}s") if d.salary_component == self.name),
+				(
+					d
+					for d in salary_structure.get(COMPONENT_TYPE_TO_PARENTFIELD[self.type])
+					if d.salary_component == self.name
+				),
 				None,
 			)
+			if not salary_detail_row:
+				continue
+
 			if is_formula_related:
 				value = value if self.amount_based_on_formula else None
 				salary_detail_row.set("amount_based_on_formula", self.amount_based_on_formula)
