@@ -953,9 +953,7 @@ class SalarySlip(TransactionBase):
 		# by process_salary_structure, before totals are finalised below.
 		self.apply_regional_deductions()
 
-		# Employer contributions are informational: they are shown on the slip but are
-		# deliberately excluded from gross_pay, total_deduction and net_pay. Evaluated
-		# last so their formulas see the final earnings and deductions.
+		# shown on the slip, but never part of gross, deduction or net pay
 		if self.salary_structure:
 			self.calculate_component_amounts("employer_contributions")
 
@@ -1263,8 +1261,7 @@ class SalarySlip(TransactionBase):
 		self.add_structure_components(component_type)
 
 		if component_type == "employer_contributions":
-			# Additional Salary, tax and flexible benefit components are all
-			# earning- or deduction-side concerns only.
+			# additional salary, tax and flexi benefits are earning/deduction only
 			return
 
 		self.add_additional_salary_components(component_type)
