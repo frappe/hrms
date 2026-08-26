@@ -3283,3 +3283,139 @@ def clear_cache():
 		TAX_COMPONENTS_BY_COMPANY,
 	]:
 		frappe.cache().delete_value(key)
+
+
+class TestSalarySlipEmployerContributions(HRMSTestSuite):
+	COMPONENTS = (
+		("Test Slip Employer PF", "TSEPF", {"amount": 6000}, 1),
+		(
+			"Test Slip Employer NPS",
+			"TSENPS",
+			{"amount_based_on_formula": 1, "formula": "BS * 0.12"},
+			0,
+		),
+	)
+
+	def setUp(self):
+		make_payroll_period(company="_Test Company")
+		frappe.db.set_single_value("Payroll Settings", "email_salary_slip_to_employee", 0)
+		frappe.flags.pop("via_payroll_entry", None)
+
+		for component, abbr, _details, depends_on_payment_days in self.COMPONENTS:
+			if frappe.db.exists("Salary Component", component):
+				frappe.delete_doc("Salary Component", component, force=True)
+			frappe.get_doc(
+				{
+					"doctype": "Salary Component",
+					"salary_component": component,
+					"salary_component_abbr": abbr,
+					"type": "Employer Contribution",
+					"depends_on_payment_days": depends_on_payment_days,
+				}
+			).insert()
+
+	def make_structure(self, name, employee, with_contributions=True):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		other_details = None
+		if with_contributions:
+			other_details = {
+				"employer_contributions": [
+					{"salary_component": component, "abbr": abbr, **details}
+					for component, abbr, details, _dopd in self.COMPONENTS
+				]
+			}
+
+		return make_salary_structure(
+			name,
+			"Monthly",
+			employee=employee,
+			company="_Test Company",
+			currency="INR",
+			other_details=other_details,
+		)
+
+	def make_slip(self, name, email, with_contributions=True):
+		employee = make_employee(email, company="_Test Company")
+		structure = self.make_structure(name, employee, with_contributions)
+		return make_salary_slip(structure.name, employee=employee)
+
+	def test_employer_contributions_populated_on_slip(self):
+		slip = self.make_slip("Salary Structure Employer Contribution", "ec_populated@salary.com")
+
+		rows = {d.salary_component: d for d in slip.employer_contributions}
+		self.assertEqual(len(rows), 2)
+		self.assertEqual(rows["Test Slip Employer PF"].amount, 6000)
+		self.assertEqual(rows["Test Slip Employer PF"].abbr, "TSEPF")
+
+		basic = next(d.amount for d in slip.earnings if d.salary_component == "Basic Salary")
+		self.assertEqual(rows["Test Slip Employer NPS"].amount, flt(basic * 0.12, 2))
+
+	def test_employer_contributions_excluded_from_totals(self):
+		with_ec = self.make_slip("Salary Structure With EC", "ec_totals_with@salary.com")
+		without_ec = self.make_slip(
+			"Salary Structure Without EC", "ec_totals_without@salary.com", with_contributions=False
+		)
+
+		self.assertTrue(with_ec.employer_contributions)
+		self.assertFalse(without_ec.employer_contributions)
+
+		for field in ("gross_pay", "total_deduction", "net_pay", "rounded_total"):
+			self.assertEqual(
+				flt(with_ec.get(field), 2),
+				flt(without_ec.get(field), 2),
+				msg=f"{field} changed because of employer contributions",
+			)
+
+	def test_employer_contribution_not_in_taxable_ctc(self):
+		with_ec = self.make_slip("Salary Structure EC Tax", "ec_tax_with@salary.com")
+		without_ec = self.make_slip(
+			"Salary Structure EC Tax Control", "ec_tax_without@salary.com", with_contributions=False
+		)
+
+		self.assertEqual(flt(with_ec.ctc, 2), flt(without_ec.ctc, 2))
+		self.assertEqual(flt(with_ec.annual_taxable_amount, 2), flt(without_ec.annual_taxable_amount, 2))
+
+	def test_no_additional_salary_leaks_into_employer_contributions(self):
+		employee = make_employee("ec_additional_salary@salary.com", company="_Test Company")
+		structure = self.make_structure("Salary Structure EC Additional", employee)
+
+		additional_salary = frappe.get_doc(
+			{
+				"doctype": "Additional Salary",
+				"employee": employee,
+				"company": "_Test Company",
+				"salary_component": "Professional Tax",
+				"payroll_date": nowdate(),
+				"amount": 1000,
+				"type": "Deduction",
+				"currency": "INR",
+				"overwrite_salary_structure_amount": 1,
+			}
+		).submit()
+
+		slip = make_salary_slip(structure.name, employee=employee)
+
+		self.assertNotIn("Professional Tax", [d.salary_component for d in slip.employer_contributions])
+		self.assertIn("Professional Tax", [d.salary_component for d in slip.deductions])
+		self.assertEqual(len(slip.employer_contributions), 2)
+
+		additional_salary.cancel()
+
+	def test_employer_contributions_not_printed(self):
+		"""Employer cost stays on the record, not on the employee's payslip."""
+		slip = self.make_slip("Salary Structure EC Print", "ec_print@salary.com")
+		slip.insert()
+		self.assertEqual(len(slip.employer_contributions), 2)
+
+		html = frappe.get_print("Salary Slip", slip.name, print_format="Salary Slip Standard")
+		self.assertNotIn('data-fieldname="employer_contributions"', html)
+		self.assertNotIn("Test Slip Employer PF", html)
+		self.assertNotIn("Test Slip Employer NPS", html)
+
+	def test_employer_contributions_reset_on_reload(self):
+		slip = self.make_slip("Salary Structure EC Reload", "ec_reload@salary.com")
+		self.assertEqual(len(slip.employer_contributions), 2)
+
+		slip.get_emp_and_working_day_details()
+		self.assertEqual(len(slip.employer_contributions), 2)
