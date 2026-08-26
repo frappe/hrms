@@ -47,7 +47,12 @@ const props = defineProps({
 })
 
 const status = computed(() => {
-	return props.workflowStateField ? props.doc[props.workflowStateField] : props.doc.status
+	if (props.doc.docstatus === 0) return "Draft"
+	if (props.doc.docstatus === 2) return "Cancelled"
+
+	return props.workflowStateField
+		? props.doc[props.workflowStateField]
+		: props.doc.status
 })
 
 const colorMap = {
