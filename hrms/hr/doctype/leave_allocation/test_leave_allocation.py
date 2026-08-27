@@ -62,6 +62,24 @@ class TestLeaveAllocation(HRMSTestSuite):
 		# invalid period
 		self.assertRaises(frappe.ValidationError, doc.save)
 
+	def test_single_day_allocation(self):
+		doc = frappe.get_doc(
+			{
+				"doctype": "Leave Allocation",
+				"__islocal": 1,
+				"employee": self.employee.name,
+				"employee_name": self.employee.employee_name,
+				"leave_type": "_Test Leave Type",
+				"from_date": getdate("2015-09-1"),
+				"to_date": getdate("2015-09-1"),
+				"new_leaves_allocated": 1,
+			}
+		)
+
+		# from_date and to_date on the same day should be allowed
+		doc.save()
+		self.assertEqual(doc.from_date, doc.to_date)
+
 	def test_validation_for_over_allocation(self):
 		leave_type = create_leave_type(leave_type_name="Test Over Allocation", is_carry_forward=1)
 
