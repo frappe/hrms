@@ -72,6 +72,7 @@ frappe.ui.form.on("Leave Control Panel", {
 	},
 
 	leave_period(frm) {
+		frm.trigger("set_dates_from_leave_period");
 		frm.trigger("get_employees");
 	},
 
@@ -89,9 +90,19 @@ frappe.ui.form.on("Leave Control Panel", {
 
 	reset_leave_details(frm) {
 		if (frm.doc.dates_based_on === "Leave Period") {
-			frm.add_fetch("leave_period", "from_date", "from_date");
-			frm.add_fetch("leave_period", "to_date", "to_date");
+			frm.trigger("set_dates_from_leave_period");
 		}
+	},
+
+	set_dates_from_leave_period(frm) {
+		if (frm.doc.dates_based_on !== "Leave Period" || !frm.doc.leave_period) return;
+
+		frappe.db
+			.get_value("Leave Period", frm.doc.leave_period, ["from_date", "to_date"])
+			.then((r) => {
+				frm.set_value("from_date", r.message.from_date);
+				frm.set_value("to_date", r.message.to_date);
+			});
 	},
 
 	set_leave_details(frm) {
@@ -110,7 +121,7 @@ frappe.ui.form.on("Leave Control Panel", {
 				no_of_days: 0,
 				leave_policy: leave_policy || null,
 				company: frm.doc.company,
-			});
+			}).then(() => frm.trigger("set_dates_from_leave_period"));
 		});
 	},
 
