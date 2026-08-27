@@ -1110,6 +1110,43 @@ class TestExpenseClaim(HRMSTestSuite):
 		self.assertEqual(gain_loss_jv.total_debit, 2100)
 		self.assertEqual(gain_loss_jv.total_credit, 2100)
 
+	def test_no_exchange_gain_loss_when_advance_exchange_rate_missing(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			get_advances_for_claim,
+			make_employee_advance,
+			make_payment_entry,
+		)
+
+		employee = make_employee("test_advance_claim_missing_exchange_rate@example.com", "_Test Company")
+		advance = make_employee_advance(employee)
+		self.assertEqual(advance.status, "Unpaid")
+
+		make_payment_entry(advance, advance.advance_amount)
+		advance.reload()
+		self.assertEqual(advance.status, "Paid")
+
+		claim = make_expense_claim(
+			get_payable_account("_Test Company"),
+			advance.advance_amount,
+			advance.advance_amount,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			employee=employee,
+			do_not_submit=True,
+		)
+
+		claim = get_advances_for_claim(claim, advance.name)
+		for claim_advance in claim.advances:
+			claim_advance.exchange_rate = 0
+
+		claim.save().submit()
+		claim.reload()
+
+		for claim_advance in claim.advances:
+			self.assertEqual(claim_advance.exchange_gain_loss, 0)
+		self.assertEqual(claim.total_exchange_gain_loss, 0)
+		self.assertFalse(claim.gain_loss_account)
+
 	def test_expense_claim_status_as_payment_after_unreconciliation(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import make_payment_entry
 
