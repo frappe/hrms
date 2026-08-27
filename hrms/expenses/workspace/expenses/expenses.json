@@ -1,11 +1,49 @@
 {
  "app": "hrms",
- "creation": "2025-10-26 21:53:46.574309",
+ "charts": [
+  {
+   "chart_name": "Expense Claims",
+   "label": "Expense Claims"
+  }
+ ],
+ "content": "[{\"id\":\"8c0d6b00c5\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Expense Claims\",\"col\":12}},{\"id\":\"597a4953b8\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Expense Claims (This Month)\",\"col\":4}},{\"id\":\"a8821844c5\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Approved Claims (This Month)\",\"col\":4}},{\"id\":\"a96ef52e68\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Rejected Claims (This Month)\",\"col\":4}}]",
+ "creation": "2022-08-20 16:28:40.701015",
+ "custom_blocks": [],
  "docstatus": 0,
- "doctype": "Workspace Sidebar",
- "header_icon": "receipt-text",
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 1,
+ "icon": "receipt-text",
  "idx": 0,
- "items": [
+ "is_hidden": 0,
+ "label": "Expenses",
+ "links": [],
+ "modified": "2026-08-26 18:34:03.000000",
+ "modified_by": "Administrator",
+ "module": "Expenses",
+ "name": "Expenses",
+ "number_cards": [
+  {
+   "label": "Expense Claims (This Month)",
+   "number_card_name": "Expense Claims (This Month)"
+  },
+  {
+   "label": "Approved Claims (This Month)",
+   "number_card_name": "Approved Claims (This Month)"
+  },
+  {
+   "label": "Rejected Claims (This Month)",
+   "number_card_name": "Rejected Claims (This Month)"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 6.0,
+ "shortcuts": [],
+ "sidebar_items": [
   {
    "child": 0,
    "collapsible": 1,
@@ -15,6 +53,7 @@
    "label": "Home",
    "link_to": "Expenses",
    "link_type": "Workspace",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -27,6 +66,7 @@
    "label": "Dashboard",
    "link_to": "Expense Claims",
    "link_type": "Dashboard",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -39,6 +79,7 @@
    "label": "Employee Advance",
    "link_to": "Employee Advance",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -51,6 +92,7 @@
    "label": "Expense Claim",
    "link_to": "Expense Claim",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -62,6 +104,7 @@
    "keep_closed": 1,
    "label": "Travel",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Section Break"
   },
@@ -74,6 +117,7 @@
    "label": "Purpose of Travel",
    "link_to": "Purpose of Travel",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -86,6 +130,7 @@
    "label": "Travel Request",
    "link_to": "Travel Request",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -98,6 +143,7 @@
    "label": "Vehicle Log",
    "link_to": "Vehicle Log",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -109,6 +155,7 @@
    "keep_closed": 1,
    "label": "Accounting Entries",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Section Break"
   },
@@ -121,6 +168,7 @@
    "label": "Payment Entry",
    "link_to": "Payment Entry",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -133,6 +181,7 @@
    "label": "Journal Entry",
    "link_to": "Journal Entry",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -144,6 +193,7 @@
    "keep_closed": 1,
    "label": "Reports",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Section Break"
   },
@@ -156,6 +206,7 @@
    "label": "Unpaid Expense Claim",
    "link_to": "Unpaid Expense Claim",
    "link_type": "Report",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -168,6 +219,7 @@
    "label": "Vehicle Expenses",
    "link_to": "Vehicle Expenses",
    "link_type": "Report",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -180,6 +232,7 @@
    "label": "Accounts Receivable",
    "link_to": "Accounts Receivable",
    "link_type": "Report",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -192,6 +245,7 @@
    "label": "Accounts Payable",
    "link_to": "Accounts Payable",
    "link_type": "Report",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -204,6 +258,7 @@
    "label": "General Ledger",
    "link_to": "General Ledger",
    "link_type": "Report",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -215,6 +270,7 @@
    "keep_closed": 1,
    "label": "Setup",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Section Break"
   },
@@ -227,6 +283,7 @@
    "label": "Expense Claim Type",
    "link_to": "Expense Claim Type",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -239,6 +296,7 @@
    "label": "Driver",
    "link_to": "Driver",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -251,6 +309,7 @@
    "label": "Vehicle",
    "link_to": "Vehicle",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -264,15 +323,12 @@
    "link_to": "HR Settings",
    "link_type": "DocType",
    "navigate_to_tab": "expenses_tab",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   }
  ],
- "modified": "2026-08-07 12:00:00.000000",
- "modified_by": "Administrator",
- "module": "Expenses",
- "name": "Expenses",
- "owner": "Administrator",
  "standard": 1,
- "title": "Expenses"
+ "title": "Expenses",
+ "type": "Workspace"
 }

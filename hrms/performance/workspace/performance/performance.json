@@ -1,11 +1,49 @@
 {
  "app": "hrms",
- "creation": "2025-10-26 21:53:46.604449",
+ "charts": [
+  {
+   "chart_name": "Appraisal Overview",
+   "label": "Appraisal Overview"
+  }
+ ],
+ "content": "[{\"id\":\"06c858b172\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Appraisal Overview\",\"col\":12}},{\"id\":\"6f97170772\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Ongoing Appraisal Cycles\",\"col\":4}},{\"id\":\"34c472e1e7\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Appraisals (This Year)\",\"col\":4}},{\"id\":\"11a238b76b\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Goals In Progress\",\"col\":4}}]",
+ "creation": "2022-08-20 16:17:20.159886",
+ "custom_blocks": [],
  "docstatus": 0,
- "doctype": "Workspace Sidebar",
- "header_icon": "star",
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "star",
  "idx": 0,
- "items": [
+ "is_hidden": 0,
+ "label": "Performance",
+ "links": [],
+ "modified": "2026-08-26 18:34:03.000000",
+ "modified_by": "Administrator",
+ "module": "Performance",
+ "name": "Performance",
+ "number_cards": [
+  {
+   "label": "Ongoing Appraisal Cycles",
+   "number_card_name": "Ongoing Appraisal Cycles"
+  },
+  {
+   "label": "Appraisals (This Year)",
+   "number_card_name": "Appraisals (This Year)"
+  },
+  {
+   "label": "Goals In Progress",
+   "number_card_name": "Goals In Progress"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 7.0,
+ "shortcuts": [],
+ "sidebar_items": [
   {
    "child": 0,
    "collapsible": 1,
@@ -15,6 +53,7 @@
    "label": "Home",
    "link_to": "Performance",
    "link_type": "Workspace",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -27,6 +66,7 @@
    "label": "Goal",
    "link_to": "Goal",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -39,6 +79,7 @@
    "label": "Appraisal Cycle",
    "link_to": "Appraisal Cycle",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -51,6 +92,7 @@
    "label": "Appraisal",
    "link_to": "Appraisal",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -63,6 +105,7 @@
    "label": "Employee Performance Feedback",
    "link_to": "Employee Performance Feedback",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -75,6 +118,7 @@
    "label": "Employee Promotion",
    "link_to": "Employee Promotion",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -86,6 +130,7 @@
    "keep_closed": 1,
    "label": "Reports",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Section Break"
   },
@@ -97,6 +142,7 @@
    "label": "Appraisal Overview",
    "link_to": "Appraisal Overview",
    "link_type": "Report",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -108,6 +154,7 @@
    "keep_closed": 1,
    "label": "Setup",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Section Break"
   },
@@ -120,6 +167,7 @@
    "label": "Appraisal Template",
    "link_to": "Appraisal Template",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -132,6 +180,7 @@
    "label": "KRA",
    "link_to": "KRA",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -144,15 +193,12 @@
    "label": "Employee Feedback Criteria",
    "link_to": "Employee Feedback Criteria",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   }
  ],
- "modified": "2026-08-07 12:00:00.000000",
- "modified_by": "Administrator",
- "module": "Performance",
- "name": "Performance",
- "owner": "Administrator",
  "standard": 1,
- "title": "Performance"
+ "title": "Performance",
+ "type": "Workspace"
 }
