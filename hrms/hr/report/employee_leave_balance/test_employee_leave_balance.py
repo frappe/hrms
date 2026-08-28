@@ -3,6 +3,7 @@
 
 
 import frappe
+from frappe.permissions import add_user_permission
 from frappe.utils import add_days, add_months, flt, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -14,7 +15,7 @@ from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import (
 	process_expired_allocation,
 )
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
-from hrms.hr.report.employee_leave_balance.employee_leave_balance import execute
+from hrms.hr.report.employee_leave_balance.employee_leave_balance import execute, get_employees
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
@@ -293,6 +294,16 @@ class TestEmployeeLeaveBalance(HRMSTestSuite):
 		)
 		report = execute(filters)
 		self.assertEqual(len(report[1]), 1)
+
+	def test_employee_permission_filter(self):
+		make_employee("test_emp_leave_balance_other@example.com", company="_Test Company")
+		add_user_permission("Employee", self.employee_id, "test_emp_leave_balance@example.com")
+
+		filters = frappe._dict({"from_date": self.year_start, "to_date": self.year_end})
+		with self.set_user("test_emp_leave_balance@example.com"):
+			employees = {emp.name for emp in get_employees(filters)}
+
+		self.assertEqual(employees, {self.employee_id})
 
 	def test_manually_expired_leaves(self):
 		leave_type = create_leave_type(leave_type_name="Compensatory off")

@@ -272,6 +272,116 @@ class TestExpenseClaim(HRMSTestSuite):
 		self.assertEqual(advance_row.unclaimed_amount, 1000)
 		self.assertEqual(advance_row.allocated_amount, 1000)
 
+	def test_advance_with_non_receivable_account(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			make_employee_advance,
+			make_payment_entry,
+		)
+
+		frappe.db.delete("Employee Advance")
+
+		payable_advance_account = create_account(
+			account_name="Payable Employee Advance",
+			parent_account="Accounts Payable - _TC",
+			company="_Test Company",
+			account_currency=get_company_currency("_Test Company"),
+			account_type="Payable",
+		)
+
+		payable_account = get_payable_account("_Test Company")
+		claim = make_expense_claim(
+			payable_account, 1000, 1000, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
+		)
+
+		# bypasses validate_advance_account_type, simulating an account that was
+		# set to Payable after the advance was submitted
+		advance = make_employee_advance(
+			claim.employee, args={"advance_account": payable_advance_account}, do_not_submit=True
+		)
+		advance.flags.ignore_validate = True
+		advance.insert()
+		advance.submit()
+		make_payment_entry(advance)
+
+		self.assertRaises(frappe.ValidationError, get_advances, claim, advance.name)
+
+	def test_advance_blocked_after_account_reverted_to_receivable(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			make_employee_advance,
+			make_payment_entry,
+		)
+
+		frappe.db.delete("Employee Advance")
+
+		payable_advance_account = create_account(
+			account_name="Payable Employee Advance 3",
+			parent_account="Accounts Payable - _TC",
+			company="_Test Company",
+			account_currency=get_company_currency("_Test Company"),
+			account_type="Payable",
+		)
+
+		payable_account = get_payable_account("_Test Company")
+		claim = make_expense_claim(
+			payable_account, 1000, 1000, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
+		)
+
+		advance = make_employee_advance(
+			claim.employee, args={"advance_account": payable_advance_account}, do_not_submit=True
+		)
+		advance.flags.ignore_validate = True
+		advance.insert()
+		advance.submit()
+		make_payment_entry(advance)
+
+		# account corrected back to Receivable without cancelling and redoing the payment
+		# the existing ledger entry is still recorded as a negative amount
+		frappe.db.set_value("Account", payable_advance_account, "account_type", "Receivable")
+
+		self.assertRaises(frappe.ValidationError, get_advances, claim, advance.name)
+
+	def test_validate_advances_blocks_non_receivable_advance(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			make_employee_advance,
+			make_payment_entry,
+		)
+
+		frappe.db.delete("Employee Advance")
+
+		payable_advance_account = create_account(
+			account_name="Payable Employee Advance 2",
+			parent_account="Accounts Payable - _TC",
+			company="_Test Company",
+			account_currency=get_company_currency("_Test Company"),
+			account_type="Payable",
+		)
+
+		payable_account = get_payable_account("_Test Company")
+		claim = make_expense_claim(
+			payable_account, 1000, 1000, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
+		)
+
+		advance = make_employee_advance(
+			claim.employee, args={"advance_account": payable_advance_account}, do_not_submit=True
+		)
+		advance.flags.ignore_validate = True
+		advance.insert()
+		advance.submit()
+		make_payment_entry(advance)
+
+		claim.append(
+			"advances",
+			{
+				"employee_advance": advance.name,
+				"advance_account": payable_advance_account,
+				"advance_paid": 1000,
+				"unclaimed_amount": 1000,
+				"allocated_amount": 1000,
+			},
+		)
+
+		self.assertRaises(frappe.ValidationError, claim.save)
+
 	def test_advance_amount_allocation_against_claim_with_taxes(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (
 			get_advances_for_claim,
@@ -818,9 +928,10 @@ class TestExpenseClaim(HRMSTestSuite):
 			do_not_submit=True,
 		)
 
-		# mismatched-currency advance is excluded from both the bulk and explicit fetch
+		# mismatched-currency advance is excluded from the bulk fetch
 		self.assertEqual(get_advances(claim), [])
-		self.assertEqual(get_advances(claim, advance.name), [])
+		# explicit fetch raises a currency-specific error
+		self.assertRaises(frappe.ValidationError, get_advances, claim, advance.name)
 
 	def test_multicurrency_claim(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (

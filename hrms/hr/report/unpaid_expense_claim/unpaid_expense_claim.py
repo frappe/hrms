@@ -4,9 +4,8 @@
 from collections import OrderedDict
 
 import frappe
-from frappe import _
+from frappe import _, scrub
 from frappe.query_builder.functions import Sum
-from frappe.utils import scrub
 
 
 def execute(filters=None):
@@ -185,7 +184,7 @@ def get_unclaimed_expese_claims(filters):
 			Sum(ple.amount).as_("outstanding_amt"),
 		)
 		.where((ec.docstatus == 1) & (ec.is_paid == 0) & (ple.delinked == 0))
-		.groupby(ec.name)
+		.groupby(ec.name, emp.branch)
 		.having(Sum(ple.amount) != 0)
 	)
 
