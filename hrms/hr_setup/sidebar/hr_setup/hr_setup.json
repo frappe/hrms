@@ -1,9 +1,8 @@
 {
  "app": "hrms",
- "creation": "2025-11-12 15:31:27.305365",
+ "creation": "2026-08-07 12:00:00.000000",
  "docstatus": 0,
- "doctype": "Workspace Sidebar",
- "for_user": "",
+ "doctype": "Sidebar",
  "header_icon": "briefcase-business",
  "idx": 0,
  "items": [
@@ -36,6 +35,7 @@
    "collapsible": 1,
    "icon": "square-user-round",
    "indent": 0,
+   "is_default_module": 1,
    "keep_closed": 0,
    "label": "Employee",
    "link_to": "Employee",
@@ -148,7 +148,7 @@
    "url": "/desk/hr-settings#employee_tab"
   }
  ],
- "modified": "2026-08-07 12:00:00.000000",
+ "modified": "2026-08-13 20:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR Setup",
  "name": "HR Setup",

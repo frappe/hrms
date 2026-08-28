@@ -1,11 +1,65 @@
 {
  "app": "hrms",
- "creation": "2025-10-26 21:53:46.569705",
+ "charts": [
+  {
+   "chart_name": "Hiring vs Attrition Count",
+   "label": "Hiring vs Attrition Count"
+  }
+ ],
+ "content": "[{\"id\":\"e2b4d8ab1a\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Hiring vs Attrition Count\",\"col\":12}},{\"id\":\"ae8269534b\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"New Hires (This Year)\",\"col\":4}},{\"id\":\"88bb24db83\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Employee Exits (This Year)\",\"col\":4}},{\"id\":\"544bf99a8c\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Promotions (This Month)\",\"col\":4}},{\"id\":\"Do0km6oB3q\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"New Hires (This Month)\",\"col\":4}},{\"id\":\"90EyF0WfYs\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Exits (This Month)\",\"col\":4}},{\"id\":\"lWsQRmsSwR\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Trainings (This Week)\",\"col\":4}}]",
+ "creation": "2022-08-20 14:06:34.309347",
+ "custom_blocks": [],
  "docstatus": 0,
- "doctype": "Workspace Sidebar",
- "header_icon": "user",
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "user",
  "idx": 0,
- "items": [
+ "is_hidden": 0,
+ "label": "Tenure",
+ "links": [],
+ "modified": "2026-08-26 18:34:03.000000",
+ "modified_by": "Administrator",
+ "module": "Tenure",
+ "name": "Tenure",
+ "number_cards": [
+  {
+   "label": "New Hires (This Year)",
+   "number_card_name": "New Hires (This Year)"
+  },
+  {
+   "label": "Employee Exits (This Year)",
+   "number_card_name": "Employee Exits (This Year)"
+  },
+  {
+   "label": "Promotions (This Month)",
+   "number_card_name": "Promotions (This Month)"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [
+  {
+   "document_type": "Employee",
+   "label": "New Hires (This Month)",
+   "quick_list_filter": "{\"date_of_joining\":[\"Timespan\",\"this month\"]}"
+  },
+  {
+   "document_type": "Training Event",
+   "label": "Trainings (This Week)",
+   "quick_list_filter": "{\"start_time\":[\"Timespan\",\"this week\"]}"
+  },
+  {
+   "document_type": "Employee",
+   "label": "Exits (This Month)",
+   "quick_list_filter": "{\"relieving_date\":[\"Timespan\",\"this month\"]}"
+  }
+ ],
+ "roles": [],
+ "sequence_id": 2.0,
+ "shortcuts": [],
+ "sidebar_items": [
   {
    "child": 0,
    "collapsible": 1,
@@ -15,6 +69,7 @@
    "label": "Home",
    "link_to": "Tenure",
    "link_type": "Workspace",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -27,6 +82,7 @@
    "label": "Dashboard",
    "link_to": "Employee Lifecycle",
    "link_type": "Dashboard",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -39,6 +95,7 @@
    "label": "Employee Onboarding",
    "link_to": "Employee Onboarding",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -51,6 +108,7 @@
    "label": "Employee Separation",
    "link_to": "Employee Separation",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -63,6 +121,7 @@
    "label": "Employee Grievance",
    "link_to": "Employee Grievance",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -74,6 +133,7 @@
    "keep_closed": 1,
    "label": "Reports",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Section Break"
   },
@@ -86,6 +146,7 @@
    "label": "Employee Exits",
    "link_to": "Employee Exits",
    "link_type": "Report",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -98,6 +159,7 @@
    "label": "Employee Birthday",
    "link_to": "Employee Birthday",
    "link_type": "Report",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -110,6 +172,7 @@
    "label": "Employee Information",
    "link_to": "Employee Information",
    "link_type": "Report",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -122,6 +185,7 @@
    "label": "Employee Analytics",
    "link_to": "Employee Analytics",
    "link_type": "Report",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -133,6 +197,7 @@
    "keep_closed": 1,
    "label": "Setup",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Section Break"
   },
@@ -145,6 +210,7 @@
    "label": "Employee Skill Map",
    "link_to": "Employee Skill Map",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -157,6 +223,7 @@
    "label": "Grievance Type",
    "link_to": "Grievance Type",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -169,6 +236,7 @@
    "label": "Training Program",
    "link_to": "Training Program",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -181,6 +249,7 @@
    "label": "Training Event",
    "link_to": "Training Event",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -193,6 +262,7 @@
    "label": "Training Feedback",
    "link_to": "Training Feedback",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -205,6 +275,7 @@
    "label": "Training Result",
    "link_to": "Training Result",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -218,15 +289,12 @@
    "link_to": "HR Settings",
    "link_type": "DocType",
    "navigate_to_tab": "tenure_tab",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   }
  ],
- "modified": "2026-08-07 12:00:00.000000",
- "modified_by": "Administrator",
- "module": "Tenure",
- "name": "Tenure",
- "owner": "Administrator",
  "standard": 1,
- "title": "Tenure"
+ "title": "Tenure",
+ "type": "Workspace"
 }

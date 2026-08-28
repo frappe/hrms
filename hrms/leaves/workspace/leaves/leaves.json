@@ -1,11 +1,49 @@
 {
  "app": "hrms",
- "creation": "2025-10-26 21:53:46.590129",
+ "charts": [
+  {
+   "chart_name": "Leave Applications by Type",
+   "label": "Leave Applications by Type"
+  }
+ ],
+ "content": "[{\"id\":\"2c95e54b53\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Leave Applications by Type\",\"col\":12}},{\"id\":\"f219923446\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Number of Employees on Leave (Today)\",\"col\":4}},{\"id\":\"363b6269bd\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Number of Employees on Leave (This Month)\",\"col\":4}},{\"id\":\"d95373613c\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Holidays in this month\",\"col\":4}}]",
+ "creation": "2022-08-20 16:06:26.672497",
+ "custom_blocks": [],
  "docstatus": 0,
- "doctype": "Workspace Sidebar",
- "header_icon": "tree-palm",
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "tree-palm",
  "idx": 0,
- "items": [
+ "is_hidden": 0,
+ "label": "Leaves",
+ "links": [],
+ "modified": "2026-08-26 18:34:03.000000",
+ "modified_by": "Administrator",
+ "module": "Leaves",
+ "name": "Leaves",
+ "number_cards": [
+  {
+   "label": "Number of Employees on Leave (Today)",
+   "number_card_name": "Number of Employees on Leave (Today)"
+  },
+  {
+   "label": "Number of Employees on Leave (This Month)",
+   "number_card_name": "Number of Employees on Leave (This Month)"
+  },
+  {
+   "label": "Holidays in this month",
+   "number_card_name": "Holidays in this month"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 5.0,
+ "shortcuts": [],
+ "sidebar_items": [
   {
    "child": 0,
    "collapsible": 1,
@@ -15,6 +53,7 @@
    "label": "Home",
    "link_to": "Leaves",
    "link_type": "Workspace",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -27,6 +66,7 @@
    "label": "Leave Application",
    "link_to": "Leave Application",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -39,6 +79,7 @@
    "label": "Leave Encashment",
    "link_to": "Leave Encashment",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -51,6 +92,7 @@
    "label": "Leave Control Panel",
    "link_to": "Leave Control Panel",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -63,6 +105,7 @@
    "label": "Leave Policy Assignment",
    "link_to": "Leave Policy Assignment",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -75,6 +118,7 @@
    "label": "Leave Allocation",
    "link_to": "Leave Allocation",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -86,6 +130,7 @@
    "keep_closed": 1,
    "label": "Reports",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Section Break"
   },
@@ -98,6 +143,7 @@
    "label": "Leave Balance",
    "link_to": "Employee Leave Balance",
    "link_type": "Report",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -110,6 +156,7 @@
    "label": "Leave Balance Summary",
    "link_to": "Employee Leave Balance Summary",
    "link_type": "Report",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -122,6 +169,7 @@
    "label": "Employees Working on a Holiday",
    "link_to": "Employees working on a holiday",
    "link_type": "Report",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -133,6 +181,7 @@
    "keep_closed": 1,
    "label": "Setup",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Section Break"
   },
@@ -145,6 +194,7 @@
    "label": "Holiday List",
    "link_to": "Holiday List",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -156,6 +206,7 @@
    "label": "Holiday List Assignment",
    "link_to": "Holiday List Assignment",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -168,6 +219,7 @@
    "label": "Leave Period",
    "link_to": "Leave Period",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -180,6 +232,7 @@
    "label": "Leave Policy",
    "link_to": "Leave Policy",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -192,6 +245,7 @@
    "label": "Leave Block List",
    "link_to": "Leave Block List",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -204,6 +258,7 @@
    "label": "Leave Type",
    "link_to": "Leave Type",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -217,15 +272,12 @@
    "link_to": "HR Settings",
    "link_type": "DocType",
    "navigate_to_tab": "leaves_tab",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   }
  ],
- "modified": "2026-08-07 12:00:00.000000",
- "modified_by": "Administrator",
- "module": "Leaves",
- "name": "Leaves",
- "owner": "Administrator",
  "standard": 1,
- "title": "Leaves"
+ "title": "Leaves",
+ "type": "Workspace"
 }

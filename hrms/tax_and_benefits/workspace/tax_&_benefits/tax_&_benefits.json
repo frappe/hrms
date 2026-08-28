@@ -1,11 +1,49 @@
 {
  "app": "hrms",
- "creation": "2025-11-12 15:31:27.323617",
+ "charts": [
+  {
+   "chart_name": "Benefit Claims",
+   "label": "Benefit Claims"
+  }
+ ],
+ "content": "[{\"id\":\"2f9f8fdd6e\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Benefit Claims\",\"col\":12}},{\"id\":\"eaf196592f\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Declaration Submitted\",\"col\":4}},{\"id\":\"191a303e61\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Benefit Claims (This Month)\",\"col\":4}},{\"id\":\"e168404207\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Tax Exemption Proofs (This Year)\",\"col\":4}}]",
+ "creation": "2022-08-20 17:04:52.350699",
+ "custom_blocks": [],
  "docstatus": 0,
- "doctype": "Workspace Sidebar",
- "header_icon": "coins",
- "idx": 0,
- "items": [
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "coins",
+ "idx": 1,
+ "is_hidden": 0,
+ "label": "Tax & Benefits",
+ "links": [],
+ "modified": "2026-08-26 18:34:03.000000",
+ "modified_by": "Administrator",
+ "module": "Tax and Benefits",
+ "name": "Tax & Benefits",
+ "number_cards": [
+  {
+   "label": "Total Declaration Submitted",
+   "number_card_name": "Total Declaration Submitted"
+  },
+  {
+   "label": "Benefit Claims (This Month)",
+   "number_card_name": "Benefit Claims (This Month)"
+  },
+  {
+   "label": "Tax Exemption Proofs (This Year)",
+   "number_card_name": "Tax Exemption Proofs (This Year)"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [],
+ "sequence_id": 10.0,
+ "shortcuts": [],
+ "sidebar_items": [
   {
    "child": 0,
    "collapsible": 1,
@@ -15,6 +53,7 @@
    "label": "Home",
    "link_to": "Tax & Benefits",
    "link_type": "Workspace",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -27,6 +66,7 @@
    "label": "Exemption Declaration",
    "link_to": "Employee Tax Exemption Declaration",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -36,9 +76,10 @@
    "icon": "scale",
    "indent": 0,
    "keep_closed": 0,
-   "label": "Exemption Submission Proof",
+   "label": "Excemption Submission Proof",
    "link_to": "Employee Tax Exemption Proof Submission",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -51,6 +92,7 @@
    "label": "Benefit Application",
    "link_to": "Employee Benefit Application",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -63,6 +105,7 @@
    "label": "Benefit Claim",
    "link_to": "Employee Benefit Claim",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -74,6 +117,7 @@
    "keep_closed": 1,
    "label": "Reports",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Section Break"
   },
@@ -86,6 +130,7 @@
    "label": "Income Tax Computation",
    "link_to": "Income Tax Computation",
    "link_type": "Report",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -98,17 +143,7 @@
    "label": "Income Tax Deductions",
    "link_to": "Income Tax Deductions",
    "link_type": "Report",
-   "show_arrow": 0,
-   "type": "Link"
-  },
-  {
-   "child": 1,
-   "collapsible": 1,
-   "indent": 0,
-   "keep_closed": 0,
-   "label": "Accrued Earnings Report",
-   "link_to": "Accrued Earnings Report",
-   "link_type": "Report",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -120,6 +155,7 @@
    "keep_closed": 1,
    "label": "Setup",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Section Break"
   },
@@ -132,6 +168,7 @@
    "label": "Income Tax Slab",
    "link_to": "Income Tax Slab",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -144,15 +181,12 @@
    "label": "Exemption Category",
    "link_to": "Employee Tax Exemption Category",
    "link_type": "DocType",
+   "open_in_new_tab": 1,
    "show_arrow": 0,
    "type": "Link"
   }
  ],
- "modified": "2026-08-07 12:00:00.000000",
- "modified_by": "Administrator",
- "module": "Tax and Benefits",
- "name": "Tax & Benefits",
- "owner": "Administrator",
  "standard": 1,
- "title": "Tax & Benefits"
+ "title": "Tax & Benefits",
+ "type": "Workspace"
 }
