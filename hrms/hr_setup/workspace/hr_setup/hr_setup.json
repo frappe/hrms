@@ -1,12 +1,50 @@
 {
  "app": "hrms",
- "creation": "2025-11-12 15:31:27.305365",
+ "charts": [
+  {
+   "chart_name": "Department Wise Employee Count",
+   "label": "Department Wise Employee Count"
+  }
+ ],
+ "content": "[{\"id\":\"6ff1e7c3de\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Department Wise Employee Count\",\"col\":12}},{\"id\":\"a81b2c6bd8\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Employees\",\"col\":4}},{\"id\":\"9ba6aa02f7\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Employees Joining (This Quarter)\",\"col\":4}},{\"id\":\"e1432ee93d\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Employees Relieving (This Quarter)\",\"col\":4}}]",
+ "creation": "2020-03-02 15:48:58.322521",
+ "custom_blocks": [],
  "docstatus": 0,
- "doctype": "Workspace Sidebar",
+ "doctype": "Workspace",
  "for_user": "",
- "header_icon": "briefcase-business",
- "idx": 0,
- "items": [
+ "hide_custom": 0,
+ "icon": "briefcase-business",
+ "idx": 1,
+ "is_hidden": 0,
+ "label": "HR Setup",
+ "links": [],
+ "modified": "2026-08-26 18:34:03.000000",
+ "modified_by": "Administrator",
+ "module": "HR Setup",
+ "name": "HR Setup",
+ "number_cards": [
+  {
+   "label": "Total Employees",
+   "number_card_name": "Total Employees"
+  },
+  {
+   "label": "Employees Joining (This Quarter)",
+   "number_card_name": "Employees Joining (This Quarter)"
+  },
+  {
+   "label": "Employees Relieving (This Quarter)",
+   "number_card_name": "Employees Relieving (This Quarter)"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "restrict_to_domain": "",
+ "roles": [],
+ "sequence_id": 1.0,
+ "shortcuts": [],
+ "sidebar_items": [
   {
    "child": 0,
    "collapsible": 1,
@@ -16,6 +54,7 @@
    "label": "Home",
    "link_to": "HR Setup",
    "link_type": "Workspace",
+   "open_in_new_tab": 0,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -28,6 +67,7 @@
    "label": "Dashboard",
    "link_to": "Human Resource",
    "link_type": "Dashboard",
+   "open_in_new_tab": 0,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -40,6 +80,7 @@
    "label": "Employee",
    "link_to": "Employee",
    "link_type": "DocType",
+   "open_in_new_tab": 0,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -52,6 +93,7 @@
    "label": "Organizational Chart",
    "link_to": "organizational-chart",
    "link_type": "Page",
+   "open_in_new_tab": 0,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -63,6 +105,7 @@
    "keep_closed": 1,
    "label": "Setup",
    "link_type": "DocType",
+   "open_in_new_tab": 0,
    "show_arrow": 0,
    "type": "Section Break"
   },
@@ -74,6 +117,7 @@
    "label": "Company",
    "link_to": "Company",
    "link_type": "DocType",
+   "open_in_new_tab": 0,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -85,6 +129,7 @@
    "label": "Branch",
    "link_to": "Branch",
    "link_type": "DocType",
+   "open_in_new_tab": 0,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -96,6 +141,7 @@
    "label": "Department",
    "link_to": "Department",
    "link_type": "DocType",
+   "open_in_new_tab": 0,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -107,6 +153,7 @@
    "label": "Designation",
    "link_to": "Designation",
    "link_type": "DocType",
+   "open_in_new_tab": 0,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -118,6 +165,7 @@
    "label": "Employee Group",
    "link_to": "Employee Group",
    "link_type": "DocType",
+   "open_in_new_tab": 0,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -129,6 +177,7 @@
    "label": "Employee Grade",
    "link_to": "Employee Grade",
    "link_type": "DocType",
+   "open_in_new_tab": 0,
    "show_arrow": 0,
    "type": "Link"
   },
@@ -142,17 +191,14 @@
    "link_to": "HR Settings",
    "link_type": "DocType",
    "navigate_to_tab": "employee_tab",
+   "open_in_new_tab": 0,
    "route_options": "",
    "show_arrow": 0,
    "type": "Link",
    "url": "/desk/hr-settings#employee_tab"
   }
  ],
- "modified": "2026-08-07 12:00:00.000000",
- "modified_by": "Administrator",
- "module": "HR Setup",
- "name": "HR Setup",
- "owner": "Administrator",
  "standard": 1,
- "title": "HR Setup"
+ "title": "HR Setup",
+ "type": "Workspace"
 }

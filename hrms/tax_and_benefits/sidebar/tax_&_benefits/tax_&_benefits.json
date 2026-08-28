@@ -1,8 +1,8 @@
 {
  "app": "hrms",
- "creation": "2025-11-12 15:31:27.323617",
+ "creation": "2026-08-07 12:00:00.000000",
  "docstatus": 0,
- "doctype": "Workspace Sidebar",
+ "doctype": "Sidebar",
  "header_icon": "coins",
  "idx": 0,
  "items": [
@@ -148,7 +148,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-08-07 12:00:00.000000",
+ "modified": "2026-08-27 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Tax and Benefits",
  "name": "Tax & Benefits",
