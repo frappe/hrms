@@ -28,7 +28,12 @@ from hrms.hr.doctype.employee_checkin.employee_checkin import (
 	calculate_working_hours,
 	mark_attendance_and_link_log,
 )
-from hrms.hr.doctype.shift_assignment.shift_assignment import get_employee_shift, get_shift_details
+from hrms.hr.doctype.shift_assignment.shift_assignment import (
+	get_employee_shift,
+	get_shift_details,
+	get_shifts_for_date,
+	get_valid_shifts_for_time,
+)
 from hrms.utils import get_date_range
 from hrms.utils.holiday_list import get_holiday_dates_between
 
@@ -365,7 +370,12 @@ class ShiftType(Document):
 
 		# check if shift is found for 1 day before the last sync of checkin
 		# absentees are auto-marked 1 day after the shift to wait for any manual attendance records
-		prev_shift = get_employee_shift(employee, last_shift_time - timedelta(days=1), True, "reverse")
+		ref_time = last_shift_time - timedelta(days=1)
+		prev_shift = get_employee_shift(employee, ref_time, True, "reverse")
+		if prev_shift and prev_shift.shift_type.name != self.name:
+			# an overlapping assignment may have won resolution; prefer this shift if also scheduled then
+			prev_shift = self.get_scheduled_shift_at(employee, ref_time) or prev_shift
+
 		if prev_shift and prev_shift.shift_type.name == self.name:
 			end_date = (
 				min(prev_shift.start_datetime.date(), relieving_date)
@@ -376,6 +386,11 @@ class ShiftType(Document):
 			# no shift found
 			return None, None
 		return start_date, end_date
+
+	def get_scheduled_shift_at(self, employee: str, for_timestamp: datetime) -> dict | None:
+		"""Return this shift's details if it is validly scheduled for the employee at the given timestamp"""
+		shifts = get_valid_shifts_for_time(get_shifts_for_date(employee, for_timestamp), for_timestamp)
+		return next((shift for shift in shifts if shift.shift_type.name == self.name), None)
 
 	def get_marked_attendance_dates_between(self, employee: str, start_date: str, end_date: str) -> list[str]:
 		Attendance = frappe.qb.DocType("Attendance")
