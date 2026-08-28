@@ -663,6 +663,47 @@ class TestShiftType(HRMSTestSuite):
 		attendance = frappe.db.get_value("Attendance", {"employee": employee}, "status")
 		self.assertIsNone(attendance)
 
+	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
+	def test_mark_absent_with_multiple_overlapping_shift_assignments(self):
+		"""Tests absent is marked for each shift when actual timings of multiple assignments overlap"""
+		employee = make_employee("test_employee_multishift@example.com", company="_Test Company")
+		today = getdate()
+		start_date = add_days(today, -5)
+		absent_date = add_days(today, -3)
+		last_sync = datetime.combine(today, get_time("06:00:00"))
+
+		# actual windows overlap (day: 05:00-23:00, night: 20:01-08:59) but raw timings don't
+		day_shift = setup_shift_type(
+			shift_type="Test Overlap Day",
+			start_time="06:00:00",
+			end_time="22:00:00",
+			process_attendance_after=start_date,
+			last_sync_of_checkin=last_sync,
+		)
+		night_shift = setup_shift_type(
+			shift_type="Test Overlap Night",
+			start_time="22:01:00",
+			end_time="05:59:00",
+			begin_check_in_before_shift_start_time=120,
+			allow_check_out_after_shift_end_time=180,
+			process_attendance_after=start_date,
+			last_sync_of_checkin=last_sync,
+		)
+
+		make_shift_assignment(day_shift.name, employee, start_date)
+		make_shift_assignment(night_shift.name, employee, start_date)
+
+		day_shift.process_auto_attendance()
+		night_shift.process_auto_attendance()
+
+		for shift in (day_shift, night_shift):
+			status = frappe.db.get_value(
+				"Attendance",
+				{"employee": employee, "shift": shift.name, "attendance_date": absent_date},
+				"status",
+			)
+			self.assertEqual(status, "Absent", msg=f"Absent not marked for {shift.name}")
+
 	def test_get_start_and_end_dates(self):
 		date = getdate()
 
