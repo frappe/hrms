@@ -1386,7 +1386,7 @@ class SalarySlip(TransactionBase):
 		default_data = data.copy()
 
 		for key in COMPONENT_PARENTFIELDS:
-			for d in self.get(key):
+			for d in self.get(key) or []:
 				default_data[d.abbr] = d.default_amount or 0
 				data[d.abbr] = d.amount or 0
 
