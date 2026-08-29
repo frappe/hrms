@@ -29,7 +29,7 @@
 		</template>
 
 		<div v-else class="font-medium text-sm text-gray-500 mt-1.5">
-			{{ dayjs().format("ddd, D MMMM, YYYY") }}
+			{{ serverNow ? dayjs(serverNow).format("ddd, D MMMM, YYYY") : "" }}
 		</div>
 	</div>
 
@@ -43,10 +43,10 @@
 		<div class="h-120 w-full flex flex-col items-center justify-center gap-5 p-4 mb-5">
 			<div class="flex flex-col gap-1.5 mt-2 items-center justify-center">
 				<div class="font-bold text-xl">
-					{{ dayjs(checkinTimestamp).format("hh:mm:ss a") }}
+					{{ checkinTimestamp ? dayjs(checkinTimestamp).format("hh:mm:ss a") : "" }}
 				</div>
 				<div class="font-medium text-gray-500 text-sm">
-					{{ dayjs().format("D MMM, YYYY") }}
+					{{ checkinTimestamp ? dayjs(checkinTimestamp).format("D MMM, YYYY") : "" }}
 				</div>
 			</div>
 
@@ -90,6 +90,7 @@ const DOCTYPE = "Employee Checkin"
 const socket = inject("$socket")
 const employee = inject("$employee")
 const dayjs = inject("$dayjs")
+const serverNow = ref(null)
 const __ = inject("$translate")
 const checkinTimestamp = ref(null)
 const latitude = ref(0)
@@ -144,9 +145,30 @@ const fetchLocation = () => {
 		navigator.geolocation.getCurrentPosition(handleLocationSuccess, handleLocationError)
 	}
 }
+async function fetchServerTime() {
+	try {
+		const res = await fetch("/api/method/frappe.ping", { credentials: "include" })
+		const dateHeader = res.headers.get("Date")
+		return dateHeader ? new Date(dateHeader) : null
+	} catch {
+		return null
+	}
+}
 
 const handleEmployeeCheckin = () => {
-	checkinTimestamp.value = dayjs().format("YYYY-MM-DD HH:mm:ss")
+	fetchServerTime().then((serverTime) => {
+		if (serverTime) {
+			checkinTimestamp.value = serverTime
+		} else {
+			toast({
+				title: __("Error"),
+				text: __("Unable to fetch server time. Please try again."),
+				icon: "alert-circle",
+				position: "bottom-center",
+				iconClasses: "text-red-500",
+			})
+		}
+	})
 
 	if (settings.data?.allow_geolocation_tracking) {
 		fetchLocation()
@@ -160,7 +182,6 @@ const submitLog = (logType) => {
 		{
 			employee: employee.data.name,
 			log_type: logType,
-			time: checkinTimestamp.value,
 			latitude: latitude.value,
 			longitude: longitude.value,
 		},
@@ -193,6 +214,10 @@ const submitLog = (logType) => {
 }
 
 onMounted(() => {
+	fetchServerTime().then((serverTime) => {
+		if (serverTime) serverNow.value = serverTime
+	})
+
 	socket.emit("doctype_subscribe", DOCTYPE)
 	socket.on("list_update", (data) => {
 		if (data.doctype == DOCTYPE) {
