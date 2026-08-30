@@ -512,3 +512,8 @@ def calculate_time_difference(start_time, end_time):
 	time_difference = abs(start_time - end_time)
 
 	return round(time_difference.total_seconds() / 3600, 2)
+
+
+@frappe.whitelist()
+def get_server_time():
+	return frappe.utils.now_datetime().strftime("%Y-%m-%d %H:%M:%S")

@@ -15,7 +15,7 @@
 			<Button
 				class="mt-4 mb-1 drop-shadow-sm py-5 text-base"
 				id="open-checkin-modal"
-				:loading="checkins.list.loading"
+				:loading="checkins.list.loading || fetchingServerTime"
 				@click="handleEmployeeCheckin"
 			>
 				<template #prefix>
@@ -35,10 +35,10 @@
 
 	<ion-modal
 		v-if="settings.data?.allow_employee_checkin_from_mobile_app"
-		ref="modal"
-		trigger="open-checkin-modal"
+		:is-open="isModalOpen"
 		:initial-breakpoint="1"
 		:breakpoints="[0, 1]"
+		@didDismiss="isModalOpen = false"
 	>
 		<div class="h-120 w-full flex flex-col items-center justify-center gap-5 p-4 mb-5">
 			<div class="flex flex-col gap-1.5 mt-2 items-center justify-center">
@@ -80,7 +80,7 @@
 <script setup>
 import { createListResource, toast, FeatherIcon } from "frappe-ui"
 import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
-import { IonModal, modalController } from "@ionic/vue"
+import { IonModal } from "@ionic/vue"
 
 import { formatTimestamp } from "@/utils/formatters"
 import { settings } from "@/data/settings"
@@ -96,6 +96,8 @@ const checkinTimestamp = ref(null)
 const latitude = ref(0)
 const longitude = ref(0)
 const locationStatus = ref("")
+const isModalOpen = ref(false)
+const fetchingServerTime = ref(false)
 
 const checkins = createListResource({
 	doctype: DOCTYPE,
@@ -147,31 +149,38 @@ const fetchLocation = () => {
 }
 async function fetchServerTime() {
 	try {
-		const res = await fetch("/api/method/frappe.ping", { credentials: "include" })
-		const dateHeader = res.headers.get("Date")
-		return dateHeader ? new Date(dateHeader) : null
+		const res = await fetch("/api/method/hrms.hr.doctype.employee_checkin.employee_checkin.get_server_time", {
+			credentials: "include",
+		})
+		const data = await res.json()
+		return data.message || null
 	} catch {
 		return null
 	}
 }
 
-const handleEmployeeCheckin = () => {
-	fetchServerTime().then((serverTime) => {
-		if (serverTime) {
-			checkinTimestamp.value = serverTime
-		} else {
-			toast({
-				title: __("Error"),
-				text: __("Unable to fetch server time. Please try again."),
-				icon: "alert-circle",
-				position: "bottom-center",
-				iconClasses: "text-red-500",
-			})
-		}
-	})
+const handleEmployeeCheckin = async () => {
+	fetchingServerTime.value = true
+	checkinTimestamp.value = null
 
-	if (settings.data?.allow_geolocation_tracking) {
-		fetchLocation()
+	const serverTime = await fetchServerTime()
+	fetchingServerTime.value = false
+
+	if (serverTime) {
+		checkinTimestamp.value = serverTime
+		isModalOpen.value = true
+
+		if (settings.data?.allow_geolocation_tracking) {
+			fetchLocation()
+		}
+	} else {
+		toast({
+			title: __("Error"),
+			text: __("Unable to fetch server time. Please try again."),
+			icon: "alert-circle",
+			position: "bottom-center",
+			iconClasses: "text-red-500",
+		})
 	}
 }
 
@@ -187,7 +196,7 @@ const submitLog = (logType) => {
 		},
 		{
 			onSuccess() {
-				modalController.dismiss()
+				isModalOpen.value = false
 				toast({
 					title: __("Success"),
 					text: __("{0} successful!", [actionLabel]),
