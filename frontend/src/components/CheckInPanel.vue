@@ -165,9 +165,10 @@ async function fetchServerTime() {
 function startLiveClock() {
 	stopLiveClock()
 	liveCheckinTimestamp.value = serverTimeAnchor.value.toDate()
+	deviceElapsedAnchor.value = performance.now()
 
 	tickInterval = setInterval(() => {
-		const elapsedMs = Date.now() - deviceElapsedAnchor.value
+		const elapsedMs = performance.now() - deviceElapsedAnchor.value
 		liveCheckinTimestamp.value = serverTimeAnchor.value.add(elapsedMs, "millisecond").toDate()
 	}, 1000)
 }
