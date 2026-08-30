@@ -62,10 +62,6 @@ class JobApplicant(Document):
 
 
 @frappe.whitelist()
-<<<<<<< HEAD
-def create_interview(doc, interview_round):
-	import json
-=======
 def make_employee(source_name: str, target_doc: str | Document | None = None) -> Document:
 	def set_missing_values(source, target):
 		target.employee_name = source.applicant_name
@@ -110,9 +106,8 @@ def make_employee(source_name: str, target_doc: str | Document | None = None) ->
 
 
 @frappe.whitelist()
-def create_kanban_board(board_name: str) -> dict:
-	frappe.has_permission("Job Applicant", throw=True)
->>>>>>> 0a0eb9a (feat(job_applicant): copy applicant data when creating an Employee (#5101))
+def create_interview(doc, interview_round):
+	import json
 
 	if isinstance(doc, str):
 		doc = json.loads(doc)

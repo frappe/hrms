@@ -53,10 +53,6 @@ class TestJobApplicant(FrappeTestCase):
 		job_offer.reload()
 		self.assertEqual(job_offer.status, "Accepted")
 
-<<<<<<< HEAD
-	def tearDown(self):
-		frappe.db.rollback()
-=======
 	def test_make_employee(self):
 		opening = get_job_opening(
 			job_title="Mapped Applicant Role",
@@ -91,4 +87,6 @@ class TestJobApplicant(FrappeTestCase):
 		self.assertEqual(employee.status, "Active")
 		self.assertEqual(employee.company, "_Test Company")
 		self.assertEqual(employee.department, "_Test Department - _TC")
->>>>>>> 0a0eb9a (feat(job_applicant): copy applicant data when creating an Employee (#5101))
+
+	def tearDown(self):
+		frappe.db.rollback()
