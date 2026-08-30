@@ -38,15 +38,15 @@
 		:is-open="isModalOpen"
 		:initial-breakpoint="1"
 		:breakpoints="[0, 1]"
-		@didDismiss="isModalOpen = false"
+		@didDismiss="handleModalDismiss"
 	>
 		<div class="h-120 w-full flex flex-col items-center justify-center gap-5 p-4 mb-5">
 			<div class="flex flex-col gap-1.5 mt-2 items-center justify-center">
 				<div class="font-bold text-xl">
-					{{ checkinTimestamp ? dayjs(checkinTimestamp).format("hh:mm:ss a") : "" }}
+					{{ liveCheckinTimestamp ? dayjs(liveCheckinTimestamp).format("hh:mm:ss a") : "" }}
 				</div>
 				<div class="font-medium text-gray-500 text-sm">
-					{{ checkinTimestamp ? dayjs(checkinTimestamp).format("D MMM, YYYY") : "" }}
+					{{ liveCheckinTimestamp ? dayjs(liveCheckinTimestamp).format("D MMM, YYYY") : "" }}
 				</div>
 			</div>
 
@@ -92,12 +92,15 @@ const employee = inject("$employee")
 const dayjs = inject("$dayjs")
 const serverNow = ref(null)
 const __ = inject("$translate")
-const checkinTimestamp = ref(null)
 const latitude = ref(0)
 const longitude = ref(0)
 const locationStatus = ref("")
 const isModalOpen = ref(false)
 const fetchingServerTime = ref(false)
+const serverTimeAnchor = ref(null)
+const deviceElapsedAnchor = ref(null)
+const liveCheckinTimestamp = ref(null)
+let tickInterval = null
 
 const checkins = createListResource({
 	doctype: DOCTYPE,
@@ -159,15 +162,33 @@ async function fetchServerTime() {
 	}
 }
 
+function startLiveClock() {
+	stopLiveClock()
+	liveCheckinTimestamp.value = serverTimeAnchor.value.toDate()
+
+	tickInterval = setInterval(() => {
+		const elapsedMs = Date.now() - deviceElapsedAnchor.value
+		liveCheckinTimestamp.value = serverTimeAnchor.value.add(elapsedMs, "millisecond").toDate()
+	}, 1000)
+}
+
+function stopLiveClock() {
+	if (tickInterval) {
+		clearInterval(tickInterval)
+		tickInterval = null
+	}
+}
+
 const handleEmployeeCheckin = async () => {
 	fetchingServerTime.value = true
-	checkinTimestamp.value = null
 
 	const serverTime = await fetchServerTime()
 	fetchingServerTime.value = false
 
 	if (serverTime) {
-		checkinTimestamp.value = serverTime
+		serverTimeAnchor.value = dayjs(serverTime)
+		deviceElapsedAnchor.value = Date.now()
+		startLiveClock()
 		isModalOpen.value = true
 
 		if (settings.data?.allow_geolocation_tracking) {
@@ -184,6 +205,11 @@ const handleEmployeeCheckin = async () => {
 	}
 }
 
+function handleModalDismiss() {
+	isModalOpen.value = false
+	stopLiveClock()
+}
+
 const submitLog = (logType) => {
 	const actionLabel = logType === "IN" ? __("Check-in") : __("Check-out")
 
@@ -197,6 +223,7 @@ const submitLog = (logType) => {
 		{
 			onSuccess() {
 				isModalOpen.value = false
+				stopLiveClock()
 				toast({
 					title: __("Success"),
 					text: __("{0} successful!", [actionLabel]),
@@ -236,6 +263,7 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
+	stopLiveClock()
 	socket.emit("doctype_unsubscribe", DOCTYPE)
 	socket.off("list_update")
 })
