@@ -212,6 +212,7 @@ function handleModalDismiss() {
 
 const submitLog = (logType) => {
 	const actionLabel = logType === "IN" ? __("Check-in") : __("Check-out")
+	stopLiveClock()
 
 	checkins.insert.submit(
 		{
@@ -221,16 +222,20 @@ const submitLog = (logType) => {
 			longitude: longitude.value,
 		},
 		{
-			onSuccess() {
+			onSuccess(data) {
 				isModalOpen.value = false
-				stopLiveClock()
+				const recordedTime = data?.time ? dayjs(data.time).format("hh:mm:ss a") : null
+
 				toast({
 					title: __("Success"),
-					text: __("{0} successful!", [actionLabel]),
+					text: recordedTime
+						? __("{0} recorded at {1}", [actionLabel, recordedTime])
+						: __("{0} successful!", [actionLabel]),
 					icon: "check-circle",
 					position: "bottom-center",
 					iconClasses: "text-green-500",
 				})
+				checkins.reload() // ensure lastLog reflects the just-created record immediately
 			},
 			onError(error) {
 				let messages = error.messages || []
