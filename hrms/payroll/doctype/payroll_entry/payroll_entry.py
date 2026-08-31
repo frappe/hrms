@@ -33,48 +33,6 @@ from hrms.payroll.doctype.salary_withholding.salary_withholding import link_bank
 
 
 class PayrollEntry(Document):
-<<<<<<< HEAD
-=======
-	# begin: auto-generated types
-	# This code is auto-generated. Do not modify anything in this block.
-
-	from typing import TYPE_CHECKING
-
-	if TYPE_CHECKING:
-		from frappe.types import DF
-
-		from hrms.payroll.doctype.payroll_employee_detail.payroll_employee_detail import PayrollEmployeeDetail
-
-		amended_from: DF.Link | None
-		bank_account: DF.Link | None
-		branch: DF.Link | None
-		company: DF.Link
-		cost_center: DF.Link
-		currency: DF.Link
-		deduct_tax_for_unsubmitted_tax_exemption_proof: DF.Check
-		department: DF.Link | None
-		designation: DF.Link | None
-		employees: DF.Table[PayrollEmployeeDetail]
-		end_date: DF.Date
-		error_message: DF.TextEditor | None
-		exchange_rate: DF.Float
-		grade: DF.Link | None
-		number_of_employees: DF.Int
-		overtime_step: DF.Literal["", "Create", "Submit"]
-		payment_account: DF.Link | None
-		payroll_frequency: DF.Literal["", "Monthly", "Fortnightly", "Bimonthly", "Weekly", "Daily"]
-		payroll_payable_account: DF.Link
-		posting_date: DF.Date
-		project: DF.Link | None
-		salary_slip_based_on_timesheet: DF.Check
-		salary_slips_created: DF.Check
-		salary_slips_submitted: DF.Check
-		start_date: DF.Date
-		status: DF.Literal["Draft", "Submitted", "Cancelled", "Queued", "Failed"]
-		validate_attendance: DF.Check
-	# end: auto-generated types
-
->>>>>>> 22f5c31 (fix: error message in html to text)
 	def onload(self):
 		if not self.docstatus == 1 or self.salary_slips_submitted:
 			return

@@ -334,18 +334,8 @@
  ],
  "icon": "fa fa-cog",
  "is_submittable": 1,
-<<<<<<< HEAD
  "links": [],
- "modified": "2025-01-22 15:27:16.652848",
-=======
- "links": [
-  {
-   "link_doctype": "Overtime Slip",
-   "link_fieldname": "payroll_entry"
-  }
- ],
  "modified": "2026-07-28 20:19:41.847412",
->>>>>>> 22f5c31 (fix: error message in html to text)
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",
