@@ -43,6 +43,7 @@ from hrms.payroll.doctype.salary_slip.salary_slip import (
 	TAX_COMPONENTS_BY_COMPANY,
 	SalarySlip,
 	_safe_eval,
+	generate_password_for_pdf,
 	make_salary_slip_from_timesheet,
 )
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
@@ -921,6 +922,19 @@ class TestSalarySlip(HRMSTestSuite):
 		ss.submit()
 
 		self.assertIsNotNone(get_email_by_subject("Test Salary Slip Email Template"))
+
+	@HRMSTestSuite.change_settings("System Settings", {"date_format": "dd-mm-yyyy"})
+	def test_pdf_password_uses_system_date_format(self):
+		emp_id = make_employee("test_pdf_password@salary.com", company="_Test Company")
+
+		# the format is cached per request, reset it so that the changed setting is picked up
+		frappe.local.user_date_format = None
+		self.addCleanup(setattr, frappe.local, "user_date_format", None)
+
+		self.assertEqual(generate_password_for_pdf("{date_of_birth}", emp_id), "08-05-1990")
+		# the value is still a date, so attribute access and format specs keep working
+		self.assertEqual(generate_password_for_pdf("SAL-{date_of_birth.year}", emp_id), "SAL-1990")
+		self.assertEqual(generate_password_for_pdf("{date_of_birth:%d%m%Y}", emp_id), "08051990")
 
 	def test_payroll_frequency(self):
 		fiscal_year = get_fiscal_year(nowdate(), company="_Test Company")[0]
