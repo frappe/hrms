@@ -11,6 +11,7 @@
   "naming_series",
   "employee",
   "employee_name",
+  "employee_email",
   "column_break_4",
   "leave_type",
   "company",
@@ -65,6 +66,16 @@
    "fieldtype": "Data",
    "in_global_search": 1,
    "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fetch_from": "employee.user_id",
+   "fieldname": "employee_email",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Employee Email",
+   "options": "Email",
    "read_only": 1
   },
   {
@@ -255,7 +266,7 @@
  "is_submittable": 1,
  "links": [],
  "max_attachments": 3,
- "modified": "2026-01-27 12:02:51.679025",
+ "modified": "2026-08-29 13:04:47.671748",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Application",

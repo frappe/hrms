@@ -82,6 +82,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		department: DF.Link | None
 		description: DF.SmallText | None
 		employee: DF.Link
+		employee_email: DF.Data | None
 		employee_name: DF.Data | None
 		follow_via_email: DF.Check
 		from_date: DF.Date
