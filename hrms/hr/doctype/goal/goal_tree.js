@@ -230,6 +230,7 @@ frappe.treeview_settings["Goal"] = {
 	toolbar: [
 		{
 			label: __("Update Progress"),
+			icon: "trending-up",
 			condition: function (node) {
 				return !node.root && !node.expandable;
 			},
@@ -255,6 +256,7 @@ frappe.treeview_settings["Goal"] = {
 		},
 		{
 			label: __("Mark as Completed"),
+			icon: "check",
 			condition: function (node) {
 				return !node.is_root && !node.expandable && node.data.status != "Completed";
 			},
