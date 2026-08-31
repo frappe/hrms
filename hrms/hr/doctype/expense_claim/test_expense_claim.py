@@ -1212,6 +1212,55 @@ class TestExpenseClaim(HRMSTestSuite):
 		self.assertEqual(advance.status, "Paid")
 		self.assertEqual(advance.claimed_amount, 0)
 
+	def test_expense_claim_advance_zero_or_none_exchange_rate(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			get_advances_for_claim,
+			make_employee_advance,
+			manual_journal_entry_for_advance,
+		)
+
+		payable_account = get_payable_account("_Test Company")
+		claim = make_expense_claim(
+			payable_account,
+			1000,
+			1000,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			do_not_submit=True,
+		)
+
+		advance = make_employee_advance(claim.employee)
+		je = manual_journal_entry_for_advance(advance)
+		je.submit()
+
+		# Case 1: Test with exchange_rate = 0.0
+		claim = get_advances_for_claim(claim, advance.name)
+		self.assertEqual(len(claim.advances), 1)
+		claim.advances[0].exchange_rate = 0.0
+
+		claim.save()
+		claim.submit()
+		self.assertEqual(flt(claim.total_exchange_gain_loss), 0.0)
+		claim.cancel()
+
+		# Case 2: Test with exchange_rate = None
+		claim = make_expense_claim(
+			payable_account,
+			1000,
+			1000,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			do_not_submit=True,
+		)
+		claim = get_advances_for_claim(claim, advance.name)
+		self.assertEqual(len(claim.advances), 1)
+		claim.advances[0].exchange_rate = None
+
+		claim.save()
+		claim.submit()
+		self.assertEqual(flt(claim.total_exchange_gain_loss), 0.0)
+		claim.cancel()
+
 
 def get_payable_account(company):
 	return frappe.get_cached_value("Company", company, "default_payable_account")

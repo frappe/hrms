@@ -374,9 +374,8 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		total_advance_exchange_gain_loss = 0
 		for advance in self.advances:
 			if advance.base_allocated_amount and self.base_total_advance_amount:
-				allocated_amount_in_adv_exchange_rate = flt(advance.allocated_amount) * flt(
-					advance.exchange_rate
-				)
+				advance_exchange_rate = flt(advance.exchange_rate) or 1.0
+				allocated_amount_in_adv_exchange_rate = flt(advance.allocated_amount) * advance_exchange_rate
 				per_advance_gain_loss += flt(
 					(advance.base_allocated_amount - allocated_amount_in_adv_exchange_rate),
 					self.precision("total_exchange_gain_loss"),
@@ -396,6 +395,9 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 			dr_or_cr = "credit" if self.total_exchange_gain_loss > 0 else "debit"
 			reverse_dr_or_cr = "debit" if dr_or_cr == "credit" else "credit"
 
+			cost_center = self.cost_center or (self.expenses[0].cost_center if self.expenses else None)
+			project = self.project or (self.expenses[0].project if self.expenses else None)
+
 			je = create_gain_loss_journal(
 				company=self.company,
 				posting_date=today(),
@@ -412,8 +414,9 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 				ref2_dt=self.doctype,
 				ref2_dn=self.name,
 				ref2_detail_no=1,
-				cost_center=self.cost_center,
+				cost_center=cost_center,
 				dimensions={},
+				project=project,
 			)
 			frappe.msgprint(
 				_("All Exchange Gain/Loss amount of {0} has been booked through {1}").format(
@@ -827,7 +830,7 @@ def get_expense_claim_advances(expense_claim, employee_advance):
 				"unclaimed_amount": unclaimed_amount,
 				"allocated_amount": allocated_amount,
 				"return_amount": return_amount,
-				"exchange_rate": advance["exchange_rate"],
+				"exchange_rate": flt(advance["exchange_rate"]) or 1.0,
 				"reference_type": advance["voucher_type"],
 				"reference_name": advance["voucher_no"],
 			},
