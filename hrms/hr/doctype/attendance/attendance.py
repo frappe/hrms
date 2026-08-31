@@ -289,7 +289,12 @@ class Attendance(Document):
 
 
 @frappe.whitelist()
-def get_events(start: date | str, end: date | str, filters: str | list | None = None) -> list[dict]:
+def get_events(
+	start: date | str,
+	end: date | str,
+	filters: str | list | None = None,
+	order_by: str | None = None,
+) -> list[dict]:
 	employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user})
 	if not employee:
 		return []
@@ -301,12 +306,12 @@ def get_events(start: date | str, end: date | str, filters: str | list | None = 
 	if not filters:
 		filters = []
 	filters.append(["attendance_date", "between", [get_datetime(start).date(), get_datetime(end).date()]])
-	attendance_records = add_attendance(filters)
+	attendance_records = add_attendance(filters, order_by)
 	add_holidays(attendance_records, start, end, employee)
 	return attendance_records
 
 
-def add_attendance(filters):
+def add_attendance(filters, order_by=None):
 	attendance = frappe.get_list(
 		"Attendance",
 		fields=[
@@ -318,6 +323,7 @@ def add_attendance(filters):
 			"docstatus",
 		],
 		filters=filters,
+		order_by=order_by,
 	)
 	for record in attendance:
 		record["title"] = f"{record['employee_name']} : {record['status']}"
