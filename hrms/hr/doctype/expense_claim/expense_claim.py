@@ -426,7 +426,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		per_advance_gain_loss = 0
 		total_advance_exchange_gain_loss = 0
 		for advance in self.advances:
-			if advance.base_allocated_amount and self.base_total_advance_amount:
+			if advance.exchange_rate and advance.base_allocated_amount and self.base_total_advance_amount:
 				allocated_amount_in_adv_exchange_rate = flt(advance.allocated_amount) * flt(
 					advance.exchange_rate
 				)
