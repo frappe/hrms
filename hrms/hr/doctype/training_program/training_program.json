@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:training_program",
  "creation": "2017-10-11 04:43:17.230065",
@@ -102,7 +103,7 @@
   }
  ],
  "links": [],
- "modified": "2026-03-24 17:33:35.839192",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Training Program",

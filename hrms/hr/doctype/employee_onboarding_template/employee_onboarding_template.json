@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "HR-EMP-ONT-.#####",
  "creation": "2018-05-09 05:27:02.393377",
  "doctype": "DocType",
@@ -68,7 +69,7 @@
   }
  ],
  "links": [],
- "modified": "2026-04-07 17:54:37.020259",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Onboarding Template",

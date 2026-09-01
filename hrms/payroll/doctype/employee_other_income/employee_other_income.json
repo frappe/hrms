@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "HR-INCOME-.######",
  "creation": "2020-03-18 15:04:40.767434",
  "doctype": "DocType",

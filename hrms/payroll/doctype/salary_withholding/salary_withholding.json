@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "format:SAL-WTH-{#####}",
  "creation": "2024-07-01 07:28:05.514677",
  "doctype": "DocType",
@@ -176,7 +177,7 @@
    "link_fieldname": "salary_withholding"
   }
  ],
- "modified": "2024-07-22 18:24:24.217371",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Withholding",
