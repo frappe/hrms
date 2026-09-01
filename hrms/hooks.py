@@ -263,6 +263,8 @@ accounting_dimension_doctypes = [
 
 bank_reconciliation_doctypes = ["Expense Claim"]
 
+audit_trail_doctypes = ["Expense Claim", "Payroll Entry", "Salary Slip", "Leave Encashment", "Gratuity"]
+
 repost_allowed_doctypes = ["Expense Claim"]
 
 # Testing
