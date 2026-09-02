@@ -119,21 +119,25 @@ def get_holiday_list_for_employee(
 def get_assigned_holiday_list(assigned_to: str, as_on=None, as_dict: bool = False) -> str:
 	as_on = frappe.utils.getdate(as_on)
 	HLA = frappe.qb.DocType("Holiday List Assignment")
-	HolidayList = frappe.qb.DocType("Holiday List")
 	query = (
 		frappe.qb.from_(HLA)
-		.join(HolidayList)
-		.on(HLA.holiday_list == HolidayList.name)
 		.select(HLA.holiday_list)
 		.where(HLA.assigned_to == assigned_to)
 		.where(HLA.from_date <= as_on)
 		.where(HLA.docstatus == 1)
-		.where(HolidayList.to_date >= as_on)
 		.orderby(HLA.from_date, order=frappe.qb.desc)
 		.limit(1)
 	)
 	if as_dict:
-		query = query.select(HLA.from_date, HLA.override_shift_holiday_list)
+		# also expose the Holiday List's own to_date, for callers to check if it has expired
+		HolidayList = frappe.qb.DocType("Holiday List")
+		query = (
+			query.join(HolidayList)
+			.on(HLA.holiday_list == HolidayList.name)
+			.select(
+				HLA.from_date, HLA.override_shift_holiday_list, HolidayList.to_date.as_("holiday_list_to_date")
+			)
+		)
 		holiday_list = query.run(as_dict=True)
 		return holiday_list[0] if holiday_list else None
 

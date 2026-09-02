@@ -4,7 +4,7 @@
 from contextlib import contextmanager
 
 import frappe
-from frappe.utils import add_months, add_years, get_year_ending, get_year_start, getdate
+from frappe.utils import add_months, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
@@ -73,22 +73,6 @@ class IntegrationTestHolidayListAssignment(HRMSTestSuite):
 		employee = make_employee("test_default_hla@example.com", company="_Test Company")
 		holiday_list = get_holiday_list_for_employee(employee, as_on=getdate())
 		self.assertEqual(holiday_list, self.holiday_list)
-
-	def test_expired_holiday_list_assignment_is_not_used(self):
-		employee = make_employee("test_expired_hla@example.com", company="_Test Company")
-		expired_holiday_list = make_holiday_list(
-			list_name="Test HLA Expired",
-			from_date=get_year_start(add_years(getdate(), -1)),
-			to_date=get_year_ending(add_years(getdate(), -1)),
-		)
-		create_holiday_list_assignment(
-			"Employee",
-			assigned_to=employee,
-			holiday_list=expired_holiday_list,
-			from_date=get_year_start(add_years(getdate(), -1)),
-		)
-		holiday_list = get_holiday_list_for_employee(employee, raise_exception=False, as_on=getdate())
-		self.assertIsNone(holiday_list)
 
 
 def create_holiday_list_assignment(

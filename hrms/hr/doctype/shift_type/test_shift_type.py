@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 import frappe
 from frappe.utils import (
 	add_days,
+	add_years,
 	get_datetime,
 	get_time,
 	get_year_ending,
@@ -687,6 +688,26 @@ class TestShiftType(HRMSTestSuite):
 		)
 		# employee's holiday list assignment is used once override is checked
 		self.assertEqual(shift_type.get_holiday_list(employee), self.holiday_list)
+
+	def test_expired_override_assignment_does_not_override_shift_holiday_list(self):
+		shift_type = setup_shift_type()
+		employee = make_employee("test_expired_override@example.com", company="_Test Company")
+
+		expired_holiday_list = make_holiday_list(
+			"Test Expired Override Holiday List",
+			from_date=get_year_start(add_years(getdate(), -1)),
+			to_date=get_year_ending(add_years(getdate(), -1)),
+		)
+		create_holiday_list_assignment(
+			"Employee",
+			assigned_to=employee,
+			holiday_list=expired_holiday_list,
+			from_date=get_year_start(add_years(getdate(), -1)),
+			override_shift_holiday_list=1,
+		)
+
+		# override is checked, but its holiday list has expired, so shift type's list is used
+		self.assertEqual(shift_type.get_holiday_list(employee), shift_type.holiday_list)
 
 	def test_skip_absent_marking_for_a_fallback_default_shift(self):
 		"""

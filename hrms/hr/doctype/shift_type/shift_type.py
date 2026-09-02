@@ -442,7 +442,9 @@ class ShiftType(Document):
 	def get_holiday_list(self, employee: str, date=None) -> str:
 		assigned_holiday_list = get_holiday_list_for_employee(employee, False, as_on=date, as_dict=True)
 		if assigned_holiday_list and assigned_holiday_list.override_shift_holiday_list:
-			return assigned_holiday_list.holiday_list
+			# ignore the override if its holiday list has since expired
+			if getdate(assigned_holiday_list.holiday_list_to_date) >= getdate(date):
+				return assigned_holiday_list.holiday_list
 
 		if self.holiday_list:
 			return self.holiday_list
