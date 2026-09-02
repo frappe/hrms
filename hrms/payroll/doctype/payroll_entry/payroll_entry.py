@@ -1702,6 +1702,7 @@ def create_salary_slips_for_employees(employees, args, publish_progress=True):
 		preloaded_data = preload_payroll_data_for_employees(employees, args)
 		sal_struct_map = preloaded_data.get("sal_struct_map", {})
 
+		frappe.flags.payroll_sal_struct_map = sal_struct_map
 		frappe.flags.payroll_additional_salaries = preloaded_data.get("additional_salaries")
 		frappe.flags.payroll_salary_withholdings = preloaded_data.get("salary_withholdings")
 
@@ -1733,6 +1734,7 @@ def create_salary_slips_for_employees(employees, args, publish_progress=True):
 						title=_("Creating Salary Slips..."),
 					)
 		finally:
+			frappe.flags.payroll_sal_struct_map = None
 			frappe.flags.payroll_additional_salaries = None
 			frappe.flags.payroll_salary_withholdings = None
 

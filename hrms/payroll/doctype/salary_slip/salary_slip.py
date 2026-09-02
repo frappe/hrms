@@ -493,8 +493,20 @@ class SalarySlip(TransactionBase):
 			self.append("timesheets", {"time_sheet": data.name, "working_hours": data.total_hours})
 
 	def check_sal_struct(self):
-		if self.payroll_entry and self.salary_structure:
-			return self.salary_structure
+		if getattr(frappe.flags, "payroll_sal_struct_map", None) is not None:
+			st_name = frappe.flags.payroll_sal_struct_map.get(self.employee)
+			if st_name:
+				self.salary_structure = st_name
+				return self.salary_structure
+			else:
+				self.salary_structure = None
+				frappe.msgprint(
+					_("No active or default Salary Structure found for employee {0} for the given dates").format(
+						self.employee
+					),
+					title=_("Salary Structure Missing"),
+				)
+				return None
 
 		ss = frappe.qb.DocType("Salary Structure")
 		ssa = frappe.qb.DocType("Salary Structure Assignment")
