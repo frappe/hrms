@@ -493,7 +493,7 @@ class SalarySlip(TransactionBase):
 			self.append("timesheets", {"time_sheet": data.name, "working_hours": data.total_hours})
 
 	def check_sal_struct(self):
-		if self.salary_structure:
+		if self.payroll_entry and self.salary_structure:
 			return self.salary_structure
 
 		ss = frappe.qb.DocType("Salary Structure")
