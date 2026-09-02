@@ -728,7 +728,7 @@ def get_holidays_for_employee(employee, start_date, end_date, raise_exception=Tr
 
 	return: list of dicts with `holiday_date` and `description`
 	"""
-	holiday_list = get_holiday_list_for_employee(employee, raise_exception=raise_exception)
+	holiday_list = get_holiday_list_for_employee(employee, raise_exception=raise_exception, as_on=start_date)
 
 	if not holiday_list:
 		return []

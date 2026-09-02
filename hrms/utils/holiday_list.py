@@ -135,7 +135,9 @@ def get_assigned_holiday_list(assigned_to: str, as_on=None, as_dict: bool = Fals
 			query.join(HolidayList)
 			.on(HLA.holiday_list == HolidayList.name)
 			.select(
-				HLA.from_date, HLA.override_shift_holiday_list, HolidayList.to_date.as_("holiday_list_to_date")
+				HLA.from_date,
+				HLA.override_shift_holiday_list,
+				HolidayList.to_date.as_("holiday_list_to_date"),
 			)
 		)
 		holiday_list = query.run(as_dict=True)
