@@ -523,6 +523,60 @@ class TestShiftType(HRMSTestSuite):
 			"Absent",
 		)
 
+	def test_backfill_recognizes_holidays_across_assignment_change(self):
+		employee = make_employee("test_holiday_backfill@example.com", company="_Test Company")
+		today = getdate()
+		process_attendance_after = add_days(today, -6)
+
+		shift_type = setup_shift_type(
+			shift_type="Test Holiday Backfill",
+			process_attendance_after=process_attendance_after,
+			last_sync_of_checkin=f"{today} 15:00:00",
+		)
+		shift_type.holiday_list = None
+		shift_type.save()
+
+		make_shift_assignment(shift_type.name, employee, process_attendance_after)
+
+		old_holiday_list = make_holiday_list(
+			"Test Holiday Backfill Old",
+			from_date=process_attendance_after,
+			to_date=today,
+			add_weekly_offs=False,
+		)
+		new_holiday_list = make_holiday_list(
+			"Test Holiday Backfill New",
+			from_date=process_attendance_after,
+			to_date=today,
+			add_weekly_offs=False,
+		)
+		old_list_holiday = add_days(today, -5)
+		new_list_holiday = add_days(today, -1)
+		add_date_to_holiday_list(old_list_holiday, old_holiday_list)
+		add_date_to_holiday_list(new_list_holiday, new_holiday_list)
+
+		# employee follows old_holiday_list first, then switches to new_holiday_list partway through the backfill range
+		create_holiday_list_assignment(
+			"Employee",
+			assigned_to=employee,
+			holiday_list=old_holiday_list,
+			from_date=process_attendance_after,
+		)
+		create_holiday_list_assignment(
+			"Employee", assigned_to=employee, holiday_list=new_holiday_list, from_date=add_days(today, -2)
+		)
+
+		shift_type.process_auto_attendance()
+
+		# old_list_holiday falls under old_holiday_list's assignment period and must still be recognized,
+		# even though new_holiday_list is the assignment active "today"
+		self.assertIsNone(
+			frappe.db.get_value("Attendance", {"employee": employee, "attendance_date": old_list_holiday})
+		)
+		self.assertIsNone(
+			frappe.db.get_value("Attendance", {"employee": employee, "attendance_date": new_list_holiday})
+		)
+
 	def test_do_not_mark_absent_before_shift_actual_end_time(self):
 		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 
