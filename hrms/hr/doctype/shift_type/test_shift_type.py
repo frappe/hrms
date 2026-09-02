@@ -15,7 +15,10 @@ from frappe.utils import (
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
-from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import assign_holiday_list
+from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+	assign_holiday_list,
+	create_holiday_list_assignment,
+)
 from hrms.hr.doctype.leave_application.test_leave_application import get_first_sunday
 from hrms.hr.doctype.shift_type.shift_type import update_last_sync_of_checkin
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
@@ -608,6 +611,28 @@ class TestShiftType(HRMSTestSuite):
 			{"attendance_date": first_sunday, "employee": employee},
 		)
 		self.assertIsNone(attendance)
+
+	def test_shift_type_holiday_list_overridden_by_holiday_list_assignment(self):
+		shift_type = setup_shift_type()
+		employee = make_employee("test_hla_override_shift@example.com", company="_Test Company")
+
+		create_holiday_list_assignment(
+			"Employee",
+			assigned_to=employee,
+			holiday_list=self.holiday_list,
+			from_date=get_year_start(getdate()),
+		)
+		# shift type's holiday list is used when override is not set
+		self.assertEqual(shift_type.get_holiday_list(employee), shift_type.holiday_list)
+
+		frappe.db.set_value(
+			"Holiday List Assignment",
+			{"assigned_to": employee, "holiday_list": self.holiday_list},
+			"override_shift_holiday_list",
+			1,
+		)
+		# employee's holiday list assignment is used once override is checked
+		self.assertEqual(shift_type.get_holiday_list(employee), self.holiday_list)
 
 	def test_skip_absent_marking_for_a_fallback_default_shift(self):
 		"""
