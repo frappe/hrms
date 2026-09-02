@@ -1600,7 +1600,7 @@ def log_payroll_failure(process, payroll_entry, error):
 
 def preload_payroll_data_for_employees(employees, args):
 	if not employees:
-		return {}
+		return {"sal_struct_map": {}, "additional_salaries": {}, "salary_withholdings": {}}
 
 	emp_records = frappe.get_all(
 		"Employee",
@@ -1628,7 +1628,6 @@ def preload_payroll_data_for_employees(employees, args):
 		h_list = emp.holiday_list or company_holiday_list
 		if h_list:
 			holiday_lists.add(h_list)
-
 
 	from hrms.payroll.doctype.salary_slip.salary_slip import HOLIDAYS_BETWEEN_DATES
 	from hrms.utils.holiday_list import get_holiday_dates_between
@@ -1660,7 +1659,6 @@ def preload_payroll_data_for_employees(employees, args):
 		.orderby(SalaryStructureAssignment.from_date, order=frappe.qb.desc)
 	)
 
-
 	if args.get("company"):
 		sal_struct_query = sal_struct_query.where(SalaryStructureAssignment.company == args.get("company"))
 
@@ -1670,15 +1668,27 @@ def preload_payroll_data_for_employees(employees, args):
 	if not args.get("salary_slip_based_on_timesheet") and args.get("payroll_frequency"):
 		sal_struct_query = sal_struct_query.where(SalaryStructure.payroll_frequency == args.get("payroll_frequency"))
 
-
 	struct_rows = sal_struct_query.run(as_dict=True)
 	sal_struct_map = {}
 	for r in struct_rows:
 		if r.employee not in sal_struct_map:
 			sal_struct_map[r.employee] = r.salary_structure
 
-	return sal_struct_map
+	from hrms.payroll.doctype.additional_salary.additional_salary import get_additional_salaries
 
+	additional_salaries = {
+		"earnings": get_additional_salaries(employees, args.get("start_date"), args.get("end_date"), "earnings"),
+		"deductions": get_additional_salaries(employees, args.get("start_date"), args.get("end_date"), "deductions"),
+	}
+
+	withholdings_list = get_salary_withholdings(args.get("start_date"), args.get("end_date"), employees)
+	salary_withholdings = {w.employee: w for w in withholdings_list} if withholdings_list else {}
+
+	return {
+		"sal_struct_map": sal_struct_map,
+		"additional_salaries": additional_salaries,
+		"salary_withholdings": salary_withholdings,
+	}
 
 
 def create_salary_slips_for_employees(employees, args, publish_progress=True):
@@ -1689,35 +1699,42 @@ def create_salary_slips_for_employees(employees, args, publish_progress=True):
 		count = 0
 
 		employees = list(set(employees) - set(salary_slips_exist_for))
-		sal_struct_map = preload_payroll_data_for_employees(employees, args)
+		preloaded_data = preload_payroll_data_for_employees(employees, args)
+		sal_struct_map = preloaded_data.get("sal_struct_map", {})
 
-		for emp in employees:
-			slip_args = {
-				"doctype": "Salary Slip",
-				"employee": emp,
-				"salary_structure": sal_struct_map.get(emp),
-				"salary_slip_based_on_timesheet": args.get("salary_slip_based_on_timesheet"),
-				"payroll_frequency": args.get("payroll_frequency"),
-				"start_date": args.get("start_date"),
-				"end_date": args.get("end_date"),
-				"company": args.get("company"),
-				"posting_date": args.get("posting_date"),
-				"deduct_tax_for_unsubmitted_tax_exemption_proof": args.get(
-					"deduct_tax_for_unsubmitted_tax_exemption_proof"
-				),
-				"payroll_entry": args.get("payroll_entry"),
-				"exchange_rate": args.get("exchange_rate"),
-				"currency": args.get("currency"),
-			}
-			frappe.get_doc(slip_args).insert()
+		frappe.flags.payroll_additional_salaries = preloaded_data.get("additional_salaries")
+		frappe.flags.payroll_salary_withholdings = preloaded_data.get("salary_withholdings")
 
+		try:
+			for emp in employees:
+				slip_args = {
+					"doctype": "Salary Slip",
+					"employee": emp,
+					"salary_structure": sal_struct_map.get(emp),
+					"salary_slip_based_on_timesheet": args.get("salary_slip_based_on_timesheet"),
+					"payroll_frequency": args.get("payroll_frequency"),
+					"start_date": args.get("start_date"),
+					"end_date": args.get("end_date"),
+					"company": args.get("company"),
+					"posting_date": args.get("posting_date"),
+					"deduct_tax_for_unsubmitted_tax_exemption_proof": args.get(
+						"deduct_tax_for_unsubmitted_tax_exemption_proof"
+					),
+					"payroll_entry": args.get("payroll_entry"),
+					"exchange_rate": args.get("exchange_rate"),
+					"currency": args.get("currency"),
+				}
+				frappe.get_doc(slip_args).insert()
 
-			count += 1
-			if publish_progress:
-				frappe.publish_progress(
-					count * 100 / len(employees),
-					title=_("Creating Salary Slips..."),
-				)
+				count += 1
+				if publish_progress:
+					frappe.publish_progress(
+						count * 100 / len(employees),
+						title=_("Creating Salary Slips..."),
+					)
+		finally:
+			frappe.flags.payroll_additional_salaries = None
+			frappe.flags.payroll_salary_withholdings = None
 
 		payroll_entry.db_set({"status": "Submitted", "salary_slips_created": 1, "error_message": ""})
 

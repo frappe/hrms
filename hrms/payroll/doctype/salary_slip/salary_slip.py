@@ -269,7 +269,12 @@ class SalarySlip(TransactionBase):
 			self.current_payroll_period = self.payroll_period.name
 
 	def check_salary_withholding(self):
-		withholding = get_salary_withholdings(self.start_date, self.end_date, self.employee)
+		if getattr(frappe.flags, "payroll_salary_withholdings", None) is not None:
+			withholding_entry = frappe.flags.payroll_salary_withholdings.get(self.employee)
+			withholding = [withholding_entry] if withholding_entry else []
+		else:
+			withholding = get_salary_withholdings(self.start_date, self.end_date, self.employee)
+
 		if withholding:
 			self.salary_withholding = withholding[0].salary_withholding
 			self.salary_withholding_cycle = withholding[0].salary_withholding_cycle
@@ -1647,9 +1652,15 @@ class SalarySlip(TransactionBase):
 		return current_period_benefit, is_accrual
 
 	def add_additional_salary_components(self, component_type):
-		additional_salaries = get_additional_salaries(
-			self.employee, self.start_date, self.end_date, component_type
-		)
+		if (
+			getattr(frappe.flags, "payroll_additional_salaries", None) is not None
+			and component_type in frappe.flags.payroll_additional_salaries
+		):
+			additional_salaries = frappe.flags.payroll_additional_salaries[component_type].get(self.employee, [])
+		else:
+			additional_salaries = get_additional_salaries(
+				self.employee, self.start_date, self.end_date, component_type
+			)
 
 		for additional_salary in additional_salaries:
 			component_data = get_salary_component_data(additional_salary.component)
