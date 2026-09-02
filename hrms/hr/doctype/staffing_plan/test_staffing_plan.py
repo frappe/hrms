@@ -102,6 +102,47 @@ class TestStaffingPlan(HRMSTestSuite):
 		self.assertEqual(staffing_plan_detail.current_count, 1)
 		self.assertEqual(staffing_plan_detail.number_of_positions, 5)
 
+	def test_number_of_positions_updates_when_vacancies_decrease(self):
+		# Covers the server-side invariant only: StaffingPlan.set_number_of_positions()
+		# (staffing_plan.py) must always recompute number_of_positions as
+		# vacancies + current_count, even when vacancies is reduced.
+		#
+		# NOTE: this does NOT cover the client-side bug it was written for, where
+		# staffing_plan.js's `set_number_of_positions` skipped the update on the
+		# desk form when the newly computed total was lower than the current
+		# value (so decreasing Vacancies did not decrease Number of Positions
+		# on screen until save). This repo has no JS/UI test harness for desk
+		# form scripts, so that fix has to be verified manually in the browser
+		# whenever hrms/hr/doctype/staffing_plan/staffing_plan.js is touched.
+		frappe.get_doc({"doctype": "Designation", "designation_name": "_Test SP Designation"}).insert(
+			ignore_if_duplicate=True
+		)
+
+		if frappe.db.exists("Staffing Plan", "Test Vacancy Decrease"):
+			frappe.delete_doc("Staffing Plan", "Test Vacancy Decrease", force=True)
+
+		staffing_plan = frappe.new_doc("Staffing Plan")
+		staffing_plan.company = "_Test Company 10"
+		staffing_plan.name = "Test Vacancy Decrease"
+		staffing_plan.from_date = nowdate()
+		staffing_plan.to_date = add_days(nowdate(), 10)
+		staffing_plan.append(
+			"staffing_details",
+			{"designation": "_Test SP Designation", "vacancies": 2, "estimated_cost_per_position": 50000},
+		)
+		staffing_plan.insert()
+		self.assertEqual(staffing_plan.staffing_details[0].number_of_positions, 2)
+
+		# decreasing vacancies should decrease number_of_positions
+		staffing_plan.staffing_details[0].vacancies = 1
+		staffing_plan.save()
+		self.assertEqual(staffing_plan.staffing_details[0].number_of_positions, 1)
+
+		# increasing vacancies again should still work
+		staffing_plan.staffing_details[0].vacancies = 3
+		staffing_plan.save()
+		self.assertEqual(staffing_plan.staffing_details[0].number_of_positions, 3)
+
 
 def make_company(name=None, abbr=None):
 	if not name:
