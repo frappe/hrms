@@ -334,10 +334,11 @@ def get_additional_salaries(employee, start_date, end_date, component_type):
 	component_field = additional_sal.salary_component.as_("component")
 	overwrite_field = additional_sal.overwrite_salary_structure_amount.as_("overwrite")
 
-	additional_salary_list = (
+	query = (
 		frappe.qb.from_(additional_sal)
 		.select(
 			additional_sal.name,
+			additional_sal.employee,
 			component_field,
 			additional_sal.type,
 			additional_sal.amount,
@@ -347,12 +348,20 @@ def get_additional_salaries(employee, start_date, end_date, component_type):
 			additional_sal.ref_doctype,
 		)
 		.where(
-			(additional_sal.employee == employee)
-			& (additional_sal.docstatus == 1)
+			(additional_sal.docstatus == 1)
 			& (additional_sal.type == comp_type)
 			& (additional_sal.disabled == 0)
 		)
-		.where(
+	)
+
+	is_list_input = isinstance(employee, list)
+	if is_list_input:
+		query = query.where(additional_sal.employee.isin(employee))
+	else:
+		query = query.where(additional_sal.employee == employee)
+
+	additional_salary_list = (
+		query.where(
 			Criterion.any(
 				[
 					Criterion.all(
@@ -374,21 +383,44 @@ def get_additional_salaries(employee, start_date, end_date, component_type):
 		.run(as_dict=True)
 	)
 
-	additional_salaries = []
-	components_to_overwrite = []
+	if is_list_input:
+		res = {emp: [] for emp in employee}
+		components_to_overwrite_map = {emp: [] for emp in employee}
+		for d in additional_salary_list:
+			emp = d.employee
+			if emp not in res:
+				res[emp] = []
+				components_to_overwrite_map[emp] = []
 
-	for d in additional_salary_list:
-		if d.overwrite:
-			if d.component in components_to_overwrite:
-				frappe.throw(
-					_(
-						"Multiple Additional Salaries with overwrite property exist for Salary Component {0} between {1} and {2}."
-					).format(frappe.bold(d.component), start_date, end_date),
-					title=_("Error"),
-				)
+			if d.overwrite:
+				if d.component in components_to_overwrite_map[emp]:
+					frappe.throw(
+						_(
+							"Multiple Additional Salaries with overwrite property exist for Salary Component {0} between {1} and {2} for employee {3}."
+						).format(frappe.bold(d.component), start_date, end_date, emp),
+						title=_("Error"),
+					)
+				components_to_overwrite_map[emp].append(d.component)
 
-			components_to_overwrite.append(d.component)
+			res[emp].append(d)
+		return res
+	else:
+		additional_salaries = []
+		components_to_overwrite = []
 
-		additional_salaries.append(d)
+		for d in additional_salary_list:
+			if d.overwrite:
+				if d.component in components_to_overwrite:
+					frappe.throw(
+						_(
+							"Multiple Additional Salaries with overwrite property exist for Salary Component {0} between {1} and {2}."
+						).format(frappe.bold(d.component), start_date, end_date),
+						title=_("Error"),
+					)
 
-	return additional_salaries
+				components_to_overwrite.append(d.component)
+
+			additional_salaries.append(d)
+
+		return additional_salaries
+

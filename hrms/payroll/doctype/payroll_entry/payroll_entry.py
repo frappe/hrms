@@ -559,7 +559,9 @@ class PayrollEntry(Document):
 					& (SalaryStructureAssignment.from_date <= self.end_date)
 				)
 				.orderby(SalaryStructureAssignment.from_date, order=frappe.qb.desc)
+				.orderby(SalaryStructureAssignment.creation, order=frappe.qb.desc)
 				.limit(1)
+
 			)
 			cost_centers = dict(
 				(
@@ -1596,6 +1598,89 @@ def log_payroll_failure(process, payroll_entry, error):
 	payroll_entry.db_set({"error_message": error_message, "status": "Failed"})
 
 
+def preload_payroll_data_for_employees(employees, args):
+	if not employees:
+		return {}
+
+	emp_records = frappe.get_all(
+		"Employee",
+		filters={"name": ["in", employees]},
+		fields=[
+			"name",
+			"status",
+			"date_of_joining",
+			"relieving_date",
+			"department",
+			"company",
+			"payroll_cost_center",
+			"holiday_list",
+			"employee_name",
+			"user_id",
+		],
+	)
+
+	company_holiday_list = None
+	if args.get("company"):
+		company_holiday_list = frappe.db.get_value("Company", args.get("company"), "default_holiday_list", cache=True)
+
+	holiday_lists = set()
+	for emp in emp_records:
+		h_list = emp.holiday_list or company_holiday_list
+		if h_list:
+			holiday_lists.add(h_list)
+
+
+	from hrms.payroll.doctype.salary_slip.salary_slip import HOLIDAYS_BETWEEN_DATES
+	from hrms.utils.holiday_list import get_holiday_dates_between
+
+	for h_list in holiday_lists:
+		key = f"{h_list}:{args.get('start_date')}:{args.get('end_date')}"
+		if not frappe.cache().hget(HOLIDAYS_BETWEEN_DATES, key):
+			h_dates = get_holiday_dates_between(h_list, args.get("start_date"), args.get("end_date"))
+			frappe.cache().hset(HOLIDAYS_BETWEEN_DATES, key, h_dates)
+
+	SalaryStructureAssignment = frappe.qb.DocType("Salary Structure Assignment")
+	SalaryStructure = frappe.qb.DocType("Salary Structure")
+
+	sal_struct_query = (
+		frappe.qb.from_(SalaryStructureAssignment)
+		.join(SalaryStructure)
+		.on(SalaryStructureAssignment.salary_structure == SalaryStructure.name)
+		.select(SalaryStructureAssignment.employee, SalaryStructureAssignment.salary_structure)
+		.where(
+			(SalaryStructureAssignment.docstatus == 1)
+			& (SalaryStructure.docstatus == 1)
+			& (SalaryStructure.is_active == "Yes")
+			& (SalaryStructureAssignment.employee.isin(employees))
+			& (
+				(SalaryStructureAssignment.from_date <= args.get("start_date"))
+				| (SalaryStructureAssignment.from_date <= args.get("end_date"))
+			)
+		)
+		.orderby(SalaryStructureAssignment.from_date, order=frappe.qb.desc)
+	)
+
+
+	if args.get("company"):
+		sal_struct_query = sal_struct_query.where(SalaryStructureAssignment.company == args.get("company"))
+
+	if args.get("currency"):
+		sal_struct_query = sal_struct_query.where(SalaryStructureAssignment.currency == args.get("currency"))
+
+	if not args.get("salary_slip_based_on_timesheet") and args.get("payroll_frequency"):
+		sal_struct_query = sal_struct_query.where(SalaryStructure.payroll_frequency == args.get("payroll_frequency"))
+
+
+	struct_rows = sal_struct_query.run(as_dict=True)
+	sal_struct_map = {}
+	for r in struct_rows:
+		if r.employee not in sal_struct_map:
+			sal_struct_map[r.employee] = r.salary_structure
+
+	return sal_struct_map
+
+
+
 def create_salary_slips_for_employees(employees, args, publish_progress=True):
 	payroll_entry = frappe.get_cached_doc("Payroll Entry", args.payroll_entry)
 
@@ -1604,10 +1689,13 @@ def create_salary_slips_for_employees(employees, args, publish_progress=True):
 		count = 0
 
 		employees = list(set(employees) - set(salary_slips_exist_for))
+		sal_struct_map = preload_payroll_data_for_employees(employees, args)
+
 		for emp in employees:
 			slip_args = {
 				"doctype": "Salary Slip",
 				"employee": emp,
+				"salary_structure": sal_struct_map.get(emp),
 				"salary_slip_based_on_timesheet": args.get("salary_slip_based_on_timesheet"),
 				"payroll_frequency": args.get("payroll_frequency"),
 				"start_date": args.get("start_date"),
@@ -1622,6 +1710,7 @@ def create_salary_slips_for_employees(employees, args, publish_progress=True):
 				"currency": args.get("currency"),
 			}
 			frappe.get_doc(slip_args).insert()
+
 
 			count += 1
 			if publish_progress:
@@ -1831,7 +1920,7 @@ def employee_query(
 def get_salary_withholdings(
 	start_date: str,
 	end_date: str,
-	employee: str | None = None,
+	employee: str | list[str] | None = None,
 	pluck: str | None = None,
 ) -> list[str] | list[dict]:
 	Withholding = frappe.qb.DocType("Salary Withholding")
@@ -1854,8 +1943,12 @@ def get_salary_withholdings(
 	)
 
 	if employee:
-		withheld_salaries = withheld_salaries.where(Withholding.employee == employee)
+		if isinstance(employee, list):
+			withheld_salaries = withheld_salaries.where(Withholding.employee.isin(employee))
+		else:
+			withheld_salaries = withheld_salaries.where(Withholding.employee == employee)
 
 	if pluck:
 		return withheld_salaries.run(pluck=pluck)
 	return withheld_salaries.run(as_dict=True)
+
