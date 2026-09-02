@@ -335,12 +335,39 @@ class ShiftType(Document):
 		date_range = get_date_range(start_date, end_date)
 
 		# skip marking absent on holidays
-		holiday_list = self.get_holiday_list(employee)
-		holiday_dates = get_holiday_dates_between(holiday_list, start_date, end_date)
+		holiday_dates = set()
+		for from_date, to_date in self.get_holiday_list_date_ranges(employee, start_date, end_date):
+			holiday_list = self.get_holiday_list(employee, from_date)
+			holiday_dates.update(get_holiday_dates_between(holiday_list, from_date, to_date))
 		# skip dates with attendance
 		marked_attendance_dates = self.get_marked_attendance_dates_between(employee, start_date, end_date)
 
 		return sorted(set(date_range) - set(holiday_dates) - set(marked_attendance_dates))
+
+	def get_holiday_list_date_ranges(
+		self, employee: str, start_date: str, end_date: str
+	) -> list[tuple[str, str]]:
+		"""Splits [start_date, end_date] into ranges at each Holiday List Assignment change,
+		so every range resolves against the assignment active on those dates.
+		"""
+		company = frappe.db.get_value("Employee", employee, "company")
+		HLA = frappe.qb.DocType("Holiday List Assignment")
+		assignment_from_dates = (
+			frappe.qb.from_(HLA)
+			.select(HLA.from_date)
+			.distinct()
+			.where(HLA.assigned_to.isin([employee, company]))
+			.where(HLA.docstatus == 1)
+			.where(HLA.from_date > start_date)
+			.where(HLA.from_date <= end_date)
+			.orderby(HLA.from_date)
+		).run(pluck=True)
+
+		from_dates = [start_date, *(getdate(from_date) for from_date in assignment_from_dates)]
+		return [
+			(from_date, add_days(from_dates[idx + 1], -1) if idx + 1 < len(from_dates) else end_date)
+			for idx, from_date in enumerate(from_dates)
+		]
 
 	def get_start_and_end_dates(self, employee):
 		"""Returns start and end dates for checking attendance and marking absent
