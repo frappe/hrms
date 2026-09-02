@@ -16,6 +16,13 @@ ALLOWED_EMPLOYEE_FILTERS = {
 	"branch",
 	"designation",
 	"employee_name",
+	"reports_to",
+	"grade",
+	"employment_type",
+	"station",
+	"production_line",
+	"employee_number",
+	"location",
 }
 
 ALLOWED_SHIFT_FILTERS = {

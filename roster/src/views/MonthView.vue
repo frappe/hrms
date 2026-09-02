@@ -68,7 +68,19 @@ import MonthViewHeader from "../components/MonthViewHeader.vue";
 import ShiftAssignmentDialog from "../components/ShiftAssignmentDialog.vue";
 
 export type EmployeeFilters = {
-	[K in "status" | "company" | "department" | "branch" | "designation"]?: string;
+	[K in
+		| "status"
+		| "company"
+		| "department"
+		| "branch"
+		| "designation"
+		| "reports_to"
+		| "grade"
+		| "employment_type"
+		| "station"
+		| "production_line"
+		| "employee_number"
+		| "location"]?: string;
 };
 export type ShiftFilters = {
 	[K in "shift_type" | "shift_location"]?: string;
