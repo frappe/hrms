@@ -20,7 +20,6 @@ from frappe.utils import (
 	time_diff,
 )
 
-from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
 from erpnext.setup.doctype.holiday_list.holiday_list import is_half_holiday, is_holiday
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
@@ -30,7 +29,7 @@ from hrms.hr.doctype.employee_checkin.employee_checkin import (
 )
 from hrms.hr.doctype.shift_assignment.shift_assignment import get_employee_shift, get_shift_details
 from hrms.utils import get_date_range
-from hrms.utils.holiday_list import get_holiday_dates_between
+from hrms.utils.holiday_list import get_holiday_dates_between, get_holiday_list_for_employee
 
 EMPLOYEE_CHUNK_SIZE = 50
 
@@ -414,8 +413,14 @@ class ShiftType(Document):
 		return list(set(assigned_employees) - set(inactive_employees))
 
 	def get_holiday_list(self, employee: str, date=None) -> str:
-		holiday_list_name = self.holiday_list or get_holiday_list_for_employee(employee, False, as_on=date)
-		return holiday_list_name
+		assigned_holiday_list = get_holiday_list_for_employee(employee, False, as_on=date, as_dict=True)
+		if assigned_holiday_list and assigned_holiday_list.override_shift_holiday_list:
+			return assigned_holiday_list.holiday_list
+
+		if self.holiday_list:
+			return self.holiday_list
+
+		return assigned_holiday_list.holiday_list if assigned_holiday_list else None
 
 	def should_mark_attendance(self, employee: str, attendance_date: str) -> bool:
 		"""Determines whether attendance should be marked on holidays or not"""
