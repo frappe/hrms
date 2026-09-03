@@ -830,6 +830,7 @@ class TestExpenseClaim(HRMSTestSuite):
 		self.assertEqual(get_advances(claim), [])
 		self.assertEqual(get_advances(claim, advance.name), [])
 
+	@HRMSTestSuite.change_settings("HR Settings", {"enable_multi_currency_expense_claim": 1})
 	def test_multicurrency_claim(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (
 			create_advance_account,
@@ -940,6 +941,7 @@ class TestExpenseClaim(HRMSTestSuite):
 		self.assertEqual(claim.base_total_claimed_amount, total_claimed_amount)
 		self.assertEqual(claim.total_exchange_gain_loss, 0)
 
+	@HRMSTestSuite.change_settings("HR Settings", {"enable_multi_currency_expense_claim": 1})
 	def test_advance_claim_multicurrency_gain_loss(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (
 			create_advance_account,

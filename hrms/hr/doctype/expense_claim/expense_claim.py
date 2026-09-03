@@ -490,14 +490,13 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 				frappe.throw(_("Mode of payment is required to make a payment").format(self.employee))
 
 	def set_company_currency_if_multi_currency_disabled(self):
-		"""When multi-currency expense claims are turned off in HR Settings, every
-		claim is forced to the company currency with an exchange rate of 1 so no
-		multi-currency conversion is applied."""
 		if frappe.db.get_single_value("HR Settings", "enable_multi_currency_expense_claim"):
 			return
 
 		self.currency = erpnext.get_company_currency(self.company)
 		self.exchange_rate = 1.0
+		for advance in self.get("advances"):
+			advance.exchange_rate = 1.0
 
 	def calculate_total_amount(self):
 		self.total_claimed_amount = 0
@@ -736,9 +735,6 @@ def get_expense_claim(employee_advance: str | dict) -> Document:
 		employee_advance = frappe.get_doc("Employee Advance", employee_advance)
 
 	company = employee_advance.company
-	default_payable_account = frappe.get_cached_value(
-		"Company", company, "default_expense_claim_payable_account"
-	)
 	default_cost_center = frappe.get_cached_value("Company", company, "cost_center")
 
 	expense_claim = frappe.new_doc("Expense Claim")
@@ -746,7 +742,7 @@ def get_expense_claim(employee_advance: str | dict) -> Document:
 	expense_claim.currency = employee_advance.currency
 	expense_claim.employee = employee_advance.employee
 	expense_claim.payable_account = (
-		default_payable_account
+		get_default_payable_account(company)
 		if employee_advance.currency == erpnext.get_company_currency(company)
 		else None
 	)
@@ -757,45 +753,11 @@ def get_expense_claim(employee_advance: str | dict) -> Document:
 
 
 @frappe.whitelist()
-def has_default_expense_approver(employee: str) -> bool:
-	"""Return True if a default Expense Approver is configured for the employee,
-	either on the Employee master or anywhere in the Employee's Department tree."""
-	if not employee:
-		return False
-
-	emp = frappe.db.get_value("Employee", employee, ["expense_approver", "department"], as_dict=True)
-	if not emp:
-		return False
-
-	if emp.expense_approver:
-		return True
-
-	if emp.department:
-		dept = frappe.db.get_value("Department", emp.department, ["lft", "rgt"], as_dict=True)
-		if dept:
-			# include the department and all of its ancestors (same precedence as get_approvers)
-			departments = frappe.get_all(
-				"Department",
-				filters={"lft": ["<=", dept.lft], "rgt": [">=", dept.rgt], "disabled": 0},
-				pluck="name",
-			)
-			if departments and frappe.db.exists(
-				"Department Approver",
-				{"parent": ["in", departments], "parentfield": "expense_approvers"},
-			):
-				return True
-
-	return False
-
-
-@frappe.whitelist()
-def set_default_expense_approver(employee: str, approver: str) -> str:
-	"""Save the given user as the default Expense Approver on the Employee master."""
-	if not frappe.has_permission("Employee", "write", doc=employee):
-		frappe.throw(_("You do not have permission to update the Employee record."), frappe.PermissionError)
-
-	frappe.db.set_value("Employee", employee, "expense_approver", approver)
-	return approver
+def get_default_payable_account(company: str) -> str | None:
+	frappe.has_permission("Company", "read", company, throw=True)
+	return frappe.get_cached_value(
+		"Company", company, "default_expense_claim_payable_account"
+	) or frappe.get_cached_value("Company", company, "default_payroll_payable_account")
 
 
 def get_expense_claim_advances(expense_claim, employee_advance):

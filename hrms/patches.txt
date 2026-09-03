@@ -50,3 +50,4 @@ hrms.patches.v16_0.set_reference_fields_in_expense_claim_advance
 hrms.patches.v16_0.update_partially_paid_employee_advance_status
 hrms.patches.v16_0.delete_upload_attendance_doctype #2026-07-16
 hrms.patches.v16_0.set_leave_approver_name_in_leave_application #2026-08-05
+hrms.patches.v16_0.enable_multi_currency_expense_claim_for_existing_users

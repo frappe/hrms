@@ -178,6 +178,7 @@ doc_events = {
 		"on_update": [
 			"hrms.overrides.company.make_company_fixtures",
 			"hrms.overrides.company.set_default_hr_accounts",
+			"hrms.overrides.company.set_expense_claim_type_accounts",
 		],
 		"on_trash": "hrms.overrides.company.handle_linked_docs",
 	},
