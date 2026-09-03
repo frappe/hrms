@@ -21,6 +21,13 @@ frappe.query_reports["Employee Exits"] = {
 			label: __("Company"),
 			fieldtype: "Link",
 			options: "Company",
+			on_change: (report) => {
+				frappe.query_report.set_filter_value({
+					employee: "",
+					reports_to: "",
+				});
+				report.refresh();
+			},
 		},
 		{
 			fieldname: "department",
@@ -39,12 +46,26 @@ frappe.query_reports["Employee Exits"] = {
 			label: __("Employee"),
 			fieldtype: "Link",
 			options: "Employee",
+			get_query: () => {
+				return {
+					filters: {
+						company: frappe.query_report.get_filter_value("company"),
+					},
+				};
+			},
 		},
 		{
 			fieldname: "reports_to",
 			label: __("Reports To"),
 			fieldtype: "Link",
 			options: "Employee",
+			get_query: () => {
+				return {
+					filters: {
+						company: frappe.query_report.get_filter_value("company"),
+					},
+				};
+			},
 		},
 		{
 			fieldname: "interview_status",
