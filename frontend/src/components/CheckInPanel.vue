@@ -165,7 +165,18 @@ const submitLog = (logType) => {
 			longitude: longitude.value,
 		},
 		{
-			onSuccess() {
+			onSuccess(data) {
+				if (!data?.name) {
+					toast({
+						title: __("Error"),
+						text: __("{0} failed!", [actionLabel]),
+						icon: "alert-circle",
+						position: "bottom-center",
+						iconClasses: "text-red-500",
+					})
+					return
+				}
+
 				modalController.dismiss()
 				toast({
 					title: __("Success"),
@@ -176,7 +187,7 @@ const submitLog = (logType) => {
 				})
 			},
 			onError(error) {
-				let messages = error.messages || []
+				let messages = error.messages?.length ? error.messages : [__("{0} failed!", [actionLabel])]
 
 				for (const message of messages) {
 					toast({
