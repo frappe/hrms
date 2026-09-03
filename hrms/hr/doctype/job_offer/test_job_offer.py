@@ -9,6 +9,7 @@ from erpnext.setup.doctype.designation.test_designation import create_designatio
 from hrms.hr.doctype.job_applicant.job_applicant import get_applicant_to_hire_percentage
 from hrms.hr.doctype.job_offer.job_offer import get_offer_acceptance_rate, make_employee
 from hrms.hr.doctype.staffing_plan.test_staffing_plan import make_company
+from hrms.overrides.employee_master import update_job_applicant_and_offer
 from hrms.tests.test_utils import create_job_applicant
 from hrms.tests.utils import HRMSTestSuite
 
@@ -160,6 +161,40 @@ class TestJobOffer(HRMSTestSuite):
 		unrelated.save()
 		unrelated.run_method("onload")
 		self.assertFalse(unrelated.get_onload("employee"))
+
+	def test_rejected_job_offer_not_accepted_on_employee_creation(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		job_offer = create_job_offer(
+			applicant_name="Rejected Candidate",
+			applicant_email="rejected_candidate@example.com",
+			status="Rejected",
+		)
+		job_offer.submit()
+
+		employee = make_employee(job_offer.name)
+		employee.date_of_birth = "1990-05-08"
+		employee.date_of_joining = nowdate()
+		employee.gender = "Female"
+		employee.insert()
+
+		job_offer.reload()
+		self.assertEqual(job_offer.status, "Rejected")
+
+	def test_reoffered_applicant_accepts_live_job_offer(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		job_applicant = create_job_applicant(email_id="reoffered_pick@example.com")
+
+		rejected = create_job_offer(job_applicant=job_applicant.name, status="Rejected")
+		rejected.submit()
+		live = create_job_offer(job_applicant=job_applicant.name, status="Awaiting Response")
+		live.save()
+
+		update_job_applicant_and_offer(frappe._dict({"job_applicant": job_applicant.name}))
+
+		live.reload()
+		rejected.reload()
+		self.assertEqual(live.status, "Accepted")
+		self.assertEqual(rejected.status, "Rejected")
 
 
 def create_job_offer(**args):

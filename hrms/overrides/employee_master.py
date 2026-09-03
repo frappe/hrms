@@ -76,7 +76,7 @@ def update_job_applicant_and_offer(doc, method=None):
 		return
 
 	job_offer = frappe.get_doc("Job Offer", offer_name)
-	if job_offer.docstatus == 2 or job_offer.status == "Accepted":
+	if job_offer.docstatus == 2 or job_offer.status in ("Accepted", "Rejected", "Cancelled"):
 		return
 
 	job_offer.status = "Accepted"
