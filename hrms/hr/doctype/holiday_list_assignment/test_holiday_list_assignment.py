@@ -82,6 +82,7 @@ def create_holiday_list_assignment(
 	company="_Test Company",
 	do_not_submit=False,
 	from_date=None,
+	override_shift_holiday_list=0,
 ):
 	if not frappe.db.exists(
 		"Holiday List Assignment",
@@ -95,6 +96,7 @@ def create_holiday_list_assignment(
 		if not from_date:
 			from_date = frappe.db.get_value("Holiday List", holiday_list, "from_date")
 		hla.from_date = from_date
+		hla.override_shift_holiday_list = override_shift_holiday_list
 		hla.save()
 		if do_not_submit:
 			return hla

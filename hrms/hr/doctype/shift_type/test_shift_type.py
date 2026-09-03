@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 import frappe
 from frappe.utils import (
 	add_days,
+	add_years,
 	get_datetime,
 	get_time,
 	get_year_ending,
@@ -15,7 +16,10 @@ from frappe.utils import (
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
-from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import assign_holiday_list
+from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+	assign_holiday_list,
+	create_holiday_list_assignment,
+)
 from hrms.hr.doctype.leave_application.test_leave_application import get_first_sunday
 from hrms.hr.doctype.shift_type.shift_type import update_last_sync_of_checkin
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
@@ -520,6 +524,60 @@ class TestShiftType(HRMSTestSuite):
 			"Absent",
 		)
 
+	def test_backfill_recognizes_holidays_across_assignment_change(self):
+		employee = make_employee("test_holiday_backfill@example.com", company="_Test Company")
+		today = getdate()
+		process_attendance_after = add_days(today, -6)
+
+		shift_type = setup_shift_type(
+			shift_type="Test Holiday Backfill",
+			process_attendance_after=process_attendance_after,
+			last_sync_of_checkin=f"{today} 15:00:00",
+		)
+		shift_type.holiday_list = None
+		shift_type.save()
+
+		make_shift_assignment(shift_type.name, employee, process_attendance_after)
+
+		old_holiday_list = make_holiday_list(
+			"Test Holiday Backfill Old",
+			from_date=process_attendance_after,
+			to_date=today,
+			add_weekly_offs=False,
+		)
+		new_holiday_list = make_holiday_list(
+			"Test Holiday Backfill New",
+			from_date=process_attendance_after,
+			to_date=today,
+			add_weekly_offs=False,
+		)
+		old_list_holiday = add_days(today, -5)
+		new_list_holiday = add_days(today, -1)
+		add_date_to_holiday_list(old_list_holiday, old_holiday_list)
+		add_date_to_holiday_list(new_list_holiday, new_holiday_list)
+
+		# employee follows old_holiday_list first, then switches to new_holiday_list partway through the backfill range
+		create_holiday_list_assignment(
+			"Employee",
+			assigned_to=employee,
+			holiday_list=old_holiday_list,
+			from_date=process_attendance_after,
+		)
+		create_holiday_list_assignment(
+			"Employee", assigned_to=employee, holiday_list=new_holiday_list, from_date=add_days(today, -2)
+		)
+
+		shift_type.process_auto_attendance()
+
+		# old_list_holiday falls under old_holiday_list's assignment period and must still be recognized,
+		# even though new_holiday_list is the assignment active "today"
+		self.assertIsNone(
+			frappe.db.get_value("Attendance", {"employee": employee, "attendance_date": old_list_holiday})
+		)
+		self.assertIsNone(
+			frappe.db.get_value("Attendance", {"employee": employee, "attendance_date": new_list_holiday})
+		)
+
 	def test_do_not_mark_absent_before_shift_actual_end_time(self):
 		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 
@@ -608,6 +666,48 @@ class TestShiftType(HRMSTestSuite):
 			{"attendance_date": first_sunday, "employee": employee},
 		)
 		self.assertIsNone(attendance)
+
+	def test_shift_type_holiday_list_overridden_by_holiday_list_assignment(self):
+		shift_type = setup_shift_type()
+		employee = make_employee("test_hla_override_shift@example.com", company="_Test Company")
+
+		create_holiday_list_assignment(
+			"Employee",
+			assigned_to=employee,
+			holiday_list=self.holiday_list,
+			from_date=get_year_start(getdate()),
+		)
+		# shift type's holiday list is used when override is not set
+		self.assertEqual(shift_type.get_holiday_list(employee), shift_type.holiday_list)
+
+		frappe.db.set_value(
+			"Holiday List Assignment",
+			{"assigned_to": employee, "holiday_list": self.holiday_list},
+			"override_shift_holiday_list",
+			1,
+		)
+		# employee's holiday list assignment is used once override is checked
+		self.assertEqual(shift_type.get_holiday_list(employee), self.holiday_list)
+
+	def test_expired_override_assignment_does_not_override_shift_holiday_list(self):
+		shift_type = setup_shift_type()
+		employee = make_employee("test_expired_override@example.com", company="_Test Company")
+
+		expired_holiday_list = make_holiday_list(
+			"Test Expired Override Holiday List",
+			from_date=get_year_start(add_years(getdate(), -1)),
+			to_date=get_year_ending(add_years(getdate(), -1)),
+		)
+		create_holiday_list_assignment(
+			"Employee",
+			assigned_to=employee,
+			holiday_list=expired_holiday_list,
+			from_date=get_year_start(add_years(getdate(), -1)),
+			override_shift_holiday_list=1,
+		)
+
+		# override is checked, but its holiday list has expired, so shift type's list is used
+		self.assertEqual(shift_type.get_holiday_list(employee), shift_type.holiday_list)
 
 	def test_skip_absent_marking_for_a_fallback_default_shift(self):
 		"""

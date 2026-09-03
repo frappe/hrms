@@ -16,7 +16,8 @@
   "holiday_list",
   "from_date",
   "holiday_list_start",
-  "holiday_list_end"
+  "holiday_list_end",
+  "override_shift_holiday_list"
  ],
  "fields": [
   {
@@ -101,13 +102,20 @@
    "fieldtype": "Date",
    "label": "Assignment Starts From",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "description": "If checked, this Holiday List will be used instead of the Shift Type's Holiday List for auto attendance",
+   "fieldname": "override_shift_holiday_list",
+   "fieldtype": "Check",
+   "label": "Override Shift Type's Holiday List"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-01-07 16:11:21.856458",
+ "modified": "2026-09-02 14:20:15.136585",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Holiday List Assignment",
