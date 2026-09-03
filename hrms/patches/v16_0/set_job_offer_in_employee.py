@@ -29,32 +29,7 @@ def execute():
 		}
 	)
 
-	set_applicant_email_in_job_offer()
 	set_job_offer_in_employee()
-
-
-def set_applicant_email_in_job_offer():
-	offers = frappe.get_all(
-		"Job Offer",
-		filters={"applicant_email": ["in", ["", None]], "job_applicant": ["is", "set"]},
-		fields=["name", "job_applicant"],
-	)
-	if not offers:
-		return
-
-	applicant_emails = dict(
-		frappe.get_all(
-			"Job Applicant",
-			filters={"name": ["in", {offer.job_applicant for offer in offers}]},
-			fields=["name", "email_id"],
-			as_list=True,
-		)
-	)
-
-	for offer in offers:
-		email = applicant_emails.get(offer.job_applicant)
-		if email:
-			frappe.db.set_value("Job Offer", offer.name, "applicant_email", email, update_modified=False)
 
 
 def set_job_offer_in_employee():
