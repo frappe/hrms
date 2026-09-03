@@ -307,10 +307,10 @@
   },
   {
    "default": "0",
-   "description": "Allow expense claims to be raised in a currency other than the company currency. When disabled, all expense claims use the company currency.",
+   "description": "Allow expense claims to be raised in a currency other than the company currency",
    "fieldname": "enable_multi_currency_expense_claim",
    "fieldtype": "Check",
-   "label": "Enable Multi-Currency Expense Claim"
+   "label": "Enable Multi-Currency Expense Claims"
   },
   {
    "default": "0",
@@ -388,7 +388,11 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
+<<<<<<< HEAD
  "modified": "2025-12-29 16:25:06.271352",
+=======
+ "modified": "2026-09-03 11:00:00.000000",
+>>>>>>> 8520ec8 (fix: Expense claim workflow cleanup)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",

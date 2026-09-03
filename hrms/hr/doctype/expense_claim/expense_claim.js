@@ -84,16 +84,15 @@ frappe.ui.form.on("Expense Claim", {
 		erpnext.accounts.dimensions.setup_dimension_filters(frm, frm.doctype);
 
 		if (frm.doc.docstatus == 0) {
-			frappe.call({
+			return frappe.call({
 				method: "hrms.hr.doctype.leave_application.leave_application.get_mandatory_approval",
 				args: {
 					doctype: frm.doc.doctype,
 				},
 				callback: function (r) {
-					// Nudge (rather than hard-block) the user to set an approver.
-					// Keeping the field optional lets them save a draft first.
-					frm.__expense_approver_expected = !r.exc && !!r.message;
-					frm.trigger("check_expense_approver_config");
+					if (!r.exc && r.message) {
+						frm.toggle_reqd("expense_approver", true);
+					}
 				},
 			});
 		}
@@ -102,10 +101,18 @@ frappe.ui.form.on("Expense Claim", {
 		frm.trigger("update_child_fields_label");
 	},
 
-	refresh: function (frm) {
+	refresh: async function (frm) {
+		if (frm.multi_currency_enabled === undefined) {
+			frm.multi_currency_enabled = cint(
+				await frappe.db.get_single_value(
+					"HR Settings",
+					"enable_multi_currency_expense_claim",
+				),
+			);
+		}
 		frm.trigger("set_employee");
-		frm.trigger("set_approver_nudge");
-		frm.trigger("setup_multi_currency");
+		frm.trigger("set_payable_account");
+		frm.trigger("toggle_multi_currency_fields");
 		frm.trigger("toggle_fields");
 		frm.trigger("add_ledger_buttons");
 
@@ -155,10 +162,47 @@ frappe.ui.form.on("Expense Claim", {
 		frm.trigger("update_child_fields_label");
 	},
 
+	toggle_multi_currency_fields: function (frm) {
+		if (frm.multi_currency_enabled) return;
+
+		frm.trigger("set_company_currency");
+		frm.toggle_display(["currency_section", "currency", "exchange_rate"], false);
+
+		const base_fields = {
+			expenses: ["base_amount", "base_sanctioned_amount"],
+			advances: [
+				"base_advance_paid",
+				"base_unclaimed_amount",
+				"base_allocated_amount",
+				"exchange_rate",
+			],
+			taxes: ["base_tax_amount", "base_total"],
+		};
+		for (const table in base_fields) {
+			base_fields[table].forEach((field) => {
+				frm.fields_dict[table].grid.update_docfield_property(field, "hidden", 1);
+			});
+		}
+	},
+
+	set_company_currency: function (frm) {
+		if (frm.doc.docstatus !== 0) return;
+
+		const company_currency = erpnext.get_currency(
+			frm.doc.company || frappe.defaults.get_default("Company"),
+		);
+		if (company_currency && frm.doc.currency !== company_currency) {
+			frm.set_value("currency", company_currency);
+		}
+		if (frm.doc.exchange_rate !== 1) {
+			frm.set_value("exchange_rate", 1);
+		}
+	},
+
 	set_exchange_rate: function (frm) {
 		if (frm.doc.currency) {
-			let from_currency = frm.doc.currency;
-			let company_currency;
+			var from_currency = frm.doc.currency;
+			var company_currency;
 			if (!frm.doc.company) {
 				company_currency = erpnext.get_currency(frappe.defaults.get_default("Company"));
 			} else {
@@ -188,92 +232,6 @@ frappe.ui.form.on("Expense Claim", {
 			}
 			frm.refresh_fields();
 		}
-	},
-
-	setup_multi_currency: async function (frm) {
-		if (frm.__multi_currency_enabled === undefined) {
-			frm.__multi_currency_enabled = Boolean(
-				await frappe.db.get_single_value(
-					"HR Settings",
-					"enable_multi_currency_expense_claim",
-				),
-			);
-		}
-
-		// When multi-currency is off, force the claim to the company currency so
-		// the (hidden) mandatory fields are satisfied and amounts stay single-currency.
-		if (!frm.__multi_currency_enabled) {
-			frm.events.set_company_currency(frm);
-		}
-		frm.trigger("apply_multi_currency_display");
-	},
-
-	set_company_currency: function (frm) {
-		if (frm.doc.docstatus !== 0) {
-			return;
-		}
-
-		const company_currency = frm.doc.company
-			? erpnext.get_currency(frm.doc.company)
-			: erpnext.get_currency(frappe.defaults.get_default("Company"));
-
-		if (company_currency && frm.doc.currency !== company_currency) {
-			frm.set_value("currency", company_currency);
-		}
-		if (frm.doc.exchange_rate !== 1) {
-			frm.set_value("exchange_rate", 1);
-		}
-	},
-
-	apply_multi_currency_display: function (frm) {
-		if (frm.__multi_currency_enabled === undefined) {
-			return;
-		}
-		const enabled = frm.__multi_currency_enabled;
-
-		// Drive visibility through depends_on so it survives the form's
-		// dependency re-evaluation (e.g. after the employee/currency is set).
-		frm.set_df_property(
-			"currency",
-			"depends_on",
-			enabled ? "eval:(doc.docstatus==1 || doc.employee)" : "eval:false",
-		);
-		frm.set_df_property("exchange_rate", "depends_on", enabled ? "currency" : "eval:false");
-
-		if (!enabled) {
-			frm.toggle_display(
-				[
-					"base_total_sanctioned_amount",
-					"base_total_taxes_and_charges",
-					"base_total_advance_amount",
-					"base_grand_total",
-					"base_total_claimed_amount",
-				],
-				false,
-			);
-		}
-
-		const child_base_fields = {
-			expenses: ["base_amount", "base_sanctioned_amount"],
-			taxes: ["base_tax_amount", "base_total"],
-			advances: [
-				"base_advance_paid",
-				"base_unclaimed_amount",
-				"base_allocated_amount",
-				"exchange_rate",
-			],
-		};
-		for (const table in child_base_fields) {
-			const field = frm.fields_dict[table];
-			if (!field || !field.grid) {
-				continue;
-			}
-			child_base_fields[table].forEach((fieldname) => {
-				field.grid.update_docfield_property(fieldname, "hidden", enabled ? 0 : 1);
-			});
-		}
-
-		frm.refresh_fields();
 	},
 
 	update_fields_label: function (frm) {
@@ -463,8 +421,9 @@ frappe.ui.form.on("Expense Claim", {
 
 	company: function (frm) {
 		erpnext.accounts.dimensions.update_dimension(frm, frm.doctype);
-		if (frm.__multi_currency_enabled === false) {
-			frm.events.set_company_currency(frm);
+		frm.trigger("set_payable_account");
+		if (frm.multi_currency_enabled === 0) {
+			frm.trigger("set_company_currency");
 		}
 		var expenses = frm.doc.expenses;
 		for (var i = 0; i < expenses.length; i++) {
@@ -496,8 +455,23 @@ frappe.ui.form.on("Expense Claim", {
 		frm.toggle_reqd("mode_of_payment", frm.doc.is_paid);
 	},
 
-	async set_employee(frm) {
-		if (frm.doc.employee) return;
+	set_payable_account: async function (frm) {
+		if (!frm.is_new() || frm.doc.payable_account || !frm.doc.company) return;
+
+		const account = (
+			await frappe.call({
+				method: "hrms.hr.doctype.expense_claim.expense_claim.get_default_payable_account",
+				args: { company: frm.doc.company },
+			})
+		)?.message;
+
+		if (account && !frm.doc.payable_account) {
+			frm.set_value("payable_account", account);
+		}
+	},
+
+	set_employee: async function (frm) {
+		if (!frm.is_new() || frm.doc.employee) return;
 
 		const employee = await hrms.get_current_employee(frm);
 		if (employee) {
@@ -507,109 +481,6 @@ frappe.ui.form.on("Expense Claim", {
 
 	employee: function (frm) {
 		frm.events.get_advances(frm);
-		frm.trigger("check_expense_approver_config");
-	},
-
-	check_expense_approver_config: function (frm) {
-		// The nudge is only relevant when an approver is expected but none is
-		// configured as a default (on the Employee master or Department tree).
-		if (!frm.__expense_approver_expected || frm.doc.docstatus !== 0 || !frm.doc.employee) {
-			frm.trigger("set_approver_nudge");
-			return;
-		}
-
-		frappe.call({
-			method: "hrms.hr.doctype.expense_claim.expense_claim.has_default_expense_approver",
-			args: {
-				employee: frm.doc.employee,
-			},
-			callback: function (r) {
-				frm.__no_default_expense_approver = !r.message;
-				frm.trigger("set_approver_nudge");
-			},
-		});
-	},
-
-	set_approver_nudge: function (frm) {
-		// Always start clean so the nudge never stacks or lingers.
-		frm.dashboard.clear_headline();
-
-		// Show a gentle reminder (instead of a mandatory field) only when an
-		// approver is expected, none is configured as a default, and this draft
-		// doesn't have one picked yet.
-		if (
-			!frm.__expense_approver_expected ||
-			!frm.__no_default_expense_approver ||
-			frm.doc.expense_approver ||
-			frm.doc.docstatus !== 0
-		) {
-			return;
-		}
-
-		const message = __(
-			"No Expense Approver is set up for you yet, so this claim can't be routed for approval.",
-		);
-		const banner = `<div class="flex justify-between align-center" style="gap: 10px;">
-				<span>${message}</span>
-				<button class="btn btn-default btn-xs btn-set-expense-approver" style="white-space: nowrap;">
-					${__("Set Expense Approver")}
-				</button>
-			</div>`;
-		frm.dashboard.set_headline(banner, "yellow", true);
-
-		frm.layout.message.find(".btn-set-expense-approver").on("click", () => {
-			frm.events.show_expense_approver_dialog(frm);
-		});
-	},
-
-	show_expense_approver_dialog: function (frm) {
-		const dialog = new frappe.ui.Dialog({
-			title: __("Set Expense Approver"),
-			fields: [
-				{
-					fieldname: "expense_approver",
-					label: __("Expense Approver"),
-					fieldtype: "Link",
-					options: "User",
-					reqd: 1,
-					description: __("This user will approve the expense claim."),
-				},
-				{
-					fieldname: "set_as_default",
-					label: __("Also set as the default approver for this employee"),
-					fieldtype: "Check",
-					default: 0,
-					description: __(
-						"Saves this approver on the Employee record so future claims are pre-filled.",
-					),
-				},
-			],
-			primary_action_label: __("Set Approver"),
-			primary_action: function (values) {
-				frm.set_value("expense_approver", values.expense_approver);
-
-				if (values.set_as_default) {
-					frappe.call({
-						method: "hrms.hr.doctype.expense_claim.expense_claim.set_default_expense_approver",
-						args: {
-							employee: frm.doc.employee,
-							approver: values.expense_approver,
-						},
-						callback: function () {
-							frm.__no_default_expense_approver = false;
-						},
-					});
-				}
-
-				dialog.hide();
-			},
-		});
-
-		dialog.show();
-	},
-
-	expense_approver: function (frm) {
-		frm.trigger("set_approver_nudge");
 	},
 
 	cost_center: function (frm) {
