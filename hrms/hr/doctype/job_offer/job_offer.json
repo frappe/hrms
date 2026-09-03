@@ -29,13 +29,13 @@
  ],
  "fields": [
   {
+   "depends_on": "eval:doc.job_applicant",
    "fieldname": "job_applicant",
    "fieldtype": "Link",
    "label": "Job Applicant",
    "link_filters": "[[\"Job Applicant\",\"status\",\"!=\",\"Rejected\"]]",
    "options": "Job Applicant",
-   "print_hide": 1,
-   "reqd": 1
+   "print_hide": 1
   },
   {
    "fetch_from": "job_applicant.applicant_name",
@@ -44,7 +44,6 @@
    "in_global_search": 1,
    "in_list_view": 1,
    "label": "Applicant Name",
-   "read_only": 1,
    "reqd": 1
   },
   {
@@ -54,7 +53,7 @@
    "in_global_search": 1,
    "label": "Applicant Email Address",
    "options": "Email",
-   "read_only": 1
+   "reqd": 1
   },
   {
    "fieldname": "column_break_3",

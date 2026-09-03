@@ -253,6 +253,14 @@ def get_custom_fields():
 				"insert_after": "employment_details",
 			},
 			{
+				"fieldname": "job_offer",
+				"fieldtype": "Link",
+				"label": _("Job Offer"),
+				"options": "Job Offer",
+				"insert_after": "job_applicant",
+				"read_only": 1,
+			},
+			{
 				"fieldname": "grade",
 				"fieldtype": "Link",
 				"label": _("Grade"),

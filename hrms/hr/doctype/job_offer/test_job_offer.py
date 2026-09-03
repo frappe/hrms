@@ -7,7 +7,7 @@ from frappe.utils import add_days, nowdate
 from erpnext.setup.doctype.designation.test_designation import create_designation
 
 from hrms.hr.doctype.job_applicant.job_applicant import get_applicant_to_hire_percentage
-from hrms.hr.doctype.job_offer.job_offer import get_offer_acceptance_rate
+from hrms.hr.doctype.job_offer.job_offer import get_offer_acceptance_rate, make_employee
 from hrms.hr.doctype.staffing_plan.test_staffing_plan import make_company
 from hrms.tests.test_utils import create_job_applicant
 from hrms.tests.utils import HRMSTestSuite
@@ -68,17 +68,104 @@ class TestJobOffer(HRMSTestSuite):
 		self.assertEqual(get_offer_acceptance_rate().get("value"), 50)
 
 	def test_status_on_save(self):
-		job_offer = create_job_offer()
+		job_applicant = create_job_applicant(email_id="test_job_offer_status@example.com")
+		job_offer = create_job_offer(job_applicant=job_applicant.name)
 		job_offer.save()
 		job_offer.discard()
 		job_offer.reload()
 		self.assertEqual(job_offer.status, "Cancelled")
 
+	def test_job_offer_without_job_applicant(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		job_offer = create_job_offer(
+			applicant_name="Walk In Candidate",
+			applicant_email="walk_in_candidate@example.com",
+			status="Awaiting Response",
+		)
+		job_offer.submit()
+
+		job_offer.reload()
+		self.assertFalse(job_offer.job_applicant)
+		self.assertEqual(job_offer.applicant_name, "Walk In Candidate")
+
+	def test_duplicate_job_offer_for_same_email(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		create_job_offer(
+			applicant_name="Duplicate Candidate",
+			applicant_email="duplicate_candidate@example.com",
+			status="Awaiting Response",
+		).submit()
+
+		duplicate = create_job_offer(
+			applicant_name="Duplicate Candidate",
+			applicant_email="duplicate_candidate@example.com",
+			status="Awaiting Response",
+		)
+		self.assertRaises(frappe.ValidationError, duplicate.save)
+
+		# a different email is not a duplicate
+		create_job_offer(
+			applicant_name="Another Candidate",
+			applicant_email="another_candidate@example.com",
+			status="Awaiting Response",
+		).save()
+
+	def test_duplicate_job_offer_allowed_after_rejection(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		rejected = create_job_offer(
+			applicant_name="Reoffered Candidate",
+			applicant_email="reoffered_candidate@example.com",
+			status="Rejected",
+		)
+		rejected.submit()
+
+		create_job_offer(
+			applicant_name="Reoffered Candidate",
+			applicant_email="reoffered_candidate@example.com",
+			status="Awaiting Response",
+		).save()
+
+	def test_make_employee_without_job_applicant(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		job_offer = create_job_offer(
+			applicant_name="Intern Candidate",
+			applicant_email="intern_candidate@example.com",
+			status="Awaiting Response",
+		)
+		job_offer.submit()
+
+		employee = make_employee(job_offer.name)
+		self.assertEqual(employee.first_name, "Intern Candidate")
+		self.assertEqual(employee.personal_email, "intern_candidate@example.com")
+		self.assertEqual(employee.job_offer, job_offer.name)
+
+		employee.date_of_birth = "1990-05-08"
+		employee.date_of_joining = nowdate()
+		employee.gender = "Female"
+		employee.insert()
+
+		job_offer.reload()
+		self.assertEqual(job_offer.status, "Accepted")
+
+		job_offer.run_method("onload")
+		self.assertEqual(job_offer.get_onload("employee"), employee.name)
+
+	def test_onload_employee_ignores_unrelated_offers(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		unrelated = create_job_offer(
+			applicant_name="Unrelated Candidate",
+			applicant_email="unrelated_candidate@example.com",
+			status="Awaiting Response",
+		)
+		unrelated.save()
+		unrelated.run_method("onload")
+		self.assertFalse(unrelated.get_onload("employee"))
+
 
 def create_job_offer(**args):
 	args = frappe._dict(args)
-	if not args.job_applicant:
-		job_applicant = create_job_applicant()
+	if not args.job_applicant and not args.applicant_email:
+		args.job_applicant = create_job_applicant().name
 
 	if not frappe.db.exists("Designation", args.designation):
 		create_designation(designation_name=args.designation)
@@ -86,7 +173,7 @@ def create_job_offer(**args):
 	job_offer = frappe.get_doc(
 		{
 			"doctype": "Job Offer",
-			"job_applicant": args.job_applicant or job_applicant.name,
+			"job_applicant": args.job_applicant,
 			"offer_date": args.offer_date or nowdate(),
 			"designation": args.designation or "Researcher",
 			"status": args.status or "Accepted",
