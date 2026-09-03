@@ -1,19 +1,32 @@
 import frappe
 from frappe import _
-from frappe.custom.doctype.custom_field.custom_field import create_custom_field
+from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 
 
 def execute():
-	create_custom_field(
-		"Employee",
+	create_custom_fields(
 		{
-			"fieldname": "job_offer",
-			"fieldtype": "Link",
-			"label": _("Job Offer"),
-			"options": "Job Offer",
-			"insert_after": "job_applicant",
-			"read_only": 1,
-		},
+			"Employee": [
+				{
+					"fieldname": "job_applicant",
+					"fieldtype": "Link",
+					"label": _("Job Applicant"),
+					"options": "Job Applicant",
+					"insert_after": "employment_details",
+					"depends_on": "eval:doc.job_applicant",
+					"read_only": 1,
+				},
+				{
+					"fieldname": "job_offer",
+					"fieldtype": "Link",
+					"label": _("Job Offer"),
+					"options": "Job Offer",
+					"insert_after": "job_applicant",
+					"depends_on": "eval:doc.job_offer",
+					"read_only": 1,
+				},
+			]
+		}
 	)
 
 	set_applicant_email_in_job_offer()

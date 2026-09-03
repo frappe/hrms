@@ -6,6 +6,7 @@ frappe.ui.form.on("Employee Onboarding", {
 		frm.set_query("job_offer", function () {
 			return {
 				filters: {
+					status: "Accepted",
 					docstatus: 1,
 				},
 			};

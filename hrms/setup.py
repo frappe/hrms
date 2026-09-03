@@ -251,6 +251,8 @@ def get_custom_fields():
 				"label": _("Job Applicant"),
 				"options": "Job Applicant",
 				"insert_after": "employment_details",
+				"depends_on": "eval:doc.job_applicant",
+				"read_only": 1,
 			},
 			{
 				"fieldname": "job_offer",
@@ -258,6 +260,7 @@ def get_custom_fields():
 				"label": _("Job Offer"),
 				"options": "Job Offer",
 				"insert_after": "job_applicant",
+				"depends_on": "eval:doc.job_offer",
 				"read_only": 1,
 			},
 			{
