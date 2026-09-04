@@ -326,5 +326,60 @@ class TestAttendance(HRMSTestSuite):
 		attendance_records = frappe.get_all("Attendance", {"employee": employee2})
 		self.assertEqual(len(attendance_records), 1)
 
+	def test_future_date_attendance_restricted(self):
+		employee = make_employee("test_future_date_attendance@example.com", company="_Test Company")
+		future_date = add_days(nowdate(), 5)
+
+		frappe.db.set_single_value("HR Settings", "allow_future_date_attendance", 0)
+
+		attendance = frappe.get_doc(
+			{
+				"doctype": "Attendance",
+				"employee": employee,
+				"attendance_date": future_date,
+				"status": "Present",
+				"company": "_Test Company",
+			}
+		)
+		self.assertRaises(frappe.ValidationError, attendance.insert)
+
+	def test_future_date_attendance_allowed_on_leave(self):
+		employee = make_employee("test_future_date_attendance_on_leave@example.com", company="_Test Company")
+		future_date = add_days(nowdate(), 5)
+
+		frappe.db.set_single_value("HR Settings", "allow_future_date_attendance", 0)
+
+		attendance = frappe.get_doc(
+			{
+				"doctype": "Attendance",
+				"employee": employee,
+				"attendance_date": future_date,
+				"status": "On Leave",
+				"company": "_Test Company",
+			}
+		)
+		attendance.insert()
+		self.assertEqual(getdate(attendance.attendance_date), getdate(future_date))
+
+	def test_future_date_attendance_allowed_when_setting_enabled(self):
+		employee = make_employee(
+			"test_future_date_attendance_setting_enabled@example.com", company="_Test Company"
+		)
+		future_date = add_days(nowdate(), 5)
+
+		frappe.db.set_single_value("HR Settings", "allow_future_date_attendance", 1)
+
+		attendance = frappe.get_doc(
+			{
+				"doctype": "Attendance",
+				"employee": employee,
+				"attendance_date": future_date,
+				"status": "Present",
+				"company": "_Test Company",
+			}
+		)
+		attendance.insert()
+		self.assertEqual(getdate(attendance.attendance_date), getdate(future_date))
+
 	def tearDown(self):
 		frappe.db.rollback()
