@@ -105,6 +105,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 	def validate(self):
 		validate_active_employee(self.employee)
 		set_employee_name(self)
+		self.set_company_currency_if_multi_currency_disabled()
 		self.validate_sanctioned_amount()
 		self.calculate_total_amount()
 		self.validate_advances()
@@ -488,6 +489,15 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 			if not self.mode_of_payment:
 				frappe.throw(_("Mode of payment is required to make a payment").format(self.employee))
 
+	def set_company_currency_if_multi_currency_disabled(self):
+		if frappe.db.get_single_value("HR Settings", "enable_multi_currency_expense_claim"):
+			return
+
+		self.currency = erpnext.get_company_currency(self.company)
+		self.exchange_rate = 1.0
+		for advance in self.get("advances"):
+			advance.exchange_rate = 1.0
+
 	def calculate_total_amount(self):
 		self.total_claimed_amount = 0
 		self.total_sanctioned_amount = 0
@@ -798,9 +808,6 @@ def get_expense_claim(employee_advance: str | dict) -> Document:
 		employee_advance = frappe.get_doc("Employee Advance", employee_advance)
 
 	company = employee_advance.company
-	default_payable_account = frappe.get_cached_value(
-		"Company", company, "default_expense_claim_payable_account"
-	)
 	default_cost_center = frappe.get_cached_value("Company", company, "cost_center")
 
 	expense_claim = frappe.new_doc("Expense Claim")
@@ -808,7 +815,7 @@ def get_expense_claim(employee_advance: str | dict) -> Document:
 	expense_claim.currency = employee_advance.currency
 	expense_claim.employee = employee_advance.employee
 	expense_claim.payable_account = (
-		default_payable_account
+		get_default_payable_account(company)
 		if employee_advance.currency == erpnext.get_company_currency(company)
 		else None
 	)
@@ -816,6 +823,14 @@ def get_expense_claim(employee_advance: str | dict) -> Document:
 	expense_claim.is_paid = 1 if flt(employee_advance.paid_amount) else 0
 	get_expense_claim_advances(expense_claim, employee_advance)
 	return expense_claim
+
+
+@frappe.whitelist()
+def get_default_payable_account(company: str) -> str | None:
+	frappe.has_permission("Company", "read", company, throw=True)
+	return frappe.get_cached_value(
+		"Company", company, "default_expense_claim_payable_account"
+	) or frappe.get_cached_value("Company", company, "default_payroll_payable_account")
 
 
 def get_expense_claim_advances(expense_claim, employee_advance):

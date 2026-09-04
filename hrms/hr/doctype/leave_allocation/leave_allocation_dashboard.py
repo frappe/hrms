@@ -6,5 +6,4 @@ def get_data():
 			{"items": ["Leave Encashment"]},
 			{"items": ["Leave Adjustment"]},
 		],
-		"reports": [{"items": ["Employee Leave Balance"]}],
 	}

@@ -57,6 +57,7 @@ import ExpensesTable from "@/components/ExpensesTable.vue"
 import ExpenseTaxesTable from "@/components/ExpenseTaxesTable.vue"
 import ExpenseAdvancesTable from "@/components/ExpenseAdvancesTable.vue"
 import { getCompanyCurrency } from "@/data/currencies"
+import { settings } from "@/data/settings"
 import { useCurrencyConversion } from "@/composables/useCurrencyConversion"
 
 
@@ -112,7 +113,8 @@ const formFields = createResource({
 		companyDetails.reload()
 	},
 })
-formFields.reload()
+if (settings.data) formFields.reload()
+else settings.promise.then(() => formFields.reload())
 
 useCurrencyConversion(
 	formFields,
@@ -188,6 +190,10 @@ const employeeCurrency = createResource({
 		};
 	},
 	onSuccess(data) {
+		if (!settings.data?.enable_multi_currency_expense_claim) {
+			expenseClaim.value.currency = companyCurrency.value
+			return
+		}
 		if (data?.salary_currency) {
 			expenseClaim.value.currency = data.salary_currency;
 		}
@@ -200,7 +206,8 @@ const companyDetails = createResource({
 	onSuccess(data) {
 		expenseClaim.value.cost_center = data?.cost_center
 		expenseClaim.value.payable_account =
-			data?.default_expense_claim_payable_account
+			data?.default_expense_claim_payable_account ||
+			data?.default_payroll_payable_account
 	},
 })
 
@@ -273,6 +280,8 @@ function getFilteredFields(fields) {
 		"taxes_and_charges_sb",
 		"advance_payments_sb",
 	]
+	if (!settings.data?.enable_multi_currency_expense_claim)
+		excludeFields.push("currency_section", "currency", "exchange_rate")
 	const extraFields = [
 		"employee",
 		"employee_name",
@@ -475,6 +484,10 @@ function validateForm() {
 
 function setExchangeRate() {
 	if (!expenseClaim.value.currency || !formFields.data) return
+	if (!settings.data?.enable_multi_currency_expense_claim) {
+		expenseClaim.value.exchange_rate = 1
+		return
+	}
 	const exchange_rate_field = formFields.data?.find(
 		(field) => field.fieldname === "exchange_rate"
 	)
