@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "HR-LPOL-.YYYY.-.#####",
  "creation": "2018-04-13 16:06:19.507624",
  "doctype": "DocType",
@@ -52,7 +53,7 @@
  "hide_toolbar": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-07-14 09:31:25.466192",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Policy",

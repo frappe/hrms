@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "HR-APP-LETTER-.#####",
  "creation": "2019-12-26 12:35:49.574828",
  "default_print_format": "Standard Appointment Letter",
@@ -86,7 +87,7 @@
   }
  ],
  "links": [],
- "modified": "2024-03-27 13:06:30.680330",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appointment Letter",

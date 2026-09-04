@@ -58,6 +58,8 @@
   "deductions",
   "section_break_jgfy",
   "accrued_benefits",
+  "employer_contributions_section",
+  "employer_contributions",
   "totals",
   "gross_pay",
   "base_gross_pay",
@@ -757,13 +759,26 @@
    "options": "Employee Benefit Detail",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "eval:doc.employer_contributions && doc.employer_contributions.length",
+   "fieldname": "employer_contributions_section",
+   "fieldtype": "Section Break",
+   "label": "Employer Contributions"
+  },
+  {
+   "fieldname": "employer_contributions",
+   "fieldtype": "Table",
+   "options": "Salary Detail",
+   "print_hide": 1
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-19 21:25:42.584589",
+ "modified": "2026-08-25 12:22:09.751656",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",

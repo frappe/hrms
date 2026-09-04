@@ -1,0 +1,21 @@
+{
+ "creation": "2026-08-26 12:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "document_type": "Employee Tax Exemption Proof Submission",
+ "dynamic_filters_json": "[[\"Employee Tax Exemption Proof Submission\", \"company\", \"=\", \"frappe.defaults.get_user_default(\\\"Company\\\")\"]]",
+ "filters_json": "[[\"Employee Tax Exemption Proof Submission\", \"submission_date\", \"Timespan\", \"this year\"], [\"Employee Tax Exemption Proof Submission\", \"docstatus\", \"=\", \"1\"]]",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "label": "Tax Exemption Proofs (This Year)",
+ "modified": "2026-08-26 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Payroll",
+ "name": "Tax Exemption Proofs (This Year)",
+ "owner": "Administrator",
+ "show_percentage_stats": 1,
+ "stats_time_interval": "Monthly",
+ "type": "Document Type"
+}

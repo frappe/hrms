@@ -674,15 +674,17 @@ frappe.ui.form.on("Expense Claim Advance", {
 						set_in_company_currency(frm, child, ["allocated_amount"]);
 						refresh_field("advances");
 					} else {
-						frm.doc.advances = [];
+						remove_invalid_advance_row(frm, cdt, cdn);
 						frappe.validated = false;
-						refresh_field("advances");
 						frappe.throw(
 							__("Selected employee advance is not of employee {0}", [
 								frm.doc.employee,
 							]),
 						);
 					}
+				},
+				error: function () {
+					remove_invalid_advance_row(frm, cdt, cdn);
 				},
 			});
 		}
@@ -735,4 +737,15 @@ async function set_in_company_currency(frm, doc, fields, exchange_rate = frm.doc
 			precision("base_" + f, doc),
 		);
 	});
+}
+
+function remove_invalid_advance_row(frm, cdt, cdn) {
+	const grid_row = frm.fields_dict.advances.grid.grid_rows_by_docname[cdn];
+	if (grid_row) {
+		grid_row.remove();
+	} else {
+		console.error("expense_claim: could not find grid row to remove for cdn", cdn);
+		frappe.model.set_value(cdt, cdn, "employee_advance", "");
+		refresh_field("advances");
+	}
 }

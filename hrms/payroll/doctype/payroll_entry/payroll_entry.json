@@ -252,7 +252,7 @@
   {
    "depends_on": "eval:doc.status=='Failed';",
    "fieldname": "error_message",
-   "fieldtype": "Small Text",
+   "fieldtype": "Text Editor",
    "label": "Error Message",
    "no_copy": 1,
    "read_only": 1
@@ -340,7 +340,7 @@
    "link_fieldname": "payroll_entry"
   }
  ],
- "modified": "2025-08-25 20:05:37.733324",
+ "modified": "2026-09-01 21:42:50.393703",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",

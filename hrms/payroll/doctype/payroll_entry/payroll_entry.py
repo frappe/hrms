@@ -55,7 +55,7 @@ class PayrollEntry(Document):
 		designation: DF.Link | None
 		employees: DF.Table[PayrollEmployeeDetail]
 		end_date: DF.Date
-		error_message: DF.SmallText | None
+		error_message: DF.TextEditor | None
 		exchange_rate: DF.Float
 		grade: DF.Link | None
 		number_of_employees: DF.Int

@@ -31,6 +31,15 @@ def sanitize_expression(string: str | None = None) -> str | None:
 	return string
 
 
+COMPONENT_PARENTFIELDS = ("earnings", "deductions", "employer_contributions")
+
+COMPONENT_TYPE_TO_PARENTFIELD = {
+	"Earning": "earnings",
+	"Deduction": "deductions",
+	"Employer Contribution": "employer_contributions",
+}
+
+
 COMPONENT_EVAL_GLOBALS = {
 	"int": int,
 	"float": float,
