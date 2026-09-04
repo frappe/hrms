@@ -101,7 +101,11 @@ jinja = {
 after_install = "hrms.install.after_install"
 after_migrate = "hrms.setup.update_select_perm_after_install"
 
+setup_wizard_requires = "assets/hrms/js/setup_wizard.js"
+setup_wizard_stages = "hrms.setup_wizard.get_setup_stages"
 setup_wizard_complete = "hrms.subscription_utils.update_erpnext_access"
+
+extend_bootinfo = "hrms.utils.extend_bootinfo"
 
 # Uninstallation
 # ------------

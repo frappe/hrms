@@ -26,6 +26,7 @@ def capture(event: str, properties: dict | None = None) -> None:
 		return
 
 	_capture(event, APP, properties=properties or {})
+	_track_conversion()
 
 
 MILESTONE_DOCTYPE = "HR Telemetry Milestone"
@@ -53,6 +54,40 @@ def capture_first(event: str, properties: dict | None = None) -> None:
 		return
 
 	capture(event, {"day_since_install": age, **(properties or {})})
+
+
+# ---- Conversion --------------------------------------------------------------
+# A site counts as converted once it is still producing usage events more than
+# 14 days after its first capture. The `first_capture` milestone is pure
+# bookkeeping (never sent), its creation timestamp starts the clock.
+
+CONVERSION_WINDOW_DAYS = 14
+FIRST_CAPTURE_MILESTONE = "first_capture"
+CONVERSION_EVENT = "site_converted"
+
+
+def _track_conversion() -> None:
+	if frappe.db.exists(MILESTONE_DOCTYPE, CONVERSION_EVENT):
+		return
+
+	first_capture = frappe.db.get_value(MILESTONE_DOCTYPE, FIRST_CAPTURE_MILESTONE, "creation")
+	if not first_capture:
+		_claim_milestone(FIRST_CAPTURE_MILESTONE)
+		return
+
+	days_since_first_capture = date_diff(today(), first_capture)
+	if days_since_first_capture <= CONVERSION_WINDOW_DAYS:
+		return
+
+	if _claim_milestone(CONVERSION_EVENT):
+		_capture(
+			CONVERSION_EVENT,
+			APP,
+			properties={
+				"days_since_first_capture": days_since_first_capture,
+				"day_since_install": site_age(),
+			},
+		)
 
 
 def _duration_days(from_date, to_date) -> int | None:
@@ -242,9 +277,11 @@ def capture_daily_attendance_pulse():
 	def rate(n):
 		return round(n / active_employees, 3)
 
-	capture(
+	# Scheduler output, not usage: bypass `capture` so it never drives conversion.
+	_capture(
 		"attendance_daily_summary",
-		{
+		APP,
+		properties={
 			"active_employees": active_employees,
 			"checkins": checkins,
 			"employees_checked_in": employees_checked_in,
