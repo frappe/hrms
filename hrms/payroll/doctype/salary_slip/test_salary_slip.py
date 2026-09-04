@@ -3229,3 +3229,33 @@ def clear_cache():
 		TAX_COMPONENTS_BY_COMPANY,
 	]:
 		frappe.cache().delete_value(key)
+
+	def test_set_totals_consistent_with_set_net_pay_for_partial_payment_days(self):
+		from datetime import timedelta
+
+		from frappe.utils import get_first_day, nowdate
+
+		employee = make_employee(
+			"test_partial_days@example.com",
+			date_of_joining=get_first_day(nowdate()) + timedelta(days=14),
+		)
+		salary_structure = make_salary_structure(
+			"Test Structure Partial Days",
+			"Monthly",
+			employee=employee,
+			include_payment_days_based_components=True,
+		)
+
+		ss = make_salary_slip(salary_structure.name, employee=employee)
+		ss.insert()
+
+		ss.calculate_net_pay()
+		expected_net_pay = flt(ss.net_pay, ss.precision("net_pay"))
+		expected_words = ss.total_in_words
+
+		ss.reload()
+		ss.set_totals()
+
+		self.assertEqual(flt(ss.net_pay, ss.precision("net_pay")), expected_net_pay)
+		self.assertEqual(ss.total_in_words, expected_words)
+
