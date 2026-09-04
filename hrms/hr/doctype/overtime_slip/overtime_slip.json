@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "HR-OT-SLIP-.#####",
  "creation": "2024-10-15 16:19:55.229439",
@@ -151,7 +152,7 @@
    "link_fieldname": "ref_docname"
   }
  ],
- "modified": "2025-08-11 17:02:10.282104",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Overtime Slip",

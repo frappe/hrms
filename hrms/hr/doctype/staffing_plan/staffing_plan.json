@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "prompt",
  "creation": "2018-04-13 18:07:21.582747",
  "doctype": "DocType",
@@ -90,7 +91,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-27 13:10:43.405514",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Staffing Plan",

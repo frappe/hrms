@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "naming_series:",
  "creation": "2025-08-28 12:59:25.390188",
  "doctype": "DocType",
@@ -107,7 +108,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-01-07 16:11:21.856458",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Holiday List Assignment",
