@@ -180,6 +180,19 @@ class TestJobOffer(HRMSTestSuite):
 		job_offer.reload()
 		self.assertEqual(job_offer.status, "Rejected")
 
+	def test_rejected_job_offer_does_not_accept_job_applicant(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		job_applicant = create_job_applicant(email_id="rejected_sync@example.com")
+		job_offer = create_job_offer(job_applicant=job_applicant.name, status="Rejected")
+		job_offer.submit()
+
+		update_job_applicant_and_offer(frappe._dict({"job_applicant": job_applicant.name}))
+
+		job_applicant.reload()
+		job_offer.reload()
+		self.assertEqual(job_offer.status, "Rejected")
+		self.assertEqual(job_applicant.status, "Rejected")
+
 	def test_reoffered_applicant_accepts_live_job_offer(self):
 		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
 		job_applicant = create_job_applicant(email_id="reoffered_pick@example.com")

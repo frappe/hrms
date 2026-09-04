@@ -57,6 +57,18 @@ def publish_update(doc, method=None):
 def update_job_applicant_and_offer(doc, method=None):
 	"""Updates Job Applicant and Job Offer status as 'Accepted' and submits them"""
 	job_applicant = doc.get("job_applicant")
+	job_offer = get_linked_job_offer(doc, job_applicant)
+
+	if job_offer and job_offer.status in ("Rejected", "Cancelled"):
+		frappe.msgprint(
+			_(
+				"Linked Job Offer {0} is {1}. Please update the Job Offer status if this hire is intended."
+			).format(get_link_to_form("Job Offer", job_offer.name), frappe.bold(_(job_offer.status))),
+			title=_("Job Offer Status Not Updated"),
+			indicator="orange",
+		)
+		return
+
 	if job_applicant:
 		applicant_status_before_change = frappe.db.get_value("Job Applicant", job_applicant, "status")
 		if applicant_status_before_change != "Accepted":
@@ -67,16 +79,7 @@ def update_job_applicant_and_offer(doc, method=None):
 				)
 			)
 
-	offer_name = doc.get("job_offer")
-	if not offer_name and job_applicant:
-		offer_name = frappe.db.get_value(
-			"Job Offer", {"job_applicant": job_applicant, "docstatus": ["!=", 2]}, "name"
-		)
-	if not offer_name:
-		return
-
-	job_offer = frappe.get_doc("Job Offer", offer_name)
-	if job_offer.docstatus == 2 or job_offer.status in ("Accepted", "Rejected", "Cancelled"):
+	if not job_offer or job_offer.status == "Accepted":
 		return
 
 	job_offer.status = "Accepted"
@@ -93,6 +96,19 @@ def update_job_applicant_and_offer(doc, method=None):
 		msg += "<br>" + _("You may add additional details, if any, and submit the offer.")
 
 	frappe.msgprint(msg)
+
+
+def get_linked_job_offer(doc, job_applicant: str | None):
+	offer_name = doc.get("job_offer")
+	if not offer_name and job_applicant:
+		offer_name = frappe.db.get_value(
+			"Job Offer", {"job_applicant": job_applicant, "docstatus": ["!=", 2]}, "name"
+		)
+	if not offer_name:
+		return None
+
+	job_offer = frappe.get_doc("Job Offer", offer_name)
+	return None if job_offer.docstatus == 2 else job_offer
 
 
 def update_approver_role(doc, method=None):
