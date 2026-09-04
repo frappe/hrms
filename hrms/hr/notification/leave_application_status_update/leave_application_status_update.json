@@ -1,0 +1,30 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "condition": "frappe.utils.cint(doc.follow_via_email)",
+ "condition_type": "Python",
+ "creation": "2026-08-28 17:10:18.434569",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Leave Application",
+ "enabled": 1,
+ "event": "Submit",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "<h2>{{ _(\"Your Leave Application has been\") }} {{ doc.status }}</h2>\n\n<table class=\"table table-bordered small\" style=\"max-width: 500px;\">\n    <tr><td>Employee</td><td>{{ doc.employee_name }}</td></tr>\n    <tr><td>Leave Type</td><td>{{ doc.leave_type }}</td></tr>\n    <tr><td>From Date</td><td>{{ doc.from_date }}</td></tr>\n    <tr><td>To Date</td><td>{{ doc.to_date }}</td></tr>\n    <tr><td>Status</td><td>{{ doc.status }}</td></tr>\n</table>\n\n<p><br>\n<a class=\"btn btn-primary\" href=\"{{ frappe.utils.get_url_to_form(doc.doctype, doc.name) }}\" target=\"_blank\">{{ _('View Leave') }}</a></p>\n",
+ "minutes_offset": 0,
+ "modified": "2026-08-28 19:20:12.252165",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Leave Application Status Update",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_document_field": "employee_email"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "subject": "Leave Application {{ doc.status }}: {{ doc.name }}"
+}
