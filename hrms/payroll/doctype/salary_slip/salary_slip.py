@@ -2662,10 +2662,30 @@ def get_lwp_or_ppl_for_date_range(employee, start_date, end_date):
 
 
 @frappe.whitelist()
-def make_salary_slip_from_timesheet(source_name: str, target_doc: str | Document | None = None) -> Document:
+def make_salary_slip_from_timesheet(source_name: str | Document | None = None) -> Document:
 	frappe.has_permission("Timesheet", "read", source_name, throw=True)
 	target = frappe.new_doc("Salary Slip")
 	set_missing_values(source_name, target)
+	if not target.check_sal_struct():
+		frappe.throw(
+			_("Cannot create Salary Slip: no active Salary Structure is assigned to employee {0}.").format(
+				frappe.bold(target.employee_name)
+			)
+		)
+
+	timesheet_config = frappe.get_cached_value(
+		"Salary Structure",
+		target.salary_structure,
+		["salary_slip_based_on_timesheet", "salary_component"],
+		as_dict=True,
+	)
+	if not timesheet_config or not timesheet_config.salary_slip_based_on_timesheet:
+		frappe.throw(
+			_(
+				"The Assigned Salary Structure {0} for the employee {1} is not configured for Salary Slip based on Timesheet."
+			).format(frappe.bold(target.salary_structure), frappe.bold(target.employee_name))
+		)
+
 	target.run_method("get_emp_and_working_day_details")
 
 	return target
