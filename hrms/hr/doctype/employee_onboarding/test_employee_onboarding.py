@@ -1,6 +1,10 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
+from collections.abc import Iterator
+from contextlib import contextmanager
+from datetime import date
+
 import frappe
 from frappe.utils import add_days, getdate
 
@@ -59,6 +63,52 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		employee.insert()
 		self.assertEqual(employee.employee_name, "Test Engineer")
 
+	def test_task_dates_skip_holidays(self):
+		boarding_begins_on = getdate()
+		onboarding = create_employee_onboarding(
+			boarding_begins_on=boarding_begins_on,
+			holidays=[
+				{"holiday_date": add_days(boarding_begins_on, 1), "description": "Test Holiday"},
+				{"holiday_date": add_days(boarding_begins_on, 2), "description": "Test Holiday"},
+				# half days are working days, so dates should not be pushed past them
+				{
+					"holiday_date": add_days(boarding_begins_on, 3),
+					"description": "Test Half Day Holiday",
+					"is_half_day": 1,
+				},
+			],
+		)
+
+		# first activity begins on day 0 and ends on day 1, which falls in the holiday block
+		start_date, end_date = get_task_dates(onboarding.activities[0].task)
+		self.assertEqual(start_date, boarding_begins_on)
+		self.assertEqual(end_date, add_days(boarding_begins_on, 3))
+
+		# second activity begins on day 1 and ends on day 2, both in the holiday block
+		start_date, end_date = get_task_dates(onboarding.activities[1].task)
+		self.assertEqual(start_date, add_days(boarding_begins_on, 3))
+		self.assertEqual(end_date, add_days(boarding_begins_on, 3))
+
+	def test_holidays_are_fetched_in_a_single_query(self):
+		boarding_begins_on = getdate()
+		onboarding = create_employee_onboarding(
+			boarding_begins_on=boarding_begins_on,
+			holidays=[
+				{"holiday_date": add_days(boarding_begins_on, day), "description": "Test Holiday"}
+				for day in range(1, 8)
+			],
+		)
+		holiday_list = onboarding.get_holiday_list()
+
+		# dates walk over a week of holidays, but the holidays are read only once
+		with count_queries() as queries:
+			holidays = onboarding.get_upcoming_holidays(holiday_list)
+			for activity in onboarding.activities:
+				onboarding.get_task_dates(activity, holidays)
+
+		holiday_queries = [query for query in queries if "`tabHoliday`" in query]
+		self.assertEqual(len(holiday_queries), 1, msg="\n\n".join(holiday_queries))
+
 	def test_mark_onboarding_as_completed(self):
 		onboarding = create_employee_onboarding()
 
@@ -78,6 +128,23 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		self.assertEqual(project.status, "Completed")
 		for task_status in frappe.get_all("Task", dict(project=project.name), pluck="status"):
 			self.assertEqual(task_status, "Completed")
+
+
+@contextmanager
+def count_queries() -> Iterator[list[str]]:
+	"""Collect the queries fired inside the block, so N+1s can be asserted against."""
+	queries = []
+	original_sql = frappe.db.__class__.sql
+
+	def counting_sql(self, query, *args, **kwargs):
+		queries.append(str(query))
+		return original_sql(self, query, *args, **kwargs)
+
+	frappe.db.__class__.sql = counting_sql
+	try:
+		yield queries
+	finally:
+		frappe.db.__class__.sql = original_sql
 
 
 def get_job_applicant():
@@ -103,19 +170,24 @@ def get_job_offer(applicant_name):
 	return job_offer
 
 
-def create_employee_onboarding():
+def create_employee_onboarding(holidays: list | None = None, boarding_begins_on: date | str | None = None):
 	applicant = get_job_applicant()
 	job_offer = get_job_offer(applicant.name)
 
-	holiday_list = make_holiday_list("_Test Employee Boarding")
+	boarding_begins_on = getdate(boarding_begins_on)
+	holiday_list = make_holiday_list(
+		"_Test Employee Boarding", from_date=boarding_begins_on, to_date=add_days(boarding_begins_on, 30)
+	)
 	holiday_list = frappe.get_doc("Holiday List", holiday_list)
 	holiday_list.holidays = []
+	for holiday in holidays or []:
+		holiday_list.append("holidays", holiday)
 	holiday_list.save()
 
 	onboarding = frappe.new_doc("Employee Onboarding")
 	onboarding.job_applicant = applicant.name
 	onboarding.job_offer = job_offer.name
-	onboarding.date_of_joining = onboarding.boarding_begins_on = getdate()
+	onboarding.date_of_joining = onboarding.boarding_begins_on = boarding_begins_on
 	onboarding.company = "_Test Company"
 	onboarding.holiday_list = holiday_list.name
 	onboarding.designation = "Engineer"
