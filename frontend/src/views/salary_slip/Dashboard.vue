@@ -4,10 +4,10 @@
 			<div class="flex flex-col items-center my-7 p-4">
 				<div class="flex flex-col w-full bg-white rounded py-5 px-3.5 gap-5">
 					<div v-if="lastSalarySlip && lastSalarySlip.year_to_date" class="flex flex-col w-full gap-1.5">
-						<span class="text-gray-600 text-sm font-medium leading-5">
+						<span class="text-gray-600 text-sm-medium leading-5">
 							{{ __("Year To Date") }}
 						</span>
-						<span class="text-gray-800 text-xl font-bold leading-6">
+						<span class="text-gray-800 text-2xl-bold leading-6">
 							{{
 								formatCurrency(
 									lastSalarySlip.year_to_date,
@@ -17,7 +17,7 @@
 						</span>
 					</div>
 
-					<Autocomplete
+					<Combobox
 						:label="__('Payroll Period')"
 						class="w-full"
 						:placeholder="__('Select Payroll Period')"
@@ -56,7 +56,7 @@
 
 <script setup>
 import { inject, ref, computed, watch, onMounted, onBeforeUnmount } from "vue"
-import { Autocomplete, createListResource } from "frappe-ui"
+import { Combobox, createListResource } from "frappe-ui"
 
 import BaseLayout from "@/components/BaseLayout.vue"
 import EmptyState from "@/components/EmptyState.vue"
@@ -64,7 +64,7 @@ import SalarySlipItem from "@/components/SalarySlipItem.vue"
 
 import { formatCurrency } from "@/utils/formatters"
 
-let selectedPeriod = ref({})
+let selectedPeriod = ref(null)
 let periodsByName = ref({})
 
 const employee = inject("$employee")
@@ -90,7 +90,7 @@ const payrollPeriods = createListResource({
 		})
 	},
 	onSuccess: (data) => {
-		selectedPeriod.value = data[0]
+		selectedPeriod.value = data[0]?.value ?? null
 	},
 })
 
@@ -123,7 +123,7 @@ function getPeriodLabel(period) {
 watch(
 	() => selectedPeriod.value,
 	(value) => {
-		let period = periodsByName.value[value?.value]
+		let period = periodsByName.value[value]
 		documents.filters.start_date = [
 			"between",
 			[period?.start_date, period?.end_date],

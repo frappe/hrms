@@ -2,6 +2,7 @@ import { defineConfig } from "vite"
 import vue from "@vitejs/plugin-vue"
 import { VitePWA } from "vite-plugin-pwa"
 import frappeui from "frappe-ui/vite"
+import devBootFallback from "./devBootFallback.js"
 
 import path from "path"
 import fs from "fs"
@@ -14,7 +15,13 @@ export default defineConfig({
 	},
 	plugins: [
 		vue(),
-		frappeui(),
+		devBootFallback(),
+		frappeui({
+			frappeProxy: false,
+			lucideIcons: true,
+			jinjaBootData: false,
+			buildConfig: false,
+		}),
 		VitePWA({
 			registerType: "autoUpdate",
 			strategies: "injectManifest",
@@ -82,12 +89,8 @@ export default defineConfig({
 		},
 	},
 	optimizeDeps: {
-		include: [
-			"frappe-ui > feather-icons",
-			"showdown",
-			"tailwind.config.js",
-			"engine.io-client",
-		],
+		exclude: ["frappe-ui"],
+		include: ["tailwind.config.js", "engine.io-client", "feather-icons"],
 	},
 })
 

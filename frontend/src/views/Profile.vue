@@ -12,9 +12,9 @@
 								class="!pl-0 hover:bg-white"
 								@click="router.back()"
 							>
-								<FeatherIcon name="chevron-left" class="h-5 w-5" />
+								<span class="lucide-chevron-left h-5 w-5" />
 							</Button>
-							<h2 class="text-xl font-semibold text-gray-900">{{ __("Profile") }}</h2>
+							<h2 class="text-2xl-semibold text-gray-900">{{ __("Profile") }}</h2>
 						</div>
 					</header>
 
@@ -34,10 +34,10 @@
 						</div>
 
 						<div class="flex flex-col gap-1.5 items-center mt-2 mb-5">
-							<span v-if="employee" class="text-lg font-bold text-gray-900">{{
+							<span v-if="employee" class="text-lg-bold text-gray-900">{{
 								employee?.data?.employee_name
 							}}</span>
-							<span v-if="employee" class="font-normal text-sm text-gray-500">{{
+							<span v-if="employee" class="text-sm text-gray-500">{{
 								employee?.data?.designation
 							}}</span>
 						</div>
@@ -52,17 +52,13 @@
 									@click="openInfoModal(link)"
 								>
 									<div class="flex flex-row items-center gap-3 grow">
-										<FeatherIcon
-											:name="link.icon"
-											class="h-5 w-5 text-gray-500"
-										/>
-										<div class="text-base font-normal text-gray-800">
+										<span :class="[link.icon, 'h-5 w-5 text-gray-500']" />
+										<div class="text-base text-gray-800">
 											{{ link.title }}
 										</div>
 									</div>
-									<FeatherIcon
-										name="chevron-right"
-										class="h-5 w-5 text-gray-500"
+									<span
+										class="lucide-chevron-right h-5 w-5 text-gray-500"
 									/>
 								</div>
 							</div>
@@ -78,17 +74,15 @@
 									class="flex flex-row cursor-pointer flex-start p-4 items-center justify-between border-b"
 								>
 									<div class="flex flex-row items-center gap-3 grow">
-										<FeatherIcon
-											name="settings"
-											class="h-5 w-5 text-gray-500"
+										<span
+											class="lucide-settings h-5 w-5 text-gray-500"
 										/>
-										<div class="text-base font-normal text-gray-800">
+										<div class="text-base text-gray-800">
 											{{ __("Settings") }}
 										</div>
 									</div>
-									<FeatherIcon
-										name="chevron-right"
-										class="h-5 w-5 text-gray-500"
+									<span
+										class="lucide-chevron-right h-5 w-5 text-gray-500"
 									/>
 								</router-link>
 							</div>
@@ -101,7 +95,7 @@
 							class="w-full shadow py-4 mt-5"
 						>
 							<template #prefix>
-								<FeatherIcon name="log-out" class="w-4" />
+								<span class="lucide-log-out w-4" />
 							</template>
 							{{ __("Log Out") }}
 						</Button>
@@ -141,7 +135,7 @@
 import { computed, inject, ref, watch, onMounted, onBeforeUnmount } from "vue"
 import { useRouter } from "vue-router"
 import { IonPage, IonContent } from "@ionic/vue"
-import { FeatherIcon, createDocumentResource, createResource, toast } from "frappe-ui"
+import { createDocumentResource, createResource } from "frappe-ui"
 
 import { showErrorAlert } from "@/utils/dialogs"
 import { formatCurrency } from "@/utils/formatters"
@@ -162,7 +156,7 @@ const router = useRouter()
 
 const profileLinks = [
 	{
-		icon: "user",
+		icon: "lucide-user",
 		title: __("Employee Details"),
 		fields: [
 			"employee_name",
@@ -174,7 +168,7 @@ const profileLinks = [
 		],
 	},
 	{
-		icon: "file",
+		icon: "lucide-file",
 		title: __("Company Information"),
 		fields: [
 			"company",
@@ -187,7 +181,7 @@ const profileLinks = [
 		],
 	},
 	{
-		icon: "book",
+		icon: "lucide-book",
 		title: __("Contact Information"),
 		fields: [
 			"cell_number",
@@ -197,7 +191,7 @@ const profileLinks = [
 		],
 	},
 	{
-		icon: "dollar-sign",
+		icon: "lucide-dollar-sign",
 		title: __("Salary Information"),
 		fields: [
 			"ctc",

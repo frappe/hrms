@@ -10,21 +10,82 @@
 				:id="props.id"
 				:showAttachmentView="true"
 				@validateForm="validateForm"
-			/>
+			>
+				<template #from_date="{ field, readOnly }">
+					<div v-if="!field.hidden" class="flex flex-col gap-1.5">
+						<span
+							class="block text-sm leading-5 text-gray-700"
+							:class="field.reqd ? `after:content-['_*'] after:text-red-600` : ''"
+						>
+							{{ __("Leave Period") }}
+						</span>
+						<DateRangePicker
+							v-model="leaveDateRange"
+							:format="dateFormat"
+							:typeable="false"
+							:disabled="readOnly"
+						>
+							<template #trigger="{ togglePopover, isOpen }">
+								<div
+									class="grid grid-cols-2 divide-x divide-outline-gray-2 rounded border bg-surface-base text-sm transition-colors"
+									:class="
+										isOpen
+											? 'border-outline-gray-4 ring-2 ring-outline-gray-2'
+											: 'border-outline-gray-2 hover:border-outline-gray-3'
+									"
+								>
+									<button
+										type="button"
+										class="flex items-center gap-2 rounded-l px-3 py-2 text-left hover:bg-surface-gray-1 disabled:cursor-not-allowed disabled:opacity-60"
+										:disabled="readOnly"
+										@click="togglePopover"
+									>
+										<span class="lucide-calendar-days size-4 text-ink-gray-5" />
+										<div class="flex min-w-0 flex-col leading-tight">
+											<span class="text-xs text-ink-gray-5">{{ __("From Date") }}</span>
+											<span class="truncate text-ink-gray-9">
+												{{ formatLeaveDate(leaveApplication.from_date) }}
+											</span>
+										</div>
+									</button>
+									<button
+										type="button"
+										class="flex items-center gap-2 rounded-r px-3 py-2 text-left hover:bg-surface-gray-1 disabled:cursor-not-allowed disabled:opacity-60"
+										:disabled="readOnly"
+										@click="togglePopover"
+									>
+										<span class="lucide-calendar-days size-4 text-ink-gray-5" />
+										<div class="flex min-w-0 flex-col leading-tight">
+											<span class="text-xs text-ink-gray-5">{{ __("To Date") }}</span>
+											<span class="truncate text-ink-gray-9">
+												{{ formatLeaveDate(leaveApplication.to_date) }}
+											</span>
+										</div>
+									</button>
+								</div>
+							</template>
+						</DateRangePicker>
+						<ErrorMessage :message="field.error_message" />
+					</div>
+				</template>
+			</FormView>
 		</ion-content>
 	</ion-page>
 </template>
 
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
-import { createResource } from "frappe-ui"
-import { ref, watch, inject, nextTick } from "vue"
+import { createResource, DateRangePicker, ErrorMessage } from "frappe-ui"
+import { computed, ref, watch, inject, nextTick } from "vue"
 
 import FormView from "@/components/FormView.vue"
 
 const dayjs = inject("$dayjs")
 const __ = inject("$translate")
 const today = dayjs().format("YYYY-MM-DD")
+const dateFormat = (
+	window.frappe?.boot?.sysdefaults?.date_format || "yyyy-mm-dd"
+).toUpperCase()
 
 const props = defineProps({
 	id: {
@@ -65,6 +126,7 @@ const formFields = createResource({
 
 		return fields.map((field) => {
 			if (field.fieldname === "half_day_date") field.hidden = true
+			if (field.fieldname === "to_date") field.hidden = true
 
 			if (field.fieldname === "posting_date") field.default = today
 
@@ -77,6 +139,22 @@ const formFields = createResource({
 	},
 })
 formFields.reload()
+
+const leaveDateRange = computed({
+	get() {
+		if (!(leaveApplication.value.from_date && leaveApplication.value.to_date)) return []
+		return [leaveApplication.value.from_date, leaveApplication.value.to_date]
+	},
+	set(range) {
+		const [fromDate = "", toDate = ""] = range || []
+		leaveApplication.value.from_date = fromDate
+		leaveApplication.value.to_date = toDate
+	},
+})
+
+function formatLeaveDate(value) {
+	return value ? dayjs(value).format(dateFormat) : __("Add date")
+}
 
 const leaveApprovalDetails = createResource({
 	url: "hrms.api.get_leave_approval_details",

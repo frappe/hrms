@@ -1,16 +1,16 @@
 <template>
 	<!-- Header -->
 	<div class="flex flex-row justify-between items-center mt-2">
-		<h2 class="text-base font-semibold text-gray-800">{{ __("Expenses") }} </h2>
+		<h2 class="text-base-semibold text-gray-800">{{ __("Expenses") }} </h2>
 		<div class="flex flex-row gap-3 items-center">
-			<span class="text-base font-semibold text-gray-800">
+			<span class="text-base-semibold text-gray-800">
 				{{ formatCurrency(expenseClaim.total_claimed_amount, expenseClaim.currency) }}
 			</span>
 			<Button
 				v-if="!isReadOnly"
 				id="add-expense-modal"
 				class="text-sm"
-				icon="plus"
+				icon="lucide-plus"
 				variant="subtle"
 				@click="openModal()"
 			/>
@@ -32,10 +32,10 @@
 				<div class="flex flex-row items-center justify-between">
 					<div class="flex flex-row items-start gap-3 grow">
 						<div class="flex flex-col items-start gap-1.5">
-							<div class="text-base font-normal text-gray-800">
+							<div class="text-base text-gray-800">
 								{{ __(item.expense_type) }}
 							</div>
-							<div class="text-xs font-normal text-gray-500">
+							<div class="text-xs text-gray-500">
 								<span>
 									{{
 										__("{0}: {1}", [
@@ -52,10 +52,10 @@
 						</div>
 					</div>
 					<div class="flex flex-row justify-end items-center gap-2">
-						<span class="text-gray-700 font-normal rounded text-base">
+						<span class="text-gray-700 rounded text-base">
 							{{ formatCurrency(item.amount, expenseClaim.currency) }}
 						</span>
-						<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
+						<span class="lucide-chevron-right h-5 w-5 text-gray-500" />
 					</div>
 				</div>
 			</div>
@@ -70,7 +70,7 @@
 				class="bg-white w-full flex flex-col items-center justify-center pb-5"
 			>
 				<div class="w-full pt-8 pb-5 border-b text-center">
-					<span class="text-gray-900 font-bold text-lg">
+					<span class="text-gray-900 text-lg-bold">
 						{{ modalTitle }}
 					</span>
 				</div>
@@ -104,7 +104,7 @@
 							@click="deleteExpenseItem()"
 						>
 							<template #prefix>
-								<FeatherIcon name="trash" class="w-4" />
+								<span class="lucide-trash w-4" />
 							</template>
 							{{ __("Delete") }}
 						</Button>
@@ -115,9 +115,8 @@
 							:disabled="addButtonDisabled"
 						>
 							<template #prefix>
-								<FeatherIcon
-									:name="editingIdx === null ? 'plus' : 'check'"
-									class="w-4"
+								<span
+									:class="[editingIdx === null ? 'lucide-plus' : 'lucide-check', 'w-4']"
 								/>
 							</template>
 							{{ editingIdx === null ? __("Add Expense") : __("Update Expense") }}
@@ -130,7 +129,7 @@
 </template>
 
 <script setup>
-import { FeatherIcon, createResource } from "frappe-ui"
+import { createResource } from "frappe-ui"
 import { computed, ref, watch, inject } from "vue"
 
 import FormField from "@/components/FormField.vue"

@@ -1,10 +1,10 @@
 <template>
 	<!-- Filter Action Sheet -->
 	<div
-		class="bg-white w-full flex flex-col items-center justify-center pb-5 max-h-[calc(100vh-5rem)]"
+		class="bg-white w-full flex flex-col items-center justify-center pb-5 max-h-[calc(100vh-5rem)] overflow-x-hidden"
 	>
 		<div class="w-full pt-8 pb-5 border-b text-center sticky top-0 z-[100]">
-			<span class="text-gray-900 font-bold text-lg">{{ __("Filters") }} </span>
+			<span class="text-gray-900 text-lg-bold">{{ __("Filters") }} </span>
 		</div>
 
 		<div class="w-full p-4 overflow-auto">
@@ -19,7 +19,7 @@
 						class="flex flex-col gap-1.5"
 						v-if="['status', 'approval_status'].includes(filter.fieldname)"
 					>
-						<div class="text-gray-800 font-semibold text-base">
+						<div class="text-gray-800 text-base-semibold">
 							{{ __(filter.label) }}
 						</div>
 						<div class="flex flex-row gap-2 mt-2 flex-wrap">
@@ -40,21 +40,23 @@
 					</div>
 
 					<!-- Field filters -->
-					<div v-else class="flex flex-col gap-2">
-						<div class="text-gray-800 font-semibold text-base">
+					<div v-else class="flex w-full min-w-0 flex-col gap-2">
+						<div class="text-gray-800 text-base-semibold">
 							{{ __(filter.label) }}
 						</div>
-						<div class="flex flex-row items-center gap-3">
-							<Autocomplete
+						<div class="flex min-w-0 flex-row items-center gap-3">
+							<Combobox
 								v-if="filterConditionMap[filter.fieldtype]"
-								class="mt-1 w-[75px]"
+								class="mt-1 w-[75px] shrink-0"
 								:options="filterConditionMap[filter.fieldtype]"
 								v-model="filters[filter.fieldname].condition"
 							/>
 							<FormField
-								class="w-full"
+								class="min-w-0 flex-1"
 								:fieldtype="filter.fieldtype"
 								:fieldname="filter.fieldname"
+								:label="filter.label"
+								:hideLabel="true"
 								:options="filter.options"
 								v-model="filters[filter.fieldname].value"
 							/>
@@ -66,19 +68,19 @@
 
 		<!-- Filter Buttons -->
 		<div
-			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t p-4 z[100]"
+			class="flex w-full flex-row items-center gap-3 sticky bottom-0 border-t bg-white p-4 z-[100]"
 		>
 			<Button
 				@click="emit('clear-filters')"
 				variant="outline"
-				class="w-full py-5 text-sm"
+				class="shrink-0 px-3 py-5 text-sm"
 			>
 				{{ __("Clear All") }}
 			</Button>
 			<Button
 				@click="emit('apply-filters')"
 				variant="solid"
-				class="w-full py-5 text-sm"
+				class="min-w-0 flex-1 py-5 text-sm"
 			>
 				{{ __("Apply Filters") }}
 			</Button>
@@ -89,7 +91,7 @@
 <script setup>
 import { computed } from "vue"
 import FormField from "@/components/FormField.vue"
-import { Autocomplete } from "frappe-ui"
+import { Combobox } from "frappe-ui"
 
 const props = defineProps({
 	filterConfig: {

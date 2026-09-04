@@ -2,7 +2,10 @@
 	<div v-if="showField" class="flex flex-col gap-1.5">
 		<!-- Label -->
 		<span
-			v-if="!['Check', 'Section Break', 'Column Break'].includes(props.fieldtype)"
+			v-if="
+				!props.hideLabel &&
+				!['Check', 'Section Break', 'Column Break'].includes(props.fieldtype)
+			"
 			:class="[
 				// mark field as mandatory
 				props.reqd ? `after:content-['_*'] after:text-red-600` : ``,
@@ -13,15 +16,15 @@
 		</span>
 
 		<!-- Select or Link field with predefined options -->
-		<Autocomplete
+		<Combobox
 			v-if="props.fieldtype === 'Select' || props.documentList"
 			:class="isReadOnly ? 'pointer-events-none' : ''"
 			:placeholder="__('Select {0}', [props.label])"
 			:options="selectionList"
-			:modelValue="modelValue"
+			:model-value="modelValue"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
-			@update:modelValue="(v) => emit('update:modelValue', v?.value)"
+			@update:model-value="(v) => emit('update:modelValue', v)"
 		/>
 
 		<!-- Link field -->
@@ -34,71 +37,72 @@
 			@update:modelValue="(v) => emit('update:modelValue', v)"
 		/>
 
-		<TextEditor
+		<Editor
 			v-else-if="props.fieldtype === 'Text Editor'"
-			:content="modelValue"
+			:model-value="modelValue || ''"
+			:extensions="editorExtensions"
 			:placeholder="__('Enter {0}', [props.label])"
-			@change="(v) => emit('update:modelValue', v)"
-			:fixedMenu="true"
 			:editable="!isReadOnly"
-			editor-class="prose-sm border-b border-x border-gray-200 rounded-b-sm p-1 min-h-[4rem]"
-		/>
+			:upload-function="uploadEditorFile"
+			@update:model-value="(v) => emit('update:modelValue', v)"
+		>
+			<div class="overflow-hidden rounded-sm border border-gray-200">
+				<EditorFixedMenu
+					:items="articleToolbar"
+					class="overflow-x-auto border-b border-gray-200 p-1"
+				/>
+				<EditorContent class="prose-sm p-1 min-h-[4rem]" />
+			</div>
+		</Editor>
 
 		<!-- Text -->
-		<Input
+		<Textarea
 			v-else-if="['Small Text', 'Text', 'Long Text'].includes(props.fieldtype)"
-			type="textarea"
-			:value="modelValue"
+			:model-value="modelValue"
 			:placeholder="__('Enter {0}', [props.label])"
-			@input="(v) => emit('update:modelValue', v)"
-			@change="(v) => emit('change', v)"
+			@update:model-value="(v) => emit('update:modelValue', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
 			class="h-15"
 		/>
 
 		<!-- Check -->
-		<Input
+		<Checkbox
 			v-else-if="props.fieldtype === 'Check'"
-			type="checkbox"
 			:label="props.label"
-			:value="modelValue"
-			@input="(v) => emit('update:modelValue', v)"
-			@change="(v) => emit('change', v)"
+			:model-value="Boolean(modelValue)"
+			@update:model-value="(v) => emit('update:modelValue', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
 			class="rounded-sm text-gray-800"
 		/>
 
 		<!-- Data field -->
-		<Input
+		<TextInput
 			v-else-if="props.fieldtype === 'Data'"
 			type="text"
-			:value="modelValue"
-			@input="(v) => emit('update:modelValue', v)"
-			@change="(v) => emit('change', v)"
+			:model-value="modelValue"
+			@update:model-value="(v) => emit('update:modelValue', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
 		/>
 
 		<!-- Read only currency field -->
-		<Input
+		<TextInput
 			v-else-if="props.fieldtype === 'Currency' && isReadOnly"
 			type="text"
-			:value="modelValue"
-			@input="(v) => emit('update:modelValue', v)"
-			@change="(v) => emit('change', v)"
+			:model-value="modelValue"
+			@update:model-value="(v) => emit('update:modelValue', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
 		/>
 
 		<!-- Float/Int field -->
-		<Input
+		<TextInput
 			v-else-if="isNumberType"
 			type="number"
-			:value="modelValue"
-			@input="(v) => emit('update:modelValue', v)"
-			@change="(v) => emit('change', v)"
+			:model-value="modelValue"
+			@update:model-value="(v) => emit('update:modelValue', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
 		/>
@@ -110,7 +114,7 @@
 		>
 			<h2
 				v-if="props.label"
-				class="text-base font-semibold text-gray-800"
+				class="text-base-semibold text-gray-800"
 				:class="props.addSectionPadding ? 'pt-4' : ''"
 			>
 				{{ props.label }}
@@ -118,15 +122,13 @@
 		</div>
 
 		<!-- Date -->
-		<!-- FIXME: default datepicker has poor UI -->
-		<Input
+		<DatePicker
 			v-else-if="props.fieldtype === 'Date'"
-			type="date"
-			:value="modelValue"
+			:model-value="modelValue"
 			:placeholder="__('Select {0}', [props.label])"
-			:formatValue="(val) => dayjs(val).format('DD-MM-YYYY')"
-			@input="(v) => emit('update:modelValue', v)"
-			@change="(v) => emit('change', v)"
+			:format="dateFormat"
+			:typeable="false"
+			@update:model-value="(v) => emit('update:modelValue', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
 			:min="props.minDate"
@@ -134,13 +136,24 @@
 		/>
 
 		<!-- Time -->
+		<TextInput
+			v-else-if="props.fieldtype === 'Time'"
+			type="time"
+			step="60"
+			:model-value="formatTimeValue(modelValue)"
+			:placeholder="__('Select {0}', [props.label])"
+			@update:model-value="(v) => emit('update:modelValue', normalizeTimeValue(v))"
+			v-bind="$attrs"
+			:disabled="isReadOnly"
+		/>
+
 		<!-- Datetime -->
 		<DateTimePicker
 			v-else-if="props.fieldtype === 'Datetime'"
-			:value="modelValue"
+			:model-value="modelValue"
 			:placeholder="`Select ${props.label}`"
-			:formatter="(val) => dayjs(val).format('DD-MM-YYYY HH:mm:ss')"
-			@update:modelValue="(v) => emit('update:modelValue', v)"
+			format="DD-MM-YYYY HH:mm:ss"
+			@update:model-value="(v) => emit('update:modelValue', v)"
 			v-bind="$attrs"
 			:disabled="isReadOnly"
 		/>
@@ -150,7 +163,23 @@
 </template>
 
 <script setup>
-import { Autocomplete, DateTimePicker, ErrorMessage, Input, TextEditor } from "frappe-ui"
+import {
+	Checkbox,
+	Combobox,
+	DatePicker,
+	DateTimePicker,
+	ErrorMessage,
+	Textarea,
+	useFileUpload,
+	TextInput,
+} from "frappe-ui"
+import {
+	articleToolbar,
+	Editor,
+	EditorContent,
+	EditorFixedMenu,
+	RichTextKit,
+} from "frappe-ui/editor"
 import { computed, onMounted, inject } from "vue"
 
 import Link from "@/components/Link.vue"
@@ -163,6 +192,7 @@ const props = defineProps({
 	modelValue: [String, Number, Boolean, Array, Object],
 	default: [String, Number, Boolean, Array, Object],
 	label: String,
+	hideLabel: Boolean,
 	options: [String, Array],
 	linkFilters: Object,
 	documentList: Array,
@@ -181,8 +211,15 @@ const props = defineProps({
 	},
 })
 
-const emit = defineEmits(["change", "update:modelValue"])
+const emit = defineEmits(["update:modelValue"])
 const dayjs = inject("$dayjs")
+const dateFormat = (
+	window.frappe?.boot?.sysdefaults?.date_format || "yyyy-mm-dd"
+).toUpperCase()
+
+const editorExtensions = [RichTextKit]
+const editorFileUpload = useFileUpload()
+const uploadEditorFile = (file) => editorFileUpload.upload(file, { private: true })
 
 const showField = computed(() => {
 	if (props.readOnly && !isLayoutField.value && !props.modelValue) return false
@@ -201,6 +238,18 @@ const isLayoutField = computed(() => {
 const isReadOnly = computed(() => {
 	return Boolean(props.readOnly)
 })
+
+function formatTimeValue(value) {
+	if (!value) return ""
+	return String(value).split(":").slice(0, 2).join(":")
+}
+
+function normalizeTimeValue(value) {
+	if (!value) return ""
+	const time = String(value).split(":")
+	if (time.length === 2) return `${time[0]}:${time[1]}:00`
+	return String(value).split(".")[0]
+}
 
 const selectionList = computed(() => {
 	if (props.fieldtype === "Link" && props.documentList) {

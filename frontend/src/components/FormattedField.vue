@@ -13,11 +13,10 @@
 		{{ dayjs(props.value).format("D MMM YYYY") }}
 	</div>
 
-	<Input
+	<Checkbox
 		v-else-if="props.fieldtype === 'Check'"
-		type="checkbox"
 		label=""
-		v-model="props.value"
+		:model-value="Boolean(props.value)"
 		:disabled="true"
 		class="rounded-sm text-gray-800"
 	/>
@@ -59,7 +58,7 @@
 
 <script setup>
 import { inject } from "vue"
-import { Badge, FormControl, Input } from "frappe-ui"
+import { Badge, Checkbox } from "frappe-ui"
 
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
 

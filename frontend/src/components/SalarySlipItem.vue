@@ -3,10 +3,10 @@
 		<template #left>
 			<SalaryIcon class="h-5 w-5 text-gray-500" />
 			<div class="flex flex-col items-start gap-1.5">
-				<div class="text-base font-normal text-gray-800">
+				<div class="text-base text-gray-800">
 					{{ title }}
 				</div>
-				<div v-if="doc?.gross_pay" class="text-xs font-normal text-gray-500">
+				<div v-if="doc?.gross_pay" class="text-xs text-gray-500">
 					<span>
 						{{
 							__("{0}: {1}", [
@@ -20,17 +20,16 @@
 			</div>
 		</template>
 		<template #right>
-			<span v-if="doc?.net_pay" class="text-gray-700 font-normal rounded text-base">
+			<span v-if="doc?.net_pay" class="text-gray-700 rounded text-base">
 				{{ formatCurrency(doc.net_pay, doc.currency) }}
 			</span>
-			<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
+			<span class="lucide-chevron-right h-5 w-5 text-gray-500" />
 		</template>
 	</ListItem>
 </template>
 
 <script setup>
 import { computed, inject } from "vue"
-import { FeatherIcon } from "frappe-ui"
 
 import ListItem from "@/components/ListItem.vue"
 import SalaryIcon from "@/components/icons/SalaryIcon.vue"

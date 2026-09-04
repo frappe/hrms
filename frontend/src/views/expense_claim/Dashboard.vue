@@ -20,7 +20,7 @@
 				</div>
 
 				<div>
-					<div class="text-lg text-gray-800 font-bold">{{ __("Recent Expenses") }}</div>
+					<div class="text-lg-bold text-gray-800">{{ __("Recent Expenses") }}</div>
 					<RequestList
 						:component="markRaw(ExpenseClaimItem)"
 						:items="myClaims.data"
@@ -31,12 +31,12 @@
 
 				<div>
 					<div class="flex flex-row justify-between items-center">
-						<div class="text-lg text-gray-800 font-bold">
+						<div class="text-lg-bold text-gray-800">
 							{{ __("Employee Advance Balance") }}
 						</div>
 						<router-link
 							:to="{ name: 'EmployeeAdvanceListView' }"
-							class="text-sm text-gray-800 font-semibold cursor-pointer underline underline-offset-2"
+							class="text-sm-semibold text-gray-800 cursor-pointer underline underline-offset-2"
 						>
 							{{ __("View List") }}
 						</router-link>

@@ -7,13 +7,12 @@
 		<div
 			class="w-full flex flex-row gap-2 pt-8 pb-5 border-b justify-center items-center sticky top-0 z-[100]"
 		>
-			<span class="text-gray-900 font-bold text-lg text-center">
+			<span class="text-gray-900 text-lg-bold text-center">
 				{{ __(document?.doctype) }}
 			</span>
-			<FeatherIcon
+			<span
 				v-if="props.showOpenForm"
-				name="external-link"
-				class="h-4 w-4 text-gray-500 cursor-pointer"
+				class="lucide-external-link h-4 w-4 text-gray-500 cursor-pointer"
 				@click="openFormView"
 			/>
 		</div>
@@ -91,7 +90,7 @@
 				theme="red"
 			>
 				<template #prefix>
-					<FeatherIcon name="x" class="w-4" />
+					<span class="lucide-x w-4" />
 				</template>
 				{{ __("Reject") }}
 			</Button>
@@ -103,7 +102,7 @@
 				theme="green"
 			>
 				<template #prefix>
-					<FeatherIcon name="check" class="w-4" />
+					<span class="lucide-check w-4" />
 				</template>
 				{{ __("Approve") }}
 			</Button>
@@ -138,7 +137,7 @@
 				theme="red"
 			>
 				<template #prefix>
-					<FeatherIcon name="x" class="w-4" />
+					<span class="lucide-x w-4" />
 				</template>
 				{{ __("Cancel") }}
 			</Button>
@@ -163,7 +162,6 @@ import {
 	toast,
 	createDocumentResource,
 	createResource,
-	FeatherIcon,
 } from "frappe-ui"
 
 import FormattedField from "@/components/FormattedField.vue"
@@ -313,21 +311,13 @@ const updateDocumentStatus = ({ status = "", docstatus = 0 }) => {
 			onSuccess() {
 				if (docstatus !== 0) modalController.dismiss()
 
-				toast({
-					title: __("Success"),
-					text: getSuccessMessage({ status, docstatus }),
-					icon: "check-circle",
-					position: "bottom-center",
-					iconClasses: "text-green-500",
+				toast.success(__("Success"), {
+					description: getSuccessMessage({ status, docstatus }),
 				})
 			},
 			onError() {
-				toast({
-					title: __("Error"),
-					text: getFailureMessage({ status, docstatus }),
-					icon: "alert-circle",
-					position: "bottom-center",
-					iconClasses: "text-red-500",
+				toast.error(__("Error"), {
+					description: getFailureMessage({ status, docstatus }),
 				})
 			},
 		}

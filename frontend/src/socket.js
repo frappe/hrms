@@ -1,7 +1,6 @@
 import { io } from "socket.io-client"
 
-import { getCachedListResource } from "frappe-ui/src/resources/listResource"
-import { getCachedResource } from "frappe-ui/src/resources/resources"
+import { getCachedListResource, getCachedResource } from "frappe-ui"
 
 export function initSocket() {
 	let host = window.location.hostname

@@ -11,30 +11,27 @@
 							class="!pl-0 hover:bg-white"
 							@click="router.back()"
 						>
-							<FeatherIcon name="chevron-left" class="h-5 w-5" />
+							<span class="lucide-chevron-left h-5 w-5" />
 						</Button>
-						<h2 class="text-xl font-semibold text-gray-900">{{ __("Change Password") }}</h2>
+						<h2 class="text-2xl-semibold text-gray-900">{{ __("Change Password") }}</h2>
 					</header>
 
 					<div class="bg-white grow overflow-y-auto">
 						<form class="flex flex-col space-y-4 p-4" @submit.prevent="submitPasswordChange">
-							<Input
+							<Password
 								:label="__('Current Password') + ' *'"
-								type="password"
 								v-model="currentPassword"
 								autocomplete="current-password"
 								required
 							/>
-							<Input
+							<Password
 								:label="__('New Password') + ' *'"
-								type="password"
 								v-model="newPassword"
 								autocomplete="new-password"
 								required
 							/>
-							<Input
+							<Password
 								:label="__('Confirm New Password') + ' *'"
-								type="password"
 								v-model="confirmPassword"
 								autocomplete="new-password"
 								required
@@ -64,7 +61,7 @@
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
 import { useRouter } from "vue-router"
-import { FeatherIcon, toast, createResource, Input, ErrorMessage, Button } from "frappe-ui"
+import { toast, createResource, Password, ErrorMessage, Button } from "frappe-ui"
 
 import { inject, ref } from "vue"
 
@@ -80,12 +77,8 @@ const updatePasswordResource = createResource({
 	url: "frappe.core.doctype.user.user.update_password",
 	method: "POST",
 	onSuccess() {
-		toast({
-			title: __("Success"),
-			text: __("Your password has been updated."),
-			icon: "check-circle",
-			position: "bottom-center",
-			iconClasses: "text-green-500",
+		toast.success(__("Success"), {
+			description: __("Your password has been updated."),
 		})
 		resetForm()
 		router.back()

@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-col w-full">
 		<div class="flex flex-row justify-between items-center px-4">
-			<div class="text-lg text-gray-800 font-bold">{{ __("Leave Balance") }} </div>
+			<div class="text-lg-bold text-gray-800">{{ __("Leave Balance") }} </div>
 			<router-link
 				:to="{ name: 'LeaveApplicationListView' }"
 				v-slot="{ navigate }"
@@ -9,7 +9,7 @@
 			>
 				<div
 					@click="navigate"
-					class="text-sm text-gray-800 font-semibold cursor-pointer underline underline-offset-2"
+					class="text-sm-semibold text-gray-800 cursor-pointer underline underline-offset-2"
 				>
 					{{ __("View Leave History") }}
 				</div>
@@ -30,10 +30,10 @@
 					:percentage="allocation.balance_percentage"
 					:colorClass="getChartColor(index)"
 				/>
-				<div class="text-gray-800 font-bold text-base">
+				<div class="text-gray-800 text-base-bold">
 					{{ `${allocation.balance_leaves}/${allocation.allocated_leaves}` }}
 				</div>
-				<div class="text-gray-600 font-normal text-sm w-24 leading-4">
+				<div class="text-gray-600 text-sm w-24 leading-4">
 					{{ __("{0} balance", [__(leave_type, null, "Leave Type")]) }}
 				</div>
 			</div>

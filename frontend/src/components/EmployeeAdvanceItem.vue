@@ -7,17 +7,17 @@
 		<template #left>
 			<EmployeeAdvanceIcon class="h-5 w-5 mt-[3px] text-gray-500" />
 			<div class="flex flex-col items-start gap-1">
-				<div v-if="props.doc.balance_amount" class="text-lg font-bold text-gray-800 leading-6">
+				<div v-if="props.doc.balance_amount" class="text-lg-bold text-gray-800 leading-6">
 					{{ formatCurrency(props.doc.balance_amount, props.doc.currency) }}
 					/
 					<span class="text-gray-600">
 						{{ formatCurrency(props.doc.paid_amount, props.doc.currency) }}
 					</span>
 				</div>
-				<div v-else class="text-lg font-bold text-gray-800 leading-6">
+				<div v-else class="text-lg-bold text-gray-800 leading-6">
 					{{ formatCurrency(props.doc.advance_amount, props.doc.currency) }}
 				</div>
-				<div class="text-xs font-normal text-gray-500">
+				<div class="text-xs text-gray-500">
 					<span>
 						{{ __(props.doc.purpose) }}
 					</span>
@@ -30,13 +30,13 @@
 		</template>
 		<template #right>
 			<Badge variant="outline" :theme="colorMap[status]" :label="__(status, null, 'Employee Advance')" size="md" />
-			<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
+			<span class="lucide-chevron-right h-5 w-5 text-gray-500" />
 		</template>
 	</ListItem>
 </template>
 
 <script setup>
-import { FeatherIcon, Badge } from "frappe-ui"
+import { Badge } from "frappe-ui"
 import { computed, inject } from "vue"
 
 import ListItem from "@/components/ListItem.vue"

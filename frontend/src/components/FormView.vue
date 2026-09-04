@@ -9,14 +9,14 @@
 					class="!pl-0 hover:bg-white"
 					@click="router.back()"
 				>
-					<FeatherIcon name="chevron-left" class="h-5 w-5" />
+					<span class="lucide-chevron-left h-5 w-5" />
 				</Button>
 				<div
 					v-if="id"
 					class="flex flex-row items-center gap-2 overflow-hidden grow"
 				>
 					<h2
-						class="text-xl font-semibold text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis"
+						class="text-2xl-semibold text-gray-900 whitespace-nowrap overflow-hidden text-ellipsis"
 					>
 						{{ __(props.doctype) }}
 					</h2>
@@ -49,12 +49,12 @@
 						]"
 						:button="{
 							label: __('Menu'),
-							icon: 'more-horizontal',
+							icon: 'lucide-more-horizontal',
 							variant: 'ghost',
 						}"
 					/>
 				</div>
-				<h2 v-else class="text-2xl font-semibold text-gray-900">
+				<h2 v-else class="text-3xl-semibold text-gray-900">
 					{{ __('New {0}', [__(doctype)], props.doctype) }}
 				</h2>
 			</header>
@@ -64,7 +64,7 @@
 				<!-- Tabs -->
 				<template v-if="tabbedView">
 					<div
-						class="px-4 sticky top-0 z-[100] bg-white text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
+						class="px-4 sticky top-0 z-[100] bg-white text-sm-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700"
 					>
 						<ul class="flex -mb-px overflow-auto hide-scrollbar">
 							<li class="mr-2 whitespace-nowrap" v-for="tab in tabs">
@@ -90,8 +90,10 @@
 						>
 							<template v-for="field in fieldList" :key="field.fieldname">
 								<slot
-									v-if="field.fieldtype == 'Table'"
+									v-if="$slots[field.fieldname]"
 									:name="field.fieldname"
+									:field="field"
+									:readOnly="isFieldReadOnly(field)"
 									:isFormReadOnly="isFormReadOnly"
 								></slot>
 
@@ -135,24 +137,32 @@
 				</template>
 
 				<div class="flex flex-col space-y-4 p-4" v-else>
-					<FormField
-						v-for="field in props.fields"
-						:key="field.name"
-						:fieldtype="field.fieldtype"
-						:fieldname="field.fieldname"
-						v-model="formModel[field.fieldname]"
-						:default="field.default"
-						:label="__(field.label, null, props.doctype)"
-						:options="field.options"
-						:linkFilters="field.linkFilters"
-						:documentList="field.documentList"
-						:readOnly="isFieldReadOnly(field)"
-						:reqd="Boolean(field.reqd)"
-						:hidden="Boolean(field.hidden)"
-						:errorMessage="field.error_message"
-						:minDate="field.minDate"
-						:maxDate="field.maxDate"
-					/>
+					<template v-for="field in props.fields" :key="field.name">
+						<slot
+							v-if="$slots[field.fieldname]"
+							:name="field.fieldname"
+							:field="field"
+							:readOnly="isFieldReadOnly(field)"
+							:isFormReadOnly="isFormReadOnly"
+						></slot>
+						<FormField
+							v-else
+							:fieldtype="field.fieldtype"
+							:fieldname="field.fieldname"
+							v-model="formModel[field.fieldname]"
+							:default="field.default"
+							:label="__(field.label, null, props.doctype)"
+							:options="field.options"
+							:linkFilters="field.linkFilters"
+							:documentList="field.documentList"
+							:readOnly="isFieldReadOnly(field)"
+							:reqd="Boolean(field.reqd)"
+							:hidden="Boolean(field.hidden)"
+							:errorMessage="field.error_message"
+							:minDate="field.minDate"
+							:maxDate="field.maxDate"
+						/>
+					</template>
 
 					<!-- Attachment upload -->
 					<div
@@ -219,11 +229,11 @@
 	</div>
 
 	<!-- Confirmation Dialogs -->
-	<Dialog v-model="showDeleteDialog">
-		<template #body-title>
-			<h2 class="text-xl font-bold">{{ __("Delete {0}", [__(props.doctype)]) }}</h2>
+	<Dialog v-model:open="showDeleteDialog">
+		<template #title>
+			<h2 class="text-2xl-bold">{{ __("Delete {0}", [__(props.doctype)]) }}</h2>
 		</template>
-		<template #body-content>
+		<template #default>
 			<p>
 				{{ __("Are you sure you want to delete the {0}", [__(props.doctype)])  }}
 				<span class="font-bold">{{ formModel.name }}</span>
@@ -251,11 +261,11 @@
 		</template>
 	</Dialog>
 
-	<Dialog v-model="showSubmitDialog">
-		<template #body-title>
-			<h2 class="text-xl font-bold">{{ __("Confirm") }} </h2>
+	<Dialog v-model:open="showSubmitDialog">
+		<template #title>
+			<h2 class="text-2xl-bold">{{ __("Confirm") }} </h2>
 		</template>
-		<template #body-content>
+		<template #default>
 			<p>
 				{{ __("Permanently submit {0}", [__(props.doctype)]) }}
 				<span class="font-bold">{{ formModel.name }}</span>
@@ -282,11 +292,11 @@
 		</template>
 	</Dialog>
 
-	<Dialog v-model="showCancelDialog">
-		<template #body-title>
-			<h2 class="text-xl font-bold">{{ __("Confirm") }} </h2>
+	<Dialog v-model:open="showCancelDialog">
+		<template #title>
+			<h2 class="text-2xl-bold">{{ __("Confirm") }} </h2>
 		</template>
-		<template #body-content>
+		<template #default>
 			<p>
 				{{ __("Permanently cancel {0}", [__(props.doctype)]) }}
 				<span class="font-bold">{{ formModel.name }}</span
@@ -320,7 +330,6 @@ import { useRouter } from "vue-router"
 import {
 	ErrorMessage,
 	Badge,
-	FeatherIcon,
 	createListResource,
 	createDocumentResource,
 	toast,
@@ -523,12 +532,8 @@ const docList = createListResource({
 	doctype: props.doctype,
 	insert: {
 		async onSuccess(data) {
-			toast({
-				title: __("Success"),
-				text: __("{0} created successfully!", [__(props.doctype)]),
-				icon: "check-circle",
-				position: "bottom-center",
-				iconClasses: "text-green-500",
+			toast.success(__("Success"), {
+				description: __("{0} created successfully!", [__(props.doctype)]),
 			})
 			await uploadAllAttachments(data.doctype, data.name, fileAttachments.value)
 
@@ -538,12 +543,8 @@ const docList = createListResource({
 			})
 		},
 		onError() {
-			toast({
-				title: __("Error"),
-				text: __("Error creating {0}", [__(props.doctype)]),
-				icon: "alert-circle",
-				position: "bottom-center",
-				iconClasses: "text-red-500",
+			toast.error(__("Error"), {
+				description: __("Error creating {0}", [__(props.doctype)]),
 			})
 			console.log(`Error creating ${props.doctype}`)
 		},
@@ -555,21 +556,13 @@ const documentResource = createDocumentResource({
 	name: props.id,
 	setValue: {
 		onSuccess() {
-			toast({
-				title: __("Success"),
-				text: __("{0} updated successfully!", [__(props.doctype)]),
-				icon: "check-circle",
-				position: "bottom-center",
-				iconClasses: "text-green-500",
+			toast.success(__("Success"), {
+				description: __("{0} updated successfully!", [__(props.doctype)]),
 			})
 		},
 		onError() {
-			toast({
-				title: __("Error"),
-				text: __("Error updating {0}", [__(props.doctype)]),
-				icon: "alert-circle",
-				position: "bottom-center",
-				iconClasses: "text-red-500",
+			toast.error(__("Error"), {
+				description: __("Error updating {0}", [__(props.doctype)]),
 			})
 			console.log(`Error updating ${props.doctype}`)
 		},
@@ -577,21 +570,13 @@ const documentResource = createDocumentResource({
 	delete: {
 		onSuccess() {
 			router.back()
-			toast({
-				title: __("Success"),
-				text: __("{0} deleted successfully!", [__(props.doctype)]),
-				icon: "check-circle",
-				position: "bottom-center",
-				iconClasses: "text-green-500",
+			toast.success(__("Success"), {
+				description: __("{0} deleted successfully!", [__(props.doctype)]),
 			})
 		},
 		onError() {
-			toast({
-				title: __("Error"),
-				text: __("Error deleting {0}", [__(props.doctype)]),
-				icon: "alert-circle",
-				position: "bottom-center",
-				iconClasses: "text-red-500",
+			toast.error(__("Error"), {
+				description: __("Error deleting {0}", [__(props.doctype)]),
 			})
 			console.log(`Error deleting ${props.doctype}`)
 		},

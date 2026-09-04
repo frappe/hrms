@@ -12,9 +12,9 @@
 								class="!pl-0 hover:bg-white"
 								@click="router.back()"
 							>
-								<FeatherIcon name="chevron-left" class="h-5 w-5" />
+								<span class="lucide-chevron-left h-5 w-5" />
 							</Button>
-							<h2 class="text-xl font-semibold text-gray-900">{{ __("Settings") }} </h2>
+							<h2 class="text-2xl-semibold text-gray-900">{{ __("Settings") }} </h2>
 						</div>
 					</header>
 
@@ -28,17 +28,15 @@
 									class="flex flex-row items-center justify-between w-full"
 								>
 									<div class="flex flex-row items-center gap-3 grow">
-										<FeatherIcon
-											name="lock"
-											class="h-5 w-5 text-gray-500"
+										<span
+											class="lucide-lock h-5 w-5 text-gray-500"
 										/>
-										<div class="text-base font-normal text-gray-800">
+										<div class="text-base text-gray-800">
 											{{ __("Change Password") }}
 										</div>
 									</div>
-									<FeatherIcon
-										name="chevron-right"
-										class="h-5 w-5 text-gray-500"
+									<span
+										class="lucide-chevron-right h-5 w-5 text-gray-500"
 									/>
 								</router-link>
 							</div>
@@ -75,7 +73,7 @@
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
 import { useRouter } from "vue-router"
-import { FeatherIcon, Switch, toast, LoadingIndicator, Button } from "frappe-ui"
+import { Switch, toast, LoadingIndicator, Button } from "frappe-ui"
 
 import { computed, inject, ref } from "vue"
 
@@ -116,21 +114,13 @@ const togglePushNotifications = (newValue) => {
 			.disableNotification()
 			.then(() => {
 				pushNotificationState.value = false
-				toast({
-					title: __("Success"),
-					text: __("Push notifications disabled"),
-					icon: "check-circle",
-					position: "bottom-center",
-					iconClasses: "text-green-500",
+				toast.success(__("Success"), {
+					description: __("Push notifications disabled"),
 				})
 			})
 			.catch((error) => {
-				toast({
-					title: __("Error"),
-					text: __(error.message),
-					icon: "alert-circle",
-					position: "bottom-center",
-					iconClasses: "text-red-500",
+				toast.error(__("Error"), {
+					description: __(error.message),
 				})
 			})
 			.finally(() => {
@@ -147,23 +137,15 @@ const enablePushNotifications = () => {
 			if (data.permission_granted) {
 				pushNotificationState.value = true
 			} else {
-				toast({
-					title: __("Error"),
-					text: __("Push Notification permission denied"),
-					icon: "alert-circle",
-					position: "bottom-center",
-					iconClasses: "text-red-500",
+				toast.error(__("Error"), {
+					description: __("Push Notification permission denied"),
 				})
 				pushNotificationState.value = false
 			}
 		})
 		.catch((error) => {
-			toast({
-				title: __("Error"),
-				text: __(error.message),
-				icon: "alert-circle",
-				position: "bottom-center",
-				iconClasses: "text-red-500",
+			toast.error(__("Error"), {
+				description: __(error.message),
 			})
 			pushNotificationState.value = false
 		})

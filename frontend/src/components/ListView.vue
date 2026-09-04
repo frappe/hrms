@@ -6,15 +6,15 @@
 			>
 				<div class="flex flex-row items-center">
 					<Button variant="ghost" class="!px-1 mr-1 hover:bg-white" @click="router.back()">
-						<FeatherIcon name="chevron-left" class="h-5 w-5" />
+						<span class="lucide-chevron-left h-5 w-5" />
 					</Button>
-					<h2 class="text-xl font-semibold text-gray-900">{{ pageTitle }}</h2>
+					<h2 class="text-2xl-semibold text-gray-900">{{ pageTitle }}</h2>
 				</div>
 
 				<div class="flex flex-row gap-2">
 					<Button
 						id="show-filter-modal"
-						icon="filter"
+						icon="lucide-filter"
 						variant="subtle"
 						:class="[
 							areFiltersApplied
@@ -29,7 +29,7 @@
 					>
 						<Button variant="solid" class="mr-2" @click="navigate">
 							<template #prefix>
-								<FeatherIcon name="plus" class="w-4" />
+								<span class="lucide-plus w-4" />
 							</template>
 							{{ __("New", null, props.doctype) }}
 						</Button>
@@ -141,7 +141,7 @@ import {
 	IonRefresherContent,
 } from "@ionic/vue"
 
-import { FeatherIcon, createResource, LoadingIndicator, debounce } from "frappe-ui"
+import { createResource, LoadingIndicator, debounce } from "frappe-ui"
 
 import TabButtons from "@/components/TabButtons.vue"
 import EmployeeCheckinItem from "@/components/EmployeeCheckinItem.vue"
@@ -323,10 +323,6 @@ function prepareFilters() {
 
 	for (const fieldname in filterMap) {
 		condition = filterMap[fieldname].condition
-		// accessing .value because autocomplete returns an object instead of value
-		if (typeof condition === "object" && condition !== null) {
-			condition = condition.value
-		}
 
 		value = filterMap[fieldname].value
 		if (condition && value) appliedFilters.value.push([props.doctype, fieldname, condition, value])

@@ -5,7 +5,6 @@ import { initSocket } from "./socket"
 
 import {
 	Button,
-	Input,
 	setConfig,
 	frappeRequest,
 	resourcesPlugin,
@@ -34,14 +33,12 @@ import "./theme/variables.css"
 import "./main.css"
 
 const app = createApp(App)
-const socket = initSocket()
 
 setConfig("resourceFetcher", frappeRequest)
 app.use(resourcesPlugin)
 app.use(translationsPlugin)
 
 app.component("Button", Button)
-app.component("Input", Input)
 app.component("FormControl", FormControl)
 app.component("EmptyState", EmptyState)
 
@@ -55,7 +52,6 @@ if (session?.isLoggedIn && !employeeResource?.data) {
 app.provide("$session", session)
 app.provide("$user", userResource)
 app.provide("$employee", employeeResource)
-app.provide("$socket", socket)
 app.provide("$dayjs", dayjs)
 
 const registerServiceWorker = async () => {
@@ -105,7 +101,10 @@ router.isReady().then(async () => {
 		})
 	}
 
-	await translationsPlugin.isReady();
+	const socket = initSocket()
+	app.provide("$socket", socket)
+
+	await translationsPlugin.isReady()
 	registerServiceWorker()
 	app.mount("#app")
 })

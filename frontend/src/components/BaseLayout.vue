@@ -5,7 +5,7 @@
 				<div class="flex flex-col bg-white shadow-sm p-4">
 					<div class="flex flex-row justify-between items-center">
 						<div class="flex flex-row items-center gap-2">
-							<h2 class="text-xl font-bold text-gray-900">
+							<h2 class="text-2xl-bold text-gray-900">
 								{{ props.pageTitle || __("Frappe HR") }}
 							</h2>
 						</div>
@@ -16,7 +16,7 @@
 								class="flex flex-col items-center"
 							>
 								<span class="relative inline-block" @click="navigate">
-									<FeatherIcon name="bell" class="h-6 w-6" />
+									<span class="lucide-bell h-6 w-6" />
 									<span
 										v-if="unreadNotificationsCount.data"
 										class="absolute top-0 right-0.5 inline-block w-2 h-2 bg-red-600 rounded-full border border-white"
@@ -50,7 +50,7 @@
 
 <script setup>
 import { IonHeader, IonContent, IonPage } from "@ionic/vue"
-import { FeatherIcon, Avatar } from "frappe-ui"
+import { Avatar } from "frappe-ui"
 
 import { unreadNotificationsCount } from "@/data/notifications"
 

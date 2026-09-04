@@ -1,4 +1,4 @@
-@import "frappe-ui/src/style.css";
+@import "frappe-ui/style.css";
 
 ion-modal {
 	--height: auto;
@@ -27,4 +27,8 @@ body {
 .hide-scrollbar {
 	-ms-overflow-style: none; /* IE and Edge */
 	scrollbar-width: none; /* Firefox */
+}
+
+[data-sonner-toast][data-type="success"] [data-icon] {
+	@apply text-ink-green-5;
 }

@@ -19,13 +19,8 @@ export function useDownloadPDF() {
 				if (response.ok) {
 					return response.blob()
 				} else {
-					toast({
-						title: "Download Failed",
-						text: `Error downloading PDF`,
-						type: "error",
-						icon: "alert-circle",
-						position: "bottom-center",
-						iconClasses: "text-red-500",
+					toast.error("Download Failed", {
+						description: `Error downloading PDF`,
 					})
 				}
 			})
@@ -41,12 +36,8 @@ export function useDownloadPDF() {
 				}, 3000)
 			})
 			.catch((error) => {
-				toast({
-					title: __("Error"),
-					text: __("Error downloading PDF", [__(error)]),
-					icon: "alert-circle",
-					position: "bottom-center",
-					iconClasses: "text-red-500",
+				toast.error(__("Error"), {
+					description: __("Error downloading PDF", [__(error)]),
 				})
 			})
 	}

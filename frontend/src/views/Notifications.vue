@@ -12,16 +12,16 @@
 								class="!pl-0 hover:bg-white"
 								@click="router.back()"
 							>
-								<FeatherIcon name="chevron-left" class="h-5 w-5" />
+								<span class="lucide-chevron-left h-5 w-5" />
 							</Button>
-							<h2 class="text-xl font-semibold text-gray-900">{{ __("Notifications") }} </h2>
+							<h2 class="text-2xl-semibold text-gray-900">{{ __("Notifications") }} </h2>
 						</div>
 					</header>
 
 					<div class="flex flex-col gap-4 mt-5 p-4">
 						<div class="flex flex-row justify-between items-center">
 							<div
-								class="text-lg text-gray-800 font-semibold"
+								class="text-lg-semibold text-gray-800"
 								v-if="unreadNotificationsCount.data"
 							>
 								{{ __("{0} Unread", [unreadNotificationsCount.data]) }}
@@ -33,7 +33,7 @@
 									@click="router.push({ name: 'Settings' })"
 								>
 									<template #prefix>
-										<FeatherIcon name="settings" class="w-4" />
+										<span class="lucide-settings w-4" />
 									</template>
 									{{ __("Settings") }}
 								</Button>
@@ -44,7 +44,7 @@
 									:loading="markAllAsRead.loading"
 								>
 									<template #prefix>
-										<FeatherIcon name="check-circle" class="w-4" />
+										<span class="lucide-check-circle w-4" />
 									</template>
 									{{ __("Mark all as read") }}
 								</Button>
@@ -69,10 +69,10 @@
 								<EmployeeAvatar :userID="item.from_user" size="lg" />
 								<div class="flex flex-col gap-0.5 grow ml-3">
 									<div
-										class="text-sm leading-5 font-normal text-gray-800"
+										class="text-sm leading-5 text-gray-800"
 										v-html="item.message"
 									></div>
-									<div class="text-xs font-normal text-gray-500">
+									<div class="text-xs text-gray-500">
 										{{ dayjs(item.creation).fromNow() }}
 									</div>
 								</div>
@@ -99,7 +99,7 @@
 <script setup>
 import { IonContent, IonPage } from "@ionic/vue"
 import { useRouter } from "vue-router"
-import { createResource, FeatherIcon } from "frappe-ui"
+import { createResource } from "frappe-ui"
 
 import { computed, inject, onMounted, ref } from "vue"
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"

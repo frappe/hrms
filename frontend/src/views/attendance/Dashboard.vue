@@ -11,7 +11,7 @@
 					</router-link>
 				</div>
 				<div>
-					<div class="text-lg text-gray-800 font-bold">{{ __("Recent Attendance Requests") }}</div>
+					<div class="text-lg-bold text-gray-800">{{ __("Recent Attendance Requests") }}</div>
 					<RequestList
 						:component="markRaw(AttendanceRequestItem)"
 						:items="myAttendanceRequests?.data?.slice(0, 5)"
@@ -20,7 +20,7 @@
 					/>
 				</div>
 				<div>
-					<div class="text-lg text-gray-800 font-bold">{{ __("Upcoming Shifts") }}</div>
+					<div class="text-lg-bold text-gray-800">{{ __("Upcoming Shifts") }}</div>
 					<RequestList
 						:component="markRaw(ShiftAssignmentItem)"
 						:items="upcomingShifts"
@@ -37,7 +37,7 @@
 					</router-link>
 				</div>
 				<div>
-					<div class="text-lg text-gray-800 font-bold">{{ __("Recent Shift Requests") }}</div>
+					<div class="text-lg-bold text-gray-800">{{ __("Recent Shift Requests") }}</div>
 					<RequestList
 						:component="markRaw(ShiftRequestItem)"
 						:items="myShiftRequests?.data?.slice(0, 5)"

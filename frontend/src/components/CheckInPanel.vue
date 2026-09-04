@@ -1,11 +1,11 @@
 <template>
 	<div class="flex flex-col bg-white rounded w-full py-6 px-4 border-none">
-		<h2 class="text-lg font-bold text-gray-900">
+		<h2 class="text-lg-bold text-gray-900">
 			{{ __("Hey, {0} 👋", [employee?.data?.first_name]) }}
 		</h2>
 
 		<template v-if="settings.data?.allow_employee_checkin_from_mobile_app">
-			<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
+			<div class="text-sm-medium text-gray-500 mt-1.5" v-if="lastLog">
 				<span>{{ __("Last {0} was at {1}", [__(lastLogType), formatTimestamp(lastLog.time)]) }}</span>
 				<span class="whitespace-pre"> &middot; </span>
 				<router-link :to="{ name: 'EmployeeCheckinListView' }" v-slot="{ navigate }">
@@ -19,16 +19,20 @@
 				@click="handleEmployeeCheckin"
 			>
 				<template #prefix>
-					<FeatherIcon
-						:name="nextAction.action === 'IN' ? 'arrow-right-circle' : 'arrow-left-circle'"
-						class="w-4"
+					<span
+						:class="[
+							nextAction.action === 'IN'
+								? 'lucide-arrow-right-circle'
+								: 'lucide-arrow-left-circle',
+							'w-4',
+						]"
 					/>
 				</template>
 				{{ nextAction.label }}
 			</Button>
 		</template>
 
-		<div v-else class="font-medium text-sm text-gray-500 mt-1.5">
+		<div v-else class="text-sm-medium text-gray-500 mt-1.5">
 			{{ dayjs().format("ddd, D MMMM, YYYY") }}
 		</div>
 	</div>
@@ -42,16 +46,16 @@
 	>
 		<div class="h-120 w-full flex flex-col items-center justify-center gap-5 p-4 mb-5">
 			<div class="flex flex-col gap-1.5 mt-2 items-center justify-center">
-				<div class="font-bold text-xl">
+				<div class="text-2xl-bold">
 					{{ dayjs(checkinTimestamp).format("hh:mm:ss a") }}
 				</div>
-				<div class="font-medium text-gray-500 text-sm">
+				<div class="text-gray-500 text-sm-medium">
 					{{ dayjs().format("D MMM, YYYY") }}
 				</div>
 			</div>
 
 			<template v-if="settings.data?.allow_geolocation_tracking">
-				<span v-if="locationStatus" class="font-medium text-gray-500 text-sm">
+				<span v-if="locationStatus" class="text-gray-500 text-sm-medium">
 					{{ locationStatus }}
 				</span>
 
@@ -78,7 +82,7 @@
 </template>
 
 <script setup>
-import { createListResource, toast, FeatherIcon } from "frappe-ui"
+import { createListResource, toast } from "frappe-ui"
 import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
 import { IonModal, modalController } from "@ionic/vue"
 
@@ -167,24 +171,16 @@ const submitLog = (logType) => {
 		{
 			onSuccess() {
 				modalController.dismiss()
-				toast({
-					title: __("Success"),
-					text: __("{0} successful!", [actionLabel]),
-					icon: "check-circle",
-					position: "bottom-center",
-					iconClasses: "text-green-500",
+				toast.success(__("Success"), {
+					description: __("{0} successful!", [actionLabel]),
 				})
 			},
 			onError(error) {
 				let messages = error.messages || []
 
 				for (const message of messages) {
-					toast({
-						title: __("Error"),
-						text: message || __("{0} failed!", [actionLabel]),
-						icon: "alert-circle",
-						position: "bottom-center",
-						iconClasses: "text-red-500",
+					toast.error(__("Error"), {
+						description: message || __("{0} failed!", [actionLabel]),
 					})
 				}
 			},

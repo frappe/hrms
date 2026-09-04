@@ -1,6 +1,6 @@
 <template>
 	<div class="flex flex-row justify-between items-center">
-		<h2 class="text-base font-semibold text-gray-800">
+		<h2 class="text-base-semibold text-gray-800">
 			{{ __("Settle against Advances") }}
 		</h2>
 	</div>
@@ -27,11 +27,11 @@
 					/>
 
 					<div class="flex flex-col items-start gap-1.5">
-						<div class="text-base font-semibold text-gray-800">
+						<div class="text-base-semibold text-gray-800">
 							{{ advance.purpose || advance.employee_advance }}
 						</div>
 						<div class="flex flex-row items-center gap-3 justify-between">
-							<div class="text-xs font-normal text-gray-500">
+							<div class="text-xs text-gray-500">
 								{{ __("{0}: {1}", [
 									__("Unclaimed Amount"),
 									formatCurrency(advance.unclaimed_amount, expenseClaim.currency),
@@ -45,11 +45,11 @@
 					<span class="text-normal">
 						{{ currencySymbol }}
 					</span>
-					<Input
+					<TextInput
 						type="number"
 						class="w-20"
 						v-model="advance.allocated_amount"
-						@input="(v) => (advance.selected = v)"
+						@update:model-value="(v) => (advance.selected = Boolean(v))"
 						@click.stop
 						:disabled="isReadOnly"
 						:max="advance.unclaimed_amount"
@@ -65,6 +65,7 @@
 
 <script setup>
 import { computed, inject } from "vue"
+import { TextInput } from "frappe-ui"
 import { getCurrencySymbol } from "@/data/currencies"
 import { formatCurrency } from "@/utils/formatters"
 

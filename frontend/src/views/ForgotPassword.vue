@@ -11,9 +11,9 @@
 							class="!pl-0 hover:bg-white"
 							@click="goBack"
 						>
-							<FeatherIcon name="chevron-left" class="h-5 w-5" />
+							<span class="lucide-chevron-left h-5 w-5" />
 						</Button>
-						<h2 class="text-xl font-semibold text-gray-900">{{ __("Reset Password") }}</h2>
+						<h2 class="text-2xl-semibold text-gray-900">{{ __("Reset Password") }}</h2>
 					</header>
 
 					<div class="bg-white grow overflow-y-auto">
@@ -21,7 +21,7 @@
 							<p class="text-sm leading-5 text-gray-600">
 								{{ __("Enter your email address and we'll send you a link to reset your password.") }}
 							</p>
-							<Input
+							<TextInput
 								:label="__('Email') + ' *'"
 								type="email"
 								placeholder="johndoe@mail.com"
@@ -54,7 +54,7 @@
 <script setup>
 import { IonPage, IonContent } from "@ionic/vue"
 import { useRoute, useRouter } from "vue-router"
-import { FeatherIcon, toast, createResource, Input, ErrorMessage, Button } from "frappe-ui"
+import { toast, createResource, TextInput, ErrorMessage, Button } from "frappe-ui"
 
 import { inject, ref } from "vue"
 
@@ -69,12 +69,8 @@ const forgotPasswordResource = createResource({
 	url: "frappe.core.doctype.user.user.reset_password",
 	method: "POST",
 	onSuccess() {
-		toast({
-			title: __("Success"),
-			text: __("Password reset link has been sent to your email."),
-			icon: "check-circle",
-			position: "bottom-center",
-			iconClasses: "text-green-500",
+		toast.success(__("Success"), {
+			description: __("Password reset link has been sent to your email."),
 		})
 		errorMessage.value = ""
 		router.replace({ name: "Login" })
