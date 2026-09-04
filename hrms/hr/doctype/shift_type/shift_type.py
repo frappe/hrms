@@ -375,6 +375,9 @@ class ShiftType(Document):
 		else:
 			# no shift found
 			return None, None
+
+		end_date = min(end_date, getdate())
+
 		return start_date, end_date
 
 	def get_marked_attendance_dates_between(self, employee: str, start_date: str, end_date: str) -> list[str]:

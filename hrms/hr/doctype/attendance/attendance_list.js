@@ -138,15 +138,28 @@ frappe.listview_settings["Attendance"] = {
 		dialog.no_unmarked_days_left = false;
 		fields.exclude_holidays.value = false;
 
-		fields.to_date.datepicker.update({
-			maxDate: moment().toDate(),
-		});
+		for (const fieldname of ["from_date", "to_date"]) {
+			fields[fieldname].datepicker.update({
+				maxDate: moment().toDate(),
+			});
+		}
 
 		this.get_unmarked_days(dialog);
 	},
 
 	get_unmarked_days: function (dialog) {
 		let fields = dialog.fields_dict;
+
+		const today = frappe.datetime.get_today();
+		for (const fieldname of ["from_date", "to_date"]) {
+			const field = fields[fieldname];
+			if (field.value && field.value > today) {
+				frappe.msgprint(__("Future dates not allowed"));
+				field.set_value(today);
+				return;
+			}
+		}
+
 		if (fields.employee.value && fields.from_date.value && fields.to_date.value) {
 			dialog.set_df_property("days_section", "hidden", 0);
 			dialog.set_df_property("status", "hidden", 0);
