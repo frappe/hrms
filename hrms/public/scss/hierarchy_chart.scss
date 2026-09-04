@@ -247,6 +247,12 @@
 	}
 }
 
+[dir="rtl"] {
+	.hierarchy {
+		flex-direction: row-reverse;
+	}
+}
+
 .hierarchy li {
 	list-style-type: none;
 }
