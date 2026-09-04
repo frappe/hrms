@@ -27,26 +27,60 @@
 				</div>
 
 				<div class="flex flex-col items-center mt-5 mb-7 w-full">
-					<div
-						v-if="documents.data?.length"
-						class="flex flex-col bg-white rounded mt-5 overflow-auto w-full"
-					>
-						<div
-							class="p-3.5 items-center justify-between border-b cursor-pointer"
-							v-for="link in documents.data"
-							:key="link.name"
-						>
-							<router-link
-								:to="{
-									name: 'SalarySlipDetailView',
-									params: { id: link.name },
-								}"
-								v-slot="{ navigate }"
-							>
-								<SalarySlipItem :doc="link" @click="navigate" />
-							</router-link>
+					<template v-if="documents.data?.length">
+						<div class="flex flex-row items-center justify-between w-full">
+							<span class="text-gray-600 text-sm font-medium leading-5">
+								{{ isSelecting ? __("{0} selected", [selectedSlips.length]) : "" }}
+							</span>
+							<div class="flex flex-row items-center gap-2">
+								<Button v-if="isSelecting" variant="ghost" @click="toggleSelectAll">
+									{{ areAllSelected ? __("Clear") : __("Select All") }}
+								</Button>
+								<Button variant="ghost" @click="toggleSelectionMode">
+									{{ isSelecting ? __("Cancel") : __("Select") }}
+								</Button>
+							</div>
 						</div>
-					</div>
+
+						<div class="flex flex-col bg-white rounded mt-3 overflow-auto w-full">
+							<div
+								class="p-3.5 items-center justify-between border-b cursor-pointer"
+								v-for="link in documents.data"
+								:key="link.name"
+							>
+								<div v-if="isSelecting" @click="toggleSelection(link.name)">
+									<SalarySlipItem
+										:doc="link"
+										selectable
+										:selected="selectedSlips.includes(link.name)"
+									/>
+								</div>
+								<router-link
+									v-else
+									:to="{
+										name: 'SalarySlipDetailView',
+										params: { id: link.name },
+									}"
+									v-slot="{ navigate }"
+								>
+									<SalarySlipItem :doc="link" @click="navigate" />
+								</router-link>
+							</div>
+						</div>
+
+						<div v-if="isSelecting" class="sticky bottom-4 w-full mt-5">
+							<ErrorMessage :message="downloadError" class="mb-2" />
+							<Button
+								class="w-full rounded py-5 text-base disabled:bg-gray-700 disabled:text-white"
+								variant="solid"
+								:loading="isDownloading"
+								:disabled="!selectedSlips.length"
+								@click="downloadSelected"
+							>
+								{{ downloadLabel }}
+							</Button>
+						</div>
+					</template>
 					<EmptyState :message="__('No salary slips found')" v-else />
 				</div>
 			</div>
@@ -56,16 +90,22 @@
 
 <script setup>
 import { inject, ref, computed, watch, onMounted, onBeforeUnmount } from "vue"
-import { Autocomplete, createListResource } from "frappe-ui"
+import { Autocomplete, ErrorMessage, createListResource } from "frappe-ui"
 
 import BaseLayout from "@/components/BaseLayout.vue"
 import EmptyState from "@/components/EmptyState.vue"
 import SalarySlipItem from "@/components/SalarySlipItem.vue"
 
+import { downloadBulkPDF } from "@/utils/download"
 import { formatCurrency } from "@/utils/formatters"
 
 let selectedPeriod = ref({})
 let periodsByName = ref({})
+
+const isSelecting = ref(false)
+const selectedSlips = ref([])
+const isDownloading = ref(false)
+const downloadError = ref("")
 
 const employee = inject("$employee")
 const dayjs = inject("$dayjs")
@@ -114,6 +154,62 @@ const documents = createListResource({
 
 const lastSalarySlip = computed(() => documents.data?.[0])
 
+const areAllSelected = computed(
+	() => selectedSlips.value.length === documents.data?.length
+)
+
+const downloadLabel = computed(() => {
+	const count = selectedSlips.value.length
+	if (!count) return __("Download Salary Slips")
+	if (count === 1) return __("Download Salary Slip")
+	return __("Download {0} Salary Slips", [count])
+})
+
+function toggleSelectionMode() {
+	isSelecting.value = !isSelecting.value
+	resetSelection()
+}
+
+function resetSelection() {
+	selectedSlips.value = []
+	downloadError.value = ""
+}
+
+function toggleSelection(name) {
+	const index = selectedSlips.value.indexOf(name)
+	if (index === -1) selectedSlips.value.push(name)
+	else selectedSlips.value.splice(index, 1)
+
+	downloadError.value = ""
+}
+
+function toggleSelectAll() {
+	if (areAllSelected.value) selectedSlips.value = []
+	else selectedSlips.value = documents.data.map((slip) => slip.name)
+
+	downloadError.value = ""
+}
+
+async function downloadSelected() {
+	isDownloading.value = true
+	downloadError.value = ""
+
+	const period = selectedPeriod.value?.value?.replace(/\s/g, "-")
+
+	try {
+		await downloadBulkPDF(
+			"Salary Slip",
+			selectedSlips.value,
+			`Salary-Slips-${period}.pdf`
+		)
+		toggleSelectionMode()
+	} catch (error) {
+		downloadError.value = __("Failed to download PDF: {0}", [error.message])
+	} finally {
+		isDownloading.value = false
+	}
+}
+
 function getPeriodLabel(period) {
 	return `${dayjs(period?.start_date).format("MMM YYYY")} - ${dayjs(
 		period?.end_date
@@ -123,6 +219,8 @@ function getPeriodLabel(period) {
 watch(
 	() => selectedPeriod.value,
 	(value) => {
+		resetSelection()
+
 		let period = periodsByName.value[value?.value]
 		documents.filters.start_date = [
 			"between",
@@ -135,6 +233,7 @@ watch(
 onMounted(() => {
 	socket.on("hrms:update_salary_slips", (data) => {
 		if (data.employee === employee.data.name) {
+			resetSelection()
 			documents.reload()
 		}
 	})
