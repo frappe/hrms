@@ -38,6 +38,10 @@
   "expense_approver_mandatory_in_expense_claim",
   "prevent_self_expense_approval",
   "unlink_payment_on_cancellation_of_employee_advance",
+  "column_break_fhpr",
+  "send_expense_notification",
+  "expense_claim_approval_notification_template",
+  "expense_claim_status_notification_template",
   "shift_and_attendance_tab",
   "shift_settings_section",
   "allow_multiple_shift_assignments",
@@ -375,6 +379,32 @@
    "fieldname": "employee_exit_settings_section",
    "fieldtype": "Section Break",
    "label": "Employee Exit Settings"
+  },
+  {
+   "fieldname": "column_break_fhpr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "send_expense_notification",
+   "fieldtype": "Check",
+   "label": "Send Expense Notification"
+  },
+  {
+   "depends_on": "eval: doc.send_expense_notification == 1",
+   "fieldname": "expense_claim_approval_notification_template",
+   "fieldtype": "Link",
+   "label": "Expense Claim Approval Notification Template",
+   "mandatory_depends_on": "eval: doc.send_expense_notification == 1",
+   "options": "Email Template"
+  },
+  {
+   "depends_on": "eval: doc.send_expense_notification == 1",
+   "fieldname": "expense_claim_status_notification_template",
+   "fieldtype": "Link",
+   "label": "Expense Claim Status Notification Template",
+   "mandatory_depends_on": "eval: doc.send_expense_notification == 1",
+   "options": "Email Template"
   }
  ],
  "icon": "fa fa-cog",

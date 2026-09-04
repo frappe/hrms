@@ -29,6 +29,8 @@ class HRSettings(Document):
 		exit_questionnaire_notification_template: DF.Link | None
 		exit_questionnaire_web_form: DF.Link | None
 		expense_approver_mandatory_in_expense_claim: DF.Check
+		expense_claim_approval_notification_template: DF.Link | None
+		expense_claim_status_notification_template: DF.Link | None
 		feedback_reminder_notification_template: DF.Link | None
 		frequency: DF.Literal["Weekly", "Monthly"]
 		hiring_sender: DF.Link | None
@@ -44,6 +46,7 @@ class HRSettings(Document):
 		retirement_age: DF.Data | None
 		role_allowed_to_create_backdated_leave_application: DF.Link | None
 		send_birthday_reminders: DF.Check
+		send_expense_notification: DF.Check
 		send_holiday_reminders: DF.Check
 		send_interview_feedback_reminder: DF.Check
 		send_interview_reminder: DF.Check
