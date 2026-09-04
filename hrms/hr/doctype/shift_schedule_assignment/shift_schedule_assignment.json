@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "HR-SHSA-.YY.-.MM.-.#####",
  "creation": "2024-11-11 17:33:00.330488",
  "doctype": "DocType",
@@ -107,7 +108,7 @@
    "link_fieldname": "shift_schedule_assignment"
   }
  ],
- "modified": "2025-07-10 18:48:42.170391",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Schedule Assignment",
