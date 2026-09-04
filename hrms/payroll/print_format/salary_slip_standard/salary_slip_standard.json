@@ -12,10 +12,11 @@
  "line_breaks": 0,
  "modified": "2018-07-24 19:31:39.040701",
  "modified_by": "Administrator",
- "module": "HR",
+ "module": "Payroll",
  "name": "Salary Slip Standard",
  "owner": "Administrator",
  "print_format_builder": 1,
+ "print_format_for": "DocType",
  "print_format_type": "Jinja",
  "show_section_headings": 0,
  "standard": "Yes"
