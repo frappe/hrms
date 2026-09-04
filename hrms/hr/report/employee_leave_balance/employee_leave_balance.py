@@ -22,21 +22,21 @@ def execute(filters: Filters | None = None) -> tuple:
 	if filters.to_date <= filters.from_date:
 		frappe.throw(_('"From Date" can not be greater than or equal to "To Date"'))
 
-	columns = get_columns()
+	columns = get_columns(filters)
 	data = get_data(filters)
 	charts = get_chart_data(data, filters)
 	return columns, data, None, charts
 
 
-def get_columns() -> list[dict]:
-	return [
-		{
-			"label": _("Leave Type"),
-			"fieldtype": "Link",
-			"fieldname": "leave_type",
-			"width": 200,
-			"options": "Leave Type",
-		},
+def get_columns(filters: Filters) -> list[dict]:
+	leave_type_column = {
+		"label": _("Leave Type"),
+		"fieldtype": "Link",
+		"fieldname": "leave_type",
+		"width": 200,
+		"options": "Leave Type",
+	}
+	employee_columns = [
 		{
 			"label": _("Employee"),
 			"fieldtype": "Link",
@@ -51,6 +51,22 @@ def get_columns() -> list[dict]:
 			"width": 100,
 			"options": "employee",
 		},
+		{
+			"label": _("Branch"),
+			"fieldtype": "Link",
+			"fieldname": "branch",
+			"width": 120,
+			"options": "Branch",
+		},
+	]
+
+	if filters.get("consolidate_by") == "Employee":
+		first_columns = [*employee_columns, leave_type_column]
+	else:
+		first_columns = [leave_type_column, *employee_columns]
+
+	return [
+		*first_columns,
 		{
 			"label": _("Opening Balance"),
 			"fieldtype": "float",
@@ -89,54 +105,75 @@ def get_data(filters: Filters) -> list:
 	active_employees = get_employees(filters)
 
 	precision = cint(frappe.db.get_single_value("System Settings", "float_precision"))
-	consolidate_leave_types = len(active_employees) > 1 and filters.consolidate_leave_types
-	row = None
+	consolidate_by = filters.get("consolidate_by")
+	consolidate_leave_types = len(active_employees) > 1 and consolidate_by == "Leave Type"
+	consolidate_by_employee = len(leave_types) > 1 and consolidate_by == "Employee"
 
 	data = []
+
+	if consolidate_by_employee:
+		for employee in active_employees:
+			data.append(
+				{
+					"employee": employee.name,
+					"employee_name": employee.employee_name,
+					"branch": employee.branch,
+				}
+			)
+
+			for leave_type in leave_types:
+				row = get_leave_balance_row(employee, leave_type, filters, precision)
+				del row.employee
+				del row.employee_name
+				del row.branch
+				data.append(row)
+
+		return data
 
 	for leave_type in leave_types:
 		if consolidate_leave_types:
 			data.append({"leave_type": leave_type})
-		else:
-			row = frappe._dict({"leave_type": leave_type})
 
 		for employee in active_employees:
+			row = get_leave_balance_row(employee, leave_type, filters, precision)
 			if consolidate_leave_types:
-				row = frappe._dict()
-			else:
-				row = frappe._dict({"leave_type": leave_type})
-
-			row.employee = employee.name
-			row.employee_name = employee.employee_name
-
-			leaves_taken = (
-				get_leaves_for_period(employee.name, leave_type, filters.from_date, filters.to_date) * -1
-			)
-
-			new_allocation, expired_leaves, carry_forwarded_leaves = get_allocated_and_expired_leaves(
-				filters.from_date, filters.to_date, employee.name, leave_type
-			)
-			on_allocation_boundary = is_opening_balance_on_allocation_boundary(
-				employee.name, leave_type, filters
-			)
-			opening = get_opening_balance(
-				employee.name, leave_type, filters, carry_forwarded_leaves, on_allocation_boundary
-			)
-			allocated_leaves = new_allocation + carry_forwarded_leaves
-			if on_allocation_boundary:
-				allocated_leaves -= carry_forwarded_leaves
-
-			row.leaves_allocated = flt(allocated_leaves, precision)
-			row.leaves_expired = flt(expired_leaves, precision)
-			row.opening_balance = flt(opening, precision)
-			row.leaves_taken = flt(leaves_taken, precision)
-
-			closing = allocated_leaves + opening - (row.leaves_expired + leaves_taken)
-			row.closing_balance = flt(closing, precision)
-			row.indent = 1
+				del row.leave_type
 			data.append(row)
 
 	return data
+
+
+def get_leave_balance_row(employee: dict, leave_type: str, filters: Filters, precision: int) -> frappe._dict:
+	row = frappe._dict(
+		leave_type=leave_type,
+		employee=employee.name,
+		employee_name=employee.employee_name,
+		branch=employee.branch,
+	)
+
+	leaves_taken = get_leaves_for_period(employee.name, leave_type, filters.from_date, filters.to_date) * -1
+
+	new_allocation, expired_leaves, carry_forwarded_leaves = get_allocated_and_expired_leaves(
+		filters.from_date, filters.to_date, employee.name, leave_type
+	)
+	on_allocation_boundary = is_opening_balance_on_allocation_boundary(employee.name, leave_type, filters)
+	opening = get_opening_balance(
+		employee.name, leave_type, filters, carry_forwarded_leaves, on_allocation_boundary
+	)
+	allocated_leaves = new_allocation + carry_forwarded_leaves
+	if on_allocation_boundary:
+		allocated_leaves -= carry_forwarded_leaves
+
+	row.leaves_allocated = flt(allocated_leaves, precision)
+	row.leaves_expired = flt(expired_leaves, precision)
+	row.opening_balance = flt(opening, precision)
+	row.leaves_taken = flt(leaves_taken, precision)
+
+	closing = allocated_leaves + opening - (row.leaves_expired + leaves_taken)
+	row.closing_balance = flt(closing, precision)
+	row.indent = 1
+
+	return row
 
 
 def get_leave_types() -> list[str]:
@@ -147,7 +184,7 @@ def get_leave_types() -> list[str]:
 def get_employees(filters: Filters) -> list[dict]:
 	conditions = {}
 
-	for field in ["company", "department"]:
+	for field in ["company", "department", "branch"]:
 		if filters.get(field):
 			conditions[field] = filters.get(field)
 
@@ -160,7 +197,7 @@ def get_employees(filters: Filters) -> list[dict]:
 	return frappe.get_list(
 		"Employee",
 		filters=conditions,
-		fields=["name", "employee_name", "department"],
+		fields=["name", "employee_name", "department", "branch"],
 	)
 
 
