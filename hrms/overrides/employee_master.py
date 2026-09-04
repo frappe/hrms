@@ -30,17 +30,18 @@ class EmployeeMaster(Employee):
 
 def validate_onboarding_process(doc, method=None):
 	"""Validates Employee Creation for linked Employee Onboarding"""
-	if not doc.job_applicant:
+	job_applicant = doc.get("job_applicant")
+	job_offer = doc.get("job_offer")
+
+	filters = {"docstatus": 1, "boarding_status": ("!=", "Completed")}
+	if job_offer:
+		filters["job_offer"] = job_offer
+	elif job_applicant:
+		filters["job_applicant"] = job_applicant
+	else:
 		return
 
-	employee_onboarding = frappe.get_all(
-		"Employee Onboarding",
-		filters={
-			"job_applicant": doc.job_applicant,
-			"docstatus": 1,
-			"boarding_status": ("!=", "Completed"),
-		},
-	)
+	employee_onboarding = frappe.get_all("Employee Onboarding", filters=filters)
 	if employee_onboarding:
 		onboarding = frappe.get_doc("Employee Onboarding", employee_onboarding[0].name)
 		onboarding.validate_employee_creation()
@@ -55,36 +56,59 @@ def publish_update(doc, method=None):
 
 def update_job_applicant_and_offer(doc, method=None):
 	"""Updates Job Applicant and Job Offer status as 'Accepted' and submits them"""
-	if not doc.job_applicant:
+	job_applicant = doc.get("job_applicant")
+	job_offer = get_linked_job_offer(doc, job_applicant)
+
+	if job_offer and job_offer.status in ("Rejected", "Cancelled"):
+		frappe.msgprint(
+			_(
+				"Linked Job Offer {0} was {1}. Please update the Job Offer status if this hire was intended."
+			).format(get_link_to_form("Job Offer", job_offer.name), frappe.bold(_(job_offer.status))),
+			title=_("Job Offer Status Not Updated"),
+			indicator="orange",
+		)
 		return
 
-	applicant_status_before_change = frappe.db.get_value("Job Applicant", doc.job_applicant, "status")
-	if applicant_status_before_change != "Accepted":
-		frappe.db.set_value("Job Applicant", doc.job_applicant, "status", "Accepted")
-		frappe.msgprint(
-			_("Updated the status of linked Job Applicant {0} to {1}").format(
-				get_link_to_form("Job Applicant", doc.job_applicant), frappe.bold(_("Accepted"))
+	if job_applicant:
+		applicant_status_before_change = frappe.db.get_value("Job Applicant", job_applicant, "status")
+		if applicant_status_before_change != "Accepted":
+			frappe.db.set_value("Job Applicant", job_applicant, "status", "Accepted")
+			frappe.msgprint(
+				_("Updated the status of linked Job Applicant {0} to {1}").format(
+					get_link_to_form("Job Applicant", job_applicant), frappe.bold(_("Accepted"))
+				)
 			)
-		)
-	offer_status_before_change = frappe.db.get_value(
-		"Job Offer", {"job_applicant": doc.job_applicant, "docstatus": ["!=", 2]}, "status"
+
+	if not job_offer or job_offer.status == "Accepted":
+		return
+
+	job_offer.status = "Accepted"
+	job_offer.flags.ignore_mandatory = True
+	job_offer.flags.ignore_permissions = True
+	job_offer.save()
+
+	msg = _("Updated the status of Job Offer {0} for {1} to {2}").format(
+		get_link_to_form("Job Offer", job_offer.name),
+		frappe.bold(job_offer.applicant_name),
+		frappe.bold(_("Accepted")),
 	)
-	if offer_status_before_change and offer_status_before_change != "Accepted":
-		job_offer = frappe.get_last_doc("Job Offer", filters={"job_applicant": doc.job_applicant})
-		job_offer.status = "Accepted"
-		job_offer.flags.ignore_mandatory = True
-		job_offer.flags.ignore_permissions = True
-		job_offer.save()
+	if job_offer.docstatus == 0:
+		msg += "<br>" + _("You may add additional details, if any, and submit the offer.")
 
-		msg = _("Updated the status of Job Offer {0} for the linked Job Applicant {1} to {2}").format(
-			get_link_to_form("Job Offer", job_offer.name),
-			frappe.bold(doc.job_applicant),
-			frappe.bold(_("Accepted")),
+	frappe.msgprint(msg)
+
+
+def get_linked_job_offer(doc, job_applicant: str | None):
+	offer_name = doc.get("job_offer")
+	if not offer_name and job_applicant:
+		offer_name = frappe.db.get_value(
+			"Job Offer", {"job_applicant": job_applicant, "docstatus": ["!=", 2]}, "name"
 		)
-		if job_offer.docstatus == 0:
-			msg += "<br>" + _("You may add additional details, if any, and submit the offer.")
+	if not offer_name:
+		return None
 
-		frappe.msgprint(msg)
+	job_offer = frappe.get_doc("Job Offer", offer_name)
+	return None if job_offer.docstatus == 2 else job_offer
 
 
 def update_approver_role(doc, method=None):
