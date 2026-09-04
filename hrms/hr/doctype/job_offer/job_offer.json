@@ -7,14 +7,44 @@
  "document_type": "Document",
  "engine": "InnoDB",
  "field_order": [
+  "role_and_engagement_tab",
   "job_applicant",
   "applicant_name",
   "applicant_email",
   "column_break_3",
+  "company",
   "status",
   "offer_date",
+  "offer_valid_till",
+  "role_section",
   "designation",
-  "company",
+  "department",
+  "grade",
+  "employment_type",
+  "column_break_role",
+  "branch",
+  "reports_to",
+  "date_of_joining",
+  "compensation_tab",
+  "salary_structure",
+  "calculate_component_amount_from",
+  "base",
+  "column_break_compensation",
+  "currency",
+  "variable",
+  "ctc",
+  "ctc_breakup_section",
+  "ctc_breakup",
+  "leave_policy_tab",
+  "leave_policy",
+  "column_break_leave",
+  "holiday_list",
+  "employment_policy_tab",
+  "probation_period_days",
+  "notice_period_during_probation",
+  "notice_number_of_days",
+  "column_break_employment_policy",
+  "working_hours",
   "section_break_4",
   "job_offer_term_template",
   "offer_terms",
@@ -28,6 +58,11 @@
   "amended_from"
  ],
  "fields": [
+  {
+   "fieldname": "role_and_engagement_tab",
+   "fieldtype": "Tab Break",
+   "label": "Role & Engagement"
+  },
   {
    "fieldname": "job_applicant",
    "fieldtype": "Link",
@@ -61,6 +96,16 @@
    "fieldtype": "Column Break"
   },
   {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "print_hide": 1,
+   "remember_last_selected_value": 1,
+   "reqd": 1
+  },
+  {
    "allow_on_submit": 1,
    "fieldname": "status",
    "fieldtype": "Select",
@@ -77,6 +122,16 @@
    "reqd": 1
   },
   {
+   "fieldname": "offer_valid_till",
+   "fieldtype": "Date",
+   "label": "Offer Valid Till"
+  },
+  {
+   "fieldname": "role_section",
+   "fieldtype": "Section Break",
+   "label": "Role"
+  },
+  {
    "fetch_from": "job_applicant.designation",
    "fetch_if_empty": 1,
    "fieldname": "designation",
@@ -87,18 +142,181 @@
    "reqd": 1
   },
   {
-   "fieldname": "company",
+   "fieldname": "department",
    "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Company",
-   "options": "Company",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "grade",
+   "fieldtype": "Link",
+   "label": "Employee Grade",
+   "options": "Employee Grade"
+  },
+  {
+   "fieldname": "employment_type",
+   "fieldtype": "Link",
+   "label": "Employment Type",
+   "options": "Employment Type"
+  },
+  {
+   "fieldname": "column_break_role",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Link",
+   "label": "Branch",
+   "options": "Branch"
+  },
+  {
+   "fieldname": "reports_to",
+   "fieldtype": "Link",
+   "label": "Reports To",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "date_of_joining",
+   "fieldtype": "Date",
+   "label": "Date of Joining"
+  },
+  {
+   "fieldname": "compensation_tab",
+   "fieldtype": "Tab Break",
+   "label": "Compensation"
+  },
+  {
+   "fetch_from": "grade.default_salary_structure",
+   "fetch_if_empty": 1,
+   "fieldname": "salary_structure",
+   "fieldtype": "Link",
+   "label": "Salary Structure",
+   "options": "Salary Structure"
+  },
+  {
+   "fetch_from": "salary_structure.currency",
+   "fieldname": "currency",
+   "fieldtype": "Link",
+   "label": "Currency",
+   "options": "Currency",
    "print_hide": 1,
-   "remember_last_selected_value": 1,
-   "reqd": 1
+   "read_only": 1
+  },
+  {
+   "depends_on": "salary_structure",
+   "fieldname": "calculate_component_amount_from",
+   "fieldtype": "Select",
+   "label": "Calculate Component Amount From",
+   "mandatory_depends_on": "eval:doc.salary_structure",
+   "options": "\nBase and Variable\nCTC"
+  },
+  {
+   "fieldname": "column_break_compensation",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.salary_structure && doc.calculate_component_amount_from",
+   "fetch_from": "grade.default_base_pay",
+   "fetch_if_empty": 1,
+   "fieldname": "base",
+   "fieldtype": "Currency",
+   "label": "Base",
+   "mandatory_depends_on": "eval:doc.salary_structure && doc.calculate_component_amount_from=='Base and Variable'",
+   "options": "currency",
+   "read_only_depends_on": "eval:doc.calculate_component_amount_from=='CTC'"
+  },
+  {
+   "depends_on": "eval:doc.salary_structure && doc.calculate_component_amount_from",
+   "fieldname": "variable",
+   "fieldtype": "Currency",
+   "label": "Variable",
+   "options": "currency"
+  },
+  {
+   "depends_on": "eval:doc.salary_structure && doc.calculate_component_amount_from",
+   "fieldname": "ctc",
+   "fieldtype": "Currency",
+   "label": "Total Cost to Company (CTC)",
+   "mandatory_depends_on": "eval:doc.salary_structure && doc.calculate_component_amount_from=='CTC'",
+   "options": "currency",
+   "read_only_depends_on": "eval:doc.calculate_component_amount_from=='Base and Variable'"
+  },
+  {
+   "fieldname": "ctc_breakup_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "salary_structure",
+   "fieldname": "ctc_breakup",
+   "fieldtype": "Table",
+   "label": "CTC Break-up",
+   "options": "Job Offer Component",
+   "read_only": 1
+  },
+  {
+   "fieldname": "leave_policy_tab",
+   "fieldtype": "Tab Break",
+   "label": "Leave Policy"
+  },
+  {
+   "fieldname": "leave_policy",
+   "fieldtype": "Link",
+   "label": "Leave Policy",
+   "options": "Leave Policy"
+  },
+  {
+   "fieldname": "column_break_leave",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "holiday_list",
+   "fieldtype": "Link",
+   "label": "Holiday List",
+   "options": "Holiday List"
+  },
+  {
+   "fieldname": "employment_policy_tab",
+   "fieldtype": "Tab Break",
+   "label": "Employment Policy"
+  },
+  {
+   "fieldname": "probation_period_days",
+   "fieldtype": "Int",
+   "label": "Probation Period (Days)",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "notice_period_during_probation",
+   "fieldtype": "Int",
+   "label": "Notice Period During Probation (Days)",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "notice_number_of_days",
+   "fieldtype": "Int",
+   "label": "Notice Period (Days)",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "column_break_employment_policy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "working_hours",
+   "fieldtype": "Float",
+   "label": "Working Hours",
+   "non_negative": 1
   },
   {
    "fieldname": "section_break_4",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Additional Terms"
+  },
+  {
+   "fieldname": "job_offer_term_template",
+   "fieldtype": "Link",
+   "label": "Job Offer Term Template",
+   "options": "Job Offer Term Template"
   },
   {
    "fieldname": "offer_terms",
@@ -160,21 +378,15 @@
    "options": "Job Offer",
    "print_hide": 1,
    "read_only": 1
-  },
-  {
-   "fieldname": "job_offer_term_template",
-   "fieldtype": "Link",
-   "label": "Job Offer Term Template",
-   "options": "Job Offer Term Template"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-04-09 18:26:35.285541",
+ "modified": "2026-08-17 12:36:28.786843",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",
- "naming_rule": "Expression (old style)",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

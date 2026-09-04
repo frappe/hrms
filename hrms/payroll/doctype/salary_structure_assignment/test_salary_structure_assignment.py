@@ -62,6 +62,50 @@ class TestSalaryStructureAssignment(HRMSTestSuite):
 		self.assertEqual(ssa.annual_gross_earning, 50000 * 12)
 		self.assertEqual(ssa.ctc, (50000 + 6000) * 12)
 
+	def test_regional_ctc_hook_reaches_ctc_but_not_gross(self):
+		"""A region may bear employer costs that no structure formula can express (India's
+		EPF/EPS/EDLI depend on statutory ceilings and per-assignment elections). Injected
+		rows must count toward CTC and leave gross alone."""
+		emp = make_employee("ssa_regional_ctc@test.com", company="_Test Company")
+
+		_make_component("SSA Test Basic", "SSATB", "Earning", amount_based_on_formula=1, formula="base")
+		_make_component("SSA Test Regional Employer", "SSATRE", "Employer Contribution")
+
+		make_salary_structure(
+			"SSA Test Regional CTC Structure",
+			"Monthly",
+			employee=emp,
+			company="_Test Company",
+			base=50000,
+			earnings=[
+				{
+					"salary_component": "SSA Test Basic",
+					"abbr": "SSATB",
+					"amount_based_on_formula": 1,
+					"formula": "base",
+				}
+			],
+			deductions=[],
+		)
+		ssa = frappe.get_last_doc("Salary Structure Assignment", filters={"employee": emp})
+
+		def inject(rows_by_type, data):
+			rows_by_type["employer_contributions"].append(
+				frappe._dict(
+					salary_component="SSA Test Regional Employer",
+					abbr="SSATRE",
+					default_amount=2700,
+					statistical_component=0,
+					do_not_include_in_total=0,
+				)
+			)
+
+		ssa.apply_regional_ctc_components = inject
+		ssa.calculate_ctc_and_gross()
+
+		self.assertEqual(ssa.annual_gross_earning, 50000 * 12)
+		self.assertEqual(ssa.ctc, (50000 + 2700) * 12)
+
 	def test_ctc_reset_when_base_missing(self):
 		emp = make_employee("ssa_ctc_nobase@test.com", company="_Test Company")
 		make_salary_structure("SSA Test No Base Structure", "Monthly", company="_Test Company")
