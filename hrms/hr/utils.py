@@ -423,19 +423,19 @@ def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type
 	precision = allocation.precision("total_leaves_allocated")
 	annual_allocation = flt(annual_allocation, precision)
 	earned_leaves = flt(earned_leaves, precision)
-	new_leaves_to_allocate_without_cf = flt(
-		flt(allocation.get_existing_leave_count()) + earned_leaves,
-		precision,
-	)
-	if (
-		# annual allocation as per policy should not be exceeded except for yearly leaves
-		new_leaves_to_allocate_without_cf > annual_allocation
-		and e_leave_type.earned_leave_frequency != "Yearly"
-	):
-		frappe.throw(
-			_("Allocation was skipped due to exceeding annual allocation set in leave policy"),
-			OverAllocationError,
-		)
+
+	if earned_leaves > 0 and e_leave_type.earned_leave_frequency != "Yearly":
+		existing_leave_count = flt(allocation.get_existing_leave_count(), precision)
+		leaves_left_in_annual_quota = flt(annual_allocation - existing_leave_count, precision)
+
+		if leaves_left_in_annual_quota <= 0:
+			frappe.throw(
+				_("Allocation was skipped due to exceeding annual allocation set in leave policy"),
+				OverAllocationError,
+			)
+
+		if earned_leaves > leaves_left_in_annual_quota:
+			earned_leaves = leaves_left_in_annual_quota
 
 	if e_leave_type.max_leaves_allowed:
 		leaves_quota = flt(e_leave_type.max_leaves_allowed - allocation.total_leaves_allocated, precision)

@@ -395,7 +395,37 @@ class LeavePolicyAssignment(Document):
 				pro_rated_period_end,
 			)
 			schedule[0]["number_of_leaves"] = pro_rated_earned_leave
+
+		# yearly earned leaves are exempted from the annual allocation limit
+		# since a single period already grants the entire annual allocation
+		if annual_allocation and leave_details.earned_leave_frequency != "Yearly":
+			schedule = cap_schedule_to_annual_allocation(schedule, annual_allocation)
+
 		return schedule
+
+
+def cap_schedule_to_annual_allocation(schedule, annual_allocation):
+	from frappe.model.meta import get_field_precision
+
+	precision = get_field_precision(frappe.get_meta("Leave Allocation").get_field("new_leaves_allocated"))
+	annual_allocation = flt(annual_allocation, precision)
+
+	capped_schedule = []
+	scheduled_leaves = 0.0
+
+	for row in schedule:
+		# leaves allocated already have ledger entries against them, they cannot be trimmed
+		if not row.get("is_allocated"):
+			leaves_left_in_quota = flt(annual_allocation - scheduled_leaves, precision)
+			if leaves_left_in_quota <= 0:
+				break
+			if flt(row["number_of_leaves"], precision) > leaves_left_in_quota:
+				row["number_of_leaves"] = leaves_left_in_quota
+
+		scheduled_leaves = flt(scheduled_leaves + flt(row["number_of_leaves"], precision), precision)
+		capped_schedule.append(row)
+
+	return capped_schedule
 
 
 def get_pro_rata_period_end_date(consider_current_month):

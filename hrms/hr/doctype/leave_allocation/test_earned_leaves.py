@@ -207,10 +207,13 @@ class TestLeaveAllocation(HRMSTestSuite):
 		)
 
 		# validate earned leaves creation without maximum leaves
+		# the leave period spans 13 allocation dates, but the schedule is capped to the
+		# annual allocation (6), so the leaves skipped due to the max leaves limit
+		# are not compensated by an extra allocation and have to be retried instead
 		frappe.db.set_value("Leave Type", self.leave_type, "max_leaves_allowed", 0)
 		allocate_earned_leaves_for_months(6)
 		self.assertEqual(
-			get_leave_balance_on(self.employee.name, self.leave_type, frappe.flags.current_date), 5
+			get_leave_balance_on(self.employee.name, self.leave_type, frappe.flags.current_date), 4.5
 		)
 
 	def test_overallocation(self):
@@ -236,6 +239,44 @@ class TestLeaveAllocation(HRMSTestSuite):
 		self.assertEqual(
 			get_leave_balance_on(self.employee.name, self.leave_type, frappe.flags.current_date), 22
 		)
+
+	def test_overallocation_when_annual_allocation_is_not_divisible(self):
+		"""Tests earned leave allocation is capped to the annual allocation
+		when rounding up does not divide the annual allocation evenly"""
+		frappe.flags.current_date = get_year_start(getdate())
+		assignment = make_policy_assignment(
+			self.employee,
+			annual_allocation=19,
+			allocate_on_day="First Day",
+			start_date=frappe.flags.current_date,
+			rounding=1.0,
+		)[0]
+
+		# 19 leaves / 12 months = 1.58 rounded to 2 leaves per month
+		# the last allocation should be capped to the leaves left in the annual quota
+		allocate_earned_leaves_for_months(12)
+		self.assertEqual(get_allocated_leaves(assignment), 19)
+
+		# allocations should not be marked as failed since nothing was skipped
+		allocation = frappe.db.get_value("Leave Allocation", {"leave_policy_assignment": assignment}, "name")
+		self.assertEqual(frappe.db.count("Earned Leave Schedule", {"parent": allocation, "failed": 1}), 0)
+
+	def test_overallocation_without_earned_leave_schedule(self):
+		"""Tests earned leave allocation is capped to the annual allocation
+		for allocations created before the earned leave schedule was introduced"""
+		frappe.flags.current_date = get_year_start(getdate())
+		assignment = make_policy_assignment(
+			self.employee,
+			annual_allocation=19,
+			allocate_on_day="First Day",
+			start_date=frappe.flags.current_date,
+			rounding=1.0,
+		)[0]
+		allocation = frappe.db.get_value("Leave Allocation", {"leave_policy_assignment": assignment}, "name")
+		frappe.db.delete("Earned Leave Schedule", {"parent": allocation})
+
+		allocate_earned_leaves_for_months(12)
+		self.assertEqual(get_allocated_leaves(assignment), 19)
 
 	def test_over_allocation_during_assignment_creation(self):
 		"""Tests backdated earned leave allocation does not exceed annual allocation"""
