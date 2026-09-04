@@ -62,7 +62,7 @@ def update_job_applicant_and_offer(doc, method=None):
 	if job_offer and job_offer.status in ("Rejected", "Cancelled"):
 		frappe.msgprint(
 			_(
-				"Linked Job Offer {0} is {1}. Please update the Job Offer status if this hire is intended."
+				"Linked Job Offer {0} was {1}. Please update the Job Offer status if this hire was intended."
 			).format(get_link_to_form("Job Offer", job_offer.name), frappe.bold(_(job_offer.status))),
 			title=_("Job Offer Status Not Updated"),
 			indicator="orange",
