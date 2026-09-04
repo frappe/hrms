@@ -2685,7 +2685,12 @@ def make_salary_slip_from_timesheet(source_name: str, target_doc: str | Document
 				"The Assigned Salary Structure {0} for the employee {1} is not configured for Salary Slip based on Timesheet."
 			).format(frappe.bold(target.salary_structure), frappe.bold(target.employee_name))
 		)
-
+	if not timesheet_config.salary_component:
+		frappe.throw(
+			_(
+				"The Assigned Salary Structure {0} for the employee {1} does not have a Salary Component configured for Salary Slip based on Timesheet."
+			).format(frappe.bold(target.salary_structure), frappe.bold(target.employee_name))
+		)
 	target.run_method("get_emp_and_working_day_details")
 
 	return target
