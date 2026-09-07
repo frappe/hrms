@@ -101,7 +101,11 @@ jinja = {
 after_install = "hrms.install.after_install"
 after_migrate = "hrms.setup.update_select_perm_after_install"
 
+setup_wizard_requires = "assets/hrms/js/setup_wizard.js"
+setup_wizard_stages = "hrms.setup_wizard.get_setup_stages"
 setup_wizard_complete = "hrms.subscription_utils.update_erpnext_access"
+
+extend_bootinfo = "hrms.utils.extend_bootinfo"
 
 # Uninstallation
 # ------------
@@ -178,6 +182,7 @@ doc_events = {
 		"on_update": [
 			"hrms.overrides.company.make_company_fixtures",
 			"hrms.overrides.company.set_default_hr_accounts",
+			"hrms.overrides.company.set_expense_claim_type_accounts",
 		],
 		"on_trash": "hrms.overrides.company.handle_linked_docs",
 	},
@@ -231,6 +236,10 @@ doc_events = {
 	"Attendance Request": {"on_submit": "hrms.telemetry.on_attendance_request_submit"},
 	"Shift Request": {"on_submit": "hrms.telemetry.on_shift_request_submit"},
 	"Employee Checkin": {"after_insert": "hrms.telemetry.on_employee_checkin"},
+	"Payroll Entry": {"on_submit": "hrms.telemetry.on_payroll_entry_submit"},
+	"Job Offer": {"on_submit": "hrms.telemetry.on_job_offer_submit"},
+	"Appraisal": {"on_submit": "hrms.telemetry.on_appraisal_submit"},
+	"Interview": {"on_submit": "hrms.telemetry.on_interview_submit"},
 	# ---- Activation telemetry: post-install setup funnel (first-time milestones) ----
 	"Shift Type": {"after_insert": "hrms.telemetry.on_milestone_insert"},
 	"Leave Type": {"after_insert": "hrms.telemetry.on_milestone_insert"},
@@ -239,7 +248,6 @@ doc_events = {
 	"Appraisal Cycle": {"after_insert": "hrms.telemetry.on_milestone_insert"},
 	"Employee Onboarding": {"after_insert": "hrms.telemetry.on_milestone_insert"},
 	"Salary Slip": {"on_submit": "hrms.telemetry.on_milestone_submit"},
-	"Payroll Entry": {"on_submit": "hrms.telemetry.on_milestone_submit"},
 }
 
 # Scheduled Tasks
@@ -290,6 +298,8 @@ accounting_dimension_doctypes = [
 ]
 
 bank_reconciliation_doctypes = ["Expense Claim"]
+
+audit_trail_doctypes = ["Expense Claim", "Payroll Entry", "Salary Slip", "Leave Encashment", "Gratuity"]
 
 # Testing
 # -------

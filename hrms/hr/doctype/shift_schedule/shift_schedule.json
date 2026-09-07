@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "prompt",
  "creation": "2024-11-11 16:56:33.536882",
@@ -65,7 +66,7 @@
    "link_fieldname": "shift_schedule"
   }
  ],
- "modified": "2024-12-19 13:34:43.731635",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Schedule",

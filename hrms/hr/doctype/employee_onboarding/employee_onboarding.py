@@ -40,7 +40,7 @@ class EmployeeOnboarding(EmployeeBoardingController):
 		employee_name: DF.Data
 		employee_onboarding_template: DF.Link | None
 		holiday_list: DF.Link | None
-		job_applicant: DF.Link
+		job_applicant: DF.Link | None
 		job_offer: DF.Link
 		notify_users_by_email: DF.Check
 		project: DF.Link | None
@@ -53,16 +53,16 @@ class EmployeeOnboarding(EmployeeBoardingController):
 
 	def set_employee(self):
 		if not self.employee:
-			self.employee = frappe.db.get_value("Employee", {"job_applicant": self.job_applicant}, "name")
+			self.employee = frappe.db.get_value("Employee", {"job_offer": self.job_offer}, "name")
 
 	def validate_duplicate_employee_onboarding(self):
 		emp_onboarding = frappe.db.exists(
-			"Employee Onboarding", {"job_applicant": self.job_applicant, "docstatus": ("!=", 2)}
+			"Employee Onboarding", {"job_offer": self.job_offer, "docstatus": ("!=", 2)}
 		)
 		if emp_onboarding and emp_onboarding != self.name:
 			frappe.throw(
-				_("Employee Onboarding: {0} already exists for Job Applicant: {1}").format(
-					frappe.bold(emp_onboarding), frappe.bold(self.job_applicant)
+				_("Employee Onboarding: {0} already exists for Job Offer: {1}").format(
+					frappe.bold(emp_onboarding), frappe.bold(self.job_offer)
 				)
 			)
 
@@ -106,7 +106,8 @@ def make_employee(source_name: str, target_doc: str | Document | None = None) ->
 	doc.validate_employee_creation()
 
 	def set_missing_values(source, target):
-		target.personal_email = frappe.db.get_value("Job Applicant", source.job_applicant, "email_id")
+		target.personal_email = frappe.db.get_value("Job Offer", source.job_offer, "applicant_email")
+		target.job_offer = source.job_offer
 		target.status = "Active"
 
 	doc = get_mapped_doc(

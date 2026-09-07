@@ -14,7 +14,7 @@ frappe.ui.form.on("Gratuity", {
 		frm.set_query("expense_account", function () {
 			return {
 				filters: {
-					root_type: "Expense",
+					root_type: ["in", ["Expense", "Liability"]],
 					is_group: 0,
 					company: frm.doc.company,
 				},
@@ -24,7 +24,7 @@ frappe.ui.form.on("Gratuity", {
 		frm.set_query("payable_account", function () {
 			return {
 				filters: {
-					root_type: "Liability",
+					root_type: ["in", ["Expense", "Liability"]],
 					is_group: 0,
 					company: frm.doc.company,
 				},

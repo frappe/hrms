@@ -46,12 +46,14 @@
    "reqd": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "assignment_based_on",
    "fieldtype": "Select",
    "label": "Assignment based on",
    "options": "\nLeave Period\nJoining Date"
   },
   {
+   "allow_in_quick_entry": 1,
    "depends_on": "eval:doc.assignment_based_on == \"Leave Period\"",
    "fieldname": "leave_period",
    "fieldtype": "Link",
@@ -97,6 +99,7 @@
   },
   {
    "default": "0",
+   "allow_in_quick_entry": 1,
    "fieldname": "carry_forward",
    "fieldtype": "Check",
    "label": "Add unused leaves from previous allocations"
@@ -113,7 +116,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-27 13:10:01.746553",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Policy Assignment",
