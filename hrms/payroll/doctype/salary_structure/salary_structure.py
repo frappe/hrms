@@ -16,43 +16,6 @@ from hrms.payroll.utils import COMPONENT_PARENTFIELDS, sanitize_expression
 
 
 class SalaryStructure(Document):
-<<<<<<< HEAD
-=======
-	# begin: auto-generated types
-	# This code is auto-generated. Do not modify anything in this block.
-
-	from typing import TYPE_CHECKING
-
-	if TYPE_CHECKING:
-		from frappe.types import DF
-
-		from hrms.payroll.doctype.employee_benefit_detail.employee_benefit_detail import EmployeeBenefitDetail
-		from hrms.payroll.doctype.salary_detail.salary_detail import SalaryDetail
-
-		amended_from: DF.Link | None
-		company: DF.Link
-		currency: DF.Link
-		deductions: DF.Table[SalaryDetail]
-		earnings: DF.Table[SalaryDetail]
-		employee_benefits: DF.Table[EmployeeBenefitDetail]
-		employer_contributions: DF.Table[SalaryDetail]
-		hour_rate: DF.Currency
-		is_active: DF.Literal["", "Yes", "No"]
-		is_default: DF.Literal["Yes", "No"]
-		leave_encashment_amount_per_day: DF.Currency
-		letter_head: DF.Link | None
-		max_benefits: DF.Currency
-		mode_of_payment: DF.Link | None
-		net_pay: DF.Currency
-		payment_account: DF.Link | None
-		payroll_frequency: DF.Literal["", "Monthly", "Fortnightly", "Bimonthly", "Weekly", "Daily"]
-		salary_component: DF.Link | None
-		salary_slip_based_on_timesheet: DF.Check
-		total_deduction: DF.Currency
-		total_earning: DF.Currency
-	# end: auto-generated types
-
->>>>>>> 376238d (feat: show employer contribution in salary slip)
 	def before_validate(self):
 		self.sanitize_condition_and_formula_fields()
 
