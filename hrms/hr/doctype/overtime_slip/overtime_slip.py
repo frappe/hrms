@@ -94,7 +94,7 @@ class OvertimeSlip(Document):
 				)
 			)
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def get_emp_and_overtime_details(self):
 		records = self.get_attendance_records()
 		if len(records):
