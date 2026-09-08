@@ -423,6 +423,7 @@ def get_employees(salary_structure: str) -> list[str]:
 
 
 @frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
 def get_salary_component(
 	doctype: str, txt: str, searchfield: str, start: int, page_len: int, filters: dict
 ) -> list:
