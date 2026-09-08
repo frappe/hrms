@@ -1,0 +1,23 @@
+/* frappe-ui's stylesheet already declares @tailwind base/components/utilities */
+@import "frappe-ui/style.css";
+
+@layer base {
+	html {
+		-webkit-font-smoothing: antialiased;
+	}
+	body {
+		@apply bg-surface-white text-ink-gray-8;
+	}
+	/* every figure that lines up in a column */
+	.nums {
+		font-variant-numeric: tabular-nums;
+	}
+}
+
+@layer components {
+	/* wide content scrolls inside its own container, never the page body */
+	.scroll-x {
+		@apply overflow-x-auto;
+		scrollbar-width: thin;
+	}
+}

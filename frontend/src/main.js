@@ -98,7 +98,7 @@ const registerServiceWorker = async () => {
 router.isReady().then(async () => {
 	if (import.meta.env.DEV) {
 		await frappeRequest({
-			url: "/api/method/hrms.www.hrms.get_context_for_dev",
+			url: "/api/method/hrms.www.hr_app.get_context_for_dev",
 		}).then(async (values) => {
 			if (!window.frappe) window.frappe = {}
 			window.frappe.boot = values

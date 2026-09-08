@@ -83,6 +83,11 @@ website_generators = ["Job Opening"]
 website_route_rules = [
 	{"from_route": "/hrms/<path:app_path>", "to_route": "hrms"},
 	{"from_route": "/hr/<path:app_path>", "to_route": "roster"},
+	# the shipped Frappe HR PWA, moved aside so the employee portal can own /hrms.
+	# the bare path needs its own rule: the www page is hr_app, so file-based
+	# routing would otherwise only answer on /hr_app.
+	{"from_route": "/hr-app", "to_route": "hr_app"},
+	{"from_route": "/hr-app/<path:app_path>", "to_route": "hr_app"},
 ]
 # Jinja
 # ----------

@@ -1,0 +1,24 @@
+.org-tree[data-v-83c2f619] li {
+	position: relative;
+}
+.org-tree[data-v-83c2f619] li:before,
+.org-tree[data-v-83c2f619] li:after {
+	content: "";
+	position: absolute;
+	border-color: var(--outline-gray-2);
+}
+.org-tree[data-v-83c2f619] li:before {
+	left: -14px;
+	top: 0;
+	height: 100%;
+	border-left-width: 1px;
+}
+.org-tree[data-v-83c2f619] li:last-child:before {
+	height: 24px;
+}
+.org-tree[data-v-83c2f619] li:after {
+	left: -14px;
+	top: 24px;
+	width: 14px;
+	border-top-width: 1px;
+}
