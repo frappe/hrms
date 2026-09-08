@@ -7,6 +7,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import cint, date_diff, flt, get_link_to_form, getdate
 
+import hrms
 from hrms.payroll.doctype.payroll_period.payroll_period import get_payroll_period
 from hrms.payroll.doctype.salary_structure.salary_structure import validate_max_benefit_for_flexible_benefit
 from hrms.payroll.utils import (
@@ -337,7 +338,63 @@ class SalaryStructureAssignment(Document):
 		rows_by_type["employer_contributions"] = self._evaluate_component_table(
 			salary_structure.get("employer_contributions") or [], data
 		)
+
+		# last, so the hook can read every abbr resolved above
+		self.apply_regional_ctc_components(rows_by_type, data)
+
 		return data, rows_by_type
+
+	@hrms.allow_regional
+	def apply_regional_ctc_components(self, rows_by_type: dict, data: frappe._dict) -> None:
+		"""Hook point for statutory employer contributions a formula cannot express.
+
+		Add rows via ``upsert_employer_contribution``. Never mutate ``self`` or the
+		cached Salary Structure -- both are shared across a Payroll Entry run.
+		"""
+		pass
+
+	def upsert_employer_contribution(
+		self, rows_by_type: dict, data: frappe._dict, salary_component: str, amount: float
+	) -> frappe._dict | None:
+		"""Add or replace an employer contribution row, keyed by component.
+
+		A zero amount clears an existing row but never adds one.
+		"""
+		# the structure row calls it `abbr`, the component `salary_component_abbr`
+		fields = [f for f in SALARY_COMPONENT_FLAGS if f != "abbr"] + ["salary_component_abbr"]
+		component = frappe.db.get_value("Salary Component", salary_component, fields, as_dict=True)
+		if not component:
+			return None
+
+		rows = rows_by_type["employer_contributions"]
+		row = next((r for r in rows if r.salary_component == salary_component), None)
+
+		if row is None:
+			if not flt(amount):
+				return None
+
+			row = frappe._dict(
+				condition=None,
+				formula=None,
+				precision=frappe.get_precision("Salary Detail", "amount"),
+			)
+			for field in SALARY_COMPONENT_FLAGS:
+				row[field] = component.get(field)
+			row.salary_component = salary_component
+			row.abbr = component.salary_component_abbr
+			rows.append(row)
+		else:
+			row.condition = None
+			row.formula = None
+			row.amount_based_on_formula = 0
+
+		value = flt(amount, row.precision)
+		row.default_amount = value
+		row.amount = value
+		if row.abbr:
+			data[row.abbr] = value
+
+		return row
 
 	def _get_component_eval_context(self) -> frappe._dict:
 		from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates

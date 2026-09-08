@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "Prompt",
  "creation": "2020-08-05 19:00:36.103500",
  "doctype": "DocType",

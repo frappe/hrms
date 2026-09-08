@@ -12,8 +12,11 @@ from hrms.hr.utils import validate_active_employee
 
 class AdditionalSalary(Document):
 	def before_validate(self):
-		if self.payroll_date and self.is_recurring:
+		if self.is_recurring:
 			self.payroll_date = None
+		else:
+			self.from_date = None
+			self.to_date = None
 
 	def on_submit(self):
 		self.update_employee_referral()

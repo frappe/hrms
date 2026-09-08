@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "HR-INT-.YYYY.-.####",
  "creation": "2021-04-12 15:03:11.524090",
  "doctype": "DocType",
@@ -199,7 +200,7 @@
    "link_fieldname": "interview"
   }
  ],
- "modified": "2026-02-19 15:40:38.547112",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview",

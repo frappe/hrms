@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:location_name",
  "creation": "2024-07-04 12:12:26.894513",
