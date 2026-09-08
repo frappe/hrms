@@ -123,9 +123,62 @@ function classify(route) {
 	return null;
 }
 
+// The draft the user is currently sitting on, if it is an unsaved HR document.
+let pending_draft = null;
+
+// How far into the form the user got, as a count. Values themselves are never
+// read — only whether each field holds something.
+function count_filled_fields(doctype, draft) {
+	try {
+		const meta = frappe.get_meta(doctype);
+		if (!meta) return null;
+		return meta.fields.filter((df) => {
+			if (frappe.model.no_value_type.includes(df.fieldtype)) return false;
+			const value = draft[df.fieldname];
+			return value !== undefined && value !== null && value !== "";
+		}).length;
+	} catch (e) {
+		return null;
+	}
+}
+
+// A saved document is renamed away from its `new-…` key, so a draft still
+// sitting in `locals` when we leave the route was abandoned rather than saved.
+function resolve_pending_draft(route) {
+	if (!pending_draft) return;
+
+	const { doctype, name } = pending_draft;
+	if (route[0] === "Form" && route[1] === doctype && route[2] === name) return;
+
+	const draft = locals?.[doctype]?.[name];
+	if (draft) {
+		hr_capture("creation_abandoned", {
+			doctype,
+			fields_filled: count_filled_fields(doctype, draft),
+		});
+	}
+	pending_draft = null;
+}
+
+function remember_pending_draft(route) {
+	const name = route[2];
+	const is_new =
+		route[0] === "Form" &&
+		HR_DOCTYPES.has(route[1]) &&
+		typeof name === "string" &&
+		name.startsWith("new-");
+
+	pending_draft = is_new ? { doctype: route[1], name } : null;
+}
+
 function track_route() {
-	const hit = classify(frappe.get_route());
+	const route = frappe.get_route() || [];
+	resolve_pending_draft(route);
+
+	const hit = classify(route);
 	if (hit) hr_capture(hit.event, hit.props);
+
+	remember_pending_draft(route);
 }
 
 function track_landing() {
@@ -154,4 +207,9 @@ $(document).on("app_ready", function () {
 		track_route();
 		frappe.router.on("change", track_route);
 	});
+
+	// Closing the tab on a half-filled form is abandonment too. Best effort —
+	// the event is dropped if the provider has not flushed by the time the page
+	// goes away, so treat this as a floor on the real count.
+	window.addEventListener("pagehide", () => resolve_pending_draft([]), { capture: true });
 });
