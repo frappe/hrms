@@ -65,6 +65,7 @@ function makeTranslationFunction() {
 }
 
 const { translate, load } = makeTranslationFunction();
+export const __ = translate;
 
 export const translationsPlugin = {
 	async isReady() {
