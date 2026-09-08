@@ -86,42 +86,7 @@ def _get_unmarked_attendance(employee_list: list[dict], attendance_list: list[di
 	return unmarked_attendance
 
 
-<<<<<<< HEAD
-@frappe.whitelist()
-=======
-def _get_unmarked_attendance_with_shift(unmarked_attendance, shift, date):
-	# Fetch employees based on Shift Assignment
-	shift_assigned_employees = frappe.get_list(
-		"Shift Assignment",
-		filters={
-			"shift_type": shift,
-			"start_date": ["<=", frappe.utils.getdate(date)],
-		},
-		fields=["employee"],
-	)
-	# Fetch employees based on default shifts
-	default_shift_employees = frappe.get_list(
-		"Employee",
-		filters={
-			"default_shift": shift,
-		},
-		fields=["employee"],
-	)
-
-	all_employees_with_shift = shift_assigned_employees + default_shift_employees
-	distinct_employees_with_shift = {emp["employee"] for emp in all_employees_with_shift}
-
-	# Filter unmarked attendance based on assigned employees
-	shiftwise_unmarked_attendance = []
-	for emp in unmarked_attendance:
-		if emp["employee"] in distinct_employees_with_shift:
-			shiftwise_unmarked_attendance.append(emp)
-
-	return shiftwise_unmarked_attendance
-
-
 @frappe.whitelist(methods=["POST"])
->>>>>>> a2a9928 (fix: limit whitelisted write endpoints to POST requests)
 def mark_employee_attendance(
 	employee_list: list | str,
 	status: str,

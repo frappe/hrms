@@ -209,13 +209,8 @@ class Appraisal(Document, AppraisalMixin):
 
 		self.final_score = flt(final_score, self.precision("final_score"))
 
-<<<<<<< HEAD
-	@frappe.whitelist()
-	def add_feedback(self, feedback, feedback_ratings):
-=======
 	@frappe.whitelist(methods=["POST"])
-	def add_feedback(self, feedback: str, feedback_ratings: list) -> Document:
->>>>>>> a2a9928 (fix: limit whitelisted write endpoints to POST requests)
+	def add_feedback(self, feedback, feedback_ratings):
 		feedback = frappe.get_doc(
 			{
 				"doctype": "Employee Performance Feedback",

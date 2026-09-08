@@ -105,15 +105,9 @@ def make_employee(source_name: str, target_doc: str | Document | None = None) ->
 	)
 
 
-<<<<<<< HEAD
 @frappe.whitelist()
 def create_interview(doc, interview_round):
 	import json
-=======
-@frappe.whitelist(methods=["POST"])
-def create_kanban_board(board_name: str) -> dict:
-	frappe.has_permission("Job Applicant", throw=True)
->>>>>>> a2a9928 (fix: limit whitelisted write endpoints to POST requests)
 
 	if isinstance(doc, str):
 		doc = json.loads(doc)
@@ -142,58 +136,8 @@ def create_kanban_board(board_name: str) -> dict:
 	return interview
 
 
-<<<<<<< HEAD
 @frappe.whitelist()
 def get_interview_details(job_applicant):
-=======
-@frappe.whitelist(methods=["POST"])
-def schedule_interview(
-	job_applicant: str,
-	interview_type: str,
-	scheduled_on: str,
-	from_time: str | None = None,
-	to_time: str | None = None,
-	interviewers: str | list | None = None,
-) -> str:
-	frappe.has_permission("Interview", ptype="create", throw=True)
-	frappe.has_permission("Job Applicant", ptype="read", doc=job_applicant, throw=True)
-
-	applicant = frappe.get_doc("Job Applicant", job_applicant)
-
-	round_designation = frappe.db.get_value("Interview Type", interview_type, "designation")
-	if round_designation and applicant.designation and round_designation != applicant.designation:
-		frappe.throw(
-			_("Interview Type {0} is only applicable for Designation {1}").format(
-				frappe.bold(interview_type), frappe.bold(round_designation)
-			)
-		)
-
-	interview = frappe.new_doc("Interview")
-	interview.interview_type = interview_type
-	interview.job_applicant = applicant.name
-	interview.designation = applicant.designation
-	interview.resume_link = applicant.resume_link
-	interview.job_opening = applicant.job_title
-	interview.scheduled_on = scheduled_on
-	interview.from_time = from_time
-	interview.to_time = to_time
-
-	if isinstance(interviewers, str):
-		interviewers = json.loads(interviewers)
-
-	for entry in interviewers or []:
-		if entry.get("interviewer"):
-			interview.append("interview_details", {"interviewer": entry["interviewer"]})
-
-	interview.insert(ignore_permissions=True)
-
-	return interview.name
-
-
-@frappe.whitelist()
-def get_interview_details(job_applicant: str) -> dict:
-	frappe.has_permission("Job Applicant", "read", job_applicant, throw=True)
->>>>>>> a2a9928 (fix: limit whitelisted write endpoints to POST requests)
 	interview_details = frappe.db.get_all(
 		"Interview",
 		filters={"job_applicant": job_applicant, "docstatus": ["!=", 2]},

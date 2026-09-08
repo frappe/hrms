@@ -738,15 +738,8 @@ def get_attachments(dt: str, dn: str):
 	)
 
 
-<<<<<<< HEAD
-@frappe.whitelist()
-def upload_base64_file(content, filename, dt=None, dn=None, fieldname=None):
-=======
 @frappe.whitelist(methods=["POST"])
-def upload_base64_file(
-	content: str, filename: str, dt: str | None = None, dn: str | None = None, fieldname: str | None = None
-):
->>>>>>> a2a9928 (fix: limit whitelisted write endpoints to POST requests)
+def upload_base64_file(content, filename, dt=None, dn=None, fieldname=None):
 	import base64
 	import io
 	from mimetypes import guess_type

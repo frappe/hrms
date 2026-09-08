@@ -25,7 +25,6 @@ class JobRequisition(Document):
 			},
 		)
 
-<<<<<<< HEAD
 		if duplicate:
 			frappe.throw(
 				_("A Job Requisition for {0} requested by {1} already exists: {2}").format(
@@ -40,13 +39,8 @@ class JobRequisition(Document):
 		if self.status == "Filled" and self.completed_on:
 			self.time_to_fill = time_diff_in_seconds(self.completed_on, self.posting_date)
 
-	@frappe.whitelist()
-	def associate_job_opening(self, job_opening):
-=======
 	@frappe.whitelist(methods=["POST"])
-	def associate_job_opening(self, job_opening: str) -> None:
-		frappe.has_permission("Job Opening", "write", job_opening, throw=True)
->>>>>>> a2a9928 (fix: limit whitelisted write endpoints to POST requests)
+	def associate_job_opening(self, job_opening):
 		frappe.db.set_value(
 			"Job Opening", job_opening, {"job_requisition": self.name, "vacancies": self.no_of_positions}
 		)

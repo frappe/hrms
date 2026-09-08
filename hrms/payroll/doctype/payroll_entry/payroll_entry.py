@@ -240,13 +240,8 @@ class PayrollEntry(Document):
 			if employee.employee in withheld_salaries:
 				employee.is_salary_withheld = 1
 
-<<<<<<< HEAD
-	@frappe.whitelist()
-	def create_salary_slips(self):
-=======
 	@frappe.whitelist(methods=["POST"])
-	def create_salary_slips(self) -> None:
->>>>>>> a2a9928 (fix: limit whitelisted write endpoints to POST requests)
+	def create_salary_slips(self):
 		"""
 		Creates salary slip for selected employees if already not created
 		"""
@@ -309,13 +304,8 @@ class PayrollEntry(Document):
 
 		return ss_list
 
-<<<<<<< HEAD
-	@frappe.whitelist()
-	def submit_salary_slips(self):
-=======
 	@frappe.whitelist(methods=["POST"])
-	def submit_salary_slips(self) -> None:
->>>>>>> a2a9928 (fix: limit whitelisted write endpoints to POST requests)
+	def submit_salary_slips(self):
 		self.check_permission("write")
 		salary_slips = self.get_sal_slip_list(ss_status=0)
 
@@ -914,13 +904,8 @@ class PayrollEntry(Document):
 			),
 		}
 
-<<<<<<< HEAD
-	@frappe.whitelist()
-	def make_bank_entry(self, for_withheld_salaries=False):
-=======
 	@frappe.whitelist(methods=["POST"])
-	def make_bank_entry(self, for_withheld_salaries: bool = False) -> Document | None:
->>>>>>> a2a9928 (fix: limit whitelisted write endpoints to POST requests)
+	def make_bank_entry(self, for_withheld_salaries=False):
 		self.check_permission("write")
 		self.employee_based_payroll_payable_entries = {}
 		employee_wise_accounting_enabled = frappe.db.get_single_value(
@@ -1262,102 +1247,6 @@ class PayrollEntry(Document):
 
 		return self._holidays_between_dates.get(key) or 0
 
-<<<<<<< HEAD
-=======
-	@frappe.whitelist(methods=["POST"])
-	def create_overtime_slips(self) -> None:
-		self.check_permission("write")
-
-		from hrms.hr.doctype.overtime_slip.overtime_slip import (
-			create_overtime_slips_for_employees,
-			filter_employees_for_overtime_slip_creation,
-		)
-
-		employee_list = [emp.employee for emp in self.employees]
-		employees = filter_employees_for_overtime_slip_creation(self.start_date, self.end_date, employee_list)
-
-		if employees:
-			args = frappe._dict(
-				{
-					"posting_date": self.posting_date,
-					"start_date": self.start_date,
-					"end_date": self.end_date,
-					"company": self.company,
-					"currency": self.currency,
-					"payroll_entry": self.name,
-				}
-			)
-			if len(employees) > 30 or frappe.flags.enqueue_payroll_entry:
-				self.db_set("status", "Queued")
-				frappe.enqueue(
-					create_overtime_slips_for_employees,
-					timeout=3000,
-					employees=employees,
-					args=args,
-				)
-				frappe.msgprint(
-					_("Overtime Slip creation is queued. It may take a few minutes"),
-					alert=True,
-					indicator="blue",
-				)
-			else:
-				create_overtime_slips_for_employees(employees, args)
-
-	@frappe.whitelist(methods=["POST"])
-	def submit_overtime_slips(self) -> None:
-		self.check_permission("write")
-
-		from hrms.hr.doctype.overtime_slip.overtime_slip import (
-			submit_overtime_slips_for_employees,
-		)
-
-		overtime_slips = self.get_unsubmitted_overtime_slips()
-		if overtime_slips:
-			if len(overtime_slips) > 30 or frappe.flags.enqueue_payroll_entry:
-				self.db_set("status", "Queued")
-				frappe.enqueue(
-					submit_overtime_slips_for_employees,
-					timeout=3000,
-					overtime_slips=overtime_slips,
-					payroll_entry=self.name,
-				)
-				frappe.msgprint(
-					_("Overtime Slip submission is queued. It may take a few minutes"),
-					alert=True,
-					indicator="blue",
-				)
-			else:
-				submit_overtime_slips_for_employees(overtime_slips, self.name)
-
-	@frappe.whitelist()
-	def get_unsubmitted_overtime_slips(self, limit: int | None = None) -> list[str]:
-		OvertimeSlip = frappe.qb.DocType("Overtime Slip")
-		query = (
-			frappe.qb.from_(OvertimeSlip)
-			.select(OvertimeSlip.name)
-			.where((OvertimeSlip.docstatus == 0) & (OvertimeSlip.payroll_entry == self.name))
-		)
-		if limit:
-			query = query.limit(limit)
-
-		return query.run(pluck="name")
-
-	@frappe.whitelist()
-	def get_overtime_slip_details(self) -> list[bool]:
-		from hrms.hr.doctype.overtime_slip.overtime_slip import filter_employees_for_overtime_slip_creation
-
-		employee_eligible_for_overtime = unsubmitted_overtime_slips = []
-
-		if frappe.db.get_single_value("Payroll Settings", "create_overtime_slip"):
-			employees = [emp.employee for emp in self.employees]
-			employee_eligible_for_overtime = filter_employees_for_overtime_slip_creation(
-				self.start_date, self.end_date, employees
-			)
-			unsubmitted_overtime_slips = self.get_unsubmitted_overtime_slips(limit=1)
-
-		return [len(employee_eligible_for_overtime) > 0, len(unsubmitted_overtime_slips) > 0]
-
->>>>>>> a2a9928 (fix: limit whitelisted write endpoints to POST requests)
 
 def get_salary_structure(
 	company: str, currency: str, salary_slip_based_on_timesheet: int, payroll_frequency: str
