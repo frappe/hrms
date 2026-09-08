@@ -53,11 +53,7 @@
  "hide_toolbar": 1,
  "is_submittable": 1,
  "links": [],
-<<<<<<< HEAD
  "modified": "2026-09-01 18:39:51.520758",
-=======
- "modified": "2026-07-14 09:31:25.466192",
->>>>>>> 071ae76 (fix: HR form cleanup)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Policy",

@@ -388,11 +388,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2025-12-29 16:25:06.271352",
-=======
  "modified": "2026-09-03 11:00:00.000000",
->>>>>>> 8520ec8 (fix: Expense claim workflow cleanup)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
