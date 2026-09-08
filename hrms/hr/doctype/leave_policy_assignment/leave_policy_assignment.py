@@ -464,7 +464,7 @@ def calculate_pro_rated_leaves(
 	return rounded(leaves)
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def create_assignment_for_multiple_employees(employees: str | list[str], data: str | dict) -> list[str]:
 	if isinstance(employees, str):
 		employees = json.loads(employees)
@@ -494,7 +494,7 @@ def create_assignment_for_multiple_employees(employees: str | list[str], data: s
 	return docs_name
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def create_assignment(employee: str, data: frappe._dict) -> Document:
 	assignment = frappe.new_doc("Leave Policy Assignment")
 	assignment.employee = employee

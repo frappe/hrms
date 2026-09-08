@@ -261,7 +261,7 @@ class PayrollEntry(Document):
 			if employee.employee in withheld_salaries:
 				employee.is_salary_withheld = 1
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def create_salary_slips(self) -> None:
 		"""
 		Creates salary slip for selected employees if already not created
@@ -324,7 +324,7 @@ class PayrollEntry(Document):
 
 		return ss_list
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def submit_salary_slips(self) -> None:
 		self.check_permission("write")
 		salary_slips = self.get_sal_slip_list(ss_status=0)
@@ -913,7 +913,7 @@ class PayrollEntry(Document):
 			),
 		}
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def make_bank_entry(self, for_withheld_salaries: bool = False) -> Document | None:
 		self.check_permission("write")
 		self.employee_based_payroll_payable_entries = {}
@@ -1224,7 +1224,7 @@ class PayrollEntry(Document):
 
 		return self._holidays_between_dates.get(key) or 0
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def create_overtime_slips(self) -> None:
 		self.check_permission("write")
 
@@ -1263,7 +1263,7 @@ class PayrollEntry(Document):
 			else:
 				create_overtime_slips_for_employees(employees, args)
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def submit_overtime_slips(self) -> None:
 		self.check_permission("write")
 
