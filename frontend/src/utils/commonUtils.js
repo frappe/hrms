@@ -1,4 +1,5 @@
 import { toast } from "frappe-ui"
+import { __ } from "@/plugins/translationsPlugin"
 
 export function useDownloadPDF() {
 	async function downloadPDF({ doctype, docname, filename = null }) {
