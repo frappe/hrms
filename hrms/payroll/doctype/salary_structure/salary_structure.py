@@ -12,7 +12,7 @@ from frappe.utils import cint, cstr, flt, get_link_to_form
 
 import erpnext
 
-from hrms.payroll.utils import sanitize_expression
+from hrms.payroll.utils import COMPONENT_PARENTFIELDS, sanitize_expression
 
 
 class SalaryStructure(Document):
@@ -38,7 +38,7 @@ class SalaryStructure(Document):
 		self.reset_condition_and_formula_fields()
 
 	def validate_formula_setup(self):
-		for table in ["earnings", "deductions"]:
+		for table in COMPONENT_PARENTFIELDS:
 			for row in self.get(table):
 				if not row.amount_based_on_formula and row.formula:
 					frappe.msgprint(
@@ -62,7 +62,7 @@ class SalaryStructure(Document):
 			"is_flexible_benefit",
 		]
 		overwritten_fields_if_missing = ["amount_based_on_formula", "formula", "amount"]
-		for table in ["earnings", "deductions"]:
+		for table in COMPONENT_PARENTFIELDS:
 			for d in self.get(table):
 				component_default_value = frappe.db.get_value(
 					"Salary Component",
@@ -95,7 +95,7 @@ class SalaryStructure(Document):
 
 	def validate_payment_days_based_dependent_component(self):
 		abbreviations = self.get_component_abbreviations()
-		for component_type in ("earnings", "deductions"):
+		for component_type in COMPONENT_PARENTFIELDS:
 			for row in self.get(component_type):
 				if (
 					row.formula
@@ -115,8 +115,9 @@ class SalaryStructure(Document):
 					frappe.throw(message, title=_("Payment Days Dependency"))
 
 	def get_component_abbreviations(self):
-		abbr = [d.abbr for d in self.earnings if d.depends_on_payment_days]
-		abbr += [d.abbr for d in self.deductions if d.depends_on_payment_days]
+		abbr = []
+		for table in COMPONENT_PARENTFIELDS:
+			abbr += [d.abbr for d in self.get(table) if d.depends_on_payment_days]
 
 		return abbr
 
@@ -136,7 +137,7 @@ class SalaryStructure(Document):
 				break
 
 	def sanitize_condition_and_formula_fields(self):
-		for table in ("earnings", "deductions", "employer_contributions"):
+		for table in COMPONENT_PARENTFIELDS:
 			for row in self.get(table):
 				row.condition = row.condition.strip() if row.condition else ""
 				row.formula = row.formula.strip() if row.formula else ""
@@ -145,7 +146,7 @@ class SalaryStructure(Document):
 
 	def reset_condition_and_formula_fields(self):
 		# set old values (allowing multiline strings for better readability in the doctype form)
-		for table in ("earnings", "deductions", "employer_contributions"):
+		for table in COMPONENT_PARENTFIELDS:
 			for row in self.get(table):
 				row.condition = row._condition
 				row.formula = row._formula
@@ -422,6 +423,7 @@ def get_employees(salary_structure: str) -> list[str]:
 
 
 @frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
 def get_salary_component(
 	doctype: str, txt: str, searchfield: str, start: int, page_len: int, filters: dict
 ) -> list:
