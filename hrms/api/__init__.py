@@ -117,7 +117,7 @@ def get_unread_notifications_count() -> int:
 	)
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def mark_all_notifications_as_read() -> None:
 	frappe.db.set_value(
 		"PWA Notification",
@@ -749,7 +749,7 @@ def get_attachments(dt: str, dn: str):
 	)
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def upload_base64_file(
 	content: str, filename: str, dt: str | None = None, dn: str | None = None, fieldname: str | None = None
 ):
@@ -793,7 +793,7 @@ def upload_base64_file(
 	).insert()
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def delete_attachment(filename: str):
 	attached_to_doctype, attached_to_name = frappe.db.get_value(
 		"File", filename, ["attached_to_doctype", "attached_to_name"]
