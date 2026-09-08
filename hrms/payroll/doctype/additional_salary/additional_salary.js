@@ -86,6 +86,15 @@ frappe.ui.form.on("Additional Salary", {
 		});
 	},
 
+	is_recurring: function (frm) {
+		if (frm.doc.is_recurring) {
+			frm.set_value("payroll_date", null);
+		} else {
+			frm.set_value("from_date", null);
+			frm.set_value("to_date", null);
+		}
+	},
+
 	salary_component: function (frm) {
 		if (!frm.doc.ref_doctype) {
 			frm.trigger("get_salary_component_amount");
