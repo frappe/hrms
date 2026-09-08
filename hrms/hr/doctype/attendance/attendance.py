@@ -346,7 +346,7 @@ def mark_attendance(
 	return attendance.name
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def mark_bulk_attendance(data: str | dict):
 	import json
 

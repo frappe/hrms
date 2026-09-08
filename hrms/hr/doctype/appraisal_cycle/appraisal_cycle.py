@@ -104,7 +104,7 @@ class AppraisalCycle(Document):
 
 		return appraisal_templates
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def create_appraisals(self):
 		self.check_permission("write")
 		if not self.appraisees:
@@ -143,7 +143,7 @@ class AppraisalCycle(Document):
 			msg, title=_("Appraisal Template Missing"), indicator="yellow", raise_exception=raise_exception
 		)
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def complete_cycle(self):
 		self.check_permission("write")
 

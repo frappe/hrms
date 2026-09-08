@@ -209,7 +209,7 @@ class Appraisal(Document, AppraisalMixin):
 
 		self.final_score = flt(final_score, self.precision("final_score"))
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def add_feedback(self, feedback: str, feedback_ratings: list) -> Document:
 		feedback = frappe.get_doc(
 			{
