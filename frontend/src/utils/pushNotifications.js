@@ -1,3 +1,4 @@
+import { __ } from "@/plugins/translationsPlugin"
 export const isChrome = () =>
 	navigator.userAgent.toLowerCase().includes("chrome")
 
