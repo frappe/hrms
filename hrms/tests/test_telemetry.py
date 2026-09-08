@@ -3,7 +3,14 @@ from unittest.mock import patch
 import frappe
 from frappe.utils import add_days, getdate
 
-from hrms.telemetry import MILESTONE_DOCTYPE, _claim_milestone, capture_daily_attendance_pulse
+from hrms.telemetry import (
+	CONVERSION_EVENT,
+	FIRST_CAPTURE_MILESTONE,
+	MILESTONE_DOCTYPE,
+	_claim_milestone,
+	capture,
+	capture_daily_attendance_pulse,
+)
 from hrms.tests.utils import HRMSTestSuite
 
 # A fixed Wednesday. The daily pulse reads the clock and summarises the day
@@ -74,6 +81,18 @@ class TestTelemetry(HRMSTestSuite):
 
 	def release_milestone(self, event: str):
 		frappe.db.delete(MILESTONE_DOCTYPE, {"event": event})
+
+	def start_conversion_clock(self, days_ago: int):
+		"""Reset both conversion milestones and backdate `first_capture`."""
+		self.release_milestone(CONVERSION_EVENT)
+		self.release_milestone(FIRST_CAPTURE_MILESTONE)
+		frappe.get_doc({"doctype": MILESTONE_DOCTYPE, "event": FIRST_CAPTURE_MILESTONE}).insert()
+		frappe.db.set_value(
+			MILESTONE_DOCTYPE,
+			FIRST_CAPTURE_MILESTONE,
+			"creation",
+			f"{add_days(FROZEN_TODAY, -days_ago)} 10:00:00",
+		)
 
 	def reset_checkins(self):
 		"""The pulse counts site-wide, so leftover rows on the frozen dates would
@@ -179,6 +198,67 @@ class TestTelemetry(HRMSTestSuite):
 			create_leave_type()
 
 		self.assertEqual(self.events("leave_type_configured"), [])
+
+	# ---- conversion ----
+
+	def test_first_capture_starts_the_clock_without_firing_an_event(self):
+		self.release_milestone(CONVERSION_EVENT)
+		self.release_milestone(FIRST_CAPTURE_MILESTONE)
+
+		capture("_test_usage")
+
+		self.assertTrue(frappe.db.exists(MILESTONE_DOCTYPE, FIRST_CAPTURE_MILESTONE))
+		self.assertEqual(self.events(CONVERSION_EVENT), [])
+		self.assertEqual(self.events(FIRST_CAPTURE_MILESTONE), [])
+
+	def test_no_conversion_within_fourteen_days_of_first_capture(self):
+		self.start_conversion_clock(days_ago=14)
+
+		capture("_test_usage")
+
+		self.assertEqual(self.events(CONVERSION_EVENT), [])
+
+	def test_usage_beyond_fourteen_days_converts_the_site(self):
+		self.start_conversion_clock(days_ago=15)
+
+		capture("_test_usage")
+
+		conversions = self.events(CONVERSION_EVENT)
+		self.assertEqual(len(conversions), 1)
+		self.assertEqual(conversions[0]["days_since_first_capture"], 15)
+		self.assertEqual(conversions[0]["day_since_install"], 3)
+
+	def test_conversion_fires_only_once_per_site(self):
+		self.start_conversion_clock(days_ago=30)
+
+		for _ in range(3):
+			capture("_test_usage")
+
+		self.assertEqual(len(self.events(CONVERSION_EVENT)), 1)
+
+	def test_daily_pulse_does_not_start_the_conversion_clock(self):
+		"""The pulse is scheduler output, not usage: a site that set up employees
+		and walked away would otherwise convert on cron activity alone."""
+		# Created first: the Employee insert hook is itself usage and would
+		# stamp `first_capture` before the pulse gets a chance to.
+		create_employee(f"_Test Pulse {frappe.generate_hash(length=8)}")
+		self.release_milestone(CONVERSION_EVENT)
+		self.release_milestone(FIRST_CAPTURE_MILESTONE)
+
+		with self.telemetry_enabled():
+			capture_daily_attendance_pulse()
+
+		self.assertEqual(len(self.events("attendance_daily_summary")), 1)
+		self.assertFalse(frappe.db.exists(MILESTONE_DOCTYPE, FIRST_CAPTURE_MILESTONE))
+
+	def test_daily_pulse_does_not_convert_the_site(self):
+		create_employee(f"_Test Pulse {frappe.generate_hash(length=8)}")
+		self.start_conversion_clock(days_ago=15)
+
+		with self.telemetry_enabled():
+			capture_daily_attendance_pulse()
+
+		self.assertEqual(self.events(CONVERSION_EVENT), [])
 
 	# ---- the claim is atomic ----
 
