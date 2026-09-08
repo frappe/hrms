@@ -21,7 +21,7 @@ export const showNotification = (payload) => {
 			notificationOptions["actions"] = [
 				{
 					action: payload.data.click_action,
-					title: "View Details",
+					title: __("View Details"),
 				},
 			]
 		}

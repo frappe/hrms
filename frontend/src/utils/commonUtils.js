@@ -20,8 +20,8 @@ export function useDownloadPDF() {
 					return response.blob()
 				} else {
 					toast({
-						title: "Download Failed",
-						text: `Error downloading PDF`,
+						title: __("Download Failed"),
+						text: __("Error downloading PDF"),
 						type: "error",
 						icon: "alert-circle",
 						position: "bottom-center",
