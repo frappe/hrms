@@ -420,14 +420,8 @@ def get_employees(salary_structure):
 
 
 @frappe.whitelist()
-<<<<<<< HEAD
-def get_salary_component(doctype, txt, searchfield, start, page_len, filters):
-=======
 @frappe.validate_and_sanitize_search_inputs
-def get_salary_component(
-	doctype: str, txt: str, searchfield: str, start: int, page_len: int, filters: dict
-) -> list:
->>>>>>> 50e9e14 (fix: validate search input)
+def get_salary_component(doctype, txt, searchfield, start, page_len, filters):
 	sc = frappe.qb.DocType("Salary Component")
 	sca = frappe.qb.DocType("Salary Component Account")
 
