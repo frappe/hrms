@@ -116,7 +116,7 @@ def get_unread_notifications_count() -> int:
 	)
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def mark_all_notifications_as_read() -> None:
 	frappe.db.set_value(
 		"PWA Notification",
@@ -738,8 +738,15 @@ def get_attachments(dt: str, dn: str):
 	)
 
 
+<<<<<<< HEAD
 @frappe.whitelist()
 def upload_base64_file(content, filename, dt=None, dn=None, fieldname=None):
+=======
+@frappe.whitelist(methods=["POST"])
+def upload_base64_file(
+	content: str, filename: str, dt: str | None = None, dn: str | None = None, fieldname: str | None = None
+):
+>>>>>>> a2a9928 (fix: limit whitelisted write endpoints to POST requests)
 	import base64
 	import io
 	from mimetypes import guess_type
@@ -778,7 +785,7 @@ def upload_base64_file(content, filename, dt=None, dn=None, fieldname=None):
 	).insert()
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def delete_attachment(filename: str):
 	frappe.delete_doc("File", filename)
 

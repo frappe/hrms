@@ -293,3 +293,22 @@ def get_total_amount_and_exchange_rate(ref_doc, party_account_currency, company_
 		)
 
 	return total_amount, exchange_rate
+<<<<<<< HEAD
+=======
+
+
+# update exchange rate in linked advance
+@frappe.whitelist(methods=["POST"])
+def set_exchange_rate_in_advance(doc: Document, method: None = None):
+	if doc.references:
+		for reference_doc in doc.references:
+			if reference_doc.reference_doctype == "Employee Advance" and doc.target_exchange_rate:
+				frappe.has_permission("Employee Advance", "write", reference_doc.reference_name, throw=True)
+				frappe.db.set_value(
+					"Employee Advance",
+					reference_doc.reference_name,
+					"exchange_rate",
+					doc.target_exchange_rate,
+					update_modified=False,
+				)
+>>>>>>> a2a9928 (fix: limit whitelisted write endpoints to POST requests)

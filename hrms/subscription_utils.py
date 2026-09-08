@@ -63,7 +63,11 @@ def get_active_employees() -> int:
 	return frappe.db.count("Employee", {"status": "Active"})
 
 
+<<<<<<< HEAD
 @frappe.whitelist(allow_guest=True)
+=======
+@frappe.whitelist(methods=["POST"])
+>>>>>>> a2a9928 (fix: limit whitelisted write endpoints to POST requests)
 def subscription_updated(app: str, plan: str):
 	if app in ["hrms", "erpnext"] and plan:
 		update_erpnext_access()

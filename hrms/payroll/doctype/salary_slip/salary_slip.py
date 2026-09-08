@@ -2391,6 +2391,7 @@ def on_doctype_update():
 	frappe.db.add_index("Salary Slip", ["employee", "start_date", "end_date"])
 
 
+<<<<<<< HEAD
 def _safe_eval(code: str, eval_globals: dict | None = None, eval_locals: dict | None = None):
 	"""Old version of safe_eval from framework.
 
@@ -2437,6 +2438,10 @@ def _check_attributes(code: str) -> None:
 
 @frappe.whitelist()
 def enqueue_email_salary_slips(names) -> None:
+=======
+@frappe.whitelist(methods=["POST"])
+def enqueue_email_salary_slips(names: list | str) -> None:
+>>>>>>> a2a9928 (fix: limit whitelisted write endpoints to POST requests)
 	"""enqueue bulk emailing salary slips"""
 	import json
 

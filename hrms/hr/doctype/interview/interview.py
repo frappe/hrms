@@ -80,8 +80,15 @@ class Interview(Document):
 		status_map = {"Cleared": "Accepted", "Rejected": "Rejected"}
 		return status_map.get(self.status, None)
 
+<<<<<<< HEAD
 	@frappe.whitelist()
 	def reschedule_interview(self, scheduled_on, from_time, to_time):
+=======
+	@frappe.whitelist(methods=["POST"])
+	def reschedule_interview(
+		self, scheduled_on: datetime.date, from_time: datetime.time, to_time: datetime.time
+	) -> None:
+>>>>>>> a2a9928 (fix: limit whitelisted write endpoints to POST requests)
 		if scheduled_on == self.scheduled_on and from_time == self.from_time and to_time == self.to_time:
 			frappe.msgprint(
 				_("No changes found in timings."), indicator="orange", title=_("Interview Not Rescheduled")
@@ -184,10 +191,15 @@ def get_skill_wise_average_rating(interview: str) -> list[dict]:
 	).run(as_dict=True)
 
 
+<<<<<<< HEAD
 @frappe.whitelist()
 def update_job_applicant_status(args):
 	import json
 
+=======
+@frappe.whitelist(methods=["POST"])
+def update_job_applicant_status(status: str, job_applicant: str):
+>>>>>>> a2a9928 (fix: limit whitelisted write endpoints to POST requests)
 	try:
 		if isinstance(args, str):
 			args = json.loads(args)
@@ -316,8 +328,13 @@ def get_expected_skill_set(interview_round):
 	)
 
 
+<<<<<<< HEAD
 @frappe.whitelist()
 def create_interview_feedback(data, interview_name, interviewer, job_applicant):
+=======
+@frappe.whitelist(methods=["POST"])
+def create_interview_feedback(data: str | dict, interview_name: str, interviewer: str, job_applicant: str):
+>>>>>>> a2a9928 (fix: limit whitelisted write endpoints to POST requests)
 	import json
 
 	if isinstance(data, str):

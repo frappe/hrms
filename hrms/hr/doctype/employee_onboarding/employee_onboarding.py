@@ -58,7 +58,7 @@ class EmployeeOnboarding(EmployeeBoardingController):
 	def on_cancel(self):
 		super().on_cancel()
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def mark_onboarding_as_completed(self):
 		for activity in self.activities:
 			frappe.db.set_value("Task", activity.task, "status", "Completed")

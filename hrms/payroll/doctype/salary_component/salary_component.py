@@ -71,8 +71,15 @@ class SalaryComponent(Document):
 			.run(pluck=True)
 		)
 
+<<<<<<< HEAD
 	@frappe.whitelist()
 	def update_salary_structures(self, field, value, structures=None):
+=======
+	@frappe.whitelist(methods=["POST"])
+	def update_salary_structures(
+		self, field: str, value: str | int | float | None, structures: list | None = None
+	) -> None:
+>>>>>>> a2a9928 (fix: limit whitelisted write endpoints to POST requests)
 		is_formula_related = field == "formula"
 
 		if not structures:

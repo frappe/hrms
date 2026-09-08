@@ -193,7 +193,7 @@ class SalaryStructure(Document):
 
 		return employees
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def assign_salary_structure(
 		self,
 		branch=None,
