@@ -3,6 +3,7 @@
 
 
 import datetime
+from functools import cached_property
 
 import frappe
 from frappe import _, msgprint
@@ -67,6 +68,8 @@ from hrms.utils.holiday_list import get_holiday_dates_between
 HOLIDAYS_BETWEEN_DATES = "holidays_between_dates"
 LEAVE_TYPE_MAP = "leave_type_map"
 TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
+
+CACHED_PROPERTIES = ("evaluated_components",)
 
 
 class SalarySlip(TransactionBase):
@@ -208,6 +211,14 @@ class SalarySlip(TransactionBase):
 			return self.relieving_date
 
 		return self.end_date
+
+	def clear_cached_properties(self) -> None:
+		for name in CACHED_PROPERTIES:
+			self.__dict__.pop(name, None)
+
+	def load_from_db(self):
+		super().load_from_db()
+		self.clear_cached_properties()
 
 	def validate(self):
 		self.check_salary_withholding()
@@ -879,6 +890,9 @@ class SalarySlip(TransactionBase):
 		return lwp, absent
 
 	def set_salary_structure_assignment(self):
+		self._ssa_doc = None
+		self.clear_cached_properties()
+
 		self._salary_structure_assignment = frappe.db.get_value(
 			"Salary Structure Assignment",
 			{
@@ -1186,7 +1200,7 @@ class SalarySlip(TransactionBase):
 				current_period_exempted_amount += d.amount
 
 		# Future period exempted amount
-		for deduction in self._evaluated_components["deductions"]:
+		for deduction in self.evaluated_components["deductions"]:
 			if deduction.exempted_from_income_tax:
 				if deduction.amount_based_on_formula:
 					for sub_period in range(1, ceil(self.remaining_sub_periods)):
@@ -1238,9 +1252,6 @@ class SalarySlip(TransactionBase):
 			self.accrued_benefits = []
 			self.benefit_ledger_components = []
 
-		if not getattr(self, "_evaluated_components", None):
-			self._set_evaluated_components()
-
 		self.add_structure_components(component_type)
 
 		if component_type == "employer_contributions":
@@ -1253,12 +1264,12 @@ class SalarySlip(TransactionBase):
 		else:
 			self.add_tax_components()
 
-	def _set_evaluated_components(self) -> None:
-		"""Ask the Salary Structure Assignment to evaluate all component formulas
-		once and return fully-resolved rows (with default_amount + flags). Shared
-		across the earnings and deductions passes so cross-component references
-		(e.g. a deduction referencing an earning abbr) resolve correctly."""
-		self._evaluated_components = self._get_ssa_doc().get_evaluated_components()
+	@cached_property
+	def evaluated_components(self) -> frappe._dict:
+		"""Every salary structure component, evaluated once for a full cycle by the
+		Salary Structure Assignment. Earnings, deductions and employer contributions
+		share one pass, so a deduction formula can reference an earning's abbr."""
+		return self._get_ssa_doc().get_evaluated_components()
 
 	def _get_ssa_doc(self):
 		if not getattr(self, "_ssa_doc", None):
@@ -1272,7 +1283,7 @@ class SalarySlip(TransactionBase):
 	def add_structure_components(self, component_type):
 		self.data, self.default_data = self.get_data_for_eval()
 
-		for struct_row in self._evaluated_components[component_type]:
+		for struct_row in self.evaluated_components[component_type]:
 			self.add_structure_component(struct_row, component_type)
 
 	def add_structure_component(self, struct_row, component_type):
@@ -1669,7 +1680,7 @@ class SalarySlip(TransactionBase):
 	def add_tax_components(self):
 		# Calculate variable_based_on_taxable_salary after all components updated in salary slip
 		tax_components, self.other_deduction_components = [], []
-		for d in self._evaluated_components["deductions"]:
+		for d in self.evaluated_components["deductions"]:
 			if d.variable_based_on_taxable_salary == 1 and not d.formula and not flt(d.amount):
 				tax_components.append(d.salary_component)
 			else:
