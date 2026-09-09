@@ -3,6 +3,7 @@
 
 import frappe
 from frappe import _
+from frappe.query_builder.functions import Count
 
 
 def execute(filters: dict | None = None) -> tuple:
@@ -67,9 +68,15 @@ def get_columns() -> list[dict]:
 
 def get_data(filters: dict | None = None) -> list[dict]:
 	Appraisal = frappe.qb.DocType("Appraisal")
+	query = frappe.qb.from_(Appraisal).where(Appraisal.docstatus != 2)
+
+	for condition in ["appraisal_cycle", "employee", "department", "designation", "company"]:
+		if filters.get(condition):
+			query = query.where(Appraisal[condition] == filters.get(condition))
+
+	filtered_appraisals = query.select(Appraisal.name)
 	query = (
-		frappe.qb.from_(Appraisal)
-		.select(
+		query.select(
 			Appraisal.employee,
 			Appraisal.employee_name,
 			Appraisal.designation,
@@ -81,21 +88,25 @@ def get_data(filters: dict | None = None) -> list[dict]:
 			Appraisal.self_score,
 			Appraisal.final_score,
 		)
-		.where(Appraisal.docstatus != 2)
+		.orderby(Appraisal.appraisal_cycle)
+		.orderby(Appraisal.final_score, order=frappe.qb.desc)
+	)
+	appraisals = query.run(as_dict=True)
+	if not appraisals:
+		return appraisals
+
+	Feedback = frappe.qb.DocType("Employee Performance Feedback")
+	feedback_counts = dict(
+		frappe.qb.from_(Feedback)
+		.select(Feedback.appraisal, Count(Feedback.name))
+		.where(Feedback.docstatus == 1)
+		.where(Feedback.appraisal.isin(filtered_appraisals))
+		.groupby(Feedback.appraisal)
+		.run()
 	)
 
-	for condition in ["appraisal_cycle", "employee", "department", "designation", "company"]:
-		if filters.get(condition):
-			query = query.where(Appraisal[condition] == filters.get(condition))
-
-	query = query.orderby(Appraisal.appraisal_cycle)
-	query = query.orderby(Appraisal.final_score, order=frappe.qb.desc)
-	appraisals = query.run(as_dict=True)
-
 	for row in appraisals:
-		row["feedback_count"] = frappe.db.count(
-			"Employee Performance Feedback", {"appraisal": row.appraisal, "docstatus": 1}
-		)
+		row["feedback_count"] = feedback_counts.get(row.appraisal, 0)
 
 	return appraisals
 
