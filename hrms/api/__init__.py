@@ -104,6 +104,7 @@ def get_hr_settings() -> dict:
 		allow_employee_checkin_from_mobile_app=settings.allow_employee_checkin_from_mobile_app,
 		allow_geolocation_tracking=settings.allow_geolocation_tracking,
 		prevent_self_leave_approval=settings.prevent_self_leave_approval,
+		enable_multi_currency_expense_claim=settings.enable_multi_currency_expense_claim,
 	)
 
 
@@ -714,7 +715,10 @@ def get_currency_symbols() -> dict:
 def get_company_cost_center_and_expense_account(company: str) -> dict:
 	frappe.has_permission("Company", "read", company, throw=True)
 	return frappe.db.get_value(
-		"Company", company, ["cost_center", "default_expense_claim_payable_account"], as_dict=True
+		"Company",
+		company,
+		["cost_center", "default_expense_claim_payable_account", "default_payroll_payable_account"],
+		as_dict=True,
 	)
 
 
