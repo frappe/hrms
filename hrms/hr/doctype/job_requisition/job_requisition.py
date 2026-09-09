@@ -39,7 +39,7 @@ class JobRequisition(Document):
 		if self.status == "Filled" and self.completed_on:
 			self.time_to_fill = time_diff_in_seconds(self.completed_on, self.posting_date)
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def associate_job_opening(self, job_opening):
 		frappe.db.set_value(
 			"Job Opening", job_opening, {"job_requisition": self.name, "vacancies": self.no_of_positions}

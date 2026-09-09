@@ -228,7 +228,7 @@ class LeaveAllocation(Document):
 				BackDatedAllocationError,
 			)
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def set_total_leaves_allocated(self):
 		self.unused_leaves = flt(
 			get_carry_forwarded_leaves(self.employee, self.leave_type, self.from_date, self.carry_forward),
@@ -316,7 +316,7 @@ class LeaveAllocation(Document):
 		)
 		create_leave_ledger_entry(self, args, submit)
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def allocate_leaves_manually(self, new_leaves, from_date=None):
 		if from_date and not (getdate(self.from_date) <= getdate(from_date) <= getdate(self.to_date)):
 			frappe.throw(
@@ -497,7 +497,7 @@ def show_expire_leave_dialog(expired_leaves, leave_type):
 	)
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def expire_carried_forward_allocation():
 	if frappe.has_permission(doctype="Leave Allocation", ptype="submit", user=frappe.session.user):
 		process_expired_allocation()

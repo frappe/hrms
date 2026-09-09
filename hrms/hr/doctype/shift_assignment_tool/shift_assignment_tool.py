@@ -175,7 +175,7 @@ class ShiftAssignmentTool(Document):
 			.where((end_time_case >= shift_start) & (ShiftType.start_time <= shift_end))
 		)
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def bulk_assign(self, employees: list):
 		if self.action == "Assign Shift":
 			mandatory_fields = ["shift_type"]
@@ -253,7 +253,7 @@ class ShiftAssignmentTool(Document):
 			after_commit=True,
 		)
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def bulk_process_shift_requests(self, shift_requests: list, status: str):
 		if not shift_requests:
 			frappe.throw(

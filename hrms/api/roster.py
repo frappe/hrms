@@ -42,7 +42,7 @@ def get_schedule_from_assignment(shift_schedule_assignment: str):
 	return {"frequency": frequency, "repeat_on_days": repeat_on_days}
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def create_shift_schedule_assignment(
 	employee: str,
 	company: str,
@@ -75,7 +75,7 @@ def create_shift_schedule_assignment(
 	)
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def delete_shift_schedule_assignment(shift_schedule_assignment: str) -> None:
 	for shift_assignment in frappe.get_all(
 		"Shift Assignment", {"shift_schedule_assignment": shift_schedule_assignment}, pluck="name"
@@ -87,7 +87,7 @@ def delete_shift_schedule_assignment(shift_schedule_assignment: str) -> None:
 	frappe.delete_doc("Shift Schedule Assignment", shift_schedule_assignment)
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def swap_shift(
 	src_shift: str, src_date: str, tgt_employee: str, tgt_date: str, tgt_shift: str | None
 ) -> None:
@@ -125,7 +125,7 @@ def swap_shift(
 		)
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def break_shift(assignment: str | ShiftAssignment, date: str) -> None:
 	if isinstance(assignment, str):
 		assignment = frappe.get_doc("Shift Assignment", assignment)
@@ -155,7 +155,7 @@ def break_shift(assignment: str | ShiftAssignment, date: str) -> None:
 		)
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def insert_shift(
 	employee: str,
 	company: str,
