@@ -56,6 +56,7 @@ from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import (
 from hrms.payroll.utils import (
 	COMPONENT_EVAL_GLOBALS,
 	COMPONENT_PARENTFIELDS,
+	SALARY_COMPONENT_VALUES,
 	_safe_eval,
 	get_component_eval_context,
 	throw_error_message,
@@ -65,7 +66,6 @@ from hrms.utils.holiday_list import get_holiday_dates_between
 # cache keys
 HOLIDAYS_BETWEEN_DATES = "holidays_between_dates"
 LEAVE_TYPE_MAP = "leave_type_map"
-SALARY_COMPONENT_VALUES = "salary_component_values"
 TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
 
 
