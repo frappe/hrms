@@ -26,6 +26,7 @@ class HRSettings(Document):
 		auto_leave_encashment: DF.Check
 		check_vacancies: DF.Check
 		emp_created_by: DF.Literal["Naming Series", "Employee Number", "Full Name"]
+		enable_multi_currency_expense_claim: DF.Check
 		exit_questionnaire_notification_template: DF.Link | None
 		exit_questionnaire_web_form: DF.Link | None
 		expense_approver_mandatory_in_expense_claim: DF.Check

@@ -81,7 +81,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		posting_date: DF.Date
 		project: DF.Link | None
 		remark: DF.SmallText | None
-		status: DF.Literal["Draft", "Paid", "Unpaid", "Rejected", "Submitted", "Cancelled"]
+		status: DF.Literal["Draft", "Paid", "Partially Paid", "Unpaid", "Rejected", "Submitted", "Cancelled"]
 		task: DF.Link | None
 		taxes: DF.Table[ExpenseTaxesandCharges]
 		total_advance_amount: DF.Currency
@@ -105,6 +105,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 	def validate(self):
 		validate_active_employee(self.employee)
 		set_employee_name(self)
+		self.set_company_currency_if_multi_currency_disabled()
 		self.validate_sanctioned_amount()
 		self.calculate_total_amount()
 		self.validate_advances()
@@ -141,7 +142,10 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 				):
 					status = "Paid"
 				elif flt(self.total_sanctioned_amount) > 0:
-					status = "Unpaid"
+					if flt(self.total_amount_reimbursed, precision) > 0:
+						status = "Partially Paid"
+					else:
+						status = "Unpaid"
 			elif self.approval_status == "Rejected":
 				status = "Rejected"
 
@@ -426,7 +430,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		per_advance_gain_loss = 0
 		total_advance_exchange_gain_loss = 0
 		for advance in self.advances:
-			if advance.base_allocated_amount and self.base_total_advance_amount:
+			if advance.exchange_rate and advance.base_allocated_amount and self.base_total_advance_amount:
 				allocated_amount_in_adv_exchange_rate = flt(advance.allocated_amount) * flt(
 					advance.exchange_rate
 				)
@@ -487,6 +491,15 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		if self.is_paid:
 			if not self.mode_of_payment:
 				frappe.throw(_("Mode of payment is required to make a payment").format(self.employee))
+
+	def set_company_currency_if_multi_currency_disabled(self):
+		if frappe.db.get_single_value("HR Settings", "enable_multi_currency_expense_claim"):
+			return
+
+		self.currency = erpnext.get_company_currency(self.company)
+		self.exchange_rate = 1.0
+		for advance in self.get("advances"):
+			advance.exchange_rate = 1.0
 
 	def calculate_total_amount(self):
 		self.total_claimed_amount = 0
@@ -798,9 +811,6 @@ def get_expense_claim(employee_advance: str | dict) -> Document:
 		employee_advance = frappe.get_doc("Employee Advance", employee_advance)
 
 	company = employee_advance.company
-	default_payable_account = frappe.get_cached_value(
-		"Company", company, "default_expense_claim_payable_account"
-	)
 	default_cost_center = frappe.get_cached_value("Company", company, "cost_center")
 
 	expense_claim = frappe.new_doc("Expense Claim")
@@ -808,7 +818,7 @@ def get_expense_claim(employee_advance: str | dict) -> Document:
 	expense_claim.currency = employee_advance.currency
 	expense_claim.employee = employee_advance.employee
 	expense_claim.payable_account = (
-		default_payable_account
+		get_default_payable_account(company)
 		if employee_advance.currency == erpnext.get_company_currency(company)
 		else None
 	)
@@ -816,6 +826,14 @@ def get_expense_claim(employee_advance: str | dict) -> Document:
 	expense_claim.is_paid = 1 if flt(employee_advance.paid_amount) else 0
 	get_expense_claim_advances(expense_claim, employee_advance)
 	return expense_claim
+
+
+@frappe.whitelist()
+def get_default_payable_account(company: str) -> str | None:
+	frappe.has_permission("Company", "read", company, throw=True)
+	return frappe.get_cached_value(
+		"Company", company, "default_expense_claim_payable_account"
+	) or frappe.get_cached_value("Company", company, "default_payroll_payable_account")
 
 
 def get_expense_claim_advances(expense_claim, employee_advance):

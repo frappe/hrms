@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "naming_series:",
  "creation": "2022-08-29 19:00:53.358248",
@@ -204,7 +205,7 @@
    "link_fieldname": "job_requisition"
   }
  ],
- "modified": "2026-08-06 13:01:43.187327",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Requisition",

@@ -55,7 +55,7 @@ class PayrollEntry(Document):
 		designation: DF.Link | None
 		employees: DF.Table[PayrollEmployeeDetail]
 		end_date: DF.Date
-		error_message: DF.SmallText | None
+		error_message: DF.TextEditor | None
 		exchange_rate: DF.Float
 		grade: DF.Link | None
 		number_of_employees: DF.Int
@@ -300,7 +300,7 @@ class PayrollEntry(Document):
 			if employee.employee in withheld_salaries:
 				employee.is_salary_withheld = 1
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def create_salary_slips(self) -> None:
 		"""
 		Creates salary slip for selected employees if already not created
@@ -363,7 +363,7 @@ class PayrollEntry(Document):
 
 		return ss_list
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def submit_salary_slips(self) -> None:
 		self.check_permission("write")
 		salary_slips = self.get_sal_slip_list(ss_status=0)
@@ -986,7 +986,7 @@ class PayrollEntry(Document):
 			for employee, amount in sorted(amounts.items())
 		]
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def make_bank_entry(
 		self, for_withheld_salaries: bool = False, employees: list[str] | str | None = None
 	) -> Document | None:
@@ -1339,7 +1339,7 @@ class PayrollEntry(Document):
 
 		return self._holidays_between_dates.get(key) or 0
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def create_overtime_slips(self) -> None:
 		self.check_permission("write")
 
@@ -1378,7 +1378,7 @@ class PayrollEntry(Document):
 			else:
 				create_overtime_slips_for_employees(employees, args)
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def submit_overtime_slips(self) -> None:
 		self.check_permission("write")
 
@@ -1537,16 +1537,30 @@ def set_filter_conditions(query, filters, qb_object):
 
 def set_match_conditions(query, qb_object):
 	match_conditions = get_match_cond("Employee", as_condition=False)
+	employee_permission_fields = get_employee_permission_fields()
 
 	for cond in match_conditions:
 		if isinstance(cond, dict):
 			for key, value in cond.items():
+				fieldname = employee_permission_fields.get(key)
+				if not fieldname:
+					continue
+
 				if isinstance(value, list):
-					query = query.where(qb_object[key].isin(value))
+					query = query.where(qb_object[fieldname].isin(value))
 				else:
-					query = query.where(qb_object[key] == value)
+					query = query.where(qb_object[fieldname] == value)
 
 	return query
+
+
+def get_employee_permission_fields():
+	permission_fields = {"Employee": "name"}
+	for df in frappe.get_meta("Employee").get_link_fields():
+		if not df.get("ignore_user_permissions"):
+			permission_fields[df.options] = df.fieldname
+
+	return permission_fields
 
 
 def remove_payrolled_employees(emp_list, start_date, end_date):

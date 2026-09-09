@@ -143,7 +143,7 @@ function downloadPDF() {
 			if (response.ok) {
 				return response.blob()
 			} else {
-				downloadError.value = "Failed to download PDF"
+				downloadError.value = __("Failed to download PDF")
 			}
 		})
 		.then((blob) => {

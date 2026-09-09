@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "creation": "2016-11-08 04:58:20.001780",
  "doctype": "DocType",
  "document_type": "Document",
@@ -36,7 +37,7 @@
  ],
  "in_create": 1,
  "links": [],
- "modified": "2026-04-16 12:52:47.429304",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Daily Work Summary",
