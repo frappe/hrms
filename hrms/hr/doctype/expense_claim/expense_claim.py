@@ -89,7 +89,10 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 				):
 					status = "Paid"
 				elif flt(self.total_sanctioned_amount) > 0:
-					status = "Unpaid"
+					if flt(self.total_amount_reimbursed, precision) > 0:
+						status = "Partially Paid"
+					else:
+						status = "Unpaid"
 			elif self.approval_status == "Rejected":
 				status = "Rejected"
 
