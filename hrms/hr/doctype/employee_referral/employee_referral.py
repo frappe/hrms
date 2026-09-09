@@ -46,7 +46,7 @@ class EmployeeReferral(Document):
 		self.db_set("status", "Cancelled")
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def create_job_applicant(source_name: str, target_doc: str | Document | None = None) -> Document:
 	emp_ref = frappe.get_doc("Employee Referral", source_name)
 	# just for Api call if some set status apart from default Status

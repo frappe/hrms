@@ -207,7 +207,7 @@ def get_remaining_leaves(allocation):
 	)
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def expire_allocation(allocation: str | Document | frappe._dict, expiry_date: datetime.date | None = None):
 	"""expires non-carry forwarded allocation"""
 	import json

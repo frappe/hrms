@@ -2635,7 +2635,7 @@ def on_doctype_update():
 	frappe.db.add_index("Salary Slip", ["employee", "start_date", "end_date"])
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def enqueue_email_salary_slips(names: list | str) -> None:
 	"""enqueue bulk emailing salary slips"""
 	import json
