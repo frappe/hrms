@@ -84,67 +84,47 @@ class SalarySlip(TransactionBase):
 
 	@property
 	def has_custom_naming_series(self):
-		if not hasattr(self, "__has_custom_naming_series"):
-			self.__has_custom_naming_series = frappe.db.exists(
-				"Property Setter",
-				{
-					"doc_type": "Salary Slip",
-					"property": "autoname",
-				},
-			)
-
-		return self.__has_custom_naming_series
+		return frappe.db.exists(
+			"Property Setter",
+			{
+				"doc_type": "Salary Slip",
+				"property": "autoname",
+			},
+		)
 
 	@property
 	def joining_date(self):
-		if not hasattr(self, "__joining_date"):
-			self.__joining_date = frappe.get_cached_value(
-				"Employee",
-				self.employee,
-				"date_of_joining",
-			)
-
-		return self.__joining_date
+		return frappe.get_cached_value(
+			"Employee",
+			self.employee,
+			"date_of_joining",
+		)
 
 	@property
 	def relieving_date(self):
-		if not hasattr(self, "__relieving_date"):
-			self.__relieving_date = frappe.get_cached_value(
-				"Employee",
-				self.employee,
-				"relieving_date",
-			)
-
-		return self.__relieving_date
+		return frappe.get_cached_value(
+			"Employee",
+			self.employee,
+			"relieving_date",
+		)
 
 	@property
 	def payroll_period(self):
-		if not hasattr(self, "__payroll_period"):
-			self.__payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
-
-		return self.__payroll_period
+		return get_payroll_period(self.start_date, self.end_date, self.company)
 
 	@property
 	def actual_start_date(self):
-		if not hasattr(self, "__actual_start_date"):
-			self.__actual_start_date = self.start_date
+		if self.joining_date and getdate(self.start_date) < self.joining_date <= getdate(self.end_date):
+			return self.joining_date
 
-			if self.joining_date and getdate(self.start_date) < self.joining_date <= getdate(self.end_date):
-				self.__actual_start_date = self.joining_date
-
-		return self.__actual_start_date
+		return self.start_date
 
 	@property
 	def actual_end_date(self):
-		if not hasattr(self, "__actual_end_date"):
-			self.__actual_end_date = self.end_date
+		if self.relieving_date and getdate(self.start_date) <= self.relieving_date < getdate(self.end_date):
+			return self.relieving_date
 
-			if self.relieving_date and getdate(self.start_date) <= self.relieving_date < getdate(
-				self.end_date
-			):
-				self.__actual_end_date = self.relieving_date
-
-		return self.__actual_end_date
+		return self.end_date
 
 	def validate(self):
 		self.check_salary_withholding()
