@@ -2,11 +2,13 @@
 # See license.txt
 
 import frappe
+from frappe.model import numeric_fieldtypes
 from frappe.utils import get_first_day, nowdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.payroll.utils import get_salary_slip_eval_defaults
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -168,6 +170,55 @@ class TestSalaryStructureAssignment(HRMSTestSuite):
 
 		components = {r.salary_component: r.default_amount for r in ssa.get_evaluated_components().deductions}
 		self.assertEqual(components["SSA Test YTD Guard"], 50000)
+
+	def test_salary_slip_eval_defaults_cover_every_slip_field(self):
+		"""The seeded field set is derived from the Salary Slip meta, so it covers
+		fields outside the previously hard-coded list -- including custom fields,
+		which cannot be enumerated ahead of time."""
+		defaults = get_salary_slip_eval_defaults()
+		meta = frappe.get_meta("Salary Slip")
+
+		for field in meta.fields:
+			if field.fieldtype in numeric_fieldtypes:
+				self.assertIn(field.fieldname, defaults)
+				self.assertEqual(defaults[field.fieldname], 0)
+
+		# layout and table fieldtypes hold no value and must stay out of the context
+		self.assertNotIn("earnings", defaults)
+		self.assertNotIn("deductions", defaults)
+
+	def test_get_evaluated_components_resolves_slip_fields_outside_hardcoded_set(self):
+		"""A formula may reference a slip field that the SSA pre-pass does not seed
+		explicitly and that is not one of the totals (here base_gross_pay). It must
+		resolve to its default instead of raising a NameError."""
+		emp = make_employee("ssa_unseeded_field@test.com", company="_Test Company")
+
+		formula = "base + base_gross_pay"
+		_make_component(
+			"SSA Test Unseeded Field", "SSATUF", "Earning", amount_based_on_formula=1, formula=formula
+		)
+		earnings = [
+			{
+				"salary_component": "SSA Test Unseeded Field",
+				"abbr": "SSATUF",
+				"amount_based_on_formula": 1,
+				"formula": formula,
+			},
+		]
+
+		make_salary_structure(
+			"SSA Test Unseeded Field Structure",
+			"Monthly",
+			employee=emp,
+			company="_Test Company",
+			base=50000,
+			earnings=earnings,
+			deductions=[],
+		)
+		ssa = frappe.get_last_doc("Salary Structure Assignment", filters={"employee": emp})
+
+		components = {r.salary_component: r.default_amount for r in ssa.get_evaluated_components().earnings}
+		self.assertEqual(components["SSA Test Unseeded Field"], 50000)
 
 	def test_do_not_include_in_total_earning_is_in_ctc_but_not_gross(self):
 		"""A 'Do Not Include in Total' earning is part of CTC but not payable - it
