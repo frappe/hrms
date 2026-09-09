@@ -1,8 +1,10 @@
 # Copyright (c) 2025, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 import calendar
+from unittest.mock import patch
 
 import frappe
+from frappe import ValidationError
 from frappe.utils import add_days, flt
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -103,3 +105,38 @@ class TestPayrollCorrection(HRMSTestSuite):
 				},
 			)
 		)
+
+	def test_payroll_correction_with_zero_payment_days(self):
+		payroll_correction_doc = frappe.get_doc(
+			{
+				"doctype": "Payroll Correction",
+				"employee": "EMP-0001",
+				"payroll_period": "Test Payroll Period",
+				"payroll_date": "2025-02-01",
+				"company": "_Test Company",
+				"days_to_reverse": 1,
+				"month_for_lwp_reversal": "January",
+				"salary_slip_reference": "SAL-SLIP-ZERO-PAYMENT-DAYS",
+			}
+		)
+
+		salary_slip = frappe._dict(
+			{
+				"name": "SAL-SLIP-ZERO-PAYMENT-DAYS",
+				"payment_days": 0,
+				"total_working_days": 30,
+				"earnings": [],
+				"deductions": [],
+				"accrued_benefits": [
+					frappe._dict({"salary_component": "Mediclaim Allowance", "amount": 2000})
+				],
+			}
+		)
+		salary_slip.precision = lambda fieldname: 2
+
+		with (
+			patch("frappe.get_doc", return_value=salary_slip),
+			patch("frappe.db.get_list", return_value=["Mediclaim Allowance"]),
+			self.assertRaisesRegex(ValidationError, "zero payment days"),
+		):
+			payroll_correction_doc.populate_breakup_table()

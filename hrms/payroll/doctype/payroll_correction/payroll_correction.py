@@ -203,6 +203,17 @@ class PayrollCorrection(Document):
 			else:
 				total_working_days = salary_slip.get("total_working_days", 1)
 
+			if not total_working_days:
+				frappe.throw(
+					_(
+						"Cannot calculate payroll correction for salary component {0} because salary slip {1} has zero {2}."
+					).format(
+						frappe.bold(component),
+						frappe.bold(salary_slip.name),
+						_("payment days") if component_data.get("accrual_component") else _("working days"),
+					)
+				)
+
 			per_day_amount = flt(component_data["default_amount"] / total_working_days)
 			arrear_amount = flt(per_day_amount * self.days_to_reverse)
 
