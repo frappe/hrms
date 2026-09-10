@@ -45,6 +45,8 @@ class OvertimeSlip(Document):
 	# end: auto-generated types
 
 	def validate(self):
+		self.validate_employee_company()
+
 		if not (self.start_date or self.end_date):
 			self.get_frequency_and_dates()
 
@@ -53,6 +55,15 @@ class OvertimeSlip(Document):
 
 		self.validate_overlap()
 		self.validate_overtime_date_and_duration()
+
+	def validate_employee_company(self):
+		employee_company = frappe.db.get_value("Employee", self.employee, "company")
+		if employee_company != self.company:
+			frappe.throw(
+				_("Employee {0} does not belong to Company {1}").format(
+					bold(self.employee), bold(self.company)
+				)
+			)
 
 	def on_submit(self):
 		self.process_overtime_slip()

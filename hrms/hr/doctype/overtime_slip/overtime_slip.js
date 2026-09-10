@@ -2,6 +2,16 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Overtime Slip", {
+	setup(frm) {
+		frm.set_query("employee", () => {
+			const filters = {};
+			if (frm.doc.company) {
+				filters.company = frm.doc.company;
+			}
+			return { filters };
+		});
+	},
+
 	refresh: async (frm) => {
 		if (frm.doc.docstatus === 0) {
 			frm.add_custom_button(__("Fetch Overtime Details"), () => {
