@@ -272,6 +272,31 @@ class TestExpenseClaim(HRMSTestSuite):
 		self.assertEqual(advance_row.unclaimed_amount, 1000)
 		self.assertEqual(advance_row.allocated_amount, 1000)
 
+	def test_validate_advances_blocks_incompletely_linked_advance(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			make_employee_advance,
+			make_payment_entry,
+		)
+
+		frappe.db.delete("Employee Advance")
+
+		payable_account = get_payable_account("_Test Company")
+		claim = make_expense_claim(
+			payable_account, 1000, 1000, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
+		)
+
+		advance = make_employee_advance(claim.employee)
+		make_payment_entry(advance)
+
+		# advance_account / reference_type / reference_name are set by get_advances;
+		# a row added without them cannot book its accounting entry
+		claim.append(
+			"advances",
+			{"employee_advance": advance.name, "allocated_amount": 1000, "unclaimed_amount": 1000},
+		)
+
+		self.assertRaises(frappe.ValidationError, claim.save)
+
 	def test_advance_with_non_receivable_account(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (
 			make_employee_advance,
