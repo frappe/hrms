@@ -278,8 +278,6 @@ class TestExpenseClaim(HRMSTestSuite):
 			make_payment_entry,
 		)
 
-		frappe.db.delete("Employee Advance")
-
 		payable_account = get_payable_account("_Test Company")
 		claim = make_expense_claim(
 			payable_account, 1000, 1000, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
@@ -295,7 +293,7 @@ class TestExpenseClaim(HRMSTestSuite):
 			{"employee_advance": advance.name, "allocated_amount": 1000, "unclaimed_amount": 1000},
 		)
 
-		self.assertRaises(frappe.ValidationError, claim.save)
+		self.assertRaisesRegex(frappe.ValidationError, "required against advance", claim.save)
 
 	def test_advance_with_non_receivable_account(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (
