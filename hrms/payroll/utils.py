@@ -3,6 +3,8 @@ from datetime import date
 
 import frappe
 from frappe import _
+from frappe.model import numeric_fieldtypes
+from frappe.model.create_new import get_new_doc
 from frappe.utils import ceil, floor, get_first_day, get_last_day, get_link_to_form, getdate, rounded
 
 
@@ -31,6 +33,15 @@ def sanitize_expression(string: str | None = None) -> str | None:
 	return string
 
 
+COMPONENT_PARENTFIELDS = ("earnings", "deductions", "employer_contributions")
+
+COMPONENT_TYPE_TO_PARENTFIELD = {
+	"Earning": "earnings",
+	"Deduction": "deductions",
+	"Employer Contribution": "employer_contributions",
+}
+
+
 COMPONENT_EVAL_GLOBALS = {
 	"int": int,
 	"float": float,
@@ -48,42 +59,29 @@ COMPONENT_EVAL_GLOBALS = {
 }
 
 
+SALARY_COMPONENT_VALUES = "salary_component_values"
+
+
 def get_component_abbr_map() -> dict:
 	"""Cached {salary_component_abbr: 0} map, seeded into the formula eval context
 	so any component abbreviation referenced in a formula resolves (default 0).
 
-	Cache key matches salary_slip.SALARY_COMPONENT_VALUES (shared entry, invalidated
-	on Salary Component save)."""
+	Invalidated on Salary Component save."""
 
 	def _fetch_component_values():
 		return {abbr: 0 for abbr in frappe.get_all("Salary Component", pluck="salary_component_abbr")}
 
-	return frappe.cache().get_value("salary_component_values", generator=_fetch_component_values)
+	return frappe.cache().get_value(SALARY_COMPONENT_VALUES, generator=_fetch_component_values)
 
 
-SALARY_SLIP_EVAL_DEFAULTS = {
-	"gross_pay": 0,
-	"net_pay": 0,
-	"total_deduction": 0,
-	"rounded_total": 0,
-	"total_working_hours": 0,
-	"hour_rate": 0,
-	"year_to_date": 0,
-	"month_to_date": 0,
-	"gross_year_to_date": 0,
-	"ctc": 0,
-	"total_earnings": 0,
-	"income_from_other_sources": 0,
-	"non_taxable_earnings": 0,
-	"deductions_before_tax_calculation": 0,
-	"tax_exemption_declaration": 0,
-	"standard_tax_exemption_amount": 0,
-	"annual_taxable_amount": 0,
-	"income_tax_deducted_till_date": 0,
-	"future_income_tax_deductions": 0,
-	"current_month_income_tax": 0,
-	"total_income_tax": 0,
-}
+def get_salary_slip_field_defaults() -> dict:
+	defaults = get_new_doc("Salary Slip", as_dict=True)
+
+	for df in frappe.get_meta("Salary Slip").fields:
+		if df.fieldtype in numeric_fieldtypes and defaults.get(df.fieldname) is None:
+			defaults[df.fieldname] = 0
+
+	return defaults
 
 
 def get_component_eval_context(employee: str, ssa_as_dict: dict) -> frappe._dict:
@@ -95,7 +93,7 @@ def get_component_eval_context(employee: str, ssa_as_dict: dict) -> frappe._dict
 	"""
 	data = frappe._dict()
 	data.update(get_component_abbr_map())
-	data.update(SALARY_SLIP_EVAL_DEFAULTS)
+	data.update(get_salary_slip_field_defaults())
 	data.update(ssa_as_dict)
 	data.update(frappe.get_cached_doc("Employee", employee).as_dict())
 	return data

@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "field:identification_document_type",
  "creation": "2018-05-15 07:13:28.620570",
  "doctype": "DocType",
@@ -17,7 +18,7 @@
   }
  ],
  "links": [],
- "modified": "2024-03-27 13:09:50.249558",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Identification Document Type",

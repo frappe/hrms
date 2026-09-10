@@ -269,7 +269,7 @@ class LeaveAllocation(Document):
 				BackDatedAllocationError,
 			)
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def set_total_leaves_allocated(self):
 		self.unused_leaves = flt(
 			get_carry_forwarded_leaves(self.employee, self.leave_type, self.from_date, self.carry_forward),
@@ -358,7 +358,7 @@ class LeaveAllocation(Document):
 		)
 		create_leave_ledger_entry(self, args, submit)
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def allocate_leaves_manually(self, new_leaves: str | float, from_date: str | datetime.date | None = None):
 		self.check_permission("write")
 		if from_date and not (getdate(self.from_date) <= getdate(from_date) <= getdate(self.to_date)):
@@ -438,7 +438,7 @@ class LeaveAllocation(Document):
 
 		return _get_monthly_earned_leave(doj, annual_allocation, frequency, rounding)
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def create_leave_adjustment(
 		self,
 		adjustment_type: str,
@@ -460,7 +460,7 @@ class LeaveAllocation(Document):
 		leave_adjustment.submit()
 		frappe.msgprint(_("Adjustment Created Successfully"), indicator="green", alert=True)
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def retry_failed_allocations(self, failed_allocations: list) -> None:
 		if not frappe.has_permission(doctype="Leave Allocation", ptype="write", user=frappe.session.user):
 			frappe.throw(_("You do not have permission to complete this action"), frappe.PermissionError)
@@ -621,7 +621,7 @@ def show_expire_leave_dialog(expired_leaves, leave_type):
 	)
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def expire_carried_forward_allocation():
 	if frappe.has_permission(doctype="Leave Allocation", ptype="submit", user=frappe.session.user):
 		process_expired_allocation()
