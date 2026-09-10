@@ -57,9 +57,11 @@ from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import (
 from hrms.payroll.utils import (
 	COMPONENT_EVAL_GLOBALS,
 	COMPONENT_PARENTFIELDS,
+	SALARY_COMPONENT_FLAGS,
 	SALARY_COMPONENT_VALUES,
 	_safe_eval,
 	get_component_eval_context,
+	sanitize_expression,
 	throw_error_message,
 )
 from hrms.utils.holiday_list import get_holiday_dates_between
@@ -1266,10 +1268,104 @@ class SalarySlip(TransactionBase):
 
 	@cached_property
 	def evaluated_components(self) -> frappe._dict:
-		"""Every salary structure component, evaluated once for a full cycle by the
-		Salary Structure Assignment. Earnings, deductions and employer contributions
-		share one pass, so a deduction formula can reference an earning's abbr."""
-		return self._get_ssa_doc().get_evaluated_components()
+		"""Every structure component evaluated once at full payment days, giving each
+		row its period-independent default_amount.
+
+		The context is this slip's own, with proration neutralised, so a formula sees
+		real employee and slip fields rather than a stand-in for them.
+		"""
+		data, _default_data = self.get_data_for_eval()
+		data.update(
+			payment_days=self.total_working_days,
+			leave_without_pay=0,
+			absent_days=0,
+			unmarked_days=0,
+		)
+
+		return self.evaluate_structure(data)
+
+	def evaluate_structure(self, data: frappe._dict) -> frappe._dict:
+		"""Walk earnings -> deductions -> employer contributions against one shared,
+		mutating context, so a deduction formula can reference an earning's abbr."""
+		structure = frappe.get_cached_doc("Salary Structure", self.salary_structure)
+
+		rows_by_type = {"earnings": self.evaluate_component_table(structure.get("earnings") or [], data)}
+
+		data["gross_pay"] = sum(
+			flt(row.default_amount)
+			for row in rows_by_type["earnings"]
+			if not row.statistical_component and not row.do_not_include_in_total
+		)
+
+		rows_by_type["deductions"] = self.evaluate_component_table(structure.get("deductions") or [], data)
+		rows_by_type["employer_contributions"] = self.evaluate_component_table(
+			structure.get("employer_contributions") or [], data
+		)
+
+		# the assignment still owns this hook: india_payroll registers it by module path
+		self._get_ssa_doc().apply_regional_ctc_components(rows_by_type, data)
+
+		return frappe._dict(**rows_by_type)
+
+	def evaluate_component_table(self, rows, data: frappe._dict) -> list:
+		"""Evaluate one component table, returning cache-safe copies of each row.
+		Rows whose condition is falsey are skipped."""
+		evaluated = []
+
+		for struct_row in rows:
+			condition = sanitize_expression(struct_row.condition)
+			formula = sanitize_expression(struct_row.formula)
+			amount = flt(struct_row.amount)
+
+			if condition and not self.eval_component_expression(struct_row, condition, data):
+				continue
+
+			if struct_row.amount_based_on_formula and formula:
+				amount = flt(
+					self.eval_component_expression(struct_row, formula, data),
+					struct_row.precision("amount"),
+				)
+
+			row = frappe._dict(
+				condition=condition,
+				formula=formula,
+				amount=flt(struct_row.amount),
+				default_amount=amount,
+				precision=struct_row.precision("amount"),
+			)
+			for field in SALARY_COMPONENT_FLAGS:
+				row[field] = struct_row.get(field)
+
+			data[struct_row.abbr] = amount
+			evaluated.append(row)
+
+		return evaluated
+
+	def eval_component_expression(self, row, code: str, data: frappe._dict):
+		try:
+			return _safe_eval(code, COMPONENT_EVAL_GLOBALS.copy(), data)
+		except NameError as ne:
+			throw_error_message(
+				row,
+				ne,
+				title=_("Name error"),
+				description=_("This error can be due to missing or deleted field."),
+			)
+		except SyntaxError as se:
+			throw_error_message(
+				row,
+				se,
+				title=_("Syntax error"),
+				description=_("This error can be due to invalid syntax."),
+			)
+		except Exception as exc:
+			throw_error_message(
+				row,
+				exc,
+				title=_("Error in formula or condition"),
+				description=_("This error can be due to invalid formula or condition."),
+			)
+			raise
 
 	def _get_ssa_doc(self):
 		if not getattr(self, "_ssa_doc", None):

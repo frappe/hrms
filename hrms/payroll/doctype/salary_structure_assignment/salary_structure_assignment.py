@@ -12,28 +12,11 @@ from hrms.payroll.doctype.payroll_period.payroll_period import get_payroll_perio
 from hrms.payroll.doctype.salary_structure.salary_structure import validate_max_benefit_for_flexible_benefit
 from hrms.payroll.utils import (
 	COMPONENT_EVAL_GLOBALS,
+	SALARY_COMPONENT_FLAGS,
 	_safe_eval,
 	get_component_eval_context,
 	sanitize_expression,
 	throw_error_message,
-)
-
-# Fields copied from the salary structure component row onto each evaluated row
-# handed to the salary slip. The slip reads these to build/identify slip rows.
-SALARY_COMPONENT_FLAGS = (
-	"salary_component",
-	"abbr",
-	"amount_based_on_formula",
-	"statistical_component",
-	"accrual_component",
-	"depends_on_payment_days",
-	"do_not_include_in_total",
-	"do_not_include_in_accounts",
-	"is_tax_applicable",
-	"is_flexible_benefit",
-	"variable_based_on_taxable_salary",
-	"exempted_from_income_tax",
-	"deduct_full_tax_on_selected_payroll_date",
 )
 
 PERIODS_PER_YEAR = {

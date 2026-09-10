@@ -33,6 +33,25 @@ def sanitize_expression(string: str | None = None) -> str | None:
 	return string
 
 
+# Fields copied from the salary structure component row onto each evaluated row
+# handed to the salary slip. The slip reads these to build/identify slip rows.
+SALARY_COMPONENT_FLAGS = (
+	"salary_component",
+	"abbr",
+	"amount_based_on_formula",
+	"statistical_component",
+	"accrual_component",
+	"depends_on_payment_days",
+	"do_not_include_in_total",
+	"do_not_include_in_accounts",
+	"is_tax_applicable",
+	"is_flexible_benefit",
+	"variable_based_on_taxable_salary",
+	"exempted_from_income_tax",
+	"deduct_full_tax_on_selected_payroll_date",
+)
+
+
 COMPONENT_PARENTFIELDS = ("earnings", "deductions", "employer_contributions")
 
 COMPONENT_TYPE_TO_PARENTFIELD = {
