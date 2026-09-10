@@ -79,7 +79,11 @@ COMPONENT_EVAL_GLOBALS = {
 }
 
 
+# cache keys
+HOLIDAYS_BETWEEN_DATES = "holidays_between_dates"
+LEAVE_TYPE_MAP = "leave_type_map"
 SALARY_COMPONENT_VALUES = "salary_component_values"
+TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
 
 
 def payable_earnings(rows) -> float:
@@ -214,4 +218,26 @@ def get_payroll_settings_for_payment_days() -> dict:
 			"consider_marked_attendance_on_holidays",
 		],
 		as_dict=True,
+	)
+
+
+def get_salary_component_data(component):
+	# get_cached_value doesn't work here due to alias "name as salary_component"
+	return frappe.db.get_value(
+		"Salary Component",
+		component,
+		(
+			"name as salary_component",
+			"depends_on_payment_days",
+			"salary_component_abbr as abbr",
+			"do_not_include_in_total",
+			"do_not_include_in_accounts",
+			"is_tax_applicable",
+			"is_flexible_benefit",
+			"variable_based_on_taxable_salary",
+			"accrual_component",
+			"exempted_from_income_tax",
+		),
+		as_dict=1,
+		cache=True,
 	)
