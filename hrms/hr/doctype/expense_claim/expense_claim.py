@@ -488,6 +488,9 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 					)
 				)
 
+		for data in self.advances:
+			self.validate_advance_linkage(data)
+
 		if self.is_paid:
 			if not self.mode_of_payment:
 				frappe.throw(_("Mode of payment is required to make a payment").format(self.employee))
@@ -558,41 +561,62 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		precision = self.precision("total_advance_amount")
 
 		for d in self.get("advances"):
-			advance_details = frappe.db.get_value(
-				"Employee Advance",
-				d.employee_advance,
-				["employee", "currency", "advance_account", "paid_amount"],
-				as_dict=True,
-			)
-			if not advance_details or self.employee != advance_details.employee:
-				frappe.throw(_("Selected employee advance is not of employee {}").format(self.employee))
-
-			validate_employee_advance_currency_and_account(self, d.employee_advance, advance_details)
-
-			self.round_floats_in(d)
-			if d.allocated_amount and flt(d.allocated_amount) > flt(
-				flt(d.unclaimed_amount) - flt(d.return_amount), precision
-			):
-				frappe.throw(
-					_("Row {0}# Allocated amount {1} cannot be greater than unclaimed amount {2}").format(
-						d.idx, d.allocated_amount, d.unclaimed_amount
-					)
-				)
+			self.validate_advance_row(d, precision)
 
 			self.total_advance_amount += flt(d.allocated_amount)
 			self.set_base_fields_amount(d, ["advance_paid", "unclaimed_amount"], d.exchange_rate)
 			self.set_base_fields_amount(d, ["allocated_amount"])
 
 		if self.total_advance_amount:
-			self.round_floats_in(self, ["total_advance_amount"])
-			amount_with_taxes = flt(
-				(flt(self.total_sanctioned_amount, precision) + flt(self.total_taxes_and_charges, precision)),
-				precision,
-			)
-			self.set_base_fields_amount(self, ["total_advance_amount"])
+			self.validate_total_advance_amount(precision)
 
-			if flt(self.total_advance_amount, precision) > amount_with_taxes:
-				frappe.throw(_("Total advance amount cannot be greater than total sanctioned amount"))
+	def validate_advance_row(self, d, precision):
+		advance_details = frappe.db.get_value(
+			"Employee Advance",
+			d.employee_advance,
+			["employee", "currency", "advance_account", "paid_amount"],
+			as_dict=True,
+		)
+		if not advance_details or self.employee != advance_details.employee:
+			frappe.throw(_("Selected employee advance is not of employee {}").format(self.employee))
+
+		validate_employee_advance_currency_and_account(self, d.employee_advance, advance_details)
+		self.validate_advance_linkage(d)
+
+		self.round_floats_in(d)
+		if d.allocated_amount and flt(d.allocated_amount) > flt(
+			flt(d.unclaimed_amount) - flt(d.return_amount), precision
+		):
+			frappe.throw(
+				_("Row {0}# Allocated amount {1} cannot be greater than unclaimed amount {2}").format(
+					d.idx, d.allocated_amount, d.unclaimed_amount
+				)
+			)
+
+	def validate_advance_linkage(self, d):
+		# advance_account and the payment reference are set by get_advances; a row added
+		# without them cannot book its accounting entry against the advance
+		if d.allocated_amount and not (d.advance_account and d.reference_type and d.reference_name):
+			frappe.throw(
+				_("Row {0}: {1}, {2} and {3} are required against advance {4}.").format(
+					d.idx,
+					frappe.bold(_("Advance Account")),
+					frappe.bold(_("Reference Type")),
+					frappe.bold(_("Reference Name")),
+					frappe.bold(d.employee_advance),
+				)
+			)
+
+	def validate_total_advance_amount(self, precision):
+		self.round_floats_in(self, ["total_advance_amount"])
+		amount_with_taxes = flt(
+			(flt(self.total_sanctioned_amount, precision) + flt(self.total_taxes_and_charges, precision)),
+			precision,
+		)
+		self.set_base_fields_amount(self, ["total_advance_amount"])
+
+		if flt(self.total_advance_amount, precision) > amount_with_taxes:
+			frappe.throw(_("Total advance amount cannot be greater than total sanctioned amount"))
 
 	def validate_sanctioned_amount(self):
 		for d in self.get("expenses"):
