@@ -6,7 +6,7 @@ from frappe import _
 from frappe.model import numeric_fieldtypes
 from frappe.model.create_new import get_new_doc
 from frappe.model.document import Document
-from frappe.utils import ceil, floor, get_first_day, get_last_day, get_link_to_form, getdate, rounded
+from frappe.utils import ceil, floor, flt, get_first_day, get_last_day, get_link_to_form, getdate, rounded
 
 
 def sanitize_expression(string: str | None = None) -> str | None:
@@ -80,6 +80,17 @@ COMPONENT_EVAL_GLOBALS = {
 
 
 SALARY_COMPONENT_VALUES = "salary_component_values"
+
+
+def payable_earnings(rows) -> float:
+	"""Per-cycle gross: earnings that are actually paid, which is what the salary
+	slip reports as gross_pay. Statistical rows exist only to feed other formulas,
+	and do_not_include_in_total rows are a cost to the company rather than pay."""
+	return sum(
+		flt(row.default_amount)
+		for row in rows
+		if not row.statistical_component and not row.do_not_include_in_total
+	)
 
 
 def get_component_abbr_map() -> dict:

@@ -61,6 +61,7 @@ from hrms.payroll.utils import (
 	SALARY_COMPONENT_VALUES,
 	_safe_eval,
 	get_component_eval_context,
+	payable_earnings,
 	sanitize_expression,
 	throw_error_message,
 )
@@ -1291,11 +1292,7 @@ class SalarySlip(TransactionBase):
 
 		rows_by_type = {"earnings": self.evaluate_component_table(structure.get("earnings") or [], data)}
 
-		data["gross_pay"] = sum(
-			flt(row.default_amount)
-			for row in rows_by_type["earnings"]
-			if not row.statistical_component and not row.do_not_include_in_total
-		)
+		data["gross_pay"] = payable_earnings(rows_by_type["earnings"])
 
 		rows_by_type["deductions"] = self.evaluate_component_table(structure.get("deductions") or [], data)
 		rows_by_type["employer_contributions"] = self.evaluate_component_table(
@@ -1395,6 +1392,9 @@ class SalarySlip(TransactionBase):
 		)
 		self.start_date = self.start_date or assignment.from_date
 		self.get_date_details()
+
+		# a full cycle is paid at the end of it
+		self.posting_date = self.end_date
 
 		period_days = date_diff(self.end_date, self.start_date) + 1
 		self.total_working_days = period_days

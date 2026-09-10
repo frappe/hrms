@@ -5,19 +5,12 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cint, date_diff, flt, get_link_to_form, getdate
+from frappe.utils import cint, flt, get_link_to_form, getdate
 
 import hrms
 from hrms.payroll.doctype.payroll_period.payroll_period import get_payroll_period
 from hrms.payroll.doctype.salary_structure.salary_structure import validate_max_benefit_for_flexible_benefit
-from hrms.payroll.utils import (
-	COMPONENT_EVAL_GLOBALS,
-	SALARY_COMPONENT_FLAGS,
-	_safe_eval,
-	get_component_eval_context,
-	sanitize_expression,
-	throw_error_message,
-)
+from hrms.payroll.utils import SALARY_COMPONENT_FLAGS, payable_earnings
 
 PERIODS_PER_YEAR = {
 	"Monthly": 12,
@@ -221,25 +214,19 @@ class SalaryStructureAssignment(Document):
 			)
 
 	def get_evaluated_components(self) -> frappe._dict:
-		"""Evaluate all salary structure components for this assignment and return
-		fully-evaluated rows the salary slip can consume directly.
+		"""Full-cycle evaluation of every structure component for this assignment.
 
-		Earnings, deductions and employer contributions are evaluated in one
-		shared pass (so a deduction formula can reference an earning abbr), each
-		row carrying its full-cycle ``default_amount`` plus the flags the slip
-		needs. This is period-independent: the (period-dependent) timesheet wage
-		is built by the salary slip itself, not here. The slip consumes
-		``default_amount`` directly and applies payment-days proration / tax on
-		top (it re-evaluates each formula once against its prorated context for
-		the actual ``amount``).
+		Delegates to a Salary Slip, which owns component evaluation: formulas are
+		written against slip fields, so the slip is the only place that can supply a
+		real context for them.
 		"""
-		_data, rows_by_type = self._evaluate_all_components()
+		return self._prospective_slip().evaluated_components
 
-		return frappe._dict(
-			earnings=rows_by_type["earnings"],
-			deductions=rows_by_type["deductions"],
-			employer_contributions=rows_by_type["employer_contributions"],
-		)
+	def _prospective_slip(self):
+		"""An unsaved slip carrying this assignment, used to evaluate a full cycle."""
+		slip = frappe.new_doc("Salary Slip")
+		slip.set_prospective_context(self, self.employee)
+		return slip
 
 	def get_timesheet_config(self) -> frappe._dict:
 		"""Lightweight read of the linked structure's timesheet settings, needed
@@ -265,18 +252,14 @@ class SalaryStructureAssignment(Document):
 			self.ctc = 0
 			return
 
-		salary_structure = frappe.get_cached_doc("Salary Structure", self.salary_structure)
-		periods = PERIODS_PER_YEAR.get(salary_structure.payroll_frequency, 12)
+		slip = self._prospective_slip()
+		rows_by_type = slip.evaluated_components
+		periods = PERIODS_PER_YEAR.get(slip.payroll_frequency, 12)
 
-		data, rows_by_type = self._evaluate_all_components()
+		gross_per_period = payable_earnings(rows_by_type["earnings"])
 
-		# Reuse the per-period gross already computed in the eval context: payable
-		# earnings only (excludes statistical and do_not_include_in_total), matching
-		# the salary slip's gross_pay.
-		gross_per_period = flt(data.get("gross_pay"))
-
-		# CTC also includes costs that are part of CTC but not payable: do_not_include_in_total
-		# earnings (shown on the slip, excluded from gross) and employer contributions (off-slip).
+		# CTC also covers costs that are not payable: do_not_include_in_total earnings
+		# (shown on the slip, excluded from gross) and employer contributions (off-slip).
 		non_payable_earnings_per_period = sum(
 			flt(r.default_amount)
 			for r in rows_by_type["earnings"]
@@ -293,39 +276,6 @@ class SalaryStructureAssignment(Document):
 			(gross_per_period + non_payable_earnings_per_period + employer_per_period) * periods,
 			self.precision("ctc"),
 		)
-
-	def _evaluate_all_components(self) -> tuple[frappe._dict, dict]:
-		"""Single shared-context pass over earnings -> deductions ->
-		employer_contributions. Returns the final context and evaluated rows by
-		type. Does not mutate the cached salary structure doc."""
-		salary_structure = frappe.get_cached_doc("Salary Structure", self.salary_structure)
-		data = self._get_component_eval_context()
-
-		rows_by_type = {}
-		rows_by_type["earnings"] = self._evaluate_component_table(
-			salary_structure.get("earnings") or [], data
-		)
-
-		# Expose full-cycle gross_pay so deduction / employer-contribution formulas can
-		# reference it (e.g. PF, ESI), mirroring how the salary slip sets gross_pay after
-		# earnings and before deductions.
-		data["gross_pay"] = sum(
-			flt(r.default_amount)
-			for r in rows_by_type["earnings"]
-			if not r.statistical_component and not r.do_not_include_in_total
-		)
-
-		rows_by_type["deductions"] = self._evaluate_component_table(
-			salary_structure.get("deductions") or [], data
-		)
-		rows_by_type["employer_contributions"] = self._evaluate_component_table(
-			salary_structure.get("employer_contributions") or [], data
-		)
-
-		# last, so the hook can read every abbr resolved above
-		self.apply_regional_ctc_components(rows_by_type, data)
-
-		return data, rows_by_type
 
 	@hrms.allow_regional
 	def apply_regional_ctc_components(self, rows_by_type: dict, data: frappe._dict) -> None:
@@ -378,87 +328,6 @@ class SalaryStructureAssignment(Document):
 			data[row.abbr] = value
 
 		return row
-
-	def _get_component_eval_context(self) -> frappe._dict:
-		from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
-
-		data = get_component_eval_context(self.employee, self.as_dict())
-
-		# The SSA has no salary slip, so formulas referencing slip period fields (e.g.
-		# start_date) would raise NameError. Seed a full cycle -- the period containing
-		# from_date -- with no LWP/absence so proration-based formulas yield full-cycle
-		# values (payment_days == total_working_days, ratio 1).
-		frequency = frappe.get_cached_value("Salary Structure", self.salary_structure, "payroll_frequency")
-		dates = get_start_end_dates(frequency, self.from_date, self.company)
-		period_days = date_diff(dates.end_date, dates.start_date) + 1
-		data.start_date = dates.start_date
-		data.end_date = dates.end_date
-		data.posting_date = dates.end_date
-		data.payment_days = period_days
-		data.total_working_days = period_days
-		data.leave_without_pay = 0
-		data.absent_days = 0
-		data.unmarked_days = 0
-		return data
-
-	def _evaluate_component_table(self, rows, data: frappe._dict) -> list:
-		"""Evaluate one component table against the shared ``data`` (mutating it
-		with each component's full-cycle amount). Returns fresh ``frappe._dict``
-		rows (cache-safe copies). Raises a clear error on a bad formula/condition.
-		Rows whose condition is falsey are skipped (not added to the slip)."""
-		evaluated_components = []
-		for struct_row in rows:
-			condition = sanitize_expression(struct_row.condition)
-			formula = sanitize_expression(struct_row.formula)
-			amount = flt(struct_row.amount)
-
-			try:
-				if condition and not _safe_eval(condition, COMPONENT_EVAL_GLOBALS.copy(), data):
-					continue
-				if struct_row.amount_based_on_formula and formula:
-					default_amount = flt(
-						_safe_eval(formula, COMPONENT_EVAL_GLOBALS.copy(), data),
-						struct_row.precision("amount"),
-					)
-				else:
-					default_amount = amount
-			except NameError as ne:
-				throw_error_message(
-					struct_row,
-					ne,
-					title=_("Name error"),
-					description=_("This error can be due to missing or deleted field."),
-				)
-			except SyntaxError as se:
-				throw_error_message(
-					struct_row,
-					se,
-					title=_("Syntax error"),
-					description=_("This error can be due to invalid syntax."),
-				)
-			except Exception as exc:
-				throw_error_message(
-					struct_row,
-					exc,
-					title=_("Error in formula or condition"),
-					description=_("This error can be due to invalid formula or condition."),
-				)
-				raise
-
-			data[struct_row.abbr] = default_amount
-
-			evaluated_component_row = frappe._dict(
-				default_amount=default_amount,
-				amount=amount,
-				condition=condition,
-				formula=formula,
-				precision=struct_row.precision("amount"),
-			)
-			for field in SALARY_COMPONENT_FLAGS:
-				evaluated_component_row[field] = struct_row.get(field)
-			evaluated_components.append(evaluated_component_row)
-
-		return evaluated_components
 
 	@frappe.whitelist()
 	def are_opening_entries_required(self) -> bool:
