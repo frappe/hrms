@@ -11,10 +11,28 @@ from hrms.hr.doctype.overtime_type.test_overtime_type import create_overtime_typ
 from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_earning_salary_component
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.tests.test_utils import create_company
 from hrms.tests.utils import HRMSTestSuite
 
 
 class TestOvertimeSlip(HRMSTestSuite):
+	def test_employee_must_belong_to_slip_company(self):
+		employee = make_employee("test_overtime_slip_company@example.com", company="_Test Company")
+		company = create_company("_Test Overtime Company")
+		slip = frappe.new_doc("Overtime Slip")
+		slip.update(
+			{
+				"employee": employee,
+				"company": company.name,
+				"posting_date": today(),
+				"start_date": today(),
+				"end_date": today(),
+			}
+		)
+
+		with self.assertRaises(frappe.ValidationError):
+			slip.validate_employee_company()
+
 	def test_overtime_calculation_and_additional_salary_creation(self):
 		from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
 
