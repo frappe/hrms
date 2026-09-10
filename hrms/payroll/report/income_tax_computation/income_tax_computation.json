@@ -9,7 +9,7 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "letter_head": "",
+ "letter_head": null,
  "modified": "2022-02-23 13:07:30.347861",
  "modified_by": "Administrator",
  "module": "Payroll",
