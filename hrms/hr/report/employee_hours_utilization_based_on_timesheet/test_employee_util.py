@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 import frappe
 from frappe.utils.make_random import get_random
 
@@ -5,6 +7,7 @@ from erpnext.projects.doctype.project.test_project import make_project
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.report.employee_hours_utilization_based_on_timesheet.employee_hours_utilization_based_on_timesheet import (
+	EmployeeHoursReport,
 	execute,
 )
 from hrms.tests.utils import HRMSTestSuite
@@ -149,6 +152,17 @@ class TestEmployeeUtilization(HRMSTestSuite):
 
 		for i in range(4):
 			self.assertEqual(summary[i]["value"], expected_summary_values[i])
+
+	def test_employee_metadata_is_fetched_in_one_query(self):
+		report = EmployeeHoursReport.__new__(EmployeeHoursReport)
+		report.stats_by_employee = frappe._dict({self.test_emp1: {}, self.test_emp2: {}})
+
+		with patch.object(frappe, "get_all", wraps=frappe.get_all) as get_all:
+			report.set_employee_department_and_name()
+
+		self.assertEqual(get_all.call_count, 1)
+		self.assertEqual(report.stats_by_employee[self.test_emp1]["employee_name"], "test1@employeeutil.com")
+		self.assertEqual(report.stats_by_employee[self.test_emp2]["employee_name"], "test2@employeeutil.com")
 
 	def get_expected_data_for_test_employees(self):
 		emp1_data = frappe.get_doc("Employee", self.test_emp1)
