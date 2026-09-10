@@ -2256,6 +2256,53 @@ class TestSalarySlip(HRMSTestSuite):
 		for name in CACHED_PROPERTIES:
 			self.assertNotIn(name, slip.__dict__, name)
 
+	def test_prospective_context_evaluates_without_saved_records(self):
+		"""A Job Offer evaluates a package for a candidate who has no Employee record
+		and no submitted assignment. Neither document is saved."""
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		structure = make_salary_structure(
+			"Test Prospective Structure",
+			"Monthly",
+			company="_Test Company",
+			currency="INR",
+			earnings=[
+				{
+					"salary_component": "Basic Salary",
+					"abbr": "BS",
+					"amount_based_on_formula": 1,
+					"formula": "base",
+				},
+				{
+					"salary_component": "Special Allowance",
+					"abbr": "SA",
+					"amount_based_on_formula": 1,
+					"formula": "base * 0.4",
+				},
+			],
+			deductions=[],
+		)
+
+		candidate = frappe.new_doc("Employee")
+		candidate.company = "_Test Company"
+		candidate.date_of_joining = nowdate()
+
+		offer = frappe.new_doc("Salary Structure Assignment")
+		offer.salary_structure = structure.name
+		offer.company = "_Test Company"
+		offer.currency = "INR"
+		offer.from_date = nowdate()
+		offer.base = 50000
+
+		slip = frappe.new_doc("Salary Slip")
+		slip.set_prospective_context(offer, candidate)
+		amounts = {r.salary_component: r.default_amount for r in slip.evaluated_components["earnings"]}
+
+		self.assertEqual(amounts["Basic Salary"], 50000)
+		self.assertEqual(amounts["Special Allowance"], 20000)
+		self.assertIsNone(candidate.name)
+		self.assertIsNone(offer.name)
+
 	def test_evaluated_components_pulls_without_running_the_pipeline(self):
 		"""A consumer that only needs component amounts must not pay for attendance,
 		tax or benefits. Pulling the node computes it and nothing else."""

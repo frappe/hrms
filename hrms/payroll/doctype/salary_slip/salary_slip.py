@@ -1376,6 +1376,33 @@ class SalarySlip(TransactionBase):
 			)
 		return self._ssa_doc
 
+	def set_prospective_context(self, assignment, employee) -> None:
+		"""Evaluate a package for someone with no submitted assignment and no Employee
+		record, as a Job Offer does. Neither document has to be saved.
+
+		An unhired candidate cannot have attendance, so the cycle is always full.
+		"""
+		self._ssa_doc = assignment
+		self._salary_structure_assignment = assignment.as_dict()
+		self._employee_doc = employee
+		self.clear_cached_properties()
+
+		self.salary_structure = assignment.salary_structure
+		self.company = assignment.company
+		self.currency = assignment.currency
+		self.payroll_frequency = frappe.get_cached_value(
+			"Salary Structure", assignment.salary_structure, "payroll_frequency"
+		)
+		self.start_date = self.start_date or assignment.from_date
+		self.get_date_details()
+
+		period_days = date_diff(self.end_date, self.start_date) + 1
+		self.total_working_days = period_days
+		self.payment_days = period_days
+		self.leave_without_pay = 0
+		self.absent_days = 0
+		self.unmarked_days = 0
+
 	def add_structure_components(self, component_type):
 		self.data, self.default_data = self.get_data_for_eval()
 
@@ -1462,7 +1489,8 @@ class SalarySlip(TransactionBase):
 		if not hasattr(self, "_salary_structure_assignment"):
 			self.set_salary_structure_assignment()
 
-		data = get_component_eval_context(self.employee, self._salary_structure_assignment)
+		employee = getattr(self, "_employee_doc", None) or self.employee
+		data = get_component_eval_context(employee, self._salary_structure_assignment)
 		# Overlay salary-slip fields (payment_days, gross_pay, start_date, …) last, so the
 		# actual period context wins on a name collision with an Employee field (e.g. a saved
 		# payslip keeps its own department/branch snapshot, not the employee's current one).
