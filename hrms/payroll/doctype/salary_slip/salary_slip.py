@@ -72,7 +72,7 @@ HOLIDAYS_BETWEEN_DATES = "holidays_between_dates"
 LEAVE_TYPE_MAP = "leave_type_map"
 TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
 
-CACHED_PROPERTIES = ("evaluated_components",)
+CACHED_PROPERTIES = ("evaluated_components", "remaining_sub_periods")
 
 
 class SalarySlip(TransactionBase):
@@ -214,6 +214,24 @@ class SalarySlip(TransactionBase):
 			return self.relieving_date
 
 		return self.end_date
+
+	@cached_property
+	def remaining_sub_periods(self) -> float:
+		"""Sub-periods left in the payroll period, including this one. Annual tax is
+		spread across these, so a slip halfway through the year carries half the year's
+		remaining liability."""
+		if not self.payroll_period:
+			return 0
+
+		return get_period_factor(
+			self.employee,
+			self.start_date,
+			self.end_date,
+			self.payroll_frequency,
+			self.payroll_period,
+			joining_date=self.joining_date,
+			relieving_date=self.relieving_date,
+		)[1]
 
 	def clear_cached_properties(self) -> None:
 		for name in CACHED_PROPERTIES:
@@ -946,18 +964,6 @@ class SalarySlip(TransactionBase):
 			self.base_gross_pay = flt(
 				flt(self.gross_pay) * flt(self.exchange_rate), self.precision("base_gross_pay")
 			)
-
-		# get remaining numbers of sub-period (period for which one salary is processed)
-		if self.payroll_period:
-			self.remaining_sub_periods = get_period_factor(
-				self.employee,
-				self.start_date,
-				self.end_date,
-				self.payroll_frequency,
-				self.payroll_period,
-				joining_date=self.joining_date,
-				relieving_date=self.relieving_date,
-			)[1]
 
 		if self.salary_structure:
 			self.calculate_component_amounts("earnings")
