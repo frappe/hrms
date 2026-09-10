@@ -2256,6 +2256,28 @@ class TestSalarySlip(HRMSTestSuite):
 		for name in CACHED_PROPERTIES:
 			self.assertNotIn(name, slip.__dict__, name)
 
+	def test_compute_payment_days_returns_without_writing_fields(self):
+		"""The day-count brick returns its answer. Only get_working_days_details writes,
+		so a caller can ask what a period looks like without changing the slip."""
+		emp = make_employee("test_payment_days_brick@salary.com", company="_Test Company")
+		slip = make_employee_salary_slip(emp, "Monthly", "Test Payment Days Brick")
+
+		slip.total_working_days = None
+		slip.payment_days = None
+		slip.leave_without_pay = None
+
+		days = slip.compute_payment_days()
+
+		self.assertTrue(days.total_working_days)
+		self.assertIsNotNone(days.payment_days)
+		self.assertIsNone(slip.total_working_days)
+		self.assertIsNone(slip.payment_days)
+		self.assertIsNone(slip.leave_without_pay)
+
+		slip.get_working_days_details()
+		self.assertEqual(slip.total_working_days, days.total_working_days)
+		self.assertEqual(slip.payment_days, days.payment_days)
+
 	def test_prospective_context_evaluates_without_saved_records(self):
 		"""A Job Offer evaluates a package for a candidate who has no Employee record
 		and no submitted assignment. Neither document is saved."""

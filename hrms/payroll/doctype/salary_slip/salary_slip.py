@@ -551,6 +551,16 @@ class SalarySlip(TransactionBase):
 			)
 
 	def get_working_days_details(self, lwp=None, for_preview=0, lwp_days_corrected=None):
+		for fieldname, value in self.compute_payment_days(lwp, for_preview, lwp_days_corrected).items():
+			self.set(fieldname, value)
+
+	def compute_payment_days(self, lwp=None, for_preview=0, lwp_days_corrected=None) -> frappe._dict:
+		"""Day counts for this slip's period, returned rather than written, so a caller
+		can ask what the period looks like without changing the slip.
+
+		Only the counts this period actually determines are returned: a preview settles
+		nothing about leave, and absences are only known when payroll runs on attendance.
+		"""
 		payroll_settings = frappe.get_cached_value(
 			"Payroll Settings",
 			None,
@@ -573,9 +583,7 @@ class SalarySlip(TransactionBase):
 
 		working_days = date_diff(self.end_date, self.start_date) + 1
 		if for_preview:
-			self.total_working_days = working_days
-			self.payment_days = working_days
-			return
+			return frappe._dict(total_working_days=working_days, payment_days=working_days)
 
 		holidays = self.get_holidays_for_employee(self.start_date, self.end_date)
 		working_days_list = [add_days(getdate(self.start_date), days=day) for day in range(0, working_days)]
@@ -590,11 +598,13 @@ class SalarySlip(TransactionBase):
 		if not payroll_settings.payroll_based_on:
 			frappe.throw(_("Please set Payroll based on in Payroll settings"))
 
-		if payroll_settings.payroll_based_on == "Attendance":
-			actual_lwp, absent = self.calculate_lwp_ppl_and_absent_days_based_on_attendance(
+		based_on_attendance = payroll_settings.payroll_based_on == "Attendance"
+		absent_days = None
+
+		if based_on_attendance:
+			actual_lwp, absent_days = self.calculate_lwp_ppl_and_absent_days_based_on_attendance(
 				holidays, daily_wages_fraction_for_half_day, consider_marked_attendance_on_holidays
 			)
-			self.absent_days = absent
 		else:
 			actual_lwp = self.calculate_lwp_or_ppl_based_on_leave_application(
 				holidays, working_days_list, daily_wages_fraction_for_half_day
@@ -609,45 +619,56 @@ class SalarySlip(TransactionBase):
 				)
 			)
 
-		self.leave_without_pay = lwp
-		self.total_working_days = working_days
+		payable_days = self.get_payment_days(payroll_settings.include_holidays_in_total_working_days)
 
-		payment_days = self.get_payment_days(payroll_settings.include_holidays_in_total_working_days)
+		if flt(payable_days) > flt(lwp):
+			payment_days = flt(payable_days) - flt(lwp)
 
-		if flt(payment_days) > flt(lwp):
-			self.payment_days = flt(payment_days) - flt(lwp)
+			if based_on_attendance:
+				payment_days -= flt(absent_days)
 
-			if payroll_settings.payroll_based_on == "Attendance":
-				self.payment_days -= flt(absent)
-
-			consider_unmarked_attendance_as = payroll_settings.consider_unmarked_attendance_as or "Present"
-
-			if payroll_settings.payroll_based_on == "Attendance":
+				consider_unmarked_attendance_as = (
+					payroll_settings.consider_unmarked_attendance_as or "Present"
+				)
 				if consider_unmarked_attendance_as == "Absent":
 					unmarked_days = self.get_unmarked_days(
-						payroll_settings.include_holidays_in_total_working_days, holidays
+						payroll_settings.include_holidays_in_total_working_days, working_days, holidays
 					)
-					self.absent_days += unmarked_days  # will be treated as absent
-					self.payment_days -= unmarked_days
+					absent_days += unmarked_days  # will be treated as absent
+					payment_days -= unmarked_days
+
 				half_absent_days = self.get_half_absent_days(
 					consider_marked_attendance_on_holidays,
 					holidays,
 				)
-				self.absent_days += half_absent_days * daily_wages_fraction_for_half_day
-				self.payment_days -= half_absent_days * daily_wages_fraction_for_half_day
+				absent_days += half_absent_days * daily_wages_fraction_for_half_day
+				payment_days -= half_absent_days * daily_wages_fraction_for_half_day
 		else:
-			self.payment_days = 0
+			payment_days = 0
 
 		if lwp_days_corrected and lwp_days_corrected > 0:
 			if verify_lwp_days_corrected(self.employee, self.start_date, self.end_date, lwp_days_corrected):
-				self.payment_days += lwp_days_corrected
+				payment_days += lwp_days_corrected
+
+		days = frappe._dict(
+			total_working_days=working_days,
+			payment_days=payment_days,
+			leave_without_pay=lwp,
+		)
+		if absent_days is not None:
+			days.absent_days = absent_days
+
+		return days
 
 	def get_unmarked_days(
-		self, include_holidays_in_total_working_days: bool, holidays: list | None = None
+		self,
+		include_holidays_in_total_working_days: bool,
+		total_working_days: float,
+		holidays: list | None = None,
 	) -> float:
 		"""Calculates the number of unmarked days for an employee within a date range"""
 		unmarked_days = (
-			self.total_working_days
+			total_working_days
 			- self._get_days_outside_period(include_holidays_in_total_working_days, holidays)
 			- self._get_marked_attendance_days(holidays)
 		)
