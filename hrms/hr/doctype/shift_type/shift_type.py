@@ -49,6 +49,7 @@ class ShiftType(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		absent_buffer_days: DF.Int
 		allow_check_out_after_shift_end_time: DF.Int
 		allow_overtime: DF.Check
 		auto_update_last_sync: DF.Check
@@ -85,6 +86,7 @@ class ShiftType(Document):
 		self.validate_same_start_and_end(start, end)
 		self.validate_circular_shift(start, end)
 		self.validate_unlinked_logs()
+		self.validate_absent_buffer_days()
 
 	def validate_same_start_and_end(self, start_time: datetime.time, end_time: datetime.time):
 		if start_time == end_time:
@@ -139,6 +141,15 @@ class ShiftType(Document):
 			frappe.throw(
 				title=_("Unmarked Check-in Logs Found"),
 				msg=_("Mark attendance for existing check-in/out logs before changing shift settings"),
+			)
+
+	def validate_absent_buffer_days(self):
+		if cint(self.absent_buffer_days) == 0 and not self.auto_update_last_sync:
+			frappe.throw(
+				title=_("Missing Configuration"),
+				msg=_("Enable {0} to mark absent on the same day").format(
+					frappe.bold(_("Automatically update Last Sync of Checkin"))
+				),
 			)
 
 	def is_field_modified(self, fieldname):
@@ -369,9 +380,10 @@ class ShiftType(Document):
 			shift_details.actual_end if shift_details else get_datetime(self.last_sync_of_checkin)
 		)
 
-		# check if shift is found for 1 day before the last sync of checkin
-		# absentees are auto-marked 1 day after the shift to wait for any manual attendance records
-		ref_time = last_shift_time - timedelta(days=1)
+		# wait `absent_buffer_days` days after the shift ends before auto-marking absent, to leave
+		# room for manual attendance records; 0 marks absent the same day, right after the shift ends
+		buffer_days = cint(self.absent_buffer_days)
+		ref_time = last_shift_time - timedelta(days=buffer_days)
 		prev_shift = get_employee_shift(employee, ref_time, True, "reverse")
 		if prev_shift and prev_shift.shift_type.name != self.name:
 			# an overlapping assignment may have won resolution; prefer this shift if also scheduled then
