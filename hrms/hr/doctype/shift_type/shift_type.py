@@ -106,14 +106,9 @@ class ShiftType(Document):
 			{"shift": self.name, "attendance": ["is", "not set"], "skip_auto_attendance": 0, "offshift": 0},
 		)
 
-<<<<<<< HEAD
 	@frappe.whitelist(methods=["POST"])
 	def process_auto_attendance(self, is_manually_triggered=False):
-=======
-	@frappe.whitelist()
-	def process_auto_attendance(self, is_manually_triggered: int | bool = False) -> None | str:
 		self.check_permission("write")
->>>>>>> 4ec082c (fix(shift_type): enforce write permission)
 		if self.has_incorrect_shift_config():
 			return
 
