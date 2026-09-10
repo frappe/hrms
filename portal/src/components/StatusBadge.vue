@@ -25,7 +25,7 @@ const THEMES = {
 		"work from home",
 		"completed",
 	],
-	orange: [
+	amber: [
 		"pending",
 		"open",
 		"in review",

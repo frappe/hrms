@@ -6,7 +6,7 @@
 		-webkit-font-smoothing: antialiased;
 	}
 	body {
-		@apply bg-surface-white text-ink-gray-8;
+		@apply bg-surface-base text-ink-gray-8;
 	}
 	/* every figure that lines up in a column */
 	.nums {

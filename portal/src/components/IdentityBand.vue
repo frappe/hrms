@@ -1,9 +1,9 @@
 <template>
-	<div class="rounded-lg border border-outline-gray-1 bg-surface-white">
+	<div class="rounded-6 border border-outline-gray-1 bg-surface-base">
 		<div class="flex flex-wrap items-start gap-4 p-4">
 			<Avatar :label="name" :image="image" size="3xl" />
 			<div class="min-w-0 flex-1">
-				<h1 class="truncate text-lg font-semibold text-ink-gray-9 sm:text-xl">
+				<h1 class="truncate text-lg-semibold text-ink-gray-9 sm:text-2xl">
 					{{ name }}
 				</h1>
 				<p class="mt-0.5 truncate text-p-base text-ink-gray-5">{{ meta }}</p>
@@ -30,7 +30,7 @@
 				:key="fact.label"
 				class="border-b border-r border-outline-gray-1 px-4 py-2 last:border-r-0 sm:border-b-0"
 			>
-				<dd class="nums truncate text-base font-semibold text-ink-gray-9">
+				<dd class="nums truncate text-base-semibold text-ink-gray-9">
 					{{ fact.value || "—" }}
 				</dd>
 				<dt class="mt-px truncate text-base text-ink-gray-5">

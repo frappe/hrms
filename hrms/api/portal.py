@@ -19,6 +19,7 @@ from frappe.utils import (
 )
 
 from hrms.api import get_current_employee, get_current_employee_info
+from hrms.api.portal_extensions import nav_items
 
 # Fields the employee maintains themselves.
 EMPLOYEE_OWNED = (
@@ -123,6 +124,8 @@ def get_bootstrap() -> dict:
 			"image": frappe.db.get_value("Employee", employee.name, "image"),
 		},
 		"is_approver": is_approver,
+		# screens contributed by regional/custom apps; none of their code is here
+		"extensions": nav_items(),
 		"counts": {"expenses": pending_expenses},
 		"currency": frappe.db.get_value("Company", employee.company, "default_currency") or "INR",
 	}
@@ -175,9 +178,6 @@ def get_home() -> dict:
 			}
 		)
 
-	# --- leave balance ---------------------------------------------------
-	balances = _leave_balances(employee)
-
 	# --- my recent requests, cross doctype -------------------------------
 	requests = _recent_requests(employee, limit=5)
 
@@ -203,7 +203,6 @@ def get_home() -> dict:
 			),
 		},
 		"week": week,
-		"balances": balances[:3],
 		"requests": requests,
 		"pending_approvals": pending,
 		"out_today": out_today,
@@ -658,39 +657,7 @@ def get_leave() -> dict:
 		"applications": applications,
 		"team": team,
 		"allocation_period": _allocation_period(employee),
-		"policy": _leave_policy(employee),
 	}
-
-
-def _leave_policy(employee: str) -> list[dict]:
-	"""Rules read from Leave Type, so the constraints sit beside the Apply button."""
-	types = frappe.get_all(
-		"Leave Allocation",
-		filters={"employee": employee, "docstatus": 1, "to_date": [">=", nowdate()]},
-		pluck="leave_type",
-	)
-	if not types:
-		return []
-	rows = frappe.get_all(
-		"Leave Type",
-		filters={"name": ["in", list(set(types))]},
-		fields=[
-			"name",
-			"max_continuous_days_allowed",
-			"is_carry_forward",
-			"allow_negative",
-			"is_optional_leave",
-		],
-	)
-	return [
-		{
-			"leave_type": r.name,
-			"max_continuous": r.max_continuous_days_allowed or None,
-			"carry_forward": bool(r.is_carry_forward),
-			"optional": bool(r.is_optional_leave),
-		}
-		for r in rows
-	]
 
 
 def _allocation_period(employee: str) -> str:
@@ -723,6 +690,7 @@ def get_expenses() -> dict:
 			"docstatus",
 			"remark",
 			"currency",
+			"expense_approver",
 		],
 		order_by="posting_date desc, modified desc",
 		limit=25,
@@ -741,7 +709,10 @@ def get_expenses() -> dict:
 
 	claimed = sum(flt(c.total_claimed_amount) for c in claims if c.docstatus == 1)
 	reimbursed = sum(flt(c.total_amount_reimbursed) for c in claims)
-	awaiting = [c for c in claims if c.docstatus == 1 and c.approval_status == "Draft"]
+	# A submitted claim can never be "Draft": Expense Claim.on_submit throws unless
+	# approval_status is Approved or Rejected. What is actually waiting on the
+	# approver is the employee's draft, which the approver reviews and submits.
+	awaiting = [c for c in claims if c.docstatus == 0]
 
 	# age of the oldest unapproved claim: the number people escalate on
 	oldest_age = None
@@ -750,8 +721,42 @@ def get_expenses() -> dict:
 		if dates:
 			oldest_age = (getdate(nowdate()) - min(dates)).days
 
+	# The age is what people escalate on, so name who is holding the claim too.
+	awaiting_rows = _attach_approver_names(
+		[
+			{
+				"name": c.name,
+				"purpose": c.purpose,
+				"amount": flt(c.total_claimed_amount),
+				"currency": c.currency,
+				"approver": c.expense_approver,
+				"days": (getdate(nowdate()) - getdate(c.posting_date)).days if c.posting_date else None,
+			}
+			for c in awaiting
+		]
+	)
+
+	# Advances drawn but not yet settled against a claim: money the employee is
+	# holding. Same formula as get_advances so the two pages cannot disagree.
+	open_advances = []
+	for a in frappe.get_all(
+		"Employee Advance",
+		filters={"employee": employee, "docstatus": 1},
+		fields=["name", "purpose", "posting_date", "paid_amount", "claimed_amount", "return_amount"],
+		order_by="posting_date asc",
+	):
+		left = flt(a.paid_amount) - flt(a.claimed_amount) - flt(a.return_amount)
+		if left > 0:
+			a["outstanding"] = left
+			open_advances.append(a)
+
 	return {
 		"claims": claims,
+		"awaiting_claims": awaiting_rows,
+		"advances": {
+			"rows": open_advances,
+			"outstanding": sum(a["outstanding"] for a in open_advances),
+		},
 		"stats": {
 			"claimed": claimed,
 			"awaiting": sum(flt(c.total_claimed_amount) for c in awaiting),
@@ -760,7 +765,6 @@ def get_expenses() -> dict:
 			"reimbursed": reimbursed,
 			"count": len([c for c in claims if c.docstatus == 1]),
 		},
-		"claim_types": frappe.get_all("Expense Claim Type", fields=["name", "description"], limit=10),
 		# currency a new claim will be raised in
 		"claim_currency": _claim_currency(employee),
 	}
@@ -772,13 +776,22 @@ def _claim_currency(employee: str) -> str:
 
 
 @frappe.whitelist()
-def get_payslips(year: str | None = None) -> dict:
+def get_payslips(period: str | None = None, from_date: str | None = None, to_date: str | None = None) -> dict:
+	"""`period` is one of PAYSLIP_PERIODS; "custom" reads from_date/to_date instead."""
 	employee = get_current_employee()
-	emp = _employee_doc(employee)
+
+	start, end = _payslip_range(period, from_date, to_date)
+	filters = {"employee": employee, "docstatus": ["!=", 2]}
+	if start and end:
+		filters["start_date"] = ["between", [start, end]]
+	elif start:
+		filters["start_date"] = [">=", start]
+	elif end:
+		filters["start_date"] = ["<=", end]
 
 	slips = frappe.get_all(
 		"Salary Slip",
-		filters={"employee": employee, "docstatus": ["!=", 2]},
+		filters=filters,
 		fields=[
 			"name",
 			"start_date",
@@ -816,13 +829,28 @@ def get_payslips(year: str | None = None) -> dict:
 		"slips": slips,
 		"ytd": ytd,
 		"structure": structure,
-		"bank": {
-			"bank_name": emp.bank_name,
-			"account": _mask(emp.bank_ac_no),
-			"ifsc": emp.ifsc_code,
-		},
 		"tax": _tax_summary(employee),
+		"period": period or "12m",
+		"range": {"from_date": str(start) if start else None, "to_date": str(end) if end else None},
 	}
+
+
+# Ranges the payslip list offers, in months back from today.
+PAYSLIP_PERIODS = {"3m": 3, "6m": 6, "12m": 12, "all": None}
+
+
+def _payslip_range(period: str | None, from_date: str | None, to_date: str | None):
+	"""Resolve a period key, or an explicit range, into (start, end) dates."""
+	if period == "custom":
+		return (getdate(from_date) if from_date else None, getdate(to_date) if to_date else None)
+
+	months = PAYSLIP_PERIODS.get(period or "12m", 12)
+	if months is None:
+		return (None, None)
+
+	today = getdate(nowdate())
+	# from the first of the month N-1 back, so "3 months" means three whole ones
+	return (get_first_day(add_months(today, -(months - 1))), get_last_day(today))
 
 
 @frappe.whitelist()
@@ -875,7 +903,6 @@ def get_payslip(name: str) -> dict:
 		},
 		"salary_structure": slip.salary_structure,
 		"mode_of_payment": slip.mode_of_payment,
-		"bank_account": _mask(frappe.db.get_value("Employee", employee, "bank_ac_no")),
 	}
 
 
@@ -905,6 +932,49 @@ def payslip_pdf(name: str, inline: int = 0):
 	frappe.local.response.filecontent = pdf
 	# inline opens in the browser's PDF viewer to print from; otherwise it saves
 	frappe.local.response.type = "pdf" if cint(inline) else "download"
+
+
+# A guard against a runaway request: rendering PDFs is the expensive part, and
+# the list itself never offers more than this many rows.
+MAX_BULK_PAYSLIPS = 24
+
+
+def _own_payslip(name: str, employee: str) -> dict:
+	slip = frappe.db.get_value(
+		"Salary Slip", name, ["name", "employee", "docstatus", "start_date"], as_dict=True
+	)
+	if not slip or slip.docstatus == 2:
+		raise frappe.DoesNotExistError(_("This payslip does not exist."))
+	if slip.employee != employee:
+		raise frappe.PermissionError(_("This payslip belongs to someone else."))
+	return slip
+
+
+@frappe.whitelist(methods=["POST"])
+def payslips_zip(names: str | list):
+	"""Several payslips as one zip, each rendered with the desk print format."""
+	import io
+	import zipfile
+
+	employee = get_current_employee()
+	names = frappe.parse_json(names) if isinstance(names, str) else names
+	if not names:
+		frappe.throw(_("Select at least one payslip to download."))
+	if len(names) > MAX_BULK_PAYSLIPS:
+		frappe.throw(_("You can download at most {0} payslips at once.").format(MAX_BULK_PAYSLIPS))
+
+	buffer = io.BytesIO()
+	with zipfile.ZipFile(buffer, "w", zipfile.ZIP_DEFLATED) as archive:
+		for name in names:
+			slip = _own_payslip(name, employee)
+			# name the entry by period, so the zip reads as months not doc ids
+			label = getdate(slip.start_date).strftime("%Y-%m") if slip.start_date else slip.name
+			pdf = frappe.get_print("Salary Slip", name, as_pdf=True, no_letterhead=None)
+			archive.writestr(f"{label}-payslip.pdf", pdf)
+
+	frappe.local.response.filename = "payslips.zip"
+	frappe.local.response.filecontent = buffer.getvalue()
+	frappe.local.response.type = "download"
 
 
 def _tax_summary(employee: str) -> dict:
@@ -1116,29 +1186,12 @@ def get_org_chart() -> dict:
 		limit=24,
 	)
 
-	# headcount by department, doubling as a jump into a filtered directory
-	dept_rows = frappe.get_all(
-		"Employee",
-		filters={"status": "Active", "company": emp.company},
-		fields=["department"],
-		limit=500,
-	)
-	counts = {}
-	for r in dept_rows:
-		key = (r.department or "").split(" - ")[0] or "Unassigned"
-		counts[key] = counts.get(key, 0) + 1
-
 	return {
 		"me": me,
 		"manager": manager,
 		"skip": skip,
 		"peers": peers,
 		"reports": my_reports,
-		"departments": sorted(
-			[{"name": k, "count": v} for k, v in counts.items()],
-			key=lambda d: d["count"],
-			reverse=True,
-		),
 	}
 
 

@@ -31,6 +31,8 @@ const routes = [
 	{ path: "/holidays", name: "Holidays", component: () => import("@/pages/Holidays.vue") },
 	{ path: "/documents", name: "Documents", component: () => import("@/pages/Documents.vue") },
 	{ path: "/me", name: "Profile", component: () => import("@/pages/Profile.vue") },
+	// screens contributed by regional/custom apps, rendered from their own spec
+	{ path: "/x/:slug", name: "Extension", component: () => import("@/pages/Extension.vue") },
 	{ path: "/:pathMatch(.*)*", redirect: "/home" },
 ];
 

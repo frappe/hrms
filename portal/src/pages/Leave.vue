@@ -59,23 +59,6 @@
 						</ul>
 						<EmptyState v-else message="Nobody is away in the next week." />
 					</SectionCard>
-
-					<!-- the rules sit beside Apply, which prevents most rejected applications -->
-					<SectionCard
-						v-if="d.policy?.length"
-						title="Rules"
-						readonly-label="Per leave type"
-					>
-						<dl class="flex flex-col">
-							<FieldRow
-								v-for="p in d.policy"
-								:key="p.leave_type"
-								:label="p.leave_type"
-								:value="ruleText(p)"
-								locked
-							/>
-						</dl>
-					</SectionCard>
 				</template>
 			</DashGrid>
 		</template>
@@ -98,7 +81,6 @@ import StatTiles from "@/components/StatTiles.vue";
 import StatusBadge from "@/components/StatusBadge.vue";
 import PersonRow from "@/components/PersonRow.vue";
 import BalanceBars from "@/components/BalanceBars.vue";
-import FieldRow from "@/components/FieldRow.vue";
 import EmptyState from "@/components/EmptyState.vue";
 import RequestDialog from "@/components/RequestDialog.vue";
 
@@ -126,14 +108,6 @@ const tiles = computed(() =>
 		hint: `of ${b.allocated} allocated`,
 	})),
 );
-
-function ruleText(p) {
-	const bits = [];
-	if (p.max_continuous) bits.push(`max ${p.max_continuous} days at a stretch`);
-	if (p.carry_forward) bits.push("carries forward");
-	if (p.optional) bits.push("optional");
-	return bits.length ? bits.join(", ") : "No special rules";
-}
 
 function open(row) {
 	router.push(requestPath("leave", row.name));

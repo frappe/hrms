@@ -1,6 +1,6 @@
 <template>
 	<section
-		class="flex flex-col rounded-lg border border-outline-gray-1 bg-surface-white"
+		class="flex flex-col rounded-6 border border-outline-gray-1 bg-surface-base"
 		:class="padded ? 'gap-3 p-3.5' : ''"
 	>
 		<header
@@ -8,7 +8,7 @@
 			class="flex items-center justify-between gap-2"
 			:class="!padded && 'px-3.5 pb-2.5 pt-3'"
 		>
-			<h2 class="text-base font-semibold text-ink-gray-9">{{ title }}</h2>
+			<h2 class="text-base-semibold text-ink-gray-9">{{ title }}</h2>
 			<div class="shrink-0">
 				<slot name="action">
 					<!-- one affordance per card: Edit, Add, or the words HR-owned -->

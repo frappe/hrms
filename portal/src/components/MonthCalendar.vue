@@ -14,7 +14,7 @@
 				<div
 					v-for="day in days"
 					:key="day.date"
-					class="flex h-[52px] flex-col rounded px-1.5 py-1 text-[10px]"
+					class="flex h-[52px] flex-col rounded-4 px-1.5 py-1 text-[10px]"
 					:class="[
 						cellClass(day),
 						day.is_today && 'ring-1 ring-inset ring-outline-gray-4',
@@ -49,7 +49,7 @@
 
 		<div class="flex flex-wrap gap-x-3 gap-y-1.5">
 			<span v-for="k in LEGEND" :key="k.label" class="flex items-center gap-1.5">
-				<span class="h-2.5 w-2.5 rounded-sm" :class="k.class" />
+				<span class="h-2.5 w-2.5 rounded-1" :class="k.class" />
 				<span class="text-[10px] text-ink-gray-5">{{ k.label }}</span>
 			</span>
 		</div>
@@ -82,13 +82,13 @@ function cellClass(day) {
 	switch (day.status) {
 		case "Present":
 		case "Work From Home":
-			return "bg-surface-green-2 text-ink-green-3";
+			return "bg-surface-green-2 text-ink-green-6";
 		case "Half Day":
-			return "bg-surface-amber-2 text-ink-amber-3";
+			return "bg-surface-amber-2 text-ink-amber-6";
 		case "On Leave":
-			return "bg-surface-blue-2 text-ink-blue-3";
+			return "bg-surface-blue-2 text-ink-blue-6";
 		case "Absent":
-			return "bg-surface-red-2 text-ink-red-4";
+			return "bg-surface-red-2 text-ink-red-8";
 		default:
 			return "bg-surface-gray-2 text-ink-gray-5";
 	}

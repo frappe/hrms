@@ -51,7 +51,7 @@
 
 					<SectionCard v-if="d.stats.next" title="Next Holiday">
 						<div class="flex flex-col gap-0.5">
-							<span class="text-p-base font-semibold text-ink-gray-9">
+							<span class="text-p-base-semibold text-ink-gray-9">
 								{{ d.stats.next.description }}
 							</span>
 							<span class="nums text-base text-ink-gray-5">

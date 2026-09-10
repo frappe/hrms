@@ -5,7 +5,7 @@
 				<p class="text-base text-ink-gray-5">
 					{{ statusLine }}
 				</p>
-				<p class="nums mt-0.5 text-3xl font-semibold leading-tight text-ink-gray-9">
+				<p class="nums mt-0.5 text-4xl-semibold leading-tight text-ink-gray-9">
 					{{ checkin.checked_in ? ticker : "—" }}
 				</p>
 				<div class="mt-1.5 flex flex-wrap items-center gap-2">
@@ -29,7 +29,7 @@
 			<div v-for="d in week" :key="d.date" class="flex flex-col items-center gap-1">
 				<span class="text-[10px] text-ink-gray-4">{{ d.label }}</span>
 				<span
-					class="h-6 w-full rounded"
+					class="h-6 w-full rounded-4"
 					:class="[dayClass(d), d.is_today && 'ring-1 ring-inset ring-outline-gray-4']"
 					:title="d.status || 'Not marked'"
 				/>

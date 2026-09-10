@@ -2,7 +2,7 @@
 	<div class="flex flex-wrap items-end justify-between gap-3">
 		<div class="min-w-0">
 			<Breadcrumbs v-if="items.length" class="mb-0.5" :items="items" />
-			<h1 v-if="title" class="truncate text-xl font-semibold text-ink-gray-9">
+			<h1 v-if="title" class="truncate text-2xl-semibold text-ink-gray-9">
 				{{ title }}
 			</h1>
 			<p v-if="subtitle" class="mt-0.5 text-base text-ink-gray-5">{{ subtitle }}</p>

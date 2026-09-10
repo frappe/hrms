@@ -2,21 +2,26 @@ export const NAV = [
 	{
 		group: "My Work",
 		items: [
-			{ label: "Home", to: "/home", icon: "home" },
-			{ label: "Attendance", to: "/attendance", icon: "clock" },
-			{ label: "Leave", to: "/leave", icon: "sunrise" },
-			{ label: "Expenses", to: "/expenses", icon: "credit-card", countKey: "expenses" },
-			{ label: "Payslips", to: "/payslips", icon: "file-text" },
-			{ label: "Advances", to: "/advances", icon: "trending-up" },
+			{ label: "Home", to: "/home", icon: "lucide-home" },
+			{ label: "Attendance", to: "/attendance", icon: "lucide-clock" },
+			{ label: "Leave", to: "/leave", icon: "lucide-sunrise" },
+			{
+				label: "Expenses",
+				to: "/expenses",
+				icon: "lucide-credit-card",
+				countKey: "expenses",
+			},
+			{ label: "Payslips", to: "/payslips", icon: "lucide-file-text" },
+			{ label: "Advances", to: "/advances", icon: "lucide-trending-up" },
 		],
 	},
 	{
 		group: "Company",
 		items: [
-			{ label: "Directory", to: "/directory", icon: "users" },
-			{ label: "Org chart", to: "/org-chart", icon: "git-merge" },
-			{ label: "Holidays", to: "/holidays", icon: "calendar" },
-			{ label: "Documents", to: "/documents", icon: "folder" },
+			{ label: "Directory", to: "/directory", icon: "lucide-users" },
+			{ label: "Org chart", to: "/org-chart", icon: "lucide-git-merge" },
+			{ label: "Holidays", to: "/holidays", icon: "lucide-calendar" },
+			{ label: "Documents", to: "/documents", icon: "lucide-folder" },
 		],
 	},
 ];
@@ -26,11 +31,11 @@ export const NAV = [
  * drawer, so nothing is removed, only relocated.
  */
 export const TABS = [
-	{ label: "Home", to: "/home", icon: "home" },
-	{ label: "Attendance", to: "/attendance", icon: "clock" },
-	{ label: "Leave", to: "/leave", icon: "sunrise" },
-	{ label: "Pay", to: "/payslips", icon: "file-text" },
+	{ label: "Home", to: "/home", icon: "lucide-home" },
+	{ label: "Attendance", to: "/attendance", icon: "lucide-clock" },
+	{ label: "Leave", to: "/leave", icon: "lucide-sunrise" },
+	{ label: "Pay", to: "/payslips", icon: "lucide-file-text" },
 	// opens the drawer rather than routing: it is the only way to reach the
 	// Company group and the profile now that there is no top bar
-	{ label: "More", action: "more", icon: "menu" },
+	{ label: "More", action: "more", icon: "lucide-menu" },
 ];

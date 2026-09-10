@@ -1,8 +1,8 @@
 if (!self.define) {
 	let s,
 		e = {};
-	const l = (l, r) => (
-		(l = new URL(l + ".js", r).href),
+	const l = (l, i) => (
+		(l = new URL(l + ".js", i).href),
 		e[l] ||
 			new Promise((e) => {
 				if ("document" in self) {
@@ -15,13 +15,13 @@ if (!self.define) {
 				return s;
 			})
 	);
-	self.define = (r, i) => {
-		const n = s || ("document" in self ? document.currentScript.src : "") || location.href;
-		if (e[n]) return;
+	self.define = (i, n) => {
+		const r = s || ("document" in self ? document.currentScript.src : "") || location.href;
+		if (e[r]) return;
 		let u = {};
-		const t = (s) => l(s, n),
-			o = { module: { uri: n }, exports: u, require: t };
-		e[n] = Promise.all(r.map((s) => o[s] || t(s))).then((s) => (i(...s), u));
+		const t = (s) => l(s, r),
+			a = { module: { uri: r }, exports: u, require: t };
+		e[r] = Promise.all(i.map((s) => a[s] || t(s))).then((s) => (n(...s), u));
 	};
 }
 define(["./workbox-0bb07689"], function (s) {
@@ -31,41 +31,44 @@ define(["./workbox-0bb07689"], function (s) {
 		s.precacheAndRoute(
 			[
 				{ url: "registerSW.js", revision: "7519ffe4bee5819351778bc0b11a9342" },
-				{ url: "index.html", revision: "dccd43c81915e0e609ecdc14f1fe277d" },
-				{ url: "assets/toast-9qekBDJT.js", revision: null },
-				{ url: "assets/index-DKSqIuAQ.js", revision: null },
-				{ url: "assets/index-BWm--ni7.css", revision: null },
-				{ url: "assets/frappe-ui-Bp8pEQrW.css", revision: null },
-				{ url: "assets/frappe-ui-BQ9PgXrr.js", revision: null },
-				{ url: "assets/StatusBadge-Bqz4zlkD.js", revision: null },
-				{ url: "assets/StatTiles-YoNxs_Qn.js", revision: null },
-				{ url: "assets/SectionCard-u_7VCKnT.js", revision: null },
-				{ url: "assets/RequestDialog-TPB8mqrQ.js", revision: null },
-				{ url: "assets/Request-B1_U03dg.js", revision: null },
-				{ url: "assets/Profile-5WmgxzRt.js", revision: null },
-				{ url: "assets/PersonRow-DZ4YBxpS.js", revision: null },
-				{ url: "assets/Payslips-BPdeU3Bp.js", revision: null },
-				{ url: "assets/Payslip-CFlv2Jvw.js", revision: null },
-				{ url: "assets/PageHead-3jtDpZ9g.js", revision: null },
-				{ url: "assets/OrgChart-CRKf-07x.css", revision: null },
-				{ url: "assets/OrgChart-B5HV4bG-.js", revision: null },
-				{ url: "assets/Leave-59X_GT51.js", revision: null },
+				{ url: "index.html", revision: "a2aa235d20e217b4b4d9a05466351113" },
+				{ url: "assets/toast-BPVivXt-.js", revision: null },
+				{ url: "assets/index-BSaIzYPn.js", revision: null },
+				{ url: "assets/index-BDq9BcFq.css", revision: null },
+				{ url: "assets/frappe-ui-Gd3P3Yvw.css", revision: null },
+				{ url: "assets/frappe-ui-D0k6koYp.js", revision: null },
+				{ url: "assets/TotalRow-DhNOuPhk.js", revision: null },
+				{ url: "assets/StatusBadge-sSVuNJEI.js", revision: null },
+				{ url: "assets/StatTiles-CcQndbp7.js", revision: null },
+				{ url: "assets/SectionCard-C5Qs8pBJ.js", revision: null },
+				{ url: "assets/RequestField-CEA0aLLd.js", revision: null },
+				{ url: "assets/RequestDialog-UMsP4D4j.js", revision: null },
+				{ url: "assets/Request-hIkiCd30.js", revision: null },
+				{ url: "assets/Profile-DYVnOsur.js", revision: null },
+				{ url: "assets/PersonRow-2k8WhDWN.js", revision: null },
+				{ url: "assets/Payslips-BO4rJX6X.js", revision: null },
+				{ url: "assets/Payslip-_l5-BTWq.js", revision: null },
+				{ url: "assets/OrgChart-C1AHL9m-.js", revision: null },
+				{ url: "assets/Leave-ByXBDfov.js", revision: null },
 				{ url: "assets/Inter.var-C9xDBOS3.woff2", revision: null },
 				{ url: "assets/Inter-Italic.var-BGHziHgI.woff2", revision: null },
-				{ url: "assets/IdentityBand-BGB1Buc7.js", revision: null },
-				{ url: "assets/Home-DBGqMnyY.js", revision: null },
-				{ url: "assets/Holidays-Bk9m_VhS.js", revision: null },
-				{ url: "assets/FieldRow-DbBPtAxY.js", revision: null },
-				{ url: "assets/Expenses-C-UGZDUr.js", revision: null },
-				{ url: "assets/EmptyState-DNwecFw5.js", revision: null },
-				{ url: "assets/Documents-B4XK28MO.js", revision: null },
-				{ url: "assets/Directory-CbMhGYpC.js", revision: null },
-				{ url: "assets/DataTable-vZ6Z-J3d.js", revision: null },
-				{ url: "assets/DashGrid-Bd23iLvt.js", revision: null },
-				{ url: "assets/Colleague-CM8SqR9s.js", revision: null },
-				{ url: "assets/BalanceBars-CBgUe-mJ.js", revision: null },
-				{ url: "assets/Attendance-CLV1kRNW.js", revision: null },
-				{ url: "assets/Advances-D4z4VXmc.js", revision: null },
+				{ url: "assets/IdentityBand-BZ37_HBf.js", revision: null },
+				{ url: "assets/Home-C0pHjBgn.js", revision: null },
+				{ url: "assets/Holidays-DQnJRsKu.js", revision: null },
+				{ url: "assets/FieldRow-DoxIhPye.js", revision: null },
+				{ url: "assets/Extension-Dw3zvxtZ.js", revision: null },
+				{ url: "assets/Expenses-suXsNGZy.js", revision: null },
+				{ url: "assets/EmptyState-38_uLDf3.js", revision: null },
+				{ url: "assets/Documents-DN62iRzA.js", revision: null },
+				{ url: "assets/Directory-CCxFXTcR.js", revision: null },
+				{ url: "assets/DateField-DafgtgxX.js", revision: null },
+				{ url: "assets/DataTable-BPI_hH2T.js", revision: null },
+				{ url: "assets/DataTable-BCMkhabB.css", revision: null },
+				{ url: "assets/DashGrid-CGnJY6QD.js", revision: null },
+				{ url: "assets/Colleague-CqZ7kh9t.js", revision: null },
+				{ url: "assets/BalanceBars-9ROF_iIl.js", revision: null },
+				{ url: "assets/Attendance-DsdvaukV.js", revision: null },
+				{ url: "assets/Advances-tyJB2sdK.js", revision: null },
 				{ url: "manifest.webmanifest", revision: "8357eaf9ca5c75638afd6bf63f8500f1" },
 			],
 			{},

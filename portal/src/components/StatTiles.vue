@@ -3,12 +3,12 @@
 		<div
 			v-for="tile in tiles"
 			:key="tile.label"
-			class="flex flex-col gap-0.5 rounded-lg border border-outline-gray-1 bg-surface-white p-3"
+			class="flex flex-col gap-0.5 rounded-6 border border-outline-gray-1 bg-surface-base p-3"
 		>
 			<span class="text-base text-ink-gray-5">
 				{{ tile.label }}
 			</span>
-			<span class="nums text-xl font-semibold leading-tight text-ink-gray-9">
+			<span class="nums text-2xl-semibold leading-tight text-ink-gray-9">
 				{{ tile.value }}
 			</span>
 			<Progress v-if="tile.pct !== undefined" class="mt-1.5" :value="tile.pct" size="md" />

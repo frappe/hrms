@@ -1,6 +1,6 @@
 <template>
 	<!-- One form for every employee-raised document; the schema comes from the server. -->
-	<Dialog v-model="isOpen" :options="{ title, size: tableField ? 'lg' : 'md' }">
+	<Dialog v-model:open="isOpen" :title="title" :size="tableField ? 'lg' : 'md'">
 		<template #body-content>
 			<div v-if="!schema" class="flex items-center gap-2 py-6 text-base text-ink-gray-5">
 				<LoadingIndicator class="h-4 w-4" />
@@ -23,10 +23,10 @@
 					<div
 						v-for="(row, i) in values[tableField.fieldname]"
 						:key="i"
-						class="flex flex-col gap-3 rounded-lg border border-outline-gray-2 p-3"
+						class="flex flex-col gap-3 rounded-6 border border-outline-gray-2 p-3"
 					>
 						<div class="flex items-center justify-between">
-							<span class="text-base font-medium text-ink-gray-5">
+							<span class="text-base-medium text-ink-gray-5">
 								{{ tableField.row_label }} {{ i + 1 }}
 							</span>
 							<Button
@@ -36,7 +36,7 @@
 								@click="values[tableField.fieldname].splice(i, 1)"
 							>
 								<template #icon
-									><FeatherIcon name="trash-2" class="h-3.5 w-3.5"
+									><span class="h-3.5 w-3.5 lucide-trash-2" aria-hidden="true"
 								/></template>
 							</Button>
 						</div>
@@ -53,7 +53,7 @@
 
 					<Button variant="subtle" class="self-start" @click="addRow">
 						<template #prefix
-							><FeatherIcon name="plus" class="h-3.5 w-3.5"
+							><span class="h-3.5 w-3.5 lucide-plus" aria-hidden="true"
 						/></template>
 						Add Another {{ tableField.row_label }}
 					</Button>
@@ -63,13 +63,13 @@
 					v-if="schema.supports_attachments"
 					class="flex flex-col gap-2 border-t border-outline-gray-1 pt-3"
 				>
-					<span class="text-base font-medium text-ink-gray-5">Attachments</span>
+					<span class="text-base-medium text-ink-gray-5">Attachments</span>
 
 					<ul v-if="keptAttachments.length" class="flex flex-col gap-1.5">
 						<li
 							v-for="a in keptAttachments"
 							:key="a.name"
-							class="flex items-center justify-between gap-2 rounded border border-outline-gray-2 px-2 py-1.5"
+							class="flex items-center justify-between gap-2 rounded-4 border border-outline-gray-2 px-2 py-1.5"
 						>
 							<a
 								:href="a.file_url"
@@ -77,9 +77,9 @@
 								rel="noopener"
 								class="flex min-w-0 items-center gap-2 text-p-base text-ink-gray-8 hover:underline"
 							>
-								<FeatherIcon
-									name="paperclip"
-									class="h-3.5 w-3.5 shrink-0 text-ink-gray-4"
+								<span
+									class="h-3.5 w-3.5 shrink-0 text-ink-gray-4 lucide-paperclip"
+									aria-hidden="true"
 								/>
 								<span class="truncate">{{ a.file_name }}</span>
 							</a>
@@ -90,7 +90,7 @@
 								@click="removed.push(a.name)"
 							>
 								<template #icon
-									><FeatherIcon name="x" class="h-3.5 w-3.5"
+									><span class="h-3.5 w-3.5 lucide-x" aria-hidden="true"
 								/></template>
 							</Button>
 						</li>
@@ -100,12 +100,12 @@
 						<li
 							v-for="(f, i) in files"
 							:key="f.name + i"
-							class="flex items-center justify-between gap-2 rounded border border-outline-gray-2 px-2 py-1.5"
+							class="flex items-center justify-between gap-2 rounded-4 border border-outline-gray-2 px-2 py-1.5"
 						>
 							<div class="flex min-w-0 items-center gap-2">
-								<FeatherIcon
-									name="paperclip"
-									class="h-3.5 w-3.5 shrink-0 text-ink-gray-4"
+								<span
+									class="h-3.5 w-3.5 shrink-0 text-ink-gray-4 lucide-paperclip"
+									aria-hidden="true"
 								/>
 								<span class="truncate text-p-base text-ink-gray-8">{{
 									f.name
@@ -121,7 +121,7 @@
 								@click="files.splice(i, 1)"
 							>
 								<template #icon
-									><FeatherIcon name="x" class="h-3.5 w-3.5"
+									><span class="h-3.5 w-3.5 lucide-x" aria-hidden="true"
 								/></template>
 							</Button>
 						</li>
@@ -129,7 +129,7 @@
 
 					<Button variant="subtle" class="self-start" @click="fileInput.click()">
 						<template #prefix
-							><FeatherIcon name="paperclip" class="h-3.5 w-3.5"
+							><span class="h-3.5 w-3.5 lucide-paperclip" aria-hidden="true"
 						/></template>
 						Attach Files
 					</Button>
@@ -170,7 +170,7 @@
 
 <script setup>
 import { computed, reactive, ref, watch } from "vue";
-import { Button, Dialog, FeatherIcon, LoadingIndicator } from "frappe-ui";
+import { Button, Dialog, LoadingIndicator } from "frappe-ui";
 
 import RequestField from "@/components/RequestField.vue";
 import { createRequest, requestForm, updateRequest } from "@/data/requests";

@@ -8,11 +8,11 @@
 				<template #actions>
 					<Button
 						variant="subtle"
-						icon="download"
+						icon="lucide-download"
 						label="Download PDF"
 						@click="download"
 					/>
-					<Button variant="subtle" icon="printer" label="Print" @click="print" />
+					<Button variant="subtle" icon="lucide-printer" label="Print" @click="print" />
 				</template>
 			</PageHead>
 
@@ -71,7 +71,6 @@
 							<FieldRow label="Period" :value="d.period" />
 							<FieldRow label="Paid on" :value="date(d.posting_date)" nums />
 							<FieldRow label="Mode" :value="d.mode_of_payment" />
-							<FieldRow label="Account" :value="d.bank_account" nums />
 						</dl>
 					</SectionCard>
 

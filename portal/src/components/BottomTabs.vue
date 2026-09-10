@@ -1,6 +1,6 @@
 <template>
 	<nav
-		class="grid shrink-0 grid-cols-5 border-t border-outline-gray-1 bg-surface-white pb-safe-bottom"
+		class="grid shrink-0 grid-cols-5 border-t border-outline-gray-1 bg-surface-base pb-safe-bottom"
 		aria-label="Sections"
 	>
 		<template v-for="tab in TABS" :key="tab.label">
@@ -9,7 +9,7 @@
 				resolves to the globally registered frappe-ui Button component.
 			-->
 			<RouterLink v-if="tab.to" :to="tab.to" :class="[tabClass, toneClass(tab)]">
-				<FeatherIcon :name="tab.icon" class="h-[18px] w-[18px]" />
+				<span :class="[tab.icon, 'h-[18px] w-[18px]']" aria-hidden="true" />
 				<span class="text-[10px]" :class="isActive(tab) && 'font-semibold'">
 					{{ tab.label }}
 				</span>
@@ -20,7 +20,7 @@
 				:class="[tabClass, toneClass(tab)]"
 				@click="$emit(tab.action)"
 			>
-				<FeatherIcon :name="tab.icon" class="h-[18px] w-[18px]" />
+				<span :class="[tab.icon, 'h-[18px] w-[18px]']" aria-hidden="true" />
 				<span class="text-[10px]">{{ tab.label }}</span>
 			</button>
 		</template>
@@ -29,7 +29,6 @@
 
 <script setup>
 import { useRoute } from "vue-router";
-import { FeatherIcon } from "frappe-ui";
 import { TABS } from "@/nav";
 
 defineEmits(["more"]);

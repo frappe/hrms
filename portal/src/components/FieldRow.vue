@@ -9,10 +9,10 @@
 				<span v-else :class="nums && 'nums'">{{ value }}</span>
 			</slot>
 			<!-- locked values stay at full contrast: greying out reads as broken -->
-			<FeatherIcon
+			<span
 				v-if="locked"
-				name="lock"
-				class="ml-1 inline h-3 w-3 shrink-0 align-[-1px] text-ink-gray-4"
+				class="lucide-lock ml-1 inline-block size-3 shrink-0 align-[-1px] text-ink-gray-4"
+				aria-hidden="true"
 			/>
 		</dd>
 	</div>
@@ -20,7 +20,6 @@
 
 <script setup>
 import { computed } from "vue";
-import { FeatherIcon } from "frappe-ui";
 
 const props = defineProps({
 	label: String,

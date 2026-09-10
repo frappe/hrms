@@ -3,39 +3,38 @@
 		<PageHead title="Attendance" subtitle="Your month at a glance">
 			<template #actions>
 				<!--
-					The month sits between its own arrows: it is the only thing they
-					change, so it has to be where the eye already is. Left/right step
-					the month once focus is anywhere in the group.
+					Label first, then the arrows as an adjacent pair: sandwiching it between
+					them splits one control in two and makes the arrows read as unrelated.
+					It stays beside them so the change is still where the eye is.
 				-->
 				<div
-					class="flex items-center gap-1"
+					class="flex items-center gap-2"
 					role="group"
 					aria-label="Month"
 					@keydown.left.prevent="step(-1)"
 					@keydown.right.prevent="step(1)"
 				>
-					<Button
-						ref="prevBtn"
-						variant="subtle"
-						icon="chevron-left"
-						label="Previous month"
-						:disabled="!d?.prev_month"
-						@click="step(-1)"
-					/>
-					<span
-						class="nums min-w-[7.5rem] text-center text-base font-semibold text-ink-gray-8"
-						aria-live="polite"
-					>
+					<span class="nums text-base-semibold text-ink-gray-8" aria-live="polite">
 						{{ d?.month_label || "—" }}
 					</span>
-					<Button
-						ref="nextBtn"
-						variant="subtle"
-						icon="chevron-right"
-						label="Next month"
-						:disabled="!d?.next_month"
-						@click="step(1)"
-					/>
+					<div class="flex items-center gap-1">
+						<Button
+							ref="prevBtn"
+							variant="subtle"
+							icon="lucide-chevron-left"
+							label="Previous month"
+							:disabled="!d?.prev_month"
+							@click="step(-1)"
+						/>
+						<Button
+							ref="nextBtn"
+							variant="subtle"
+							icon="lucide-chevron-right"
+							label="Next month"
+							:disabled="!d?.next_month"
+							@click="step(1)"
+						/>
+					</div>
 				</div>
 				<Button variant="solid" @click="showNew = true">Regularise</Button>
 			</template>

@@ -1,7 +1,7 @@
 <template>
 	<!-- FrappeUIProvider replaces <Toasts /> from 0.1.278: it hosts the toast portal -->
 	<FrappeUIProvider>
-		<div class="flex h-[100dvh] overflow-hidden bg-surface-white">
+		<div class="flex h-[100dvh] overflow-hidden bg-surface-base">
 			<!-- one instance: the sidebar collapses itself to a rail below lg -->
 			<div class="hidden h-full md:block"><AppSidebar /></div>
 
@@ -15,7 +15,7 @@
 						v-else-if="bootstrap.data && !bootstrap.data.employee"
 						class="mx-auto max-w-md p-6 text-center"
 					>
-						<h1 class="text-lg font-semibold text-ink-gray-9">No employee record</h1>
+						<h1 class="text-lg-semibold text-ink-gray-9">No employee record</h1>
 						<p class="mt-2 text-p-base text-ink-gray-6">
 							This portal shows your own HR record, and
 							<span class="font-medium text-ink-gray-8">{{ session.user }}</span>
@@ -50,7 +50,7 @@
 				leave-to-class="-translate-x-full"
 			>
 				<div v-if="drawer" class="fixed inset-y-0 left-0 z-50 md:hidden">
-					<AppSidebar expanded @navigate="drawer = false" />
+					<AppSidebar @navigate="drawer = false" />
 				</div>
 			</Transition>
 		</div>

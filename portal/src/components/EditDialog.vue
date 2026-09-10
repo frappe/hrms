@@ -1,5 +1,5 @@
 <template>
-	<Dialog v-model="isOpen" :options="{ title, size: 'md' }">
+	<Dialog v-model:open="isOpen" :title="title" :size="'md'">
 		<template #body-content>
 			<div class="flex flex-col gap-3">
 				<div class="grid gap-3 sm:grid-cols-2">
@@ -24,14 +24,14 @@
 						<div v-for="f in locked" :key="f.fieldname" class="flex flex-col gap-1">
 							<span class="text-base text-ink-gray-5">{{ f.label }}</span>
 							<div
-								class="flex items-center justify-between gap-2 rounded border border-outline-gray-2 px-2 py-1.5 text-p-base text-ink-gray-6"
+								class="flex items-center justify-between gap-2 rounded-4 border border-outline-gray-2 px-2 py-1.5 text-p-base text-ink-gray-6"
 							>
 								<span class="truncate">{{
 									values[f.fieldname] || "Not set"
 								}}</span>
-								<FeatherIcon
-									name="lock"
-									class="h-3 w-3 shrink-0 text-ink-gray-4"
+								<span
+									class="h-3 w-3 shrink-0 text-ink-gray-4 lucide-lock"
+									aria-hidden="true"
 								/>
 							</div>
 						</div>
@@ -59,7 +59,7 @@
 
 <script setup>
 import { computed, ref, watch } from "vue";
-import { Button, Dialog, FeatherIcon, FormControl } from "frappe-ui";
+import { Button, Dialog, FormControl } from "frappe-ui";
 
 import { updateProfile } from "@/data/portal";
 import { errorMessage, notifyError, notifySuccess } from "@/utils/toast";

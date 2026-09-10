@@ -22,20 +22,20 @@
 				hiding them behind a sheet; the row scrolls when the list is long.
 			-->
 			<div class="scroll-x pb-1">
-				<TabButtons v-model="active" :buttons="facets" />
+				<TabButtons v-model="active" :options="facets" />
 			</div>
 		</div>
 
-		<div v-if="filtered.length" class="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+		<div v-if="filtered.length" class="grid grid-cols-1 gap-3 sm:grid-cols-2">
 			<RouterLink
 				v-for="p in filtered"
 				:key="p.name"
 				:to="`/directory/${p.name}`"
-				class="flex items-center gap-3 rounded-lg border border-outline-gray-1 bg-surface-white p-3 transition-colors hover:bg-surface-gray-1"
+				class="flex items-center gap-3 rounded-6 border border-outline-gray-1 bg-surface-base p-3 transition-colors hover:bg-surface-gray-1"
 			>
 				<Avatar :label="p.employee_name" :image="p.image" size="3xl" />
 				<div class="min-w-0 flex-1">
-					<div class="truncate text-base font-semibold text-ink-gray-9">
+					<div class="truncate text-base-semibold text-ink-gray-9">
 						{{ p.employee_name }}
 					</div>
 					<div class="truncate text-sm text-ink-gray-5">

@@ -8,7 +8,7 @@
 			:label="b.leave_type"
 		>
 			<template #hint>
-				<span class="nums text-base font-medium text-ink-gray-5">
+				<span class="nums text-base-medium text-ink-gray-5">
 					{{ b.balance }} of {{ b.allocated }}
 				</span>
 			</template>

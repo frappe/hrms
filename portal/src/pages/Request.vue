@@ -56,9 +56,9 @@
 									rel="noopener"
 									class="flex min-w-0 items-center gap-2 text-p-base text-ink-gray-8 hover:underline"
 								>
-									<FeatherIcon
-										name="paperclip"
-										class="h-3.5 w-3.5 shrink-0 text-ink-gray-4"
+									<span
+										class="h-3.5 w-3.5 shrink-0 text-ink-gray-4 lucide-paperclip"
+										aria-hidden="true"
 									/>
 									<span class="truncate">{{ a.file_name }}</span>
 								</a>
@@ -119,7 +119,7 @@
 <script setup>
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { Button, FeatherIcon, confirmDialog } from "frappe-ui";
+import { Button, dialog } from "frappe-ui";
 
 import PageBody from "@/components/PageBody.vue";
 import PageHead from "@/components/PageHead.vue";
@@ -214,18 +214,21 @@ async function reload() {
 
 function confirmDelete() {
 	const { label, name, type, list_route } = d.value;
-	confirmDialog({
+	// v1: resolving onConfirm closes the dialog, rejecting shows the error inline
+	dialog.confirm({
 		title: `Delete this ${label.toLowerCase()}?`,
 		message: `${name} will be removed. This cannot be undone.`,
-		async onConfirm({ hideDialog }) {
+		theme: "red",
+		confirmLabel: "Delete",
+		async onConfirm() {
 			try {
 				await deleteRequest.submit({ request_type: type, name });
-				notifySuccess(`${label} deleted`);
-				hideDialog();
-				router.push(list_route);
 			} catch (e) {
 				notifyError("Could not delete", errorMessage(e, "Try again in a moment."));
+				throw e;
 			}
+			notifySuccess(`${label} deleted`);
+			router.push(list_route);
 		},
 	});
 }

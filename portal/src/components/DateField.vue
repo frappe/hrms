@@ -8,7 +8,7 @@
 	<div class="flex flex-col gap-1.5">
 		<label v-if="label" class="block text-base text-ink-gray-5">
 			{{ label }}
-			<span v-if="required" class="text-ink-red-3">*</span>
+			<span v-if="required" class="text-ink-red-6">*</span>
 		</label>
 		<DatePicker
 			class="w-full"
