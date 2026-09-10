@@ -3,7 +3,7 @@
 from datetime import datetime, timedelta
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests.utils import FrappeTestCase, change_settings
 from frappe.utils import (
 	add_days,
 	get_time,
@@ -666,7 +666,7 @@ class TestShiftType(FrappeTestCase):
 		attendance = frappe.db.get_value("Attendance", {"employee": employee}, "status")
 		self.assertIsNone(attendance)
 
-	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
+	@change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
 	def test_mark_absent_with_multiple_overlapping_shift_assignments(self):
 		"""Tests absent is marked for each shift when actual timings of multiple assignments overlap"""
 		employee = make_employee("test_employee_multishift@example.com", company="_Test Company")
