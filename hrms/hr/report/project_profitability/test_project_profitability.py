@@ -55,6 +55,7 @@ class TestProjectProfitability(HRMSTestSuite):
 		self.assertEqual(self.salary_slip.base_gross_pay, row.base_gross_pay)
 		self.assertEqual(timesheet.total_billed_hours, row.total_billed_hours)
 		self.assertEqual(self.salary_slip.total_working_days, row.total_working_days)
+		self.assertEqual(self.salary_slip.name, row.salary_slip)
 
 		standard_working_hours = frappe.db.get_single_value("HR Settings", "standard_working_hours")
 		utilization = flt(
