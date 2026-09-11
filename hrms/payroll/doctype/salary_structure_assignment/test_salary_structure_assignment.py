@@ -77,9 +77,6 @@ class TestSalaryStructureAssignment(HRMSTestSuite):
 		self.assertEqual(ssa.ctc, (50000 + 6000) * 12)
 
 	def test_regional_ctc_hook_reaches_ctc_but_not_gross(self):
-		"""A region may bear employer costs that no structure formula can express (India's
-		EPF/EPS/EDLI depend on statutory ceilings and per-assignment elections). Injected
-		rows must count toward CTC and leave gross alone."""
 		emp = make_employee("ssa_regional_ctc@test.com", company="_Test Company")
 
 		_make_component("SSA Test Basic", "SSATB", "Earning", amount_based_on_formula=1, formula="base")

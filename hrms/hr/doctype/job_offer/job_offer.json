@@ -7,25 +7,27 @@
  "document_type": "Document",
  "engine": "InnoDB",
  "field_order": [
-  "role_and_engagement_tab",
+  "role_and_joining_tab",
   "job_applicant",
   "applicant_name",
   "applicant_email",
   "column_break_3",
   "offer_date",
   "offer_valid_till",
+  "status",
   "role_section",
   "designation",
-  "company",
-  "status",
   "department",
+  "branch",
+  "column_break_role",
+  "company",
   "grade",
   "employment_type",
-  "column_break_role",
-  "branch",
-  "reports_to",
+  "column_break_role_2",
   "date_of_joining",
+  "reports_to",
   "compensation_tab",
+  "salary_details_section",
   "salary_structure",
   "calculate_component_amount_from",
   "base",
@@ -33,18 +35,25 @@
   "currency",
   "variable",
   "ctc",
+  "gross",
   "ctc_breakup_section",
   "ctc_breakup",
   "leave_policy_tab",
+  "leave_section",
   "leave_policy",
   "column_break_leave",
+  "leave_allocations",
+  "holiday_section",
   "holiday_list",
+  "column_break_holiday",
+  "weekly_off_days",
+  "total_public_holidays",
   "employment_policy_tab",
   "probation_period_days",
-  "notice_period_during_probation",
   "notice_number_of_days",
   "column_break_employment_policy",
   "working_hours",
+  "notice_period_during_probation",
   "section_break_4",
   "job_offer_term_template",
   "offer_terms",
@@ -59,9 +68,9 @@
  ],
  "fields": [
   {
-   "fieldname": "role_and_engagement_tab",
+   "fieldname": "role_and_joining_tab",
    "fieldtype": "Tab Break",
-   "label": "Role & Engagement"
+   "label": "Role & Joining"
   },
   {
    "depends_on":"eval:doc.job_applicant",
@@ -163,6 +172,10 @@
    "fieldtype": "Column Break"
   },
   {
+   "fieldname": "column_break_role_2",
+   "fieldtype": "Column Break"
+  },
+  {
    "fieldname": "branch",
    "fieldtype": "Link",
    "label": "Branch",
@@ -185,6 +198,11 @@
    "label": "Compensation"
   },
   {
+   "fieldname": "salary_details_section",
+   "fieldtype": "Section Break",
+   "label": "Salary Details"
+  },
+  {
    "fetch_from": "grade.default_salary_structure",
    "fetch_if_empty": 1,
    "fieldname": "salary_structure",
@@ -193,6 +211,7 @@
    "options": "Salary Structure"
   },
   {
+   "depends_on": "eval:doc.salary_structure",
    "fetch_from": "salary_structure.currency",
    "fieldname": "currency",
    "fieldtype": "Link",
@@ -241,6 +260,15 @@
    "read_only_depends_on": "eval:doc.calculate_component_amount_from=='Base and Variable'"
   },
   {
+   "description": "Gross earnings for one payroll cycle, before deductions. Shown as a row in the break-up; kept as a field because statutory wage ceilings are drawn on it.",
+   "fieldname": "gross",
+   "fieldtype": "Currency",
+   "hidden": 1,
+   "label": "Gross Pay",
+   "options": "currency",
+   "read_only": 1
+  },
+  {
    "fieldname": "ctc_breakup_section",
    "fieldtype": "Section Break"
   },
@@ -249,13 +277,49 @@
    "fieldname": "ctc_breakup",
    "fieldtype": "Table",
    "label": "CTC Break-up",
-   "options": "Job Offer Component",
-   "read_only": 1
+   "options": "Job Offer Component"
   },
   {
    "fieldname": "leave_policy_tab",
    "fieldtype": "Tab Break",
-   "label": "Leave Policy"
+   "label": "Leave & Holidays"
+  },
+  {
+   "depends_on": "eval:doc.holiday_list",
+   "fieldname": "weekly_off_days",
+   "fieldtype": "Data",
+   "label": "Weekly Off",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.holiday_list",
+   "description": "Holidays in the year other than weekly offs",
+   "fieldname": "total_public_holidays",
+   "fieldtype": "Int",
+   "label": "Public Holidays",
+   "read_only": 1
+  },
+  {
+   "fieldname": "leave_section",
+   "fieldtype": "Section Break",
+   "label": "Leave"
+  },
+  {
+   "fieldname": "holiday_section",
+   "fieldtype": "Section Break",
+   "label": "Holidays"
+  },
+  {
+   "fieldname": "column_break_holiday",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.leave_policy",
+   "fieldname": "leave_allocations",
+   "fieldtype": "Table",
+   "label": "Leave Allocations",
+   "options": "Job Offer Leave",
+   "read_only": 1
   },
   {
    "fieldname": "leave_policy",
@@ -279,6 +343,7 @@
    "label": "Employment Policy"
   },
   {
+   "default": "90",
    "fieldname": "probation_period_days",
    "fieldtype": "Int",
    "label": "Probation Period (Days)",
@@ -291,6 +356,7 @@
    "non_negative": 1
   },
   {
+   "default": "30",
    "fieldname": "notice_number_of_days",
    "fieldtype": "Int",
    "label": "Notice Period (Days)",
@@ -301,6 +367,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "default": "8",
    "fieldname": "working_hours",
    "fieldtype": "Float",
    "label": "Working Hours",
@@ -381,7 +448,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-08-17 12:36:28.786843",
+ "modified": "2026-08-27 17:09:08.078373",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",
