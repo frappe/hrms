@@ -106,9 +106,7 @@ var set_number_of_positions = function (frm, cdt, cdn) {
 				frappe.model.set_value(cdt, cdn, "current_count", data.message.employee_count);
 				frappe.model.set_value(cdt, cdn, "current_openings", data.message.job_openings);
 				let total_positions = cint(data.message.employee_count) + cint(child.vacancies);
-				if (cint(child.number_of_positions) < total_positions) {
-					frappe.model.set_value(cdt, cdn, "number_of_positions", total_positions);
-				}
+				frappe.model.set_value(cdt, cdn, "number_of_positions", total_positions);
 			} else {
 				// No employees for this designation
 				frappe.model.set_value(cdt, cdn, "current_count", 0);
