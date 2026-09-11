@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+		<title>Frappe HR Portal</title>
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-title" content="HR Portal" />
+		<meta name="theme-color" content="#ffffff" />
+
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="196x196"
+			href="/assets/hrms/manifest/favicon-196.png"
+		/>
+		<link rel="apple-touch-icon" href="/assets/hrms/manifest/apple-icon-180.png" />
+		<script type="module" crossorigin src="/assets/hrms/portal/assets/index-6wvshjQq.js"></script>
+		<link rel="modulepreload" crossorigin href="/assets/hrms/portal/assets/frappe-ui-rHlwnvVy.js">
+		<link rel="stylesheet" crossorigin href="/assets/hrms/portal/assets/frappe-ui-Gd3P3Yvw.css">
+		<link rel="stylesheet" crossorigin href="/assets/hrms/portal/assets/index-B--0C4K1.css">
+	<link rel="manifest" href="/assets/hrms/portal/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/assets/hrms/portal/registerSW.js"></script></head>
+	<body class="antialiased">
+		<div id="app"></div>
+		<div id="modals"></div>
+		<div id="popovers"></div>
+
+		<script>
+			window.csrf_token = "{{ csrf_token }}"
+			window.site_name = "{{ site_name }}"
+			if (!window.frappe) window.frappe = {}
+			frappe.boot = {{ boot }}
+		</script>
+
+	</body>
+</html>
