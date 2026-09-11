@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.utils import add_days, nowdate
+from frappe.utils import add_days, get_weekday, getdate, nowdate
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -11,6 +11,8 @@ from hrms.hr.doctype.job_applicant.job_applicant import get_applicant_to_hire_pe
 from hrms.hr.doctype.job_offer.job_offer import (
 	compute_compensation,
 	copy_regional_config,
+	get_holiday_summary,
+	get_leave_allocations,
 	get_offer_acceptance_rate,
 )
 from hrms.hr.doctype.job_offer.job_offer import make_employee as make_employee_from_job_offer
@@ -25,6 +27,8 @@ from hrms.payroll.doctype.salary_structure_assignment.test_salary_structure_assi
 )
 from hrms.tests.test_utils import create_job_applicant
 from hrms.tests.utils import HRMSTestSuite
+
+TAKE_HOME = "Take Home* (Income Tax applicable as per IT Act)"
 
 
 class TestJobOffer(HRMSTestSuite):
@@ -271,22 +275,180 @@ class TestJobOffer(HRMSTestSuite):
 		for row in component_rows(details):
 			self.assertNotIn("(", row["fixed_components"])
 
-	def test_breakup_closes_with_ctc_and_take_home_rows(self):
-		"""Take Home is CTC less the employer's own off-slip cost."""
+	def test_breakup_reads_top_to_bottom(self):
 		base = 50000
 		structure = make_capped_pf_structure("Test Offer Summary Structure")
 		details = compute_from_base(structure.name, base)
 
-		summaries = summary_rows(details)
-		self.assertEqual(list(summaries), ["Total Cost to Company (CTC)", "Take Home"])
-		self.assertEqual([row["is_summary"] for row in details["components"][-2:]], [1, 1])
+		labels = [row["fixed_components"] for row in details["components"]]
+		self.assertEqual(
+			labels,
+			[
+				"JO Test Basic",
+				"Gross Pay",
+				"JO Test Employer PF",
+				"Total Cost to Company (CTC)",
+				TAKE_HOME,
+			],
+		)
+		self.assertEqual([row["is_summary"] for row in details["components"]], [0, 1, 0, 1, 1])
 
-		employer_yearly = 1800 * 12
+		summaries = summary_rows(details)
+		self.assertAlmostEqual(summaries["Gross Pay"]["per_cycle"], base * 0.5, places=2)
 		self.assertAlmostEqual(summaries["Total Cost to Company (CTC)"]["yearly"], details["ctc"], places=2)
-		self.assertAlmostEqual(summaries["Take Home"]["yearly"], details["ctc"] - employer_yearly, places=2)
 		self.assertAlmostEqual(
 			summaries["Total Cost to Company (CTC)"]["per_cycle"], details["ctc"] / 12, places=2
 		)
+
+	def test_zero_components_are_left_out(self):
+		base = 50000
+		_make_component("JO Test Basic", "JOTB", "Earning", amount_based_on_formula=1, formula="base * 0.5")
+		_make_component("JO Test Nil", "JOTN", "Earning", amount_based_on_formula=1, formula="0")
+		structure = make_salary_structure(
+			"Test Offer Nil Structure",
+			"Monthly",
+			currency="INR",
+			earnings=[
+				{
+					"salary_component": "JO Test Basic",
+					"abbr": "JOTB",
+					"amount_based_on_formula": 1,
+					"formula": "base * 0.5",
+				},
+				{
+					"salary_component": "JO Test Nil",
+					"abbr": "JOTN",
+					"amount_based_on_formula": 1,
+					"formula": "0",
+				},
+			],
+			deductions=[],
+		)
+		details = compute_from_base(structure.name, base)
+
+		labels = [row["fixed_components"] for row in details["components"]]
+		self.assertIn("JO Test Basic", labels)
+		self.assertNotIn("JO Test Nil", labels)
+
+	def test_take_home_nets_off_employee_deductions(self):
+		base = 50000
+		_make_component("JO Test Basic", "JOTB", "Earning", amount_based_on_formula=1, formula="base * 0.5")
+		_make_component("JO Test PT", "JOTPT", "Deduction", amount=200, depends_on_payment_days=0)
+		structure = make_salary_structure(
+			"Test Offer Take Home Structure",
+			"Monthly",
+			currency="INR",
+			earnings=[
+				{
+					"salary_component": "JO Test Basic",
+					"abbr": "JOTB",
+					"amount_based_on_formula": 1,
+					"formula": "base * 0.5",
+				}
+			],
+			deductions=[{"salary_component": "JO Test PT", "abbr": "JOTPT", "amount": 200}],
+		)
+		details = compute_from_base(structure.name, base)
+
+		summaries = summary_rows(details)
+		gross = summaries["Gross Pay"]["per_cycle"]
+		self.assertAlmostEqual(gross, base * 0.5, places=2)
+		self.assertAlmostEqual(summaries[TAKE_HOME]["per_cycle"], gross - 200, places=2)
+
+		self.assertNotIn("JO Test PT", [row["fixed_components"] for row in details["components"]])
+
+	def test_gross_excludes_employer_contributions(self):
+		base = 50000
+		structure = make_capped_pf_structure("Test Offer Gross Structure")
+		details = compute_from_base(structure.name, base)
+
+		self.assertAlmostEqual(details["gross"], base * 0.5, places=2)
+
+		employer_yearly = 1800 * 12
+		self.assertAlmostEqual(details["ctc"] - details["gross"] * 12, employer_yearly, places=2)
+
+	def test_gross_is_set_on_save_without_the_form(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		base = 50000
+		structure = make_capped_pf_structure("Test Offer Gross Save Structure")
+		applicant = create_job_applicant(email_id="test_offer_gross@example.com")
+
+		offer = create_job_offer(
+			job_applicant=applicant.name,
+			salary_structure=structure.name,
+			calculate_component_amount_from="Base and Variable",
+			base=base,
+			currency="INR",
+		)
+		offer.insert()
+
+		self.assertAlmostEqual(offer.gross, base * 0.5, places=2)
+
+	def test_gross_is_cleared_with_the_rest_of_the_compensation(self):
+		base = 50000
+		structure = make_salary_structure(
+			"Test Offer Gross Clear Structure", "Monthly", base=base, currency="INR"
+		)
+		offer = make_offer_doc(structure.name, calculate_component_amount_from="Base and Variable", base=base)
+		offer.set_compensation()
+		self.assertGreater(offer.gross, 0)
+
+		offer.salary_structure = None
+		offer.set_compensation()
+		self.assertFalse(offer.gross)
+
+	def test_hand_edited_break_up_survives_a_re_save(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		base = 50000
+		structure = make_capped_pf_structure("Test Offer Manual Rows Structure")
+		applicant = create_job_applicant(email_id="test_offer_manual@example.com")
+
+		offer = create_job_offer(
+			job_applicant=applicant.name,
+			salary_structure=structure.name,
+			calculate_component_amount_from="Base and Variable",
+			base=base,
+			currency="INR",
+		)
+		offer.insert()
+		self.assertIn("JO Test Basic", [row.fixed_components for row in offer.ctc_breakup])
+
+		offer.append(
+			"ctc_breakup",
+			{"fixed_components": "Joining Bonus", "per_cycle": 5000, "yearly": 60000, "currency": "INR"},
+		)
+		offer.ctc_breakup = [row for row in offer.ctc_breakup if row.fixed_components != "JO Test Basic"]
+		offer.save()
+
+		labels = [row.fixed_components for row in offer.ctc_breakup]
+		self.assertIn("Joining Bonus", labels)
+		self.assertNotIn("JO Test Basic", labels)
+
+	def test_renegotiating_the_pay_rebuilds_the_break_up(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		structure = make_capped_pf_structure("Test Offer Renegotiate Structure")
+		applicant = create_job_applicant(email_id="test_offer_renegotiate@example.com")
+
+		offer = create_job_offer(
+			job_applicant=applicant.name,
+			salary_structure=structure.name,
+			calculate_component_amount_from="Base and Variable",
+			base=50000,
+			currency="INR",
+		)
+		offer.insert()
+
+		offer.append(
+			"ctc_breakup",
+			{"fixed_components": "Joining Bonus", "per_cycle": 5000, "yearly": 60000, "currency": "INR"},
+		)
+		offer.base = 60000
+		offer.save()
+
+		labels = [row.fixed_components for row in offer.ctc_breakup]
+		self.assertNotIn("Joining Bonus", labels)
+		self.assertIn("JO Test Basic", labels)
+		self.assertAlmostEqual(offer.gross, 30000, places=2)
 
 	def test_yearly_uses_periods_per_year(self):
 		base = 50000
@@ -314,8 +476,7 @@ class TestJobOffer(HRMSTestSuite):
 		earnings_total = sum(row["yearly"] for row in component_rows(details))
 
 		self.assertAlmostEqual(details["ctc"], earnings_total, places=2)
-		# with nothing for the employer to bear off-slip, Take Home is the whole CTC
-		self.assertAlmostEqual(summary_rows(details)["Take Home"]["yearly"], details["ctc"], places=2)
+		self.assertAlmostEqual(summary_rows(details)[TAKE_HOME]["yearly"], details["ctc"], places=2)
 
 	def test_returns_nothing_without_base(self):
 		structure = make_salary_structure(
@@ -327,9 +488,6 @@ class TestJobOffer(HRMSTestSuite):
 		self.assertEqual(details["ctc"], 0)
 
 	def test_solves_base_across_an_employer_contribution_cap(self):
-		"""The probes land below the PF wage cap and the answer above it, so the fitted
-		line does not hold where the answer lies. A solver that trusted the fit would
-		return 44642.86 (CTC 289457) instead of 46400."""
 		structure = make_capped_pf_structure("Test Offer Cap Structure")
 
 		details = compute_from_ctc(structure.name, 300000)
@@ -338,7 +496,6 @@ class TestJobOffer(HRMSTestSuite):
 		self.assertAlmostEqual(details["ctc"], 300000, delta=1)
 		self.assertFalse(details["ctc_adjusted"])
 
-		# the answer the two probes' line points at, had it been trusted unverified
 		self.assertAlmostEqual(compute_from_base(structure.name, 44642.86)["ctc"], 289457.16, delta=1)
 
 	def test_mode_switch_is_lossless(self):
@@ -355,8 +512,6 @@ class TestJobOffer(HRMSTestSuite):
 		self.assertFalse(from_ctc["ctc_adjusted"])
 
 	def test_unreachable_ctc_snaps_to_the_achievable_figure(self):
-		"""A stepped formula makes CTC a staircase in multiples of 12000, so 300500 has
-		no base that produces it."""
 		structure = make_stepped_structure("Test Offer Stepped Structure")
 
 		details = compute_from_ctc(structure.name, 300500)
@@ -366,8 +521,6 @@ class TestJobOffer(HRMSTestSuite):
 		self.assertNotAlmostEqual(details["ctc"], 300500, delta=1)
 
 	def test_base_independent_structure_does_not_divide_by_zero(self):
-		"""Every component is a fixed amount, so CTC never moves with base and the fitted
-		slope is zero."""
 		_make_component("JO Test Flat", "JOTF", "Earning")
 		structure = make_salary_structure(
 			"Test Offer Flat Structure",
@@ -383,8 +536,6 @@ class TestJobOffer(HRMSTestSuite):
 		self.assertAlmostEqual(details["ctc"], 120000, delta=1)
 
 	def test_regional_config_is_carried_onto_the_prospective_assignment(self):
-		"""A regional app opts an offer into statutory employer costs by adding the same
-		fieldname to Job Offer, without hrms naming anything region-specific."""
 		make_shared_custom_field("test_epf_applicable")
 		self.addCleanup(remove_shared_custom_field, "test_epf_applicable")
 
@@ -394,13 +545,9 @@ class TestJobOffer(HRMSTestSuite):
 		copy_regional_config(offer, assignment)
 
 		self.assertEqual(assignment.get("test_epf_applicable"), 1)
-		# standard fields are set deliberately, never swept across by matching name --
-		# ctc exists on both doctypes and must not leak from the offer
 		self.assertFalse(assignment.ctc)
 
 	def test_regional_config_ignores_fields_the_offer_does_not_have(self):
-		"""A statutory field that exists only on the assignment must be left at its own
-		default rather than blanked by the offer."""
 		make_shared_custom_field("test_assignment_only_flag", on_job_offer=False)
 		self.addCleanup(remove_shared_custom_field, "test_assignment_only_flag")
 
@@ -412,9 +559,6 @@ class TestJobOffer(HRMSTestSuite):
 		self.assertEqual(assignment.get("test_assignment_only_flag"), 1)
 
 	def test_offer_without_a_salary_structure_asks_for_no_compensation(self):
-		"""An offer that carries no salary structure must not demand a base or a basis. Built
-		through new_doc, since that is what applies field defaults -- get_doc(dict) does not,
-		which is how a stored default slipped past the other tests."""
 		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
 		applicant = create_job_applicant(email_id="test_offer_no_structure@example.com")
 
@@ -436,7 +580,6 @@ class TestJobOffer(HRMSTestSuite):
 		self.assertFalse(offer.ctc)
 		self.assertFalse(offer.ctc_breakup)
 
-		# and a basis on its own must not demand a base either -- only a structure does
 		offer.calculate_component_amount_from = "Base and Variable"
 		offer.save()
 
@@ -444,8 +587,6 @@ class TestJobOffer(HRMSTestSuite):
 		self.assertFalse(offer.ctc_breakup)
 
 	def test_compensation_is_set_on_save_without_the_form(self):
-		"""REST, data import and the Employee override all save a Job Offer without the
-		client script ever running."""
 		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
 		base = 50000
 		structure = make_salary_structure("Test Offer Save Structure", "Monthly", base=base, currency="INR")
@@ -466,8 +607,56 @@ class TestJobOffer(HRMSTestSuite):
 		self.assertAlmostEqual(sum(row.yearly for row in components), offer.ctc, places=2)
 		self.assertEqual(
 			[row.fixed_components for row in offer.ctc_breakup if row.is_summary],
-			["Total Cost to Company (CTC)", "Take Home"],
+			["Gross Pay", "Total Cost to Company (CTC)", TAKE_HOME],
 		)
+
+	def test_leave_allocations_follow_the_leave_policy(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		policy = make_leave_policy("Test Offer Leave Policy", [("_Test Leave Type", 15)])
+		applicant = create_job_applicant(email_id="test_offer_leave@example.com")
+
+		offer = create_job_offer(job_applicant=applicant.name, leave_policy=policy.name)
+		offer.insert()
+
+		self.assertEqual(
+			[(row.leave_type, row.annual_allocation) for row in offer.leave_allocations],
+			[("_Test Leave Type", 15)],
+		)
+
+		offer.leave_policy = None
+		offer.save()
+		self.assertFalse(offer.leave_allocations)
+
+	def test_weekly_off_reads_the_days_not_the_holiday_list_field(self):
+		holiday_list = make_holiday_list("Test Offer Weekend List", weekly_offs=["Saturday", "Sunday"])
+		frappe.db.set_value("Holiday List", holiday_list, "weekly_off", "")
+
+		summary = get_holiday_summary(holiday_list)
+
+		self.assertEqual(summary["weekly_off_days"], "Saturday, Sunday")
+
+	def test_public_holidays_exclude_weekly_offs(self):
+		holiday_list = make_holiday_list("Test Offer Public List", weekly_offs=["Sunday"], public_holidays=3)
+
+		summary = get_holiday_summary(holiday_list)
+
+		self.assertEqual(summary["total_public_holidays"], 3)
+		self.assertEqual(summary["weekly_off_days"], "Sunday")
+
+	def test_holiday_summary_is_set_on_save_without_the_form(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		holiday_list = make_holiday_list("Test Offer Saved List", weekly_offs=["Sunday"], public_holidays=2)
+		applicant = create_job_applicant(email_id="test_offer_holidays@example.com")
+
+		offer = create_job_offer(job_applicant=applicant.name, holiday_list=holiday_list)
+		offer.insert()
+
+		self.assertEqual(offer.weekly_off_days, "Sunday")
+		self.assertEqual(offer.total_public_holidays, 2)
+
+	def test_offer_without_a_holiday_list_or_policy_says_nothing(self):
+		self.assertEqual(get_leave_allocations(None), [])
+		self.assertEqual(get_holiday_summary(None), {"weekly_off_days": "", "total_public_holidays": 0})
 
 
 def component_rows(details):
@@ -498,7 +687,6 @@ def remove_shared_custom_field(fieldname):
 
 
 def make_offer_doc(salary_structure, **values):
-	"""An unsaved Job Offer carrying only what the compensation maths reads."""
 	return frappe.get_doc(
 		{
 			"doctype": "Job Offer",
@@ -523,8 +711,6 @@ def compute_from_ctc(salary_structure, ctc, base=None):
 
 
 def make_capped_pf_structure(name):
-	"""Basic is half of base; employer PF is 12% of Basic but only up to a wage of 15000,
-	so CTC is 6.72 * base below the cap and 6 * base + 21600 above it."""
 	_make_component("JO Test Basic", "JOTB", "Earning", amount_based_on_formula=1, formula="base * 0.5")
 	_make_component(
 		"JO Test Employer PF",
@@ -555,6 +741,7 @@ def make_capped_pf_structure(name):
 					"abbr": "JOTEPF",
 					"amount_based_on_formula": 1,
 					"formula": "min(JOTB, 15000) * 0.12",
+					"depends_on_payment_days": 0,
 				}
 			]
 		},
@@ -623,3 +810,67 @@ def create_staffing_plan(**args):
 	staffing_plan.insert()
 	staffing_plan.submit()
 	return staffing_plan
+
+
+def make_leave_policy(title, allocations):
+	if frappe.db.exists("Leave Policy", title):
+		frappe.delete_doc("Leave Policy", title, force=True)
+
+	for leave_type, _allocation in allocations:
+		if not frappe.db.exists("Leave Type", leave_type):
+			frappe.get_doc({"doctype": "Leave Type", "leave_type_name": leave_type}).insert()
+
+	return frappe.get_doc(
+		{
+			"doctype": "Leave Policy",
+			"title": title,
+			"leave_policy_details": [
+				{"leave_type": leave_type, "annual_allocation": allocation}
+				for leave_type, allocation in allocations
+			],
+		}
+	).insert()
+
+
+def make_holiday_list(name, weekly_offs=None, public_holidays=0):
+	if frappe.db.exists("Holiday List", name):
+		frappe.delete_doc("Holiday List", name, force=True)
+
+	from_date = getdate("2026-01-01")
+	to_date = getdate("2026-12-31")
+
+	holidays = []
+	for day_name in weekly_offs or []:
+		holidays += [
+			{"holiday_date": day, "description": day_name, "weekly_off": 1}
+			for day in weekdays_between(day_name, from_date, to_date)
+		]
+
+	holidays += [
+		{"holiday_date": add_days(from_date, 14 * (index + 1)), "description": f"Holiday {index}"}
+		for index in range(public_holidays)
+	]
+
+	return (
+		frappe.get_doc(
+			{
+				"doctype": "Holiday List",
+				"holiday_list_name": name,
+				"from_date": from_date,
+				"to_date": to_date,
+				"holidays": holidays,
+			}
+		)
+		.insert()
+		.name
+	)
+
+
+def weekdays_between(day_name, from_date, to_date):
+	day = getdate(from_date)
+	days = []
+	while day <= getdate(to_date):
+		if get_weekday(day) == day_name:
+			days.append(day)
+		day = add_days(day, 1)
+	return days

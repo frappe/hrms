@@ -7,7 +7,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe.query_builder.functions import Sum
-from frappe.utils import cint, flt, get_link_to_form, nowdate
+from frappe.utils import cint, flt, get_link_to_form, get_weekday, get_weekdays, nowdate
 
 
 class JobOffer(Document):
@@ -20,6 +20,7 @@ class JobOffer(Document):
 		from frappe.types import DF
 
 		from hrms.hr.doctype.job_offer_component.job_offer_component import JobOfferComponent
+		from hrms.hr.doctype.job_offer_leave.job_offer_leave import JobOfferLeave
 		from hrms.hr.doctype.job_offer_term.job_offer_term import JobOfferTerm
 
 		amended_from: DF.Link | None
@@ -35,11 +36,13 @@ class JobOffer(Document):
 		date_of_joining: DF.Date | None
 		department: DF.Link | None
 		designation: DF.Link
-		job_applicant: DF.Link | None
 		employment_type: DF.Link | None
 		grade: DF.Link | None
+		gross: DF.Currency
 		holiday_list: DF.Link | None
+		job_applicant: DF.Link | None
 		job_offer_term_template: DF.Link | None
+		leave_allocations: DF.Table[JobOfferLeave]
 		leave_policy: DF.Link | None
 		letter_head: DF.Link | None
 		notice_number_of_days: DF.Int
@@ -52,9 +55,11 @@ class JobOffer(Document):
 		salary_structure: DF.Link | None
 		select_print_heading: DF.Link | None
 		select_terms: DF.Link | None
+		total_public_holidays: DF.Int
 		status: DF.Literal["Awaiting Response", "Accepted", "Rejected", "Cancelled"]
 		terms: DF.TextEditor | None
 		variable: DF.Currency
+		weekly_off_days: DF.Data | None
 		working_hours: DF.Float
 	# end: auto-generated types
 
@@ -66,6 +71,14 @@ class JobOffer(Document):
 		self.validate_vacancies()
 		self.validate_duplicate_job_offer()
 		self.set_compensation()
+		self.set_leave_details()
+
+	def set_leave_details(self):
+		self.set("leave_allocations", get_leave_allocations(self.leave_policy))
+
+		summary = get_holiday_summary(self.holiday_list)
+		self.weekly_off_days = summary["weekly_off_days"]
+		self.total_public_holidays = summary["total_public_holidays"]
 
 	def validate_duplicate_job_offer(self):
 		duplicate = frappe.db.exists(
@@ -85,19 +98,38 @@ class JobOffer(Document):
 			)
 
 	def set_compensation(self):
-		"""Rebuild the CTC break-up server-side so the offer is correct however it was
-		saved -- the form is not the only way in (REST, data import, and the Employee
-		override that auto-submits the offer all bypass it)."""
 		if not self.salary_structure or not self.calculate_component_amount_from:
 			self.ctc = 0
+			self.gross = 0
 			self.set("ctc_breakup", [])
+			return
+
+		if not self.compensation_inputs_changed():
 			return
 
 		details = compute_compensation(self)
 
 		self.base = details["base"]
 		self.ctc = details["ctc"]
+		self.gross = details["gross"]
 		self.set("ctc_breakup", details["components"])
+
+	def compensation_inputs_changed(self) -> bool:
+		if not self.ctc_breakup:
+			return True
+
+		previous = self.get_doc_before_save()
+		if not previous:
+			self.load_doc_before_save()
+			previous = self.get_doc_before_save()
+
+		if not previous:
+			return True
+
+		driver = "ctc" if self.calculate_component_amount_from == "CTC" else "base"
+		fieldnames = (*COMPENSATION_INPUTS, driver, *shared_regional_fieldnames(self))
+
+		return any(not _same_input(self.get(f), previous.get(f)) for f in fieldnames)
 
 	def validate_vacancies(self):
 		staffing_plan = get_staffing_plan_detail(self.designation, self.company, self.offer_date)
@@ -189,13 +221,6 @@ def make_employee(source_name: str, target_doc: str | Document | None = None):
 
 
 def build_prospective_assignment(offer):
-	"""An unsaved Salary Structure Assignment carrying an unsaved Employee, so the offer
-	and payroll share one evaluator.
-
-	Component formulas routinely reference employee fields (employment_type, grade, ...),
-	so those are seeded from the offer itself. Neither document is ever saved. ``base`` is
-	left to the caller, which varies it while solving for a target CTC.
-	"""
 	structure_currency = frappe.get_cached_value("Salary Structure", offer.salary_structure, "currency")
 	from_date = offer.date_of_joining or offer.offer_date or nowdate()
 
@@ -224,104 +249,91 @@ def build_prospective_assignment(offer):
 	return assignment
 
 
-def copy_regional_config(offer, assignment) -> None:
-	"""Carry an offer's regional payroll configuration onto the prospective assignment.
+def _same_input(current, previous) -> bool:
+	if isinstance(current, int | float) or isinstance(previous, int | float):
+		return flt(current) == flt(previous)
 
-	Statutory settings that change the employer's cost (india_payroll's ``epf_applicable``
-	and ``contribute_on_actual_pf_wage``, for instance) live on the Salary Structure
-	Assignment as Custom Fields, and the regional CTC hook reads them from there. A regional
-	app opts an offer in simply by adding the same fieldname to Job Offer; nothing here
-	names a region-specific field.
+	return str(current or "") == str(previous or "")
 
-	Only Custom Fields are considered, so a standard field can never be clobbered by a
-	same-named field that means something different on the other doctype.
-	"""
+
+COMPENSATION_INPUTS = (
+	"salary_structure",
+	"calculate_component_amount_from",
+	"variable",
+	"company",
+	"grade",
+	"branch",
+	"employment_type",
+	"department",
+	"designation",
+	"date_of_joining",
+	"offer_date",
+)
+
+
+def shared_regional_fieldnames(offer) -> list[str]:
 	offer_fieldnames = {df.fieldname for df in offer.meta.fields}
 
-	for df in frappe.get_meta("Salary Structure Assignment").get("fields", {"is_custom_field": 1}):
-		if df.fieldtype in frappe.model.no_value_fields:
-			continue
-		if df.fieldname in offer_fieldnames:
-			assignment.set(df.fieldname, offer.get(df.fieldname))
+	return [
+		df.fieldname
+		for df in frappe.get_meta("Salary Structure Assignment").get("fields", {"is_custom_field": 1})
+		if df.fieldtype not in frappe.model.no_value_fields and df.fieldname in offer_fieldnames
+	]
+
+
+def copy_regional_config(offer, assignment) -> None:
+	for fieldname in shared_regional_fieldnames(offer):
+		assignment.set(fieldname, offer.get(fieldname))
 
 
 def get_breakup_rows(assignment, periods: int, total_ctc: float) -> list[dict]:
-	"""The components that make up CTC -- every non-statistical earning and employer
-	contribution -- closed by a CTC row and a Take Home row.
-
-	Deductions are paid out of CTC, not added to it, so they never appear here. Take Home
-	is CTC less the employer's own off-slip cost; it does not net off employee deductions
-	or tax, so it is the value of the package to the candidate rather than a payslip
-	figure.
-
-	The two closing rows carry ``is_summary`` because this table is printed on the offer
-	letter, and a consumer must be able to tell a total from a component without matching
-	label text that has already been translated.
-	"""
 	rows_by_type = assignment.get_evaluated_components()
 
-	breakup = []
-	employer_yearly = 0.0
+	def row(label, per_cycle: float, is_summary: int) -> dict:
+		return {
+			"fixed_components": label,
+			"per_cycle": flt(per_cycle),
+			"yearly": flt(per_cycle * periods),
+			"currency": assignment.currency,
+			"is_summary": is_summary,
+		}
 
-	for component_type in ("earnings", "employer_contributions"):
-		for row in rows_by_type[component_type]:
-			if row.statistical_component:
-				continue
+	def payable(component_type) -> list:
+		return [
+			r for r in rows_by_type[component_type] if not r.statistical_component and flt(r.default_amount)
+		]
 
-			per_cycle = flt(row.default_amount)
-			yearly = flt(per_cycle * periods)
-			if component_type == "employer_contributions":
-				employer_yearly += yearly
+	earnings = payable("earnings")
+	employer_contributions = payable("employer_contributions")
 
-			breakup.append(
-				{
-					"fixed_components": row.salary_component,
-					"per_cycle": per_cycle,
-					"yearly": yearly,
-					"currency": assignment.currency,
-					"is_summary": 0,
-				}
-			)
+	if not earnings and not employer_contributions:
+		return []
 
-	if not breakup:
-		return breakup
+	gross = flt(assignment.annual_gross_earning) / periods
+	deductions = sum(flt(r.default_amount) for r in payable("deductions"))
 
-	for label, yearly in (
-		(_("Total Cost to Company (CTC)"), total_ctc),
-		(_("Take Home"), flt(total_ctc - employer_yearly)),
-	):
-		breakup.append(
-			{
-				"fixed_components": label,
-				"per_cycle": flt(yearly / periods),
-				"yearly": yearly,
-				"currency": assignment.currency,
-				"is_summary": 1,
-			}
-		)
+	breakup = [row(r.salary_component, flt(r.default_amount), 0) for r in earnings]
+	breakup.append(row(_("Gross Pay"), gross, 1))
+	breakup += [row(r.salary_component, flt(r.default_amount), 0) for r in employer_contributions]
+	breakup.append(row(_("Total Cost to Company (CTC)"), flt(total_ctc) / periods, 1))
+	breakup.append(row(_("Take Home* (Income Tax applicable as per IT Act)"), gross - deductions, 1))
 
 	return breakup
 
 
 def compute_compensation(offer) -> dict:
-	"""Resolve base, CTC and the break-up for one offer.
-
-	Takes the Job Offer document itself, saved or not, rather than a list of field values:
-	a regional app can then influence the result purely by adding fields to Job Offer, with
-	no change to this signature, the whitelisted endpoint or the client.
-
-	In ``Base and Variable`` mode the structure is evaluated at the offered base. In
-	``CTC`` mode the base that produces the target CTC is solved for instead; a target
-	that no base can reach (component rounding makes CTC a staircase) yields the closest
-	achievable figure with ``ctc_adjusted`` set, so the caller can say so rather than
-	storing a CTC payroll cannot reproduce.
-	"""
 	from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
 		PERIODS_PER_YEAR,
 	)
 	from hrms.payroll.utils import CTC_SOLVER_TOLERANCE
 
-	empty = {"base": flt(offer.base), "ctc": 0.0, "components": [], "ctc_adjusted": False}
+	empty = {
+		"base": flt(offer.base),
+		"ctc": 0.0,
+		"gross": 0.0,
+		"components": [],
+		"ctc_adjusted": False,
+	}
 	if not offer.salary_structure or not offer.calculate_component_amount_from:
 		return empty
 
@@ -347,18 +359,18 @@ def compute_compensation(offer) -> dict:
 
 	assignment.base = base
 	frequency = frappe.get_cached_value("Salary Structure", offer.salary_structure, "payroll_frequency")
+	periods = PERIODS_PER_YEAR.get(frequency, 12)
 
 	return {
 		"base": base,
 		"ctc": total_ctc,
-		"components": get_breakup_rows(assignment, PERIODS_PER_YEAR.get(frequency, 12), total_ctc),
+		"gross": flt(assignment.annual_gross_earning) / periods,
+		"components": get_breakup_rows(assignment, periods, total_ctc),
 		"ctc_adjusted": ctc_adjusted,
 	}
 
 
 def _resolve_base_for_target(assignment, base: float, target_ctc: float) -> tuple[float, float]:
-	"""Skip the search when the base already on the offer still produces the target -- the
-	common case on re-save, and one evaluation instead of a full solve."""
 	from hrms.payroll.utils import CTC_SOLVER_TOLERANCE, solve_base_for_ctc
 
 	if base:
@@ -372,12 +384,6 @@ def _resolve_base_for_target(assignment, base: float, target_ctc: float) -> tupl
 
 @frappe.whitelist()
 def get_compensation_details(offer: str | dict) -> dict:
-	"""Preview the break-up for an offer the user is still editing.
-
-	The document arrives from the form unsaved, so it is rebuilt in memory and never
-	written. Nothing here is authoritative: ``validate`` recomputes from the stored
-	document on save.
-	"""
 	frappe.has_permission("Job Offer", throw=True)
 
 	offer = frappe.parse_json(offer)
@@ -404,4 +410,40 @@ def get_offer_acceptance_rate(company: str | None = None, department: str | None
 	return {
 		"value": flt(total_accepted) / flt(total_offers) * 100 if total_offers else 0,
 		"fieldtype": "Percent",
+	}
+
+
+@frappe.whitelist()
+def get_leave_allocations(leave_policy: str | None = None) -> list[dict]:
+	frappe.has_permission("Job Offer", throw=True)
+
+	if not leave_policy:
+		return []
+
+	return frappe.get_all(
+		"Leave Policy Detail",
+		filters={"parent": leave_policy, "parenttype": "Leave Policy"},
+		fields=["leave_type", "annual_allocation"],
+		order_by="idx",
+	)
+
+
+@frappe.whitelist()
+def get_holiday_summary(holiday_list: str | None = None) -> dict:
+	frappe.has_permission("Job Offer", throw=True)
+
+	if not holiday_list:
+		return {"weekly_off_days": "", "total_public_holidays": 0}
+
+	holidays = frappe.get_all(
+		"Holiday",
+		filters={"parent": holiday_list, "parenttype": "Holiday List"},
+		fields=["holiday_date", "weekly_off"],
+	)
+	weekdays = get_weekdays()
+	off_days = {get_weekday(holiday.holiday_date) for holiday in holidays if holiday.weekly_off}
+
+	return {
+		"weekly_off_days": ", ".join(_(day) for day in sorted(off_days, key=weekdays.index)),
+		"total_public_holidays": sum(1 for holiday in holidays if not holiday.weekly_off),
 	}
