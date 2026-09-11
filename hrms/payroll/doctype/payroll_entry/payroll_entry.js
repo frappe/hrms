@@ -180,13 +180,20 @@ frappe.ui.form.on("Payroll Entry", {
 
 	add_bank_entry_button: function (frm) {
 		frm.call("has_bank_entries").then((r) => {
-			if (!r.message.has_bank_entries) {
+			const { has_bank_entries, has_withheld_salaries, has_unwithheld_salaries } = r.message;
+
+			if (!has_bank_entries && has_unwithheld_salaries) {
 				frm.add_custom_button(__("Make Bank Entry"), function () {
 					make_bank_entry(frm);
 				}).addClass("btn-primary");
-			} else if (!r.message.has_bank_entries_for_withheld_salaries) {
+			}
+
+			// releasing normally waits for the regular bank entry, but when every employee
+			// is withheld there is no regular entry to wait for and the release would
+			// otherwise be unreachable, leaving the salaries stranded
+			if (has_withheld_salaries && (has_bank_entries || !has_unwithheld_salaries)) {
 				frm.add_custom_button(__("Release Withheld Salaries"), function () {
-					make_bank_entry(frm, (for_withheld_salaries = 1));
+					make_bank_entry(frm, 1);
 				}).addClass("btn-primary");
 			}
 		});
@@ -449,7 +456,24 @@ let make_bank_entry = function (frm, for_withheld_salaries = 0) {
 				dn: frm.doc.name,
 				args: { for_withheld_salaries: for_withheld_salaries },
 			},
-			callback: function () {
+			callback: function (r) {
+				// the server returns nothing when no salary qualifies for payment,
+				// so don't route to an empty Journal Entry list without explanation
+				if (!r.message) {
+					frappe.msgprint({
+						title: __("No Bank Entry Created"),
+						message: for_withheld_salaries
+							? __(
+									"There are no withheld salaries pending release for this Payroll Entry.",
+							  )
+							: __(
+									"There are no salaries pending payment for this Payroll Entry. Withheld salaries have to be paid using the Release Withheld Salaries button.",
+							  ),
+						indicator: "orange",
+					});
+					return;
+				}
+
 				frappe.set_route("List", "Journal Entry", {
 					"Journal Entry Account.reference_name": frm.doc.name,
 				});
