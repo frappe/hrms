@@ -185,25 +185,6 @@ CTC_SOLVER_MAX_ITERATIONS = 60
 def solve_base_for_ctc(
 	assignment, target_ctc: float, tolerance: float = CTC_SOLVER_TOLERANCE
 ) -> tuple[float, float]:
-	"""Find the ``base`` that makes ``assignment`` cost ``target_ctc`` per year.
-
-	Returns ``(base, achieved_ctc)``. ``achieved_ctc`` is always the CTC the
-	returned base actually produces, which differs from ``target_ctc`` when the
-	target is unreachable -- component rounding makes CTC a staircase, so most
-	arbitrary targets have no exact base. Callers should store the achieved value
-	rather than the requested one.
-
-	CTC(base) is measured, not derived from the formulas. Two probes fit a line,
-	which is solved and then **verified against the real evaluator**; a miss means
-	the answer crossed a statutory cap (``min(BS, 15000) * 0.12``), a condition
-	switching a component off, or a rounding step, and the search falls back to
-	bisection. Parsing the formulas instead would require choosing a branch of
-	``min`` before ``base`` is known, and would be a second evaluator to keep in
-	step with the first.
-
-	Where a plateau makes several bases produce the same CTC, the smallest is
-	returned so that repeated recomputation is stable.
-	"""
 	from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
 		PERIODS_PER_YEAR,
 	)

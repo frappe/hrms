@@ -18,7 +18,6 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Fixed Components",
-   "read_only": 1,
    "reqd": 1
   },
   {
@@ -27,8 +26,7 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Per Cycle",
-   "options": "currency",
-   "read_only": 1
+   "options": "currency"
   },
   {
    "columns": 3,
@@ -36,8 +34,7 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Yearly",
-   "options": "currency",
-   "read_only": 1
+   "options": "currency"
   },
   {
    "fieldname": "currency",
@@ -50,7 +47,7 @@
   },
   {
    "default": "0",
-   "description": "Set on the CTC and Take Home rows so consumers can tell a total from a component without matching translated label text.",
+   "description": "Set by the system on total rows. A row added by hand is a component.",
    "fieldname": "is_summary",
    "fieldtype": "Check",
    "hidden": 1,
