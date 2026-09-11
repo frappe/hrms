@@ -412,7 +412,8 @@ def get_events(start: str, end: str, filters: str | None = None):
 	:param end: End date-time.
 	:param filters: Filters (JSON).
 	"""
-	from frappe.desk.calendar import get_event_conditions
+	if not frappe.has_permission("Interview"):
+		frappe.throw(_("Not Permitted"), frappe.PermissionError)
 
 	events = []
 
@@ -423,25 +424,32 @@ def get_events(start: str, end: str, filters: str | None = None):
 		"Rejected": "#fce7e7",
 	}
 
-	conditions = get_event_conditions("Interview", filters)
+	filters = frappe.parse_json(filters)
+	if isinstance(filters, dict):
+		filters = {
+			field: ["!=", value[1:]] if isinstance(value, str) and value.startswith("!") else value
+			for field, value in filters.items()
+		}
 
-	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
-	interviews = frappe.db.sql(
-		f"""
-			SELECT DISTINCT
-				`tabInterview`.name, `tabInterview`.job_applicant, `tabInterview`.interview_type,
-				`tabInterview`.scheduled_on, `tabInterview`.status, `tabInterview`.from_time as from_time,
-				`tabInterview`.to_time as to_time
-			from
-				`tabInterview`
-			where
-				(`tabInterview`.scheduled_on between %(start)s and %(end)s)
-				and docstatus != 2
-				{conditions}
-			""",
-		{"start": start, "end": end},
-		as_dict=True,
-		update={"allDay": 0},
+	Interview = frappe.qb.DocType("Interview")
+	interviews = (
+		frappe.qb.get_query(
+			"Interview",
+			fields=[
+				"name",
+				"job_applicant",
+				"interview_type",
+				"scheduled_on",
+				"status",
+				"from_time",
+				"to_time",
+			],
+			filters=filters,
+			distinct=True,
+			ignore_permissions=False,
+		)
+		.where((Interview.scheduled_on.between(start, end)) & (Interview.docstatus != 2))
+		.run(as_dict=True)
 	)
 
 	for d in interviews:
