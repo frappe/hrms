@@ -418,26 +418,22 @@ def calculate_upcoming_earned_leave(allocation, e_leave_type, date_of_joining):
 	return earned_leave
 
 
-def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type, earned_leaves, today):
+def update_previous_leave_allocation(
+	allocation, annual_allocation, e_leave_type, earned_leaves, today, allocated_via="Scheduler"
+):
 	allocation = frappe.get_doc("Leave Allocation", allocation.name)
 	precision = allocation.precision("total_leaves_allocated")
 	annual_allocation = flt(annual_allocation, precision)
 	earned_leaves = flt(earned_leaves, precision)
-	new_leaves_to_allocate_without_cf = flt(
-		flt(allocation.get_existing_leave_count()) + earned_leaves,
-		precision,
-	)
-	if (
-		# annual allocation as per policy should not be exceeded except for yearly leaves
-		new_leaves_to_allocate_without_cf > annual_allocation
-		and e_leave_type.earned_leave_frequency != "Yearly"
-	):
-		frappe.throw(
-			_("Allocation was skipped due to exceeding annual allocation set in leave policy"),
-			OverAllocationError,
-		)
 
-	if e_leave_type.max_leaves_allowed:
+	if earned_leaves > 0 and e_leave_type.earned_leave_frequency != "Yearly":
+		leaves_left_in_annual_quota = max(
+			flt(annual_allocation - allocation.get_existing_leave_count(), precision), 0
+		)
+		earned_leaves = min(earned_leaves, leaves_left_in_annual_quota)
+
+	scheduled_leaves = earned_leaves
+	if earned_leaves > 0 and e_leave_type.max_leaves_allowed:
 		leaves_quota = flt(e_leave_type.max_leaves_allowed - allocation.total_leaves_allocated, precision)
 		if leaves_quota <= 0:
 			frappe.throw(
@@ -450,18 +446,59 @@ def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type
 			if leaves_quota < earned_leaves:
 				earned_leaves = leaves_quota
 
-	allocation.db_set(
-		"total_leaves_allocated",
-		earned_leaves + allocation.total_leaves_allocated,
-		update_modified=False,
-	)
-	create_additional_leave_ledger_entry(allocation, earned_leaves, today)
+	if earned_leaves:
+		allocation.db_set(
+			"total_leaves_allocated",
+			earned_leaves + allocation.total_leaves_allocated,
+			update_modified=False,
+		)
+		create_additional_leave_ledger_entry(allocation, earned_leaves, today)
+
 	earned_leave_schedule = qb.DocType("Earned Leave Schedule")
-	qb.update(earned_leave_schedule).where(
-		(earned_leave_schedule.parent == allocation.name) & (earned_leave_schedule.allocation_date == today)
-	).set(earned_leave_schedule.is_allocated, 1).set(earned_leave_schedule.attempted, 1).set(
-		earned_leave_schedule.allocated_via, "Scheduler"
-	).set(earned_leave_schedule.number_of_leaves, earned_leaves).run()
+	(
+		qb.update(earned_leave_schedule)
+		.where(
+			(earned_leave_schedule.parent == allocation.name)
+			& (earned_leave_schedule.allocation_date == today)
+		)
+		.set(earned_leave_schedule.is_allocated, 1)
+		.set(earned_leave_schedule.attempted, 1)
+		.set(earned_leave_schedule.allocated_via, allocated_via)
+		.set(earned_leave_schedule.number_of_leaves, earned_leaves)
+		.set(earned_leave_schedule.failed, 0)
+		.set(earned_leave_schedule.failure_reason, "")
+	).run()
+
+	if earned_leaves < scheduled_leaves:
+		redistribute_earned_leave_schedule(allocation, annual_allocation, e_leave_type, today)
+
+
+def redistribute_earned_leave_schedule(allocation, annual_allocation, e_leave_type, allocation_date):
+	"""Move a credit reduced by the leave type limit to remaining allocation dates."""
+	if e_leave_type.earned_leave_frequency == "Yearly" or not allocation.earned_leave_schedule:
+		return
+
+	precision = allocation.precision("total_leaves_allocated")
+	# Failed credits remain available for manual retry; reserve their entitlement.
+	failed_leaves = sum(
+		row.number_of_leaves
+		for row in allocation.earned_leave_schedule
+		if row.failed and not row.is_allocated and getdate(row.allocation_date) != getdate(allocation_date)
+	)
+	remaining = flt(annual_allocation - allocation.get_existing_leave_count() - failed_leaves, precision)
+	periodic_leaves = get_monthly_earned_leave(
+		allocation.from_date,
+		annual_allocation,
+		e_leave_type.earned_leave_frequency,
+		e_leave_type.rounding,
+		pro_rated=False,
+	)
+	for row in sorted(allocation.earned_leave_schedule, key=lambda row: getdate(row.allocation_date)):
+		if row.attempted or getdate(row.allocation_date) <= getdate(allocation_date):
+			continue
+		leaves = min(flt(periodic_leaves, precision), max(remaining, 0))
+		row.db_set("number_of_leaves", leaves, update_modified=False)
+		remaining = flt(remaining - leaves, precision)
 
 
 def log_allocation_error(allocation_name, error):
