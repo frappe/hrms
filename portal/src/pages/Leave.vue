@@ -36,10 +36,6 @@
 				</template>
 
 				<template #side>
-					<SectionCard title="Balance">
-						<BalanceBars :balances="d.balances" />
-					</SectionCard>
-
 					<SectionCard title="Team, Next 7 Days">
 						<ul v-if="d.team.length" class="flex flex-col gap-2">
 							<li
@@ -80,7 +76,6 @@ import DataTable from "@/components/DataTable.vue";
 import StatTiles from "@/components/StatTiles.vue";
 import StatusBadge from "@/components/StatusBadge.vue";
 import PersonRow from "@/components/PersonRow.vue";
-import BalanceBars from "@/components/BalanceBars.vue";
 import EmptyState from "@/components/EmptyState.vue";
 import RequestDialog from "@/components/RequestDialog.vue";
 

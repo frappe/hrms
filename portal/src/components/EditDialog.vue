@@ -1,6 +1,6 @@
 <template>
 	<Dialog v-model:open="isOpen" :title="title" :size="'md'">
-		<template #body-content>
+		<template #default>
 			<div class="flex flex-col gap-3">
 				<div class="grid gap-3 sm:grid-cols-2">
 					<div

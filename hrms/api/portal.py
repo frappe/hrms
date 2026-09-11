@@ -11,11 +11,13 @@ from frappe.utils import (
 	add_days,
 	add_months,
 	cint,
+	date_diff,
 	flt,
 	get_first_day,
 	get_last_day,
 	getdate,
 	nowdate,
+	strip_html_tags,
 )
 
 from hrms.api import get_current_employee, get_current_employee_info
@@ -153,28 +155,101 @@ def get_home() -> dict:
 		)
 
 	# --- attendance for the current week --------------------------------
+	# Each day is openable in the portal, so it carries the whole story of that
+	# day: what it was marked as, when the employee actually came and went, and
+	# which shift they were on.
 	week_start = add_days(today, -today.weekday())
+	week_end = add_days(week_start, 6)
 	week_rows = frappe.get_all(
 		"Attendance",
 		filters={
 			"employee": employee,
 			"docstatus": 1,
-			"attendance_date": ["between", [week_start, add_days(week_start, 6)]],
+			"attendance_date": ["between", [week_start, week_end]],
 		},
-		fields=["attendance_date", "status", "working_hours"],
+		fields=["attendance_date", "status", "working_hours", "leave_type", "in_time", "out_time"],
 	)
 	week_map = {str(r.attendance_date): r for r in week_rows}
+
+	# Attendance carries in/out only when it was built from a shift, so the raw
+	# logs stand in for it otherwise. Bounds are spelled out because `time` is a
+	# datetime: a bare end date would stop at midnight and drop the last day.
+	logs_by_day = {}
+	for log in frappe.get_all(
+		"Employee Checkin",
+		filters={
+			"employee": employee,
+			"time": ["between", [f"{week_start} 00:00:00", f"{week_end} 23:59:59"]],
+		},
+		fields=["time", "log_type"],
+		order_by="time asc",
+	):
+		logs_by_day.setdefault(str(getdate(log.time)), []).append(log)
+
+	holiday_list = emp.holiday_list or frappe.db.get_value("Company", emp.company, "default_holiday_list")
+	week_holidays = {}
+	if holiday_list:
+		week_holidays = {
+			str(h.holiday_date): h
+			for h in frappe.get_all(
+				"Holiday",
+				filters={"parent": holiday_list, "holiday_date": ["between", [week_start, week_end]]},
+				fields=["holiday_date", "description", "weekly_off"],
+			)
+		}
+
+	# An assignment beats the default shift, and only for the days it covers.
+	assignments = frappe.get_all(
+		"Shift Assignment",
+		filters={
+			"employee": employee,
+			"docstatus": 1,
+			"status": "Active",
+			"start_date": ["<=", week_end],
+		},
+		fields=["shift_type", "start_date", "end_date"],
+		order_by="start_date desc",
+	)
+	shift_types = {}
+	for name in {a.shift_type for a in assignments if a.shift_type} | (
+		{emp.default_shift} if emp.default_shift else set()
+	):
+		shift_types[name] = frappe.db.get_value(
+			"Shift Type", name, ["name", "start_time", "end_time"], as_dict=True
+		)
+
+	def _shift_on(day):
+		for a in assignments:
+			if getdate(a.start_date) <= day and (not a.end_date or day <= getdate(a.end_date)):
+				return shift_types.get(a.shift_type)
+		return shift_types.get(emp.default_shift)
+
 	week = []
 	for i in range(7):
-		day = add_days(week_start, i)
-		row = week_map.get(str(day))
+		day = getdate(add_days(week_start, i))
+		key = str(day)
+		row = week_map.get(key)
+		holiday = week_holidays.get(key)
+		day_logs = logs_by_day.get(key, [])
+		ins = [log.time for log in day_logs if log.log_type == "IN"]
+		outs = [log.time for log in day_logs if log.log_type == "OUT"]
+		in_time = (row.in_time if row and row.in_time else None) or (min(ins) if ins else None)
+		out_time = (row.out_time if row and row.out_time else None) or (max(outs) if outs else None)
 		week.append(
 			{
-				"date": str(day),
-				"label": getdate(day).strftime("%a"),
+				"date": key,
+				"label": day.strftime("%a"),
 				"status": row.status if row else None,
 				"hours": flt(row.working_hours, 1) if row else None,
-				"is_today": getdate(day) == today,
+				"leave_type": row.leave_type if row else None,
+				"in_time": str(in_time) if in_time else None,
+				"out_time": str(out_time) if out_time else None,
+				"logs": [{"time": str(log.time), "log_type": log.log_type} for log in day_logs],
+				"holiday": holiday.description if holiday else None,
+				"weekly_off": bool(holiday and holiday.weekly_off),
+				"shift": _shift_on(day),
+				"is_today": day == today,
+				"is_future": day > today,
 			}
 		)
 
@@ -207,6 +282,7 @@ def get_home() -> dict:
 		"pending_approvals": pending,
 		"out_today": out_today,
 		"coming_up": coming_up,
+		"onboarding": _onboarding(employee),
 	}
 
 
@@ -401,6 +477,95 @@ def _out_today(company: str, employee: str) -> dict:
 		{"employee": r.employee, "employee_name": r.employee_name, "reason": r.leave_type} for r in rows
 	]
 	return {"people": people[:5], "count": len(people), "total": total}
+
+
+def _onboarding(employee: str) -> dict | None:
+	"""The employee's onboarding checklist, or nothing if they were never onboarded.
+
+	Activities are the plan; the Tasks they spawned on submit hold the state, so
+	the two are read together. Most activities belong to HR or IT rather than the
+	employee, which is the point: they show what is still being done for them.
+	"""
+	onboarding = frappe.db.get_value(
+		"Employee Onboarding",
+		{"employee": employee, "docstatus": 1},
+		["name", "boarding_status", "project", "date_of_joining", "boarding_begins_on"],
+		as_dict=True,
+		order_by="creation desc",
+	)
+	if not onboarding:
+		return None
+
+	activities = frappe.get_all(
+		"Employee Boarding Activity",
+		filters={"parent": onboarding.name, "parenttype": "Employee Onboarding"},
+		fields=["activity_name", "user", "role", "task", "description", "idx"],
+		order_by="idx asc",
+	)
+	if not activities:
+		return None
+
+	task_names = [a.task for a in activities if a.task]
+	tasks = (
+		{
+			t.name: t
+			for t in frappe.get_all(
+				"Task",
+				filters={"name": ["in", task_names]},
+				fields=["name", "status", "exp_start_date", "exp_end_date", "completed_on"],
+			)
+		}
+		if task_names
+		else {}
+	)
+
+	own_user = frappe.db.get_value("Employee", employee, "user_id")
+	names = {
+		u.name: u.full_name
+		for u in frappe.get_all(
+			"User",
+			filters={"name": ["in", [a.user for a in activities if a.user]]},
+			fields=["name", "full_name"],
+		)
+	}
+
+	rows = []
+	for a in activities:
+		task = tasks.get(a.task)
+		if a.user:
+			owner = _("You") if a.user == own_user else (names.get(a.user) or a.user)
+		else:
+			owner = a.role or _("Unassigned")
+		rows.append(
+			{
+				"activity": a.activity_name,
+				"owner": owner,
+				"mine": bool(own_user and a.user == own_user),
+				# an activity whose task was never created is still pending, not done
+				"status": task.status if task else "Open",
+				"due": str(task.exp_end_date) if task and task.exp_end_date else None,
+				"completed_on": str(task.completed_on) if task and task.completed_on else None,
+				"note": strip_html_tags(a.description or "").strip(),
+			}
+		)
+
+	# A finished task is not news. Only what is still outstanding is listed, and
+	# once nothing is, the whole card has nothing left to say and goes away. The
+	# counts stay whole-plan so progress still reads against everything.
+	done = sum(1 for r in rows if r["status"] == "Completed")
+	pending = [r for r in rows if r["status"] not in ("Completed", "Cancelled")]
+	if not pending:
+		return None
+
+	return {
+		"status": onboarding.boarding_status,
+		"date_of_joining": str(onboarding.date_of_joining) if onboarding.date_of_joining else None,
+		"begins_on": str(onboarding.boarding_begins_on) if onboarding.boarding_begins_on else None,
+		"tasks": pending,
+		"done": done,
+		"total": len(rows),
+		"pct": cint(done / len(rows) * 100) if rows else 0,
+	}
 
 
 def _coming_up(emp) -> list[dict]:
@@ -829,7 +994,6 @@ def get_payslips(period: str | None = None, from_date: str | None = None, to_dat
 		"slips": slips,
 		"ytd": ytd,
 		"structure": structure,
-		"tax": _tax_summary(employee),
 		"period": period or "12m",
 		"range": {"from_date": str(start) if start else None, "to_date": str(end) if end else None},
 	}
@@ -1235,6 +1399,207 @@ def get_holidays() -> dict:
 			"remaining": len(remaining),
 			"next": remaining[0] if remaining else None,
 		},
+	}
+
+
+def _rating_out_of_five(value) -> float:
+	"""Rating fields store a fraction; every other score on an appraisal is /5."""
+	return flt(flt(value) * 5, 2)
+
+
+def _compensation_history(employee: str) -> list[dict]:
+	"""Every pay revision, newest first, each carrying the jump that made it."""
+	rows = frappe.get_all(
+		"Salary Structure Assignment",
+		filters={"employee": employee, "docstatus": 1},
+		fields=["name", "from_date", "base", "variable", "ctc", "salary_structure", "grade"],
+		order_by="from_date asc",
+	)
+
+	history = []
+	previous = 0.0
+	for r in rows:
+		# ctc is optional on the assignment, so fall back to what it actually pays
+		annual = flt(r.ctc) or flt(r.base) * 12 + flt(r.variable)
+		change = annual - previous if previous else 0.0
+		history.append(
+			{
+				"name": r.name,
+				"from_date": str(r.from_date),
+				"structure": r.salary_structure,
+				"grade": r.grade,
+				"base": flt(r.base),
+				"variable": flt(r.variable),
+				"annual": annual,
+				"change": change,
+				# the first revision has nothing to grow from, which is not zero growth
+				"change_pct": flt(change / previous * 100, 1) if previous else None,
+			}
+		)
+		previous = annual
+
+	history.reverse()
+	return history
+
+
+def _growth(history: list[dict], joined) -> dict:
+	"""What the pay revisions add up to. Meaningless with only one, so it says so."""
+	if len(history) < 2:
+		return {}
+
+	latest, first = history[0], history[-1]
+	if not first["annual"]:
+		return {}
+
+	span_days = date_diff(latest["from_date"], first["from_date"])
+	years = span_days / 365.25
+	total_pct = (latest["annual"] - first["annual"]) / first["annual"] * 100
+	return {
+		"from": first["annual"],
+		"from_date": first["from_date"],
+		"to": latest["annual"],
+		"to_date": latest["from_date"],
+		"total": latest["annual"] - first["annual"],
+		"total_pct": flt(total_pct, 1),
+		"revisions": len(history) - 1,
+		# compounded, not the arithmetic mean: a raise builds on the one before it
+		"annual_pct": flt(((latest["annual"] / first["annual"]) ** (1 / years) - 1) * 100, 1)
+		if years >= 1
+		else None,
+		"joined": str(joined) if joined else None,
+	}
+
+
+@frappe.whitelist()
+def get_appraisals() -> dict:
+	"""Appraisal history and pay revisions: how the employee did, and what it moved."""
+	employee = get_current_employee()
+	emp = _employee_doc(employee)
+
+	rows = frappe.get_all(
+		"Appraisal",
+		filters={"employee": employee, "docstatus": ["<", 2]},
+		fields=[
+			"name",
+			"appraisal_cycle",
+			"start_date",
+			"end_date",
+			"docstatus",
+			"final_score",
+			"self_score",
+			"avg_feedback_score",
+			"total_score",
+		],
+		order_by="end_date desc",
+	)
+	appraisals = [
+		{
+			"name": r.name,
+			"cycle": r.appraisal_cycle,
+			"start_date": str(r.start_date) if r.start_date else None,
+			"end_date": str(r.end_date) if r.end_date else None,
+			"year": getdate(r.end_date).year if r.end_date else None,
+			"final_score": flt(r.final_score, 2),
+			"self_score": flt(r.self_score, 2),
+			"feedback_score": flt(r.avg_feedback_score, 2),
+			"goal_score": flt(r.total_score, 2),
+			"status": "Submitted" if r.docstatus == 1 else "In Progress",
+		}
+		for r in rows
+	]
+
+	# an in-progress appraisal has no score worth averaging or leading with
+	scored = [a for a in appraisals if a["status"] == "Submitted" and a["final_score"]]
+	history = _compensation_history(employee)
+
+	return {
+		"appraisals": appraisals,
+		"compensation": history,
+		"growth": _growth(history, emp.date_of_joining),
+		"stats": {
+			"latest_score": scored[0]["final_score"] if scored else None,
+			"latest_cycle": scored[0]["cycle"] if scored else None,
+			"average_score": flt(sum(a["final_score"] for a in scored) / len(scored), 2) if scored else None,
+			"reviews": len(scored),
+			"current_ctc": history[0]["annual"] if history else flt(emp.ctc),
+			"current_since": history[0]["from_date"] if history else None,
+		},
+	}
+
+
+@frappe.whitelist()
+def get_appraisal(name: str) -> dict:
+	"""One appraisal in full. Read-only: the portal never rates on the employee's behalf."""
+	employee = get_current_employee()
+	doc = frappe.get_doc("Appraisal", name)
+
+	if doc.employee != employee:
+		raise frappe.PermissionError(_("This appraisal belongs to someone else."))
+	if doc.docstatus == 2:
+		raise frappe.DoesNotExistError(_("This appraisal has been cancelled."))
+
+	# KRAs are scored from linked goals; the goals table is used when rated by hand
+	kras = [
+		{
+			"kra": k.kra,
+			"weightage": flt(k.per_weightage, 1),
+			"completion": flt(k.goal_completion, 1),
+			"score": flt(k.goal_score, 2),
+		}
+		for k in doc.appraisal_kra
+	]
+	goals = [
+		{
+			"kra": g.kra,
+			"weightage": flt(g.per_weightage, 1),
+			"score": flt(g.score, 2),
+			"earned": flt(g.score_earned, 2),
+		}
+		for g in doc.goals
+	]
+
+	feedback = [
+		{
+			"name": f.name,
+			"reviewer": f.reviewer_name,
+			"designation": f.reviewer_designation,
+			"score": flt(f.total_score, 2),
+			"added_on": str(f.added_on) if f.added_on else None,
+			"feedback": strip_html_tags(f.feedback or "").strip(),
+		}
+		for f in frappe.get_all(
+			"Employee Performance Feedback",
+			filters={"appraisal": name, "docstatus": 1},
+			fields=["name", "reviewer_name", "reviewer_designation", "total_score", "added_on", "feedback"],
+			order_by="added_on desc",
+		)
+	]
+
+	return {
+		"name": doc.name,
+		"cycle": doc.appraisal_cycle,
+		"start_date": str(doc.start_date) if doc.start_date else None,
+		"end_date": str(doc.end_date) if doc.end_date else None,
+		"status": "Submitted" if doc.docstatus == 1 else "In Progress",
+		"designation": doc.designation,
+		"department": doc.department,
+		"final_score": flt(doc.final_score, 2),
+		"goal_score": flt(doc.total_score, 2),
+		"self_score": flt(doc.self_score, 2),
+		"feedback_score": flt(doc.avg_feedback_score, 2),
+		"rated_manually": bool(doc.rate_goals_manually),
+		"kras": kras,
+		"goals": goals,
+		"self_ratings": [
+			{
+				"criteria": r.criteria,
+				"rating": _rating_out_of_five(r.rating),
+				"weightage": flt(r.per_weightage, 1),
+			}
+			for r in doc.self_ratings
+		],
+		"reflections": strip_html_tags(doc.reflections or "").strip(),
+		"feedback": feedback,
 	}
 
 

@@ -13,6 +13,7 @@ export const NAV = [
 			},
 			{ label: "Payslips", to: "/payslips", icon: "lucide-file-text" },
 			{ label: "Advances", to: "/advances", icon: "lucide-trending-up" },
+			{ label: "Appraisals", to: "/appraisals", icon: "lucide-award" },
 		],
 	},
 	{

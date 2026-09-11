@@ -72,30 +72,6 @@
 				</template>
 
 				<template #side>
-					<SectionCard title="Tax Declaration">
-						<template #action>
-							<StatusBadge
-								:status="d.tax.has_declaration ? 'submitted' : 'due'"
-								:label="d.tax.has_declaration ? 'Submitted' : 'Not declared'"
-							/>
-						</template>
-						<dl class="flex flex-col">
-							<FieldRow label="Declared" :value="money(d.tax.declared)" nums />
-							<FieldRow
-								label="Period ends"
-								:value="d.tax.period_end ? date(d.tax.period_end) : ''"
-								nums
-							/>
-						</dl>
-						<Button
-							variant="subtle"
-							class="mt-1 w-full"
-							@click="desk('employee-tax-exemption-declaration')"
-						>
-							Declare Investments
-						</Button>
-					</SectionCard>
-
 					<SectionCard title="Salary Structure" readonly-label="HR-owned">
 						<dl class="flex flex-col">
 							<FieldRow

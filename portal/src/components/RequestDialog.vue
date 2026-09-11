@@ -1,7 +1,7 @@
 <template>
 	<!-- One form for every employee-raised document; the schema comes from the server. -->
 	<Dialog v-model:open="isOpen" :title="title" :size="tableField ? 'lg' : 'md'">
-		<template #body-content>
+		<template #default>
 			<div v-if="!schema" class="flex items-center gap-2 py-6 text-base text-ink-gray-5">
 				<LoadingIndicator class="h-4 w-4" />
 				Loading

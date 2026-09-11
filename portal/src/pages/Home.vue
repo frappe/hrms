@@ -10,6 +10,42 @@
 		<template v-if="d">
 			<CheckInCard :checkin="d.checkin" :week="d.week" @changed="homeData.reload()" />
 
+			<!--
+				Only for someone who was actually onboarded, and only while
+				something is still outstanding. Most of these tasks belong to HR or
+				IT, so this is where a new joiner sees what is still being done for
+				them rather than having to ask.
+			-->
+			<SectionCard v-if="d.onboarding" title="Onboarding" :padded="false">
+				<template #action>
+					<div class="flex items-center gap-2.5">
+						<span class="nums text-base text-ink-gray-5">
+							{{ d.onboarding.done }} of {{ d.onboarding.total }} done
+						</span>
+						<StatusBadge :status="d.onboarding.status" />
+					</div>
+				</template>
+				<Progress class="px-3.5 pb-2.5" :value="d.onboarding.pct" size="md" />
+				<DataTable :columns="onboardingCols" :rows="d.onboarding.tasks" id-key="activity">
+					<template #cell-activity="{ row }">
+						<span class="text-ink-gray-8">{{ row.activity }}</span>
+					</template>
+					<template #cell-owner="{ row }">
+						<span :class="row.mine ? 'text-ink-gray-8' : 'text-ink-gray-6'">
+							{{ row.owner }}
+						</span>
+					</template>
+					<template #cell-due="{ row }">
+						<span class="nums text-ink-gray-5">{{
+							row.due ? date(row.due) : "—"
+						}}</span>
+					</template>
+					<template #cell-status="{ row }">
+						<StatusBadge :status="row.status" />
+					</template>
+				</DataTable>
+			</SectionCard>
+
 			<div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
 				<RouterLink
 					v-for="a in ACTIONS"
@@ -114,7 +150,7 @@
 
 <script setup>
 import { computed, onMounted } from "vue";
-import { Button } from "frappe-ui";
+import { Button, Progress } from "frappe-ui";
 
 import PageBody from "@/components/PageBody.vue";
 import PageHead from "@/components/PageHead.vue";
@@ -129,10 +165,17 @@ import CheckInCard from "@/components/CheckInCard.vue";
 import { homeData } from "@/data/portal";
 import { date, dateRange, dayjs, money } from "@/utils/format";
 
+const onboardingCols = [
+	{ key: "activity", label: "Task", primary: true },
+	{ key: "owner", label: "With", muted: true, hideOnMobile: true },
+	{ key: "due", label: "Due", align: "right", nums: true, hideOnMobile: true },
+	{ key: "status", label: "Status", align: "right", badge: true },
+];
+
 const ACTIONS = [
 	{ label: "Apply Leave", to: "/leave", icon: "lucide-sunrise" },
 	{ label: "Claim Expense", to: "/expenses", icon: "lucide-credit-card" },
-	{ label: "Latest Payslip", to: "/payslips", icon: "lucide-file-text" },
+	{ label: "Latest Payslips", to: "/payslips", icon: "lucide-file-text" },
 	{ label: "Request Advance", to: "/advances", icon: "lucide-trending-up" },
 	{ label: "Regularise", to: "/attendance", icon: "lucide-clock" },
 ];

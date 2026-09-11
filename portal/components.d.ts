@@ -30,6 +30,7 @@ declare module 'vue' {
     RequestField: typeof import('./src/components/RequestField.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Score: typeof import('./src/components/Score.vue')['default']
     SectionCard: typeof import('./src/components/SectionCard.vue')['default']
     StatTiles: typeof import('./src/components/StatTiles.vue')['default']
     StatusBadge: typeof import('./src/components/StatusBadge.vue')['default']
