@@ -36,7 +36,10 @@ import "./main.css"
 const app = createApp(App)
 const socket = initSocket()
 
-setConfig("resourceFetcher", frappeRequest)
+setConfig("resourceFetcher", (options) =>
+	// Resources invoke onError themselves after the request rejects.
+	frappeRequest({ ...options, onError: undefined })
+)
 app.use(resourcesPlugin)
 app.use(translationsPlugin)
 
