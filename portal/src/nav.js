@@ -1,20 +1,37 @@
+/**
+ * Sidebar sections, in order. Home is deliberately absent: the identity row at
+ * the top of the sidebar links there, so listing it again would be a second
+ * control for the same destination.
+ *
+ * Apps contribute their own entries through the `employee_portal_screens` hook
+ * and name the group they join. An unrecognised name becomes its own section
+ * rather than disappearing, so renaming a group here cannot silently hide
+ * another app's screens.
+ */
 export const NAV = [
 	{
-		group: "My Work",
+		group: "Leave & Attendance",
 		items: [
-			{ label: "Home", to: "/home", icon: "lucide-home" },
 			{ label: "Attendance", to: "/attendance", icon: "lucide-clock" },
 			{ label: "Leave", to: "/leave", icon: "lucide-sunrise" },
+		],
+	},
+	{
+		group: "Pay",
+		items: [
+			{ label: "Payslips", to: "/payslips", icon: "lucide-file-text" },
 			{
 				label: "Expenses",
 				to: "/expenses",
 				icon: "lucide-credit-card",
 				countKey: "expenses",
 			},
-			{ label: "Payslips", to: "/payslips", icon: "lucide-file-text" },
 			{ label: "Advances", to: "/advances", icon: "lucide-trending-up" },
-			{ label: "Appraisals", to: "/appraisals", icon: "lucide-award" },
 		],
+	},
+	{
+		group: "Performance",
+		items: [{ label: "Appraisals", to: "/appraisals", icon: "lucide-award" }],
 	},
 	{
 		group: "Company",

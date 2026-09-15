@@ -11,7 +11,7 @@
 					icon-left="lucide-download"
 					:disabled="!d?.slips?.length"
 					:loading="zipping"
-					:label="d?.slips?.length ? `Download ${d.slips.length}` : 'Download'"
+					label="Download All"
 					@click="downloadAll"
 				/>
 			</template>

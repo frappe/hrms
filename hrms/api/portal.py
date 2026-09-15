@@ -254,7 +254,7 @@ def get_home() -> dict:
 		)
 
 	# --- my recent requests, cross doctype -------------------------------
-	requests = _recent_requests(employee, limit=5)
+	requests = _requests_by_type(employee, limit=5)
 
 	# --- waiting on you ---------------------------------------------------
 	pending = _pending_approvals(employee)
@@ -324,88 +324,100 @@ def _leave_balances(employee: str) -> list[dict]:
 	return out
 
 
-def _recent_requests(employee: str, limit: int = 5) -> list[dict]:
-	"""One feed across leave, expense and attendance requests."""
-	rows = []
-
-	for la in frappe.get_all(
-		"Leave Application",
-		filters={"employee": employee},
-		fields=[
-			"name",
-			"leave_type",
-			"from_date",
-			"to_date",
-			"total_leave_days",
-			"status",
-			"leave_approver",
-			"modified",
-		],
-		order_by="modified desc",
-		limit=limit,
-	):
-		rows.append(
-			{
-				"type": "Leave",
-				"name": la.name,
-				"label": la.leave_type,
-				"from_date": str(la.from_date) if la.from_date else None,
-				"to_date": str(la.to_date) if la.to_date else None,
-				"days": flt(la.total_leave_days, 1),
-				"submitted": str(la.modified.date()) if la.modified else None,
-				"approver": la.leave_approver,
-				"status": la.status,
-			}
+def _leave_requests(employee: str, limit: int = 5) -> list[dict]:
+	return [
+		{
+			"type": "Leave",
+			"name": la.name,
+			"label": la.leave_type,
+			"from_date": str(la.from_date) if la.from_date else None,
+			"to_date": str(la.to_date) if la.to_date else None,
+			"days": flt(la.total_leave_days, 1),
+			"submitted": str(la.modified.date()) if la.modified else None,
+			"approver": la.leave_approver,
+			"status": la.status,
+		}
+		for la in frappe.get_all(
+			"Leave Application",
+			filters={"employee": employee},
+			fields=[
+				"name",
+				"leave_type",
+				"from_date",
+				"to_date",
+				"total_leave_days",
+				"status",
+				"leave_approver",
+				"modified",
+			],
+			order_by="modified desc",
+			limit=limit,
 		)
+	]
 
-	for ec in frappe.get_all(
-		"Expense Claim",
-		filters={"employee": employee},
-		fields=[
-			"name",
-			"total_claimed_amount",
-			"approval_status",
-			"status",
-			"expense_approver",
-			"posting_date",
-			"modified",
-		],
-		order_by="modified desc",
-		limit=limit,
-	):
-		rows.append(
-			{
-				"type": "Expense",
-				"name": ec.name,
-				"amount": flt(ec.total_claimed_amount),
-				"submitted": str(ec.posting_date) if ec.posting_date else None,
-				"approver": ec.expense_approver,
-				"status": ec.status if ec.status not in ("Draft",) else "Draft",
-			}
+
+def _expense_requests(employee: str, limit: int = 5) -> list[dict]:
+	return [
+		{
+			"type": "Expense",
+			"name": ec.name,
+			"amount": flt(ec.total_claimed_amount),
+			"submitted": str(ec.posting_date) if ec.posting_date else None,
+			"approver": ec.expense_approver,
+			"status": ec.status if ec.status not in ("Draft",) else "Draft",
+		}
+		for ec in frappe.get_all(
+			"Expense Claim",
+			filters={"employee": employee},
+			fields=[
+				"name",
+				"total_claimed_amount",
+				"approval_status",
+				"status",
+				"expense_approver",
+				"posting_date",
+				"modified",
+			],
+			order_by="modified desc",
+			limit=limit,
 		)
+	]
 
-	for ar in frappe.get_all(
-		"Attendance Request",
-		filters={"employee": employee},
-		fields=["name", "reason", "from_date", "to_date", "docstatus", "modified"],
-		order_by="modified desc",
-		limit=limit,
-	):
-		rows.append(
-			{
-				"type": "Attendance",
-				"name": ar.name,
-				"label": ar.reason,
-				"from_date": str(ar.from_date) if ar.from_date else None,
-				"to_date": str(ar.to_date) if ar.to_date else None,
-				"submitted": str(ar.modified.date()) if ar.modified else None,
-				"approver": None,
-				"status": {0: "Draft", 1: "Approved", 2: "Cancelled"}.get(ar.docstatus, "Draft"),
-			}
+
+def _attendance_requests(employee: str, limit: int = 5) -> list[dict]:
+	return [
+		{
+			"type": "Attendance",
+			"name": ar.name,
+			"label": ar.reason,
+			"from_date": str(ar.from_date) if ar.from_date else None,
+			"to_date": str(ar.to_date) if ar.to_date else None,
+			"submitted": str(ar.modified.date()) if ar.modified else None,
+			"approver": None,
+			"status": {0: "Draft", 1: "Approved", 2: "Cancelled"}.get(ar.docstatus, "Draft"),
+		}
+		for ar in frappe.get_all(
+			"Attendance Request",
+			filters={"employee": employee},
+			fields=["name", "reason", "from_date", "to_date", "docstatus", "modified"],
+			order_by="modified desc",
+			limit=limit,
 		)
+	]
 
-	rows.sort(key=lambda r: r.get("submitted") or "", reverse=True)
-	return _attach_approver_names(rows)[:limit]
+
+def _requests_by_type(employee: str, limit: int = 5) -> dict:
+	"""Each kind of request keeps its own list and its own limit.
+
+	Merging them into one feed meant a busy week of expense claims could push
+	every leave application off the page, so a whole category could silently
+	read as empty.
+	"""
+	return {
+		"leave": _attach_approver_names(_leave_requests(employee, limit)),
+		"expense": _attach_approver_names(_expense_requests(employee, limit)),
+		"attendance": _attach_approver_names(_attendance_requests(employee, limit)),
+	}
 
 
 def _attach_approver_names(rows: list[dict]) -> list[dict]:

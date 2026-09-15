@@ -86,23 +86,88 @@
 				</ul>
 			</SectionCard>
 
-			<SectionCard title="My Requests" :padded="false">
+			<SectionCard title="My Leave" :padded="false">
 				<template #action>
 					<Button variant="ghost" route="/leave" label="View All" />
 				</template>
 				<DataTable
-					:columns="requestCols"
-					:rows="d.requests"
-					empty-message="You have not raised any requests yet."
+					:columns="leaveCols"
+					:rows="d.requests.leave"
+					clickable
+					empty-message="You have not applied for leave yet."
+					@row-click="openRequest"
 				>
-					<template #cell-detail="{ row }">
-						<span class="text-ink-gray-8">{{ detailOf(row) }}</span>
+					<template #cell-label="{ row }">
+						<span class="text-ink-gray-8">{{ row.label }}</span>
+					</template>
+					<template #cell-dates="{ row }">
+						<span class="nums text-ink-gray-6">{{
+							dateRange(row.from_date, row.to_date)
+						}}</span>
+					</template>
+					<template #cell-days="{ row }">
+						<span class="nums text-ink-gray-6">{{ row.days }}</span>
+					</template>
+					<template #cell-approver="{ row }">
+						<span class="text-ink-gray-6">{{ row.approver_name || "—" }}</span>
+					</template>
+					<template #cell-status="{ row }">
+						<StatusBadge :status="row.status" />
+					</template>
+				</DataTable>
+			</SectionCard>
+
+			<SectionCard title="My Claims" :padded="false">
+				<template #action>
+					<Button variant="ghost" route="/expenses" label="View All" />
+				</template>
+				<DataTable
+					:columns="expenseCols"
+					:rows="d.requests.expense"
+					clickable
+					empty-message="You have not claimed any expenses yet."
+					@row-click="openRequest"
+				>
+					<template #cell-amount="{ row }">
+						<span class="text-ink-gray-8">{{ money(row.amount) }}</span>
 					</template>
 					<template #cell-submitted="{ row }">
 						<span class="nums text-ink-gray-5">{{ date(row.submitted) }}</span>
 					</template>
 					<template #cell-approver="{ row }">
 						<span class="text-ink-gray-6">{{ row.approver_name || "—" }}</span>
+					</template>
+					<template #cell-status="{ row }">
+						<StatusBadge :status="row.status" />
+					</template>
+				</DataTable>
+			</SectionCard>
+
+			<!-- rare enough that an empty card would be noise; the Attendance page lists these too -->
+			<SectionCard
+				v-if="d.requests.attendance.length"
+				title="Regularisation"
+				:padded="false"
+			>
+				<template #action>
+					<Button variant="ghost" route="/attendance" label="View All" />
+				</template>
+				<DataTable
+					:columns="attendanceCols"
+					:rows="d.requests.attendance"
+					clickable
+					@row-click="openRequest"
+				>
+					<template #cell-label="{ row }">
+						<span class="text-ink-gray-8">{{ row.label }}</span>
+					</template>
+					<template #cell-dates="{ row }">
+						<span class="nums text-ink-gray-6">{{
+							dateRange(row.from_date, row.to_date)
+						}}</span>
+					</template>
+					<template #cell-submitted="{ row }">
+						<span class="nums text-ink-gray-5">{{ date(row.submitted) }}</span>
 					</template>
 					<template #cell-status="{ row }">
 						<StatusBadge :status="row.status" />
@@ -150,6 +215,7 @@
 
 <script setup>
 import { computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import { Button, Progress } from "frappe-ui";
 
 import PageBody from "@/components/PageBody.vue";
@@ -180,20 +246,33 @@ const ACTIONS = [
 	{ label: "Regularise", to: "/attendance", icon: "lucide-clock" },
 ];
 
-const requestCols = [
-	{ key: "type", label: "Type", hideOnMobile: true },
-	{ key: "detail", label: "Detail", primary: true },
-	{ key: "submitted", label: "Submitted", nums: true, muted: true },
-	{ key: "approver", label: "Approver" },
+const leaveCols = [
+	{ key: "label", label: "Type", primary: true },
+	{ key: "dates", label: "Dates", nums: true },
+	{ key: "days", label: "Days", align: "right", nums: true, hideOnMobile: true },
+	{ key: "approver", label: "Approver", hideOnMobile: true },
 	{ key: "status", label: "Status", align: "right", badge: true },
 ];
 
+const expenseCols = [
+	{ key: "amount", label: "Amount", primary: true, nums: true },
+	{ key: "submitted", label: "Submitted", nums: true, muted: true },
+	{ key: "approver", label: "Approver", hideOnMobile: true },
+	{ key: "status", label: "Status", align: "right", badge: true },
+];
+
+const attendanceCols = [
+	{ key: "label", label: "Reason", primary: true },
+	{ key: "dates", label: "Dates", nums: true },
+	{ key: "submitted", label: "Raised", nums: true, muted: true, hideOnMobile: true },
+	{ key: "status", label: "Status", align: "right", badge: true },
+];
+
+const router = useRouter();
 const d = computed(() => homeData.data);
 
-function detailOf(row) {
-	if (row.type === "Expense") return money(row.amount);
-	const span = dateRange(row.from_date, row.to_date);
-	return row.label ? `${row.label}, ${span}` : span;
+function openRequest(row) {
+	router.push(`/requests/${row.type.toLowerCase()}/${encodeURIComponent(row.name)}`);
 }
 
 const greeting = computed(() => {

@@ -140,8 +140,8 @@ function signed(n) {
 }
 
 function toneOf(pct) {
-	if (pct > 0) return "text-ink-green-3";
-	return pct < 0 ? "text-ink-red-3" : "text-ink-gray-6";
+	if (pct > 0) return "text-ink-green-7";
+	return pct < 0 ? "text-ink-red-7" : "text-ink-gray-6";
 }
 
 function open(row) {

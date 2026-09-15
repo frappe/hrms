@@ -31,7 +31,7 @@ def nav_items() -> list[dict]:
 				"label": screen.get("label") or slug,
 				"icon": screen.get("icon") or "lucide-puzzle",
 				"to": f"/x/{slug}",
-				"group": screen.get("group") or "My Work",
+				"group": screen.get("group") or "More",
 				"order": screen.get("order") or 0,
 			}
 		)

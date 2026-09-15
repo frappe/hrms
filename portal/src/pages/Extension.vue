@@ -114,7 +114,7 @@
 					class="rounded-6 border px-3.5 py-2.5 text-p-base"
 					:class="
 						section.tone === 'success'
-							? 'border-outline-green-2 bg-surface-green-1 text-ink-green-3'
+							? 'border-outline-green-2 bg-surface-green-1 text-ink-green-7'
 							: 'border-outline-gray-2 bg-surface-gray-1 text-ink-gray-7'
 					"
 				>
