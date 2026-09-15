@@ -86,6 +86,25 @@ frappe.ui.form.on("Leave Encashment", {
 	},
 	company: function (frm) {
 		erpnext.accounts.dimensions.update_dimension(frm, frm.doctype);
+		frm.trigger("set_leave_period");
+	},
+	set_leave_period: function (frm) {
+		if (!frm.doc.company || frm.doc.leave_period) return;
+
+		const date = frm.doc.encashment_date || frappe.datetime.get_today();
+		frappe.db.get_value(
+			"Leave Period",
+			{
+				company: frm.doc.company,
+				is_active: 1,
+				from_date: ["<=", date],
+				to_date: [">=", date],
+			},
+			"name",
+			(r) => {
+				if (r && r.name) frm.set_value("leave_period", r.name);
+			},
+		);
 	},
 	leave_type: function (frm) {
 		frm.trigger("get_leave_details_for_encashment");

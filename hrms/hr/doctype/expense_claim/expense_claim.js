@@ -101,7 +101,18 @@ frappe.ui.form.on("Expense Claim", {
 		frm.trigger("update_child_fields_label");
 	},
 
-	refresh: function (frm) {
+	refresh: async function (frm) {
+		if (frm.multi_currency_enabled === undefined) {
+			frm.multi_currency_enabled = cint(
+				await frappe.db.get_single_value(
+					"HR Settings",
+					"enable_multi_currency_expense_claim",
+				),
+			);
+		}
+		frm.trigger("set_employee");
+		frm.trigger("set_payable_account");
+		frm.trigger("toggle_multi_currency_fields");
 		frm.trigger("toggle_fields");
 		frm.trigger("add_ledger_buttons");
 
@@ -149,6 +160,43 @@ frappe.ui.form.on("Expense Claim", {
 		frm.trigger("set_exchange_rate");
 		frm.trigger("update_fields_label");
 		frm.trigger("update_child_fields_label");
+	},
+
+	toggle_multi_currency_fields: function (frm) {
+		if (frm.multi_currency_enabled) return;
+
+		frm.trigger("set_company_currency");
+		frm.toggle_display(["currency_section", "currency", "exchange_rate"], false);
+
+		const base_fields = {
+			expenses: ["base_amount", "base_sanctioned_amount"],
+			advances: [
+				"base_advance_paid",
+				"base_unclaimed_amount",
+				"base_allocated_amount",
+				"exchange_rate",
+			],
+			taxes: ["base_tax_amount", "base_total"],
+		};
+		for (const table in base_fields) {
+			base_fields[table].forEach((field) => {
+				frm.fields_dict[table].grid.update_docfield_property(field, "hidden", 1);
+			});
+		}
+	},
+
+	set_company_currency: function (frm) {
+		if (frm.doc.docstatus !== 0) return;
+
+		const company_currency = erpnext.get_currency(
+			frm.doc.company || frappe.defaults.get_default("Company"),
+		);
+		if (company_currency && frm.doc.currency !== company_currency) {
+			frm.set_value("currency", company_currency);
+		}
+		if (frm.doc.exchange_rate !== 1) {
+			frm.set_value("exchange_rate", 1);
+		}
 	},
 
 	set_exchange_rate: function (frm) {
@@ -373,6 +421,10 @@ frappe.ui.form.on("Expense Claim", {
 
 	company: function (frm) {
 		erpnext.accounts.dimensions.update_dimension(frm, frm.doctype);
+		frm.trigger("set_payable_account");
+		if (frm.multi_currency_enabled === 0) {
+			frm.trigger("set_company_currency");
+		}
 		var expenses = frm.doc.expenses;
 		for (var i = 0; i < expenses.length; i++) {
 			var expense = expenses[i];
@@ -401,6 +453,30 @@ frappe.ui.form.on("Expense Claim", {
 
 	toggle_fields: function (frm) {
 		frm.toggle_reqd("mode_of_payment", frm.doc.is_paid);
+	},
+
+	set_payable_account: async function (frm) {
+		if (!frm.is_new() || frm.doc.payable_account || !frm.doc.company) return;
+
+		const account = (
+			await frappe.call({
+				method: "hrms.hr.doctype.expense_claim.expense_claim.get_default_payable_account",
+				args: { company: frm.doc.company },
+			})
+		)?.message;
+
+		if (account && !frm.doc.payable_account) {
+			frm.set_value("payable_account", account);
+		}
+	},
+
+	set_employee: async function (frm) {
+		if (!frm.is_new() || frm.doc.employee) return;
+
+		const employee = await hrms.get_current_employee(frm);
+		if (employee) {
+			frm.set_value("employee", employee);
+		}
 	},
 
 	employee: function (frm) {

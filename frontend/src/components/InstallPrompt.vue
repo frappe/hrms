@@ -41,9 +41,9 @@
 							{{ __("Get the app on your iPhone for easy access & a better experience") }}
 						</span>
 						<span class="inline-flex items-start whitespace-nowrap">
-							<span>Tap&nbsp;</span>
+							<span>{{ __("Tap") }}&nbsp;</span>
 							<FeatherIcon name="share" class="h-4 w-4 text-blue-600" />
-							<span>&nbsp;and then "Add to Home Screen"</span>
+							<span>&nbsp;{{ __('and then "Add to Home Screen"') }}</span>
 						</span>
 					</span>
 				</div>

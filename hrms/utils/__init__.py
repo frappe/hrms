@@ -60,3 +60,7 @@ def get_employee_email(employee_id: str) -> str | None:
 		or employee_emails.company_email
 		or employee_emails.personal_email
 	)
+
+
+def extend_bootinfo(bootinfo):
+	bootinfo.hr_only_setup = bool(frappe.conf.sk_hrms)

@@ -1,6 +1,8 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
+from unittest.mock import patch
+
 from dateutil.relativedelta import relativedelta
 
 import frappe
@@ -18,6 +20,7 @@ from hrms.payroll.doctype.payroll_entry.payroll_entry import (
 	PayrollEntry,
 	get_end_date,
 	get_start_end_dates,
+	set_match_conditions,
 )
 from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
 from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import if_lending_app_installed
@@ -1184,6 +1187,22 @@ class TestPayrollEntry(HRMSTestSuite):
 		payroll_entry.discard()
 		payroll_entry.reload()
 		self.assertEqual(payroll_entry.status, "Cancelled")
+
+	def test_set_match_conditions_maps_permission_doctype_to_employee_field(self):
+		employee = frappe.qb.DocType("Employee")
+		query = frappe.qb.from_(employee).select(employee.name)
+
+		with patch(
+			"hrms.payroll.doctype.payroll_entry.payroll_entry.get_match_cond",
+			return_value=[{"Employee Grade": ["A"], "Unknown Doctype": ["Ignored"]}],
+		):
+			query = set_match_conditions(query, employee)
+
+		query_sql = query.get_sql()
+		self.assertIn("grade", query_sql)
+		self.assertIn("'A'", query_sql)
+		self.assertNotIn("Employee Grade", query_sql)
+		self.assertNotIn("Unknown Doctype", query_sql)
 
 
 def get_payroll_entry(**args):

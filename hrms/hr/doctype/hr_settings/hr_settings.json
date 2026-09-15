@@ -38,6 +38,7 @@
   "expense_approver_mandatory_in_expense_claim",
   "prevent_self_expense_approval",
   "unlink_payment_on_cancellation_of_employee_advance",
+  "enable_multi_currency_expense_claim",
   "shift_and_attendance_tab",
   "shift_settings_section",
   "allow_multiple_shift_assignments",
@@ -307,6 +308,13 @@
   },
   {
    "default": "0",
+   "description": "Allow expense claims to be raised in a currency other than the company currency",
+   "fieldname": "enable_multi_currency_expense_claim",
+   "fieldtype": "Check",
+   "label": "Enable Multi-Currency Expense Claims"
+  },
+  {
+   "default": "0",
    "fieldname": "prevent_self_leave_approval",
    "fieldtype": "Check",
    "label": "Prevent self approval for leaves even if user has permissions"
@@ -381,7 +389,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-08-06 13:01:43.187327",
+ "modified": "2026-09-03 11:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
