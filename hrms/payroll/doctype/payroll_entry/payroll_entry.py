@@ -642,30 +642,33 @@ class PayrollEntry(Document):
 				employee_wise_accounting_enabled=employee_wise_accounting_enabled,
 			)
 
-		self.make_employer_contribution_jv_entry(employer_contributions)
+		self.make_employer_contribution_jv_entry(employer_contributions, employee_wise_accounting_enabled)
 
-	def make_employer_contribution_jv_entry(self, employer_contributions):
-		component_dict = {}
+	def make_employer_contribution_jv_entry(
+		self, employer_contributions, employee_wise_accounting_enabled=False
+	):
+		expense_entries = {}
+		liability_entries = {}
 		for item in employer_contributions:
+			expense_account, liability_account = self.get_employer_contribution_accounts(
+				item.salary_component
+			)
+
 			employee_cost_centers = self.get_payroll_cost_centers_for_employee(
 				item.employee, item.salary_structure
 			)
-
 			for cost_center, percentage in employee_cost_centers.items():
-				key = (item.salary_component, cost_center)
-				component_dict[key] = component_dict.get(key, 0) + flt(item.amount) * percentage / 100
+				expense_key = (expense_account, cost_center)
+				expense_entries[expense_key] = (
+					expense_entries.get(expense_key, 0) + flt(item.amount) * percentage / 100
+				)
 
-		if not component_dict:
+			# breaks up the liability employee-wise, mirroring the payable rows of the accrual JE
+			liability_key = (liability_account, item.employee if employee_wise_accounting_enabled else None)
+			liability_entries[liability_key] = liability_entries.get(liability_key, 0) + flt(item.amount)
+
+		if not expense_entries:
 			return
-
-		expense_entries = {}
-		liability_entries = {}
-		for (component, cost_center), amount in component_dict.items():
-			expense_account, liability_account = self.get_employer_contribution_accounts(component)
-
-			expense_key = (expense_account, cost_center)
-			expense_entries[expense_key] = expense_entries.get(expense_key, 0) + amount
-			liability_entries[liability_account] = liability_entries.get(liability_account, 0) + amount
 
 		precision = frappe.get_precision("Journal Entry Account", "debit_in_account_currency")
 		accounting_dimensions = get_accounting_dimensions() or []
@@ -687,7 +690,7 @@ class PayrollEntry(Document):
 				accounts=accounts,
 			)
 
-		for account, amount in liability_entries.items():
+		for (account, employee), amount in liability_entries.items():
 			self.get_accounting_entries_and_payable_amount(
 				account,
 				self.cost_center,
@@ -699,6 +702,7 @@ class PayrollEntry(Document):
 				precision,
 				entry_type="credit",
 				accounts=accounts,
+				party=employee,
 				reference_type=self.doctype,
 				reference_name=self.name,
 			)
@@ -711,6 +715,7 @@ class PayrollEntry(Document):
 				self.start_date, self.end_date
 			),
 			submit_journal_entry=True,
+			employee_wise_accounting_enabled=employee_wise_accounting_enabled,
 			title=_("Employer Contribution"),
 		)
 
