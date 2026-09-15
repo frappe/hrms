@@ -1022,6 +1022,77 @@ class TestPayrollEntry(HRMSTestSuite):
 		self.assertIn(company.default_payroll_payable_account, accounts)
 		self.assertNotIn("ESIC Payable - _TC", accounts, "ESIC component wrongly included in JE")
 
+	def test_employer_contribution_journal_entry(self):
+		company = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee("employer_contribution_jv@payroll.com", company=company.name)
+
+		create_account("Employer PF Contribution", company.name, "Indirect Expenses - _TC")
+		create_account("Employer PF Payable", company.name, "Current Liabilities - _TC")
+		expense_account = "Employer PF Contribution - _TC"
+		liability_account = "Employer PF Payable - _TC"
+
+		employer_pf = create_salary_component("Test Employer PF", **{"type": "Employer Contribution"})
+		employer_pf.accounts = []
+		employer_pf.append(
+			"accounts",
+			{"company": company.name, "account": expense_account, "liability_account": liability_account},
+		)
+		employer_pf.save()
+
+		make_salary_structure(
+			"Test Salary Structure Employer Contribution",
+			"Monthly",
+			employee,
+			company=company.name,
+			currency=company.default_currency,
+			other_details={
+				"employer_contributions": [{"salary_component": employer_pf.name, "amount": 5000}]
+			},
+		)
+
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = make_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company.default_payroll_payable_account,
+			currency=company.default_currency,
+			company=company.name,
+			cost_center="Main - _TC",
+		)
+
+		employer_contribution_je = frappe.db.get_value(
+			"Journal Entry Account",
+			{"account": liability_account, "reference_name": payroll_entry.name, "docstatus": 1},
+			"parent",
+		)
+		self.assertTrue(employer_contribution_je, "Employer contribution Journal Entry not created")
+
+		je_doc = frappe.get_doc("Journal Entry", employer_contribution_je)
+		self.assertEqual(je_doc.total_debit, 5000)
+		self.assertEqual(je_doc.total_credit, 5000)
+
+		debit_row = next(d for d in je_doc.accounts if d.account == expense_account)
+		self.assertEqual(debit_row.debit, 5000)
+
+		credit_row = next(d for d in je_doc.accounts if d.account == liability_account)
+		self.assertEqual(credit_row.credit, 5000)
+		self.assertEqual(credit_row.reference_type, "Payroll Entry")
+
+		# employer contribution accounts should not leak into the salary accrual JV
+		salary_slip = frappe.get_doc("Salary Slip", {"payroll_entry": payroll_entry.name})
+		self.assertNotEqual(salary_slip.journal_entry, employer_contribution_je)
+
+		accrual_accounts = [
+			d.account for d in frappe.get_doc("Journal Entry", salary_slip.journal_entry).accounts
+		]
+		self.assertNotIn(expense_account, accrual_accounts)
+		self.assertNotIn(liability_account, accrual_accounts)
+
+		# cancelling the payroll entry should cancel the employer contribution JV
+		payroll_entry.reload()
+		payroll_entry.cancel()
+		self.assertEqual(frappe.db.get_value("Journal Entry", employer_contribution_je, "docstatus"), 2)
+
 	def test_employee_benefits_accruals_in_salary_slip(self):
 		"""Test to verify
 		- employee flexible benefits of accrual payout methods are fetched into salary slip
