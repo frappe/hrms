@@ -76,9 +76,17 @@ class JobOffer(Document):
 	def set_leave_details(self):
 		self.set("leave_allocations", get_leave_allocations(self.leave_policy))
 
+		if not self.holiday_list_changed():
+			return
+
 		summary = get_holiday_summary(self.holiday_list)
 		self.weekly_off_days = summary["weekly_off_days"]
 		self.total_public_holidays = summary["total_public_holidays"]
+
+	def holiday_list_changed(self) -> bool:
+		previous = self.doc_before_save()
+
+		return not previous or previous.holiday_list != self.holiday_list
 
 	def validate_duplicate_job_offer(self):
 		duplicate = frappe.db.exists(
@@ -118,11 +126,7 @@ class JobOffer(Document):
 		if not self.ctc_breakup:
 			return True
 
-		previous = self.get_doc_before_save()
-		if not previous:
-			self.load_doc_before_save()
-			previous = self.get_doc_before_save()
-
+		previous = self.doc_before_save()
 		if not previous:
 			return True
 
@@ -130,6 +134,14 @@ class JobOffer(Document):
 		fieldnames = (*COMPENSATION_INPUTS, driver, *shared_regional_fieldnames(self))
 
 		return any(not _same_input(self.get(f), previous.get(f)) for f in fieldnames)
+
+	def doc_before_save(self):
+		previous = self.get_doc_before_save()
+		if not previous:
+			self.load_doc_before_save()
+			previous = self.get_doc_before_save()
+
+		return previous
 
 	def validate_vacancies(self):
 		staffing_plan = get_staffing_plan_detail(self.designation, self.company, self.offer_date)
