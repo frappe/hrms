@@ -1022,12 +1022,9 @@ class TestPayrollEntry(HRMSTestSuite):
 		self.assertIn(company.default_payroll_payable_account, accounts)
 		self.assertNotIn("ESIC Payable - _TC", accounts, "ESIC component wrongly included in JE")
 
-	def test_employer_contribution_journal_entry(self):
-		company = frappe.get_doc("Company", "_Test Company")
-		employee = make_employee("employer_contribution_jv@payroll.com", company=company.name)
-
-		create_account("Employer PF Contribution", company.name, "Indirect Expenses - _TC")
-		create_account("Employer PF Payable", company.name, "Current Liabilities - _TC")
+	def setup_employer_contribution_component(self):
+		create_account("Employer PF Contribution", "_Test Company", "Indirect Expenses - _TC")
+		create_account("Employer PF Payable", "_Test Company", "Current Liabilities - _TC")
 		expense_account = "Employer PF Contribution - _TC"
 		liability_account = "Employer PF Payable - _TC"
 
@@ -1035,9 +1032,27 @@ class TestPayrollEntry(HRMSTestSuite):
 		employer_pf.accounts = []
 		employer_pf.append(
 			"accounts",
-			{"company": company.name, "account": expense_account, "liability_account": liability_account},
+			{
+				"company": "_Test Company",
+				"account": expense_account,
+				"liability_account": liability_account,
+			},
 		)
 		employer_pf.save()
+
+		return employer_pf, expense_account, liability_account
+
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0}
+	)
+	def test_employer_contribution_journal_entry(self):
+		company = frappe.get_doc("Company", "_Test Company")
+		department = create_department("EC JV Test")
+		employee = make_employee(
+			"employer_contribution_jv@payroll.com", company=company.name, department=department
+		)
+
+		employer_pf, expense_account, liability_account = self.setup_employer_contribution_component()
 
 		make_salary_structure(
 			"Test Salary Structure Employer Contribution",
@@ -1058,6 +1073,7 @@ class TestPayrollEntry(HRMSTestSuite):
 			currency=company.default_currency,
 			company=company.name,
 			cost_center="Main - _TC",
+			department=department,
 		)
 
 		employer_contribution_je = frappe.db.get_value(
@@ -1077,6 +1093,7 @@ class TestPayrollEntry(HRMSTestSuite):
 		credit_row = next(d for d in je_doc.accounts if d.account == liability_account)
 		self.assertEqual(credit_row.credit, 5000)
 		self.assertEqual(credit_row.reference_type, "Payroll Entry")
+		self.assertFalse(credit_row.party)
 
 		# employer contribution accounts should not leak into the salary accrual JV
 		salary_slip = frappe.get_doc("Salary Slip", {"payroll_entry": payroll_entry.name})
@@ -1092,6 +1109,66 @@ class TestPayrollEntry(HRMSTestSuite):
 		payroll_entry.reload()
 		payroll_entry.cancel()
 		self.assertEqual(frappe.db.get_value("Journal Entry", employer_contribution_je, "docstatus"), 2)
+
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 1}
+	)
+	def test_employer_contribution_journal_entry_with_employee_tagging(self):
+		company = frappe.get_doc("Company", "_Test Company")
+		department = create_department("EC Tagging Test")
+		emp1 = make_employee("ec_jv_tagging1@payroll.com", company=company.name, department=department)
+		emp2 = make_employee("ec_jv_tagging2@payroll.com", company=company.name, department=department)
+
+		employer_pf, expense_account, liability_account = self.setup_employer_contribution_component()
+
+		structure = make_salary_structure(
+			"Test Salary Structure EC Tagging",
+			"Monthly",
+			emp1,
+			company=company.name,
+			currency=company.default_currency,
+			other_details={
+				"employer_contributions": [{"salary_component": employer_pf.name, "amount": 5000}]
+			},
+		)
+		create_salary_structure_assignment(
+			emp2, structure.name, company=company.name, currency=company.default_currency
+		)
+
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = make_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company.default_payroll_payable_account,
+			currency=company.default_currency,
+			company=company.name,
+			cost_center="Main - _TC",
+			department=department,
+		)
+
+		credit_rows = frappe.get_all(
+			"Journal Entry Account",
+			filters={
+				"account": liability_account,
+				"reference_name": payroll_entry.name,
+				"docstatus": 1,
+			},
+			fields=["parent", "party_type", "party", "credit_in_account_currency"],
+		)
+
+		self.assertEqual(len(credit_rows), 2)
+		self.assertEqual({row.party for row in credit_rows}, {emp1, emp2})
+		for row in credit_rows:
+			self.assertEqual(row.party_type, "Employee")
+			self.assertEqual(row.credit_in_account_currency, 5000)
+
+		je_doc = frappe.get_doc("Journal Entry", credit_rows[0].parent)
+		self.assertEqual(je_doc.total_debit, 10000)
+		self.assertEqual(je_doc.total_credit, 10000)
+
+		debit_row = next(d for d in je_doc.accounts if d.account == expense_account)
+		self.assertEqual(debit_row.debit, 10000)
+		self.assertFalse(debit_row.party)
 
 	def test_employee_benefits_accruals_in_salary_slip(self):
 		"""Test to verify
