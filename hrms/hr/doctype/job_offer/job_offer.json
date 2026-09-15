@@ -54,12 +54,12 @@
   "column_break_employment_policy",
   "working_hours",
   "notice_period_during_probation",
-  "section_break_4",
-  "job_offer_term_template",
-  "offer_terms",
   "section_break_14",
   "select_terms",
   "terms",
+  "section_break_4",
+  "job_offer_term_template",
+  "offer_terms",
   "printing_details",
   "letter_head",
   "column_break_16",
@@ -233,7 +233,8 @@
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "eval:doc.salary_structure && doc.calculate_component_amount_from",
+   "default": "0",
+   "depends_on": "salary_structure",
    "fetch_from": "grade.default_base_pay",
    "fetch_if_empty": 1,
    "fieldname": "base",
@@ -241,23 +242,26 @@
    "label": "Base",
    "mandatory_depends_on": "eval:doc.salary_structure && doc.calculate_component_amount_from=='Base and Variable'",
    "options": "currency",
-   "read_only_depends_on": "eval:doc.calculate_component_amount_from=='CTC'"
+   "read_only_depends_on": "eval:doc.calculate_component_amount_from!='Base and Variable'"
   },
   {
-   "depends_on": "eval:doc.salary_structure && doc.calculate_component_amount_from",
+   "default": "0",
+   "depends_on": "salary_structure",
    "fieldname": "variable",
    "fieldtype": "Currency",
    "label": "Variable",
-   "options": "currency"
+   "options": "currency",
+   "read_only_depends_on": "eval:!doc.calculate_component_amount_from"
   },
   {
-   "depends_on": "eval:doc.salary_structure && doc.calculate_component_amount_from",
+   "default": "0",
+   "depends_on": "salary_structure",
    "fieldname": "ctc",
    "fieldtype": "Currency",
    "label": "Total Cost to Company (CTC)",
    "mandatory_depends_on": "eval:doc.salary_structure && doc.calculate_component_amount_from=='CTC'",
    "options": "currency",
-   "read_only_depends_on": "eval:doc.calculate_component_amount_from=='Base and Variable'"
+   "read_only_depends_on": "eval:doc.calculate_component_amount_from!='CTC'"
   },
   {
    "description": "Gross earnings for one payroll cycle, before deductions. Shown as a row in the break-up; kept as a field because statutory wage ceilings are drawn on it.",
@@ -285,19 +289,17 @@
    "label": "Leave & Holidays"
   },
   {
-   "depends_on": "eval:doc.holiday_list",
+   "description": "Comma separated, for example: Saturday, Sunday",
    "fieldname": "weekly_off_days",
    "fieldtype": "Data",
-   "label": "Weekly Off",
-   "read_only": 1
+   "label": "Weekly Off"
   },
   {
-   "depends_on": "eval:doc.holiday_list",
    "description": "Holidays in the year other than weekly offs",
    "fieldname": "total_public_holidays",
    "fieldtype": "Int",
    "label": "Public Holidays",
-   "read_only": 1
+   "non_negative": 1
   },
   {
    "fieldname": "leave_section",
@@ -374,6 +376,7 @@
    "non_negative": 1
   },
   {
+   "collapsible": 1,
    "fieldname": "section_break_4",
    "fieldtype": "Section Break",
    "label": "Additional Terms"

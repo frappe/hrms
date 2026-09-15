@@ -26,6 +26,8 @@ frappe.ui.form.on("Job Offer", {
 		frm.set_query("reports_to", function () {
 			return { filters: { company: frm.doc.company, status: "Active" } };
 		});
+
+		set_default_leave_and_holidays(frm);
 	},
 
 	setup: function (frm) {
@@ -133,26 +135,10 @@ function update_compensation(frm) {
 		return;
 	}
 
-	if (!frm.doc.calculate_component_amount_from) return;
-
-	const driver = frm.doc.calculate_component_amount_from === "CTC" ? frm.doc.ctc : frm.doc.base;
-	if (!driver) return;
-
-	const sent = compensation_signature(frm);
-	const release = () => {
-		frm.__updating_compensation = false;
-		if (!frm.__compensation_pending) return;
-
-		frm.__compensation_pending = false;
-		if (compensation_signature(frm) === sent) return;
-
-		update_compensation(frm);
-	};
-
-	frm.__updating_compensation = true;
-	frm.__compensation_pending = false;
+	if (!compensation_driver(frm)) return;
 
 	const was_empty = !(frm.doc.ctc_breakup || []).length;
+	const release = hold_compensation(frm);
 
 	frappe.call({
 		method: "hrms.hr.doctype.job_offer.job_offer.get_compensation_details",
@@ -161,30 +147,54 @@ function update_compensation(frm) {
 		callback: function (r) {
 			if (!r.message) return release();
 
-			const details = r.message;
-			frm.set_value({ base: details.base, ctc: details.ctc, gross: details.gross }).then(
-				() => {
-					frm.clear_table("ctc_breakup");
-					details.components.forEach((row) => frm.add_child("ctc_breakup", row));
-					frm.refresh_field("ctc_breakup");
-					release();
-
-					if (was_empty && details.components.length) {
-						frm.scroll_to_field("ctc_breakup", false);
-					}
-
-					if (details.ctc_adjusted) {
-						frappe.show_alert({
-							message: __(
-								"CTC set to {0}, the closest this salary structure can produce.",
-								[format_currency(details.ctc, frm.doc.currency)],
-							),
-							indicator: "orange",
-						});
-					}
-				},
-			);
+			apply_compensation(frm, r.message, was_empty).then(release);
 		},
+	});
+}
+
+function compensation_driver(frm) {
+	if (!frm.doc.calculate_component_amount_from) return 0;
+
+	return frm.doc.calculate_component_amount_from === "CTC" ? frm.doc.ctc : frm.doc.base;
+}
+
+function hold_compensation(frm) {
+	const sent = compensation_signature(frm);
+
+	frm.__updating_compensation = true;
+	frm.__compensation_pending = false;
+
+	return () => {
+		frm.__updating_compensation = false;
+		if (!frm.__compensation_pending) return;
+
+		frm.__compensation_pending = false;
+		if (compensation_signature(frm) !== sent) update_compensation(frm);
+	};
+}
+
+function apply_compensation(frm, details, was_empty) {
+	return frm
+		.set_value({ base: details.base, ctc: details.ctc, gross: details.gross })
+		.then(() => {
+			frm.clear_table("ctc_breakup");
+			details.components.forEach((row) => frm.add_child("ctc_breakup", row));
+			frm.refresh_field("ctc_breakup");
+
+			if (was_empty && details.components.length) {
+				frm.scroll_to_field("ctc_breakup", false);
+			}
+
+			if (details.ctc_adjusted) announce_ctc_adjustment(frm, details.ctc);
+		});
+}
+
+function announce_ctc_adjustment(frm, ctc) {
+	frappe.show_alert({
+		message: __("CTC set to {0}, the closest this salary structure can produce.", [
+			format_currency(ctc, frm.doc.currency),
+		]),
+		indicator: "orange",
 	});
 }
 
@@ -282,4 +292,21 @@ function set_holiday_summary(frm) {
 			if (r.message) frm.set_value(r.message);
 		},
 	});
+}
+
+function set_default_leave_and_holidays(frm) {
+	if (!frm.is_new()) return;
+
+	set_latest(frm, "holiday_list", "Holiday List");
+	set_latest(frm, "leave_policy", "Leave Policy");
+}
+
+function set_latest(frm, fieldname, doctype) {
+	if (frm.doc[fieldname]) return;
+
+	frappe.db
+		.get_list(doctype, { order_by: "creation desc", limit: 1, pluck: "name" })
+		.then((names) => {
+			if (names.length && !frm.doc[fieldname]) frm.set_value(fieldname, names[0]);
+		});
 }

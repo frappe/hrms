@@ -654,6 +654,41 @@ class TestJobOffer(HRMSTestSuite):
 		self.assertEqual(offer.weekly_off_days, "Sunday")
 		self.assertEqual(offer.total_public_holidays, 2)
 
+	def test_hand_edited_holiday_summary_survives_a_re_save(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		holiday_list = make_holiday_list(
+			"Test Offer Manual Summary", weekly_offs=["Sunday"], public_holidays=2
+		)
+		applicant = create_job_applicant(email_id="test_offer_manual_summary@example.com")
+
+		offer = create_job_offer(job_applicant=applicant.name, holiday_list=holiday_list)
+		offer.insert()
+		self.assertEqual(offer.weekly_off_days, "Sunday")
+
+		offer.weekly_off_days = "Sunday, alternate Saturday"
+		offer.total_public_holidays = 12
+		offer.save()
+
+		self.assertEqual(offer.weekly_off_days, "Sunday, alternate Saturday")
+		self.assertEqual(offer.total_public_holidays, 12)
+
+	def test_changing_the_holiday_list_replaces_a_hand_edited_summary(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		holiday_list = make_holiday_list("Test Offer Summary One", weekly_offs=["Sunday"], public_holidays=2)
+		applicant = create_job_applicant(email_id="test_offer_summary_swap@example.com")
+
+		offer = create_job_offer(job_applicant=applicant.name, holiday_list=holiday_list)
+		offer.insert()
+
+		offer.weekly_off_days = "Whatever the HR manager typed"
+		offer.holiday_list = make_holiday_list(
+			"Test Offer Summary Two", weekly_offs=["Saturday", "Sunday"], public_holidays=3
+		)
+		offer.save()
+
+		self.assertEqual(offer.weekly_off_days, "Saturday, Sunday")
+		self.assertEqual(offer.total_public_holidays, 3)
+
 	def test_offer_without_a_holiday_list_or_policy_says_nothing(self):
 		self.assertEqual(get_leave_allocations(None), [])
 		self.assertEqual(get_holiday_summary(None), {"weekly_off_days": "", "total_public_holidays": 0})
