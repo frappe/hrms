@@ -163,6 +163,7 @@
    "fieldname": "accounts",
    "fieldtype": "Table",
    "label": "Accounts",
+   "mandatory_depends_on": "eval:doc.statistical_component != 1 && doc.type != \"Employer Contribution\"",
    "options": "Salary Component Account"
   },
   {
@@ -297,7 +298,7 @@
  "icon": "fa fa-flag",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-08-06 13:01:43.187327",
+ "modified": "2026-09-11 12:49:34.111687",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",
