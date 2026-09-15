@@ -320,7 +320,7 @@
    "fieldname": "leave_allocations",
    "fieldtype": "Table",
    "label": "Leave Allocations",
-   "options": "Job Offer Leave",
+   "options": "Leave Policy Detail",
    "read_only": 1
   },
   {

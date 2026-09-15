@@ -20,8 +20,8 @@ class JobOffer(Document):
 		from frappe.types import DF
 
 		from hrms.hr.doctype.job_offer_component.job_offer_component import JobOfferComponent
-		from hrms.hr.doctype.job_offer_leave.job_offer_leave import JobOfferLeave
 		from hrms.hr.doctype.job_offer_term.job_offer_term import JobOfferTerm
+		from hrms.hr.doctype.leave_policy_detail.leave_policy_detail import LeavePolicyDetail
 
 		amended_from: DF.Link | None
 		applicant_email: DF.Data
@@ -42,7 +42,7 @@ class JobOffer(Document):
 		holiday_list: DF.Link | None
 		job_applicant: DF.Link | None
 		job_offer_term_template: DF.Link | None
-		leave_allocations: DF.Table[JobOfferLeave]
+		leave_allocations: DF.Table[LeavePolicyDetail]
 		leave_policy: DF.Link | None
 		letter_head: DF.Link | None
 		notice_number_of_days: DF.Int
