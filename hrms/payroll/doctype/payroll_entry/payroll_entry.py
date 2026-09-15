@@ -623,6 +623,9 @@ class PayrollEntry(Document):
 			or {}
 		)
 
+		# fetched before the accrual JE gets linked to slips as get_sal_slip_list excludes linked slips
+		employer_contributions = self.get_salary_components("employer_contributions") or []
+
 		precision = frappe.get_precision("Journal Entry Account", "debit_in_account_currency")
 
 		if earnings or deductions:
@@ -678,6 +681,96 @@ class PayrollEntry(Document):
 				employee_wise_accounting_enabled=employee_wise_accounting_enabled,
 			)
 
+		self.make_employer_contribution_jv_entry(employer_contributions)
+
+	def make_employer_contribution_jv_entry(self, employer_contributions):
+		component_dict = {}
+		for item in employer_contributions:
+			employee_cost_centers = self.get_payroll_cost_centers_for_employee(
+				item.employee, item.salary_structure
+			)
+
+			for cost_center, percentage in employee_cost_centers.items():
+				key = (item.salary_component, cost_center)
+				component_dict[key] = component_dict.get(key, 0) + flt(item.amount) * percentage / 100
+
+		if not component_dict:
+			return
+
+		expense_entries = {}
+		liability_entries = {}
+		for (component, cost_center), amount in component_dict.items():
+			expense_account, liability_account = self.get_employer_contribution_accounts(component)
+
+			expense_key = (expense_account, cost_center)
+			expense_entries[expense_key] = expense_entries.get(expense_key, 0) + amount
+			liability_entries[liability_account] = liability_entries.get(liability_account, 0) + amount
+
+		precision = frappe.get_precision("Journal Entry Account", "debit_in_account_currency")
+		accounting_dimensions = get_accounting_dimensions() or []
+		company_currency = erpnext.get_company_currency(self.company)
+		accounts = []
+		currencies = []
+
+		for (account, cost_center), amount in expense_entries.items():
+			self.get_accounting_entries_and_payable_amount(
+				account,
+				cost_center or self.cost_center,
+				amount,
+				currencies,
+				company_currency,
+				0,
+				accounting_dimensions,
+				precision,
+				entry_type="debit",
+				accounts=accounts,
+			)
+
+		for account, amount in liability_entries.items():
+			self.get_accounting_entries_and_payable_amount(
+				account,
+				self.cost_center,
+				amount,
+				currencies,
+				company_currency,
+				0,
+				accounting_dimensions,
+				precision,
+				entry_type="credit",
+				accounts=accounts,
+				reference_type=self.doctype,
+				reference_name=self.name,
+			)
+
+		self.make_journal_entry(
+			accounts,
+			currencies,
+			voucher_type="Journal Entry",
+			user_remark=_("Employer contribution accrual for salaries from {0} to {1}").format(
+				self.start_date, self.end_date
+			),
+			submit_journal_entry=True,
+			title=_("Employer Contribution"),
+		)
+
+	def get_employer_contribution_accounts(self, salary_component):
+		accounts = frappe.db.get_value(
+			"Salary Component Account",
+			{"parent": salary_component, "company": self.company},
+			["account", "liability_account"],
+			as_dict=True,
+			cache=True,
+		)
+
+		if not accounts or not accounts.account or not accounts.liability_account:
+			frappe.throw(
+				_("Please set expense and liability accounts in Salary Component {0}").format(
+					get_link_to_form("Salary Component", salary_component)
+				)
+			)
+
+		return accounts.account, accounts.liability_account
+
 	def make_journal_entry(
 		self,
 		accounts,
@@ -688,6 +781,7 @@ class PayrollEntry(Document):
 		submitted_salary_slips: list | None = None,
 		submit_journal_entry=False,
 		employee_wise_accounting_enabled=False,
+		title=None,
 	) -> str:
 		multi_currency = 0
 		if len(currencies) > 1:
@@ -704,7 +798,7 @@ class PayrollEntry(Document):
 		journal_entry.multi_currency = multi_currency
 
 		if voucher_type == "Journal Entry":
-			journal_entry.title = payroll_payable_account
+			journal_entry.title = title or payroll_payable_account
 
 		journal_entry.save(ignore_permissions=True)
 
