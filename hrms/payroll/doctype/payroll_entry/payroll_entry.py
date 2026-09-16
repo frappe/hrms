@@ -623,6 +623,9 @@ class PayrollEntry(Document):
 			or {}
 		)
 
+		# fetched before the accrual JE gets linked to slips as get_sal_slip_list excludes linked slips
+		employer_contributions = self.get_salary_components("employer_contributions") or []
+
 		precision = frappe.get_precision("Journal Entry Account", "debit_in_account_currency")
 
 		if earnings or deductions:
@@ -678,6 +681,122 @@ class PayrollEntry(Document):
 				employee_wise_accounting_enabled=employee_wise_accounting_enabled,
 			)
 
+		self.make_employer_contribution_jv_entry(employer_contributions, employee_wise_accounting_enabled)
+
+	def make_employer_contribution_jv_entry(
+		self, employer_contributions, employee_wise_accounting_enabled=False
+	):
+		if not employer_contributions:
+			return
+
+		component_accounts = self.get_employer_contribution_accounts(
+			{item.salary_component for item in employer_contributions}
+		)
+
+		precision = frappe.get_precision("Journal Entry Account", "debit_in_account_currency")
+		expense_entries = {}
+		liability_entries = {}
+		for item in employer_contributions:
+			expense_account, liability_account = component_accounts[item.salary_component]
+
+			# the last cost center takes the rounding remainder so that the expense
+			# splits always sum up to the amount credited against the liability
+			item_amount = flt(item.amount, precision)
+			employee_cost_centers = list(
+				self.get_payroll_cost_centers_for_employee(item.employee, item.salary_structure).items()
+			)
+			allocated = 0
+			for cost_center, percentage in employee_cost_centers[:-1]:
+				split = flt(item_amount * percentage / 100, precision)
+				allocated += split
+				expense_key = (expense_account, cost_center)
+				expense_entries[expense_key] = expense_entries.get(expense_key, 0) + split
+
+			last_cost_center = employee_cost_centers[-1][0]
+			expense_key = (expense_account, last_cost_center)
+			expense_entries[expense_key] = expense_entries.get(expense_key, 0) + flt(
+				item_amount - allocated, precision
+			)
+
+			# breaks up the liability employee-wise, mirroring the payable rows of the accrual JE
+			liability_key = (liability_account, item.employee if employee_wise_accounting_enabled else None)
+			liability_entries[liability_key] = liability_entries.get(liability_key, 0) + item_amount
+
+		if not any(expense_entries.values()):
+			return
+		accounting_dimensions = get_accounting_dimensions() or []
+		company_currency = erpnext.get_company_currency(self.company)
+		accounts = []
+		currencies = []
+
+		for (account, cost_center), amount in expense_entries.items():
+			self.get_accounting_entries_and_payable_amount(
+				account,
+				cost_center or self.cost_center,
+				amount,
+				currencies,
+				company_currency,
+				0,
+				accounting_dimensions,
+				precision,
+				entry_type="debit",
+				accounts=accounts,
+			)
+
+		for (account, employee), amount in liability_entries.items():
+			self.get_accounting_entries_and_payable_amount(
+				account,
+				self.cost_center,
+				amount,
+				currencies,
+				company_currency,
+				0,
+				accounting_dimensions,
+				precision,
+				entry_type="credit",
+				accounts=accounts,
+				party=employee,
+				reference_type=self.doctype,
+				reference_name=self.name,
+			)
+
+		self.make_journal_entry(
+			accounts,
+			currencies,
+			voucher_type="Journal Entry",
+			user_remark=_("Employer contribution accrual for salaries from {0} to {1}").format(
+				self.start_date, self.end_date
+			),
+			submit_journal_entry=True,
+			employee_wise_accounting_enabled=employee_wise_accounting_enabled,
+			title=_("Employer Contribution"),
+		)
+
+	def get_employer_contribution_accounts(self, salary_components):
+		"""Returns {salary_component: (expense_account, liability_account)} in a single query"""
+		salary_components = list(salary_components)
+		account_details = frappe.get_all(
+			"Salary Component Account",
+			filters={
+				"parenttype": "Salary Component",
+				"parent": ["in", salary_components],
+				"company": self.company,
+			},
+			fields=["parent", "account", "liability_account"],
+		)
+		component_accounts = {d.parent: (d.account, d.liability_account) for d in account_details}
+
+		for salary_component in salary_components:
+			accounts = component_accounts.get(salary_component)
+			if not accounts or not all(accounts):
+				frappe.throw(
+					_("Please set expense and liability accounts in Salary Component {0}").format(
+						get_link_to_form("Salary Component", salary_component)
+					)
+				)
+
+		return component_accounts
+
 	def make_journal_entry(
 		self,
 		accounts,
@@ -688,6 +807,7 @@ class PayrollEntry(Document):
 		submitted_salary_slips: list | None = None,
 		submit_journal_entry=False,
 		employee_wise_accounting_enabled=False,
+		title=None,
 	) -> str:
 		multi_currency = 0
 		if len(currencies) > 1:
@@ -704,7 +824,7 @@ class PayrollEntry(Document):
 		journal_entry.multi_currency = multi_currency
 
 		if voucher_type == "Journal Entry":
-			journal_entry.title = payroll_payable_account
+			journal_entry.title = title or payroll_payable_account
 
 		journal_entry.save(ignore_permissions=True)
 
