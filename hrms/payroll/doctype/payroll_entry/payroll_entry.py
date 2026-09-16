@@ -647,13 +647,18 @@ class PayrollEntry(Document):
 	def make_employer_contribution_jv_entry(
 		self, employer_contributions, employee_wise_accounting_enabled=False
 	):
+		if not employer_contributions:
+			return
+
+		component_accounts = self.get_employer_contribution_accounts(
+			{item.salary_component for item in employer_contributions}
+		)
+
 		precision = frappe.get_precision("Journal Entry Account", "debit_in_account_currency")
 		expense_entries = {}
 		liability_entries = {}
 		for item in employer_contributions:
-			expense_account, liability_account = self.get_employer_contribution_accounts(
-				item.salary_component
-			)
+			expense_account, liability_account = component_accounts[item.salary_component]
 
 			# the last cost center takes the rounding remainder so that the expense
 			# splits always sum up to the amount credited against the liability
@@ -728,23 +733,30 @@ class PayrollEntry(Document):
 			title=_("Employer Contribution"),
 		)
 
-	def get_employer_contribution_accounts(self, salary_component):
-		accounts = frappe.db.get_value(
+	def get_employer_contribution_accounts(self, salary_components):
+		"""Returns {salary_component: (expense_account, liability_account)} in a single query"""
+		salary_components = list(salary_components)
+		account_details = frappe.get_all(
 			"Salary Component Account",
-			{"parent": salary_component, "company": self.company},
-			["account", "liability_account"],
-			as_dict=True,
-			cache=True,
+			filters={
+				"parenttype": "Salary Component",
+				"parent": ["in", salary_components],
+				"company": self.company,
+			},
+			fields=["parent", "account", "liability_account"],
 		)
+		component_accounts = {d.parent: (d.account, d.liability_account) for d in account_details}
 
-		if not accounts or not accounts.account or not accounts.liability_account:
-			frappe.throw(
-				_("Please set expense and liability accounts in Salary Component {0}").format(
-					get_link_to_form("Salary Component", salary_component)
+		for salary_component in salary_components:
+			accounts = component_accounts.get(salary_component)
+			if not accounts or not all(accounts):
+				frappe.throw(
+					_("Please set expense and liability accounts in Salary Component {0}").format(
+						get_link_to_form("Salary Component", salary_component)
+					)
 				)
-			)
 
-		return accounts.account, accounts.liability_account
+		return component_accounts
 
 	def make_journal_entry(
 		self,
