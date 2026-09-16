@@ -647,6 +647,7 @@ class PayrollEntry(Document):
 	def make_employer_contribution_jv_entry(
 		self, employer_contributions, employee_wise_accounting_enabled=False
 	):
+		precision = frappe.get_precision("Journal Entry Account", "debit_in_account_currency")
 		expense_entries = {}
 		liability_entries = {}
 		for item in employer_contributions:
@@ -654,23 +655,31 @@ class PayrollEntry(Document):
 				item.salary_component
 			)
 
-			employee_cost_centers = self.get_payroll_cost_centers_for_employee(
-				item.employee, item.salary_structure
+			# the last cost center takes the rounding remainder so that the expense
+			# splits always sum up to the amount credited against the liability
+			item_amount = flt(item.amount, precision)
+			employee_cost_centers = list(
+				self.get_payroll_cost_centers_for_employee(item.employee, item.salary_structure).items()
 			)
-			for cost_center, percentage in employee_cost_centers.items():
+			allocated = 0
+			for cost_center, percentage in employee_cost_centers[:-1]:
+				split = flt(item_amount * percentage / 100, precision)
+				allocated += split
 				expense_key = (expense_account, cost_center)
-				expense_entries[expense_key] = (
-					expense_entries.get(expense_key, 0) + flt(item.amount) * percentage / 100
-				)
+				expense_entries[expense_key] = expense_entries.get(expense_key, 0) + split
+
+			last_cost_center = employee_cost_centers[-1][0]
+			expense_key = (expense_account, last_cost_center)
+			expense_entries[expense_key] = expense_entries.get(expense_key, 0) + flt(
+				item_amount - allocated, precision
+			)
 
 			# breaks up the liability employee-wise, mirroring the payable rows of the accrual JE
 			liability_key = (liability_account, item.employee if employee_wise_accounting_enabled else None)
-			liability_entries[liability_key] = liability_entries.get(liability_key, 0) + flt(item.amount)
+			liability_entries[liability_key] = liability_entries.get(liability_key, 0) + item_amount
 
-		if not expense_entries:
+		if not any(expense_entries.values()):
 			return
-
-		precision = frappe.get_precision("Journal Entry Account", "debit_in_account_currency")
 		accounting_dimensions = get_accounting_dimensions() or []
 		company_currency = erpnext.get_company_currency(self.company)
 		accounts = []

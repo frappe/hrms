@@ -1170,6 +1170,59 @@ class TestPayrollEntry(HRMSTestSuite):
 		self.assertEqual(debit_row.debit, 10000)
 		self.assertFalse(debit_row.party)
 
+	def test_employer_contribution_jv_balances_with_cost_center_split_rounding(self):
+		company = frappe.get_doc("Company", "_Test Company")
+		department = create_department("EC Rounding Test")
+		employee = make_employee("ec_jv_rounding@payroll.com", company=company.name, department=department)
+
+		employer_pf, expense_account, liability_account = self.setup_employer_contribution_component()
+
+		structure = make_salary_structure(
+			"Test Salary Structure EC Rounding",
+			"Monthly",
+			employee,
+			company=company.name,
+			currency=company.default_currency,
+			other_details={
+				"employer_contributions": [{"salary_component": employer_pf.name, "amount": 0.01}]
+			},
+		)
+
+		ssa = frappe.db.get_value(
+			"Salary Structure Assignment",
+			{"employee": employee, "salary_structure": structure.name, "docstatus": 1},
+			"name",
+		)
+		ssa_doc = frappe.get_doc("Salary Structure Assignment", ssa)
+		ssa_doc.payroll_cost_centers = []
+		ssa_doc.append("payroll_cost_centers", {"cost_center": "_Test Cost Center - _TC", "percentage": 50})
+		ssa_doc.append("payroll_cost_centers", {"cost_center": "_Test Cost Center 2 - _TC", "percentage": 50})
+		ssa_doc.save()
+
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = make_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company.default_payroll_payable_account,
+			currency=company.default_currency,
+			company=company.name,
+			cost_center="Main - _TC",
+			department=department,
+		)
+
+		# 0.005 + 0.005 rounded per row would not equal the 0.01 credit,
+		# making the JE unbalanced and failing submission
+		employer_contribution_je = frappe.db.get_value(
+			"Journal Entry Account",
+			{"account": liability_account, "reference_name": payroll_entry.name, "docstatus": 1},
+			"parent",
+		)
+		self.assertTrue(employer_contribution_je, "Employer contribution Journal Entry not created")
+
+		je_doc = frappe.get_doc("Journal Entry", employer_contribution_je)
+		self.assertEqual(flt(je_doc.total_debit, 2), 0.01)
+		self.assertEqual(flt(je_doc.total_credit, 2), 0.01)
+
 	def test_employee_benefits_accruals_in_salary_slip(self):
 		"""Test to verify
 		- employee flexible benefits of accrual payout methods are fetched into salary slip
