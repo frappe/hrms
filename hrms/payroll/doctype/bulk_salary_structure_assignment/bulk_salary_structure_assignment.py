@@ -60,7 +60,7 @@ class BulkSalaryStructureAssignment(Document):
 		)
 		return query.run(as_dict=True)
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def bulk_assign_structure(self, employees: list) -> None:
 		mandatory_fields = ["salary_structure", "from_date", "company"]
 		validate_bulk_tool_fields(self, mandatory_fields, employees)

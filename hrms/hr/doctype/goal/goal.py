@@ -198,7 +198,7 @@ def _update_goal_completion_status(goals: list[dict]) -> list[dict]:
 	return goals
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def update_progress(progress: float, goal: str) -> None:
 	goal = frappe.get_doc("Goal", goal)
 	goal.progress = progress
@@ -208,7 +208,7 @@ def update_progress(progress: float, goal: str) -> None:
 	return goal
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def update_status(status: str, goals: str | list) -> None:
 	if isinstance(goals, str):
 		import json
@@ -226,7 +226,7 @@ def update_status(status: str, goals: str | list) -> None:
 	return goals
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def add_tree_node():
 	from frappe.desk.treeview import make_tree_args
 

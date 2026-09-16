@@ -86,7 +86,7 @@ def _get_unmarked_attendance(employee_list: list[dict], attendance_list: list[di
 	return unmarked_attendance
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def mark_employee_attendance(
 	employee_list: list | str,
 	status: str,

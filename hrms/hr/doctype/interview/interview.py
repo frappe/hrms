@@ -80,7 +80,7 @@ class Interview(Document):
 		status_map = {"Cleared": "Accepted", "Rejected": "Rejected"}
 		return status_map.get(self.status, None)
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def reschedule_interview(self, scheduled_on, from_time, to_time):
 		if scheduled_on == self.scheduled_on and from_time == self.from_time and to_time == self.to_time:
 			frappe.msgprint(
@@ -184,7 +184,7 @@ def get_skill_wise_average_rating(interview: str) -> list[dict]:
 	).run(as_dict=True)
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def update_job_applicant_status(args):
 	import json
 
@@ -316,7 +316,7 @@ def get_expected_skill_set(interview_round):
 	)
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def create_interview_feedback(data, interview_name, interviewer, job_applicant):
 	import json
 

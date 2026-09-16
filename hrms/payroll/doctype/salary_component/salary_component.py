@@ -71,7 +71,7 @@ class SalaryComponent(Document):
 			.run(pluck=True)
 		)
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def update_salary_structures(self, field, value, structures=None):
 		is_formula_related = field == "formula"
 

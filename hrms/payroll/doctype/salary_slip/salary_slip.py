@@ -2435,7 +2435,7 @@ def _check_attributes(code: str) -> None:
 			raise SyntaxError(f'Illegal rule {frappe.bold(code)}. Cannot use "{node.attr}"')
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def enqueue_email_salary_slips(names) -> None:
 	"""enqueue bulk emailing salary slips"""
 	import json
