@@ -270,12 +270,15 @@ class IntegrationTestHolidayListAssignment(HRMSTestSuite):
 		)
 		create_holiday_list_assignment("Employee", employee, expiring_holiday_list, from_date=year_start)
 
-		# the expired list stays in effect until the next assignment starts
+		# the expired list stays in effect until the next assignment starts, even when a company
+		# assignment covers the remaining period, matching get_holiday_list_for_employee
+		create_holiday_list_assignment("Company", "_Test Company", self.holiday_list, from_date=year_start)
 		ranges = get_holiday_list_ranges_for_employee(employee, year_start, year_end)
 		self.assertEqual(
 			ranges,
 			[{"holiday_list": expiring_holiday_list, "from_date": year_start, "to_date": year_end}],
 		)
+		self.assertEqual(get_holiday_list_for_employee(employee, as_on=year_end), expiring_holiday_list)
 
 	def test_bulk_holiday_list_ranges_fall_back_to_company(self):
 		employee = make_employee("test_hla_bulk_ranges@example.com", company="_Test Company")

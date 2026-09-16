@@ -138,9 +138,10 @@ def get_holiday_list_ranges_for_employees(
 ) -> dict[str, list[frappe._dict]]:
 	"""
 	Resolves the holiday list in effect on every date of [start_date, end_date] for many employees,
-	fetching all of their and their companies' assignments in a single query. Gaps in employee-level
-	assignments are filled with company-level ones, and dates no assignment covers resolve the way
-	a single date does in `get_holiday_list_for_employee`.
+	fetching all of their and their companies' assignments in a single query. An assignment stays in
+	effect until the next assignment starts, exactly as in `get_holiday_list_for_employee`. Dates before
+	the employee's first assignment use the company's assignments, and dates before both use the
+	earliest assignment.
 
 	{"EMP-001": [{"holiday_list": "HL-1", "from_date": date, "to_date": date}, ...]}
 	"""
@@ -179,9 +180,8 @@ def fill_uncovered_dates_with_assigned_holiday_list(
 	end_date: date,
 ) -> list[frappe._dict]:
 	"""
-	Dates outside every assignment's effective range (before the first assignment, or after the
-	assigned holiday list expired) resolve like a single date would. Adjacent ranges using the same
-	holiday list are merged.
+	Dates before the first assignment resolve like a single date would. Adjacent ranges using the
+	same holiday list are merged.
 	"""
 	filled = []
 
@@ -237,17 +237,9 @@ def get_holiday_list_assignments(assigned_to_list: list[str]) -> dict[str, list[
 		return {}
 
 	HLA = frappe.qb.DocType("Holiday List Assignment")
-	HolidayList = frappe.qb.DocType("Holiday List")
 	assignments = (
 		frappe.qb.from_(HLA)
-		.join(HolidayList)
-		.on(HLA.holiday_list == HolidayList.name)
-		.select(
-			HLA.assigned_to,
-			HLA.holiday_list,
-			HLA.from_date,
-			HolidayList.to_date.as_("holiday_list_to_date"),
-		)
+		.select(HLA.assigned_to, HLA.holiday_list, HLA.from_date)
 		.where(HLA.assigned_to.isin(assigned_to_list))
 		.where(HLA.docstatus == 1)
 		.orderby(HLA.assigned_to)
@@ -316,20 +308,15 @@ def build_effective_date_ranges_for_holiday_assignments(
 	end_date: date,
 ) -> dict[str, list[dict]]:
 	"""
-	Returns map of {assigned_to: [raw_holiday_list_assignment_rows]},
-	effective_to_date = MIN(HL.to_date, next assignment's from_date - 1 day)
+	Returns map of {assigned_to: [{"holiday_list", "from_date", "to_date"}]} clipped to [start_date, end_date].
+	Each assignment stays in effect until the day before the next assignment starts.
 	"""
 	result = {}
 	for assigned_to, assignments in holiday_assignment_map.items():
 		ranges = []
 		for idx, assignment in enumerate(assignments):
-			hl_to_date = getdate(assignment.holiday_list_to_date)
 			next_assignment = assignments[idx + 1] if idx + 1 < len(assignments) else None
-
-			if next_assignment:
-				effective_to_date = min(hl_to_date, add_days(next_assignment.from_date, -1))
-			else:
-				effective_to_date = hl_to_date
+			effective_to_date = add_days(next_assignment.from_date, -1) if next_assignment else end_date
 
 			from_date = max(getdate(assignment.from_date), start_date)
 			effective_to_date = min(getdate(effective_to_date), end_date)
