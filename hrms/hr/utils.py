@@ -725,29 +725,12 @@ def get_holidays_for_employee(employee, start_date, end_date, raise_exception=Tr
 
 	return: list of dicts with `holiday_date` and `description`
 	"""
-	from hrms.utils.holiday_list import get_holiday_list_ranges_for_employee
+	from hrms.utils.holiday_list import get_holiday_list_ranges_for_employee, get_holidays_in_ranges
 
-	holidays = []
-	for holiday_list_range in get_holiday_list_ranges_for_employee(
+	holiday_list_ranges = get_holiday_list_ranges_for_employee(
 		employee, start_date, end_date, raise_exception=raise_exception
-	):
-		filters = {
-			"parent": holiday_list_range.holiday_list,
-			"holiday_date": ("between", [holiday_list_range.from_date, holiday_list_range.to_date]),
-		}
-		if only_non_weekly:
-			filters["weekly_off"] = False
-
-		holidays.extend(
-			frappe.get_all(
-				"Holiday",
-				fields=["name", "description", "holiday_date"],
-				filters=filters,
-				order_by="holiday_date",
-			)
-		)
-
-	return holidays
+	)
+	return get_holidays_in_ranges(holiday_list_ranges, skip_weekly_offs=only_non_weekly)
 
 
 @erpnext.allow_regional

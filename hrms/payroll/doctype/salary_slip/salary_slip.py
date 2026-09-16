@@ -60,7 +60,7 @@ from hrms.payroll.utils import (
 	get_component_eval_context,
 	throw_error_message,
 )
-from hrms.utils.holiday_list import get_holiday_dates_between, get_holiday_list_ranges_for_employee
+from hrms.utils.holiday_list import get_holiday_list_ranges_for_employee, get_holidays_in_ranges_map
 
 # cache keys
 HOLIDAYS_BETWEEN_DATES = "holidays_between_dates"
@@ -738,20 +738,21 @@ class SalarySlip(TransactionBase):
 		return payment_days
 
 	def get_holidays_for_employee(self, start_date, end_date):
-		holiday_dates = []
+		holidays_by_range = {}
+		uncached_ranges = {}
 		for holiday_list_range in get_holiday_list_ranges_for_employee(self.employee, start_date, end_date):
 			key = "{holiday_list}:{from_date}:{to_date}".format(**holiday_list_range)
-			holidays = frappe.cache().hget(HOLIDAYS_BETWEEN_DATES, key)
+			holidays_by_range[key] = frappe.cache().hget(HOLIDAYS_BETWEEN_DATES, key)
+			if not holidays_by_range[key]:
+				uncached_ranges[key] = [holiday_list_range]
 
-			if not holidays:
-				holidays = get_holiday_dates_between(
-					holiday_list_range.holiday_list, holiday_list_range.from_date, holiday_list_range.to_date
-				)
-				frappe.cache().hset(HOLIDAYS_BETWEEN_DATES, key, holidays)
+		if uncached_ranges:
+			fetched = get_holidays_in_ranges_map(uncached_ranges)
+			for key in uncached_ranges:
+				holidays_by_range[key] = [holiday.holiday_date for holiday in fetched.get(key, [])]
+				frappe.cache().hset(HOLIDAYS_BETWEEN_DATES, key, holidays_by_range[key])
 
-			holiday_dates.extend(holidays)
-
-		return holiday_dates
+		return [holiday_date for holidays in holidays_by_range.values() for holiday_date in holidays]
 
 	def calculate_lwp_or_ppl_based_on_leave_application(
 		self, holidays, working_days_list, daily_wages_fraction_for_half_day

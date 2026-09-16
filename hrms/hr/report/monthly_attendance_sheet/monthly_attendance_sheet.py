@@ -17,7 +17,7 @@ from frappe.utils import add_days, cint, cstr, formatdate, getdate
 from frappe.utils.nestedset import get_descendants_of
 
 from hrms.utils import date_diff, get_date_range
-from hrms.utils.holiday_list import get_holiday_list_ranges_for_employees
+from hrms.utils.holiday_list import get_holiday_list_ranges_for_employees, get_holidays_in_ranges_map
 
 Filters = frappe._dict
 
@@ -427,56 +427,17 @@ def get_employee_related_details(filters: Filters) -> tuple[dict, list]:
 
 
 def get_employee_holiday_map(employee_details: dict, filters: Filters) -> dict[str, list[dict]]:
-	"""
-	Builds {employee: [holidays]} for all employees in two queries.
-
-	Query 1 — bulk HLA fetch for all employees + their companies.
-	Query 2 — holidays for only the holiday lists employees are actually assigned to.
-
-	Per-employee lookup after this call is an O(1) dict access.
-	"""
+	"""Builds {employee: [holidays]} for all employees in two queries: one for assignments, one for holidays"""
 	if not employee_details:
 		return {}
 
 	start_date, end_date = get_date_range_from_filters(filters)
-
-	employee_hl_ranges = get_holiday_list_ranges_for_employees(
+	employee_holiday_list_ranges = get_holiday_list_ranges_for_employees(
 		{employee: details.get("company") for employee, details in employee_details.items()},
 		start_date,
 		end_date,
 	)
-
-	if not employee_hl_ranges:
-		return {}
-
-	# collect only the HL names employees are actually assigned to
-	used_hl_names = {r["holiday_list"] for ranges in employee_hl_ranges.values() for r in ranges}
-
-	Holiday = frappe.qb.DocType("Holiday")
-	holiday_rows = (
-		frappe.qb.from_(Holiday)
-		.select(Holiday.parent, Holiday.holiday_date, Holiday.weekly_off)
-		.where(Holiday.parent.isin(list(used_hl_names)))
-		.where(Holiday.holiday_date.between(start_date, end_date))
-	).run(as_dict=True)
-
-	hl_holidays = {}
-	for h in holiday_rows:
-		hl_holidays.setdefault(h.parent, []).append(h)
-
-	# filter holidays to each employee's effective ranges
-	employee_holiday_map = {}
-	for employee, ranges in employee_hl_ranges.items():
-		holidays = [
-			h
-			for r in ranges
-			for h in hl_holidays.get(r["holiday_list"], [])
-			if r["from_date"] <= getdate(h.holiday_date) <= r["to_date"]
-		]
-		if holidays:
-			employee_holiday_map[employee] = holidays
-
-	return employee_holiday_map
+	return get_holidays_in_ranges_map(employee_holiday_list_ranges)
 
 
 def get_date_range_from_filters(filters: Filters) -> tuple:
