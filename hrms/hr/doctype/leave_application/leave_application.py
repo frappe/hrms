@@ -805,7 +805,9 @@ class LeaveApplication(Document, PWANotificationsMixin):
 					from_date=self.from_date,
 					to_date=self.to_date,
 					is_lwp=lwp,
-					holiday_list=get_holiday_list_for_employee(self.employee, raise_exception=raise_exception)
+					holiday_list=get_holiday_list_for_employee(
+						self.employee, raise_exception=raise_exception, as_on=self.from_date
+					)
 					or "",
 				)
 				create_leave_ledger_entry(self, args, submit)
@@ -866,20 +868,33 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			self.half_day_date,
 		)
 
-		args = dict(
-			is_lwp=lwp,
-			holiday_list=get_holiday_list_for_employee(self.employee, raise_exception=raise_exception) or "",
-		)
+		args = dict(is_lwp=lwp)
 
 		if leaves_in_first_alloc:
 			args.update(
-				dict(from_date=self.from_date, to_date=first_alloc_end, leaves=leaves_in_first_alloc * -1)
+				dict(
+					from_date=self.from_date,
+					to_date=first_alloc_end,
+					leaves=leaves_in_first_alloc * -1,
+					holiday_list=get_holiday_list_for_employee(
+						self.employee, raise_exception=raise_exception, as_on=self.from_date
+					)
+					or "",
+				)
 			)
 			create_leave_ledger_entry(self, args, submit)
 
 		if leaves_in_second_alloc:
 			args.update(
-				dict(from_date=second_alloc_start, to_date=self.to_date, leaves=leaves_in_second_alloc * -1)
+				dict(
+					from_date=second_alloc_start,
+					to_date=self.to_date,
+					leaves=leaves_in_second_alloc * -1,
+					holiday_list=get_holiday_list_for_employee(
+						self.employee, raise_exception=raise_exception, as_on=second_alloc_start
+					)
+					or "",
+				)
 			)
 			create_leave_ledger_entry(self, args, submit)
 
@@ -897,7 +912,9 @@ class LeaveApplication(Document, PWANotificationsMixin):
 				to_date=expiry_date,
 				leaves=leaves * -1,
 				is_lwp=lwp,
-				holiday_list=get_holiday_list_for_employee(self.employee, raise_exception=raise_exception)
+				holiday_list=get_holiday_list_for_employee(
+					self.employee, raise_exception=raise_exception, as_on=self.from_date
+				)
 				or "",
 			)
 			create_leave_ledger_entry(self, args, submit)
@@ -909,7 +926,16 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			)
 
 			if leaves:
-				args.update(dict(from_date=start_date, to_date=self.to_date, leaves=leaves * -1))
+				args = dict(
+					from_date=start_date,
+					to_date=self.to_date,
+					leaves=leaves * -1,
+					is_lwp=lwp,
+					holiday_list=get_holiday_list_for_employee(
+						self.employee, raise_exception=raise_exception, as_on=start_date
+					)
+					or "",
+				)
 				create_leave_ledger_entry(self, args, submit)
 
 	def validate_leave_approver(self):
@@ -1504,18 +1530,9 @@ def add_block_dates(events, start, end, employee, company):
 
 
 def add_holidays(events, start, end, employee, company):
-	applicable_holiday_list = get_holiday_list_for_employee(employee, company)
-	if not applicable_holiday_list:
-		return
+	from hrms.hr.utils import get_holidays_for_employee
 
-	Holiday = frappe.qb.DocType("Holiday")
-	holidays = (
-		frappe.qb.from_(Holiday)
-		.select(Holiday.name, Holiday.holiday_date, Holiday.description)
-		.where((Holiday.parent == applicable_holiday_list) & (Holiday.holiday_date.between(start, end)))
-	).run(as_dict=True)
-
-	for holiday in holidays:
+	for holiday in get_holidays_for_employee(employee, start, end, raise_exception=False):
 		events.append(
 			{
 				"doctype": "Holiday",

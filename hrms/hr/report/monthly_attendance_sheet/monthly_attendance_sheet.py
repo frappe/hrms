@@ -17,10 +17,7 @@ from frappe.utils import add_days, cint, cstr, formatdate, getdate
 from frappe.utils.nestedset import get_descendants_of
 
 from hrms.utils import date_diff, get_date_range
-from hrms.utils.holiday_list import (
-	fill_employee_holiday_list_date_gaps_with_company_holiday_list,
-	get_assigned_holiday_lists_to_employee_and_company,
-)
+from hrms.utils.holiday_list import get_holiday_list_ranges_for_employees
 
 Filters = frappe._dict
 
@@ -383,7 +380,6 @@ def get_employee_related_details(filters: Filters) -> tuple[dict, list]:
 			Employee.department,
 			Employee.branch,
 			Employee.company,
-			Employee.holiday_list,
 			(Employee.date_of_joining).as_("joined_date"),
 			Case()
 			.when(
@@ -444,23 +440,11 @@ def get_employee_holiday_map(employee_details: dict, filters: Filters) -> dict[s
 
 	start_date, end_date = get_date_range_from_filters(filters)
 
-	employees = list(employee_details.keys())
-	companies = list({d.company for d in employee_details.values() if d.get("company")})
-
-	assigned_holiday_lists = get_assigned_holiday_lists_to_employee_and_company(
-		employees + companies, start_date, end_date
+	employee_hl_ranges = get_holiday_list_ranges_for_employees(
+		{employee: details.get("company") for employee, details in employee_details.items()},
+		start_date,
+		end_date,
 	)
-
-	# gaps in employee-level assignments are filled with company-level assignments,
-	employee_hl_ranges = {}
-	for employee, details in employee_details.items():
-		employee_ranges = assigned_holiday_lists.get(employee, [])
-		company_ranges = assigned_holiday_lists.get(details.get("company"), [])
-		ranges = fill_employee_holiday_list_date_gaps_with_company_holiday_list(
-			employee_ranges, company_ranges, start_date, end_date
-		)
-		if ranges:
-			employee_hl_ranges[employee] = ranges
 
 	if not employee_hl_ranges:
 		return {}

@@ -5,7 +5,7 @@
 import frappe
 from frappe import _
 
-from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
+from hrms.utils.holiday_list import get_holiday_list_ranges_for_employee
 
 
 def execute(filters=None):
@@ -61,30 +61,32 @@ def get_data(filters):
 		employee_filters["department"] = filters.department
 
 	for employee in frappe.get_list("Employee", filters=employee_filters, pluck="name"):
-		holiday_list = get_holiday_list_for_employee(employee, raise_exception=False)
-		if not holiday_list or (filters.holiday_list and filters.holiday_list != holiday_list):
-			continue
+		for holiday_list_range in get_holiday_list_ranges_for_employee(
+			employee, filters.from_date, filters.to_date, raise_exception=False
+		):
+			if filters.holiday_list and filters.holiday_list != holiday_list_range.holiday_list:
+				continue
 
-		working_days = (
-			frappe.qb.from_(Attendance)
-			.inner_join(Holiday)
-			.on(Attendance.attendance_date == Holiday.holiday_date)
-			.select(
-				Attendance.employee,
-				Attendance.employee_name,
-				Attendance.attendance_date,
-				Attendance.status,
-				Holiday.description,
+			working_days = (
+				frappe.qb.from_(Attendance)
+				.inner_join(Holiday)
+				.on(Attendance.attendance_date == Holiday.holiday_date)
+				.select(
+					Attendance.employee,
+					Attendance.employee_name,
+					Attendance.attendance_date,
+					Attendance.status,
+					Holiday.description,
+				)
+				.where(
+					(Attendance.employee == employee)
+					& (Attendance.attendance_date[holiday_list_range.from_date : holiday_list_range.to_date])
+					& (Attendance.status.notin(["Absent", "On Leave"]))
+					& (Attendance.docstatus == 1)
+					& (Holiday.parent == holiday_list_range.holiday_list)
+				)
+				.run(as_list=True)
 			)
-			.where(
-				(Attendance.employee == employee)
-				& (Attendance.attendance_date[filters.from_date : filters.to_date])
-				& (Attendance.status.notin(["Absent", "On Leave"]))
-				& (Attendance.docstatus == 1)
-				& (Holiday.parent == holiday_list)
-			)
-			.run(as_list=True)
-		)
-		data.extend(working_days)
+			data.extend(working_days)
 
 	return data
