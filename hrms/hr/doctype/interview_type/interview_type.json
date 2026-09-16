@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:interview_type_name",
  "creation": "2021-04-12 12:57:19.902866",
@@ -68,7 +69,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-16 15:52:26.011116",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview Type",

@@ -321,7 +321,7 @@ def get_total_amount_and_exchange_rate(ref_doc, party_account_currency, company_
 
 
 # update exchange rate in linked advance
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def set_exchange_rate_in_advance(doc: Document, method: None = None):
 	if doc.references:
 		for reference_doc in doc.references:

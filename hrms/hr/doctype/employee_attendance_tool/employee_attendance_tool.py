@@ -166,7 +166,7 @@ def _get_unmarked_attendance_with_shift(unmarked_attendance, shift, date):
 	return shiftwise_unmarked_attendance
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def mark_employee_attendance(
 	employee_list: list | str,
 	status: str,

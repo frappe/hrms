@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "HR-GRIEV-.YYYY.-.#####",
  "creation": "2021-05-11 13:41:51.485295",
  "doctype": "DocType",
@@ -203,7 +204,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-21 17:25:40.972515",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Grievance",

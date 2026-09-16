@@ -81,7 +81,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		posting_date: DF.Date
 		project: DF.Link | None
 		remark: DF.SmallText | None
-		status: DF.Literal["Draft", "Paid", "Unpaid", "Rejected", "Submitted", "Cancelled"]
+		status: DF.Literal["Draft", "Paid", "Partially Paid", "Unpaid", "Rejected", "Submitted", "Cancelled"]
 		task: DF.Link | None
 		taxes: DF.Table[ExpenseTaxesandCharges]
 		total_advance_amount: DF.Currency
@@ -105,6 +105,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 	def validate(self):
 		validate_active_employee(self.employee)
 		set_employee_name(self)
+		self.set_company_currency_if_multi_currency_disabled()
 		self.validate_sanctioned_amount()
 		self.calculate_total_amount()
 		self.validate_advances()
@@ -141,7 +142,10 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 				):
 					status = "Paid"
 				elif flt(self.total_sanctioned_amount) > 0:
-					status = "Unpaid"
+					if flt(self.total_amount_reimbursed, precision) > 0:
+						status = "Partially Paid"
+					else:
+						status = "Unpaid"
 			elif self.approval_status == "Rejected":
 				status = "Rejected"
 
@@ -484,9 +488,21 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 					)
 				)
 
+		for data in self.advances:
+			self.validate_advance_linkage(data)
+
 		if self.is_paid:
 			if not self.mode_of_payment:
 				frappe.throw(_("Mode of payment is required to make a payment").format(self.employee))
+
+	def set_company_currency_if_multi_currency_disabled(self):
+		if frappe.db.get_single_value("HR Settings", "enable_multi_currency_expense_claim"):
+			return
+
+		self.currency = erpnext.get_company_currency(self.company)
+		self.exchange_rate = 1.0
+		for advance in self.get("advances"):
+			advance.exchange_rate = 1.0
 
 	def calculate_total_amount(self):
 		self.total_claimed_amount = 0
@@ -545,41 +561,62 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		precision = self.precision("total_advance_amount")
 
 		for d in self.get("advances"):
-			advance_details = frappe.db.get_value(
-				"Employee Advance",
-				d.employee_advance,
-				["employee", "currency", "advance_account", "paid_amount"],
-				as_dict=True,
-			)
-			if not advance_details or self.employee != advance_details.employee:
-				frappe.throw(_("Selected employee advance is not of employee {}").format(self.employee))
-
-			validate_employee_advance_currency_and_account(self, d.employee_advance, advance_details)
-
-			self.round_floats_in(d)
-			if d.allocated_amount and flt(d.allocated_amount) > flt(
-				flt(d.unclaimed_amount) - flt(d.return_amount), precision
-			):
-				frappe.throw(
-					_("Row {0}# Allocated amount {1} cannot be greater than unclaimed amount {2}").format(
-						d.idx, d.allocated_amount, d.unclaimed_amount
-					)
-				)
+			self.validate_advance_row(d, precision)
 
 			self.total_advance_amount += flt(d.allocated_amount)
 			self.set_base_fields_amount(d, ["advance_paid", "unclaimed_amount"], d.exchange_rate)
 			self.set_base_fields_amount(d, ["allocated_amount"])
 
 		if self.total_advance_amount:
-			self.round_floats_in(self, ["total_advance_amount"])
-			amount_with_taxes = flt(
-				(flt(self.total_sanctioned_amount, precision) + flt(self.total_taxes_and_charges, precision)),
-				precision,
-			)
-			self.set_base_fields_amount(self, ["total_advance_amount"])
+			self.validate_total_advance_amount(precision)
 
-			if flt(self.total_advance_amount, precision) > amount_with_taxes:
-				frappe.throw(_("Total advance amount cannot be greater than total sanctioned amount"))
+	def validate_advance_row(self, d, precision):
+		advance_details = frappe.db.get_value(
+			"Employee Advance",
+			d.employee_advance,
+			["employee", "currency", "advance_account", "paid_amount"],
+			as_dict=True,
+		)
+		if not advance_details or self.employee != advance_details.employee:
+			frappe.throw(_("Selected employee advance is not of employee {}").format(self.employee))
+
+		validate_employee_advance_currency_and_account(self, d.employee_advance, advance_details)
+		self.validate_advance_linkage(d)
+
+		self.round_floats_in(d)
+		if d.allocated_amount and flt(d.allocated_amount) > flt(
+			flt(d.unclaimed_amount) - flt(d.return_amount), precision
+		):
+			frappe.throw(
+				_("Row {0}# Allocated amount {1} cannot be greater than unclaimed amount {2}").format(
+					d.idx, d.allocated_amount, d.unclaimed_amount
+				)
+			)
+
+	def validate_advance_linkage(self, d):
+		# advance_account and the payment reference are set by get_advances; a row added
+		# without them cannot book its accounting entry against the advance
+		if d.allocated_amount and not (d.advance_account and d.reference_type and d.reference_name):
+			frappe.throw(
+				_("Row {0}: {1}, {2} and {3} are required against advance {4}.").format(
+					d.idx,
+					frappe.bold(_("Advance Account")),
+					frappe.bold(_("Reference Type")),
+					frappe.bold(_("Reference Name")),
+					frappe.bold(d.employee_advance),
+				)
+			)
+
+	def validate_total_advance_amount(self, precision):
+		self.round_floats_in(self, ["total_advance_amount"])
+		amount_with_taxes = flt(
+			(flt(self.total_sanctioned_amount, precision) + flt(self.total_taxes_and_charges, precision)),
+			precision,
+		)
+		self.set_base_fields_amount(self, ["total_advance_amount"])
+
+		if flt(self.total_advance_amount, precision) > amount_with_taxes:
+			frappe.throw(_("Total advance amount cannot be greater than total sanctioned amount"))
 
 	def validate_sanctioned_amount(self):
 		for d in self.get("expenses"):
@@ -798,9 +835,6 @@ def get_expense_claim(employee_advance: str | dict) -> Document:
 		employee_advance = frappe.get_doc("Employee Advance", employee_advance)
 
 	company = employee_advance.company
-	default_payable_account = frappe.get_cached_value(
-		"Company", company, "default_expense_claim_payable_account"
-	)
 	default_cost_center = frappe.get_cached_value("Company", company, "cost_center")
 
 	expense_claim = frappe.new_doc("Expense Claim")
@@ -808,7 +842,7 @@ def get_expense_claim(employee_advance: str | dict) -> Document:
 	expense_claim.currency = employee_advance.currency
 	expense_claim.employee = employee_advance.employee
 	expense_claim.payable_account = (
-		default_payable_account
+		get_default_payable_account(company)
 		if employee_advance.currency == erpnext.get_company_currency(company)
 		else None
 	)
@@ -816,6 +850,14 @@ def get_expense_claim(employee_advance: str | dict) -> Document:
 	expense_claim.is_paid = 1 if flt(employee_advance.paid_amount) else 0
 	get_expense_claim_advances(expense_claim, employee_advance)
 	return expense_claim
+
+
+@frappe.whitelist()
+def get_default_payable_account(company: str) -> str | None:
+	frappe.has_permission("Company", "read", company, throw=True)
+	return frappe.get_cached_value(
+		"Company", company, "default_expense_claim_payable_account"
+	) or frappe.get_cached_value("Company", company, "default_payroll_payable_account")
 
 
 def get_expense_claim_advances(expense_claim, employee_advance):

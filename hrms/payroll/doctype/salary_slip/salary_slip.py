@@ -56,6 +56,7 @@ from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import (
 from hrms.payroll.utils import (
 	COMPONENT_EVAL_GLOBALS,
 	COMPONENT_PARENTFIELDS,
+	SALARY_COMPONENT_VALUES,
 	_safe_eval,
 	get_component_eval_context,
 	throw_error_message,
@@ -65,7 +66,6 @@ from hrms.utils.holiday_list import get_holiday_dates_between
 # cache keys
 HOLIDAYS_BETWEEN_DATES = "holidays_between_dates"
 LEAVE_TYPE_MAP = "leave_type_map"
-SALARY_COMPONENT_VALUES = "salary_component_values"
 TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
 
 
@@ -167,67 +167,47 @@ class SalarySlip(TransactionBase):
 
 	@property
 	def has_custom_naming_series(self):
-		if not hasattr(self, "__has_custom_naming_series"):
-			self.__has_custom_naming_series = frappe.db.exists(
-				"Property Setter",
-				{
-					"doc_type": "Salary Slip",
-					"property": "autoname",
-				},
-			)
-
-		return self.__has_custom_naming_series
+		return frappe.db.exists(
+			"Property Setter",
+			{
+				"doc_type": "Salary Slip",
+				"property": "autoname",
+			},
+		)
 
 	@property
 	def joining_date(self):
-		if not hasattr(self, "__joining_date"):
-			self.__joining_date = frappe.get_cached_value(
-				"Employee",
-				self.employee,
-				"date_of_joining",
-			)
-
-		return self.__joining_date
+		return frappe.get_cached_value(
+			"Employee",
+			self.employee,
+			"date_of_joining",
+		)
 
 	@property
 	def relieving_date(self):
-		if not hasattr(self, "__relieving_date"):
-			self.__relieving_date = frappe.get_cached_value(
-				"Employee",
-				self.employee,
-				"relieving_date",
-			)
-
-		return self.__relieving_date
+		return frappe.get_cached_value(
+			"Employee",
+			self.employee,
+			"relieving_date",
+		)
 
 	@property
 	def payroll_period(self):
-		if not hasattr(self, "__payroll_period"):
-			self.__payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
-
-		return self.__payroll_period
+		return get_payroll_period(self.start_date, self.end_date, self.company)
 
 	@property
 	def actual_start_date(self):
-		if not hasattr(self, "__actual_start_date"):
-			self.__actual_start_date = self.start_date
+		if self.joining_date and getdate(self.start_date) < self.joining_date <= getdate(self.end_date):
+			return self.joining_date
 
-			if self.joining_date and getdate(self.start_date) < self.joining_date <= getdate(self.end_date):
-				self.__actual_start_date = self.joining_date
-
-		return self.__actual_start_date
+		return self.start_date
 
 	@property
 	def actual_end_date(self):
-		if not hasattr(self, "__actual_end_date"):
-			self.__actual_end_date = self.end_date
+		if self.relieving_date and getdate(self.start_date) <= self.relieving_date < getdate(self.end_date):
+			return self.relieving_date
 
-			if self.relieving_date and getdate(self.start_date) <= self.relieving_date < getdate(
-				self.end_date
-			):
-				self.__actual_end_date = self.relieving_date
-
-		return self.__actual_end_date
+		return self.end_date
 
 	def validate(self):
 		self.check_salary_withholding()
@@ -2666,6 +2646,31 @@ def make_salary_slip_from_timesheet(source_name: str, target_doc: str | Document
 	frappe.has_permission("Timesheet", "read", source_name, throw=True)
 	target = frappe.new_doc("Salary Slip")
 	set_missing_values(source_name, target)
+	if not target.check_sal_struct():
+		frappe.throw(
+			_("Cannot create Salary Slip: no active Salary Structure is assigned to employee {0}.").format(
+				frappe.bold(target.employee_name)
+			)
+		)
+
+	timesheet_config = frappe.get_cached_value(
+		"Salary Structure",
+		target.salary_structure,
+		["salary_slip_based_on_timesheet", "salary_component"],
+		as_dict=True,
+	)
+	if not timesheet_config or not timesheet_config.salary_slip_based_on_timesheet:
+		frappe.throw(
+			_(
+				"The Assigned Salary Structure {0} for the employee {1} is not configured for Salary Slip based on Timesheet."
+			).format(frappe.bold(target.salary_structure), frappe.bold(target.employee_name))
+		)
+	if not timesheet_config.salary_component:
+		frappe.throw(
+			_(
+				"The Assigned Salary Structure {0} for the employee {1} does not have a Salary Component configured for Salary Slip based on Timesheet."
+			).format(frappe.bold(target.salary_structure), frappe.bold(target.employee_name))
+		)
 	target.run_method("get_emp_and_working_day_details")
 
 	return target
@@ -2718,7 +2723,7 @@ def on_doctype_update():
 	frappe.db.add_index("Salary Slip", ["employee", "start_date", "end_date"])
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def enqueue_email_salary_slips(names: list | str) -> None:
 	"""enqueue bulk emailing salary slips"""
 	import json

@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:health_insurance_name",
  "creation": "2017-03-27 14:32:51.628588",
@@ -21,7 +22,7 @@
   }
  ],
  "links": [],
- "modified": "2024-03-27 13:09:39.535296",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Health Insurance",

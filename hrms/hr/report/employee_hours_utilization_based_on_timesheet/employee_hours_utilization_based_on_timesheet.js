@@ -11,6 +11,10 @@ frappe.query_reports["Employee Hours Utilization Based On Timesheet"] = {
 			options: "Company",
 			default: frappe.defaults.get_user_default("Company"),
 			reqd: 1,
+			on_change: (report) => {
+				frappe.query_report.set_filter_value("employee", "");
+				report.refresh();
+			},
 		},
 		{
 			fieldname: "from_date",
@@ -31,6 +35,13 @@ frappe.query_reports["Employee Hours Utilization Based On Timesheet"] = {
 			label: __("Employee"),
 			fieldtype: "Link",
 			options: "Employee",
+			get_query: () => {
+				return {
+					filters: {
+						company: frappe.query_report.get_filter_value("company"),
+					},
+				};
+			},
 		},
 		{
 			fieldname: "department",

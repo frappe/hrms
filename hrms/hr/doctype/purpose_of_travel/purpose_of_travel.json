@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "field:purpose_of_travel",
  "creation": "2018-05-15 07:00:30.933908",
  "doctype": "DocType",
@@ -17,7 +18,7 @@
   }
  ],
  "links": [],
- "modified": "2024-03-27 13:10:27.112282",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Purpose of Travel",

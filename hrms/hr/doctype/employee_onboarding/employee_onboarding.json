@@ -6,8 +6,8 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "job_applicant",
   "job_offer",
+  "job_applicant",
   "employee_onboarding_template",
   "column_break_7",
   "company",
@@ -30,13 +30,6 @@
  ],
  "fields": [
   {
-   "fieldname": "job_applicant",
-   "fieldtype": "Link",
-   "label": "Job Applicant",
-   "options": "Job Applicant",
-   "reqd": 1
-  },
-  {
    "fieldname": "job_offer",
    "fieldtype": "Link",
    "label": "Job Offer",
@@ -44,7 +37,15 @@
    "reqd": 1
   },
   {
-   "fetch_from": "job_applicant.applicant_name",
+   "depends_on": "eval:doc.job_applicant",
+   "fetch_from": "job_offer.job_applicant",
+   "fieldname": "job_applicant",
+   "fieldtype": "Link",
+   "label": "Job Applicant",
+   "options": "Job Applicant"
+  },
+  {
+   "fetch_from": "job_offer.applicant_name",
    "fieldname": "employee_name",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -174,7 +175,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-24 17:13:19.990319",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Onboarding",

@@ -410,6 +410,7 @@ class SalaryStructureAssignment(Document):
 		period_days = date_diff(dates.end_date, dates.start_date) + 1
 		data.start_date = dates.start_date
 		data.end_date = dates.end_date
+		data.posting_date = dates.end_date
 		data.payment_days = period_days
 		data.total_working_days = period_days
 		data.leave_without_pay = 0

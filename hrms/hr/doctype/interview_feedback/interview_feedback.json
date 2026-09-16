@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "HR-INT-FEED-.####",
  "creation": "2021-04-12 17:03:13.833285",
  "doctype": "DocType",
@@ -123,7 +124,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-02-19 16:31:33.463199",
+ "modified": "2026-09-01 18:39:51.520758",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview Feedback",

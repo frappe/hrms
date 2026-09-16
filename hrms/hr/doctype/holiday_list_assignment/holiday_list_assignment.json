@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "naming_series:",
  "creation": "2025-08-28 12:59:25.390188",
  "doctype": "DocType",

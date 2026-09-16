@@ -22,11 +22,11 @@ class JobOffer(Document):
 		from hrms.hr.doctype.job_offer_term.job_offer_term import JobOfferTerm
 
 		amended_from: DF.Link | None
-		applicant_email: DF.Data | None
+		applicant_email: DF.Data
 		applicant_name: DF.Data
 		company: DF.Link
 		designation: DF.Link
-		job_applicant: DF.Link
+		job_applicant: DF.Link | None
 		job_offer_term_template: DF.Link | None
 		letter_head: DF.Link | None
 		offer_date: DF.Date
@@ -38,18 +38,27 @@ class JobOffer(Document):
 	# end: auto-generated types
 
 	def onload(self):
-		employee = frappe.db.get_value("Employee", {"job_applicant": self.job_applicant}, "name") or ""
+		employee = frappe.db.get_value("Employee", {"job_offer": self.name}, "name") or ""
 		self.set_onload("employee", employee)
 
 	def validate(self):
 		self.validate_vacancies()
-		job_offer = frappe.db.exists(
-			"Job Offer", {"job_applicant": self.job_applicant, "docstatus": ["!=", 2]}
+		self.validate_duplicate_job_offer()
+
+	def validate_duplicate_job_offer(self):
+		duplicate = frappe.db.exists(
+			"Job Offer",
+			{
+				"applicant_email": self.applicant_email,
+				"docstatus": ["!=", 2],
+				"status": ["not in", ["Rejected", "Cancelled"]],
+				"name": ["!=", self.name],
+			},
 		)
-		if job_offer and job_offer != self.name:
+		if duplicate:
 			frappe.throw(
-				_("Job Offer: {0} is already for Job Applicant: {1}").format(
-					frappe.bold(job_offer), frappe.bold(self.job_applicant)
+				_("Job Offer {0} already exists for {1}").format(
+					get_link_to_form("Job Offer", duplicate), frappe.bold(self.applicant_email)
 				)
 			)
 
@@ -86,7 +95,7 @@ class JobOffer(Document):
 
 
 def update_job_applicant(status, job_applicant):
-	if status in ("Accepted", "Rejected"):
+	if job_applicant and status in ("Accepted", "Rejected"):
 		frappe.set_value("Job Applicant", job_applicant, "status", status)
 
 
@@ -123,9 +132,9 @@ def get_staffing_plan_detail(designation, company, offer_date):
 @frappe.whitelist()
 def make_employee(source_name: str, target_doc: str | Document | None = None):
 	def set_missing_values(source, target):
-		target.personal_email, target.first_name = frappe.db.get_value(
-			"Job Applicant", source.job_applicant, ["email_id", "applicant_name"]
-		)
+		target.personal_email = source.applicant_email
+		target.first_name = source.applicant_name
+		target.job_offer = source.name
 
 	doc = get_mapped_doc(
 		"Job Offer",

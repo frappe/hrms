@@ -50,9 +50,9 @@ class JobApplicant(Document):
 	# end: auto-generated types
 
 	def onload(self):
-		job_offer = frappe.get_all("Job Offer", filters={"job_applicant": self.name})
+		job_offer = frappe.get_all("Job Offer", filters={"job_applicant": self.name, "docstatus": ["!=", 2]})
 		if job_offer:
-			self.get("__onload").job_offer = job_offer[0].name
+			self.set_onload("job_offer", job_offer[0].name)
 
 		employee = frappe.db.get_value("Employee", {"job_applicant": self.name}, "name") or ""
 		self.set_onload("employee", employee)
@@ -160,7 +160,7 @@ def make_employee(source_name: str, target_doc: str | Document | None = None) ->
 	)
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def create_kanban_board(board_name: str) -> dict:
 	frappe.has_permission("Job Applicant", throw=True)
 
@@ -212,7 +212,7 @@ def create_interview(job_applicant: str, interview_type: str) -> Document:
 	return interview
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def schedule_interview(
 	job_applicant: str,
 	interview_type: str,

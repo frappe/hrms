@@ -283,7 +283,7 @@
    "in_list_view": 1,
    "label": "Status",
    "no_copy": 1,
-   "options": "Draft\nPaid\nUnpaid\nRejected\nSubmitted\nCancelled",
+   "options": "Draft\nPaid\nPartially Paid\nUnpaid\nRejected\nSubmitted\nCancelled",
    "print_hide": 1,
    "read_only": 1
   },
@@ -623,6 +623,10 @@
   {
    "color": "Green",
    "title": "Paid"
+  },
+  {
+   "color": "Blue",
+   "title": "Partially Paid"
   },
   {
    "color": "Yellow",
