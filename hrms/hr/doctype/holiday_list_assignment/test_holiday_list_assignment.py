@@ -4,14 +4,18 @@
 from contextlib import contextmanager
 
 import frappe
-from frappe.utils import add_months, get_year_ending, get_year_start, getdate
+from frappe.utils import add_days, add_months, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import DuplicateAssignment
 from hrms.tests.utils import HRMSTestSuite
-from hrms.utils.holiday_list import get_holiday_list_for_employee
+from hrms.utils.holiday_list import (
+	get_holiday_list_for_employee,
+	get_holiday_list_ranges_for_employee,
+	get_holiday_list_ranges_for_employees,
+)
 
 
 class IntegrationTestHolidayListAssignment(HRMSTestSuite):
@@ -73,6 +77,155 @@ class IntegrationTestHolidayListAssignment(HRMSTestSuite):
 		employee = make_employee("test_default_hla@example.com", company="_Test Company")
 		holiday_list = get_holiday_list_for_employee(employee, as_on=getdate())
 		self.assertEqual(holiday_list, self.holiday_list)
+
+	def test_dates_before_first_assignment_fall_back_to_earliest_assignment(self):
+		employee = make_employee("test_hla_fallback@example.com", company="_Test Company")
+		year_start = get_year_start(getdate())
+		create_holiday_list_assignment(
+			"Employee", employee, self.holiday_list, from_date=add_months(year_start, 6)
+		)
+
+		self.assertEqual(get_holiday_list_for_employee(employee, as_on=year_start), self.holiday_list)
+		self.assertEqual(
+			get_holiday_list_for_employee(employee, as_on=add_months(year_start, -12)), self.holiday_list
+		)
+
+	def test_holiday_list_ranges_split_on_assignment_change(self):
+		employee = make_employee("test_hla_ranges@example.com", company="_Test Company")
+		year_start = get_year_start(getdate())
+		new_holiday_list = make_holiday_list(
+			list_name="Test HLA Ranges", from_date=year_start, to_date=get_year_ending(getdate())
+		)
+		create_holiday_list_assignment("Employee", employee, self.holiday_list, from_date=year_start)
+		create_holiday_list_assignment(
+			"Employee", employee, new_holiday_list, from_date=add_months(year_start, 6)
+		)
+
+		ranges = get_holiday_list_ranges_for_employee(
+			employee, add_months(year_start, 5), add_days(add_months(year_start, 7), -1)
+		)
+		self.assertEqual(
+			ranges,
+			[
+				{
+					"holiday_list": self.holiday_list,
+					"from_date": add_months(year_start, 5),
+					"to_date": add_days(add_months(year_start, 6), -1),
+				},
+				{
+					"holiday_list": new_holiday_list,
+					"from_date": add_months(year_start, 6),
+					"to_date": add_days(add_months(year_start, 7), -1),
+				},
+			],
+		)
+
+		ranges = get_holiday_list_ranges_for_employee(
+			employee, add_months(year_start, 1), add_months(year_start, 2)
+		)
+		self.assertEqual(
+			ranges,
+			[
+				{
+					"holiday_list": self.holiday_list,
+					"from_date": add_months(year_start, 1),
+					"to_date": add_months(year_start, 2),
+				}
+			],
+		)
+
+	def test_holiday_list_ranges_include_assignments_inside_the_range(self):
+		employee = make_employee("test_hla_inner_ranges@example.com", company="_Test Company")
+		year_start = get_year_start(getdate())
+		year_end = get_year_ending(getdate())
+		inner_holiday_list = make_holiday_list(
+			list_name="Test HLA Inner", from_date=year_start, to_date=year_end
+		)
+		# A -> B -> A: B is active only in the middle of the range
+		create_holiday_list_assignment("Employee", employee, self.holiday_list, from_date=year_start)
+		create_holiday_list_assignment(
+			"Employee", employee, inner_holiday_list, from_date=add_months(year_start, 3)
+		)
+		frappe.get_doc(
+			{
+				"doctype": "Holiday List Assignment",
+				"applicable_for": "Employee",
+				"assigned_to": employee,
+				"holiday_list": self.holiday_list,
+				"from_date": add_months(year_start, 6),
+			}
+		).submit()
+
+		ranges = get_holiday_list_ranges_for_employee(employee, year_start, year_end)
+		self.assertEqual(
+			ranges,
+			[
+				{
+					"holiday_list": self.holiday_list,
+					"from_date": year_start,
+					"to_date": add_days(add_months(year_start, 3), -1),
+				},
+				{
+					"holiday_list": inner_holiday_list,
+					"from_date": add_months(year_start, 3),
+					"to_date": add_days(add_months(year_start, 6), -1),
+				},
+				{
+					"holiday_list": self.holiday_list,
+					"from_date": add_months(year_start, 6),
+					"to_date": year_end,
+				},
+			],
+		)
+
+	def test_holiday_list_ranges_after_holiday_list_expiry(self):
+		employee = make_employee("test_hla_expired_ranges@example.com", company="_Test Company")
+		year_start = get_year_start(getdate())
+		year_end = get_year_ending(getdate())
+		expiring_holiday_list = make_holiday_list(
+			list_name="Test HLA Expiring",
+			from_date=year_start,
+			to_date=add_days(add_months(year_start, 6), -1),
+		)
+		create_holiday_list_assignment("Employee", employee, expiring_holiday_list, from_date=year_start)
+
+		# the expired list stays in effect until the next assignment starts
+		ranges = get_holiday_list_ranges_for_employee(employee, year_start, year_end)
+		self.assertEqual(
+			ranges,
+			[{"holiday_list": expiring_holiday_list, "from_date": year_start, "to_date": year_end}],
+		)
+
+	def test_bulk_holiday_list_ranges_fall_back_to_company(self):
+		employee = make_employee("test_hla_bulk_ranges@example.com", company="_Test Company")
+		year_start = get_year_start(getdate())
+		year_end = get_year_ending(getdate())
+		employee_holiday_list = make_holiday_list(
+			list_name="Test HLA Bulk Ranges", from_date=year_start, to_date=year_end
+		)
+		create_holiday_list_assignment("Company", "_Test Company", self.holiday_list, from_date=year_start)
+		create_holiday_list_assignment(
+			"Employee", employee, employee_holiday_list, from_date=add_months(year_start, 6)
+		)
+
+		ranges = get_holiday_list_ranges_for_employees({employee: "_Test Company"}, year_start, year_end)
+		self.assertEqual(
+			ranges,
+			{
+				employee: [
+					{
+						"holiday_list": self.holiday_list,
+						"from_date": year_start,
+						"to_date": add_days(add_months(year_start, 6), -1),
+					},
+					{
+						"holiday_list": employee_holiday_list,
+						"from_date": add_months(year_start, 6),
+						"to_date": year_end,
+					},
+				]
+			},
+		)
 
 
 def create_holiday_list_assignment(

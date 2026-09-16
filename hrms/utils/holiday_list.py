@@ -39,68 +39,141 @@ def get_holiday_dates_between_range(
 	skip_weekly_offs: bool = False,
 	select_weekly_offs: bool = False,
 	raise_exception_for_holiday_list: bool = True,
+	as_dict: bool = False,
 ) -> list:
-	start_date = getdate(start_date)
-	end_date = getdate(end_date)
-
-	from_holiday_list = (
-		get_holiday_list_for_employee(
-			assigned_to, as_on=start_date, as_dict=True, raise_exception=raise_exception_for_holiday_list
-		)
-		or {}
-	)
-	to_holiday_list = (
-		get_holiday_list_for_employee(
-			assigned_to, as_on=end_date, as_dict=True, raise_exception=raise_exception_for_holiday_list
-		)
-		or {}
-	)
-
-	if (
-		from_holiday_list
-		and to_holiday_list
-		and from_holiday_list.holiday_list != to_holiday_list.holiday_list
+	"""Returns holidays between the dates, honouring holiday list changes within the range"""
+	holiday_dates = []
+	for holiday_list_range in get_holiday_list_ranges_for_employee(
+		assigned_to, start_date, end_date, raise_exception=raise_exception_for_holiday_list
 	):
-		return list(
-			set(
-				get_holiday_dates_between(
-					holiday_list=from_holiday_list.holiday_list,
-					start_date=start_date,
-					end_date=add_days(to_holiday_list.from_date, -1),
-					select_weekly_off=select_weekly_offs,
-					skip_weekly_offs=skip_weekly_offs,
-				)
-				+ get_holiday_dates_between(
-					holiday_list=to_holiday_list.holiday_list,
-					start_date=to_holiday_list.from_date,
-					end_date=end_date,
-					select_weekly_off=select_weekly_offs,
-					skip_weekly_offs=skip_weekly_offs,
-				)
+		holiday_dates.extend(
+			get_holiday_dates_between(
+				holiday_list=holiday_list_range.holiday_list,
+				start_date=holiday_list_range.from_date,
+				end_date=holiday_list_range.to_date,
+				select_weekly_off=select_weekly_offs,
+				skip_weekly_offs=skip_weekly_offs,
+				as_dict=as_dict,
 			)
 		)
-	elif holiday_list := from_holiday_list.get("holiday_list", None) or to_holiday_list.get(
-		"holiday_list", None
-	):
-		return get_holiday_dates_between(
-			holiday_list=holiday_list,
-			start_date=start_date,
-			end_date=end_date,
-			select_weekly_off=select_weekly_offs,
-			skip_weekly_offs=skip_weekly_offs,
+
+	return holiday_dates
+
+
+def get_holiday_list_ranges_for_employee(
+	employee: str,
+	start_date: date | str,
+	end_date: date | str,
+	raise_exception: bool = True,
+) -> list[frappe._dict]:
+	"""
+	Splits [start_date, end_date] into ranges, one per holiday list assigned during it.
+
+	[{"holiday_list": "HL-1", "from_date": date, "to_date": date}, ...]
+	"""
+	company = frappe.db.get_value("Employee", employee, "company")
+	return get_holiday_list_ranges_for_employees(
+		{employee: company}, start_date, end_date, raise_exception=raise_exception
+	).get(employee, [])
+
+
+def get_holiday_list_ranges_for_employees(
+	employee_company_map: dict[str, str],
+	start_date: date | str,
+	end_date: date | str,
+	raise_exception: bool = False,
+) -> dict[str, list[frappe._dict]]:
+	"""
+	Resolves every assignment intersecting [start_date, end_date] for the employees and their companies
+	in a single query. Gaps in employee-level assignments are filled with company-level ones, and dates
+	no assignment covers resolve the way a single date does in `get_holiday_list_for_employee`.
+
+	{"EMP-001": [{"holiday_list": "HL-1", "from_date": date, "to_date": date}, ...]}
+	"""
+	if not employee_company_map:
+		return {}
+
+	start_date = getdate(start_date)
+	end_date = getdate(end_date)
+	companies = list({company for company in employee_company_map.values() if company})
+
+	assigned_holiday_lists = get_assigned_holiday_lists_to_employee_and_company(
+		list(employee_company_map) + companies, start_date, end_date
+	)
+
+	employee_holiday_list_ranges = {}
+	for employee, company in employee_company_map.items():
+		ranges = fill_employee_holiday_list_date_gaps_with_company_holiday_list(
+			assigned_holiday_lists.get(employee, []),
+			assigned_holiday_lists.get(company, []),
+			start_date,
+			end_date,
 		)
-	else:
-		return []
+		ranges = fill_uncovered_dates_with_assigned_holiday_list(
+			employee, ranges, start_date, end_date, raise_exception
+		)
+		if ranges:
+			employee_holiday_list_ranges[employee] = ranges
+
+	return employee_holiday_list_ranges
+
+
+def fill_uncovered_dates_with_assigned_holiday_list(
+	employee: str,
+	ranges: list[dict],
+	start_date: date,
+	end_date: date,
+	raise_exception: bool = False,
+) -> list[frappe._dict]:
+	"""
+	Dates outside every assignment's effective range (before the first assignment, or after the
+	assigned holiday list expired) resolve like a single date would. Adjacent ranges using the same
+	holiday list are merged.
+	"""
+	filled = []
+
+	def add_range(holiday_list, from_date, to_date):
+		last = filled[-1] if filled else None
+		if last and last.holiday_list == holiday_list and add_days(last.to_date, 1) == from_date:
+			last.to_date = to_date
+		else:
+			filled.append(frappe._dict(holiday_list=holiday_list, from_date=from_date, to_date=to_date))
+
+	current = start_date
+	for holiday_list_range in [*sorted(ranges, key=lambda r: r["from_date"]), None]:
+		gap_end = add_days(holiday_list_range["from_date"], -1) if holiday_list_range else end_date
+		if current <= gap_end:
+			holiday_list = get_holiday_list_for_employee(
+				employee, raise_exception=raise_exception, as_on=current
+			)
+			if holiday_list:
+				add_range(holiday_list, current, gap_end)
+
+		if holiday_list_range:
+			add_range(
+				holiday_list_range["holiday_list"],
+				getdate(holiday_list_range["from_date"]),
+				getdate(holiday_list_range["to_date"]),
+			)
+			current = add_days(holiday_list_range["to_date"], 1)
+
+	return filled
 
 
 def get_holiday_list_for_employee(
 	employee: str, raise_exception: bool = True, as_on: date | str | None = None, as_dict: bool = False
 ) -> str:
 	as_on = frappe.utils.getdate(as_on)
-	holiday_list = get_assigned_holiday_list(employee, as_on, as_dict)
+	company = frappe.db.get_value("Employee", employee, "company")
+	holiday_list = get_assigned_holiday_list(employee, as_on, as_dict) or get_assigned_holiday_list(
+		company, as_on, as_dict
+	)
+
 	if not holiday_list:
-		company = frappe.db.get_value("Employee", employee, "company")
-		holiday_list = get_assigned_holiday_list(company, as_on, as_dict)
+		# dates before the first assignment fall back to the earliest one
+		holiday_list = get_first_assigned_holiday_list(employee, as_dict) or get_first_assigned_holiday_list(
+			company, as_dict
+		)
 
 	if not holiday_list and raise_exception:
 		frappe.throw(
@@ -119,15 +192,30 @@ def get_holiday_list_for_employee(
 def get_assigned_holiday_list(assigned_to: str, as_on=None, as_dict: bool = False) -> str:
 	as_on = frappe.utils.getdate(as_on)
 	HLA = frappe.qb.DocType("Holiday List Assignment")
-	query = (
+	query = get_holiday_list_assignment_query(assigned_to).where(HLA.from_date <= as_on)
+	query = query.orderby(HLA.from_date, order=frappe.qb.desc)
+	return run_holiday_list_assignment_query(query, as_dict)
+
+
+def get_first_assigned_holiday_list(assigned_to: str, as_dict: bool = False) -> str:
+	HLA = frappe.qb.DocType("Holiday List Assignment")
+	query = get_holiday_list_assignment_query(assigned_to).orderby(HLA.from_date, order=frappe.qb.asc)
+	return run_holiday_list_assignment_query(query, as_dict)
+
+
+def get_holiday_list_assignment_query(assigned_to: str):
+	HLA = frappe.qb.DocType("Holiday List Assignment")
+	return (
 		frappe.qb.from_(HLA)
 		.select(HLA.holiday_list)
 		.where(HLA.assigned_to == assigned_to)
-		.where(HLA.from_date <= as_on)
 		.where(HLA.docstatus == 1)
-		.orderby(HLA.from_date, order=frappe.qb.desc)
 		.limit(1)
 	)
+
+
+def run_holiday_list_assignment_query(query, as_dict: bool = False) -> str:
+	HLA = frappe.qb.DocType("Holiday List Assignment")
 	if as_dict:
 		query = query.select(HLA.from_date)
 		holiday_list = query.run(as_dict=True)
