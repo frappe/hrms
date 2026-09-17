@@ -10,6 +10,7 @@
   "naming_series",
   "employee",
   "employee_name",
+  "company",
   "amended_from",
   "column_break_juxz",
   "leave_type",
@@ -148,6 +149,14 @@
    "fieldname": "reason_for_adjustment",
    "fieldtype": "Small Text",
    "label": "Reason for Adjustment"
+  },
+  {
+   "fetch_from": "employee.company",
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,

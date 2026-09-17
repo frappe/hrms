@@ -116,6 +116,58 @@ def set_default_hr_accounts(doc, method=None):
 		doc.db_set("default_employee_advance_account", employe_advance_account)
 
 
+def set_expense_claim_type_accounts(doc, method=None):
+	if frappe.local.flags.ignore_chart_of_accounts:
+		return
+
+	expense_account = None
+	for claim_type in frappe.get_all("Expense Claim Type", pluck="name"):
+		if frappe.db.exists("Expense Claim Account", {"parent": claim_type, "company": doc.name}):
+			continue
+
+		if not expense_account:
+			expense_account = get_or_create_expense_claim_account(doc)
+			if not expense_account:
+				return
+
+		claim_type_doc = frappe.get_doc("Expense Claim Type", claim_type)
+		claim_type_doc.append("accounts", {"company": doc.name, "default_account": expense_account})
+		claim_type_doc.save(ignore_permissions=True)
+
+
+def get_or_create_expense_claim_account(doc) -> str | None:
+	account = frappe.db.get_value(
+		"Account", {"account_name": _("Expense Claims"), "company": doc.name, "is_group": 0}
+	)
+	if account:
+		return account
+
+	parent_account = frappe.db.get_value(
+		"Account", {"account_name": _("Indirect Expenses"), "company": doc.name, "is_group": 1}
+	) or frappe.db.get_value(
+		"Account",
+		{"root_type": "Expense", "company": doc.name, "is_group": 1},
+		order_by="lft",
+	)
+	if not parent_account:
+		return None
+
+	return (
+		frappe.get_doc(
+			{
+				"doctype": "Account",
+				"account_name": _("Expense Claims"),
+				"company": doc.name,
+				"parent_account": parent_account,
+				"account_type": "Expense Account",
+				"root_type": "Expense",
+			}
+		)
+		.insert(ignore_permissions=True)
+		.name
+	)
+
+
 def validate_default_accounts(doc, method=None):
 	if doc.default_payroll_payable_account:
 		for_company = frappe.db.get_value("Account", doc.default_payroll_payable_account, "company")

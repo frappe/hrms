@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.utils import get_first_day, nowdate
+from frappe.utils import get_first_day, get_last_day, nowdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
@@ -17,6 +17,20 @@ def _make_component(name, abbr, comp_type="Earning", **flags):
 	doc.update({"salary_component": name, "salary_component_abbr": abbr, "type": comp_type})
 	doc.update(flags)
 	return doc.insert()
+
+
+def _make_slip_custom_field(fieldname, fieldtype="Float", default=None):
+	if frappe.db.exists("Custom Field", {"dt": "Salary Slip", "fieldname": fieldname}):
+		return
+	return frappe.get_doc(
+		doctype="Custom Field",
+		dt="Salary Slip",
+		fieldname=fieldname,
+		label=fieldname.replace("_", " ").title(),
+		fieldtype=fieldtype,
+		default=default,
+		insert_after="net_pay",
+	).insert()
 
 
 class TestSalaryStructureAssignment(HRMSTestSuite):
@@ -168,6 +182,104 @@ class TestSalaryStructureAssignment(HRMSTestSuite):
 
 		components = {r.salary_component: r.default_amount for r in ssa.get_evaluated_components().deductions}
 		self.assertEqual(components["SSA Test YTD Guard"], 50000)
+
+	def test_get_evaluated_components_resolves_salary_slip_custom_field(self):
+		"""A formula referencing a Custom Field on Salary Slip must not raise NameError
+		when the assignment evaluates it without a slip (#5141)."""
+		emp = make_employee("ssa_custom_field@test.com", company="_Test Company")
+		_make_slip_custom_field("custom_shift_allowance_rate")
+
+		formula = "base + custom_shift_allowance_rate"
+		_make_component(
+			"SSA Test Shift Allowance", "SSATSA", "Earning", amount_based_on_formula=1, formula=formula
+		)
+		earnings = [
+			{
+				"salary_component": "SSA Test Shift Allowance",
+				"abbr": "SSATSA",
+				"amount_based_on_formula": 1,
+				"formula": formula,
+			},
+		]
+
+		make_salary_structure(
+			"SSA Test Custom Field Structure",
+			"Monthly",
+			employee=emp,
+			company="_Test Company",
+			base=50000,
+			earnings=earnings,
+			deductions=[],
+		)
+		ssa = frappe.get_last_doc("Salary Structure Assignment", filters={"employee": emp})
+
+		components = {r.salary_component: r.default_amount for r in ssa.get_evaluated_components().earnings}
+		self.assertEqual(components["SSA Test Shift Allowance"], 50000)
+
+	def test_get_evaluated_components_uses_declared_field_defaults(self):
+		"""A slip field's declared default must reach the formula. exchange_rate
+		defaults to 1.0, so seeding a bare 0 would zero out any formula using it."""
+		emp = make_employee("ssa_field_default@test.com", company="_Test Company")
+		_make_slip_custom_field("custom_shift_multiplier", fieldtype="Float", default="2")
+
+		formula = "base * exchange_rate * custom_shift_multiplier"
+		_make_component(
+			"SSA Test Shift Multiplier", "SSATSM", "Earning", amount_based_on_formula=1, formula=formula
+		)
+		earnings = [
+			{
+				"salary_component": "SSA Test Shift Multiplier",
+				"abbr": "SSATSM",
+				"amount_based_on_formula": 1,
+				"formula": formula,
+			},
+		]
+
+		make_salary_structure(
+			"SSA Test Field Default Structure",
+			"Monthly",
+			employee=emp,
+			company="_Test Company",
+			base=1000,
+			earnings=earnings,
+			deductions=[],
+		)
+		ssa = frappe.get_last_doc("Salary Structure Assignment", filters={"employee": emp})
+
+		components = {r.salary_component: r.default_amount for r in ssa.get_evaluated_components().earnings}
+		self.assertEqual(components["SSA Test Shift Multiplier"], 2000)
+
+	def test_get_evaluated_components_seeds_posting_date(self):
+		"""A full cycle seeds posting_date to the cycle end date."""
+		emp = make_employee("ssa_posting_date@test.com", company="_Test Company")
+
+		formula = "base * getdate(posting_date).day"
+		_make_component(
+			"SSA Test Posting Bonus", "SSATPOB", "Earning", amount_based_on_formula=1, formula=formula
+		)
+		earnings = [
+			{
+				"salary_component": "SSA Test Posting Bonus",
+				"abbr": "SSATPOB",
+				"amount_based_on_formula": 1,
+				"formula": formula,
+			},
+		]
+
+		make_salary_structure(
+			"SSA Test Posting Date Structure",
+			"Monthly",
+			employee=emp,
+			company="_Test Company",
+			base=1000,
+			earnings=earnings,
+			deductions=[],
+		)
+		ssa = frappe.get_last_doc("Salary Structure Assignment", filters={"employee": emp})
+
+		expected = 1000 * get_last_day(ssa.from_date).day
+		components = {r.salary_component: r.default_amount for r in ssa.get_evaluated_components().earnings}
+		self.assertEqual(components["SSA Test Posting Bonus"], expected)
 
 	def test_do_not_include_in_total_earning_is_in_ctc_but_not_gross(self):
 		"""A 'Do Not Include in Total' earning is part of CTC but not payable - it
