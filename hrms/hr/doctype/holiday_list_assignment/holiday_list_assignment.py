@@ -26,6 +26,7 @@ class HolidayListAssignment(Document):
 		from_date: DF.Date
 		holiday_list: DF.Link
 		naming_series: DF.Literal["HR-HLA-.YYYY.-"]
+		override_shift_holiday_list: DF.Check
 	# end: auto-generated types
 
 	@property
