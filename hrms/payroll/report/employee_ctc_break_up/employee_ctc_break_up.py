@@ -112,11 +112,7 @@ class SalaryBreakupReport:
 			component.update(component_details)
 
 	def set_employer_contribution_details(self):
-		evaluated_components = getattr(self.salary_slip, "_evaluated_components", None)
-		if evaluated_components is None:
-			evaluated_components = frappe.get_cached_doc(
-				"Salary Structure Assignment", self.salary_structure_assignment
-			).get_evaluated_components()
+		evaluated_components = self.salary_slip.evaluated_components
 
 		self.salary_components += [
 			{

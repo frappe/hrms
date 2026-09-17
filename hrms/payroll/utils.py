@@ -5,7 +5,8 @@ import frappe
 from frappe import _
 from frappe.model import numeric_fieldtypes
 from frappe.model.create_new import get_new_doc
-from frappe.utils import ceil, floor, get_first_day, get_last_day, get_link_to_form, getdate, rounded
+from frappe.model.document import Document
+from frappe.utils import ceil, floor, flt, get_first_day, get_last_day, get_link_to_form, getdate, rounded
 
 
 def sanitize_expression(string: str | None = None) -> str | None:
@@ -31,6 +32,25 @@ def sanitize_expression(string: str | None = None) -> str | None:
 	string = " ".join(parts)
 
 	return string
+
+
+# Fields copied from the salary structure component row onto each evaluated row
+# handed to the salary slip. The slip reads these to build/identify slip rows.
+SALARY_COMPONENT_FLAGS = (
+	"salary_component",
+	"abbr",
+	"amount_based_on_formula",
+	"statistical_component",
+	"accrual_component",
+	"depends_on_payment_days",
+	"do_not_include_in_total",
+	"do_not_include_in_accounts",
+	"is_tax_applicable",
+	"is_flexible_benefit",
+	"variable_based_on_taxable_salary",
+	"exempted_from_income_tax",
+	"deduct_full_tax_on_selected_payroll_date",
+)
 
 
 COMPONENT_PARENTFIELDS = ("earnings", "deductions", "employer_contributions")
@@ -59,7 +79,22 @@ COMPONENT_EVAL_GLOBALS = {
 }
 
 
+# cache keys
+HOLIDAYS_BETWEEN_DATES = "holidays_between_dates"
+LEAVE_TYPE_MAP = "leave_type_map"
 SALARY_COMPONENT_VALUES = "salary_component_values"
+TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
+
+
+def payable_earnings(rows) -> float:
+	"""Per-cycle gross: earnings that are actually paid, which is what the salary
+	slip reports as gross_pay. Statistical rows exist only to feed other formulas,
+	and do_not_include_in_total rows are a cost to the company rather than pay."""
+	return sum(
+		flt(row.default_amount)
+		for row in rows
+		if not row.statistical_component and not row.do_not_include_in_total
+	)
 
 
 def get_component_abbr_map() -> dict:
@@ -84,18 +119,27 @@ def get_salary_slip_field_defaults() -> dict:
 	return defaults
 
 
-def get_component_eval_context(employee: str, ssa_as_dict: dict) -> frappe._dict:
+def get_component_eval_context(employee: "str | Document | None", ssa_as_dict: dict) -> frappe._dict:
 	"""Build the base evaluation context for salary component formulas.
 
 	Merges component abbreviation defaults, Salary Structure Assignment fields
 	(base, variable, ...) and employee fields so that formulas can reference any
 	of them by name.
+
+	``employee`` may be an unsaved Employee document, so a prospective package can
+	be evaluated for someone with no Employee record yet.
 	"""
 	data = frappe._dict()
 	data.update(get_component_abbr_map())
 	data.update(get_salary_slip_field_defaults())
 	data.update(ssa_as_dict)
-	data.update(frappe.get_cached_doc("Employee", employee).as_dict())
+
+	if employee:
+		employee_doc = (
+			employee if isinstance(employee, Document) else frappe.get_cached_doc("Employee", employee)
+		)
+		data.update(employee_doc.as_dict())
+
 	return data
 
 
@@ -174,4 +218,26 @@ def get_payroll_settings_for_payment_days() -> dict:
 			"consider_marked_attendance_on_holidays",
 		],
 		as_dict=True,
+	)
+
+
+def get_salary_component_data(component):
+	# get_cached_value doesn't work here due to alias "name as salary_component"
+	return frappe.db.get_value(
+		"Salary Component",
+		component,
+		(
+			"name as salary_component",
+			"depends_on_payment_days",
+			"salary_component_abbr as abbr",
+			"do_not_include_in_total",
+			"do_not_include_in_accounts",
+			"is_tax_applicable",
+			"is_flexible_benefit",
+			"variable_based_on_taxable_salary",
+			"accrual_component",
+			"exempted_from_income_tax",
+		),
+		as_dict=1,
+		cache=True,
 	)

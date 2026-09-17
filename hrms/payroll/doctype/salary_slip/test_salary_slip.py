@@ -3,6 +3,7 @@
 
 import calendar
 import random
+from functools import cached_property
 
 import frappe
 from frappe.core.doctype.user_permission.test_user_permission import create_user
@@ -37,6 +38,7 @@ from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_e
 )
 from hrms.payroll.doctype.payroll_entry.payroll_entry import get_month_details
 from hrms.payroll.doctype.salary_slip.salary_slip import (
+	CACHED_PROPERTIES,
 	HOLIDAYS_BETWEEN_DATES,
 	LEAVE_TYPE_MAP,
 	SALARY_COMPONENT_VALUES,
@@ -2233,6 +2235,122 @@ class TestSalarySlip(HRMSTestSuite):
 
 		self.assertIn("Allowance", earnings)
 		self.assertEqual(earnings["Allowance"], 0.0)
+
+	def test_cached_properties_are_declared_and_cleared(self):
+		"""Every name in CACHED_PROPERTIES must be a cached_property that reload()
+		and set_salary_structure_assignment() both drop, or a stale value survives."""
+		for name in CACHED_PROPERTIES:
+			self.assertIsInstance(getattr(SalarySlip, name), cached_property, name)
+
+		emp = make_employee("test_cached_props@salary.com", company="_Test Company")
+		slip = make_employee_salary_slip(emp, "Monthly", "Test Cached Props")
+
+		slip.reload()
+		for name in CACHED_PROPERTIES:
+			self.assertNotIn(name, slip.__dict__, name)
+
+		self.assertIs(slip.evaluated_components, slip.evaluated_components)
+		self.assertIn("evaluated_components", slip.__dict__)
+
+		slip.set_salary_structure_assignment()
+		for name in CACHED_PROPERTIES:
+			self.assertNotIn(name, slip.__dict__, name)
+
+	def test_compute_payment_days_returns_without_writing_fields(self):
+		"""The day-count brick returns its answer. Only get_working_days_details writes,
+		so a caller can ask what a period looks like without changing the slip."""
+		emp = make_employee("test_payment_days_brick@salary.com", company="_Test Company")
+		slip = make_employee_salary_slip(emp, "Monthly", "Test Payment Days Brick")
+
+		slip.total_working_days = None
+		slip.payment_days = None
+		slip.leave_without_pay = None
+
+		days = slip.compute_payment_days()
+
+		self.assertTrue(days.total_working_days)
+		self.assertIsNotNone(days.payment_days)
+		self.assertIsNone(slip.total_working_days)
+		self.assertIsNone(slip.payment_days)
+		self.assertIsNone(slip.leave_without_pay)
+
+		slip.get_working_days_details()
+		self.assertEqual(slip.total_working_days, days.total_working_days)
+		self.assertEqual(slip.payment_days, days.payment_days)
+
+	def test_prospective_context_evaluates_without_saved_records(self):
+		"""A Job Offer evaluates a package for a candidate who has no Employee record
+		and no submitted assignment. Neither document is saved."""
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		structure = make_salary_structure(
+			"Test Prospective Structure",
+			"Monthly",
+			company="_Test Company",
+			currency="INR",
+			earnings=[
+				{
+					"salary_component": "Basic Salary",
+					"abbr": "BS",
+					"amount_based_on_formula": 1,
+					"formula": "base",
+				},
+				{
+					"salary_component": "Special Allowance",
+					"abbr": "SA",
+					"amount_based_on_formula": 1,
+					"formula": "base * 0.4",
+				},
+			],
+			deductions=[],
+		)
+
+		candidate = frappe.new_doc("Employee")
+		candidate.company = "_Test Company"
+		candidate.date_of_joining = nowdate()
+
+		offer = frappe.new_doc("Salary Structure Assignment")
+		offer.salary_structure = structure.name
+		offer.company = "_Test Company"
+		offer.currency = "INR"
+		offer.from_date = nowdate()
+		offer.base = 50000
+
+		slip = frappe.new_doc("Salary Slip")
+		slip.set_prospective_context(offer, candidate)
+		amounts = {r.salary_component: r.default_amount for r in slip.evaluated_components["earnings"]}
+
+		self.assertEqual(amounts["Basic Salary"], 50000)
+		self.assertEqual(amounts["Special Allowance"], 20000)
+		self.assertIsNone(candidate.name)
+		self.assertIsNone(offer.name)
+
+	def test_evaluated_components_pulls_without_running_the_pipeline(self):
+		"""A consumer that only needs component amounts must not pay for attendance,
+		tax or benefits. Pulling the node computes it and nothing else."""
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		emp = make_employee("test_lazy_pull@salary.com", company="_Test Company")
+		structure = make_salary_structure(
+			"Test Lazy Pull", "Monthly", employee=emp, company="_Test Company", currency="INR"
+		)
+
+		slip = frappe.new_doc("Salary Slip")
+		slip.employee = emp
+		slip.salary_structure = structure.name
+		slip.company = "_Test Company"
+		slip.payroll_frequency = "Monthly"
+		slip.start_date = nowdate()
+		slip.get_date_details()
+
+		components = slip.evaluated_components
+
+		self.assertTrue(components["earnings"])
+		self.assertIn("evaluated_components", slip.__dict__)
+		self.assertFalse(slip.get("earnings"))
+		self.assertFalse(slip.get("deductions"))
+		self.assertFalse(slip.gross_pay)
+		self.assertFalse(slip.total_working_days)
 
 
 class TestSalarySlipSafeEval(HRMSTestSuite):
