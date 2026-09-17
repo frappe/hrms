@@ -153,7 +153,7 @@
    "search_index": 1
   },
   {
-   "depends_on": "eval:doc.statistical_component != 1 && doc.type != \"Employer Contribution\"",
+   "depends_on": "eval:doc.statistical_component != 1",
    "fieldname": "section_break_5",
    "fieldtype": "Section Break",
    "label": "Accounts"
