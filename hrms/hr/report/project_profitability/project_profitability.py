@@ -48,6 +48,7 @@ def get_rows(filters):
 			Timesheet.total_billed_hours,
 			Timesheet.name.as_("timesheet"),
 			SalarySlip.base_gross_pay,
+			SalarySlip.name.as_("salary_slip"),
 			SalarySlip.total_working_days,
 			Timesheet.total_billed_hours,
 		)
@@ -81,6 +82,13 @@ def calculate_cost_and_profit(data):
 	precision = cint(frappe.db.get_default("float_precision")) or 2
 
 	for row in data:
+		if flt(row.total_working_days) <= 0:
+			frappe.throw(
+				_(
+					"Cannot calculate project profitability. Total Working Days must be greater than zero. Please review Salary Slip {0}."
+				).format(frappe.utils.get_link_to_form("Salary Slip", row.salary_slip))
+			)
+
 		row.utilization = flt(
 			flt(row.total_billed_hours) / (flt(row.total_working_days) * flt(standard_working_hours)),
 			precision,
