@@ -3,7 +3,7 @@
 
 import frappe
 from frappe import _dict
-from frappe.utils import flt, nowdate
+from frappe.utils import add_months, flt, get_last_day, nowdate
 
 import erpnext
 from erpnext.accounts.doctype.account.test_account import create_account
@@ -244,6 +244,100 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		self.assertEqual(deduction_row.additional_salary, payroll_details.additional_salary)
 		advance.reload()
 		self.assertEqual(advance.status, "Returned")
+
+	def test_overlapping_recurring_returns_for_different_advances(self):
+		company = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee("test_overlapping_advance_returns@payroll.com", company=company.name)
+
+		advance_1 = make_employee_advance(employee, {"repay_unclaimed_amount_from_salary": 1})
+		make_payment_entry(advance_1)
+		advance_1.reload()
+		advance_2 = make_employee_advance(employee, {"repay_unclaimed_amount_from_salary": 1})
+		make_payment_entry(advance_2)
+		advance_2.reload()
+
+		component = make_advance_deduction_component(company)
+		setup_salary_structure(employee, company)
+
+		dates = get_start_end_dates("Monthly", nowdate())
+		to_date = get_last_day(add_months(dates.end_date, 2))
+
+		# both advances are recovered through the same component over the same period
+		return_1 = make_recurring_advance_return(advance_1, component, 400, dates.start_date, to_date)
+		return_1.submit()
+		return_2 = make_recurring_advance_return(advance_2, component, 300, dates.start_date, to_date)
+		return_2.submit()
+
+		payroll_entry = make_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company.default_payroll_payable_account,
+			currency=company.default_currency,
+			company=company.name,
+			cost_center="Main - _TC",
+		)
+		salary_slip = frappe.get_doc(
+			"Salary Slip", {"payroll_entry": payroll_entry.name, "employee": employee}
+		)
+
+		# each return is deducted in its own row
+		deductions = {
+			row.additional_salary: flt(row.amount)
+			for row in salary_slip.deductions
+			if row.salary_component == component
+		}
+		self.assertEqual(deductions, {return_1.name: 400, return_2.name: 300})
+
+		# and booked against its own advance
+		self.assertEqual(frappe.db.get_value("Employee Advance", advance_1.name, "return_amount"), 400)
+		self.assertEqual(frappe.db.get_value("Employee Advance", advance_2.name, "return_amount"), 300)
+
+	def test_overlapping_recurring_returns_blocked_for_same_advance(self):
+		company = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee("test_blocked_advance_returns@payroll.com", company=company.name)
+
+		advance_1 = make_employee_advance(employee, {"repay_unclaimed_amount_from_salary": 1})
+		make_payment_entry(advance_1)
+		advance_1.reload()
+		advance_2 = make_employee_advance(employee, {"repay_unclaimed_amount_from_salary": 1})
+		make_payment_entry(advance_2)
+		advance_2.reload()
+
+		component = make_advance_deduction_component(company)
+		setup_salary_structure(employee, company)
+
+		from_date = get_start_end_dates("Monthly", nowdate()).start_date
+		to_date = get_last_day(add_months(from_date, 2))
+
+		return_1 = make_recurring_advance_return(advance_1, component, 400, from_date, to_date)
+		return_1.submit()
+
+		# a second schedule for the same advance
+		duplicate = make_recurring_advance_return(advance_1, component, 100, from_date, to_date)
+		self.assertRaisesRegex(frappe.ValidationError, "already exist", duplicate.insert)
+
+		# an existing return that overwrites the structure amount
+		return_1.db_set("overwrite_salary_structure_amount", 1)
+		overwritten = make_recurring_advance_return(advance_2, component, 100, from_date, to_date)
+		self.assertRaisesRegex(frappe.ValidationError, "already exist", overwritten.insert)
+		return_1.db_set("overwrite_salary_structure_amount", 0)
+
+		# a deduction of the same component that is not an advance return
+		additional_salary = frappe.new_doc("Additional Salary")
+		additional_salary.update(
+			{
+				"employee": employee,
+				"company": company.name,
+				"currency": company.default_currency,
+				"salary_component": component,
+				"is_recurring": 1,
+				"from_date": from_date,
+				"to_date": to_date,
+				"amount": 50,
+				"overwrite_salary_structure_amount": 0,
+			}
+		)
+		self.assertRaisesRegex(frappe.ValidationError, "already exist", additional_salary.insert)
 
 	def test_payment_entry_against_advance(self):
 		employee_name = make_employee("_T@employee.advance", "_Test Company")
@@ -576,8 +670,7 @@ def create_advance_account(account_name, account_currency):
 	)
 
 
-def create_payroll_for_advance_return(employee, company, advance, return_amount=None):
-	# Advance deduction component
+def make_advance_deduction_component(company) -> str:
 	component = create_salary_component(
 		"Advance Salary",
 		**{"type": "Deduction"},
@@ -590,12 +683,26 @@ def create_payroll_for_advance_return(employee, company, advance, return_amount=
 		},
 	)
 	component.save()
+	return component.name
 
+
+def make_recurring_advance_return(advance, component, amount, from_date, to_date):
+	additional_salary = create_return_through_additional_salary(advance)
+	additional_salary.salary_component = component
+	additional_salary.is_recurring = 1
+	additional_salary.from_date = from_date
+	additional_salary.to_date = to_date
+	additional_salary.amount = amount
+	return additional_salary
+
+
+def create_payroll_for_advance_return(employee, company, advance, return_amount=None):
+	component = make_advance_deduction_component(company)
 	setup_salary_structure(employee, company)
 
 	# Create Additional Salary for repayment
 	additional_salary = create_return_through_additional_salary(advance)
-	additional_salary.salary_component = component.name
+	additional_salary.salary_component = component
 	additional_salary.payroll_date = nowdate()
 	additional_salary.amount = return_amount or advance.paid_amount
 	additional_salary.submit()
@@ -613,7 +720,7 @@ def create_payroll_for_advance_return(employee, company, advance, return_amount=
 	return _dict(
 		{
 			"payroll_entry": payroll_entry.name,
-			"advance_component": component.name,
+			"advance_component": component,
 			"additional_salary": additional_salary.name,
 		}
 	)
