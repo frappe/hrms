@@ -1,10 +1,12 @@
+import { loadDayjsLocale } from "@/utils/dayjs"
+
 function makeTranslationFunction() {
 	let messages = {};
 	return {
 		translate,
 		load: () => Promise.allSettled([
 			setup(),
-			// TODO: load dayjs locales
+			loadDayjsLocale(window.frappe?.boot?.lang ?? navigator.language),
 		]),
 	}
 
