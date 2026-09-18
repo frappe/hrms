@@ -18,7 +18,7 @@ from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_leave_application
-from hrms.tests.utils import HRMSTestSuite
+from hrms.tests.utils import HRMSTestSuite, make_company_restricted_user
 
 
 class TestEmployeeAttendanceTool(HRMSTestSuite):
@@ -228,6 +228,49 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 		self.assertIn(self.employee2.name, filtered)
 		self.assertNotIn(self.employee3.name, filtered)
 
+<<<<<<< HEAD
+=======
+	def test_mark_attendance_outside_company_scope(self):
+		user = make_company_restricted_user("test_scoped_hr_user@example.com", "_Test Company")
+
+		date = add_days(getdate(), -1)
+		while is_holiday(employee=self.employee4, date=date):
+			date = add_days(date, -1)
+
+		frappe.set_user(user)
+		try:
+			# employee4 belongs to _Test Company 1, outside the user's scope
+			with self.assertRaises(frappe.PermissionError):
+				mark_employee_attendance(employee_list=[self.employee4], status="Present", date=date)
+
+			with self.assertRaises(frappe.PermissionError):
+				mark_employee_attendance(
+					employee_list=[],
+					status="Present",
+					date=date,
+					mark_half_day=True,
+					half_day_status="Absent",
+					half_day_employee_list=[self.employee4],
+				)
+
+			# employee3 belongs to _Test Company but the caller claims a different company
+			with self.assertRaises(frappe.ValidationError):
+				mark_employee_attendance(
+					employee_list=[self.employee3], status="Present", date=date, company="_Test Company 1"
+				)
+		finally:
+			frappe.set_user("Administrator")
+
+		self.assertFalse(
+			frappe.db.exists("Attendance", {"employee": self.employee4, "attendance_date": date})
+		)
+		self.assertFalse(
+			frappe.db.exists("Attendance", {"employee": self.employee3, "attendance_date": date})
+		)
+
+	def test_mark_half_day_attendance_permissions(self):
+		user_no_role = "test_no_role@example.com"
+>>>>>>> 47411b1 (fix: Telemery data capture updates)
 
 def create_leave_allocation(employee, leave_type):
 	frappe.get_doc(

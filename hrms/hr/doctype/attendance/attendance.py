@@ -346,6 +346,16 @@ def mark_attendance(
 	return attendance.name
 
 
+def validate_employee_access(employee: str, company: str | None = None) -> None:
+	frappe.has_permission("Employee", "read", employee, throw=True)
+	if company and frappe.db.get_value("Employee", employee, "company") != company:
+		frappe.throw(
+			_("Employee {0} does not belong to Company {1}").format(
+				frappe.bold(employee), frappe.bold(company)
+			)
+		)
+
+
 @frappe.whitelist(methods=["POST"])
 def mark_bulk_attendance(data: str | dict):
 	import json
@@ -353,6 +363,8 @@ def mark_bulk_attendance(data: str | dict):
 	if isinstance(data, str):
 		data = json.loads(data)
 	data = frappe._dict(data)
+	frappe.has_permission("Attendance", "create", throw=True)
+	validate_employee_access(data.employee)
 	if not data.unmarked_days:
 		frappe.throw(_("Please select a date."))
 		return
