@@ -13,6 +13,8 @@ from hrms.payroll.utils import COMPONENT_PARENTFIELDS
 salary_slip = frappe.qb.DocType("Salary Slip")
 salary_detail = frappe.qb.DocType("Salary Detail")
 
+EMPLOYER_CONTRIBUTIONS = "employer_contributions"
+
 
 def execute(filters=None):
 	if not filters:
@@ -63,13 +65,13 @@ def execute(filters=None):
 		for parentfield in parentfields:
 			amounts = component_maps[parentfield].get(ss.name, {})
 			for component, amount in amounts.items():
-				row.setdefault(frappe.scrub(component), amount)
+				row.setdefault(get_component_fieldname(parentfield, component), amount)
 
-		if components["employer_contributions"]:
+		if components[EMPLOYER_CONTRIBUTIONS]:
 			row.update(
 				{
 					"total_employer_contribution": sum(
-						component_maps["employer_contributions"].get(ss.name, {}).values()
+						component_maps[EMPLOYER_CONTRIBUTIONS].get(ss.name, {}).values()
 					)
 				}
 			)
@@ -102,19 +104,31 @@ def get_active_parentfields(filters):
 	if filters.get("show_employer_contributions"):
 		return COMPONENT_PARENTFIELDS
 
-	return ("earnings", "deductions")
+	return tuple(p for p in COMPONENT_PARENTFIELDS if p != EMPLOYER_CONTRIBUTIONS)
+
+
+def get_component_fieldname(parentfield, component):
+	if parentfield == EMPLOYER_CONTRIBUTIONS:
+		return f"employer_contribution_{frappe.scrub(component)}"
+
+	return frappe.scrub(component)
 
 
 def get_components_by_parentfield(salary_slips, parentfields):
 	rows = get_salary_components(salary_slips)
 	components = {parentfield: set() for parentfield in COMPONENT_PARENTFIELDS}
-	seen = set()
+	pay_components = set()
 
 	for parentfield in parentfields:
 		for row in rows:
-			if row.parentfield == parentfield and row.salary_component not in seen:
+			if row.parentfield != parentfield:
+				continue
+
+			if parentfield == EMPLOYER_CONTRIBUTIONS:
 				components[parentfield].add(row.salary_component)
-				seen.add(row.salary_component)
+			elif row.salary_component not in pay_components:
+				components[parentfield].add(row.salary_component)
+				pay_components.add(row.salary_component)
 
 	return {parentfield: sorted(names) for parentfield, names in components.items()}
 
@@ -222,7 +236,7 @@ def get_columns(components):
 		columns.append(
 			{
 				"label": earning,
-				"fieldname": frappe.scrub(earning),
+				"fieldname": get_component_fieldname("earnings", earning),
 				"fieldtype": "Currency",
 				"options": "currency",
 				"width": 120,
@@ -243,7 +257,7 @@ def get_columns(components):
 		columns.append(
 			{
 				"label": deduction,
-				"fieldname": frappe.scrub(deduction),
+				"fieldname": get_component_fieldname("deductions", deduction),
 				"fieldtype": "Currency",
 				"options": "currency",
 				"width": 120,
@@ -280,18 +294,18 @@ def get_columns(components):
 		]
 	)
 
-	for contribution in components["employer_contributions"]:
+	for contribution in components[EMPLOYER_CONTRIBUTIONS]:
 		columns.append(
 			{
 				"label": contribution,
-				"fieldname": frappe.scrub(contribution),
+				"fieldname": get_component_fieldname(EMPLOYER_CONTRIBUTIONS, contribution),
 				"fieldtype": "Currency",
 				"options": "currency",
 				"width": 120,
 			}
 		)
 
-	if components["employer_contributions"]:
+	if components[EMPLOYER_CONTRIBUTIONS]:
 		columns.append(
 			{
 				"label": _("Total Employer Contribution"),

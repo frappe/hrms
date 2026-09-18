@@ -11,7 +11,7 @@ from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 	create_salary_structure_assignment,
 	make_salary_structure,
 )
-from hrms.payroll.report.salary_register.salary_register import execute
+from hrms.payroll.report.salary_register.salary_register import execute, get_component_fieldname
 from hrms.tests.utils import HRMSTestSuite
 
 EMPLOYER_PF = "_Test Register Employer PF"
@@ -78,7 +78,7 @@ class TestSalaryRegister(HRMSTestSuite):
 		columns, data = self.get_report()
 
 		fieldnames = [column["fieldname"] for column in columns]
-		self.assertNotIn(frappe.scrub(EMPLOYER_PF), fieldnames)
+		self.assertNotIn(get_component_fieldname("employer_contributions", EMPLOYER_PF), fieldnames)
 		self.assertNotIn("total_employer_contribution", fieldnames)
 		self.assertEqual(len(data), 1)
 
@@ -88,11 +88,12 @@ class TestSalaryRegister(HRMSTestSuite):
 
 		columns, data = self.get_report(show_employer_contributions=1)
 
+		fieldname = get_component_fieldname("employer_contributions", EMPLOYER_PF)
 		fieldnames = [column["fieldname"] for column in columns]
-		self.assertIn(frappe.scrub(EMPLOYER_PF), fieldnames)
+		self.assertIn(fieldname, fieldnames)
 		self.assertIn("total_employer_contribution", fieldnames)
 
-		self.assertEqual(data[0][frappe.scrub(EMPLOYER_PF)], 1800)
+		self.assertEqual(data[0][fieldname], 1800)
 		self.assertEqual(data[0]["total_employer_contribution"], 1800)
 		self.assertEqual(data[0]["net_pay"], salary_slip.net_pay)
 
@@ -135,9 +136,15 @@ class TestSalaryRegister(HRMSTestSuite):
 
 		columns, data = self.get_report(show_employer_contributions=1)
 
-		fieldname = frappe.scrub(SHARED_PF)
-		self.assertEqual([column["fieldname"] for column in columns].count(fieldname), 1)
+		deduction_fieldname = get_component_fieldname("deductions", SHARED_PF)
+		contribution_fieldname = get_component_fieldname("employer_contributions", SHARED_PF)
+		fieldnames = [column["fieldname"] for column in columns]
 
-		amounts = {row["salary_slip_id"]: row.get(fieldname) for row in data}
-		self.assertEqual(amounts[deduction_slip.name], 1800)
-		self.assertEqual(amounts[contribution_slip.name], 2400)
+		self.assertEqual(fieldnames.count(deduction_fieldname), 1)
+		self.assertEqual(fieldnames.count(contribution_fieldname), 1)
+		self.assertIn("total_employer_contribution", fieldnames)
+
+		rows = {row["salary_slip_id"]: row for row in data}
+		self.assertEqual(rows[deduction_slip.name][deduction_fieldname], 1800)
+		self.assertEqual(rows[contribution_slip.name][contribution_fieldname], 2400)
+		self.assertEqual(rows[contribution_slip.name]["total_employer_contribution"], 2400)
