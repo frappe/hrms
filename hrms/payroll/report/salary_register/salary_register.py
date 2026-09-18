@@ -31,7 +31,8 @@ def execute(filters=None):
 
 	parentfields = get_active_parentfields(filters)
 	components = get_components_by_parentfield(salary_slips, parentfields)
-	columns = get_columns(components)
+	fieldnames = get_component_fieldnames(components, parentfields)
+	columns = get_columns(components, fieldnames)
 
 	component_maps = {
 		parentfield: get_salary_slip_details(salary_slips, currency, company_currency, parentfield)
@@ -65,7 +66,9 @@ def execute(filters=None):
 		for parentfield in parentfields:
 			amounts = component_maps[parentfield].get(ss.name, {})
 			for component, amount in amounts.items():
-				row.setdefault(get_component_fieldname(parentfield, component), amount)
+				fieldname = fieldnames.get((parentfield, component))
+				if fieldname:
+					row[fieldname] = amount
 
 		if components[EMPLOYER_CONTRIBUTIONS]:
 			row.update(
@@ -107,11 +110,23 @@ def get_active_parentfields(filters):
 	return tuple(p for p in COMPONENT_PARENTFIELDS if p != EMPLOYER_CONTRIBUTIONS)
 
 
-def get_component_fieldname(parentfield, component):
-	if parentfield == EMPLOYER_CONTRIBUTIONS:
-		return f"employer_contribution_{frappe.scrub(component)}"
+def get_component_fieldnames(components, parentfields):
+	fieldnames = {}
+	used = set()
 
-	return frappe.scrub(component)
+	for parentfield in parentfields:
+		for component in components[parentfield]:
+			fieldname = frappe.scrub(component)
+			if parentfield == EMPLOYER_CONTRIBUTIONS:
+				fieldname = f"employer_contribution_{fieldname}"
+
+			if fieldname in used:
+				fieldname = f"{fieldname}_{len(used)}"
+
+			used.add(fieldname)
+			fieldnames[(parentfield, component)] = fieldname
+
+	return fieldnames
 
 
 def get_components_by_parentfield(salary_slips, parentfields):
@@ -144,7 +159,7 @@ def update_column_width(ss, columns):
 		columns[9].update({"width": 120})
 
 
-def get_columns(components):
+def get_columns(components, fieldnames):
 	columns = [
 		{
 			"label": _("Salary Slip ID"),
@@ -236,7 +251,7 @@ def get_columns(components):
 		columns.append(
 			{
 				"label": earning,
-				"fieldname": get_component_fieldname("earnings", earning),
+				"fieldname": fieldnames[("earnings", earning)],
 				"fieldtype": "Currency",
 				"options": "currency",
 				"width": 120,
@@ -257,7 +272,7 @@ def get_columns(components):
 		columns.append(
 			{
 				"label": deduction,
-				"fieldname": get_component_fieldname("deductions", deduction),
+				"fieldname": fieldnames[("deductions", deduction)],
 				"fieldtype": "Currency",
 				"options": "currency",
 				"width": 120,
@@ -298,7 +313,7 @@ def get_columns(components):
 		columns.append(
 			{
 				"label": contribution,
-				"fieldname": get_component_fieldname(EMPLOYER_CONTRIBUTIONS, contribution),
+				"fieldname": fieldnames[(EMPLOYER_CONTRIBUTIONS, contribution)],
 				"fieldtype": "Currency",
 				"options": "currency",
 				"width": 120,

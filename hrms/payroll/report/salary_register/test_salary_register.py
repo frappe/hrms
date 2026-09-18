@@ -11,11 +11,13 @@ from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 	create_salary_structure_assignment,
 	make_salary_structure,
 )
-from hrms.payroll.report.salary_register.salary_register import execute, get_component_fieldname
+from hrms.payroll.report.salary_register.salary_register import execute
 from hrms.tests.utils import HRMSTestSuite
 
 EMPLOYER_PF = "_Test Register Employer PF"
 SHARED_PF = "_Test Register Shared PF"
+PREFIXED_PF = "_Test Register PF"
+CLASHING_PF = "Employer Contribution _Test Register PF"
 
 
 class TestSalaryRegister(HRMSTestSuite):
@@ -78,7 +80,7 @@ class TestSalaryRegister(HRMSTestSuite):
 		columns, data = self.get_report()
 
 		fieldnames = [column["fieldname"] for column in columns]
-		self.assertNotIn(get_component_fieldname("employer_contributions", EMPLOYER_PF), fieldnames)
+		self.assertNotIn(f"employer_contribution_{frappe.scrub(EMPLOYER_PF)}", fieldnames)
 		self.assertNotIn("total_employer_contribution", fieldnames)
 		self.assertEqual(len(data), 1)
 
@@ -88,7 +90,7 @@ class TestSalaryRegister(HRMSTestSuite):
 
 		columns, data = self.get_report(show_employer_contributions=1)
 
-		fieldname = get_component_fieldname("employer_contributions", EMPLOYER_PF)
+		fieldname = f"employer_contribution_{frappe.scrub(EMPLOYER_PF)}"
 		fieldnames = [column["fieldname"] for column in columns]
 		self.assertIn(fieldname, fieldnames)
 		self.assertIn("total_employer_contribution", fieldnames)
@@ -136,8 +138,8 @@ class TestSalaryRegister(HRMSTestSuite):
 
 		columns, data = self.get_report(show_employer_contributions=1)
 
-		deduction_fieldname = get_component_fieldname("deductions", SHARED_PF)
-		contribution_fieldname = get_component_fieldname("employer_contributions", SHARED_PF)
+		deduction_fieldname = frappe.scrub(SHARED_PF)
+		contribution_fieldname = f"employer_contribution_{frappe.scrub(SHARED_PF)}"
 		fieldnames = [column["fieldname"] for column in columns]
 
 		self.assertEqual(fieldnames.count(deduction_fieldname), 1)
@@ -148,3 +150,31 @@ class TestSalaryRegister(HRMSTestSuite):
 		self.assertEqual(rows[deduction_slip.name][deduction_fieldname], 1800)
 		self.assertEqual(rows[contribution_slip.name][contribution_fieldname], 2400)
 		self.assertEqual(rows[contribution_slip.name]["total_employer_contribution"], 2400)
+
+	def test_scrubbed_names_do_not_clash_across_parentfields(self):
+		self.create_component(PREFIXED_PF, "TRPF", "Employer Contribution")
+		self.create_component(CLASHING_PF, "ECTRPF", "Deduction")
+
+		salary_structure = make_salary_structure(
+			"_Test Salary Register Clash Structure",
+			"Monthly",
+			employee=self.employee,
+			company="_Test Company",
+			currency="INR",
+			from_date=self.start_date,
+			deductions=[{"salary_component": CLASHING_PF, "abbr": "ECTRPF", "amount": 500}],
+			other_details={
+				"employer_contributions": [{"salary_component": PREFIXED_PF, "abbr": "TRPF", "amount": 1800}]
+			},
+		)
+		self.create_salary_slip(salary_structure.name, self.end_date)
+
+		columns, data = self.get_report(show_employer_contributions=1)
+
+		deduction_column = next(column for column in columns if column["label"] == CLASHING_PF)
+		contribution_column = next(column for column in columns if column["label"] == PREFIXED_PF)
+
+		self.assertNotEqual(deduction_column["fieldname"], contribution_column["fieldname"])
+		self.assertEqual(data[0][deduction_column["fieldname"]], 500)
+		self.assertEqual(data[0][contribution_column["fieldname"]], 1800)
+		self.assertEqual(data[0]["total_employer_contribution"], 1800)
