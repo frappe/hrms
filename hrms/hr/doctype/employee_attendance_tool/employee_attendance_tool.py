@@ -187,9 +187,9 @@ def mark_employee_attendance(
 
 	if employee_list:
 		frappe.has_permission("Attendance", "create", throw=True)
+		validate_employee_access(employee_list, company)
 
 	for employee in employee_list:
-		validate_employee_access(employee, company)
 		leave_type = None
 		if status == "On Leave" and leave_type:
 			leave_type = leave_type
@@ -213,8 +213,7 @@ def mark_employee_attendance(
 		if isinstance(half_day_employee_list, str):
 			half_day_employee_list = json.loads(half_day_employee_list)
 
-		for employee in half_day_employee_list:
-			validate_employee_access(employee, company)
+		validate_employee_access(half_day_employee_list, company)
 
 		eligible_attendance = frappe.get_list(
 			"Attendance",
@@ -223,20 +222,15 @@ def mark_employee_attendance(
 				"attendance_date": date,
 				"docstatus": 1,
 			},
-			fields=["name", "employee"],
+			pluck="name",
 			limit=0,
 		)
-		attendance_map = {d.employee: d.name for d in eligible_attendance}
+		if not eligible_attendance:
+			return
 
 		Attendance = frappe.qb.DocType("Attendance")
-		for employee in half_day_employee_list:
-			attendance_name = attendance_map.get(employee)
-			if attendance_name:
-				frappe.has_permission("Attendance", "write", attendance_name, throw=True)
-				frappe.qb.update(Attendance).where(
-					(Attendance.employee == employee)
-					& (Attendance.attendance_date == date)
-					& (Attendance.docstatus == 1)
-				).set(Attendance.half_day_status, half_day_status).set(Attendance.shift, shift).set(
-					Attendance.late_entry, late_entry or 0
-				).set(Attendance.early_exit, early_exit or 0).set(Attendance.modify_half_day_status, 0).run()
+		frappe.qb.update(Attendance).where(Attendance.name.isin(eligible_attendance)).set(
+			Attendance.half_day_status, half_day_status
+		).set(Attendance.shift, shift).set(Attendance.late_entry, late_entry or 0).set(
+			Attendance.early_exit, early_exit or 0
+		).set(Attendance.modify_half_day_status, 0).run()

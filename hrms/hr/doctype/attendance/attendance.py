@@ -384,12 +384,27 @@ def mark_attendance(
 	return attendance.name
 
 
-def validate_employee_access(employee: str, company: str | None = None) -> None:
-	frappe.has_permission("Employee", "read", employee, throw=True)
-	if company and frappe.db.get_value("Employee", employee, "company") != company:
+def validate_employee_access(employees: list[str], company: str | None = None) -> None:
+	"""Single permission-aware query for all employees, run before any loop."""
+	employees = list(dict.fromkeys(employees or []))
+	if not employees:
+		return
+
+	accessible = frappe.get_list(
+		"Employee", filters={"name": ["in", employees]}, fields=["name", "company"], limit=0
+	)
+	company_map = {d.name: d.company for d in accessible}
+
+	if denied := [e for e in employees if e not in company_map]:
+		frappe.throw(
+			_("You do not have access to Employee {0}").format(", ".join(map(frappe.bold, denied))),
+			frappe.PermissionError,
+		)
+
+	if company and (mismatched := [e for e, c in company_map.items() if c != company]):
 		frappe.throw(
 			_("Employee {0} does not belong to Company {1}").format(
-				frappe.bold(employee), frappe.bold(company)
+				", ".join(map(frappe.bold, mismatched)), frappe.bold(company)
 			)
 		)
 
@@ -402,7 +417,7 @@ def mark_bulk_attendance(data: str | dict):
 		data = json.loads(data)
 	data = frappe._dict(data)
 	frappe.has_permission("Attendance", "create", throw=True)
-	validate_employee_access(data.employee)
+	validate_employee_access([data.employee])
 	if not data.unmarked_days:
 		frappe.throw(_("Please select a date."))
 		return
