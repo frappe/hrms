@@ -31,6 +31,11 @@ from erpnext.accounts.utils import get_fiscal_year
 
 from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import if_lending_app_installed
 from hrms.payroll.doctype.salary_withholding.salary_withholding import link_bank_entry_in_salary_withholdings
+from hrms.utils.holiday_list import (
+	clip_holiday_list_ranges,
+	get_holiday_list_ranges_for_employees,
+	get_holidays_in_ranges_map,
+)
 
 
 class PayrollEntry(Document):
@@ -1288,22 +1293,30 @@ class PayrollEntry(Document):
 			return
 
 		unmarked_attendance = []
-		employee_details = self.get_employee_and_attendance_details()
-		default_holiday_list = frappe.db.get_value(
-			"Company", self.company, "default_holiday_list", cache=True
+		employee_details = {record.name: record for record in self.get_employee_and_attendance_details()}
+		holiday_list_ranges = get_holiday_list_ranges_for_employees(
+			{name: details.company for name, details in employee_details.items()},
+			self.start_date,
+			self.end_date,
 		)
 
+		payroll_dates = {}
+		for employee, details in employee_details.items():
+			payroll_dates[employee] = self.get_payroll_dates_for_employee(details)
+			holiday_list_ranges[employee] = clip_holiday_list_ranges(
+				holiday_list_ranges.get(employee, []), *payroll_dates[employee]
+			)
+
+		holidays = get_holidays_in_ranges_map(holiday_list_ranges)
+
 		for emp in self.employees:
-			details = next((record for record in employee_details if record.name == emp.employee), None)
+			details = employee_details.get(emp.employee)
 			if not details:
 				continue
 
-			start_date, end_date = self.get_payroll_dates_for_employee(details)
-			holidays = self.get_holidays_count(
-				details.holiday_list or default_holiday_list, start_date, end_date
-			)
+			start_date, end_date = payroll_dates[emp.employee]
 			payroll_days = date_diff(end_date, start_date) + 1
-			unmarked_days = payroll_days - (holidays + details.attendance_count)
+			unmarked_days = payroll_days - (len(holidays.get(emp.employee, [])) + details.attendance_count)
 
 			if unmarked_days > 0:
 				unmarked_attendance.append(
@@ -1323,7 +1336,7 @@ class PayrollEntry(Document):
 		                "name": "HREMP00001",
 		                "date_of_joining": "2019-01-01",
 		                "relieving_date": "2022-01-01",
-		                "holiday_list": "Holiday List Company",
+		                "company": "_Test Company",
 		                "attendance_count": 22
 		        }
 		]
@@ -1345,7 +1358,7 @@ class PayrollEntry(Document):
 				Employee.name,
 				Employee.date_of_joining,
 				Employee.relieving_date,
-				Employee.holiday_list,
+				Employee.company,
 				Count(Attendance.name).as_("attendance_count"),
 			)
 			.where(Employee.name.isin(employees))
@@ -1362,26 +1375,6 @@ class PayrollEntry(Document):
 			end_date = employee_details.relieving_date
 
 		return start_date, end_date
-
-	def get_holidays_count(self, holiday_list: str, start_date: str, end_date: str) -> float:
-		"""Returns number of holidays between start and end dates in the holiday list"""
-		if not hasattr(self, "_holidays_between_dates"):
-			self._holidays_between_dates = {}
-
-		key = f"{start_date}-{end_date}-{holiday_list}"
-		if key in self._holidays_between_dates:
-			return self._holidays_between_dates[key]
-
-		holidays = frappe.db.get_all(
-			"Holiday",
-			filters={"parent": holiday_list, "holiday_date": ("between", [start_date, end_date])},
-			fields=[{"COUNT": "*", "as": "holidays_count"}],
-		)[0]
-
-		if holidays:
-			self._holidays_between_dates[key] = holidays.holidays_count
-
-		return self._holidays_between_dates.get(key) or 0
 
 	@frappe.whitelist(methods=["POST"])
 	def create_overtime_slips(self) -> None:
