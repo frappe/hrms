@@ -9,6 +9,8 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import getdate
 
+from hrms.hr.doctype.attendance.attendance import validate_employee_access
+
 
 class EmployeeAttendanceTool(Document):
 	# begin: auto-generated types
@@ -183,7 +185,11 @@ def mark_employee_attendance(
 	if isinstance(employee_list, str):
 		employee_list = json.loads(employee_list)
 
+	if employee_list:
+		frappe.has_permission("Attendance", "create", throw=True)
+
 	for employee in employee_list:
+		validate_employee_access(employee, company)
 		leave_type = None
 		if status == "On Leave" and leave_type:
 			leave_type = leave_type
@@ -206,6 +212,9 @@ def mark_employee_attendance(
 		frappe.has_permission("Attendance", "write", throw=True)
 		if isinstance(half_day_employee_list, str):
 			half_day_employee_list = json.loads(half_day_employee_list)
+
+		for employee in half_day_employee_list:
+			validate_employee_access(employee, company)
 
 		eligible_attendance = frappe.get_list(
 			"Attendance",

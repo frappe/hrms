@@ -10,6 +10,16 @@ from hrms.telemetry import (
 	_claim_milestone,
 	capture,
 	capture_daily_attendance_pulse,
+	on_appraisal_submit,
+	on_attendance_request_submit,
+	on_employee_checkin,
+	on_expense_claim_submit,
+	on_interview_submit,
+	on_job_offer_submit,
+	on_leave_application_submit,
+	on_payroll_entry_submit,
+	on_shift_request_submit,
+	sanitize_properties,
 )
 from hrms.tests.utils import HRMSTestSuite
 
@@ -41,9 +51,9 @@ def create_checkin(employee: str, time: str):
 	).insert()
 
 
-def create_leave_type():
+def create_leave_type(**flags):
 	return frappe.get_doc(
-		{"doctype": "Leave Type", "leave_type_name": f"_Test LT {frappe.generate_hash(length=8)}"}
+		{"doctype": "Leave Type", "leave_type_name": f"_Test LT {frappe.generate_hash(length=8)}", **flags}
 	).insert()
 
 
@@ -60,6 +70,7 @@ class TestTelemetry(HRMSTestSuite):
 		# mid-test; `add_days`/`getdate` stay real and derive from the frozen value.
 		patches = [
 			patch("hrms.telemetry._skip_context", return_value=False),
+			patch("hrms.telemetry.is_enabled", return_value=True),
 			patch("hrms.telemetry._capture", side_effect=collect),
 			patch("hrms.telemetry.site_age", return_value=3),
 			patch("hrms.telemetry.today", return_value=FROZEN_TODAY),
@@ -70,14 +81,6 @@ class TestTelemetry(HRMSTestSuite):
 
 	def events(self, name: str) -> list[dict]:
 		return [props for event, props in self.captured if event == name]
-
-	def telemetry_enabled(self):
-		"""Force only `enable_telemetry` on; other settings (timezone) must pass through."""
-		real = frappe.get_system_settings
-		return patch(
-			"frappe.get_system_settings",
-			side_effect=lambda key: 1 if key == "enable_telemetry" else real(key),
-		)
 
 	def release_milestone(self, event: str):
 		frappe.db.delete(MILESTONE_DOCTYPE, {"event": event})
@@ -126,8 +129,7 @@ class TestTelemetry(HRMSTestSuite):
 		self.assertEqual(self.checkins_on(FROZEN_YESTERDAY), 3)
 		self.assertEqual(self.checkins_on(FROZEN_TODAY), 1)
 
-		with self.telemetry_enabled():
-			capture_daily_attendance_pulse()
+		capture_daily_attendance_pulse()
 
 		summaries = self.events("attendance_daily_summary")
 		self.assertEqual(len(summaries), 1)
@@ -145,8 +147,7 @@ class TestTelemetry(HRMSTestSuite):
 		create_checkin(employee.name, f"{FROZEN_TODAY} 09:30:00")
 		create_checkin(employee.name, f"{FROZEN_TODAY} 18:30:00")
 
-		with self.telemetry_enabled():
-			capture_daily_attendance_pulse()
+		capture_daily_attendance_pulse()
 
 		summary = self.events("attendance_daily_summary")[0]
 		self.assertEqual(summary["checkins"], 0)
@@ -156,13 +157,167 @@ class TestTelemetry(HRMSTestSuite):
 	def test_daily_pulse_weekday_describes_the_summarised_day(self):
 		create_employee(f"_Test Pulse {frappe.generate_hash(length=8)}")
 
-		with self.telemetry_enabled():
-			capture_daily_attendance_pulse()
+		capture_daily_attendance_pulse()
 
 		summary = self.events("attendance_daily_summary")[0]
 		# 2026-03-11 is a Wednesday; weekday() counts Monday as 0.
 		self.assertEqual(summary["weekday"], 2)
 		self.assertEqual(summary["weekday"], getdate(add_days(FROZEN_TODAY, -1)).weekday())
+
+	# ---- the enable_telemetry gate ----
+
+	def test_nothing_is_captured_or_recorded_when_telemetry_is_disabled(self):
+		self.release_milestone(CONVERSION_EVENT)
+		self.release_milestone(FIRST_CAPTURE_MILESTONE)
+		self.release_milestone("leave_type_configured")
+		create_employee(f"_Test Pulse {frappe.generate_hash(length=8)}")
+
+		with patch("hrms.telemetry.is_enabled", return_value=False):
+			capture("_test_usage", {"count": 1})
+			create_leave_type()
+			capture_daily_attendance_pulse()
+
+		self.assertEqual(self.captured, [])
+		self.assertFalse(frappe.db.exists(MILESTONE_DOCTYPE, FIRST_CAPTURE_MILESTONE))
+		self.assertFalse(frappe.db.exists(MILESTONE_DOCTYPE, "leave_type_configured"))
+
+	# ---- payload hygiene ----
+
+	def test_only_scalars_and_fixed_vocabulary_leave_the_site(self):
+		clean = sanitize_properties(
+			{
+				"count": 3,
+				"rate": 0.5,
+				"flag": True,
+				"missing": None,
+				"note": "free text typed by a user",
+				"employee_name": "Jane Doe",
+				"when": getdate(FROZEN_TODAY),
+				"nested": {"a": 1},
+				"status": "Accepted",
+				"reason": "Attending a funeral",
+			}
+		)
+
+		self.assertEqual(
+			clean,
+			{
+				"count": 3,
+				"rate": 0.5,
+				"flag": True,
+				"missing": None,
+				"status": "Accepted",
+				"reason": "other",
+			},
+		)
+
+	def test_capture_applies_the_sanitizer(self):
+		capture("_test_usage", {"note": "secret", "count": 2})
+
+		self.assertEqual(self.events("_test_usage"), [{"count": 2}])
+
+	def test_leave_application_sends_leave_type_flags_not_its_name(self):
+		leave_type = create_leave_type(is_lwp=1)
+		doc = frappe._dict(
+			leave_type=leave_type.name, total_leave_days=2.0, half_day=0, leave_approver="x@example.com"
+		)
+
+		on_leave_application_submit(doc)
+
+		props = self.events("leave_application_submitted")[0]
+		self.assertNotIn("leave_type", props)
+		self.assertTrue(props["is_lwp"])
+		self.assertFalse(props["is_compensatory"])
+		self.assertEqual(props["total_leave_days"], 2.0)
+		self.assertFalse(props["self_approved"])
+
+	def test_hook_payloads_carry_no_personal_or_free_text_values(self):
+		hooks = [
+			(
+				on_expense_claim_submit,
+				frappe._dict(total_claimed_amount=12345, expenses=[{}, {}], is_paid=0, advances=[], taxes=[]),
+			),
+			(
+				on_attendance_request_submit,
+				frappe._dict(
+					reason="Doctor visit",
+					half_day=0,
+					include_holidays=0,
+					from_date=FROZEN_TODAY,
+					to_date=FROZEN_TODAY,
+				),
+			),
+			(
+				on_shift_request_submit,
+				frappe._dict(
+					shift_type="Night Shift",
+					approver="a@example.com",
+					from_date=FROZEN_TODAY,
+					to_date=FROZEN_TODAY,
+				),
+			),
+			(
+				on_employee_checkin,
+				frappe._dict(log_type="IN", shift="Day", latitude=12.9, longitude=77.6, device_id="d1"),
+			),
+			(
+				on_payroll_entry_submit,
+				frappe._dict(
+					payroll_frequency="Monthly",
+					number_of_employees=4,
+					employees=[],
+					validate_attendance=1,
+					salary_slip_based_on_timesheet=0,
+					start_date=FROZEN_TODAY,
+					end_date=FROZEN_TODAY,
+				),
+			),
+			(
+				on_job_offer_submit,
+				frappe._dict(status="Accepted", offer_terms=[{}], job_offer_term_template=None),
+			),
+			(
+				on_appraisal_submit,
+				frappe._dict(
+					appraisal_cycle="C1",
+					goals=[{}],
+					appraisal_kra=[{}],
+					rate_goals_manually=0,
+					self_ratings=[{}],
+					final_score=4.7,
+				),
+			),
+			(
+				on_interview_submit,
+				frappe._dict(status="Cleared", interview_details=[{}, {}], job_opening="JO1"),
+			),
+		]
+
+		for hook, doc in hooks:
+			hook(doc)
+
+		forbidden = {
+			"total_claimed_amount",
+			"shift_type",
+			"final_score",
+			"leave_type",
+			"latitude",
+			"longitude",
+			"device_id",
+		}
+		for event, props in self.captured:
+			self.assertFalse(forbidden & set(props), f"{event} leaks {forbidden & set(props)}")
+			for key, value in props.items():
+				if isinstance(value, str):
+					self.assertIn(
+						key, ("reason", "log_type", "status", "payroll_frequency"), f"{event}.{key}"
+					)
+				else:
+					self.assertTrue(value is None or isinstance(value, bool | int | float), f"{event}.{key}")
+
+		self.assertEqual(self.events("attendance_request_submitted")[0]["reason"], "other")
+		self.assertEqual(self.events("job_offer_made")[0]["status"], "Accepted")
+		self.assertEqual(self.events("employee_checkin")[0]["has_geolocation"], True)
 
 	# ---- first-time milestones ----
 
@@ -245,8 +400,7 @@ class TestTelemetry(HRMSTestSuite):
 		self.release_milestone(CONVERSION_EVENT)
 		self.release_milestone(FIRST_CAPTURE_MILESTONE)
 
-		with self.telemetry_enabled():
-			capture_daily_attendance_pulse()
+		capture_daily_attendance_pulse()
 
 		self.assertEqual(len(self.events("attendance_daily_summary")), 1)
 		self.assertFalse(frappe.db.exists(MILESTONE_DOCTYPE, FIRST_CAPTURE_MILESTONE))
@@ -255,8 +409,7 @@ class TestTelemetry(HRMSTestSuite):
 		create_employee(f"_Test Pulse {frappe.generate_hash(length=8)}")
 		self.start_conversion_clock(days_ago=15)
 
-		with self.telemetry_enabled():
-			capture_daily_attendance_pulse()
+		capture_daily_attendance_pulse()
 
 		self.assertEqual(self.events(CONVERSION_EVENT), [])
 
