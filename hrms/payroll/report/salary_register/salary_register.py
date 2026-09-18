@@ -10,7 +10,8 @@ import erpnext
 
 salary_slip = frappe.qb.DocType("Salary Slip")
 salary_detail = frappe.qb.DocType("Salary Detail")
-salary_component = frappe.qb.DocType("Salary Component")
+
+COMPONENT_TYPES = ("earnings", "deductions", "employer_contributions")
 
 
 def execute(filters=None):
@@ -26,11 +27,14 @@ def execute(filters=None):
 	if not salary_slips:
 		return [], []
 
-	earning_types, ded_types = get_earning_and_deduction_types(salary_slips)
-	columns = get_columns(earning_types, ded_types)
+	component_types = get_active_component_types(filters)
+	components = get_components_by_type(salary_slips, component_types)
+	columns = get_columns(components)
 
-	ss_earning_map = get_salary_slip_details(salary_slips, currency, company_currency, "earnings")
-	ss_ded_map = get_salary_slip_details(salary_slips, currency, company_currency, "deductions")
+	component_maps = {
+		component_type: get_salary_slip_details(salary_slips, currency, company_currency, component_type)
+		for component_type in component_types
+	}
 
 	doj_map = get_employee_doj_map()
 
@@ -56,11 +60,19 @@ def execute(filters=None):
 
 		update_column_width(ss, columns)
 
-		for e in earning_types:
-			row.update({frappe.scrub(e): ss_earning_map.get(ss.name, {}).get(e)})
+		for component_type in component_types:
+			amounts = component_maps[component_type].get(ss.name, {})
+			for component in components[component_type]:
+				row.update({frappe.scrub(component): amounts.get(component)})
 
-		for d in ded_types:
-			row.update({frappe.scrub(d): ss_ded_map.get(ss.name, {}).get(d)})
+		if components["employer_contributions"]:
+			row.update(
+				{
+					"total_employer_contribution": sum(
+						component_maps["employer_contributions"].get(ss.name, {}).values()
+					)
+				}
+			)
 
 		if currency == company_currency:
 			row.update(
@@ -86,14 +98,21 @@ def execute(filters=None):
 	return columns, data
 
 
-def get_earning_and_deduction_types(salary_slips):
-	salary_component_and_type = {_("Earning"): [], _("Deduction"): []}
+def get_active_component_types(filters):
+	if filters.get("show_employer_contributions"):
+		return COMPONENT_TYPES
 
-	for salary_component in get_salary_components(salary_slips):
-		component_type = get_salary_component_type(salary_component)
-		salary_component_and_type[_(component_type)].append(salary_component)
+	return ("earnings", "deductions")
 
-	return sorted(salary_component_and_type[_("Earning")]), sorted(salary_component_and_type[_("Deduction")])
+
+def get_components_by_type(salary_slips, component_types):
+	components = {component_type: set() for component_type in COMPONENT_TYPES}
+
+	for row in get_salary_components(salary_slips):
+		if row.parentfield in component_types:
+			components[row.parentfield].add(row.salary_component)
+
+	return {component_type: sorted(names) for component_type, names in components.items()}
 
 
 def update_column_width(ss, columns):
@@ -107,7 +126,7 @@ def update_column_width(ss, columns):
 		columns[9].update({"width": 120})
 
 
-def get_columns(earning_types, ded_types):
+def get_columns(components):
 	columns = [
 		{
 			"label": _("Salary Slip ID"),
@@ -195,7 +214,7 @@ def get_columns(earning_types, ded_types):
 		},
 	]
 
-	for earning in earning_types:
+	for earning in components["earnings"]:
 		columns.append(
 			{
 				"label": earning,
@@ -216,7 +235,7 @@ def get_columns(earning_types, ded_types):
 		}
 	)
 
-	for deduction in ded_types:
+	for deduction in components["deductions"]:
 		columns.append(
 			{
 				"label": deduction,
@@ -254,14 +273,39 @@ def get_columns(earning_types, ded_types):
 				"options": "currency",
 				"width": 120,
 			},
-			{
-				"label": _("Currency"),
-				"fieldtype": "Data",
-				"fieldname": "currency",
-				"options": "Currency",
-				"hidden": 1,
-			},
 		]
+	)
+
+	for contribution in components["employer_contributions"]:
+		columns.append(
+			{
+				"label": contribution,
+				"fieldname": frappe.scrub(contribution),
+				"fieldtype": "Currency",
+				"options": "currency",
+				"width": 120,
+			}
+		)
+
+	if components["employer_contributions"]:
+		columns.append(
+			{
+				"label": _("Total Employer Contribution"),
+				"fieldname": "total_employer_contribution",
+				"fieldtype": "Currency",
+				"options": "currency",
+				"width": 120,
+			}
+		)
+
+	columns.append(
+		{
+			"label": _("Currency"),
+			"fieldtype": "Data",
+			"fieldname": "currency",
+			"options": "Currency",
+			"hidden": 1,
+		}
 	)
 	return columns
 
@@ -270,13 +314,9 @@ def get_salary_components(salary_slips):
 	return (
 		frappe.qb.from_(salary_detail)
 		.where((salary_detail.amount != 0) & (salary_detail.parent.isin([d.name for d in salary_slips])))
-		.select(salary_detail.salary_component)
+		.select(salary_detail.parentfield, salary_detail.salary_component)
 		.distinct()
-	).run(pluck=True)
-
-
-def get_salary_component_type(salary_component):
-	return frappe.db.get_value("Salary Component", salary_component, "type", cache=True)
+	).run(as_dict=True)
 
 
 def get_salary_slips(filters, company_currency):
