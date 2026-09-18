@@ -110,9 +110,14 @@ class AdditionalSalary(Document):
 		if self.is_recurring:
 			AdditionalSalary = frappe.qb.DocType("Additional Salary")
 
-			additional_salaries = (
+			overlapping = (
 				frappe.qb.from_(AdditionalSalary)
-				.select(AdditionalSalary.name)
+				.select(
+					AdditionalSalary.name,
+					AdditionalSalary.ref_doctype,
+					AdditionalSalary.ref_docname,
+					AdditionalSalary.overwrite_salary_structure_amount,
+				)
 				.where(
 					(AdditionalSalary.employee == self.employee)
 					& (AdditionalSalary.name != self.name)
@@ -123,9 +128,11 @@ class AdditionalSalary(Document):
 					& (AdditionalSalary.from_date <= self.to_date)
 					& (AdditionalSalary.disabled == 0)
 				)
-			).run(pluck=True)
+			).run(as_dict=True)
 
-			if additional_salaries and len(additional_salaries):
+			additional_salaries = [d.name for d in overlapping if not self.is_separate_advance_return(d)]
+
+			if additional_salaries:
 				frappe.throw(
 					_(
 						"Additional Salary: {0} already exist for Salary Component: {1} for period {2} and {3}"
@@ -136,6 +143,19 @@ class AdditionalSalary(Document):
 						bold(formatdate(self.to_date)),
 					)
 				)
+
+	def is_separate_advance_return(self, other: dict) -> bool:
+		"""Returns against different employee advances are deducted in separate salary slip rows,
+		each booked against its own advance, so they can be scheduled over the same period"""
+		return bool(
+			self.ref_doctype == other.ref_doctype == "Employee Advance"
+			and self.ref_docname
+			and other.ref_docname
+			and self.ref_docname != other.ref_docname
+			# two overwriting rows of the same component cannot coexist in a salary slip
+			and not self.overwrite_salary_structure_amount
+			and not other.overwrite_salary_structure_amount
+		)
 
 	def validate_dates(self):
 		date_of_joining, relieving_date = frappe.db.get_value(
