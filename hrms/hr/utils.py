@@ -33,10 +33,7 @@ from frappe.utils import (
 
 import erpnext
 from erpnext import get_company_currency
-from erpnext.setup.doctype.employee.employee import (
-	InactiveEmployeeStatusError,
-	get_holiday_list_for_employee,
-)
+from erpnext.setup.doctype.employee.employee import InactiveEmployeeStatusError
 
 from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
 	calculate_pro_rated_leaves,
@@ -728,21 +725,12 @@ def get_holidays_for_employee(employee, start_date, end_date, raise_exception=Tr
 
 	return: list of dicts with `holiday_date` and `description`
 	"""
-	holiday_list = get_holiday_list_for_employee(employee, raise_exception=raise_exception)
+	from hrms.utils.holiday_list import get_holiday_list_ranges_for_employee, get_holidays_in_ranges
 
-	if not holiday_list:
-		return []
-
-	filters = {"parent": holiday_list, "holiday_date": ("between", [start_date, end_date])}
-
-	if only_non_weekly:
-		filters["weekly_off"] = False
-
-	holidays = frappe.get_all(
-		"Holiday", fields=["description", "holiday_date"], filters=filters, order_by="holiday_date"
+	holiday_list_ranges = get_holiday_list_ranges_for_employee(
+		employee, start_date, end_date, raise_exception=raise_exception
 	)
-
-	return holidays
+	return get_holidays_in_ranges(holiday_list_ranges, skip_weekly_offs=only_non_weekly)
 
 
 @erpnext.allow_regional
