@@ -13,8 +13,6 @@ from hrms.payroll.utils import COMPONENT_PARENTFIELDS
 salary_slip = frappe.qb.DocType("Salary Slip")
 salary_detail = frappe.qb.DocType("Salary Detail")
 
-EMPLOYER_CONTRIBUTIONS = "employer_contributions"
-
 
 def execute(filters=None):
 	if not filters:
@@ -70,11 +68,11 @@ def execute(filters=None):
 				if fieldname:
 					row[fieldname] = amount
 
-		if components[EMPLOYER_CONTRIBUTIONS]:
+		if components["employer_contributions"]:
 			row.update(
 				{
 					"total_employer_contribution": sum(
-						component_maps[EMPLOYER_CONTRIBUTIONS].get(ss.name, {}).values()
+						component_maps["employer_contributions"].get(ss.name, {}).values()
 					)
 				}
 			)
@@ -107,7 +105,7 @@ def get_active_parentfields(filters):
 	if filters.get("show_employer_contributions"):
 		return COMPONENT_PARENTFIELDS
 
-	return tuple(p for p in COMPONENT_PARENTFIELDS if p != EMPLOYER_CONTRIBUTIONS)
+	return ("earnings", "deductions")
 
 
 def get_component_fieldnames(components, parentfields):
@@ -117,7 +115,7 @@ def get_component_fieldnames(components, parentfields):
 	for parentfield in parentfields:
 		for component in components[parentfield]:
 			fieldname = frappe.scrub(component)
-			if parentfield == EMPLOYER_CONTRIBUTIONS:
+			if parentfield == "employer_contributions":
 				fieldname = f"employer_contribution_{fieldname}"
 
 			if fieldname in used:
@@ -139,7 +137,7 @@ def get_components_by_parentfield(salary_slips, parentfields):
 			if row.parentfield != parentfield:
 				continue
 
-			if parentfield == EMPLOYER_CONTRIBUTIONS:
+			if parentfield == "employer_contributions":
 				components[parentfield].add(row.salary_component)
 			elif row.salary_component not in pay_components:
 				components[parentfield].add(row.salary_component)
@@ -309,18 +307,18 @@ def get_columns(components, fieldnames):
 		]
 	)
 
-	for contribution in components[EMPLOYER_CONTRIBUTIONS]:
+	for contribution in components["employer_contributions"]:
 		columns.append(
 			{
 				"label": contribution,
-				"fieldname": fieldnames[(EMPLOYER_CONTRIBUTIONS, contribution)],
+				"fieldname": fieldnames[("employer_contributions", contribution)],
 				"fieldtype": "Currency",
 				"options": "currency",
 				"width": 120,
 			}
 		)
 
-	if components[EMPLOYER_CONTRIBUTIONS]:
+	if components["employer_contributions"]:
 		columns.append(
 			{
 				"label": _("Total Employer Contribution"),
