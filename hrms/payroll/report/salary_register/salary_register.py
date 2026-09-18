@@ -8,10 +8,10 @@ from frappe.utils import flt
 
 import erpnext
 
+from hrms.payroll.utils import COMPONENT_PARENTFIELDS
+
 salary_slip = frappe.qb.DocType("Salary Slip")
 salary_detail = frappe.qb.DocType("Salary Detail")
-
-COMPONENT_TYPES = ("earnings", "deductions", "employer_contributions")
 
 
 def execute(filters=None):
@@ -27,13 +27,13 @@ def execute(filters=None):
 	if not salary_slips:
 		return [], []
 
-	component_types = get_active_component_types(filters)
-	components = get_components_by_type(salary_slips, component_types)
+	parentfields = get_active_parentfields(filters)
+	components = get_components_by_parentfield(salary_slips, parentfields)
 	columns = get_columns(components)
 
 	component_maps = {
-		component_type: get_salary_slip_details(salary_slips, currency, company_currency, component_type)
-		for component_type in component_types
+		parentfield: get_salary_slip_details(salary_slips, currency, company_currency, parentfield)
+		for parentfield in parentfields
 	}
 
 	doj_map = get_employee_doj_map()
@@ -60,10 +60,10 @@ def execute(filters=None):
 
 		update_column_width(ss, columns)
 
-		for component_type in component_types:
-			amounts = component_maps[component_type].get(ss.name, {})
-			for component in components[component_type]:
-				row.update({frappe.scrub(component): amounts.get(component)})
+		for parentfield in parentfields:
+			amounts = component_maps[parentfield].get(ss.name, {})
+			for component, amount in amounts.items():
+				row.setdefault(frappe.scrub(component), amount)
 
 		if components["employer_contributions"]:
 			row.update(
@@ -98,21 +98,25 @@ def execute(filters=None):
 	return columns, data
 
 
-def get_active_component_types(filters):
+def get_active_parentfields(filters):
 	if filters.get("show_employer_contributions"):
-		return COMPONENT_TYPES
+		return COMPONENT_PARENTFIELDS
 
 	return ("earnings", "deductions")
 
 
-def get_components_by_type(salary_slips, component_types):
-	components = {component_type: set() for component_type in COMPONENT_TYPES}
+def get_components_by_parentfield(salary_slips, parentfields):
+	rows = get_salary_components(salary_slips)
+	components = {parentfield: set() for parentfield in COMPONENT_PARENTFIELDS}
+	seen = set()
 
-	for row in get_salary_components(salary_slips):
-		if row.parentfield in component_types:
-			components[row.parentfield].add(row.salary_component)
+	for parentfield in parentfields:
+		for row in rows:
+			if row.parentfield == parentfield and row.salary_component not in seen:
+				components[parentfield].add(row.salary_component)
+				seen.add(row.salary_component)
 
-	return {component_type: sorted(names) for component_type, names in components.items()}
+	return {parentfield: sorted(names) for parentfield, names in components.items()}
 
 
 def update_column_width(ss, columns):
@@ -364,14 +368,14 @@ def get_employee_doj_map():
 	return frappe._dict(result)
 
 
-def get_salary_slip_details(salary_slips, currency, company_currency, component_type):
+def get_salary_slip_details(salary_slips, currency, company_currency, parentfield):
 	salary_slips = [ss.name for ss in salary_slips]
 
 	result = (
 		frappe.qb.from_(salary_slip)
 		.join(salary_detail)
 		.on(salary_slip.name == salary_detail.parent)
-		.where((salary_detail.parent.isin(salary_slips)) & (salary_detail.parentfield == component_type))
+		.where((salary_detail.parent.isin(salary_slips)) & (salary_detail.parentfield == parentfield))
 		.select(
 			salary_detail.parent,
 			salary_detail.salary_component,
