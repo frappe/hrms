@@ -18,7 +18,10 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_earning_salary_component,
 	make_employee_salary_slip,
 )
-from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
+from hrms.payroll.doctype.salary_structure.salary_structure import (
+	get_salary_component,
+	make_salary_slip,
+)
 
 test_dependencies = ["Fiscal Year"]
 
@@ -51,6 +54,18 @@ class TestSalaryStructure(FrappeTestCase):
 			).insert()
 			holiday_list.get_weekly_off_dates()
 			holiday_list.save()
+
+	def test_get_salary_component_rejects_invalid_searchfield(self):
+		self.assertRaises(
+			frappe.DataError,
+			get_salary_component,
+			doctype="Salary Component",
+			txt="x",
+			searchfield="name`)",
+			start=0,
+			page_len=20,
+			filters={"component_type": "Earning", "company": "x"},
+		)
 
 	def test_salary_structure_deduction_based_on_gross_pay(self):
 		emp = make_employee("test_employee_3@salary.com")
