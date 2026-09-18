@@ -1371,6 +1371,11 @@ def get_leaves_for_period(
 			leave_days += leave_entry.leaves
 
 		elif leave_entry.transaction_type == "Leave Application":
+			if inclusive_period:
+				# use the ledger's recorded value instead of recomputing it
+				leave_days += leave_entry.leaves
+				continue
+
 			if leave_entry.from_date < getdate(from_date):
 				leave_entry.from_date = from_date
 			if leave_entry.to_date > getdate(to_date):
