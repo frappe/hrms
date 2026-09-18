@@ -1,0 +1,83 @@
+:where([data-slot="list"]) {
+	--list-columns: var(--list-columns-default, auto minmax(0, 1fr) auto);
+}
+[data-slot="list-row"],
+[data-slot="list-header"] {
+	display: grid;
+	grid-template-columns: var(--list-columns);
+	-moz-column-gap: var(--list-gap, 0.5rem);
+	column-gap: var(--list-gap, 0.5rem);
+	align-items: center;
+	text-align: start;
+}
+[data-slot="list-row"] {
+	padding-inline-start: calc(var(--list-checkbox-width, 0px) + var(--_list-row-pad, 0px));
+	padding-inline-end: var(--_list-row-pad, 0px);
+}
+:where([data-slot="list-header"]) {
+	padding-inline-start: calc(var(--list-checkbox-width, 0px) + var(--list-row-padding-x, 0px));
+	padding-inline-end: var(--list-row-padding-x, 0px);
+}
+:where([data-slot="list-group-header"]) {
+	padding-inline-start: calc(var(--list-checkbox-width, 0px) + var(--list-row-padding-x, 0px));
+	padding-inline-end: var(--list-row-padding-x, 0px);
+}
+:where([data-slot="list-row"], [data-slot="list-header"]) {
+	position: relative;
+}
+:where([data-slot="list-row"]) {
+	height: var(--list-row-height, auto);
+	transition:
+		padding 0.2s ease-out,
+		background-color 0.15s;
+}
+:where([data-slot="list-row"][data-interactive]) {
+	--_list-row-pad: var(--list-row-padding-x, 0.75rem);
+	width: 100%;
+}
+:where([data-slot="list-row-checkbox"], [data-slot="list-header-checkbox"]) {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	inset-inline-start: var(--_list-row-pad, 0px);
+	display: flex;
+	align-items: center;
+	width: 32px;
+	overflow: hidden;
+}
+:where([data-slot="list-header-checkbox"]) {
+	inset-inline-start: var(--list-row-padding-x, 0px);
+}
+:where([data-slot="list-header-border"]) {
+	position: absolute;
+	grid-column: 1 / -1;
+	bottom: 0;
+	inset-inline-start: 0;
+	inset-inline-end: 0;
+	height: 0;
+	pointer-events: none;
+}
+:where([data-slot="list-divider"]) {
+	position: absolute;
+	top: 0;
+	inset-inline-start: 0;
+	inset-inline-end: 0;
+	height: 0;
+	pointer-events: none;
+}
+[data-slot="list-row"] [data-slot="list-divider"] {
+	opacity: 0;
+}
+[data-slot="list-row"] + [data-slot="list-row"] [data-slot="list-divider"] {
+	opacity: 1;
+}
+[data-slot="list-row"][data-interactive]:hover [data-slot="list-divider"],
+[data-slot="list-row"][data-interactive]:hover
+	+ [data-slot="list-row"]
+	[data-slot="list-divider"] {
+	opacity: 0;
+}
+[data-slot="list-row"][data-active] [data-slot="list-divider"],
+[data-slot="list-row"][data-active] + [data-slot="list-row"] [data-slot="list-divider"] {
+	opacity: 0;
+}
