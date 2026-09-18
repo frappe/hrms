@@ -167,10 +167,13 @@ class TestTelemetry(HRMSTestSuite):
 	# ---- the enable_telemetry gate ----
 
 	def test_nothing_is_captured_or_recorded_when_telemetry_is_disabled(self):
+		# Created first: on a fresh site the Employee insert hook is itself usage
+		# and would stamp `first_capture` before the disabled block begins.
+		create_employee(f"_Test Pulse {frappe.generate_hash(length=8)}")
 		self.release_milestone(CONVERSION_EVENT)
 		self.release_milestone(FIRST_CAPTURE_MILESTONE)
 		self.release_milestone("leave_type_configured")
-		create_employee(f"_Test Pulse {frappe.generate_hash(length=8)}")
+		self.captured.clear()
 
 		with patch("hrms.telemetry.is_enabled", return_value=False):
 			capture("_test_usage", {"count": 1})
