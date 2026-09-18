@@ -272,6 +272,57 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 			frappe.db.exists("Attendance", {"employee": self.employee3, "attendance_date": date})
 		)
 
+	def test_half_day_update_requires_write_access_on_each_record(self):
+		hr_user = make_company_restricted_user("test_half_day_writer@example.com", "_Test Company 1")
+
+		date = add_days(getdate(), -1)
+		while is_holiday(employee=self.employee1, date=date):
+			date = add_days(date, -1)
+
+		attendance = frappe.get_doc(
+			{
+				"doctype": "Attendance",
+				"employee": self.employee1,
+				"attendance_date": date,
+				"status": "Present",
+			}
+		).insert()
+		attendance.submit()
+
+		# employee1 sits outside the user's company scope; share the records read-only so
+		# they are visible to the user without being editable
+		frappe.share.add("Employee", self.employee1, hr_user, read=1)
+		frappe.share.add("Attendance", attendance.name, hr_user, read=1)
+
+		def mark_half_day():
+			mark_employee_attendance(
+				employee_list=[],
+				status="Present",
+				date=date,
+				mark_half_day=True,
+				half_day_status="Absent",
+				half_day_employee_list=[self.employee1],
+			)
+
+		frappe.set_user(hr_user)
+		try:
+			self.assertRaises(frappe.PermissionError, mark_half_day)
+		finally:
+			frappe.set_user("Administrator")
+
+		attendance.reload()
+		self.assertIsNone(attendance.half_day_status)
+
+		frappe.share.add("Attendance", attendance.name, hr_user, read=1, write=1)
+		frappe.set_user(hr_user)
+		try:
+			mark_half_day()
+		finally:
+			frappe.set_user("Administrator")
+
+		attendance.reload()
+		self.assertEqual(attendance.half_day_status, "Absent")
+
 	def test_mark_half_day_attendance_permissions(self):
 		user_no_role = "test_no_role@example.com"
 

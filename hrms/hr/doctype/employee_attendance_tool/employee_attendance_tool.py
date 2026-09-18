@@ -168,6 +168,14 @@ def _get_unmarked_attendance_with_shift(unmarked_attendance, shift, date):
 	return shiftwise_unmarked_attendance
 
 
+def get_permission_check_fields(doctype: str) -> list[str]:
+	"""Columns needed to evaluate document permissions without loading the document."""
+	link_fields = [
+		df.fieldname for df in frappe.get_meta(doctype).get_link_fields() if not df.ignore_user_permissions
+	]
+	return ["name", "owner", "docstatus", *link_fields]
+
+
 @frappe.whitelist(methods=["POST"])
 def mark_employee_attendance(
 	employee_list: list | str,
@@ -222,15 +230,20 @@ def mark_employee_attendance(
 				"attendance_date": date,
 				"docstatus": 1,
 			},
-			pluck="name",
+			fields=get_permission_check_fields("Attendance"),
 			limit=0,
 		)
 		if not eligible_attendance:
 			return
 
+		for row in eligible_attendance:
+			# in-memory document, no fetch: the engine needs meta, owner and link values
+			attendance = frappe.get_doc(dict(row, doctype="Attendance"))
+			frappe.has_permission("Attendance", "write", doc=attendance, throw=True)
+
 		Attendance = frappe.qb.DocType("Attendance")
-		frappe.qb.update(Attendance).where(Attendance.name.isin(eligible_attendance)).set(
-			Attendance.half_day_status, half_day_status
-		).set(Attendance.shift, shift).set(Attendance.late_entry, late_entry or 0).set(
-			Attendance.early_exit, early_exit or 0
-		).set(Attendance.modify_half_day_status, 0).run()
+		frappe.qb.update(Attendance).where(
+			Attendance.name.isin([row.name for row in eligible_attendance])
+		).set(Attendance.half_day_status, half_day_status).set(Attendance.shift, shift).set(
+			Attendance.late_entry, late_entry or 0
+		).set(Attendance.early_exit, early_exit or 0).set(Attendance.modify_half_day_status, 0).run()
