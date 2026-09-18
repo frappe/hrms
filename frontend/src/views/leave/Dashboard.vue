@@ -5,20 +5,18 @@
 				<LeaveBalance />
 
 				<div class="flex flex-col gap-7 mt-5 px-4 w-full">
-					<router-link
-						:to="{ name: 'LeaveApplicationFormView' }"
-						v-slot="{ navigate }"
-					>
-						<Button
-							@click="navigate"
-							variant="solid"
-							class="py-5 text-base w-full"
-						>
+					<router-link :to="{ name: 'LeaveApplicationFormView' }" v-slot="{ navigate }">
+						<Button @click="navigate" variant="solid" class="py-5 text-base w-full">
 							{{ __("Request a Leave") }}
 						</Button>
 					</router-link>
+					<router-link :to="{ name: 'CompensatoryLeaveRequestListView' }" v-slot="{ navigate }">
+						<Button @click="navigate" variant="outline" class="py-5 text-base w-full">
+							{{ __("Compensatory Leave Requests") }}
+						</Button>
+					</router-link>
 					<div>
-						<div class="text-lg text-gray-800 font-bold">{{ __('Recent Leaves') }} </div>
+						<div class="text-lg text-gray-800 font-bold">{{ __("Recent Leaves") }}</div>
 						<RequestList
 							:component="markRaw(LeaveRequestItem)"
 							:items="myLeaves.data"
