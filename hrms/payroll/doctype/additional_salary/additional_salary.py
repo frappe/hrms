@@ -285,6 +285,16 @@ class AdditionalSalary(Document):
 		precision = self.precision("amount")
 		advance = frappe.get_doc("Employee Advance", self.ref_docname)
 
+		if advance.employee != self.employee:
+			frappe.throw(
+				_("Employee Advance {0} belongs to {1}, not {2}").format(
+					get_link_to_form("Employee Advance", self.ref_docname),
+					bold(advance.employee),
+					bold(self.employee),
+				),
+				title=_("Invalid Employee Advance"),
+			)
+
 		AdditionalSalary = frappe.qb.DocType("Additional Salary")
 		scheduled_deductions = (
 			frappe.qb.from_(AdditionalSalary)
