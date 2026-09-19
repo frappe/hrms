@@ -339,6 +339,27 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		)
 		self.assertRaisesRegex(frappe.ValidationError, "already exist", additional_salary.insert)
 
+	def test_advance_return_blocked_for_another_employee(self):
+		company = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee("test_advance_owner@payroll.com", company=company.name)
+		other_employee = make_employee("test_advance_other@payroll.com", company=company.name)
+
+		advance = make_employee_advance(employee, {"repay_unclaimed_amount_from_salary": 1})
+		make_payment_entry(advance)
+		advance.reload()
+
+		component = make_advance_deduction_component(company)
+		setup_salary_structure(other_employee, company)
+
+		# deduct from another employee's salary against this employee's advance
+		additional_salary = create_return_through_additional_salary(advance)
+		additional_salary.employee = other_employee
+		additional_salary.salary_component = component
+		additional_salary.payroll_date = nowdate()
+		additional_salary.amount = 100
+
+		self.assertRaisesRegex(frappe.ValidationError, "belongs to", additional_salary.insert)
+
 	def test_payment_entry_against_advance(self):
 		employee_name = make_employee("_T@employee.advance", "_Test Company")
 		advance = make_employee_advance(employee_name)
