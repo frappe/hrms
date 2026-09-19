@@ -2,8 +2,9 @@
 # License: GNU General Public License v3. See license.txt
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
-from frappe.utils import flt, nowdate
+from frappe.utils import flt, get_link_to_form, nowdate
 
 import erpnext
 from erpnext.accounts.doctype.payment_entry.payment_entry import (
@@ -93,6 +94,22 @@ def get_payment_entry_for_employee(
 
 	# bank or cash
 	bank = get_bank_cash_account(doc, bank_account)
+	if not bank.get("account"):
+		company_link = get_link_to_form("Company", doc.company + "#accounts_tab", _("here"))
+		if frappe.get_meta(dt).has_field("mode_of_payment"):
+			frappe.throw(
+				_(
+					"Please set a {0} on this document, or a Default Bank/Cash Account in the Company {1}"
+				).format(
+					get_link_to_form(dt, dn + "#mode_of_payment", _("Mode of Payment")),
+					company_link,
+				),
+				title=_("Bank/Cash Account Required"),
+			)
+		frappe.throw(
+			_("Please set a Default Bank/Cash Account in the Company {0}").format(company_link),
+			title=_("Bank/Cash Account Required"),
+		)
 
 	pe = frappe.new_doc("Payment Entry")
 	pe.payment_type = payment_type
