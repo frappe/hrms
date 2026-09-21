@@ -673,6 +673,40 @@ class TestSalarySlip(HRMSTestSuite):
 		self.assertEqual(ss.earnings[1].amount, 3000)
 		self.assertEqual(ss.gross_pay, 78000)
 
+	@HRMSTestSuite.change_settings("Payroll Settings", {"include_holidays_in_total_working_days": 0})
+	def test_holidays_resolved_from_holiday_list_assigned_during_slip_period(self):
+		from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+			create_holiday_list_assignment,
+		)
+
+		emp_id = make_employee(
+			"test_holiday_list_assigned_during_slip_period@salary.com",
+			relieving_date=None,
+			status="Active",
+			company="_Test Company",
+		)
+		year_start, year_end = get_year_start(getdate()), get_year_ending(getdate())
+		sunday_off_list = make_holiday_list("Test Slip Period Sunday Off", year_start, year_end)
+		no_off_list = make_holiday_list(
+			"Test Slip Period No Off", year_start, year_end, add_weekly_offs=False
+		)
+		create_holiday_list_assignment("Employee", emp_id, sunday_off_list, from_date=year_start)
+		create_holiday_list_assignment("Employee", emp_id, no_off_list, from_date=getdate())
+
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test Salary Slip Holiday List Assigned Period")
+
+		# holidays before today come from the Sunday off list, none after the assignment changes
+		sundays_before_today = len(
+			[
+				d
+				for d in range(date_diff(getdate(), get_first_day(getdate())))
+				if add_days(get_first_day(getdate()), d).weekday() == 6
+			]
+		)
+		days_in_month = get_no_of_days()[0]
+		self.assertEqual(ss.total_working_days, days_in_month - sundays_before_today)
+		self.assertEqual(ss.payment_days, days_in_month - sundays_before_today)
+
 	@HRMSTestSuite.change_settings(
 		"Payroll Settings",
 		{

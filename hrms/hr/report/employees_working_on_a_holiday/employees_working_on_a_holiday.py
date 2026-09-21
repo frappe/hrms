@@ -4,8 +4,9 @@
 
 import frappe
 from frappe import _
+from frappe.utils import getdate
 
-from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
+from hrms.utils.holiday_list import get_holiday_list_ranges_for_employees, get_holidays_in_ranges_map
 
 
 def execute(filters=None):
@@ -51,40 +52,37 @@ def get_columns():
 
 
 def get_data(filters):
-	Attendance = frappe.qb.DocType("Attendance")
-	Holiday = frappe.qb.DocType("Holiday")
-
-	data = []
-
 	employee_filters = {"company": filters.company}
 	if filters.department:
 		employee_filters["department"] = filters.department
 
-	for employee in frappe.get_list("Employee", filters=employee_filters, pluck="name"):
-		holiday_list = get_holiday_list_for_employee(employee, raise_exception=False)
-		if not holiday_list or (filters.holiday_list and filters.holiday_list != holiday_list):
-			continue
+	employees = frappe.get_list("Employee", filters=employee_filters, fields=["name", "company"])
+	holiday_list_ranges = get_holiday_list_ranges_for_employees(
+		{employee.name: employee.company for employee in employees}, filters.from_date, filters.to_date
+	)
+	holiday_map = {
+		(employee, getdate(holiday.holiday_date)): holiday
+		for employee, holidays in get_holidays_in_ranges_map(holiday_list_ranges).items()
+		for holiday in holidays
+		if not filters.holiday_list or holiday.parent == filters.holiday_list
+	}
+	if not holiday_map:
+		return []
 
-		working_days = (
-			frappe.qb.from_(Attendance)
-			.inner_join(Holiday)
-			.on(Attendance.attendance_date == Holiday.holiday_date)
-			.select(
-				Attendance.employee,
-				Attendance.employee_name,
-				Attendance.attendance_date,
-				Attendance.status,
-				Holiday.description,
-			)
-			.where(
-				(Attendance.employee == employee)
-				& (Attendance.attendance_date[filters.from_date : filters.to_date])
-				& (Attendance.status.notin(["Absent", "On Leave"]))
-				& (Attendance.docstatus == 1)
-				& (Holiday.parent == holiday_list)
-			)
-			.run(as_list=True)
-		)
-		data.extend(working_days)
+	Attendance = frappe.qb.DocType("Attendance")
+	attendance = (
+		frappe.qb.from_(Attendance)
+		.select(Attendance.employee, Attendance.employee_name, Attendance.attendance_date, Attendance.status)
+		.where(Attendance.employee.isin(list({employee for employee, _ in holiday_map})))
+		.where(Attendance.attendance_date[filters.from_date : filters.to_date])
+		.where(Attendance.status.notin(["Absent", "On Leave"]))
+		.where(Attendance.docstatus == 1)
+		.orderby(Attendance.employee)
+		.orderby(Attendance.attendance_date)
+	).run(as_dict=True)
 
-	return data
+	return [
+		[row.employee, row.employee_name, row.attendance_date, row.status, holiday.description]
+		for row in attendance
+		if (holiday := holiday_map.get((row.employee, getdate(row.attendance_date))))
+	]

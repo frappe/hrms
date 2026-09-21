@@ -785,6 +785,44 @@ class TestPayrollEntry(HRMSTestSuite):
 		employees = payroll_entry.get_employees_with_unmarked_attendance()
 		self.assertFalse(employees)
 
+	def test_validate_attendance_with_holiday_list_assignment(self):
+		from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+			create_holiday_list_assignment,
+		)
+		from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
+
+		company = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee("test_validate_attendance_hla@payroll.com", company=company.name)
+		setup_salary_structure(employee, company)
+
+		dates = get_start_end_dates("Monthly", nowdate())
+		weekend_off_list = make_holiday_list(
+			"Test Payroll Entry Weekend Off",
+			dates.start_date,
+			dates.end_date,
+			weekly_off_days=["Saturday", "Sunday"],
+		)
+		create_holiday_list_assignment("Employee", employee, weekend_off_list, from_date=dates.start_date)
+
+		payroll_entry = get_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company.default_payroll_payable_account,
+			currency=company.default_currency,
+			company=company.name,
+			cost_center="Main - _TC",
+		)
+		payroll_entry.validate_attendance = True
+
+		unmarked = next(
+			d for d in payroll_entry.get_employees_with_unmarked_attendance() if d["employee"] == employee
+		)
+		weekend_days = len(
+			[d for d in get_date_range(dates.start_date, dates.end_date) if getdate(d).weekday() >= 5]
+		)
+		payroll_days = date_diff(dates.end_date, dates.start_date) + 1
+		self.assertEqual(unmarked["unmarked_days"], payroll_days - weekend_days)
+
 	@HRMSTestSuite.change_settings(
 		"Payroll Settings",
 		{
