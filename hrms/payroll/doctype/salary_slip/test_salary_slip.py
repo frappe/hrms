@@ -508,6 +508,66 @@ class TestSalarySlip(HRMSTestSuite):
 
 		self.assertEqual(ss.payment_days, days_in_month - no_of_holidays - 3.75)
 
+	def _get_lwp_for_partially_paid_leave(self, payroll_based_on, email, leave_type, half_day=False):
+		emp_id = make_employee(email, company="_Test Company")
+		frappe.db.set_value("Employee", emp_id, {"relieving_date": None, "status": "Active"})
+
+		leave_date = add_days(get_first_sunday(), 4)
+		alloc = create_leave_allocation(
+			employee=emp_id,
+			from_date=leave_date,
+			to_date=add_days(leave_date, 6),
+			new_leaves_allocated=3,
+			leave_type=leave_type,
+		)
+		alloc.save()
+		alloc.submit()
+
+		make_leave_application(
+			emp_id,
+			leave_date,
+			leave_date,
+			leave_type,
+			half_day=half_day,
+			half_day_date=leave_date if half_day else None,
+		)
+
+		with self.change_settings("Payroll Settings", {"payroll_based_on": payroll_based_on}):
+			ss = make_employee_salary_slip(
+				emp_id,
+				"Monthly",
+				"Test Payment Based On Leave Application",
+			)
+
+		return ss.leave_without_pay
+
+	def test_partially_paid_leave_lwp_is_consistent_across_payroll_based_on(self):
+		"""
+		Fraction of Daily Salary per Leave is the share of the day that is paid,
+		so LWP must be (1 - fraction) whether payroll is based on Leave or Attendance
+		"""
+		test_cases = (
+			# fraction, half day, expected LWP for the day
+			(0.6, False, 0.4),
+			(0.6, True, 0.2),
+			(0.25, False, 0.75),
+			(1, False, 0),
+		)
+
+		for fraction, half_day, expected_lwp in test_cases:
+			leave_type = f"Test PPL {int(fraction * 100)}"
+			create_leave_type(
+				leave_type_name=leave_type, is_ppl=1, fraction_of_daily_salary_per_leave=fraction
+			)
+
+			for payroll_based_on in ("Leave", "Attendance"):
+				with self.subTest(fraction=fraction, half_day=half_day, payroll_based_on=payroll_based_on):
+					email = f"test_ppl_{payroll_based_on}_{int(fraction * 100)}_{int(half_day)}@salary.com".lower()
+					lwp = self._get_lwp_for_partially_paid_leave(
+						payroll_based_on, email, leave_type, half_day=half_day
+					)
+					self.assertEqual(flt(lwp, 2), expected_lwp)
+
 	@HRMSTestSuite.change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
 	def test_payment_days_calculation_for_lwp_on_month_boundaries(self):
 		from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
