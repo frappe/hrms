@@ -3,6 +3,7 @@ import "./templates/feedback_summary.html";
 import "./templates/feedback_history.html";
 import "./templates/rating.html";
 import "./utils";
+import "./utils/employee_assignments";
 import "./utils/payroll_utils";
 import "./utils/leave_utils";
 import "./utils/employee_quick_entry";

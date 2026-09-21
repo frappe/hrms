@@ -10,6 +10,7 @@
  "engine": "InnoDB",
  "field_order": [
   "job_applicant",
+  "employee_onboarding",
   "applicant_name",
   "column_break_3",
   "company",
@@ -66,6 +67,13 @@
    "label": "Job Applicant",
    "options": "Job Applicant",
    "reqd": 1
+  },
+  {
+   "fieldname": "employee_onboarding",
+   "fieldtype": "Link",
+   "label": "Employee Onboarding",
+   "options": "Employee Onboarding",
+   "read_only": 1
   },
   {
    "fieldname": "company",

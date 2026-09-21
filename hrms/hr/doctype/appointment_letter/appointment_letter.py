@@ -24,6 +24,7 @@ class AppointmentLetter(Document):
 		appointment_letter_template: DF.Link
 		closing_notes: DF.Text | None
 		company: DF.Link
+		employee_onboarding: DF.Link | None
 		introduction: DF.LongText
 		job_applicant: DF.Link
 		terms: DF.Table[AppointmentLettercontent]

@@ -13,6 +13,7 @@
   "column_break_7",
   "company",
   "boarding_status",
+  "onboarding_stage",
   "project",
   "details_section",
   "employee",
@@ -24,6 +25,30 @@
   "column_break_13",
   "date_of_joining",
   "boarding_begins_on",
+  "user_section",
+  "personal_email",
+  "company_email",
+  "column_break_user",
+  "create_user_for",
+  "user",
+  "documents_section",
+  "documents",
+  "documents_requested_on",
+  "submitted_details",
+  "details_submitted_on",
+  "details_confirmed_on",
+  "appointment_letter_section",
+  "appointment_letter",
+  "appointment_letter_sent_on",
+  "employee_details_section",
+  "branch",
+  "employment_type",
+  "reports_to",
+  "column_break_employee_details",
+  "gender",
+  "date_of_birth",
+  "assignments_section",
+  "assignments",
   "table_for_activity",
   "activities",
   "notify_users_by_email",
@@ -77,6 +102,14 @@
    "read_only": 1
   },
   {
+   "default": "Create User",
+   "fieldname": "onboarding_stage",
+   "fieldtype": "Select",
+   "label": "Onboarding Stage",
+   "options": "Create User\nUpload Documents\nAppointment Letter\nCreate Employee\nAssign Masters\nActivities",
+   "read_only": 1
+  },
+  {
    "allow_on_submit": 1,
    "default": "0",
    "fieldname": "notify_users_by_email",
@@ -127,6 +160,7 @@
   {
    "fieldname": "project",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Project",
    "options": "Project",
    "read_only": 1
@@ -137,7 +171,6 @@
    "label": "Onboarding Activities"
   },
   {
-   "allow_on_submit": 1,
    "fieldname": "activities",
    "fieldtype": "Table",
    "label": "Activities",
@@ -172,6 +205,149 @@
    "fieldtype": "Link",
    "label": "Holiday List",
    "options": "Holiday List"
+  },
+  {
+   "fieldname": "user_section",
+   "fieldtype": "Section Break",
+   "label": "User Account"
+  },
+  {
+   "fetch_from": "job_offer.applicant_email",
+   "fetch_if_empty": 1,
+   "fieldname": "personal_email",
+   "fieldtype": "Data",
+   "label": "Personal Email",
+   "mandatory_depends_on": "eval:doc.create_user_for=='Personal Email'",
+   "options": "Email"
+  },
+  {
+   "fieldname": "company_email",
+   "fieldtype": "Data",
+   "label": "Company Email",
+   "mandatory_depends_on": "eval:doc.create_user_for=='Company Email'",
+   "options": "Email"
+  },
+  {
+   "fieldname": "column_break_user",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Company Email",
+   "fieldname": "create_user_for",
+   "fieldtype": "Select",
+   "label": "Create User For",
+   "options": "Company Email\nPersonal Email"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "documents_section",
+   "fieldtype": "Section Break",
+   "label": "Documents to Upload"
+  },
+  {
+   "fieldname": "documents",
+   "fieldtype": "Table",
+   "label": "Documents",
+   "options": "Employee Onboarding Document"
+  },
+  {
+   "fieldname": "documents_requested_on",
+   "fieldtype": "Datetime",
+   "label": "Documents Requested On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "submitted_details",
+   "fieldtype": "Code",
+   "hidden": 1,
+   "label": "Submitted Details",
+   "options": "JSON",
+   "read_only": 1
+  },
+  {
+   "fieldname": "details_submitted_on",
+   "fieldtype": "Datetime",
+   "label": "Details Submitted On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "details_confirmed_on",
+   "fieldtype": "Datetime",
+   "label": "Details Confirmed On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "appointment_letter_section",
+   "fieldtype": "Section Break",
+   "label": "Appointment Letter"
+  },
+  {
+   "fieldname": "appointment_letter",
+   "fieldtype": "Link",
+   "label": "Appointment Letter",
+   "options": "Appointment Letter",
+   "read_only": 1
+  },
+  {
+   "fieldname": "appointment_letter_sent_on",
+   "fieldtype": "Datetime",
+   "label": "Appointment Letter Sent On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "employee_details_section",
+   "fieldtype": "Section Break",
+   "label": "Employee Details"
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Link",
+   "label": "Branch",
+   "options": "Branch"
+  },
+  {
+   "fieldname": "employment_type",
+   "fieldtype": "Link",
+   "label": "Employment Type",
+   "options": "Employment Type"
+  },
+  {
+   "fieldname": "reports_to",
+   "fieldtype": "Link",
+   "label": "Reports To",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "column_break_employee_details",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "gender",
+   "fieldtype": "Link",
+   "label": "Gender",
+   "options": "Gender"
+  },
+  {
+   "fieldname": "date_of_birth",
+   "fieldtype": "Date",
+   "label": "Date of Birth"
+  },
+  {
+   "fieldname": "assignments_section",
+   "fieldtype": "Section Break",
+   "label": "Master Assignments"
+  },
+  {
+   "fieldname": "assignments",
+   "fieldtype": "Table",
+   "label": "Assignments",
+   "options": "Employee Onboarding Assignment"
   }
  ],
  "icon": "user-plus",

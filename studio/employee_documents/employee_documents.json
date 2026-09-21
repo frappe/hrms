@@ -1,0 +1,14 @@
+{
+ "app_name": "employee_documents",
+ "app_title": "Employee Documents",
+ "creation": "2026-09-17 12:40:35.653362",
+ "doctype": "Studio App",
+ "frappe_app": "hrms",
+ "is_standard": 1,
+ "modified": "2026-09-17 12:40:35.653362",
+ "modified_by": "Administrator",
+ "name": "employee_documents",
+ "owner": "Administrator",
+ "route": "employee-documents",
+ "app_home": "page-6592d919"
+}

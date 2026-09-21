@@ -16,6 +16,7 @@ class EmployeeBoardingActivity(Document):
 
 		activity_name: DF.Data
 		begin_on: DF.Int
+		completed: DF.Check
 		description: DF.TextEditor | None
 		duration: DF.Int
 		parent: DF.Data

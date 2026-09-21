@@ -94,21 +94,49 @@ frappe.ui.form.on("Job Offer", {
 		add_email_button(frm);
 		render_offer_letter_preview(frm);
 
-		if (
-			!frm.doc.__islocal &&
-			frm.doc.status == "Accepted" &&
-			frm.doc.docstatus === 1 &&
-			(!frm.doc.__onload || !frm.doc.__onload.employee)
-		) {
-			frm.add_custom_button(__("Create Employee"), function () {
-				erpnext.job_offer.make_employee(frm);
-			});
+		const onload = frm.doc.__onload || {};
+		const accepted =
+			!frm.doc.__islocal && frm.doc.status == "Accepted" && frm.doc.docstatus === 1;
+
+		if (accepted && !onload.employee_onboarding) {
+			frm.add_custom_button(
+				__("Employee Onboarding"),
+				function () {
+					erpnext.job_offer.make_employee_onboarding(frm);
+				},
+				__("Create"),
+			);
+			frm.page.set_inner_btn_group_as_primary(__("Create"));
 		}
 
-		if (frm.doc.__onload && frm.doc.__onload.employee) {
-			frm.add_custom_button(__("Show Employee"), function () {
-				frappe.set_route("Form", "Employee", frm.doc.__onload.employee);
-			});
+		if (accepted && !onload.employee && !onload.employee_onboarding) {
+			frm.add_custom_button(
+				__("Employee"),
+				function () {
+					erpnext.job_offer.make_employee(frm);
+				},
+				__("Create"),
+			);
+		}
+
+		if (onload.employee_onboarding) {
+			frm.add_custom_button(
+				__("Employee Onboarding"),
+				function () {
+					frappe.set_route("Form", "Employee Onboarding", onload.employee_onboarding);
+				},
+				__("View"),
+			);
+		}
+
+		if (onload.employee) {
+			frm.add_custom_button(
+				__("Employee"),
+				function () {
+					frappe.set_route("Form", "Employee", onload.employee);
+				},
+				__("View"),
+			);
 		}
 	},
 
@@ -241,6 +269,13 @@ function offer_letter_message(doc) {
 erpnext.job_offer.make_employee = function (frm) {
 	frappe.model.open_mapped_doc({
 		method: "hrms.hr.doctype.job_offer.job_offer.make_employee",
+		frm: frm,
+	});
+};
+
+erpnext.job_offer.make_employee_onboarding = function (frm) {
+	frappe.model.open_mapped_doc({
+		method: "hrms.hr.doctype.job_offer.job_offer.make_employee_onboarding",
 		frm: frm,
 	});
 };

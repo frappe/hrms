@@ -17,12 +17,16 @@ class EmployeeOnboardingTemplate(Document):
 		from hrms.hr.doctype.employee_boarding_activity.employee_boarding_activity import (
 			EmployeeBoardingActivity,
 		)
+		from hrms.hr.doctype.employee_onboarding_document.employee_onboarding_document import (
+			EmployeeOnboardingDocument,
+		)
 
 		activities: DF.Table[EmployeeBoardingActivity]
 		company: DF.Link | None
 		department: DF.Link | None
 		designation: DF.Link | None
 		employee_grade: DF.Link | None
+		required_documents: DF.Table[EmployeeOnboardingDocument]
 		title: DF.Data
 	# end: auto-generated types
 

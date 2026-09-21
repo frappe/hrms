@@ -1,0 +1,2787 @@
+{
+ "blocks": [
+  {
+   "baseStyles": {
+    "display": "flex",
+    "flexDirection": "column",
+    "height": "100%",
+    "width": "100%"
+   },
+   "blockName": "body",
+   "children": [
+    {
+     "componentId": "div-56",
+     "componentName": "div",
+     "blockName": "App Bar",
+     "baseStyles": {
+      "width": "100%",
+      "position": "sticky",
+      "top": "0",
+      "zIndex": "20"
+     },
+     "classes": [
+      "bg-surface-white",
+      "border-b",
+      "border-outline-gray-2",
+      "shrink-0"
+     ],
+     "children": [
+      {
+       "componentId": "div-55",
+       "componentName": "div",
+       "baseStyles": {
+        "maxWidth": "56rem"
+       },
+       "classes": [
+        "flex",
+        "flex-row",
+        "items-center",
+        "justify-between",
+        "gap-3",
+        "mx-auto",
+        "px-6",
+        "py-3",
+        "w-full"
+       ],
+       "children": [
+        {
+         "componentId": "div-50",
+         "componentName": "div",
+         "classes": [
+          "flex",
+          "flex-col",
+          "gap-0.5",
+          "min-w-0"
+         ],
+         "children": [
+          {
+           "componentId": "textblock-48",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "text": "Onboarding",
+            "fontSize": "text-base",
+            "tag": "h1"
+           },
+           "classes": [
+            "font-semibold",
+            "text-ink-gray-8"
+           ]
+          },
+          {
+           "componentId": "textblock-49",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "text": "{{ roleLine }}",
+            "fontSize": "text-xs"
+           },
+           "classes": [
+            "text-ink-gray-5",
+            "truncate"
+           ],
+           "visibilityCondition": "{{ roleLine }}"
+          }
+         ],
+         "originalElement": "div"
+        },
+        {
+         "componentId": "div-54",
+         "componentName": "div",
+         "classes": [
+          "flex",
+          "flex-row",
+          "items-center",
+          "gap-2.5",
+          "shrink-0"
+         ],
+         "visibilityCondition": "{{ isReady }}",
+         "children": [
+          {
+           "componentId": "textblock-51",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "text": "{{ employeeName }}",
+            "fontSize": "text-sm"
+           },
+           "classes": [
+            "text-ink-gray-7",
+            "font-medium"
+           ]
+          },
+          {
+           "componentId": "avatar-52",
+           "componentName": "Avatar",
+           "componentProps": {
+            "label": "{{ employeeName }}",
+            "size": "md"
+           }
+          },
+          {
+           "componentId": "button-53",
+           "componentName": "Button",
+           "componentProps": {
+            "label": "Log out",
+            "variant": "ghost",
+            "size": "sm"
+           },
+           "componentEvents": {
+            "click": {
+             "action": "Run Script",
+             "script": "logout()"
+            }
+           }
+          }
+         ],
+         "originalElement": "div"
+        }
+       ],
+       "originalElement": "div"
+      }
+     ],
+     "originalElement": "div"
+    },
+    {
+     "componentId": "div-83",
+     "componentName": "div",
+     "blockName": "Main",
+     "baseStyles": {
+      "width": "100%"
+     },
+     "classes": [
+      "ed-scroll",
+      "grow",
+      "overflow-y-auto"
+     ],
+     "children": [
+      {
+       "componentId": "div-82",
+       "componentName": "div",
+       "blockName": "Content",
+       "baseStyles": {
+        "maxWidth": "56rem"
+       },
+       "classes": [
+        "flex",
+        "flex-col",
+        "gap-5",
+        "mx-auto",
+        "w-full",
+        "px-6",
+        "py-8"
+       ],
+       "children": [
+        {
+         "componentId": "repeater-44",
+         "componentName": "Repeater",
+         "blockName": "Stepper",
+         "componentProps": {
+          "data": "{{ stepMarkers }}",
+          "dataKey": "key"
+         },
+         "componentSlots": {
+          "default": {
+           "slotName": "default",
+           "slotContent": [
+            {
+             "componentId": "div-43",
+             "componentName": "div",
+             "blockName": "Step Marker",
+             "componentEvents": {
+              "click": {
+               "action": "Run Script",
+               "script": "goToStep(dataItem.index)"
+              }
+             },
+             "classes": [
+              "flex",
+              "flex-row",
+              "items-center",
+              "gap-2.5",
+              "min-w-0"
+             ],
+             "children": [
+              {
+               "componentId": "textblock-41",
+               "componentName": "TextBlock",
+               "componentProps": {
+                "text": "{{ dataItem.number }}",
+                "fontSize": "text-xs"
+               },
+               "baseStyles": {
+                "width": "1.5rem",
+                "height": "1.5rem",
+                "lineHeight": "1",
+                "backgroundColor": "{{ dataItem.markerBg }}",
+                "borderColor": "{{ dataItem.markerBorder }}",
+                "color": "{{ dataItem.markerColor }}"
+               },
+               "classes": [
+                "flex",
+                "items-center",
+                "justify-center",
+                "rounded-full",
+                "border",
+                "font-medium",
+                "shrink-0",
+                "cursor-pointer"
+               ]
+              },
+              {
+               "componentId": "textblock-42",
+               "componentName": "TextBlock",
+               "componentProps": {
+                "text": "{{ dataItem.label }}",
+                "fontSize": "text-sm"
+               },
+               "baseStyles": {
+                "color": "{{ dataItem.labelColor }}",
+                "fontWeight": "{{ dataItem.labelWeight }}"
+               },
+               "classes": [
+                "truncate",
+                "cursor-pointer"
+               ]
+              }
+             ],
+             "originalElement": "div",
+             "parentSlotName": "default"
+            }
+           ]
+          }
+         },
+         "baseStyles": {
+          "width": "100%",
+          "gap": "0.5rem 1.5rem"
+         },
+         "classes": [
+          "flex",
+          "flex-row",
+          "flex-wrap",
+          "items-center"
+         ],
+         "mobileStyles": {
+          "display": "none"
+         },
+         "visibilityCondition": "{{ showForm }}"
+        },
+        {
+         "componentId": "div-47",
+         "componentName": "div",
+         "blockName": "Stepper Compact",
+         "baseStyles": {
+          "width": "100%",
+          "display": "none"
+         },
+         "classes": [
+          "flex",
+          "flex-col",
+          "gap-1"
+         ],
+         "mobileStyles": {
+          "display": "flex"
+         },
+         "visibilityCondition": "{{ showForm }}",
+         "children": [
+          {
+           "componentId": "textblock-45",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "text": "{{ stepCounter }}",
+            "fontSize": "text-xs"
+           },
+           "classes": [
+            "text-ink-gray-5"
+           ]
+          },
+          {
+           "componentId": "textblock-46",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "text": "{{ currentStepLabel }}",
+            "fontSize": "text-base"
+           },
+           "classes": [
+            "font-semibold",
+            "text-ink-gray-8"
+           ]
+          }
+         ],
+         "originalElement": "div"
+        },
+        {
+         "componentId": "div-66",
+         "componentName": "div",
+         "blockName": "Loading",
+         "classes": [
+          "flex",
+          "items-center",
+          "justify-center",
+          "py-24"
+         ],
+         "visibilityCondition": "{{ loading }}",
+         "children": [
+          {
+           "componentId": "spinner-65",
+           "componentName": "Spinner",
+           "classes": [
+            "w-6",
+            "text-ink-gray-5"
+           ]
+          }
+         ],
+         "originalElement": "div"
+        },
+        {
+         "componentId": "div-69",
+         "componentName": "div",
+         "blockName": "Blocked",
+         "baseStyles": {
+          "width": "100%"
+         },
+         "classes": [
+          "bg-surface-white",
+          "rounded-xl",
+          "border",
+          "border-outline-gray-2",
+          "flex",
+          "flex-col",
+          "items-center",
+          "text-center",
+          "gap-2",
+          "px-6",
+          "py-12"
+         ],
+         "visibilityCondition": "{{ blockedMessage }}",
+         "children": [
+          {
+           "componentId": "textblock-67",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "text": "You cannot open this form",
+            "fontSize": "text-base"
+           },
+           "classes": [
+            "font-semibold",
+            "text-ink-gray-8"
+           ]
+          },
+          {
+           "componentId": "textblock-68",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "text": "{{ blockedMessage }}",
+            "fontSize": "text-sm"
+           },
+           "classes": [
+            "text-ink-gray-5"
+           ]
+          }
+         ],
+         "originalElement": "div"
+        },
+        {
+         "componentId": "alert-70",
+         "componentName": "Alert",
+         "blockName": "Locked",
+         "componentProps": {
+          "title": "Your details are with HR now and can no longer be changed.",
+          "theme": "blue",
+          "variant": "subtle"
+         },
+         "baseStyles": {
+          "width": "100%"
+         },
+         "visibilityCondition": "{{ isReady && isLocked && !isSubmitted }}"
+        },
+        {
+         "componentId": "div-76",
+         "componentName": "div",
+         "blockName": "Thank You",
+         "baseStyles": {
+          "width": "100%"
+         },
+         "classes": [
+          "bg-surface-white",
+          "rounded-xl",
+          "border",
+          "border-outline-gray-2",
+          "flex",
+          "flex-col",
+          "items-center",
+          "text-center",
+          "gap-3",
+          "px-6",
+          "py-16"
+         ],
+         "visibilityCondition": "{{ isReady && isSubmitted }}",
+         "children": [
+          {
+           "componentId": "div-72",
+           "componentName": "div",
+           "baseStyles": {
+            "width": "2.75rem",
+            "height": "2.75rem",
+            "backgroundColor": "var(--surface-green-2)"
+           },
+           "classes": [
+            "flex",
+            "items-center",
+            "justify-center",
+            "rounded-full"
+           ],
+           "children": [
+            {
+             "componentId": "feathericon-71",
+             "componentName": "FeatherIcon",
+             "componentProps": {
+              "name": "check"
+             },
+             "baseStyles": {
+              "width": "1.25rem",
+              "height": "1.25rem",
+              "color": "var(--ink-green-8)"
+             }
+            }
+           ],
+           "originalElement": "div"
+          },
+          {
+           "componentId": "textblock-73",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "text": "Thank you, your details are submitted",
+            "fontSize": "text-xl",
+            "tag": "h1"
+           },
+           "classes": [
+            "font-semibold",
+            "text-ink-gray-9"
+           ]
+          },
+          {
+           "componentId": "textblock-74",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "text": "{{ thankYouNote }}",
+            "fontSize": "text-sm"
+           },
+           "classes": [
+            "text-ink-gray-6"
+           ]
+          },
+          {
+           "componentId": "textblock-75",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "text": "You can close this page. Signing in again will show this confirmation.",
+            "fontSize": "text-xs"
+           },
+           "classes": [
+            "text-ink-gray-5"
+           ]
+          }
+         ],
+         "originalElement": "div"
+        },
+        {
+         "componentId": "repeater-07",
+         "componentName": "Repeater",
+         "blockName": "Sections",
+         "componentProps": {
+          "data": "{{ sectionCards }}",
+          "dataKey": "key"
+         },
+         "componentSlots": {
+          "default": {
+           "slotName": "default",
+           "slotContent": [
+            {
+             "componentId": "div-06",
+             "componentName": "div",
+             "blockName": "Section Card",
+             "baseStyles": {
+              "width": "100%"
+             },
+             "classes": [
+              "bg-surface-white",
+              "rounded-xl",
+              "border",
+              "border-outline-gray-2",
+              "flex",
+              "flex-col"
+             ],
+             "children": [
+              {
+               "componentId": "div-03",
+               "componentName": "div",
+               "classes": [
+                "flex",
+                "flex-col",
+                "gap-1",
+                "px-5",
+                "pt-5",
+                "pb-4"
+               ],
+               "children": [
+                {
+                 "componentId": "textblock-01",
+                 "componentName": "TextBlock",
+                 "componentProps": {
+                  "text": "{{ dataItem.label }}",
+                  "fontSize": "text-base",
+                  "tag": "h2"
+                 },
+                 "classes": [
+                  "font-semibold",
+                  "text-ink-gray-8"
+                 ]
+                },
+                {
+                 "componentId": "textblock-02",
+                 "componentName": "TextBlock",
+                 "componentProps": {
+                  "text": "{{ dataItem.description }}",
+                  "fontSize": "text-sm"
+                 },
+                 "classes": [
+                  "text-ink-gray-5"
+                 ],
+                 "visibilityCondition": "{{ dataItem.description }}"
+                }
+               ],
+               "originalElement": "div"
+              },
+              {
+               "componentId": "repeater-05",
+               "componentName": "Repeater",
+               "componentProps": {
+                "data": "{{ dataItem.fields }}",
+                "dataKey": "key"
+               },
+               "componentSlots": {
+                "default": {
+                 "slotName": "default",
+                 "slotContent": [
+                  {
+                   "componentId": "formcontrol-04",
+                   "componentName": "FormControl",
+                   "blockName": "Field",
+                   "componentProps": {
+                    "label": "{{ dataItem.label }}",
+                    "type": "{{ dataItem.controlType }}",
+                    "options": "{{ dataItem.options }}",
+                    "modelValue": "{{ dataItem.value }}",
+                    "required": "{{ dataItem.required }}",
+                    "disabled": "{{ isLocked }}",
+                    "size": "md"
+                   },
+                   "componentEvents": {
+                    "update:modelValue": {
+                     "action": "Run Script",
+                     "script": "function handleEvent(value) { setField(dataItem, value) }"
+                    }
+                   },
+                   "baseStyles": {
+                    "width": "{{ dataItem.width }}"
+                   },
+                   "mobileStyles": {
+                    "width": "100%"
+                   },
+                   "parentSlotName": "default"
+                  }
+                 ]
+                }
+               },
+               "baseStyles": {
+                "width": "100%",
+                "gap": "1rem",
+                "columnGap": "1rem",
+                "rowGap": "1.25rem"
+               },
+               "classes": [
+                "flex",
+                "flex-row",
+                "flex-wrap",
+                "px-5",
+                "pb-5"
+               ]
+              }
+             ],
+             "originalElement": "div",
+             "parentSlotName": "default"
+            }
+           ]
+          }
+         },
+         "baseStyles": {
+          "width": "100%",
+          "gap": "1.25rem"
+         },
+         "classes": [
+          "flex",
+          "flex-col"
+         ],
+         "visibilityCondition": "{{ showForm && sectionCards.length }}"
+        },
+        {
+         "componentId": "repeater-25",
+         "componentName": "Repeater",
+         "blockName": "Tables",
+         "componentProps": {
+          "data": "{{ tableCards }}",
+          "dataKey": "key"
+         },
+         "componentSlots": {
+          "default": {
+           "slotName": "default",
+           "slotContent": [
+            {
+             "componentId": "div-24",
+             "componentName": "div",
+             "blockName": "Table Card",
+             "baseStyles": {
+              "width": "100%"
+             },
+             "classes": [
+              "bg-surface-white",
+              "rounded-xl",
+              "border",
+              "border-outline-gray-2",
+              "flex",
+              "flex-col"
+             ],
+             "children": [
+              {
+               "componentId": "div-18",
+               "componentName": "div",
+               "classes": [
+                "flex",
+                "flex-col",
+                "gap-1",
+                "px-5",
+                "pt-5",
+                "pb-4",
+                "!flex-row",
+                "items-start",
+                "justify-between"
+               ],
+               "children": [
+                {
+                 "componentId": "div-16",
+                 "componentName": "div",
+                 "classes": [
+                  "flex",
+                  "flex-col",
+                  "gap-1",
+                  "min-w-0"
+                 ],
+                 "children": [
+                  {
+                   "componentId": "textblock-14",
+                   "componentName": "TextBlock",
+                   "componentProps": {
+                    "text": "{{ dataItem.label }}",
+                    "fontSize": "text-base",
+                    "tag": "h2"
+                   },
+                   "classes": [
+                    "font-semibold",
+                    "text-ink-gray-8"
+                   ]
+                  },
+                  {
+                   "componentId": "textblock-15",
+                   "componentName": "TextBlock",
+                   "componentProps": {
+                    "text": "{{ dataItem.description }}",
+                    "fontSize": "text-sm"
+                   },
+                   "classes": [
+                    "text-ink-gray-5"
+                   ],
+                   "visibilityCondition": "{{ dataItem.description }}"
+                  }
+                 ],
+                 "originalElement": "div"
+                },
+                {
+                 "componentId": "badge-17",
+                 "componentName": "Badge",
+                 "componentProps": {
+                  "label": "{{ dataItem.count }}",
+                  "theme": "gray",
+                  "variant": "subtle"
+                 },
+                 "classes": [
+                  "shrink-0"
+                 ],
+                 "visibilityCondition": "{{ dataItem.count }}"
+                }
+               ],
+               "originalElement": "div"
+              },
+              {
+               "componentId": "div-23",
+               "componentName": "div",
+               "classes": [
+                "flex",
+                "flex-col",
+                "gap-3",
+                "px-5",
+                "pb-5"
+               ],
+               "children": [
+                {
+                 "componentId": "div-20",
+                 "componentName": "div",
+                 "classes": [
+                  "rounded-lg",
+                  "border",
+                  "border-dashed",
+                  "border-outline-gray-2",
+                  "px-4",
+                  "py-6",
+                  "text-center"
+                 ],
+                 "visibilityCondition": "{{ dataItem.isEmpty }}",
+                 "children": [
+                  {
+                   "componentId": "textblock-19",
+                   "componentName": "TextBlock",
+                   "componentProps": {
+                    "text": "{{ dataItem.emptyMessage }}",
+                    "fontSize": "text-sm"
+                   },
+                   "classes": [
+                    "text-ink-gray-5"
+                   ]
+                  }
+                 ],
+                 "originalElement": "div"
+                },
+                {
+                 "componentId": "repeater-21",
+                 "componentName": "Repeater",
+                 "componentProps": {
+                  "data": "{{ dataItem.rows }}",
+                  "dataKey": "key"
+                 },
+                 "componentSlots": {
+                  "default": {
+                   "slotName": "default",
+                   "slotContent": [
+                    {
+                     "componentId": "div-13",
+                     "componentName": "div",
+                     "blockName": "Entry",
+                     "baseStyles": {
+                      "width": "100%"
+                     },
+                     "classes": [
+                      "flex",
+                      "flex-col",
+                      "gap-3",
+                      "rounded-lg",
+                      "border",
+                      "border-outline-gray-2",
+                      "bg-surface-gray-1",
+                      "px-4",
+                      "py-4"
+                     ],
+                     "children": [
+                      {
+                       "componentId": "div-10",
+                       "componentName": "div",
+                       "classes": [
+                        "flex",
+                        "flex-row",
+                        "items-center",
+                        "justify-between",
+                        "gap-3"
+                       ],
+                       "children": [
+                        {
+                         "componentId": "textblock-08",
+                         "componentName": "TextBlock",
+                         "componentProps": {
+                          "text": "{{ dataItem.title }}",
+                          "fontSize": "text-sm"
+                         },
+                         "classes": [
+                          "font-medium",
+                          "text-ink-gray-7",
+                          "truncate"
+                         ]
+                        },
+                        {
+                         "componentId": "button-09",
+                         "componentName": "Button",
+                         "componentProps": {
+                          "label": "Remove",
+                          "variant": "ghost",
+                          "theme": "red",
+                          "size": "sm"
+                         },
+                         "componentEvents": {
+                          "click": {
+                           "action": "Run Script",
+                           "script": "removeRow(dataItem.table, dataItem.index)"
+                          }
+                         },
+                         "classes": [
+                          "shrink-0"
+                         ],
+                         "visibilityCondition": "{{ isEditable }}"
+                        }
+                       ],
+                       "originalElement": "div"
+                      },
+                      {
+                       "componentId": "repeater-12",
+                       "componentName": "Repeater",
+                       "componentProps": {
+                        "data": "{{ dataItem.fields }}",
+                        "dataKey": "key"
+                       },
+                       "componentSlots": {
+                        "default": {
+                         "slotName": "default",
+                         "slotContent": [
+                          {
+                           "componentId": "formcontrol-11",
+                           "componentName": "FormControl",
+                           "blockName": "Field",
+                           "componentProps": {
+                            "label": "{{ dataItem.label }}",
+                            "type": "{{ dataItem.controlType }}",
+                            "options": "{{ dataItem.options }}",
+                            "modelValue": "{{ dataItem.value }}",
+                            "required": "{{ dataItem.required }}",
+                            "disabled": "{{ isLocked }}",
+                            "size": "md"
+                           },
+                           "componentEvents": {
+                            "update:modelValue": {
+                             "action": "Run Script",
+                             "script": "function handleEvent(value) { setField(dataItem, value) }"
+                            }
+                           },
+                           "baseStyles": {
+                            "width": "{{ dataItem.width }}"
+                           },
+                           "mobileStyles": {
+                            "width": "100%"
+                           },
+                           "parentSlotName": "default"
+                          }
+                         ]
+                        }
+                       },
+                       "baseStyles": {
+                        "width": "100%",
+                        "gap": "1rem",
+                        "columnGap": "1rem",
+                        "rowGap": "1.25rem"
+                       },
+                       "classes": [
+                        "flex",
+                        "flex-row",
+                        "flex-wrap"
+                       ]
+                      }
+                     ],
+                     "originalElement": "div",
+                     "parentSlotName": "default"
+                    }
+                   ]
+                  }
+                 },
+                 "baseStyles": {
+                  "width": "100%",
+                  "gap": "0.75rem"
+                 },
+                 "classes": [
+                  "flex",
+                  "flex-col"
+                 ],
+                 "visibilityCondition": "{{ !dataItem.isEmpty }}"
+                },
+                {
+                 "componentId": "button-22",
+                 "componentName": "Button",
+                 "componentProps": {
+                  "label": "{{ dataItem.addLabel }}",
+                  "variant": "subtle",
+                  "size": "sm",
+                  "iconLeft": "plus"
+                 },
+                 "componentEvents": {
+                  "click": {
+                   "action": "Run Script",
+                   "script": "addRow(dataItem.table)"
+                  }
+                 },
+                 "classes": [
+                  "self-start"
+                 ],
+                 "visibilityCondition": "{{ isEditable }}"
+                }
+               ],
+               "originalElement": "div"
+              }
+             ],
+             "originalElement": "div",
+             "parentSlotName": "default"
+            }
+           ]
+          }
+         },
+         "baseStyles": {
+          "width": "100%",
+          "gap": "1.25rem"
+         },
+         "classes": [
+          "flex",
+          "flex-col"
+         ],
+         "visibilityCondition": "{{ showForm && tableCards.length }}"
+        },
+        {
+         "componentId": "div-40",
+         "componentName": "div",
+         "blockName": "Documents Card",
+         "baseStyles": {
+          "width": "100%"
+         },
+         "classes": [
+          "bg-surface-white",
+          "rounded-xl",
+          "border",
+          "border-outline-gray-2",
+          "flex",
+          "flex-col"
+         ],
+         "visibilityCondition": "{{ showForm && showDocuments }}",
+         "children": [
+          {
+           "componentId": "div-38",
+           "componentName": "div",
+           "classes": [
+            "flex",
+            "flex-col",
+            "gap-1",
+            "px-5",
+            "pt-5",
+            "pb-4"
+           ],
+           "children": [
+            {
+             "componentId": "textblock-36",
+             "componentName": "TextBlock",
+             "componentProps": {
+              "text": "Documents",
+              "fontSize": "text-base",
+              "tag": "h2"
+             },
+             "classes": [
+              "font-semibold",
+              "text-ink-gray-8"
+             ]
+            },
+            {
+             "componentId": "textblock-37",
+             "componentName": "TextBlock",
+             "componentProps": {
+              "text": "Upload a clear scan or photo of each document.",
+              "fontSize": "text-sm"
+             },
+             "classes": [
+              "text-ink-gray-5"
+             ]
+            }
+           ],
+           "originalElement": "div"
+          },
+          {
+           "componentId": "repeater-39",
+           "componentName": "Repeater",
+           "componentProps": {
+            "data": "{{ documentRows }}",
+            "dataKey": "key"
+           },
+           "componentSlots": {
+            "default": {
+             "slotName": "default",
+             "slotContent": [
+              {
+               "componentId": "div-35",
+               "componentName": "div",
+               "blockName": "Document Row",
+               "baseStyles": {
+                "width": "100%"
+               },
+               "classes": [
+                "flex",
+                "flex-row",
+                "items-center",
+                "gap-4",
+                "px-5",
+                "py-3.5",
+                "border-t",
+                "border-outline-gray-2"
+               ],
+               "children": [
+                {
+                 "componentId": "div-29",
+                 "componentName": "div",
+                 "classes": [
+                  "flex",
+                  "flex-col",
+                  "gap-0.5",
+                  "min-w-0",
+                  "grow"
+                 ],
+                 "children": [
+                  {
+                   "componentId": "textblock-26",
+                   "componentName": "TextBlock",
+                   "componentProps": {
+                    "text": "{{ dataItem.label }}",
+                    "fontSize": "text-sm"
+                   },
+                   "classes": [
+                    "font-medium",
+                    "text-ink-gray-8"
+                   ]
+                  },
+                  {
+                   "componentId": "textblock-27",
+                   "componentName": "TextBlock",
+                   "componentProps": {
+                    "text": "{{ dataItem.description }}",
+                    "fontSize": "text-xs"
+                   },
+                   "classes": [
+                    "text-ink-gray-5"
+                   ],
+                   "visibilityCondition": "{{ dataItem.description }}"
+                  },
+                  {
+                   "componentId": "textblock-28",
+                   "componentName": "TextBlock",
+                   "componentProps": {
+                    "text": "{{ dataItem.fileName }}",
+                    "fontSize": "text-xs"
+                   },
+                   "classes": [
+                    "text-ink-gray-5",
+                    "truncate"
+                   ],
+                   "visibilityCondition": "{{ dataItem.fileName }}"
+                  }
+                 ],
+                 "originalElement": "div"
+                },
+                {
+                 "componentId": "div-31",
+                 "componentName": "div",
+                 "baseStyles": {
+                  "width": "5.5rem"
+                 },
+                 "classes": [
+                  "shrink-0",
+                  "flex",
+                  "justify-end"
+                 ],
+                 "children": [
+                  {
+                   "componentId": "badge-30",
+                   "componentName": "Badge",
+                   "componentProps": {
+                    "label": "{{ dataItem.statusLabel }}",
+                    "theme": "{{ dataItem.statusTheme }}",
+                    "variant": "subtle"
+                   }
+                  }
+                 ],
+                 "originalElement": "div"
+                },
+                {
+                 "componentId": "div-34",
+                 "componentName": "div",
+                 "baseStyles": {
+                  "width": "6rem"
+                 },
+                 "classes": [
+                  "shrink-0",
+                  "flex",
+                  "justify-end"
+                 ],
+                 "children": [
+                  {
+                   "componentId": "fileuploader-33",
+                   "componentName": "FileUploader",
+                   "componentProps": {
+                    "uploadArgs": {
+                     "private": true
+                    }
+                   },
+                   "componentEvents": {
+                    "success": {
+                     "action": "Run Script",
+                     "script": "function handleEvent(file) { setDocument(dataItem.idx, file.file_url) }"
+                    }
+                   },
+                   "componentSlots": {
+                    "default": {
+                     "slotName": "default",
+                     "slotContent": [
+                      {
+                       "componentId": "button-32",
+                       "componentName": "Button",
+                       "componentProps": {
+                        "label": "{{ dataItem.buttonLabel }}",
+                        "variant": "{{ dataItem.buttonVariant }}",
+                        "size": "sm",
+                        "loading": "{{ uploading }}"
+                       },
+                       "componentEvents": {
+                        "click": {
+                         "action": "Run Script",
+                         "script": "openFileSelector()"
+                        }
+                       },
+                       "parentSlotName": "default"
+                      }
+                     ]
+                    }
+                   },
+                   "visibilityCondition": "{{ isEditable }}"
+                  }
+                 ],
+                 "originalElement": "div"
+                }
+               ],
+               "originalElement": "div",
+               "parentSlotName": "default"
+              }
+             ]
+            }
+           },
+           "baseStyles": {
+            "width": "100%",
+            "gap": "0"
+           },
+           "classes": [
+            "flex",
+            "flex-col"
+           ]
+          }
+         ],
+         "originalElement": "div"
+        },
+        {
+         "componentId": "dialog-81",
+         "componentName": "Dialog",
+         "blockName": "Confirm Submit",
+         "componentProps": {
+          "modelValue": "{{ confirmOpen }}",
+          "title": "Submit your details?",
+          "size": "md"
+         },
+         "componentEvents": {
+          "update:modelValue": {
+           "action": "Run Script",
+           "script": "function handleEvent(value) { setConfirmOpen(value) }"
+          }
+         },
+         "componentSlots": {
+          "default": {
+           "slotName": "default",
+           "slotContent": [
+            {
+             "componentId": "textblock-77",
+             "componentName": "TextBlock",
+             "componentProps": {
+              "text": "Check that everything you entered is correct. Once you submit, you cannot edit your details - your HR contact will have to make any changes for you.",
+              "fontSize": "text-sm"
+             },
+             "classes": [
+              "text-ink-gray-6"
+             ],
+             "parentSlotName": "default"
+            }
+           ]
+          },
+          "actions": {
+           "slotName": "actions",
+           "slotContent": [
+            {
+             "componentId": "div-80",
+             "componentName": "div",
+             "baseStyles": {
+              "width": "100%"
+             },
+             "classes": [
+              "flex",
+              "flex-row",
+              "items-center",
+              "justify-end",
+              "gap-2"
+             ],
+             "children": [
+              {
+               "componentId": "button-78",
+               "componentName": "Button",
+               "componentProps": {
+                "label": "Go back and check",
+                "variant": "subtle",
+                "size": "md"
+               },
+               "componentEvents": {
+                "click": {
+                 "action": "Run Script",
+                 "script": "setConfirmOpen(false)"
+                }
+               }
+              },
+              {
+               "componentId": "button-79",
+               "componentName": "Button",
+               "componentProps": {
+                "label": "Confirm and submit",
+                "variant": "solid",
+                "size": "md",
+                "loading": "{{ saving }}"
+               },
+               "componentEvents": {
+                "click": {
+                 "action": "Run Script",
+                 "script": "confirmSubmit()"
+                }
+               }
+              }
+             ],
+             "originalElement": "div",
+             "parentSlotName": "actions"
+            }
+           ]
+          }
+         }
+        }
+       ],
+       "originalElement": "div"
+      }
+     ],
+     "originalElement": "div"
+    },
+    {
+     "componentId": "div-89",
+     "componentName": "div",
+     "blockName": "Save Bar",
+     "baseStyles": {
+      "width": "100%",
+      "position": "sticky",
+      "bottom": "0",
+      "zIndex": "20"
+     },
+     "classes": [
+      "bg-surface-white",
+      "border-t",
+      "border-outline-gray-2",
+      "shrink-0"
+     ],
+     "visibilityCondition": "{{ isEditable && !isSubmitted }}",
+     "children": [
+      {
+       "componentId": "div-88",
+       "componentName": "div",
+       "baseStyles": {
+        "maxWidth": "56rem"
+       },
+       "classes": [
+        "flex",
+        "flex-row",
+        "items-center",
+        "justify-between",
+        "gap-3",
+        "mx-auto",
+        "px-6",
+        "py-3",
+        "w-full"
+       ],
+       "children": [
+        {
+         "componentId": "textblock-84",
+         "componentName": "TextBlock",
+         "componentProps": {
+          "text": "{{ savedNote }}",
+          "fontSize": "text-xs"
+         },
+         "classes": [
+          "text-ink-gray-5",
+          "truncate"
+         ]
+        },
+        {
+         "componentId": "div-87",
+         "componentName": "div",
+         "classes": [
+          "flex",
+          "flex-row",
+          "items-center",
+          "gap-2",
+          "shrink-0"
+         ],
+         "children": [
+          {
+           "componentId": "button-85",
+           "componentName": "Button",
+           "componentProps": {
+            "label": "Back",
+            "variant": "subtle",
+            "size": "md",
+            "iconLeft": "arrow-left"
+           },
+           "componentEvents": {
+            "click": {
+             "action": "Run Script",
+             "script": "goBack()"
+            }
+           },
+           "visibilityCondition": "{{ !isFirstStep }}"
+          },
+          {
+           "componentId": "button-86",
+           "componentName": "Button",
+           "componentProps": {
+            "label": "{{ nextLabel }}",
+            "variant": "solid",
+            "size": "md",
+            "loading": "{{ saving }}"
+           },
+           "componentEvents": {
+            "click": {
+             "action": "Run Script",
+             "script": "goNext()"
+            }
+           }
+          }
+         ],
+         "originalElement": "div"
+        }
+       ],
+       "originalElement": "div"
+      }
+     ],
+     "originalElement": "div"
+    }
+   ],
+   "classes": [
+    "bg-surface-gray-1"
+   ],
+   "componentId": "root",
+   "componentName": "div",
+   "originalElement": "body"
+  }
+ ],
+ "creation": "2026-09-17 12:40:35.944513",
+ "doctype": "Studio Page",
+ "frappe_app": "hrms",
+ "is_standard": 1,
+ "modified": "2026-09-18 17:08:31.828818",
+ "modified_by": "Administrator",
+ "name": "employee_documents",
+ "owner": "Administrator",
+ "page_name": "page-6592d919",
+ "page_title": "Employee Documents",
+ "published": 1,
+ "resources": [],
+ "route": "/",
+ "studio_app": "employee_documents",
+ "variables": [],
+ "draft_blocks": [
+  {
+   "baseStyles": {
+    "display": "flex",
+    "flexDirection": "column",
+    "height": "100%",
+    "width": "100%"
+   },
+   "blockName": "body",
+   "children": [
+    {
+     "componentId": "div-56",
+     "componentName": "div",
+     "blockName": "App Bar",
+     "baseStyles": {
+      "width": "100%",
+      "position": "sticky",
+      "top": "0",
+      "zIndex": "20"
+     },
+     "classes": [
+      "bg-surface-white",
+      "border-b",
+      "border-outline-gray-2",
+      "shrink-0"
+     ],
+     "children": [
+      {
+       "componentId": "div-55",
+       "componentName": "div",
+       "baseStyles": {
+        "maxWidth": "56rem"
+       },
+       "classes": [
+        "flex",
+        "flex-row",
+        "items-center",
+        "justify-between",
+        "gap-3",
+        "mx-auto",
+        "px-6",
+        "py-3",
+        "w-full"
+       ],
+       "children": [
+        {
+         "componentId": "div-50",
+         "componentName": "div",
+         "classes": [
+          "flex",
+          "flex-col",
+          "gap-0.5",
+          "min-w-0"
+         ],
+         "children": [
+          {
+           "componentId": "textblock-48",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "text": "Onboarding",
+            "fontSize": "text-base",
+            "tag": "h1"
+           },
+           "classes": [
+            "font-semibold",
+            "text-ink-gray-8"
+           ]
+          },
+          {
+           "componentId": "textblock-49",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "text": "{{ roleLine }}",
+            "fontSize": "text-xs"
+           },
+           "classes": [
+            "text-ink-gray-5",
+            "truncate"
+           ],
+           "visibilityCondition": "{{ roleLine }}"
+          }
+         ],
+         "originalElement": "div"
+        },
+        {
+         "componentId": "div-54",
+         "componentName": "div",
+         "classes": [
+          "flex",
+          "flex-row",
+          "items-center",
+          "gap-2.5",
+          "shrink-0"
+         ],
+         "visibilityCondition": "{{ isReady }}",
+         "children": [
+          {
+           "componentId": "textblock-51",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "text": "{{ employeeName }}",
+            "fontSize": "text-sm"
+           },
+           "classes": [
+            "text-ink-gray-7",
+            "font-medium"
+           ]
+          },
+          {
+           "componentId": "avatar-52",
+           "componentName": "Avatar",
+           "componentProps": {
+            "label": "{{ employeeName }}",
+            "size": "md"
+           }
+          },
+          {
+           "componentId": "button-53",
+           "componentName": "Button",
+           "componentProps": {
+            "label": "Log out",
+            "variant": "ghost",
+            "size": "sm"
+           },
+           "componentEvents": {
+            "click": {
+             "action": "Run Script",
+             "script": "logout()"
+            }
+           }
+          }
+         ],
+         "originalElement": "div"
+        }
+       ],
+       "originalElement": "div"
+      }
+     ],
+     "originalElement": "div"
+    },
+    {
+     "componentId": "div-83",
+     "componentName": "div",
+     "blockName": "Main",
+     "baseStyles": {
+      "width": "100%"
+     },
+     "classes": [
+      "ed-scroll",
+      "grow",
+      "overflow-y-auto"
+     ],
+     "children": [
+      {
+       "componentId": "div-82",
+       "componentName": "div",
+       "blockName": "Content",
+       "baseStyles": {
+        "maxWidth": "56rem"
+       },
+       "classes": [
+        "flex",
+        "flex-col",
+        "gap-5",
+        "mx-auto",
+        "w-full",
+        "px-6",
+        "py-8"
+       ],
+       "children": [
+        {
+         "componentId": "repeater-44",
+         "componentName": "Repeater",
+         "blockName": "Stepper",
+         "componentProps": {
+          "data": "{{ stepMarkers }}",
+          "dataKey": "key"
+         },
+         "componentSlots": {
+          "default": {
+           "slotName": "default",
+           "slotContent": [
+            {
+             "componentId": "div-43",
+             "componentName": "div",
+             "blockName": "Step Marker",
+             "componentEvents": {
+              "click": {
+               "action": "Run Script",
+               "script": "goToStep(dataItem.index)"
+              }
+             },
+             "classes": [
+              "flex",
+              "flex-row",
+              "items-center",
+              "gap-2.5",
+              "min-w-0"
+             ],
+             "children": [
+              {
+               "componentId": "textblock-41",
+               "componentName": "TextBlock",
+               "componentProps": {
+                "text": "{{ dataItem.number }}",
+                "fontSize": "text-xs"
+               },
+               "baseStyles": {
+                "width": "1.5rem",
+                "height": "1.5rem",
+                "lineHeight": "1",
+                "backgroundColor": "{{ dataItem.markerBg }}",
+                "borderColor": "{{ dataItem.markerBorder }}",
+                "color": "{{ dataItem.markerColor }}"
+               },
+               "classes": [
+                "flex",
+                "items-center",
+                "justify-center",
+                "rounded-full",
+                "border",
+                "font-medium",
+                "shrink-0",
+                "cursor-pointer"
+               ]
+              },
+              {
+               "componentId": "textblock-42",
+               "componentName": "TextBlock",
+               "componentProps": {
+                "text": "{{ dataItem.label }}",
+                "fontSize": "text-sm"
+               },
+               "baseStyles": {
+                "color": "{{ dataItem.labelColor }}",
+                "fontWeight": "{{ dataItem.labelWeight }}"
+               },
+               "classes": [
+                "truncate",
+                "cursor-pointer"
+               ]
+              }
+             ],
+             "originalElement": "div",
+             "parentSlotName": "default"
+            }
+           ]
+          }
+         },
+         "baseStyles": {
+          "width": "100%",
+          "gap": "0.5rem 1.5rem"
+         },
+         "classes": [
+          "flex",
+          "flex-row",
+          "flex-wrap",
+          "items-center"
+         ],
+         "mobileStyles": {
+          "display": "none"
+         },
+         "visibilityCondition": "{{ showForm }}"
+        },
+        {
+         "componentId": "div-47",
+         "componentName": "div",
+         "blockName": "Stepper Compact",
+         "baseStyles": {
+          "width": "100%",
+          "display": "none"
+         },
+         "classes": [
+          "flex",
+          "flex-col",
+          "gap-1"
+         ],
+         "mobileStyles": {
+          "display": "flex"
+         },
+         "visibilityCondition": "{{ showForm }}",
+         "children": [
+          {
+           "componentId": "textblock-45",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "text": "{{ stepCounter }}",
+            "fontSize": "text-xs"
+           },
+           "classes": [
+            "text-ink-gray-5"
+           ]
+          },
+          {
+           "componentId": "textblock-46",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "text": "{{ currentStepLabel }}",
+            "fontSize": "text-base"
+           },
+           "classes": [
+            "font-semibold",
+            "text-ink-gray-8"
+           ]
+          }
+         ],
+         "originalElement": "div"
+        },
+        {
+         "componentId": "div-66",
+         "componentName": "div",
+         "blockName": "Loading",
+         "classes": [
+          "flex",
+          "items-center",
+          "justify-center",
+          "py-24"
+         ],
+         "visibilityCondition": "{{ loading }}",
+         "children": [
+          {
+           "componentId": "spinner-65",
+           "componentName": "Spinner",
+           "classes": [
+            "w-6",
+            "text-ink-gray-5"
+           ]
+          }
+         ],
+         "originalElement": "div"
+        },
+        {
+         "componentId": "div-69",
+         "componentName": "div",
+         "blockName": "Blocked",
+         "baseStyles": {
+          "width": "100%"
+         },
+         "classes": [
+          "bg-surface-white",
+          "rounded-xl",
+          "border",
+          "border-outline-gray-2",
+          "flex",
+          "flex-col",
+          "items-center",
+          "text-center",
+          "gap-2",
+          "px-6",
+          "py-12"
+         ],
+         "visibilityCondition": "{{ blockedMessage }}",
+         "children": [
+          {
+           "componentId": "textblock-67",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "text": "You cannot open this form",
+            "fontSize": "text-base"
+           },
+           "classes": [
+            "font-semibold",
+            "text-ink-gray-8"
+           ]
+          },
+          {
+           "componentId": "textblock-68",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "text": "{{ blockedMessage }}",
+            "fontSize": "text-sm"
+           },
+           "classes": [
+            "text-ink-gray-5"
+           ]
+          }
+         ],
+         "originalElement": "div"
+        },
+        {
+         "componentId": "alert-70",
+         "componentName": "Alert",
+         "blockName": "Locked",
+         "componentProps": {
+          "title": "Your details are with HR now and can no longer be changed.",
+          "theme": "blue",
+          "variant": "subtle"
+         },
+         "baseStyles": {
+          "width": "100%"
+         },
+         "visibilityCondition": "{{ isReady && isLocked && !isSubmitted }}"
+        },
+        {
+         "componentId": "div-76",
+         "componentName": "div",
+         "blockName": "Thank You",
+         "baseStyles": {
+          "width": "100%"
+         },
+         "classes": [
+          "bg-surface-white",
+          "rounded-xl",
+          "border",
+          "border-outline-gray-2",
+          "flex",
+          "flex-col",
+          "items-center",
+          "text-center",
+          "gap-3",
+          "px-6",
+          "py-16"
+         ],
+         "visibilityCondition": "{{ isReady && isSubmitted }}",
+         "children": [
+          {
+           "componentId": "div-72",
+           "componentName": "div",
+           "baseStyles": {
+            "width": "2.75rem",
+            "height": "2.75rem",
+            "backgroundColor": "var(--surface-green-2)"
+           },
+           "classes": [
+            "flex",
+            "items-center",
+            "justify-center",
+            "rounded-full"
+           ],
+           "children": [
+            {
+             "componentId": "feathericon-71",
+             "componentName": "FeatherIcon",
+             "componentProps": {
+              "name": "check"
+             },
+             "baseStyles": {
+              "width": "1.25rem",
+              "height": "1.25rem",
+              "color": "var(--ink-green-8)"
+             }
+            }
+           ],
+           "originalElement": "div"
+          },
+          {
+           "componentId": "textblock-73",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "text": "Thank you, your details are submitted",
+            "fontSize": "text-xl",
+            "tag": "h1"
+           },
+           "classes": [
+            "font-semibold",
+            "text-ink-gray-9"
+           ]
+          },
+          {
+           "componentId": "textblock-74",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "text": "{{ thankYouNote }}",
+            "fontSize": "text-sm"
+           },
+           "classes": [
+            "text-ink-gray-6"
+           ]
+          },
+          {
+           "componentId": "textblock-75",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "text": "You can close this page. Signing in again will show this confirmation.",
+            "fontSize": "text-xs"
+           },
+           "classes": [
+            "text-ink-gray-5"
+           ]
+          }
+         ],
+         "originalElement": "div"
+        },
+        {
+         "componentId": "repeater-07",
+         "componentName": "Repeater",
+         "blockName": "Sections",
+         "componentProps": {
+          "data": "{{ sectionCards }}",
+          "dataKey": "key"
+         },
+         "componentSlots": {
+          "default": {
+           "slotName": "default",
+           "slotContent": [
+            {
+             "componentId": "div-06",
+             "componentName": "div",
+             "blockName": "Section Card",
+             "baseStyles": {
+              "width": "100%"
+             },
+             "classes": [
+              "bg-surface-white",
+              "rounded-xl",
+              "border",
+              "border-outline-gray-2",
+              "flex",
+              "flex-col"
+             ],
+             "children": [
+              {
+               "componentId": "div-03",
+               "componentName": "div",
+               "classes": [
+                "flex",
+                "flex-col",
+                "gap-1",
+                "px-5",
+                "pt-5",
+                "pb-4"
+               ],
+               "children": [
+                {
+                 "componentId": "textblock-01",
+                 "componentName": "TextBlock",
+                 "componentProps": {
+                  "text": "{{ dataItem.label }}",
+                  "fontSize": "text-base",
+                  "tag": "h2"
+                 },
+                 "classes": [
+                  "font-semibold",
+                  "text-ink-gray-8"
+                 ]
+                },
+                {
+                 "componentId": "textblock-02",
+                 "componentName": "TextBlock",
+                 "componentProps": {
+                  "text": "{{ dataItem.description }}",
+                  "fontSize": "text-sm"
+                 },
+                 "classes": [
+                  "text-ink-gray-5"
+                 ],
+                 "visibilityCondition": "{{ dataItem.description }}"
+                }
+               ],
+               "originalElement": "div"
+              },
+              {
+               "componentId": "repeater-05",
+               "componentName": "Repeater",
+               "componentProps": {
+                "data": "{{ dataItem.fields }}",
+                "dataKey": "key"
+               },
+               "componentSlots": {
+                "default": {
+                 "slotName": "default",
+                 "slotContent": [
+                  {
+                   "componentId": "formcontrol-04",
+                   "componentName": "FormControl",
+                   "blockName": "Field",
+                   "componentProps": {
+                    "label": "{{ dataItem.label }}",
+                    "type": "{{ dataItem.controlType }}",
+                    "options": "{{ dataItem.options }}",
+                    "modelValue": "{{ dataItem.value }}",
+                    "required": "{{ dataItem.required }}",
+                    "disabled": "{{ isLocked }}",
+                    "size": "md"
+                   },
+                   "componentEvents": {
+                    "update:modelValue": {
+                     "action": "Run Script",
+                     "script": "function handleEvent(value) { setField(dataItem, value) }"
+                    }
+                   },
+                   "baseStyles": {
+                    "width": "{{ dataItem.width }}"
+                   },
+                   "mobileStyles": {
+                    "width": "100%"
+                   },
+                   "parentSlotName": "default"
+                  }
+                 ]
+                }
+               },
+               "baseStyles": {
+                "width": "100%",
+                "gap": "1rem",
+                "columnGap": "1rem",
+                "rowGap": "1.25rem"
+               },
+               "classes": [
+                "flex",
+                "flex-row",
+                "flex-wrap",
+                "px-5",
+                "pb-5"
+               ]
+              }
+             ],
+             "originalElement": "div",
+             "parentSlotName": "default"
+            }
+           ]
+          }
+         },
+         "baseStyles": {
+          "width": "100%",
+          "gap": "1.25rem"
+         },
+         "classes": [
+          "flex",
+          "flex-col"
+         ],
+         "visibilityCondition": "{{ showForm && sectionCards.length }}"
+        },
+        {
+         "componentId": "repeater-25",
+         "componentName": "Repeater",
+         "blockName": "Tables",
+         "componentProps": {
+          "data": "{{ tableCards }}",
+          "dataKey": "key"
+         },
+         "componentSlots": {
+          "default": {
+           "slotName": "default",
+           "slotContent": [
+            {
+             "componentId": "div-24",
+             "componentName": "div",
+             "blockName": "Table Card",
+             "baseStyles": {
+              "width": "100%"
+             },
+             "classes": [
+              "bg-surface-white",
+              "rounded-xl",
+              "border",
+              "border-outline-gray-2",
+              "flex",
+              "flex-col"
+             ],
+             "children": [
+              {
+               "componentId": "div-18",
+               "componentName": "div",
+               "classes": [
+                "flex",
+                "flex-col",
+                "gap-1",
+                "px-5",
+                "pt-5",
+                "pb-4",
+                "!flex-row",
+                "items-start",
+                "justify-between"
+               ],
+               "children": [
+                {
+                 "componentId": "div-16",
+                 "componentName": "div",
+                 "classes": [
+                  "flex",
+                  "flex-col",
+                  "gap-1",
+                  "min-w-0"
+                 ],
+                 "children": [
+                  {
+                   "componentId": "textblock-14",
+                   "componentName": "TextBlock",
+                   "componentProps": {
+                    "text": "{{ dataItem.label }}",
+                    "fontSize": "text-base",
+                    "tag": "h2"
+                   },
+                   "classes": [
+                    "font-semibold",
+                    "text-ink-gray-8"
+                   ]
+                  },
+                  {
+                   "componentId": "textblock-15",
+                   "componentName": "TextBlock",
+                   "componentProps": {
+                    "text": "{{ dataItem.description }}",
+                    "fontSize": "text-sm"
+                   },
+                   "classes": [
+                    "text-ink-gray-5"
+                   ],
+                   "visibilityCondition": "{{ dataItem.description }}"
+                  }
+                 ],
+                 "originalElement": "div"
+                },
+                {
+                 "componentId": "badge-17",
+                 "componentName": "Badge",
+                 "componentProps": {
+                  "label": "{{ dataItem.count }}",
+                  "theme": "gray",
+                  "variant": "subtle"
+                 },
+                 "classes": [
+                  "shrink-0"
+                 ],
+                 "visibilityCondition": "{{ dataItem.count }}"
+                }
+               ],
+               "originalElement": "div"
+              },
+              {
+               "componentId": "div-23",
+               "componentName": "div",
+               "classes": [
+                "flex",
+                "flex-col",
+                "gap-3",
+                "px-5",
+                "pb-5"
+               ],
+               "children": [
+                {
+                 "componentId": "div-20",
+                 "componentName": "div",
+                 "classes": [
+                  "rounded-lg",
+                  "border",
+                  "border-dashed",
+                  "border-outline-gray-2",
+                  "px-4",
+                  "py-6",
+                  "text-center"
+                 ],
+                 "visibilityCondition": "{{ dataItem.isEmpty }}",
+                 "children": [
+                  {
+                   "componentId": "textblock-19",
+                   "componentName": "TextBlock",
+                   "componentProps": {
+                    "text": "{{ dataItem.emptyMessage }}",
+                    "fontSize": "text-sm"
+                   },
+                   "classes": [
+                    "text-ink-gray-5"
+                   ]
+                  }
+                 ],
+                 "originalElement": "div"
+                },
+                {
+                 "componentId": "repeater-21",
+                 "componentName": "Repeater",
+                 "componentProps": {
+                  "data": "{{ dataItem.rows }}",
+                  "dataKey": "key"
+                 },
+                 "componentSlots": {
+                  "default": {
+                   "slotName": "default",
+                   "slotContent": [
+                    {
+                     "componentId": "div-13",
+                     "componentName": "div",
+                     "blockName": "Entry",
+                     "baseStyles": {
+                      "width": "100%"
+                     },
+                     "classes": [
+                      "flex",
+                      "flex-col",
+                      "gap-3",
+                      "rounded-lg",
+                      "border",
+                      "border-outline-gray-2",
+                      "bg-surface-gray-1",
+                      "px-4",
+                      "py-4"
+                     ],
+                     "children": [
+                      {
+                       "componentId": "div-10",
+                       "componentName": "div",
+                       "classes": [
+                        "flex",
+                        "flex-row",
+                        "items-center",
+                        "justify-between",
+                        "gap-3"
+                       ],
+                       "children": [
+                        {
+                         "componentId": "textblock-08",
+                         "componentName": "TextBlock",
+                         "componentProps": {
+                          "text": "{{ dataItem.title }}",
+                          "fontSize": "text-sm"
+                         },
+                         "classes": [
+                          "font-medium",
+                          "text-ink-gray-7",
+                          "truncate"
+                         ]
+                        },
+                        {
+                         "componentId": "button-09",
+                         "componentName": "Button",
+                         "componentProps": {
+                          "label": "Remove",
+                          "variant": "ghost",
+                          "theme": "red",
+                          "size": "sm"
+                         },
+                         "componentEvents": {
+                          "click": {
+                           "action": "Run Script",
+                           "script": "removeRow(dataItem.table, dataItem.index)"
+                          }
+                         },
+                         "classes": [
+                          "shrink-0"
+                         ],
+                         "visibilityCondition": "{{ isEditable }}"
+                        }
+                       ],
+                       "originalElement": "div"
+                      },
+                      {
+                       "componentId": "repeater-12",
+                       "componentName": "Repeater",
+                       "componentProps": {
+                        "data": "{{ dataItem.fields }}",
+                        "dataKey": "key"
+                       },
+                       "componentSlots": {
+                        "default": {
+                         "slotName": "default",
+                         "slotContent": [
+                          {
+                           "componentId": "formcontrol-11",
+                           "componentName": "FormControl",
+                           "blockName": "Field",
+                           "componentProps": {
+                            "label": "{{ dataItem.label }}",
+                            "type": "{{ dataItem.controlType }}",
+                            "options": "{{ dataItem.options }}",
+                            "modelValue": "{{ dataItem.value }}",
+                            "required": "{{ dataItem.required }}",
+                            "disabled": "{{ isLocked }}",
+                            "size": "md"
+                           },
+                           "componentEvents": {
+                            "update:modelValue": {
+                             "action": "Run Script",
+                             "script": "function handleEvent(value) { setField(dataItem, value) }"
+                            }
+                           },
+                           "baseStyles": {
+                            "width": "{{ dataItem.width }}"
+                           },
+                           "mobileStyles": {
+                            "width": "100%"
+                           },
+                           "parentSlotName": "default"
+                          }
+                         ]
+                        }
+                       },
+                       "baseStyles": {
+                        "width": "100%",
+                        "gap": "1rem",
+                        "columnGap": "1rem",
+                        "rowGap": "1.25rem"
+                       },
+                       "classes": [
+                        "flex",
+                        "flex-row",
+                        "flex-wrap"
+                       ]
+                      }
+                     ],
+                     "originalElement": "div",
+                     "parentSlotName": "default"
+                    }
+                   ]
+                  }
+                 },
+                 "baseStyles": {
+                  "width": "100%",
+                  "gap": "0.75rem"
+                 },
+                 "classes": [
+                  "flex",
+                  "flex-col"
+                 ],
+                 "visibilityCondition": "{{ !dataItem.isEmpty }}"
+                },
+                {
+                 "componentId": "button-22",
+                 "componentName": "Button",
+                 "componentProps": {
+                  "label": "{{ dataItem.addLabel }}",
+                  "variant": "subtle",
+                  "size": "sm",
+                  "iconLeft": "plus"
+                 },
+                 "componentEvents": {
+                  "click": {
+                   "action": "Run Script",
+                   "script": "addRow(dataItem.table)"
+                  }
+                 },
+                 "classes": [
+                  "self-start"
+                 ],
+                 "visibilityCondition": "{{ isEditable }}"
+                }
+               ],
+               "originalElement": "div"
+              }
+             ],
+             "originalElement": "div",
+             "parentSlotName": "default"
+            }
+           ]
+          }
+         },
+         "baseStyles": {
+          "width": "100%",
+          "gap": "1.25rem"
+         },
+         "classes": [
+          "flex",
+          "flex-col"
+         ],
+         "visibilityCondition": "{{ showForm && tableCards.length }}"
+        },
+        {
+         "componentId": "div-40",
+         "componentName": "div",
+         "blockName": "Documents Card",
+         "baseStyles": {
+          "width": "100%"
+         },
+         "classes": [
+          "bg-surface-white",
+          "rounded-xl",
+          "border",
+          "border-outline-gray-2",
+          "flex",
+          "flex-col"
+         ],
+         "visibilityCondition": "{{ showForm && showDocuments }}",
+         "children": [
+          {
+           "componentId": "div-38",
+           "componentName": "div",
+           "classes": [
+            "flex",
+            "flex-col",
+            "gap-1",
+            "px-5",
+            "pt-5",
+            "pb-4"
+           ],
+           "children": [
+            {
+             "componentId": "textblock-36",
+             "componentName": "TextBlock",
+             "componentProps": {
+              "text": "Documents",
+              "fontSize": "text-base",
+              "tag": "h2"
+             },
+             "classes": [
+              "font-semibold",
+              "text-ink-gray-8"
+             ]
+            },
+            {
+             "componentId": "textblock-37",
+             "componentName": "TextBlock",
+             "componentProps": {
+              "text": "Upload a clear scan or photo of each document.",
+              "fontSize": "text-sm"
+             },
+             "classes": [
+              "text-ink-gray-5"
+             ]
+            }
+           ],
+           "originalElement": "div"
+          },
+          {
+           "componentId": "repeater-39",
+           "componentName": "Repeater",
+           "componentProps": {
+            "data": "{{ documentRows }}",
+            "dataKey": "key"
+           },
+           "componentSlots": {
+            "default": {
+             "slotName": "default",
+             "slotContent": [
+              {
+               "componentId": "div-35",
+               "componentName": "div",
+               "blockName": "Document Row",
+               "baseStyles": {
+                "width": "100%"
+               },
+               "classes": [
+                "flex",
+                "flex-row",
+                "items-center",
+                "gap-4",
+                "px-5",
+                "py-3.5",
+                "border-t",
+                "border-outline-gray-2"
+               ],
+               "children": [
+                {
+                 "componentId": "div-29",
+                 "componentName": "div",
+                 "classes": [
+                  "flex",
+                  "flex-col",
+                  "gap-0.5",
+                  "min-w-0",
+                  "grow"
+                 ],
+                 "children": [
+                  {
+                   "componentId": "textblock-26",
+                   "componentName": "TextBlock",
+                   "componentProps": {
+                    "text": "{{ dataItem.label }}",
+                    "fontSize": "text-sm"
+                   },
+                   "classes": [
+                    "font-medium",
+                    "text-ink-gray-8"
+                   ]
+                  },
+                  {
+                   "componentId": "textblock-27",
+                   "componentName": "TextBlock",
+                   "componentProps": {
+                    "text": "{{ dataItem.description }}",
+                    "fontSize": "text-xs"
+                   },
+                   "classes": [
+                    "text-ink-gray-5"
+                   ],
+                   "visibilityCondition": "{{ dataItem.description }}"
+                  },
+                  {
+                   "componentId": "textblock-28",
+                   "componentName": "TextBlock",
+                   "componentProps": {
+                    "text": "{{ dataItem.fileName }}",
+                    "fontSize": "text-xs"
+                   },
+                   "classes": [
+                    "text-ink-gray-5",
+                    "truncate"
+                   ],
+                   "visibilityCondition": "{{ dataItem.fileName }}"
+                  }
+                 ],
+                 "originalElement": "div"
+                },
+                {
+                 "componentId": "div-31",
+                 "componentName": "div",
+                 "baseStyles": {
+                  "width": "5.5rem"
+                 },
+                 "classes": [
+                  "shrink-0",
+                  "flex",
+                  "justify-end"
+                 ],
+                 "children": [
+                  {
+                   "componentId": "badge-30",
+                   "componentName": "Badge",
+                   "componentProps": {
+                    "label": "{{ dataItem.statusLabel }}",
+                    "theme": "{{ dataItem.statusTheme }}",
+                    "variant": "subtle"
+                   }
+                  }
+                 ],
+                 "originalElement": "div"
+                },
+                {
+                 "componentId": "div-34",
+                 "componentName": "div",
+                 "baseStyles": {
+                  "width": "6rem"
+                 },
+                 "classes": [
+                  "shrink-0",
+                  "flex",
+                  "justify-end"
+                 ],
+                 "children": [
+                  {
+                   "componentId": "fileuploader-33",
+                   "componentName": "FileUploader",
+                   "componentProps": {
+                    "uploadArgs": {
+                     "private": true
+                    }
+                   },
+                   "componentEvents": {
+                    "success": {
+                     "action": "Run Script",
+                     "script": "function handleEvent(file) { setDocument(dataItem.idx, file.file_url) }"
+                    }
+                   },
+                   "componentSlots": {
+                    "default": {
+                     "slotName": "default",
+                     "slotContent": [
+                      {
+                       "componentId": "button-32",
+                       "componentName": "Button",
+                       "componentProps": {
+                        "label": "{{ dataItem.buttonLabel }}",
+                        "variant": "{{ dataItem.buttonVariant }}",
+                        "size": "sm",
+                        "loading": "{{ uploading }}"
+                       },
+                       "componentEvents": {
+                        "click": {
+                         "action": "Run Script",
+                         "script": "openFileSelector()"
+                        }
+                       },
+                       "parentSlotName": "default"
+                      }
+                     ]
+                    }
+                   },
+                   "visibilityCondition": "{{ isEditable }}"
+                  }
+                 ],
+                 "originalElement": "div"
+                }
+               ],
+               "originalElement": "div",
+               "parentSlotName": "default"
+              }
+             ]
+            }
+           },
+           "baseStyles": {
+            "width": "100%",
+            "gap": "0"
+           },
+           "classes": [
+            "flex",
+            "flex-col"
+           ]
+          }
+         ],
+         "originalElement": "div"
+        },
+        {
+         "componentId": "dialog-81",
+         "componentName": "Dialog",
+         "blockName": "Confirm Submit",
+         "componentProps": {
+          "modelValue": "{{ confirmOpen }}",
+          "title": "Submit your details?",
+          "size": "md"
+         },
+         "componentEvents": {
+          "update:modelValue": {
+           "action": "Run Script",
+           "script": "function handleEvent(value) { setConfirmOpen(value) }"
+          }
+         },
+         "componentSlots": {
+          "default": {
+           "slotName": "default",
+           "slotContent": [
+            {
+             "componentId": "textblock-77",
+             "componentName": "TextBlock",
+             "componentProps": {
+              "text": "Check that everything you entered is correct. Once you submit, you cannot edit your details - your HR contact will have to make any changes for you.",
+              "fontSize": "text-sm"
+             },
+             "classes": [
+              "text-ink-gray-6"
+             ],
+             "parentSlotName": "default"
+            }
+           ]
+          },
+          "actions": {
+           "slotName": "actions",
+           "slotContent": [
+            {
+             "componentId": "div-80",
+             "componentName": "div",
+             "baseStyles": {
+              "width": "100%"
+             },
+             "classes": [
+              "flex",
+              "flex-row",
+              "items-center",
+              "justify-end",
+              "gap-2"
+             ],
+             "children": [
+              {
+               "componentId": "button-78",
+               "componentName": "Button",
+               "componentProps": {
+                "label": "Go back and check",
+                "variant": "subtle",
+                "size": "md"
+               },
+               "componentEvents": {
+                "click": {
+                 "action": "Run Script",
+                 "script": "setConfirmOpen(false)"
+                }
+               }
+              },
+              {
+               "componentId": "button-79",
+               "componentName": "Button",
+               "componentProps": {
+                "label": "Confirm and submit",
+                "variant": "solid",
+                "size": "md",
+                "loading": "{{ saving }}"
+               },
+               "componentEvents": {
+                "click": {
+                 "action": "Run Script",
+                 "script": "confirmSubmit()"
+                }
+               }
+              }
+             ],
+             "originalElement": "div",
+             "parentSlotName": "actions"
+            }
+           ]
+          }
+         }
+        }
+       ],
+       "originalElement": "div"
+      }
+     ],
+     "originalElement": "div"
+    },
+    {
+     "componentId": "div-89",
+     "componentName": "div",
+     "blockName": "Save Bar",
+     "baseStyles": {
+      "width": "100%",
+      "position": "sticky",
+      "bottom": "0",
+      "zIndex": "20"
+     },
+     "classes": [
+      "bg-surface-white",
+      "border-t",
+      "border-outline-gray-2",
+      "shrink-0"
+     ],
+     "visibilityCondition": "{{ isEditable && !isSubmitted }}",
+     "children": [
+      {
+       "componentId": "div-88",
+       "componentName": "div",
+       "baseStyles": {
+        "maxWidth": "56rem"
+       },
+       "classes": [
+        "flex",
+        "flex-row",
+        "items-center",
+        "justify-between",
+        "gap-3",
+        "mx-auto",
+        "px-6",
+        "py-3",
+        "w-full"
+       ],
+       "children": [
+        {
+         "componentId": "textblock-84",
+         "componentName": "TextBlock",
+         "componentProps": {
+          "text": "{{ savedNote }}",
+          "fontSize": "text-xs"
+         },
+         "classes": [
+          "text-ink-gray-5",
+          "truncate"
+         ]
+        },
+        {
+         "componentId": "div-87",
+         "componentName": "div",
+         "classes": [
+          "flex",
+          "flex-row",
+          "items-center",
+          "gap-2",
+          "shrink-0"
+         ],
+         "children": [
+          {
+           "componentId": "button-85",
+           "componentName": "Button",
+           "componentProps": {
+            "label": "Back",
+            "variant": "subtle",
+            "size": "md",
+            "iconLeft": "arrow-left"
+           },
+           "componentEvents": {
+            "click": {
+             "action": "Run Script",
+             "script": "goBack()"
+            }
+           },
+           "visibilityCondition": "{{ !isFirstStep }}"
+          },
+          {
+           "componentId": "button-86",
+           "componentName": "Button",
+           "componentProps": {
+            "label": "{{ nextLabel }}",
+            "variant": "solid",
+            "size": "md",
+            "loading": "{{ saving }}"
+           },
+           "componentEvents": {
+            "click": {
+             "action": "Run Script",
+             "script": "goNext()"
+            }
+           }
+          }
+         ],
+         "originalElement": "div"
+        }
+       ],
+       "originalElement": "div"
+      }
+     ],
+     "originalElement": "div"
+    }
+   ],
+   "classes": [
+    "bg-surface-gray-1"
+   ],
+   "componentId": "root",
+   "componentName": "div",
+   "originalElement": "body"
+  }
+ ]
+}

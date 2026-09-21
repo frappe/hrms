@@ -11,6 +11,7 @@
   "begin_on",
   "duration",
   "column_break_3",
+  "completed",
   "task",
   "task_weight",
   "required_for_employee_creation",
@@ -46,6 +47,14 @@
   {
    "fieldname": "column_break_3",
    "fieldtype": "Column Break"
+  },
+  {
+   "columns": 1,
+   "default": "0",
+   "fieldname": "completed",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Completed"
   },
   {
    "fieldname": "task",

@@ -78,6 +78,14 @@ class JobOffer(Document):
 		employee = frappe.db.get_value("Employee", {"job_offer": self.name}, "name") or ""
 		self.set_onload("employee", employee)
 
+		onboarding = (
+			frappe.db.get_value(
+				"Employee Onboarding", {"job_offer": self.name, "docstatus": ("!=", 2)}, "name"
+			)
+			or ""
+		)
+		self.set_onload("employee_onboarding", onboarding)
+
 	def validate(self):
 		self.set_status()
 		self.validate_vacancies()
@@ -505,3 +513,27 @@ def get_holiday_summary(holiday_list: str | None = None) -> dict:
 		"weekly_off_days": ", ".join(_(day) for day in sorted(off_days, key=weekdays.index)),
 		"total_public_holidays": sum(1 for holiday in holidays if not holiday.weekly_off),
 	}
+
+
+@frappe.whitelist()
+def make_employee_onboarding(source_name: str, target_doc: str | Document | None = None):
+	def set_missing_values(source, target):
+		target.personal_email = source.applicant_email
+		target.boarding_begins_on = source.date_of_joining
+
+	return get_mapped_doc(
+		"Job Offer",
+		source_name,
+		{
+			"Job Offer": {
+				"doctype": "Employee Onboarding",
+				"field_map": {
+					"name": "job_offer",
+					"applicant_name": "employee_name",
+					"grade": "employee_grade",
+				},
+			}
+		},
+		target_doc,
+		set_missing_values,
+	)

@@ -29,7 +29,7 @@ class EmployeeMaster(Employee):
 
 
 def validate_onboarding_process(doc, method=None):
-	"""Validates Employee Creation for linked Employee Onboarding"""
+	"""Link a new Employee back to its open Employee Onboarding."""
 	job_applicant = doc.get("job_applicant")
 	job_offer = doc.get("job_offer")
 
@@ -41,11 +41,9 @@ def validate_onboarding_process(doc, method=None):
 	else:
 		return
 
-	employee_onboarding = frappe.get_all("Employee Onboarding", filters=filters)
+	employee_onboarding = frappe.get_all("Employee Onboarding", filters=filters, pluck="name")
 	if employee_onboarding:
-		onboarding = frappe.get_doc("Employee Onboarding", employee_onboarding[0].name)
-		onboarding.validate_employee_creation()
-		onboarding.db_set("employee", doc.name)
+		frappe.db.set_value("Employee Onboarding", employee_onboarding[0], "employee", doc.name)
 
 
 def publish_update(doc, method=None):

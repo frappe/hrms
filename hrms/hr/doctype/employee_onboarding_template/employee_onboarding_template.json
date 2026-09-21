@@ -15,7 +15,9 @@
   "designation",
   "employee_grade",
   "section_break_7",
-  "activities"
+  "activities",
+  "documents_section",
+  "required_documents"
  ],
  "fields": [
   {
@@ -67,6 +69,17 @@
    "fieldtype": "Table",
    "label": "Activities",
    "options": "Employee Boarding Activity"
+  },
+  {
+   "fieldname": "documents_section",
+   "fieldtype": "Section Break",
+   "label": "Documents to Upload"
+  },
+  {
+   "fieldname": "required_documents",
+   "fieldtype": "Table",
+   "label": "Required Documents",
+   "options": "Employee Onboarding Document"
   }
  ],
  "icon": "clipboard-list",

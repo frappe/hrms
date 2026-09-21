@@ -22,6 +22,7 @@ def after_install():
 	set_single_defaults()
 	setup_repost_defaults()
 	create_default_role_profiles()
+	create_onboarding_candidate_role()
 	run_post_install_patches()
 	add_default_hr_permissions()
 
@@ -768,6 +769,31 @@ def get_lending_docperms_for_ess():
 		"Loan Application": ["read", "write", "create", "delete", "submit"],
 		"Loan Product": ["read"],
 	}
+
+
+def create_onboarding_candidate_role():
+	from hrms.hr.doctype.employee_onboarding.employee_onboarding import (
+		ONBOARDING_CANDIDATE_ROLE,
+		PORTAL_ROUTE,
+	)
+
+	# Role.home_page is read first by frappe's get_home_page, so the candidate lands on
+	# the portal after logging in instead of the generic /me page.
+	home_page = PORTAL_ROUTE.lstrip("/")
+
+	if frappe.db.exists("Role", ONBOARDING_CANDIDATE_ROLE):
+		frappe.db.set_value("Role", ONBOARDING_CANDIDATE_ROLE, "home_page", home_page)
+		return
+
+	frappe.get_doc(
+		{
+			"doctype": "Role",
+			"role_name": ONBOARDING_CANDIDATE_ROLE,
+			"desk_access": 0,
+			"is_custom": 0,
+			"home_page": home_page,
+		}
+	).insert(ignore_permissions=True)
 
 
 def create_custom_role(data):

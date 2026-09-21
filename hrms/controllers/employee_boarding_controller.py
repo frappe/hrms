@@ -13,8 +13,8 @@ from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
 
 class EmployeeBoardingController(Document):
 	"""
-	Create the project and the task for the boarding process
-	Assign to the concerned person and roles as per the onboarding/separation template
+	Create the project and the task for the separation process
+	Assign to the concerned person and roles as per the separation template
 	"""
 
 	def validate(self):
@@ -24,20 +24,11 @@ class EmployeeBoardingController(Document):
 				activity.task = ""
 
 	def on_submit(self):
-		# create the project for the given employee onboarding
-		project_name = _(self.doctype) + " : "
-		if self.doctype == "Employee Onboarding":
-			project_name += self.job_applicant or self.employee_name
-		else:
-			project_name += self.employee
-
 		project = frappe.get_doc(
 			{
 				"doctype": "Project",
-				"project_name": project_name,
-				"expected_start_date": self.date_of_joining
-				if self.doctype == "Employee Onboarding"
-				else self.resignation_letter_date,
+				"project_name": _(self.doctype) + " : " + self.employee,
+				"expected_start_date": self.resignation_letter_date,
 				"department": self.department,
 				"company": self.company,
 			}
@@ -176,10 +167,8 @@ def get_onboarding_details(parent: str, parenttype: str):
 
 
 def update_employee_boarding_status(project, event=None):
-	employee_onboarding = frappe.db.exists("Employee Onboarding", {"project": project.name})
 	employee_separation = frappe.db.exists("Employee Separation", {"project": project.name})
-
-	if not (employee_onboarding or employee_separation):
+	if not employee_separation:
 		return
 
 	status = "Pending"
@@ -188,10 +177,7 @@ def update_employee_boarding_status(project, event=None):
 	elif flt(project.percent_complete) == 100.0:
 		status = "Completed"
 
-	if employee_onboarding:
-		frappe.db.set_value("Employee Onboarding", employee_onboarding, "boarding_status", status)
-	elif employee_separation:
-		frappe.db.set_value("Employee Separation", employee_separation, "boarding_status", status)
+	frappe.db.set_value("Employee Separation", employee_separation, "boarding_status", status)
 
 
 def update_task(task, event=None):
