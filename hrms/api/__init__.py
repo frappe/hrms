@@ -680,23 +680,13 @@ def get_employee_advance_balance() -> list[dict]:
 # Company
 @frappe.whitelist()
 def get_company_currencies() -> dict:
-	Company = frappe.qb.DocType("Company")
-	Currency = frappe.qb.DocType("Currency")
-
-	query = (
-		frappe.qb.from_(Company)
-		.join(Currency)
-		.on(Company.default_currency == Currency.name)
-		.select(
-			Company.name,
-			Company.default_currency,
-			Currency.name.as_("currency"),
-			Currency.symbol.as_("symbol"),
-		)
-	)
-
-	companies = query.run(as_dict=True)
-	return {company.name: (company.default_currency, company.symbol) for company in companies}
+	companies = frappe.get_list("Company", fields=["name", "default_currency"])
+	symbols = get_currency_symbols()
+	return {
+		company.name: (company.default_currency, symbols.get(company.default_currency))
+		for company in companies
+		if company.default_currency in symbols
+	}
 
 
 @frappe.whitelist()
