@@ -244,7 +244,6 @@ frappe.ui.form.on("Leave Application", {
 					to_date: frm.doc.to_date,
 					half_day: frm.doc.half_day,
 					half_day_date: frm.doc.half_day_date,
-					leave_application: frm.is_new() ? null : frm.doc.name,
 				},
 				callback: function (r) {
 					if (r && r.message) {
@@ -262,7 +261,6 @@ frappe.ui.form.on("Leave Application", {
 				method: "hrms.hr.doctype.leave_application.leave_application.get_leave_approver",
 				args: {
 					employee: frm.doc.employee,
-					leave_application: frm.is_new() ? null : frm.doc.name,
 				},
 				callback: function (r) {
 					if (r && r.message) {
