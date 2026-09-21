@@ -115,6 +115,7 @@ class FullandFinalStatement(Document):
 			components = self.get_payable_component()
 			self.create_component_row(components, "payables")
 		if not self.receivables:
+			self.add_outstanding_employee_advances()
 			components = self.get_receivable_component()
 			self.create_component_row(components, "receivables")
 		self.get_assets_statements()
@@ -170,8 +171,37 @@ class FullandFinalStatement(Document):
 				},
 			)
 
+	def add_outstanding_employee_advances(self):
+		advances = frappe.get_all(
+			"Employee Advance",
+			filters={"employee": self.employee, "docstatus": 1},
+			fields=["name", "advance_account", "paid_amount", "claimed_amount", "return_amount"],
+		)
+
+		for advance in advances:
+			outstanding = flt(advance.paid_amount) - flt(advance.claimed_amount) - flt(advance.return_amount)
+			if outstanding <= 0:
+				continue
+
+			self.append(
+				"receivables",
+				{
+					"status": "Unsettled",
+					"component": "Employee Advance",
+					"reference_document_type": "Employee Advance",
+					"reference_document": advance.name,
+					"account": advance.advance_account,
+					"amount": outstanding,
+				},
+			)
+
 	def create_component_row(self, components, component_type):
+		existing_components = {row.component for row in self.get(component_type)}
+
 		for component in components:
+			if component in existing_components:
+				continue
+
 			self.append(
 				component_type,
 				{
@@ -263,8 +293,15 @@ class FullandFinalStatement(Document):
 					"user_remark": data.remark,
 				}
 				if data.reference_document_type == "Employee Advance":
-					account_dict["party_type"] = "Employee"
-					account_dict["party"] = self.employee
+					account_dict.update(
+						{
+							"party_type": "Employee",
+							"party": self.employee,
+							"reference_type": "Employee Advance",
+							"reference_name": data.reference_document,
+							"is_advance": "Yes",
+						}
+					)
 
 				jv.append("accounts", account_dict)
 
@@ -301,7 +338,10 @@ class FullandFinalStatement(Document):
 	def update_linked_payable_documents(self):
 		"""update payment status in linked payable documents"""
 		for payable in self.payables:
-			if payable.reference_document_type in ["Gratuity", "Leave Encashment"]:
+			if (
+				payable.reference_document_type in ["Gratuity", "Leave Encashment"]
+				and payable.reference_document
+			):
 				self.update_reference_document_payment_status(payable)
 
 

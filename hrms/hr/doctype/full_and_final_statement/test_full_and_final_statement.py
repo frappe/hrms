@@ -66,6 +66,37 @@ class TestFullandFinalStatement(HRMSTestSuite):
 		self.assertEqual(debit_entry.reference_type, "Full and Final Statement")
 		self.assertEqual(debit_entry.reference_name, self.fnf.name)
 
+	def test_employee_advance_settlement(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			make_employee_advance,
+			make_payment_entry,
+		)
+
+		advance = make_employee_advance(self.employee)
+		make_payment_entry(advance)
+		advance.reload()
+
+		self.fnf.receivables = []
+		self.fnf.get_outstanding_statements()
+
+		advance_rows = [row for row in self.fnf.receivables if row.component == "Employee Advance"]
+		self.assertEqual(len(advance_rows), 1)
+		self.assertEqual(advance_rows[0].reference_document, advance.name)
+		self.assertEqual(advance_rows[0].account, advance.advance_account)
+		self.assertEqual(advance_rows[0].amount, advance.paid_amount)
+		self.fnf.save()
+
+		jv = self.fnf.create_journal_entry()
+		jv.accounts[-1].account = "_Test Bank - _TC"
+		jv.cheque_no = "FNF-ADV-001"
+		jv.cheque_date = today()
+		jv.insert()
+		jv.submit()
+
+		advance.reload()
+		self.assertEqual(advance.return_amount, advance.paid_amount)
+		self.assertEqual(advance.status, "Returned")
+
 	def test_status_on_discard(self):
 		self.fnf.discard()
 		self.fnf.reload()
