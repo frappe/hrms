@@ -238,7 +238,7 @@ def mark_employee_attendance(
 
 		for row in eligible_attendance:
 			# in-memory document, no fetch: the engine needs meta, owner and link values
-			attendance = frappe.get_doc(dict(row, doctype="Attendance"))
+			attendance = frappe.get_doc(doctype="Attendance", **row)
 			frappe.has_permission("Attendance", "write", doc=attendance, throw=True)
 
 		Attendance = frappe.qb.DocType("Attendance")
