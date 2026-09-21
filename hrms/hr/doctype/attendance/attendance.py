@@ -348,9 +348,13 @@ def mark_attendance(
 
 def validate_employee_access(employees: list[str], company: str | None = None) -> None:
 	"""Single permission-aware query for all employees, run before any loop."""
-	employees = list(dict.fromkeys(employees or []))
 	if not employees:
 		return
+
+	if any(not isinstance(e, str) or not e for e in employees):
+		frappe.throw(_("Employee must be a non-empty string."), frappe.ValidationError)
+
+	employees = list(dict.fromkeys(employees))
 
 	accessible = frappe.get_list(
 		"Employee", filters={"name": ["in", employees]}, fields=["name", "company"], limit=0
@@ -378,6 +382,11 @@ def mark_bulk_attendance(data: str | dict):
 	if isinstance(data, str):
 		data = json.loads(data)
 	data = frappe._dict(data)
+	if not isinstance(data.employee, str) or not data.employee:
+		frappe.throw(_("Employee must be a non-empty string."), frappe.ValidationError)
+	if not isinstance(data.unmarked_days, list):
+		frappe.throw(_("Unmarked days must be a list of dates."), frappe.ValidationError)
+
 	frappe.has_permission("Attendance", "create", throw=True)
 	validate_employee_access([data.employee])
 	if not data.unmarked_days:

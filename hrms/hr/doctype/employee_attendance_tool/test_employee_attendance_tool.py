@@ -268,6 +268,18 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 			frappe.db.exists("Attendance", {"employee": self.employee3, "attendance_date": date})
 		)
 
+	def test_mark_attendance_rejects_non_string_employees(self):
+		date = add_days(getdate(), -1)
+		for bad_list in ([None], [1], [{"name": self.employee1}], [self.employee1, ""]):
+			self.assertRaises(
+				frappe.ValidationError,
+				mark_employee_attendance,
+				employee_list=bad_list,
+				status="Present",
+				date=date,
+			)
+		self.assertFalse(frappe.db.exists("Attendance", {"attendance_date": date}))
+
 	def test_half_day_update_requires_write_access_on_each_record(self):
 		hr_user = make_company_restricted_user("test_half_day_writer@example.com", "_Test Company 1")
 

@@ -323,6 +323,18 @@ class TestAttendance(HRMSTestSuite):
 		attendance_records = frappe.get_all("Attendance", {"employee": employee2})
 		self.assertEqual(len(attendance_records), 1)
 
+	def test_bulk_attendance_rejects_malformed_input(self):
+		employee = make_employee("test_bulk_input@example.com", company="_Test Company")
+
+		for bad_employee in (None, "", 1, ["EMP-1"], {"name": employee}):
+			data = frappe._dict(unmarked_days=[getdate()], employee=bad_employee, status="Present")
+			self.assertRaises(frappe.ValidationError, mark_bulk_attendance, data)
+
+		data = frappe._dict(unmarked_days=str(getdate()), employee=employee, status="Present")
+		self.assertRaises(frappe.ValidationError, mark_bulk_attendance, data)
+
+		self.assertFalse(frappe.db.exists("Attendance", {"employee": employee}))
+
 	def test_bulk_attendance_outside_company_scope(self):
 		user = make_company_restricted_user("test_scoped_bulk_user@example.com", "_Test Company")
 		other_company_employee = make_employee(
