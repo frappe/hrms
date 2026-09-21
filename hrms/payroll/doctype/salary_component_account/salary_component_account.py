@@ -6,8 +6,6 @@ from frappe.model.document import Document
 
 
 class SalaryComponentAccount(Document):
-<<<<<<< HEAD
-=======
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -24,5 +22,4 @@ class SalaryComponentAccount(Document):
 		parenttype: DF.Data
 	# end: auto-generated types
 
->>>>>>> 833b252 (feat: pass separate Journal Entry for employer contributions)
 	pass
