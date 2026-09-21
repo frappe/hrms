@@ -7,9 +7,6 @@ from hrms.tests.utils import HRMSTestSuite, make_company_restricted_user
 
 
 class TestAPI(HRMSTestSuite):
-	def tearDown(self):
-		frappe.set_user("Administrator")
-
 	def test_get_company_currencies_respects_company_scope(self):
 		companies = get_company_currencies()
 		self.assertIn("_Test Company", companies)
@@ -22,6 +19,9 @@ class TestAPI(HRMSTestSuite):
 		make_employee(user, company="_Test Company")
 		make_company_restricted_user(user, "_Test Company", role="Employee")
 		frappe.set_user(user)
+		try:
+			companies = get_company_currencies()
+		finally:
+			frappe.set_user("Administrator")
 
-		companies = get_company_currencies()
 		self.assertEqual(list(companies), ["_Test Company"])
