@@ -103,10 +103,7 @@ class TestEmployeeLeaveBalance(FrappeTestCase):
 
 		self.assertEqual(report[1], expected_data)
 
-<<<<<<< HEAD
 	@set_holiday_list("_Test Emp Balance Holiday List", "_Test Company")
-=======
-	@assign_holiday_list("_Test Emp Balance Holiday List", "_Test Company")
 	def test_leaves_taken_matches_ledger_when_holiday_list_changes_after_approval(self):
 		frappe.get_doc(test_records[0]).insert()
 
@@ -136,8 +133,7 @@ class TestEmployeeLeaveBalance(FrappeTestCase):
 		# should match the ledger, not a recalculation against the new holiday list
 		self.assertEqual(report[1][0].leaves_taken, flt(leave_application.total_leave_days))
 
-	@assign_holiday_list("_Test Emp Balance Holiday List", "_Test Company")
->>>>>>> 32a4d00 (test(leave_application): cover leave balance report matching the ledger after a holiday list edit)
+	@set_holiday_list("_Test Emp Balance Holiday List", "_Test Company")
 	def test_opening_balance_on_alloc_boundary_dates(self):
 		frappe.get_doc(test_records[0]).insert()
 
