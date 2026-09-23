@@ -36,6 +36,7 @@ from hrms.hr.utils import (
 	validate_active_employee,
 )
 from hrms.mixins.pwa_notifications import PWANotificationsMixin
+from hrms.utils import get_employee_email
 from hrms.utils.holiday_list import get_holiday_dates_between_range
 
 
@@ -109,6 +110,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 	def validate(self):
 		validate_active_employee(self.employee)
 		set_employee_name(self)
+		self.employee_email = get_employee_email(self.employee)
 		self.validate_dates()
 		self.validate_balance_leaves()
 		self.validate_leave_overlap()

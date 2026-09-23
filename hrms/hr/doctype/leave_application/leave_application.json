@@ -70,7 +70,6 @@
   },
   {
    "allow_on_submit": 1,
-   "fetch_from": "employee.user_id",
    "fieldname": "employee_email",
    "fieldtype": "Data",
    "hidden": 1,
