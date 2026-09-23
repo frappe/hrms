@@ -170,17 +170,23 @@ class FullandFinalStatement(Document):
 			)
 
 	def add_outstanding_employee_advances(self):
-		"""Adds the employee's outstanding advances, dropping placeholder rows and other employees' advances"""
+		"""
+		Reconciles receivables with the employee's outstanding advances: placeholder rows and other
+		employees' advances are dropped, unsettled rows are refreshed to the current balance, and
+		missing advances are added.
+		"""
 		advances = frappe.get_all(
 			"Employee Advance",
 			filters={"employee": self.employee, "docstatus": 1},
 			fields=["name", "advance_account", "paid_amount", "claimed_amount", "return_amount"],
 		)
-		outstanding_advances = {
-			advance.name: advance
-			for advance in advances
-			if flt(advance.paid_amount) - flt(advance.claimed_amount) - flt(advance.return_amount) > 0
-		}
+		outstanding_advances = {}
+		for advance in advances:
+			advance.outstanding = (
+				flt(advance.paid_amount) - flt(advance.claimed_amount) - flt(advance.return_amount)
+			)
+			if advance.outstanding > 0:
+				outstanding_advances[advance.name] = advance
 
 		self.receivables = [
 			row
@@ -189,13 +195,22 @@ class FullandFinalStatement(Document):
 			or (row.reference_document in outstanding_advances)
 			or (not row.reference_document and not outstanding_advances)
 		]
-		referenced_advances = {row.reference_document for row in self.receivables}
+
+		referenced_advances = set()
+		for row in self.receivables:
+			advance = outstanding_advances.get(row.reference_document)
+			if not advance:
+				continue
+
+			referenced_advances.add(advance.name)
+			if row.status == "Unsettled":
+				row.account = advance.advance_account
+				row.amount = advance.outstanding
 
 		for advance in outstanding_advances.values():
 			if advance.name in referenced_advances:
 				continue
 
-			outstanding = flt(advance.paid_amount) - flt(advance.claimed_amount) - flt(advance.return_amount)
 			self.append(
 				"receivables",
 				{
@@ -204,7 +219,7 @@ class FullandFinalStatement(Document):
 					"reference_document_type": "Employee Advance",
 					"reference_document": advance.name,
 					"account": advance.advance_account,
-					"amount": outstanding,
+					"amount": advance.outstanding,
 				},
 			)
 
