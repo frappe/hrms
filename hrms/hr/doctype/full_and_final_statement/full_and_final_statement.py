@@ -83,10 +83,8 @@ class FullandFinalStatement(Document):
 			self.add_withheld_salary_slips()
 			components = self.get_payable_component()
 			self.create_component_row(components, "payables")
-		if not self.receivables:
-			self.add_outstanding_employee_advances()
-			components = self.get_receivable_component()
-			self.create_component_row(components, "receivables")
+		self.add_outstanding_employee_advances()
+		self.create_component_row(self.get_receivable_component(), "receivables")
 		self.get_assets_statements()
 
 	def get_assets_statements(self):
@@ -141,17 +139,32 @@ class FullandFinalStatement(Document):
 			)
 
 	def add_outstanding_employee_advances(self):
+		"""Adds the employee's outstanding advances, dropping placeholder rows and other employees' advances"""
 		advances = frappe.get_all(
 			"Employee Advance",
 			filters={"employee": self.employee, "docstatus": 1},
 			fields=["name", "advance_account", "paid_amount", "claimed_amount", "return_amount"],
 		)
+		outstanding_advances = {
+			advance.name: advance
+			for advance in advances
+			if flt(advance.paid_amount) - flt(advance.claimed_amount) - flt(advance.return_amount) > 0
+		}
 
-		for advance in advances:
-			outstanding = flt(advance.paid_amount) - flt(advance.claimed_amount) - flt(advance.return_amount)
-			if outstanding <= 0:
+		self.receivables = [
+			row
+			for row in self.receivables
+			if row.component != "Employee Advance"
+			or (row.reference_document in outstanding_advances)
+			or (not row.reference_document and not outstanding_advances)
+		]
+		referenced_advances = {row.reference_document for row in self.receivables}
+
+		for advance in outstanding_advances.values():
+			if advance.name in referenced_advances:
 				continue
 
+			outstanding = flt(advance.paid_amount) - flt(advance.claimed_amount) - flt(advance.return_amount)
 			self.append(
 				"receivables",
 				{

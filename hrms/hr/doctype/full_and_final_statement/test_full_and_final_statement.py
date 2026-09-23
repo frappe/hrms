@@ -97,6 +97,51 @@ class TestFullandFinalStatement(HRMSTestSuite):
 		self.assertEqual(advance.return_amount, advance.paid_amount)
 		self.assertEqual(advance.status, "Returned")
 
+	def test_employee_advance_added_after_bootstrap(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			make_employee_advance,
+			make_payment_entry,
+		)
+
+		# placeholder rows already exist from bootstrap
+		self.assertTrue(any(row.component == "Employee Advance" for row in self.fnf.receivables))
+
+		advance = make_employee_advance(self.employee)
+		make_payment_entry(advance)
+		advance.reload()
+
+		self.fnf.get_outstanding_statements()
+		advance_rows = [row for row in self.fnf.receivables if row.component == "Employee Advance"]
+		self.assertEqual([row.reference_document for row in advance_rows], [advance.name])
+		self.assertEqual(advance_rows[0].amount, advance.paid_amount)
+
+		# calling again neither duplicates the advance nor re-adds the placeholder
+		self.fnf.get_outstanding_statements()
+		advance_rows = [row for row in self.fnf.receivables if row.component == "Employee Advance"]
+		self.assertEqual([row.reference_document for row in advance_rows], [advance.name])
+
+	def test_employee_advance_rows_follow_employee_change(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			make_employee_advance,
+			make_payment_entry,
+		)
+
+		advance = make_employee_advance(self.employee)
+		make_payment_entry(advance)
+		self.fnf.get_outstanding_statements()
+		self.assertIn(advance.name, [row.reference_document for row in self.fnf.receivables])
+
+		other_employee = make_employee(
+			"test_fnf_other@example.com", company="_Test Company", relieving_date=add_days(today(), 30)
+		)
+		self.fnf.employee = other_employee
+		self.fnf.relieving_date = add_days(today(), 30)
+		self.fnf.get_outstanding_statements()
+
+		advance_rows = [row for row in self.fnf.receivables if row.component == "Employee Advance"]
+		self.assertEqual(len(advance_rows), 1)
+		self.assertFalse(advance_rows[0].reference_document)
+
 	def test_status_on_discard(self):
 		self.fnf.discard()
 		self.fnf.reload()
