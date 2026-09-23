@@ -172,8 +172,8 @@ class FullandFinalStatement(Document):
 	def add_outstanding_employee_advances(self):
 		"""
 		Reconciles receivables with the employee's outstanding advances: placeholder rows and other
-		employees' advances are dropped, unsettled rows are refreshed to the current balance, and
-		missing advances are added.
+		employees' advances are dropped, rows not marked Settled are refreshed to the current balance,
+		and missing advances are added.
 		"""
 		advances = frappe.get_all(
 			"Employee Advance",
@@ -203,7 +203,7 @@ class FullandFinalStatement(Document):
 				continue
 
 			referenced_advances.add(advance.name)
-			if row.status == "Unsettled":
+			if row.status != "Settled":
 				row.account = advance.advance_account
 				row.amount = advance.outstanding
 

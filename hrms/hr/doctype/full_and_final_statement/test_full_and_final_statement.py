@@ -155,6 +155,13 @@ class TestFullandFinalStatement(HRMSTestSuite):
 		advance_row = next(row for row in self.fnf.receivables if row.reference_document == advance.name)
 		self.assertEqual(advance_row.amount, advance.paid_amount - 300)
 
+		# a row with a blank status is refreshed like an unsettled one
+		advance_row.status = None
+		advance_row.amount = 100
+		self.fnf.get_outstanding_statements()
+		advance_row = next(row for row in self.fnf.receivables if row.reference_document == advance.name)
+		self.assertEqual(advance_row.amount, advance.paid_amount - 300)
+
 		# a row the user has already settled is left as it is
 		advance_row.status = "Settled"
 		advance_row.amount = 100
