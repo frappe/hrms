@@ -37,6 +37,11 @@ ORIGINAL_EMAIL_CONTENT = """<h1>Leave Application Notification</h1>
 	<br><br>
 	<a class="btn btn-primary" href="{{ doc_link }}" target="_blank">{{ _('Open Now') }}</a>"""
 
+SHARED_TEMPLATE_NAME = "Leave Application Notification"
+SHARED_TEMPLATE_SUBJECT = (
+	'Leave Application {% if status == "Open" %}Pending Approval{% else %}{{ status }}{% endif %}: {{ name }}'
+)
+
 OLD_DEFAULT_TEMPLATES = ("Leave Approval Notification", "Leave Status Notification")
 
 NOTIFICATION_TO_OLD_SETTING = {
@@ -50,6 +55,10 @@ def execute():
 	"""Preserve customized Leave Application notification content after the refactor to a shared Email Template."""
 	if not frappe.db.exists("Notification", "Leave Application Pending Approval"):
 		return
+
+	# setup_notifications() only runs on a fresh install (after_install hook), so an upgrading
+	# site never gets this template on its own — the 3 Notification fixtures need it to exist.
+	create_shared_email_template()
 
 	raw_send_leave_notification = get_old_single_value("send_leave_notification")
 	# "1" was the field's default, so a never-touched site behaves as still on.
@@ -70,6 +79,22 @@ def execute():
 	delete_unused_default_templates()
 	# db.set_value() above skips Notification.clear_cache(), so the cache goes stale.
 	clear_notification_cache()
+
+
+def create_shared_email_template():
+	if frappe.db.exists("Email Template", SHARED_TEMPLATE_NAME):
+		return
+
+	response = frappe.read_file(
+		frappe.get_app_path(
+			"hrms", "hr", "doctype", "leave_application", "leave_application_email_template.html"
+		)
+	)
+	email_template = frappe.new_doc("Email Template")
+	email_template.name = SHARED_TEMPLATE_NAME
+	email_template.response = response
+	email_template.subject = SHARED_TEMPLATE_SUBJECT
+	email_template.insert(ignore_permissions=True)
 
 
 def get_old_single_value(fieldname):
