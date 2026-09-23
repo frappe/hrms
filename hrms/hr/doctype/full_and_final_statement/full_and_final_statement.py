@@ -114,9 +114,8 @@ class FullandFinalStatement(Document):
 			self.add_withheld_salary_slips()
 			components = self.get_payable_component()
 			self.create_component_row(components, "payables")
-		if not self.receivables:
-			components = self.get_receivable_component()
-			self.create_component_row(components, "receivables")
+		self.add_outstanding_employee_advances()
+		self.create_component_row(self.get_receivable_component(), "receivables")
 		self.get_assets_statements()
 
 	def get_assets_statements(self):
@@ -170,8 +169,67 @@ class FullandFinalStatement(Document):
 				},
 			)
 
+	def add_outstanding_employee_advances(self):
+		"""
+		Reconciles receivables with the employee's outstanding advances: placeholder rows and other
+		employees' advances are dropped, rows not marked Settled are refreshed to the current balance,
+		and missing advances are added.
+		"""
+		advances = frappe.get_all(
+			"Employee Advance",
+			filters={"employee": self.employee, "docstatus": 1},
+			fields=["name", "advance_account", "paid_amount", "claimed_amount", "return_amount"],
+		)
+		outstanding_advances = {}
+		for advance in advances:
+			advance.outstanding = (
+				flt(advance.paid_amount) - flt(advance.claimed_amount) - flt(advance.return_amount)
+			)
+			if advance.outstanding > 0:
+				outstanding_advances[advance.name] = advance
+
+		self.receivables = [
+			row
+			for row in self.receivables
+			if row.component != "Employee Advance"
+			or (row.reference_document in outstanding_advances)
+			or (not row.reference_document and not outstanding_advances)
+		]
+
+		referenced_advances = set()
+		for row in self.receivables:
+			advance = outstanding_advances.get(row.reference_document)
+			if not advance:
+				continue
+
+			referenced_advances.add(advance.name)
+			if row.status != "Settled":
+				row.account = advance.advance_account
+				row.amount = advance.outstanding
+
+		for advance in outstanding_advances.values():
+			if advance.name in referenced_advances:
+				continue
+
+			self.append(
+				"receivables",
+				{
+					"status": "Unsettled",
+					"component": "Employee Advance",
+					"reference_document_type": "Employee Advance",
+					"reference_document": advance.name,
+					"account": advance.advance_account,
+					"amount": advance.outstanding,
+				},
+			)
+
 	def create_component_row(self, components, component_type):
+		existing_components = {row.component for row in self.get(component_type)}
+
 		for component in components:
+			if component in existing_components:
+				continue
+
 			self.append(
 				component_type,
 				{
@@ -263,8 +321,15 @@ class FullandFinalStatement(Document):
 					"user_remark": data.remark,
 				}
 				if data.reference_document_type == "Employee Advance":
-					account_dict["party_type"] = "Employee"
-					account_dict["party"] = self.employee
+					account_dict.update(
+						{
+							"party_type": "Employee",
+							"party": self.employee,
+							"reference_type": "Employee Advance",
+							"reference_name": data.reference_document,
+							"is_advance": "Yes",
+						}
+					)
 
 				jv.append("accounts", account_dict)
 
@@ -301,7 +366,10 @@ class FullandFinalStatement(Document):
 	def update_linked_payable_documents(self):
 		"""update payment status in linked payable documents"""
 		for payable in self.payables:
-			if payable.reference_document_type in ["Gratuity", "Leave Encashment"]:
+			if (
+				payable.reference_document_type in ["Gratuity", "Leave Encashment"]
+				and payable.reference_document
+			):
 				self.update_reference_document_payment_status(payable)
 
 
