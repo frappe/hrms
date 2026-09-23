@@ -120,6 +120,48 @@ class TestFullandFinalStatement(HRMSTestSuite):
 		advance_rows = [row for row in self.fnf.receivables if row.component == "Employee Advance"]
 		self.assertEqual([row.reference_document for row in advance_rows], [advance.name])
 
+	def test_employee_advance_row_refreshed_to_current_balance(self):
+		from hrms.hr.doctype.employee_advance.employee_advance import make_return_entry
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			make_employee_advance,
+			make_payment_entry,
+		)
+
+		advance = make_employee_advance(self.employee)
+		make_payment_entry(advance)
+		advance.reload()
+		self.fnf.get_outstanding_statements()
+		advance_row = next(row for row in self.fnf.receivables if row.reference_document == advance.name)
+		self.assertEqual(advance_row.amount, advance.paid_amount)
+
+		# a partial return after the row was created reduces the outstanding balance
+		return_entry = frappe.get_doc(
+			make_return_entry(
+				employee=advance.employee,
+				company=advance.company,
+				employee_advance_name=advance.name,
+				return_amount=300,
+				advance_account=advance.advance_account,
+				mode_of_payment=advance.mode_of_payment,
+				currency=advance.currency,
+			)
+		)
+		return_entry.insert()
+		return_entry.submit()
+		advance.reload()
+		self.assertEqual(advance.return_amount, 300)
+
+		self.fnf.get_outstanding_statements()
+		advance_row = next(row for row in self.fnf.receivables if row.reference_document == advance.name)
+		self.assertEqual(advance_row.amount, advance.paid_amount - 300)
+
+		# a row the user has already settled is left as it is
+		advance_row.status = "Settled"
+		advance_row.amount = 100
+		self.fnf.get_outstanding_statements()
+		advance_row = next(row for row in self.fnf.receivables if row.reference_document == advance.name)
+		self.assertEqual(advance_row.amount, 100)
+
 	def test_employee_advance_rows_follow_employee_change(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (
 			make_employee_advance,
