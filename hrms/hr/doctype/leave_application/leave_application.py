@@ -401,6 +401,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 
 	def validate_balance_leaves(self):
 		precision = cint(frappe.db.get_single_value("System Settings", "float_precision")) or 2
+		leave_application = None if self.is_new() else self.name
 
 		if self.from_date and self.to_date:
 			self.total_leave_days = get_number_of_leave_days(
@@ -427,6 +428,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 					self.to_date,
 					consider_all_leaves_in_the_allocation_period=True,
 					for_consumption=True,
+					leave_application=leave_application,
 				)
 				leave_balance_for_consumption = flt(
 					leave_balance.get("leave_balance_for_consumption"), precision
@@ -934,8 +936,13 @@ def get_number_of_leave_days(
 
 
 @frappe.whitelist()
-def get_leave_details(employee: str, date: str | datetime.date, for_salary_slip: bool = False) -> dict:
-	validate_leave_access(employee)
+def get_leave_details(
+	employee: str,
+	date: str | datetime.date,
+	for_salary_slip: bool = False,
+	leave_application: str | None = None,
+) -> dict:
+	validate_leave_access(employee, leave_application)
 
 	allocation_records = get_leave_allocation_records(employee, date)
 	leave_allocation = {}
@@ -950,6 +957,7 @@ def get_leave_details(employee: str, date: str | datetime.date, for_salary_slip:
 			date,
 			to_date=to_date,
 			consider_all_leaves_in_the_allocation_period=False if for_salary_slip else True,
+			leave_application=leave_application,
 		)
 
 		leaves_taken = get_leaves_for_period(employee, d, allocation.from_date, to_date) * -1
@@ -982,6 +990,7 @@ def get_leave_balance_on(
 	to_date: datetime.date | None = None,
 	consider_all_leaves_in_the_allocation_period: bool = False,
 	for_consumption: bool = False,
+	leave_application: str | None = None,
 ):
 	"""
 	Returns leave balance till date
@@ -995,8 +1004,10 @@ def get_leave_balance_on(
 	        in this case leave_balance = 10 but leave_balance_for_consumption = 1
 	        if True, returns a dict eg: {'leave_balance': 10, 'leave_balance_for_consumption': 1}
 	        else, returns leave_balance (in this case 10)
+	:param leave_application: leave application name, used to allow access for users who can read this
+	        specific leave application even without Employee read permission
 	"""
-	validate_leave_access(employee)
+	validate_leave_access(employee, leave_application)
 
 	if not to_date:
 		to_date = nowdate()
@@ -1225,6 +1236,11 @@ def get_leaves_for_period(
 			leave_days += leave_entry.leaves
 
 		elif leave_entry.transaction_type == "Leave Application":
+			if inclusive_period:
+				# use the ledger's recorded value instead of recomputing it
+				leave_days += leave_entry.leaves
+				continue
+
 			if leave_entry.from_date < getdate(from_date):
 				leave_entry.from_date = from_date
 			if leave_entry.to_date > getdate(to_date):
@@ -1504,11 +1520,17 @@ def get_leave_approver_and_mandatory(employee: str) -> dict:
 	}
 
 
-def validate_leave_access(employee):
+def validate_leave_access(employee, leave_application=None):
 	employee_user = frappe.db.get_value("Employee", employee, "user_id")
 	leave_approver = get_leave_approver(employee)
 
-	if frappe.session.user not in (employee_user, leave_approver) and (
-		not frappe.has_permission("Employee", "read", employee)
+	if (
+		frappe.session.user not in (employee_user, leave_approver)
+		and not frappe.has_permission("Employee", "read", employee)
+		and not (
+			leave_application
+			and frappe.db.get_value("Leave Application", leave_application, "employee") == employee
+			and frappe.has_permission("Leave Application", "read", leave_application)
+		)
 	):
 		frappe.throw(_("Not permitted"), frappe.PermissionError)
