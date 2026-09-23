@@ -35,7 +35,7 @@ from hrms.hr.doctype.shift_assignment.shift_assignment import (
 	get_valid_shifts_for_time,
 )
 from hrms.utils import get_date_range
-from hrms.utils.holiday_list import get_holiday_dates_between
+from hrms.utils.holiday_list import get_holiday_dates_between, get_holiday_dates_between_range
 
 EMPLOYEE_CHUNK_SIZE = 50
 
@@ -304,8 +304,12 @@ class ShiftType(Document):
 		date_range = get_date_range(start_date, end_date)
 
 		# skip marking absent on holidays
-		holiday_list = self.get_holiday_list(employee)
-		holiday_dates = get_holiday_dates_between(holiday_list, start_date, end_date)
+		if self.holiday_list:
+			holiday_dates = get_holiday_dates_between(self.holiday_list, start_date, end_date)
+		else:
+			holiday_dates = get_holiday_dates_between_range(
+				employee, start_date, end_date, raise_exception_for_holiday_list=False
+			)
 		# skip dates with attendance
 		marked_attendance_dates = self.get_marked_attendance_dates_between(employee, start_date, end_date)
 
@@ -419,10 +423,15 @@ class ShiftType(Document):
 			fields=["name", "attendance_date"],
 		)
 		start_time = get_time(self.start_time)
+		last_sync_of_checkin = get_datetime(self.last_sync_of_checkin)
 		for attendance in half_day_attendances:
 			timestamp = datetime.combine(attendance.attendance_date, start_time)
 			shift_details = get_employee_shift(employee, timestamp, True)
-			if shift_details and shift_details.shift_type.name == self.name:
+			if (
+				shift_details
+				and shift_details.shift_type.name == self.name
+				and shift_details.actual_end < last_sync_of_checkin
+			):
 				frappe.db.set_value(
 					"Attendance",
 					attendance.name,

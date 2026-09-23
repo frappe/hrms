@@ -153,7 +153,7 @@
    "search_index": 1
   },
   {
-   "depends_on": "eval:doc.statistical_component != 1 && doc.type != \"Employer Contribution\"",
+   "depends_on": "eval:doc.statistical_component != 1",
    "fieldname": "section_break_5",
    "fieldtype": "Section Break",
    "label": "Accounts"
@@ -295,7 +295,7 @@
  "icon": "fa fa-flag",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-06-08 17:39:39.847210",
+ "modified": "2026-09-15 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",

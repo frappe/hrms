@@ -6,7 +6,8 @@
  "engine": "InnoDB",
  "field_order": [
   "company",
-  "account"
+  "account",
+  "liability_account"
  ],
  "fields": [
   {
@@ -23,11 +24,20 @@
    "in_list_view": 1,
    "label": "Account",
    "options": "Account"
+  },
+  {
+   "depends_on": "eval:parent.type == \"Employer Contribution\"",
+   "description": "Liability account credited for employer contributions. Applicable only for Employer Contribution components, where Account is debited as the expense.",
+   "fieldname": "liability_account",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Liability Account",
+   "options": "Account"
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2024-03-27 13:10:34.071210",
+ "modified": "2026-09-15 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component Account",

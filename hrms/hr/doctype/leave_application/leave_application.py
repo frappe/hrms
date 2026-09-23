@@ -417,6 +417,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 
 	def validate_balance_leaves(self):
 		precision = cint(frappe.db.get_single_value("System Settings", "float_precision")) or 2
+		leave_application = None if self.is_new() else self.name
 
 		if self.from_date and self.to_date:
 			self.total_leave_days = get_number_of_leave_days(
@@ -426,6 +427,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 				self.to_date,
 				self.half_day,
 				self.half_day_date,
+				leave_application=leave_application,
 			)
 
 			if self.total_leave_days <= 0:
@@ -443,6 +445,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 					self.to_date,
 					consider_all_leaves_in_the_allocation_period=True,
 					for_consumption=True,
+					leave_application=leave_application,
 				)
 				leave_balance_for_consumption = flt(
 					leave_balance.get("leave_balance_for_consumption"), precision
@@ -781,7 +784,9 @@ class LeaveApplication(Document, PWANotificationsMixin):
 					from_date=self.from_date,
 					to_date=self.to_date,
 					is_lwp=lwp,
-					holiday_list=get_holiday_list_for_employee(self.employee, raise_exception=raise_exception)
+					holiday_list=get_holiday_list_for_employee(
+						self.employee, raise_exception=raise_exception, as_on=self.from_date
+					)
 					or "",
 				)
 				create_leave_ledger_entry(self, args, submit)
@@ -842,20 +847,33 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			self.half_day_date,
 		)
 
-		args = dict(
-			is_lwp=lwp,
-			holiday_list=get_holiday_list_for_employee(self.employee, raise_exception=raise_exception) or "",
-		)
+		args = dict(is_lwp=lwp)
 
 		if leaves_in_first_alloc:
 			args.update(
-				dict(from_date=self.from_date, to_date=first_alloc_end, leaves=leaves_in_first_alloc * -1)
+				dict(
+					from_date=self.from_date,
+					to_date=first_alloc_end,
+					leaves=leaves_in_first_alloc * -1,
+					holiday_list=get_holiday_list_for_employee(
+						self.employee, raise_exception=raise_exception, as_on=self.from_date
+					)
+					or "",
+				)
 			)
 			create_leave_ledger_entry(self, args, submit)
 
 		if leaves_in_second_alloc:
 			args.update(
-				dict(from_date=second_alloc_start, to_date=self.to_date, leaves=leaves_in_second_alloc * -1)
+				dict(
+					from_date=second_alloc_start,
+					to_date=self.to_date,
+					leaves=leaves_in_second_alloc * -1,
+					holiday_list=get_holiday_list_for_employee(
+						self.employee, raise_exception=raise_exception, as_on=second_alloc_start
+					)
+					or "",
+				)
 			)
 			create_leave_ledger_entry(self, args, submit)
 
@@ -873,7 +891,9 @@ class LeaveApplication(Document, PWANotificationsMixin):
 				to_date=expiry_date,
 				leaves=leaves * -1,
 				is_lwp=lwp,
-				holiday_list=get_holiday_list_for_employee(self.employee, raise_exception=raise_exception)
+				holiday_list=get_holiday_list_for_employee(
+					self.employee, raise_exception=raise_exception, as_on=self.from_date
+				)
 				or "",
 			)
 			create_leave_ledger_entry(self, args, submit)
@@ -885,7 +905,16 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			)
 
 			if leaves:
-				args.update(dict(from_date=start_date, to_date=self.to_date, leaves=leaves * -1))
+				args = dict(
+					from_date=start_date,
+					to_date=self.to_date,
+					leaves=leaves * -1,
+					is_lwp=lwp,
+					holiday_list=get_holiday_list_for_employee(
+						self.employee, raise_exception=raise_exception, as_on=start_date
+					)
+					or "",
+				)
 				create_leave_ledger_entry(self, args, submit)
 
 	def validate_leave_approver(self):
@@ -953,9 +982,11 @@ def get_number_of_leave_days(
 	half_day: int | str | None = None,
 	half_day_date: datetime.date | str | None = None,
 	holiday_list: str | None = None,
+	leave_application: str | None = None,
 ) -> float:
 	"""Returns number of leave days between 2 dates after considering half day and holidays
 	(Based on the include_holiday setting in Leave Type)"""
+	validate_leave_access(employee, leave_application)
 	number_of_days = 0
 	if cint(half_day) == 1:
 		if getdate(from_date) == getdate(to_date):
@@ -968,13 +999,20 @@ def get_number_of_leave_days(
 		number_of_days = date_diff(to_date, from_date) + 1
 
 	if not frappe.db.get_value("Leave Type", leave_type, "include_holiday"):
-		number_of_days = flt(number_of_days) - flt(get_holidays(employee, from_date, to_date))
+		number_of_days = flt(number_of_days) - flt(
+			get_holidays(employee, from_date, to_date, leave_application=leave_application)
+		)
 	return number_of_days
 
 
 @frappe.whitelist()
-def get_leave_details(employee: str, date: str | datetime.date, for_salary_slip: bool = False) -> dict:
-	validate_leave_access(employee)
+def get_leave_details(
+	employee: str,
+	date: str | datetime.date,
+	for_salary_slip: bool = False,
+	leave_application: str | None = None,
+) -> dict:
+	validate_leave_access(employee, leave_application)
 
 	allocation_records = get_leave_allocation_records(employee, date)
 	leave_allocation = {}
@@ -989,6 +1027,7 @@ def get_leave_details(employee: str, date: str | datetime.date, for_salary_slip:
 			date,
 			to_date=to_date,
 			consider_all_leaves_in_the_allocation_period=False if for_salary_slip else True,
+			leave_application=leave_application,
 		)
 
 		leaves_taken = get_leaves_for_period(employee, d, allocation.from_date, to_date) * -1
@@ -1021,6 +1060,7 @@ def get_leave_balance_on(
 	to_date: datetime.date | None = None,
 	consider_all_leaves_in_the_allocation_period: bool = False,
 	for_consumption: bool = False,
+	leave_application: str | None = None,
 ) -> dict[str, float]:
 	"""
 	Returns leave balance till date
@@ -1034,8 +1074,10 @@ def get_leave_balance_on(
 	        in this case leave_balance = 10 but leave_balance_for_consumption = 1
 	        if True, returns a dict eg: {'leave_balance': 10, 'leave_balance_for_consumption': 1}
 	        else, returns leave_balance (in this case 10)
+	:param leave_application: leave application name, used to allow access for users who can read this
+	        specific leave application even without Employee read permission
 	"""
-	validate_leave_access(employee)
+	validate_leave_access(employee, leave_application)
 
 	if not to_date:
 		to_date = nowdate()
@@ -1272,6 +1314,11 @@ def get_leaves_for_period(
 			leave_days += leave_entry.leaves
 
 		elif leave_entry.transaction_type == "Leave Application":
+			if inclusive_period:
+				# use the ledger's recorded value instead of recomputing it
+				leave_days += leave_entry.leaves
+				continue
+
 			if leave_entry.from_date < getdate(from_date):
 				leave_entry.from_date = from_date
 			if leave_entry.to_date > getdate(to_date):
@@ -1334,9 +1381,14 @@ def get_leave_entries(employee, leave_type, from_date, to_date):
 
 
 @frappe.whitelist()
-def get_holidays(employee: str, from_date: str | datetime.date, to_date: str | datetime.date) -> int:
+def get_holidays(
+	employee: str,
+	from_date: str | datetime.date,
+	to_date: str | datetime.date,
+	leave_application: str | None = None,
+) -> int:
 	"""get holidays between two dates for the given employee"""
-	validate_leave_access(employee)
+	validate_leave_access(employee, leave_application)
 	holidays = get_holiday_dates_between_range(employee, from_date, to_date)
 	return len(holidays)
 
@@ -1446,18 +1498,9 @@ def add_block_dates(events, start, end, employee, company):
 
 
 def add_holidays(events, start, end, employee, company):
-	applicable_holiday_list = get_holiday_list_for_employee(employee, company)
-	if not applicable_holiday_list:
-		return
+	from hrms.hr.utils import get_holidays_for_employee
 
-	Holiday = frappe.qb.DocType("Holiday")
-	holidays = (
-		frappe.qb.from_(Holiday)
-		.select(Holiday.name, Holiday.holiday_date, Holiday.description)
-		.where((Holiday.parent == applicable_holiday_list) & (Holiday.holiday_date.between(start, end)))
-	).run(as_dict=True)
-
-	for holiday in holidays:
+	for holiday in get_holidays_for_employee(employee, start, end, raise_exception=False):
 		events.append(
 			{
 				"doctype": "Holiday",
@@ -1527,8 +1570,8 @@ def get_approved_leaves_for_period(employee, leave_type, from_date, to_date):
 
 
 @frappe.whitelist()
-def get_leave_approver(employee: str) -> str:
-	validate_leave_access(employee)
+def get_leave_approver(employee: str, leave_application: str | None = None) -> str:
+	validate_leave_access(employee, leave_application)
 	return get_employee_leave_approver(employee)
 
 
@@ -1560,11 +1603,17 @@ def get_leave_approver_and_mandatory(employee: str) -> dict:
 	}
 
 
-def validate_leave_access(employee):
+def validate_leave_access(employee, leave_application=None):
 	employee_user = frappe.db.get_value("Employee", employee, "user_id")
 	leave_approver = get_employee_leave_approver(employee)
 
-	if frappe.session.user not in (employee_user, leave_approver) and (
-		not frappe.has_permission("Employee", "read", employee)
+	if (
+		frappe.session.user not in (employee_user, leave_approver)
+		and not frappe.has_permission("Employee", "read", employee)
+		and not (
+			leave_application
+			and frappe.db.get_value("Leave Application", leave_application, "employee") == employee
+			and frappe.has_permission("Leave Application", "read", leave_application)
+		)
 	):
 		frappe.throw(_("Not permitted"), frappe.PermissionError)
