@@ -55,8 +55,6 @@ class TestSalarySlip(HRMSTestSuite):
 	def setUp(self):
 		make_payroll_period(company="_Test Company")
 		frappe.db.set_single_value("Payroll Settings", "email_salary_slip_to_employee", 0)
-		frappe.db.set_single_value("HR Settings", "leave_status_notification_template", None)
-		frappe.db.set_single_value("HR Settings", "leave_approval_notification_template", None)
 		create_ss_email_template()
 		frappe.flags.pop("via_payroll_entry", None)
 
