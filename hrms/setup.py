@@ -501,18 +501,12 @@ def setup_notifications():
 	records = [
 		{
 			"doctype": "Email Template",
-			"name": _("Leave Approval Notification"),
+			"name": _("Leave Application Notification"),
 			"response": response,
-			"subject": _("Leave Approval Notification"),
-			"owner": frappe.session.user,
-		}
-	]
-	records += [
-		{
-			"doctype": "Email Template",
-			"name": _("Leave Status Notification"),
-			"response": response,
-			"subject": _("Leave Status Notification"),
+			"subject": (
+				'Leave Application {% if status == "Open" %}Pending Approval'
+				"{% else %}{{ status }}{% endif %}: {{ name }}"
+			),
 			"owner": frappe.session.user,
 		}
 	]

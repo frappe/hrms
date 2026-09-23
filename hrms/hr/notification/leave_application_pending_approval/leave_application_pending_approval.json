@@ -8,13 +8,14 @@
  "docstatus": 0,
  "doctype": "Notification",
  "document_type": "Leave Application",
+ "email_template": "Leave Application Notification",
  "enabled": 1,
  "event": "Save",
  "idx": 0,
  "is_standard": 1,
- "message": "<h2>{{ _(\"Leave Application Pending Approval\") }}</h2>\n\n<table class=\"table table-bordered small\" style=\"max-width: 500px;\">\n    <tr><td>Employee</td><td>{{ doc.employee_name }}</td></tr>\n    <tr><td>Leave Type</td><td>{{ doc.leave_type }}</td></tr>\n    <tr><td>From Date</td><td>{{ doc.from_date }}</td></tr>\n    <tr><td>To Date</td><td>{{ doc.to_date }}</td></tr>\n    <tr><td>Status</td><td>{{ doc.status }}</td></tr>\n</table>\n\n<p><br>\n<a class=\"btn btn-primary\" href=\"{{ frappe.utils.get_url_to_form(doc.doctype, doc.name) }}\" target=\"_blank\">{{ _('View Leave') }}</a></p>\n",
+ "message": "",
  "minutes_offset": 0,
- "modified": "2026-08-28 19:15:03.450125",
+ "modified": "2026-09-22 16:26:12.881132",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Application Pending Approval",
@@ -26,5 +27,5 @@
  ],
  "send_system_notification": 0,
  "send_to_all_assignees": 0,
- "subject": "Leave Application Pending Approval: {{ doc.name }}"
+ "subject": ""
 }
