@@ -1,5 +1,10 @@
-<h1>Leave Application Notification</h1>
-<h3>Details:</h3>
+{% if status == "Open" %}
+<h2>{{ _("Leave Application Pending Approval") }}</h2>
+{% elif status == "Cancelled" %}
+<h2>{{ _("Leave Application Cancelled") }}</h2>
+{% else %}
+<h2>{{ _("Your Leave Application has been") }} {{ status }}</h2>
+{% endif %}
 
 	<table class="table table-bordered small" style="max-width: 500px;">
 		<tr>
@@ -27,4 +32,4 @@
 	{% set doc_link = frappe.utils.get_url_to_form('Leave Application', name) %}
 
 	<br><br>
-	<a class="btn btn-primary" href="{{ doc_link }}" target="_blank">{{ _('Open Now') }}</a>
+	<a class="btn btn-primary" href="{{ doc_link }}" target="_blank">{{ _('View Leave') }}</a>
