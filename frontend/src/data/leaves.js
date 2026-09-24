@@ -20,6 +20,12 @@ export const getLeaveDates = (leave) => {
 		).format("D MMM")}`
 }
 
+// an approver's decision on a draft is not final until submission, so show it as Draft like desk
+export const getLeaveStatus = (leave) => {
+	if (!leave.docstatus && ["Approved", "Rejected"].includes(leave.status)) return "Draft"
+	return leave.status
+}
+
 export const myLeaves = createResource({
 	url: "hrms.api.get_leave_applications",
 	params: {
