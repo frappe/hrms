@@ -12,6 +12,7 @@ def get_holiday_dates_between(
 	skip_weekly_offs: bool = False,
 	as_dict: bool = False,
 	select_weekly_off: bool = False,
+	only_half_days: bool = False,
 ) -> list:
 	Holiday = frappe.qb.DocType("Holiday")
 	query = frappe.qb.from_(Holiday).select(Holiday.holiday_date)
@@ -25,6 +26,9 @@ def get_holiday_dates_between(
 
 	if skip_weekly_offs:
 		query = query.where(Holiday.weekly_off == 0)
+
+	if only_half_days:
+		query = query.where(Holiday.is_half_day == 1)
 
 	if as_dict:
 		return query.run(as_dict=True)
