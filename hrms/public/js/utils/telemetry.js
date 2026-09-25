@@ -74,7 +74,6 @@ const HR_REPORTS = new Set([
 	"Income Tax Deductions",
 	"Professional Tax Deductions",
 	"Provident Fund Deductions",
-	"Daily Work Summary Replies",
 ]);
 
 function hr_capture(event, props) {
