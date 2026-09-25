@@ -186,7 +186,7 @@ frappe.ui.form.on("Payroll Entry", {
 				}).addClass("btn-primary");
 			} else if (!r.message.has_bank_entries_for_withheld_salaries) {
 				frm.add_custom_button(__("Release Withheld Salaries"), function () {
-					make_bank_entry(frm, (for_withheld_salaries = 1));
+					release_withheld_salaries(frm);
 				}).addClass("btn-primary");
 			}
 		});
@@ -438,7 +438,91 @@ const submit_salary_slip = function (frm) {
 	);
 };
 
-let make_bank_entry = function (frm, for_withheld_salaries = 0) {
+let release_withheld_salaries = function (frm) {
+	if (!frm.doc.payment_account) {
+		frappe.msgprint(__("Payment Account is mandatory"));
+		frm.scroll_to_field("payment_account");
+		return;
+	}
+
+	frm.call("get_withheld_salaries").then((r) => {
+		const withheld_salaries = r.message || [];
+
+		if (!withheld_salaries.length) {
+			frappe.msgprint({
+				title: __("No Withheld Salaries"),
+				message: __(
+					"There are no withheld salaries pending release for this Payroll Entry.",
+				),
+				indicator: "orange",
+			});
+			return;
+		}
+
+		const dialog = new frappe.ui.Dialog({
+			title: __("Release Withheld Salaries"),
+			size: "large",
+			fields: [
+				{
+					fieldname: "employees",
+					fieldtype: "Table",
+					label: __("Employees"),
+					cannot_add_rows: true,
+					in_place_edit: false,
+					data: withheld_salaries,
+					get_data: () => withheld_salaries,
+					fields: [
+						{
+							fieldname: "employee",
+							fieldtype: "Link",
+							options: "Employee",
+							label: __("Employee"),
+							in_list_view: 1,
+							read_only: 1,
+							columns: 3,
+						},
+						{
+							fieldname: "employee_name",
+							fieldtype: "Data",
+							label: __("Employee Name"),
+							in_list_view: 1,
+							read_only: 1,
+							columns: 5,
+						},
+						{
+							fieldname: "amount",
+							fieldtype: "Currency",
+							label: __("Amount"),
+							in_list_view: 1,
+							read_only: 1,
+							columns: 3,
+						},
+					],
+				},
+			],
+			primary_action_label: __("Release"),
+			primary_action() {
+				const selected = dialog.fields_dict.employees.grid
+					.get_selected_children()
+					.map((row) => row.employee);
+
+				if (!selected.length) {
+					frappe.msgprint(
+						__("Please select at least one employee to release the salary for"),
+					);
+					return;
+				}
+
+				dialog.hide();
+				make_bank_entry(frm, 1, selected);
+			},
+		});
+
+		dialog.show();
+	});
+};
+
+let make_bank_entry = function (frm, for_withheld_salaries = 0, employees = null) {
 	const doc = frm.doc;
 	if (doc.payment_account) {
 		return frappe.call({
@@ -447,7 +531,7 @@ let make_bank_entry = function (frm, for_withheld_salaries = 0) {
 				method: "make_bank_entry",
 				dt: "Payroll Entry",
 				dn: frm.doc.name,
-				args: { for_withheld_salaries: for_withheld_salaries },
+				args: { for_withheld_salaries: for_withheld_salaries, employees: employees },
 			},
 			callback: function () {
 				frappe.set_route("List", "Journal Entry", {
