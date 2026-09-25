@@ -3,6 +3,11 @@
 
 frappe.ui.form.on("Daily Work Summary Group", {
 	refresh: function (frm) {
+		frm.dashboard.set_headline_alert(
+			__("Daily Work Summary is deprecated and will be removed in an upcoming release."),
+			"orange",
+		);
+
 		if (!frm.is_new()) {
 			frm.add_custom_button(__("Daily Work Summary"), function () {
 				frappe.set_route("List", "Daily Work Summary");

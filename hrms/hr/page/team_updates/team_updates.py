@@ -1,11 +1,15 @@
 from email_reply_parser import EmailReplyParser
 
 import frappe
+from frappe.deprecation_dumpster import deprecation_warning
 
 
 @frappe.whitelist()
 def get_data(start: int = 0):
 	frappe.only_for("Employee", "System Manager")
+	deprecation_warning(
+		"2026-09-25", "v16", "Daily Work Summary is deprecated and will be removed in an upcoming release."
+	)
 	data = frappe.get_all(
 		"Communication",
 		fields=("content", "text_content", "sender", "creation"),
