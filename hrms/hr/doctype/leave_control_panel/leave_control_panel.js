@@ -59,7 +59,7 @@ frappe.ui.form.on("Leave Control Panel", {
 	},
 
 	dates_based_on(frm) {
-		frm.trigger("reset_leave_details");
+		frm.trigger("set_leave_period_dates");
 		frm.trigger("get_employees");
 	},
 
@@ -72,6 +72,7 @@ frappe.ui.form.on("Leave Control Panel", {
 	},
 
 	leave_period(frm) {
+		frm.trigger("set_leave_period_dates");
 		frm.trigger("get_employees");
 	},
 
@@ -87,11 +88,29 @@ frappe.ui.form.on("Leave Control Panel", {
 		frm.trigger("get_employees");
 	},
 
-	reset_leave_details(frm) {
-		if (frm.doc.dates_based_on === "Leave Period") {
-			frm.add_fetch("leave_period", "from_date", "from_date");
-			frm.add_fetch("leave_period", "to_date", "to_date");
+	set_leave_period_dates(frm) {
+		// from_date and to_date are read only for leave periods, so they are always
+		// pulled from the period instead of keeping whatever was entered before
+		if (frm.doc.dates_based_on !== "Leave Period") return;
+
+		if (!frm.doc.leave_period) {
+			frm.set_value({ from_date: null, to_date: null });
+			return;
 		}
+
+		const leave_period = frm.doc.leave_period;
+
+		frappe.db.get_value("Leave Period", leave_period, ["from_date", "to_date"]).then((r) => {
+			if (!r.message) return;
+			// the selection may have changed while the request was in flight
+			if (frm.doc.dates_based_on !== "Leave Period" || frm.doc.leave_period !== leave_period)
+				return;
+
+			frm.set_value({
+				from_date: r.message.from_date,
+				to_date: r.message.to_date,
+			});
+		});
 	},
 
 	set_leave_details(frm) {
