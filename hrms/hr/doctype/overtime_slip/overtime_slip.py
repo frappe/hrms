@@ -526,7 +526,7 @@ def submit_overtime_slips_for_employees(overtime_slips, payroll_entry):
 		error_list_html = "".join(f"<li>{err}</li>" for err in errors)
 		frappe.msgprint(
 			title=_("Overtime Slip Submission Failed"),
-			msg=_(f"<ul>{error_list_html}</ul>"),
+			msg=f"<ul>{error_list_html}</ul>",
 			indicator="red",
 		)
 
