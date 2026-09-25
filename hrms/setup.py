@@ -501,18 +501,12 @@ def setup_notifications():
 	records = [
 		{
 			"doctype": "Email Template",
-			"name": _("Leave Approval Notification"),
+			"name": _("Leave Application Notification"),
 			"response": response,
-			"subject": _("Leave Approval Notification"),
-			"owner": frappe.session.user,
-		}
-	]
-	records += [
-		{
-			"doctype": "Email Template",
-			"name": _("Leave Status Notification"),
-			"response": response,
-			"subject": _("Leave Status Notification"),
+			"subject": (
+				'Leave Application {% if status == "Open" %}Pending Approval'
+				"{% else %}{{ status }}{% endif %}: {{ name }}"
+			),
 			"owner": frappe.session.user,
 		}
 	]
@@ -563,8 +557,6 @@ def setup_notifications():
 def update_hr_defaults():
 	hr_settings = frappe.get_doc("HR Settings")
 	hr_settings.emp_created_by = "Naming Series"
-	hr_settings.leave_approval_notification_template = _("Leave Approval Notification")
-	hr_settings.leave_status_notification_template = _("Leave Status Notification")
 
 	hr_settings.send_interview_reminder = 1
 	hr_settings.interview_reminder_template = _("Interview Reminder")
