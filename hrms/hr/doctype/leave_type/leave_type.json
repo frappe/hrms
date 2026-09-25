@@ -197,7 +197,7 @@
   },
   {
    "depends_on": "eval:doc.is_ppl == 1",
-   "description": "For a day of leave taken, if you still pay (say) 50% of the daily salary, then enter 0.50 in this field.",
+   "description": "Fraction of one day's salary that is paid for each day of this leave. For example, 0.60 pays 60% of the daily salary for a leave day, and the remaining 40% is deducted as Leave Without Pay. Enter 1 for fully paid and 0 for fully unpaid.",
    "fieldname": "fraction_of_daily_salary_per_leave",
    "fieldtype": "Float",
    "label": "Fraction of Daily Salary per Leave",
