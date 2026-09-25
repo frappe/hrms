@@ -207,6 +207,10 @@ const document = createDocumentResource({
 	doctype: props.modelValue.doctype,
 	name: props.modelValue.name,
 	auto: true,
+	whitelistedMethods: {
+		submitDoc: "submit",
+		cancelDoc: "cancel",
+	},
 	onSuccess(doc) {
 		attachedFiles.reload()
 	},
@@ -302,36 +306,34 @@ const getFailureMessage = ({ status = "", docstatus = 0 }) => {
 }
 
 const updateDocumentStatus = ({ status = "", docstatus = 0 }) => {
-	let updateValues = {}
+	const options = {
+		onSuccess() {
+			if (docstatus !== 0) modalController.dismiss()
 
-	if (status) updateValues[approvalField.value] = status
-	if (docstatus) updateValues.docstatus = docstatus
+			toast({
+				title: __("Success"),
+				text: getSuccessMessage({ status, docstatus }),
+				icon: "check-circle",
+				position: "bottom-center",
+				iconClasses: "text-green-500",
+			})
+		},
+		onError() {
+			toast({
+				title: __("Error"),
+				text: getFailureMessage({ status, docstatus }),
+				icon: "alert-circle",
+				position: "bottom-center",
+				iconClasses: "text-red-500",
+			})
+		},
+	}
 
-	document.setValue.submit(
-		{ ...updateValues },
-		{
-			onSuccess() {
-				if (docstatus !== 0) modalController.dismiss()
-
-				toast({
-					title: __("Success"),
-					text: getSuccessMessage({ status, docstatus }),
-					icon: "check-circle",
-					position: "bottom-center",
-					iconClasses: "text-green-500",
-				})
-			},
-			onError() {
-				toast({
-					title: __("Error"),
-					text: getFailureMessage({ status, docstatus }),
-					icon: "alert-circle",
-					position: "bottom-center",
-					iconClasses: "text-red-500",
-				})
-			},
-		}
-	)
+	// docstatus is a framework managed field and is dropped by frappe.client.set_value,
+	// so it cannot be used to submit or cancel the document
+	if (docstatus === 1) document.submitDoc.submit(null, options)
+	else if (docstatus === 2) document.cancelDoc.submit(null, options)
+	else if (status) document.setValue.submit({ [approvalField.value]: status }, options)
 }
 
 const openFormView = () => {
