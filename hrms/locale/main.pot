@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Frappe HR VERSION\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-09-20 09:36+0000\n"
-"PO-Revision-Date: 2026-09-20 09:36+0000\n"
+"POT-Creation-Date: 2026-09-27 09:37+0000\n"
+"PO-Revision-Date: 2026-09-27 09:37+0000\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: contact@frappe.io\n"
 "MIME-Version: 1.0\n"
@@ -332,7 +332,7 @@ msgstr ""
 
 #. Label of the absent_days (Float) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/report/salary_register/salary_register.py:185
+#: hrms/payroll/report/salary_register/salary_register.py:235
 msgid "Absent Days"
 msgstr ""
 
@@ -394,7 +394,7 @@ msgstr ""
 msgid "Accrual Component must be set for Flexible Benefit Salary Components with accrual payout methods."
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:681
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:693
 msgid "Accrual Journal Entry for salaries from {0} to {1}"
 msgstr ""
 
@@ -501,7 +501,7 @@ msgstr ""
 msgid "Add unused leaves from previous leave period's allocation to this allocation"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1692
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1770
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
 msgstr ""
 
@@ -599,7 +599,7 @@ msgstr ""
 msgid "Advanced Filters"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:476
+#: hrms/hr/doctype/expense_claim/expense_claim.py:508
 msgid "All Exchange Gain/Loss amount of {0} has been booked through {1}"
 msgstr ""
 
@@ -683,11 +683,7 @@ msgstr ""
 msgid "Allocation to Adjust"
 msgstr ""
 
-#: hrms/hr/utils.py:433
-msgid "Allocation was skipped due to exceeding annual allocation set in leave policy"
-msgstr ""
-
-#: hrms/hr/utils.py:441
+#: hrms/hr/utils.py:436
 msgid "Allocation was skipped due to maximum leave allocation limit set in leave type. Please increase the limit and retry failed allocation."
 msgstr ""
 
@@ -1148,7 +1144,7 @@ msgstr ""
 msgid "Approval Status"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:202
+#: hrms/hr/doctype/expense_claim/expense_claim.py:234
 msgid "Approval Status must be 'Approved' or 'Rejected'"
 msgstr ""
 
@@ -1240,7 +1236,7 @@ msgstr ""
 msgid "As per your assigned Salary Structure you cannot apply for benefits"
 msgstr ""
 
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:132
+#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:131
 msgid "Asset Recovery Cost for {0}: {1}"
 msgstr ""
 
@@ -1286,7 +1282,7 @@ msgstr ""
 msgid "Assignment Date: "
 msgstr ""
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:559
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:589
 msgid "Assignment Failed"
 msgstr ""
 
@@ -1451,7 +1447,7 @@ msgstr ""
 msgid "Attendance marked successfully"
 msgstr ""
 
-#: hrms/hr/doctype/attendance/attendance.py:413
+#: hrms/hr/doctype/attendance/attendance.py:449
 msgid "Attendance marked successfully."
 msgstr ""
 
@@ -1505,7 +1501,7 @@ msgstr ""
 msgid "Automated Based on Goal Progress"
 msgstr ""
 
-#: hrms/hr/utils.py:494
+#: hrms/hr/utils.py:499
 msgid "Automatic Leave Allocation has failed for the following Earned Leaves: {0}. Please check {1} for more details."
 msgstr ""
 
@@ -1583,6 +1579,11 @@ msgstr ""
 #. Name of a report
 #: hrms/payroll/report/bank_remittance/bank_remittance.json
 msgid "Bank Remittance"
+msgstr ""
+
+#: hrms/overrides/employee_payment_entry.py:107
+#: hrms/overrides/employee_payment_entry.py:111
+msgid "Bank/Cash Account Required"
 msgstr ""
 
 #. Label of the base (Currency) field in DocType 'Salary Structure Assignment'
@@ -1772,11 +1773,11 @@ msgstr ""
 msgid "Bulk Salary Structure Assignment"
 msgstr ""
 
-#: hrms/hr/doctype/attendance/attendance.py:407
+#: hrms/hr/doctype/attendance/attendance.py:443
 msgid "Bulk attendance marking is already in progress for employee {0}. You can monitor the job status {1}"
 msgstr ""
 
-#: hrms/hr/doctype/attendance/attendance.py:403
+#: hrms/hr/doctype/attendance/attendance.py:439
 msgid "Bulk attendance marking is queued with a background job. It may take a while. You can monitor the job status {0}"
 msgstr ""
 
@@ -1818,7 +1819,7 @@ msgstr ""
 msgid "Calculated in days"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:747
+#: hrms/hr/doctype/expense_claim/expense_claim.py:779
 msgid "Cancel the Payment Entry made against it, correct the advance account to be of type Receivable, and create a new Payment Entry."
 msgstr ""
 
@@ -1842,14 +1843,6 @@ msgstr ""
 msgid "Cannot allocate leaves outside the allocation period {0} - {1}"
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:495
-msgid "Cannot allocate more leaves due to maximum leave allocation limit of {0} in leave policy assignment"
-msgstr ""
-
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:487
-msgid "Cannot allocate more leaves due to maximum leaves allowed limit of {0} in {1} leave type."
-msgstr ""
-
 #: hrms/api/roster.py:202
 msgid "Cannot break shift after end date"
 msgstr ""
@@ -1870,15 +1863,15 @@ msgstr ""
 msgid "Cannot cancel Shift Assignment: {0} as it is linked to Employee Checkin: {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:368
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:375
 msgid "Cannot create Salary Slip for Employee joining after Payroll Period"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:371
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:378
 msgid "Cannot create Salary Slip for Employee who has left before Payroll Period"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2656
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2734
 msgid "Cannot create Salary Slip: no active Salary Structure is assigned to employee {0}."
 msgstr ""
 
@@ -1958,7 +1951,7 @@ msgstr ""
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1719
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1731
 msgid "Check Error Log {0} for more details."
 msgstr ""
 
@@ -1982,8 +1975,8 @@ msgstr ""
 msgid "Check in to create your first log."
 msgstr ""
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:551
-#: hrms/hr/utils.py:953
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:581
+#: hrms/hr/utils.py:958
 msgid "Check {0} for more details"
 msgstr ""
 
@@ -2215,7 +2208,7 @@ msgstr ""
 msgid "Copy of Invitation/Announcement"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1799
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1811
 msgid "Could not submit some Salary Slips: {}"
 msgstr ""
 
@@ -2327,7 +2320,7 @@ msgstr ""
 msgid "Creating Payment Entries......"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1757
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1769
 msgid "Creating Salary Slips..."
 msgstr ""
 
@@ -2339,7 +2332,7 @@ msgstr ""
 msgid "Creation Date"
 msgstr ""
 
-#: hrms/hr/utils.py:962
+#: hrms/hr/utils.py:967
 msgid "Creation Failed"
 msgstr ""
 
@@ -2558,8 +2551,6 @@ msgstr ""
 
 #. Option for the 'Type' (Select) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
-#: hrms/payroll/report/salary_register/salary_register.py:90
-#: hrms/payroll/report/salary_register/salary_register.py:96
 msgid "Deduction"
 msgstr ""
 
@@ -2640,7 +2631,7 @@ msgstr ""
 msgid "Department Wise Employee Count"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:164
+#: hrms/hr/doctype/expense_claim/expense_claim.py:196
 msgid "Department {0} does not belong to company: {1}"
 msgstr ""
 
@@ -2831,8 +2822,6 @@ msgstr ""
 
 #. Option for the 'Type' (Select) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
-#: hrms/payroll/report/salary_register/salary_register.py:90
-#: hrms/payroll/report/salary_register/salary_register.py:96
 msgid "Earning"
 msgstr ""
 
@@ -2945,19 +2934,19 @@ msgstr ""
 msgid "Employee Advance {0} has {1} available for return. {2} has already been scheduled for deduction in {3}."
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:737
+#: hrms/hr/doctype/expense_claim/expense_claim.py:769
 msgid "Employee Advance {0} is in currency {1} and can only be claimed in an Expense Claim of the same currency. This Expense Claim is in {2}."
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:764
+#: hrms/hr/doctype/expense_claim/expense_claim.py:796
 msgid "Employee Advance {0} is linked to account {1}, which is not of type Receivable. Please correct the account type before making a payment against it."
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:755
+#: hrms/hr/doctype/expense_claim/expense_claim.py:787
 msgid "Employee Advance {0} is linked to account {1}, which is not of type Receivable. {2}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:782
+#: hrms/hr/doctype/expense_claim/expense_claim.py:814
 msgid "Employee Advance {0}'s payment does not match its Receivable account. This can happen if the account's type was changed after the payment was made. {1}"
 msgstr ""
 
@@ -3436,6 +3425,11 @@ msgstr ""
 msgid "Employee can be named by Employee ID if you assign one, or via Naming Series. Select your preference here."
 msgstr ""
 
+#: hrms/hr/doctype/attendance/attendance.py:393
+#: hrms/hr/doctype/attendance/attendance.py:424
+msgid "Employee must be a non-empty string."
+msgstr ""
+
 #. Label of the employee_name (Data) field in DocType 'Leave Policy Assignment'
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 msgid "Employee name"
@@ -3459,7 +3453,7 @@ msgstr ""
 msgid "Employee was marked Absent for not meeting the working hours threshold."
 msgstr ""
 
-#: hrms/hr/doctype/shift_type/shift_type.py:491
+#: hrms/hr/doctype/shift_type/shift_type.py:496
 msgid "Employee was marked Absent for other half due to missing Employee Checkins."
 msgstr ""
 
@@ -3477,6 +3471,14 @@ msgstr ""
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:82
 msgid "Employee {0} already submitted an application {1} for the payroll period {2}"
+msgstr ""
+
+#: hrms/hr/doctype/attendance/attendance.py:410
+msgid "Employee {0} does not belong to Company {1}"
+msgstr ""
+
+#: hrms/hr/doctype/expense_claim/expense_claim.py:174
+msgid "Employee {0} does not belong to company: {1}"
 msgstr ""
 
 #: hrms/hr/doctype/shift_request/shift_request.py:154
@@ -3507,7 +3509,7 @@ msgstr ""
 msgid "Employee {0} on Half day on {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:727
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:769
 msgid "Employee {0} relieved on {1} must be set as 'Left'"
 msgstr ""
 
@@ -3569,7 +3571,7 @@ msgid "Employees working on a holiday"
 msgstr ""
 
 #. Option for the 'Type' (Select) field in DocType 'Salary Component'
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:777
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:789
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Employer Contribution"
 msgstr ""
@@ -3583,7 +3585,7 @@ msgstr ""
 msgid "Employer Contributions"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:772
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:784
 msgid "Employer contribution accrual for salaries from {0} to {1}"
 msgstr ""
 
@@ -3746,7 +3748,7 @@ msgstr ""
 msgid "Error downloading PDF"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1414
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1492
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:460
 msgid "Error in formula or condition"
 msgstr ""
@@ -3794,14 +3796,6 @@ msgstr ""
 #: hrms/hr/notification/training_scheduled/training_scheduled.html:23
 #: hrms/templates/emails/training_event.html:6
 msgid "Event Location"
-msgstr ""
-
-#. Label of the event_name (Data) field in DocType 'Training Event'
-#. Label of the event_name (Data) field in DocType 'Training Feedback'
-#: hrms/hr/doctype/training_event/training_event.json
-#: hrms/hr/doctype/training_feedback/training_feedback.json
-#: hrms/templates/emails/training_event.html:5
-msgid "Event Name"
 msgstr ""
 
 #. Label of the event_status (Select) field in DocType 'Training Event'
@@ -4063,7 +4057,7 @@ msgstr ""
 #. Label of the expense_type (Data) field in DocType 'Expense Claim Type'
 #. Label of a Workspace Sidebar Item
 #: hrms/expenses/sidebar/expenses/expenses.json
-#: hrms/hr/doctype/expense_claim/expense_claim.py:714
+#: hrms/hr/doctype/expense_claim/expense_claim.py:746
 #: hrms/hr/doctype/expense_claim_detail/expense_claim_detail.json
 #: hrms/hr/doctype/expense_claim_type/expense_claim_type.json
 #: hrms/workspace_sidebar/expenses.json
@@ -4143,7 +4137,7 @@ msgstr ""
 msgid "Expire Carry Forwarded Leaves (Days)"
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:617
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:586
 msgid "Expire Leaves"
 msgstr ""
 
@@ -4165,7 +4159,7 @@ msgstr ""
 msgid "Exporting..."
 msgstr ""
 
-#: hrms/hr/utils.py:950
+#: hrms/hr/utils.py:955
 msgid "Failed to create/submit {0} for employees:"
 msgstr ""
 
@@ -4177,7 +4171,7 @@ msgstr ""
 msgid "Failed to download PDF"
 msgstr ""
 
-#: hrms/api/__init__.py:815
+#: hrms/api/__init__.py:805
 msgid "Failed to download PDF: {0}"
 msgstr ""
 
@@ -4217,7 +4211,7 @@ msgstr ""
 msgid "Failure Reason"
 msgstr ""
 
-#: hrms/hr/utils.py:493
+#: hrms/hr/utils.py:498
 msgid "Failure of Automatic Allocation of Earned Leaves"
 msgstr ""
 
@@ -4368,7 +4362,7 @@ msgstr ""
 msgid "First Name "
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1702
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1714
 msgid "Fiscal Year {0} not found"
 msgstr ""
 
@@ -4769,7 +4763,7 @@ msgstr ""
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/payroll/report/income_tax_deductions/income_tax_deductions.py:54
 #: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:44
-#: hrms/payroll/report/salary_register/salary_register.py:211
+#: hrms/payroll/report/salary_register/salary_register.py:261
 msgid "Gross Pay"
 msgstr ""
 
@@ -5300,11 +5294,11 @@ msgstr ""
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1971
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2049
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1959
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2037
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr ""
 
@@ -5312,7 +5306,7 @@ msgstr ""
 msgid "Income Tax Slab: "
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1967
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2045
 msgid "Income Tax Slab: {0} is disabled"
 msgstr ""
 
@@ -5551,7 +5545,7 @@ msgstr ""
 msgid "Invalid Dates"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2721
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2799
 msgid "Invalid LWP Days Reversed"
 msgstr ""
 
@@ -5572,7 +5566,7 @@ msgstr ""
 msgid "Invalid employee filter: {0}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:1006
+#: hrms/hr/doctype/expense_claim/expense_claim.py:1038
 msgid "Invalid parameters provided. Please pass the required arguments."
 msgstr ""
 
@@ -5945,7 +5939,7 @@ msgstr ""
 msgid "Key Result Area"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2718
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2796
 msgid "LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
 msgstr ""
 
@@ -6172,7 +6166,7 @@ msgstr ""
 msgid "Leave Block List Name"
 msgstr ""
 
-#: hrms/hr/doctype/leave_application/leave_application.py:1544
+#: hrms/hr/doctype/leave_application/leave_application.py:1549
 msgid "Leave Blocked"
 msgstr ""
 
@@ -6371,7 +6365,7 @@ msgstr ""
 msgid "Leave Type {0} cannot be allocated since it is leave without pay"
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:606
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:575
 msgid "Leave Type {0} cannot be carry-forwarded"
 msgstr ""
 
@@ -6381,12 +6375,12 @@ msgstr ""
 
 #. Label of the leave_without_pay (Float) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/report/salary_register/salary_register.py:179 hrms/setup.py:453
+#: hrms/payroll/report/salary_register/salary_register.py:229 hrms/setup.py:453
 #: hrms/setup.py:454
 msgid "Leave Without Pay"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:592
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:610
 msgid "Leave Without Pay does not match with approved {} records"
 msgstr ""
 
@@ -6423,7 +6417,7 @@ msgstr ""
 msgid "Leave of type {0} cannot be longer than {1}."
 msgstr ""
 
-#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:548
+#: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:578
 msgid "Leave policy could not be assigned to the following employees:"
 msgstr ""
 
@@ -6480,7 +6474,7 @@ msgstr ""
 msgid "Leaves Allocated"
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:611
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:580
 msgid "Leaves Expired"
 msgstr ""
 
@@ -6533,11 +6527,6 @@ msgstr ""
 msgid "Lime"
 msgstr ""
 
-#. Label of the limits_tab (Tab Break) field in DocType 'Leave Type'
-#: hrms/hr/doctype/leave_type/leave_type.json
-msgid "Limits"
-msgstr ""
-
 #. Description of the 'Appraisal Linking' (Section Break) field in DocType
 #. 'Goal'
 #: hrms/hr/doctype/goal/goal.json hrms/hr/doctype/goal/goal_tree.js:97
@@ -6562,7 +6551,7 @@ msgstr ""
 msgid "Loan Product"
 msgstr ""
 
-#: hrms/payroll/report/salary_register/salary_register.py:233 hrms/setup.py:833
+#: hrms/payroll/report/salary_register/salary_register.py:283 hrms/setup.py:833
 msgid "Loan Repayment"
 msgstr ""
 
@@ -6571,7 +6560,7 @@ msgstr ""
 msgid "Loan Repayment Entry"
 msgstr ""
 
-#: hrms/hr/utils.py:837
+#: hrms/hr/utils.py:842
 msgid "Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
 msgstr ""
 
@@ -6920,7 +6909,7 @@ msgstr ""
 msgid "Missing Salary Components"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1962
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2040
 msgid "Missing Tax Slab"
 msgstr ""
 
@@ -6933,7 +6922,7 @@ msgstr ""
 msgid "Mode of Travel"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:496
+#: hrms/hr/doctype/expense_claim/expense_claim.py:528
 msgid "Mode of payment is required to make a payment"
 msgstr ""
 
@@ -6993,7 +6982,7 @@ msgid "My Requests"
 msgstr ""
 
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.py:123
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1400
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1478
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:446
 msgid "Name error"
 msgstr ""
@@ -7008,7 +6997,7 @@ msgstr ""
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 #: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:51
-#: hrms/payroll/report/salary_register/salary_register.py:251
+#: hrms/payroll/report/salary_register/salary_register.py:301
 msgid "Net Pay"
 msgstr ""
 
@@ -7022,7 +7011,7 @@ msgstr ""
 msgid "Net Pay Info"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:271
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:278
 msgid "Net Pay cannot be less than 0"
 msgstr ""
 
@@ -7094,11 +7083,11 @@ msgstr ""
 msgid "No Employee found for the given employee field value. '{}': {}"
 msgstr ""
 
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:137 hrms/hr/utils.py:940
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:137 hrms/hr/utils.py:945
 msgid "No Employees Selected"
 msgstr ""
 
-#: hrms/utils/holiday_list.py:279
+#: hrms/utils/holiday_list.py:283
 msgid "No Holiday List was found for Employee {0} or their company {1} for date {2}. Please assign through {3}"
 msgstr ""
 
@@ -7154,7 +7143,7 @@ msgstr ""
 msgid "No active employee found associated with the email ID {0}. Try logging in with your employee email ID or contact your HR manager for access."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:505
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:512
 msgid "No active or default Salary Structure found for employee {0} for the given dates"
 msgstr ""
 
@@ -7272,7 +7261,7 @@ msgstr ""
 msgid "No replies from"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1785
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1797
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
 msgstr ""
 
@@ -7339,7 +7328,7 @@ msgstr ""
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2271
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2349
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr ""
 
@@ -7707,11 +7696,11 @@ msgstr ""
 msgid "Overtime Slip created for {0} employee(s)"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1411
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1423
 msgid "Overtime Slip creation is queued. It may take a few minutes"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1437
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1449
 msgid "Overtime Slip submission is queued. It may take a few minutes"
 msgstr ""
 
@@ -7866,7 +7855,7 @@ msgstr ""
 #. Label of the payment_days_tab (Tab Break) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/report/salary_register/salary_register.py:191
+#: hrms/payroll/report/salary_register/salary_register.py:241
 msgid "Payment Days"
 msgstr ""
 
@@ -7889,7 +7878,7 @@ msgstr ""
 msgid "Payment and Accounting"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1271
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1283
 msgid "Payment of {0} from {1} to {2}"
 msgstr ""
 
@@ -8138,7 +8127,7 @@ msgstr ""
 msgid "Please Select Company First"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:902
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:980
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 msgstr ""
 
@@ -8182,7 +8171,7 @@ msgstr ""
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2260
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2338
 msgid "Please see attachment"
 msgstr ""
 
@@ -8228,11 +8217,11 @@ msgstr ""
 msgid "Please select a company first."
 msgstr ""
 
-#: hrms/hr/doctype/attendance/attendance.py:395
+#: hrms/hr/doctype/attendance/attendance.py:431
 msgid "Please select a date."
 msgstr ""
 
-#: hrms/hr/utils.py:828
+#: hrms/hr/utils.py:833
 msgid "Please select an Applicant"
 msgstr ""
 
@@ -8244,7 +8233,7 @@ msgstr ""
 msgid "Please select at least one Shift Request to perform this action."
 msgstr ""
 
-#: hrms/hr/utils.py:939
+#: hrms/hr/utils.py:944
 msgid "Please select at least one employee to perform this action."
 msgstr ""
 
@@ -8305,7 +8294,7 @@ msgstr ""
 msgid "Please set Leave Approver for the Employee: {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:576
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:591
 msgid "Please set Payroll based on in Payroll settings"
 msgstr ""
 
@@ -8313,9 +8302,17 @@ msgstr ""
 msgid "Please set Relieving Date for employee: {0}"
 msgstr ""
 
+#: hrms/overrides/employee_payment_entry.py:110
+msgid "Please set a Default Bank/Cash Account in the Company {0}"
+msgstr ""
+
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:193
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:53
 msgid "Please set a date range less than 90 days."
+msgstr ""
+
+#: hrms/overrides/employee_payment_entry.py:101
+msgid "Please set a {0} on this document, or a Default Bank/Cash Account in the Company {1}"
 msgstr ""
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:408
@@ -8338,7 +8335,7 @@ msgstr ""
 msgid "Please set employee's total cost to company to see CTC breakup."
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:798
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:810
 msgid "Please set expense and liability accounts in Salary Component {0}"
 msgstr ""
 
@@ -8354,7 +8351,7 @@ msgstr ""
 msgid "Please set the Company"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:364
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:371
 msgid "Please set the Date Of Joining for employee {0}"
 msgstr ""
 
@@ -8895,7 +8892,7 @@ msgstr ""
 msgid "Repay From Salary"
 msgstr ""
 
-#: hrms/hr/utils.py:843
+#: hrms/hr/utils.py:848
 msgid "Repay From Salary can be selected only for term loans"
 msgstr ""
 
@@ -9017,11 +9014,6 @@ msgstr ""
 msgid "Retirement Age (In Years)"
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:490
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:498
-msgid "Retry Failed"
-msgstr ""
-
 #. Label of the retry_failed_allocations (Button) field in DocType 'Leave
 #. Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
@@ -9116,11 +9108,11 @@ msgstr ""
 msgid "Row #{0}: Timesheet amount will overwrite the Earning component amount for the Salary Component {1}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:974
+#: hrms/hr/doctype/expense_claim/expense_claim.py:1006
 msgid "Row No {0}: Amount cannot be greater than the Outstanding Amount against Expense Claim {1}. Outstanding Amount is {2}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:591
+#: hrms/hr/doctype/expense_claim/expense_claim.py:623
 msgid "Row {0}# Allocated amount {1} cannot be greater than unclaimed amount {2}"
 msgstr ""
 
@@ -9148,15 +9140,11 @@ msgstr ""
 msgid "Row {0}: Paid amount {1} is greater than pending accrued amount {2} against loan {3}"
 msgstr ""
 
-#: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:96
-msgid "Row {0}: {1}"
-msgstr ""
-
-#: hrms/hr/doctype/expense_claim/expense_claim.py:486
+#: hrms/hr/doctype/expense_claim/expense_claim.py:518
 msgid "Row {0}: {1} is required in the expenses table to book an expense claim."
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:601
+#: hrms/hr/doctype/expense_claim/expense_claim.py:633
 msgid "Row {0}: {1}, {2} and {3} are required against advance {4}."
 msgstr ""
 
@@ -9311,7 +9299,7 @@ msgstr ""
 msgid "Salary Slip Based on Timesheet"
 msgstr ""
 
-#: hrms/payroll/report/salary_register/salary_register.py:113
+#: hrms/payroll/report/salary_register/salary_register.py:163
 msgid "Salary Slip ID"
 msgstr ""
 
@@ -9350,11 +9338,11 @@ msgstr ""
 msgid "Salary Slip not found."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:398
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:405
 msgid "Salary Slip of employee {0} already created for this period"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:404
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:411
 msgid "Salary Slip of employee {0} already created for time sheet {1}"
 msgstr ""
 
@@ -9362,7 +9350,7 @@ msgstr ""
 msgid "Salary Slip submission is queued. It may take a few minutes"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1707
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1719
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr ""
 
@@ -9384,11 +9372,11 @@ msgstr ""
 msgid "Salary Slips Submitted"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1764
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1776
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1791
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1803
 msgid "Salary Slips submitted for period from {0} to {1}"
 msgstr ""
 
@@ -9435,7 +9423,7 @@ msgstr ""
 msgid "Salary Structure Assignment not found for employee {0} on date {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:508
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:515
 msgid "Salary Structure Missing"
 msgstr ""
 
@@ -9501,7 +9489,7 @@ msgstr ""
 msgid "Salary components should be part of the Salary Structure."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2744
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2822
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr ""
 
@@ -9518,7 +9506,7 @@ msgstr ""
 msgid "Sanctioned Amount (Company Currency)"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:625
+#: hrms/hr/doctype/expense_claim/expense_claim.py:657
 msgid "Sanctioned Amount cannot be greater than Claim Amount in Row {0}."
 msgstr ""
 
@@ -9577,7 +9565,7 @@ msgstr ""
 msgid "Select Payment Account to make Bank Entry"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1943
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1955
 msgid "Select Payroll Frequency."
 msgstr ""
 
@@ -9666,7 +9654,7 @@ msgstr ""
 msgid "Selected employee advance is not of employee {0}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:581
+#: hrms/hr/doctype/expense_claim/expense_claim.py:613
 msgid "Selected employee advance is not of employee {}"
 msgstr ""
 
@@ -9694,7 +9682,7 @@ msgstr ""
 msgid "Self-Study"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:178
+#: hrms/hr/doctype/expense_claim/expense_claim.py:210
 msgid "Self-approval for Expense Claims is not allowed"
 msgstr ""
 
@@ -9820,7 +9808,7 @@ msgstr ""
 msgid "Set optional filters to fetch employees in the appraisee list"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:713
+#: hrms/hr/doctype/expense_claim/expense_claim.py:745
 msgid "Set the default account for the {0} {1}"
 msgstr ""
 
@@ -9855,7 +9843,7 @@ msgstr ""
 msgid "Settle all Payables and Receivables before submission"
 msgstr ""
 
-#: hrms/hr/utils.py:791
+#: hrms/hr/utils.py:796
 msgid "Shared document with the user {0} with 'Submit' permission"
 msgstr ""
 
@@ -10105,6 +10093,10 @@ msgstr ""
 msgid "Show Employee"
 msgstr ""
 
+#: hrms/payroll/report/salary_register/salary_register.js:95
+msgid "Show Employer Contributions"
+msgstr ""
+
 #. Label of the show_leave_balances_in_salary_slip (Check) field in DocType
 #. 'Payroll Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
@@ -10243,7 +10235,7 @@ msgstr ""
 msgid "Standard Working Hours"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1896
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1974
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}."
 msgstr ""
 
@@ -10349,7 +10341,7 @@ msgstr ""
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1846
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1858
 msgid "Submitting Salary Slips..."
 msgstr ""
 
@@ -10357,7 +10349,7 @@ msgstr ""
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
 msgstr ""
 
-#: hrms/hr/utils.py:967
+#: hrms/hr/utils.py:972
 msgid "Successfully created {0} for employees:"
 msgstr ""
 
@@ -10383,7 +10375,7 @@ msgstr ""
 msgid "Sync {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1407
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1485
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:453
 msgid "Syntax error"
 msgstr ""
@@ -10540,11 +10532,11 @@ msgstr ""
 msgid "Thank you for applying."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2675
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2753
 msgid "The Assigned Salary Structure {0} for the employee {1} does not have a Salary Component configured for Salary Slip based on Timesheet."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2669
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2747
 msgid "The Assigned Salary Structure {0} for the employee {1} is not configured for Salary Slip based on Timesheet."
 msgstr ""
 
@@ -10626,7 +10618,7 @@ msgstr ""
 msgid "Theory"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:573
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:588
 msgid "There are more holidays than working days this month."
 msgstr ""
 
@@ -10674,17 +10666,17 @@ msgstr ""
 msgid "This employee already has a log with the same timestamp.{0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1415
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1493
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:461
 msgid "This error can be due to invalid formula or condition."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1408
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1486
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:454
 msgid "This error can be due to invalid syntax."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1401
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1479
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:447
 msgid "This error can be due to missing or deleted field."
 msgstr ""
@@ -10907,7 +10899,7 @@ msgstr ""
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 #: hrms/payroll/report/salary_payments_based_on_payment_mode/salary_payments_based_on_payment_mode.py:155
-#: hrms/payroll/report/salary_register/salary_register.py:244
+#: hrms/payroll/report/salary_register/salary_register.py:294
 msgid "Total Deduction"
 msgstr ""
 
@@ -10933,6 +10925,10 @@ msgstr ""
 #. Label of a number card in the HR Setup Workspace
 #: hrms/hr_setup/workspace/hr_setup/hr_setup.json
 msgid "Total Employees"
+msgstr ""
+
+#: hrms/payroll/report/salary_register/salary_register.py:324
+msgid "Total Employer Contribution"
 msgstr ""
 
 #. Label of the total_estimated_budget (Currency) field in DocType 'Staffing
@@ -11116,7 +11112,7 @@ msgstr ""
 msgid "Total Self Score"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:619
+#: hrms/hr/doctype/expense_claim/expense_claim.py:651
 msgid "Total advance amount cannot be greater than total sanctioned amount"
 msgstr ""
 
@@ -11176,7 +11172,7 @@ msgstr ""
 msgid "Total working Days Per Year"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:241
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:248
 msgid "Total working hours should not be greater than max working hours {0}"
 msgstr ""
 
@@ -11286,7 +11282,7 @@ msgstr ""
 msgid "Trainings (This Week)"
 msgstr ""
 
-#: hrms/hr/utils.py:814
+#: hrms/hr/utils.py:819
 msgid "Transactions cannot be created for an Inactive Employee {0}."
 msgstr ""
 
@@ -11422,6 +11418,10 @@ msgstr ""
 #. Label of the unmarked_days (Float) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Unmarked days"
+msgstr ""
+
+#: hrms/hr/doctype/attendance/attendance.py:426
+msgid "Unmarked days must be a list of dates."
 msgstr ""
 
 #: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.py:58
@@ -11867,12 +11867,20 @@ msgstr ""
 msgid "Yes, Proceed"
 msgstr ""
 
+#: hrms/hr/doctype/expense_claim/expense_claim.py:185
+msgid "You are not allowed to create or modify an Expense Claim for Employee {0}"
+msgstr ""
+
 #: hrms/hr/doctype/leave_application/leave_application.py:440
 msgid "You are not authorized to approve leaves on Block Dates"
 msgstr ""
 
 #: hrms/payroll/report/employee_ctc_break_up/employee_ctc_break_up.py:366
 msgid "You are not permitted to access the CTC report of another employee."
+msgstr ""
+
+#: hrms/hr/doctype/goal/goal.py:238
+msgid "You are not permitted to update another employee's goal."
 msgstr ""
 
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:79
@@ -11895,7 +11903,7 @@ msgstr ""
 msgid "You can only submit Leave Encashment for a valid encashment amount"
 msgstr ""
 
-#: hrms/api/__init__.py:765
+#: hrms/api/__init__.py:755
 msgid "You can only upload JPG, PNG, PDF, TXT or Microsoft documents."
 msgstr ""
 
@@ -11903,12 +11911,16 @@ msgstr ""
 msgid "You cannot reverse more than the total LWP days {0}. You have already reversed {1} days for this employee."
 msgstr ""
 
+#: hrms/hr/doctype/attendance/attendance.py:404
+msgid "You do not have access to Employee {0}"
+msgstr ""
+
 #: hrms/hr/doctype/shift_request/shift_request.py:170
 msgid "You do not have permission to change the Status of a Shift Request."
 msgstr ""
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:466
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:629
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:598
 msgid "You do not have permission to complete this action"
 msgstr ""
 
@@ -12013,6 +12025,7 @@ msgid "fields are mandatory"
 msgstr ""
 
 #: hrms/hr/doctype/employee_advance/employee_advance.py:82
+#: hrms/overrides/employee_payment_entry.py:98
 msgid "here"
 msgstr ""
 
@@ -12187,7 +12200,7 @@ msgstr ""
 msgid "{0} leaves allocated successfully"
 msgstr ""
 
-#: hrms/hr/doctype/leave_allocation/leave_allocation.py:612
+#: hrms/hr/doctype/leave_allocation/leave_allocation.py:581
 msgid "{0} leaves from allocation for {1} leave type have expired and will be processed during the next scheduled job. It is recommended to expire them now before creating new leave policy assignments."
 msgstr ""
 
@@ -12244,11 +12257,11 @@ msgstr ""
 msgid "{0} {1} {2}?"
 msgstr ""
 
-#: hrms/hr/utils.py:466
+#: hrms/hr/utils.py:471
 msgid "{0}. Check error log for more details."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2294
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2372
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr ""
 
