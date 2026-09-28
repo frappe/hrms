@@ -63,4 +63,7 @@ def get_employee_email(employee_id: str) -> str | None:
 
 
 def extend_bootinfo(bootinfo):
+	from hrms.api.employee_setup import get_setup_status
+
 	bootinfo.hr_only_setup = bool(frappe.conf.sk_hrms)
+	bootinfo.hrms_employee_setup = get_setup_status()
