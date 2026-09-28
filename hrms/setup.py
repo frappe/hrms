@@ -114,6 +114,12 @@ def set_dashboard_links():
 	set_dashboard_links(DASHBOARD_LINKS)
 
 
+def after_app_uninstall(app_name):
+	if app_name == "insights":
+		set_dashboard_links()
+		frappe.db.commit()  # nosemgrep
+
+
 def before_app_uninstall(app_name):
 	"""Clean up loan integration with payroll"""
 	if app_name != "lending":

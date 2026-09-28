@@ -133,7 +133,7 @@ after_app_install = "hrms.setup.after_app_install"
 # Name of the app being uninstalled is passed as an argument
 
 before_app_uninstall = "hrms.setup.before_app_uninstall"
-# after_app_uninstall = "hrms.utils.after_app_uninstall"
+after_app_uninstall = "hrms.setup.after_app_uninstall"
 
 # Desk Notifications
 # ------------------
