@@ -1,0 +1,904 @@
+{
+ "charts": {
+  "attendance-absent-days": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "comparison": {
+       "label": "vs last FY",
+       "measure": {
+        "data_type": "Decimal",
+        "expression": {
+         "expression": "sum_if(attendance_date.between(date_sub(fiscal_year_start(date_sub(month_start(today()), 1, 'day')), 1, 'year'), date_sub(date_sub(month_start(today()), 1, 'day'), 1, 'year')), absent_days)",
+         "type": "expression"
+        },
+        "measure_name": "Same Months Last Year"
+       },
+       "show": "change",
+       "source": "measure"
+      },
+      "decimals": 1,
+      "negative_is_better": true,
+      "shorten": false
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Decimal",
+      "expression": {
+       "expression": "sum_if(attendance_date.between(fiscal_year_start(date_sub(month_start(today()), 1, 'day')), date_sub(month_start(today()), 1, 'day')), absent_days)",
+       "type": "expression"
+      },
+      "id": "Absent Days",
+      "measure_name": "Absent Days (This FY)"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "attendance-absent-days",
+   "query": "attendance-absences-fiscal-year-to-last-month",
+   "sort_order": 1,
+   "title": "Absent Days",
+   "workbook": "attendance"
+  },
+  "attendance-absent-days-by-department": {
+   "chart_type": "Row",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_format": {
+     "decimals": 1,
+     "shorten": false
+    },
+    "order_by": [
+     {
+      "column": {
+       "column_name": "Absent Days",
+       "type": "column"
+      },
+      "direction": "desc"
+     }
+    ],
+    "x_axis": {
+     "dimension": {
+      "column_name": "department_name",
+      "data_type": "String",
+      "dimension_name": "Department"
+     }
+    },
+    "y_axis": {
+     "axis_label": "Days",
+     "reference_lines": [
+      {
+       "aggregate": "average",
+       "axis": "y",
+       "dashed": true,
+       "id": "c5c54ae0",
+       "label": "Average",
+       "measure_name": "Absent Days"
+      }
+     ],
+     "series": [
+      {
+       "measure": {
+        "aggregation": "sum",
+        "column_name": "absent_days",
+        "data_type": "Decimal",
+        "measure_name": "Absent Days"
+       },
+       "type": "bar"
+      }
+     ],
+     "show_axis_label": true
+    }
+   },
+   "folder": null,
+   "name": "attendance-absent-days-by-department",
+   "query": "attendance-absences-by-department-fiscal-year-to-last-month",
+   "sort_order": 5,
+   "title": "Absent Days by Department",
+   "workbook": "attendance"
+  },
+  "attendance-attendance-by-month": {
+   "chart_type": "Bar",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_format": {
+     "decimals": 1,
+     "shorten": false
+    },
+    "order_by": [
+     {
+      "column": {
+       "column_name": "Month",
+       "type": "column"
+      },
+      "direction": "asc"
+     }
+    ],
+    "x_axis": {
+     "dimension": {
+      "column_name": "attendance_date",
+      "data_type": "Date",
+      "dimension_name": "Month",
+      "granularity": "month"
+     }
+    },
+    "y_axis": {
+     "axis_label": "Days",
+     "min": 0,
+     "series": [
+      {
+       "measure": {
+        "aggregation": "sum",
+        "column_name": "absent_days",
+        "data_type": "Decimal",
+        "measure_name": "Absent Days"
+       },
+       "type": "bar"
+      },
+      {
+       "measure": {
+        "aggregation": "sum",
+        "column_name": "leave_days",
+        "data_type": "Decimal",
+        "measure_name": "Leave Days"
+       },
+       "type": "bar"
+      }
+     ],
+     "show_axis_label": true,
+     "stack": true
+    }
+   },
+   "folder": null,
+   "name": "attendance-attendance-by-month",
+   "query": "attendance-attendance-12-months",
+   "sort_order": 4,
+   "title": "Absent and Leave Days by Month",
+   "workbook": "attendance"
+  },
+  "attendance-leave-days": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "comparison": {
+       "label": "vs last FY",
+       "measure": {
+        "data_type": "Decimal",
+        "expression": {
+         "expression": "sum_if(attendance_date.between(date_sub(fiscal_year_start(date_sub(month_start(today()), 1, 'day')), 1, 'year'), date_sub(date_sub(month_start(today()), 1, 'day'), 1, 'year')), leave_days)",
+         "type": "expression"
+        },
+        "measure_name": "Same Months Last Year"
+       },
+       "show": "change",
+       "source": "measure"
+      },
+      "decimals": 1,
+      "shorten": false
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Decimal",
+      "expression": {
+       "expression": "sum_if(attendance_date.between(fiscal_year_start(date_sub(month_start(today()), 1, 'day')), date_sub(month_start(today()), 1, 'day')), leave_days)",
+       "type": "expression"
+      },
+      "id": "Leave Days",
+      "measure_name": "Leave Days (This FY)"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "attendance-leave-days",
+   "query": "attendance-leave-fiscal-year-to-last-month",
+   "sort_order": 2,
+   "title": "Leave Days",
+   "workbook": "attendance"
+  },
+  "attendance-leave-days-by-leave-type": {
+   "chart_type": "Row",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_format": {
+     "decimals": 1,
+     "shorten": false
+    },
+    "order_by": [
+     {
+      "column": {
+       "column_name": "Leave Days",
+       "type": "column"
+      },
+      "direction": "desc"
+     }
+    ],
+    "x_axis": {
+     "dimension": {
+      "column_name": "leave_type",
+      "data_type": "String",
+      "dimension_name": "Leave Type"
+     }
+    },
+    "y_axis": {
+     "axis_label": "Days",
+     "series": [
+      {
+       "measure": {
+        "aggregation": "sum",
+        "column_name": "leave_days",
+        "data_type": "Decimal",
+        "measure_name": "Leave Days"
+       },
+       "type": "bar"
+      }
+     ],
+     "show_axis_label": true
+    }
+   },
+   "folder": null,
+   "name": "attendance-leave-days-by-leave-type",
+   "query": "attendance-leave-by-leave-type-fiscal-year-to-last-month",
+   "sort_order": 6,
+   "title": "Leave Days by Leave Type",
+   "workbook": "attendance"
+  },
+  "attendance-on-leave-today": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "comparison": {
+       "label": "vs a week ago",
+       "measure": {
+        "data_type": "Integer",
+        "expression": {
+         "expression": "distinct_count_if(attendance_date == date_sub(today(), 7, 'day'), employee)",
+         "type": "expression"
+        },
+        "measure_name": "A Week Ago"
+       },
+       "show": "delta",
+       "source": "measure"
+      },
+      "decimals": 0,
+      "shorten": false
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Integer",
+      "expression": {
+       "expression": "distinct_count_if(attendance_date == today(), employee)",
+       "type": "expression"
+      },
+      "id": "On Leave Today",
+      "measure_name": "On Leave Today"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "attendance-on-leave-today",
+   "query": "attendance-on-leave-today-and-a-week-ago",
+   "sort_order": 3,
+   "title": "On Leave Today",
+   "workbook": "attendance"
+  }
+ },
+ "creation": "2026-09-26 21:12:30.181240",
+ "dashboards": {
+  "attendance": {
+   "items": [
+    {
+     "default_operator": "=",
+     "default_user_key": "Company",
+     "filter_name": "Company",
+     "filter_type": "String",
+     "layout": {
+      "h": 2,
+      "i": "filter-company",
+      "w": 4,
+      "x": 0,
+      "y": 0
+     },
+     "layouts": {
+      "sm": {
+       "h": 2,
+       "w": 20,
+       "x": 0,
+       "y": 0
+      }
+     },
+     "links": {
+      "attendance-absent-days": "`attendance-attendance`.`company`",
+      "attendance-absent-days-by-department": "`attendance-attendance`.`company`",
+      "attendance-attendance-by-month": "`attendance-attendance`.`company`",
+      "attendance-leave-days": "`attendance-attendance`.`company`",
+      "attendance-leave-days-by-leave-type": "`attendance-attendance`.`company`",
+      "attendance-on-leave-today": "`attendance-attendance`.`company`"
+     },
+     "type": "filter"
+    },
+    {
+     "chart": "attendance-absent-days",
+     "layout": {
+      "h": 5,
+      "i": "chart-3ntjflfvuf",
+      "w": 7,
+      "x": 0,
+      "y": 3
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 10,
+       "x": 0,
+       "y": 3
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "attendance-leave-days",
+     "layout": {
+      "h": 5,
+      "i": "chart-3nuslk6mtg",
+      "w": 7,
+      "x": 7,
+      "y": 3
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 10,
+       "x": 10,
+       "y": 3
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "attendance-on-leave-today",
+     "layout": {
+      "h": 5,
+      "i": "chart-3nubfupoea",
+      "w": 6,
+      "x": 14,
+      "y": 3
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 20,
+       "x": 0,
+       "y": 8
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "attendance-attendance-by-month",
+     "layout": {
+      "h": 17,
+      "i": "chart-3nunndvp1d",
+      "w": 20,
+      "x": 0,
+      "y": 8
+     },
+     "layouts": {
+      "sm": {
+       "h": 17,
+       "w": 20,
+       "x": 0,
+       "y": 13
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "attendance-absent-days-by-department",
+     "layout": {
+      "h": 17,
+      "i": "chart-3nua77cq96",
+      "w": 10,
+      "x": 0,
+      "y": 25
+     },
+     "layouts": {
+      "sm": {
+       "h": 17,
+       "w": 20,
+       "x": 0,
+       "y": 30
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "attendance-leave-days-by-leave-type",
+     "layout": {
+      "h": 17,
+      "i": "chart-3nuo76jc0l",
+      "w": 10,
+      "x": 10,
+      "y": 25
+     },
+     "layouts": {
+      "sm": {
+       "h": 17,
+       "w": 20,
+       "x": 0,
+       "y": 47
+      }
+     },
+     "type": "chart"
+    }
+   ],
+   "name": "attendance",
+   "title": "Attendance",
+   "vertical_compact_layout": 1,
+   "visible_to_roles": [
+    {
+     "role": "HR User"
+    },
+    {
+     "role": "HR Manager"
+    }
+   ],
+   "workbook": "attendance"
+  }
+ },
+ "docstatus": 0,
+ "doctype": "Insights Workbook",
+ "folders": [],
+ "idx": 0,
+ "is_standard": 1,
+ "modified": "2026-09-28 12:09:41.942712",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "attendance",
+ "owner": "Administrator",
+ "queries": {
+  "attendance-absences-by-department-fiscal-year-to-last-month": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "attendance-absences-by-department-fiscal-year-to-last-month",
+   "operations": [
+    {
+     "table": {
+      "query_name": "attendance-absences-fiscal-year-to-last-month",
+      "type": "query",
+      "workbook": "attendance"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "expression": {
+        "expression": "attendance_date.between(fiscal_year_start(date_sub(month_start(today()), 1, 'day')), date_sub(month_start(today()), 1, 'day'))",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    }
+   ],
+   "sort_order": 6,
+   "title": "Absences by Department, Fiscal Year to Last Month",
+   "use_live_connection": 1,
+   "workbook": "attendance"
+  },
+  "attendance-absences-fiscal-year-to-last-month": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "attendance-absences-fiscal-year-to-last-month",
+   "operations": [
+    {
+     "table": {
+      "query_name": "attendance-attendance",
+      "type": "query",
+      "workbook": "attendance"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "column": {
+        "column_name": "absent_days",
+        "type": "column"
+       },
+       "operator": ">",
+       "value": 0
+      },
+      {
+       "expression": {
+        "expression": "attendance_date.between(date_sub(fiscal_year_start(date_sub(month_start(today()), 1, 'day')), 1, 'year'), date_sub(month_start(today()), 1, 'day'))",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "attendance",
+      "employee",
+      "employee_name",
+      "department_name",
+      "attendance_date",
+      "status",
+      "absent_days"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 2,
+   "title": "Absences, Fiscal Year to Last Month",
+   "use_live_connection": 1,
+   "workbook": "attendance"
+  },
+  "attendance-attendance": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "attendance-attendance",
+   "operations": [
+    {
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabAttendance",
+      "type": "table"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "column": {
+        "column_name": "docstatus",
+        "type": "column"
+       },
+       "operator": "=",
+       "value": 1
+      },
+      {
+       "expression": {
+        "expression": "attendance_date <= today()",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "join_condition": {
+      "left_column": {
+       "column_name": "department",
+       "type": "column"
+      },
+      "right_column": {
+       "column_name": "name",
+       "type": "column"
+      }
+     },
+     "join_type": "left",
+     "select_columns": [
+      {
+       "column_name": "department_name",
+       "type": "column"
+      }
+     ],
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabDepartment",
+      "type": "table"
+     },
+     "type": "join"
+    },
+    {
+     "data_type": "String",
+     "expression": {
+      "expression": "if_null(department_name, 'Not Set')",
+      "type": "expression"
+     },
+     "new_name": "department_name",
+     "type": "mutate"
+    },
+    {
+     "data_type": "String",
+     "expression": {
+      "expression": "if_null(leave_type, 'Not Set')",
+      "type": "expression"
+     },
+     "new_name": "leave_type",
+     "type": "mutate"
+    },
+    {
+     "data_type": "String",
+     "expression": {
+      "expression": "name",
+      "type": "expression"
+     },
+     "new_name": "attendance",
+     "type": "mutate"
+    },
+    {
+     "data_type": "Decimal",
+     "expression": {
+      "expression": "case(status == 'Absent', 1.0, (status == 'Half Day') & (coalesce(half_day_status, '') == 'Absent'), 0.5, 0.0)",
+      "type": "expression"
+     },
+     "new_name": "absent_days",
+     "type": "mutate"
+    },
+    {
+     "data_type": "Decimal",
+     "expression": {
+      "expression": "case(status == 'On Leave', 1.0, (status == 'Half Day') & (coalesce(leave_application, '') != ''), 0.5, 0.0)",
+      "type": "expression"
+     },
+     "new_name": "leave_days",
+     "type": "mutate"
+    },
+    {
+     "column_names": [
+      "attendance",
+      "employee",
+      "employee_name",
+      "department_name",
+      "attendance_date",
+      "status",
+      "leave_type",
+      "company",
+      "absent_days",
+      "leave_days"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 1,
+   "title": "Attendance",
+   "use_live_connection": 1,
+   "workbook": "attendance"
+  },
+  "attendance-attendance-12-months": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "attendance-attendance-12-months",
+   "operations": [
+    {
+     "table": {
+      "query_name": "attendance-attendance",
+      "type": "query",
+      "workbook": "attendance"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "expression": {
+        "expression": "attendance_date.between(date_sub(month_start(today()), 12, 'month'), date_sub(month_start(today()), 1, 'day'))",
+        "type": "expression"
+       }
+      },
+      {
+       "expression": {
+        "expression": "(absent_days > 0) | (leave_days > 0)",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "attendance",
+      "employee",
+      "employee_name",
+      "department_name",
+      "attendance_date",
+      "status",
+      "absent_days",
+      "leave_days"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 5,
+   "title": "Attendance, 12 Months",
+   "use_live_connection": 1,
+   "workbook": "attendance"
+  },
+  "attendance-leave-by-leave-type-fiscal-year-to-last-month": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "attendance-leave-by-leave-type-fiscal-year-to-last-month",
+   "operations": [
+    {
+     "table": {
+      "query_name": "attendance-leave-fiscal-year-to-last-month",
+      "type": "query",
+      "workbook": "attendance"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "expression": {
+        "expression": "attendance_date.between(fiscal_year_start(date_sub(month_start(today()), 1, 'day')), date_sub(month_start(today()), 1, 'day'))",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    }
+   ],
+   "sort_order": 7,
+   "title": "Leave by Leave Type, Fiscal Year to Last Month",
+   "use_live_connection": 1,
+   "workbook": "attendance"
+  },
+  "attendance-leave-fiscal-year-to-last-month": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "attendance-leave-fiscal-year-to-last-month",
+   "operations": [
+    {
+     "table": {
+      "query_name": "attendance-attendance",
+      "type": "query",
+      "workbook": "attendance"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "column": {
+        "column_name": "leave_days",
+        "type": "column"
+       },
+       "operator": ">",
+       "value": 0
+      },
+      {
+       "expression": {
+        "expression": "attendance_date.between(date_sub(fiscal_year_start(date_sub(month_start(today()), 1, 'day')), 1, 'year'), date_sub(month_start(today()), 1, 'day'))",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "attendance",
+      "employee",
+      "employee_name",
+      "department_name",
+      "attendance_date",
+      "status",
+      "leave_type",
+      "leave_days"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 3,
+   "title": "Leave, Fiscal Year to Last Month",
+   "use_live_connection": 1,
+   "workbook": "attendance"
+  },
+  "attendance-on-leave-today-and-a-week-ago": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "attendance-on-leave-today-and-a-week-ago",
+   "operations": [
+    {
+     "table": {
+      "query_name": "attendance-attendance",
+      "type": "query",
+      "workbook": "attendance"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "column": {
+        "column_name": "leave_days",
+        "type": "column"
+       },
+       "operator": ">",
+       "value": 0
+      },
+      {
+       "expression": {
+        "expression": "(attendance_date == today()) | (attendance_date == date_sub(today(), 7, 'day'))",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "attendance",
+      "employee",
+      "employee_name",
+      "department_name",
+      "attendance_date",
+      "status",
+      "leave_type"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 4,
+   "title": "On Leave, Today and a Week Ago",
+   "use_live_connection": 1,
+   "workbook": "attendance"
+  }
+ },
+ "title": "Attendance"
+}
