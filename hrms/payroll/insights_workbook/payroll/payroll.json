@@ -714,7 +714,7 @@
  "folders": [],
  "idx": 0,
  "is_standard": 1,
- "modified": "2026-09-28 12:09:41.911184",
+ "modified": "2026-09-28 12:56:29.244088",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "payroll",
@@ -1117,7 +1117,7 @@
     {
      "data_type": "Decimal",
      "expression": {
-      "expression": "base_gross_pay - base_net_pay - base_total_deduction",
+      "expression": "(gross_pay - net_pay - total_deduction) * exchange_rate",
       "type": "expression"
      },
      "new_name": "base_amount",
