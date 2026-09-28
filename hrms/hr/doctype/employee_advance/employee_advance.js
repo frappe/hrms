@@ -173,6 +173,7 @@ frappe.ui.form.on("Employee Advance", {
 						filters: {
 							company: frm.doc.company,
 							account_type: ["in", ["Bank", "Cash"]],
+							account_currency: frm.doc.currency,
 							is_group: 0,
 						},
 					}),
