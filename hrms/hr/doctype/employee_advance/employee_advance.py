@@ -289,7 +289,7 @@ def make_return_entry(
 ) -> dict:
 	bank_cash_account = get_same_currency_bank_cash_account(company, currency, mode_of_payment, bank_account)
 
-	if not bank_cash_account.get("account"):
+	if not (bank_cash_account.get("account") or bank_cash_account.get("name")):
 		frappe.msgprint(
 			_(
 				"Couldn't automatically pick a Bank/Cash Account for this return. Please set one in the"
