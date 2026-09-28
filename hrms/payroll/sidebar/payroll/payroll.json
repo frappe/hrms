@@ -26,10 +26,9 @@
    "indent": 0,
    "keep_closed": 0,
    "label": "Dashboard",
-   "link_to": "insights-dashboard",
-   "link_type": "Page",
+   "link_to": "Payroll",
+   "link_type": "Dashboard",
    "open_in_new_tab": 1,
-   "route": "payroll",
    "show_arrow": 0,
    "type": "Link"
   },
@@ -239,7 +238,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-09-19 21:30:00.000000",
+ "modified": "2026-08-07 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll",

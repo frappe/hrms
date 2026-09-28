@@ -25,9 +25,8 @@
    "indent": 0,
    "keep_closed": 0,
    "label": "Dashboard",
-   "link_to": "insights-dashboard",
-   "link_type": "Page",
-   "route": "human-resource",
+   "link_to": "Human Resource",
+   "link_type": "Dashboard",
    "show_arrow": 0,
    "type": "Link"
   },
@@ -149,7 +148,7 @@
    "url": "/desk/hr-settings#employee_tab"
   }
  ],
- "modified": "2026-09-19 21:30:00.000000",
+ "modified": "2026-08-13 20:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR Setup",
  "name": "HR Setup",

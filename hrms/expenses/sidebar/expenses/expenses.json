@@ -25,9 +25,8 @@
    "indent": 0,
    "keep_closed": 0,
    "label": "Dashboard",
-   "link_to": "insights-dashboard",
-   "link_type": "Page",
-   "route": "expense-claims",
+   "link_to": "Expense Claims",
+   "link_type": "Dashboard",
    "show_arrow": 0,
    "type": "Link"
   },
@@ -269,7 +268,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-09-19 21:30:00.000000",
+ "modified": "2026-08-07 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Expenses",
  "name": "Expenses",
