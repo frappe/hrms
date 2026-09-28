@@ -99,7 +99,7 @@ jinja = {
 
 # before_install = "hrms.install.before_install"
 after_install = "hrms.install.after_install"
-after_migrate = ["hrms.setup.update_select_perm_after_install", "hrms.setup.set_dashboard_links"]
+after_migrate = "hrms.setup.update_select_perm_after_install"
 
 setup_wizard_requires = "assets/hrms/js/setup_wizard.js"
 setup_wizard_stages = "hrms.setup_wizard.get_setup_stages"
@@ -133,7 +133,7 @@ after_app_install = "hrms.setup.after_app_install"
 # Name of the app being uninstalled is passed as an argument
 
 before_app_uninstall = "hrms.setup.before_app_uninstall"
-after_app_uninstall = "hrms.setup.after_app_uninstall"
+# after_app_uninstall = "hrms.utils.after_app_uninstall"
 
 # Desk Notifications
 # ------------------

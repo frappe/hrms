@@ -88,37 +88,12 @@ def get_customizations():
 
 def after_app_install(app_name):
 	"""Set up loan integration with payroll"""
-	if app_name == "insights":
-		set_dashboard_links()
-
 	if app_name != "lending":
 		return
 
 	print("Updating payroll setup for loans")
 	create_custom_fields(get_salary_slip_loan_fields(), ignore_validate=True)
 	add_lending_docperms_to_ess()
-
-
-# (sidebar, the desk Dashboard its Dashboard item links, the Insights dashboard that replaces it)
-DASHBOARD_LINKS = [
-	("HR Setup", "Human Resource", "human-resource"),
-	("Expenses", "Expense Claims", "expense-claims"),
-	("Payroll", "Payroll", "payroll"),
-	("Shift & Attendance", "Attendance", "attendance"),
-]
-
-
-def set_dashboard_links():
-	from erpnext.setup.insights_dashboards import set_dashboard_links
-
-	set_dashboard_links(DASHBOARD_LINKS)
-
-
-def after_app_uninstall(app_name):
-	# a dry run calls this hook too, with Insights still installed
-	if app_name == "insights" and "insights" not in frappe.get_installed_apps():
-		set_dashboard_links()
-		frappe.db.commit()  # nosemgrep
 
 
 def before_app_uninstall(app_name):
