@@ -50,12 +50,6 @@ NOTIFICATION_TO_OLD_SETTING = {
 	"Leave Application Cancelled": "leave_status_notification_template",
 }
 
-# Each old default's own name was also its literal (site-language-translated) subject.
-SETTING_TO_OLD_DEFAULT_NAME = {
-	"leave_approval_notification_template": "Leave Approval Notification",
-	"leave_status_notification_template": "Leave Status Notification",
-}
-
 
 def execute():
 	"""Preserve customized Leave Application notification content after the refactor to a shared Email Template."""
@@ -77,8 +71,7 @@ def execute():
 			continue
 
 		template_name = get_old_single_value(setting_field)
-		expected_name = SETTING_TO_OLD_DEFAULT_NAME.get(setting_field)
-		if is_customized(template_name, expected_name):
+		if is_customized(template_name):
 			clone_with_custom_template(notification_name, template_name, bool(send_leave_notification))
 		elif not send_leave_notification:
 			frappe.db.set_value("Notification", notification_name, "enabled", 0)
@@ -111,7 +104,7 @@ def get_old_single_value(fieldname):
 	)
 
 
-def is_customized(template_name, expected_name=None):
+def is_customized(template_name):
 	if not template_name or not frappe.db.exists("Email Template", template_name):
 		return False
 
@@ -119,18 +112,7 @@ def is_customized(template_name, expected_name=None):
 	# whitespace, so sanitize both sides then normalize whitespace too before comparing.
 	response = frappe.db.get_value("Email Template", template_name, "response") or ""
 	canonical_original = sanitize_html(ORIGINAL_EMAIL_CONTENT, linkify=True)
-	if normalize(response) != normalize(canonical_original):
-		return True
-
-	# Only checkable against a known default name; a renamed template has no expected subject.
-	if expected_name and template_name == expected_name:
-		subject = frappe.db.get_value("Email Template", template_name, "subject") or ""
-		# Compare against today's translation, since the old subject was translated at creation.
-		canonical_subject = sanitize_html(frappe._(expected_name))
-		if normalize(subject) != normalize(canonical_subject):
-			return True
-
-	return False
+	return normalize(response) != normalize(canonical_original)
 
 
 def normalize(html):
@@ -158,7 +140,7 @@ def delete_unused_default_templates():
 	for template_name in OLD_DEFAULT_TEMPLATES:
 		if not frappe.db.exists("Email Template", template_name):
 			continue
-		if is_customized(template_name, template_name):
+		if is_customized(template_name):
 			continue
 		try:
 			frappe.delete_doc("Email Template", template_name, ignore_permissions=True)
