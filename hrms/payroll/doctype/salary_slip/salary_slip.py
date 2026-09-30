@@ -1712,10 +1712,21 @@ class SalarySlip(TransactionBase):
 
 		for additional_salary in additional_salaries:
 			component_data = get_salary_component_data(additional_salary.component)
-			remove_if_zero_valued = frappe.get_cached_value(
-				"Salary Component", additional_salary.component, "remove_if_zero_valued"
+			# a tax component overwritten to zero stays on the slip, so that tax handling
+			# takes the tax as zero instead of calculating it from the slabs
+			remove_if_zero_valued = (
+				frappe.get_cached_value(
+					"Salary Component", additional_salary.component, "remove_if_zero_valued"
+				)
+				and not component_data.variable_based_on_taxable_salary
 			)
-			if flt(additional_salary.amount) == 0 and remove_if_zero_valued:
+			# a zero amount that overwrites the structure amount still has to be applied,
+			# so that the component is removed instead of keeping the structure amount
+			if (
+				flt(additional_salary.amount) == 0
+				and remove_if_zero_valued
+				and not additional_salary.overwrite
+			):
 				continue
 			self.update_component_row(
 				component_data,
@@ -1723,9 +1734,14 @@ class SalarySlip(TransactionBase):
 				component_type,
 				additional_salary,
 				is_recurring=additional_salary.is_recurring,
+				remove_if_zero_valued=remove_if_zero_valued,
 			)
 
-			if component_type == "earnings" and hasattr(self, "benefit_ledger_components"):
+			if (
+				component_type == "earnings"
+				and hasattr(self, "benefit_ledger_components")
+				and flt(additional_salary.amount)
+			):
 				if (
 					additional_salary.ref_doctype == "Employee Benefit Claim"
 					and component_data.is_flexible_benefit
@@ -2260,7 +2276,11 @@ class SalarySlip(TransactionBase):
 			and cint(row.depends_on_payment_days)
 		):
 			amount, additional_amount = 0, 0
-		elif not row.amount and row.additional_amount:
+		elif (
+			not row.amount
+			and row.additional_amount
+			and not (row.additional_salary and row.default_amount)  # overwritten amount is final
+		):
 			amount = flt(row.additional_amount)
 
 		# apply rounding
