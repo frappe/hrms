@@ -141,23 +141,6 @@ frappe.ui.form.on("Employee Advance", {
 	},
 
 	make_return_entry: function (frm) {
-<<<<<<< HEAD
-		frappe.call({
-			method: "hrms.hr.doctype.employee_advance.employee_advance.make_return_entry",
-			args: {
-				employee: frm.doc.employee,
-				company: frm.doc.company,
-				employee_advance_name: frm.doc.name,
-				return_amount: flt(frm.doc.paid_amount - frm.doc.claimed_amount),
-				advance_account: frm.doc.advance_account,
-				mode_of_payment: frm.doc.mode_of_payment,
-				currency: frm.doc.currency,
-				exchange_rate: frm.doc.exchange_rate,
-			},
-			callback: function (r) {
-				const doclist = frappe.model.sync(r.message);
-				frappe.set_route("Form", doclist[0].doctype, doclist[0].name);
-=======
 		let dialog = new frappe.ui.Dialog({
 			title: __("Return Advance"),
 			fields: [
@@ -192,6 +175,7 @@ frappe.ui.form.on("Employee Advance", {
 						advance_account: frm.doc.advance_account,
 						mode_of_payment: frm.doc.mode_of_payment,
 						currency: frm.doc.currency,
+						exchange_rate: frm.doc.exchange_rate,
 						bank_account: values.bank_account,
 					},
 					callback: function (r) {
@@ -199,7 +183,6 @@ frappe.ui.form.on("Employee Advance", {
 						frappe.set_route("Form", doclist[0].doctype, doclist[0].name);
 					},
 				});
->>>>>>> 40652b9 (fix(employee_advance): let user pick a bank/cash account when returning an advance)
 			},
 		});
 		dialog.show();

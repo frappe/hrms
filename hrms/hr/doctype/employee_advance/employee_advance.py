@@ -327,7 +327,6 @@ def create_return_through_additional_salary(doc):
 
 @frappe.whitelist()
 def make_return_entry(
-<<<<<<< HEAD
 	employee,
 	company,
 	employee_advance_name,
@@ -336,23 +335,14 @@ def make_return_entry(
 	currency,
 	exchange_rate,
 	mode_of_payment=None,
+	bank_account=None,
 ):
 	bank_cash_account = get_default_bank_cash_account(
-		company, account_type="Cash", mode_of_payment=mode_of_payment
+		company,
+		account_type="Cash",
+		mode_of_payment=None if bank_account else mode_of_payment,
+		account=bank_account,
 	)
-	if not bank_cash_account:
-		frappe.throw(_("Please set a Default Cash Account in Company defaults"))
-=======
-	employee: str,
-	company: str,
-	employee_advance_name: str,
-	return_amount: str | float,
-	advance_account: str,
-	currency: str,
-	mode_of_payment: str | None = None,
-	bank_account: str | None = None,
-) -> dict:
-	bank_cash_account = get_same_currency_bank_cash_account(company, currency, mode_of_payment, bank_account)
 
 	if not (bank_cash_account.get("account") or bank_cash_account.get("name")):
 		frappe.msgprint(
@@ -364,7 +354,6 @@ def make_return_entry(
 			title=_("Bank/Cash Account Not Set"),
 			indicator="orange",
 		)
->>>>>>> 40652b9 (fix(employee_advance): let user pick a bank/cash account when returning an advance)
 
 	advance_account_currency = frappe.db.get_value("Account", advance_account, "account_currency")
 
@@ -418,48 +407,6 @@ def make_return_entry(
 	return je.as_dict()
 
 
-<<<<<<< HEAD
-=======
-def get_same_currency_bank_cash_account(company, currency, mode_of_payment=None, account=None):
-	company_currency = erpnext.get_company_currency(company)
-	if currency == company_currency:
-		return get_default_bank_cash_account(
-			company,
-			account_type="Cash",
-			mode_of_payment=None if account else mode_of_payment,
-			account=account,
-		)
-
-	if not account and mode_of_payment:
-		from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
-
-		account = get_bank_cash_account(mode_of_payment, company).get("account")
-
-	if not account:
-		accounts = frappe.get_all(
-			"Account",
-			filters={
-				"company": company,
-				"account_currency": currency,
-				"account_type": ["in", ["Cash", "Bank"]],
-				"is_group": 0,
-			},
-			limit=1,
-		)
-		if not accounts:
-			frappe.throw(
-				_("No Bank/Cash Account found for currency {0}. Please create one under company {1}.").format(
-					frappe.bold(currency), company
-				),
-				title=_("Account Not Found"),
-			)
-		account = accounts[0].name
-	return frappe.get_cached_value(
-		"Account", account, ["name", "account_currency", "account_type"], as_dict=True
-	)
-
-
->>>>>>> 40652b9 (fix(employee_advance): let user pick a bank/cash account when returning an advance)
 def get_voucher_type(mode_of_payment=None):
 	voucher_type = "Cash Entry"
 
