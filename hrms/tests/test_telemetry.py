@@ -455,6 +455,17 @@ class TestTelemetry(HRMSTestSuite):
 		leave_type = create_leave_type()
 		self.assertTrue(frappe.db.exists("Leave Type", leave_type.name))
 
+	def test_duplicate_claim_shows_no_message(self):
+		"""The user saving the observed document must not see a "Duplicate Name"
+		message for a milestone claimed earlier."""
+		self.release_milestone("_test_claim")
+		_claim_milestone("_test_claim")
+		frappe.clear_messages()
+
+		self.assertFalse(_claim_milestone("_test_claim"))
+		self.assertEqual(frappe.message_log, [])
+		self.assertFalse(frappe.flags.mute_messages)
+
 	def test_claim_is_enforced_by_the_database(self):
 		"""The exclusivity is a primary-key constraint, not application logic."""
 		self.release_milestone("_test_claim")
