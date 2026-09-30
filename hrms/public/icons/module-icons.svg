@@ -1,0 +1,67 @@
+<!-- Dual-tone module icons for the desk dock and sidebar headers. Each symbol animates while its dock
+     tile is hovered, through the icon-motion custom properties the tile sets (see dock.scss).
+
+     This sprite is inserted into the page, so the style block below is a document stylesheet: it can
+     style the tiles that hold an icon as well as the shapes inside one. -->
+
+<svg id="hrms-module-symbols" aria-hidden="true" style="display: none;" class="icon" xmlns="http://www.w3.org/2000/svg">
+	<style>
+		/* Tones. A symbol fills from --duotone-light and --duotone-dark. Only custom properties reach
+		   inside a use element, so the surface holding the icon sets them, and a symbol's own
+		   fallbacks are the resting tones it wears anywhere else. These rules match the ERPNext
+		   sprite's, so HRMS icons behave the same with or without it.
+
+		   Hover is motion alone: a hovered dock tile keeps the resting tones. The active tile moves
+		   both tones one token darker (lighter, in the dark theme). The sidebar header never animates;
+		   in the dark theme its hover fill is within a few levels of the resting light tone, so there
+		   the light tone moves up one token.
+
+		   Every value is a frappe-ui ink token (https://ui.frappe.io/docs/foundations/colors).
+		     rest           light: ink-gray-3 / ink-gray-5     dark: ink-gray-3 / ink-gray-6
+		     dock hover     as rest
+		     header hover   light: as rest                     dark: ink-gray-4 / ink-gray-6
+		     active         light: ink-gray-4 / ink-gray-6     dark: ink-gray-4 / ink-gray-7 */
+		.shell-header:hover .header-logo,
+		.shell-header.hover .header-logo {
+			--duotone-light: light-dark(var(--ink-gray-3), var(--ink-gray-4));
+		}
+		.dock-item--duotone.active {
+			--duotone-light: var(--ink-gray-4);
+			--duotone-dark: light-dark(var(--ink-gray-6), var(--ink-gray-7));
+		}
+		/* The briefcase is picked up by its handle and swings as it is carried, while hovered. It
+		   loops, so a still copy shows at rest and the moving copy never freezes mid-swing when the
+		   pointer leaves. */
+		.briefcase-still {
+			opacity: calc(1 - var(--icon-motion-opacity, 0));
+		}
+		.briefcase-carried {
+			opacity: var(--icon-motion-opacity, 0);
+			transform-box: view-box;
+			transform-origin: 12px 2.75px;
+			animation: briefcase-carry 1.4s ease-in-out infinite;
+			animation-play-state: var(--icon-motion, paused);
+		}
+		@keyframes briefcase-carry {
+			0%, 100% { transform: translateY(-1px) rotate(0deg); }
+			25% { transform: translateY(-1.4px) rotate(5deg); }
+			50% { transform: translateY(-1px) rotate(0deg); }
+			75% { transform: translateY(-1.4px) rotate(-5deg); }
+		}
+		@media (prefers-reduced-motion: reduce) {
+			.briefcase-carried { animation: none; }
+		}
+	</style>
+	<symbol viewBox="0 0 24 24" id="icon-briefcase-duotone" stroke="none" style="overflow: visible">
+		<g class="briefcase-still">
+			<path fill-rule="evenodd" d="M10.1 2.75H13.9Q15.5 2.75 15.5 4.35V7.2H8.5V4.35Q8.5 2.75 10.1 2.75ZM10.5 4.75H13.5V7.2H10.5V4.75Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+			<path fill-rule="evenodd" d="M4 7H20Q22 7 22 9V12.25H2V9Q2 7 4 7ZM10.2 10.5H13.8V12.25H10.2V10.5Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+			<path fill-rule="evenodd" d="M2 12.25H22V18Q22 20 20 20H4Q2 20 2 18V12.25ZM10.2 12.25H13.8V14H10.2V12.25Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+		<g class="briefcase-carried">
+			<path fill-rule="evenodd" d="M10.1 2.75H13.9Q15.5 2.75 15.5 4.35V7.2H8.5V4.35Q8.5 2.75 10.1 2.75ZM10.5 4.75H13.5V7.2H10.5V4.75Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+			<path fill-rule="evenodd" d="M4 7H20Q22 7 22 9V12.25H2V9Q2 7 4 7ZM10.2 10.5H13.8V12.25H10.2V10.5Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+			<path fill-rule="evenodd" d="M2 12.25H22V18Q22 20 20 20H4Q2 20 2 18V12.25ZM10.2 12.25H13.8V14H10.2V12.25Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+	</symbol>
+</svg>
