@@ -1,0 +1,283 @@
+<!-- Dual-tone module icons for the desk dock and sidebar headers. Each symbol animates while its dock
+     tile is hovered, through the icon-motion custom properties the tile sets (see dock.scss).
+
+     This sprite is inserted into the page, so the style block below is a document stylesheet: it can
+     style the tiles that hold an icon as well as the shapes inside one. -->
+
+<svg id="hrms-module-symbols" aria-hidden="true" style="display: none;" class="icon" xmlns="http://www.w3.org/2000/svg">
+	<style>
+		/* Tones. A symbol fills from --duotone-light and --duotone-dark. Only custom properties reach
+		   inside a use element, so the surface holding the icon sets them, and a symbol's own
+		   fallbacks are the resting tones it wears anywhere else. These rules match the ERPNext
+		   sprite's, so HRMS icons behave the same with or without it.
+
+		   Hover is motion alone: a hovered dock tile keeps the resting tones. The active tile moves
+		   both tones one token darker (lighter, in the dark theme). The sidebar header never animates;
+		   in the dark theme its hover fill is within a few levels of the resting light tone, so there
+		   the light tone moves up one token.
+
+		   Every value is a frappe-ui ink token (https://ui.frappe.io/docs/foundations/colors).
+		     rest           light: ink-gray-3 / ink-gray-5     dark: ink-gray-3 / ink-gray-6
+		     dock hover     as rest
+		     header hover   light: as rest                     dark: ink-gray-4 / ink-gray-6
+		     active         light: ink-gray-4 / ink-gray-6     dark: ink-gray-4 / ink-gray-7 */
+		.shell-header:hover .header-logo,
+		.shell-header.hover .header-logo {
+			--duotone-light: light-dark(var(--ink-gray-3), var(--ink-gray-4));
+		}
+		.dock-item--duotone.active {
+			--duotone-light: var(--ink-gray-4);
+			--duotone-dark: light-dark(var(--ink-gray-6), var(--ink-gray-7));
+		}
+		/* The briefcase is picked up by its handle and swings as it is carried, while hovered. It
+		   loops, so a still copy shows at rest and the moving copy never freezes mid-swing when the
+		   pointer leaves. */
+		.briefcase-still {
+			opacity: calc(1 - var(--icon-motion-opacity, 0));
+		}
+		.briefcase-carried {
+			opacity: var(--icon-motion-opacity, 0);
+			transform-box: view-box;
+			transform-origin: 12px 2.75px;
+			animation: briefcase-carry 1.4s ease-in-out infinite;
+			animation-play-state: var(--icon-motion, paused);
+		}
+		@keyframes briefcase-carry {
+			0%, 100% { transform: translateY(-1px) rotate(0deg); }
+			25% { transform: translateY(-1.4px) rotate(5deg); }
+			50% { transform: translateY(-1px) rotate(0deg); }
+			75% { transform: translateY(-1.4px) rotate(-5deg); }
+		}
+		/* Tenure: the clock's minute hand sweeps round while hovered. It loops, so a still hand shows
+		   at rest and the moving one never freezes mid-sweep when the pointer leaves. An ageing
+		   person (grey hair, a stoop) was drawn and dropped for the plain clock. */
+		.tenure-still {
+			opacity: calc(1 - var(--icon-motion-opacity, 0));
+		}
+		.tenure-minute {
+			opacity: var(--icon-motion-opacity, 0);
+			transform-box: view-box;
+			transform-origin: 16.8px 14.6px;
+			animation: tenure-sweep 1.6s linear infinite;
+			animation-play-state: var(--icon-motion, paused);
+		}
+		@keyframes tenure-sweep {
+			to { transform: rotate(360deg); }
+		}
+		/* Recruitment: the magnifier circles, looking, while hovered. A still copy shows at rest. */
+		.recruitment-still {
+			opacity: calc(1 - var(--icon-motion-opacity, 0));
+		}
+		.recruitment-searching {
+			opacity: var(--icon-motion-opacity, 0);
+			animation: recruitment-scan 1.8s ease-in-out infinite;
+			animation-play-state: var(--icon-motion, paused);
+		}
+		@keyframes recruitment-scan {
+			0%, 100% { transform: translate(0, 0); }
+			25% { transform: translate(1.4px, -0.8px); }
+			50% { transform: translate(0, -1.4px); }
+			75% { transform: translate(-1.4px, -0.8px); }
+		}
+		/* Tax and Benefits: the front coin flips over like a tossed coin, then rests, while hovered.
+		   It loops, so a still copy shows at rest and the moving copy never freezes mid-flip when the
+		   pointer leaves. */
+		.tax-still {
+			opacity: calc(1 - var(--icon-motion-opacity, 0));
+		}
+		.tax-flipping {
+			opacity: var(--icon-motion-opacity, 0);
+			transform-box: view-box;
+			transform-origin: 14.6px 13.4px;
+			animation: tax-flip 1.8s ease-in-out infinite;
+			animation-play-state: var(--icon-motion, paused);
+		}
+		@keyframes tax-flip {
+			0%, 15% { transform: scaleX(1); }
+			32.5% { transform: scaleX(0); }
+			50%, 100% { transform: scaleX(1); }
+		}
+		/* Shift and Attendance: the time card dips into the clock to be stamped and comes back up,
+		   while hovered. It loops, so a still card shows at rest and the moving one never freezes
+		   part-way in when the pointer leaves. The clock's hands stay still. */
+		.attendance-still {
+			opacity: calc(1 - var(--icon-motion-opacity, 0));
+		}
+		.attendance-punching {
+			opacity: var(--icon-motion-opacity, 0);
+			animation: attendance-punch 1.6s ease-in-out infinite;
+			animation-play-state: var(--icon-motion, paused);
+		}
+		@keyframes attendance-punch {
+			0%, 100% { transform: translateY(0); }
+			50% { transform: translateY(3.2px); }
+		}
+		/* Leaves: the palm swings from side to side on its island while hovered. A still copy shows
+		   at rest. */
+		.leaves-still {
+			opacity: calc(1 - var(--icon-motion-opacity, 0));
+		}
+		.leaves-swinging {
+			opacity: var(--icon-motion-opacity, 0);
+			transform-box: view-box;
+			transform-origin: 11.4px 19.4px;
+			animation: leaves-swing 2.2s ease-in-out infinite;
+			animation-play-state: var(--icon-motion, paused);
+		}
+		@keyframes leaves-swing {
+			0%, 100% { transform: rotate(0deg); }
+			25% { transform: rotate(9deg); }
+			75% { transform: rotate(-9deg); }
+		}
+		/* Performance: the star hops above the winner's block while hovered. It loops, so a still
+		   star shows at rest. */
+		.performance-still {
+			opacity: calc(1 - var(--icon-motion-opacity, 0));
+		}
+		.performance-hopping {
+			opacity: var(--icon-motion-opacity, 0);
+			animation: performance-hop 1.3s ease-in-out infinite;
+			animation-play-state: var(--icon-motion, paused);
+		}
+		@keyframes performance-hop {
+			0%, 100% { transform: translateY(0); }
+			50% { transform: translateY(-1.6px); }
+		}
+		/* Payroll: the notes rise out of the wallet and settle back while hovered. It loops, so still
+		   notes show at rest. */
+		.payroll-still {
+			opacity: calc(1 - var(--icon-motion-opacity, 0));
+		}
+		.payroll-rising {
+			opacity: var(--icon-motion-opacity, 0);
+			animation: payroll-rise 1.5s ease-in-out infinite;
+			animation-play-state: var(--icon-motion, paused);
+		}
+		@keyframes payroll-rise {
+			0%, 100% { transform: translateY(0); }
+			50% { transform: translateY(-1.8px); }
+		}
+		/* Expenses: the card swipes across the receipt and back while hovered. A still card shows
+		   at rest. */
+		.expenses-still {
+			opacity: calc(1 - var(--icon-motion-opacity, 0));
+		}
+		.expenses-swiping {
+			opacity: var(--icon-motion-opacity, 0);
+			animation: expenses-swipe 1.5s ease-in-out infinite;
+			animation-play-state: var(--icon-motion, paused);
+		}
+		@keyframes expenses-swipe {
+			0%, 100% { transform: translateX(0); }
+			50% { transform: translateX(-1.8px); }
+		}
+		@media (prefers-reduced-motion: reduce) {
+			.briefcase-carried,
+			.tenure-minute,
+			.recruitment-searching,
+			.tax-flipping,
+			.attendance-punching,
+			.leaves-swinging,
+			.performance-hopping,
+			.payroll-rising,
+			.expenses-swiping { animation: none; }
+		}
+	</style>
+	<symbol viewBox="0 0 24 24" id="icon-briefcase-duotone" stroke="none" style="overflow: visible">
+		<g class="briefcase-still">
+			<path fill-rule="evenodd" d="M10.1 2.75H13.9Q15.5 2.75 15.5 4.35V7.2H8.5V4.35Q8.5 2.75 10.1 2.75ZM10.5 4.75H13.5V7.2H10.5V4.75Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+			<path fill-rule="evenodd" d="M4 7H20Q22 7 22 9V12.25H2V9Q2 7 4 7ZM10.2 10.5H13.8V12.25H10.2V10.5Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+			<path fill-rule="evenodd" d="M2 12.25H22V18Q22 20 20 20H4Q2 20 2 18V12.25ZM10.2 12.25H13.8V14H10.2V12.25Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+		<g class="briefcase-carried">
+			<path fill-rule="evenodd" d="M10.1 2.75H13.9Q15.5 2.75 15.5 4.35V7.2H8.5V4.35Q8.5 2.75 10.1 2.75ZM10.5 4.75H13.5V7.2H10.5V4.75Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+			<path fill-rule="evenodd" d="M4 7H20Q22 7 22 9V12.25H2V9Q2 7 4 7ZM10.2 10.5H13.8V12.25H10.2V10.5Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+			<path fill-rule="evenodd" d="M2 12.25H22V18Q22 20 20 20H4Q2 20 2 18V12.25ZM10.2 12.25H13.8V14H10.2V12.25Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+	</symbol>
+	<symbol viewBox="0 0 24 24" id="icon-user-clock-duotone" stroke="none" style="overflow: visible">
+		<path fill-rule="evenodd" d="M5.1 7A3.5 3.5 0 1 0 12.1 7A3.5 3.5 0 1 0 5.1 7Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		<path fill-rule="evenodd" d="M2 19V16.6C2 13.4 4.8 11.9 8.6 11.9C12.4 11.9 15.2 13.4 15.2 16.6V19Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		<path fill-rule="evenodd" d="M11.4 14.6A5.4 5.4 0 1 0 22.2 14.6A5.4 5.4 0 1 0 11.4 14.6Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+		<path fill-rule="evenodd" d="M16.8 11.2H16.8Q17.5 11.2 17.5 11.9V14.6Q17.5 15.3 16.8 15.3H16.8Q16.1 15.3 16.1 14.6V11.9Q16.1 11.2 16.8 11.2Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		<path class="tenure-still" fill-rule="evenodd" d="M16.8 13.9H19.5Q20.2 13.9 20.2 14.6V14.6Q20.2 15.3 19.5 15.3H16.8Q16.1 15.3 16.1 14.6V14.6Q16.1 13.9 16.8 13.9Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		<path class="tenure-minute" fill-rule="evenodd" d="M16.8 13.9H19.5Q20.2 13.9 20.2 14.6V14.6Q20.2 15.3 19.5 15.3H16.8Q16.1 15.3 16.1 14.6V14.6Q16.1 13.9 16.8 13.9Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+	</symbol>
+	<symbol viewBox="0 0 24 24" id="icon-user-search-duotone" stroke="none" style="overflow: visible">
+		<g class="recruitment-still">
+			<path fill-rule="evenodd" d="M4 9.4A5.8 5.8 0 1 0 15.6 9.4A5.8 5.8 0 1 0 4 9.4Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+			<path fill-rule="evenodd" d="M7.7 7.9A2.1 2.1 0 1 0 11.9 7.9A2.1 2.1 0 1 0 7.7 7.9ZM6.200000000000001 13.6V13.2C6.200000000000001 11.6 7.9 10.6 9.8 10.6C11.700000000000001 10.6 13.4 11.6 13.4 13.2V13.6Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+			<path fill-rule="evenodd" d="M2.5 9.4A7.3 7.3 0 1 0 17.1 9.4A7.3 7.3 0 1 0 2.5 9.4ZM4 9.4A5.8 5.8 0 1 0 15.6 9.4A5.8 5.8 0 1 0 4 9.4Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+			<path fill-rule="evenodd" d="M14.09 15.95L19.69 21.35L21.91 19.05L16.31 13.65Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+		<g class="recruitment-searching">
+			<path fill-rule="evenodd" d="M4 9.4A5.8 5.8 0 1 0 15.6 9.4A5.8 5.8 0 1 0 4 9.4Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+			<path fill-rule="evenodd" d="M7.7 7.9A2.1 2.1 0 1 0 11.9 7.9A2.1 2.1 0 1 0 7.7 7.9ZM6.200000000000001 13.6V13.2C6.200000000000001 11.6 7.9 10.6 9.8 10.6C11.700000000000001 10.6 13.4 11.6 13.4 13.2V13.6Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+			<path fill-rule="evenodd" d="M2.5 9.4A7.3 7.3 0 1 0 17.1 9.4A7.3 7.3 0 1 0 2.5 9.4ZM4 9.4A5.8 5.8 0 1 0 15.6 9.4A5.8 5.8 0 1 0 4 9.4Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+			<path fill-rule="evenodd" d="M14.09 15.95L19.69 21.35L21.91 19.05L16.31 13.65Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+	</symbol>
+	<symbol viewBox="0 0 24 24" id="icon-coins-percent-duotone" stroke="none" style="overflow: visible">
+		<path fill-rule="evenodd" d="M6.61 14.75A6.6 6.6 0 1 1 14.72 5.3A8.1 8.1 0 0 0 6.61 14.75Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+		<g class="tax-still">
+			<path fill-rule="evenodd" d="M7.5 13.4A7.1 7.1 0 1 0 21.7 13.4A7.1 7.1 0 1 0 7.5 13.4ZM10.75 10.95A1.5 1.5 0 1 0 13.75 10.95A1.5 1.5 0 1 0 10.75 10.95ZM15.45 15.85A1.5 1.5 0 1 0 18.45 15.85A1.5 1.5 0 1 0 15.45 15.85ZM12.6 17.3L17.8 10.4A0.75 0.75 0 0 0 16.6 9.5L11.4 16.4A0.75 0.75 0 0 0 12.6 17.3Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+		<g class="tax-flipping">
+			<path fill-rule="evenodd" d="M7.5 13.4A7.1 7.1 0 1 0 21.7 13.4A7.1 7.1 0 1 0 7.5 13.4ZM10.75 10.95A1.5 1.5 0 1 0 13.75 10.95A1.5 1.5 0 1 0 10.75 10.95ZM15.45 15.85A1.5 1.5 0 1 0 18.45 15.85A1.5 1.5 0 1 0 15.45 15.85ZM12.6 17.3L17.8 10.4A0.75 0.75 0 0 0 16.6 9.5L11.4 16.4A0.75 0.75 0 0 0 12.6 17.3Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+	</symbol>
+	<symbol viewBox="0 0 24 24" id="icon-time-clock-duotone" stroke="none" style="overflow: visible">
+		<g class="attendance-still">
+			<path fill-rule="evenodd" d="M7.1 2H16.9Q17.5 2 17.5 2.6V8.4Q17.5 9 16.9 9H7.1Q6.5 9 6.5 8.4V2.6Q6.5 2 7.1 2Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+			<path fill-rule="evenodd" d="M8.9 4.75L15.1 4.75A0.65 0.65 0 0 0 15.1 3.45L8.9 3.45A0.65 0.65 0 0 0 8.9 4.75ZM8.9 6.95L15.1 6.95A0.65 0.65 0 0 0 15.1 5.65L8.9 5.65A0.65 0.65 0 0 0 8.9 6.95Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+		<g class="attendance-punching">
+			<path fill-rule="evenodd" d="M7.1 2H16.9Q17.5 2 17.5 2.6V8.4Q17.5 9 16.9 9H7.1Q6.5 9 6.5 8.4V2.6Q6.5 2 7.1 2Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+			<path fill-rule="evenodd" d="M8.9 4.75L15.1 4.75A0.65 0.65 0 0 0 15.1 3.45L8.9 3.45A0.65 0.65 0 0 0 8.9 4.75ZM8.9 6.95L15.1 6.95A0.65 0.65 0 0 0 15.1 5.65L8.9 5.65A0.65 0.65 0 0 0 8.9 6.95Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+		<path fill-rule="evenodd" d="M4.3 8.2H19.7Q21.5 8.2 21.5 10V18.7Q21.5 20.5 19.7 20.5H4.3Q2.5 20.5 2.5 18.7V10Q2.5 8.2 4.3 8.2ZM6.1 9.7H17.9Q18.6 9.7 18.6 10.4V10.4Q18.6 11.1 17.9 11.1H6.1Q5.4 11.1 5.4 10.4V10.4Q5.4 9.7 6.1 9.7Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		<path fill-rule="evenodd" d="M8.3 15.7A3.7 3.7 0 1 0 15.7 15.7A3.7 3.7 0 1 0 8.3 15.7Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+		<path fill-rule="evenodd" d="M11.35 13.05L11.35 16.35L14.65 16.35L14.65 15.05L12.65 15.05L12.65 13.05Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+	</symbol>
+	<symbol viewBox="0 0 24 24" id="icon-tree-palm-duotone" stroke="none" style="overflow: visible">
+		<path fill-rule="evenodd" d="M2.5 20.4C4.6 17.4 8.4 16.2 12 16.2C15.6 16.2 19.4 17.4 21.5 20.4Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+		<g class="leaves-still">
+			<path fill-rule="evenodd" d="M9.9 19.4C10.2 15.2 11.2 11.4 12.8 8.2L14.9 9C13.6 12 12.9 15.6 12.9 19.4ZM13.6 8.4Q7.48 4.42 3.6 10.6Q8.51 9.11 13.6 8.4ZM13.6 8.4Q11.8 3.08 6.2 3.4Q9.56 6.4 13.6 8.4ZM13.6 8.4Q16.13 5.45 15.6 1.6Q13.07 4.55 13.6 8.4ZM13.6 8.4Q17.7 7.56 21.4 5.6Q16.35 3.8 13.6 8.4ZM13.6 8.4Q17.98 10.14 22 12.6Q20.13 5.85 13.6 8.4Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+		<g class="leaves-swinging">
+			<path fill-rule="evenodd" d="M9.9 19.4C10.2 15.2 11.2 11.4 12.8 8.2L14.9 9C13.6 12 12.9 15.6 12.9 19.4ZM13.6 8.4Q7.48 4.42 3.6 10.6Q8.51 9.11 13.6 8.4ZM13.6 8.4Q11.8 3.08 6.2 3.4Q9.56 6.4 13.6 8.4ZM13.6 8.4Q16.13 5.45 15.6 1.6Q13.07 4.55 13.6 8.4ZM13.6 8.4Q17.7 7.56 21.4 5.6Q16.35 3.8 13.6 8.4ZM13.6 8.4Q17.98 10.14 22 12.6Q20.13 5.85 13.6 8.4Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+	</symbol>
+	<symbol viewBox="0 0 24 24" id="icon-podium-duotone" stroke="none" style="overflow: visible">
+		<path fill-rule="evenodd" d="M3.5 14H8.6Q8.6 14 8.6 14V20Q8.6 20 8.6 20H3.5Q2.5 20 2.5 19V15Q2.5 14 3.5 14ZM15.4 16H20.5Q21.5 16 21.5 17V19Q21.5 20 20.5 20H15.4Q15.4 20 15.4 20V16Q15.4 16 15.4 16Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+		<path fill-rule="evenodd" d="M9.6 10.8H14.4Q15.4 10.8 15.4 11.8V20Q15.4 20 15.4 20H8.6Q8.6 20 8.6 20V11.8Q8.6 10.8 9.6 10.8Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		<g class="performance-still">
+			<path fill-rule="evenodd" d="M12 1.1L13.2 4.04L16.37 4.28L13.95 6.33L14.7 9.42L12 7.75L9.3 9.42L10.05 6.33L7.63 4.28L10.8 4.04Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+		<g class="performance-hopping">
+			<path fill-rule="evenodd" d="M12 1.1L13.2 4.04L16.37 4.28L13.95 6.33L14.7 9.42L12 7.75L9.3 9.42L10.05 6.33L7.63 4.28L10.8 4.04Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+	</symbol>
+	<symbol viewBox="0 0 24 24" id="icon-wallet-duotone" stroke="none" style="overflow: visible">
+		<g class="payroll-still">
+			<path fill-rule="evenodd" d="M6.2 3.4H16.3Q17.5 3.4 17.5 4.6V8.8Q17.5 10 16.3 10H6.2Q5 10 5 8.8V4.6Q5 3.4 6.2 3.4Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+		</g>
+		<g class="payroll-rising">
+			<path fill-rule="evenodd" d="M6.2 3.4H16.3Q17.5 3.4 17.5 4.6V8.8Q17.5 10 16.3 10H6.2Q5 10 5 8.8V4.6Q5 3.4 6.2 3.4Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+		</g>
+		<path fill-rule="evenodd" d="M4.9 7H19.1Q21.5 7 21.5 9.4V17.6Q21.5 20 19.1 20H4.9Q2.5 20 2.5 17.6V9.4Q2.5 7 4.9 7Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		<path fill-rule="evenodd" d="M16.9 11.2H21.5Q21.5 11.2 21.5 11.2V15.8Q21.5 15.8 21.5 15.8H16.9Q14.6 15.8 14.6 13.5V13.5Q14.6 11.2 16.9 11.2Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+		<path fill-rule="evenodd" d="M16.2 13.5A1.1 1.1 0 1 0 18.4 13.5A1.1 1.1 0 1 0 16.2 13.5Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+	</symbol>
+	<symbol viewBox="0 0 24 24" id="icon-receipt-card-duotone" stroke="none" style="overflow: visible">
+		<path fill-rule="evenodd" d="M4.9 2.4H13.1Q14.5 2.4 14.5 3.8V19.6L13.12 18L11.75 19.6L10.38 18L9 19.6L7.62 18L6.25 19.6L4.88 18L3.5 19.6V3.8Q3.5 2.4 4.9 2.4ZM6.4 6.95L11.6 6.95A0.75 0.75 0 0 0 11.6 5.45L6.4 5.45A0.75 0.75 0 0 0 6.4 6.95ZM6.4 10.15L9.6 10.15A0.75 0.75 0 0 0 9.6 8.65L6.4 8.65A0.75 0.75 0 0 0 6.4 10.15Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		<g class="expenses-still">
+			<path fill-rule="evenodd" d="M11.7 11.6H20.3Q22 11.6 22 13.3V17.9Q22 19.6 20.3 19.6H11.7Q10 19.6 10 17.9V13.3Q10 11.6 11.7 11.6Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+			<path fill-rule="evenodd" d="M10 13.5H22Q22 13.5 22 13.5V15.4Q22 15.4 22 15.4H10Q10 15.4 10 15.4V13.5Q10 13.5 10 13.5Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+		<g class="expenses-swiping">
+			<path fill-rule="evenodd" d="M11.7 11.6H20.3Q22 11.6 22 13.3V17.9Q22 19.6 20.3 19.6H11.7Q10 19.6 10 17.9V13.3Q10 11.6 11.7 11.6Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+			<path fill-rule="evenodd" d="M10 13.5H22Q22 13.5 22 13.5V15.4Q22 15.4 22 15.4H10Q10 15.4 10 15.4V13.5Q10 13.5 10 13.5Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+	</symbol>
+</svg>

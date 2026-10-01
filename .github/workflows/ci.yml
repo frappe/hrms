@@ -112,7 +112,8 @@ jobs:
           bash ${GITHUB_WORKSPACE}/.github/helper/install.sh
         env:
           FRAPPE_USER: ${{ github.event.inputs.user }}
-          FRAPPE_BRANCH: ${{ github.event.inputs.branch }}
+          FRAPPE_BRANCH: ${{ github.event.inputs.branch || (github.head_ref == 'version-16-polished' && 'version-16-polished') || '' }}
+          ERPNEXT_BRANCH: ${{ (github.head_ref == 'version-16-polished' && 'version-16-polished') || '' }}
 
       - name: Run Tests
         run: cd ~/frappe-bench/ && bench --site test_site run-parallel-tests --app hrms --total-builds ${{ strategy.job-total }} --build-number ${{ matrix.container }} --lightmode

@@ -11,13 +11,7 @@ hrms.HierarchyChartMobile = class {
 		this.method = method;
 		this.doctype = doctype;
 
-		this.page.main.css({
-			"min-height": "300px",
-			"max-height": "600px",
-			overflow: "auto",
-			position: "relative",
-		});
-		this.page.main.addClass("frappe-card");
+		this.page.main.addClass("frappe-card hierarchy-chart-main");
 
 		this.nodes = {};
 		this.setup_node_class();
@@ -101,6 +95,16 @@ hrms.HierarchyChartMobile = class {
 
 		company.refresh();
 		$(`[data-fieldname="company"]`).trigger("change");
+		$(`[data-fieldname="company"] .link-field`).addClass("hierarchy-company-link-field");
+	}
+
+	set_main_state(state) {
+		const state_classes = "hierarchy-main-mobile-chart hierarchy-main-mobile-empty";
+		this.page.main.removeClass(state_classes);
+
+		if (state) {
+			this.page.main.addClass(state);
+		}
 	}
 
 	make_svg_markers() {
@@ -155,6 +159,9 @@ hrms.HierarchyChartMobile = class {
 			})
 			.then((r) => {
 				if (r.message.length) {
+					me.page.body.find("#hierarchy-empty-root").remove();
+					me.set_main_state("hierarchy-main-mobile-chart");
+
 					let root_level = me.$hierarchy.find(".root-level");
 					root_level.empty();
 

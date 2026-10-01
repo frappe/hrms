@@ -47,6 +47,7 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Overtime Duration",
+   "non_negative": 1,
    "precision": "2",
    "reqd": 1
   },
@@ -61,13 +62,14 @@
    "fieldname": "standard_working_hours",
    "fieldtype": "Float",
    "label": "Standard Working Hours",
+   "non_negative": 1,
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-08-13 11:32:52.884936",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Overtime Details",

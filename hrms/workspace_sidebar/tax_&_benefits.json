@@ -3,13 +3,13 @@
  "creation": "2025-11-12 15:31:27.323617",
  "docstatus": 0,
  "doctype": "Workspace Sidebar",
- "header_icon": "money-coins-1",
+ "header_icon": "coins",
  "idx": 0,
  "items": [
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "home",
+   "icon": "house",
    "indent": 0,
    "keep_closed": 0,
    "label": "Home",
@@ -33,7 +33,7 @@
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "liabilities",
+   "icon": "scale",
    "indent": 0,
    "keep_closed": 0,
    "label": "Exemption Submission Proof",
@@ -45,7 +45,7 @@
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "criticize",
+   "icon": "trending-up",
    "indent": 0,
    "keep_closed": 0,
    "label": "Benefit Application",
@@ -148,9 +148,9 @@
    "type": "Link"
   }
  ],
- "modified": "2026-02-23 12:00:35.246366",
+ "modified": "2026-08-07 12:00:00.000000",
  "modified_by": "Administrator",
- "module": "Payroll",
+ "module": "Tax and Benefits",
  "name": "Tax & Benefits",
  "owner": "Administrator",
  "standard": 1,

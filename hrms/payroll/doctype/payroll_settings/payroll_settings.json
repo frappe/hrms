@@ -44,7 +44,8 @@
   {
    "fieldname": "max_working_hours_against_timesheet",
    "fieldtype": "Float",
-   "label": "Max working hours against Timesheet"
+   "label": "Max working hours against Timesheet",
+   "non_negative": 1
   },
   {
    "default": "0",
@@ -65,7 +66,8 @@
    "description": "The fraction of daily wages to be paid for half-day attendance",
    "fieldname": "daily_wages_fraction_for_half_day",
    "fieldtype": "Float",
-   "label": "Fraction of Daily Salary for Half Day"
+   "label": "Fraction of Daily Salary for Half Day",
+   "non_negative": 1
   },
   {
    "default": "1",
@@ -202,7 +204,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-03-26 15:37:55.573986",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Settings",

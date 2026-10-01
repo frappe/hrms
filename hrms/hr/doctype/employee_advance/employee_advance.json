@@ -100,6 +100,7 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Advance Amount",
+   "non_negative": 1,
    "options": "currency",
    "reqd": 1
   },
@@ -244,7 +245,7 @@
  "grid_page_length": 50,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-10 23:18:24.203679",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Advance",

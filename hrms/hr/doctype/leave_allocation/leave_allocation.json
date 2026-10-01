@@ -117,7 +117,8 @@
    "bold": 1,
    "fieldname": "new_leaves_allocated",
    "fieldtype": "Float",
-   "label": "New Leaves Allocated"
+   "label": "New Leaves Allocated",
+   "non_negative": 1
   },
   {
    "default": "0",
@@ -258,7 +259,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-12 12:54:03.589896",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Allocation",
