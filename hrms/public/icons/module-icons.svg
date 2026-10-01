@@ -97,11 +97,45 @@
 			32.5% { transform: scaleX(0); }
 			50%, 100% { transform: scaleX(1); }
 		}
+		/* Shift and Attendance: the time card dips into the clock to be stamped and comes back up,
+		   while hovered. It loops, so a still card shows at rest and the moving one never freezes
+		   part-way in when the pointer leaves. The clock's hands stay still. */
+		.attendance-still {
+			opacity: calc(1 - var(--icon-motion-opacity, 0));
+		}
+		.attendance-punching {
+			opacity: var(--icon-motion-opacity, 0);
+			animation: attendance-punch 1.6s ease-in-out infinite;
+			animation-play-state: var(--icon-motion, paused);
+		}
+		@keyframes attendance-punch {
+			0%, 100% { transform: translateY(0); }
+			50% { transform: translateY(3.2px); }
+		}
+		/* Leaves: the palm swings from side to side on its island while hovered. A still copy shows
+		   at rest. */
+		.leaves-still {
+			opacity: calc(1 - var(--icon-motion-opacity, 0));
+		}
+		.leaves-swinging {
+			opacity: var(--icon-motion-opacity, 0);
+			transform-box: view-box;
+			transform-origin: 11.4px 19.4px;
+			animation: leaves-swing 2.2s ease-in-out infinite;
+			animation-play-state: var(--icon-motion, paused);
+		}
+		@keyframes leaves-swing {
+			0%, 100% { transform: rotate(0deg); }
+			25% { transform: rotate(9deg); }
+			75% { transform: rotate(-9deg); }
+		}
 		@media (prefers-reduced-motion: reduce) {
 			.briefcase-carried,
 			.tenure-minute,
 			.recruitment-searching,
-			.tax-flipping { animation: none; }
+			.tax-flipping,
+			.attendance-punching,
+			.leaves-swinging { animation: none; }
 		}
 	</style>
 	<symbol viewBox="0 0 24 24" id="icon-briefcase-duotone" stroke="none" style="overflow: visible">
@@ -145,6 +179,28 @@
 		</g>
 		<g class="tax-flipping">
 			<path fill-rule="evenodd" d="M7.5 13.4A7.1 7.1 0 1 0 21.7 13.4A7.1 7.1 0 1 0 7.5 13.4ZM10.75 10.95A1.5 1.5 0 1 0 13.75 10.95A1.5 1.5 0 1 0 10.75 10.95ZM15.45 15.85A1.5 1.5 0 1 0 18.45 15.85A1.5 1.5 0 1 0 15.45 15.85ZM12.6 17.3L17.8 10.4A0.75 0.75 0 0 0 16.6 9.5L11.4 16.4A0.75 0.75 0 0 0 12.6 17.3Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+	</symbol>
+	<symbol viewBox="0 0 24 24" id="icon-time-clock-duotone" stroke="none" style="overflow: visible">
+		<g class="attendance-still">
+			<path fill-rule="evenodd" d="M7.1 2H16.9Q17.5 2 17.5 2.6V8.4Q17.5 9 16.9 9H7.1Q6.5 9 6.5 8.4V2.6Q6.5 2 7.1 2Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+			<path fill-rule="evenodd" d="M8.9 4.75L15.1 4.75A0.65 0.65 0 0 0 15.1 3.45L8.9 3.45A0.65 0.65 0 0 0 8.9 4.75ZM8.9 6.95L15.1 6.95A0.65 0.65 0 0 0 15.1 5.65L8.9 5.65A0.65 0.65 0 0 0 8.9 6.95Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+		<g class="attendance-punching">
+			<path fill-rule="evenodd" d="M7.1 2H16.9Q17.5 2 17.5 2.6V8.4Q17.5 9 16.9 9H7.1Q6.5 9 6.5 8.4V2.6Q6.5 2 7.1 2Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+			<path fill-rule="evenodd" d="M8.9 4.75L15.1 4.75A0.65 0.65 0 0 0 15.1 3.45L8.9 3.45A0.65 0.65 0 0 0 8.9 4.75ZM8.9 6.95L15.1 6.95A0.65 0.65 0 0 0 15.1 5.65L8.9 5.65A0.65 0.65 0 0 0 8.9 6.95Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+		<path fill-rule="evenodd" d="M4.3 8.2H19.7Q21.5 8.2 21.5 10V18.7Q21.5 20.5 19.7 20.5H4.3Q2.5 20.5 2.5 18.7V10Q2.5 8.2 4.3 8.2ZM6.1 9.7H17.9Q18.6 9.7 18.6 10.4V10.4Q18.6 11.1 17.9 11.1H6.1Q5.4 11.1 5.4 10.4V10.4Q5.4 9.7 6.1 9.7Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		<path fill-rule="evenodd" d="M8.3 15.7A3.7 3.7 0 1 0 15.7 15.7A3.7 3.7 0 1 0 8.3 15.7Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+		<path fill-rule="evenodd" d="M11.35 13.05L11.35 16.35L14.65 16.35L14.65 15.05L12.65 15.05L12.65 13.05Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+	</symbol>
+	<symbol viewBox="0 0 24 24" id="icon-tree-palm-duotone" stroke="none" style="overflow: visible">
+		<path fill-rule="evenodd" d="M2.5 20.4C4.6 17.4 8.4 16.2 12 16.2C15.6 16.2 19.4 17.4 21.5 20.4Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+		<g class="leaves-still">
+			<path fill-rule="evenodd" d="M9.9 19.4C10.2 15.2 11.2 11.4 12.8 8.2L14.9 9C13.6 12 12.9 15.6 12.9 19.4ZM13.6 8.4Q7.48 4.42 3.6 10.6Q8.51 9.11 13.6 8.4ZM13.6 8.4Q11.8 3.08 6.2 3.4Q9.56 6.4 13.6 8.4ZM13.6 8.4Q16.13 5.45 15.6 1.6Q13.07 4.55 13.6 8.4ZM13.6 8.4Q17.7 7.56 21.4 5.6Q16.35 3.8 13.6 8.4ZM13.6 8.4Q17.98 10.14 22 12.6Q20.13 5.85 13.6 8.4Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+		<g class="leaves-swinging">
+			<path fill-rule="evenodd" d="M9.9 19.4C10.2 15.2 11.2 11.4 12.8 8.2L14.9 9C13.6 12 12.9 15.6 12.9 19.4ZM13.6 8.4Q7.48 4.42 3.6 10.6Q8.51 9.11 13.6 8.4ZM13.6 8.4Q11.8 3.08 6.2 3.4Q9.56 6.4 13.6 8.4ZM13.6 8.4Q16.13 5.45 15.6 1.6Q13.07 4.55 13.6 8.4ZM13.6 8.4Q17.7 7.56 21.4 5.6Q16.35 3.8 13.6 8.4ZM13.6 8.4Q17.98 10.14 22 12.6Q20.13 5.85 13.6 8.4Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
 		</g>
 	</symbol>
 </svg>

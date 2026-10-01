@@ -32,7 +32,7 @@
   {
    "added": 0,
    "hidden": 0,
-   "icon": "milestone",
+   "icon": "time-clock-duotone",
    "link_to": "Shift & Attendance",
    "link_type": "Sidebar",
    "title": "Shift & Attendance"
@@ -40,7 +40,7 @@
   {
    "added": 0,
    "hidden": 0,
-   "icon": "tree-palm",
+   "icon": "tree-palm-duotone",
    "link_to": "Leaves",
    "link_type": "Sidebar",
    "title": "Leaves"
@@ -78,7 +78,7 @@
    "title": "Tax & Benefits"
   }
  ],
- "modified": "2026-10-01 21:00:00.000000",
+ "modified": "2026-10-01 22:00:00.000000",
  "modified_by": "Administrator",
  "name": "hrms",
  "owner": "Administrator",
