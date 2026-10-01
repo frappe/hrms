@@ -3,7 +3,7 @@
  "creation": "2026-08-07 12:00:00",
  "docstatus": 0,
  "doctype": "Sidebar",
- "header_icon": "coins",
+ "header_icon": "coins-percent-duotone",
  "idx": 0,
  "items": [
   {
@@ -387,7 +387,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-10-01 12:22:00.957973",
+ "modified": "2026-10-02 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Tax and Benefits",
  "name": "Tax & Benefits",

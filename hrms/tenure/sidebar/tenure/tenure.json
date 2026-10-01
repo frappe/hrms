@@ -3,7 +3,7 @@
  "creation": "2026-08-07 12:00:00",
  "docstatus": 0,
  "doctype": "Sidebar",
- "header_icon": "user",
+ "header_icon": "user-clock-duotone",
  "idx": 0,
  "items": [
   {
@@ -353,7 +353,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-09-30 12:08:52.122202",
+ "modified": "2026-10-02 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Tenure",
  "name": "Tenure",
