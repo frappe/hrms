@@ -42,7 +42,7 @@ from frappe.tests import IntegrationTestCase
 #: it. Naming these two after their modules instead is what the `&` gets quietly eaten by.
 SIDEBAR_SHELLS = {
 	"Expenses": "Expenses",
-	"HR Setup": "HR Setup",
+	"HR Setup": "HR",
 	"Leaves": "Leaves",
 	"Payroll": "Payroll",
 	"Performance": "Performance",

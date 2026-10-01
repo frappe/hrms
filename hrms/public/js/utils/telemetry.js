@@ -3,7 +3,6 @@ frappe.provide("hrms.telemetry");
 // HR workspaces shown on the desk sidebar (see hrms/hr/workspace + payroll/workspace).
 const HR_WORKSPACES = new Set([
 	"HR",
-	"HR Setup",
 	"Leaves",
 	"Shift & Attendance",
 	"Expenses",

@@ -7,7 +7,7 @@ app_license = "GNU General Public License (v3)"
 required_apps = ["frappe/erpnext"]
 source_link = "http://github.com/frappe/hrms"
 app_logo_url = "/assets/hrms/images/frappe-hr-logo.svg"
-app_home = "/desk/hr-setup"
+app_home = "/desk/hr"
 
 add_to_apps_screen = [
 	{

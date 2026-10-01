@@ -2,7 +2,7 @@ import frappe
 
 
 def execute():
-	old_workspaces = ["Expense Claims", "Salary Payout", "Employee Lifecycle", "Overview", "Attendance", "HR"]
+	old_workspaces = ["Expense Claims", "Salary Payout", "Employee Lifecycle", "Overview", "Attendance"]
 
 	for workspace in old_workspaces:
 		if frappe.db.exists("Workspace", {"name": workspace, "public": 1, "for_user": ("is", "Not Set")}):
