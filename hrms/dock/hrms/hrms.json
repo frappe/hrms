@@ -48,7 +48,7 @@
   {
    "added": 0,
    "hidden": 0,
-   "icon": "receipt-text",
+   "icon": "receipt-card-duotone",
    "link_to": "Expenses",
    "link_type": "Sidebar",
    "title": "Expenses"
@@ -64,7 +64,7 @@
   {
    "added": 0,
    "hidden": 0,
-   "icon": "wallet",
+   "icon": "wallet-duotone",
    "link_to": "Payroll",
    "link_type": "Sidebar",
    "title": "Payroll"
