@@ -28,9 +28,6 @@
   "prevent_self_leave_approval",
   "show_leaves_of_all_department_members_in_calendar",
   "column_break_29",
-  "send_leave_notification",
-  "leave_approval_notification_template",
-  "leave_status_notification_template",
   "restrict_backdated_leave_application",
   "role_allowed_to_create_backdated_leave_application",
   "expenses_tab",
@@ -110,28 +107,6 @@
    "label": "Role Allowed to Create Backdated Leave Application",
    "mandatory_depends_on": "eval:doc.restrict_backdated_leave_application == 1",
    "options": "Role"
-  },
-  {
-   "default": "1",
-   "fieldname": "send_leave_notification",
-   "fieldtype": "Check",
-   "label": "Send Leave Notification"
-  },
-  {
-   "depends_on": "eval: doc.send_leave_notification == 1",
-   "fieldname": "leave_approval_notification_template",
-   "fieldtype": "Link",
-   "label": "Leave Approval Notification Template",
-   "mandatory_depends_on": "eval: doc.send_leave_notification == 1",
-   "options": "Email Template"
-  },
-  {
-   "depends_on": "eval: doc.send_leave_notification == 1",
-   "fieldname": "leave_status_notification_template",
-   "fieldtype": "Link",
-   "label": "Leave Status Notification Template",
-   "mandatory_depends_on": "eval: doc.send_leave_notification == 1",
-   "options": "Email Template"
   },
   {
    "fieldname": "standard_working_hours",
@@ -389,7 +364,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-09-03 11:00:00.000000",
+ "modified": "2026-09-23 12:49:38.447252",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
