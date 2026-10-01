@@ -72,13 +72,13 @@
   {
    "added": 0,
    "hidden": 0,
-   "icon": "coins",
+   "icon": "coins-percent-duotone",
    "link_to": "Tax & Benefits",
    "link_type": "Sidebar",
    "title": "Tax & Benefits"
   }
  ],
- "modified": "2026-10-01 20:00:00.000000",
+ "modified": "2026-10-01 21:00:00.000000",
  "modified_by": "Administrator",
  "name": "hrms",
  "owner": "Administrator",
