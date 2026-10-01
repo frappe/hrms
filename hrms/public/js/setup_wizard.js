@@ -10,6 +10,9 @@ frappe.setup.on("before_load", function () {
 
 	if (!frappe.boot.hr_only_setup) return;
 
+	// HR-only site: the intro shows Frappe HR alone, not ERPNext
+	frappe.setup.intro_apps = frappe.setup.intro_apps?.filter((app) => app.name === "hrms");
+
 	// HR-only site: show the HR persona in place of the ERPNext one
 	const persona_index = frappe.setup.slides.findIndex((slide) => slide.name === "persona");
 	if (persona_index >= 0) {
