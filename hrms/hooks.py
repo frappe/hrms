@@ -29,6 +29,7 @@ app_include_js = [
 	"hrms.bundle.js",
 ]
 app_include_css = "hrms.bundle.css"
+app_include_icons = ["/assets/hrms/icons/module-icons.svg"]
 
 # website
 
