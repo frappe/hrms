@@ -111,6 +111,29 @@ class TestSalaryWithholding(HRMSTestSuite):
 		payroll_employee = self._get_payroll_employee_row(payroll_entry)
 		self.assertEqual(payroll_employee.is_salary_withheld, 1)
 
+	def test_release_withheld_salaries_when_every_employee_is_withheld(self):
+		# a payroll entry where every employee is withheld has no regular bank entry
+		# to make, so the release path has to stay reachable on its own
+		create_salary_withholding(self.employee1, MONTH_1_START, 1).submit()
+		create_salary_withholding(self.employee2, MONTH_1_START, 1).submit()
+
+		payroll_entry = self._make_payroll_entry()
+
+		flags = payroll_entry.has_bank_entries()
+		self.assertFalse(flags["has_bank_entries"])
+		self.assertTrue(flags["has_withheld_salaries"])
+		self.assertFalse(flags["has_unwithheld_salaries"])
+
+		# nothing is payable outside the withholding
+		self.assertIsNone(payroll_entry.make_bank_entry())
+
+		bank_entry = payroll_entry.make_bank_entry(for_withheld_salaries=1)
+		self.assertIsNotNone(bank_entry)
+		self._submit_bank_entry(bank_entry)
+
+		for employee in (self.employee1, self.employee2):
+			self.assertEqual(get_salary_slip_details(payroll_entry.name, employee).status, "Submitted")
+
 	def _make_payroll_entry(self, date: str | None = None):
 		dates = get_start_end_dates("Monthly", date or MONTH_1_START)
 
