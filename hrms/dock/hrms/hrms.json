@@ -24,7 +24,7 @@
   {
    "added": 0,
    "hidden": 0,
-   "icon": "users",
+   "icon": "user-search-duotone",
    "link_to": "Recruitment",
    "link_type": "Sidebar",
    "title": "Recruitment"
@@ -78,7 +78,7 @@
    "title": "Tax & Benefits"
   }
  ],
- "modified": "2026-10-01 12:00:00.000000",
+ "modified": "2026-10-01 18:00:00.000000",
  "modified_by": "Administrator",
  "name": "hrms",
  "owner": "Administrator",
