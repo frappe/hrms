@@ -143,6 +143,34 @@
 			0%, 100% { transform: translateY(0); }
 			50% { transform: translateY(-1.6px); }
 		}
+		/* Payroll: the notes rise out of the wallet and settle back while hovered. It loops, so still
+		   notes show at rest. */
+		.payroll-still {
+			opacity: calc(1 - var(--icon-motion-opacity, 0));
+		}
+		.payroll-rising {
+			opacity: var(--icon-motion-opacity, 0);
+			animation: payroll-rise 1.5s ease-in-out infinite;
+			animation-play-state: var(--icon-motion, paused);
+		}
+		@keyframes payroll-rise {
+			0%, 100% { transform: translateY(0); }
+			50% { transform: translateY(-1.8px); }
+		}
+		/* Expenses: the card swipes across the receipt and back while hovered. A still card shows
+		   at rest. */
+		.expenses-still {
+			opacity: calc(1 - var(--icon-motion-opacity, 0));
+		}
+		.expenses-swiping {
+			opacity: var(--icon-motion-opacity, 0);
+			animation: expenses-swipe 1.5s ease-in-out infinite;
+			animation-play-state: var(--icon-motion, paused);
+		}
+		@keyframes expenses-swipe {
+			0%, 100% { transform: translateX(0); }
+			50% { transform: translateX(-1.8px); }
+		}
 		@media (prefers-reduced-motion: reduce) {
 			.briefcase-carried,
 			.tenure-minute,
@@ -150,7 +178,9 @@
 			.tax-flipping,
 			.attendance-punching,
 			.leaves-swinging,
-			.performance-hopping { animation: none; }
+			.performance-hopping,
+			.payroll-rising,
+			.expenses-swiping { animation: none; }
 		}
 	</style>
 	<symbol viewBox="0 0 24 24" id="icon-briefcase-duotone" stroke="none" style="overflow: visible">
@@ -226,6 +256,28 @@
 		</g>
 		<g class="performance-hopping">
 			<path fill-rule="evenodd" d="M12 1.1L13.2 4.04L16.37 4.28L13.95 6.33L14.7 9.42L12 7.75L9.3 9.42L10.05 6.33L7.63 4.28L10.8 4.04Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+	</symbol>
+	<symbol viewBox="0 0 24 24" id="icon-wallet-duotone" stroke="none" style="overflow: visible">
+		<g class="payroll-still">
+			<path fill-rule="evenodd" d="M6.2 3.4H16.3Q17.5 3.4 17.5 4.6V8.8Q17.5 10 16.3 10H6.2Q5 10 5 8.8V4.6Q5 3.4 6.2 3.4Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+		</g>
+		<g class="payroll-rising">
+			<path fill-rule="evenodd" d="M6.2 3.4H16.3Q17.5 3.4 17.5 4.6V8.8Q17.5 10 16.3 10H6.2Q5 10 5 8.8V4.6Q5 3.4 6.2 3.4Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+		</g>
+		<path fill-rule="evenodd" d="M4.9 7H19.1Q21.5 7 21.5 9.4V17.6Q21.5 20 19.1 20H4.9Q2.5 20 2.5 17.6V9.4Q2.5 7 4.9 7Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		<path fill-rule="evenodd" d="M16.9 11.2H21.5Q21.5 11.2 21.5 11.2V15.8Q21.5 15.8 21.5 15.8H16.9Q14.6 15.8 14.6 13.5V13.5Q14.6 11.2 16.9 11.2Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+		<path fill-rule="evenodd" d="M16.2 13.5A1.1 1.1 0 1 0 18.4 13.5A1.1 1.1 0 1 0 16.2 13.5Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+	</symbol>
+	<symbol viewBox="0 0 24 24" id="icon-receipt-card-duotone" stroke="none" style="overflow: visible">
+		<path fill-rule="evenodd" d="M4.9 2.4H13.1Q14.5 2.4 14.5 3.8V19.6L13.12 18L11.75 19.6L10.38 18L9 19.6L7.62 18L6.25 19.6L4.88 18L3.5 19.6V3.8Q3.5 2.4 4.9 2.4ZM6.4 6.95L11.6 6.95A0.75 0.75 0 0 0 11.6 5.45L6.4 5.45A0.75 0.75 0 0 0 6.4 6.95ZM6.4 10.15L9.6 10.15A0.75 0.75 0 0 0 9.6 8.65L6.4 8.65A0.75 0.75 0 0 0 6.4 10.15Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		<g class="expenses-still">
+			<path fill-rule="evenodd" d="M11.7 11.6H20.3Q22 11.6 22 13.3V17.9Q22 19.6 20.3 19.6H11.7Q10 19.6 10 17.9V13.3Q10 11.6 11.7 11.6Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+			<path fill-rule="evenodd" d="M10 13.5H22Q22 13.5 22 13.5V15.4Q22 15.4 22 15.4H10Q10 15.4 10 15.4V13.5Q10 13.5 10 13.5Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+		<g class="expenses-swiping">
+			<path fill-rule="evenodd" d="M11.7 11.6H20.3Q22 11.6 22 13.3V17.9Q22 19.6 20.3 19.6H11.7Q10 19.6 10 17.9V13.3Q10 11.6 11.7 11.6Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+			<path fill-rule="evenodd" d="M10 13.5H22Q22 13.5 22 13.5V15.4Q22 15.4 22 15.4H10Q10 15.4 10 15.4V13.5Q10 13.5 10 13.5Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
 		</g>
 	</symbol>
 </svg>
