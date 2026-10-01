@@ -172,14 +172,18 @@ class ShiftType(Document):
 			if len(logs) > 1000 or frappe.flags.test_bg_job:
 				job_id = "process_auto_attendance_" + self.name
 				job = frappe.enqueue(self._process, logs=logs, timeout=1200, job_id=job_id, deduplicate=True)
-				return f"Attendance marking has been queued. It may take a few minutes. You can monitor the job status {get_link_to_form('RQ Job',job.id,label='here')}"
+				return _(
+					"Attendance marking has been queued. It may take a few minutes. You can monitor the job status {0}"
+				).format(get_link_to_form("RQ Job", job.id, label=_("here")))
 			else:
 				try:
 					self._process(logs)
-					return "Attendance has been marked as per employee check-ins."
+					return _("Attendance has been marked as per employee check-ins.")
 				except Exception as e:
 					error_log = frappe.log_error(e)
-					return f"An error occured during marking attendance. Refer the full error log {get_link_to_form('Error Log',error_log.name,label='here')}"
+					return _(
+						"An error occurred during marking attendance. Refer the full error log {0}"
+					).format(get_link_to_form("Error Log", error_log.name, label=_("here")))
 		else:
 			self._process(logs)
 
