@@ -10,6 +10,7 @@
 				:id="props.id"
 				:showAttachmentView="true"
 				@validateForm="validateForm"
+				@formReloaded="onFormReloaded"
 			/>
 		</ion-content>
 	</ion-page>
@@ -125,11 +126,17 @@ watch(
 	() => setTotalLeaveDays()
 )
 
+// the to date this form filled in, as opposed to one the user picked or the saved doc has
+let autoFilledToDate = null
+
 watch(
 	() => leaveApplication.value.from_date,
 	(from_date) => {
-		if (!leaveApplication.value.to_date) {
-			leaveApplication.value.to_date = from_date
+		// a date input emits partial years while typing (0002, 0020, ...), so keep an
+		// auto filled to date in step with from date until the user sets it themselves
+		const to_date = leaveApplication.value.to_date
+		if (!to_date || to_date === autoFilledToDate) {
+			leaveApplication.value.to_date = autoFilledToDate = from_date
 		}
 
 		// fetch leave types for the selected date
@@ -300,6 +307,11 @@ function areValuesSet() {
 		leaveApplication.value.to_date &&
 		leaveApplication.value.leave_type
 	)
+}
+
+function onFormReloaded() {
+	// the reloaded to date is the saved one, so a later from date change leaves it alone
+	autoFilledToDate = null
 }
 
 function validateForm() {
