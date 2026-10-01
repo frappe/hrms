@@ -16,7 +16,7 @@
   {
    "added": 0,
    "hidden": 0,
-   "icon": "user",
+   "icon": "user-clock-duotone",
    "link_to": "Tenure",
    "link_type": "Sidebar",
    "title": "Tenure"
@@ -78,7 +78,7 @@
    "title": "Tax & Benefits"
   }
  ],
- "modified": "2026-10-01 18:00:00.000000",
+ "modified": "2026-10-01 20:00:00.000000",
  "modified_by": "Administrator",
  "name": "hrms",
  "owner": "Administrator",
