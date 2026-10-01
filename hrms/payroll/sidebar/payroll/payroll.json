@@ -1,16 +1,19 @@
 {
  "app": "hrms",
- "creation": "2026-08-07 12:00:00.000000",
+ "creation": "2026-08-07 12:00:00",
  "docstatus": 0,
  "doctype": "Sidebar",
  "header_icon": "wallet-duotone",
  "idx": 0,
  "items": [
   {
+   "added": 0,
    "child": 0,
    "collapsible": 1,
+   "hidden": 0,
    "icon": "house",
    "indent": 0,
+   "is_default_module": 0,
    "keep_closed": 0,
    "label": "Home",
    "link_to": "Payroll",
@@ -20,10 +23,13 @@
    "type": "Link"
   },
   {
+   "added": 0,
    "child": 0,
    "collapsible": 1,
+   "hidden": 0,
    "icon": "layout-dashboard",
    "indent": 0,
+   "is_default_module": 0,
    "keep_closed": 0,
    "label": "Dashboard",
    "link_to": "Payroll",
@@ -33,10 +39,13 @@
    "type": "Link"
   },
   {
+   "added": 0,
    "child": 0,
    "collapsible": 1,
+   "hidden": 0,
    "icon": "banknote-arrow-up",
    "indent": 0,
+   "is_default_module": 0,
    "keep_closed": 0,
    "label": "Payroll Entry",
    "link_to": "Payroll Entry",
@@ -46,10 +55,13 @@
    "type": "Link"
   },
   {
+   "added": 0,
    "child": 0,
    "collapsible": 1,
+   "hidden": 0,
    "icon": "hand-coins",
    "indent": 0,
+   "is_default_module": 0,
    "keep_closed": 0,
    "label": "Salary Structure Assignment",
    "link_to": "Salary Structure Assignment",
@@ -59,10 +71,13 @@
    "type": "Link"
   },
   {
+   "added": 0,
    "child": 0,
    "collapsible": 1,
+   "hidden": 0,
    "icon": "wallet",
    "indent": 0,
+   "is_default_module": 0,
    "keep_closed": 0,
    "label": "Salary Slip",
    "link_to": "Salary Slip",
@@ -72,10 +87,13 @@
    "type": "Link"
   },
   {
+   "added": 0,
    "child": 0,
    "collapsible": 1,
+   "hidden": 0,
    "icon": "piggy-bank",
    "indent": 0,
+   "is_default_module": 0,
    "keep_closed": 0,
    "label": "Additional Salary",
    "link_to": "Additional Salary",
@@ -85,10 +103,13 @@
    "type": "Link"
   },
   {
+   "added": 0,
    "child": 0,
    "collapsible": 1,
+   "hidden": 0,
    "icon": "banknote-x",
    "indent": 0,
+   "is_default_module": 0,
    "keep_closed": 0,
    "label": "Salary Withholding",
    "link_to": "Salary Withholding",
@@ -98,11 +119,14 @@
    "type": "Link"
   },
   {
+   "added": 0,
    "child": 0,
    "collapsible": 1,
+   "hidden": 0,
    "icon": "notepad-text",
    "indent": 1,
-   "keep_closed": 1,
+   "is_default_module": 0,
+   "keep_closed": 0,
    "label": "Reports",
    "link_type": "DocType",
    "open_in_new_tab": 1,
@@ -110,9 +134,12 @@
    "type": "Section Break"
   },
   {
+   "added": 0,
    "child": 1,
    "collapsible": 1,
+   "hidden": 0,
    "indent": 0,
+   "is_default_module": 0,
    "keep_closed": 0,
    "label": "Employee CTC Break-up",
    "link_to": "Employee CTC Break-up",
@@ -122,10 +149,13 @@
    "type": "Link"
   },
   {
+   "added": 0,
    "child": 1,
    "collapsible": 1,
+   "hidden": 0,
    "icon": "",
    "indent": 0,
+   "is_default_module": 0,
    "keep_closed": 0,
    "label": "Salary Register",
    "link_to": "Salary Register",
@@ -135,49 +165,13 @@
    "type": "Link"
   },
   {
+   "added": 0,
    "child": 1,
    "collapsible": 1,
+   "hidden": 0,
    "icon": "",
    "indent": 0,
-   "keep_closed": 0,
-   "label": "Income Tax Deductions",
-   "link_to": "Income Tax Deductions",
-   "link_type": "Report",
-   "open_in_new_tab": 1,
-   "show_arrow": 0,
-   "type": "Link"
-  },
-  {
-   "child": 1,
-   "collapsible": 1,
-   "icon": "",
-   "indent": 0,
-   "keep_closed": 0,
-   "label": "Professional Tax Deductions",
-   "link_to": "Professional Tax Deductions",
-   "link_type": "Report",
-   "open_in_new_tab": 1,
-   "show_arrow": 0,
-   "type": "Link"
-  },
-  {
-   "child": 1,
-   "collapsible": 1,
-   "icon": "",
-   "indent": 0,
-   "keep_closed": 0,
-   "label": "General Ledger",
-   "link_to": "General Ledger",
-   "link_type": "Report",
-   "open_in_new_tab": 1,
-   "show_arrow": 0,
-   "type": "Link"
-  },
-  {
-   "child": 1,
-   "collapsible": 1,
-   "icon": "",
-   "indent": 0,
+   "is_default_module": 0,
    "keep_closed": 0,
    "label": "Accounts Payable",
    "link_to": "Accounts Payable",
@@ -187,10 +181,29 @@
    "type": "Link"
   },
   {
+   "added": 0,
+   "child": 1,
+   "collapsible": 1,
+   "hidden": 0,
+   "icon": "",
+   "indent": 0,
+   "is_default_module": 0,
+   "keep_closed": 0,
+   "label": "General Ledger",
+   "link_to": "General Ledger",
+   "link_type": "Report",
+   "open_in_new_tab": 1,
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "added": 0,
    "child": 0,
    "collapsible": 1,
+   "hidden": 0,
    "icon": "database",
    "indent": 1,
+   "is_default_module": 0,
    "keep_closed": 1,
    "label": "Setup",
    "link_type": "DocType",
@@ -199,10 +212,13 @@
    "type": "Section Break"
   },
   {
+   "added": 0,
    "child": 1,
    "collapsible": 1,
+   "hidden": 0,
    "icon": "",
    "indent": 0,
+   "is_default_module": 0,
    "keep_closed": 0,
    "label": "Salary Component",
    "link_to": "Salary Component",
@@ -212,10 +228,13 @@
    "type": "Link"
   },
   {
+   "added": 0,
    "child": 1,
    "collapsible": 1,
+   "hidden": 0,
    "icon": "",
    "indent": 0,
+   "is_default_module": 0,
    "keep_closed": 0,
    "label": "Salary Structure",
    "link_to": "Salary Structure",
@@ -225,10 +244,13 @@
    "type": "Link"
   },
   {
+   "added": 0,
    "child": 0,
    "collapsible": 1,
+   "hidden": 0,
    "icon": "settings",
    "indent": 0,
+   "is_default_module": 0,
    "keep_closed": 0,
    "label": "Settings",
    "link_to": "Payroll Settings",
@@ -238,7 +260,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-10-02 00:00:00.000000",
+ "modified": "2026-10-02 13:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll",
