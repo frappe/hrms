@@ -3,6 +3,7 @@ from dateutil.relativedelta import relativedelta
 import frappe
 from frappe.utils import add_days, get_year_ending, get_year_start, getdate
 
+from erpnext.setup.doctype.employee.employee import is_holiday
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
@@ -238,7 +239,9 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 		except OverlapError:
 			pass
 
-		leave_backed_day = previous_month_first + relativedelta(days=5)
+		leave_backed_day = add_days(previous_month_first, 2)
+		while is_holiday(self.employee, leave_backed_day):
+			leave_backed_day = add_days(leave_backed_day, 1)
 		make_leave_application(
 			self.employee,
 			leave_backed_day,
