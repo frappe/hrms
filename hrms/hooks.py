@@ -15,6 +15,7 @@ add_to_apps_screen = [
 		"logo": "/assets/hrms/images/frappe-hr-logo.svg",
 		"title": "Frappe HR",
 		"route": app_home,
+		"setup_wizard_text": "Let's build a workplace your team will love.",
 		"has_permission": "hrms.hr.utils.check_app_permission",
 		"sequence_id": 2,
 	}
