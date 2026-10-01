@@ -13,4 +13,26 @@ dayjs.extend(isToday)
 dayjs.extend(isYesterday)
 dayjs.extend(isBetween)
 
+const locales = import.meta.glob("../../node_modules/dayjs/esm/locale/*.js")
+
+export async function loadDayjsLocale(language) {
+	let locale = (language || "en").toLowerCase().replace(/_/g, "-")
+	let loadLocale = locales[`../../node_modules/dayjs/esm/locale/${locale}.js`]
+
+	while (!loadLocale && locale.includes("-")) {
+		locale = locale.slice(0, locale.lastIndexOf("-"))
+		loadLocale = locales[`../../node_modules/dayjs/esm/locale/${locale}.js`]
+	}
+
+	dayjs.locale("en")
+	if (!loadLocale || locale === "en") return
+
+	try {
+		const { default: localeData } = await loadLocale()
+		dayjs.locale(localeData)
+	} catch (error) {
+		console.error(`Failed to load Day.js locale ${locale}:`, error)
+	}
+}
+
 export default dayjs
