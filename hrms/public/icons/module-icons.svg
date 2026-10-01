@@ -48,6 +48,22 @@
 			50% { transform: translateY(-1px) rotate(0deg); }
 			75% { transform: translateY(-1.4px) rotate(-5deg); }
 		}
+		/* Tenure: the clock's minute hand sweeps round while hovered. It loops, so a still hand shows
+		   at rest and the moving one never freezes mid-sweep when the pointer leaves. An ageing
+		   person (grey hair, a stoop) was drawn and dropped for the plain clock. */
+		.tenure-still {
+			opacity: calc(1 - var(--icon-motion-opacity, 0));
+		}
+		.tenure-minute {
+			opacity: var(--icon-motion-opacity, 0);
+			transform-box: view-box;
+			transform-origin: 16.8px 14.6px;
+			animation: tenure-sweep 1.6s linear infinite;
+			animation-play-state: var(--icon-motion, paused);
+		}
+		@keyframes tenure-sweep {
+			to { transform: rotate(360deg); }
+		}
 		/* Recruitment: the magnifier circles, looking, while hovered. A still copy shows at rest. */
 		.recruitment-still {
 			opacity: calc(1 - var(--icon-motion-opacity, 0));
@@ -65,6 +81,7 @@
 		}
 		@media (prefers-reduced-motion: reduce) {
 			.briefcase-carried,
+			.tenure-minute,
 			.recruitment-searching { animation: none; }
 		}
 	</style>
@@ -79,6 +96,14 @@
 			<path fill-rule="evenodd" d="M4 7H20Q22 7 22 9V12.25H2V9Q2 7 4 7ZM10.2 10.5H13.8V12.25H10.2V10.5Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
 			<path fill-rule="evenodd" d="M2 12.25H22V18Q22 20 20 20H4Q2 20 2 18V12.25ZM10.2 12.25H13.8V14H10.2V12.25Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
 		</g>
+	</symbol>
+	<symbol viewBox="0 0 24 24" id="icon-user-clock-duotone" stroke="none" style="overflow: visible">
+		<path fill-rule="evenodd" d="M5.1 7A3.5 3.5 0 1 0 12.1 7A3.5 3.5 0 1 0 5.1 7Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		<path fill-rule="evenodd" d="M2 19V16.6C2 13.4 4.8 11.9 8.6 11.9C12.4 11.9 15.2 13.4 15.2 16.6V19Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		<path fill-rule="evenodd" d="M11.4 14.6A5.4 5.4 0 1 0 22.2 14.6A5.4 5.4 0 1 0 11.4 14.6Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+		<path fill-rule="evenodd" d="M16.8 11.2H16.8Q17.5 11.2 17.5 11.9V14.6Q17.5 15.3 16.8 15.3H16.8Q16.1 15.3 16.1 14.6V11.9Q16.1 11.2 16.8 11.2Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		<path class="tenure-still" fill-rule="evenodd" d="M16.8 13.9H19.5Q20.2 13.9 20.2 14.6V14.6Q20.2 15.3 19.5 15.3H16.8Q16.1 15.3 16.1 14.6V14.6Q16.1 13.9 16.8 13.9Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		<path class="tenure-minute" fill-rule="evenodd" d="M16.8 13.9H19.5Q20.2 13.9 20.2 14.6V14.6Q20.2 15.3 19.5 15.3H16.8Q16.1 15.3 16.1 14.6V14.6Q16.1 13.9 16.8 13.9Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
 	</symbol>
 	<symbol viewBox="0 0 24 24" id="icon-user-search-duotone" stroke="none" style="overflow: visible">
 		<g class="recruitment-still">
