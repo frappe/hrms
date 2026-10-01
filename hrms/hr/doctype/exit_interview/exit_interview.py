@@ -94,6 +94,9 @@ class ExitInterview(Document):
 @frappe.whitelist(methods=["POST"])
 def send_exit_questionnaire(interviews: str | list) -> None:
 	interviews = get_interviews(interviews)
+	for exit_interview in interviews:
+		frappe.has_permission("Exit Interview", ptype="write", doc=exit_interview.get("name"), throw=True)
+
 	validate_questionnaire_settings()
 
 	email_success = []
