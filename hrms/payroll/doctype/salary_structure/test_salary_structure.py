@@ -160,6 +160,36 @@ class TestSalaryStructure(HRMSTestSuite):
 		self.assertEqual(row.depends_on_payment_days, 0)
 		self.assertEqual(row.amount, 6000)
 
+	def test_repeated_component_without_condition_is_blocked(self):
+		sal_struct = make_salary_structure(
+			"Salary Structure Repeated Component", "Monthly", dont_submit=True, company="_Test Company"
+		)
+		repeated_row = sal_struct.earnings[0]
+		sal_struct.append(
+			"earnings",
+			{"salary_component": repeated_row.salary_component, "abbr": repeated_row.abbr, "amount": 500},
+		)
+
+		self.assertRaises(frappe.ValidationError, sal_struct.save)
+
+	def test_repeated_component_with_conditions_is_allowed(self):
+		sal_struct = make_salary_structure(
+			"Salary Structure Repeated Component", "Monthly", dont_submit=True, company="_Test Company"
+		)
+		repeated_row = sal_struct.earnings[0]
+		repeated_row.condition = "base > 10000"
+		sal_struct.append(
+			"earnings",
+			{
+				"salary_component": repeated_row.salary_component,
+				"abbr": repeated_row.abbr,
+				"amount": 500,
+				"condition": "base <= 10000",
+			},
+		)
+
+		sal_struct.save()
+
 
 def make_salary_structure(
 	salary_structure,
