@@ -48,8 +48,24 @@
 			50% { transform: translateY(-1px) rotate(0deg); }
 			75% { transform: translateY(-1.4px) rotate(-5deg); }
 		}
+		/* Recruitment: the magnifier circles, looking, while hovered. A still copy shows at rest. */
+		.recruitment-still {
+			opacity: calc(1 - var(--icon-motion-opacity, 0));
+		}
+		.recruitment-searching {
+			opacity: var(--icon-motion-opacity, 0);
+			animation: recruitment-scan 1.8s ease-in-out infinite;
+			animation-play-state: var(--icon-motion, paused);
+		}
+		@keyframes recruitment-scan {
+			0%, 100% { transform: translate(0, 0); }
+			25% { transform: translate(1.4px, -0.8px); }
+			50% { transform: translate(0, -1.4px); }
+			75% { transform: translate(-1.4px, -0.8px); }
+		}
 		@media (prefers-reduced-motion: reduce) {
-			.briefcase-carried { animation: none; }
+			.briefcase-carried,
+			.recruitment-searching { animation: none; }
 		}
 	</style>
 	<symbol viewBox="0 0 24 24" id="icon-briefcase-duotone" stroke="none" style="overflow: visible">
@@ -62,6 +78,20 @@
 			<path fill-rule="evenodd" d="M10.1 2.75H13.9Q15.5 2.75 15.5 4.35V7.2H8.5V4.35Q8.5 2.75 10.1 2.75ZM10.5 4.75H13.5V7.2H10.5V4.75Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
 			<path fill-rule="evenodd" d="M4 7H20Q22 7 22 9V12.25H2V9Q2 7 4 7ZM10.2 10.5H13.8V12.25H10.2V10.5Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
 			<path fill-rule="evenodd" d="M2 12.25H22V18Q22 20 20 20H4Q2 20 2 18V12.25ZM10.2 12.25H13.8V14H10.2V12.25Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+	</symbol>
+	<symbol viewBox="0 0 24 24" id="icon-user-search-duotone" stroke="none" style="overflow: visible">
+		<g class="recruitment-still">
+			<path fill-rule="evenodd" d="M4 9.4A5.8 5.8 0 1 0 15.6 9.4A5.8 5.8 0 1 0 4 9.4Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+			<path fill-rule="evenodd" d="M7.7 7.9A2.1 2.1 0 1 0 11.9 7.9A2.1 2.1 0 1 0 7.7 7.9ZM6.200000000000001 13.6V13.2C6.200000000000001 11.6 7.9 10.6 9.8 10.6C11.700000000000001 10.6 13.4 11.6 13.4 13.2V13.6Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+			<path fill-rule="evenodd" d="M2.5 9.4A7.3 7.3 0 1 0 17.1 9.4A7.3 7.3 0 1 0 2.5 9.4ZM4 9.4A5.8 5.8 0 1 0 15.6 9.4A5.8 5.8 0 1 0 4 9.4Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+			<path fill-rule="evenodd" d="M14.09 15.95L19.69 21.35L21.91 19.05L16.31 13.65Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+		<g class="recruitment-searching">
+			<path fill-rule="evenodd" d="M4 9.4A5.8 5.8 0 1 0 15.6 9.4A5.8 5.8 0 1 0 4 9.4Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+			<path fill-rule="evenodd" d="M7.7 7.9A2.1 2.1 0 1 0 11.9 7.9A2.1 2.1 0 1 0 7.7 7.9ZM6.200000000000001 13.6V13.2C6.200000000000001 11.6 7.9 10.6 9.8 10.6C11.700000000000001 10.6 13.4 11.6 13.4 13.2V13.6Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+			<path fill-rule="evenodd" d="M2.5 9.4A7.3 7.3 0 1 0 17.1 9.4A7.3 7.3 0 1 0 2.5 9.4ZM4 9.4A5.8 5.8 0 1 0 15.6 9.4A5.8 5.8 0 1 0 4 9.4Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+			<path fill-rule="evenodd" d="M14.09 15.95L19.69 21.35L21.91 19.05L16.31 13.65Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
 		</g>
 	</symbol>
 </svg>
