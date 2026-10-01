@@ -171,6 +171,7 @@ import FilePreviewModal from "@/components/FilePreviewModal.vue"
 import WorkflowActionSheet from "@/components/WorkflowActionSheet.vue"
 
 import { getCompanyCurrency } from "@/data/currencies"
+import { getLeaveStatus } from "@/data/leaves"
 import { settings } from "@/data/settings"
 import { formatCurrency } from "@/utils/formatters"
 
@@ -271,6 +272,9 @@ const fieldsWithValues = computed(() => {
 			}
 			field.value =
 				document?.doc?.[field.fieldname] || props.modelValue[field.fieldname]
+
+			if (props.modelValue.doctype === "Leave Application" && field.fieldname === "status")
+				field.value = getLeaveStatus(document.doc || props.modelValue)
 		}
 
 		return field.value

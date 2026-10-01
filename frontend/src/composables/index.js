@@ -87,7 +87,10 @@ export async function guessStatusColor(doctype, status) {
 	let color = "gray"
 	status = status.toLowerCase()
 
-	if (
+	// a draft is not final whatever else its status says
+	if (hasWords(["draft"], status)) {
+		return color
+	} else if (
 		hasWords(
 			["open", "pending", "unpaid", "review", "medium", "not approved"],
 			status
