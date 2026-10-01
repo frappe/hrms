@@ -9,6 +9,8 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import getdate
 
+from hrms.hr.doctype.attendance.attendance import validate_employee_access
+
 
 class EmployeeAttendanceTool(Document):
 	# begin: auto-generated types
@@ -166,6 +168,14 @@ def _get_unmarked_attendance_with_shift(unmarked_attendance, shift, date):
 	return shiftwise_unmarked_attendance
 
 
+def get_permission_check_fields(doctype: str) -> list[str]:
+	"""Columns needed to evaluate document permissions without loading the document."""
+	link_fields = [
+		df.fieldname for df in frappe.get_meta(doctype).get_link_fields() if not df.ignore_user_permissions
+	]
+	return ["name", "owner", "docstatus", *link_fields]
+
+
 @frappe.whitelist(methods=["POST"])
 def mark_employee_attendance(
 	employee_list: list | str,
@@ -182,6 +192,10 @@ def mark_employee_attendance(
 ) -> None:
 	if isinstance(employee_list, str):
 		employee_list = json.loads(employee_list)
+
+	if employee_list:
+		frappe.has_permission("Attendance", "create", throw=True)
+		validate_employee_access(employee_list, company)
 
 	for employee in employee_list:
 		leave_type = None
@@ -206,10 +220,30 @@ def mark_employee_attendance(
 		frappe.has_permission("Attendance", "write", throw=True)
 		if isinstance(half_day_employee_list, str):
 			half_day_employee_list = json.loads(half_day_employee_list)
+
+		validate_employee_access(half_day_employee_list, company)
+
+		eligible_attendance = frappe.get_list(
+			"Attendance",
+			filters={
+				"employee": ["in", half_day_employee_list],
+				"attendance_date": date,
+				"docstatus": 1,
+			},
+			fields=get_permission_check_fields("Attendance"),
+			limit=0,
+		)
+		if not eligible_attendance:
+			return
+
+		for row in eligible_attendance:
+			# in-memory document, no fetch: the engine needs meta, owner and link values
+			attendance = frappe.get_doc(doctype="Attendance", **row)
+			frappe.has_permission("Attendance", "write", doc=attendance, throw=True)
+
 		Attendance = frappe.qb.DocType("Attendance")
-		for employee in half_day_employee_list:
-			frappe.qb.update(Attendance).where(
-				(Attendance.employee == employee) & (Attendance.attendance_date == date)
-			).set(Attendance.half_day_status, half_day_status).set(Attendance.shift, shift).set(
-				Attendance.late_entry, late_entry
-			).set(Attendance.early_exit, early_exit).set(Attendance.modify_half_day_status, 0).run()
+		frappe.qb.update(Attendance).where(
+			Attendance.name.isin([row.name for row in eligible_attendance])
+		).set(Attendance.half_day_status, half_day_status).set(Attendance.shift, shift).set(
+			Attendance.late_entry, late_entry or 0
+		).set(Attendance.early_exit, early_exit or 0).set(Attendance.modify_half_day_status, 0).run()

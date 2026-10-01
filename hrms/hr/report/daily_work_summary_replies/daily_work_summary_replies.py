@@ -9,10 +9,11 @@ from hrms.hr.doctype.daily_work_summary.daily_work_summary import get_user_email
 
 
 def execute(filters=None):
+	message = _("Daily Work Summary is deprecated and will be removed in an upcoming release.")
 	if not filters.group:
-		return [], []
+		return [], [], message
 	columns, data = get_columns(), get_data(filters)
-	return columns, data
+	return columns, data, message
 
 
 def get_columns(filters=None):

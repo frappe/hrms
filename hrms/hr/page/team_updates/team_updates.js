@@ -5,6 +5,11 @@ frappe.pages["team-updates"].on_page_load = function (wrapper) {
 		single_column: true,
 	});
 
+	$("<div></div>")
+		.addClass("alert alert-warning")
+		.text(__("Daily Work Summary is deprecated and will be removed in an upcoming release."))
+		.prependTo(page.main);
+
 	frappe.team_updates.make(page);
 	frappe.team_updates.run();
 

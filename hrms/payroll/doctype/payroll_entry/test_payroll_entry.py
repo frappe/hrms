@@ -669,7 +669,7 @@ class TestPayrollEntry(HRMSTestSuite):
 		)[0]
 
 		expected_entry = {
-			"account": "Employee Advances - _TC",
+			"account": advance.advance_account,
 			"party": employee,
 			"debit": 0.0,
 			"credit": advance.paid_amount,

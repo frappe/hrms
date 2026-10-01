@@ -35,6 +35,9 @@ class ExpenseApproverIdentityError(frappe.ValidationError):
 	pass
 
 
+ROLES_ALLOWED_TO_CLAIM_FOR_OTHERS = {"HR User", "HR Manager", "Expense Approver"}
+
+
 class MismatchError(frappe.ValidationError):
 	pass
 
@@ -51,6 +54,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 
 	def validate(self):
 		validate_active_employee(self.employee)
+		self.validate_employee_scope()
 		set_employee_name(self)
 		self.set_company_currency_if_multi_currency_disabled()
 		self.validate_sanctioned_amount()
@@ -102,6 +106,34 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 			self.notify_update()
 		else:
 			self.status = status
+
+	def validate_employee_scope(self):
+		if not self.employee:
+			return
+
+		employee_company, employee_user = frappe.db.get_value(
+			"Employee", self.employee, ["company", "user_id"]
+		)
+		if not self.company:
+			self.company = employee_company
+		elif self.company != employee_company:
+			frappe.throw(
+				_("Employee {0} does not belong to company: {1}").format(self.employee, self.company),
+				exc=MismatchError,
+			)
+
+		if self.flags.ignore_permissions:
+			return
+
+		if employee_user != frappe.session.user and not (
+			set(frappe.get_roles()) & ROLES_ALLOWED_TO_CLAIM_FOR_OTHERS
+		):
+			frappe.throw(
+				_("You are not allowed to create or modify an Expense Claim for Employee {0}").format(
+					self.employee
+				),
+				frappe.PermissionError,
+			)
 
 	def validate_company_and_department(self):
 		if self.department:

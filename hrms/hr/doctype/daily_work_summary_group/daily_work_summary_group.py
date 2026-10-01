@@ -5,6 +5,7 @@
 import frappe
 import frappe.utils
 from frappe import _
+from frappe.deprecation_dumpster import deprecation_warning
 from frappe.model.document import Document
 
 from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
@@ -24,6 +25,9 @@ class DailyWorkSummaryGroup(Document):
 def trigger_emails():
 	"""Send emails to Employees at the given hour asking
 	them what did they work on today"""
+	deprecation_warning(
+		"2026-09-25", "v16", "Daily Work Summary is deprecated and will be removed in an upcoming release."
+	)
 	groups = frappe.get_all("Daily Work Summary Group")
 	for d in groups:
 		group_doc = frappe.get_doc("Daily Work Summary Group", d)
@@ -47,6 +51,9 @@ def is_current_hour(hour):
 
 def send_summary():
 	"""Send summary to everyone"""
+	deprecation_warning(
+		"2026-09-25", "v16", "Daily Work Summary is deprecated and will be removed in an upcoming release."
+	)
 	for d in frappe.get_all("Daily Work Summary", dict(status="Open")):
 		daily_work_summary = frappe.get_doc("Daily Work Summary", d.name)
 		daily_work_summary.send_summary()

@@ -411,12 +411,13 @@ class PayrollEntry(Document):
 		salary_components = self.get_salary_components(component_type)
 		if salary_components:
 			component_dict = {}
+			advance_deductions = self.get_advance_deductions(component_type, salary_components)
 
 			for item in salary_components:
 				employee_cost_centers = self.get_payroll_cost_centers_for_employee(
 					item.employee, item.salary_structure
 				)
-				employee_advance = self.get_advance_deduction(component_type, item)
+				employee_advance = advance_deductions.get(item.additional_salary)
 
 				for cost_center, percentage in employee_cost_centers.items():
 					amount_against_cost_center = flt(item.amount) * percentage / 100
@@ -438,33 +439,44 @@ class PayrollEntry(Document):
 
 			return account_details
 
-	def get_advance_deduction(self, component_type: str, item: dict) -> str | None:
-		if component_type == "deductions" and item.additional_salary:
-			ref_doctype, ref_docname = frappe.db.get_value(
-				"Additional Salary",
-				item.additional_salary,
-				["ref_doctype", "ref_docname"],
-			)
+	def get_advance_deductions(self, component_type: str, salary_components: list[dict]) -> dict[str, dict]:
+		"""Employee Advances being recovered, keyed by the Additional Salary that recovers them"""
+		additional_salaries = list({d.additional_salary for d in salary_components if d.additional_salary})
+		if component_type != "deductions" or not additional_salaries:
+			return {}
 
-			if ref_doctype == "Employee Advance":
-				return ref_docname
-		return
+		AdditionalSalary = frappe.qb.DocType("Additional Salary")
+		EmployeeAdvance = frappe.qb.DocType("Employee Advance")
+		advances = (
+			frappe.qb.from_(AdditionalSalary)
+			.join(EmployeeAdvance)
+			.on(AdditionalSalary.ref_docname == EmployeeAdvance.name)
+			.select(
+				AdditionalSalary.name.as_("additional_salary"),
+				EmployeeAdvance.name.as_("employee_advance"),
+				EmployeeAdvance.advance_account,
+			)
+			.where(AdditionalSalary.name.isin(additional_salaries))
+			.where(AdditionalSalary.ref_doctype == "Employee Advance")
+		).run(as_dict=True)
+
+		return {d.additional_salary: d for d in advances}
 
 	def add_advance_deduction_entry(
 		self,
 		item: dict,
 		amount: float,
 		cost_center: str,
-		employee_advance: str,
+		employee_advance: dict,
 	) -> None:
 		self._advance_deduction_entries.append(
 			{
 				"employee": item.employee,
-				"account": self.get_salary_component_account(item.salary_component),
+				"account": employee_advance.advance_account,
 				"amount": amount,
 				"cost_center": cost_center,
 				"reference_type": "Employee Advance",
-				"reference_name": employee_advance,
+				"reference_name": employee_advance.employee_advance,
 			}
 		)
 
