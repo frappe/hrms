@@ -3,7 +3,7 @@
  "creation": "2026-08-07 12:00:00.000000",
  "docstatus": 0,
  "doctype": "Sidebar",
- "header_icon": "briefcase-business",
+ "header_icon": "briefcase-duotone",
  "idx": 0,
  "items": [
   {
@@ -148,7 +148,7 @@
    "url": "/desk/hr-settings#employee_tab"
   }
  ],
- "modified": "2026-08-13 20:00:00.000000",
+ "modified": "2026-10-01 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR Setup",
  "name": "HR Setup",
