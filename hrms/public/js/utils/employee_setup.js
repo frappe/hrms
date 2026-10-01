@@ -8,7 +8,7 @@ const EMPTY_ROW = () => ({
 	employee_name: "",
 	email: "",
 	gender: "",
-	age: "",
+	date_of_birth: "",
 });
 
 $(document).on("app_ready", () => {
@@ -64,7 +64,6 @@ hrms.employee_setup = {
 			{ fieldtype: "HTML", fieldname: "paste" },
 			{ fieldtype: "HTML", fieldname: "mapping" },
 			{ fieldtype: "HTML", fieldname: "file_result" },
-			{ fieldtype: "HTML", fieldname: "demo" },
 			{
 				fieldtype: "Table",
 				fieldname: "employees",
@@ -98,16 +97,18 @@ hrms.employee_setup = {
 						columns: 2,
 					},
 					{
-						fieldtype: "Int",
-						fieldname: "age",
-						label: __("Approx. Age"),
+						fieldtype: "Date",
+						fieldname: "date_of_birth",
+						label: __("Date of Birth"),
 						in_list_view: 1,
-						columns: 1,
+						columns: 2,
 					},
 				],
 			},
 			{ fieldtype: "HTML", fieldname: "manual_note" },
 			{ fieldtype: "HTML", fieldname: "manual_result" },
+			{ fieldtype: "HTML", fieldname: "demo" },
+			{ fieldtype: "HTML", fieldname: "demo_result" },
 		);
 
 		this.dialog = new frappe.ui.Dialog({
@@ -131,6 +132,7 @@ hrms.employee_setup = {
 			<ul class="nav nav-tabs employee-setup-tabs mb-3">
 				<li class="nav-item"><a class="nav-link" data-tab="file" href="#">${__("Upload a file")}</a></li>
 				<li class="nav-item"><a class="nav-link" data-tab="manual" href="#">${__("Add manually")}</a></li>
+				<li class="nav-item"><a class="nav-link" data-tab="demo" href="#">${__("Use demo data")}</a></li>
 			</ul>`);
 		this.dialog.fields_dict.tabs.$wrapper.find("[data-tab]").on("click", (e) => {
 			e.preventDefault();
@@ -146,7 +148,7 @@ hrms.employee_setup = {
 		});
 		this.dialog.fields_dict.manual_note.$wrapper.html(
 			`<p class="text-muted small mt-2">${__(
-				"A login is created for each email. Date of birth is set from the approximate age and date of joining to today; both can be corrected later on the Employee record.",
+				"A login is created for each email. Date of joining is set to today and can be corrected later on the Employee record.",
 			)}</p>`,
 		);
 
@@ -158,8 +160,9 @@ hrms.employee_setup = {
 	},
 
 	tab_fields: {
-		file: ["company", "file_intro", "uploader", "paste", "mapping", "file_result", "demo"],
+		file: ["company", "file_intro", "uploader", "paste", "mapping", "file_result"],
 		manual: ["company", "employees", "manual_note", "manual_result"],
+		demo: ["company", "demo", "demo_result"],
 	},
 
 	activate_tab(name) {
@@ -189,6 +192,9 @@ hrms.employee_setup = {
 				() => this.on_primary(),
 			);
 			this.dialog.get_primary_btn().prop("disabled", !this.detected);
+		} else if (name === "demo") {
+			this.dialog.set_primary_action(__("Add Demo Employees"), () => this.on_primary());
+			this.dialog.get_primary_btn().prop("disabled", false);
 		} else {
 			this.dialog.set_primary_action(__("Add Employees"), () => this.on_primary());
 			this.dialog.get_primary_btn().prop("disabled", false);
@@ -210,11 +216,9 @@ hrms.employee_setup = {
 			.employee-setup-source a { margin-left: auto; white-space: nowrap; }
 			.employee-setup-mapping { display: grid; grid-template-columns: 1fr 18px 1fr; gap: 4px 8px; align-items: center; font-size: var(--text-sm); }
 			.employee-setup-mapping .src { font-family: var(--font-stack-mono, monospace); color: var(--text-muted); font-size: var(--text-xs); }
+			.employee-setup-mapping .src .sample { font-family: var(--font-stack); color: var(--text-color); font-size: var(--text-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 			.employee-setup-mapping .arrow { text-align: center; color: var(--text-light); }
 			.employee-setup-mapping select { width: 100%; }
-			.employee-setup-demo { margin-top: var(--padding-lg); padding: var(--padding-sm) var(--padding-md); border: 1px dashed var(--border-color); border-radius: var(--border-radius-md); }
-			.employee-setup-demo-head { display: flex; align-items: flex-start; gap: 12px; font-size: var(--text-sm); }
-			.employee-setup-demo-head .btn { margin-left: auto; white-space: nowrap; }
 			.employee-setup-demo table { margin: var(--padding-sm) 0 0; font-size: var(--text-xs); }
 			.employee-setup-demo th { color: var(--text-muted); font-weight: normal; border-top: 0; }
 			.employee-setup-result ul { padding-left: 18px; margin: 4px 0 0; }
@@ -255,7 +259,7 @@ hrms.employee_setup = {
 			make_attachments_public: false,
 			folder: "Home/Attachments",
 			restrictions: { allowed_file_types: [".csv", ".xlsx", ".xls"] },
-			upload_notes: __("Excel or CSV. Keka and greytHR exports work as they are."),
+			upload_notes: __("Excel or CSV"),
 			on_success: (file) =>
 				this.on_source_change({
 					type: "file",
@@ -280,24 +284,17 @@ hrms.employee_setup = {
 			<div class="employee-setup-paste">
 				<div class="employee-setup-or"><span>${__("or")}</span></div>
 				<label class="small text-muted">${__(
-					"Paste rows copied from Excel, Google Sheets or a CSV, header row included",
+					"Paste rows copied from Excel, Google Sheets or a CSV, with or without the header row",
 				)}</label>
 				<textarea class="form-control" rows="4" placeholder="${__(
 					"Full Name	Work Email	Gender	Date of Birth	Date of Joining",
 				)}"></textarea>
-				<div class="small text-muted mt-1 paste-hint"></div>
 			</div>`);
 		const textarea = wrapper.find("textarea");
-		const hint = wrapper.find(".paste-hint");
 		const read = frappe.utils.debounce(() => {
 			const content = textarea.val();
-			hint.text("");
 			if (!content.trim()) {
 				if (this.source?.type === "paste") this.on_source_change(null);
-				return;
-			}
-			if (content.trim().split("\n").length < 2) {
-				hint.text(__("Include the header row and at least one employee."));
 				return;
 			}
 			this.on_source_change({ type: "paste", content, label: __("pasted rows") });
@@ -343,19 +340,23 @@ hrms.employee_setup = {
 		const rows = d.columns
 			.map(
 				(c, i) => `
-				<div class="src">${frappe.utils.escape_html(c.header)}</div>
+				<div class="src">${frappe.utils.escape_html(c.header)}${
+					!d.has_header && c.sample
+						? `<div class="sample">${frappe.utils.escape_html(c.sample)}</div>`
+						: ""
+				}</div>
 				<div class="arrow">→</div>
 				<select class="form-control input-xs" data-header="${frappe.utils.escape_html(
 					c.header,
 				)}" data-index="${i}">${options}</select>`,
 			)
 			.join("");
-		const detect = d.layout
-			? __("Looks like a {0} export. Columns mapped automatically, check them below.", [
-					`<b>${d.layout}</b>`,
-			  ])
-			: __(
+		const detect = d.has_header
+			? __(
 					"Columns matched by their headers. Check them below; anything unmatched is skipped.",
+			  )
+			: __(
+					"No header row, so columns were guessed from the data. Check them below; anything unmatched is skipped.",
 			  );
 
 		this.dialog.fields_dict.mapping.$wrapper.html(`
@@ -402,12 +403,9 @@ hrms.employee_setup = {
 
 		wrapper.html(`
 			<div class="employee-setup-demo">
-				<div class="employee-setup-demo-head">
-					<div><b>${__("Just exploring?")}</b> <span class="text-muted">${__(
-						"Start with these demo employees and try leave, attendance and payroll with them. They have no logins and can be deleted later.",
-					)}</span></div>
-					<button class="btn btn-default btn-xs add-demo">${__("Add demo employees")}</button>
-				</div>
+				<p class="text-muted small">${__(
+					"Just exploring? Start with these demo employees and try leave, attendance and payroll with them. They have no logins and can be deleted later.",
+				)}</p>
 				<table class="table table-sm">
 					<thead><tr>
 						<th>${__("Name")}</th><th>${__("Designation")}</th><th>${__("Department")}</th>
@@ -416,30 +414,33 @@ hrms.employee_setup = {
 					<tbody>${body}</tbody>
 				</table>
 			</div>`);
-		wrapper.find(".add-demo").on("click", () => this.add_demo());
 	},
 
 	async add_demo() {
-		const button = this.dialog.fields_dict.demo.$wrapper.find(".add-demo");
-		button.prop("disabled", true);
+		this.dialog.get_primary_btn().prop("disabled", true);
 		try {
 			const result = await frappe.xcall(`${API}.create_demo_employees`, {
 				company: this.dialog.get_value("company") || this.status.default_company,
 			});
-			this.apply_result(result, "file_result");
+			this.apply_result(result, "demo_result");
 		} finally {
-			button.prop("disabled", false);
+			this.dialog.get_primary_btn().prop("disabled", false);
 		}
 	},
 
 	on_primary() {
-		this.active_tab === "file" ? this.import_rows() : this.add_manual();
+		const actions = {
+			file: () => this.import_rows(),
+			manual: () => this.add_manual(),
+			demo: () => this.add_demo(),
+		};
+		actions[this.active_tab]();
 	},
 
 	async add_manual() {
 		const today = frappe.datetime.get_today();
 		const rows = (this.dialog.get_value("employees") || [])
-			.filter((r) => ["employee_name", "email", "gender", "age"].some((f) => r[f]))
+			.filter((r) => ["employee_name", "email", "gender", "date_of_birth"].some((f) => r[f]))
 			.map((r) => ({ ...r, date_of_joining: r.date_of_joining || today }));
 		if (!rows.length) {
 			frappe.show_alert({
@@ -491,38 +492,57 @@ hrms.employee_setup = {
 		try {
 			const result = await frappe.xcall(method, args);
 			this.apply_result(result, "file_result");
-			if (result.incomplete.length || result.errors.length) {
-				this.offer_fix_in_grid(result);
-			}
 		} finally {
 			this.dialog.get_primary_btn().prop("disabled", false);
 		}
 	},
 
-	offer_fix_in_grid(result) {
-		const wrapper = this.dialog.fields_dict.file_result.$wrapper;
-		$(
-			`<p><button class="btn btn-default btn-xs">${__(
-				"Fill in the missing details",
-			)}</button></p>`,
-		)
-			.appendTo(wrapper)
-			.find("button")
-			.on("click", () => {
-				const grid = this.dialog.fields_dict.employees;
-				grid.df.data = [...result.incomplete, ...result.errors].map((r) => ({
-					...EMPTY_ROW(),
-					...r.row,
-				}));
-				grid.grid.refresh();
-				this.activate_tab("manual");
-			});
+	skipped_rows(result) {
+		return [
+			...result.incomplete.map((r) => ({
+				...r,
+				reason: __("Missing {0}", [r.missing.join(", ")]),
+			})),
+			...result.errors.map((r) => ({ ...r, reason: r.message })),
+		].sort((a, b) => a.row_number - b.row_number);
+	},
+
+	notify_skipped(skipped, target, added) {
+		const esc = frappe.utils.escape_html;
+		const rows = skipped
+			.map(
+				(r) => `<tr>
+					<td class="text-nowrap">${__("Row {0}", [r.row_number])}</td>
+					<td>${esc(r.row.employee_name || r.row.first_name || "")}</td>
+					<td>${esc(r.reason)}</td>
+				</tr>`,
+			)
+			.join("");
+		frappe.msgprint({
+			title:
+				skipped.length === 1
+					? __("1 row was skipped")
+					: __("{0} rows were skipped", [skipped.length]),
+			indicator: "orange",
+			message: `<p>${[
+				added ? __("The other rows were added.") : "",
+				target === "manual_result" && !this.done
+					? __("The skipped rows are still in the table, fix them and add them again.")
+					: __("Fix these in your sheet and import them again."),
+			].join(" ")}</p>
+				<table class="table table-sm small">
+					<thead><tr><th>${__("Row")}</th><th>${__("Name")}</th><th>${__("Reason")}</th></tr></thead>
+					<tbody>${rows}</tbody>
+				</table>`,
+			wide: true,
+		});
 	},
 
 	apply_result(result, target) {
 		this.status.active_employees = result.active_employees;
 		this.render_progress();
 
+		const skipped = this.skipped_rows(result);
 		const parts = [];
 		if (result.created.length) {
 			parts.push(
@@ -533,30 +553,13 @@ hrms.employee_setup = {
 					.join(", ")}`,
 			);
 		}
-		if (result.incomplete.length) {
+		if (skipped.length) {
 			parts.push(
-				`${__("{0} rows need more details", [
-					result.incomplete.length,
-				])}<ul>${result.incomplete
-					.map(
-						(r) =>
-							`<li>${frappe.utils.escape_html(
-								r.row.employee_name || __("Row {0}", [r.row_number]),
-							)}: ${__("missing")} ${r.missing.join(", ")}</li>`,
-					)
-					.join("")}</ul>`,
-			);
-		}
-		if (result.errors.length) {
-			parts.push(
-				`${__("{0} rows failed", [result.errors.length])}<ul>${result.errors
-					.map(
-						(r) =>
-							`<li>${frappe.utils.escape_html(
-								r.row.employee_name || __("Row {0}", [r.row_number]),
-							)}: ${frappe.utils.escape_html(r.message)}</li>`,
-					)
-					.join("")}</ul>`,
+				`<span class="text-warning">${
+					skipped.length === 1
+						? __("1 row skipped")
+						: __("{0} rows skipped", [skipped.length])
+				}</span>: ${skipped.map((r) => __("Row {0}", [r.row_number])).join(", ")}`,
 			);
 		}
 		if (result.unresolved_managers?.length) {
@@ -578,6 +581,7 @@ hrms.employee_setup = {
 		);
 
 		if (this.status.active_employees >= this.status.required) this.show_done();
+		if (skipped.length) this.notify_skipped(skipped, target, result.created.length);
 	},
 
 	async show_done() {

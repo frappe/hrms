@@ -141,6 +141,70 @@ DEMO_EMPLOYEES = [
 	},
 ]
 
+EMAIL_PATTERN = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+DATE_PATTERN = re.compile(
+	r"^(\d{4}[/.-]\d{1,2}[/.-]\d{1,2}|\d{1,2}[/.-]\d{1,2}[/.-]\d{2,4}"
+	r"|\d{1,2}[ -][a-z]{3,9}[ -,]+\d{2,4}|[a-z]{3,9} \d{1,2},? \d{4})( 00:00(:00)?)?$",
+	re.IGNORECASE,
+)
+CODE_PATTERN = re.compile(r"^[a-z]{0,6}[-/]?\d{1,8}$", re.IGNORECASE)
+NAME_PATTERN = re.compile(r"^[^\W\d_]+(?:[ .'-]+[^\W\d_]+)*\.?$")
+GENDER_WORDS = {"m", "f", "o", "male", "female", "other", "transgender", "non binary", "non-binary"}
+DEPARTMENT_WORDS = {
+	"accounts",
+	"admin",
+	"administration",
+	"engineering",
+	"finance",
+	"hr",
+	"human resources",
+	"it",
+	"legal",
+	"management",
+	"marketing",
+	"operations",
+	"procurement",
+	"product",
+	"production",
+	"purchase",
+	"quality",
+	"research",
+	"sales",
+	"support",
+	"technology",
+}
+DESIGNATION_WORDS = {
+	"accountant",
+	"administrator",
+	"analyst",
+	"architect",
+	"assistant",
+	"associate",
+	"ceo",
+	"cfo",
+	"consultant",
+	"coordinator",
+	"cto",
+	"designer",
+	"developer",
+	"director",
+	"engineer",
+	"executive",
+	"head",
+	"intern",
+	"lead",
+	"manager",
+	"officer",
+	"representative",
+	"specialist",
+	"supervisor",
+	"trainee",
+	"vp",
+}
+# a column is guessed from its values when at least this share of them look alike
+CONTENT_MATCH_SHARE = 0.6
+ADULT_YEARS = 16
+
 # a layout is recognised when most of its signature headers are present
 LAYOUTS = {
 	"Keka": ["employee number", "employee name", "work email", "job title", "reporting manager"],
@@ -197,6 +261,8 @@ def create_employees(rows: list | str, company: str | None = None) -> dict:
 
 	created, errors, incomplete = [], [], []
 	pending_managers = []
+	# the result lists every skipped row, so messages raised while creating them are dropped
+	message_count = len(frappe.local.message_log)
 
 	for index, raw in enumerate(rows):
 		row = frappe._dict(raw)
@@ -206,8 +272,6 @@ def create_employees(rows: list | str, company: str | None = None) -> dict:
 
 		frappe.db.savepoint("employee_setup_row")
 		try:
-			if not cstr(row.get("date_of_birth")).strip() and cstr(row.get("age")).strip():
-				row.date_of_birth = date_of_birth_from_age(row.age)
 			missing = [FIELD_LABELS[f] for f in REQUIRED_FIELDS if not cstr(row.get(f)).strip()]
 			if not (cstr(row.get("employee_name")).strip() or cstr(row.get("first_name")).strip()):
 				missing.insert(0, FIELD_LABELS["employee_name"])
@@ -231,6 +295,7 @@ def create_employees(rows: list | str, company: str | None = None) -> dict:
 			errors.append({"row_number": row_number, "row": raw, "message": cstr(e)})
 
 	unresolved_managers = link_reports_to(pending_managers)
+	del frappe.local.message_log[message_count:]
 
 	return {
 		"created": created,
@@ -325,8 +390,8 @@ def parse_date(value, label: str):
 			frappe.throw(_("Could not read {0} '{1}'").format(label, text))
 
 	try:
-		return getdate(text)
-	except Exception:
+		return date.fromisoformat(text)
+	except ValueError:
 		pass
 
 	try:
@@ -336,11 +401,7 @@ def parse_date(value, label: str):
 
 
 def date_of_birth_from_age(age) -> date:
-	"""Approximate: today's month and day, `age` years back. Meant to be corrected later."""
-	years = cint(age)
-	if years <= 0 or years > 120:
-		frappe.throw(_("Approximate age must be between 1 and 120"))
-	return add_years(getdate(), -years)
+	return add_years(getdate(), -cint(age))
 
 
 def get_or_create_gender(value) -> str:
@@ -380,10 +441,6 @@ def get_or_create_user(email: str, first: str, middle: str | None, last: str | N
 	user.flags.ignore_permissions = True
 	user.flags.no_welcome_mail = not send_welcome_email
 	user.insert()
-	# Frappe warns about a role-less user here; the Employee record adds the role a moment later
-	frappe.local.message_log = [
-		m for m in frappe.get_message_log() if m.get("title") != _("No Roles Specified")
-	]
 	return user.name
 
 
@@ -466,8 +523,8 @@ def detect_rows(rows: list[list]) -> dict:
 	if not rows:
 		frappe.throw(_("There are no rows to read"))
 
-	headers = [cstr(h).strip() for h in rows[0]]
-	normalized = [normalize_header(h) for h in headers]
+	headers, data_rows, has_header = split_header(rows)
+	normalized = [normalize_header(h) for h in headers] if has_header else [""] * len(headers)
 
 	layout, score = None, 0
 	for name, signature in LAYOUTS.items():
@@ -478,15 +535,26 @@ def detect_rows(rows: list[list]) -> dict:
 	if score < 0.6:
 		layout = None
 
-	columns = [{"header": h, "field": guess_field(n)} for h, n in zip(headers, normalized, strict=False)]
-	data_rows = [r for r in rows[1:] if any(cstr(v).strip() for v in r)]
+	fields = [guess_field(n) for n in normalized]
+	guess_fields_from_values(fields, data_rows, strong_only=has_header)
+	columns = [
+		{
+			"header": header,
+			"field": field,
+			"sample": next(
+				(cstr(r[i]).strip() for _row, r in data_rows if i < len(r) and cstr(r[i]).strip()), ""
+			),
+		}
+		for i, (header, field) in enumerate(zip(headers, fields, strict=False))
+	]
 
 	return {
 		"layout": layout,
+		"has_header": has_header,
 		"columns": columns,
 		"fields": [{"value": k, "label": v} for k, v in FIELD_LABELS.items()],
 		"row_count": len(data_rows),
-		"sample": [[cstr(v) for v in r] for r in data_rows[:3]],
+		"sample": [[cstr(v) for v in r] for _row, r in data_rows[:3]],
 	}
 
 
@@ -501,6 +569,153 @@ def guess_field(normalized_header: str) -> str:
 			if len(alias) > 3 and alias in normalized_header:
 				return field
 	return ""
+
+
+def split_header(rows: list[list]) -> tuple[list[str], list[list], bool]:
+	"""Headers, non-blank data rows and whether the first row was a header. Without one, columns
+	are labelled by position so the mapping still has something to key on."""
+	width = max(len(r) for r in rows)
+	has_header = has_header_row(rows)
+	if has_header:
+		headers = [cstr(h).strip() for h in rows[0]] + [""] * (width - len(rows[0]))
+		start = 1
+	else:
+		headers = [_("Column {0}").format(i + 1) for i in range(width)]
+		start = 0
+	data_rows = [
+		(index, r) for index, r in enumerate(rows[start:], start=start + 1) if any(cstr(v).strip() for v in r)
+	]
+	return headers, data_rows, has_header
+
+
+def has_header_row(rows: list[list]) -> bool:
+	"""Header text never looks like an email, date, phone number, gender or employee code."""
+	kinds = {classify_value(v)[0] for v in rows[0]}
+	return not kinds & {"email", "date", "phone", "gender", "code"}
+
+
+def classify_value(value) -> tuple[str, object]:
+	if isinstance(value, datetime):
+		return "date", value.date()
+	if isinstance(value, date):
+		return "date", value
+
+	text = cstr(value).strip()
+	if not text:
+		return "", None
+	lowered = text.lower()
+	digits = re.sub(r"\D", "", text)
+	if EMAIL_PATTERN.match(text):
+		return "email", text
+	if len(digits) >= 10 and re.match(r"^\+?[\d\s()-]+$", text):
+		return "phone", text
+	if DATE_PATTERN.match(text):
+		try:
+			from dateutil import parser
+
+			return "date", parser.parse(text, dayfirst=True).date()
+		except (ValueError, OverflowError):
+			pass
+	if lowered in GENDER_WORDS:
+		return "gender", text
+	if CODE_PATTERN.match(text):
+		return "code", text
+	if NAME_PATTERN.match(text):
+		words = re.split(r"[ .'-]+", lowered.strip("."))
+		if lowered in DEPARTMENT_WORDS or lowered.replace("&", "and") in DEPARTMENT_WORDS:
+			return "department", text
+		if any(w in DESIGNATION_WORDS for w in words):
+			return "designation", text
+		return ("name" if len(words) > 1 else "word"), text
+	return "text", text
+
+
+def guess_fields_from_values(fields: list[str], data_rows: list, strong_only: bool = False):
+	"""Fill unmapped columns by what their values look like. With a header row only kinds that
+	cannot be mistaken (emails, phones, genders, dates) are guessed."""
+	taken = set(filter(None, fields))
+	known = {
+		"gender": {g.lower() for g in frappe.get_all("Gender", pluck="name")},
+		"department": {d.lower() for d in frappe.get_all("Department", pluck="department_name") if d},
+		"designation": {d.lower() for d in frappe.get_all("Designation", pluck="name")},
+		"company": {c.lower() for c in frappe.get_all("Company", pluck="name")},
+	}
+
+	profiles = {}
+	for i, field in enumerate(fields):
+		if field:
+			continue
+		values = [r[i] for _row, r in data_rows if i < len(r) and cstr(r[i]).strip()][:50]
+		if values:
+			profiles[i] = column_profile(values, known)
+
+	def assign(i, field):
+		if field not in taken:
+			fields[i] = field
+			taken.add(field)
+			profiles.pop(i, None)
+
+	for kind, field in (("email", "email"), ("phone", "cell_number"), ("gender", "gender")):
+		for i, profile in list(profiles.items()):
+			if profile["kind"] == kind:
+				assign(i, field)
+
+	date_columns = sorted(
+		(profile["median_date"], i) for i, profile in profiles.items() if profile["kind"] == "date"
+	)
+	adult_cutoff = add_years(getdate(), -ADULT_YEARS)
+	for median, i in date_columns:
+		assign(i, "date_of_birth" if median <= adult_cutoff else "date_of_joining")
+	for _median, i in reversed(date_columns):
+		assign(i, "date_of_joining")
+
+	if strong_only:
+		return
+
+	for kind, field in (
+		("company", "company"),
+		("code", "employee_number"),
+		("department", "department"),
+		("designation", "designation"),
+		("name", "employee_name"),
+		("name", "reports_to"),
+	):
+		for i, profile in sorted(profiles.items()):
+			if profile["kind"] == kind and (kind != "code" or profile["unique"]):
+				assign(i, field)
+				break
+
+	if "employee_name" not in taken and "first_name" not in taken:
+		words = [i for i, profile in sorted(profiles.items()) if profile["kind"] == "word"]
+		for i, field in zip(words, ("first_name", "last_name"), strict=False):
+			assign(i, field)
+
+
+def column_profile(values: list, known: dict) -> dict:
+	kinds, dates = [], []
+	for value in values:
+		kind, parsed = classify_value(value)
+		lowered = cstr(value).strip().lower()
+		if lowered in known["company"]:
+			kind = "company"
+		elif kind in ("word", "name", "text") and lowered in known["gender"]:
+			kind = "gender"
+		elif kind in ("word", "name", "text", "designation") and lowered in known["department"]:
+			kind = "department"
+		elif kind in ("word", "name", "text") and lowered in known["designation"]:
+			kind = "designation"
+		kinds.append(kind)
+		if kind == "date":
+			dates.append(parsed)
+
+	top = max(set(kinds), key=kinds.count)
+	if kinds.count(top) / len(kinds) < CONTENT_MATCH_SHARE:
+		top = ""
+	return {
+		"kind": top,
+		"median_date": sorted(dates)[len(dates) // 2] if dates else None,
+		"unique": len({cstr(v).strip().lower() for v in values}) == len(values),
+	}
 
 
 @frappe.whitelist()
@@ -518,16 +733,16 @@ def import_pasted_employees(content: str, column_map: dict | str, company: str |
 
 def import_rows(rows: list[list], column_map: dict | str, company: str | None = None) -> dict:
 	column_map = frappe.parse_json(column_map) if isinstance(column_map, str) else column_map
-	if len(rows) < 2:
-		frappe.throw(_("There is a header row but no employees"))
+	if not rows:
+		frappe.throw(_("There are no rows to read"))
 
-	headers = [cstr(h).strip() for h in rows[0]]
+	headers, data_rows, _has_header = split_header(rows)
+	if not data_rows:
+		frappe.throw(_("There is a header row but no employees"))
 	fields = [column_map.get(h) or "" for h in headers]
 
 	employees = []
-	for index, raw in enumerate(rows[1:], start=2):
-		if not any(cstr(v).strip() for v in raw):
-			continue
+	for index, raw in data_rows:
 		row = {"row_number": index}
 		for field, value in zip(fields, raw, strict=False):
 			if field and value not in (None, ""):
@@ -565,7 +780,7 @@ def parse_pasted_rows(content: str) -> list[list]:
 
 	text = cstr(content).replace("\r\n", "\n").replace("\r", "\n").strip("\n")
 	if not text.strip():
-		frappe.throw(_("Paste a few rows first, including the header row"))
+		frappe.throw(_("Paste a few rows first"))
 
 	lines = text.split("\n")
 	if "\t" in lines[0]:

@@ -1,5 +1,4 @@
 import frappe
-from frappe.utils import cstr
 
 from hrms.api.employee_setup import (
 	DEMO_EMPLOYEES,
@@ -38,6 +37,7 @@ class TestEmployeeSetup(HRMSTestSuite):
 		self.assertIn(COMPANY, status["companies"])
 
 	def test_create_employees_from_rows(self):
+		frappe.local.message_log = []
 		result = create_employees(
 			[
 				{
@@ -88,10 +88,7 @@ class TestEmployeeSetup(HRMSTestSuite):
 		self.assertEqual(manager.user_id, "setup.manager@example.com")
 		self.assertTrue(frappe.db.exists("User", "setup.manager@example.com"))
 		self.assertIn("Employee", frappe.get_roles("setup.manager@example.com"))
-		noisy = ("Removed Employee role", "has no roles enabled")
-		self.assertFalse(
-			[m for m in frappe.get_message_log() if any(text in cstr(m.get("message")) for text in noisy)]
-		)
+		self.assertEqual(frappe.get_message_log(), [])
 		self.assertEqual(
 			frappe.db.get_value("Department", manager.department, "department_name"), "Setup Dept"
 		)
@@ -150,6 +147,54 @@ class TestEmployeeSetup(HRMSTestSuite):
 		self.assertEqual([c["field"] for c in detected["columns"]], ["employee_name", "gender"])
 		self.assertEqual(detected["row_count"], 1)
 
+	def test_headerless_paste_guesses_columns_from_values(self):
+		content = (
+			"Keka One\tsetup.keka1@example.com\tMale\t1990-05-05\t2026-09-01\tSales\tSales Executive\t\n"
+			"Keka Two\tsetup.keka2@example.com\tFemale\t1992-06-06\t2026-09-02\tSales\tSales Executive\tKeka One\n"
+		)
+		detected = detect_pasted_employees(content)
+		self.assertFalse(detected["has_header"])
+		self.assertEqual(detected["row_count"], 2)
+		self.assertEqual(detected["columns"][0]["sample"], "Keka One")
+		self.assertEqual(
+			[c["field"] for c in detected["columns"]],
+			[
+				"employee_name",
+				"email",
+				"gender",
+				"date_of_birth",
+				"date_of_joining",
+				"department",
+				"designation",
+				"reports_to",
+			],
+		)
+
+		column_map = {c["header"]: c["field"] for c in detected["columns"]}
+		result = import_pasted_employees(content, column_map, company=COMPANY)
+		self.assertEqual(result["errors"], [])
+		self.assertEqual([r["employee_name"] for r in result["created"]], ["Keka One", "Keka Two"])
+		two = frappe.get_doc("Employee", result["created"][1]["name"])
+		self.assertEqual(two.reports_to, result["created"][0]["name"])
+
+		# order does not matter, and split names, codes and phone numbers are recognised
+		detected = detect_pasted_employees(
+			"EMP001,14/03/1988,Ananya,Iyer,F,9876543210,01/08/2024\n"
+			"EMP002,22/07/1993,Rohan,Mehta,M,+91 98765 43211,03/06/2024\n"
+		)
+		self.assertEqual(
+			[c["field"] for c in detected["columns"]],
+			[
+				"employee_number",
+				"date_of_birth",
+				"first_name",
+				"last_name",
+				"gender",
+				"cell_number",
+				"date_of_joining",
+			],
+		)
+
 	def test_demo_employees(self):
 		from frappe.utils import add_months, getdate
 
@@ -173,19 +218,6 @@ class TestEmployeeSetup(HRMSTestSuite):
 		self.assertEqual(
 			frappe.db.get_value("Department", engineer.department, "department_name"), "Engineering"
 		)
-
-	def test_age_sets_approximate_date_of_birth(self):
-		from frappe.utils import add_years, getdate
-
-		result = create_employees(
-			[{"employee_name": "Age Only", "gender": "Male", "age": "30", "date_of_joining": "2026-09-01"}],
-			company=COMPANY,
-		)
-		self.assertEqual(result["errors"], [])
-		self.assertEqual(len(result["created"]), 1)
-		employee = frappe.get_doc("Employee", result["created"][0]["name"])
-		self.assertEqual(employee.date_of_birth, add_years(getdate(), -30))
-		frappe.delete_doc("Employee", employee.name, force=True)
 
 	def test_normalize_header(self):
 		self.assertEqual(normalize_header(" Date of Joining (DD/MM/YYYY) "), "date of joining")
