@@ -79,10 +79,29 @@
 			50% { transform: translate(0, -1.4px); }
 			75% { transform: translate(-1.4px, -0.8px); }
 		}
+		/* Tax and Benefits: the front coin flips over like a tossed coin, then rests, while hovered.
+		   It loops, so a still copy shows at rest and the moving copy never freezes mid-flip when the
+		   pointer leaves. */
+		.tax-still {
+			opacity: calc(1 - var(--icon-motion-opacity, 0));
+		}
+		.tax-flipping {
+			opacity: var(--icon-motion-opacity, 0);
+			transform-box: view-box;
+			transform-origin: 14.6px 13.4px;
+			animation: tax-flip 1.8s ease-in-out infinite;
+			animation-play-state: var(--icon-motion, paused);
+		}
+		@keyframes tax-flip {
+			0%, 15% { transform: scaleX(1); }
+			32.5% { transform: scaleX(0); }
+			50%, 100% { transform: scaleX(1); }
+		}
 		@media (prefers-reduced-motion: reduce) {
 			.briefcase-carried,
 			.tenure-minute,
-			.recruitment-searching { animation: none; }
+			.recruitment-searching,
+			.tax-flipping { animation: none; }
 		}
 	</style>
 	<symbol viewBox="0 0 24 24" id="icon-briefcase-duotone" stroke="none" style="overflow: visible">
@@ -117,6 +136,15 @@
 			<path fill-rule="evenodd" d="M7.7 7.9A2.1 2.1 0 1 0 11.9 7.9A2.1 2.1 0 1 0 7.7 7.9ZM6.200000000000001 13.6V13.2C6.200000000000001 11.6 7.9 10.6 9.8 10.6C11.700000000000001 10.6 13.4 11.6 13.4 13.2V13.6Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
 			<path fill-rule="evenodd" d="M2.5 9.4A7.3 7.3 0 1 0 17.1 9.4A7.3 7.3 0 1 0 2.5 9.4ZM4 9.4A5.8 5.8 0 1 0 15.6 9.4A5.8 5.8 0 1 0 4 9.4Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
 			<path fill-rule="evenodd" d="M14.09 15.95L19.69 21.35L21.91 19.05L16.31 13.65Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+	</symbol>
+	<symbol viewBox="0 0 24 24" id="icon-coins-percent-duotone" stroke="none" style="overflow: visible">
+		<path fill-rule="evenodd" d="M6.61 14.75A6.6 6.6 0 1 1 14.72 5.3A8.1 8.1 0 0 0 6.61 14.75Z" style="fill: var(--duotone-light, var(--ink-gray-3))" />
+		<g class="tax-still">
+			<path fill-rule="evenodd" d="M7.5 13.4A7.1 7.1 0 1 0 21.7 13.4A7.1 7.1 0 1 0 7.5 13.4ZM10.75 10.95A1.5 1.5 0 1 0 13.75 10.95A1.5 1.5 0 1 0 10.75 10.95ZM15.45 15.85A1.5 1.5 0 1 0 18.45 15.85A1.5 1.5 0 1 0 15.45 15.85ZM12.6 17.3L17.8 10.4A0.75 0.75 0 0 0 16.6 9.5L11.4 16.4A0.75 0.75 0 0 0 12.6 17.3Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
+		</g>
+		<g class="tax-flipping">
+			<path fill-rule="evenodd" d="M7.5 13.4A7.1 7.1 0 1 0 21.7 13.4A7.1 7.1 0 1 0 7.5 13.4ZM10.75 10.95A1.5 1.5 0 1 0 13.75 10.95A1.5 1.5 0 1 0 10.75 10.95ZM15.45 15.85A1.5 1.5 0 1 0 18.45 15.85A1.5 1.5 0 1 0 15.45 15.85ZM12.6 17.3L17.8 10.4A0.75 0.75 0 0 0 16.6 9.5L11.4 16.4A0.75 0.75 0 0 0 12.6 17.3Z" style="fill: var(--duotone-dark, light-dark(var(--ink-gray-5), var(--ink-gray-6)))" />
 		</g>
 	</symbol>
 </svg>
