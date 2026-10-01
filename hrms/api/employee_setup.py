@@ -237,8 +237,9 @@ def get_setup_status() -> dict:
 	active = get_active_employee_count()
 	companies = frappe.get_all("Company", pluck="name", order_by="creation asc")
 	session_data = frappe.session.get("data") or {}
+	show = active < MIN_EMPLOYEES
 	return {
-		"show": int(active < MIN_EMPLOYEES),
+		"show": int(show),
 		"active_employees": active,
 		"required": MIN_EMPLOYEES,
 		"companies": companies,
@@ -246,6 +247,16 @@ def get_setup_status() -> dict:
 		"session": f"{frappe.session.user}|{session_data.get('creation') or ''}",
 		"default_company": frappe.defaults.get_user_default("Company")
 		or (companies[0] if len(companies) == 1 else None),
+		# the dialog shows only on HRMS routes; doctypes and workspaces resolve their app in desk
+		**(get_hrms_reports_and_pages() if show else {}),
+	}
+
+
+def get_hrms_reports_and_pages() -> dict:
+	modules = frappe.get_all("Module Def", {"app_name": "hrms"}, pluck="name")
+	return {
+		"reports": frappe.get_all("Report", {"module": ("in", modules)}, pluck="name"),
+		"pages": frappe.get_all("Page", {"module": ("in", modules)}, pluck="name"),
 	}
 
 

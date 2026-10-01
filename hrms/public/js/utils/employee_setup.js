@@ -14,15 +14,49 @@ const EMPTY_ROW = () => ({
 $(document).on("app_ready", () => {
 	const status = frappe.boot.hrms_employee_setup;
 	if (!status?.show || !frappe.boot.setup_complete) return;
-	// the router closes open dialogs while it renders the first page, so wait for that page
+	// the router closes open dialogs while it renders a page, so wait for that page
 	const when_page_ready = () => {
-		if (frappe.container?.page) setTimeout(() => hrms.employee_setup.start(status), 400);
+		if (frappe.container?.page) setTimeout(() => hrms.employee_setup.on_route(status), 400);
 		else setTimeout(when_page_ready, 200);
 	};
 	when_page_ready();
+	frappe.router.on("change", when_page_ready);
 });
 
 hrms.employee_setup = {
+	async on_route(status) {
+		if (this.done) return;
+		const route = frappe.get_route();
+		const in_scope = await this.is_hrms_route(route, status);
+		if (route.join("/") !== frappe.get_route().join("/")) return;
+
+		this.in_scope = in_scope;
+		if (!in_scope) {
+			if (this.dialog?.display) this.dialog.hide();
+			this.hide_bar();
+		} else if (!this.status) {
+			this.start(status);
+		} else if (!this.dialog?.display) {
+			this.show_bar();
+		}
+	},
+
+	async is_hrms_route(route, status) {
+		const [view, name] = route;
+		let module;
+		if (view === "Workspaces") {
+			module = frappe.workspaces[frappe.router.slug(route[route.length - 1] || "")]?.module;
+		} else if (["List", "Form", "Tree"].includes(view) && name) {
+			await frappe.model.with_doctype(name);
+			module = frappe.get_meta(name)?.module;
+		} else if (view === "query-report") {
+			return (status.reports || []).includes(name);
+		} else {
+			return (status.pages || []).includes(view);
+		}
+		return Boolean(module) && frappe.boot.module_app?.[frappe.scrub(module)] === "hrms";
+	},
+
 	start(status) {
 		this.status = status;
 		this.ensure_styles();
@@ -626,7 +660,8 @@ hrms.employee_setup = {
 	},
 
 	show_bar() {
-		if (this.done || this.status.active_employees >= this.status.required) return;
+		if (!this.in_scope || this.done || this.status.active_employees >= this.status.required)
+			return;
 		this.hide_bar();
 		const { active_employees: done, required } = this.status;
 		this.bar = $(`<div class="employee-setup-bar">
