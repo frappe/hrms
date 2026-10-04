@@ -105,8 +105,6 @@ jobs:
         env:
           DB: mariadb
           TYPE: server
-          FRAPPE_BRANCH: ${{ (github.head_ref == 'version-16-polished' && 'version-16-polished') || '' }}
-          ERPNEXT_BRANCH: ${{ (github.head_ref == 'version-16-polished' && 'version-16-polished') || '' }}
 
       - name: Run Patch Tests
         run: |
