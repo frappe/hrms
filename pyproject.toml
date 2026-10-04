@@ -70,5 +70,5 @@ Documentation = "https://docs.frappe.io/hr"
 
 
 [tool.bench.frappe-dependencies]
-frappe = ">=16.0.0,<17.0.0"
+frappe = ">=16.50.0,<17.0.0"
 erpnext = ">=16.0.0,<17.0.0"

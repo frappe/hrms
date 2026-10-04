@@ -3,13 +3,13 @@
  "creation": "2025-10-26 21:53:46.574309",
  "docstatus": 0,
  "doctype": "Workspace Sidebar",
- "header_icon": "expenses",
+ "header_icon": "receipt-text",
  "idx": 0,
  "items": [
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "home",
+   "icon": "house",
    "indent": 0,
    "keep_closed": 0,
    "label": "Home",
@@ -104,7 +104,7 @@
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "money-coins-1",
+   "icon": "coins",
    "indent": 1,
    "keep_closed": 1,
    "label": "Accounting Entries",
@@ -268,9 +268,9 @@
    "type": "Link"
   }
  ],
- "modified": "2026-01-08 14:16:38.878865",
+ "modified": "2026-08-07 12:00:00.000000",
  "modified_by": "Administrator",
- "module": "HR",
+ "module": "Expenses",
  "name": "Expenses",
  "owner": "Administrator",
  "standard": 1,

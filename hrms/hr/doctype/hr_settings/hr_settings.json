@@ -136,7 +136,8 @@
   {
    "fieldname": "standard_working_hours",
    "fieldtype": "Float",
-   "label": "Standard Working Hours"
+   "label": "Standard Working Hours",
+   "non_negative": 1
   },
   {
    "default": "00:15:00",
@@ -388,7 +389,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-09-03 11:00:00.000000",
+ "modified": "2026-09-28 23:38:50.328083",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
