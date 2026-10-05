@@ -53,4 +53,6 @@ hrms.patches.v16_0.update_partially_paid_expense_claim_status
 hrms.patches.v16_0.set_leave_approver_name_in_leave_application #2026-08-05
 hrms.patches.v16_0.enable_multi_currency_expense_claim_for_existing_users
 hrms.patches.v16_0.set_job_applicant_kanban_column_indicators #2026-08-12
+hrms.patches.v16_0.set_employee_email_in_leave_application #2026-08-28
 hrms.patches.v16_0.set_job_offer_in_employee
+hrms.patches.v16_0.migrate_leave_notification_customizations #2026-09-23
