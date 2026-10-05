@@ -47,3 +47,36 @@ class TestShiftScheduleAssignment(HRMSTestSuite):
 
 		shift_schedule_assignment.save()
 		self.assertEqual(shift_schedule_assignment.create_shifts_after, add_days(getdate(), 6))
+
+	def test_create_shifts_when_end_date_is_last_day_of_schedule_week(self):
+		days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+		shift_schedule = get_or_insert_shift_schedule(self.shift_type.name, "Every 3 Weeks", days)
+		shift_schedule_assignment = frappe.get_doc(
+			{
+				"doctype": "Shift Schedule Assignment",
+				"employee": self.employee,
+				"company": "_Test Company",
+				"shift_schedule": shift_schedule,
+				"shift_status": "Active",
+			}
+		).insert()
+
+		# end date falls on Sunday, the last day of a schedule week starting Monday
+		shift_schedule_assignment.create_shifts("2026-09-21", "2026-12-20")
+
+		shift_assignments = frappe.get_all(
+			"Shift Assignment",
+			filters={"shift_schedule_assignment": shift_schedule_assignment.name},
+			fields=["start_date", "end_date"],
+			order_by="start_date",
+		)
+		self.assertEqual(
+			[(str(d.start_date), str(d.end_date)) for d in shift_assignments],
+			[
+				("2026-09-21", "2026-09-27"),
+				("2026-10-12", "2026-10-18"),
+				("2026-11-02", "2026-11-08"),
+				("2026-11-23", "2026-11-29"),
+				("2026-12-14", "2026-12-20"),
+			],
+		)
