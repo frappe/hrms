@@ -1,0 +1,52 @@
+{
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"@app/*": [
+				"./*"
+			],
+			"vue": [
+				"../../../studio/frontend/node_modules/vue"
+			],
+			"vue/*": [
+				"../../../studio/frontend/node_modules/vue/*"
+			],
+			"vue-router": [
+				"../../../studio/frontend/node_modules/vue-router"
+			],
+			"vue-router/*": [
+				"../../../studio/frontend/node_modules/vue-router/*"
+			],
+			"pinia": [
+				"../../../studio/frontend/node_modules/pinia"
+			],
+			"pinia/*": [
+				"../../../studio/frontend/node_modules/pinia/*"
+			],
+			"frappe-ui": [
+				"../../../studio/frontend/node_modules/frappe-ui/src/index.ts"
+			],
+			"frappe-ui/*": [
+				"../../../studio/frontend/node_modules/frappe-ui/*"
+			],
+			"reka-ui": [
+				"../../../studio/frontend/node_modules/reka-ui"
+			],
+			"reka-ui/*": [
+				"../../../studio/frontend/node_modules/reka-ui/*"
+			]
+		},
+		"target": "esnext",
+		"lib": [
+			"esnext",
+			"dom",
+			"dom.iterable"
+		],
+		"allowJs": true,
+		"module": "esnext",
+		"moduleResolution": "bundler",
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"skipLibCheck": true
+	}
+}

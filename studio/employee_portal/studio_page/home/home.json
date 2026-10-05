@@ -1,0 +1,387 @@
+{
+ "allow_guest": 0,
+ "blocks": [
+  {
+   "baseStyles": {
+    "display": "flex",
+    "flexDirection": "column",
+    "height": "100%",
+    "overflowX": "hidden",
+    "width": "inherit"
+   },
+   "blockName": "body",
+   "children": [
+    {
+     "classes": [
+      "w-full"
+     ],
+     "componentId": "home-shell",
+     "componentName": "PortalShell",
+     "componentProps": {},
+     "componentSlots": {
+      "default": {
+       "slotContent": [
+        {
+         "componentId": "home-header",
+         "componentName": "PortalPageHeader",
+         "componentProps": {
+          "icon": "lucide-house",
+          "title": "{{ t('Home') }}"
+         },
+         "isCustomVueComponent": true
+        },
+        {
+         "blockName": "body",
+         "children": [
+          {
+           "blockName": "column",
+           "children": [
+            {
+             "blockName": "title",
+             "children": [
+              {
+               "blockName": "greeting",
+               "children": [
+                {
+                 "classes": [
+                  "break-words",
+                  "text-ink-gray-9"
+                 ],
+                 "componentId": "home-greeting-line",
+                 "componentName": "TextBlock",
+                 "componentProps": {
+                  "fontSize": "text-lg-semibold",
+                  "tag": "h1",
+                  "text": "{{ greetingLine }}"
+                 }
+                },
+                {
+                 "classes": [
+                  "mt-1",
+                  "text-ink-gray-5"
+                 ],
+                 "componentId": "home-greeting-date",
+                 "componentName": "TextBlock",
+                 "componentProps": {
+                  "fontSize": "text-p-base",
+                  "tag": "p",
+                  "text": "{{ dateLabel }}"
+                 }
+                }
+               ],
+               "classes": [
+                "min-w-0",
+                "flex-[1_1_16rem]"
+               ],
+               "componentId": "home-greeting",
+               "componentName": "container",
+               "originalElement": "div"
+              },
+              {
+               "blockName": "title-action",
+               "children": [
+                {
+                 "componentId": "home-out-today",
+                 "componentName": "PortalAvatarStack",
+                 "componentProps": {
+                  "label": "{{ outTodayLabel }}",
+                  "people": "{{ outToday }}"
+                 },
+                 "isCustomVueComponent": true
+                }
+               ],
+               "classes": [
+                "flex",
+                "shrink-0",
+                "items-center",
+                "gap-2"
+               ],
+               "componentId": "home-title-action",
+               "componentName": "container",
+               "originalElement": "div",
+               "visibilityCondition": "{{ outToday.length }}"
+              }
+             ],
+             "classes": [
+              "mb-4",
+              "flex",
+              "flex-wrap",
+              "items-start",
+              "gap-x-6",
+              "gap-y-3"
+             ],
+             "componentId": "home-title",
+             "componentName": "container",
+             "originalElement": "div"
+            },
+            {
+             "componentId": "home-stats",
+             "componentName": "PortalStatGroup",
+             "componentProps": {
+              "stats": "{{ stats }}"
+             },
+             "isCustomVueComponent": true
+            },
+            {
+             "blockName": "todo",
+             "children": [
+              {
+               "blockName": "todo-header",
+               "children": [
+                {
+                 "classes": [
+                  "text-ink-gray-9"
+                 ],
+                 "componentId": "home-todo-title",
+                 "componentName": "TextBlock",
+                 "componentProps": {
+                  "fontSize": "text-base-semibold",
+                  "tag": "h2",
+                  "text": "{{ t('To do') }}"
+                 }
+                },
+                {
+                 "classes": [
+                  "tabular-nums",
+                  "text-ink-gray-5"
+                 ],
+                 "componentId": "home-todo-count",
+                 "componentName": "TextBlock",
+                 "componentProps": {
+                  "fontSize": "text-base",
+                  "tag": "span",
+                  "text": "{{ todoCount }}"
+                 },
+                 "visibilityCondition": "{{ todoCount }}"
+                },
+                {
+                 "blockName": "todo-actions",
+                 "children": [
+                  {
+                   "componentId": "home-todo-view-all",
+                   "componentName": "Button",
+                   "componentProps": {
+                    "iconRight": "lucide-arrow-right",
+                    "label": "{{ t('View all') }}",
+                    "route": "{{ ROUTES.inbox }}",
+                    "variant": "ghost"
+                   }
+                  }
+                 ],
+                 "classes": [
+                  "ml-auto",
+                  "flex",
+                  "items-center",
+                  "gap-1"
+                 ],
+                 "componentId": "home-todo-actions",
+                 "componentName": "container",
+                 "originalElement": "div",
+                 "visibilityCondition": "{{ hasMoreTodos }}"
+                }
+               ],
+               "classes": [
+                "mb-2",
+                "flex",
+                "min-h-8",
+                "items-center",
+                "gap-2"
+               ],
+               "componentId": "home-todo-header",
+               "componentName": "container",
+               "originalElement": "div"
+              },
+              {
+               "componentId": "home-todo-empty",
+               "componentName": "PortalEmptyState",
+               "componentProps": {
+                "description": "{{ t('Approvals and reviews will show up here.') }}",
+                "icon": "lucide-check-check",
+                "title": "{{ t('Nothing to do') }}"
+               },
+               "isCustomVueComponent": true,
+               "visibilityCondition": "{{ !todoCount }}"
+              },
+              {
+               "componentId": "home-todo-list",
+               "componentName": "PortalRowList",
+               "componentProps": {
+                "rows": "{{ todoRows }}"
+               },
+               "isCustomVueComponent": true,
+               "visibilityCondition": "{{ todoCount }}"
+              }
+             ],
+             "classes": [
+              "mt-12"
+             ],
+             "componentId": "home-todo",
+             "componentName": "container",
+             "originalElement": "div"
+            },
+            {
+             "blockName": "below",
+             "children": [
+              {
+               "blockName": "upcoming",
+               "children": [
+                {
+                 "blockName": "upcoming-header",
+                 "children": [
+                  {
+                   "classes": [
+                    "text-ink-gray-9"
+                   ],
+                   "componentId": "home-upcoming-title",
+                   "componentName": "TextBlock",
+                   "componentProps": {
+                    "fontSize": "text-base-semibold",
+                    "tag": "h2",
+                    "text": "{{ t('Upcoming') }}"
+                   }
+                  }
+                 ],
+                 "classes": [
+                  "mb-2",
+                  "flex",
+                  "min-h-8",
+                  "items-center",
+                  "gap-2"
+                 ],
+                 "componentId": "home-upcoming-header",
+                 "componentName": "container",
+                 "originalElement": "div"
+                },
+                {
+                 "componentId": "home-upcoming-empty",
+                 "componentName": "PortalEmptyState",
+                 "componentProps": {
+                  "icon": "lucide-calendar",
+                  "title": "{{ t('Nothing coming up') }}"
+                 },
+                 "isCustomVueComponent": true,
+                 "visibilityCondition": "{{ !upcomingRows.length }}"
+                },
+                {
+                 "componentId": "home-upcoming-list",
+                 "componentName": "PortalRowList",
+                 "componentProps": {
+                  "rows": "{{ upcomingRows }}"
+                 },
+                 "isCustomVueComponent": true,
+                 "visibilityCondition": "{{ upcomingRows.length }}"
+                }
+               ],
+               "classes": [],
+               "componentId": "home-upcoming",
+               "componentName": "container",
+               "originalElement": "div"
+              },
+              {
+               "blockName": "events",
+               "children": [
+                {
+                 "blockName": "events-header",
+                 "children": [
+                  {
+                   "classes": [
+                    "text-ink-gray-9"
+                   ],
+                   "componentId": "home-events-title",
+                   "componentName": "TextBlock",
+                   "componentProps": {
+                    "fontSize": "text-base-semibold",
+                    "tag": "h2",
+                    "text": "{{ eventsTitle }}"
+                   }
+                  }
+                 ],
+                 "classes": [
+                  "mb-2",
+                  "flex",
+                  "min-h-8",
+                  "items-center",
+                  "gap-2"
+                 ],
+                 "componentId": "home-events-header",
+                 "componentName": "container",
+                 "originalElement": "div"
+                },
+                {
+                 "componentId": "home-events-list",
+                 "componentName": "PortalRowList",
+                 "componentProps": {
+                  "rows": "{{ eventRows }}"
+                 },
+                 "isCustomVueComponent": true
+                }
+               ],
+               "classes": [],
+               "componentId": "home-events",
+               "componentName": "container",
+               "originalElement": "div",
+               "visibilityCondition": "{{ eventRows.length }}"
+              }
+             ],
+             "classes": [
+              "mt-12",
+              "grid",
+              "gap-12",
+              "md:grid-cols-2",
+              "md:gap-8"
+             ],
+             "componentId": "home-below",
+             "componentName": "container",
+             "originalElement": "div"
+            }
+           ],
+           "classes": [
+            "mx-auto",
+            "w-full",
+            "max-w-3xl"
+           ],
+           "componentId": "home-column",
+           "componentName": "container",
+           "originalElement": "div"
+          }
+         ],
+         "classes": [
+          "px-4",
+          "pt-8",
+          "pb-24",
+          "sm:px-6"
+         ],
+         "componentId": "home-body",
+         "componentName": "container",
+         "originalElement": "div"
+        }
+       ],
+       "slotName": "default"
+      }
+     },
+     "isCustomVueComponent": true
+    }
+   ],
+   "componentId": "root",
+   "componentName": "div",
+   "componentProps": {},
+   "componentSlots": {},
+   "originalElement": "body"
+  }
+ ],
+ "creation": "2026-10-05 13:21:39.478182",
+ "docstatus": 0,
+ "doctype": "Studio Page",
+ "frappe_app": "hrms",
+ "idx": 0,
+ "is_standard": 1,
+ "modified": "2026-10-05 18:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "home",
+ "owner": "Administrator",
+ "page_name": "page-f19e5796",
+ "page_title": "Home",
+ "published": 1,
+ "route": "/",
+ "studio_app": "employee-portal"
+}
