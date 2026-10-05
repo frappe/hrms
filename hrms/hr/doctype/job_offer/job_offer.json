@@ -16,16 +16,15 @@
   "offer_valid_till",
   "status",
   "role_section",
-  "designation",
-  "department",
-  "branch",
-  "column_break_role",
   "company",
-  "grade",
-  "employment_type",
+  "department",
+  "reports_to",
+  "column_break_role",
+  "designation",
+  "branch",
   "column_break_role_2",
   "date_of_joining",
-  "reports_to",
+  "employment_type",
   "leave_policy_tab",
   "leave_section",
   "leave_policy",
@@ -39,10 +38,11 @@
   "compensation_tab",
   "salary_details_section",
   "salary_structure",
+  "currency",
   "calculate_component_amount_from",
   "base",
   "column_break_compensation",
-  "currency",
+  "grade",
   "variable",
   "ctc",
   "gross",
@@ -60,10 +60,15 @@
   "section_break_4",
   "job_offer_term_template",
   "offer_terms",
+  "printing_tab",
   "printing_details",
-  "letter_head",
+  "offer_letter_print_format",
+  "signature",
   "column_break_16",
-  "select_print_heading",
+  "letter_head",
+  "offer_letter_preview_section",
+  "email_offer_letter",
+  "offer_letter_preview",
   "amended_from"
  ],
  "fields": [
@@ -73,7 +78,7 @@
    "label": "Role & Joining"
   },
   {
-   "depends_on":"eval:doc.job_applicant",
+   "depends_on": "eval:doc.job_applicant",
    "fieldname": "job_applicant",
    "fieldtype": "Link",
    "label": "Job Applicant",
@@ -410,7 +415,11 @@
    "label": "Terms and Conditions"
   },
   {
-   "collapsible": 1,
+   "fieldname": "printing_tab",
+   "fieldtype": "Tab Break",
+   "label": "Printing"
+  },
+  {
    "fieldname": "printing_details",
    "fieldtype": "Section Break",
    "label": "Printing Details"
@@ -432,12 +441,34 @@
   },
   {
    "allow_on_submit": 1,
-   "fieldname": "select_print_heading",
+   "fieldname": "offer_letter_print_format",
    "fieldtype": "Link",
-   "label": "Print Heading",
-   "options": "Print Heading",
-   "print_hide": 1,
-   "report_hide": 1
+   "label": "Print Format",
+   "options": "Print Format",
+   "print_hide": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "signature",
+   "fieldtype": "Attach Image",
+   "label": "Signature",
+   "print_hide": 1
+  },
+  {
+   "depends_on": "offer_letter_print_format",
+   "fieldname": "offer_letter_preview_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval:doc.docstatus == 1 && doc.status == \"Accepted\"",
+   "fieldname": "email_offer_letter",
+   "fieldtype": "Button",
+   "label": "Email Offer Letter"
+  },
+  {
+   "fieldname": "offer_letter_preview",
+   "fieldtype": "HTML",
+   "label": "Preview"
   },
   {
    "fieldname": "amended_from",
@@ -451,7 +482,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-08-27 17:09:08.078373",
+ "modified": "2026-10-05 11:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",
