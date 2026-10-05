@@ -216,13 +216,13 @@ def get_columns(components, fieldnames):
 		{
 			"label": _("Start Date"),
 			"fieldname": "start_date",
-			"fieldtype": "Data",
+			"fieldtype": "Date",
 			"width": 80,
 		},
 		{
 			"label": _("End Date"),
 			"fieldname": "end_date",
-			"fieldtype": "Data",
+			"fieldtype": "Date",
 			"width": 80,
 		},
 		{
