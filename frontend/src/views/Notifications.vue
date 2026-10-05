@@ -7,26 +7,29 @@
 						class="flex flex-row bg-white shadow-sm py-4 px-3 items-center justify-between border-b sticky top-0 z-10"
 					>
 						<div class="flex flex-row items-center">
-							<Button
-								variant="ghost"
-								class="!pl-0 hover:bg-white"
-								@click="router.back()"
-							>
+							<Button variant="ghost" class="!pl-0 hover:bg-white" @click="router.back()">
 								<FeatherIcon name="chevron-left" class="h-5 w-5" />
 							</Button>
-							<h2 class="text-xl font-semibold text-gray-900">{{ __("Notifications") }} </h2>
+							<h2 class="text-xl font-semibold text-gray-900">{{ __("Notifications") }}</h2>
 						</div>
 					</header>
 
 					<div class="flex flex-col gap-4 mt-5 p-4">
-						<div class="flex flex-row justify-between items-center">
+						<div class="flex flex-wrap gap-2 justify-between items-center">
 							<div
 								class="text-lg text-gray-800 font-semibold"
 								v-if="unreadNotificationsCount.data"
 							>
 								{{ __("{0} Unread", [unreadNotificationsCount.data]) }}
 							</div>
-							<div class="flex ml-auto gap-1">
+							<div class="flex flex-wrap ml-auto gap-1">
+								<Button
+									variant="outline"
+									:disabled="notifications.list.loading"
+									@click="toggleReadFilter"
+								>
+									{{ showAll ? __("Show Unread") : __("Show All") }}
+								</Button>
 								<Button
 									v-if="allowPushNotifications"
 									variant="outline"
@@ -51,10 +54,7 @@
 							</div>
 						</div>
 
-						<div
-							class="flex flex-col bg-white rounded"
-							v-if="notifications.data?.length"
-						>
+						<div class="flex flex-col bg-white rounded" v-if="notifications.data?.length">
 							<router-link
 								:class="[
 									'flex flex-row items-start p-4 justify-between border-b before:mt-3',
@@ -77,18 +77,23 @@
 									</div>
 								</div>
 							</router-link>
-							
 						</div>
 						<div v-if="notifications.data?.length && notifications.hasNextPage" class="flex">
 							<Button
 								variant="outline"
 								class="ml-auto"
-								@click="loadMore"
+								@click="notifications.next()"
+								:loading="notifications.list.loading"
 							>
-								{{ __('Load more') }}
+								{{ __("Load more") }}
 							</Button>
 						</div>
-						<EmptyState v-else-if="!notifications.data" :message="__('You have no notifications')" />
+						<EmptyState
+							v-else-if="!notifications.list.loading && !notifications.data?.length"
+							:message="
+								showAll ? __('You have no notifications') : __('You have no unread notifications')
+							"
+						/>
 					</div>
 				</div>
 			</div>
@@ -101,7 +106,7 @@ import { IonContent, IonPage } from "@ionic/vue"
 import { useRouter } from "vue-router"
 import { createResource, FeatherIcon } from "frappe-ui"
 
-import { computed, inject, onMounted, ref } from "vue"
+import { computed, inject, onMounted } from "vue"
 import EmployeeAvatar from "@/components/EmployeeAvatar.vue"
 import EmptyState from "@/components/EmptyState.vue"
 
@@ -114,20 +119,16 @@ import {
 const dayjs = inject("$dayjs")
 const router = useRouter()
 const __ = inject("$translate")
-const currentStart = ref(0)
-const pageLength = 10
-
+const showAll = computed(() => notifications.filters.read !== 0)
 
 const allowPushNotifications = computed(
-	() =>
-		window.frappe?.boot.push_relay_server_url &&
-		arePushNotificationsEnabled.data
+	() => window.frappe?.boot.push_relay_server_url && arePushNotificationsEnabled.data
 )
 
 const markAllAsRead = createResource({
 	url: "hrms.api.mark_all_notifications_as_read",
 	onSuccess() {
-		notifications.reload()
+		refreshNotifications()
 	},
 })
 
@@ -136,7 +137,7 @@ function markAsRead(name) {
 		{ name, read: 1 },
 		{
 			onSuccess: () => {
-				unreadNotificationsCount.reload()
+				refreshNotifications()
 			},
 		}
 	)
@@ -149,16 +150,22 @@ function getItemRoute(item) {
 	}
 }
 
-onMounted(() => {
-	notifications.start = 0,
-	notifications.pageLength = 10,
-	notifications.fetch()
-})
+onMounted(refreshNotifications)
 
-function loadMore() {
-	currentStart.value += pageLength
-	notifications.start = currentStart.value
-	notifications.pageLength = pageLength
-	notifications.list.fetch()
+function refreshNotifications() {
+	notifications.start = 0
+	return notifications.reload()
+}
+
+function toggleReadFilter() {
+	const filters = { ...notifications.filters }
+	if (showAll.value) {
+		filters.read = 0
+	} else {
+		delete filters.read
+	}
+	notifications.update({ filters })
+	notifications.setData(null)
+	refreshNotifications()
 }
 </script>

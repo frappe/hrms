@@ -167,14 +167,11 @@ def get_attendance_for_calendar(employee: str, from_date: str, to_date: str) -> 
 
 
 def get_holidays_for_calendar(employee: str, from_date: str, to_date: str) -> list[str]:
-	if holiday_list := get_holiday_list_for_employee(employee, raise_exception=False):
-		return frappe.get_all(
-			"Holiday",
-			filters={"parent": holiday_list, "holiday_date": ["between", [from_date, to_date]]},
-			pluck="holiday_date",
-		)
+	from hrms.utils.holiday_list import get_holiday_dates_between_range
 
-	return []
+	return get_holiday_dates_between_range(
+		employee, from_date, to_date, raise_exception_for_holiday_list=False
+	)
 
 
 @frappe.whitelist()
@@ -683,23 +680,13 @@ def get_employee_advance_balance() -> list[dict]:
 # Company
 @frappe.whitelist()
 def get_company_currencies() -> dict:
-	Company = frappe.qb.DocType("Company")
-	Currency = frappe.qb.DocType("Currency")
-
-	query = (
-		frappe.qb.from_(Company)
-		.join(Currency)
-		.on(Company.default_currency == Currency.name)
-		.select(
-			Company.name,
-			Company.default_currency,
-			Currency.name.as_("currency"),
-			Currency.symbol.as_("symbol"),
-		)
-	)
-
-	companies = query.run(as_dict=True)
-	return {company.name: (company.default_currency, company.symbol) for company in companies}
+	companies = frappe.get_list("Company", fields=["name", "default_currency"])
+	symbols = get_currency_symbols()
+	return {
+		company.name: (company.default_currency, symbols.get(company.default_currency))
+		for company in companies
+		if company.default_currency in symbols
+	}
 
 
 @frappe.whitelist()

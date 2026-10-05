@@ -33,10 +33,7 @@ from frappe.utils import (
 
 import erpnext
 from erpnext import get_company_currency
-from erpnext.setup.doctype.employee.employee import (
-	InactiveEmployeeStatusError,
-	get_holiday_list_for_employee,
-)
+from erpnext.setup.doctype.employee.employee import InactiveEmployeeStatusError
 
 from hrms.hr.doctype.leave_policy_assignment.leave_policy_assignment import (
 	calculate_pro_rated_leaves,
@@ -418,26 +415,21 @@ def calculate_upcoming_earned_leave(allocation, e_leave_type, date_of_joining):
 	return earned_leave
 
 
-def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type, earned_leaves, today):
+def update_previous_leave_allocation(
+	allocation, annual_allocation, e_leave_type, earned_leaves, today, allocated_via="Scheduler"
+):
 	allocation = frappe.get_doc("Leave Allocation", allocation.name)
 	precision = allocation.precision("total_leaves_allocated")
 	annual_allocation = flt(annual_allocation, precision)
 	earned_leaves = flt(earned_leaves, precision)
-	new_leaves_to_allocate_without_cf = flt(
-		flt(allocation.get_existing_leave_count()) + earned_leaves,
-		precision,
-	)
-	if (
-		# annual allocation as per policy should not be exceeded except for yearly leaves
-		new_leaves_to_allocate_without_cf > annual_allocation
-		and e_leave_type.earned_leave_frequency != "Yearly"
-	):
-		frappe.throw(
-			_("Allocation was skipped due to exceeding annual allocation set in leave policy"),
-			OverAllocationError,
-		)
 
-	if e_leave_type.max_leaves_allowed:
+	if earned_leaves > 0 and e_leave_type.earned_leave_frequency != "Yearly":
+		leaves_left_in_annual_quota = max(
+			flt(annual_allocation - allocation.get_existing_leave_count(), precision), 0
+		)
+		earned_leaves = min(earned_leaves, leaves_left_in_annual_quota)
+
+	if earned_leaves > 0 and e_leave_type.max_leaves_allowed:
 		leaves_quota = flt(e_leave_type.max_leaves_allowed - allocation.total_leaves_allocated, precision)
 		if leaves_quota <= 0:
 			frappe.throw(
@@ -450,18 +442,28 @@ def update_previous_leave_allocation(allocation, annual_allocation, e_leave_type
 			if leaves_quota < earned_leaves:
 				earned_leaves = leaves_quota
 
-	allocation.db_set(
-		"total_leaves_allocated",
-		earned_leaves + allocation.total_leaves_allocated,
-		update_modified=False,
-	)
-	create_additional_leave_ledger_entry(allocation, earned_leaves, today)
+	if earned_leaves:
+		allocation.db_set(
+			"total_leaves_allocated",
+			earned_leaves + allocation.total_leaves_allocated,
+			update_modified=False,
+		)
+		create_additional_leave_ledger_entry(allocation, earned_leaves, today)
+
 	earned_leave_schedule = qb.DocType("Earned Leave Schedule")
-	qb.update(earned_leave_schedule).where(
-		(earned_leave_schedule.parent == allocation.name) & (earned_leave_schedule.allocation_date == today)
-	).set(earned_leave_schedule.is_allocated, 1).set(earned_leave_schedule.attempted, 1).set(
-		earned_leave_schedule.allocated_via, "Scheduler"
-	).set(earned_leave_schedule.number_of_leaves, earned_leaves).run()
+	(
+		qb.update(earned_leave_schedule)
+		.where(
+			(earned_leave_schedule.parent == allocation.name)
+			& (earned_leave_schedule.allocation_date == today)
+		)
+		.set(earned_leave_schedule.is_allocated, 1)
+		.set(earned_leave_schedule.attempted, 1)
+		.set(earned_leave_schedule.allocated_via, allocated_via)
+		.set(earned_leave_schedule.number_of_leaves, earned_leaves)
+		.set(earned_leave_schedule.failed, 0)
+		.set(earned_leave_schedule.failure_reason, "")
+	).run()
 
 
 def log_allocation_error(allocation_name, error):
@@ -728,21 +730,12 @@ def get_holidays_for_employee(employee, start_date, end_date, raise_exception=Tr
 
 	return: list of dicts with `holiday_date` and `description`
 	"""
-	holiday_list = get_holiday_list_for_employee(employee, raise_exception=raise_exception)
+	from hrms.utils.holiday_list import get_holiday_list_ranges_for_employee, get_holidays_in_ranges
 
-	if not holiday_list:
-		return []
-
-	filters = {"parent": holiday_list, "holiday_date": ("between", [start_date, end_date])}
-
-	if only_non_weekly:
-		filters["weekly_off"] = False
-
-	holidays = frappe.get_all(
-		"Holiday", fields=["description", "holiday_date"], filters=filters, order_by="holiday_date"
+	holiday_list_ranges = get_holiday_list_ranges_for_employee(
+		employee, start_date, end_date, raise_exception=raise_exception
 	)
-
-	return holidays
+	return get_holidays_in_ranges(holiday_list_ranges, skip_weekly_offs=only_non_weekly)
 
 
 @erpnext.allow_regional

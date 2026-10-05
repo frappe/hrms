@@ -16,6 +16,7 @@ class SalaryComponentAccount(Document):
 
 		account: DF.Link | None
 		company: DF.Link | None
+		liability_account: DF.Link | None
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data

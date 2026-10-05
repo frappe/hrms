@@ -20,6 +20,7 @@
   "begin_check_in_before_shift_start_time",
   "allow_check_out_after_shift_end_time",
   "mark_auto_attendance_on_holidays",
+  "absent_buffer_days",
   "column_break_10",
   "working_hours_threshold_for_half_day",
   "working_hours_threshold_for_absent",
@@ -169,6 +170,14 @@
    "fieldname": "mark_auto_attendance_on_holidays",
    "fieldtype": "Check",
    "label": "Mark Auto Attendance on Holidays"
+  },
+  {
+   "default": "1",
+   "description": "Number of days after the shift ends before marking Absent for missing attendance. Set to 0 to mark Absent on the same day, right after the shift's checkout window closes (requires 'Automatically update Last Sync of Checkin' to be enabled).",
+   "fieldname": "absent_buffer_days",
+   "fieldtype": "Int",
+   "label": "Absent Buffer (Days)",
+   "non_negative": 1
   },
   {
    "default": "0",

@@ -66,6 +66,131 @@ class TestFullandFinalStatement(HRMSTestSuite):
 		self.assertEqual(debit_entry.reference_type, "Full and Final Statement")
 		self.assertEqual(debit_entry.reference_name, self.fnf.name)
 
+	def test_employee_advance_settlement(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			make_employee_advance,
+			make_payment_entry,
+		)
+
+		advance = make_employee_advance(self.employee)
+		make_payment_entry(advance)
+		advance.reload()
+
+		self.fnf.receivables = []
+		self.fnf.get_outstanding_statements()
+
+		advance_rows = [row for row in self.fnf.receivables if row.component == "Employee Advance"]
+		self.assertEqual(len(advance_rows), 1)
+		self.assertEqual(advance_rows[0].reference_document, advance.name)
+		self.assertEqual(advance_rows[0].account, advance.advance_account)
+		self.assertEqual(advance_rows[0].amount, advance.paid_amount)
+		self.fnf.save()
+
+		jv = self.fnf.create_journal_entry()
+		jv.accounts[-1].account = "_Test Bank - _TC"
+		jv.cheque_no = "FNF-ADV-001"
+		jv.cheque_date = today()
+		jv.insert()
+		jv.submit()
+
+		advance.reload()
+		self.assertEqual(advance.return_amount, advance.paid_amount)
+		self.assertEqual(advance.status, "Returned")
+
+	def test_employee_advance_added_after_bootstrap(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			make_employee_advance,
+			make_payment_entry,
+		)
+
+		# placeholder rows already exist from bootstrap
+		self.assertTrue(any(row.component == "Employee Advance" for row in self.fnf.receivables))
+
+		advance = make_employee_advance(self.employee)
+		make_payment_entry(advance)
+		advance.reload()
+
+		self.fnf.get_outstanding_statements()
+		advance_rows = [row for row in self.fnf.receivables if row.component == "Employee Advance"]
+		self.assertEqual([row.reference_document for row in advance_rows], [advance.name])
+		self.assertEqual(advance_rows[0].amount, advance.paid_amount)
+
+		# calling again neither duplicates the advance nor re-adds the placeholder
+		self.fnf.get_outstanding_statements()
+		advance_rows = [row for row in self.fnf.receivables if row.component == "Employee Advance"]
+		self.assertEqual([row.reference_document for row in advance_rows], [advance.name])
+
+	def test_employee_advance_row_refreshed_to_current_balance(self):
+		from hrms.hr.doctype.employee_advance.employee_advance import make_return_entry
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			make_employee_advance,
+			make_payment_entry,
+		)
+
+		advance = make_employee_advance(self.employee)
+		make_payment_entry(advance)
+		advance.reload()
+		self.fnf.get_outstanding_statements()
+		advance_row = next(row for row in self.fnf.receivables if row.reference_document == advance.name)
+		self.assertEqual(advance_row.amount, advance.paid_amount)
+
+		# a partial return after the row was created reduces the outstanding balance
+		return_entry = frappe.get_doc(
+			make_return_entry(
+				employee=advance.employee,
+				company=advance.company,
+				employee_advance_name=advance.name,
+				return_amount=300,
+				advance_account=advance.advance_account,
+				mode_of_payment=advance.mode_of_payment,
+				currency=advance.currency,
+			)
+		)
+		return_entry.insert()
+		return_entry.submit()
+		advance.reload()
+		self.assertEqual(advance.return_amount, 300)
+
+		self.fnf.get_outstanding_statements()
+		advance_row = next(row for row in self.fnf.receivables if row.reference_document == advance.name)
+		self.assertEqual(advance_row.amount, advance.paid_amount - 300)
+
+		# a row with a blank status is refreshed like an unsettled one
+		advance_row.status = None
+		advance_row.amount = 100
+		self.fnf.get_outstanding_statements()
+		advance_row = next(row for row in self.fnf.receivables if row.reference_document == advance.name)
+		self.assertEqual(advance_row.amount, advance.paid_amount - 300)
+
+		# a row the user has already settled is left as it is
+		advance_row.status = "Settled"
+		advance_row.amount = 100
+		self.fnf.get_outstanding_statements()
+		advance_row = next(row for row in self.fnf.receivables if row.reference_document == advance.name)
+		self.assertEqual(advance_row.amount, 100)
+
+	def test_employee_advance_rows_follow_employee_change(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			make_employee_advance,
+			make_payment_entry,
+		)
+
+		advance = make_employee_advance(self.employee)
+		make_payment_entry(advance)
+		self.fnf.get_outstanding_statements()
+		self.assertIn(advance.name, [row.reference_document for row in self.fnf.receivables])
+
+		other_employee = make_employee(
+			"test_fnf_other@example.com", company="_Test Company", relieving_date=add_days(today(), 30)
+		)
+		self.fnf.employee = other_employee
+		self.fnf.relieving_date = add_days(today(), 30)
+		self.fnf.get_outstanding_statements()
+
+		advance_rows = [row for row in self.fnf.receivables if row.component == "Employee Advance"]
+		self.assertEqual(len(advance_rows), 1)
+		self.assertFalse(advance_rows[0].reference_document)
+
 	def test_status_on_discard(self):
 		self.fnf.discard()
 		self.fnf.reload()

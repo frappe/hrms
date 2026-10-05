@@ -83,8 +83,8 @@ def make_salary_components(country):
 			doc.flags.ignore_permissions = True
 			doc.flags.ignore_mandatory = True
 			doc.insert(ignore_if_duplicate=True)
-		except Exception as e:
-			frappe.error_log("Error occurred while creating Salary Component", e)
+		except Exception:
+			frappe.log_error("Error occurred while creating Salary Component")
 		finally:
 			frappe.clear_messages()
 

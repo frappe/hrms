@@ -101,10 +101,10 @@ class EmployeeBoardingController(Document):
 
 	def get_holiday_list(self):
 		if self.doctype == "Employee Separation":
-			return get_holiday_list_for_employee(self.employee)
+			return get_holiday_list_for_employee(self.employee, as_on=self.boarding_begins_on)
 		else:
 			if self.employee:
-				return get_holiday_list_for_employee(self.employee)
+				return get_holiday_list_for_employee(self.employee, as_on=self.boarding_begins_on)
 			else:
 				if not self.holiday_list:
 					frappe.throw(_("Please set the Holiday List."), frappe.MandatoryError)

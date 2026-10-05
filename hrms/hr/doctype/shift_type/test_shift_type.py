@@ -586,6 +586,63 @@ class TestShiftType(HRMSTestSuite):
 		)
 		self.assertEqual(attendance, "Present")
 
+	def test_mark_absent_on_same_day(self):
+		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
+		today = getdate()
+
+		shift_type = setup_shift_type(
+			shift_type="Test Absent Buffer Same Day",
+			process_attendance_after=add_days(today, -2),
+			auto_update_last_sync=1,
+			absent_buffer_days=0,
+			# last sync is past today's shift actual end (12:00 + 60 min checkout buffer)
+			last_sync_of_checkin=datetime.combine(today, get_time("13:01:00")),
+		)
+		make_shift_assignment(shift_type.name, employee, today)
+
+		shift_type.process_auto_attendance()
+
+		attendance = frappe.db.get_value(
+			"Attendance", {"attendance_date": today, "employee": employee}, "status"
+		)
+		self.assertEqual(attendance, "Absent")
+
+	def test_absent_buffer_days_zero_requires_auto_update_last_sync(self):
+		shift_type = setup_shift_type(shift_type="Test Absent Buffer Validation", auto_update_last_sync=0)
+		shift_type.absent_buffer_days = 0
+		self.assertRaises(frappe.ValidationError, shift_type.save)
+
+	def test_mark_absent_after_two_day_buffer(self):
+		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
+		today = getdate()
+
+		shift_type = setup_shift_type(
+			shift_type="Test Two Day Absent Buffer",
+			process_attendance_after=add_days(today, -4),
+			absent_buffer_days=2,
+			last_sync_of_checkin=datetime.combine(today, get_time("15:00:00")),
+		)
+		make_shift_assignment(shift_type.name, employee, add_days(today, -4))
+
+		shift_type.process_auto_attendance()
+
+		# dates up to (today - buffer_days) should be marked absent
+		absent_records = frappe.get_all(
+			"Attendance",
+			{
+				"attendance_date": ["between", [add_days(today, -4), add_days(today, -2)]],
+				"employee": employee,
+				"status": "Absent",
+			},
+		)
+		self.assertEqual(len(absent_records), 3)
+
+		# dates within the buffer window should not be marked yet
+		for date in (add_days(today, -1), today):
+			self.assertIsNone(
+				frappe.db.get_value("Attendance", {"attendance_date": date, "employee": employee})
+			)
+
 	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_skip_marking_absent_on_a_holiday(self):
 		employee = make_employee("test_employee_checkin@example.com", company="_Test Company")
@@ -662,6 +719,47 @@ class TestShiftType(HRMSTestSuite):
 		shift.process_auto_attendance()
 		attendance = frappe.db.get_value("Attendance", {"employee": employee}, "status")
 		self.assertIsNone(attendance)
+
+	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
+	def test_mark_absent_with_multiple_overlapping_shift_assignments(self):
+		"""Tests absent is marked for each shift when actual timings of multiple assignments overlap"""
+		employee = make_employee("test_employee_multishift@example.com", company="_Test Company")
+		today = getdate()
+		start_date = add_days(today, -5)
+		absent_date = add_days(today, -3)
+		last_sync = datetime.combine(today, get_time("06:00:00"))
+
+		# actual windows overlap (day: 05:00-23:00, night: 20:01-08:59) but raw timings don't
+		day_shift = setup_shift_type(
+			shift_type="Test Overlap Day",
+			start_time="06:00:00",
+			end_time="22:00:00",
+			process_attendance_after=start_date,
+			last_sync_of_checkin=last_sync,
+		)
+		night_shift = setup_shift_type(
+			shift_type="Test Overlap Night",
+			start_time="22:01:00",
+			end_time="05:59:00",
+			begin_check_in_before_shift_start_time=120,
+			allow_check_out_after_shift_end_time=180,
+			process_attendance_after=start_date,
+			last_sync_of_checkin=last_sync,
+		)
+
+		make_shift_assignment(day_shift.name, employee, start_date)
+		make_shift_assignment(night_shift.name, employee, start_date)
+
+		day_shift.process_auto_attendance()
+		night_shift.process_auto_attendance()
+
+		for shift in (day_shift, night_shift):
+			status = frappe.db.get_value(
+				"Attendance",
+				{"employee": employee, "shift": shift.name, "attendance_date": absent_date},
+				"status",
+			)
+			self.assertEqual(status, "Absent", msg=f"Absent not marked for {shift.name}")
 
 	def test_get_start_and_end_dates(self):
 		date = getdate()
