@@ -422,7 +422,7 @@
   {
    "fieldname": "printing_details",
    "fieldtype": "Section Break",
-   "label": "Printing Details"
+   "label": "Print and Email"
   },
   {
    "fetch_from": "company.default_letter_head",
@@ -461,7 +461,7 @@
    "fieldtype": "Section Break"
   },
   {
-   "depends_on": "eval:doc.docstatus == 1 && doc.status == \"Accepted\"",
+   "depends_on": "eval:doc.docstatus == 1",
    "fieldname": "email_offer_letter",
    "fieldtype": "Button",
    "label": "Email Offer Letter"
@@ -484,7 +484,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-05 14:00:00.000000",
+ "modified": "2026-10-05 15:45:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",

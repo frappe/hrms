@@ -140,7 +140,7 @@ async function render_offer_letter_preview(frm) {
 	const field = frm.get_field("offer_letter_preview");
 	const $wrapper = field.$wrapper;
 	const $button = frm.get_field("email_offer_letter").$wrapper;
-	if (!frm.doc.offer_letter_print_format) {
+	if (!frm.doc.offer_letter_print_format || frm.doc.docstatus === 2) {
 		$button.detach();
 		$wrapper.empty();
 		return;
@@ -178,21 +178,27 @@ async function render_offer_letter_preview(frm) {
 
 function offer_letter_message(doc) {
 	const escape = frappe.utils.escape_html;
-	const joining = doc.date_of_joining
-		? `<p>${__("We look forward to welcoming you on {0}.", [
-				frappe.datetime.global_date_format(doc.date_of_joining),
-		  ])}</p>`
-		: `<p>${__("We look forward to welcoming you to the team.")}</p>`;
+	const format_date = (date) => frappe.datetime.global_date_format(date);
 
-	return [
-		`<p>${__("Dear {0},", [escape(doc.applicant_name)])}</p>`,
-		`<p>${__(
-			"Thank you for accepting our offer to join {0} as {1}. Please find attached your offer letter for your records.",
-			[escape(doc.company), escape(doc.designation)],
-		)}</p>`,
-		joining,
-		`<p>${__("Regards,")}</p>`,
-	].join("");
+	const lines = [
+		__("Dear {0},", [escape(doc.applicant_name)]),
+		__(
+			"We are delighted to offer you the position of {0} at {1}. Please find attached your offer letter, which sets out the details of your role and compensation.",
+			[escape(doc.designation), escape(doc.company)],
+		),
+		doc.offer_valid_till
+			? __(
+					"This offer is valid until {0}. Please review the letter and confirm your acceptance by then.",
+					[format_date(doc.offer_valid_till)],
+			  )
+			: __("Please review the letter and confirm your acceptance at the earliest."),
+		doc.date_of_joining
+			? __("We look forward to welcoming you on {0}.", [format_date(doc.date_of_joining)])
+			: __("We look forward to welcoming you to the team."),
+		__("Regards,"),
+	];
+
+	return lines.map((line) => `<p>${line}</p>`).join("");
 }
 
 erpnext.job_offer.make_employee = function (frm) {
