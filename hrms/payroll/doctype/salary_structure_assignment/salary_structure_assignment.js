@@ -79,6 +79,7 @@ frappe.ui.form.on("Salary Structure Assignment", {
 					);
 				}
 				frappe.set_route("query-report", "Employee CTC Break-up", {
+					company: frm.doc.company,
 					employee: frm.doc.employee,
 					salary_structure_assignment: frm.doc.name,
 				});
