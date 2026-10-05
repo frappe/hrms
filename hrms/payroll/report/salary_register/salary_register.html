@@ -26,6 +26,8 @@
 						{% var fieldname = report_columns[i].fieldname; %}
 						{% if (report_columns[i].fieldtype=='Currency' && !isNaN(row[fieldname])) { %}
 							{%= format_currency(row[fieldname]) %}
+						{% } else if (report_columns[i].fieldtype=='Date' && !is_null(row[fieldname])) { %}
+							{%= frappe.datetime.str_to_user(row[fieldname]) %}
 						{% } else { %}
 							{% if (!is_null(row[fieldname])) { %}
 								{%= row[fieldname] %}
