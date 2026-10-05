@@ -27,6 +27,10 @@ frappe.ui.form.on("Job Offer", {
 			return { filters: { company: frm.doc.company, status: "Active" } };
 		});
 
+		frm.set_query("offer_letter_print_format", function () {
+			return { filters: { doc_type: "Job Offer", disabled: 0 } };
+		});
+
 		set_default_leave_and_holidays(frm);
 	},
 
@@ -71,9 +75,22 @@ frappe.ui.form.on("Job Offer", {
 		set_holiday_summary(frm);
 	},
 
+	offer_letter_print_format: function (frm) {
+		render_offer_letter_preview(frm);
+	},
+
+	signature: function (frm) {
+		render_offer_letter_preview(frm);
+	},
+
+	letter_head: function (frm) {
+		render_offer_letter_preview(frm);
+	},
+
 	refresh: function (frm) {
 		set_per_cycle_label(frm);
 		bind_regional_inputs(frm);
+		render_offer_letter_preview(frm);
 
 		if (
 			!frm.doc.__islocal &&
@@ -92,7 +109,90 @@ frappe.ui.form.on("Job Offer", {
 			});
 		}
 	},
+
+	email_offer_letter: function (frm) {
+		email_offer_letter(frm);
+	},
 });
+
+async function email_offer_letter(frm) {
+	const composer = new frappe.views.CommunicationComposer({
+		doc: frm.doc,
+		frm: frm,
+		subject: __("Offer of Employment - {0}", [frm.doc.designation]),
+		recipients: frm.doc.applicant_email,
+		attach_document_print: true,
+		message: offer_letter_message(frm.doc),
+	});
+
+	await composer.dialog.set_value(
+		"select_print_format",
+		frm.doc.offer_letter_print_format || "Job Offer Classic",
+	);
+	composer.render_print_card_meta();
+	composer.sync_print_menu?.();
+}
+
+let offer_letter_preview_request = 0;
+
+async function render_offer_letter_preview(frm) {
+	const field = frm.get_field("offer_letter_preview");
+	const $wrapper = field.$wrapper;
+	const $button = frm.get_field("email_offer_letter").$wrapper;
+	if (!frm.doc.offer_letter_print_format) {
+		$button.detach();
+		$wrapper.empty();
+		return;
+	}
+
+	const request = ++offer_letter_preview_request;
+	const { message } = await frappe.call({
+		method: "frappe.www.printview.get_html_and_style",
+		args: {
+			doc: frm.doc,
+			print_format: frm.doc.offer_letter_print_format,
+			letterhead: frm.doc.letter_head,
+			no_letterhead: frm.doc.letter_head ? 0 : 1,
+		},
+	});
+	if (request !== offer_letter_preview_request || !message) return;
+
+	const $iframe = $(
+		`<iframe sandbox="" frameborder="0" style="width: 100%; height: 900px; border: 1px solid var(--border-color); border-radius: var(--border-radius-md);"></iframe>`,
+	);
+	$iframe[0].srcdoc = /^\s*<(!doctype|html)\b/i.test(message.html || "")
+		? message.html
+		: `<!DOCTYPE html><html><head>
+			<link href="${frappe.urllib.get_base_url()}${frappe.assets.bundled_asset(
+				"print.bundle.css",
+			)}" rel="stylesheet">
+			<style>${(message.style || "").replace(/<\//g, "<\\/")}</style>
+		</head><body><div class="print-format">${message.html || ""}</div></body></html>`;
+
+	const $head = $(`<div class="flex justify-between align-items-start">
+		<div class="text-base-medium mb-3">${__(field.df.label)}</div>
+	</div>`).append($button.detach());
+	$wrapper.empty().append($head, $iframe);
+}
+
+function offer_letter_message(doc) {
+	const escape = frappe.utils.escape_html;
+	const joining = doc.date_of_joining
+		? `<p>${__("We look forward to welcoming you on {0}.", [
+				frappe.datetime.global_date_format(doc.date_of_joining),
+		  ])}</p>`
+		: `<p>${__("We look forward to welcoming you to the team.")}</p>`;
+
+	return [
+		`<p>${__("Dear {0},", [escape(doc.applicant_name)])}</p>`,
+		`<p>${__(
+			"Thank you for accepting our offer to join {0} as {1}. Please find attached your offer letter for your records.",
+			[escape(doc.company), escape(doc.designation)],
+		)}</p>`,
+		joining,
+		`<p>${__("Regards,")}</p>`,
+	].join("");
+}
 
 erpnext.job_offer.make_employee = function (frm) {
 	frappe.model.open_mapped_doc({

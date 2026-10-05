@@ -48,13 +48,14 @@ class JobOffer(Document):
 		notice_number_of_days: DF.Int
 		notice_period_during_probation: DF.Int
 		offer_date: DF.Date
+		offer_letter_print_format: DF.Link | None
 		offer_terms: DF.Table[JobOfferTerm]
 		offer_valid_till: DF.Date | None
 		probation_period_days: DF.Int
 		reports_to: DF.Link | None
 		salary_structure: DF.Link | None
-		select_print_heading: DF.Link | None
 		select_terms: DF.Link | None
+		signature: DF.AttachImage | None
 		total_public_holidays: DF.Int
 		status: DF.Literal["Awaiting Response", "Accepted", "Rejected", "Cancelled"]
 		terms: DF.TextEditor | None
