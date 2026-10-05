@@ -120,13 +120,15 @@
   },
   {
    "allow_on_submit": 1,
+   "default": "Draft",
    "fieldname": "status",
    "fieldtype": "Select",
    "in_standard_filter": 1,
    "label": "Status",
    "no_copy": 1,
-   "options": "Awaiting Response\nAccepted\nRejected\nCancelled",
-   "print_hide": 1
+   "options": "Draft\nReady to Send\nAwaiting Response\nAccepted\nRejected\nCancelled",
+   "print_hide": 1,
+   "read_only_depends_on": "eval:doc.docstatus == 0"
   },
   {
    "fieldname": "offer_date",
@@ -417,12 +419,12 @@
   {
    "fieldname": "printing_tab",
    "fieldtype": "Tab Break",
-   "label": "Printing"
+   "label": "Print and Email"
   },
   {
    "fieldname": "printing_details",
    "fieldtype": "Section Break",
-   "label": "Print and Email"
+   "label": "Printing Details"
   },
   {
    "fetch_from": "company.default_letter_head",
@@ -461,7 +463,7 @@
    "fieldtype": "Section Break"
   },
   {
-   "depends_on": "eval:doc.docstatus == 1",
+   "depends_on": "eval:doc.docstatus == 1 && [\"Ready to Send\", \"Awaiting Response\"].includes(doc.status)",
    "fieldname": "email_offer_letter",
    "fieldtype": "Button",
    "label": "Email Offer Letter"
@@ -484,7 +486,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-05 15:45:00.000000",
+ "modified": "2026-10-05 16:30:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",

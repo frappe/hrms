@@ -91,6 +91,7 @@ frappe.ui.form.on("Job Offer", {
 		set_per_cycle_label(frm);
 		bind_regional_inputs(frm);
 		bind_grade_reselect(frm);
+		set_email_button_label(frm);
 		render_offer_letter_preview(frm);
 
 		if (
@@ -111,10 +112,26 @@ frappe.ui.form.on("Job Offer", {
 		}
 	},
 
+	status: function (frm) {
+		set_email_button_label(frm);
+	},
+
 	email_offer_letter: function (frm) {
 		email_offer_letter(frm);
 	},
 });
+
+function set_email_button_label(frm) {
+	const resend = frm.doc.status === "Awaiting Response";
+	frm.set_df_property(
+		"email_offer_letter",
+		"label",
+		resend ? "Resend Offer Letter" : "Email Offer Letter",
+	);
+	frm.get_field("email_offer_letter")
+		.$input?.toggleClass("btn-primary", !resend)
+		.toggleClass("btn-default", resend);
+}
 
 async function email_offer_letter(frm) {
 	const composer = new frappe.views.CommunicationComposer({
@@ -125,6 +142,7 @@ async function email_offer_letter(frm) {
 		attach_document_print: true,
 		message: offer_letter_message(frm.doc),
 	});
+	composer.dialog.no_focus = true;
 
 	await composer.dialog.set_value(
 		"select_print_format",

@@ -93,6 +93,33 @@ class TestJobOffer(HRMSTestSuite):
 		job_offer.reload()
 		self.assertEqual(job_offer.status, "Cancelled")
 
+	def test_status_moves_from_draft_to_awaiting_response(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		job_offer = create_job_offer(status="Awaiting Response")
+		job_offer.save()
+		self.assertEqual(job_offer.status, "Draft")
+
+		job_offer.submit()
+		self.assertEqual(job_offer.status, "Ready to Send")
+
+		add_offer_email(job_offer, "Received")
+		job_offer.reload()
+		self.assertEqual(job_offer.status, "Ready to Send")
+
+		add_offer_email(job_offer, "Sent")
+		job_offer.reload()
+		self.assertEqual(job_offer.status, "Awaiting Response")
+
+	def test_status_set_at_submit_is_kept(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		job_offer = create_job_offer(status="Accepted")
+		job_offer.submit()
+		self.assertEqual(job_offer.status, "Accepted")
+
+		add_offer_email(job_offer, "Sent")
+		job_offer.reload()
+		self.assertEqual(job_offer.status, "Accepted")
+
 	def test_job_offer_without_job_applicant(self):
 		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
 		job_offer = create_job_offer(
@@ -801,6 +828,21 @@ def make_stepped_structure(name):
 		],
 		deductions=[],
 	)
+
+
+def add_offer_email(job_offer, sent_or_received):
+	return frappe.get_doc(
+		{
+			"doctype": "Communication",
+			"communication_type": "Communication",
+			"communication_medium": "Email",
+			"sent_or_received": sent_or_received,
+			"subject": "Offer of Employment",
+			"content": "Please find attached your offer letter.",
+			"reference_doctype": "Job Offer",
+			"reference_name": job_offer.name,
+		}
+	).insert(ignore_permissions=True)
 
 
 def create_job_offer(**args):

@@ -56,3 +56,4 @@ hrms.patches.v16_0.set_job_applicant_kanban_column_indicators #2026-08-12
 hrms.patches.v16_0.set_job_offer_in_employee
 hrms.patches.v16_0.delete_old_salary_slip_print_formats
 hrms.patches.v16_0.delete_job_offer_print_format
+hrms.patches.v16_0.set_draft_status_in_job_offer

@@ -4,6 +4,7 @@
 
 import frappe
 from frappe import _
+from frappe.core.doctype.communication.communication import update_parent_document_on_communication
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe.query_builder.functions import Sum
@@ -56,7 +57,7 @@ class JobOffer(Document):
 		salary_structure: DF.Link | None
 		select_terms: DF.Link | None
 		signature: DF.AttachImage | None
-		status: DF.Literal["Awaiting Response", "Accepted", "Rejected", "Cancelled"]
+		status: DF.Literal["Draft", "Ready to Send", "Awaiting Response", "Accepted", "Rejected", "Cancelled"]
 		terms: DF.TextEditor | None
 		total_public_holidays: DF.Int
 		variable: DF.Currency
@@ -69,10 +70,28 @@ class JobOffer(Document):
 		self.set_onload("employee", employee)
 
 	def validate(self):
+		self.set_status()
 		self.validate_vacancies()
 		self.validate_duplicate_job_offer()
 		self.set_compensation()
 		self.set_leave_details()
+
+	def set_status(self):
+		if self.docstatus == 0 and self.status in (None, "", "Ready to Send", "Awaiting Response"):
+			self.status = "Draft"
+		elif self.docstatus == 1 and self.status in (None, "", "Draft"):
+			self.status = "Ready to Send"
+
+	def on_communication_update(self, communication):
+		if (
+			self.docstatus == 1
+			and self.status == "Ready to Send"
+			and communication.communication_type == "Communication"
+			and communication.sent_or_received == "Sent"
+		):
+			self.db_set("status", "Awaiting Response")
+
+		update_parent_document_on_communication(communication)
 
 	def set_leave_details(self):
 		self.set("leave_allocations", get_leave_allocations(self.leave_policy))

@@ -23,6 +23,8 @@ FIXED_VOCABULARIES = {
 	"reason": {"Work From Home", "On Duty"},
 	"log_type": {"IN", "OUT"},
 	"status": {
+		"Draft",
+		"Ready to Send",
 		"Awaiting Response",
 		"Accepted",
 		"Rejected",

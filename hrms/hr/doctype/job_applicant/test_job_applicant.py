@@ -64,7 +64,7 @@ class TestJobApplicant(HRMSTestSuite):
 
 		# before creating employee
 		self.assertEqual(applicant.status, "Open")
-		self.assertEqual(job_offer.status, "Awaiting Response")
+		self.assertEqual(job_offer.status, "Draft")
 
 		# create employee
 		make_employee(user=applicant.name, job_applicant=applicant.name, company="_Test Company")
