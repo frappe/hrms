@@ -48,6 +48,11 @@ export const LEAVE_FIELDS = [
 		fieldtype: "Select",
 	},
 	{
+		fieldname: "leave_approver_name",
+		label: "Leave Approver",
+		fieldtype: "Data",
+	},
+	{
 		fieldname: "description",
 		label: "Reason",
 		fieldtype: "Small Text",
