@@ -425,8 +425,8 @@
    "label": "Printing Details"
   },
   {
-   "allow_on_submit": 1,
    "fetch_from": "company.default_letter_head",
+   "fetch_if_empty": 1,
    "fieldname": "letter_head",
    "fieldtype": "Link",
    "label": "Letter Head",
@@ -441,6 +441,7 @@
   },
   {
    "allow_on_submit": 1,
+   "default": "Job Offer Classic",
    "fieldname": "offer_letter_print_format",
    "fieldtype": "Link",
    "label": "Print Format",
@@ -451,7 +452,7 @@
    "allow_on_submit": 1,
    "fieldname": "signature",
    "fieldtype": "Attach Image",
-   "label": "Signature",
+   "label": "HR's signature to show on offer letter",
    "print_hide": 1
   },
   {
@@ -466,6 +467,7 @@
    "label": "Email Offer Letter"
   },
   {
+   "description": "You can email this offer letter to the applicant once the job offer is submitted.",
    "fieldname": "offer_letter_preview",
    "fieldtype": "HTML",
    "label": "Preview"
@@ -482,7 +484,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-05 11:00:00.000000",
+ "modified": "2026-10-05 14:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",

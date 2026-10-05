@@ -90,6 +90,7 @@ frappe.ui.form.on("Job Offer", {
 	refresh: function (frm) {
 		set_per_cycle_label(frm);
 		bind_regional_inputs(frm);
+		bind_grade_reselect(frm);
 		render_offer_letter_preview(frm);
 
 		if (
@@ -158,7 +159,7 @@ async function render_offer_letter_preview(frm) {
 	if (request !== offer_letter_preview_request || !message) return;
 
 	const $iframe = $(
-		`<iframe sandbox="" frameborder="0" style="width: 100%; height: 900px; border: 1px solid var(--border-color); border-radius: var(--border-radius-md);"></iframe>`,
+		`<iframe sandbox="allow-same-origin" frameborder="0" style="width: 100%; height: 900px; border: 1px solid var(--border-color); border-radius: var(--border-radius-md);"></iframe>`,
 	);
 	$iframe[0].srcdoc = /^\s*<(!doctype|html)\b/i.test(message.html || "")
 		? message.html
@@ -214,6 +215,25 @@ function set_calculation_basis(frm) {
 
 	frm.set_value("calculate_component_amount_from", "Base and Variable");
 	return true;
+}
+
+function bind_grade_reselect(frm) {
+	const $input = frm.get_field("grade").$input;
+	if (!$input) return;
+
+	$input.off("awesomplete-selectcomplete.base").on("awesomplete-selectcomplete.base", (e) => {
+		const grade = e.originalEvent.text.value;
+		if (grade === frm.doc.grade) set_base_from_grade(frm, grade);
+	});
+}
+
+function set_base_from_grade(frm, grade) {
+	if (frm.doc.calculate_component_amount_from === "CTC") return;
+
+	frappe.db.get_value("Employee Grade", grade, "default_base_pay").then((r) => {
+		const base = r.message && r.message.default_base_pay;
+		if (base && base !== frm.doc.base) frm.set_value("base", base);
+	});
 }
 
 function clear_compensation(frm) {

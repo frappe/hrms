@@ -56,9 +56,9 @@ class JobOffer(Document):
 		salary_structure: DF.Link | None
 		select_terms: DF.Link | None
 		signature: DF.AttachImage | None
-		total_public_holidays: DF.Int
 		status: DF.Literal["Awaiting Response", "Accepted", "Rejected", "Cancelled"]
 		terms: DF.TextEditor | None
+		total_public_holidays: DF.Int
 		variable: DF.Currency
 		weekly_off_days: DF.Data | None
 		working_hours: DF.Float
