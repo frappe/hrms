@@ -3628,7 +3628,7 @@ class TestSalarySlipEmployerContributions(HRMSTestSuite):
 		slip.insert()
 		self.assertEqual(len(slip.employer_contributions), 2)
 
-		html = frappe.get_print("Salary Slip", slip.name, print_format="Salary Slip Standard")
+		html = frappe.get_print("Salary Slip", slip.name, print_format="Salary Slip Classic")
 		self.assertNotIn('data-fieldname="employer_contributions"', html)
 		self.assertNotIn("Test Slip Employer PF", html)
 		self.assertNotIn("Test Slip Employer NPS", html)
