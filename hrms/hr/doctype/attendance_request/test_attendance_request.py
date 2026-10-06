@@ -8,7 +8,11 @@ from frappe.utils import add_days, add_months, get_year_ending, get_year_start, 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.attendance_request.attendance_request import OverlappingAttendanceRequestError
 from hrms.hr.doctype.leave_application.test_leave_application import make_allocation_record
+<<<<<<< HEAD
 from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
+=======
+from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
+>>>>>>> 9125153 (test(attendance_request): add full leave day tests and fix the auto-absent test order)
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
@@ -276,7 +280,7 @@ class TestAttendanceRequest(FrappeTestCase):
 		self.assertEqual(updated.half_day_status, "Present")
 
 	def test_half_day_with_shift_auto_absent(self):
-		"""Test half-day attendance request when shift_type auto-flags the other half as absent due to missing checkins"""
+		"""Test half-day attendance request after shift_type auto-flags the other half as absent due to missing checkins"""
 		from_date = get_year_start(add_months(getdate(), -1))
 		to_date = get_year_ending(getdate())
 		today = getdate()
@@ -311,7 +315,16 @@ class TestAttendanceRequest(FrappeTestCase):
 		)
 		make_shift_assignment(shift_type.name, self.employee.name, add_days(today, -1), add_days(today, 1))
 
-		# 3) Attendance request for the other half — creates half-day attendance
+		# 3) Shift auto-attendance marks the other half absent when no checkins exist
+		frappe.get_doc("Shift Type", shift_type.name).mark_absent_for_half_day_dates(self.employee.name)
+		self.assertEqual(
+			frappe.db.get_value(
+				"Attendance", {"leave_application": leave_application.name}, "half_day_status"
+			),
+			"Absent",
+		)
+
+		# 4) Attendance request for the other half updates the same attendance
 		attendance_request = frappe.get_doc(
 			{
 				"doctype": "Attendance Request",
@@ -326,20 +339,86 @@ class TestAttendanceRequest(FrappeTestCase):
 		).save()
 		attendance_request.submit()
 
-		# 4) Shift auto-attendance marks the other half absent when no checkins exist
-		frappe.get_doc("Shift Type", shift_type.name).mark_absent_for_half_day_dates(self.employee.name)
-
 		# Verify
-		attendance = frappe.db.get_value(
+		attendance = frappe.get_all(
 			"Attendance",
-			{"attendance_request": attendance_request.name},
-			["name", "status", "half_day_status", "modify_half_day_status"],
-			as_dict=True,
+			filters={"employee": self.employee.name, "attendance_date": today, "docstatus": 1},
+			fields=[
+				"status",
+				"half_day_status",
+				"modify_half_day_status",
+				"attendance_request",
+			],
 		)
-		self.assertTrue(attendance)
-		self.assertEqual(attendance.status, "Half Day")
-		self.assertEqual(attendance.half_day_status, "Absent")
-		self.assertEqual(attendance.modify_half_day_status, 0)
+		self.assertEqual(len(attendance), 1)
+		self.assertEqual(attendance[0].status, "Half Day")
+		self.assertEqual(attendance[0].half_day_status, "Present")
+		self.assertEqual(attendance[0].modify_half_day_status, 0)
+		self.assertEqual(attendance[0].attendance_request, attendance_request.name)
+
+	def test_half_day_request_on_full_leave_day(self):
+		"""Half day leave on a different date of a multi-day leave must not unblock a half day request"""
+		today = getdate()
+		leave_start = add_days(today, -2)
+		frappe.db.delete("Holiday", {"parent": self.holiday_list})
+		leave_type = create_leave_type(leave_type_name="Test Half Day Leave")
+		make_allocation_record(
+			leave_type=leave_type.name,
+			from_date=get_year_start(add_months(today, -1)),
+			to_date=get_year_ending(today),
+		)
+		make_leave_application(
+			self.employee.name, leave_start, today, leave_type.name, half_day=1, half_day_date=leave_start
+		)
+
+		attendance_request = frappe.get_doc(
+			{
+				"doctype": "Attendance Request",
+				"employee": self.employee.name,
+				"from_date": today,
+				"to_date": today,
+				"reason": "On Duty",
+				"half_day": 1,
+				"half_day_date": today,
+				"company": "_Test Company",
+			}
+		)
+		self.assertEqual(
+			attendance_request.get_attendance_warnings(),
+			[{"date": today, "reason": "On Leave", "action": "Skip"}],
+		)
+
+	def test_half_day_request_on_two_half_day_leaves(self):
+		"""Two half day leaves on the same date cover the whole day, so a half day request is blocked"""
+		today = getdate()
+		frappe.db.delete("Holiday", {"parent": self.holiday_list})
+		leave_type = create_leave_type(leave_type_name="Test Half Day Leave")
+		make_allocation_record(
+			leave_type=leave_type.name,
+			from_date=get_year_start(add_months(today, -1)),
+			to_date=get_year_ending(today),
+		)
+		for _ in range(2):
+			make_leave_application(
+				self.employee.name, today, today, leave_type.name, half_day=1, half_day_date=today
+			)
+
+		attendance_request = frappe.get_doc(
+			{
+				"doctype": "Attendance Request",
+				"employee": self.employee.name,
+				"from_date": today,
+				"to_date": today,
+				"reason": "On Duty",
+				"half_day": 1,
+				"half_day_date": today,
+				"company": "_Test Company",
+			}
+		)
+		self.assertEqual(
+			attendance_request.get_attendance_warnings(),
+			[{"date": today, "reason": "On Leave", "action": "Skip"}],
+		)
 
 
 def get_employee():
