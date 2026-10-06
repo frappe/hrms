@@ -419,7 +419,7 @@
   {
    "fieldname": "printing_tab",
    "fieldtype": "Tab Break",
-   "label": "Print and Email"
+   "label": "Print & Email"
   },
   {
    "fieldname": "printing_details",
@@ -486,7 +486,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-05 16:30:00.000000",
+ "modified": "2026-10-06 13:48:30.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",
