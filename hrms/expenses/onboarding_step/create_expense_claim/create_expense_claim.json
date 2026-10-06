@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Create Expense Claim",
+ "creation": "2026-10-05 12:00:00.000000",
+ "description": "An employee's claim for money they spent on work. The expense approver approves and submits it. See [Expense Claim](https://docs.frappe.io/hr/expense-claim).",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "Create Expense Claim",
+ "owner": "Administrator",
+ "reference_document": "Expense Claim",
+ "show_form_tour": 0,
+ "show_full_form": 1,
+ "title": "Approve an expense claim",
+ "validate_action": 1
+}

@@ -137,9 +137,10 @@
   }
  ],
  "grid_page_length": 50,
+ "icon": "book-open",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-09-01 21:42:50.393703",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Benefit Ledger",

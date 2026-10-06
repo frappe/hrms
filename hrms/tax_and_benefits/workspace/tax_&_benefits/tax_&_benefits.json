@@ -6,7 +6,7 @@
    "label": "Benefit Claims"
   }
  ],
- "content": "[{\"id\":\"2f9f8fdd6e\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Benefit Claims\",\"col\":12}},{\"id\":\"eaf196592f\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Declaration Submitted\",\"col\":4}},{\"id\":\"191a303e61\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Benefit Claims (This Month)\",\"col\":4}},{\"id\":\"e168404207\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Tax Exemption Proofs (This Year)\",\"col\":4}}]",
+ "content": "[{\"id\":\"75ce554f90\",\"type\":\"onboarding\",\"data\":{\"onboarding_name\":\"Tax and Benefits Onboarding\",\"col\":12}},{\"id\":\"2f9f8fdd6e\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Benefit Claims\",\"col\":12}},{\"id\":\"eaf196592f\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Declaration Submitted\",\"col\":4}},{\"id\":\"191a303e61\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Benefit Claims (This Month)\",\"col\":4}},{\"id\":\"e168404207\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Tax Exemption Proofs (This Year)\",\"col\":4}}]",
  "creation": "2022-08-20 17:04:52.350699",
  "custom_blocks": [],
  "docstatus": 0,
@@ -18,9 +18,10 @@
  "is_hidden": 0,
  "label": "Tax & Benefits",
  "links": [],
- "modified": "2026-08-26 18:34:03.000000",
+ "modified": "2026-10-05 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Tax and Benefits",
+ "module_onboarding": "Tax and Benefits Onboarding",
  "name": "Tax & Benefits",
  "number_cards": [
   {

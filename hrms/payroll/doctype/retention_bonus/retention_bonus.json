@@ -5,6 +5,7 @@
  "autoname": "HR-RTB-.YYYY.-.#####",
  "creation": "2018-05-13 14:59:42.038964",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/retention-bonus",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -121,9 +122,10 @@
    "label": "Bonus"
   }
  ],
+ "icon": "gem",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-08-06 13:01:43.187327",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Retention Bonus",

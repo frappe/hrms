@@ -1,0 +1,43 @@
+{
+ "allow_roles": [
+  {
+   "role": "HR Manager"
+  },
+  {
+   "role": "HR User"
+  }
+ ],
+ "creation": "2026-10-05 12:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Module Onboarding",
+ "idx": 0,
+ "is_complete": 0,
+ "modified": "2026-10-06 13:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Expenses",
+ "name": "Expenses Onboarding",
+ "owner": "Administrator",
+ "steps": [
+  {
+   "is_optional": 1,
+   "step": "Create Employee Advance"
+  },
+  {
+   "is_optional": 0,
+   "step": "Create Expense Claim"
+  },
+  {
+   "is_optional": 1,
+   "step": "Pay Expense Claim"
+  },
+  {
+   "is_optional": 1,
+   "step": "Create Travel Request"
+  },
+  {
+   "is_optional": 1,
+   "step": "View Unpaid Expense Claim"
+  }
+ ],
+ "title": "Settle employee expenses"
+}
