@@ -435,6 +435,9 @@ def get_compensation_details(offer: str | dict) -> dict:
 	offer = frappe.parse_json(offer)
 	offer["doctype"] = "Job Offer"
 
+	if offer.get("salary_structure"):
+		frappe.has_permission("Salary Structure", doc=offer["salary_structure"], throw=True)
+
 	return compute_compensation(frappe.get_doc(offer))
 
 
