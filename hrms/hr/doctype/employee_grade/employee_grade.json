@@ -5,6 +5,7 @@
  "autoname": "Prompt",
  "creation": "2018-04-13 16:14:24.174138",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/employee-grade",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -37,9 +38,10 @@
    "read_only": 1
   }
  ],
+ "icon": "layers",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-08-06 13:01:43.187327",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Grade",

@@ -3,6 +3,7 @@
  "autoname": "HR-EMP-ONB-.YYYY.-.#####",
  "creation": "2018-05-09 04:57:20.016220",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/employee-onboarding",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -173,9 +174,10 @@
    "options": "Holiday List"
   }
  ],
+ "icon": "user-plus",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-09-01 18:39:51.520758",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Onboarding",

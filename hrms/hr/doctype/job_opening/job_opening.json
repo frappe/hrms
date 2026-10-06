@@ -6,6 +6,7 @@
  "creation": "2013-01-15 16:13:36",
  "description": "Description of a Job Opening",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/job-opening",
  "document_type": "Document",
  "engine": "InnoDB",
  "field_order": [
@@ -283,11 +284,11 @@
   }
  ],
  "has_web_view": 1,
- "icon": "fa fa-bookmark",
+ "icon": "briefcase-business",
  "idx": 1,
  "is_published_field": "publish",
  "links": [],
- "modified": "2026-08-10 12:10:00.000000",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
