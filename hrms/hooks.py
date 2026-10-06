@@ -30,9 +30,7 @@ app_include_js = [
 	"hrms.bundle.js",
 ]
 app_include_css = "hrms.bundle.css"
-code_only_modules = {
-	"HR": ["HR Setup"]
-}
+code_only_modules = {"HR": ["HR Setup"]}
 app_include_icons = ["/assets/hrms/icons/module-icons.svg"]
 
 # website
