@@ -12,7 +12,7 @@
  "doctype": "Module Onboarding",
  "idx": 0,
  "is_complete": 0,
- "modified": "2026-10-05 12:00:00.000000",
+ "modified": "2026-10-06 13:00:00.000000",
  "modified_by": "Administrator",
  "module": "Expenses",
  "name": "Expenses Onboarding",
@@ -27,7 +27,7 @@
    "step": "Create Expense Claim"
   },
   {
-   "is_optional": 0,
+   "is_optional": 1,
    "step": "Pay Expense Claim"
   },
   {
