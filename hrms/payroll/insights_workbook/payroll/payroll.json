@@ -1,0 +1,1529 @@
+{
+ "charts": {
+  "payroll-average-monthly-gross-per-employee": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "comparison": {
+       "label": "vs last FY",
+       "measure": {
+        "data_type": "Decimal",
+        "expression": {
+         "expression": "sum_if(start_date.between(date_sub(fiscal_year_start(date_sub(month_start(today()), 1, 'day')), 1, 'year'), date_sub(date_sub(month_start(today()), 1, 'day'), 1, 'year')), base_gross_pay) / distinct_count_if(start_date.between(date_sub(fiscal_year_start(date_sub(month_start(today()), 1, 'day')), 1, 'year'), date_sub(date_sub(month_start(today()), 1, 'day'), 1, 'year')), concat(employee, format_date(start_date, '%Y-%m')))",
+         "type": "expression"
+        },
+        "format": "currency",
+        "measure_name": "Same Months Last Year"
+       },
+       "show": "change",
+       "source": "measure"
+      },
+      "decimals": 1,
+      "shorten": true
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Decimal",
+      "expression": {
+       "expression": "sum_if(start_date.between(fiscal_year_start(date_sub(month_start(today()), 1, 'day')), date_sub(month_start(today()), 1, 'day')), base_gross_pay) / distinct_count_if(start_date.between(fiscal_year_start(date_sub(month_start(today()), 1, 'day')), date_sub(month_start(today()), 1, 'day')), concat(employee, format_date(start_date, '%Y-%m')))",
+       "type": "expression"
+      },
+      "format": "currency",
+      "id": "Average Monthly Gross per Employee",
+      "measure_name": "Average Gross Pay (This FY)"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "payroll-average-monthly-gross-per-employee",
+   "query": "payroll-average-monthly-gross-fiscal-year-to-date",
+   "sort_order": 4,
+   "title": "Average Gross Pay",
+   "workbook": "payroll"
+  },
+  "payroll-deductions-by-component": {
+   "chart_type": "Bar",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_format": {
+     "decimals": 1,
+     "shorten": true
+    },
+    "order_by": [
+     {
+      "column": {
+       "column_name": "Month",
+       "type": "column"
+      },
+      "direction": "asc"
+     }
+    ],
+    "split_by": {
+     "dimension": {
+      "column_name": "salary_component",
+      "data_type": "String",
+      "dimension_name": "Component"
+     },
+     "max_split_values": 5
+    },
+    "x_axis": {
+     "dimension": {
+      "column_name": "start_date",
+      "data_type": "Date",
+      "dimension_name": "Month",
+      "granularity": "month"
+     }
+    },
+    "y_axis": {
+     "min": 0,
+     "series": [
+      {
+       "measure": {
+        "aggregation": "sum",
+        "column_name": "base_amount",
+        "data_type": "Decimal",
+        "format": "currency",
+        "measure_name": "Deductions"
+       },
+       "type": "bar"
+      }
+     ],
+     "stack": true
+    }
+   },
+   "folder": null,
+   "name": "payroll-deductions-by-component",
+   "query": "payroll-deductions-by-component-12-months",
+   "sort_order": 9,
+   "title": "Deductions by Component",
+   "workbook": "payroll"
+  },
+  "payroll-earnings-by-component": {
+   "chart_type": "Bar",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_format": {
+     "decimals": 1,
+     "shorten": true
+    },
+    "order_by": [
+     {
+      "column": {
+       "column_name": "Month",
+       "type": "column"
+      },
+      "direction": "asc"
+     }
+    ],
+    "split_by": {
+     "dimension": {
+      "column_name": "salary_component",
+      "data_type": "String",
+      "dimension_name": "Component"
+     },
+     "max_split_values": 5
+    },
+    "x_axis": {
+     "dimension": {
+      "column_name": "start_date",
+      "data_type": "Date",
+      "dimension_name": "Month",
+      "granularity": "month"
+     }
+    },
+    "y_axis": {
+     "min": 0,
+     "series": [
+      {
+       "measure": {
+        "aggregation": "sum",
+        "column_name": "base_amount",
+        "data_type": "Decimal",
+        "format": "currency",
+        "measure_name": "Earnings"
+       },
+       "type": "bar"
+      }
+     ],
+     "stack": true
+    }
+   },
+   "folder": null,
+   "name": "payroll-earnings-by-component",
+   "query": "payroll-earnings-by-component-12-months",
+   "sort_order": 8,
+   "title": "Earnings by Component",
+   "workbook": "payroll"
+  },
+  "payroll-employees-paid": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "comparison": {
+       "label": "vs last year",
+       "measure": {
+        "data_type": "Integer",
+        "expression": {
+         "expression": "distinct_count_if(start_date.between(date_sub(date_sub(month_start(today()), 1, 'month'), 1, 'year'), date_sub(date_sub(month_start(today()), 1, 'day'), 1, 'year')), employee)",
+         "type": "expression"
+        },
+        "measure_name": "Same Month Last Year"
+       },
+       "show": "change",
+       "source": "measure"
+      },
+      "decimals": 0,
+      "shorten": false
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Integer",
+      "expression": {
+       "expression": "distinct_count_if(start_date.between(date_sub(month_start(today()), 1, 'month'), date_sub(month_start(today()), 1, 'day')), employee)",
+       "type": "expression"
+      },
+      "id": "Employees Paid, Last Month",
+      "measure_name": "Employees Paid (Last Month)"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "payroll-employees-paid",
+   "query": "payroll-employees-paid-last-month",
+   "sort_order": 3,
+   "title": "Employees Paid",
+   "workbook": "payroll"
+  },
+  "payroll-employees-paid-by-month": {
+   "chart_type": "Line",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_format": {
+     "decimals": 0,
+     "shorten": false
+    },
+    "order_by": [
+     {
+      "column": {
+       "column_name": "Month",
+       "type": "column"
+      },
+      "direction": "asc"
+     }
+    ],
+    "x_axis": {
+     "dimension": {
+      "column_name": "start_date",
+      "data_type": "Date",
+      "dimension_name": "Month",
+      "granularity": "month"
+     }
+    },
+    "y_axis": {
+     "min": 0,
+     "series": [
+      {
+       "measure": {
+        "aggregation": "count_distinct",
+        "column_name": "employee",
+        "data_type": "Integer",
+        "measure_name": "Employees Paid"
+       },
+       "show_data_points": true,
+       "type": "line"
+      }
+     ]
+    }
+   },
+   "folder": null,
+   "name": "payroll-employees-paid-by-month",
+   "query": "payroll-employees-paid-12-months",
+   "sort_order": 6,
+   "title": "Employees Paid by Month",
+   "workbook": "payroll"
+  },
+  "payroll-gross-and-net-pay-by-month": {
+   "chart_type": "Bar",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_format": {
+     "decimals": 1,
+     "shorten": true
+    },
+    "order_by": [
+     {
+      "column": {
+       "column_name": "Month",
+       "type": "column"
+      },
+      "direction": "asc"
+     }
+    ],
+    "x_axis": {
+     "dimension": {
+      "column_name": "start_date",
+      "data_type": "Date",
+      "dimension_name": "Month",
+      "granularity": "month"
+     }
+    },
+    "y_axis": {
+     "min": 0,
+     "series": [
+      {
+       "measure": {
+        "aggregation": "sum",
+        "column_name": "base_net_pay",
+        "data_type": "Decimal",
+        "format": "currency",
+        "measure_name": "Net Pay"
+       },
+       "type": "bar"
+      },
+      {
+       "measure": {
+        "aggregation": "sum",
+        "column_name": "deductions",
+        "data_type": "Decimal",
+        "format": "currency",
+        "measure_name": "Total Deduction"
+       },
+       "type": "bar"
+      }
+     ],
+     "stack": true
+    }
+   },
+   "folder": null,
+   "name": "payroll-gross-and-net-pay-by-month",
+   "query": "payroll-gross-and-net-pay-12-months",
+   "sort_order": 5,
+   "title": "Net Pay and Deductions by Month",
+   "workbook": "payroll"
+  },
+  "payroll-gross-pay": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "comparison": {
+       "label": "vs last FY",
+       "measure": {
+        "data_type": "Decimal",
+        "expression": {
+         "expression": "sum_if(start_date.between(date_sub(fiscal_year_start(date_sub(month_start(today()), 1, 'day')), 1, 'year'), date_sub(date_sub(month_start(today()), 1, 'day'), 1, 'year')), base_gross_pay)",
+         "type": "expression"
+        },
+        "format": "currency",
+        "measure_name": "Same Months Last Year"
+       },
+       "show": "change",
+       "source": "measure"
+      },
+      "decimals": 1,
+      "shorten": true
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Decimal",
+      "expression": {
+       "expression": "sum_if(start_date.between(fiscal_year_start(date_sub(month_start(today()), 1, 'day')), date_sub(month_start(today()), 1, 'day')), base_gross_pay)",
+       "type": "expression"
+      },
+      "format": "currency",
+      "id": "Gross Pay",
+      "measure_name": "Gross Pay (This FY)"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "payroll-gross-pay",
+   "query": "payroll-gross-pay-fiscal-year-to-date",
+   "sort_order": 1,
+   "title": "Gross Pay",
+   "workbook": "payroll"
+  },
+  "payroll-gross-pay-by-department": {
+   "chart_type": "Row",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 10,
+    "number_format": {
+     "decimals": 1,
+     "shorten": true
+    },
+    "order_by": [
+     {
+      "column": {
+       "column_name": "Gross Pay",
+       "type": "column"
+      },
+      "direction": "desc"
+     }
+    ],
+    "x_axis": {
+     "dimension": {
+      "column_name": "department",
+      "data_type": "String",
+      "dimension_name": "Department"
+     }
+    },
+    "y_axis": {
+     "series": [
+      {
+       "measure": {
+        "aggregation": "sum",
+        "column_name": "base_gross_pay",
+        "data_type": "Decimal",
+        "format": "currency",
+        "measure_name": "Gross Pay"
+       },
+       "type": "bar"
+      }
+     ]
+    }
+   },
+   "folder": null,
+   "name": "payroll-gross-pay-by-department",
+   "query": "payroll-gross-pay-by-department-fiscal-year-to-date",
+   "sort_order": 7,
+   "title": "Gross Pay by Department (This FY)",
+   "workbook": "payroll"
+  },
+  "payroll-net-pay": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "comparison": {
+       "label": "vs last FY",
+       "measure": {
+        "data_type": "Decimal",
+        "expression": {
+         "expression": "sum_if(start_date.between(date_sub(fiscal_year_start(date_sub(month_start(today()), 1, 'day')), 1, 'year'), date_sub(date_sub(month_start(today()), 1, 'day'), 1, 'year')), base_net_pay)",
+         "type": "expression"
+        },
+        "format": "currency",
+        "measure_name": "Same Months Last Year"
+       },
+       "show": "change",
+       "source": "measure"
+      },
+      "decimals": 1,
+      "shorten": true
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Decimal",
+      "expression": {
+       "expression": "sum_if(start_date.between(fiscal_year_start(date_sub(month_start(today()), 1, 'day')), date_sub(month_start(today()), 1, 'day')), base_net_pay)",
+       "type": "expression"
+      },
+      "format": "currency",
+      "id": "Net Pay",
+      "measure_name": "Net Pay (This FY)"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "payroll-net-pay",
+   "query": "payroll-net-pay-fiscal-year-to-date",
+   "sort_order": 2,
+   "title": "Net Pay",
+   "workbook": "payroll"
+  }
+ },
+ "creation": "2026-09-26 21:12:27.750621",
+ "dashboards": {
+  "payroll": {
+   "items": [
+    {
+     "default_operator": "=",
+     "default_user_key": "Company",
+     "filter_name": "Company",
+     "filter_type": "String",
+     "layout": {
+      "h": 2,
+      "i": "filter-company",
+      "w": 4,
+      "x": 0,
+      "y": 0
+     },
+     "layouts": {
+      "sm": {
+       "h": 2,
+       "w": 20,
+       "x": 0,
+       "y": 0
+      }
+     },
+     "links": {
+      "payroll-average-monthly-gross-per-employee": "`payroll-salary-slips`.`company`",
+      "payroll-deductions-by-component": "`payroll-salary-slip-deductions`.`company`",
+      "payroll-earnings-by-component": "`payroll-salary-slip-earnings`.`company`",
+      "payroll-employees-paid": "`payroll-salary-slips`.`company`",
+      "payroll-employees-paid-by-month": "`payroll-salary-slips`.`company`",
+      "payroll-gross-and-net-pay-by-month": "`payroll-salary-slips`.`company`",
+      "payroll-gross-pay": "`payroll-salary-slips`.`company`",
+      "payroll-gross-pay-by-department": "`payroll-salary-slips`.`company`",
+      "payroll-net-pay": "`payroll-salary-slips`.`company`"
+     },
+     "type": "filter"
+    },
+    {
+     "chart": "payroll-gross-pay",
+     "layout": {
+      "h": 5,
+      "i": "chart-3n5kun9ms9",
+      "w": 5,
+      "x": 0,
+      "y": 3
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 10,
+       "x": 0,
+       "y": 3
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "payroll-net-pay",
+     "layout": {
+      "h": 5,
+      "i": "chart-3n5ph4hs93",
+      "w": 5,
+      "x": 5,
+      "y": 3
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 10,
+       "x": 10,
+       "y": 3
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "payroll-employees-paid",
+     "layout": {
+      "h": 5,
+      "i": "chart-3n5550iea7",
+      "w": 5,
+      "x": 10,
+      "y": 3
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 10,
+       "x": 0,
+       "y": 8
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "payroll-average-monthly-gross-per-employee",
+     "layout": {
+      "h": 5,
+      "i": "chart-3n5ce1r8ka",
+      "w": 5,
+      "x": 15,
+      "y": 3
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 10,
+       "x": 10,
+       "y": 8
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "payroll-gross-and-net-pay-by-month",
+     "layout": {
+      "h": 17,
+      "i": "chart-3n5gdgk0b3",
+      "w": 10,
+      "x": 0,
+      "y": 8
+     },
+     "layouts": {
+      "sm": {
+       "h": 17,
+       "w": 20,
+       "x": 0,
+       "y": 13
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "payroll-employees-paid-by-month",
+     "layout": {
+      "h": 17,
+      "i": "chart-3n5fcmrtb9",
+      "w": 10,
+      "x": 10,
+      "y": 8
+     },
+     "layouts": {
+      "sm": {
+       "h": 17,
+       "w": 20,
+       "x": 0,
+       "y": 30
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "payroll-gross-pay-by-department",
+     "layout": {
+      "h": 19,
+      "i": "chart-3n5fqiqgb3",
+      "w": 10,
+      "x": 0,
+      "y": 25
+     },
+     "layouts": {
+      "sm": {
+       "h": 19,
+       "w": 20,
+       "x": 0,
+       "y": 47
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "payroll-earnings-by-component",
+     "layout": {
+      "h": 19,
+      "i": "chart-3n506a8pbu",
+      "w": 10,
+      "x": 10,
+      "y": 25
+     },
+     "layouts": {
+      "sm": {
+       "h": 19,
+       "w": 20,
+       "x": 0,
+       "y": 66
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "payroll-deductions-by-component",
+     "layout": {
+      "h": 19,
+      "i": "chart-3n5cq3gl4n",
+      "w": 20,
+      "x": 0,
+      "y": 44
+     },
+     "layouts": {
+      "sm": {
+       "h": 19,
+       "w": 20,
+       "x": 0,
+       "y": 85
+      }
+     },
+     "type": "chart"
+    }
+   ],
+   "name": "payroll",
+   "title": "Payroll",
+   "vertical_compact_layout": 1,
+   "visible_to_roles": [
+    {
+     "role": "HR User"
+    },
+    {
+     "role": "HR Manager"
+    }
+   ],
+   "workbook": "payroll"
+  }
+ },
+ "docstatus": 0,
+ "doctype": "Insights Workbook",
+ "folders": [],
+ "idx": 0,
+ "is_standard": 1,
+ "modified": "2026-09-28 12:56:29.244088",
+ "modified_by": "Administrator",
+ "module": "Payroll",
+ "name": "payroll",
+ "owner": "Administrator",
+ "queries": {
+  "payroll-average-monthly-gross-fiscal-year-to-date": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "payroll-average-monthly-gross-fiscal-year-to-date",
+   "operations": [
+    {
+     "table": {
+      "query_name": "payroll-salary-slips",
+      "type": "query",
+      "workbook": "payroll"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "expression": {
+        "expression": "start_date.between(date_sub(fiscal_year_start(date_sub(month_start(today()), 1, 'day')), 1, 'year'), date_sub(month_start(today()), 1, 'day'))",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "salary_slip",
+      "employee",
+      "employee_name",
+      "department",
+      "start_date",
+      "base_gross_pay"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 8,
+   "title": "Average Monthly Gross, Fiscal Year to Date",
+   "use_live_connection": 1,
+   "workbook": "payroll"
+  },
+  "payroll-deductions-by-component-12-months": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "payroll-deductions-by-component-12-months",
+   "operations": [
+    {
+     "table": {
+      "query_name": "payroll-salary-slip-deductions",
+      "type": "query",
+      "workbook": "payroll"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "expression": {
+        "expression": "start_date.between(date_sub(month_start(today()), 12, 'month'), date_sub(month_start(today()), 1, 'day'))",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "salary_slip",
+      "employee_name",
+      "start_date",
+      "salary_component",
+      "base_amount"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 13,
+   "title": "Deductions by Component, 12 Months",
+   "use_live_connection": 1,
+   "workbook": "payroll"
+  },
+  "payroll-earnings-by-component-12-months": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "payroll-earnings-by-component-12-months",
+   "operations": [
+    {
+     "table": {
+      "query_name": "payroll-salary-slip-earnings",
+      "type": "query",
+      "workbook": "payroll"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "expression": {
+        "expression": "start_date.between(date_sub(month_start(today()), 12, 'month'), date_sub(month_start(today()), 1, 'day'))",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "salary_slip",
+      "employee_name",
+      "start_date",
+      "salary_component",
+      "base_amount"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 12,
+   "title": "Earnings by Component, 12 Months",
+   "use_live_connection": 1,
+   "workbook": "payroll"
+  },
+  "payroll-employees-paid-12-months": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "payroll-employees-paid-12-months",
+   "operations": [
+    {
+     "table": {
+      "query_name": "payroll-salary-slips",
+      "type": "query",
+      "workbook": "payroll"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "expression": {
+        "expression": "start_date.between(date_sub(month_start(today()), 12, 'month'), date_sub(month_start(today()), 1, 'day'))",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "employee",
+      "employee_name",
+      "department",
+      "designation",
+      "start_date"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 10,
+   "title": "Employees Paid, 12 Months",
+   "use_live_connection": 1,
+   "workbook": "payroll"
+  },
+  "payroll-employees-paid-last-month": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "payroll-employees-paid-last-month",
+   "operations": [
+    {
+     "table": {
+      "query_name": "payroll-salary-slips",
+      "type": "query",
+      "workbook": "payroll"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "expression": {
+        "expression": "start_date.between(date_sub(date_sub(month_start(today()), 1, 'month'), 1, 'year'), date_sub(month_start(today()), 1, 'day'))",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "employee",
+      "employee_name",
+      "department",
+      "designation",
+      "start_date"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 7,
+   "title": "Employees Paid, Last Month",
+   "use_live_connection": 1,
+   "workbook": "payroll"
+  },
+  "payroll-gross-and-net-pay-12-months": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "payroll-gross-and-net-pay-12-months",
+   "operations": [
+    {
+     "table": {
+      "query_name": "payroll-salary-slips",
+      "type": "query",
+      "workbook": "payroll"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "expression": {
+        "expression": "start_date.between(date_sub(month_start(today()), 12, 'month'), date_sub(month_start(today()), 1, 'day'))",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "salary_slip",
+      "employee_name",
+      "department",
+      "start_date",
+      "base_gross_pay",
+      "base_net_pay",
+      "deductions"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 9,
+   "title": "Gross and Net Pay, 12 Months",
+   "use_live_connection": 1,
+   "workbook": "payroll"
+  },
+  "payroll-gross-pay-by-department-fiscal-year-to-date": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "payroll-gross-pay-by-department-fiscal-year-to-date",
+   "operations": [
+    {
+     "table": {
+      "query_name": "payroll-salary-slips",
+      "type": "query",
+      "workbook": "payroll"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "expression": {
+        "expression": "start_date.between(fiscal_year_start(date_sub(month_start(today()), 1, 'day')), date_sub(month_start(today()), 1, 'day'))",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "salary_slip",
+      "employee_name",
+      "department",
+      "start_date",
+      "base_gross_pay"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 11,
+   "title": "Gross Pay by Department, Fiscal Year to Date",
+   "use_live_connection": 1,
+   "workbook": "payroll"
+  },
+  "payroll-gross-pay-fiscal-year-to-date": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "payroll-gross-pay-fiscal-year-to-date",
+   "operations": [
+    {
+     "table": {
+      "query_name": "payroll-salary-slips",
+      "type": "query",
+      "workbook": "payroll"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "expression": {
+        "expression": "start_date.between(date_sub(fiscal_year_start(date_sub(month_start(today()), 1, 'day')), 1, 'year'), date_sub(month_start(today()), 1, 'day'))",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "salary_slip",
+      "employee_name",
+      "department",
+      "start_date",
+      "base_gross_pay"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 5,
+   "title": "Gross Pay, Fiscal Year to Date",
+   "use_live_connection": 1,
+   "workbook": "payroll"
+  },
+  "payroll-loan-repayments": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "payroll-loan-repayments",
+   "operations": [
+    {
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabSalary Slip",
+      "type": "table"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "column": {
+        "column_name": "docstatus",
+        "type": "column"
+       },
+       "operator": "=",
+       "value": 1
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "data_type": "String",
+     "expression": {
+      "expression": "name",
+      "type": "expression"
+     },
+     "new_name": "salary_slip",
+     "type": "mutate"
+    },
+    {
+     "data_type": "String",
+     "expression": {
+      "expression": "literal('Loan Repayment')",
+      "type": "expression"
+     },
+     "new_name": "salary_component",
+     "type": "mutate"
+    },
+    {
+     "data_type": "Decimal",
+     "expression": {
+      "expression": "(gross_pay - net_pay - total_deduction) * exchange_rate",
+      "type": "expression"
+     },
+     "new_name": "base_amount",
+     "type": "mutate"
+    },
+    {
+     "filters": [
+      {
+       "column": {
+        "column_name": "base_amount",
+        "type": "column"
+       },
+       "operator": "!=",
+       "value": 0
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "salary_slip",
+      "employee_name",
+      "company",
+      "start_date",
+      "salary_component",
+      "base_amount"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 3,
+   "title": "Loan Repayments",
+   "use_live_connection": 1,
+   "workbook": "payroll"
+  },
+  "payroll-net-pay-fiscal-year-to-date": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "payroll-net-pay-fiscal-year-to-date",
+   "operations": [
+    {
+     "table": {
+      "query_name": "payroll-salary-slips",
+      "type": "query",
+      "workbook": "payroll"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "expression": {
+        "expression": "start_date.between(date_sub(fiscal_year_start(date_sub(month_start(today()), 1, 'day')), 1, 'year'), date_sub(month_start(today()), 1, 'day'))",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "salary_slip",
+      "employee_name",
+      "department",
+      "start_date",
+      "base_net_pay"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 6,
+   "title": "Net Pay, Fiscal Year to Date",
+   "use_live_connection": 1,
+   "workbook": "payroll"
+  },
+  "payroll-salary-slip-deductions": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "payroll-salary-slip-deductions",
+   "operations": [
+    {
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabSalary Detail",
+      "type": "table"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "column": {
+        "column_name": "docstatus",
+        "type": "column"
+       },
+       "operator": "=",
+       "value": 1
+      },
+      {
+       "column": {
+        "column_name": "parenttype",
+        "type": "column"
+       },
+       "operator": "=",
+       "value": "Salary Slip"
+      },
+      {
+       "column": {
+        "column_name": "parentfield",
+        "type": "column"
+       },
+       "operator": "=",
+       "value": "deductions"
+      },
+      {
+       "column": {
+        "column_name": "do_not_include_in_total",
+        "type": "column"
+       },
+       "operator": "=",
+       "value": 0
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "join_condition": {
+      "left_column": {
+       "column_name": "parent",
+       "type": "column"
+      },
+      "right_column": {
+       "column_name": "name",
+       "type": "column"
+      }
+     },
+     "join_type": "inner",
+     "select_columns": [
+      {
+       "column_name": "start_date",
+       "type": "column"
+      },
+      {
+       "column_name": "employee_name",
+       "type": "column"
+      },
+      {
+       "column_name": "company",
+       "type": "column"
+      },
+      {
+       "column_name": "exchange_rate",
+       "type": "column"
+      }
+     ],
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabSalary Slip",
+      "type": "table"
+     },
+     "type": "join"
+    },
+    {
+     "data_type": "String",
+     "expression": {
+      "expression": "parent",
+      "type": "expression"
+     },
+     "new_name": "salary_slip",
+     "type": "mutate"
+    },
+    {
+     "data_type": "Decimal",
+     "expression": {
+      "expression": "amount * exchange_rate",
+      "type": "expression"
+     },
+     "new_name": "base_amount",
+     "type": "mutate"
+    },
+    {
+     "column_names": [
+      "salary_slip",
+      "employee_name",
+      "company",
+      "start_date",
+      "salary_component",
+      "base_amount"
+     ],
+     "type": "select"
+    },
+    {
+     "distinct": false,
+     "table": {
+      "query_name": "payroll-loan-repayments",
+      "type": "query",
+      "workbook": "payroll"
+     },
+     "type": "union"
+    }
+   ],
+   "sort_order": 4,
+   "title": "Salary Slip Deductions",
+   "use_live_connection": 1,
+   "workbook": "payroll"
+  },
+  "payroll-salary-slip-earnings": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "payroll-salary-slip-earnings",
+   "operations": [
+    {
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabSalary Detail",
+      "type": "table"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "column": {
+        "column_name": "docstatus",
+        "type": "column"
+       },
+       "operator": "=",
+       "value": 1
+      },
+      {
+       "column": {
+        "column_name": "parenttype",
+        "type": "column"
+       },
+       "operator": "=",
+       "value": "Salary Slip"
+      },
+      {
+       "column": {
+        "column_name": "parentfield",
+        "type": "column"
+       },
+       "operator": "=",
+       "value": "earnings"
+      },
+      {
+       "column": {
+        "column_name": "do_not_include_in_total",
+        "type": "column"
+       },
+       "operator": "=",
+       "value": 0
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "join_condition": {
+      "left_column": {
+       "column_name": "parent",
+       "type": "column"
+      },
+      "right_column": {
+       "column_name": "name",
+       "type": "column"
+      }
+     },
+     "join_type": "inner",
+     "select_columns": [
+      {
+       "column_name": "start_date",
+       "type": "column"
+      },
+      {
+       "column_name": "employee_name",
+       "type": "column"
+      },
+      {
+       "column_name": "company",
+       "type": "column"
+      },
+      {
+       "column_name": "exchange_rate",
+       "type": "column"
+      }
+     ],
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabSalary Slip",
+      "type": "table"
+     },
+     "type": "join"
+    },
+    {
+     "data_type": "String",
+     "expression": {
+      "expression": "parent",
+      "type": "expression"
+     },
+     "new_name": "salary_slip",
+     "type": "mutate"
+    },
+    {
+     "data_type": "Decimal",
+     "expression": {
+      "expression": "amount * exchange_rate",
+      "type": "expression"
+     },
+     "new_name": "base_amount",
+     "type": "mutate"
+    },
+    {
+     "column_names": [
+      "salary_slip",
+      "employee_name",
+      "company",
+      "start_date",
+      "salary_component",
+      "base_amount"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 2,
+   "title": "Salary Slip Earnings",
+   "use_live_connection": 1,
+   "workbook": "payroll"
+  },
+  "payroll-salary-slips": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "payroll-salary-slips",
+   "operations": [
+    {
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabSalary Slip",
+      "type": "table"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "column": {
+        "column_name": "docstatus",
+        "type": "column"
+       },
+       "operator": "=",
+       "value": 1
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "data_type": "String",
+     "expression": {
+      "expression": "name",
+      "type": "expression"
+     },
+     "new_name": "salary_slip",
+     "type": "mutate"
+    },
+    {
+     "data_type": "Decimal",
+     "expression": {
+      "expression": "base_gross_pay - base_net_pay",
+      "type": "expression"
+     },
+     "new_name": "deductions",
+     "type": "mutate"
+    },
+    {
+     "column_names": [
+      "salary_slip",
+      "employee",
+      "employee_name",
+      "department",
+      "designation",
+      "company",
+      "start_date",
+      "base_gross_pay",
+      "base_net_pay",
+      "deductions"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 1,
+   "title": "Salary Slips",
+   "use_live_connection": 1,
+   "workbook": "payroll"
+  }
+ },
+ "title": "Payroll"
+}

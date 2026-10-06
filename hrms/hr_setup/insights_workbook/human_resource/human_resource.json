@@ -1,0 +1,1281 @@
+{
+ "charts": {
+  "human-resource-exits-2": {
+   "chart_type": "Number",
+   "config": {
+    "date_column": {
+     "column_name": "relieving_date",
+     "data_type": "Date",
+     "dimension_name": "relieving_date"
+    },
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "comparison": {
+       "label": "vs last FY",
+       "show": "delta",
+       "source": "last year"
+      },
+      "decimals": 0,
+      "negative_is_better": true,
+      "shorten": false
+     }
+    ],
+    "number_columns": [
+     {
+      "aggregation": "count",
+      "column_name": "name",
+      "data_type": "Integer",
+      "id": "Exits",
+      "measure_name": "Employee Exits (This FY)"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false,
+    "window": {
+     "span": "fiscal year to date"
+    }
+   },
+   "folder": null,
+   "name": "human-resource-exits-2",
+   "query": "human-resource-exits",
+   "sort_order": 3,
+   "title": "Employee Exits",
+   "workbook": "human-resource"
+  },
+  "human-resource-exits-by-department": {
+   "chart_type": "Row",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_format": {
+     "decimals": 0,
+     "shorten": false
+    },
+    "order_by": [
+     {
+      "column": {
+       "column_name": "Exits",
+       "type": "column"
+      },
+      "direction": "desc"
+     }
+    ],
+    "x_axis": {
+     "dimension": {
+      "column_name": "department_name",
+      "data_type": "String",
+      "dimension_name": "Department"
+     }
+    },
+    "y_axis": {
+     "axis_label": "Employees",
+     "reference_lines": [
+      {
+       "aggregate": "average",
+       "axis": "y",
+       "dashed": true,
+       "id": "6e91f7c1",
+       "label": "Average",
+       "measure_name": "Exits"
+      }
+     ],
+     "series": [
+      {
+       "measure": {
+        "aggregation": "count",
+        "column_name": "name",
+        "data_type": "Integer",
+        "measure_name": "Exits"
+       },
+       "type": "bar"
+      }
+     ],
+     "show_axis_label": true
+    }
+   },
+   "folder": null,
+   "name": "human-resource-exits-by-department",
+   "query": "human-resource-exits-fiscal-year-to-date",
+   "sort_order": 7,
+   "title": "Exits by Department (This FY)",
+   "workbook": "human-resource"
+  },
+  "human-resource-headcount-2": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "comparison": {
+       "label": "since FY start",
+       "measure": {
+        "data_type": "Integer",
+        "expression": {
+         "expression": "count_if(is_not_in(status, 'Inactive', 'Suspended') & (date_of_joining <= fiscal_year_start(today())) & (is_not_set(relieving_date) | (relieving_date >= fiscal_year_start(today()))), name)",
+         "type": "expression"
+        },
+        "measure_name": "At Fiscal Year Start"
+       },
+       "show": "delta",
+       "source": "measure"
+      },
+      "decimals": 0,
+      "shorten": false
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Integer",
+      "expression": {
+       "expression": "count_if(is_not_in(status, 'Inactive', 'Suspended') & (date_of_joining <= today()) & (is_not_set(relieving_date) | (relieving_date >= today())), name)",
+       "type": "expression"
+      },
+      "id": "Headcount",
+      "measure_name": "Active Employees"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "human-resource-headcount-2",
+   "query": "human-resource-headcount",
+   "sort_order": 1,
+   "title": "Active Employees",
+   "workbook": "human-resource"
+  },
+  "human-resource-headcount-joins-exits-by-month": {
+   "chart_type": "Bar",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_format": {
+     "decimals": 0,
+     "shorten": false
+    },
+    "order_by": [
+     {
+      "column": {
+       "column_name": "Month",
+       "type": "column"
+      },
+      "direction": "asc"
+     }
+    ],
+    "x_axis": {
+     "dimension": {
+      "column_name": "period",
+      "data_type": "Date",
+      "dimension_name": "Month",
+      "granularity": "month"
+     }
+    },
+    "y_axis": {
+     "axis_label": "Employees",
+     "series": [
+      {
+       "measure": {
+        "data_type": "Integer",
+        "expression": {
+         "expression": "sum(joined)",
+         "type": "expression"
+        },
+        "measure_name": "New Hires"
+       },
+       "type": "bar"
+      },
+      {
+       "measure": {
+        "data_type": "Integer",
+        "expression": {
+         "expression": "0 - sum(left)",
+         "type": "expression"
+        },
+        "measure_name": "Exits"
+       },
+       "type": "bar"
+      },
+      {
+       "align": "Right",
+       "measure": {
+        "data_type": "Integer",
+        "expression": {
+         "expression": "sum(employed)",
+         "type": "expression"
+        },
+        "measure_name": "Active Employees"
+       },
+       "show_data_points": true,
+       "type": "line"
+      }
+     ],
+     "show_axis_label": true
+    }
+   },
+   "folder": null,
+   "name": "human-resource-headcount-joins-exits-by-month",
+   "query": "human-resource-workforce-by-month",
+   "sort_order": 4,
+   "title": "Active Employees, New Hires and Exits by Month",
+   "workbook": "human-resource"
+  },
+  "human-resource-joiners-leavers": {
+   "chart_type": "Table",
+   "config": {
+    "columns": [],
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 12,
+    "order_by": [
+     {
+      "column": {
+       "column_name": "Date",
+       "type": "column"
+      },
+      "direction": "desc"
+     }
+    ],
+    "rows": [
+     {
+      "column_name": "name",
+      "data_type": "String",
+      "dimension_name": "Employee"
+     },
+     {
+      "column_name": "employee_name",
+      "data_type": "String",
+      "dimension_name": "Name"
+     },
+     {
+      "column_name": "department_name",
+      "data_type": "String",
+      "dimension_name": "Department"
+     },
+     {
+      "column_name": "designation",
+      "data_type": "String",
+      "dimension_name": "Designation"
+     },
+     {
+      "column_name": "movement",
+      "data_type": "String",
+      "dimension_name": "Type"
+     },
+     {
+      "column_name": "moved_on",
+      "data_type": "Date",
+      "dimension_name": "Date"
+     }
+    ],
+    "values": []
+   },
+   "folder": null,
+   "name": "human-resource-joiners-leavers",
+   "query": "human-resource-joiners-leavers-fiscal-year-to-date",
+   "sort_order": 8,
+   "title": "New Hires and Exits (This FY)",
+   "workbook": "human-resource"
+  },
+  "human-resource-joins-2": {
+   "chart_type": "Number",
+   "config": {
+    "date_column": {
+     "column_name": "date_of_joining",
+     "data_type": "Date",
+     "dimension_name": "date_of_joining"
+    },
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "comparison": {
+       "label": "vs last FY",
+       "show": "delta",
+       "source": "last year"
+      },
+      "decimals": 0,
+      "shorten": false
+     }
+    ],
+    "number_columns": [
+     {
+      "aggregation": "count",
+      "column_name": "name",
+      "data_type": "Integer",
+      "id": "Joins",
+      "measure_name": "New Hires (This FY)"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false,
+    "window": {
+     "span": "fiscal year to date"
+    }
+   },
+   "folder": null,
+   "name": "human-resource-joins-2",
+   "query": "human-resource-joins",
+   "sort_order": 2,
+   "title": "New Hires",
+   "workbook": "human-resource"
+  },
+  "human-resource-workforce-by-department": {
+   "chart_type": "Donut",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "label_column": {
+     "column_name": "department_name",
+     "data_type": "String",
+     "dimension_name": "Department"
+    },
+    "legend_position": "right",
+    "limit": 100,
+    "max_slices": 6,
+    "number_format": {
+     "decimals": 0,
+     "shorten": false
+    },
+    "order_by": [],
+    "show_inline_labels": true,
+    "value_column": {
+     "aggregation": "count",
+     "column_name": "name",
+     "data_type": "Integer",
+     "measure_name": "Employees"
+    }
+   },
+   "folder": null,
+   "name": "human-resource-workforce-by-department",
+   "query": "human-resource-employed-today",
+   "sort_order": 5,
+   "title": "Employees by Department",
+   "workbook": "human-resource"
+  },
+  "human-resource-workforce-by-designation": {
+   "chart_type": "Row",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 10,
+    "number_format": {
+     "decimals": 0,
+     "shorten": false
+    },
+    "order_by": [
+     {
+      "column": {
+       "column_name": "Employees",
+       "type": "column"
+      },
+      "direction": "desc"
+     }
+    ],
+    "x_axis": {
+     "dimension": {
+      "column_name": "designation",
+      "data_type": "String",
+      "dimension_name": "Designation"
+     }
+    },
+    "y_axis": {
+     "axis_label": "Employees",
+     "series": [
+      {
+       "measure": {
+        "aggregation": "count",
+        "column_name": "name",
+        "data_type": "Integer",
+        "measure_name": "Employees"
+       },
+       "type": "bar"
+      }
+     ],
+     "show_axis_label": true
+    }
+   },
+   "folder": null,
+   "name": "human-resource-workforce-by-designation",
+   "query": "human-resource-employed-today",
+   "sort_order": 6,
+   "title": "Employees by Designation",
+   "workbook": "human-resource"
+  }
+ },
+ "creation": "2026-09-26 21:12:23.241919",
+ "dashboards": {
+  "human-resource": {
+   "items": [
+    {
+     "default_operator": "=",
+     "default_user_key": "Company",
+     "filter_name": "Company",
+     "filter_type": "String",
+     "layout": {
+      "h": 2,
+      "i": "filter-company",
+      "w": 4,
+      "x": 0,
+      "y": 0
+     },
+     "layouts": {
+      "sm": {
+       "h": 2,
+       "w": 20,
+       "x": 0,
+       "y": 0
+      }
+     },
+     "links": {
+      "human-resource-exits-2": "`human-resource-employee-roster`.`company`",
+      "human-resource-exits-by-department": "`human-resource-employee-roster`.`company`",
+      "human-resource-headcount-2": "`human-resource-employee-roster`.`company`",
+      "human-resource-headcount-joins-exits-by-month": "`human-resource-employee-roster`.`company`",
+      "human-resource-joiners-leavers": "`human-resource-employee-roster`.`company`",
+      "human-resource-joins-2": "`human-resource-employee-roster`.`company`",
+      "human-resource-workforce-by-department": "`human-resource-employee-roster`.`company`",
+      "human-resource-workforce-by-designation": "`human-resource-employee-roster`.`company`"
+     },
+     "type": "filter"
+    },
+    {
+     "chart": "human-resource-headcount-2",
+     "layout": {
+      "h": 5,
+      "i": "chart-3lok5svton",
+      "w": 7,
+      "x": 0,
+      "y": 3
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 10,
+       "x": 0,
+       "y": 3
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "human-resource-joins-2",
+     "layout": {
+      "h": 5,
+      "i": "chart-3lob2qt82i",
+      "w": 7,
+      "x": 7,
+      "y": 3
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 10,
+       "x": 10,
+       "y": 3
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "human-resource-exits-2",
+     "layout": {
+      "h": 5,
+      "i": "chart-3los9v4g3l",
+      "w": 6,
+      "x": 14,
+      "y": 3
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 20,
+       "x": 0,
+       "y": 8
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "human-resource-headcount-joins-exits-by-month",
+     "layout": {
+      "h": 17,
+      "i": "chart-3lot1g7ob4",
+      "w": 20,
+      "x": 0,
+      "y": 8
+     },
+     "layouts": {
+      "sm": {
+       "h": 17,
+       "w": 20,
+       "x": 0,
+       "y": 13
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "human-resource-workforce-by-department",
+     "layout": {
+      "h": 17,
+      "i": "chart-3lohaf3sm3",
+      "w": 10,
+      "x": 0,
+      "y": 25
+     },
+     "layouts": {
+      "sm": {
+       "h": 17,
+       "w": 20,
+       "x": 0,
+       "y": 30
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "human-resource-workforce-by-designation",
+     "layout": {
+      "h": 17,
+      "i": "chart-3lo3v42nsa",
+      "w": 10,
+      "x": 10,
+      "y": 25
+     },
+     "layouts": {
+      "sm": {
+       "h": 19,
+       "w": 20,
+       "x": 0,
+       "y": 47
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "human-resource-exits-by-department",
+     "layout": {
+      "h": 17,
+      "i": "chart-3loq60ta3p",
+      "w": 10,
+      "x": 0,
+      "y": 42
+     },
+     "layouts": {
+      "sm": {
+       "h": 17,
+       "w": 20,
+       "x": 0,
+       "y": 66
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "human-resource-joiners-leavers",
+     "layout": {
+      "h": 17,
+      "i": "chart-3loo2p20p5",
+      "w": 10,
+      "x": 10,
+      "y": 42
+     },
+     "layouts": {
+      "sm": {
+       "h": 24,
+       "w": 20,
+       "x": 0,
+       "y": 83
+      }
+     },
+     "type": "chart"
+    }
+   ],
+   "name": "human-resource",
+   "title": "Human Resource",
+   "vertical_compact_layout": 1,
+   "visible_to_roles": [
+    {
+     "role": "HR User"
+    },
+    {
+     "role": "HR Manager"
+    }
+   ],
+   "workbook": "human-resource"
+  }
+ },
+ "docstatus": 0,
+ "doctype": "Insights Workbook",
+ "folders": [],
+ "idx": 0,
+ "is_standard": 1,
+ "modified": "2026-09-28 12:09:41.771119",
+ "modified_by": "Administrator",
+ "module": "HR Setup",
+ "name": "human-resource",
+ "owner": "Administrator",
+ "queries": {
+  "human-resource-employed-today": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "human-resource-employed-today",
+   "operations": [
+    {
+     "table": {
+      "query_name": "human-resource-employee-roster",
+      "type": "query",
+      "workbook": "human-resource"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "expression": {
+        "expression": "is_not_in(status, 'Inactive', 'Suspended') & (date_of_joining <= today()) & (is_not_set(relieving_date) | (relieving_date >= today()))",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "name",
+      "employee_name",
+      "department_name",
+      "designation",
+      "date_of_joining"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 3,
+   "title": "Employed Today",
+   "use_live_connection": 1,
+   "workbook": "human-resource"
+  },
+  "human-resource-employee-roster": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "human-resource-employee-roster",
+   "operations": [
+    {
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabEmployee",
+      "type": "table"
+     },
+     "type": "source"
+    },
+    {
+     "join_condition": {
+      "left_column": {
+       "column_name": "department",
+       "type": "column"
+      },
+      "right_column": {
+       "column_name": "name",
+       "type": "column"
+      }
+     },
+     "join_type": "left",
+     "select_columns": [
+      {
+       "column_name": "department_name",
+       "type": "column"
+      }
+     ],
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabDepartment",
+      "type": "table"
+     },
+     "type": "join"
+    },
+    {
+     "data_type": "String",
+     "expression": {
+      "expression": "if_null(department_name, 'Not Set')",
+      "type": "expression"
+     },
+     "new_name": "department_name",
+     "type": "mutate"
+    },
+    {
+     "data_type": "Integer",
+     "expression": {
+      "expression": "ibis.literal(1)",
+      "type": "expression"
+     },
+     "new_name": "one_person",
+     "type": "mutate"
+    },
+    {
+     "column_names": [
+      "name",
+      "employee_name",
+      "department_name",
+      "designation",
+      "date_of_joining",
+      "relieving_date",
+      "company",
+      "status",
+      "one_person"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 1,
+   "title": "Employee Roster",
+   "use_live_connection": 1,
+   "workbook": "human-resource"
+  },
+  "human-resource-exits": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "human-resource-exits",
+   "operations": [
+    {
+     "table": {
+      "query_name": "human-resource-employee-roster",
+      "type": "query",
+      "workbook": "human-resource"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "expression": {
+        "expression": "is_set(relieving_date)",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "name",
+      "employee_name",
+      "department_name",
+      "designation",
+      "date_of_joining",
+      "relieving_date"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 5,
+   "title": "Exits",
+   "use_live_connection": 1,
+   "workbook": "human-resource"
+  },
+  "human-resource-exits-fiscal-year-to-date": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "human-resource-exits-fiscal-year-to-date",
+   "operations": [
+    {
+     "table": {
+      "query_name": "human-resource-exits",
+      "type": "query",
+      "workbook": "human-resource"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "expression": {
+        "expression": "relieving_date.between(fiscal_year_start(today()), today())",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    }
+   ],
+   "sort_order": 7,
+   "title": "Exits, Fiscal Year to Date",
+   "use_live_connection": 1,
+   "workbook": "human-resource"
+  },
+  "human-resource-headcount": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "human-resource-headcount",
+   "operations": [
+    {
+     "table": {
+      "query_name": "human-resource-employee-roster",
+      "type": "query",
+      "workbook": "human-resource"
+     },
+     "type": "source"
+    },
+    {
+     "column_names": [
+      "name",
+      "employee_name",
+      "department_name",
+      "designation",
+      "date_of_joining",
+      "status",
+      "relieving_date"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 2,
+   "title": "Headcount",
+   "use_live_connection": 1,
+   "workbook": "human-resource"
+  },
+  "human-resource-joiners-leavers-fiscal-year-to-date": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "human-resource-joiners-leavers-fiscal-year-to-date",
+   "operations": [
+    {
+     "table": {
+      "query_name": "human-resource-exits-fiscal-year-to-date",
+      "type": "query",
+      "workbook": "human-resource"
+     },
+     "type": "source"
+    },
+    {
+     "data_type": "String",
+     "expression": {
+      "expression": "ibis.literal('Left')",
+      "type": "expression"
+     },
+     "new_name": "movement",
+     "type": "mutate"
+    },
+    {
+     "data_type": "Date",
+     "expression": {
+      "expression": "relieving_date",
+      "type": "expression"
+     },
+     "new_name": "moved_on",
+     "type": "mutate"
+    },
+    {
+     "column_names": [
+      "name",
+      "employee_name",
+      "department_name",
+      "designation",
+      "movement",
+      "moved_on"
+     ],
+     "type": "select"
+    },
+    {
+     "distinct": false,
+     "table": {
+      "query_name": "human-resource-joins-as-movements",
+      "type": "query",
+      "workbook": "human-resource"
+     },
+     "type": "union"
+    },
+    {
+     "column": {
+      "column_name": "moved_on",
+      "type": "column"
+     },
+     "direction": "desc",
+     "type": "order_by"
+    }
+   ],
+   "sort_order": 11,
+   "title": "Joiners & Leavers, Fiscal Year to Date",
+   "use_live_connection": 1,
+   "workbook": "human-resource"
+  },
+  "human-resource-joins": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "human-resource-joins",
+   "operations": [
+    {
+     "table": {
+      "query_name": "human-resource-employee-roster",
+      "type": "query",
+      "workbook": "human-resource"
+     },
+     "type": "source"
+    },
+    {
+     "column_names": [
+      "name",
+      "employee_name",
+      "department_name",
+      "designation",
+      "date_of_joining"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 4,
+   "title": "Joins",
+   "use_live_connection": 1,
+   "workbook": "human-resource"
+  },
+  "human-resource-joins-as-movements": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "human-resource-joins-as-movements",
+   "operations": [
+    {
+     "table": {
+      "query_name": "human-resource-joins-fiscal-year-to-date",
+      "type": "query",
+      "workbook": "human-resource"
+     },
+     "type": "source"
+    },
+    {
+     "data_type": "String",
+     "expression": {
+      "expression": "ibis.literal('Joined')",
+      "type": "expression"
+     },
+     "new_name": "movement",
+     "type": "mutate"
+    },
+    {
+     "data_type": "Date",
+     "expression": {
+      "expression": "date_of_joining",
+      "type": "expression"
+     },
+     "new_name": "moved_on",
+     "type": "mutate"
+    },
+    {
+     "column_names": [
+      "name",
+      "employee_name",
+      "department_name",
+      "designation",
+      "movement",
+      "moved_on"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 10,
+   "title": "Joins as Movements",
+   "use_live_connection": 1,
+   "workbook": "human-resource"
+  },
+  "human-resource-joins-fiscal-year-to-date": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "human-resource-joins-fiscal-year-to-date",
+   "operations": [
+    {
+     "table": {
+      "query_name": "human-resource-joins",
+      "type": "query",
+      "workbook": "human-resource"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "expression": {
+        "expression": "date_of_joining.between(fiscal_year_start(today()), today())",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    }
+   ],
+   "sort_order": 6,
+   "title": "Joins, Fiscal Year to Date",
+   "use_live_connection": 1,
+   "workbook": "human-resource"
+  },
+  "human-resource-month-spine": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "human-resource-month-spine",
+   "operations": [
+    {
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabEmployee",
+      "type": "table"
+     },
+     "type": "source"
+    },
+    {
+     "column_names": [
+      "name"
+     ],
+     "type": "select"
+    },
+    {
+     "data_type": "Integer",
+     "expression": {
+      "expression": "row_number()",
+      "type": "expression"
+     },
+     "new_name": "months_back",
+     "type": "mutate"
+    },
+    {
+     "filters": [
+      {
+       "column": {
+        "column_name": "months_back",
+        "type": "column"
+       },
+       "operator": ">=",
+       "value": 1
+      },
+      {
+       "column": {
+        "column_name": "months_back",
+        "type": "column"
+       },
+       "operator": "<=",
+       "value": 12
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "data_type": "Date",
+     "expression": {
+      "expression": "month_start(today()) - months_back.as_interval('M')",
+      "type": "expression"
+     },
+     "new_name": "period",
+     "type": "mutate"
+    },
+    {
+     "data_type": "Integer",
+     "expression": {
+      "expression": "ibis.literal(1)",
+      "type": "expression"
+     },
+     "new_name": "one_person",
+     "type": "mutate"
+    },
+    {
+     "column_names": [
+      "period",
+      "one_person"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 8,
+   "title": "Month Spine",
+   "use_live_connection": 1,
+   "workbook": "human-resource"
+  },
+  "human-resource-workforce-by-month": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "human-resource-workforce-by-month",
+   "operations": [
+    {
+     "table": {
+      "query_name": "human-resource-month-spine",
+      "type": "query",
+      "workbook": "human-resource"
+     },
+     "type": "source"
+    },
+    {
+     "join_condition": {
+      "left_column": {
+       "column_name": "one_person",
+       "type": "column"
+      },
+      "right_column": {
+       "column_name": "one_person",
+       "type": "column"
+      }
+     },
+     "join_type": "inner",
+     "select_columns": [
+      {
+       "column_name": "name",
+       "type": "column"
+      },
+      {
+       "column_name": "employee_name",
+       "type": "column"
+      },
+      {
+       "column_name": "department_name",
+       "type": "column"
+      },
+      {
+       "column_name": "designation",
+       "type": "column"
+      },
+      {
+       "column_name": "date_of_joining",
+       "type": "column"
+      },
+      {
+       "column_name": "relieving_date",
+       "type": "column"
+      },
+      {
+       "column_name": "status",
+       "type": "column"
+      }
+     ],
+     "table": {
+      "query_name": "human-resource-employee-roster",
+      "type": "query",
+      "workbook": "human-resource"
+     },
+     "type": "join"
+    },
+    {
+     "data_type": "Date",
+     "expression": {
+      "expression": "date_sub(date_add(period, 1, 'month'), 1, 'day')",
+      "type": "expression"
+     },
+     "new_name": "month_end",
+     "type": "mutate"
+    },
+    {
+     "data_type": "Integer",
+     "expression": {
+      "expression": "one_if(month_start(date_of_joining) == period)",
+      "type": "expression"
+     },
+     "new_name": "joined",
+     "type": "mutate"
+    },
+    {
+     "data_type": "Integer",
+     "expression": {
+      "expression": "one_if(month_start(relieving_date) == period)",
+      "type": "expression"
+     },
+     "new_name": "left",
+     "type": "mutate"
+    },
+    {
+     "data_type": "Integer",
+     "expression": {
+      "expression": "one_if(is_not_in(status, 'Inactive', 'Suspended') & (date_of_joining <= month_end) & (is_not_set(relieving_date) | (relieving_date >= month_end)))",
+      "type": "expression"
+     },
+     "new_name": "employed",
+     "type": "mutate"
+    },
+    {
+     "filters": [
+      {
+       "expression": {
+        "expression": "(joined + left + employed) > 0",
+        "type": "expression"
+       }
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "period",
+      "name",
+      "employee_name",
+      "department_name",
+      "designation",
+      "date_of_joining",
+      "relieving_date",
+      "joined",
+      "left",
+      "employed"
+     ],
+     "type": "select"
+    },
+    {
+     "column": {
+      "column_name": "period",
+      "type": "column"
+     },
+     "direction": "asc",
+     "type": "order_by"
+    }
+   ],
+   "sort_order": 9,
+   "title": "Workforce by Month",
+   "use_live_connection": 1,
+   "workbook": "human-resource"
+  }
+ },
+ "title": "Human Resource"
+}
