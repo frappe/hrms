@@ -107,11 +107,7 @@ const checkins = createListResource({
 checkins.reload()
 
 const lastLog = computed(() => {
-<<<<<<< HEAD
-	if (checkins.list.loading || !checkins.data) return {}
-=======
-	if (!checkins.data?.length) return null
->>>>>>> 62a7cc9 (fix: return a falsy value when checkins don't exist)
+	if (checkins.list.loading || !checkins.data?.length) return null
 	return checkins.data[0]
 })
 
