@@ -1,0 +1,47 @@
+{
+ "allow_roles": [
+  {
+   "role": "HR Manager"
+  },
+  {
+   "role": "HR User"
+  }
+ ],
+ "creation": "2026-10-05 12:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Module Onboarding",
+ "idx": 0,
+ "is_complete": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Leaves",
+ "name": "Leaves Onboarding",
+ "owner": "Administrator",
+ "steps": [
+  {
+   "is_optional": 0,
+   "step": "Create Holiday List"
+  },
+  {
+   "is_optional": 0,
+   "step": "Create Leave Type"
+  },
+  {
+   "is_optional": 1,
+   "step": "Create Leave Policy"
+  },
+  {
+   "is_optional": 0,
+   "step": "Create Leave Allocation"
+  },
+  {
+   "is_optional": 0,
+   "step": "Create Leave Application"
+  },
+  {
+   "is_optional": 1,
+   "step": "View Employee Leave Balance"
+  }
+ ],
+ "title": "Manage time off"
+}

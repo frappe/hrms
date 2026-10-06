@@ -1,0 +1,22 @@
+{
+ "action": "Create Entry",
+ "action_label": "Create Payment Entry",
+ "creation": "2026-10-05 12:00:00.000000",
+ "description": "Reimburse an approved claim. Opening the claim and using Create > Payment fills this in for you.",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "Pay Expense Claim",
+ "owner": "Administrator",
+ "reference_document": "Payment Entry",
+ "route_options": "{\n    \"party_type\": \"Employee\",\n    \"payment_type\": \"Pay\"\n}",
+ "show_form_tour": 0,
+ "show_full_form": 1,
+ "title": "Pay the employee back",
+ "validate_action": 1
+}
