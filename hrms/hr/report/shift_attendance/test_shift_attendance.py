@@ -7,6 +7,7 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
+from hrms.hr.report.monthly_attendance_sheet.test_monthly_attendance_sheet import create_employment_type
 from hrms.hr.report.shift_attendance.shift_attendance import execute
 from hrms.tests.test_utils import create_company
 from hrms.tests.utils import HRMSTestSuite
@@ -131,6 +132,23 @@ class TestShiftAttendance(HRMSTestSuite):
 			},
 		]
 		self.assertEqual(expected_data, data)
+
+	def test_employment_type_filter(self):
+		contract = create_employment_type("Test Contract")
+		frappe.db.set_value("Employee", self.emp2, "employment_type", contract)
+
+		filters = frappe._dict(
+			{
+				"company": "_Test Company",
+				"from_date": date(2023, 1, 1),
+				"to_date": date(2023, 1, 3),
+				"employment_type": contract,
+			}
+		)
+		data = execute(filters)[1]
+
+		self.assertEqual(len(data), 3)
+		self.assertTrue(all(row.employee == self.emp2 for row in data))
 
 	def test_chart(self):
 		filters = frappe._dict(
