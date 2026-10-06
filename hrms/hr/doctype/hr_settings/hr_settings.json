@@ -390,15 +390,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
-<<<<<<< HEAD
-<<<<<<< HEAD
- "modified": "2026-09-28 23:38:50.328083",
-=======
- "modified": "2026-10-05 15:00:00.000000",
->>>>>>> 1d00ee5 (feat: documentation links and Lucide icons for DocTypes)
-=======
  "modified": "2026-10-06 14:00:00.000000",
->>>>>>> f47d367 (feat: do not make leave and expense approvers mandatory by default)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",

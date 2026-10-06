@@ -265,11 +265,7 @@
  "icon": "tag",
  "idx": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2026-09-28 23:38:50.328083",
-=======
  "modified": "2026-10-05 15:00:00.000000",
->>>>>>> 1d00ee5 (feat: documentation links and Lucide icons for DocTypes)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Type",
