@@ -106,6 +106,10 @@ class TestJobOffer(HRMSTestSuite):
 		job_offer.reload()
 		self.assertEqual(job_offer.status, "Ready to Send")
 
+		add_offer_email(job_offer, "Sent", recipients="hiring.manager@example.com")
+		job_offer.reload()
+		self.assertEqual(job_offer.status, "Ready to Send")
+
 		add_offer_email(job_offer, "Sent")
 		job_offer.reload()
 		self.assertEqual(job_offer.status, "Awaiting Response")
@@ -830,13 +834,14 @@ def make_stepped_structure(name):
 	)
 
 
-def add_offer_email(job_offer, sent_or_received):
+def add_offer_email(job_offer, sent_or_received, recipients=None):
 	return frappe.get_doc(
 		{
 			"doctype": "Communication",
 			"communication_type": "Communication",
 			"communication_medium": "Email",
 			"sent_or_received": sent_or_received,
+			"recipients": recipients or job_offer.applicant_email,
 			"subject": "Offer of Employment",
 			"content": "Please find attached your offer letter.",
 			"reference_doctype": "Job Offer",

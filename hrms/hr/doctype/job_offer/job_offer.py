@@ -8,7 +8,16 @@ from frappe.core.doctype.communication.communication import update_parent_docume
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe.query_builder.functions import Sum
-from frappe.utils import cint, flt, get_link_to_form, get_weekday, get_weekdays, nowdate
+from frappe.utils import (
+	cint,
+	flt,
+	get_link_to_form,
+	get_weekday,
+	get_weekdays,
+	nowdate,
+	parse_addr,
+	split_emails,
+)
 
 
 class JobOffer(Document):
@@ -88,10 +97,15 @@ class JobOffer(Document):
 			and self.status == "Ready to Send"
 			and communication.communication_type == "Communication"
 			and communication.sent_or_received == "Sent"
+			and self.is_addressed_to_applicant(communication)
 		):
 			self.db_set("status", "Awaiting Response")
 
 		update_parent_document_on_communication(communication)
+
+	def is_addressed_to_applicant(self, communication) -> bool:
+		recipients = {parse_addr(email)[1].lower() for email in split_emails(communication.recipients or "")}
+		return (self.applicant_email or "").lower() in recipients
 
 	def set_leave_details(self):
 		self.set("leave_allocations", get_leave_allocations(self.leave_policy))
