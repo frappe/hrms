@@ -282,14 +282,15 @@ function update_compensation(frm) {
 	if (!compensation_driver(frm)) return;
 
 	const was_empty = !(frm.doc.ctc_breakup || []).length;
-	const release = hold_compensation(frm);
+	const sent = compensation_signature(frm);
+	const release = hold_compensation(frm, sent);
 
 	frappe.call({
 		method: "hrms.hr.doctype.job_offer.job_offer.get_compensation_details",
 		args: { offer: frm.doc },
 		error: release,
 		callback: function (r) {
-			if (!r.message) return release();
+			if (!r.message || compensation_signature(frm) !== sent) return release();
 
 			apply_compensation(frm, r.message, was_empty).then(release);
 		},
@@ -302,9 +303,7 @@ function compensation_driver(frm) {
 	return frm.doc.calculate_component_amount_from === "CTC" ? frm.doc.ctc : frm.doc.base;
 }
 
-function hold_compensation(frm) {
-	const sent = compensation_signature(frm);
-
+function hold_compensation(frm, sent) {
 	frm.__updating_compensation = true;
 	frm.__compensation_pending = false;
 
@@ -391,9 +390,9 @@ const COMPENSATION_INPUTS = [
 
 function compensation_signature(frm) {
 	const solved = frm.doc.calculate_component_amount_from === "CTC" ? "base" : "ctc";
-	const fields = COMPENSATION_INPUTS.concat(Array.from(bound_regional_inputs)).filter(
-		(fieldname) => fieldname !== solved,
-	);
+	const fields = ["salary_structure"]
+		.concat(COMPENSATION_INPUTS, Array.from(bound_regional_inputs))
+		.filter((fieldname) => fieldname !== solved);
 
 	return JSON.stringify(fields.map((fieldname) => frm.doc[fieldname] ?? null));
 }
