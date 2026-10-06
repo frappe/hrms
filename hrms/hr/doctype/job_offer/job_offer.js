@@ -129,8 +129,8 @@ function set_email_button_label(frm) {
 		resend ? "Resend Offer Letter" : "Email Offer Letter",
 	);
 	frm.get_field("email_offer_letter")
-		.$input?.toggleClass("btn-primary", !resend)
-		.toggleClass("btn-default", resend);
+		.$input?.attr("class", "es-button")
+		.attr("data-variant", resend ? "subtle" : "solid");
 }
 
 async function email_offer_letter(frm) {
