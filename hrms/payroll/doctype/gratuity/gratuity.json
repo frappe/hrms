@@ -3,6 +3,7 @@
  "autoname": "HR-GRA-PAY-.#####",
  "creation": "2022-01-27 16:24:28.200061",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/gratuity",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -197,10 +198,11 @@
    "label": "Gratuity"
   }
  ],
+ "icon": "piggy-bank",
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-09-01 18:39:51.520758",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Gratuity",

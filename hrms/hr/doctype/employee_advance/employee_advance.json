@@ -4,6 +4,7 @@
  "autoname": "naming_series:",
  "creation": "2022-01-17 18:36:51.450395",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/employee-advance",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -243,9 +244,10 @@
   }
  ],
  "grid_page_length": 50,
+ "icon": "hand-coins",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-08-06 13:01:43.187327",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Advance",

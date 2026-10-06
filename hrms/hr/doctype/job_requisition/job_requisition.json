@@ -5,6 +5,7 @@
  "autoname": "naming_series:",
  "creation": "2022-08-29 19:00:53.358248",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/job-requisition",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -198,6 +199,7 @@
    "fieldtype": "Column Break"
   }
  ],
+ "icon": "clipboard-pen",
  "index_web_pages_for_search": 1,
  "links": [
   {
@@ -205,7 +207,7 @@
    "link_fieldname": "job_requisition"
   }
  ],
- "modified": "2026-09-01 18:39:51.520758",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Requisition",

@@ -4,6 +4,7 @@
  "autoname": "EMP-CKIN-.MM.-.YYYY.-.######",
  "creation": "2019-06-10 11:56:34.536413",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/employee-checkin",
  "engine": "InnoDB",
  "field_order": [
   "employee",
@@ -184,9 +185,10 @@
    "options": "Overtime Type"
   }
  ],
+ "icon": "fingerprint-pattern",
  "in_create": 1,
  "links": [],
- "modified": "2025-07-09 10:47:34.591144",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Checkin",

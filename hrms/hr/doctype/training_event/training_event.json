@@ -5,6 +5,7 @@
  "autoname": "field:event_name",
  "creation": "2016-08-08 04:53:58.355206",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/training-event",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -196,9 +197,10 @@
    "options": "Email"
   }
  ],
+ "icon": "presentation",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-24 17:45:41.639205",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Training Event",
