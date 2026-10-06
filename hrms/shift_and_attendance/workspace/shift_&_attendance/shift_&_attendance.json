@@ -6,7 +6,7 @@
    "label": "Attendance Count"
   }
  ],
- "content": "[{\"id\":\"0ccff9bd56\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Attendance Count\",\"col\":12}},{\"id\":\"e5f522d654\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Present (This Month)\",\"col\":4}},{\"id\":\"24fb69e488\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Absent (This Month)\",\"col\":4}},{\"id\":\"8706daeabd\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Late Entry (This Month)\",\"col\":4}}]",
+ "content": "[{\"id\":\"956c7b97b9\",\"type\":\"onboarding\",\"data\":{\"onboarding_name\":\"Shift and Attendance Onboarding\",\"col\":12}},{\"id\":\"0ccff9bd56\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Attendance Count\",\"col\":12}},{\"id\":\"e5f522d654\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Present (This Month)\",\"col\":4}},{\"id\":\"24fb69e488\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Absent (This Month)\",\"col\":4}},{\"id\":\"8706daeabd\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Late Entry (This Month)\",\"col\":4}}]",
  "creation": "2022-08-20 15:50:06.598086",
  "custom_blocks": [],
  "docstatus": 0,
@@ -18,9 +18,10 @@
  "is_hidden": 0,
  "label": "Shift & Attendance",
  "links": [],
- "modified": "2026-08-26 18:34:03.000000",
+ "modified": "2026-10-05 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Shift and Attendance",
+ "module_onboarding": "Shift and Attendance Onboarding",
  "name": "Shift & Attendance",
  "number_cards": [
   {

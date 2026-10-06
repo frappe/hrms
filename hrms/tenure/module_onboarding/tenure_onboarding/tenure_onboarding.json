@@ -1,0 +1,47 @@
+{
+ "allow_roles": [
+  {
+   "role": "HR Manager"
+  },
+  {
+   "role": "HR User"
+  }
+ ],
+ "creation": "2026-10-05 12:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Module Onboarding",
+ "idx": 0,
+ "is_complete": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Tenure",
+ "name": "Tenure Onboarding",
+ "owner": "Administrator",
+ "steps": [
+  {
+   "is_optional": 1,
+   "step": "Create Employee Onboarding Template"
+  },
+  {
+   "is_optional": 0,
+   "step": "Create Employee Onboarding"
+  },
+  {
+   "is_optional": 0,
+   "step": "Create Employee Separation"
+  },
+  {
+   "is_optional": 1,
+   "step": "Create Training Program"
+  },
+  {
+   "is_optional": 1,
+   "step": "Create Training Event"
+  },
+  {
+   "is_optional": 1,
+   "step": "View Employee Analytics"
+  }
+ ],
+ "title": "Welcome and see off employees"
+}
