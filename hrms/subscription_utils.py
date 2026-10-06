@@ -69,6 +69,11 @@ def subscription_updated(app: str, plan: str):
 		update_erpnext_access()
 
 
+def set_hrms_as_default_app(*args):
+	if frappe.conf.sk_hrms and not frappe.get_system_settings("default_app"):
+		frappe.db.set_single_value("System Settings", "default_app", "hrms")
+
+
 def update_erpnext_access(user_input: dict | None):
 	"""
 	Called from hooks after setup wizard completion, ignored if user has no hrms subscription
