@@ -61,7 +61,7 @@
    "icon": "database",
    "indent": 1,
    "keep_closed": 1,
-   "label": "Setup",
+   "label": "Masters",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Section Break"
@@ -148,7 +148,7 @@
    "url": "/desk/hr-settings#employee_tab"
   }
  ],
- "modified": "2026-10-01 12:00:00.000000",
+ "modified": "2026-10-05 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR Setup",
  "name": "HR Setup",

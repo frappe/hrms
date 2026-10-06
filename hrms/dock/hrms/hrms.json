@@ -16,22 +16,6 @@
   {
    "added": 0,
    "hidden": 0,
-   "icon": "user-clock-duotone",
-   "link_to": "Tenure",
-   "link_type": "Sidebar",
-   "title": "Tenure"
-  },
-  {
-   "added": 0,
-   "hidden": 0,
-   "icon": "user-search-duotone",
-   "link_to": "Recruitment",
-   "link_type": "Sidebar",
-   "title": "Recruitment"
-  },
-  {
-   "added": 0,
-   "hidden": 0,
    "icon": "time-clock-duotone",
    "link_to": "Shift & Attendance",
    "link_type": "Sidebar",
@@ -56,6 +40,14 @@
   {
    "added": 0,
    "hidden": 0,
+   "icon": "wallet-duotone",
+   "link_to": "Payroll",
+   "link_type": "Sidebar",
+   "title": "Payroll"
+  },
+  {
+   "added": 0,
+   "hidden": 0,
    "icon": "podium-duotone",
    "link_to": "Performance",
    "link_type": "Sidebar",
@@ -64,10 +56,18 @@
   {
    "added": 0,
    "hidden": 0,
-   "icon": "wallet-duotone",
-   "link_to": "Payroll",
+   "icon": "user-clock-duotone",
+   "link_to": "Tenure",
    "link_type": "Sidebar",
-   "title": "Payroll"
+   "title": "Tenure"
+  },
+  {
+   "added": 0,
+   "hidden": 0,
+   "icon": "user-search-duotone",
+   "link_to": "Recruitment",
+   "link_type": "Sidebar",
+   "title": "Recruitment"
   },
   {
    "added": 0,
@@ -78,7 +78,7 @@
    "title": "Tax & Benefits"
   }
  ],
- "modified": "2026-10-02 00:00:00.000000",
+ "modified": "2026-10-05 12:30:00.000000",
  "modified_by": "Administrator",
  "name": "hrms",
  "owner": "Administrator",
