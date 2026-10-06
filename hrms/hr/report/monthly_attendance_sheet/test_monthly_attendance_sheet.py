@@ -709,6 +709,39 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 		self.assertIn(emp_branch1, employees_in_report)
 		self.assertNotIn(emp_branch2, employees_in_report)
 
+	def test_attendance_with_employment_type_filter(self):
+		previous_month_first = get_first_day_for_prev_month()
+
+		contract = create_employment_type("Test Contract")
+		full_time = create_employment_type("Test Full-time")
+
+		emp_contract = make_employee(
+			"emp_contract@example.com", company=self.company, employment_type=contract
+		)
+		emp_full_time = make_employee(
+			"emp_full_time@example.com", company=self.company, employment_type=full_time
+		)
+
+		mark_attendance(emp_contract, previous_month_first, "Present")
+		mark_attendance(emp_full_time, previous_month_first, "Present")
+
+		filters = frappe._dict(
+			{
+				"month": previous_month_first.month,
+				"year": previous_month_first.year,
+				"company": self.company,
+				"employment_type": contract,
+				"filter_based_on": self.filter_based_on,
+			}
+		)
+		report = execute(filters=filters)
+
+		employees_in_report = [row.get("employee") for row in report[1] if row.get("employee")]
+
+		# only emp_contract should appear; emp_full_time has a different employment type
+		self.assertIn(emp_contract, employees_in_report)
+		self.assertNotIn(emp_full_time, employees_in_report)
+
 	def test_attendance_with_department_and_branch_filter_combined(self):
 		previous_month_first = get_first_day_for_prev_month()
 
@@ -932,6 +965,14 @@ def create_branch(branch_name):
 	if not frappe.db.exists("Branch", branch_name):
 		frappe.get_doc({"doctype": "Branch", "branch": branch_name}).insert(ignore_permissions=True)
 	return branch_name
+
+
+def create_employment_type(employment_type):
+	if not frappe.db.exists("Employment Type", employment_type):
+		frappe.get_doc({"doctype": "Employment Type", "employee_type_name": employment_type}).insert(
+			ignore_permissions=True
+		)
+	return employment_type
 
 
 def add_holiday_to_list(holiday_list_name, holiday_date, description="Test Holiday"):
