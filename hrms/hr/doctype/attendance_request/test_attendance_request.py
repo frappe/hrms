@@ -8,6 +8,7 @@ from frappe.utils import add_days, add_months, get_year_ending, get_year_start, 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.attendance_request.attendance_request import OverlappingAttendanceRequestError
 from hrms.hr.doctype.leave_application.test_leave_application import make_allocation_record
+from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
@@ -19,7 +20,7 @@ test_dependencies = ["Employee"]
 
 class TestAttendanceRequest(FrappeTestCase):
 	def setUp(self):
-		for doctype in ["Attendance Request", "Attendance"]:
+		for doctype in ["Attendance Request", "Attendance", "Leave Application", "Shift Assignment"]:
 			frappe.db.delete(doctype)
 
 		self.from_date = get_year_start(add_months(getdate(), -1))
@@ -245,8 +246,6 @@ class TestAttendanceRequest(FrappeTestCase):
 		)
 		self.assertEqual(half_day_status, "Absent")
 
-<<<<<<< HEAD
-=======
 	def test_half_day_absent_half_to_present(self):
 		"""Test attendance request updates half_day_status from Absent to Present when existing Half Day attendance has the other half marked absent"""
 		today = getdate()
@@ -303,12 +302,14 @@ class TestAttendanceRequest(FrappeTestCase):
 		leave_application.submit()
 
 		# 2) Create shift type + assignment
-		shift_type = create_shift("Test Half Day Shift", "09:00:00", "17:00:00")
-		shift_type.process_attendance_after = add_days(today, -1)
-		shift_type.last_sync_of_checkin = add_days(today, 1)
-		shift_type.enable_auto_attendance = 1
-		shift_type.save()
-		create_shift_assignment(self.employee.name, shift_type.name, add_days(today, -1), add_days(today, 1))
+		shift_type = setup_shift_type(
+			shift_type="Test Half Day Shift",
+			start_time="09:00:00",
+			end_time="17:00:00",
+			process_attendance_after=add_days(today, -1),
+			last_sync_of_checkin=add_days(today, 1),
+		)
+		make_shift_assignment(shift_type.name, self.employee.name, add_days(today, -1), add_days(today, 1))
 
 		# 3) Attendance request for the other half — creates half-day attendance
 		attendance_request = frappe.get_doc(
@@ -340,72 +341,6 @@ class TestAttendanceRequest(FrappeTestCase):
 		self.assertEqual(attendance.half_day_status, "Absent")
 		self.assertEqual(attendance.modify_half_day_status, 0)
 
-	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": True})
-	def test_overlap_with_different_shifts(self):
-		shift_1 = create_shift("Morning Shift", "08:00:00", "12:00:00")
-		shift_2 = create_shift("Evening Shift", "14:00:00", "18:00:00")
-
-		create_shift_assignment(
-			self.employee.name, shift_1.name, add_days(getdate(), -1), add_days(getdate(), 1)
-		)
-		create_shift_assignment(
-			self.employee.name, shift_2.name, add_days(getdate(), -1), add_days(getdate(), 1)
-		)
-
-		today = getdate()
-
-		frappe.get_doc(
-			{
-				"doctype": "Attendance",
-				"employee": self.employee.name,
-				"attendance_date": today,
-				"status": "Absent",
-				"shift": shift_1.name,
-				"company": "_Test Company",
-			}
-		).insert()
-
-		frappe.get_doc(
-			{
-				"doctype": "Attendance",
-				"employee": self.employee.name,
-				"attendance_date": today,
-				"status": "Absent",
-				"shift": shift_2.name,
-				"company": "_Test Company",
-			}
-		).insert()
-
-		create_attendance_request(
-			employee=self.employee.name,
-			reason="On Duty",
-			company="_Test Company",
-			from_date=today,
-			to_date=today,
-			shift=shift_1.name,
-		)
-
-		# same dates with a different shift should NOT overlap
-		self.assertTrue(
-			create_attendance_request(
-				employee=self.employee.name,
-				reason="On Duty",
-				company="_Test Company",
-				from_date=today,
-				to_date=today,
-				shift=shift_2.name,
-			)
-		)
-
-		attendances = frappe.db.get_all(
-			"Attendance",
-			{"employee": self.employee.name, "attendance_date": today, "status": "Present"},
-			pluck="name",
-		)
-
-		self.assertEqual(len(attendances), 2)
-
->>>>>>> 71a4157 (fix(attendance_request): enhance leave record checks for half-day attendance requests)
 
 def get_employee():
 	return frappe.get_doc("Employee", "_T-Employee-00001")
