@@ -422,17 +422,22 @@ class SalaryStructureAssignment(Document):
 		"""Evaluate one component table against the shared ``data`` (mutating it
 		with each component's full-cycle amount). Returns fresh ``frappe._dict``
 		rows (cache-safe copies). Raises a clear error on a bad formula/condition.
-		Rows whose condition is falsey are skipped (not added to the slip)."""
+		Rows whose condition is falsey in this full-cycle context are still returned
+		with a zero default_amount: the condition may depend on period fields
+		(e.g. leave_without_pay > 0) that only the salary slip knows, so the slip
+		re-evaluates it."""
 		evaluated_components = []
 		for struct_row in rows:
 			condition = sanitize_expression(struct_row.condition)
 			formula = sanitize_expression(struct_row.formula)
 			amount = flt(struct_row.amount)
+			condition_met = True
 
 			try:
 				if condition and not _safe_eval(condition, COMPONENT_EVAL_GLOBALS.copy(), data):
-					continue
-				if struct_row.amount_based_on_formula and formula:
+					condition_met = False
+					default_amount = 0
+				elif struct_row.amount_based_on_formula and formula:
 					default_amount = flt(
 						_safe_eval(formula, COMPONENT_EVAL_GLOBALS.copy(), data),
 						struct_row.precision("amount"),
@@ -462,7 +467,8 @@ class SalaryStructureAssignment(Document):
 				)
 				raise
 
-			data[struct_row.abbr] = default_amount
+			if condition_met:
+				data[struct_row.abbr] = default_amount
 
 			evaluated_component_row = frappe._dict(
 				default_amount=default_amount,
