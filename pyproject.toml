@@ -81,4 +81,4 @@ index_html_path = "./hrms/www/roster.html"
 
 [tool.bench.frappe-dependencies]
 frappe = ">=16.50.0,<17.0.0"
-erpnext = ">=16.0.0,<17.0.0"
+erpnext = ">=16.50.0,<17.0.0"
