@@ -335,12 +335,25 @@ def make_return_entry(
 	currency,
 	exchange_rate,
 	mode_of_payment=None,
+	bank_account=None,
 ):
 	bank_cash_account = get_default_bank_cash_account(
-		company, account_type="Cash", mode_of_payment=mode_of_payment
+		company,
+		account_type="Cash",
+		mode_of_payment=None if bank_account else mode_of_payment,
+		account=bank_account,
 	)
-	if not bank_cash_account:
-		frappe.throw(_("Please set a Default Cash Account in Company defaults"))
+
+	if not (bank_cash_account.get("account") or bank_cash_account.get("name")):
+		frappe.msgprint(
+			_(
+				"Couldn't automatically pick a Bank/Cash Account for this return. Please set one in the"
+				" Accounting Entries below, or set a Default Cash Account in the {0} to avoid this next"
+				" time."
+			).format(get_link_to_form("Company", company + "#accounts_tab", _("Company"))),
+			title=_("Bank/Cash Account Not Set"),
+			indicator="orange",
+		)
 
 	advance_account_currency = frappe.db.get_value("Account", advance_account, "account_currency")
 

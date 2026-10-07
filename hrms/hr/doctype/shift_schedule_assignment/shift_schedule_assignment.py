@@ -87,6 +87,7 @@ class ShiftScheduleAssignment(Document):
 					self.create_individual_assignment(
 						shift_schedule.shift_type, individual_assignment_start, date
 					)
+					individual_assignment_start = None
 
 			elif individual_assignment_start:
 				self.create_individual_assignment(
