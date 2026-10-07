@@ -2,6 +2,7 @@
  "actions": [],
  "creation": "2019-05-09 15:47:39.760406",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/leave-ledger-entry",
  "engine": "InnoDB",
  "field_order": [
   "employee",
@@ -122,11 +123,12 @@
    "reqd": 1
   }
  ],
+ "icon": "book-open",
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-09-01 21:42:50.393703",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Ledger Entry",

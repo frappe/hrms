@@ -3,6 +3,7 @@
  "autoname": "HR-LPOL-ASSGN-.#####",
  "creation": "2020-08-19 13:02:43.343666",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/leave-policy-assignment",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -46,12 +47,14 @@
    "reqd": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "assignment_based_on",
    "fieldtype": "Select",
    "label": "Assignment based on",
    "options": "\nLeave Period\nJoining Date"
   },
   {
+   "allow_in_quick_entry": 1,
    "depends_on": "eval:doc.assignment_based_on == \"Leave Period\"",
    "fieldname": "leave_period",
    "fieldtype": "Link",
@@ -97,6 +100,7 @@
   },
   {
    "default": "0",
+   "allow_in_quick_entry": 1,
    "fieldname": "carry_forward",
    "fieldtype": "Check",
    "label": "Add unused leaves from previous allocations"
@@ -111,9 +115,10 @@
    "print_hide": 1
   }
  ],
+ "icon": "user-check",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-09-01 18:39:51.520758",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Policy Assignment",

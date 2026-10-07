@@ -32,6 +32,7 @@
    "fieldtype": "Percent",
    "in_list_view": 1,
    "label": "Percent",
+   "non_negative": 1,
    "reqd": 1
   },
   {
@@ -45,6 +46,7 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Min Taxable Income",
+   "non_negative": 1,
    "options": "currency"
   },
   {
@@ -57,12 +59,13 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Max Taxable Income",
+   "non_negative": 1,
    "options": "currency"
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2024-03-27 13:09:50.699638",
+ "modified": "2026-08-06 13:01:43.187327",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Income Tax Slab Other Charges",

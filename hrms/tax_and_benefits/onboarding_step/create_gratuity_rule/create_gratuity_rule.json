@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Create Gratuity Rule",
+ "creation": "2026-10-05 12:00:00.000000",
+ "description": "How gratuity is calculated from years of service. See [Gratuity Rule](https://docs.frappe.io/hr/gratuity-rule).",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "Create Gratuity Rule",
+ "owner": "Administrator",
+ "reference_document": "Gratuity Rule",
+ "show_form_tour": 0,
+ "show_full_form": 1,
+ "title": "Set up a gratuity rule",
+ "validate_action": 1
+}

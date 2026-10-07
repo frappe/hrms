@@ -5,6 +5,7 @@
  "autoname": "Prompt",
  "creation": "2018-05-09 12:47:26.983095",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/employee-tax-exemption-declaration",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -29,7 +30,8 @@
    "fieldname": "max_amount",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Max Exemption Amount"
+   "label": "Max Exemption Amount",
+   "non_negative": 1
   },
   {
    "default": "1",
@@ -43,8 +45,9 @@
    "label": "Description"
   }
  ],
+ "icon": "tags",
  "links": [],
- "modified": "2026-05-27 00:00:00.000000",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Tax Exemption Sub Category",

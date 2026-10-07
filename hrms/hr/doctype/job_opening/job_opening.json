@@ -6,6 +6,7 @@
  "creation": "2013-01-15 16:13:36",
  "description": "Description of a Job Opening",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/job-opening",
  "document_type": "Document",
  "engine": "InnoDB",
  "field_order": [
@@ -66,6 +67,7 @@
   {
    "fieldname": "status",
    "fieldtype": "Select",
+   "hidden": 1,
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
@@ -150,6 +152,7 @@
    "fieldname": "lower_range",
    "fieldtype": "Currency",
    "label": "Lower Range",
+   "non_negative": 1,
    "options": "currency",
    "precision": "0"
   },
@@ -157,6 +160,7 @@
    "fieldname": "upper_range",
    "fieldtype": "Currency",
    "label": "Upper Range",
+   "non_negative": 1,
    "options": "currency",
    "precision": "0"
   },
@@ -280,11 +284,11 @@
   }
  ],
  "has_web_view": 1,
- "icon": "fa fa-bookmark",
+ "icon": "briefcase-business",
  "idx": 1,
  "is_published_field": "publish",
  "links": [],
- "modified": "2026-07-20 18:22:48.627602",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",

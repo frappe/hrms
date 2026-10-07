@@ -4,6 +4,7 @@
  "autoname": "HR-INT-.YYYY.-.####",
  "creation": "2021-04-12 15:03:11.524090",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/interview",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -192,6 +193,7 @@
    "reqd": 1
   }
  ],
+ "icon": "messages-square",
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [
@@ -200,7 +202,7 @@
    "link_fieldname": "interview"
   }
  ],
- "modified": "2026-09-01 18:39:51.520758",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Interview",

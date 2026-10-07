@@ -4,6 +4,7 @@
  "autoname": "naming_series:",
  "creation": "2022-01-17 18:36:51.450395",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/employee-advance",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -100,6 +101,7 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Advance Amount",
+   "non_negative": 1,
    "options": "currency",
    "reqd": 1
   },
@@ -242,9 +244,10 @@
   }
  ],
  "grid_page_length": 50,
+ "icon": "hand-coins",
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-10 23:18:24.203679",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Advance",

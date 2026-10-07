@@ -4,6 +4,7 @@
  "autoname": "naming_series:",
  "creation": "2016-09-03 14:14:51.788550",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/vehicle-log",
  "document_type": "Document",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -97,6 +98,7 @@
    "fieldname": "odometer",
    "fieldtype": "Int",
    "label": "Current Odometer value ",
+   "non_negative": 1,
    "reqd": 1
   },
   {
@@ -108,12 +110,14 @@
   {
    "fieldname": "fuel_qty",
    "fieldtype": "Float",
-   "label": "Fuel Qty"
+   "label": "Fuel Qty",
+   "non_negative": 1
   },
   {
    "fieldname": "price",
    "fieldtype": "Currency",
-   "label": "Fuel Price"
+   "label": "Fuel Price",
+   "non_negative": 1
   },
   {
    "fieldname": "column_break_15",
@@ -163,9 +167,10 @@
    "fieldtype": "Column Break"
   }
  ],
+ "icon": "car",
  "is_submittable": 1,
  "links": [],
- "modified": "2024-03-27 13:10:58.330593",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Vehicle Log",

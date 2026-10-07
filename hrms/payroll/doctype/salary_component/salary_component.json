@@ -5,6 +5,7 @@
  "autoname": "field:salary_component",
  "creation": "2016-06-30 15:42:43.631931",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/salary-component",
  "document_type": "Setup",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -137,7 +138,8 @@
    "description": "If greater than zero, this sets the maximum benefit amount assignable to any employee",
    "fieldname": "max_benefit_amount",
    "fieldtype": "Currency",
-   "label": "Max Benefit Amount (Yearly)"
+   "label": "Max Benefit Amount (Yearly)",
+   "non_negative": 1
   },
   {
    "fieldname": "column_break_9",
@@ -192,7 +194,8 @@
    "depends_on": "eval:doc.amount_based_on_formula!==1",
    "fieldname": "amount",
    "fieldtype": "Currency",
-   "label": "Amount"
+   "label": "Amount",
+   "non_negative": 1
   },
   {
    "fieldname": "column_break_28",
@@ -292,10 +295,10 @@
    "label": "Payout Unclaimed Amount in Final Payroll Cycle"
   }
  ],
- "icon": "fa fa-flag",
+ "icon": "puzzle",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-09-15 12:00:00.000000",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",

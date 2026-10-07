@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Create Benefit Application",
+ "creation": "2026-10-05 12:00:00.000000",
+ "description": "How an employee splits their flexible benefit amount across components. See [Employee Benefit Application](https://docs.frappe.io/hr/employee-benefit-application).",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "Create Employee Benefit Application",
+ "owner": "Administrator",
+ "reference_document": "Employee Benefit Application",
+ "show_form_tour": 0,
+ "show_full_form": 1,
+ "title": "Choose flexible benefits",
+ "validate_action": 1
+}

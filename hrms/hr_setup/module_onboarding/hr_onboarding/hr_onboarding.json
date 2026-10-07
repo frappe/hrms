@@ -1,0 +1,59 @@
+{
+ "allow_roles": [
+  {
+   "role": "System Manager"
+  },
+  {
+   "role": "HR Manager"
+  }
+ ],
+ "creation": "2026-10-05 12:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Module Onboarding",
+ "idx": 0,
+ "is_complete": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "HR Setup",
+ "name": "HR Onboarding",
+ "owner": "Administrator",
+ "steps": [
+  {
+   "is_optional": 0,
+   "step": "Create Employee"
+  },
+  {
+   "is_optional": 0,
+   "step": "Complete Recruitment Onboarding"
+  },
+  {
+   "is_optional": 0,
+   "step": "Complete Tenure Onboarding"
+  },
+  {
+   "is_optional": 0,
+   "step": "Complete Shift and Attendance Onboarding"
+  },
+  {
+   "is_optional": 0,
+   "step": "Complete Leaves Onboarding"
+  },
+  {
+   "is_optional": 0,
+   "step": "Complete Expenses Onboarding"
+  },
+  {
+   "is_optional": 0,
+   "step": "Complete Payroll Onboarding"
+  },
+  {
+   "is_optional": 0,
+   "step": "Complete Tax and Benefits Onboarding"
+  },
+  {
+   "is_optional": 0,
+   "step": "Complete Performance Onboarding"
+  }
+ ],
+ "title": "Get to know Frappe HR"
+}

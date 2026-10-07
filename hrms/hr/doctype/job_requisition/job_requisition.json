@@ -5,6 +5,7 @@
  "autoname": "naming_series:",
  "creation": "2022-08-29 19:00:53.358248",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/job-requisition",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -48,6 +49,7 @@
    "fieldtype": "Int",
    "in_list_view": 1,
    "label": "No of. Positions",
+   "non_negative": 1,
    "reqd": 1
   },
   {
@@ -55,6 +57,7 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Expected Compensation",
+   "non_negative": 1,
    "options": "Company:company:default_currency",
    "reqd": 1
   },
@@ -196,6 +199,7 @@
    "fieldtype": "Column Break"
   }
  ],
+ "icon": "clipboard-pen",
  "index_web_pages_for_search": 1,
  "links": [
   {
@@ -203,7 +207,7 @@
    "link_fieldname": "job_requisition"
   }
  ],
- "modified": "2026-04-09 18:15:35.113740",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Requisition",

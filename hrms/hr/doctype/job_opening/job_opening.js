@@ -11,6 +11,20 @@ frappe.ui.form.on("Job Opening", {
 			};
 		});
 	},
+	refresh: function (frm) {
+		frm.trigger("add_status_toggle_button");
+	},
+	add_status_toggle_button: function (frm) {
+		if (frm.is_new()) return;
+
+		const is_open = frm.doc.status === "Open";
+		const label = is_open ? __("Close Job Opening") : __("Reopen Job Opening");
+
+		frm.add_custom_button(label, () => {
+			frm.set_value("status", is_open ? "Closed" : "Open");
+			frm.save();
+		});
+	},
 	designation: function (frm) {
 		if (frm.doc.designation) {
 			frm.set_value("job_title", frm.doc.designation);

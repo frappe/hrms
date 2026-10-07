@@ -7,15 +7,17 @@ app_license = "GNU General Public License (v3)"
 required_apps = ["frappe/erpnext"]
 source_link = "http://github.com/frappe/hrms"
 app_logo_url = "/assets/hrms/images/frappe-hr-logo.svg"
-app_home = "/desk/people"
+app_home = "/desk/hr-setup"
 
 add_to_apps_screen = [
 	{
 		"name": "hrms",
 		"logo": "/assets/hrms/images/frappe-hr-logo.svg",
 		"title": "Frappe HR",
-		"route": "/desk/people",
+		"route": app_home,
+		"setup_wizard_text": "Let's build a workplace your team will love.",
 		"has_permission": "hrms.hr.utils.check_app_permission",
+		"sequence_id": 2,
 	}
 ]
 
@@ -28,6 +30,8 @@ app_include_js = [
 	"hrms.bundle.js",
 ]
 app_include_css = "hrms.bundle.css"
+code_only_modules = {"HR": ["HR Setup"]}
+app_include_icons = ["/assets/hrms/icons/module-icons.svg"]
 
 # website
 
@@ -102,7 +106,10 @@ after_migrate = "hrms.setup.update_select_perm_after_install"
 
 setup_wizard_requires = "assets/hrms/js/setup_wizard.js"
 setup_wizard_stages = "hrms.setup_wizard.get_setup_stages"
-setup_wizard_complete = "hrms.subscription_utils.update_erpnext_access"
+setup_wizard_complete = [
+	"hrms.subscription_utils.update_erpnext_access",
+	"hrms.subscription_utils.set_hrms_as_default_app",
+]
 
 extend_bootinfo = "hrms.utils.extend_bootinfo"
 

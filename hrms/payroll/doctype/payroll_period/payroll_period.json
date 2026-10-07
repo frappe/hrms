@@ -4,6 +4,7 @@
  "autoname": "Prompt",
  "creation": "2018-04-13 15:18:53.698553",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/payroll-period",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -52,8 +53,9 @@
    "options": "Payroll Period Date"
   }
  ],
+ "icon": "calendar-range",
  "links": [],
- "modified": "2024-05-07 17:27:51.903593",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Period",

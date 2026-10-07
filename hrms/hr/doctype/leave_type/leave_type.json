@@ -5,26 +5,25 @@
  "autoname": "field:leave_type_name",
  "creation": "2013-02-21 09:55:58",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/leave-type",
  "document_type": "Setup",
  "engine": "InnoDB",
  "field_order": [
   "leave_type_name",
-  "max_leaves_allowed",
-  "applicable_after",
-  "max_continuous_days_allowed",
-  "column_break_3",
-  "is_carry_forward",
+  "is_compensatory",
   "is_lwp",
   "is_ppl",
   "fraction_of_daily_salary_per_leave",
-  "is_optional_leave",
+  "column_break_3",
   "allow_negative",
   "allow_over_allocation",
   "include_holiday",
-  "is_compensatory",
+  "is_optional_leave",
   "carry_forward_section",
+  "is_carry_forward",
   "maximum_carry_forwarded_leaves",
   "expire_carry_forwarded_leaves_after_days",
+  "column_break_lfjz",
   "encashment",
   "allow_encashment",
   "max_encashable_leaves",
@@ -36,7 +35,13 @@
   "earned_leave_frequency",
   "column_break_22",
   "allocate_on_day",
-  "rounding"
+  "rounding",
+  "limits_tab",
+  "max_leaves_allowed",
+  "max_continuous_days_allowed",
+  "column_break_bsas",
+  "applicable_after",
+  "connections_tab"
  ],
  "fields": [
   {
@@ -52,19 +57,22 @@
   {
    "fieldname": "max_leaves_allowed",
    "fieldtype": "Float",
-   "label": "Maximum Leave Allocation Allowed per Leave Period"
+   "label": "Maximum Leave Allocation Allowed per Leave Period",
+   "non_negative": 1
   },
   {
    "description": "Minimum calendar days required since Date of Joining to apply for this leave",
    "fieldname": "applicable_after",
    "fieldtype": "Int",
-   "label": "Allow Leave Application After (Calendar Days)"
+   "label": "Allow Leave Application After (Calendar Days)",
+   "non_negative": 1
   },
   {
    "fieldname": "max_continuous_days_allowed",
    "fieldtype": "Int",
    "in_list_view": 1,
    "label": "Maximum Consecutive Leaves Allowed",
+   "non_negative": 1,
    "oldfieldname": "max_days_allowed",
    "oldfieldtype": "Data"
   },
@@ -77,7 +85,7 @@
    "fieldname": "is_carry_forward",
    "fieldtype": "Check",
    "in_list_view": 1,
-   "label": "Is Carry Forward",
+   "label": "Carry Forward",
    "oldfieldname": "is_carry_forward",
    "oldfieldtype": "Check"
   },
@@ -93,7 +101,7 @@
    "description": "These leaves are holidays permitted by the company however, availing it is optional for an Employee.",
    "fieldname": "is_optional_leave",
    "fieldtype": "Check",
-   "label": "Is Optional Leave"
+   "label": "Leave for optional holiday"
   },
   {
    "default": "0",
@@ -114,17 +122,12 @@
    "label": "Is Compensatory"
   },
   {
-   "collapsible": 1,
-   "depends_on": "eval: doc.is_carry_forward == 1",
-   "fieldname": "carry_forward_section",
-   "fieldtype": "Section Break",
-   "label": "Carry Forward"
-  },
-  {
+   "depends_on": "is_carry_forward",
    "description": "Calculated in days",
    "fieldname": "expire_carry_forwarded_leaves_after_days",
    "fieldtype": "Int",
-   "label": "Expire Carry Forwarded Leaves (Days)"
+   "label": "Expire Carry Forwarded Leaves (Days)",
+   "non_negative": 1
   },
   {
    "collapsible": 1,
@@ -175,7 +178,8 @@
    "depends_on": "is_carry_forward",
    "fieldname": "maximum_carry_forwarded_leaves",
    "fieldtype": "Float",
-   "label": "Maximum Carry Forwarded Leaves"
+   "label": "Maximum Carry Forwarded Leaves",
+   "non_negative": 1
   },
   {
    "fieldname": "column_break_17",
@@ -230,12 +234,38 @@
    "fieldtype": "Int",
    "label": "Non-Encashable Leaves",
    "non_negative": 1
+  },
+  {
+   "fieldname": "limits_tab",
+   "fieldtype": "Tab Break",
+   "label": "Limits"
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "is_carry_forward",
+   "fieldname": "carry_forward_section",
+   "fieldtype": "Section Break",
+   "label": "Carry Forward"
+  },
+  {
+   "fieldname": "column_break_lfjz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "connections_tab",
+   "fieldtype": "Tab Break",
+   "label": "Connections",
+   "show_dashboard": 1
+  },
+  {
+   "fieldname": "column_break_bsas",
+   "fieldtype": "Column Break"
   }
  ],
- "icon": "fa fa-flag",
+ "icon": "tag",
  "idx": 1,
  "links": [],
- "modified": "2026-05-07 18:26:27.583525",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Type",
@@ -269,6 +299,7 @@
    "role": "Employee"
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
