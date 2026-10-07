@@ -49,7 +49,7 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		names = [row.activity_name for row in onboarding.activities]
 		standard = [activity["title"] for activity in STANDARD_ACTIVITIES]
 		self.assertEqual(names, [*standard, "Assign ID Card", "Assign a laptop"])
-		self.assertTrue(all(row.status == "Pending" for row in onboarding.activities))
+		self.assertFalse([row for row in onboarding.activities if row.completed or row.skipped or row.status])
 		self.assertEqual(get_row(onboarding, "Assign Leave Policy").action, "Assign")
 		self.assertEqual(
 			get_row(onboarding, "Assign Leave Policy").reference_doctype, "Leave Policy Assignment"
@@ -99,7 +99,7 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		onboarding.create_user()
 		onboarding.reload()
 		self.assertEqual(onboarding.boarding_status, "In Process")
-		self.assertEqual(get_row(onboarding, "Create User").status, "Completed")
+		self.assertTrue(get_row(onboarding, "Create User").completed)
 
 	def test_create_user_uses_the_selected_email(self):
 		onboarding = create_employee_onboarding(submit=False)
@@ -138,8 +138,8 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		onboarding.submit()
 
 		self.assertEqual(onboarding.boarding_status, "Completed")
-		self.assertEqual(get_row(onboarding, "Assign ID Card").status, "Completed")
-		self.assertEqual(get_row(onboarding, "Create Employee").status, "Skipped")
+		self.assertTrue(get_row(onboarding, "Assign ID Card").completed)
+		self.assertTrue(get_row(onboarding, "Create Employee").skipped)
 
 	def test_employee_is_created_from_the_onboarding(self):
 		onboarding = create_employee_onboarding(submit=False)
@@ -163,8 +163,8 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		employee = onboarding.create_employee()
 
 		onboarding.reload()
-		self.assertEqual(get_row(onboarding, "Create Employee").status, "Completed")
-		self.assertEqual(get_row(onboarding, "Assign Holiday List").status, "Pending")
+		self.assertTrue(get_row(onboarding, "Create Employee").completed)
+		self.assertFalse(get_row(onboarding, "Assign Holiday List").completed)
 
 		assignment = frappe.get_doc(
 			{
@@ -183,7 +183,7 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		onboarding.reload()
 
 		row = get_row(onboarding, "Assign Holiday List")
-		self.assertEqual(row.status, "Completed")
+		self.assertTrue(row.completed)
 		self.assertEqual(row.reference_name, assignment.name)
 
 	def test_company_holiday_list_prefers_the_company_assignment(self):
@@ -212,14 +212,52 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		onboarding.skip_activity(get_row(onboarding, "Assign Shift Type").name)
 		onboarding.reload()
 
-		self.assertEqual(get_row(onboarding, "Assign Shift Type").status, "Skipped")
+		self.assertTrue(get_row(onboarding, "Assign Shift Type").skipped)
+
+	def test_progress_status_is_set_by_hand_and_survives_a_resave(self):
+		onboarding = create_employee_onboarding(submit=False)
+		row = get_row(onboarding, "Create Employee")
+
+		onboarding.set_activity_progress(row.name, "Stuck")
+		onboarding.reload()
+		self.assertEqual(get_row(onboarding, "Create Employee").status, "Stuck")
+		self.assertEqual(onboarding.boarding_status, "In Process")
+
+		onboarding.save()
+		self.assertEqual(get_row(onboarding, "Create Employee").status, "Stuck")
+
+	def test_progress_status_clears_by_hand_and_when_the_activity_finishes(self):
+		onboarding = create_employee_onboarding(submit=False)
+		stuck, manual = get_row(onboarding, "Create Employee"), get_row(onboarding, "Assign ID Card")
+
+		onboarding.set_activity_progress(stuck.name, "Stuck")
+		onboarding.set_activity_progress(stuck.name, None)
+		onboarding.set_activity_progress(manual.name, "In Progress")
+		onboarding.complete_activity(manual.name)
+		onboarding.reload()
+
+		self.assertFalse(get_row(onboarding, "Create Employee").status)
+		self.assertFalse(get_row(onboarding, "Assign ID Card").status)
+		self.assertTrue(get_row(onboarding, "Assign ID Card").completed)
+
+	def test_progress_status_cannot_finish_or_reopen_an_activity(self):
+		onboarding = create_employee_onboarding(submit=False)
+		row = get_row(onboarding, "Assign Shift Type")
+
+		with self.assertRaises(frappe.ValidationError):
+			onboarding.set_activity_progress(row.name, "Completed")
+
+		onboarding.skip_activity(row.name)
+		onboarding.reload()
+		with self.assertRaises(frappe.ValidationError):
+			onboarding.set_activity_progress(row.name, "In Progress")
 
 	def test_only_manual_activities_are_completed_by_hand(self):
 		onboarding = create_employee_onboarding(submit=False)
 
 		onboarding.complete_activity(get_row(onboarding, "Assign ID Card").name)
 		onboarding.reload()
-		self.assertEqual(get_row(onboarding, "Assign ID Card").status, "Completed")
+		self.assertTrue(get_row(onboarding, "Assign ID Card").completed)
 
 		with self.assertRaises(frappe.ValidationError):
 			onboarding.complete_activity(get_row(onboarding, "Create Employee").name)
@@ -283,7 +321,7 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		onboarding.mark_onboarding_as_completed()
 
 		self.assertEqual(onboarding.boarding_status, "Completed")
-		self.assertTrue(all(row.status in ("Completed", "Skipped") for row in onboarding.activities))
+		self.assertTrue(all(row.completed or row.skipped for row in onboarding.activities))
 
 
 class TestEmployeeOnboardingActivity(HRMSTestSuite):

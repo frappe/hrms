@@ -2,7 +2,9 @@ import { get_action_handler } from "./onboarding_actions.js";
 
 frappe.provide("hrms.ui");
 
-const STATUS = { Completed: "done", Skipped: "skipped" };
+const STATUS = { "In Progress": "in_progress", Stuck: "stuck" };
+
+const ROW_STATUS = { in_progress: "In Progress", stuck: "Stuck" };
 
 hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 	constructor({ frm }) {
@@ -13,6 +15,11 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 			on_assign: (item, user) => this.call("assign_activity", { row: item.id, user }),
 			on_due_date_change: (item, due_date) =>
 				this.call("set_activity_due_date", { row: item.id, due_date }),
+			on_status_change: (item, status) =>
+				this.call("set_activity_progress", {
+					row: item.id,
+					status: ROW_STATUS[status] || null,
+				}),
 		});
 	}
 
@@ -25,20 +32,22 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 
 	get_item(row) {
 		const handler = get_action_handler(row.action);
-		const status = STATUS[row.status] || "pending";
+		const state = row.completed ? "done" : row.skipped ? "skipped" : "open";
 		const saved = !this.frm.is_new() && !row.__islocal;
 
 		return {
 			id: row.name,
 			label: __(row.activity_name),
-			status,
+			done: Boolean(row.completed),
+			skipped: Boolean(row.skipped),
+			status: STATUS[row.status],
 			description: row.description && frappe.utils.html2text(row.description),
 			value: handler.get_value(this, row),
 			assignee: row.user,
 			due_date: row.due_date,
 			locked: this.get_lock_reason(row) || handler.get_lock_reason?.(this, row),
 			skippable: saved,
-			actions: handler.get_actions(this, row, status),
+			actions: handler.get_actions(this, row, state),
 		};
 	}
 
@@ -48,7 +57,7 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 		const needed = (this.frm.doc.activities || []).find(
 			(other) => other.activity === row.depends_on_activity,
 		);
-		if (!needed || needed.status === "Completed") return null;
+		if (!needed || needed.completed) return null;
 		return __("Needs: {0}", [__(needed.activity_name)]);
 	}
 

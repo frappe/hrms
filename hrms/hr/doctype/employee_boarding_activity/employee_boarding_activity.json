@@ -20,6 +20,7 @@
   "duration",
   "column_break_3",
   "completed",
+  "skipped",
   "task",
   "task_weight",
   "required_for_employee_creation",
@@ -79,9 +80,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Pending\nCompleted\nSkipped",
-   "default": "Pending",
-   "read_only": 1,
+   "options": "\nIn Progress\nStuck",
    "in_list_view": 0,
    "depends_on": "eval:doc.parenttype=='Employee Onboarding'"
   },
@@ -174,11 +173,18 @@
    "in_list_view": 1,
    "label": "Begin On (Days)",
    "non_negative": 1
+  },
+  {
+   "fieldname": "skipped",
+   "fieldtype": "Check",
+   "label": "Skipped",
+   "read_only": 1,
+   "depends_on": "eval:doc.parenttype=='Employee Onboarding'"
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2026-10-07 15:08:05.907477",
+ "modified": "2026-10-07 16:38:22.067672",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Boarding Activity",

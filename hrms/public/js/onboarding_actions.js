@@ -18,8 +18,8 @@ const EMPLOYEE_FIELDS = [
 const ACTION_HANDLERS = {
 	"Create User": {
 		get_value: (list, row) => row.reference_name,
-		get_actions: (list, row, status) =>
-			status === "done"
+		get_actions: (list, row, state) =>
+			state === "done"
 				? [open_action("User", row.reference_name)]
 				: [{ label: __("Create"), onclick: () => open_fields_dialog(list, user_dialog) }],
 	},
@@ -33,9 +33,9 @@ const ACTION_HANDLERS = {
 		// Appointment Letter still requires a Job Applicant, so an offer without one can't have a letter.
 		get_lock_reason: (list) =>
 			list.frm.doc.job_applicant ? null : __("Needs a Job Applicant on the Job Offer"),
-		get_actions: (list, row, status) => {
+		get_actions: (list, row, state) => {
 			const letter = list.frm.doc.appointment_letter;
-			if (status === "done") return [open_action("Appointment Letter", letter)];
+			if (state === "done") return [open_action("Appointment Letter", letter)];
 			if (!letter)
 				return [{ label: __("Create"), onclick: () => create_appointment_letter(list) }];
 			return [{ label: __("Send"), icon: "send", onclick: () => open_letter_dialog(list) }];
@@ -43,8 +43,8 @@ const ACTION_HANDLERS = {
 	},
 	"Create Employee": {
 		get_value: (list, row) => row.reference_name,
-		get_actions: (list, row, status) =>
-			status === "done"
+		get_actions: (list, row, state) =>
+			state === "done"
 				? [open_action("Employee", row.reference_name)]
 				: [
 						{
@@ -56,17 +56,17 @@ const ACTION_HANDLERS = {
 	Assign: {
 		get_value: (list, row) =>
 			row.reference_name || list.get_offer_default(row.reference_doctype)?.value,
-		get_actions: (list, row, status) => {
+		get_actions: (list, row, state) => {
 			if (row.reference_name)
 				return [open_action(row.reference_doctype, row.reference_name)];
-			if (status !== "pending") return [];
+			if (!is_open(state)) return [];
 			return [{ label: __("Assign"), onclick: () => assign(list, row) }];
 		},
 	},
 	Manual: {
 		get_value: () => null,
-		get_actions: (list, row, status) =>
-			status === "pending"
+		get_actions: (list, row, state) =>
+			is_open(state)
 				? [
 						{
 							label: __("Mark Done"),
@@ -95,6 +95,10 @@ const employee_dialog = {
 	method: "create_employee",
 	freeze_message: __("Creating the employee"),
 };
+
+function is_open(state) {
+	return state === "open";
+}
 
 export function get_action_handler(action) {
 	return ACTION_HANDLERS[action] || ACTION_HANDLERS.Manual;

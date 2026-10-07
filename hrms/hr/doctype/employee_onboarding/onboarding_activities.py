@@ -37,7 +37,7 @@ ACTION_DOCTYPES = {
 	"Create Employee": "Employee",
 }
 
-FINISHED = ("Completed", "Skipped")
+PROGRESS_STATUSES = ("In Progress", "Stuck")
 
 
 class OnboardingActivities:
@@ -45,8 +45,9 @@ class OnboardingActivities:
 
 	Standard activities are always on the onboarding, ahead of the template's own rows. A row
 	with an action is completed by the record it creates, not by whoever ticks it; only Manual
-	rows are completed by hand. Row changes are written per row, so several people can work
-	the same onboarding at once without one save overwriting another.
+	rows are completed by hand. An unfinished row may carry a status, In Progress or Stuck.
+	Row changes are written per row, so several people can work the same onboarding at once
+	without one save overwriting another.
 	"""
 
 	def set_activities(self):
@@ -82,7 +83,8 @@ class OnboardingActivities:
 		row.action = row.action or "Manual"
 		if row.action in ACTION_DOCTYPES:
 			row.reference_doctype = ACTION_DOCTYPES[row.action]
-		row.status = row.status or ("Completed" if row.completed else "Pending")
+		if row.status not in PROGRESS_STATUSES or is_finished(row):
+			row.status = None
 		if not row.due_date and self.boarding_begins_on:
 			row.due_date = add_days(self.boarding_begins_on, row.begin_on or 0)
 
@@ -99,19 +101,20 @@ class OnboardingActivities:
 			seen.add(key)
 
 	def reconcile_activities(self) -> list:
-		"""Derive each row's status from the records it creates, and return the changed rows."""
+		"""Complete each row whose record exists, and return the changed rows."""
 		changed = []
 		for row in self.activities:
-			status, reference_name = self.get_activity_state(row)
-			if (row.status, row.reference_name) != (status, reference_name):
-				row.status, row.reference_name = status, reference_name
-				row.completed = int(status == "Completed")
+			completed, reference_name = self.get_activity_state(row)
+			if (row.completed, row.reference_name) != (completed, reference_name):
+				row.completed, row.reference_name = completed, reference_name
+				if completed:
+					row.status = None
 				changed.append(row)
 		return changed
 
-	def get_activity_state(self, row) -> tuple[str, str | None]:
-		if row.action == "Manual" or row.status == "Skipped":
-			return row.status, row.reference_name
+	def get_activity_state(self, row) -> tuple[int, str | None]:
+		if row.action == "Manual" or row.skipped:
+			return row.completed, row.reference_name
 
 		reference_name = None
 		match row.action:
@@ -129,7 +132,7 @@ class OnboardingActivities:
 				done = bool(reference_name)
 			case _:
 				done = False
-		return ("Completed" if done else "Pending"), reference_name
+		return int(done), reference_name
 
 	def get_assignment(self, doctype: str) -> str | None:
 		config = ASSIGNMENTS.get(doctype)
@@ -167,10 +170,10 @@ class OnboardingActivities:
 		if self.boarding_status == "Completed":
 			return
 
-		statuses = [row.status for row in self.activities]
-		if statuses and all(status in FINISHED for status in statuses):
+		rows = self.activities
+		if rows and all(is_finished(row) for row in rows):
 			self.boarding_status = "Completed"
-		elif "Completed" in statuses:
+		elif any(row.completed or row.status for row in rows):
 			self.boarding_status = "In Process"
 		else:
 			self.boarding_status = "Pending"
@@ -181,10 +184,10 @@ class OnboardingActivities:
 			return
 
 		for row in self.activities:
-			if row.todo and (row.status in FINISHED or not row.user):
-				close_todo(row.todo, "Closed" if row.status in FINISHED else "Cancelled")
+			if row.todo and (is_finished(row) or not row.user):
+				close_todo(row.todo, "Closed" if is_finished(row) else "Cancelled")
 				row.db_set("todo", None)
-			elif row.user and not row.todo and row.status not in FINISHED:
+			elif row.user and not row.todo and not is_finished(row):
 				row.db_set("todo", self.make_todo(row))
 
 	def make_todo(self, row) -> str:
@@ -234,28 +237,45 @@ class OnboardingActivities:
 		activity = self.get_activity(row)
 		if activity.action != "Manual":
 			frappe.throw(_("{0} is completed by its own record").format(activity.activity_name))
-		self.set_activity_status(activity, "Completed")
+		self.finish_activity(activity, completed=1)
 
 	@frappe.whitelist(methods=["POST"])
 	def skip_activity(self, row: str) -> None:
 		self.check_permission("write")
-		self.set_activity_status(self.get_activity(row), "Skipped")
+		self.finish_activity(self.get_activity(row), skipped=1)
+
+	@frappe.whitelist(methods=["POST"])
+	def set_activity_progress(self, row: str, status: str | None = None) -> None:
+		"""Mark an unfinished activity In Progress or Stuck, or clear that; finishing is by record."""
+		self.check_permission("write")
+		activity = self.get_activity(row)
+		if status and status not in PROGRESS_STATUSES:
+			frappe.throw(_("Status must be In Progress or Stuck"))
+		if is_finished(activity):
+			frappe.throw(_("{0} is already finished").format(activity.activity_name))
+		activity.db_set("status", status or None)
+		self.save_activity_states()
 
 	@frappe.whitelist(methods=["POST"])
 	def sync_activities(self) -> None:
 		self.check_permission("write")
 		self.save_activity_states()
 
-	def set_activity_status(self, activity, status: str):
-		activity.db_set({"status": status, "completed": int(status == "Completed")})
+	def finish_activity(self, activity, completed: int = 0, skipped: int = 0):
+		activity.db_set({"completed": completed, "skipped": skipped, "status": None})
 		self.save_activity_states()
 
 	def complete_remaining_activities(self):
 		for row in self.activities:
-			if row.status not in FINISHED:
-				row.status = "Completed" if row.action == "Manual" else "Skipped"
-				row.completed = int(row.status == "Completed")
+			if not is_finished(row):
+				row.completed = int(row.action == "Manual")
+				row.skipped = int(row.action != "Manual")
+				row.status = None
 		self.boarding_status = "Completed"
+
+
+def is_finished(row) -> bool:
+	return bool(row.completed or row.skipped)
 
 
 def close_todo(name: str, status: str) -> None:
