@@ -1,0 +1,141 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "autoname": "field:title",
+ "creation": "2026-10-07 15:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "title",
+  "action",
+  "reference_doctype",
+  "depends_on_activity",
+  "description",
+  "column_break_defaults",
+  "user",
+  "begin_on",
+  "sequence",
+  "enabled",
+  "is_standard"
+ ],
+ "fields": [
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title",
+   "reqd": 1,
+   "unique": 1,
+   "in_list_view": 1,
+   "translatable": 1
+  },
+  {
+   "fieldname": "action",
+   "fieldtype": "Select",
+   "label": "Action",
+   "options": "Manual\nCreate User\nAppointment Letter\nCreate Employee\nAssign",
+   "default": "Manual",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "description": "What the checklist row opens. Manual rows are marked done by hand."
+  },
+  {
+   "fieldname": "reference_doctype",
+   "fieldtype": "Link",
+   "label": "Assignment Document Type",
+   "options": "DocType",
+   "depends_on": "eval:doc.action=='Assign'",
+   "mandatory_depends_on": "eval:doc.action=='Assign'"
+  },
+  {
+   "fieldname": "depends_on_activity",
+   "fieldtype": "Link",
+   "label": "Needs",
+   "options": "Employee Onboarding Activity",
+   "description": "This row stays locked until the activity it needs is done."
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "column_break_defaults",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "Default Assignee",
+   "options": "User"
+  },
+  {
+   "fieldname": "begin_on",
+   "fieldtype": "Int",
+   "label": "Due After (Days)",
+   "non_negative": 1,
+   "description": "Days after Onboarding Begins On."
+  },
+  {
+   "fieldname": "sequence",
+   "fieldtype": "Int",
+   "label": "Sequence",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enabled",
+   "default": "1",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "is_standard",
+   "fieldtype": "Check",
+   "label": "Is Standard",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "links": [],
+ "modified": "2026-10-07 15:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Employee Onboarding Activity",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "report": 1,
+   "role": "HR User"
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "sequence",
+ "sort_order": "ASC",
+ "states": [],
+ "title_field": "title",
+ "track_changes": 1
+}

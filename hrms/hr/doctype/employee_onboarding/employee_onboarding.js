@@ -14,8 +14,8 @@ frappe.ui.form.on("Employee Onboarding", {
 	},
 
 	onload_post_render: function (frm) {
-		frappe.require("employee_onboarding_wizard.bundle.js", () => {
-			frm.trigger("render_wizard");
+		frappe.require("employee_onboarding_checklist.bundle.js", () => {
+			frm.trigger("render_checklist");
 		});
 	},
 
@@ -31,7 +31,7 @@ frappe.ui.form.on("Employee Onboarding", {
 		}
 
 		frm.trigger("sync_appointment_letter");
-		frm.trigger("render_wizard");
+		frm.trigger("render_checklist");
 	},
 
 	sync_appointment_letter: function (frm) {
@@ -42,44 +42,18 @@ frappe.ui.form.on("Employee Onboarding", {
 		});
 	},
 
-	render_wizard: function (frm) {
-		if (!hrms.ui?.EmployeeOnboardingWizard || !frm.page?.main?.length) return;
+	render_checklist: function (frm) {
+		if (!hrms.ui?.EmployeeOnboardingChecklist) return;
 
-		const $main = frm.page.main;
-		$main.addClass("employee-onboarding-custom-page flex flex-col flex-1");
-
-		let $mount = $main.find(".employee-onboarding-wizard-root");
-		if (!$mount.length) {
-			$mount = $(
-				'<div class="employee-onboarding-wizard-root flex flex-1 w-full min-h-0"></div>',
-			).prependTo($main);
-		}
-
-		try {
-			if (frm._onboarding_wizard?.frm === frm) {
-				frm._onboarding_wizard.refresh_from_frm();
-			} else {
-				frm._onboarding_wizard?.unmount?.();
-				frm._onboarding_wizard = new hrms.ui.EmployeeOnboardingWizard({
-					wrapper: $mount[0],
-					frm,
-				});
-			}
-			frm.layout?.wrapper?.hide();
-		} catch (error) {
-			console.error("Employee Onboarding wizard mount failed", error);
-			frm._onboarding_wizard = null;
-			$mount.remove();
-			frm.layout?.wrapper?.show();
-			frappe.show_alert({
-				message: __("Could not load the onboarding wizard. Please refresh the page."),
-				indicator: "red",
-			});
-		}
+		frm._onboarding_checklist ??= new hrms.ui.EmployeeOnboardingChecklist({ frm });
+		frm._onboarding_checklist.render();
 	},
 
 	employee_onboarding_template: function (frm) {
-		frm.set_value("activities", "");
+		// Standard rows stay; only the previous template's own rows give way.
+		frm.doc.activities = (frm.doc.activities || []).filter((row) => row.action !== "Manual");
+		refresh_field("activities");
+		frm.trigger("render_checklist");
 		if (!frm.doc.employee_onboarding_template) return;
 
 		frappe.call({
@@ -90,9 +64,9 @@ frappe.ui.form.on("Employee Onboarding", {
 			},
 			callback: function (r) {
 				if (!r.message) return;
-				r.message.forEach((d) => frm.add_child("activities", d));
+				r.message.forEach((d) => frm.add_child("activities", { ...d, action: "Manual" }));
 				refresh_field("activities");
-				frm._onboarding_wizard?.refresh_from_frm();
+				frm.trigger("render_checklist");
 			},
 		});
 
@@ -109,8 +83,11 @@ frappe.ui.form.on("Employee Onboarding", {
 					}),
 				);
 				refresh_field("documents");
-				frm._onboarding_wizard?.refresh_from_frm();
 			});
+	},
+
+	job_applicant: function (frm) {
+		frm.trigger("render_checklist");
 	},
 
 	job_offer: function (frm) {

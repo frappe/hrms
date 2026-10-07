@@ -23,6 +23,7 @@ def after_install():
 	setup_repost_defaults()
 	create_default_role_profiles()
 	create_onboarding_candidate_role()
+	create_standard_onboarding_activities()
 	run_post_install_patches()
 	add_default_hr_permissions()
 
@@ -769,6 +770,14 @@ def get_lending_docperms_for_ess():
 		"Loan Application": ["read", "write", "create", "delete", "submit"],
 		"Loan Product": ["read"],
 	}
+
+
+def create_standard_onboarding_activities():
+	from hrms.hr.doctype.employee_onboarding_activity.employee_onboarding_activity import (
+		create_standard_activities,
+	)
+
+	create_standard_activities()
 
 
 def create_onboarding_candidate_role():

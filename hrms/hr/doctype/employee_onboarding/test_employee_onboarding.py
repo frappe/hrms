@@ -4,10 +4,10 @@
 import frappe
 from frappe.utils import add_days, getdate
 
-from hrms.hr.doctype.employee_onboarding.employee_onboarding import (
-	ASSIGNMENT_MASTERS,
-	make_employee,
-	split_full_name,
+from hrms.hr.doctype.employee_onboarding.employee_onboarding import make_employee, split_full_name
+from hrms.hr.doctype.employee_onboarding_activity.employee_onboarding_activity import (
+	STANDARD_ACTIVITIES,
+	create_standard_activities,
 )
 from hrms.hr.doctype.job_offer.job_offer import make_employee_onboarding
 from hrms.hr.doctype.job_offer.test_job_offer import create_job_offer
@@ -16,6 +16,9 @@ from hrms.tests.utils import HRMSTestSuite
 
 
 class TestEmployeeOnboarding(HRMSTestSuite):
+	def setUp(self):
+		create_standard_activities()
+
 	def test_split_full_name(self):
 		self.assertEqual(split_full_name("Asha"), ("Asha", "", ""))
 		self.assertEqual(split_full_name("Asha Rao"), ("Asha", "", "Rao"))
@@ -40,30 +43,63 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		self.assertFalse(frappe.db.exists("Project", {"project_name": ("like", "%Employee Onboarding%")}))
 		self.assertFalse([row.task for row in onboarding.activities if row.task])
 
-	def test_assignments_are_seeded_from_the_offer(self):
+	def test_standard_activities_come_first_then_the_onboardings_own(self):
 		onboarding = create_employee_onboarding(submit=False)
 
+		names = [row.activity_name for row in onboarding.activities]
+		standard = [activity["title"] for activity in STANDARD_ACTIVITIES]
+		self.assertEqual(names, [*standard, "Assign ID Card", "Assign a laptop"])
+		self.assertTrue(all(row.status == "Pending" for row in onboarding.activities))
+		self.assertEqual(get_row(onboarding, "Assign Leave Policy").action, "Assign")
 		self.assertEqual(
-			[row.master for row in onboarding.assignments],
-			[master["master"] for master in ASSIGNMENT_MASTERS],
+			get_row(onboarding, "Assign Leave Policy").reference_doctype, "Leave Policy Assignment"
 		)
-		self.assertTrue(all(row.status == "Pending" for row in onboarding.assignments))
+		self.assertEqual(get_row(onboarding, "Assign ID Card").action, "Manual")
 
-		holiday_row = next(row for row in onboarding.assignments if row.master == "Holiday List")
+	def test_standard_activities_survive_a_resave_without_duplicates(self):
+		onboarding = create_employee_onboarding(submit=False)
+		onboarding.activities = [row for row in onboarding.activities if row.action == "Manual"]
+		onboarding.save()
+
+		names = [row.activity_name for row in onboarding.activities]
+		self.assertEqual(len(names), len(set(names)))
+		self.assertIn("Create Employee", names)
+
+	def test_due_date_defaults_to_the_offset_from_onboarding_start(self):
+		onboarding = create_employee_onboarding(submit=False)
+
+		self.assertEqual(getdate(get_row(onboarding, "Create User").due_date), getdate())
+		self.assertEqual(getdate(get_row(onboarding, "Assign a laptop").due_date), add_days(getdate(), 1))
+
+	def test_disabled_standard_activity_is_not_added(self):
+		frappe.db.set_value("Employee Onboarding Activity", "Assign Shift Schedule", "enabled", 0)
+		self.addCleanup(
+			frappe.db.set_value, "Employee Onboarding Activity", "Assign Shift Schedule", "enabled", 1
+		)
+		onboarding = create_employee_onboarding(submit=False)
+
+		self.assertNotIn("Assign Shift Schedule", [row.activity_name for row in onboarding.activities])
+
+	def test_offer_defaults_come_from_the_job_offer(self):
+		onboarding = create_employee_onboarding(submit=False)
 		offer_holiday_list = frappe.db.get_value("Job Offer", onboarding.job_offer, "holiday_list")
-		self.assertEqual(holiday_row.offer_value, offer_holiday_list)
 
-		shift_row = next(row for row in onboarding.assignments if row.master == "Shift Type")
-		self.assertIsNone(shift_row.offer_value)
+		defaults = onboarding.get_offer_defaults()
+		self.assertEqual(
+			defaults["Holiday List Assignment"], {"fieldname": "holiday_list", "value": offer_holiday_list}
+		)
+		self.assertNotIn("Shift Assignment", defaults)
 
 	def test_boarding_status_tracks_progress(self):
 		onboarding = create_employee_onboarding(with_activities=False)
 		self.assertEqual(onboarding.boarding_status, "Pending")
 
-		onboarding.db_set("documents_requested_on", frappe.utils.now_datetime())
+		onboarding.db_set("company_email", "asha.status@example.com")
 		onboarding.reload()
-		onboarding.save()
+		onboarding.create_user()
+		onboarding.reload()
 		self.assertEqual(onboarding.boarding_status, "In Process")
+		self.assertEqual(get_row(onboarding, "Create User").status, "Completed")
 
 	def test_create_user_uses_the_selected_email(self):
 		onboarding = create_employee_onboarding(submit=False)
@@ -102,8 +138,8 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		onboarding.submit()
 
 		self.assertEqual(onboarding.boarding_status, "Completed")
-		self.assertTrue(all(row.completed for row in onboarding.activities))
-		self.assertTrue(all(row.status == "Skipped" for row in onboarding.assignments))
+		self.assertEqual(get_row(onboarding, "Assign ID Card").status, "Completed")
+		self.assertEqual(get_row(onboarding, "Create Employee").status, "Skipped")
 
 	def test_employee_is_created_from_the_onboarding(self):
 		onboarding = create_employee_onboarding(submit=False)
@@ -126,8 +162,9 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		onboarding.reload()
 		employee = onboarding.create_employee()
 
-		row = next(row for row in onboarding.assignments if row.master == "Holiday List")
-		self.assertEqual(row.status, "Pending")
+		onboarding.reload()
+		self.assertEqual(get_row(onboarding, "Create Employee").status, "Completed")
+		self.assertEqual(get_row(onboarding, "Assign Holiday List").status, "Pending")
 
 		assignment = frappe.get_doc(
 			{
@@ -142,11 +179,11 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		assignment.submit()
 
 		onboarding.reload()
-		onboarding.sync_assignments()
+		onboarding.sync_activities()
 		onboarding.reload()
 
-		row = next(row for row in onboarding.assignments if row.master == "Holiday List")
-		self.assertEqual(row.status, "Assigned")
+		row = get_row(onboarding, "Assign Holiday List")
+		self.assertEqual(row.status, "Completed")
 		self.assertEqual(row.reference_name, assignment.name)
 
 	def test_company_holiday_list_prefers_the_company_assignment(self):
@@ -169,13 +206,75 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 
 		self.assertEqual(onboarding.get_company_holiday_list(), company_list.name)
 
-	def test_skipping_an_assignment_marks_it_skipped(self):
+	def test_skipping_an_activity_marks_it_skipped(self):
 		onboarding = create_employee_onboarding(submit=False)
 
-		onboarding.set_assignment("Shift Type", None)
+		onboarding.skip_activity(get_row(onboarding, "Assign Shift Type").name)
+		onboarding.reload()
 
-		row = next(row for row in onboarding.assignments if row.master == "Shift Type")
-		self.assertEqual(row.status, "Skipped")
+		self.assertEqual(get_row(onboarding, "Assign Shift Type").status, "Skipped")
+
+	def test_only_manual_activities_are_completed_by_hand(self):
+		onboarding = create_employee_onboarding(submit=False)
+
+		onboarding.complete_activity(get_row(onboarding, "Assign ID Card").name)
+		onboarding.reload()
+		self.assertEqual(get_row(onboarding, "Assign ID Card").status, "Completed")
+
+		with self.assertRaises(frappe.ValidationError):
+			onboarding.complete_activity(get_row(onboarding, "Create Employee").name)
+
+	def test_assigning_an_activity_gives_the_user_a_todo_of_their_own(self):
+		onboarding = create_employee_onboarding(submit=False)
+		first, second = (
+			get_test_user("onboarding_first@example.com"),
+			get_test_user("onboarding_second@example.com"),
+		)
+		row = get_row(onboarding, "Create Employee")
+
+		onboarding.assign_activity(row.name, first)
+		onboarding.reload()
+		first_todo = get_row(onboarding, "Create Employee").todo
+		self.assertEqual(frappe.db.get_value("ToDo", first_todo, ["allocated_to", "status"]), (first, "Open"))
+
+		onboarding.assign_activity(row.name, second)
+		onboarding.reload()
+		second_todo = get_row(onboarding, "Create Employee").todo
+		self.assertNotEqual(first_todo, second_todo)
+		self.assertEqual(frappe.db.get_value("ToDo", first_todo, "status"), "Cancelled")
+		self.assertEqual(frappe.db.get_value("ToDo", second_todo, "allocated_to"), second)
+
+	def test_due_date_change_reaches_the_todo(self):
+		onboarding = create_employee_onboarding(submit=False)
+		row = get_row(onboarding, "Create User")
+		onboarding.assign_activity(row.name, get_test_user("onboarding_due@example.com"))
+
+		due_date = add_days(getdate(), 5)
+		onboarding.set_activity_due_date(row.name, str(due_date))
+		onboarding.reload()
+
+		row = get_row(onboarding, "Create User")
+		self.assertEqual(getdate(row.due_date), due_date)
+		self.assertEqual(getdate(frappe.db.get_value("ToDo", row.todo, "date")), due_date)
+
+	def test_finishing_an_activity_closes_its_todo(self):
+		onboarding = create_employee_onboarding(submit=False)
+		row = get_row(onboarding, "Assign ID Card")
+		onboarding.assign_activity(row.name, get_test_user("onboarding_close@example.com"))
+		onboarding.reload()
+		todo = get_row(onboarding, "Assign ID Card").todo
+
+		onboarding.complete_activity(row.name)
+
+		self.assertEqual(frappe.db.get_value("ToDo", todo, "status"), "Closed")
+
+	def test_template_cannot_list_a_standard_activity(self):
+		template = frappe.new_doc("Employee Onboarding Template")
+		template.title = "_Test Template With Standard Row"
+		template.append("activities", {"activity_name": "Create User", "activity": "Create User"})
+
+		with self.assertRaises(frappe.ValidationError):
+			template.insert()
 
 	def test_mark_onboarding_as_completed(self):
 		onboarding = create_employee_onboarding(submit=False)
@@ -184,8 +283,32 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		onboarding.mark_onboarding_as_completed()
 
 		self.assertEqual(onboarding.boarding_status, "Completed")
-		self.assertTrue(all(row.completed for row in onboarding.activities))
-		self.assertTrue(all(row.status == "Skipped" for row in onboarding.assignments))
+		self.assertTrue(all(row.status in ("Completed", "Skipped") for row in onboarding.activities))
+
+
+class TestEmployeeOnboardingActivity(HRMSTestSuite):
+	def setUp(self):
+		create_standard_activities()
+
+	def test_standard_activity_cannot_be_deleted(self):
+		with self.assertRaises(frappe.ValidationError):
+			frappe.delete_doc("Employee Onboarding Activity", "Create User")
+
+	def test_standard_activity_keeps_its_action(self):
+		activity = frappe.get_doc("Employee Onboarding Activity", "Create Employee")
+		activity.action = "Manual"
+
+		with self.assertRaises(frappe.ValidationError):
+			activity.save()
+
+	def test_an_action_is_done_by_one_activity_only(self):
+		activity = frappe.new_doc("Employee Onboarding Activity")
+		activity.title = "_Test Second Leave Policy"
+		activity.action = "Assign"
+		activity.reference_doctype = "Leave Policy Assignment"
+
+		with self.assertRaises(frappe.ValidationError):
+			activity.insert()
 
 
 def get_job_applicant():
@@ -246,3 +369,15 @@ def create_employee_onboarding(submit=False, with_activities=True):
 		onboarding.submit()
 
 	return onboarding
+
+
+def get_row(onboarding, activity_name):
+	return next(row for row in onboarding.activities if row.activity_name == activity_name)
+
+
+def get_test_user(email):
+	if not frappe.db.exists("User", email):
+		frappe.get_doc({"doctype": "User", "email": email, "first_name": email.split("@")[0]}).insert(
+			ignore_permissions=True
+		)
+	return email

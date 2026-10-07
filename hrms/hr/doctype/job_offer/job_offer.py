@@ -537,3 +537,14 @@ def make_employee_onboarding(source_name: str, target_doc: str | Document | None
 		target_doc,
 		set_missing_values,
 	)
+
+
+@frappe.whitelist(methods=["POST"])
+def create_employee_onboarding(
+	job_offer: str, boarding_begins_on: str, date_of_joining: str | None = None
+) -> str:
+	onboarding = make_employee_onboarding(job_offer)
+	onboarding.date_of_joining = onboarding.date_of_joining or date_of_joining
+	onboarding.boarding_begins_on = boarding_begins_on
+	onboarding.insert()
+	return onboarding.name

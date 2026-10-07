@@ -4,6 +4,8 @@
 
 from frappe.model.document import Document
 
+from hrms.hr.doctype.employee_onboarding.onboarding_activities import validate_template_activities
+
 
 class EmployeeOnboardingTemplate(Document):
 	# begin: auto-generated types
@@ -30,4 +32,5 @@ class EmployeeOnboardingTemplate(Document):
 		title: DF.Data
 	# end: auto-generated types
 
-	pass
+	def validate(self):
+		validate_template_activities(self)

@@ -10,39 +10,7 @@ from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe.utils import get_link_to_form, now_datetime
 
-ASSIGNMENT_MASTERS = [
-	{
-		"master": "Holiday List",
-		"offer_field": "holiday_list",
-		"reference_doctype": "Holiday List Assignment",
-		"employee_field": "assigned_to",
-		"filters": {"applicable_for": "Employee"},
-	},
-	{
-		"master": "Leave Policy",
-		"offer_field": "leave_policy",
-		"reference_doctype": "Leave Policy Assignment",
-		"employee_field": "employee",
-	},
-	{
-		"master": "Salary Structure",
-		"offer_field": "salary_structure",
-		"reference_doctype": "Salary Structure Assignment",
-		"employee_field": "employee",
-	},
-	{
-		"master": "Shift Type",
-		"offer_field": None,
-		"reference_doctype": "Shift Assignment",
-		"employee_field": "employee",
-	},
-	{
-		"master": "Shift Schedule",
-		"offer_field": None,
-		"reference_doctype": "Shift Schedule Assignment",
-		"employee_field": "employee",
-	},
-]
+from hrms.hr.doctype.employee_onboarding.onboarding_activities import OnboardingActivities
 
 EMPLOYEE_SELF_SERVICE_ROLE = "Employee Self Service"
 ONBOARDING_CANDIDATE_ROLE = "Employee Onboarding Candidate"
@@ -60,7 +28,7 @@ def split_full_name(full_name: str) -> tuple[str, str, str]:
 	return parts[0], parts[1], " ".join(parts[2:])
 
 
-class EmployeeOnboarding(Document):
+class EmployeeOnboarding(OnboardingActivities, Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -72,9 +40,6 @@ class EmployeeOnboarding(Document):
 		from hrms.hr.doctype.employee_boarding_activity.employee_boarding_activity import (
 			EmployeeBoardingActivity,
 		)
-		from hrms.hr.doctype.employee_onboarding_assignment.employee_onboarding_assignment import (
-			EmployeeOnboardingAssignment,
-		)
 		from hrms.hr.doctype.employee_onboarding_document.employee_onboarding_document import (
 			EmployeeOnboardingDocument,
 		)
@@ -83,7 +48,6 @@ class EmployeeOnboarding(Document):
 		amended_from: DF.Link | None
 		appointment_letter: DF.Link | None
 		appointment_letter_sent_on: DF.Datetime | None
-		assignments: DF.Table[EmployeeOnboardingAssignment]
 		boarding_begins_on: DF.Date
 		boarding_status: DF.Literal["Pending", "In Process", "Completed"]
 		branch: DF.Link | None
@@ -122,15 +86,22 @@ class EmployeeOnboarding(Document):
 		user: DF.Link | None
 	# end: auto-generated types
 
+	def onload(self):
+		self.set_onload("offer_defaults", self.get_offer_defaults())
+
 	def validate(self):
 		self.set_employee()
 		self.validate_duplicate_employee_onboarding()
-		self.set_assignments()
-		self.reconcile_assignments()
+		self.set_activities()
+		self.validate_unique_activities()
+		self.reconcile_activities()
 		self.set_boarding_status()
 
+	def on_update(self):
+		self.sync_todos()
+
 	def before_submit(self):
-		self.complete_remaining_steps()
+		self.complete_remaining_activities()
 
 	def set_employee(self):
 		if not self.employee:
@@ -147,66 +118,6 @@ class EmployeeOnboarding(Document):
 				)
 			)
 
-	def set_assignments(self):
-		if self.assignments:
-			return
-
-		offer = (
-			frappe.db.get_value(
-				"Job Offer",
-				self.job_offer,
-				["holiday_list", "leave_policy", "salary_structure"],
-				as_dict=True,
-			)
-			or frappe._dict()
-		)
-
-		for master in ASSIGNMENT_MASTERS:
-			self.append(
-				"assignments",
-				{
-					"master": master["master"],
-					"offer_value": offer.get(master["offer_field"]) if master["offer_field"] else None,
-					"reference_doctype": master["reference_doctype"],
-					"status": "Pending",
-				},
-			)
-
-	def reconcile_assignments(self) -> bool:
-		"""Tick a row when a real assignment document exists for this employee.
-
-		The assignment can be created from the wizard dialog, from the full form, or
-		anywhere else, so the row is derived rather than set by whoever made it.
-		"""
-		if not self.employee:
-			return False
-
-		changed = False
-		for master in ASSIGNMENT_MASTERS:
-			row = next((row for row in self.assignments if row.master == master["master"]), None)
-			if not row or row.status == "Skipped":
-				continue
-
-			doctype = master["reference_doctype"]
-			filters = {master["employee_field"]: self.employee}
-			filters.update(master.get("filters") or {})
-			filters["docstatus"] = 1 if frappe.get_meta(doctype).is_submittable else 0
-
-			name = frappe.db.get_value(doctype, filters, "name")
-			status = "Assigned" if name else "Pending"
-			if (row.reference_name, row.status) != (name, status):
-				row.reference_name = name
-				row.status = status
-				changed = True
-
-		return changed
-
-	@frappe.whitelist(methods=["POST"])
-	def sync_assignments(self) -> None:
-		self.check_permission("write")
-		if self.reconcile_assignments():
-			self.save()
-
 	@frappe.whitelist()
 	def get_company_holiday_list(self) -> str | None:
 		self.check_permission("read")
@@ -218,28 +129,6 @@ class EmployeeOnboarding(Document):
 			order_by="from_date desc",
 		)
 		return assigned or frappe.db.get_value("Company", self.company, "default_holiday_list")
-
-	def get_step_progress(self) -> list[bool]:
-		return [
-			bool(self.user),
-			bool(self.documents_requested_on),
-			bool(self.appointment_letter),
-			bool(self.employee),
-			bool(self.assignments) and all(row.status != "Pending" for row in self.assignments),
-			bool(self.activities) and all(row.completed for row in self.activities),
-		]
-
-	def set_boarding_status(self):
-		if self.boarding_status == "Completed":
-			return
-
-		progress = self.get_step_progress()
-		if all(progress):
-			self.boarding_status = "Completed"
-		elif any(progress):
-			self.boarding_status = "In Process"
-		else:
-			self.boarding_status = "Pending"
 
 	def get_employee_email(self) -> str | None:
 		return self.company_email or self.personal_email
@@ -258,6 +147,7 @@ class EmployeeOnboarding(Document):
 		if frappe.db.exists("User", email):
 			self.db_set("user", email)
 			self.grant_onboarding_candidate_role()
+			self.save_activity_states()
 			return email
 
 		first_name, middle_name, last_name = split_full_name(self.employee_name)
@@ -277,6 +167,7 @@ class EmployeeOnboarding(Document):
 		user.insert(ignore_permissions=True)
 
 		self.db_set("user", user.name)
+		self.save_activity_states()
 		return user.name
 
 	def grant_onboarding_candidate_role(self) -> None:
@@ -405,6 +296,7 @@ class EmployeeOnboarding(Document):
 			reference_name=self.name,
 		)
 		self.db_set("appointment_letter_sent_on", now_datetime())
+		self.save_activity_states()
 
 	@frappe.whitelist(methods=["POST"])
 	def create_employee(self) -> str:
@@ -420,44 +312,13 @@ class EmployeeOnboarding(Document):
 
 		self.db_set("employee", employee.name)
 		self.grant_employee_self_service()
+		self.save_activity_states()
 		return employee.name
-
-	@frappe.whitelist(methods=["POST"])
-	def set_assignment(self, master: str, reference_name: str | None = None) -> None:
-		self.check_permission("write")
-
-		row = next((row for row in self.assignments if row.master == master), None)
-		if not row:
-			frappe.throw(_("Unknown master {0}").format(frappe.bold(master)))
-
-		row.reference_name = reference_name
-		row.status = "Assigned" if reference_name else "Skipped"
-		self.save()
-
-	@frappe.whitelist(methods=["POST"])
-	def set_activity_completed(self, idx: int, completed: int = 1) -> None:
-		self.check_permission("write")
-
-		row = next((row for row in self.activities if row.idx == int(idx)), None)
-		if not row:
-			frappe.throw(_("Unknown activity"))
-
-		row.completed = int(completed)
-		self.save()
-
-	def complete_remaining_steps(self) -> None:
-		for row in self.assignments:
-			if row.status == "Pending":
-				row.status = "Skipped"
-		for row in self.activities:
-			row.completed = 1
-
-		self.boarding_status = "Completed"
 
 	@frappe.whitelist(methods=["POST"])
 	def mark_onboarding_as_completed(self) -> None:
 		self.check_permission("write")
-		self.complete_remaining_steps()
+		self.complete_remaining_activities()
 		self.save()
 
 

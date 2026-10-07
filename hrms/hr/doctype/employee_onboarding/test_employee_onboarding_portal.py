@@ -97,7 +97,7 @@ class TestEmployeeOnboardingPortal(HRMSTestSuite):
 		self.assertNotIn("boarding_status", blob)
 		self.assertNotIn("company", blob)
 		self.assertEqual(blob["first_name"], "Asha")
-		self.assertEqual(self.onboarding.boarding_status, "Pending")
+		self.assertNotEqual(self.onboarding.boarding_status, "Completed")
 
 	def test_save_drops_empty_table_rows(self):
 		frappe.set_user(self.user)

@@ -32,7 +32,7 @@ function get_assignment_actions() {
 			doctype: "Leave Policy Assignment",
 			master: "Leave Policy",
 			master_field: "leave_policy",
-			prefill: (ctx) => ({ employee: ctx.employee }),
+			prefill: (ctx) => ({ employee: ctx.employee, assignment_based_on: "Leave Period" }),
 			queries: (ctx) => ({
 				leave_policy: { docstatus: 1 },
 				leave_period: { is_active: 1, company: ctx.company },
@@ -117,6 +117,7 @@ function setup_dialog(dialog, action, ctx) {
 		if (!control) continue;
 
 		control.df = { ...control.df, onchange: () => handler(dialog, ctx) };
+		if (dialog.get_value(fieldname)) handler(dialog, ctx);
 	}
 
 	dialog.add_custom_action(__("Edit Full Form"), () => dialog.open_doc(false));
