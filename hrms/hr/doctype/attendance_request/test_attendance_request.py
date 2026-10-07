@@ -8,11 +8,8 @@ from frappe.utils import add_days, add_months, get_year_ending, get_year_start, 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.attendance_request.attendance_request import OverlappingAttendanceRequestError
 from hrms.hr.doctype.leave_application.test_leave_application import make_allocation_record
-<<<<<<< HEAD
-from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
-=======
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
->>>>>>> 9125153 (test(attendance_request): add full leave day tests and fix the auto-absent test order)
+from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
@@ -24,7 +21,13 @@ test_dependencies = ["Employee"]
 
 class TestAttendanceRequest(FrappeTestCase):
 	def setUp(self):
-		for doctype in ["Attendance Request", "Attendance", "Leave Application", "Shift Assignment"]:
+		for doctype in [
+			"Attendance Request",
+			"Attendance",
+			"Leave Application",
+			"Leave Allocation",
+			"Shift Assignment",
+		]:
 			frappe.db.delete(doctype)
 
 		self.from_date = get_year_start(add_months(getdate(), -1))
