@@ -6,7 +6,7 @@
    "label": "Hiring vs Attrition Count"
   }
  ],
- "content": "[{\"id\":\"e2b4d8ab1a\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Hiring vs Attrition Count\",\"col\":12}},{\"id\":\"ae8269534b\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"New Hires (This Year)\",\"col\":4}},{\"id\":\"88bb24db83\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Employee Exits (This Year)\",\"col\":4}},{\"id\":\"544bf99a8c\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Promotions (This Month)\",\"col\":4}},{\"id\":\"Do0km6oB3q\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"New Hires (This Month)\",\"col\":4}},{\"id\":\"90EyF0WfYs\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Exits (This Month)\",\"col\":4}},{\"id\":\"lWsQRmsSwR\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Trainings (This Week)\",\"col\":4}}]",
+ "content": "[{\"id\":\"198cfb3bd1\",\"type\":\"onboarding\",\"data\":{\"onboarding_name\":\"Tenure Onboarding\",\"col\":12}},{\"id\":\"e2b4d8ab1a\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Hiring vs Attrition Count\",\"col\":12}},{\"id\":\"ae8269534b\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"New Hires (This Year)\",\"col\":4}},{\"id\":\"88bb24db83\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Employee Exits (This Year)\",\"col\":4}},{\"id\":\"544bf99a8c\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Promotions (This Month)\",\"col\":4}},{\"id\":\"Do0km6oB3q\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"New Hires (This Month)\",\"col\":4}},{\"id\":\"90EyF0WfYs\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Exits (This Month)\",\"col\":4}},{\"id\":\"lWsQRmsSwR\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Trainings (This Week)\",\"col\":4}}]",
  "creation": "2022-08-20 14:06:34.309347",
  "custom_blocks": [],
  "docstatus": 0,
@@ -18,9 +18,10 @@
  "is_hidden": 0,
  "label": "Tenure",
  "links": [],
- "modified": "2026-08-26 18:34:03.000000",
+ "modified": "2026-10-05 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Tenure",
+ "module_onboarding": "Tenure Onboarding",
  "name": "Tenure",
  "number_cards": [
   {

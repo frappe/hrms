@@ -1,0 +1,47 @@
+{
+ "allow_roles": [
+  {
+   "role": "HR Manager"
+  },
+  {
+   "role": "HR User"
+  }
+ ],
+ "creation": "2026-10-05 12:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Module Onboarding",
+ "idx": 0,
+ "is_complete": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Payroll",
+ "name": "Payroll Onboarding",
+ "owner": "Administrator",
+ "steps": [
+  {
+   "is_optional": 0,
+   "step": "Create Salary Component"
+  },
+  {
+   "is_optional": 0,
+   "step": "Create Salary Structure"
+  },
+  {
+   "is_optional": 0,
+   "step": "Create Salary Structure Assignment"
+  },
+  {
+   "is_optional": 0,
+   "step": "Create Payroll Entry"
+  },
+  {
+   "is_optional": 1,
+   "step": "Create Additional Salary"
+  },
+  {
+   "is_optional": 1,
+   "step": "View Salary Register"
+  }
+ ],
+ "title": "Run your first payroll"
+}

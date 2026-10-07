@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Submit Proof",
+ "creation": "2026-10-05 12:00:00.000000",
+ "description": "Proof of what was declared, so the exemption counts in the final tax. See [Employee Tax Exemption Proof Submission](https://docs.frappe.io/hr/employee-tax-exemption-proof-submission).",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "Create Employee Tax Exemption Proof Submission",
+ "owner": "Administrator",
+ "reference_document": "Employee Tax Exemption Proof Submission",
+ "show_form_tour": 0,
+ "show_full_form": 1,
+ "title": "Submit proof of exemptions",
+ "validate_action": 1
+}

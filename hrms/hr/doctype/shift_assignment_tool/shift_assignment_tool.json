@@ -4,6 +4,7 @@
  "allow_rename": 1,
  "creation": "2024-03-19 15:07:00.469939",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/shift-assignment-tool",
  "engine": "InnoDB",
  "field_order": [
   "action",
@@ -207,9 +208,10 @@
   }
  ],
  "hide_toolbar": 1,
+ "icon": "users",
  "issingle": 1,
  "links": [],
- "modified": "2025-01-13 13:48:33.710186",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment Tool",

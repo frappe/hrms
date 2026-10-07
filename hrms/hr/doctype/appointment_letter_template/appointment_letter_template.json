@@ -4,6 +4,7 @@
  "autoname": "field:template_name",
  "creation": "2019-12-26 12:20:14.219578",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/appointment-letter",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -40,8 +41,9 @@
    "unique": 1
   }
  ],
+ "icon": "file-text",
  "links": [],
- "modified": "2026-09-01 18:39:51.520758",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appointment Letter Template",
