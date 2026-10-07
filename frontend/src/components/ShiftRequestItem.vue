@@ -20,7 +20,7 @@
 			</div>
 		</template>
 		<template #right>
-			<Badge variant="outline" :theme="colorMap[status]" :label="status" size="md" />
+			<Badge variant="outline" :theme="colorMap[status]" :label="__(status)" size="md" />
 			<FeatherIcon name="chevron-right" class="h-5 w-5 text-gray-500" />
 		</template>
 	</ListItem>

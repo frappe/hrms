@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Create Attendance Request",
+ "creation": "2026-10-05 12:00:00.000000",
+ "description": "An employee's request to be marked present for days on duty or working from home. See [Attendance Request](https://docs.frappe.io/hr/attendance-request).",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "Create Attendance Request",
+ "owner": "Administrator",
+ "reference_document": "Attendance Request",
+ "show_form_tour": 0,
+ "show_full_form": 1,
+ "title": "Request attendance",
+ "validate_action": 1
+}

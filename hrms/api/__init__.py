@@ -104,6 +104,7 @@ def get_hr_settings() -> dict:
 		allow_employee_checkin_from_mobile_app=settings.allow_employee_checkin_from_mobile_app,
 		allow_geolocation_tracking=settings.allow_geolocation_tracking,
 		prevent_self_leave_approval=settings.prevent_self_leave_approval,
+		enable_multi_currency_expense_claim=settings.enable_multi_currency_expense_claim,
 	)
 
 
@@ -116,7 +117,7 @@ def get_unread_notifications_count() -> int:
 	)
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def mark_all_notifications_as_read() -> None:
 	frappe.db.set_value(
 		"PWA Notification",
@@ -166,14 +167,11 @@ def get_attendance_for_calendar(employee: str, from_date: str, to_date: str) -> 
 
 
 def get_holidays_for_calendar(employee: str, from_date: str, to_date: str) -> list[str]:
-	if holiday_list := get_holiday_list_for_employee(employee, raise_exception=False):
-		return frappe.get_all(
-			"Holiday",
-			filters={"parent": holiday_list, "holiday_date": ["between", [from_date, to_date]]},
-			pluck="holiday_date",
-		)
+	from hrms.utils.holiday_list import get_holiday_dates_between_range
 
-	return []
+	return get_holiday_dates_between_range(
+		employee, from_date, to_date, raise_exception_for_holiday_list=False
+	)
 
 
 @frappe.whitelist()
@@ -682,23 +680,13 @@ def get_employee_advance_balance() -> list[dict]:
 # Company
 @frappe.whitelist()
 def get_company_currencies() -> dict:
-	Company = frappe.qb.DocType("Company")
-	Currency = frappe.qb.DocType("Currency")
-
-	query = (
-		frappe.qb.from_(Company)
-		.join(Currency)
-		.on(Company.default_currency == Currency.name)
-		.select(
-			Company.name,
-			Company.default_currency,
-			Currency.name.as_("currency"),
-			Currency.symbol.as_("symbol"),
-		)
-	)
-
-	companies = query.run(as_dict=True)
-	return {company.name: (company.default_currency, company.symbol) for company in companies}
+	companies = frappe.get_list("Company", fields=["name", "default_currency"])
+	symbols = get_currency_symbols()
+	return {
+		company.name: (company.default_currency, symbols.get(company.default_currency))
+		for company in companies
+		if company.default_currency in symbols
+	}
 
 
 @frappe.whitelist()
@@ -714,7 +702,10 @@ def get_currency_symbols() -> dict:
 def get_company_cost_center_and_expense_account(company: str) -> dict:
 	frappe.has_permission("Company", "read", company, throw=True)
 	return frappe.db.get_value(
-		"Company", company, ["cost_center", "default_expense_claim_payable_account"], as_dict=True
+		"Company",
+		company,
+		["cost_center", "default_expense_claim_payable_account", "default_payroll_payable_account"],
+		as_dict=True,
 	)
 
 
@@ -738,6 +729,7 @@ def get_doctype_states(doctype: str) -> dict:
 # File
 @frappe.whitelist()
 def get_attachments(dt: str, dn: str):
+	frappe.has_permission(dt, "read", dn, throw=True)
 	return frappe.get_list(
 		"File",
 		fields=["name", "file_name", "file_url", "is_private"],
@@ -745,7 +737,7 @@ def get_attachments(dt: str, dn: str):
 	)
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def upload_base64_file(
 	content: str, filename: str, dt: str | None = None, dn: str | None = None, fieldname: str | None = None
 ):
@@ -789,7 +781,7 @@ def upload_base64_file(
 	).insert()
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def delete_attachment(filename: str):
 	attached_to_doctype, attached_to_name = frappe.db.get_value(
 		"File", filename, ["attached_to_doctype", "attached_to_name"]

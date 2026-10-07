@@ -119,7 +119,7 @@ class OvertimeSlip(Document):
 				)
 			)
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def get_emp_and_overtime_details(self):
 		records = self.get_attendance_records()
 		if len(records):
@@ -372,13 +372,10 @@ class OvertimeSlip(Document):
 		return amount
 
 	def get_holiday_map(self):
-		from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
+		from hrms.utils.holiday_list import get_holiday_dates_between_range
 
-		from hrms.utils.holiday_list import get_holiday_dates_between
-
-		holiday_list = get_holiday_list_for_employee(self.employee)
-		holiday_dates = get_holiday_dates_between(
-			holiday_list, self.start_date, self.end_date, select_weekly_off=True, as_dict=True
+		holiday_dates = get_holiday_dates_between_range(
+			self.employee, self.start_date, self.end_date, select_weekly_offs=True, as_dict=True
 		)
 
 		holiday_date_map = {}

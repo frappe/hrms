@@ -653,7 +653,7 @@ function validateMandatoryFields() {
 
 	if (errorFields.length) {
 		formErrorMessage.value = `${errorFields.join(", ")} ${
-			errorFields.length > 1 ? "fields are mandatory" : "field is mandatory"
+			errorFields.length > 1 ? __("fields are mandatory") : __("field is mandatory")
 		}`
 		return false
 	} else {

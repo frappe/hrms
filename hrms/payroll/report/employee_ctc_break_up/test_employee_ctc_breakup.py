@@ -254,7 +254,10 @@ class TestEmployeeCTCBreakup(HRMSTestSuite):
 	def test_employer_contributions_section(self):
 		employee = make_employee("test_ctc@example.com", company="_Test Company")
 
-		for component, abbr in (("Test CTC Employer PF", "TCEPF"), ("Test CTC Employer NPS", "TCENPS")):
+		for component, abbr, depends_on_payment_days in (
+			("Test CTC Employer PF", "TCEPF", 1),
+			("Test CTC Employer NPS", "TCENPS", 0),
+		):
 			if frappe.db.exists("Salary Component", component):
 				frappe.delete_doc("Salary Component", component, force=True)
 			frappe.get_doc(
@@ -263,6 +266,7 @@ class TestEmployeeCTCBreakup(HRMSTestSuite):
 					"salary_component": component,
 					"salary_component_abbr": abbr,
 					"type": "Employer Contribution",
+					"depends_on_payment_days": depends_on_payment_days,
 				}
 			).insert()
 

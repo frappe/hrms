@@ -33,6 +33,13 @@ frappe.query_reports["Salary Register"] = {
 			fieldtype: "Link",
 			options: "Employee",
 			width: "100px",
+			get_query: () => {
+				return {
+					filters: {
+						company: frappe.query_report.get_filter_value("company"),
+					},
+				};
+			},
 		},
 		{
 			fieldname: "company",
@@ -42,6 +49,10 @@ frappe.query_reports["Salary Register"] = {
 			default: frappe.defaults.get_user_default("Company"),
 			width: "100px",
 			reqd: 1,
+			on_change: (report) => {
+				frappe.query_report.set_filter_value("employee", "");
+				report.refresh();
+			},
 		},
 		{
 			fieldname: "docstatus",
@@ -78,6 +89,12 @@ frappe.query_reports["Salary Register"] = {
 			fieldtype: "Link",
 			options: "Branch",
 			width: "100px",
+		},
+		{
+			fieldname: "show_employer_contributions",
+			label: __("Show Employer Contributions"),
+			fieldtype: "Check",
+			default: 0,
 		},
 	],
 };

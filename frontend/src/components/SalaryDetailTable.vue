@@ -1,7 +1,7 @@
 <template>
 	<!-- Header -->
 	<div class="flex flex-row justify-between items-center">
-		<h2 class="text-base font-semibold text-gray-800">{{ type }}</h2>
+		<h2 class="text-base font-semibold text-gray-800">{{ __(type) }}</h2>
 		<span class="text-base font-semibold text-gray-800">
 			{{ total }}
 		</span>

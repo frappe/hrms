@@ -132,6 +132,34 @@ class TestSalaryStructure(HRMSTestSuite):
 		)
 		self.assertEqual(sal_struct.currency, "USD")
 
+	def test_missing_values_set_on_employer_contributions(self):
+		component = "Test Structure Employer PF"
+		if frappe.db.exists("Salary Component", component):
+			frappe.delete_doc("Salary Component", component, force=True)
+
+		frappe.get_doc(
+			{
+				"doctype": "Salary Component",
+				"salary_component": component,
+				"salary_component_abbr": "TSTEPF",
+				"type": "Employer Contribution",
+				"depends_on_payment_days": 0,
+				"amount": 6000,
+			}
+		).insert()
+
+		sal_struct = make_salary_structure(
+			"Salary Structure Employer Contribution Defaults",
+			"Monthly",
+			company="_Test Company",
+			currency="INR",
+			other_details={"employer_contributions": [{"salary_component": component, "abbr": "TSTEPF"}]},
+		)
+
+		row = sal_struct.employer_contributions[0]
+		self.assertEqual(row.depends_on_payment_days, 0)
+		self.assertEqual(row.amount, 6000)
+
 
 def make_salary_structure(
 	salary_structure,

@@ -4,6 +4,7 @@
  "autoname": "HR-PRUN-.YYYY.-.#####",
  "creation": "2017-10-23 15:22:29.291323",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/payroll-entry",
  "document_type": "Other",
  "engine": "InnoDB",
  "field_order": [
@@ -252,7 +253,7 @@
   {
    "depends_on": "eval:doc.status=='Failed';",
    "fieldname": "error_message",
-   "fieldtype": "Small Text",
+   "fieldtype": "Text Editor",
    "label": "Error Message",
    "no_copy": 1,
    "read_only": 1
@@ -332,7 +333,7 @@
    "options": "\nCreate\nSubmit"
   }
  ],
- "icon": "fa fa-cog",
+ "icon": "wallet",
  "is_submittable": 1,
  "links": [
   {
@@ -340,7 +341,7 @@
    "link_fieldname": "payroll_entry"
   }
  ],
- "modified": "2025-08-25 20:05:37.733324",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",

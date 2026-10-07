@@ -395,7 +395,37 @@ class LeavePolicyAssignment(Document):
 				pro_rated_period_end,
 			)
 			schedule[0]["number_of_leaves"] = pro_rated_earned_leave
+
+		# yearly earned leaves are exempted from the annual allocation limit
+		# since a single period already grants the entire annual allocation
+		if annual_allocation and leave_details.earned_leave_frequency != "Yearly":
+			schedule = cap_schedule_to_annual_allocation(schedule, annual_allocation)
+
 		return schedule
+
+
+def cap_schedule_to_annual_allocation(schedule, annual_allocation):
+	from frappe.model.meta import get_field_precision
+
+	precision = get_field_precision(frappe.get_meta("Leave Allocation").get_field("new_leaves_allocated"))
+	annual_allocation = flt(annual_allocation, precision)
+
+	capped_schedule = []
+	scheduled_leaves = 0.0
+
+	for row in schedule:
+		# leaves allocated already have ledger entries against them, they cannot be trimmed
+		if not row.get("is_allocated"):
+			leaves_left_in_quota = flt(annual_allocation - scheduled_leaves, precision)
+			if leaves_left_in_quota <= 0:
+				break
+			if flt(row["number_of_leaves"], precision) > leaves_left_in_quota:
+				row["number_of_leaves"] = leaves_left_in_quota
+
+		scheduled_leaves = flt(scheduled_leaves + flt(row["number_of_leaves"], precision), precision)
+		capped_schedule.append(row)
+
+	return capped_schedule
 
 
 def get_pro_rata_period_end_date(consider_current_month):
@@ -489,7 +519,7 @@ def calculate_pro_rated_leaves(
 	return rounded(leaves)
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def create_assignment_for_multiple_employees(employees: str | list[str], data: str | dict) -> list[str]:
 	if isinstance(employees, str):
 		employees = json.loads(employees)
@@ -501,15 +531,23 @@ def create_assignment_for_multiple_employees(employees: str | list[str], data: s
 	failed = []
 
 	for employee in employees:
-		assignment = create_assignment(employee, frappe._dict(data))
 		savepoint = "before_assignment_submission"
 		try:
+			# create + submit inside the savepoint so a failure for one employee
+			# (e.g. an overlapping assignment) rolls back only that employee and
+			# doesn't abort assignment for the rest of the batch
 			frappe.db.savepoint(savepoint)
+			assignment = create_assignment(employee, frappe._dict(data))
 			assignment.submit()
 		except Exception:
 			frappe.db.rollback(save_point=savepoint)
-			assignment.log_error("Leave Policy Assignment submission failed")
-			failed.append(assignment.name)
+			frappe.log_error(
+				title="Leave Policy Assignment failed",
+				reference_doctype="Leave Policy Assignment",
+				reference_name=employee,
+			)
+			failed.append(employee)
+			continue
 
 		docs_name.append(assignment.name)
 
@@ -519,7 +557,7 @@ def create_assignment_for_multiple_employees(employees: str | list[str], data: s
 	return docs_name
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def create_assignment(employee: str, data: frappe._dict) -> Document:
 	assignment = frappe.new_doc("Leave Policy Assignment")
 	assignment.employee = employee
@@ -533,12 +571,12 @@ def create_assignment(employee: str, data: frappe._dict) -> Document:
 	return assignment
 
 
-def show_assignment_submission_status(failed):
+def show_assignment_submission_status(failed_employees):
 	frappe.clear_messages()
-	assignment_list = [get_link_to_form("Leave Policy Assignment", entry) for entry in failed]
+	employee_links = [get_link_to_form("Employee", employee) for employee in failed_employees]
 
-	msg = _("Failed to submit some leave policy assignments:")
-	msg += " " + comma_and(assignment_list, False) + "<hr>"
+	msg = _("Leave policy could not be assigned to the following employees:")
+	msg += " " + comma_and(employee_links, False) + "<hr>"
 	msg += (
 		_("Check {0} for more details")
 		.format("<a href='/app/List/Error Log?reference_doctype=Leave Policy Assignment'>{0}</a>")
@@ -548,7 +586,7 @@ def show_assignment_submission_status(failed):
 	frappe.msgprint(
 		msg,
 		indicator="red",
-		title=_("Submission Failed"),
+		title=_("Assignment Failed"),
 		is_minimizable=True,
 	)
 

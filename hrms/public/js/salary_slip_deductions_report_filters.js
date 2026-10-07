@@ -52,7 +52,7 @@ hrms.salary_slip_deductions_report_filters = {
 	],
 	onload: function () {
 		return frappe.call({
-			method: "hrms.payroll.report.provident_fund_deductions.provident_fund_deductions.get_years",
+			method: "hrms.payroll.utils.get_years",
 			callback: function (r) {
 				var year_filter = frappe.query_report.get_filter("year");
 				year_filter.df.options = r.message;

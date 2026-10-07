@@ -2,6 +2,7 @@
  "actions": [],
  "creation": "2013-08-02 13:45:23",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/hr-settings",
  "document_type": "Other",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -38,6 +39,7 @@
   "expense_approver_mandatory_in_expense_claim",
   "prevent_self_expense_approval",
   "unlink_payment_on_cancellation_of_employee_advance",
+  "enable_multi_currency_expense_claim",
   "shift_and_attendance_tab",
   "shift_settings_section",
   "allow_multiple_shift_assignments",
@@ -79,13 +81,13 @@
    "fieldtype": "Column Break"
   },
   {
-   "default": "1",
+   "default": "0",
    "fieldname": "expense_approver_mandatory_in_expense_claim",
    "fieldtype": "Check",
    "label": "Expense Approver Mandatory In Expense Claim"
   },
   {
-   "default": "1",
+   "default": "0",
    "fieldname": "leave_approver_mandatory_in_leave_application",
    "fieldtype": "Check",
    "label": "Leave Approver Mandatory In Leave Application"
@@ -307,6 +309,13 @@
   },
   {
    "default": "0",
+   "description": "Allow expense claims to be raised in a currency other than the company currency",
+   "fieldname": "enable_multi_currency_expense_claim",
+   "fieldtype": "Check",
+   "label": "Enable Multi-Currency Expense Claims"
+  },
+  {
+   "default": "0",
    "fieldname": "prevent_self_leave_approval",
    "fieldtype": "Check",
    "label": "Prevent self approval for leaves even if user has permissions"
@@ -377,11 +386,11 @@
    "label": "Employee Exit Settings"
   }
  ],
- "icon": "fa fa-cog",
+ "icon": "settings",
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-08-06 13:01:43.187327",
+ "modified": "2026-10-06 14:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",

@@ -1,0 +1,22 @@
+{
+ "action": "Create Entry",
+ "action_label": "Create Appraisal Template",
+ "creation": "2026-10-05 12:00:00.000000",
+ "description": "The KRAs and rating criteria for a role, with their weightage. See [Appraisal Template](https://docs.frappe.io/hr/appraisal-template).",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "intro_video_url": "https://www.youtube.com/watch?v=lSXTkKg7NyY",
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-10-05 13:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "Create Appraisal Template",
+ "owner": "Administrator",
+ "reference_document": "Appraisal Template",
+ "show_form_tour": 0,
+ "show_full_form": 1,
+ "title": "Build an appraisal template",
+ "validate_action": 1
+}

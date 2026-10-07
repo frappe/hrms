@@ -5,6 +5,7 @@
  "autoname": "HR-ENC-.YYYY.-.#####",
  "creation": "2018-04-13 15:31:51.197046",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/leave-encashment",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -196,7 +197,7 @@
    "description": "Process leave encashment via a separate Payment Entry instead of Salary Slip",
    "fieldname": "pay_via_payment_entry",
    "fieldtype": "Check",
-   "label": "Pay Via Payment Entry"
+   "label": "Pay via Payment Entry"
   },
   {
    "fieldname": "accounting_section",
@@ -257,6 +258,7 @@
    "fieldtype": "Column Break"
   }
  ],
+ "icon": "banknote",
  "is_submittable": 1,
  "links": [
   {
@@ -268,11 +270,11 @@
    "table_fieldname": "references"
   }
  ],
- "modified": "2026-08-06 13:01:43.187327",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Encashment",
- "naming_rule": "Expression (old style)",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
@@ -333,6 +335,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "employee,employee_name",
  "sort_field": "creation",
  "sort_order": "DESC",

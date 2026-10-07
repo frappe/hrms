@@ -284,7 +284,7 @@ const logout = async () => {
 	try {
 		await session.logout.submit()
 	} catch (e) {
-		const msg = "An error occurred while attempting to log out!"
+		const msg = __("An error occurred while attempting to log out!")
 		console.error(msg, e)
 		showErrorAlert(msg)
 	}

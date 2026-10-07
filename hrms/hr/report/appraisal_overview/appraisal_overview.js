@@ -11,6 +11,10 @@ frappe.query_reports["Appraisal Overview"] = {
 			options: "Company",
 			reqd: 1,
 			default: frappe.defaults.get_user_default("Company"),
+			on_change: (report) => {
+				frappe.query_report.set_filter_value("employee", "");
+				report.refresh();
+			},
 		},
 		{
 			fieldname: "appraisal_cycle",
@@ -23,6 +27,13 @@ frappe.query_reports["Appraisal Overview"] = {
 			fieldtype: "Link",
 			label: __("Employee"),
 			options: "Employee",
+			get_query: () => {
+				return {
+					filters: {
+						company: frappe.query_report.get_filter_value("company"),
+					},
+				};
+			},
 		},
 		{
 			fieldname: "department",

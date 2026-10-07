@@ -1,12 +1,38 @@
+"""Usage telemetry for HRMS.
+
+Data policy: an event describes how a feature is used, never the person it is
+used for. Properties are limited to counts, booleans, durations and values from
+a fixed vocabulary. Names, free text, amounts, scores, dates and anything that
+could describe an individual are stripped before the event leaves the site.
+"""
+
 import frappe
 from frappe.database import savepoint
 from frappe.query_builder.functions import Count
 from frappe.utils import add_days, date_diff, getdate, today
 from frappe.utils.telemetry import capture as _capture
+from frappe.utils.telemetry import is_pulse_enabled as is_enabled
 from frappe.utils.telemetry import site_age
 
 APP = "hrms"
 ACTIVATION_WINDOW_DAYS = 30
+
+# The only string properties that may be sent, each restricted to the standard
+# Select options of the field it comes from. Anything else becomes "other".
+FIXED_VOCABULARIES = {
+	"reason": {"Work From Home", "On Duty"},
+	"log_type": {"IN", "OUT"},
+	"status": {
+		"Awaiting Response",
+		"Accepted",
+		"Rejected",
+		"Cancelled",
+		"Pending",
+		"Under Review",
+		"Cleared",
+	},
+	"payroll_frequency": {"Monthly", "Fortnightly", "Bimonthly", "Weekly", "Daily"},
+}
 
 
 def _skip_context() -> bool:
@@ -20,12 +46,27 @@ def _skip_context() -> bool:
 	)
 
 
+def _should_skip() -> bool:
+	return _skip_context() or not is_enabled()
+
+
+def sanitize_properties(properties: dict | None) -> dict:
+	clean = {}
+	for key, value in (properties or {}).items():
+		if value is None or isinstance(value, bool | int | float):
+			clean[key] = value
+		elif isinstance(value, str) and key in FIXED_VOCABULARIES:
+			clean[key] = value if value in FIXED_VOCABULARIES[key] else "other"
+	return clean
+
+
 def capture(event: str, properties: dict | None = None) -> None:
 	"""Record an HR usage event (fires on every occurrence)."""
-	if _skip_context():
+	if _should_skip():
 		return
 
-	_capture(event, APP, properties=properties or {})
+	_capture(event, APP, properties=sanitize_properties(properties))
+	_track_conversion()
 
 
 MILESTONE_DOCTYPE = "HR Telemetry Milestone"
@@ -42,7 +83,7 @@ def _claim_milestone(event: str) -> bool:
 
 
 def capture_first(event: str, properties: dict | None = None) -> None:
-	if _skip_context():
+	if _should_skip():
 		return
 
 	age = site_age()
@@ -55,17 +96,57 @@ def capture_first(event: str, properties: dict | None = None) -> None:
 	capture(event, {"day_since_install": age, **(properties or {})})
 
 
+# ---- Conversion --------------------------------------------------------------
+# A site counts as converted once it is still producing usage events more than
+# 14 days after its first capture. The `first_capture` milestone is pure
+# bookkeeping (never sent), its creation timestamp starts the clock.
+
+CONVERSION_WINDOW_DAYS = 14
+FIRST_CAPTURE_MILESTONE = "first_capture"
+CONVERSION_EVENT = "site_converted"
+
+
+def _track_conversion() -> None:
+	if frappe.db.exists(MILESTONE_DOCTYPE, CONVERSION_EVENT):
+		return
+
+	first_capture = frappe.db.get_value(MILESTONE_DOCTYPE, FIRST_CAPTURE_MILESTONE, "creation")
+	if not first_capture:
+		_claim_milestone(FIRST_CAPTURE_MILESTONE)
+		return
+
+	days_since_first_capture = date_diff(today(), first_capture)
+	if days_since_first_capture <= CONVERSION_WINDOW_DAYS:
+		return
+
+	if _claim_milestone(CONVERSION_EVENT):
+		_capture(
+			CONVERSION_EVENT,
+			APP,
+			properties={
+				"days_since_first_capture": days_since_first_capture,
+				"day_since_install": site_age(),
+			},
+		)
+
+
 def _duration_days(from_date, to_date) -> int | None:
 	if not (from_date and to_date):
 		return None
 	return date_diff(to_date, from_date) + 1
 
 
+LEAVE_TYPE_FLAGS = ("is_lwp", "is_ppl", "is_compensatory", "is_optional_leave", "is_earned_leave")
+
+
 def on_leave_application_submit(doc, method=None):
+	# The leave type's name can reveal health or family circumstances
+	# (e.g. "Sick Leave"), so only its configuration flags are sent.
+	flags = frappe.db.get_value("Leave Type", doc.leave_type, LEAVE_TYPE_FLAGS, as_dict=True) or {}
 	capture(
 		"leave_application_submitted",
 		{
-			"leave_type": doc.leave_type,
+			**{flag: bool(flags.get(flag)) for flag in LEAVE_TYPE_FLAGS},
 			"total_leave_days": doc.total_leave_days,
 			"half_day": bool(doc.half_day),
 			"self_approved": doc.leave_approver == frappe.session.user,
@@ -78,7 +159,6 @@ def on_expense_claim_submit(doc, method=None):
 	capture(
 		"expense_claim_submitted",
 		{
-			"total_claimed_amount": doc.total_claimed_amount,
 			"expense_count": len(doc.expenses or []),
 			"is_paid": bool(doc.is_paid),
 			"has_advances": bool(doc.get("advances")),
@@ -88,17 +168,11 @@ def on_expense_claim_submit(doc, method=None):
 	capture_first("first_expense_claimed")
 
 
-# Standard `Attendance Request.reason` Select options. Anything outside this set
-# (e.g. a site that customised the field into free-text) is coarsened to "other"
-# so raw user-entered notes never leave the site.
-ATTENDANCE_REQUEST_REASONS = {"Work From Home", "On Duty"}
-
-
 def on_attendance_request_submit(doc, method=None):
 	capture(
 		"attendance_request_submitted",
 		{
-			"reason": doc.reason if doc.reason in ATTENDANCE_REQUEST_REASONS else "other",
+			"reason": doc.reason,
 			"half_day": bool(doc.half_day),
 			"include_holidays": bool(doc.include_holidays),
 			"days": _duration_days(doc.from_date, doc.to_date),
@@ -110,7 +184,7 @@ def on_shift_request_submit(doc, method=None):
 	capture(
 		"shift_request_submitted",
 		{
-			"shift_type": doc.shift_type,
+			"has_approver": bool(doc.approver),
 			"days": _duration_days(doc.from_date, doc.to_date),
 		},
 	)
@@ -197,7 +271,6 @@ def on_appraisal_submit(doc, method=None):
 			"kra_count": len(doc.get("appraisal_kra") or []),
 			"rated_manually": bool(doc.rate_goals_manually),
 			"has_self_appraisal": bool(doc.get("self_ratings")),
-			"final_score": doc.final_score,
 		},
 	)
 
@@ -214,7 +287,7 @@ def on_interview_submit(doc, method=None):
 
 
 def capture_daily_attendance_pulse():
-	if _skip_context() or not frappe.get_system_settings("enable_telemetry"):
+	if _should_skip():
 		return
 
 	active_employees = frappe.db.count("Employee", {"status": "Active"})
@@ -242,9 +315,11 @@ def capture_daily_attendance_pulse():
 	def rate(n):
 		return round(n / active_employees, 3)
 
-	capture(
+	# Scheduler output, not usage: bypass `capture` so it never drives conversion.
+	_capture(
 		"attendance_daily_summary",
-		{
+		APP,
+		properties={
 			"active_employees": active_employees,
 			"checkins": checkins,
 			"employees_checked_in": employees_checked_in,

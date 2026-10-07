@@ -1,6 +1,8 @@
 // Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and contributors
 // For license information, please see license.txt
 frappe.views.calendar["Attendance"] = {
+	fields: ["status"],
+	apply_to_custom_calendar_views: true,
 	field_map: {
 		start: "attendance_date",
 		end: "attendance_date",
@@ -11,7 +13,7 @@ frappe.views.calendar["Attendance"] = {
 	},
 	get_css_class: function (data) {
 		if (data.doctype === "Holiday") return "default";
-		else if (data.doctype === "Attendance") {
+		else if (!data.doctype || data.doctype === "Attendance") {
 			if (data.status === "Absent" || data.status === "On Leave") {
 				return "danger";
 			}

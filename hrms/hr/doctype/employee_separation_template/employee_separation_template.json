@@ -1,8 +1,10 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "HR-EMP-STP-.#####",
  "creation": "2018-05-09 06:31:44.498557",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/employee-separation",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -67,8 +69,9 @@
    "options": "Employee Boarding Activity"
   }
  ],
+ "icon": "clipboard-list",
  "links": [],
- "modified": "2026-04-07 18:18:38.087000",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Separation Template",

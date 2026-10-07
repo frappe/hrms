@@ -19,7 +19,7 @@ from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_leave_application
-from hrms.tests.utils import HRMSTestSuite
+from hrms.tests.utils import HRMSTestSuite, make_company_restricted_user
 
 
 class TestEmployeeAttendanceTool(HRMSTestSuite):
@@ -233,6 +233,107 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 		self.assertIn(self.employee1.name, filtered)
 		self.assertIn(self.employee2.name, filtered)
 		self.assertNotIn(self.employee3.name, filtered)
+
+	def test_mark_attendance_outside_company_scope(self):
+		user = make_company_restricted_user("test_scoped_hr_user@example.com", "_Test Company")
+
+		date = add_days(getdate(), -1)
+		while is_holiday(employee=self.employee4, date=date):
+			date = add_days(date, -1)
+
+		frappe.set_user(user)
+		try:
+			# employee4 belongs to _Test Company 1, outside the user's scope
+			with self.assertRaises(frappe.PermissionError):
+				mark_employee_attendance(employee_list=[self.employee4], status="Present", date=date)
+
+			with self.assertRaises(frappe.PermissionError):
+				mark_employee_attendance(
+					employee_list=[],
+					status="Present",
+					date=date,
+					mark_half_day=True,
+					half_day_status="Absent",
+					half_day_employee_list=[self.employee4],
+				)
+
+			# employee3 belongs to _Test Company but the caller claims a different company
+			with self.assertRaises(frappe.ValidationError):
+				mark_employee_attendance(
+					employee_list=[self.employee3], status="Present", date=date, company="_Test Company 1"
+				)
+		finally:
+			frappe.set_user("Administrator")
+
+		self.assertFalse(
+			frappe.db.exists("Attendance", {"employee": self.employee4, "attendance_date": date})
+		)
+		self.assertFalse(
+			frappe.db.exists("Attendance", {"employee": self.employee3, "attendance_date": date})
+		)
+
+	def test_mark_attendance_rejects_non_string_employees(self):
+		date = add_days(getdate(), -1)
+		for bad_list in ([None], [1], [{"name": self.employee1}], [self.employee1, ""]):
+			self.assertRaises(
+				frappe.ValidationError,
+				mark_employee_attendance,
+				employee_list=bad_list,
+				status="Present",
+				date=date,
+			)
+		self.assertFalse(frappe.db.exists("Attendance", {"attendance_date": date}))
+
+	def test_half_day_update_requires_write_access_on_each_record(self):
+		hr_user = make_company_restricted_user("test_half_day_writer@example.com", "_Test Company 1")
+
+		date = add_days(getdate(), -1)
+		while is_holiday(employee=self.employee1, date=date):
+			date = add_days(date, -1)
+
+		attendance = frappe.get_doc(
+			{
+				"doctype": "Attendance",
+				"employee": self.employee1,
+				"attendance_date": date,
+				"status": "Present",
+			}
+		).insert()
+		attendance.submit()
+
+		# employee1 sits outside the user's company scope; share the records read-only so
+		# they are visible to the user without being editable
+		frappe.share.add("Employee", self.employee1, hr_user, read=1)
+		frappe.share.add("Attendance", attendance.name, hr_user, read=1)
+
+		def mark_half_day():
+			mark_employee_attendance(
+				employee_list=[],
+				status="Present",
+				date=date,
+				mark_half_day=True,
+				half_day_status="Absent",
+				half_day_employee_list=[self.employee1],
+			)
+
+		frappe.set_user(hr_user)
+		try:
+			self.assertRaises(frappe.PermissionError, mark_half_day)
+		finally:
+			frappe.set_user("Administrator")
+
+		attendance.reload()
+		self.assertIsNone(attendance.half_day_status)
+
+		frappe.share.add("Attendance", attendance.name, hr_user, read=1, write=1)
+		frappe.set_user(hr_user)
+		try:
+			mark_half_day()
+		finally:
+			frappe.set_user("Administrator")
+
+		attendance.reload()
+		self.assertEqual(attendance.half_day_status, "Absent")
 
 	def test_mark_half_day_attendance_permissions(self):
 		user_no_role = "test_no_role@example.com"

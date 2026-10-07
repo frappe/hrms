@@ -153,19 +153,6 @@
    "icon": "",
    "indent": 0,
    "keep_closed": 0,
-   "label": "Professional Tax Deductions",
-   "link_to": "Professional Tax Deductions",
-   "link_type": "Report",
-   "open_in_new_tab": 1,
-   "show_arrow": 0,
-   "type": "Link"
-  },
-  {
-   "child": 1,
-   "collapsible": 1,
-   "icon": "",
-   "indent": 0,
-   "keep_closed": 0,
    "label": "General Ledger",
    "link_to": "General Ledger",
    "link_type": "Report",
@@ -238,7 +225,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-07-03 12:18:07.894971",
+ "modified": "2026-08-07 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll",

@@ -289,7 +289,12 @@ class Attendance(Document):
 
 
 @frappe.whitelist()
-def get_events(start: date | str, end: date | str, filters: str | list | None = None) -> list[dict]:
+def get_events(
+	start: date | str,
+	end: date | str,
+	filters: str | list | None = None,
+	order_by: str | None = None,
+) -> list[dict]:
 	employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user})
 	if not employee:
 		return []
@@ -301,12 +306,12 @@ def get_events(start: date | str, end: date | str, filters: str | list | None = 
 	if not filters:
 		filters = []
 	filters.append(["attendance_date", "between", [get_datetime(start).date(), get_datetime(end).date()]])
-	attendance_records = add_attendance(filters)
+	attendance_records = add_attendance(filters, order_by)
 	add_holidays(attendance_records, start, end, employee)
 	return attendance_records
 
 
-def add_attendance(filters):
+def add_attendance(filters, order_by=None):
 	attendance = frappe.get_list(
 		"Attendance",
 		fields=[
@@ -318,6 +323,7 @@ def add_attendance(filters):
 			"docstatus",
 		],
 		filters=filters,
+		order_by=order_by,
 	)
 	for record in attendance:
 		record["title"] = f"{record['employee_name']} : {record['status']}"
@@ -378,13 +384,49 @@ def mark_attendance(
 	return attendance.name
 
 
-@frappe.whitelist()
+def validate_employee_access(employees: list[str], company: str | None = None) -> None:
+	"""Single permission-aware query for all employees, run before any loop."""
+	if not employees:
+		return
+
+	if any(not isinstance(e, str) or not e for e in employees):
+		frappe.throw(_("Employee must be a non-empty string."), frappe.ValidationError)
+
+	employees = list(dict.fromkeys(employees))
+
+	accessible = frappe.get_list(
+		"Employee", filters={"name": ["in", employees]}, fields=["name", "company"], limit=0
+	)
+	company_map = {d.name: d.company for d in accessible}
+
+	if denied := [e for e in employees if e not in company_map]:
+		frappe.throw(
+			_("You do not have access to Employee {0}").format(", ".join(frappe.bold(e) for e in denied)),
+			frappe.PermissionError,
+		)
+
+	if company and (mismatched := [e for e, c in company_map.items() if c != company]):
+		frappe.throw(
+			_("Employee {0} does not belong to Company {1}").format(
+				", ".join(frappe.bold(e) for e in mismatched), frappe.bold(company)
+			)
+		)
+
+
+@frappe.whitelist(methods=["POST"])
 def mark_bulk_attendance(data: str | dict):
 	import json
 
 	if isinstance(data, str):
 		data = json.loads(data)
 	data = frappe._dict(data)
+	if not isinstance(data.employee, str) or not data.employee:
+		frappe.throw(_("Employee must be a non-empty string."), frappe.ValidationError)
+	if not isinstance(data.unmarked_days, list):
+		frappe.throw(_("Unmarked days must be a list of dates."), frappe.ValidationError)
+
+	frappe.has_permission("Attendance", "create", throw=True)
+	validate_employee_access([data.employee])
 	if not data.unmarked_days:
 		frappe.throw(_("Please select a date."))
 		return

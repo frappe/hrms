@@ -81,9 +81,10 @@
    "fieldtype": "Column Break"
   }
  ],
+ "icon": "bell",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-27 13:10:27.401806",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "PWA Notification",

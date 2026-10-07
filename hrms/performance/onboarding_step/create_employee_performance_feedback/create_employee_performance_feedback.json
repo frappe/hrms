@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Give Feedback",
+ "creation": "2026-10-05 12:00:00.000000",
+ "description": "A reviewer's ratings and comments on an employee for the cycle. See [Employee Performance Feedback](https://docs.frappe.io/hr/employee-performance-feedback).",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "Create Employee Performance Feedback",
+ "owner": "Administrator",
+ "reference_document": "Employee Performance Feedback",
+ "show_form_tour": 0,
+ "show_full_form": 1,
+ "title": "Give feedback",
+ "validate_action": 1
+}

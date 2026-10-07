@@ -1,8 +1,10 @@
 {
  "actions": [],
+ "allow_import": 1,
  "autoname": "HR-TRF-.YYYY.-.#####",
  "creation": "2022-01-27 13:14:35.935580",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/training-feedback",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -98,9 +100,10 @@
    "read_only": 1
   }
  ],
+ "icon": "message-square-text",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-24 17:33:21.061679",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Training Feedback",
