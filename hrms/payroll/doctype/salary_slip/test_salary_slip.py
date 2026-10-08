@@ -545,6 +545,7 @@ class TestSalarySlip(HRMSTestSuite):
 			create_holiday_list_assignment,
 		)
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+		from hrms.payroll.report.employee_ctc_break_up.employee_ctc_break_up import SalaryBreakupReport
 
 		holiday_list = make_holiday_list("Test LWP Condition Holiday List", "2024-01-01", "2024-12-31")
 		make_salary_component(
@@ -567,6 +568,17 @@ class TestSalarySlip(HRMSTestSuite):
 					"abbr": "LCFM",
 					"type": "Deduction",
 					"depends_on_payment_days": 0,
+				},
+				{
+					"salary_component": "LWP Cond Basic Share",
+					"abbr": "LCBS",
+					"type": "Deduction",
+					"depends_on_payment_days": 0,
+				},
+				{
+					"salary_component": "LWP Cond Employer",
+					"abbr": "LCE",
+					"type": "Employer Contribution",
 				},
 			],
 			test_tax=False,
@@ -600,6 +612,21 @@ class TestSalarySlip(HRMSTestSuite):
 				"amount_based_on_formula": 1,
 				"formula": "leave_without_pay * 100",
 			},
+			{
+				"salary_component": "LWP Cond Basic Share",
+				"abbr": "LCBS",
+				"condition": "leave_without_pay > 0",
+				"amount_based_on_formula": 1,
+				"formula": "LCB * 0.1",
+			},
+		]
+		employer_contributions = [
+			{
+				"salary_component": "LWP Cond Employer",
+				"abbr": "LCE",
+				"condition": "leave_without_pay > 0",
+				"amount": 300,
+			},
 		]
 
 		def make_slip(email, with_lwp):
@@ -617,6 +644,7 @@ class TestSalarySlip(HRMSTestSuite):
 				base=30000,
 				earnings=earnings,
 				deductions=deductions,
+				other_details={"employer_contributions": employer_contributions},
 			)
 			ss = make_salary_slip(structure.name, employee=emp_id, posting_date="2024-07-01")
 			ss.insert()
@@ -627,6 +655,11 @@ class TestSalarySlip(HRMSTestSuite):
 		deductions_by_component = {d.salary_component: d.amount for d in ss.deductions}
 		self.assertEqual(deductions_by_component.get("LWP Cond Fixed"), 500)
 		self.assertEqual(deductions_by_component.get("LWP Cond Formula"), 400)
+		basic = next(d for d in ss.earnings if d.salary_component == "LWP Cond Basic")
+		basic_share = next(d for d in ss.deductions if d.salary_component == "LWP Cond Basic Share")
+		self.assertEqual(basic_share.amount, flt(basic.amount * 0.1, 2))
+		self.assertEqual(basic_share.default_amount, 3000)
+		self.assertIn("LWP Cond Employer", [d.salary_component for d in ss.employer_contributions])
 		# condition false on the slip, so the accrual must not be recorded
 		self.assertNotIn("LWP Cond Accrual", [d.salary_component for d in ss.accrued_benefits])
 
@@ -635,6 +668,17 @@ class TestSalarySlip(HRMSTestSuite):
 		self.assertNotIn("LWP Cond Fixed", [d.salary_component for d in ss.deductions])
 		self.assertNotIn("LWP Cond Formula", [d.salary_component for d in ss.deductions])
 		self.assertIn("LWP Cond Accrual", [d.salary_component for d in ss.accrued_benefits])
+		self.assertNotIn("LWP Cond Employer", [d.salary_component for d in ss.employer_contributions])
+
+		frappe.flags.posting_date = getdate("2024-07-01")
+		report = SalaryBreakupReport(ss.employee, ss._salary_structure_assignment.name)
+		report.get_data()
+		self.assertFalse(
+			any(
+				"LWP Cond Employer" in c.get("salary_component")
+				for c in report.employer_contribution_components
+			)
+		)
 
 	@HRMSTestSuite.change_settings("Payroll Settings", {"payroll_based_on": "Attendance"})
 	def test_payment_days_in_salary_slip_based_on_timesheet(self):
