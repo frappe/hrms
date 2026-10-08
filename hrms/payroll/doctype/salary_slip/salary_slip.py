@@ -1266,6 +1266,8 @@ class SalarySlip(TransactionBase):
 				# full-cycle default comes from SSA (period-independent); the slip only
 				# computes the prorated `amount` above (proration is a period concern)
 				default_amount = flt(struct_row.default_amount)
+				if not struct_row.condition_met:
+					default_amount = flt(self.eval_condition_and_formula(struct_row, self.default_data))
 				self.update_component_row(
 					struct_row,
 					amount,

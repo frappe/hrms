@@ -375,6 +375,7 @@ class SalaryStructureAssignment(Document):
 
 			row = frappe._dict(
 				condition=None,
+				condition_met=True,
 				formula=None,
 				precision=frappe.get_precision("Salary Detail", "amount"),
 			)
@@ -473,6 +474,7 @@ class SalaryStructureAssignment(Document):
 			evaluated_component_row = frappe._dict(
 				default_amount=default_amount,
 				amount=amount,
+				condition_met=condition_met,
 				condition=condition,
 				formula=formula,
 				precision=struct_row.precision("amount"),
