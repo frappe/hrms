@@ -2,6 +2,8 @@
 # License: GNU General Public License v3. See license.txt
 
 
+from unittest.mock import patch
+
 import frappe
 from frappe.permissions import add_user_permission
 from frappe.utils import add_days, add_months, flt, get_year_ending, get_year_start, getdate
@@ -15,7 +17,11 @@ from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import (
 	process_expired_allocation,
 )
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
-from hrms.hr.report.employee_leave_balance.employee_leave_balance import execute, get_employees
+from hrms.hr.report.employee_leave_balance.employee_leave_balance import (
+	execute,
+	get_balance_details,
+	get_employees,
+)
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
@@ -372,3 +378,35 @@ class TestEmployeeLeaveBalance(HRMSTestSuite):
 
 		self.assertEqual(report[1][0].closing_balance, 0)
 		self.assertEqual(report[1][0].leaves_expired, 5)
+
+	def test_zero_balance_rows_are_excluded(self):
+		used_type = create_leave_type(leave_type_name="_Test Used Leave Type")
+		create_leave_type(leave_type_name="_Test Unused Leave Type")
+		future_type = create_leave_type(leave_type_name="_Test Future Leave Type")
+
+		make_allocation_record(
+			employee=self.employee_id,
+			leave_type=used_type.name,
+			leaves=5,
+			from_date=self.year_start,
+			to_date=self.mid_year,
+		)
+		# starts after the report period, so it can't affect any balance
+		make_allocation_record(
+			employee=self.employee_id,
+			leave_type=future_type.name,
+			leaves=5,
+			from_date=add_days(self.mid_year, 1),
+			to_date=self.year_end,
+		)
+
+		filters = frappe._dict(
+			{"from_date": self.year_start, "to_date": self.mid_year, "employee": self.employee_id}
+		)
+		module = "hrms.hr.report.employee_leave_balance.employee_leave_balance"
+		with patch(f"{module}.get_balance_details", wraps=get_balance_details) as balance_details:
+			report = execute(filters)
+
+		balance_details.assert_called_once()
+		self.assertEqual([row.leave_type for row in report[1]], [used_type.name])
+		self.assertEqual(report[1][0].closing_balance, 5)
