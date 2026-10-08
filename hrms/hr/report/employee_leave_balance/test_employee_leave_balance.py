@@ -410,3 +410,45 @@ class TestEmployeeLeaveBalance(HRMSTestSuite):
 		balance_details.assert_called_once()
 		self.assertEqual([row.leave_type for row in report[1]], [used_type.name])
 		self.assertEqual(report[1][0].closing_balance, 5)
+
+	def test_zero_rows_and_empty_headings_hidden_when_consolidated(self):
+		used_type = create_leave_type(leave_type_name="_Test Used Leave Type")
+		expired_type = create_leave_type(leave_type_name="_Test Expired Leave Type")
+		other_employee = make_employee("test_emp_leave_balance_2@example.com", company="_Test Company")
+
+		for employee in (self.employee_id, other_employee):
+			make_allocation_record(
+				employee=employee,
+				leave_type=used_type.name,
+				leaves=5,
+				from_date=self.year_start,
+				to_date=self.mid_year,
+			)
+		# has ledger entries, but all of them are dated before the report period
+		past_allocation = make_allocation_record(
+			employee=self.employee_id,
+			leave_type=expired_type.name,
+			leaves=5,
+			from_date=add_days(self.year_start, -60),
+			to_date=add_days(self.year_start, -31),
+		)
+		expire_allocation(past_allocation)
+
+		filters = frappe._dict(
+			{
+				"from_date": self.year_start,
+				"to_date": self.mid_year,
+				"company": "_Test Company",
+				"consolidate_leave_types": 1,
+			}
+		)
+		module = "hrms.hr.report.employee_leave_balance.employee_leave_balance"
+		with patch(f"{module}.get_balance_details", wraps=get_balance_details) as balance_details:
+			report = execute(filters)
+
+		# the expired pair is calculated, then dropped because every value is zero
+		self.assertEqual(balance_details.call_count, 3)
+		self.assertEqual(report[1][0], {"leave_type": used_type.name})
+		employee_rows = report[1][1:]
+		self.assertEqual({row.employee for row in employee_rows}, {self.employee_id, other_employee})
+		self.assertTrue(all(row.closing_balance == 5 for row in employee_rows))
