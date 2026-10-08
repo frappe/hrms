@@ -552,6 +552,12 @@ class TestSalarySlip(HRMSTestSuite):
 			[
 				{"salary_component": "LWP Cond Basic", "abbr": "LCB", "type": "Earning"},
 				{
+					"salary_component": "LWP Cond Bonus",
+					"abbr": "LCBN",
+					"type": "Earning",
+					"depends_on_payment_days": 0,
+				},
+				{
 					"salary_component": "LWP Cond Accrual",
 					"abbr": "LCA",
 					"type": "Earning",
@@ -596,6 +602,13 @@ class TestSalarySlip(HRMSTestSuite):
 				"abbr": "LCA",
 				"condition": "leave_without_pay == 0",
 				"amount": 1000,
+			},
+			{
+				"salary_component": "LWP Cond Bonus",
+				"abbr": "LCBN",
+				"condition": "leave_without_pay > 0",
+				"amount_based_on_formula": 1,
+				"formula": "LCB * 0.1 + 500",
 			},
 		]
 		deductions = [
@@ -659,6 +672,14 @@ class TestSalarySlip(HRMSTestSuite):
 		basic_share = next(d for d in ss.deductions if d.salary_component == "LWP Cond Basic Share")
 		self.assertEqual(basic_share.amount, flt(basic.amount * 0.1, 2))
 		self.assertEqual(basic_share.default_amount, 3000)
+		bonus = next(d for d in ss.earnings if d.salary_component == "LWP Cond Bonus")
+		self.assertEqual(bonus.amount, flt(basic.amount * 0.1 + 500, 2))
+		self.assertEqual(bonus.default_amount, 3500)
+		preview = make_salary_slip(
+			"Test LWP Condition Structure", employee=ss.employee, posting_date="2024-07-01"
+		)
+		preview_bonus = next(d for d in preview.earnings if d.salary_component == "LWP Cond Bonus")
+		self.assertEqual(preview_bonus.default_amount, 3500)
 		self.assertIn("LWP Cond Employer", [d.salary_component for d in ss.employer_contributions])
 		# condition false on the slip, so the accrual must not be recorded
 		self.assertNotIn("LWP Cond Accrual", [d.salary_component for d in ss.accrued_benefits])
