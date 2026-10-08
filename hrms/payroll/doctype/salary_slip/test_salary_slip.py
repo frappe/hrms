@@ -671,6 +671,7 @@ class TestSalarySlip(HRMSTestSuite):
 		self.assertNotIn("LWP Cond Employer", [d.salary_component for d in ss.employer_contributions])
 
 		frappe.flags.posting_date = getdate("2024-07-01")
+		self.addCleanup(frappe.flags.pop, "posting_date", None)
 		report = SalaryBreakupReport(ss.employee, ss._salary_structure_assignment.name)
 		report.get_data()
 		self.assertFalse(
