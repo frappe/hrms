@@ -94,7 +94,8 @@ class PayrollEntry(Document):
 
 		# check if salary slips were manually submitted
 		entries = frappe.db.count("Salary Slip", {"payroll_entry": self.name, "docstatus": 1})
-		if cint(entries) == len(self.employees):
+		# manually submitted slips still need an accrual entry via "Submit Salary Slip"
+		if cint(entries) == len(self.employees) and not self.get_sal_slip_list(ss_status=1):
 			self.set_onload("submitted_ss", True)
 
 	def validate(self):
@@ -1838,6 +1839,8 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 	try:
 		submitted = []
 		unsubmitted = []
+		# slips submitted outside the payroll entry have no accrual entry yet
+		manually_submitted = payroll_entry.get_sal_slip_list(ss_status=1, as_dict=True)
 		frappe.flags.via_payroll_entry = True
 		count = 0
 
@@ -1858,12 +1861,12 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 					count * 100 / len(salary_slips), title=_("Submitting Salary Slips...")
 				)
 
-		if submitted:
-			payroll_entry.make_accrual_jv_entry(submitted)
+		if submitted or manually_submitted:
+			payroll_entry.make_accrual_jv_entry(submitted + manually_submitted)
 			payroll_entry.email_salary_slip(submitted)
 			payroll_entry.db_set({"salary_slips_submitted": 1, "status": "Submitted", "error_message": ""})
 
-		show_payroll_submission_status(submitted, unsubmitted, payroll_entry)
+		show_payroll_submission_status(submitted + manually_submitted, unsubmitted, payroll_entry)
 
 	except Exception as e:
 		if not frappe.in_test:
