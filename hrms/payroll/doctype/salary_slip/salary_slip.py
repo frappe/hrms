@@ -1429,6 +1429,7 @@ class SalarySlip(TransactionBase):
 				default_amount = flt(struct_row.default_amount)
 				if not struct_row.condition_met:
 					default_amount = flt(self.eval_condition_and_formula(struct_row, self.default_data))
+				self.default_data[struct_row.abbr] = default_amount
 				self.update_component_row(
 					struct_row,
 					amount,
