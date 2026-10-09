@@ -35,7 +35,7 @@ class ExpenseApproverIdentityError(frappe.ValidationError):
 	pass
 
 
-ROLES_ALLOWED_TO_CLAIM_FOR_OTHERS = {"HR User", "HR Manager", "Expense Approver"}
+SELF_SERVICE_ROLES = {"Employee", "Employee Self Service"}
 
 
 class MismatchError(frappe.ValidationError):
@@ -178,15 +178,22 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		if self.flags.ignore_permissions:
 			return
 
-		if employee_user != frappe.session.user and not (
-			set(frappe.get_roles()) & ROLES_ALLOWED_TO_CLAIM_FOR_OTHERS
-		):
+		if employee_user != frappe.session.user and not self.can_claim_for_others():
 			frappe.throw(
 				_("You are not allowed to create or modify an Expense Claim for Employee {0}").format(
 					self.employee
 				),
 				frappe.PermissionError,
 			)
+
+	def can_claim_for_others(self):
+		# write access from self-service roles is meant for the employee's own claims only
+		roles_with_write = {
+			perm.role
+			for perm in frappe.get_meta(self.doctype).permissions
+			if perm.write and not perm.permlevel
+		}
+		return bool((roles_with_write - SELF_SERVICE_ROLES) & set(frappe.get_roles()))
 
 	def validate_company_and_department(self):
 		if self.department:
