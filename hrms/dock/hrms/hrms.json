@@ -8,7 +8,7 @@
   {
    "added": 0,
    "hidden": 0,
-   "icon": "briefcase-duotone",
+   "icon": "briefcase-soft",
    "link_to": "HR Setup",
    "link_type": "Sidebar",
    "title": "HR Setup"
@@ -16,7 +16,7 @@
   {
    "added": 0,
    "hidden": 0,
-   "icon": "time-clock-duotone",
+   "icon": "time-clock-soft",
    "link_to": "Shift & Attendance",
    "link_type": "Sidebar",
    "title": "Shift & Attendance"
@@ -24,7 +24,7 @@
   {
    "added": 0,
    "hidden": 0,
-   "icon": "tree-palm-duotone",
+   "icon": "tree-palm-soft",
    "link_to": "Leaves",
    "link_type": "Sidebar",
    "title": "Leaves"
@@ -32,7 +32,7 @@
   {
    "added": 0,
    "hidden": 0,
-   "icon": "receipt-card-duotone",
+   "icon": "receipt-card-soft",
    "link_to": "Expenses",
    "link_type": "Sidebar",
    "title": "Expenses"
@@ -40,7 +40,7 @@
   {
    "added": 0,
    "hidden": 0,
-   "icon": "wallet-duotone",
+   "icon": "wallet-soft",
    "link_to": "Payroll",
    "link_type": "Sidebar",
    "title": "Payroll"
@@ -48,7 +48,7 @@
   {
    "added": 0,
    "hidden": 0,
-   "icon": "podium-duotone",
+   "icon": "podium-soft",
    "link_to": "Performance",
    "link_type": "Sidebar",
    "title": "Performance"
@@ -56,7 +56,7 @@
   {
    "added": 0,
    "hidden": 0,
-   "icon": "user-clock-duotone",
+   "icon": "user-clock-soft",
    "link_to": "Tenure",
    "link_type": "Sidebar",
    "title": "Tenure"
@@ -64,7 +64,7 @@
   {
    "added": 0,
    "hidden": 0,
-   "icon": "user-search-duotone",
+   "icon": "user-search-soft",
    "link_to": "Recruitment",
    "link_type": "Sidebar",
    "title": "Recruitment"
@@ -72,13 +72,13 @@
   {
    "added": 0,
    "hidden": 0,
-   "icon": "coins-percent-duotone",
+   "icon": "coins-percent-soft",
    "link_to": "Tax & Benefits",
    "link_type": "Sidebar",
    "title": "Tax & Benefits"
   }
  ],
- "modified": "2026-10-05 12:30:00.000000",
+ "modified": "2026-10-09 12:00:00.000000",
  "modified_by": "Administrator",
  "name": "hrms",
  "owner": "Administrator",
