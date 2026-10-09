@@ -905,6 +905,58 @@ class TestExpenseClaim(HRMSTestSuite):
 
 		frappe.set_user("Administrator")
 
+	def test_role_permission_allows_claim_for_others(self):
+		from frappe.permissions import add_permission, update_permission_property
+
+		employee = make_employee("test_accounts_claim@example.com", company="_Test Company")
+		accounts_user = make_user("test_accounts_user_claim@example.com", "Accounts User")
+		payable_account = get_payable_account("_Test Company")
+
+		add_permission("Expense Claim", "Accounts User", 0, "create")
+		update_permission_property("Expense Claim", "Accounts User", 0, "write", 1)
+		self.addCleanup(frappe.clear_cache, doctype="Expense Claim")
+
+		frappe.set_user(accounts_user)
+		make_expense_claim(
+			payable_account,
+			300,
+			200,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			do_not_submit=True,
+			employee=employee,
+		).insert()
+
+		frappe.set_user("Administrator")
+
+	def test_self_service_user_cannot_claim_for_others(self):
+		make_employee("test_ess_claim@example.com", company="_Test Company")
+		other_employee = make_employee("test_ess_other_claim@example.com", company="_Test Company")
+		payable_account = get_payable_account("_Test Company")
+
+		ess_user = frappe.get_doc("User", "test_ess_claim@example.com")
+		ess_user.user_type = "Employee Self Service"
+		ess_user.save()
+
+		# user permissions are bypassed so that the controller check is what gets exercised
+		frappe.db.delete("User Permission", {"user": ess_user.name})
+		frappe.clear_cache(user=ess_user.name)
+
+		frappe.set_user(ess_user.name)
+		self.assertIn("Employee Self Service", frappe.get_roles())
+		expense_claim = make_expense_claim(
+			payable_account,
+			300,
+			200,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			do_not_submit=True,
+			employee=other_employee,
+		)
+		self.assertRaises(frappe.PermissionError, expense_claim.insert)
+
+		frappe.set_user("Administrator")
+
 	def test_self_expense_approval(self):
 		frappe.db.set_single_value("HR Settings", "prevent_self_expense_approval", 0)
 
