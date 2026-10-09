@@ -132,6 +132,22 @@ class TestShiftAttendance(HRMSTestSuite):
 		]
 		self.assertEqual(expected_data, data)
 
+	def test_employment_type_filter(self):
+		frappe.db.set_value("Employee", self.emp2, "employment_type", "Contract")
+
+		filters = frappe._dict(
+			{
+				"company": "_Test Company",
+				"from_date": date(2023, 1, 1),
+				"to_date": date(2023, 1, 3),
+				"employment_type": "Contract",
+			}
+		)
+		data = execute(filters)[1]
+
+		self.assertEqual(len(data), 3)
+		self.assertTrue(all(row.employee == self.emp2 for row in data))
+
 	def test_chart(self):
 		filters = frappe._dict(
 			{
