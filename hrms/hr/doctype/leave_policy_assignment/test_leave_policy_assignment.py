@@ -4,6 +4,7 @@
 import frappe
 from frappe.utils import add_days, add_months, get_first_day, get_year_ending, get_year_start, getdate
 
+from hrms.hr.doctype.leave_allocation.test_earned_leaves import get_allocated_leaves
 from hrms.hr.doctype.leave_application.test_leave_application import get_employee, get_leave_period
 from hrms.hr.doctype.leave_period.test_leave_period import create_leave_period
 from hrms.hr.doctype.leave_policy.test_leave_policy import create_leave_policy
@@ -525,3 +526,44 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 
 		# should be exactly 2 allocations, not 3
 		self.assertEqual(len(allocation_dates), 2)
+
+	def test_max_leaves_allowed_ignores_previous_allocation_in_overlapping_leave_period(self):
+		"""
+		Leave Periods: 2025 and 2026 (calendar year)
+		Previous allocation: 01-Feb-2024 to 31-Jan-2025
+		Current allocation: 01-Feb-2025 to 31-Jan-2026, overlaps both leave periods
+		"""
+		create_leave_period(getdate("2025-01-01"), getdate("2025-12-31"), "_Test Company")
+		create_leave_period(getdate("2026-01-01"), getdate("2026-12-31"), "_Test Company")
+		leave_type = create_leave_type(leave_type_name="_Test Max Leaves Type", max_leaves_allowed=12)
+		leave_policy = create_leave_policy(leave_type=leave_type.name, annual_allocation=12)
+		leave_policy.submit()
+
+		self.employee.date_of_joining = getdate("2024-01-01")
+		self.employee.save()
+
+		previous_assignment = create_assignment(
+			self.employee.name,
+			frappe._dict(
+				{
+					"leave_policy": leave_policy.name,
+					"effective_from": "2024-02-01",
+					"effective_to": "2025-01-31",
+				}
+			),
+		)
+		previous_assignment.submit()
+
+		current_assignment = create_assignment(
+			self.employee.name,
+			frappe._dict(
+				{
+					"leave_policy": leave_policy.name,
+					"effective_from": "2025-02-01",
+					"effective_to": "2026-01-31",
+				}
+			),
+		)
+		current_assignment.submit()
+
+		self.assertEqual(get_allocated_leaves(current_assignment.name), 12)
