@@ -13,6 +13,12 @@ frappe.ui.form.on("Leave Application", {
 			};
 		});
 		frm.set_query("employee", erpnext.queries.employee);
+		frm.set_query("leave_type", function () {
+			// empty list until an employee is selected, so no leave types are shown
+			return {
+				filters: [["leave_type_name", "in", frm.allowed_leave_types || []]],
+			};
+		});
 	},
 
 	onload: function (frm) {
@@ -47,9 +53,10 @@ frappe.ui.form.on("Leave Application", {
 	},
 
 	make_dashboard: function (frm) {
-		let leave_details;
-		let lwps;
+		let leave_details = {};
+		let lwps = [];
 
+		frm.allowed_leave_types = [];
 		if (frm.doc.employee) {
 			frappe.call({
 				method: "hrms.hr.doctype.leave_application.leave_application.get_leave_details",
@@ -77,15 +84,8 @@ frappe.ui.form.on("Leave Application", {
 			);
 			frm.dashboard.show();
 
-			let allowed_leave_types = Object.keys(leave_details);
 			// lwps should be allowed for selection as they don't have any allocation
-			allowed_leave_types = allowed_leave_types.concat(lwps);
-
-			frm.set_query("leave_type", function () {
-				return {
-					filters: [["leave_type_name", "in", allowed_leave_types]],
-				};
-			});
+			frm.allowed_leave_types = Object.keys(leave_details).concat(lwps);
 		}
 	},
 
