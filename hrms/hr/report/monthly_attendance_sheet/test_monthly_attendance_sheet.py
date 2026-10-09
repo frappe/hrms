@@ -712,14 +712,11 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 	def test_attendance_with_employment_type_filter(self):
 		previous_month_first = get_first_day_for_prev_month()
 
-		contract = create_employment_type("Test Contract")
-		full_time = create_employment_type("Test Full-time")
-
 		emp_contract = make_employee(
-			"emp_contract@example.com", company=self.company, employment_type=contract
+			"emp_contract@example.com", company=self.company, employment_type="Contract"
 		)
 		emp_full_time = make_employee(
-			"emp_full_time@example.com", company=self.company, employment_type=full_time
+			"emp_full_time@example.com", company=self.company, employment_type="Full-time"
 		)
 
 		mark_attendance(emp_contract, previous_month_first, "Present")
@@ -730,7 +727,7 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 				"month": previous_month_first.month,
 				"year": previous_month_first.year,
 				"company": self.company,
-				"employment_type": contract,
+				"employment_type": "Contract",
 				"filter_based_on": self.filter_based_on,
 			}
 		)
@@ -965,14 +962,6 @@ def create_branch(branch_name):
 	if not frappe.db.exists("Branch", branch_name):
 		frappe.get_doc({"doctype": "Branch", "branch": branch_name}).insert(ignore_permissions=True)
 	return branch_name
-
-
-def create_employment_type(employment_type):
-	if not frappe.db.exists("Employment Type", employment_type):
-		frappe.get_doc({"doctype": "Employment Type", "employee_type_name": employment_type}).insert(
-			ignore_permissions=True
-		)
-	return employment_type
 
 
 def add_holiday_to_list(holiday_list_name, holiday_date, description="Test Holiday"):
