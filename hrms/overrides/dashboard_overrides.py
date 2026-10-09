@@ -89,7 +89,7 @@ def get_dashboard_for_employee(data):
 def get_dashboard_for_holiday_list(data):
 	data["non_standard_fieldnames"].update({"Leave Period": "optional_holiday_list"})
 
-	data["transactions"].append({"items": ["Leave Period", "Shift Type"]})
+	data["transactions"].append({"items": ["Leave Period", "Shift Type", "Holiday List Assignment"]})
 
 	return data
 
