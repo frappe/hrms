@@ -6,4 +6,5 @@ import "./utils";
 import "./utils/payroll_utils";
 import "./utils/leave_utils";
 import "./utils/telemetry.js";
+import "./utils/employee_setup.js";
 import "./salary_slip_deductions_report_filters.js";
