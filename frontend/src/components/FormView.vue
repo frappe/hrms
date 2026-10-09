@@ -553,6 +553,26 @@ const docList = createListResource({
 const documentResource = createDocumentResource({
 	doctype: props.doctype,
 	name: props.id,
+	whitelistedMethods: {
+		submitDoc: {
+			method: "submit",
+			onSuccess() {
+				showSuccessToast(__("{0} submitted successfully!", [__(props.doctype)]))
+			},
+			onError(error) {
+				showErrorToast(error, __("Error submitting {0}", [__(props.doctype)]))
+			},
+		},
+		cancelDoc: {
+			method: "cancel",
+			onSuccess() {
+				showSuccessToast(__("{0} cancelled successfully!", [__(props.doctype)]))
+			},
+			onError(error) {
+				showErrorToast(error, __("Error cancelling {0}", [__(props.doctype)]))
+			},
+		},
+	},
 	setValue: {
 		onSuccess() {
 			toast({
@@ -662,25 +682,45 @@ function validateMandatoryFields() {
 	}
 }
 
+function showSuccessToast(text) {
+	toast({
+		title: __("Success"),
+		text: text,
+		icon: "check-circle",
+		position: "bottom-center",
+		iconClasses: "text-green-500",
+	})
+}
+
+function showErrorToast(error, fallbackMessage) {
+	toast({
+		title: __("Error"),
+		text: error?.messages?.[0] || fallbackMessage,
+		icon: "alert-circle",
+		position: "bottom-center",
+		iconClasses: "text-red-500",
+	})
+}
+
 async function handleDocUpdate(action) {
-	if (documentResource.doc) {
-		let params = { ...formModel.value }
+	if (documentResource.doc && !validateMandatoryFields()) return
 
-		if (!validateMandatoryFields()) return
+	try {
+		if (documentResource.doc) {
+			// frappe.client.set_value does not allow changing docstatus, a framework managed field,
+			// so the document's own methods are used to submit or cancel it
+			if (action === "submit") await documentResource.submitDoc.submit()
+			else if (action === "cancel") await documentResource.cancelDoc.submit()
+			else await documentResource.setValue.submit({ ...formModel.value })
 
-		if (action == "submit") {
-			params.docstatus = 1
-		} else if (action == "cancel") {
-			params.docstatus = 2
+			await documentResource.get.promise
+			resetForm()
 		}
-
-		await documentResource.setValue.submit(params)
-		await documentResource.get.promise
-		resetForm()
+	} finally {
+		// resources rethrow after their onError handler runs, so the dialog is closed here
+		if (action === "submit") showSubmitDialog.value = false
+		else if (action === "cancel") showCancelDialog.value = false
 	}
-
-	if (action === "submit") showSubmitDialog.value = false
-	else if (action === "cancel") showCancelDialog.value = false
 }
 
 function saveForm() {
