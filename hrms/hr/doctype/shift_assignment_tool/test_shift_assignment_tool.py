@@ -75,6 +75,7 @@ class TestShiftAssignmentTool(HRMSTestSuite):
 		self.assertIn(self.emp1, employee_names)
 		self.assertIn(self.emp2, employee_names)
 
+	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": 0})
 	def test_get_employees_for_assigning_shift_schedule(self):
 		today = getdate()
 
@@ -89,11 +90,11 @@ class TestShiftAssignmentTool(HRMSTestSuite):
 		advanced_filters = [["employee_name", "like", "%test.com%"]]  # excludes emp5
 
 		# does not exclude emp1 as days don't overlap
-		make_shift_schedule_assignment(self.schedule4, self.emp1)
+		make_shift_schedule_assignment(self.schedule4, self.emp1).create_shifts(today)
 		# excludes emp2 due to overlapping days
-		make_shift_schedule_assignment(self.schedule2, self.emp2)
+		make_shift_schedule_assignment(self.schedule2, self.emp2).create_shifts(today)
 		# excludes emp3 due to overlapping days
-		make_shift_schedule_assignment(self.schedule3, self.emp3)
+		make_shift_schedule_assignment(self.schedule3, self.emp3).create_shifts(today)
 
 		employees = shift_assignment_tool.get_employees(advanced_filters)
 		self.assertEqual(len(employees), 1)  # emp1
@@ -106,6 +107,121 @@ class TestShiftAssignmentTool(HRMSTestSuite):
 		employee_names = [d.employee for d in employees]
 		self.assertIn(self.emp1, employee_names)
 		self.assertIn(self.emp3, employee_names)
+
+	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": 0})
+	def test_complementary_rotation_schedules(self):
+		days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+		schedule_a = get_or_insert_shift_schedule(self.shift1.name, "Every 3 Weeks", days)
+		schedule_b = get_or_insert_shift_schedule(self.shift2.name, "Every 3 Weeks", days)
+		make_shift_schedule_assignment(schedule_a, self.emp1).create_shifts("2026-09-21")
+		make_shift_schedule_assignment(schedule_a, self.emp2).create_shifts("2026-09-28")
+
+		tool = ShiftAssignmentTool(
+			{
+				"doctype": "Shift Assignment Tool",
+				"action": "Assign Shift Schedule",
+				"company": "_Test Company",
+				"shift_schedule": schedule_b,
+				"start_date": "2026-09-28",
+				"status": "Active",
+			}
+		)
+		for allow_multiple in (0, 1):
+			with self.subTest(allow_multiple=allow_multiple):
+				frappe.db.set_single_value("HR Settings", "allow_multiple_shift_assignments", allow_multiple)
+				employees = {d.employee for d in tool.get_employees()}
+				self.assertIn(self.emp1, employees)
+				self.assertNotIn(self.emp2, employees)
+
+		# The complementary schedule must also pass the actual assignment validations.
+		assignment = tool.create_shift_schedule_assignment(self.emp1)
+		assignment.create_shifts(tool.start_date)
+		shifts = frappe.get_all(
+			"Shift Assignment",
+			filters={"shift_schedule_assignment": assignment.name, "docstatus": 1},
+			fields=["start_date", "end_date"],
+			order_by="start_date",
+		)
+		self.assertEqual(
+			[(str(d.start_date), str(d.end_date)) for d in shifts],
+			[
+				("2026-09-28", "2026-10-04"),
+				("2026-10-19", "2026-10-25"),
+				("2026-11-09", "2026-11-15"),
+				("2026-11-30", "2026-12-06"),
+				("2026-12-21", "2026-12-27"),
+			],
+		)
+
+	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": 0})
+	def test_schedule_conflicts_with_actual_shifts(self):
+		tool = ShiftAssignmentTool(
+			{
+				"doctype": "Shift Assignment Tool",
+				"action": "Assign Shift Schedule",
+				"company": "_Test Company",
+				"shift_schedule": self.schedule1,  # Mondays
+				"start_date": "2026-09-21",
+				"end_date": "2026-09-28",
+			}
+		)
+		# An assignment from a finite (disabled) schedule still blocks overlapping dates.
+		assignment = make_shift_schedule_assignment(self.schedule2, self.emp1, enabled=0)
+		assignment.create_shifts("2026-09-21", "2026-09-21")
+		# Standalone, open-ended shifts also need to be considered.
+		make_shift_assignment(self.shift2.name, self.emp2, "2026-09-28")
+		# A shift in between the requested Mondays is not a conflict.
+		make_shift_assignment(self.shift2.name, self.emp3, "2026-09-22", "2026-09-22")
+
+		employees = {d.employee for d in tool.get_employees()}
+		self.assertNotIn(self.emp1, employees)
+		self.assertNotIn(self.emp2, employees)
+		self.assertIn(self.emp3, employees)
+
+		# Restricting the end date excludes the later conflict.
+		tool.end_date = "2026-09-21"
+		employees = {d.employee for d in tool.get_employees()}
+		self.assertNotIn(self.emp1, employees)
+		self.assertIn(self.emp2, employees)
+
+		# Cancelled shifts must not block the schedule.
+		shift = frappe.get_doc("Shift Assignment", {"shift_schedule_assignment": assignment.name})
+		shift.cancel()
+		self.assertIn(self.emp1, {d.employee for d in tool.get_employees()})
+
+		# A range containing no scheduled weekdays must not exclude any of these employees.
+		tool.start_date = tool.end_date = "2026-09-29"
+		employees = {d.employee for d in tool.get_employees()}
+		self.assertTrue({self.emp1, self.emp2, self.emp3}.issubset(employees))
+
+	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
+	def test_touching_shift_timings_do_not_conflict(self):
+		shift4 = setup_shift_type(shift_type="Shift 4", start_time="12:00:00", end_time="16:00:00")
+		schedule = get_or_insert_shift_schedule(shift4.name, "Every Week", ["Monday"])
+		# shift1 (08:00-12:00) ends when shift4 starts
+		make_shift_assignment(self.shift1.name, self.emp1, "2026-09-21", "2026-09-21")
+		# shift2 (11:00-15:00) overlaps shift4
+		make_shift_assignment(self.shift2.name, self.emp2, "2026-09-21", "2026-09-21")
+
+		for action, field, value in (
+			("Assign Shift", "shift_type", shift4.name),
+			("Assign Shift Schedule", "shift_schedule", schedule),
+		):
+			with self.subTest(action=action):
+				tool = ShiftAssignmentTool(
+					{
+						"doctype": "Shift Assignment Tool",
+						"action": action,
+						"company": "_Test Company",
+						field: value,
+						"start_date": "2026-09-21",
+						"end_date": "2026-09-21",
+						"status": "Active",
+					}
+				)
+				employees = {d.employee for d in tool.get_employees()}
+				self.assertIn(self.emp1, employees)
+				self.assertNotIn(self.emp2, employees)
 
 	def test_get_shift_requests(self):
 		today = getdate()
@@ -307,5 +423,4 @@ def make_shift_schedule_assignment(schedule, employee, create_shifts_after=None,
 	assignment.enabled = enabled
 	assignment.create_shifts_after = create_shifts_after or getdate()
 	assignment.save()
-
-	return assignment.name
+	return assignment
