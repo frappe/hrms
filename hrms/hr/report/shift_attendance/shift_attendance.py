@@ -276,6 +276,14 @@ def get_base_attendance_query(filters):
 			query = query.where(attendance.attendance_date <= filters.to_date)
 		elif field in ["consider_grace_period", "include_attendance_without_checkins"]:
 			continue
+		elif field == "employment_type":
+			if filters.employment_type:
+				employee = frappe.qb.DocType("Employee")
+				query = (
+					query.inner_join(employee)
+					.on(attendance.employee == employee.name)
+					.where(employee.employment_type == filters.employment_type)
+				)
 		else:
 			query = query.where(attendance[field] == filters[field])
 
