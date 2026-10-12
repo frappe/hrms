@@ -156,7 +156,8 @@
    "fieldtype": "Link",
    "ignore_user_permissions": 1,
    "label": "Advance Account",
-   "options": "Account"
+   "options": "Account",
+   "read_only_depends_on": "eval:!doc.employee"
   },
   {
    "fieldname": "mode_of_payment",
@@ -247,7 +248,7 @@
  "icon": "hand-coins",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-10-12 16:01:09.034261",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Advance",
@@ -294,10 +295,10 @@
    "color": "Green",
    "title": "Paid"
   },
-    {
-     "color": "Blue",
-     "title": "Partially Paid"
-    },
+  {
+   "color": "Blue",
+   "title": "Partially Paid"
+  },
   {
    "color": "Orange",
    "title": "Unpaid"
