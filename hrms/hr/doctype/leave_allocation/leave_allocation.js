@@ -42,9 +42,12 @@ frappe.ui.form.on("Leave Allocation", {
 				frm.add_custom_button(
 					__("Expire Allocation"),
 					function () {
-						frappe.confirm("Are you sure you want to expire this allocation?", () => {
-							frm.trigger("expire_allocation");
-						});
+						frappe.confirm(
+							__("Are you sure you want to expire this allocation?"),
+							() => {
+								frm.trigger("expire_allocation");
+							},
+						);
 					},
 					__("Actions"),
 				);
