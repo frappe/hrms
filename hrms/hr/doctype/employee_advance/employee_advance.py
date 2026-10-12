@@ -60,6 +60,7 @@ class EmployeeAdvance(Document):
 
 	def validate(self):
 		validate_active_employee(self.employee)
+		self.validate_advance_amount()
 		self.validate_advance_account_currency()
 		self.validate_advance_account_type()
 		self.set_status()
@@ -111,6 +112,10 @@ class EmployeeAdvance(Document):
 	def publish_update(self):
 		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
 		hrms.refetch_resource("hrms:employee_advance_balance", employee_user)
+
+	def validate_advance_amount(self):
+		if flt(self.advance_amount) <= 0:
+			frappe.throw(_("Advance Amount must be greater than zero."))
 
 	def validate_advance_account_type(self):
 		if not self.advance_account:
