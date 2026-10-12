@@ -868,6 +868,82 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		self.assertEqual(attendance[0].in_time, in_log.time)
 		self.assertEqual(attendance[0].out_time, out_log.time)
 
+	def test_half_day_attendance_not_closed_before_shift_actually_ends(self):
+		today = getdate()
+		shift = setup_shift_type(
+			shift_type="_Test Half Day Premature Close",
+			start_time="08:00:00",
+			end_time="12:00:00",
+			allow_check_out_after_shift_end_time=630,
+			working_hours_threshold_for_half_day=3,
+			last_sync_of_checkin=datetime.combine(today, get_time("15:00:00")),
+		)
+		emp = make_employee("testhalfday5@example.com", company="_Test Company", default_shift=shift.name)
+		employee = frappe.get_doc("Employee", emp)
+		# create attendance from leave
+		leave_type = create_leave_type(leave_type_name="_Test Half Day", include_holidays=0)
+		create_leave_allocation(
+			employee=employee,
+			leave_type=leave_type,
+			from_date=add_days(today, -2),
+			to_date=add_days(today, 30),
+			new_leaves_allocated=15,
+		)
+		make_leave_application(
+			leave_type=leave_type.name,
+			employee=emp,
+			from_date=today,
+			to_date=today,
+			half_day=1,
+			half_day_date=today,
+		)
+
+		in_time = datetime.combine(today, get_time("08:00:00"))
+		out_time = datetime.combine(today, get_time("10:00:00"))
+		in_log = make_checkin(emp, in_time)
+		out_log = make_checkin(emp, out_time)
+
+		attendance_filters = {"leave_type": leave_type.name, "employee": emp, "attendance_date": today}
+		attendance_fields = [
+			"name",
+			"status",
+			"half_day_status",
+			"shift",
+			"working_hours",
+			"in_time",
+			"out_time",
+			"modify_half_day_status",
+		]
+
+		# sync before shift end: checkins aren't processed yet, half day shouldn't be force-closed
+		shift.process_auto_attendance()
+
+		attendance = frappe.get_all("Attendance", filters=attendance_filters, fields=attendance_fields)
+		self.assertEqual(len(attendance), 1)
+		self.assertEqual(attendance[0].status, "Half Day")
+		self.assertEqual(attendance[0].half_day_status, "Present")
+		self.assertEqual(attendance[0].modify_half_day_status, 1)
+
+		# sync after shift end: checkins should update the same attendance, not raise DuplicateAttendanceError
+		shift.last_sync_of_checkin = datetime.combine(add_days(today, 1), get_time("01:00:00"))
+		shift.save()
+		shift.process_auto_attendance()
+
+		attendance = frappe.get_all("Attendance", filters=attendance_filters, fields=attendance_fields)
+		self.assertEqual(len(attendance), 1)
+		self.assertEqual(attendance[0].status, "Half Day")
+		self.assertEqual(attendance[0].half_day_status, "Present")
+		self.assertEqual(attendance[0].shift, shift.name)
+		self.assertEqual(attendance[0].modify_half_day_status, 0)
+		self.assertEqual(attendance[0].working_hours, 2)
+		self.assertEqual(attendance[0].in_time, in_log.time)
+		self.assertEqual(attendance[0].out_time, out_log.time)
+
+		in_log.reload()
+		out_log.reload()
+		self.assertEqual(in_log.attendance, attendance[0].name)
+		self.assertEqual(out_log.attendance, attendance[0].name)
+
 
 def make_n_checkins(employee, n, hours_to_reverse=1):
 	logs = [make_checkin(employee, now_datetime() - timedelta(hours=hours_to_reverse, minutes=n + 1))]

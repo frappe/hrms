@@ -15,6 +15,7 @@ add_to_apps_screen = [
 		"logo": "/assets/hrms/images/frappe-hr-logo.svg",
 		"title": "Frappe HR",
 		"route": app_home,
+		"setup_wizard_text": "Let's build a workplace your team will love.",
 		"has_permission": "hrms.hr.utils.check_app_permission",
 		"sequence_id": 2,
 	}
@@ -29,6 +30,8 @@ app_include_js = [
 	"hrms.bundle.js",
 ]
 app_include_css = "hrms.bundle.css"
+code_only_modules = {"HR": ["HR Setup"]}
+app_include_icons = ["/assets/hrms/icons/module-icons.svg"]
 
 # website
 
@@ -103,7 +106,10 @@ after_migrate = "hrms.setup.update_select_perm_after_install"
 
 setup_wizard_requires = "assets/hrms/js/setup_wizard.js"
 setup_wizard_stages = "hrms.setup_wizard.get_setup_stages"
-setup_wizard_complete = "hrms.subscription_utils.update_erpnext_access"
+setup_wizard_complete = [
+	"hrms.subscription_utils.update_erpnext_access",
+	"hrms.subscription_utils.set_hrms_as_default_app",
+]
 
 extend_bootinfo = "hrms.utils.extend_bootinfo"
 
@@ -257,9 +263,6 @@ scheduler_events = {
 	"all": [
 		"hrms.hr.doctype.interview.interview.send_interview_reminder",
 	],
-	"hourly": [
-		"hrms.hr.doctype.daily_work_summary_group.daily_work_summary_group.trigger_emails",
-	],
 	"hourly_long": [
 		"hrms.hr.doctype.shift_type.shift_type.update_last_sync_of_checkin",
 		"hrms.hr.doctype.shift_type.shift_type.process_auto_attendance_for_all_shifts",
@@ -268,7 +271,6 @@ scheduler_events = {
 	"daily": [
 		"hrms.controllers.employee_reminders.send_birthday_reminders",
 		"hrms.controllers.employee_reminders.send_work_anniversary_reminders",
-		"hrms.hr.doctype.daily_work_summary_group.daily_work_summary_group.send_summary",
 		"hrms.hr.doctype.interview.interview.send_daily_feedback_reminder",
 		"hrms.hr.doctype.shift_assignment.shift_assignment.mark_expired_shift_assignments_as_inactive",
 		"hrms.hr.doctype.job_opening.job_opening.close_expired_job_openings",

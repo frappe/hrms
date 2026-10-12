@@ -1,0 +1,51 @@
+{
+ "allow_roles": [
+  {
+   "role": "HR Manager"
+  },
+  {
+   "role": "HR User"
+  }
+ ],
+ "creation": "2026-10-05 12:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Module Onboarding",
+ "idx": 0,
+ "is_complete": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Performance",
+ "name": "Performance Onboarding",
+ "owner": "Administrator",
+ "steps": [
+  {
+   "is_optional": 0,
+   "step": "Create KRA"
+  },
+  {
+   "is_optional": 0,
+   "step": "Create Appraisal Template"
+  },
+  {
+   "is_optional": 0,
+   "step": "Create Appraisal Cycle"
+  },
+  {
+   "is_optional": 0,
+   "step": "Create Appraisal"
+  },
+  {
+   "is_optional": 1,
+   "step": "Create Goal"
+  },
+  {
+   "is_optional": 1,
+   "step": "Create Employee Performance Feedback"
+  },
+  {
+   "is_optional": 1,
+   "step": "View Appraisal Overview"
+  }
+ ],
+ "title": "Review performance"
+}

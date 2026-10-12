@@ -4,6 +4,7 @@
  "autoname": "format:{Arrear}/{employee}/{#####}",
  "creation": "2025-09-15 16:08:13.216474",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/arrears",
  "engine": "InnoDB",
  "field_order": [
   "employee",
@@ -140,6 +141,7 @@
   }
  ],
  "grid_page_length": 50,
+ "icon": "rotate-ccw-clock",
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [
@@ -148,7 +150,7 @@
    "link_fieldname": "ref_docname"
   }
  ],
- "modified": "2026-09-01 18:39:51.520758",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Arrear",

@@ -68,6 +68,16 @@ Repository = "https://github.com/frappe/hrms.git"
 Documentation = "https://docs.frappe.io/hr"
 "Bug Reports" = "https://github.com/frappe/hrms/issues"
 
+[[tool.bench.assets]]
+build_dir = "./frontend"
+out_dir = "./hrms/public/frontend"
+index_html_path = "./hrms/www/hrms.html"
+
+[[tool.bench.assets]]
+build_dir = "./roster"
+out_dir = "./hrms/public/roster"
+index_html_path = "./hrms/www/roster.html"
+
 
 [tool.bench.frappe-dependencies]
 frappe = ">=17.0.0-dev,<18.0.0"

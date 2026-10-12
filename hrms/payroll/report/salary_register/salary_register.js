@@ -90,5 +90,11 @@ frappe.query_reports["Salary Register"] = {
 			options: "Branch",
 			width: "100px",
 		},
+		{
+			fieldname: "show_employer_contributions",
+			label: __("Show Employer Contributions"),
+			fieldtype: "Check",
+			default: 0,
+		},
 	],
 };

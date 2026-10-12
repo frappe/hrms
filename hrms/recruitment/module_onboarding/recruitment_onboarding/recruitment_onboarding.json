@@ -1,0 +1,47 @@
+{
+ "allow_roles": [
+  {
+   "role": "HR Manager"
+  },
+  {
+   "role": "HR User"
+  }
+ ],
+ "creation": "2026-10-05 12:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Module Onboarding",
+ "idx": 0,
+ "is_complete": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Recruitment",
+ "name": "Recruitment Onboarding",
+ "owner": "Administrator",
+ "steps": [
+  {
+   "is_optional": 0,
+   "step": "Create Job Opening"
+  },
+  {
+   "is_optional": 0,
+   "step": "Create Job Applicant"
+  },
+  {
+   "is_optional": 1,
+   "step": "Create Interview"
+  },
+  {
+   "is_optional": 0,
+   "step": "Create Job Offer"
+  },
+  {
+   "is_optional": 1,
+   "step": "Create Appointment Letter"
+  },
+  {
+   "is_optional": 1,
+   "step": "View Recruitment Analytics"
+  }
+ ],
+ "title": "Hire your first employee"
+}

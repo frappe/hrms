@@ -5,6 +5,7 @@
  "autoname": "Prompt",
  "creation": "2018-04-13 16:51:36.971140",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/employee-tax-exemption-declaration",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -32,8 +33,9 @@
    "label": "Description"
   }
  ],
+ "icon": "tag",
  "links": [],
- "modified": "2026-08-06 13:01:43.187327",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Tax Exemption Category",

@@ -12,7 +12,7 @@ from frappe.utils import getdate
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.exit_interview.exit_interview import send_exit_questionnaire
-from hrms.tests.utils import HRMSTestSuite
+from hrms.tests.utils import HRMSTestSuite, make_user
 
 
 class TestExitInterview(HRMSTestSuite):
@@ -55,18 +55,7 @@ class TestExitInterview(HRMSTestSuite):
 		self.assertEqual(frappe.db.get_value("Employee", employee, "held_on"), None)
 
 	def test_send_exit_questionnaire(self):
-		create_custom_doctype()
-		create_webform()
-		template = create_notification_template()
-
-		webform = frappe.db.get_all("Web Form", limit=1)
-		frappe.db.set_single_value(
-			"HR Settings",
-			{
-				"exit_questionnaire_web_form": webform[0].name,
-				"exit_questionnaire_notification_template": template,
-			},
-		)
+		set_exit_questionnaire_settings()
 
 		employee = make_employee("employeeexit3@example.com", company="_Test Company")
 		frappe.db.set_value("Employee", employee, "relieving_date", getdate())
@@ -76,6 +65,25 @@ class TestExitInterview(HRMSTestSuite):
 
 		email_queue = frappe.db.get_all("Email Queue", ["name", "message"], limit=1)
 		self.assertTrue("Subject: Exit Questionnaire Notification" in email_queue[0].message)
+
+	def test_send_exit_questionnaire_permission(self):
+		set_exit_questionnaire_settings()
+
+		employee = make_employee("employeeexit4@example.com", company="_Test Company")
+		frappe.db.set_value("Employee", employee, "relieving_date", getdate())
+		interview = create_exit_interview(employee)
+		hr_user = make_user("test_exit_hr_user@example.com", "HR User")
+		hr_manager = make_user("test_exit_hr_manager@example.com", "HR Manager")
+
+		with self.set_user(hr_user):
+			self.assertRaises(frappe.PermissionError, send_exit_questionnaire, [interview])
+
+		self.assertFalse(frappe.db.get_value("Exit Interview", interview.name, "questionnaire_email_sent"))
+
+		with self.set_user(hr_manager):
+			send_exit_questionnaire([interview])
+
+		self.assertTrue(frappe.db.get_value("Exit Interview", interview.name, "questionnaire_email_sent"))
 
 	def test_status_on_discard(self):
 		employee = make_employee("test_status@example.com", company="_Test Company")
@@ -104,6 +112,21 @@ def create_exit_interview(employee, save=True):
 	if save:
 		return doc.insert()
 	return doc
+
+
+def set_exit_questionnaire_settings():
+	create_custom_doctype()
+	create_webform()
+	template = create_notification_template()
+
+	webform = frappe.db.get_all("Web Form", limit=1)
+	frappe.db.set_single_value(
+		"HR Settings",
+		{
+			"exit_questionnaire_web_form": webform[0].name,
+			"exit_questionnaire_notification_template": template,
+		},
+	)
 
 
 def create_notification_template():

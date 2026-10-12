@@ -245,6 +245,34 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		advance.reload()
 		self.assertEqual(advance.status, "Returned")
 
+	def test_advance_return_posts_to_advance_account_when_component_account_differs(self):
+		company_doc = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee("test_advance_component_account@payroll.com", company=company_doc.name)
+
+		advance = make_employee_advance(employee, {"repay_unclaimed_amount_from_salary": 1})
+		make_payment_entry(advance)
+		advance.reload()
+
+		create_payroll_for_advance_return(employee, company_doc, advance, component_account="Salary - _TC")
+
+		deduction_entry = frappe.get_all(
+			"Journal Entry Account",
+			fields=["account", "party", "credit"],
+			filters={
+				"reference_type": "Employee Advance",
+				"reference_name": advance.name,
+				"is_advance": "Yes",
+			},
+		)[0]
+		self.assertEqual(
+			deduction_entry,
+			{"account": advance.advance_account, "party": employee, "credit": advance.paid_amount},
+		)
+
+		advance.reload()
+		self.assertEqual(advance.return_amount, advance.paid_amount)
+		self.assertEqual(advance.status, "Returned")
+
 	def test_payment_entry_against_advance(self):
 		employee_name = make_employee("_T@employee.advance", "_Test Company")
 		advance = make_employee_advance(employee_name)
@@ -576,17 +604,20 @@ def create_advance_account(account_name, account_currency):
 	)
 
 
-def create_payroll_for_advance_return(employee, company, advance, return_amount=None):
+def create_payroll_for_advance_return(
+	employee, company, advance, return_amount=None, component_account="Employee Advances - _TC"
+):
 	# Advance deduction component
 	component = create_salary_component(
 		"Advance Salary",
 		**{"type": "Deduction"},
 	)
+	component.set("accounts", [])
 	component.append(
 		"accounts",
 		{
 			"company": company.name,
-			"account": "Employee Advances - _TC",
+			"account": component_account,
 		},
 	)
 	component.save()

@@ -69,6 +69,15 @@ def subscription_updated(app: str, plan: str):
 		update_erpnext_access()
 
 
+def set_hrms_as_default_app(*args):
+	if is_hr_only_site() and not frappe.get_system_settings("default_app"):
+		frappe.db.set_single_value("System Settings", "default_app", "hrms")
+
+
+def is_hr_only_site() -> bool:
+	return bool(frappe.conf.sk_hrms and not (frappe.conf.sk_erpnext_smb or frappe.conf.sk_erpnext))
+
+
 def update_erpnext_access(user_input: dict | None):
 	"""
 	Called from hooks after setup wizard completion, ignored if user has no hrms subscription
@@ -173,8 +182,8 @@ def hide_erpnext() -> bool:
 
 
 def has_subscription(secret_key) -> bool:
-	url = f"https://frappecloud.com/api/method/press.api.developer.marketplace.get_subscription_status?secret_key={secret_key}"
-	response = requests.request(method="POST", url=url, timeout=5)
+	url = "https://frappecloud.com/api/method/press.api.developer.marketplace.get_subscription_status"
+	response = requests.post(url, data={"secret_key": secret_key}, timeout=5)
 
 	status = response.json().get("message")
 	return True if status == "Active" else False

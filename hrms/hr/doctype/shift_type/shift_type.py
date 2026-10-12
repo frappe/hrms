@@ -473,10 +473,15 @@ class ShiftType(Document):
 			fields=["name", "attendance_date"],
 		)
 		start_time = get_time(self.start_time)
+		last_sync_of_checkin = get_datetime(self.last_sync_of_checkin)
 		for attendance in half_day_attendances:
 			timestamp = datetime.combine(attendance.attendance_date, start_time)
 			shift_details = get_employee_shift(employee, timestamp, True)
-			if shift_details and shift_details.shift_type.name == self.name:
+			if (
+				shift_details
+				and shift_details.shift_type.name == self.name
+				and shift_details.actual_end < last_sync_of_checkin
+			):
 				frappe.db.set_value(
 					"Attendance",
 					attendance.name,

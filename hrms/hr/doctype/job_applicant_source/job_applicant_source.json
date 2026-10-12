@@ -26,8 +26,9 @@
    "label": "Details"
   }
  ],
+ "icon": "tag",
  "links": [],
- "modified": "2026-04-16 12:58:16.397378",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Applicant Source",

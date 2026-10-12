@@ -5,6 +5,7 @@
  "autoname": "field:location_name",
  "creation": "2024-07-04 12:12:26.894513",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/shift-location",
  "engine": "InnoDB",
  "field_order": [
   "location_name",
@@ -61,13 +62,14 @@
    "label": "Fetch Geolocation"
   }
  ],
+ "icon": "map-pin",
  "links": [
   {
    "link_doctype": "Shift Assignment",
    "link_fieldname": "shift_location"
   }
  ],
- "modified": "2026-09-01 18:39:51.520758",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Location",

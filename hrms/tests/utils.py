@@ -370,4 +370,39 @@ BootStrapTestData()
 class HRMSTestSuite(ERPNextTestSuite):
 	"""Class for creating HRMS test records"""
 
-	pass
+	def tearDown(self):
+		try:
+			super().tearDown()
+		finally:
+			# Cached values and document defaults can refer to records rolled back by the test.
+			frappe.local.cache.clear()
+			frappe.local.new_doc_templates.clear()
+
+
+def make_user(email: str, role: str = "HR Manager") -> str:
+	if not frappe.db.exists("User", email):
+		frappe.get_doc(
+			{
+				"doctype": "User",
+				"email": email,
+				"first_name": email.split("@")[0],
+				"send_welcome_email": 0,
+			}
+		).insert()
+	frappe.get_doc("User", email).add_roles(role)
+	return email
+
+
+def make_company_restricted_user(email: str, company: str, role: str = "HR Manager") -> str:
+	make_user(email, role)
+	if not frappe.db.exists("User Permission", {"user": email, "allow": "Company", "for_value": company}):
+		frappe.get_doc(
+			{
+				"doctype": "User Permission",
+				"user": email,
+				"allow": "Company",
+				"for_value": company,
+				"apply_to_all_doctypes": 1,
+			}
+		).insert()
+	return email

@@ -2,6 +2,7 @@
  "actions": [],
  "creation": "2013-08-02 13:45:23",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/hr-settings",
  "document_type": "Other",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -80,13 +81,13 @@
    "fieldtype": "Column Break"
   },
   {
-   "default": "1",
+   "default": "0",
    "fieldname": "expense_approver_mandatory_in_expense_claim",
    "fieldtype": "Check",
    "label": "Expense Approver Mandatory In Expense Claim"
   },
   {
-   "default": "1",
+   "default": "0",
    "fieldname": "leave_approver_mandatory_in_leave_application",
    "fieldtype": "Check",
    "label": "Leave Approver Mandatory In Leave Application"
@@ -385,11 +386,11 @@
    "label": "Employee Exit Settings"
   }
  ],
- "icon": "fa fa-cog",
+ "icon": "settings",
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-09-03 11:00:00.000000",
+ "modified": "2026-10-06 14:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",

@@ -242,31 +242,31 @@ class AttendanceRequest(Document):
 		return True
 
 	def has_leave_record(self, attendance_date: str) -> str | None:
-		filters = {
-			"employee": self.employee,
-			"docstatus": 1,
-			"from_date": ("<=", attendance_date),
-			"to_date": (">=", attendance_date),
-			"status": "Approved",
-		}
-		if self.half_day_date == attendance_date:
-			filters["half_day"] = 0
-
-		return frappe.db.exists("Leave Application", filters)
-
-	def has_half_day_leave_record(self, attendance_date: str) -> str | None:
-		return frappe.db.exists(
+		leaves = frappe.get_all(
 			"Leave Application",
-			{
+			filters={
 				"employee": self.employee,
 				"docstatus": 1,
 				"from_date": ("<=", attendance_date),
 				"to_date": (">=", attendance_date),
 				"status": "Approved",
-				"half_day": 1,
-				"half_day_date": attendance_date,
 			},
+			fields=["name", "half_day", "half_day_date"],
 		)
+
+		if self.half_day and self.half_day_date and getdate(self.half_day_date) == getdate(attendance_date):
+			half_day_leaves = [
+				leave
+				for leave in leaves
+				if leave.half_day
+				and leave.half_day_date
+				and getdate(leave.half_day_date) == getdate(attendance_date)
+			]
+			# a single half day leave on this date leaves the other half for the request to mark
+			if len(half_day_leaves) == 1:
+				leaves.remove(half_day_leaves[0])
+
+		return leaves[0].name if leaves else None
 
 	def get_attendance_doc(self, attendance_date: str) -> str | None:
 		attendance = frappe.db.exists(

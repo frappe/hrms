@@ -4,6 +4,7 @@
  "autoname": "HR-INCOME-.######",
  "creation": "2020-03-18 15:04:40.767434",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/employee-other-income",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -96,9 +97,10 @@
    "fieldtype": "Column Break"
   }
  ],
+ "icon": "coins",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-09-01 18:39:51.520758",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Other Income",

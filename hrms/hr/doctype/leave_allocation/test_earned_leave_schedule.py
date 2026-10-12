@@ -338,6 +338,42 @@ class TestLeaveAllocation(HRMSTestSuite):
 			self.employee.date_of_joining,
 		)
 
+	def test_schedule_does_not_exceed_annual_allocation_when_rounded_up(self):
+		"""Tests that rounding up the periodic leave does not schedule more leaves than the policy allows"""
+		frappe.flags.current_date = get_year_start(getdate())
+		earned_leave_schedule = create_earned_leave_schedule(
+			self.employee,
+			allocate_on_day="First Day",
+			earned_leave_frequency="Monthly",
+			annual_allocation=19,
+			assignment_based_on="Leave Period",
+			start_date=get_year_start(getdate()),
+			end_date=get_year_ending(getdate()),
+			rounding=1.0,
+		)
+
+		self.assertEqual(len(earned_leave_schedule), 10)
+		self.assertEqual(sum(row.number_of_leaves for row in earned_leave_schedule), 19)
+		self.assertEqual(earned_leave_schedule[-1].number_of_leaves, 1)
+		self.assertEqual(earned_leave_schedule[-1].allocation_date, add_months(get_year_start(getdate()), 9))
+
+	def test_schedule_for_yearly_earned_leave_is_exempted_from_annual_allocation(self):
+		"""Tests that a yearly schedule spanning multiple years is not capped to the annual allocation"""
+		frappe.flags.current_date = get_year_start(getdate())
+		earned_leave_schedule = create_earned_leave_schedule(
+			self.employee,
+			allocate_on_day="First Day",
+			earned_leave_frequency="Yearly",
+			annual_allocation=19,
+			assignment_based_on="Leave Period",
+			start_date=get_year_start(getdate()),
+			end_date=add_months(get_year_ending(getdate()), 12),
+			rounding=1.0,
+		)
+
+		self.assertEqual(len(earned_leave_schedule), 2)
+		self.assertEqual(sum(row.number_of_leaves for row in earned_leave_schedule), 38)
+
 	def test_absence_of_earned_leave_schedule_for_non_earned_leave_types(self):
 		leave_policy = frappe.get_doc(
 			{
@@ -406,6 +442,7 @@ def create_earned_leave_schedule(
 	assignment_based_on,
 	start_date,
 	end_date,
+	rounding=0.5,
 ):
 	assignment = make_policy_assignment(
 		employee,
@@ -415,6 +452,7 @@ def create_earned_leave_schedule(
 		assignment_based_on=assignment_based_on,
 		start_date=start_date,
 		end_date=end_date,
+		rounding=rounding,
 	)[0]
 	leave_allocation = frappe.get_value("Leave Allocation", {"leave_policy_assignment": assignment}, "name")
 	earned_leave_schedule = frappe.get_all(

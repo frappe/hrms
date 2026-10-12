@@ -185,8 +185,11 @@ def create_kanban_board(board_name: str) -> dict:
 	return board.as_dict()
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def create_interview(job_applicant: str, interview_type: str) -> Document:
+	frappe.has_permission("Interview", ptype="create", throw=True)
+	frappe.has_permission("Job Applicant", ptype="read", doc=job_applicant, throw=True)
+
 	doc = frappe.get_doc("Job Applicant", job_applicant)
 
 	round_designation = frappe.db.get_value("Interview Type", interview_type, "designation")

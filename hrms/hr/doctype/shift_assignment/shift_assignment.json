@@ -4,6 +4,7 @@
  "autoname": "HR-SHA-.YY.-.MM.-.#####",
  "creation": "2018-04-13 16:25:04.562730",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/shift-assignment",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -145,9 +146,10 @@
    "options": "Overtime Type"
   }
  ],
+ "icon": "user-check",
  "is_submittable": 1,
  "links": [],
- "modified": "2025-12-01 12:23:07.921773",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Shift Assignment",

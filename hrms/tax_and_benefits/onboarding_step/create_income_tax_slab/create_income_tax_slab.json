@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Create Income Tax Slab",
+ "creation": "2026-10-05 12:00:00.000000",
+ "description": "The tax rate for each range of income. See [Income Tax Slab](https://docs.frappe.io/hr/income-tax-slab).",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "Create Income Tax Slab",
+ "owner": "Administrator",
+ "reference_document": "Income Tax Slab",
+ "show_form_tour": 0,
+ "show_full_form": 1,
+ "title": "Add income tax slabs",
+ "validate_action": 1
+}

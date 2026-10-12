@@ -15,7 +15,6 @@ from frappe.utils import (
 	getdate,
 	nowdate,
 )
-from frappe.utils.user import add_role
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
@@ -32,7 +31,7 @@ from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import
 	create_holiday_list_assignment,
 )
 from hrms.tests.test_utils import get_first_sunday
-from hrms.tests.utils import HRMSTestSuite
+from hrms.tests.utils import HRMSTestSuite, make_company_restricted_user, make_user
 
 
 class TestAttendance(HRMSTestSuite):
@@ -297,12 +296,10 @@ class TestAttendance(HRMSTestSuite):
 		self.assertEqual(attendance_events[0].get("attendance_date"), getdate())
 
 	def test_bulk_attendance_marking_through_bg(self):
-		user1 = "test_bg1@example.com"
-		user2 = "test_bg2@example.com"
-		employee1 = make_employee("test_bg1@example.com", company="_Test Company")
-		employee2 = make_employee("test_bg2@example.com", company="_Test Company")
-		add_role(user1, "HR Manager")
-		add_role(user2, "HR Manager")
+		user1 = make_user("test_bg1@example.com")
+		user2 = make_user("test_bg2@example.com")
+		employee1 = make_employee("test_bg_employee1@example.com", company="_Test Company")
+		employee2 = make_employee("test_bg_employee2@example.com", company="_Test Company")
 		frappe.flags.test_bg_job = True
 		frappe.set_user(user1)
 		data1 = frappe._dict(unmarked_days=[getdate()], employee=employee1, status="Present", shift="")
@@ -325,6 +322,36 @@ class TestAttendance(HRMSTestSuite):
 		frappe.set_user("Administrator")
 		attendance_records = frappe.get_all("Attendance", {"employee": employee2})
 		self.assertEqual(len(attendance_records), 1)
+
+	def test_bulk_attendance_rejects_malformed_input(self):
+		employee = make_employee("test_bulk_input@example.com", company="_Test Company")
+
+		for bad_employee in (None, "", 1, ["EMP-1"], {"name": employee}):
+			data = frappe._dict(unmarked_days=[getdate()], employee=bad_employee, status="Present")
+			self.assertRaises(frappe.ValidationError, mark_bulk_attendance, data)
+
+		data = frappe._dict(unmarked_days=str(getdate()), employee=employee, status="Present")
+		self.assertRaises(frappe.ValidationError, mark_bulk_attendance, data)
+
+		self.assertFalse(frappe.db.exists("Attendance", {"employee": employee}))
+
+	def test_bulk_attendance_outside_company_scope(self):
+		user = make_company_restricted_user("test_scoped_bulk_user@example.com", "_Test Company")
+		other_company_employee = make_employee(
+			"test_bulk_other_company@example.com", company="_Test Company 1"
+		)
+
+		frappe.set_user(user)
+		try:
+			data = frappe._dict(
+				unmarked_days=[getdate()], employee=other_company_employee, status="Present", shift=""
+			)
+			with self.assertRaises(frappe.PermissionError):
+				mark_bulk_attendance(data)
+		finally:
+			frappe.set_user("Administrator")
+
+		self.assertFalse(frappe.db.exists("Attendance", {"employee": other_company_employee}))
 
 	def tearDown(self):
 		frappe.db.rollback()
