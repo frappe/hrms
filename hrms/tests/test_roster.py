@@ -1,7 +1,9 @@
 import frappe
 from frappe.utils import add_days, getdate
 
-from hrms.api.roster import get_shifts, insert_shift
+from erpnext.setup.doctype.employee.test_employee import make_employee
+
+from hrms.api.roster import FILTER_DOCTYPES, get_permitted_filter_doctypes, get_shifts, insert_shift
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -79,6 +81,25 @@ class TestRoster(HRMSTestSuite):
 			},
 		)
 		self.assertTrue(new_assignment)
+
+	def test_permitted_filter_doctypes(self):
+		"""The roster loads only filters the user can list, so a user without HR roles
+		gets no permission errors from filter doctypes like Branch and Designation."""
+		self.assertEqual(get_permitted_filter_doctypes(), list(FILTER_DOCTYPES))
+
+		user = "roster_filters@test.com"
+		make_employee(user, company="_Test Company")
+		self.assertNotIn("HR User", frappe.get_roles(user))
+
+		frappe.set_user(user)
+		self.addCleanup(frappe.set_user, "Administrator")
+		permitted = get_permitted_filter_doctypes()
+
+		self.assertNotIn("Branch", permitted)
+		self.assertNotIn("Designation", permitted)
+		self.assertIn("Shift Type", permitted)
+		for doctype in permitted:
+			frappe.get_list(doctype, fields=["name"], limit=1)
 
 
 def create_employee(employee_name: str):
