@@ -87,56 +87,82 @@ def get_columns() -> list[dict]:
 def get_data(filters: Filters) -> list:
 	leave_types = get_leave_types()
 	active_employees = get_employees(filters)
+	pairs_with_entries = get_pairs_with_ledger_entries(active_employees, filters.to_date)
 
 	precision = cint(frappe.db.get_single_value("System Settings", "float_precision"))
 	consolidate_leave_types = len(active_employees) > 1 and filters.consolidate_leave_types
-	row = None
 
 	data = []
 
 	for leave_type in leave_types:
-		if consolidate_leave_types:
-			data.append({"leave_type": leave_type})
-		else:
-			row = frappe._dict({"leave_type": leave_type})
+		rows = []
 
 		for employee in active_employees:
-			if consolidate_leave_types:
-				row = frappe._dict()
-			else:
-				row = frappe._dict({"leave_type": leave_type})
+			if (employee.name, leave_type) not in pairs_with_entries:
+				continue
 
-			row.employee = employee.name
-			row.employee_name = employee.employee_name
+			balance = get_balance_details(employee.name, leave_type, filters, precision)
+			if not any(balance.values()):
+				continue
 
-			leaves_taken = (
-				get_leaves_for_period(employee.name, leave_type, filters.from_date, filters.to_date) * -1
-			)
+			row = frappe._dict() if consolidate_leave_types else frappe._dict({"leave_type": leave_type})
+			row.update(employee=employee.name, employee_name=employee.employee_name, **balance, indent=1)
+			rows.append(row)
 
-			new_allocation, expired_leaves, carry_forwarded_leaves = get_allocated_and_expired_leaves(
-				filters.from_date, filters.to_date, employee.name, leave_type
-			)
-			on_allocation_boundary = is_opening_balance_on_allocation_boundary(
-				employee.name, leave_type, filters
-			)
-			opening = get_opening_balance(
-				employee.name, leave_type, filters, carry_forwarded_leaves, on_allocation_boundary
-			)
-			allocated_leaves = new_allocation + carry_forwarded_leaves
-			if on_allocation_boundary:
-				allocated_leaves -= carry_forwarded_leaves
-
-			row.leaves_allocated = flt(allocated_leaves, precision)
-			row.leaves_expired = flt(expired_leaves, precision)
-			row.opening_balance = flt(opening, precision)
-			row.leaves_taken = flt(leaves_taken, precision)
-
-			closing = allocated_leaves + opening - (row.leaves_expired + leaves_taken)
-			row.closing_balance = flt(closing, precision)
-			row.indent = 1
-			data.append(row)
+		if consolidate_leave_types and rows:
+			data.append({"leave_type": leave_type})
+		data.extend(rows)
 
 	return data
+
+
+def get_balance_details(employee: str, leave_type: str, filters: Filters, precision: int) -> dict:
+	leaves_taken = get_leaves_for_period(employee, leave_type, filters.from_date, filters.to_date) * -1
+
+	new_allocation, expired_leaves, carry_forwarded_leaves = get_allocated_and_expired_leaves(
+		filters.from_date, filters.to_date, employee, leave_type
+	)
+	on_allocation_boundary = is_opening_balance_on_allocation_boundary(employee, leave_type, filters)
+	opening = get_opening_balance(
+		employee, leave_type, filters, carry_forwarded_leaves, on_allocation_boundary
+	)
+	allocated_leaves = new_allocation + carry_forwarded_leaves
+	if on_allocation_boundary:
+		allocated_leaves -= carry_forwarded_leaves
+
+	leaves_expired = flt(expired_leaves, precision)
+	closing = allocated_leaves + opening - (leaves_expired + leaves_taken)
+
+	return {
+		"leaves_allocated": flt(allocated_leaves, precision),
+		"leaves_expired": leaves_expired,
+		"opening_balance": flt(opening, precision),
+		"leaves_taken": flt(leaves_taken, precision),
+		"closing_balance": flt(closing, precision),
+	}
+
+
+def get_pairs_with_ledger_entries(employees: list[dict], to_date: str) -> set[tuple[str, str]]:
+	"""(employee, leave type) pairs with ledger entries up to `to_date`.
+
+	Every balance lookup reads the ledger, so pairs outside this set always balance to zero
+	and are left out of the report without running the per-pair queries.
+	"""
+	if not employees:
+		return set()
+
+	Ledger = frappe.qb.DocType("Leave Ledger Entry")
+	pairs = (
+		frappe.qb.from_(Ledger)
+		.select(Ledger.employee, Ledger.leave_type)
+		.distinct()
+		.where(
+			(Ledger.docstatus == 1)
+			& (Ledger.from_date <= to_date)
+			& (Ledger.employee.isin([employee.name for employee in employees]))
+		)
+	).run()
+	return {tuple(pair) for pair in pairs}
 
 
 def get_leave_types() -> list[str]:
