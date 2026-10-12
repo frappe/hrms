@@ -371,7 +371,96 @@ def make_journal_entry_for_advance(advance):
 	journal_entry.cheque_date = nowdate()
 	journal_entry.save()
 
+<<<<<<< HEAD
 	return journal_entry
+=======
+		expected_base_paid = flt(
+			advance.paid_amount * payment_entry.transaction_exchange_rate,
+			advance.precision("base_paid_amount"),
+		)
+		self.assertEqual(advance.base_paid_amount, expected_base_paid)
+		self.assertEqual(payment_entry.paid_amount, expected_base_paid)
+
+	def test_no_exchange_gain_loss_for_same_currency_advance_payment(self):
+		from hrms.overrides.employee_payment_entry import get_payment_entry_for_employee
+
+		gain_loss_account = frappe.db.get_value("Company", "_Test Company", "exchange_gain_loss_account")
+		frappe.db.set_value("Company", "_Test Company", "exchange_gain_loss_account", None)
+
+		try:
+			employee_name = make_employee("_T@employee.advance", "_Test Company")
+			advance = make_employee_advance(employee_name)
+
+			# should not raise error even without exchange_gain_loss_account set at time of payment
+			pe = get_payment_entry_for_employee(advance.doctype, advance.name)
+
+			self.assertEqual(flt(pe.source_exchange_rate), 1.0)
+			self.assertEqual(flt(pe.target_exchange_rate), 1.0)
+			self.assertFalse(any(d.is_exchange_gain_loss for d in pe.deductions))
+		finally:
+			frappe.db.set_value("Company", "_Test Company", "exchange_gain_loss_account", gain_loss_account)
+
+	def test_advance_amount_must_be_greater_than_zero(self):
+		employee_name = make_employee("Test_zero_amount@employee.advance", "_Test Company")
+		advance = make_employee_advance(employee_name, {"advance_amount": 0}, do_not_submit=True)
+		self.assertRaises(frappe.ValidationError, advance.insert)
+
+		advance.advance_amount = 1
+		advance.insert()
+		self.assertEqual(advance.status, "Draft")
+
+	def test_status_on_discard(self):
+		employee_name = make_employee("Test_status@employee.advance", "_Test Company")
+		advance = make_employee_advance(employee_name, do_not_submit=True)
+		advance.insert()
+		advance.reload()
+		self.assertEqual(advance.status, "Draft")
+		advance.discard()
+		advance.reload()
+		self.assertEqual(advance.status, "Cancelled")
+
+
+def manual_journal_entry_for_advance(advance) -> dict:
+	doc = frappe.get_doc("Employee Advance", advance.name)
+	payment_account = get_same_currency_bank_cash_account(doc.company, doc.currency, doc.mode_of_payment)
+
+	je = frappe.new_doc("Journal Entry")
+	je.posting_date = nowdate()
+	je.voucher_type = "Bank Entry"
+	je.company = doc.company
+	je.remark = "Payment against Employee Advance: " + advance.name + "\n" + doc.purpose
+	je.multi_currency = 1 if doc.currency != erpnext.get_company_currency(doc.company) else 0
+
+	je.append(
+		"accounts",
+		{
+			"account": doc.advance_account,
+			"account_currency": doc.currency,
+			"debit_in_account_currency": flt(doc.advance_amount),
+			"reference_type": "Employee Advance",
+			"reference_name": doc.name,
+			"party_type": "Employee",
+			"cost_center": erpnext.get_default_cost_center(doc.company),
+			"party": doc.employee,
+			"is_advance": "Yes",
+		},
+	)
+
+	je.append(
+		"accounts",
+		{
+			"account": payment_account.account or payment_account.name,
+			"cost_center": erpnext.get_default_cost_center(doc.company),
+			"credit_in_account_currency": flt(doc.advance_amount),
+			"account_currency": doc.currency,
+			"account_type": payment_account.account_type,
+		},
+	)
+	je.cheque_no = "123123"
+	je.cheque_date = nowdate()
+	je.save()
+	return je
+>>>>>>> 7fc314b (fix: do not allow zero advance amount in Employee Advance)
 
 
 def make_payment_entry(advance, amount=None):
