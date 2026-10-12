@@ -1840,6 +1840,7 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 		unsubmitted = []
 		frappe.flags.via_payroll_entry = True
 		count = 0
+		savepoint = "before_salary_slip_submission"
 
 		for entry in salary_slips:
 			salary_slip = frappe.get_doc("Salary Slip", entry[0])
@@ -1847,9 +1848,11 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 				unsubmitted.append(entry[0])
 			else:
 				try:
+					frappe.db.savepoint(savepoint)
 					salary_slip.submit()
 					submitted.append(salary_slip)
 				except frappe.ValidationError:
+					frappe.db.rollback(save_point=savepoint)
 					unsubmitted.append(entry[0])
 
 			count += 1
