@@ -8,7 +8,7 @@
 					>
 						<Button
 							variant="ghost"
-							class="!pl-0 hover:bg-white"
+							class="!ps-0 hover:bg-white"
 							@click="goBack"
 						>
 							<FeatherIcon name="chevron-left" class="h-5 w-5" />
