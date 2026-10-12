@@ -124,9 +124,9 @@ class HRSettings(Document):
 
 		frappe.msgprint(
 			msg=frappe._(
-				"Employees will miss holiday reminders from {} until {}. <br> Do you want to proceed with this change?"
+				"Employees will miss holiday reminders from {0} until {1}. <br> Do you want to proceed with this change?"
 			).format(from_date, to_date),
-			title="Confirm change in Frequency",
+			title=frappe._("Confirm change in Frequency"),
 			primary_action={
 				"label": frappe._("Yes, Proceed"),
 				"client_action": "hrms.proceed_save_with_reminders_frequency_change",
