@@ -6,6 +6,7 @@ from frappe.utils import get_first_day, get_last_day, nowdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
+from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 from hrms.tests.utils import HRMSTestSuite
 
@@ -394,3 +395,60 @@ class TestSalaryStructureAssignment(HRMSTestSuite):
 		components = [r.salary_component for r in ssa.get_evaluated_components().earnings]
 		self.assertNotIn("SSA TS2 Wage", components)
 		self.assertIn("SSA TS2 Basic", components)
+
+	def test_assignment_dated_before_any_fiscal_year(self):
+		"""Long-running assignments can predate the oldest fiscal year. Evaluating their
+		components (on submit and for every salary slip) must not require a fiscal year
+		covering from_date."""
+		formula = "getdate(start_date).day * 100 + getdate(end_date).day"
+		_make_component(
+			"SSA Test Cycle Days", "SSATCD", "Earning", amount_based_on_formula=1, formula=formula
+		)
+		earnings = [
+			{
+				"salary_component": "SSA Test Cycle Days",
+				"abbr": "SSATCD",
+				"amount_based_on_formula": 1,
+				"formula": formula,
+			},
+		]
+
+		# expected = start day * 100 + end day of the full cycle containing from_date
+		cases = (
+			("Monthly", "2005-04-10", 130),  # 01-30 April
+			("Bimonthly", "2005-04-10", 115),  # 01-15 April
+			("Bimonthly", "2004-02-20", 1629),  # 16-29 February, leap year
+		)
+		for idx, (frequency, from_date, expected) in enumerate(cases):
+			with self.subTest(frequency=frequency, from_date=from_date):
+				self.assertFalse(
+					frappe.db.exists(
+						"Fiscal Year",
+						{"year_start_date": ("<=", from_date), "year_end_date": (">=", from_date)},
+					)
+				)
+				emp = make_employee(
+					f"ssa_old_assignment_{idx}@test.com",
+					company="_Test Company",
+					date_of_joining="2004-01-01",
+				)
+				structure = make_salary_structure(
+					f"SSA Test Old Assignment {idx}",
+					frequency,
+					employee=emp,
+					from_date=from_date,
+					company="_Test Company",
+					base=1000,
+					earnings=earnings,
+					deductions=[],
+				)
+				ssa = frappe.get_last_doc("Salary Structure Assignment", filters={"employee": emp})
+				self.assertEqual(ssa.docstatus, 1)
+
+				components = {
+					r.salary_component: r.default_amount for r in ssa.get_evaluated_components().earnings
+				}
+				self.assertEqual(components["SSA Test Cycle Days"], expected)
+
+				slip = make_salary_slip(structure.name, employee=emp)
+				self.assertIn("SSA Test Cycle Days", [r.salary_component for r in slip.earnings])
