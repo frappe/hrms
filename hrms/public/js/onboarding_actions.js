@@ -1,5 +1,5 @@
-// What each Employee Onboarding Activity action shows and does. An activity record names
-// its action; the row's value, lock and buttons come from the handler for that action.
+// What each onboarding activity action shows and does. A template row names its action;
+// the row's value, lock and buttons come from the handler for that action.
 
 const USER_FIELDS = ["personal_email", "company_email", "create_user_for"];
 

@@ -2,6 +2,8 @@ import { get_action_handler } from "./onboarding_actions.js";
 
 frappe.provide("hrms.ui");
 
+const ROW_CLICK_KEY = "employee_onboarding_checklist_row_click";
+
 const STATUS = { "In Progress": "in_progress", Stuck: "stuck" };
 
 const ROW_STATUS = { in_progress: "In Progress", stuck: "Stuck" };
@@ -11,7 +13,9 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 		this.frm = frm;
 		this.checklist = new frappe.ui.Checklist({
 			title: __("Onboarding Checklist"),
+			row_click: get_row_click(),
 			on_skip: (item) => this.call("skip_activity", { row: item.id }),
+			on_unskip: (item) => this.call("unskip_activity", { row: item.id }),
 			on_assign: (item, user) => this.call("assign_activity", { row: item.id, user }),
 			on_due_date_change: (item, due_date) =>
 				this.call("set_activity_due_date", { row: item.id, due_date }),
@@ -25,9 +29,50 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 
 	render() {
 		const $wrapper = this.frm.fields_dict.onboarding_checklist.$wrapper;
-		if (!$.contains($wrapper[0], this.checklist.el))
-			$wrapper.empty().append(this.checklist.$el);
+		if (!$.contains($wrapper[0], this.checklist.el)) {
+			this.$hint = $('<div class="eoc-template-hint"></div>');
+			$wrapper.empty().append(this.make_demo_switch(), this.$hint, this.checklist.$el);
+		}
+		this.render_template_hint();
 		this.checklist.set_items((this.frm.doc.activities || []).map((row) => this.get_item(row)));
+	}
+
+	// Until the default template gets tasks of the company's own, point first-time users at it.
+	render_template_hint() {
+		const template = this.frm.doc.__onload?.template_hint;
+		this.$hint.empty();
+		if (!template) return;
+
+		this.$hint.append(
+			frappe.ui.alert({
+				title: __("These are the standard onboarding tasks"),
+				description: __("Edit the template to add your own tasks, owners and due dates."),
+				footer: frappe.ui.button({
+					label: __("Edit Template"),
+					onclick: () =>
+						frappe.set_route("Form", "Employee Onboarding Template", template),
+				}),
+			}),
+		);
+	}
+
+	// Demo only: flips the checklist between action buttons and clickable rows.
+	make_demo_switch() {
+		const tabs = new frappe.ui.TabButtons({
+			label: __("Checklist style"),
+			options: [
+				{ label: __("Buttons"), value: "buttons" },
+				{ label: __("Clickable rows"), value: "rows" },
+			],
+			value: get_row_click() ? "rows" : "buttons",
+			on_change: (value) => {
+				try {
+					localStorage.setItem(ROW_CLICK_KEY, value === "rows" ? "1" : "0");
+				} catch (e) {}
+				this.checklist.set_row_click(value === "rows");
+			},
+		});
+		return $('<div class="eoc-demo-switch"></div>').append(tabs.$el);
 	}
 
 	get_item(row) {
@@ -52,10 +97,10 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 	}
 
 	get_lock_reason(row) {
-		if (!row.depends_on_activity) return null;
+		if (!row.depends_on_action) return null;
 
 		const needed = (this.frm.doc.activities || []).find(
-			(other) => other.activity === row.depends_on_activity,
+			(other) => other.action === row.depends_on_action,
 		);
 		if (!needed || needed.completed) return null;
 		return __("Needs: {0}", [__(needed.activity_name)]);
@@ -77,3 +122,11 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 		if (this.frm.is_new() || this.frm.is_dirty()) await this.frm.save();
 	}
 };
+
+function get_row_click() {
+	try {
+		return localStorage.getItem(ROW_CLICK_KEY) === "1";
+	} catch (e) {
+		return false;
+	}
+}

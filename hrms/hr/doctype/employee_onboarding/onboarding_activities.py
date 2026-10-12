@@ -4,11 +4,7 @@
 import frappe
 from frappe import _
 from frappe.desk.form.assign_to import notify_assignment
-from frappe.utils import add_days, get_link_to_form
-
-from hrms.hr.doctype.employee_onboarding_activity.employee_onboarding_activity import (
-	get_standard_activities,
-)
+from frappe.utils import add_days
 
 ASSIGNMENTS = {
 	"Holiday List Assignment": {
@@ -39,66 +35,84 @@ ACTION_DOCTYPES = {
 
 PROGRESS_STATUSES = ("In Progress", "Stuck")
 
+TEMPLATE_ROW_FIELDS = [
+	"activity_name",
+	"action",
+	"reference_doctype",
+	"depends_on_action",
+	"user",
+	"role",
+	"description",
+	"begin_on",
+	"duration",
+]
+
+
+def make_assign_activity(title, doctype):
+	return {
+		"activity_name": title,
+		"action": "Assign",
+		"reference_doctype": doctype,
+		"depends_on_action": "Create Employee",
+	}
+
+
+# The tasks the checklist can do itself. Each new template starts with them.
+STANDARD_ACTIVITIES = [
+	{"activity_name": "Create User", "action": "Create User"},
+	{"activity_name": "Create Employee", "action": "Create Employee"},
+	{"activity_name": "Appointment Letter", "action": "Appointment Letter"},
+	make_assign_activity("Assign Holiday List", "Holiday List Assignment"),
+	make_assign_activity("Assign Leave Policy", "Leave Policy Assignment"),
+	make_assign_activity("Assign Salary Structure", "Salary Structure Assignment"),
+	make_assign_activity("Assign Shift Type", "Shift Assignment"),
+	make_assign_activity("Assign Shift Schedule", "Shift Schedule Assignment"),
+]
+
 
 class OnboardingActivities:
 	"""The checklist rows of an Employee Onboarding.
 
-	Standard activities are always on the onboarding, ahead of the template's own rows. A row
-	with an action is completed by the record it creates, not by whoever ticks it; only Manual
-	rows are completed by hand. An unfinished row may carry a status, In Progress or Stuck.
+	The rows come from the onboarding's template, or the standard activities when it has none.
+	A row with an action is completed by the record it creates, not by whoever ticks it; only
+	Manual rows are completed by hand. An unfinished row may carry a status, In Progress or Stuck.
 	Row changes are written per row, so several people can work the same onboarding at once
 	without one save overwriting another.
 	"""
 
+	def set_default_template(self):
+		if not self.employee_onboarding_template:
+			self.employee_onboarding_template = frappe.db.get_value(
+				"Employee Onboarding Template", {"is_default": 1}
+			)
+
 	def set_activities(self):
-		rows = {row.activity: row for row in self.activities if row.activity}
-		standard = [
-			rows.get(activity.name) or self.make_activity_row(activity)
-			for activity in get_standard_activities()
-		]
-		standard_names = {row.activity for row in standard}
-		others = [row for row in self.activities if row.activity not in standard_names]
-
-		self.activities = []
-		for idx, row in enumerate(standard + others, start=1):
-			child = self.append("activities", row)
-			child.idx = idx
-			self.set_activity_defaults(child)
-
-	def make_activity_row(self, activity) -> dict:
-		return frappe._dict(
-			activity=activity.name,
-			activity_name=activity.title,
-			description=activity.description,
-			user=activity.user,
-			begin_on=activity.begin_on,
-		)
+		if not self.activities:
+			for row in get_template_activities(self.employee_onboarding_template):
+				self.append("activities", row)
+		for row in self.activities:
+			self.set_activity_defaults(row)
 
 	def set_activity_defaults(self, row):
-		if row.activity:
-			master = frappe.get_cached_doc("Employee Onboarding Activity", row.activity)
-			row.action = master.action
-			row.reference_doctype = master.reference_doctype
-			row.depends_on_activity = master.depends_on_activity
-		row.action = row.action or "Manual"
-		if row.action in ACTION_DOCTYPES:
-			row.reference_doctype = ACTION_DOCTYPES[row.action]
+		set_action_defaults(row)
 		if row.status not in PROGRESS_STATUSES or is_finished(row):
 			row.status = None
 		if not row.due_date and self.boarding_begins_on:
 			row.due_date = add_days(self.boarding_begins_on, row.begin_on or 0)
 
 	def validate_unique_activities(self):
-		seen = set()
-		for row in self.activities:
-			if row.action == "Manual" and not row.activity:
-				continue
-			key = row.activity or (row.action, row.reference_doctype)
-			if key in seen:
-				frappe.throw(
-					_("Row #{0}: {1} is already on this onboarding").format(row.idx, row.activity_name)
-				)
-			seen.add(key)
+		validate_unique_actions(self.activities, _("this onboarding"))
+
+	def get_template_hint(self) -> str | None:
+		"""The default template, while it still has only the standard activities."""
+		template = self.employee_onboarding_template
+		if not template or not frappe.db.get_value("Employee Onboarding Template", template, "is_default"):
+			return None
+		has_own_rows = frappe.db.exists(
+			"Employee Boarding Activity",
+			{"parent": template, "parenttype": "Employee Onboarding Template", "action": "Manual"},
+		)
+		return None if has_own_rows else template
 
 	def reconcile_activities(self) -> list:
 		"""Complete each row whose record exists, and return the changed rows."""
@@ -245,6 +259,12 @@ class OnboardingActivities:
 		self.finish_activity(self.get_activity(row), skipped=1)
 
 	@frappe.whitelist(methods=["POST"])
+	def unskip_activity(self, row: str) -> None:
+		self.check_permission("write")
+		self.get_activity(row).db_set("skipped", 0)
+		self.save_activity_states()
+
+	@frappe.whitelist(methods=["POST"])
 	def set_activity_progress(self, row: str, status: str | None = None) -> None:
 		"""Mark an unfinished activity In Progress or Stuck, or clear that; finishing is by record."""
 		self.check_permission("write")
@@ -288,16 +308,49 @@ def close_todo(name: str, status: str) -> None:
 		notify_assignment(todo.assigned_by, todo.allocated_to, todo.reference_type, todo.reference_name)
 
 
-def validate_template_activities(template) -> None:
-	standard = {activity.name for activity in get_standard_activities()}
+def get_template_activities(template: str | None) -> list[dict]:
+	if not template:
+		return [dict(row) for row in STANDARD_ACTIVITIES]
+	return frappe.get_all(
+		"Employee Boarding Activity",
+		fields=TEMPLATE_ROW_FIELDS,
+		filters={"parent": template, "parenttype": "Employee Onboarding Template"},
+		order_by="idx",
+	)
+
+
+def set_action_defaults(row) -> None:
+	row.action = row.action or "Manual"
+	if row.action in ACTION_DOCTYPES:
+		row.reference_doctype = ACTION_DOCTYPES[row.action]
+	elif row.action == "Manual":
+		row.reference_doctype = None
+
+
+def validate_unique_actions(rows, where: str) -> None:
 	seen = set()
-	for row in template.activities:
-		if row.activity in standard:
-			frappe.throw(
-				_("Row #{0}: {1} is a standard activity, which every onboarding already has").format(
-					row.idx, get_link_to_form("Employee Onboarding Activity", row.activity)
-				)
-			)
-		if row.activity and row.activity in seen:
-			frappe.throw(_("Row #{0}: {1} is listed twice").format(row.idx, row.activity))
-		seen.add(row.activity)
+	for row in rows:
+		if row.action == "Manual":
+			continue
+		key = action_key(row.action, row.reference_doctype)
+		if key in seen:
+			frappe.throw(_("Row #{0}: {1} is already on {2}").format(row.idx, _(row.activity_name), where))
+		seen.add(key)
+
+
+def action_key(action: str | None, reference_doctype: str | None) -> tuple:
+	return action, ACTION_DOCTYPES.get(action) or reference_doctype
+
+
+def add_standard_activities(template) -> None:
+	"""Put the standard activities at the top of a new template; it may drop them later."""
+	present = {action_key(row.action, row.reference_doctype) for row in template.activities}
+	own_rows = list(template.activities)
+	template.activities = []
+	for activity in STANDARD_ACTIVITIES:
+		if action_key(activity["action"], activity.get("reference_doctype")) not in present:
+			template.append("activities", activity)
+	for row in own_rows:
+		template.append("activities", row)
+	for idx, row in enumerate(template.activities, start=1):
+		row.idx = idx

@@ -13,6 +13,16 @@ frappe.ui.form.on("Employee Onboarding", {
 		});
 	},
 
+	onload: function (frm) {
+		if (!frm.is_new() || frm.doc.employee_onboarding_template) return;
+		frappe.db
+			.get_value("Employee Onboarding Template", { is_default: 1 }, "name")
+			.then((r) => {
+				const template = r.message?.name;
+				if (template) frm.set_value("employee_onboarding_template", template);
+			});
+	},
+
 	onload_post_render: function (frm) {
 		frappe.require("employee_onboarding_checklist.bundle.js", () => {
 			frm.trigger("render_checklist");
@@ -50,8 +60,14 @@ frappe.ui.form.on("Employee Onboarding", {
 	},
 
 	employee_onboarding_template: function (frm) {
-		// Standard rows stay; only the previous template's own rows give way.
-		frm.doc.activities = (frm.doc.activities || []).filter((row) => row.action !== "Manual");
+		// Finished rows stay; the new template's rows replace the rest.
+		const finished = (frm.doc.activities || []).filter((row) => row.completed || row.skipped);
+		const is_finished = (d) =>
+			d.action !== "Manual" &&
+			finished.some(
+				(row) => row.action === d.action && row.reference_doctype === d.reference_doctype,
+			);
+		frm.doc.activities = finished;
 		refresh_field("activities");
 		frm.trigger("render_checklist");
 		if (!frm.doc.employee_onboarding_template) return;
@@ -64,7 +80,9 @@ frappe.ui.form.on("Employee Onboarding", {
 			},
 			callback: function (r) {
 				if (!r.message) return;
-				r.message.forEach((d) => frm.add_child("activities", { ...d, action: "Manual" }));
+				r.message
+					.filter((d) => !is_finished(d))
+					.forEach((d) => frm.add_child("activities", d));
 				refresh_field("activities");
 				frm.trigger("render_checklist");
 			},

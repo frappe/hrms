@@ -5,10 +5,7 @@ import frappe
 from frappe.utils import add_days, getdate
 
 from hrms.hr.doctype.employee_onboarding.employee_onboarding import make_employee, split_full_name
-from hrms.hr.doctype.employee_onboarding_activity.employee_onboarding_activity import (
-	STANDARD_ACTIVITIES,
-	create_standard_activities,
-)
+from hrms.hr.doctype.employee_onboarding.onboarding_activities import STANDARD_ACTIVITIES
 from hrms.hr.doctype.job_offer.job_offer import make_employee_onboarding
 from hrms.hr.doctype.job_offer.test_job_offer import create_job_offer
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
@@ -16,9 +13,6 @@ from hrms.tests.utils import HRMSTestSuite
 
 
 class TestEmployeeOnboarding(HRMSTestSuite):
-	def setUp(self):
-		create_standard_activities()
-
 	def test_split_full_name(self):
 		self.assertEqual(split_full_name("Asha"), ("Asha", "", ""))
 		self.assertEqual(split_full_name("Asha Rao"), ("Asha", "", "Rao"))
@@ -43,27 +37,26 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		self.assertFalse(frappe.db.exists("Project", {"project_name": ("like", "%Employee Onboarding%")}))
 		self.assertFalse([row.task for row in onboarding.activities if row.task])
 
-	def test_standard_activities_come_first_then_the_onboardings_own(self):
+	def test_template_rows_become_the_checklist(self):
 		onboarding = create_employee_onboarding(submit=False)
 
 		names = [row.activity_name for row in onboarding.activities]
-		standard = [activity["title"] for activity in STANDARD_ACTIVITIES]
+		standard = [activity["activity_name"] for activity in STANDARD_ACTIVITIES]
 		self.assertEqual(names, [*standard, "Assign ID Card", "Assign a laptop"])
 		self.assertFalse([row for row in onboarding.activities if row.completed or row.skipped or row.status])
 		self.assertEqual(get_row(onboarding, "Assign Leave Policy").action, "Assign")
 		self.assertEqual(
 			get_row(onboarding, "Assign Leave Policy").reference_doctype, "Leave Policy Assignment"
 		)
+		self.assertEqual(get_row(onboarding, "Assign Leave Policy").depends_on_action, "Create Employee")
 		self.assertEqual(get_row(onboarding, "Assign ID Card").action, "Manual")
 
-	def test_standard_activities_survive_a_resave_without_duplicates(self):
+	def test_resaving_keeps_the_rows_without_duplicates(self):
 		onboarding = create_employee_onboarding(submit=False)
-		onboarding.activities = [row for row in onboarding.activities if row.action == "Manual"]
 		onboarding.save()
 
 		names = [row.activity_name for row in onboarding.activities]
 		self.assertEqual(len(names), len(set(names)))
-		self.assertIn("Create Employee", names)
 
 	def test_due_date_defaults_to_the_offset_from_onboarding_start(self):
 		onboarding = create_employee_onboarding(submit=False)
@@ -71,14 +64,56 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		self.assertEqual(getdate(get_row(onboarding, "Create User").due_date), getdate())
 		self.assertEqual(getdate(get_row(onboarding, "Assign a laptop").due_date), add_days(getdate(), 1))
 
-	def test_disabled_standard_activity_is_not_added(self):
-		frappe.db.set_value("Employee Onboarding Activity", "Assign Shift Schedule", "enabled", 0)
-		self.addCleanup(
-			frappe.db.set_value, "Employee Onboarding Activity", "Assign Shift Schedule", "enabled", 1
-		)
-		onboarding = create_employee_onboarding(submit=False)
+	def test_new_template_starts_with_the_standard_activities_once(self):
+		template = make_template("_Test Fresh Template", [{"activity_name": "Order a desk"}])
 
-		self.assertNotIn("Assign Shift Schedule", [row.activity_name for row in onboarding.activities])
+		standard = [activity["activity_name"] for activity in STANDARD_ACTIVITIES]
+		self.assertEqual([row.activity_name for row in template.activities], [*standard, "Order a desk"])
+
+		template.activities = [row for row in template.activities if row.action != "Appointment Letter"]
+		template.save()
+		self.assertNotIn("Appointment Letter", [row.activity_name for row in template.activities])
+
+	def test_template_rejects_a_duplicate_action(self):
+		template = make_template("_Test Duplicate Template")
+		template.append(
+			"activities",
+			{
+				"activity_name": "Assign Leave Policy again",
+				"action": "Assign",
+				"reference_doctype": "Leave Policy Assignment",
+			},
+		)
+
+		with self.assertRaises(frappe.ValidationError):
+			template.save()
+
+	def test_only_one_template_is_the_default(self):
+		keep_default_template(self)
+		first = make_template("_Test First Default", is_default=1)
+		second = make_template("_Test Second Default", is_default=1)
+
+		self.assertFalse(frappe.db.get_value("Employee Onboarding Template", first.name, "is_default"))
+		self.assertTrue(frappe.db.get_value("Employee Onboarding Template", second.name, "is_default"))
+
+	def test_new_onboarding_uses_the_default_template(self):
+		keep_default_template(self)
+		template = make_template("_Test Default For New Onboardings", [{"activity_name": "Book a desk"}], 1)
+
+		onboarding = create_employee_onboarding(submit=False, with_activities=False)
+
+		self.assertEqual(onboarding.employee_onboarding_template, template.name)
+		self.assertIn("Book a desk", [row.activity_name for row in onboarding.activities])
+
+	def test_hint_shows_until_the_default_template_has_own_tasks(self):
+		keep_default_template(self)
+		template = make_template("_Test Hint Template", is_default=1)
+		onboarding = create_employee_onboarding(submit=False, with_activities=False)
+		self.assertEqual(onboarding.get_template_hint(), template.name)
+
+		template.append("activities", {"activity_name": "Welcome lunch"})
+		template.save()
+		self.assertIsNone(onboarding.get_template_hint())
 
 	def test_offer_defaults_come_from_the_job_offer(self):
 		onboarding = create_employee_onboarding(submit=False)
@@ -252,6 +287,17 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		with self.assertRaises(frappe.ValidationError):
 			onboarding.set_activity_progress(row.name, "In Progress")
 
+	def test_undoing_a_skip_reopens_the_activity(self):
+		onboarding = create_employee_onboarding(submit=False)
+		row = get_row(onboarding, "Assign Shift Type")
+
+		onboarding.skip_activity(row.name)
+		onboarding.unskip_activity(row.name)
+		onboarding.reload()
+
+		self.assertFalse(get_row(onboarding, "Assign Shift Type").skipped)
+		self.assertFalse(get_row(onboarding, "Assign Shift Type").completed)
+
 	def test_only_manual_activities_are_completed_by_hand(self):
 		onboarding = create_employee_onboarding(submit=False)
 
@@ -306,14 +352,6 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 
 		self.assertEqual(frappe.db.get_value("ToDo", todo, "status"), "Closed")
 
-	def test_template_cannot_list_a_standard_activity(self):
-		template = frappe.new_doc("Employee Onboarding Template")
-		template.title = "_Test Template With Standard Row"
-		template.append("activities", {"activity_name": "Create User", "activity": "Create User"})
-
-		with self.assertRaises(frappe.ValidationError):
-			template.insert()
-
 	def test_mark_onboarding_as_completed(self):
 		onboarding = create_employee_onboarding(submit=False)
 		self.assertEqual(onboarding.boarding_status, "Pending")
@@ -322,31 +360,6 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 
 		self.assertEqual(onboarding.boarding_status, "Completed")
 		self.assertTrue(all(row.completed or row.skipped for row in onboarding.activities))
-
-
-class TestEmployeeOnboardingActivity(HRMSTestSuite):
-	def setUp(self):
-		create_standard_activities()
-
-	def test_standard_activity_cannot_be_deleted(self):
-		with self.assertRaises(frappe.ValidationError):
-			frappe.delete_doc("Employee Onboarding Activity", "Create User")
-
-	def test_standard_activity_keeps_its_action(self):
-		activity = frappe.get_doc("Employee Onboarding Activity", "Create Employee")
-		activity.action = "Manual"
-
-		with self.assertRaises(frappe.ValidationError):
-			activity.save()
-
-	def test_an_action_is_done_by_one_activity_only(self):
-		activity = frappe.new_doc("Employee Onboarding Activity")
-		activity.title = "_Test Second Leave Policy"
-		activity.action = "Assign"
-		activity.reference_doctype = "Leave Policy Assignment"
-
-		with self.assertRaises(frappe.ValidationError):
-			activity.insert()
 
 
 def get_job_applicant():
@@ -394,14 +407,7 @@ def create_employee_onboarding(submit=False, with_activities=True):
 	onboarding.designation = "Engineer"
 	onboarding.employee_name = applicant.applicant_name
 	if with_activities:
-		onboarding.append(
-			"activities",
-			{"activity_name": "Assign ID Card", "role": "HR User", "begin_on": 0, "duration": 1},
-		)
-		onboarding.append(
-			"activities",
-			{"activity_name": "Assign a laptop", "role": "HR User", "begin_on": 1, "duration": 1},
-		)
+		onboarding.employee_onboarding_template = get_test_template().name
 	onboarding.insert()
 	if submit:
 		onboarding.submit()
@@ -419,3 +425,37 @@ def get_test_user(email):
 			ignore_permissions=True
 		)
 	return email
+
+
+def get_test_template():
+	name = frappe.db.get_value("Employee Onboarding Template", {"title": "_Test Engineering Onboarding"})
+	if name:
+		return frappe.get_doc("Employee Onboarding Template", name)
+	return make_template(
+		"_Test Engineering Onboarding",
+		[
+			{"activity_name": "Assign ID Card", "role": "HR User", "begin_on": 0, "duration": 1},
+			{"activity_name": "Assign a laptop", "role": "HR User", "begin_on": 1, "duration": 1},
+		],
+	)
+
+
+def make_template(title, activities=None, is_default=0):
+	template = frappe.new_doc("Employee Onboarding Template")
+	template.title = title
+	template.is_default = is_default
+	for activity in activities or []:
+		template.append("activities", activity)
+	return template.insert()
+
+
+def keep_default_template(test):
+	"""Restore whichever template is the default once the test is over."""
+	default = frappe.db.get_value("Employee Onboarding Template", {"is_default": 1})
+	test.addCleanup(restore_default_template, default)
+
+
+def restore_default_template(default):
+	frappe.db.set_value("Employee Onboarding Template", {"is_default": 1}, "is_default", 0)
+	if default:
+		frappe.db.set_value("Employee Onboarding Template", default, "is_default", 1)

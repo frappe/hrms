@@ -60,5 +60,6 @@ hrms.patches.v16_0.set_draft_status_in_job_offer
 hrms.patches.v16_0.add_employee_overview_tab
 hrms.patches.v16_0.create_employee_onboarding_candidate_role
 hrms.patches.v16_0.set_onboarding_candidate_home_page
-hrms.patches.v16_0.create_standard_onboarding_activities
+hrms.patches.v16_0.create_default_onboarding_template
 hrms.patches.v16_0.split_onboarding_activity_status
+hrms.patches.v16_0.set_onboarding_activity_dependency

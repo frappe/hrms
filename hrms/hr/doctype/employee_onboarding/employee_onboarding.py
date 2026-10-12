@@ -88,6 +88,10 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 
 	def onload(self):
 		self.set_onload("offer_defaults", self.get_offer_defaults())
+		self.set_onload("template_hint", self.get_template_hint())
+
+	def before_insert(self):
+		self.set_default_template()
 
 	def validate(self):
 		self.set_employee()

@@ -153,7 +153,9 @@ def get_onboarding_details(parent: str, parenttype: str):
 		"Employee Boarding Activity",
 		fields=[
 			"activity_name",
-			"activity",
+			"action",
+			"reference_doctype",
+			"depends_on_action",
 			"role",
 			"user",
 			"required_for_employee_creation",

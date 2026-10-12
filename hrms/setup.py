@@ -23,7 +23,7 @@ def after_install():
 	setup_repost_defaults()
 	create_default_role_profiles()
 	create_onboarding_candidate_role()
-	create_standard_onboarding_activities()
+	create_default_onboarding_template()
 	run_post_install_patches()
 	add_default_hr_permissions()
 
@@ -772,12 +772,12 @@ def get_lending_docperms_for_ess():
 	}
 
 
-def create_standard_onboarding_activities():
-	from hrms.hr.doctype.employee_onboarding_activity.employee_onboarding_activity import (
-		create_standard_activities,
+def create_default_onboarding_template():
+	from hrms.hr.doctype.employee_onboarding_template.employee_onboarding_template import (
+		create_default_template,
 	)
 
-	create_standard_activities()
+	create_default_template()
 
 
 def create_onboarding_candidate_role():
