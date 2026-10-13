@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Create Payroll Period",
+ "creation": "2026-10-05 12:00:00.000000",
+ "description": "The financial year that tax is calculated over. See [Payroll Period](https://docs.frappe.io/hr/payroll-period).",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "Create Payroll Period",
+ "owner": "Administrator",
+ "reference_document": "Payroll Period",
+ "show_form_tour": 0,
+ "show_full_form": 1,
+ "title": "Set your payroll period",
+ "validate_action": 1
+}

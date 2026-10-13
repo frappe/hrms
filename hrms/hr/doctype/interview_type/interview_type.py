@@ -23,8 +23,11 @@ class InterviewType(Document):
 	pass
 
 
-@frappe.whitelist()
-def create_interview(docname: str):
+@frappe.whitelist(methods=["POST"])
+def create_interview(docname: str) -> Document:
+	frappe.has_permission("Interview", ptype="create", throw=True)
+	frappe.has_permission("Interview Type", ptype="read", doc=docname, throw=True)
+
 	interview_type = frappe.get_doc("Interview Type", docname)
 
 	interview = frappe.new_doc("Interview")

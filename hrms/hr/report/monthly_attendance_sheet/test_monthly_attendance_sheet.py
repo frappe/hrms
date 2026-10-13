@@ -3,6 +3,7 @@ from dateutil.relativedelta import relativedelta
 import frappe
 from frappe.utils import add_days, get_year_ending, get_year_start, getdate
 
+from erpnext.setup.doctype.employee.employee import is_holiday
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
@@ -238,7 +239,9 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 		except OverlapError:
 			pass
 
-		leave_backed_day = previous_month_first + relativedelta(days=5)
+		leave_backed_day = add_days(previous_month_first, 2)
+		while is_holiday(self.employee, leave_backed_day):
+			leave_backed_day = add_days(leave_backed_day, 1)
 		make_leave_application(
 			self.employee,
 			leave_backed_day,
@@ -705,6 +708,36 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 		# only emp_branch1 should appear; emp_branch2 belongs to a different branch
 		self.assertIn(emp_branch1, employees_in_report)
 		self.assertNotIn(emp_branch2, employees_in_report)
+
+	def test_attendance_with_employment_type_filter(self):
+		previous_month_first = get_first_day_for_prev_month()
+
+		emp_contract = make_employee(
+			"emp_contract@example.com", company=self.company, employment_type="Contract"
+		)
+		emp_full_time = make_employee(
+			"emp_full_time@example.com", company=self.company, employment_type="Full-time"
+		)
+
+		mark_attendance(emp_contract, previous_month_first, "Present")
+		mark_attendance(emp_full_time, previous_month_first, "Present")
+
+		filters = frappe._dict(
+			{
+				"month": previous_month_first.month,
+				"year": previous_month_first.year,
+				"company": self.company,
+				"employment_type": "Contract",
+				"filter_based_on": self.filter_based_on,
+			}
+		)
+		report = execute(filters=filters)
+
+		employees_in_report = [row.get("employee") for row in report[1] if row.get("employee")]
+
+		# only emp_contract should appear; emp_full_time has a different employment type
+		self.assertIn(emp_contract, employees_in_report)
+		self.assertNotIn(emp_full_time, employees_in_report)
 
 	def test_attendance_with_department_and_branch_filter_combined(self):
 		previous_month_first = get_first_day_for_prev_month()

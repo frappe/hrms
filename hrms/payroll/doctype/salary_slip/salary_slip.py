@@ -1372,6 +1372,8 @@ class SalarySlip(TransactionBase):
 		#   - self.default_data: full-cycle values            -> the `default_amount`
 		# (proration cascades through dependent formulas, e.g. SA = BS * 0.5 inherits BS's proration).
 		amount = self.eval_condition_and_formula(struct_row, self.data)
+		# amount is None when the component's condition is false for this slip
+		condition_met = amount is not None
 		if struct_row.statistical_component or struct_row.accrual_component:
 			# update statistical component amount in reference data based on payment days
 			# since row for statistical component is not added to salary slip
@@ -1385,7 +1387,8 @@ class SalarySlip(TransactionBase):
 				self.data[struct_row.abbr] = flt(amount, struct_row.precision)
 
 			is_accrual_component = (
-				component_type == "earnings"
+				condition_met
+				and component_type == "earnings"
 				and struct_row.accrual_component
 				and hasattr(self, "benefit_ledger_components")
 			)
@@ -1424,6 +1427,9 @@ class SalarySlip(TransactionBase):
 				# full-cycle default comes from SSA (period-independent); the slip only
 				# computes the prorated `amount` above (proration is a period concern)
 				default_amount = flt(struct_row.default_amount)
+				if not struct_row.condition_met:
+					default_amount = flt(self.eval_condition_and_formula(struct_row, self.default_data))
+				self.default_data[struct_row.abbr] = default_amount
 				self.update_component_row(
 					struct_row,
 					amount,

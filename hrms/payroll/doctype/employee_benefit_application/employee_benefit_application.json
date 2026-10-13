@@ -5,6 +5,7 @@
  "autoname": "HR-BEN-APP-.YY.-.MM.-.#####",
  "creation": "2018-04-13 16:31:39.190787",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/employee-benefit-application",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -152,9 +153,10 @@
    "fieldtype": "Column Break"
   }
  ],
+ "icon": "gift",
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-17 20:01:52.362546",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Employee Benefit Application",

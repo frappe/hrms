@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Add Checkin",
+ "creation": "2026-10-05 12:00:00.000000",
+ "description": "A punch from a biometric device or the mobile app. Auto attendance turns these into attendance. See [Employee Checkin](https://docs.frappe.io/hr/employee-checkin).",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "Create Employee Checkin",
+ "owner": "Administrator",
+ "reference_document": "Employee Checkin",
+ "show_form_tour": 0,
+ "show_full_form": 0,
+ "title": "Record a check-in",
+ "validate_action": 1
+}

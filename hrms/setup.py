@@ -8,6 +8,7 @@ from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.permissions import add_permission, update_permission_property
 
 from hrms.overrides.company import delete_company_fixtures
+from hrms.subscription_utils import set_hrms_as_default_app
 
 
 def after_install():
@@ -22,6 +23,7 @@ def after_install():
 	create_default_role_profiles()
 	run_post_install_patches()
 	add_default_hr_permissions()
+	set_hrms_as_default_app()
 
 
 def before_uninstall():

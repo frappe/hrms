@@ -5,7 +5,7 @@
 		</h2>
 
 		<template v-if="settings.data?.allow_employee_checkin_from_mobile_app">
-			<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog">
+			<div class="font-medium text-sm text-gray-500 mt-1.5" v-if="lastLog?.time">
 				<span>{{ __("Last {0} was at {1}", [__(lastLogType), formatTimestamp(lastLog.time)]) }}</span>
 				<span class="whitespace-pre"> &middot; </span>
 				<router-link :to="{ name: 'EmployeeCheckinListView' }" v-slot="{ navigate }">
@@ -107,7 +107,7 @@ const checkins = createListResource({
 checkins.reload()
 
 const lastLog = computed(() => {
-	if (!checkins.data?.length) return {}
+	if (!checkins.data?.length) return null
 	return checkins.data[0]
 })
 

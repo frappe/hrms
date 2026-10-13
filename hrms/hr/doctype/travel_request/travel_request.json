@@ -4,6 +4,7 @@
  "autoname": "HR-TRQ-.YYYY.-.#####",
  "creation": "2018-05-15 06:32:33.950356",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/travel-request",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -224,9 +225,10 @@
    "read_only": 1
   }
  ],
+ "icon": "plane-takeoff",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-09-01 18:39:51.520758",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Travel Request",

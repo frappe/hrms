@@ -8,7 +8,7 @@ from frappe.query_builder import DocType
 
 import erpnext
 
-from hrms.payroll.report.provident_fund_deductions.provident_fund_deductions import get_conditions
+from hrms.payroll.utils import get_conditions
 
 
 def execute(filters=None):

@@ -4,6 +4,7 @@
  "autoname": "HR-PRUN-.YYYY.-.#####",
  "creation": "2017-10-23 15:22:29.291323",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/payroll-entry",
  "document_type": "Other",
  "engine": "InnoDB",
  "field_order": [
@@ -332,7 +333,7 @@
    "options": "\nCreate\nSubmit"
   }
  ],
- "icon": "fa fa-cog",
+ "icon": "wallet",
  "is_submittable": 1,
  "links": [
   {
@@ -340,7 +341,7 @@
    "link_fieldname": "payroll_entry"
   }
  ],
- "modified": "2026-09-01 21:42:50.393703",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",

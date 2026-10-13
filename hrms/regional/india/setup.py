@@ -244,11 +244,7 @@ def get_custom_fields():
 
 
 def add_custom_roles_for_reports():
-	for report_name in (
-		"Professional Tax Deductions",
-		"Provident Fund Deductions",
-		"Income Tax Deductions",
-	):
+	for report_name in ("Income Tax Deductions",):
 		if not frappe.db.get_value("Custom Role", dict(report=report_name)):
 			doc = frappe.new_doc("Custom Role")
 			doc.update(

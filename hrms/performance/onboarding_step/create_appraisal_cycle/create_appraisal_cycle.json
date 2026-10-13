@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Create Appraisal Cycle",
+ "creation": "2026-10-05 12:00:00.000000",
+ "description": "The review period, and the employees and templates in it. See [Appraisal Cycle](https://docs.frappe.io/hr/appraisal-cycle).",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "Create Appraisal Cycle",
+ "owner": "Administrator",
+ "reference_document": "Appraisal Cycle",
+ "show_form_tour": 0,
+ "show_full_form": 1,
+ "title": "Start an appraisal cycle",
+ "validate_action": 1
+}

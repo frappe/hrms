@@ -5,6 +5,7 @@
  "autoname": "field:salary_component",
  "creation": "2016-06-30 15:42:43.631931",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/salary-component",
  "document_type": "Setup",
  "editable_grid": 1,
  "engine": "InnoDB",
@@ -294,10 +295,10 @@
    "label": "Payout Unclaimed Amount in Final Payroll Cycle"
   }
  ],
- "icon": "fa fa-flag",
+ "icon": "puzzle",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-09-15 12:00:00.000000",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",

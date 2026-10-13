@@ -5,7 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cint, date_diff, flt, get_link_to_form, getdate
+from frappe.utils import cint, date_diff, flt, get_first_day, get_last_day, get_link_to_form, getdate
 
 import hrms
 from hrms.payroll.doctype.payroll_period.payroll_period import get_payroll_period
@@ -375,6 +375,7 @@ class SalaryStructureAssignment(Document):
 
 			row = frappe._dict(
 				condition=None,
+				condition_met=True,
 				formula=None,
 				precision=frappe.get_precision("Salary Detail", "amount"),
 			)
@@ -397,8 +398,6 @@ class SalaryStructureAssignment(Document):
 		return row
 
 	def _get_component_eval_context(self) -> frappe._dict:
-		from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
-
 		data = get_component_eval_context(self.employee, self.as_dict())
 
 		# The SSA has no salary slip, so formulas referencing slip period fields (e.g.
@@ -406,7 +405,7 @@ class SalaryStructureAssignment(Document):
 		# from_date -- with no LWP/absence so proration-based formulas yield full-cycle
 		# values (payment_days == total_working_days, ratio 1).
 		frequency = frappe.get_cached_value("Salary Structure", self.salary_structure, "payroll_frequency")
-		dates = get_start_end_dates(frequency, self.from_date, self.company)
+		dates = self._get_full_cycle_dates(frequency)
 		period_days = date_diff(dates.end_date, dates.start_date) + 1
 		data.start_date = dates.start_date
 		data.end_date = dates.end_date
@@ -418,21 +417,44 @@ class SalaryStructureAssignment(Document):
 		data.unmarked_days = 0
 		return data
 
+	def _get_full_cycle_dates(self, frequency: str) -> frappe._dict:
+		from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
+
+		if frequency not in ("Monthly", "Bimonthly", ""):
+			return get_start_end_dates(frequency, self.from_date)
+
+		# get_start_end_dates needs a fiscal year covering from_date for month-based
+		# frequencies, which long-running assignments may predate. Use calendar months.
+		from_date = getdate(self.from_date)
+		start_date, end_date = get_first_day(from_date), get_last_day(from_date)
+		if frequency == "Bimonthly":
+			if from_date.day <= 15:
+				end_date = start_date.replace(day=15)
+			else:
+				start_date = start_date.replace(day=16)
+
+		return frappe._dict(start_date=start_date, end_date=end_date)
+
 	def _evaluate_component_table(self, rows, data: frappe._dict) -> list:
 		"""Evaluate one component table against the shared ``data`` (mutating it
 		with each component's full-cycle amount). Returns fresh ``frappe._dict``
 		rows (cache-safe copies). Raises a clear error on a bad formula/condition.
-		Rows whose condition is falsey are skipped (not added to the slip)."""
+		Rows whose condition is falsey in this full-cycle context are still returned
+		with a zero default_amount: the condition may depend on period fields
+		(e.g. leave_without_pay > 0) that only the salary slip knows, so the slip
+		re-evaluates it."""
 		evaluated_components = []
 		for struct_row in rows:
 			condition = sanitize_expression(struct_row.condition)
 			formula = sanitize_expression(struct_row.formula)
 			amount = flt(struct_row.amount)
+			condition_met = True
 
 			try:
 				if condition and not _safe_eval(condition, COMPONENT_EVAL_GLOBALS.copy(), data):
-					continue
-				if struct_row.amount_based_on_formula and formula:
+					condition_met = False
+					default_amount = 0
+				elif struct_row.amount_based_on_formula and formula:
 					default_amount = flt(
 						_safe_eval(formula, COMPONENT_EVAL_GLOBALS.copy(), data),
 						struct_row.precision("amount"),
@@ -462,11 +484,13 @@ class SalaryStructureAssignment(Document):
 				)
 				raise
 
-			data[struct_row.abbr] = default_amount
+			if condition_met:
+				data[struct_row.abbr] = default_amount
 
 			evaluated_component_row = frappe._dict(
 				default_amount=default_amount,
 				amount=amount,
+				condition_met=condition_met,
 				condition=condition,
 				formula=formula,
 				precision=struct_row.precision("amount"),
