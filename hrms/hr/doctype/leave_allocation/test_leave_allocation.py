@@ -9,10 +9,15 @@ from hrms.hr.doctype.leave_allocation.leave_allocation import (
 	BackDatedAllocationError,
 	OverAllocationError,
 )
+<<<<<<< HEAD
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import (
 	expire_allocation,
 	process_expired_allocation,
 )
+=======
+from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import process_expired_allocation
+from hrms.hr.doctype.leave_period.test_leave_period import create_leave_period
+>>>>>>> 0cd31a6 (fix: use leave period for max leaves only when it contains the allocation)
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 
 
@@ -207,6 +212,29 @@ class TestLeaveAllocation(FrappeTestCase):
 		# total leaves = 40 which is more than `max_leaves_allowed` setting i.e. 30
 		allocation.new_leaves_allocated = 25
 		self.assertRaises(OverAllocationError, allocation.save)
+
+	def test_max_leaves_allowed_for_allocation_spanning_two_leave_periods(self):
+		create_leave_period(getdate("2030-01-01"), getdate("2030-12-31"), "_Test Company")
+		create_leave_period(getdate("2031-01-01"), getdate("2031-12-31"), "_Test Company")
+		leave_type = create_leave_type(leave_type_name="_Test Spanning Max Leaves", max_leaves_allowed=12)
+
+		create_leave_allocation(
+			leave_type=leave_type.name,
+			employee=self.employee.name,
+			from_date="2029-02-01",
+			to_date="2030-01-31",
+			new_leaves_allocated=12,
+		).submit()
+
+		allocation = create_leave_allocation(
+			leave_type=leave_type.name,
+			employee=self.employee.name,
+			from_date="2030-02-01",
+			to_date="2031-01-31",
+			new_leaves_allocated=12,
+		)
+		allocation.submit()
+		self.assertEqual(allocation.docstatus, 1)
 
 	def test_validate_back_dated_allocation_update(self):
 		create_leave_type(leave_type_name="_Test_CF_leave", is_carry_forward=1)
