@@ -14,7 +14,6 @@ frappe.ui.form.on("Leave Application", {
 		});
 		frm.set_query("employee", erpnext.queries.employee);
 		frm.set_query("leave_type", function () {
-			// empty list until an employee is selected, so no leave types are shown
 			return {
 				filters: [["leave_type_name", "in", frm.allowed_leave_types || []]],
 			};
