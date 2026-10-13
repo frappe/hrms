@@ -537,6 +537,171 @@ class TestSalarySlip(HRMSTestSuite):
 		self.assertEqual(ss.leave_without_pay, 10)
 		self.assertEqual(ss.payment_days, 17)
 
+	@HRMSTestSuite.change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
+	def test_component_condition_based_on_leave_without_pay(self):
+		"""A condition on a slip value (leave_without_pay) is false in the Salary Structure
+		Assignment's full-cycle context, so the slip must evaluate it with its own values."""
+		from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+			create_holiday_list_assignment,
+		)
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+		from hrms.payroll.report.employee_ctc_break_up.employee_ctc_break_up import SalaryBreakupReport
+
+		holiday_list = make_holiday_list("Test LWP Condition Holiday List", "2024-01-01", "2024-12-31")
+		make_salary_component(
+			[
+				{"salary_component": "LWP Cond Basic", "abbr": "LCB", "type": "Earning"},
+				{
+					"salary_component": "LWP Cond Bonus",
+					"abbr": "LCBN",
+					"type": "Earning",
+					"depends_on_payment_days": 0,
+				},
+				{
+					"salary_component": "LWP Cond Accrual",
+					"abbr": "LCA",
+					"type": "Earning",
+					"accrual_component": 1,
+				},
+				{
+					"salary_component": "LWP Cond Fixed",
+					"abbr": "LCF",
+					"type": "Deduction",
+					"depends_on_payment_days": 0,
+				},
+				{
+					"salary_component": "LWP Cond Formula",
+					"abbr": "LCFM",
+					"type": "Deduction",
+					"depends_on_payment_days": 0,
+				},
+				{
+					"salary_component": "LWP Cond Basic Share",
+					"abbr": "LCBS",
+					"type": "Deduction",
+					"depends_on_payment_days": 0,
+				},
+				{
+					"salary_component": "LWP Cond Employer",
+					"abbr": "LCE",
+					"type": "Employer Contribution",
+				},
+			],
+			test_tax=False,
+			company_list=["_Test Company"],
+		)
+		earnings = [
+			{
+				"salary_component": "LWP Cond Basic",
+				"abbr": "LCB",
+				"amount_based_on_formula": 1,
+				"formula": "base",
+			},
+			{
+				"salary_component": "LWP Cond Accrual",
+				"abbr": "LCA",
+				"condition": "leave_without_pay == 0",
+				"amount": 1000,
+			},
+			{
+				"salary_component": "LWP Cond Bonus",
+				"abbr": "LCBN",
+				"condition": "leave_without_pay > 0",
+				"amount_based_on_formula": 1,
+				"formula": "LCB * 0.1 + 500",
+			},
+		]
+		deductions = [
+			{
+				"salary_component": "LWP Cond Fixed",
+				"abbr": "LCF",
+				"condition": "leave_without_pay > 0",
+				"amount": 500,
+			},
+			{
+				"salary_component": "LWP Cond Formula",
+				"abbr": "LCFM",
+				"condition": "leave_without_pay > 0",
+				"amount_based_on_formula": 1,
+				"formula": "leave_without_pay * 100",
+			},
+			{
+				"salary_component": "LWP Cond Basic Share",
+				"abbr": "LCBS",
+				"condition": "leave_without_pay > 0",
+				"amount_based_on_formula": 1,
+				"formula": "LCB * 0.1",
+			},
+		]
+		employer_contributions = [
+			{
+				"salary_component": "LWP Cond Employer",
+				"abbr": "LCE",
+				"condition": "leave_without_pay > 0",
+				"amount": 300,
+			},
+		]
+
+		def make_slip(email, with_lwp):
+			emp_id = make_employee(email, holiday_list=holiday_list, company="_Test Company")
+			create_holiday_list_assignment("Employee", emp_id, holiday_list)
+			if with_lwp:
+				make_leave_application(emp_id, "2024-07-10", "2024-07-13", "Leave Without Pay")
+
+			structure = make_salary_structure(
+				"Test LWP Condition Structure",
+				"Monthly",
+				employee=emp_id,
+				company="_Test Company",
+				from_date="2024-07-01",
+				base=30000,
+				earnings=earnings,
+				deductions=deductions,
+				other_details={"employer_contributions": employer_contributions},
+			)
+			ss = make_salary_slip(structure.name, employee=emp_id, posting_date="2024-07-01")
+			ss.insert()
+			return ss
+
+		ss = make_slip("test_lwp_condition@salary.com", with_lwp=True)
+		self.assertEqual(ss.leave_without_pay, 4)
+		deductions_by_component = {d.salary_component: d.amount for d in ss.deductions}
+		self.assertEqual(deductions_by_component.get("LWP Cond Fixed"), 500)
+		self.assertEqual(deductions_by_component.get("LWP Cond Formula"), 400)
+		basic = next(d for d in ss.earnings if d.salary_component == "LWP Cond Basic")
+		basic_share = next(d for d in ss.deductions if d.salary_component == "LWP Cond Basic Share")
+		self.assertEqual(basic_share.amount, flt(basic.amount * 0.1, 2))
+		self.assertEqual(basic_share.default_amount, 3000)
+		bonus = next(d for d in ss.earnings if d.salary_component == "LWP Cond Bonus")
+		self.assertEqual(bonus.amount, flt(basic.amount * 0.1 + 500, 2))
+		self.assertEqual(bonus.default_amount, 3500)
+		preview = make_salary_slip(
+			"Test LWP Condition Structure", employee=ss.employee, posting_date="2024-07-01"
+		)
+		preview_bonus = next(d for d in preview.earnings if d.salary_component == "LWP Cond Bonus")
+		self.assertEqual(preview_bonus.default_amount, 3500)
+		self.assertIn("LWP Cond Employer", [d.salary_component for d in ss.employer_contributions])
+		# condition false on the slip, so the accrual must not be recorded
+		self.assertNotIn("LWP Cond Accrual", [d.salary_component for d in ss.accrued_benefits])
+
+		ss = make_slip("test_no_lwp_condition@salary.com", with_lwp=False)
+		self.assertEqual(ss.leave_without_pay, 0)
+		self.assertNotIn("LWP Cond Fixed", [d.salary_component for d in ss.deductions])
+		self.assertNotIn("LWP Cond Formula", [d.salary_component for d in ss.deductions])
+		self.assertIn("LWP Cond Accrual", [d.salary_component for d in ss.accrued_benefits])
+		self.assertNotIn("LWP Cond Employer", [d.salary_component for d in ss.employer_contributions])
+
+		frappe.flags.posting_date = getdate("2024-07-01")
+		self.addCleanup(frappe.flags.pop, "posting_date", None)
+		report = SalaryBreakupReport(ss.employee, ss._salary_structure_assignment.name)
+		report.get_data()
+		self.assertFalse(
+			any(
+				"LWP Cond Employer" in c.get("salary_component")
+				for c in report.employer_contribution_components
+			)
+		)
+
 	@HRMSTestSuite.change_settings("Payroll Settings", {"payroll_based_on": "Attendance"})
 	def test_payment_days_in_salary_slip_based_on_timesheet(self):
 		from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet

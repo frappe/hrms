@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Frappe HR VERSION\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-10-04 11:08+0000\n"
-"PO-Revision-Date: 2026-10-04 11:08+0000\n"
+"POT-Creation-Date: 2026-10-11 09:40+0000\n"
+"PO-Revision-Date: 2026-10-11 09:40+0000\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: contact@frappe.io\n"
 "MIME-Version: 1.0\n"
@@ -152,9 +152,54 @@ msgstr ""
 msgid "A Job Requisition already exists for {0} requested by {1} for the same department.<br> Do you want to continue?"
 msgstr ""
 
+#. Description of the Onboarding Step 'Pay a one-off amount'
+#: hrms/payroll/onboarding_step/create_additional_salary/create_additional_salary.json
+msgid "A bonus, arrear or deduction for one payroll period. See [Additional Salary](https://docs.frappe.io/hr/additional-salary)."
+msgstr ""
+
+#. Description of the Onboarding Step 'Plan a training program'
+#: hrms/tenure/onboarding_step/create_training_program/create_training_program.json
+msgid "A course you run for employees, with its trainer and what it covers. See [Training Program](https://docs.frappe.io/hr/training-program)."
+msgstr ""
+
 #: hrms/controllers/employee_reminders.py:125
 #: hrms/controllers/employee_reminders.py:210
 msgid "A friendly reminder of an important date for our team."
+msgstr ""
+
+#. Description of the Onboarding Step 'Add a leave type'
+#: hrms/leaves/onboarding_step/create_leave_type/create_leave_type.json
+msgid "A kind of leave, such as casual or sick, and its rules. See [Leave Type](https://docs.frappe.io/hr/leave-type)."
+msgstr ""
+
+#. Description of the Onboarding Step 'Set a goal'
+#: hrms/performance/onboarding_step/create_goal/create_goal.json
+msgid "A measurable target for an employee, tracked against a KRA. See [Goal](https://docs.frappe.io/hr/goal)."
+msgstr ""
+
+#. Description of the Onboarding Step 'Record a check-in'
+#: hrms/shift_and_attendance/onboarding_step/create_employee_checkin/create_employee_checkin.json
+msgid "A punch from a biometric device or the mobile app. Auto attendance turns these into attendance. See [Employee Checkin](https://docs.frappe.io/hr/employee-checkin)."
+msgstr ""
+
+#. Description of the Onboarding Step 'Give feedback'
+#: hrms/performance/onboarding_step/create_employee_performance_feedback/create_employee_performance_feedback.json
+msgid "A reviewer's ratings and comments on an employee for the cycle. See [Employee Performance Feedback](https://docs.frappe.io/hr/employee-performance-feedback)."
+msgstr ""
+
+#. Description of the Onboarding Step 'Open a job'
+#: hrms/recruitment/onboarding_step/create_job_opening/create_job_opening.json
+msgid "A role you are hiring for, which you can publish on your job portal. See [Job Opening](https://docs.frappe.io/hr/job-opening)."
+msgstr ""
+
+#. Description of the Onboarding Step 'Schedule a training'
+#: hrms/tenure/onboarding_step/create_training_event/create_training_event.json
+msgid "A session of a training program and the employees attending it. See [Training Event](https://docs.frappe.io/hr/training-event)."
+msgstr ""
+
+#. Description of the Onboarding Step 'Define a shift'
+#: hrms/shift_and_attendance/onboarding_step/create_shift_type/create_shift_type.json
+msgid "A shift's working hours and the rules for marking attendance from check-ins. See [Shift Type](https://docs.frappe.io/hr/shift-type)."
 msgstr ""
 
 #: hrms/hr/utils.py:244
@@ -314,6 +359,11 @@ msgstr ""
 msgid "Actual balances aren't available because the leave application spans over different leave allocations. You can still apply for leaves which would be compensated during the next allocation."
 msgstr ""
 
+#. Label of an action in the Onboarding Step 'Record a check-in'
+#: hrms/shift_and_attendance/onboarding_step/create_employee_checkin/create_employee_checkin.json
+msgid "Add Checkin"
+msgstr ""
+
 #: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:21
 msgid "Add Checkin for Another Employee"
 msgstr ""
@@ -321,6 +371,11 @@ msgstr ""
 #. Label of the add_day_wise_dates (Button) field in DocType 'Leave Block List'
 #: hrms/hr/doctype/leave_block_list/leave_block_list.json
 msgid "Add Day-wise Dates"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Add your employees'
+#: hrms/hr_setup/onboarding_step/create_employee/create_employee.json
+msgid "Add Employee"
 msgstr ""
 
 #: hrms/hr/employee_property_update.js:43
@@ -335,8 +390,38 @@ msgstr ""
 msgid "Add Feedback"
 msgstr ""
 
+#. Label of an action in the Onboarding Step 'Add an applicant'
+#: hrms/recruitment/onboarding_step/create_job_applicant/create_job_applicant.json
+msgid "Add Job Applicant"
+msgstr ""
+
 #: frontend/src/components/ExpenseTaxesTable.vue:118
 msgid "Add Tax"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/performance/onboarding_step/create_kra/create_kra.json
+msgid "Add a key result area"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/leaves/onboarding_step/create_leave_type/create_leave_type.json
+msgid "Add a leave type"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/payroll/onboarding_step/create_salary_component/create_salary_component.json
+msgid "Add a salary component"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/recruitment/onboarding_step/create_job_applicant/create_job_applicant.json
+msgid "Add an applicant"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/tax_and_benefits/onboarding_step/create_income_tax_slab/create_income_tax_slab.json
+msgid "Add income tax slabs"
 msgstr ""
 
 #: hrms/hr/employee_property_update.js:116
@@ -357,7 +442,12 @@ msgstr ""
 msgid "Add unused leaves from previous leave period's allocation to this allocation"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1770
+#. Title of an Onboarding Step
+#: hrms/hr_setup/onboarding_step/create_employee/create_employee.json
+msgid "Add your employees"
+msgstr ""
+
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1776
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
 msgstr ""
 
@@ -477,7 +567,9 @@ msgstr ""
 msgid "Allocate Based On Leave Policy"
 msgstr ""
 
+#. Label of an action in the Onboarding Step 'Give an employee leave'
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.js:180
+#: hrms/leaves/onboarding_step/create_leave_allocation/create_leave_allocation.json
 msgid "Allocate Leave"
 msgstr ""
 
@@ -642,7 +734,7 @@ msgstr ""
 #. Detail'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
-#: hrms/payroll/doctype/salary_structure/salary_structure.js:325
+#: hrms/payroll/doctype/salary_structure/salary_structure.js:322
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:143
 msgid "Amount based on formula"
 msgstr ""
@@ -687,12 +779,42 @@ msgstr ""
 msgid "An Arrear document already exists for employee {0} with salary structure {1} in payroll period {2}"
 msgstr ""
 
+#. Description of the Onboarding Step 'Add a key result area'
+#: hrms/performance/onboarding_step/create_kra/create_kra.json
+msgid "An area an employee is measured on, such as quality or delivery. See [Appraisal Template](https://docs.frappe.io/hr/appraisal-template)."
+msgstr ""
+
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:82
 msgid "An attendance record is linked to this checkin. Please cancel the attendance before modifying time."
 msgstr ""
 
+#. Description of the Onboarding Step 'Add a salary component'
+#: hrms/payroll/onboarding_step/create_salary_component/create_salary_component.json
+msgid "An earning or deduction on the salary slip, such as Basic or Provident Fund. See [Salary Component](https://docs.frappe.io/hr/salary-component)."
+msgstr ""
+
+#. Description of the Onboarding Step 'Approve an expense claim'
+#: hrms/expenses/onboarding_step/create_expense_claim/create_expense_claim.json
+msgid "An employee's claim for money they spent on work. The expense approver approves and submits it. See [Expense Claim](https://docs.frappe.io/hr/expense-claim)."
+msgstr ""
+
+#. Description of the Onboarding Step 'Approve a leave request'
+#: hrms/leaves/onboarding_step/create_leave_application/create_leave_application.json
+msgid "An employee's request for time off. Their leave approver approves and submits it. See [Leave Application](https://docs.frappe.io/hr/leave-application)."
+msgstr ""
+
+#. Description of the Onboarding Step 'Request attendance'
+#: hrms/shift_and_attendance/onboarding_step/create_attendance_request/create_attendance_request.json
+msgid "An employee's request to be marked present for days on duty or working from home. See [Attendance Request](https://docs.frappe.io/hr/attendance-request)."
+msgstr ""
+
 #: frontend/src/views/Profile.vue:287
 msgid "An error occurred while attempting to log out!"
+msgstr ""
+
+#. Description of the Onboarding Step 'Schedule an interview'
+#: hrms/recruitment/onboarding_step/create_interview/create_interview.json
+msgid "An interview round with the applicant and the people interviewing them. See [Interview](https://docs.frappe.io/hr/interview)."
 msgstr ""
 
 #: hrms/public/js/utils/index.js:219
@@ -719,7 +841,7 @@ msgstr ""
 msgid "Annual Gross Earning"
 msgstr ""
 
-#: hrms/setup.py:476
+#: hrms/setup.py:478
 msgid "Annual Salary"
 msgstr ""
 
@@ -821,6 +943,11 @@ msgstr ""
 #: hrms/templates/generators/job_opening.html:29
 #: hrms/templates/generators/job_opening.html:209
 msgid "Apply Now"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Approve a leave request'
+#: hrms/leaves/onboarding_step/create_leave_application/create_leave_application.json
+msgid "Apply for Leave"
 msgstr ""
 
 #. Label of the applicable_for_public_holiday (Check) field in DocType
@@ -931,7 +1058,7 @@ msgstr ""
 #: hrms/hr/doctype/appraisal/appraisal.json
 #: hrms/hr/doctype/appraisal_template/appraisal_template.json
 #: hrms/hr/doctype/appraisee/appraisee.json
-#: hrms/performance/sidebar/performance/performance.json hrms/setup.py:219
+#: hrms/performance/sidebar/performance/performance.json hrms/setup.py:221
 #: hrms/workspace_sidebar/performance.json
 msgid "Appraisal Template"
 msgstr ""
@@ -971,6 +1098,11 @@ msgstr ""
 msgid "Appraisals (This Year)"
 msgstr ""
 
+#. Title of an Onboarding Step
+#: hrms/performance/onboarding_step/create_appraisal/create_appraisal.json
+msgid "Appraise an employee"
+msgstr ""
+
 #. Name of a DocType
 #: hrms/hr/doctype/appraisee/appraisee.json
 msgid "Appraisee"
@@ -980,7 +1112,7 @@ msgstr ""
 msgid "Appraisees: {0}"
 msgstr ""
 
-#: hrms/setup.py:468
+#: hrms/setup.py:470
 msgid "Apprentice"
 msgstr ""
 
@@ -1001,9 +1133,29 @@ msgstr ""
 msgid "Approval Status must be 'Approved' or 'Rejected'"
 msgstr ""
 
+#. Description of the Onboarding Step 'Plan a work trip'
+#: hrms/expenses/onboarding_step/create_travel_request/create_travel_request.json
+msgid "Approval and funding for a work trip before it happens. See [Travel Request](https://docs.frappe.io/hr/travel-request)."
+msgstr ""
+
 #: frontend/src/components/RequestActionSheet.vue:108
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:119
 msgid "Approve"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/leaves/onboarding_step/create_leave_application/create_leave_application.json
+msgid "Approve a leave request"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/expenses/onboarding_step/create_expense_claim/create_expense_claim.json
+msgid "Approve an expense claim"
+msgstr ""
+
+#. Description of the Onboarding Step 'Settle employee expenses'
+#: hrms/hr_setup/onboarding_step/complete_expenses_onboarding/complete_expenses_onboarding.json
+msgid "Approve an expense claim and pay the employee back."
 msgstr ""
 
 #. Option for the 'Approval Status' (Select) field in DocType 'Expense Claim'
@@ -1022,6 +1174,12 @@ msgstr ""
 msgid "Approved Claims (This Month)"
 msgstr ""
 
+#. Description of the Onboarding Step 'See what is still owed'
+#. Description of a report in the Onboarding Step 'See what is still owed'
+#: hrms/expenses/onboarding_step/view_unpaid_expense_claim/view_unpaid_expense_claim.json
+msgid "Approved claims that have not been paid back yet."
+msgstr ""
+
 #. Label of the approver (Link) field in DocType 'Department Approver'
 #. Label of the approver (Link) field in DocType 'Shift Assignment Tool'
 #. Label of the approver (Link) field in DocType 'Shift Request'
@@ -1031,7 +1189,7 @@ msgstr ""
 msgid "Approver"
 msgstr ""
 
-#: hrms/setup.py:190 hrms/setup.py:304
+#: hrms/setup.py:192 hrms/setup.py:306
 msgid "Approvers"
 msgstr ""
 
@@ -1099,13 +1257,20 @@ msgstr ""
 msgid "Assets Allocated"
 msgstr ""
 
+#. Label of an action in the Onboarding Step 'Assign it to an employee'
+#: hrms/payroll/onboarding_step/create_salary_structure_assignment/create_salary_structure_assignment.json
+msgid "Assign Salary Structure"
+msgstr ""
+
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:283
 msgid "Assign Salary Structure to {0} employee(s)?"
 msgstr ""
 
 #. Option for the 'Action' (Select) field in DocType 'Shift Assignment Tool'
+#. Label of an action in the Onboarding Step 'Assign a shift'
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:110
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
+#: hrms/shift_and_attendance/onboarding_step/create_shift_assignment/create_shift_assignment.json
 msgid "Assign Shift"
 msgstr ""
 
@@ -1117,6 +1282,16 @@ msgstr ""
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:53
 msgid "Assign Structure"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/shift_and_attendance/onboarding_step/create_shift_assignment/create_shift_assignment.json
+msgid "Assign a shift"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/payroll/onboarding_step/create_salary_structure_assignment/create_salary_structure_assignment.json
+msgid "Assign it to an employee"
 msgstr ""
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:298
@@ -1175,7 +1350,7 @@ msgstr ""
 msgid "Associated Document Type"
 msgstr ""
 
-#: hrms/hr/doctype/exit_interview/exit_interview.py:139
+#: hrms/hr/doctype/exit_interview/exit_interview.py:142
 msgid "At least one interview has to be selected."
 msgstr ""
 
@@ -1532,7 +1707,7 @@ msgstr ""
 msgid "Benefits"
 msgstr ""
 
-#: hrms/hr/report/project_profitability/project_profitability.py:169
+#: hrms/hr/report/project_profitability/project_profitability.py:178
 msgid "Bill Amount"
 msgstr ""
 
@@ -1619,6 +1794,21 @@ msgstr ""
 msgid "Branch: {0}"
 msgstr ""
 
+#. Title of an Onboarding Step
+#: hrms/payroll/onboarding_step/create_salary_structure/create_salary_structure.json
+msgid "Build a salary structure"
+msgstr ""
+
+#. Description of the Onboarding Step 'Run your first payroll'
+#: hrms/hr_setup/onboarding_step/complete_payroll_onboarding/complete_payroll_onboarding.json
+msgid "Build a salary structure, assign it and run payroll."
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/performance/onboarding_step/create_appraisal_template/create_appraisal_template.json
+msgid "Build an appraisal template"
+msgstr ""
+
 #: hrms/hr/doctype/leave_policy/leave_policy.js:19
 msgid "Bulk Assignment"
 msgstr ""
@@ -1643,6 +1833,11 @@ msgstr ""
 
 #: hrms/hr/doctype/attendance/attendance.py:439
 msgid "Bulk attendance marking is queued with a background job. It may take a while. You can monitor the job status {0}"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/leaves/onboarding_step/create_leave_policy/create_leave_policy.json
+msgid "Bundle leave types into a policy"
 msgstr ""
 
 #. Description of the 'Calculate Final Score based on Formula' (Check) field in
@@ -1681,6 +1876,10 @@ msgstr ""
 #. DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Calculated in days"
+msgstr ""
+
+#: hrms/setup.py:406
+msgid "Calls"
 msgstr ""
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:779
@@ -1735,7 +1934,7 @@ msgstr ""
 msgid "Cannot create Salary Slip for Employee who has left before Payroll Period"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2734
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2740
 msgid "Cannot create Salary Slip: no active Salary Structure is assigned to employee {0}."
 msgstr ""
 
@@ -1782,7 +1981,7 @@ msgstr ""
 msgid "Carry Forwarded Leaves"
 msgstr ""
 
-#: hrms/setup.py:419 hrms/setup.py:420
+#: hrms/setup.py:421 hrms/setup.py:422
 msgid "Casual Leave"
 msgstr ""
 
@@ -1835,8 +2034,23 @@ msgstr ""
 msgid "Check Vacancies On Job Offer Creation"
 msgstr ""
 
+#. Title of an Onboarding Step
+#: hrms/tax_and_benefits/onboarding_step/view_income_tax_computation/view_income_tax_computation.json
+msgid "Check each employee's tax"
+msgstr ""
+
 #: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:92
 msgid "Check in to create your first log."
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/leaves/onboarding_step/view_employee_leave_balance/view_employee_leave_balance.json
+msgid "Check leave balances"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/shift_and_attendance/onboarding_step/view_monthly_attendance_sheet/view_monthly_attendance_sheet.json
+msgid "Check the month's attendance"
 msgstr ""
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:581
@@ -1877,6 +2091,11 @@ msgstr ""
 
 #: hrms/hr/doctype/goal/goal_tree.js:52
 msgid "Child nodes can only be created under 'Group' type nodes"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/tax_and_benefits/onboarding_step/create_employee_benefit_application/create_employee_benefit_application.json
+msgid "Choose flexible benefits"
 msgstr ""
 
 #. Description of the 'Overtime Amount Calculation' (Select) field in DocType
@@ -1978,6 +2197,11 @@ msgstr ""
 msgid "Company Information"
 msgstr ""
 
+#. Title of an Onboarding Step
+#: hrms/performance/onboarding_step/view_appraisal_overview/view_appraisal_overview.json
+msgid "Compare scores across a cycle"
+msgstr ""
+
 #. Name of a DocType
 #. Label of the compensatory_request (Link) field in DocType 'Leave Allocation'
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.json
@@ -1985,7 +2209,7 @@ msgstr ""
 msgid "Compensatory Leave Request"
 msgstr ""
 
-#: hrms/setup.py:428 hrms/setup.py:429
+#: hrms/setup.py:430 hrms/setup.py:431
 msgid "Compensatory Off"
 msgstr ""
 
@@ -2115,8 +2339,30 @@ msgstr ""
 msgid "Cover Letter"
 msgstr ""
 
+#. Label of an action in the Onboarding Step 'Pay a one-off amount'
 #: hrms/hr/doctype/employee_referral/employee_referral.js:40
+#: hrms/payroll/onboarding_step/create_additional_salary/create_additional_salary.json
 msgid "Create Additional Salary"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Send an appointment letter'
+#: hrms/recruitment/onboarding_step/create_appointment_letter/create_appointment_letter.json
+msgid "Create Appointment Letter"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Appraise an employee'
+#: hrms/performance/onboarding_step/create_appraisal/create_appraisal.json
+msgid "Create Appraisal"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Start an appraisal cycle'
+#: hrms/performance/onboarding_step/create_appraisal_cycle/create_appraisal_cycle.json
+msgid "Create Appraisal Cycle"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Build an appraisal template'
+#: hrms/performance/onboarding_step/create_appraisal_template/create_appraisal_template.json
+msgid "Create Appraisal Template"
 msgstr ""
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.js:34
@@ -2128,6 +2374,51 @@ msgstr ""
 msgid "Create Assignments"
 msgstr ""
 
+#. Label of an action in the Onboarding Step 'Request attendance'
+#: hrms/shift_and_attendance/onboarding_step/create_attendance_request/create_attendance_request.json
+msgid "Create Attendance Request"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Choose flexible benefits'
+#: hrms/tax_and_benefits/onboarding_step/create_employee_benefit_application/create_employee_benefit_application.json
+msgid "Create Benefit Application"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Declare tax exemptions'
+#: hrms/tax_and_benefits/onboarding_step/create_employee_tax_exemption_declaration/create_employee_tax_exemption_declaration.json
+msgid "Create Declaration"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Give an employee an advance'
+#: hrms/expenses/onboarding_step/create_employee_advance/create_employee_advance.json
+msgid "Create Employee Advance"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Approve an expense claim'
+#: hrms/expenses/onboarding_step/create_expense_claim/create_expense_claim.json
+msgid "Create Expense Claim"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Set a goal'
+#: hrms/performance/onboarding_step/create_goal/create_goal.json
+msgid "Create Goal"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Set up a gratuity rule'
+#: hrms/tax_and_benefits/onboarding_step/create_gratuity_rule/create_gratuity_rule.json
+msgid "Create Gratuity Rule"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Set your holidays'
+#: hrms/leaves/onboarding_step/create_holiday_list/create_holiday_list.json
+msgid "Create Holiday List"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Add income tax slabs'
+#: hrms/tax_and_benefits/onboarding_step/create_income_tax_slab/create_income_tax_slab.json
+msgid "Create Income Tax Slab"
+msgstr ""
+
 #: hrms/hr/doctype/interview_type/interview_type.js:7
 msgid "Create Interview"
 msgstr ""
@@ -2136,13 +2427,32 @@ msgstr ""
 msgid "Create Job Applicant"
 msgstr ""
 
+#. Label of an action in the Onboarding Step 'Make an offer'
 #: hrms/hr/doctype/job_applicant/job_applicant.js:107
+#: hrms/recruitment/onboarding_step/create_job_offer/create_job_offer.json
 msgid "Create Job Offer"
 msgstr ""
 
+#. Label of an action in the Onboarding Step 'Open a job'
 #: hrms/hr/doctype/job_opening_template/job_opening_template.js:7
 #: hrms/hr/doctype/job_requisition/job_requisition.js:39
+#: hrms/recruitment/onboarding_step/create_job_opening/create_job_opening.json
 msgid "Create Job Opening"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Add a key result area'
+#: hrms/performance/onboarding_step/create_kra/create_kra.json
+msgid "Create KRA"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Bundle leave types into a policy'
+#: hrms/leaves/onboarding_step/create_leave_policy/create_leave_policy.json
+msgid "Create Leave Policy"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Add a leave type'
+#: hrms/leaves/onboarding_step/create_leave_type/create_leave_type.json
+msgid "Create Leave Type"
 msgstr ""
 
 #. Label of the create_new_employee_id (Check) field in DocType 'Employee
@@ -2161,6 +2471,21 @@ msgstr ""
 msgid "Create Overtime Slips"
 msgstr ""
 
+#. Label of an action in the Onboarding Step 'Run payroll'
+#: hrms/payroll/onboarding_step/create_payroll_entry/create_payroll_entry.json
+msgid "Create Payroll Entry"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Set your payroll period'
+#: hrms/tax_and_benefits/onboarding_step/create_payroll_period/create_payroll_period.json
+msgid "Create Payroll Period"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Add a salary component'
+#: hrms/payroll/onboarding_step/create_salary_component/create_salary_component.json
+msgid "Create Salary Component"
+msgstr ""
+
 #: hrms/public/js/erpnext/timesheet.js:8
 msgid "Create Salary Slip"
 msgstr ""
@@ -2170,14 +2495,49 @@ msgstr ""
 msgid "Create Salary Slips"
 msgstr ""
 
+#. Label of an action in the Onboarding Step 'Build a salary structure'
+#: hrms/payroll/onboarding_step/create_salary_structure/create_salary_structure.json
+msgid "Create Salary Structure"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Define a shift'
+#: hrms/shift_and_attendance/onboarding_step/create_shift_type/create_shift_type.json
+msgid "Create Shift Type"
+msgstr ""
+
 #. Label of the create_shifts_after (Date) field in DocType 'Shift Schedule
 #. Assignment'
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.json
 msgid "Create Shifts After"
 msgstr ""
 
+#. Label of an action in the Onboarding Step 'Write an onboarding checklist'
+#: hrms/tenure/onboarding_step/create_employee_onboarding_template/create_employee_onboarding_template.json
+msgid "Create Template"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Schedule a training'
+#: hrms/tenure/onboarding_step/create_training_event/create_training_event.json
+msgid "Create Training Event"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Plan a training program'
+#: hrms/tenure/onboarding_step/create_training_program/create_training_program.json
+msgid "Create Training Program"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Plan a work trip'
+#: hrms/expenses/onboarding_step/create_travel_request/create_travel_request.json
+msgid "Create Travel Request"
+msgstr ""
+
 #: hrms/public/js/templates/hierarchy_empty_state.html:25
 msgid "Create {0}"
+msgstr ""
+
+#. Description of the Onboarding Step 'Run payroll'
+#: hrms/payroll/onboarding_step/create_payroll_entry/create_payroll_entry.json
+msgid "Creates salary slips for everyone in a period and books the salary. See [Payroll Entry](https://docs.frappe.io/hr/payroll-entry)."
 msgstr ""
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:218
@@ -2333,7 +2693,7 @@ msgstr ""
 msgid "Dates Based On"
 msgstr ""
 
-#: hrms/setup.py:178
+#: hrms/setup.py:180
 msgid "Days for which Holidays are blocked for this department."
 msgstr ""
 
@@ -2365,6 +2725,11 @@ msgstr ""
 msgid "Declarations"
 msgstr ""
 
+#. Title of an Onboarding Step
+#: hrms/tax_and_benefits/onboarding_step/create_employee_tax_exemption_declaration/create_employee_tax_exemption_declaration.json
+msgid "Declare tax exemptions"
+msgstr ""
+
 #. Label of the amount (Currency) field in DocType 'Employee Tax Exemption
 #. Declaration Category'
 #: hrms/payroll/doctype/employee_tax_exemption_declaration_category/employee_tax_exemption_declaration_category.json
@@ -2390,6 +2755,13 @@ msgstr ""
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Deduct Tax For Unsubmitted Tax Exemption Proof"
+msgstr ""
+
+#. Title of an Onboarding Step
+#. Title of the Module Onboarding 'Tax and Benefits Onboarding'
+#: hrms/hr_setup/onboarding_step/complete_tax_and_benefits_onboarding/complete_tax_and_benefits_onboarding.json
+#: hrms/tax_and_benefits/module_onboarding/tax_and_benefits_onboarding/tax_and_benefits_onboarding.json
+msgid "Deduct the right tax"
 msgstr ""
 
 #. Option for the 'Type' (Select) field in DocType 'Salary Component'
@@ -2437,15 +2809,15 @@ msgstr ""
 msgid "Default Base Pay"
 msgstr ""
 
-#: hrms/setup.py:138
+#: hrms/setup.py:140
 msgid "Default Employee Advance Account"
 msgstr ""
 
-#: hrms/setup.py:130
+#: hrms/setup.py:132
 msgid "Default Expense Claim Payable Account"
 msgstr ""
 
-#: hrms/overrides/company.py:185 hrms/setup.py:153
+#: hrms/overrides/company.py:185 hrms/setup.py:155
 msgid "Default Payroll Payable Account"
 msgstr ""
 
@@ -2456,8 +2828,18 @@ msgid "Default Salary Structure"
 msgstr ""
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:204
-#: hrms/setup.py:276
+#: hrms/setup.py:278
 msgid "Default Shift"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/shift_and_attendance/onboarding_step/create_shift_type/create_shift_type.json
+msgid "Define a shift"
+msgstr ""
+
+#. Description of the Onboarding Step 'Track attendance and shifts'
+#: hrms/hr_setup/onboarding_step/complete_shift_and_attendance_onboarding/complete_shift_and_attendance_onboarding.json
+msgid "Define a shift, put an employee on it and mark their attendance."
 msgstr ""
 
 #: frontend/src/components/FileUploaderView.vue:49
@@ -2608,6 +2990,20 @@ msgstr ""
 msgid "ERROR({0}): {1}"
 msgstr ""
 
+#. Description of the Onboarding Step 'Check the month's attendance'
+#. Description of a report in the Onboarding Step 'Check the month's
+#. attendance'
+#: hrms/shift_and_attendance/onboarding_step/view_monthly_attendance_sheet/view_monthly_attendance_sheet.json
+msgid "Each employee's attendance for every day of the month."
+msgstr ""
+
+#. Description of the Onboarding Step 'Compare scores across a cycle'
+#. Description of a report in the Onboarding Step 'Compare scores across a
+#. cycle'
+#: hrms/performance/onboarding_step/view_appraisal_overview/view_appraisal_overview.json
+msgid "Each employee's goal, feedback and self appraisal scores in a cycle."
+msgstr ""
+
 #. Label of the early_exit (Check) field in DocType 'Attendance'
 #. Label of the early_exit (Check) field in DocType 'Employee Attendance Tool'
 #: hrms/hr/doctype/attendance/attendance.json
@@ -2751,7 +3147,7 @@ msgid "Employee A/C Number"
 msgstr ""
 
 #: hrms/patches/v16_0/create_custom_field_for_employee_advance_in_employee_master.py:11
-#: hrms/setup.py:339
+#: hrms/setup.py:341
 msgid "Employee Advance Account"
 msgstr ""
 
@@ -2833,7 +3229,7 @@ msgstr ""
 #. Label of the employee_benefits_section (Section Break) field in DocType
 #. 'Salary Structure Assignment'
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/setup.py:478
+#: hrms/setup.py:480
 msgid "Employee Benefits"
 msgstr ""
 
@@ -3045,7 +3441,7 @@ msgstr ""
 msgid "Employee Leave Balance Summary"
 msgstr ""
 
-#: hrms/setup.py:840
+#: hrms/setup.py:842
 msgid "Employee Loan"
 msgstr ""
 
@@ -3121,7 +3517,7 @@ msgstr ""
 #: hrms/hr/doctype/employee_referral/employee_referral.json
 #: hrms/hr/doctype/job_applicant/job_applicant.json
 #: hrms/hr/doctype/job_requisition/job_requisition.js:18
-#: hrms/recruitment/sidebar/recruitment/recruitment.json hrms/setup.py:472
+#: hrms/recruitment/sidebar/recruitment/recruitment.json hrms/setup.py:474
 #: hrms/workspace_sidebar/recruitment.json
 msgid "Employee Referral"
 msgstr ""
@@ -3385,6 +3781,12 @@ msgstr ""
 msgid "Employees Working on a Holiday"
 msgstr ""
 
+#. Description of the Onboarding Step 'Look at your workforce'
+#. Description of a report in the Onboarding Step 'Look at your workforce'
+#: hrms/tenure/onboarding_step/view_employee_analytics/view_employee_analytics.json
+msgid "Employees by branch, department, designation or grade."
+msgstr ""
+
 #: hrms/hr/doctype/employee_performance_feedback/employee_performance_feedback.py:60
 msgid "Employees cannot give feedback to themselves. Use {0} instead: {1}"
 msgstr ""
@@ -3448,7 +3850,7 @@ msgstr ""
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
-#: hrms/setup.py:243 hrms/templates/generators/job_opening.html:141
+#: hrms/setup.py:245 hrms/templates/generators/job_opening.html:141
 msgid "Employment Type"
 msgstr ""
 
@@ -3590,8 +3992,12 @@ msgstr ""
 msgid "Error downloading PDF"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1492
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:460
+#: hrms/hr/report/project_profitability/project_profitability.py:87
+msgid "Error in calculating project profitability"
+msgstr ""
+
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1498
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:466
 msgid "Error in formula or condition"
 msgstr ""
 
@@ -3669,6 +4075,12 @@ msgstr ""
 #. Option for the 'Frequency' (Select) field in DocType 'Shift Schedule'
 #: hrms/hr/doctype/shift_schedule/shift_schedule.json
 msgid "Every Week"
+msgstr ""
+
+#. Description of the Onboarding Step 'Review the salary register'
+#. Description of a report in the Onboarding Step 'Review the salary register'
+#: hrms/payroll/onboarding_step/view_salary_register/view_salary_register.json
+msgid "Every salary slip in a period, component by component."
 msgstr ""
 
 #: hrms/controllers/employee_reminders.py:212
@@ -3792,14 +4204,14 @@ msgstr ""
 #. Label of the exit_questionnaire_section (Section Break) field in DocType
 #. 'Exit Interview'
 #: hrms/hr/doctype/exit_interview/exit_interview.json
-#: hrms/hr/doctype/exit_interview/exit_interview.py:174
+#: hrms/hr/doctype/exit_interview/exit_interview.py:177
 msgid "Exit Questionnaire"
 msgstr ""
 
-#: hrms/hr/doctype/exit_interview/test_exit_interview.py:110
-#: hrms/hr/doctype/exit_interview/test_exit_interview.py:120
-#: hrms/hr/doctype/exit_interview/test_exit_interview.py:122 hrms/setup.py:553
-#: hrms/setup.py:555 hrms/setup.py:576
+#: hrms/hr/doctype/exit_interview/test_exit_interview.py:133
+#: hrms/hr/doctype/exit_interview/test_exit_interview.py:143
+#: hrms/hr/doctype/exit_interview/test_exit_interview.py:145 hrms/setup.py:555
+#: hrms/setup.py:557 hrms/setup.py:578
 msgid "Exit Questionnaire Notification"
 msgstr ""
 
@@ -3815,7 +4227,7 @@ msgstr ""
 
 #. Label of the exit_questionnaire_web_form (Link) field in DocType 'HR
 #. Settings'
-#: hrms/hr/doctype/exit_interview/exit_interview.py:155
+#: hrms/hr/doctype/exit_interview/exit_interview.py:158
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Exit Questionnaire Web Form"
 msgstr ""
@@ -3863,8 +4275,8 @@ msgstr ""
 #. Label of the expense_approver (Link) field in DocType 'Expense Claim'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 #: hrms/hr/doctype/expense_claim/expense_claim.json
-#: hrms/patches/v15_0/update_approver_custom_fields.py:11 hrms/setup.py:210
-#: hrms/setup.py:310
+#: hrms/patches/v15_0/update_approver_custom_fields.py:11 hrms/setup.py:212
+#: hrms/setup.py:312
 msgid "Expense Approver"
 msgstr ""
 
@@ -4017,6 +4429,10 @@ msgstr ""
 
 #: hrms/api/__init__.py:805
 msgid "Failed to download PDF: {0}"
+msgstr ""
+
+#: hrms/setup_wizard.py:13 hrms/setup_wizard.py:18
+msgid "Failed to personalize your setup"
 msgstr ""
 
 #: frontend/src/views/ForgotPassword.vue:83
@@ -4257,7 +4673,7 @@ msgstr ""
 msgid "Follow via Email"
 msgstr ""
 
-#: hrms/setup.py:405
+#: hrms/setup.py:407
 msgid "Food"
 msgstr ""
 
@@ -4309,7 +4725,7 @@ msgstr ""
 msgid "Fraction of Daily Salary per Leave"
 msgstr ""
 
-#: hrms/hr/report/project_profitability/project_profitability.py:191
+#: hrms/hr/report/project_profitability/project_profitability.py:200
 msgid "Fractional Cost"
 msgstr ""
 
@@ -4403,7 +4819,7 @@ msgstr ""
 msgid "Full and Final Outstanding Statement"
 msgstr ""
 
-#: hrms/setup.py:461
+#: hrms/setup.py:463
 msgid "Full-time"
 msgstr ""
 
@@ -4469,6 +4885,31 @@ msgstr ""
 
 #: frontend/src/components/InstallPrompt.vue:41
 msgid "Get the app on your iPhone for easy access & a better experience"
+msgstr ""
+
+#. Title of the Module Onboarding 'HR Onboarding'
+#: hrms/hr_setup/module_onboarding/hr_onboarding/hr_onboarding.json
+msgid "Get to know Frappe HR"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Give feedback'
+#: hrms/performance/onboarding_step/create_employee_performance_feedback/create_employee_performance_feedback.json
+msgid "Give Feedback"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/expenses/onboarding_step/create_employee_advance/create_employee_advance.json
+msgid "Give an employee an advance"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/leaves/onboarding_step/create_leave_allocation/create_leave_allocation.json
+msgid "Give an employee leave"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/performance/onboarding_step/create_employee_performance_feedback/create_employee_performance_feedback.json
+msgid "Give feedback"
 msgstr ""
 
 #. Option for the 'Meal Preference' (Select) field in DocType 'Travel
@@ -4541,7 +4982,7 @@ msgstr ""
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:173
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/setup.py:269
+#: hrms/setup.py:271
 msgid "Grade"
 msgstr ""
 
@@ -4642,15 +5083,15 @@ msgstr ""
 msgid "Group goal's progress is auto-calculated based on the child goals."
 msgstr ""
 
-#: hrms/setup.py:394
+#: hrms/setup.py:396
 msgid "HR"
 msgstr ""
 
-#: hrms/setup.py:116
+#: hrms/setup.py:118
 msgid "HR & Payroll"
 msgstr ""
 
-#: hrms/setup.py:122
+#: hrms/setup.py:124
 msgid "HR & Payroll Settings"
 msgstr ""
 
@@ -4658,7 +5099,7 @@ msgstr ""
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 #: hrms/hr/doctype/leave_application/leave_application.py:214
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:37
-#: hrms/hr/report/project_profitability/project_profitability.py:103
+#: hrms/hr/report/project_profitability/project_profitability.py:112
 msgid "HR Settings"
 msgstr ""
 
@@ -4735,12 +5176,17 @@ msgstr ""
 msgid "Half day date should be in between from date and to date"
 msgstr ""
 
+#. Title of an Onboarding Step
+#: hrms/tenure/onboarding_step/create_employee_separation/create_employee_separation.json
+msgid "Handle an exit"
+msgstr ""
+
 #. Label of the has_certificate (Check) field in DocType 'Training Event'
 #: hrms/hr/doctype/training_event/training_event.json
 msgid "Has Certificate"
 msgstr ""
 
-#: hrms/setup.py:284
+#: hrms/setup.py:286
 msgid "Health Insurance"
 msgstr ""
 
@@ -4750,11 +5196,11 @@ msgstr ""
 msgid "Health Insurance Name"
 msgstr ""
 
-#: hrms/setup.py:298
+#: hrms/setup.py:300
 msgid "Health Insurance No"
 msgstr ""
 
-#: hrms/setup.py:290
+#: hrms/setup.py:292
 msgid "Health Insurance Provider"
 msgstr ""
 
@@ -4768,6 +5214,13 @@ msgstr ""
 
 #: frontend/src/components/CheckInPanel.vue:4
 msgid "Hey, {0} 👋"
+msgstr ""
+
+#. Title of an Onboarding Step
+#. Title of the Module Onboarding 'Recruitment Onboarding'
+#: hrms/hr_setup/onboarding_step/complete_recruitment_onboarding/complete_recruitment_onboarding.json
+#: hrms/recruitment/module_onboarding/recruitment_onboarding/recruitment_onboarding.json
+msgid "Hire your first employee"
 msgstr ""
 
 #: hrms/hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:55
@@ -4862,8 +5315,29 @@ msgstr ""
 msgid "House rented dates should be atleast 15 days apart"
 msgstr ""
 
+#. Description of the Onboarding Step 'Choose flexible benefits'
+#: hrms/tax_and_benefits/onboarding_step/create_employee_benefit_application/create_employee_benefit_application.json
+msgid "How an employee splits their flexible benefit amount across components. See [Employee Benefit Application](https://docs.frappe.io/hr/employee-benefit-application)."
+msgstr ""
+
+#. Description of the Onboarding Step 'Set up a gratuity rule'
+#: hrms/tax_and_benefits/onboarding_step/create_gratuity_rule/create_gratuity_rule.json
+msgid "How gratuity is calculated from years of service. See [Gratuity Rule](https://docs.frappe.io/hr/gratuity-rule)."
+msgstr ""
+
+#. Description of the Onboarding Step 'Bundle leave types into a policy'
+#: hrms/leaves/onboarding_step/create_leave_policy/create_leave_policy.json
+msgid "How many days of each leave type an employee gets in a year. See [Leave Policy](https://docs.frappe.io/hr/leave-policy)."
+msgstr ""
+
 #: hrms/public/js/setup_wizard.js:47
 msgid "How many employees do you have?"
+msgstr ""
+
+#. Description of the Onboarding Step 'Check leave balances'
+#. Description of a report in the Onboarding Step 'Check leave balances'
+#: hrms/leaves/onboarding_step/view_employee_leave_balance/view_employee_leave_balance.json
+msgid "How much of each leave type every employee has left."
 msgstr ""
 
 #: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:62
@@ -5153,11 +5627,11 @@ msgstr ""
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2049
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2055
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2037
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2043
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr ""
 
@@ -5165,7 +5639,7 @@ msgstr ""
 msgid "Income Tax Slab: "
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2045
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2051
 msgid "Income Tax Slab: {0} is disabled"
 msgstr ""
 
@@ -5218,7 +5692,7 @@ msgstr ""
 msgid "Interest Income Account"
 msgstr ""
 
-#: hrms/setup.py:467
+#: hrms/setup.py:469
 msgid "Intern"
 msgstr ""
 
@@ -5264,8 +5738,8 @@ msgstr ""
 #: hrms/hr/doctype/interview/test_interview.py:309
 #: hrms/hr/doctype/interview/test_interview.py:318
 #: hrms/hr/doctype/interview/test_interview.py:320
-#: hrms/hr/doctype/interview/test_interview.py:327 hrms/setup.py:539
-#: hrms/setup.py:541 hrms/setup.py:574
+#: hrms/hr/doctype/interview/test_interview.py:327 hrms/setup.py:541
+#: hrms/setup.py:543 hrms/setup.py:576
 msgid "Interview Feedback Reminder"
 msgstr ""
 
@@ -5280,8 +5754,8 @@ msgstr ""
 #: hrms/hr/doctype/interview/test_interview.py:293
 #: hrms/hr/doctype/interview/test_interview.py:302
 #: hrms/hr/doctype/interview/test_interview.py:304
-#: hrms/hr/doctype/interview/test_interview.py:326 hrms/setup.py:527
-#: hrms/setup.py:529 hrms/setup.py:570
+#: hrms/hr/doctype/interview/test_interview.py:326 hrms/setup.py:529
+#: hrms/setup.py:531 hrms/setup.py:572
 msgid "Interview Reminder"
 msgstr ""
 
@@ -5333,11 +5807,11 @@ msgstr ""
 msgid "Interview Type Name"
 msgstr ""
 
-#: hrms/hr/doctype/job_applicant/job_applicant.py:232
+#: hrms/hr/doctype/job_applicant/job_applicant.py:235
 msgid "Interview Type {0} is only applicable for Designation {1}"
 msgstr ""
 
-#: hrms/hr/doctype/job_applicant/job_applicant.py:196
+#: hrms/hr/doctype/job_applicant/job_applicant.py:199
 msgid "Interview Type {0} is only applicable for the Designation {1}"
 msgstr ""
 
@@ -5404,7 +5878,7 @@ msgstr ""
 msgid "Invalid Dates"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2799
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2805
 msgid "Invalid LWP Days Reversed"
 msgstr ""
 
@@ -5569,7 +6043,7 @@ msgstr ""
 #: hrms/hr/doctype/job_offer/job_offer.json
 #: hrms/hr/report/recruitment_analytics/recruitment_analytics.py:38
 #: hrms/patches/v16_0/set_job_offer_in_employee.py:13
-#: hrms/recruitment/sidebar/recruitment/recruitment.json hrms/setup.py:251
+#: hrms/recruitment/sidebar/recruitment/recruitment.json hrms/setup.py:253
 #: hrms/workspace_sidebar/recruitment.json
 msgid "Job Applicant"
 msgstr ""
@@ -5600,7 +6074,7 @@ msgstr ""
 #. Label of the job_description_tab (Tab Break) field in DocType 'Job
 #. Requisition'
 #. Label of the description (Text Editor) field in DocType 'Job Requisition'
-#: hrms/hr/doctype/job_requisition/job_requisition.json hrms/setup.py:482
+#: hrms/hr/doctype/job_requisition/job_requisition.json hrms/setup.py:484
 msgid "Job Description"
 msgstr ""
 
@@ -5612,7 +6086,7 @@ msgstr ""
 #: hrms/hr/doctype/job_offer/job_offer.json
 #: hrms/hr/report/recruitment_analytics/recruitment_analytics.py:52
 #: hrms/patches/v16_0/set_job_offer_in_employee.py:22
-#: hrms/recruitment/sidebar/recruitment/recruitment.json hrms/setup.py:260
+#: hrms/recruitment/sidebar/recruitment/recruitment.json hrms/setup.py:262
 #: hrms/workspace_sidebar/recruitment.json
 msgid "Job Offer"
 msgstr ""
@@ -5798,7 +6272,7 @@ msgstr ""
 msgid "Key Result Area"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2796
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2802
 msgid "LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
 msgstr ""
 
@@ -5933,7 +6407,7 @@ msgstr ""
 msgid "Leave Applications by Type"
 msgstr ""
 
-#: hrms/setup.py:504 hrms/setup.py:506 hrms/setup.py:566
+#: hrms/setup.py:506 hrms/setup.py:508 hrms/setup.py:568
 msgid "Leave Approval Notification"
 msgstr ""
 
@@ -5947,8 +6421,8 @@ msgstr ""
 #. Name of a role
 #: hrms/hr/doctype/leave_application/leave_application.json
 #: hrms/hr/doctype/overtime_slip/overtime_slip.json
-#: hrms/patches/v15_0/update_approver_custom_fields.py:19 hrms/setup.py:203
-#: hrms/setup.py:318
+#: hrms/patches/v15_0/update_approver_custom_fields.py:19 hrms/setup.py:205
+#: hrms/setup.py:320
 msgid "Leave Approver"
 msgstr ""
 
@@ -5995,7 +6469,7 @@ msgstr ""
 #. Label of a Sidebar Item
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/leave_block_list/leave_block_list.json
-#: hrms/leaves/sidebar/leaves/leaves.json hrms/setup.py:182
+#: hrms/leaves/sidebar/leaves/leaves.json hrms/setup.py:184
 #: hrms/workspace_sidebar/leaves.json
 msgid "Leave Block List"
 msgstr ""
@@ -6164,7 +6638,7 @@ msgstr ""
 msgid "Leave Setup"
 msgstr ""
 
-#: hrms/setup.py:513 hrms/setup.py:515 hrms/setup.py:567
+#: hrms/setup.py:515 hrms/setup.py:517 hrms/setup.py:569
 msgid "Leave Status Notification"
 msgstr ""
 
@@ -6242,8 +6716,8 @@ msgstr ""
 
 #. Label of the leave_without_pay (Float) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/report/salary_register/salary_register.py:229 hrms/setup.py:453
-#: hrms/setup.py:454
+#: hrms/payroll/report/salary_register/salary_register.py:229 hrms/setup.py:455
+#: hrms/setup.py:456
 msgid "Leave Without Pay"
 msgstr ""
 
@@ -6353,7 +6827,7 @@ msgstr ""
 msgid "Leaves for the Leave Type {0} won't be carry-forwarded since carry-forwarding is disabled."
 msgstr ""
 
-#: hrms/setup.py:484
+#: hrms/setup.py:486
 msgid "Leaves per Year"
 msgstr ""
 
@@ -6418,7 +6892,7 @@ msgstr ""
 msgid "Loan Product"
 msgstr ""
 
-#: hrms/payroll/report/salary_register/salary_register.py:283 hrms/setup.py:833
+#: hrms/payroll/report/salary_register/salary_register.py:283 hrms/setup.py:835
 msgid "Loan Repayment"
 msgstr ""
 
@@ -6475,6 +6949,11 @@ msgstr ""
 msgid "Longitude: {0}°"
 msgstr ""
 
+#. Title of an Onboarding Step
+#: hrms/tenure/onboarding_step/view_employee_analytics/view_employee_analytics.json
+msgid "Look at your workforce"
+msgstr ""
+
 #. Label of the lower_range (Currency) field in DocType 'Job Applicant'
 #. Label of the lower_range (Currency) field in DocType 'Job Opening'
 #. Label of the lower_range (Currency) field in DocType 'Job Opening Template'
@@ -6492,6 +6971,18 @@ msgstr ""
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:184
 msgid "Make Bank Entry"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/recruitment/onboarding_step/create_job_offer/create_job_offer.json
+msgid "Make an offer"
+msgstr ""
+
+#. Title of an Onboarding Step
+#. Title of the Module Onboarding 'Leaves Onboarding'
+#: hrms/hr_setup/onboarding_step/complete_leaves_onboarding/complete_leaves_onboarding.json
+#: hrms/leaves/module_onboarding/leaves_onboarding/leaves_onboarding.json
+msgid "Manage time off"
 msgstr ""
 
 #. Label of the mandatory_benefit_application (Check) field in DocType 'Payroll
@@ -6525,11 +7016,13 @@ msgstr ""
 msgid "Mar"
 msgstr ""
 
+#. Label of an action in the Onboarding Step 'Mark attendance'
 #: hrms/hr/doctype/attendance/attendance_list.js:16
 #: hrms/hr/doctype/attendance/attendance_list.js:24
 #: hrms/hr/doctype/attendance/attendance_list.js:125
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.js:232
 #: hrms/hr/doctype/shift_type/shift_type.js:13
+#: hrms/shift_and_attendance/onboarding_step/create_attendance/create_attendance.json
 msgid "Mark Attendance"
 msgstr ""
 
@@ -6552,6 +7045,11 @@ msgstr ""
 
 #: hrms/hr/doctype/interview/interview.py:100
 msgid "Mark as {0}"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/shift_and_attendance/onboarding_step/create_attendance/create_attendance.json
+msgid "Mark attendance"
 msgstr ""
 
 #: hrms/hr/doctype/attendance/attendance_list.js:108
@@ -6590,6 +7088,11 @@ msgstr ""
 
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.js:286
 msgid "Marking Attendance"
+msgstr ""
+
+#. Label of a Sidebar Item
+#: hrms/hr_setup/sidebar/hr_setup/hr_setup.json
+msgid "Masters"
 msgstr ""
 
 #. Label of the max_amount_eligible (Currency) field in DocType 'Employee
@@ -6725,7 +7228,7 @@ msgstr ""
 msgid "Meal Preference"
 msgstr ""
 
-#: hrms/setup.py:406
+#: hrms/setup.py:408
 msgid "Medical"
 msgstr ""
 
@@ -6760,6 +7263,10 @@ msgstr ""
 msgid "Missing Configuration"
 msgstr ""
 
+#: hrms/hr/utils.py:939
+msgid "Missing Field"
+msgstr ""
+
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:155
 msgid "Missing Mandatory Field"
 msgstr ""
@@ -6772,7 +7279,7 @@ msgstr ""
 msgid "Missing Relieving Date"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2040
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2046
 msgid "Missing Tax Slab"
 msgstr ""
 
@@ -6787,6 +7294,11 @@ msgstr ""
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:528
 msgid "Mode of payment is required to make a payment"
+msgstr ""
+
+#. Description of the Onboarding Step 'Give an employee an advance'
+#: hrms/expenses/onboarding_step/create_employee_advance/create_employee_advance.json
+msgid "Money paid before the expense, settled later against the claim. See [Employee Advance](https://docs.frappe.io/hr/employee-advance)."
 msgstr ""
 
 #. Label of the month_to_date (Currency) field in DocType 'Salary Slip'
@@ -6845,8 +7357,8 @@ msgid "My Requests"
 msgstr ""
 
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.py:123
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1478
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:446
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1484
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:452
 msgid "Name error"
 msgstr ""
 
@@ -7183,7 +7695,7 @@ msgstr ""
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2349
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2355
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr ""
 
@@ -7191,11 +7703,11 @@ msgstr ""
 msgid "Nothing to change"
 msgstr ""
 
-#: hrms/setup.py:485
+#: hrms/setup.py:487
 msgid "Notice Period"
 msgstr ""
 
-#: hrms/hr/doctype/exit_interview/exit_interview.py:156
+#: hrms/hr/doctype/exit_interview/exit_interview.py:159
 msgid "Notification Template"
 msgstr ""
 
@@ -7327,6 +7839,11 @@ msgstr ""
 msgid "On Leave"
 msgstr ""
 
+#. Title of an Onboarding Step
+#: hrms/tenure/onboarding_step/create_employee_onboarding/create_employee_onboarding.json
+msgid "Onboard a new hire"
+msgstr ""
+
 #. Label of the table_for_activity (Section Break) field in DocType 'Employee
 #. Onboarding'
 #: hrms/hr/doctype/employee_onboarding/employee_onboarding.json
@@ -7337,6 +7854,11 @@ msgstr ""
 #. Onboarding'
 #: hrms/hr/doctype/employee_onboarding/employee_onboarding.json
 msgid "Onboarding Begins On"
+msgstr ""
+
+#. Description of the Onboarding Step 'Appraise an employee'
+#: hrms/performance/onboarding_step/create_appraisal/create_appraisal.json
+msgid "One employee's ratings for a cycle. The cycle can create these for everyone in it. See [Appraisal](https://docs.frappe.io/hr/appraisal)."
 msgstr ""
 
 #. Label of a number card in the Performance Workspace
@@ -7393,6 +7915,26 @@ msgstr ""
 msgid "Open & Approved"
 msgstr ""
 
+#. Label of an action in the Onboarding Step 'Compare scores across a cycle'
+#: hrms/performance/onboarding_step/view_appraisal_overview/view_appraisal_overview.json
+msgid "Open Appraisal Overview"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Look at your workforce'
+#: hrms/tenure/onboarding_step/view_employee_analytics/view_employee_analytics.json
+msgid "Open Employee Analytics"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Check leave balances'
+#: hrms/leaves/onboarding_step/view_employee_leave_balance/view_employee_leave_balance.json
+msgid "Open Employee Leave Balance"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Settle employee expenses'
+#: hrms/hr_setup/onboarding_step/complete_expenses_onboarding/complete_expenses_onboarding.json
+msgid "Open Expenses"
+msgstr ""
+
 #: hrms/public/js/templates/feedback_history.html:44
 msgid "Open Feedback"
 msgstr ""
@@ -7401,8 +7943,43 @@ msgstr ""
 msgid "Open Full Form"
 msgstr ""
 
+#. Label of an action in the Onboarding Step 'Check each employee's tax'
+#: hrms/tax_and_benefits/onboarding_step/view_income_tax_computation/view_income_tax_computation.json
+msgid "Open Income Tax Computation"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Manage time off'
+#: hrms/hr_setup/onboarding_step/complete_leaves_onboarding/complete_leaves_onboarding.json
+msgid "Open Leaves"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Check the month's attendance'
+#: hrms/shift_and_attendance/onboarding_step/view_monthly_attendance_sheet/view_monthly_attendance_sheet.json
+msgid "Open Monthly Attendance Sheet"
+msgstr ""
+
 #: hrms/hr/doctype/leave_application/leave_application_email_template.html:30
 msgid "Open Now"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Run your first payroll'
+#: hrms/hr_setup/onboarding_step/complete_payroll_onboarding/complete_payroll_onboarding.json
+msgid "Open Payroll"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Review performance'
+#: hrms/hr_setup/onboarding_step/complete_performance_onboarding/complete_performance_onboarding.json
+msgid "Open Performance"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Hire your first employee'
+#: hrms/hr_setup/onboarding_step/complete_recruitment_onboarding/complete_recruitment_onboarding.json
+msgid "Open Recruitment"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Track hiring against your plan'
+#: hrms/recruitment/onboarding_step/view_recruitment_analytics/view_recruitment_analytics.json
+msgid "Open Recruitment Analytics"
 msgstr ""
 
 #. Label of the open_resume_button (Button) field in DocType 'Job Applicant'
@@ -7410,9 +7987,56 @@ msgstr ""
 msgid "Open Resume in New Tab"
 msgstr ""
 
+#. Label of an action in the Onboarding Step 'Review the salary register'
+#: hrms/payroll/onboarding_step/view_salary_register/view_salary_register.json
+msgid "Open Salary Register"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Track attendance and shifts'
+#: hrms/hr_setup/onboarding_step/complete_shift_and_attendance_onboarding/complete_shift_and_attendance_onboarding.json
+msgid "Open Shift & Attendance"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Deduct the right tax'
+#: hrms/hr_setup/onboarding_step/complete_tax_and_benefits_onboarding/complete_tax_and_benefits_onboarding.json
+msgid "Open Tax & Benefits"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Welcome and see off employees'
+#: hrms/hr_setup/onboarding_step/complete_tenure_onboarding/complete_tenure_onboarding.json
+msgid "Open Tenure"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Pay the employee back'
+#: hrms/expenses/onboarding_step/pay_expense_claim/pay_expense_claim.json
+msgid "Open Unpaid Claims"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'See what is still owed'
+#: hrms/expenses/onboarding_step/view_unpaid_expense_claim/view_unpaid_expense_claim.json
+msgid "Open Unpaid Expense Claim"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/recruitment/onboarding_step/create_job_opening/create_job_opening.json
+msgid "Open a job"
+msgstr ""
+
+#. Description of the Onboarding Step 'Hire your first employee'
+#: hrms/hr_setup/onboarding_step/complete_recruitment_onboarding/complete_recruitment_onboarding.json
+msgid "Open a job, add an applicant and make them an offer."
+msgstr ""
+
 #: hrms/templates/generators/job_opening.html:38
 #: hrms/templates/generators/job_opening.html:218
 msgid "Opening closed."
+msgstr ""
+
+#. Description of the Onboarding Step 'Track hiring against your plan'
+#. Description of a report in the Onboarding Step 'Track hiring against your
+#. plan'
+#: hrms/recruitment/onboarding_step/view_recruitment_analytics/view_recruitment_analytics.json
+msgid "Openings, applicants and offers for each designation in a staffing plan."
 msgstr ""
 
 #: hrms/hr/doctype/leave_application/leave_application.py:691
@@ -7632,7 +8256,7 @@ msgstr ""
 msgid "Parent Goal"
 msgstr ""
 
-#: hrms/setup.py:462
+#: hrms/setup.py:464
 msgid "Part-time"
 msgstr ""
 
@@ -7676,6 +8300,16 @@ msgstr ""
 #. 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Pay Rate Multipliers"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/payroll/onboarding_step/create_additional_salary/create_additional_salary.json
+msgid "Pay a one-off amount"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/expenses/onboarding_step/pay_expense_claim/pay_expense_claim.json
+msgid "Pay the employee back"
 msgstr ""
 
 #. Label of the pay_via_payment_entry (Check) field in DocType 'Leave
@@ -7775,7 +8409,7 @@ msgstr ""
 msgid "Payroll Correction Child"
 msgstr ""
 
-#: hrms/setup.py:168 hrms/setup.py:353
+#: hrms/setup.py:170 hrms/setup.py:355
 msgid "Payroll Cost Center"
 msgstr ""
 
@@ -7839,7 +8473,7 @@ msgstr ""
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
-#: hrms/setup.py:906
+#: hrms/setup.py:908
 msgid "Payroll Payable Account"
 msgstr ""
 
@@ -7957,8 +8591,23 @@ msgstr ""
 msgid "Permanently submit {0}"
 msgstr ""
 
-#: hrms/setup.py:466
+#. Description of the Onboarding Step 'Pay the employee back'
+#: hrms/expenses/onboarding_step/pay_expense_claim/pay_expense_claim.json
+msgid "Pick an approved claim from the list this opens and use Create > Payment on it. The payment is then linked to the claim and marks it paid. See [Expense Claim](https://docs.frappe.io/hr/expense-claim#payment-for-expense-claim)."
+msgstr ""
+
+#: hrms/setup.py:468
 msgid "Piecework"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/tenure/onboarding_step/create_training_program/create_training_program.json
+msgid "Plan a training program"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/expenses/onboarding_step/create_travel_request/create_travel_request.json
+msgid "Plan a work trip"
 msgstr ""
 
 #. Label of the planned_vacancies (Int) field in DocType 'Job Opening'
@@ -8014,7 +8663,7 @@ msgstr ""
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2338
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2344
 msgid "Please see attachment"
 msgstr ""
 
@@ -8211,7 +8860,7 @@ msgstr ""
 msgid "Please set the relieving date for employee {0}"
 msgstr ""
 
-#: hrms/hr/doctype/exit_interview/exit_interview.py:154
+#: hrms/hr/doctype/exit_interview/exit_interview.py:157
 msgid "Please set {0} and {1} in {2}."
 msgstr ""
 
@@ -8310,7 +8959,7 @@ msgstr ""
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:161
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:199
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.js:89
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.js:90
 msgid "Preview Salary Slip"
 msgstr ""
 
@@ -8319,19 +8968,19 @@ msgstr ""
 msgid "Principal Amount"
 msgstr ""
 
-#: hrms/payroll/report/salary_register/salary_register.html:40
+#: hrms/payroll/report/salary_register/salary_register.html:42
 msgid "Printed On {0}"
 msgstr ""
 
-#: hrms/setup.py:445 hrms/setup.py:446
+#: hrms/setup.py:447 hrms/setup.py:448
 msgid "Privilege Leave"
 msgstr ""
 
-#: hrms/setup.py:463
+#: hrms/setup.py:465
 msgid "Probation"
 msgstr ""
 
-#: hrms/setup.py:477
+#: hrms/setup.py:479
 msgid "Probationary Period"
 msgstr ""
 
@@ -8344,7 +8993,7 @@ msgstr ""
 #. Label of the process_payroll_accounting_entry_based_on_employee (Check)
 #. field in DocType 'Payroll Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
-#: hrms/setup.py:917
+#: hrms/setup.py:919
 msgid "Process Payroll Accounting Entry based on Employee"
 msgstr ""
 
@@ -8386,7 +9035,7 @@ msgstr ""
 msgid "Proficiency"
 msgstr ""
 
-#: hrms/hr/report/project_profitability/project_profitability.py:183
+#: hrms/hr/report/project_profitability/project_profitability.py:192
 msgid "Profit"
 msgstr ""
 
@@ -8407,6 +9056,11 @@ msgstr ""
 #. Label of a number card in the Tenure Workspace
 #: hrms/tenure/workspace/tenure/tenure.json
 msgid "Promotions (This Month)"
+msgstr ""
+
+#. Description of the Onboarding Step 'Submit proof of exemptions'
+#: hrms/tax_and_benefits/onboarding_step/create_employee_tax_exemption_proof_submission/create_employee_tax_exemption_proof_submission.json
+msgid "Proof of what was declared, so the exemption counts in the final tax. See [Employee Tax Exemption Proof Submission](https://docs.frappe.io/hr/employee-tax-exemption-proof-submission)."
 msgstr ""
 
 #: hrms/hr/employee_property_update.js:172
@@ -8470,6 +9124,16 @@ msgstr ""
 
 #: frontend/src/views/AppSettings.vue:106
 msgid "Push notifications have been disabled on your site"
+msgstr ""
+
+#. Description of the Onboarding Step 'Assign it to an employee'
+#: hrms/payroll/onboarding_step/create_salary_structure_assignment/create_salary_structure_assignment.json
+msgid "Puts an employee on a salary structure with their base pay from a date. See [Salary Structure Assignment](https://docs.frappe.io/hr/salary-structure-assignment)."
+msgstr ""
+
+#. Description of the Onboarding Step 'Assign a shift'
+#: hrms/shift_and_attendance/onboarding_step/create_shift_assignment/create_shift_assignment.json
+msgid "Puts an employee on a shift from a date. See [Shift Assignment](https://docs.frappe.io/hr/shift-assignment)."
 msgstr ""
 
 #. Label of the questionnaire_email_sent (Check) field in DocType 'Exit
@@ -8562,6 +9226,11 @@ msgstr ""
 #. in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Recommended for a single biometric device / checkins via mobile app"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/shift_and_attendance/onboarding_step/create_employee_checkin/create_employee_checkin.json
+msgid "Record a check-in"
 msgstr ""
 
 #. Option for the 'Action' (Select) field in DocType 'Full and Final Asset'
@@ -8718,7 +9387,7 @@ msgstr ""
 msgid "Reopen Job Opening"
 msgstr ""
 
-#: hrms/setup.py:890 hrms/setup.py:899
+#: hrms/setup.py:892 hrms/setup.py:901
 msgid "Repay From Salary"
 msgstr ""
 
@@ -8768,6 +9437,11 @@ msgstr ""
 msgid "Request an Advance"
 msgstr ""
 
+#. Title of an Onboarding Step
+#: hrms/shift_and_attendance/onboarding_step/create_attendance_request/create_attendance_request.json
+msgid "Request attendance"
+msgstr ""
+
 #. Label of the requested_by (Link) field in DocType 'Job Requisition'
 #. Label of the section_break_7 (Section Break) field in DocType 'Job
 #. Requisition'
@@ -8785,7 +9459,7 @@ msgstr ""
 msgid "Require Full Funding"
 msgstr ""
 
-#: hrms/setup.py:227
+#: hrms/setup.py:229
 msgid "Required Skills"
 msgstr ""
 
@@ -8799,7 +9473,7 @@ msgstr ""
 msgid "Reschedule Interview"
 msgstr ""
 
-#: hrms/setup.py:483
+#: hrms/setup.py:485
 msgid "Responsibilities"
 msgstr ""
 
@@ -8860,6 +9534,18 @@ msgstr ""
 
 #: hrms/hr/doctype/employee_advance/employee_advance.py:239
 msgid "Return amount cannot be greater than unclaimed amount"
+msgstr ""
+
+#. Title of an Onboarding Step
+#. Title of the Module Onboarding 'Performance Onboarding'
+#: hrms/hr_setup/onboarding_step/complete_performance_onboarding/complete_performance_onboarding.json
+#: hrms/performance/module_onboarding/performance_onboarding/performance_onboarding.json
+msgid "Review performance"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/payroll/onboarding_step/view_salary_register/view_salary_register.json
+msgid "Review the salary register"
 msgstr ""
 
 #: hrms/hr/doctype/hr_settings/hr_settings.js:41
@@ -8976,6 +9662,18 @@ msgstr ""
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:633
 msgid "Row {0}: {1}, {2} and {3} are required against advance {4}."
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/payroll/onboarding_step/create_payroll_entry/create_payroll_entry.json
+msgid "Run payroll"
+msgstr ""
+
+#. Title of an Onboarding Step
+#. Title of the Module Onboarding 'Payroll Onboarding'
+#: hrms/hr_setup/onboarding_step/complete_payroll_onboarding/complete_payroll_onboarding.json
+#: hrms/payroll/module_onboarding/payroll_onboarding/payroll_onboarding.json
+msgid "Run your first payroll"
 msgstr ""
 
 #. Label of the salary_component (Link) field in DocType 'Overtime Salary
@@ -9112,7 +9810,7 @@ msgstr ""
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
-#: hrms/payroll/sidebar/payroll/payroll.json hrms/setup.py:381
+#: hrms/payroll/sidebar/payroll/payroll.json hrms/setup.py:383
 #: hrms/workspace_sidebar/payroll.json
 msgid "Salary Slip"
 msgstr ""
@@ -9315,7 +10013,7 @@ msgstr ""
 msgid "Salary components should be part of the Salary Structure."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2822
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2828
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr ""
 
@@ -9336,9 +10034,21 @@ msgstr ""
 msgid "Sanctioned Amount cannot be greater than Claim Amount in Row {0}."
 msgstr ""
 
+#. Label of an action in the Onboarding Step 'Schedule an interview'
 #: hrms/hr/doctype/job_applicant/job_applicant.js:81
 #: hrms/hr/doctype/job_applicant/job_applicant.js:152
+#: hrms/recruitment/onboarding_step/create_interview/create_interview.json
 msgid "Schedule Interview"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/tenure/onboarding_step/create_training_event/create_training_event.json
+msgid "Schedule a training"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/recruitment/onboarding_step/create_interview/create_interview.json
+msgid "Schedule an interview"
 msgstr ""
 
 #. Label of the scheduled_on (Date) field in DocType 'Interview'
@@ -9366,6 +10076,11 @@ msgstr ""
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.js:73
 msgid "See CTC Break-up"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/expenses/onboarding_step/view_unpaid_expense_claim/view_unpaid_expense_claim.json
+msgid "See what is still owed"
 msgstr ""
 
 #: hrms/hr/doctype/overtime_type/overtime_type.py:40
@@ -9543,16 +10258,21 @@ msgstr ""
 msgid "Send Reset Link"
 msgstr ""
 
+#. Title of an Onboarding Step
+#: hrms/recruitment/onboarding_step/create_appointment_letter/create_appointment_letter.json
+msgid "Send an appointment letter"
+msgstr ""
+
 #. Label of the sender_copy (Link) field in DocType 'Payroll Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Sender Copy"
 msgstr ""
 
-#: hrms/hr/doctype/exit_interview/exit_interview.py:170
+#: hrms/hr/doctype/exit_interview/exit_interview.py:173
 msgid "Sending Failed due to missing email information for employee(s): {1}"
 msgstr ""
 
-#: hrms/hr/doctype/exit_interview/exit_interview.py:166
+#: hrms/hr/doctype/exit_interview/exit_interview.py:169
 msgid "Sent Successfully: {0}"
 msgstr ""
 
@@ -9604,6 +10324,11 @@ msgstr ""
 msgid "Set Relieving Date for Employee: {0}"
 msgstr ""
 
+#. Title of an Onboarding Step
+#: hrms/performance/onboarding_step/create_goal/create_goal.json
+msgid "Set a goal"
+msgstr ""
+
 #. Description of the 'Get Employees' (Section Break) field in DocType
 #. 'Employee Attendance Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
@@ -9631,6 +10356,11 @@ msgstr ""
 msgid "Set the frequency for holiday reminders"
 msgstr ""
 
+#. Description of the Onboarding Step 'Deduct the right tax'
+#: hrms/hr_setup/onboarding_step/complete_tax_and_benefits_onboarding/complete_tax_and_benefits_onboarding.json
+msgid "Set the payroll period and tax slabs, and record what employees declare."
+msgstr ""
+
 #. Description of the 'Employee Promotion Details' (Section Break) field in
 #. DocType 'Employee Promotion'
 #: hrms/hr/doctype/employee_promotion/employee_promotion.json
@@ -9641,11 +10371,36 @@ msgstr ""
 msgid "Set the status to {0} if required."
 msgstr ""
 
+#. Title of an Onboarding Step
+#: hrms/tax_and_benefits/onboarding_step/create_gratuity_rule/create_gratuity_rule.json
+msgid "Set up a gratuity rule"
+msgstr ""
+
+#. Description of the Onboarding Step 'Review performance'
+#: hrms/hr_setup/onboarding_step/complete_performance_onboarding/complete_performance_onboarding.json
+msgid "Set up what employees are measured on and run an appraisal cycle."
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/leaves/onboarding_step/create_holiday_list/create_holiday_list.json
+msgid "Set your holidays"
+msgstr ""
+
+#. Description of the Onboarding Step 'Manage time off'
+#: hrms/hr_setup/onboarding_step/complete_leaves_onboarding/complete_leaves_onboarding.json
+msgid "Set your holidays and leave types, give leave and approve a request."
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/tax_and_benefits/onboarding_step/create_payroll_period/create_payroll_period.json
+msgid "Set your payroll period"
+msgstr ""
+
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:200
 msgid "Set {0} for selected employees"
 msgstr ""
 
-#: hrms/hr/doctype/exit_interview/exit_interview.py:159
+#: hrms/hr/doctype/exit_interview/exit_interview.py:162
 msgid "Settings Missing"
 msgstr ""
 
@@ -9655,6 +10410,13 @@ msgstr ""
 
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:86
 msgid "Settle all Payables and Receivables before submission"
+msgstr ""
+
+#. Title of the Module Onboarding 'Expenses Onboarding'
+#. Title of an Onboarding Step
+#: hrms/expenses/module_onboarding/expenses_onboarding/expenses_onboarding.json
+#: hrms/hr_setup/onboarding_step/complete_expenses_onboarding/complete_expenses_onboarding.json
+msgid "Settle employee expenses"
 msgstr ""
 
 #: hrms/hr/utils.py:796
@@ -9725,7 +10487,7 @@ msgstr ""
 msgid "Shift Assignments"
 msgstr ""
 
-#: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.py:153
+#: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.py:154
 msgid "Shift Assignments created for the schedule between {0} and {1} via background job"
 msgstr ""
 
@@ -9784,8 +10546,8 @@ msgstr ""
 msgid "Shift Request"
 msgstr ""
 
-#: hrms/patches/v15_0/update_approver_custom_fields.py:27 hrms/setup.py:196
-#: hrms/setup.py:331
+#: hrms/patches/v15_0/update_approver_custom_fields.py:27 hrms/setup.py:198
+#: hrms/setup.py:333
 msgid "Shift Request Approver"
 msgstr ""
 
@@ -9951,7 +10713,7 @@ msgstr ""
 msgid "Showing"
 msgstr ""
 
-#: hrms/setup.py:437 hrms/setup.py:438
+#: hrms/setup.py:439 hrms/setup.py:440
 msgid "Sick Leave"
 msgstr ""
 
@@ -9991,7 +10753,7 @@ msgstr ""
 
 #. Label of the skills_section (Section Break) field in DocType 'Employee Skill
 #. Map'
-#: hrms/hr/doctype/employee_skill_map/employee_skill_map.json hrms/setup.py:233
+#: hrms/hr/doctype/employee_skill_map/employee_skill_map.json hrms/setup.py:235
 msgid "Skills"
 msgstr ""
 
@@ -10003,6 +10765,11 @@ msgstr ""
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:360
 msgid "Skipping Salary Structure Assignment for the following employees, as Salary Structure Assignment records already exists against them. {0}"
+msgstr ""
+
+#. Description of the Onboarding Step 'Add an applicant'
+#: hrms/recruitment/onboarding_step/create_job_applicant/create_job_applicant.json
+msgid "Someone who applied for a job opening. Applications from the job portal arrive here. See [Job Applicant](https://docs.frappe.io/hr/job-applicant)."
 msgstr ""
 
 #: hrms/api/roster.py:149
@@ -10063,11 +10830,26 @@ msgstr ""
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 #: hrms/hr/doctype/overtime_details/overtime_details.json
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:36
-#: hrms/hr/report/project_profitability/project_profitability.py:102
+#: hrms/hr/report/project_profitability/project_profitability.py:111
 msgid "Standard Working Hours"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1974
+#. Label of an action in the Onboarding Step 'Onboard a new hire'
+#: hrms/tenure/onboarding_step/create_employee_onboarding/create_employee_onboarding.json
+msgid "Start Onboarding"
+msgstr ""
+
+#. Label of an action in the Onboarding Step 'Handle an exit'
+#: hrms/tenure/onboarding_step/create_employee_separation/create_employee_separation.json
+msgid "Start Separation"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/performance/onboarding_step/create_appraisal_cycle/create_appraisal_cycle.json
+msgid "Start an appraisal cycle"
+msgstr ""
+
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1980
 msgid "Start and end dates not in a valid Payroll Period, cannot calculate {0}."
 msgstr ""
 
@@ -10103,7 +10885,7 @@ msgstr ""
 msgid "Status for Other Half"
 msgstr ""
 
-#: hrms/setup.py:480
+#: hrms/setup.py:482
 msgid "Stock Options"
 msgstr ""
 
@@ -10147,12 +10929,19 @@ msgstr ""
 msgid "Submit Overtime Slips"
 msgstr ""
 
+#. Label of an action in the Onboarding Step 'Submit proof of exemptions'
 #: hrms/payroll/doctype/employee_tax_exemption_declaration/employee_tax_exemption_declaration.js:43
+#: hrms/tax_and_benefits/onboarding_step/create_employee_tax_exemption_proof_submission/create_employee_tax_exemption_proof_submission.json
 msgid "Submit Proof"
 msgstr ""
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:171
 msgid "Submit Salary Slip"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/tax_and_benefits/onboarding_step/create_employee_tax_exemption_proof_submission/create_employee_tax_exemption_proof_submission.json
+msgid "Submit proof of exemptions"
 msgstr ""
 
 #: hrms/hr/doctype/leave_application/leave_application.js:109
@@ -10207,8 +10996,8 @@ msgstr ""
 msgid "Sync {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1485
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:453
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1491
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:459
 msgid "Syntax error"
 msgstr ""
 
@@ -10311,6 +11100,12 @@ msgstr ""
 msgid "Taxable Salary Slabs"
 msgstr ""
 
+#. Description of the Onboarding Step 'Check each employee's tax'
+#. Description of a report in the Onboarding Step 'Check each employee's tax'
+#: hrms/tax_and_benefits/onboarding_step/view_income_tax_computation/view_income_tax_computation.json
+msgid "Taxable income, exemptions and tax for each employee in a payroll period."
+msgstr ""
+
 #. Label of the taxes_and_charges_sb (Section Break) field in DocType 'Expense
 #. Claim'
 #: frontend/src/components/ExpenseTaxesTable.vue:4
@@ -10365,12 +11160,17 @@ msgstr ""
 msgid "Thank you for applying."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2753
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2759
 msgid "The Assigned Salary Structure {0} for the employee {1} does not have a Salary Component configured for Salary Slip based on Timesheet."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2747
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2753
 msgid "The Assigned Salary Structure {0} for the employee {1} is not configured for Salary Slip based on Timesheet."
+msgstr ""
+
+#. Description of the Onboarding Step 'Build an appraisal template'
+#: hrms/performance/onboarding_step/create_appraisal_template/create_appraisal_template.json
+msgid "The KRAs and rating criteria for a role, with their weightage. See [Appraisal Template](https://docs.frappe.io/hr/appraisal-template)."
 msgstr ""
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:300
@@ -10396,12 +11196,32 @@ msgstr ""
 msgid "The day(s) on which you are applying for leave are holidays. You need not apply for leave."
 msgstr ""
 
+#. Description of the Onboarding Step 'Give an employee leave'
+#: hrms/leaves/onboarding_step/create_leave_allocation/create_leave_allocation.json
+msgid "The days an employee can take of a leave type in a period. See [Leave Allocation](https://docs.frappe.io/hr/leave-allocation)."
+msgstr ""
+
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:85
 msgid "The days between {0} to {1} are not valid holidays."
 msgstr ""
 
-#: hrms/setup.py:187
+#. Description of the Onboarding Step 'Build a salary structure'
+#: hrms/payroll/onboarding_step/create_salary_structure/create_salary_structure.json
+msgid "The earnings and deductions that make up a salary, and how each is calculated. See [Salary Structure](https://docs.frappe.io/hr/salary-structure)."
+msgstr ""
+
+#. Description of the Onboarding Step 'Set your payroll period'
+#: hrms/tax_and_benefits/onboarding_step/create_payroll_period/create_payroll_period.json
+msgid "The financial year that tax is calculated over. See [Payroll Period](https://docs.frappe.io/hr/payroll-period)."
+msgstr ""
+
+#: hrms/setup.py:189
 msgid "The first Approver in the list will be set as the default Approver."
+msgstr ""
+
+#. Description of the Onboarding Step 'Send an appointment letter'
+#: hrms/recruitment/onboarding_step/create_appointment_letter/create_appointment_letter.json
+msgid "The formal letter that confirms the role and its terms. See [Appointment Letter](https://docs.frappe.io/hr/appointment-letter)."
 msgstr ""
 
 #: hrms/hr/doctype/leave_type/leave_type.py:84
@@ -10414,7 +11234,12 @@ msgstr ""
 msgid "The fraction of daily wages to be paid for half-day attendance"
 msgstr ""
 
-#: hrms/hr/report/project_profitability/project_profitability.py:101
+#. Description of the Onboarding Step 'Declare tax exemptions'
+#: hrms/tax_and_benefits/onboarding_step/create_employee_tax_exemption_declaration/create_employee_tax_exemption_declaration.json
+msgid "The investments and expenses an employee plans to claim against tax. See [Employee Tax Exemption Declaration](https://docs.frappe.io/hr/employee-tax-exemption-declaration)."
+msgstr ""
+
+#: hrms/hr/report/project_profitability/project_profitability.py:110
 msgid "The metrics for this report are calculated based on the {0}. Please set {0} in {1}."
 msgstr ""
 
@@ -10422,10 +11247,35 @@ msgstr ""
 msgid "The metrics for this report are calculated based on {0}. Please set {0} in {1}."
 msgstr ""
 
+#. Description of the Onboarding Step 'Add your employees'
+#: hrms/hr_setup/onboarding_step/create_employee/create_employee.json
+msgid "The people you manage, with their joining date, department and reporting manager. See [Employee](https://docs.frappe.io/hr/employee)."
+msgstr ""
+
+#. Description of the Onboarding Step 'Start an appraisal cycle'
+#: hrms/performance/onboarding_step/create_appraisal_cycle/create_appraisal_cycle.json
+msgid "The review period, and the employees and templates in it. See [Appraisal Cycle](https://docs.frappe.io/hr/appraisal-cycle)."
+msgstr ""
+
 #. Description of the 'Encrypt Salary Slips in Emails' (Check) field in DocType
 #. 'Payroll Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "The salary slip emailed to the employee will be password protected, the password will be generated based on the password policy."
+msgstr ""
+
+#. Description of the Onboarding Step 'Write an onboarding checklist'
+#: hrms/tenure/onboarding_step/create_employee_onboarding_template/create_employee_onboarding_template.json
+msgid "The tasks to finish when someone joins, reused for every new hire. See [Employee Onboarding](https://docs.frappe.io/hr/employee-onboarding)."
+msgstr ""
+
+#. Description of the Onboarding Step 'Add income tax slabs'
+#: hrms/tax_and_benefits/onboarding_step/create_income_tax_slab/create_income_tax_slab.json
+msgid "The tax rate for each range of income. See [Income Tax Slab](https://docs.frappe.io/hr/income-tax-slab)."
+msgstr ""
+
+#. Description of the Onboarding Step 'Make an offer'
+#: hrms/recruitment/onboarding_step/create_job_offer/create_job_offer.json
+msgid "The terms you offer the applicant. Submit it once they accept. See [Job Offer](https://docs.frappe.io/hr/job-offer)."
 msgstr ""
 
 #. Description of the 'Late Entry Grace Period' (Int) field in DocType 'Shift
@@ -10444,6 +11294,11 @@ msgstr ""
 #. (Int) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "The time before the shift start time during which Employee Check-in is considered for attendance."
+msgstr ""
+
+#. Description of the Onboarding Step 'Set your holidays'
+#: hrms/leaves/onboarding_step/create_holiday_list/create_holiday_list.json
+msgid "The weekly offs and public holidays your employees get. See [Holiday List](https://docs.frappe.io/hr/holiday-list)."
 msgstr ""
 
 #. Option for the 'Type' (Select) field in DocType 'Training Event'
@@ -10469,7 +11324,7 @@ msgstr ""
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:86
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:39
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:518
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:526
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
 msgstr ""
 
@@ -10499,18 +11354,18 @@ msgstr ""
 msgid "This employee already has a log with the same timestamp.{0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1493
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:461
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1499
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:467
 msgid "This error can be due to invalid formula or condition."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1486
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:454
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1492
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:460
 msgid "This error can be due to invalid syntax."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:1479
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:447
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:1485
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:453
 msgid "This error can be due to missing or deleted field."
 msgstr ""
 
@@ -10561,10 +11416,6 @@ msgstr ""
 #. Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Timesheet Details"
-msgstr ""
-
-#: hrms/hr/notification/training_scheduled/training_scheduled.html:29
-msgid "Timing"
 msgstr ""
 
 #. Label of the to_amount (Currency) field in DocType 'Taxable Salary Slab'
@@ -10791,11 +11642,11 @@ msgstr ""
 msgid "Total Exemption Amount"
 msgstr ""
 
-#: hrms/setup.py:371
+#: hrms/setup.py:373
 msgid "Total Expense Claim (via Expense Claim)"
 msgstr ""
 
-#: hrms/setup.py:362
+#: hrms/setup.py:364
 msgid "Total Expense Claim (via Expense Claims)"
 msgstr ""
 
@@ -10823,7 +11674,7 @@ msgstr ""
 msgid "Total Income Tax"
 msgstr ""
 
-#: hrms/setup.py:863
+#: hrms/setup.py:865
 msgid "Total Interest Amount"
 msgstr ""
 
@@ -10856,7 +11707,7 @@ msgstr ""
 msgid "Total Leaves Encashed"
 msgstr ""
 
-#: hrms/setup.py:877
+#: hrms/setup.py:879
 msgid "Total Loan Repayment"
 msgstr ""
 
@@ -10903,7 +11754,7 @@ msgstr ""
 msgid "Total Present (This Month)"
 msgstr ""
 
-#: hrms/setup.py:854
+#: hrms/setup.py:856
 msgid "Total Principal Amount"
 msgstr ""
 
@@ -10943,6 +11794,10 @@ msgstr ""
 #. Label of the self_score (Float) field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json
 msgid "Total Self Score"
+msgstr ""
+
+#: hrms/hr/report/project_profitability/project_profitability.py:88
+msgid "Total Working Days must be greater than zero. Please review Salary Slip {0}."
 msgstr ""
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:651
@@ -11007,6 +11862,33 @@ msgstr ""
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:248
 msgid "Total working hours should not be greater than max working hours {0}"
+msgstr ""
+
+#. Title of an Onboarding Step
+#. Title of the Module Onboarding 'Shift and Attendance Onboarding'
+#: hrms/hr_setup/onboarding_step/complete_shift_and_attendance_onboarding/complete_shift_and_attendance_onboarding.json
+#: hrms/shift_and_attendance/module_onboarding/shift_and_attendance_onboarding/shift_and_attendance_onboarding.json
+msgid "Track attendance and shifts"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/recruitment/onboarding_step/view_recruitment_analytics/view_recruitment_analytics.json
+msgid "Track hiring against your plan"
+msgstr ""
+
+#. Description of the Onboarding Step 'Welcome and see off employees'
+#: hrms/hr_setup/onboarding_step/complete_tenure_onboarding/complete_tenure_onboarding.json
+msgid "Track the joining tasks for a new hire and the exit tasks when someone leaves."
+msgstr ""
+
+#. Description of the Onboarding Step 'Handle an exit'
+#: hrms/tenure/onboarding_step/create_employee_separation/create_employee_separation.json
+msgid "Tracks the exit tasks when an employee leaves. Submit it once they are done. See [Employee Separation](https://docs.frappe.io/hr/employee-separation)."
+msgstr ""
+
+#. Description of the Onboarding Step 'Onboard a new hire'
+#: hrms/tenure/onboarding_step/create_employee_onboarding/create_employee_onboarding.json
+msgid "Tracks the joining tasks for one new employee. Submit it once they are done. See [Employee Onboarding](https://docs.frappe.io/hr/employee-onboarding)."
 msgstr ""
 
 #. Option for the 'Mode of Travel' (Select) field in DocType 'Travel Itinerary'
@@ -11128,7 +12010,7 @@ msgstr ""
 
 #. Label of a Sidebar Item
 #. Label of a Workspace Sidebar Item
-#: hrms/expenses/sidebar/expenses/expenses.json hrms/setup.py:408
+#: hrms/expenses/sidebar/expenses/expenses.json hrms/setup.py:410
 #: hrms/workspace_sidebar/expenses.json
 msgid "Travel"
 msgstr ""
@@ -11524,7 +12406,7 @@ msgstr ""
 msgid "Warning: {0} already has an active Shift Assignment {1} for some/all of these dates."
 msgstr ""
 
-#: hrms/setup.py:470
+#: hrms/setup.py:472
 msgid "Website Listing"
 msgstr ""
 
@@ -11546,6 +12428,13 @@ msgstr ""
 msgid "Weightage (%)"
 msgstr ""
 
+#. Title of an Onboarding Step
+#. Title of the Module Onboarding 'Tenure Onboarding'
+#: hrms/hr_setup/onboarding_step/complete_tenure_onboarding/complete_tenure_onboarding.json
+#: hrms/tenure/module_onboarding/tenure_onboarding/tenure_onboarding.json
+msgid "Welcome and see off employees"
+msgstr ""
+
 #: hrms/public/js/setup_wizard.js:76
 msgid "What do you use for HR today?"
 msgstr ""
@@ -11558,6 +12447,11 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_type/leave_type.py:69
 msgid "Whereas allocation for Compensatory Leaves is automatically created or updated on submission of Compensatory Leave Request."
+msgstr ""
+
+#. Description of the Onboarding Step 'Mark attendance'
+#: hrms/shift_and_attendance/onboarding_step/create_attendance/create_attendance.json
+msgid "Whether an employee was present, absent or on leave on a day. See [Attendance](https://docs.frappe.io/hr/attendance)."
 msgstr ""
 
 #. Label of the qualification_reason (Text Editor) field in DocType 'Employee
@@ -11670,6 +12564,11 @@ msgstr ""
 #. Option for the 'Type' (Select) field in DocType 'Training Event'
 #: hrms/hr/doctype/training_event/training_event.json
 msgid "Workshop"
+msgstr ""
+
+#. Title of an Onboarding Step
+#: hrms/tenure/onboarding_step/create_employee_onboarding_template/create_employee_onboarding_template.json
+msgid "Write an onboarding checklist"
 msgstr ""
 
 #. Label of the year_to_date (Currency) field in DocType 'Salary Detail'
@@ -11867,12 +12766,6 @@ msgstr ""
 msgid "goals"
 msgstr ""
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:82
-#: hrms/overrides/employee_payment_entry.py:98
-#: hrms/payroll/doctype/salary_slip/salary_slip.js:300
-msgid "here"
-msgstr ""
-
 #: frontend/src/views/Login.vue:46
 msgid "johndoe@mail.com"
 msgstr ""
@@ -11968,7 +12861,7 @@ msgstr ""
 msgid "{0} Row #{1}: Formula is set but {2} is disabled for the Salary Component {3}."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_structure/salary_structure.js:325
+#: hrms/payroll/doctype/salary_structure/salary_structure.js:322
 msgid "{0} Row #{1}: {2} needs to be enabled for the formula to be considered."
 msgstr ""
 
@@ -12105,7 +12998,7 @@ msgstr ""
 msgid "{0}. Check error log for more details."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2372
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2378
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr ""
 
