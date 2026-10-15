@@ -22,6 +22,13 @@ frappe.query_reports["Shift Attendance"] = {
 			label: __("Employee"),
 			fieldtype: "Link",
 			options: "Employee",
+			get_query: () => {
+				return {
+					filters: {
+						company: frappe.query_report.get_filter_value("company"),
+					},
+				};
+			},
 		},
 		{
 			fieldname: "shift",
@@ -42,6 +49,10 @@ frappe.query_reports["Shift Attendance"] = {
 			options: "Company",
 			reqd: 1,
 			default: frappe.defaults.get_user_default("Company"),
+			on_change: (report) => {
+				frappe.query_report.set_filter_value("employee", "");
+				report.refresh();
+			},
 		},
 		{
 			fieldname: "late_entry",

@@ -71,7 +71,7 @@ class SalaryComponent(Document):
 			.run(pluck=True)
 		)
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def update_salary_structures(self, field, value, structures=None):
 		is_formula_related = field == "formula"
 
@@ -101,3 +101,7 @@ class SalaryComponent(Document):
 				"label": _("via Salary Component sync"),
 			}
 			salary_structure.save_version()
+			# db_update_all() does not invalidate cached Salary Structure documents.
+			# Clear the cache so salary slip generation picks up updated formulas
+			# and conditions immediately.
+			salary_structure.clear_cache()

@@ -104,6 +104,36 @@ class TestEmployeeLeaveBalance(FrappeTestCase):
 		self.assertEqual(report[1], expected_data)
 
 	@set_holiday_list("_Test Emp Balance Holiday List", "_Test Company")
+	def test_leaves_taken_matches_ledger_when_holiday_list_changes_after_approval(self):
+		frappe.get_doc(test_records[0]).insert()
+
+		allocation = make_allocation_record(
+			employee=self.employee_id, from_date=self.year_start, to_date=self.year_end
+		)
+
+		first_sunday = get_first_sunday(self.holiday_list, for_date=self.year_start)
+		leave_application = make_leave_application(
+			self.employee_id, add_days(first_sunday, 1), add_days(first_sunday, 4), "_Test Leave Type"
+		)
+		leave_application.reload()
+
+		# holiday list is edited after the leave is already approved
+		holiday_list = frappe.get_doc("Holiday List", self.holiday_list)
+		holiday_list.append(
+			"holidays",
+			{"holiday_date": add_days(first_sunday, 2), "description": "Half Day", "is_half_day": 1},
+		)
+		holiday_list.save()
+
+		filters = frappe._dict(
+			{"from_date": allocation.from_date, "to_date": allocation.to_date, "employee": self.employee_id}
+		)
+		report = execute(filters)
+
+		# should match the ledger, not a recalculation against the new holiday list
+		self.assertEqual(report[1][0].leaves_taken, flt(leave_application.total_leave_days))
+
+	@set_holiday_list("_Test Emp Balance Holiday List", "_Test Company")
 	def test_opening_balance_on_alloc_boundary_dates(self):
 		frappe.get_doc(test_records[0]).insert()
 
@@ -207,6 +237,58 @@ class TestEmployeeLeaveBalance(FrappeTestCase):
 			allocation1.new_leaves_allocated - leave_application.total_leave_days
 		)
 		self.assertEqual(report[1][0].opening_balance, opening_balance)
+
+	def test_carry_forwarded_leaves_are_included_when_they_expire(self):
+		leave_type = create_leave_type(
+			leave_type_name="_Test_CF_report_expiry",
+			is_carry_forward=1,
+			expire_carry_forwarded_leaves_after_days=7,
+		)
+
+		previous_allocation = make_allocation_record(
+			employee=self.employee_id,
+			from_date=add_days(self.date, -45),
+			to_date=add_days(self.date, -31),
+			leave_type=leave_type.name,
+			leaves=7,
+		)
+		current_allocation = make_allocation_record(
+			employee=self.employee_id,
+			from_date=add_days(self.date, -20),
+			to_date=add_days(self.date, 30),
+			carry_forward=True,
+			leave_type=leave_type.name,
+			leaves=11,
+		)
+
+		leave_application = make_leave_application(
+			self.employee_id,
+			add_days(current_allocation.from_date, 8),
+			add_days(current_allocation.from_date, 16),
+			leave_type.name,
+		)
+		leave_application.reload()
+		process_expired_allocation()
+
+		filters = frappe._dict(
+			{
+				"from_date": current_allocation.from_date,
+				"to_date": current_allocation.to_date,
+				"employee": self.employee_id,
+			}
+		)
+		report = execute(filters)
+		row = next(row for row in report[1] if row.leave_type == leave_type.name)
+
+		expected_allocated = current_allocation.new_leaves_allocated + current_allocation.unused_leaves
+		expected_closing = row.opening_balance + row.leaves_allocated - row.leaves_expired - row.leaves_taken
+
+		self.assertEqual(current_allocation.unused_leaves, previous_allocation.new_leaves_allocated)
+		self.assertEqual(row.opening_balance, 0)
+		self.assertEqual(row.leaves_allocated, flt(expected_allocated))
+		self.assertEqual(row.leaves_expired, flt(current_allocation.unused_leaves))
+		self.assertEqual(row.leaves_taken, flt(leave_application.total_leave_days))
+		self.assertEqual(row.closing_balance, flt(expected_closing))
 
 	@set_holiday_list("_Test Emp Balance Holiday List", "_Test Company")
 	def test_employee_status_filter(self):

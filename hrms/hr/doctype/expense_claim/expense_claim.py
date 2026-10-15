@@ -127,9 +127,6 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		self.publish_update()
 
 	def before_submit(self):
-		if not self.payable_account and not self.is_paid:
-			frappe.throw(_("Payable Account is mandatory to submit an Expense Claim"))
-
 		self.validate_for_self_approval()
 
 	def publish_update(self):
@@ -184,8 +181,16 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 			).run()[0][0]
 
 			task.save()
-		elif self.project:
-			frappe.get_doc("Project", self.project).update_project()
+
+		for project in self.get_linked_projects():
+			frappe.get_doc("Project", project).update_project()
+
+	def get_linked_projects(self):
+		projects = set()
+		if self.project:
+			projects.add(self.project)
+		projects.update(expense.project for expense in self.expenses if expense.project)
+		return projects
 
 	def make_gl_entries(self, cancel=False):
 		if flt(self.total_sanctioned_amount) > 0:
@@ -567,7 +572,9 @@ def get_expense_claim_account(expense_claim_type, company):
 
 
 @frappe.whitelist()
-def get_advances(employee: str, advance_id: str | None = None):
+def get_advances(employee: str, advance_id: str | None = None, company: str | None = None):
+	frappe.has_permission("Employee", "read", employee, throw=True)
+
 	advance = frappe.qb.DocType("Employee Advance")
 
 	query = frappe.qb.from_(advance).select(
@@ -590,6 +597,11 @@ def get_advances(employee: str, advance_id: str | None = None):
 	else:
 		query = query.where((advance.name == advance_id) & (advance.employee == employee))
 
+	if company:
+		company_currency = frappe.get_cached_value("Company", company, "default_currency")
+		if company_currency:
+			query = query.where(advance.currency == company_currency)
+
 	return query.run(as_dict=True)
 
 
@@ -597,6 +609,19 @@ def get_advances(employee: str, advance_id: str | None = None):
 def get_expense_claim(
 	employee_name, company, employee_advance_name, posting_date, paid_amount, claimed_amount, return_amount
 ):
+	advance_currency = frappe.db.get_value("Employee Advance", employee_advance_name, "currency")
+	company_currency = frappe.get_cached_value("Company", company, "default_currency")
+	if advance_currency and advance_currency != company_currency:
+		frappe.throw(
+			_(
+				"Cannot create Expense Claim for Employee Advance {0}. The advance currency {1} differs from the company's default currency {2}."
+			).format(
+				frappe.bold(employee_advance_name),
+				frappe.bold(advance_currency),
+				frappe.bold(company_currency),
+			)
+		)
+
 	default_payable_account = frappe.get_cached_value(
 		"Company", company, "default_expense_claim_payable_account"
 	)

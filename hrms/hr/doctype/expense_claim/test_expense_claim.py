@@ -11,6 +11,7 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.expense_claim.expense_claim import (
 	MismatchError,
+	get_advances,
 	get_outstanding_amount_for_claim,
 	make_bank_entry,
 	make_expense_claim_for_delivery_trip,
@@ -71,6 +72,56 @@ class TestExpenseClaim(FrappeTestCase):
 
 		self.assertEqual(frappe.db.get_value("Task", task, "total_expense_claim"), 200)
 		self.assertEqual(frappe.db.get_value("Project", project, "total_expense_claim"), 200)
+
+	def test_total_expense_claim_for_project_set_on_expense_line(self):
+		project = create_project("_Test Project Line 1")
+
+		payable_account = get_payable_account(company_name)
+
+		expense_claim = make_expense_claim(
+			payable_account, 300, 200, company_name, "Travel Expenses - _TC3", do_not_submit=True
+		)
+		expense_claim.expenses[0].project = project
+		expense_claim.submit()
+
+		self.assertEqual(frappe.db.get_value("Project", project, "total_expense_claim"), 200)
+
+		expense_claim.cancel()
+
+		self.assertEqual(frappe.db.get_value("Project", project, "total_expense_claim"), 0)
+
+	def test_total_expense_claim_for_project_at_document_and_line_level(self):
+		document_project = create_project("_Test Project Doc Level")
+		line_project = create_project("_Test Project Line 2")
+
+		payable_account = get_payable_account(company_name)
+		cost_center = frappe.db.get_value("Company", company_name, "cost_center")
+
+		expense_claim = make_expense_claim(
+			payable_account,
+			300,
+			200,
+			company_name,
+			"Travel Expenses - _TC3",
+			project=document_project,
+			do_not_submit=True,
+		)
+		expense_claim.append(
+			"expenses",
+			{
+				"expense_type": "Travel",
+				"default_account": "Travel Expenses - _TC3",
+				"currency": expense_claim.currency,
+				"amount": 500,
+				"sanctioned_amount": 500,
+				"cost_center": cost_center,
+				"project": line_project,
+			},
+		)
+		expense_claim.submit()
+
+		self.assertEqual(frappe.db.get_value("Project", document_project, "total_expense_claim"), 200)
+		self.assertEqual(frappe.db.get_value("Project", line_project, "total_expense_claim"), 500)
 
 	def test_expense_claim_status_as_payment_from_journal_entry(self):
 		# Via Journal Entry
@@ -765,6 +816,49 @@ class TestExpenseClaim(FrappeTestCase):
 		expense_claim.submit()
 
 		self.assertEqual(1, expense_claim.docstatus)
+
+	def test_advance_in_different_currency_excluded_from_claim(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			make_employee_advance,
+			make_payment_entry,
+		)
+
+		company = "_Test Company"
+		company_currency = frappe.get_cached_value("Company", company, "default_currency")
+		employee = make_employee("test_adv_cross_currency@example.com", company=company)
+
+		advance_account = create_account(
+			account_name="Employee Advance (USD) - Test",
+			parent_account="Current Assets - _TC",
+			company=company,
+			account_currency="USD",
+		)
+		advance = make_employee_advance(
+			employee,
+			args={
+				"currency": "USD",
+				"exchange_rate": 80,
+				"advance_amount": 100,
+				"advance_account": advance_account,
+			},
+		)
+		make_payment_entry(advance)
+		advance.reload()
+		self.assertNotEqual(advance.currency, company_currency)
+
+		claim = make_expense_claim(
+			get_payable_account(company),
+			100,
+			100,
+			company,
+			"Travel Expenses - _TC",
+			employee=employee,
+			do_not_submit=True,
+		)
+
+		# advances in a different currency are excluded from both the bulk and explicit fetch
+		self.assertEqual(get_advances(claim.employee, company=company), [])
+		self.assertEqual(get_advances(claim.employee, advance.name, company=company), [])
 
 	def test_expense_claim_status_as_payment_after_unreconciliation(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import make_payment_entry

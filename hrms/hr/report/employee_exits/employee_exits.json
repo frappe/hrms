@@ -9,7 +9,7 @@
  "filters": [],
  "idx": 0,
  "is_standard": "Yes",
- "letter_head": "Test",
+ "letter_head": null,
  "modified": "2021-12-05 19:47:18.332319",
  "modified_by": "Administrator",
  "module": "HR",

@@ -2,7 +2,7 @@
 	<ion-page>
 		<ListView
 			doctype="Shift Request"
-			pageTitle="Shift Request History"
+			:pageTitle="__('Shift Request History')"
 			:tabButtons="TAB_BUTTONS"
 			:fields="SHIFT_REQUEST_FIELDS"
 			:filterConfig="FILTER_CONFIG"

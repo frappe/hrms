@@ -65,13 +65,15 @@ const registerServiceWorker = async () => {
 		let serviceWorkerURL = "/assets/hrms/frontend/sw.js"
 		let config = ""
 
-		try {
-			config = await window.frappePushNotification.fetchWebConfig()
-			serviceWorkerURL = `${serviceWorkerURL}?config=${encodeURIComponent(
-				JSON.stringify(config)
-			)}`
-		} catch (err) {
-			console.error("Failed to fetch FCM config", err)
+		if (window.frappe?.boot?.push_relay_server_url) {
+			try {
+				config = await window.frappePushNotification.fetchWebConfig()
+				serviceWorkerURL = `${serviceWorkerURL}?config=${encodeURIComponent(
+					JSON.stringify(config)
+				)}`
+			} catch (err) {
+				console.error("Failed to fetch FCM config", err)
+			}
 		}
 
 		navigator.serviceWorker
@@ -121,8 +123,8 @@ router.beforeEach(async (to, _, next) => {
 		// password reset page is outside the PWA scope
 		if (to.path === "/update-password") {
 			return next(false)
-		} else if (to.name !== "Login") {
-			next({ name: "Login" })
+		} else if (!["Login", "ForgotPassword"].includes(to.name)) {
+			return next({ name: "Login" })
 		}
 	}
 
@@ -135,7 +137,7 @@ router.beforeEach(async (to, _, next) => {
 			employeeResource?.data?.user_id !== userResource.data.name
 		) {
 			next({ name: "InvalidEmployee" })
-		} else if (to.name === "Login") {
+		} else if (["Login", "ForgotPassword"].includes(to.name)) {
 			next({ name: "Home" })
 		} else {
 			next()

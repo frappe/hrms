@@ -1726,6 +1726,36 @@ class TestSalarySlip(FrappeTestCase):
 		# to handle cases like 16th Jul 2024 - 15th Jul 2025
 		self.assertEqual(period_factor, 12)
 
+	def test_variable_tax_with_zero_remaining_sub_periods(self):
+		# regression: when an employee has no remaining sub-periods in the payroll period
+		# (e.g. relieved before the period started), remaining_sub_periods is 0 and the
+		# structured tax calculation must not raise ZeroDivisionError
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		payroll_period = create_payroll_period(company="_Test Company")
+		create_tax_slab(payroll_period, allow_tax_exemption=True, currency="INR")
+		employee = make_employee("test_zero_remaining_period@salary.slip", company="_Test Company")
+
+		salary_structure = make_salary_structure(
+			"Structure to test zero remaining sub periods",
+			"Monthly",
+			test_tax=True,
+			employee=employee,
+			payroll_period=payroll_period,
+			company="_Test Company",
+		)
+
+		salary_slip = make_salary_slip(salary_structure.name, employee=employee)
+
+		# force the boundary condition and re-run the variable tax calculation
+		salary_slip.remaining_sub_periods = 0
+		salary_slip.calculate_variable_tax("TDS")
+
+		# no structured tax to spread over future periods => 0, and no ZeroDivisionError
+		self.assertEqual(salary_slip.current_structured_tax_amount, 0.0)
+
+		frappe.db.rollback()
+
 	@change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
 	def test_lwp_calculation_based_on_relieving_date(self):
 		emp_id = make_employee("test_lwp_based_on_relieving_date@salary.com")
@@ -1825,6 +1855,37 @@ class TestSalarySlip(FrappeTestCase):
 				# LTA = 40000 - 21000 = 19000
 
 				self.assertEqual(earning.default_amount, 19000)
+
+	@change_settings("Payroll Settings", {"payroll_based_on": "Attendance"})
+	def test_default_amount_unaffected_by_leave_without_pay(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+			create_salary_structure_assignment,
+		)
+
+		emp = make_employee("test_default_amount_lwp@salary.com", company="_Test Company")
+		first_sunday = get_first_sunday()
+		mark_attendance(emp, add_days(first_sunday, 1), "Absent", ignore_validate=True)
+
+		# base = 50000
+		salary_structure = make_salary_structure_for_payment_days_based_component_dependency(
+			test_payment_days_in_formula=True
+		)
+		create_salary_structure_assignment(
+			emp, salary_structure.name, company="_Test Company", currency="INR"
+		)
+
+		ss = make_salary_slip_for_payment_days_dependency_test(
+			"test_default_amount_lwp@salary.com", salary_structure.name
+		)
+		self.assertLess(ss.payment_days, ss.total_working_days)
+
+		other_allowance = next(
+			e for e in ss.earnings if e.salary_component == "Other Allowance - Payment Days"
+		)
+
+		# default_amount = base - P_HRA = 50000 - (50000 * 0.20) = 40000, unaffected by lwp
+		self.assertEqual(other_allowance.default_amount, 40000)
+		self.assertLess(other_allowance.amount, other_allowance.default_amount)
 
 	def test_variable_tax_component(self):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
@@ -2710,7 +2771,9 @@ def make_holiday_list(
 	return holiday_list
 
 
-def make_salary_structure_for_payment_days_based_component_dependency(test_statistical_comp=False):
+def make_salary_structure_for_payment_days_based_component_dependency(
+	test_statistical_comp=False, test_payment_days_in_formula=False
+):
 	earnings = [
 		{
 			"salary_component": "Basic Salary - Payment Days",
@@ -2748,6 +2811,17 @@ def make_salary_structure_for_payment_days_based_component_dependency(test_stati
 					"depends_on_payment_days": 0,
 				},
 			]
+		)
+	if test_payment_days_in_formula:
+		earnings.append(
+			{
+				"salary_component": "Other Allowance - Payment Days",
+				"abbr": "P_OA",
+				"type": "Earning",
+				"amount_based_on_formula": 1,
+				"depends_on_payment_days": 0,
+				"formula": "(base/total_working_days*payment_days) - P_HRA",
+			}
 		)
 
 	make_salary_component(earnings, False, company_list=["_Test Company"])

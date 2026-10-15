@@ -7,6 +7,16 @@
 cur_frm.email_field = "email_id";
 
 frappe.ui.form.on("Job Applicant", {
+	setup: function (frm) {
+		frm.make_methods = {
+			Employee: () =>
+				frappe.model.open_mapped_doc({
+					method: "hrms.hr.doctype.job_applicant.job_applicant.make_employee",
+					frm: frm,
+				}),
+		};
+	},
+
 	refresh: function (frm) {
 		frm.set_query("job_title", function () {
 			return {
@@ -31,6 +41,16 @@ frappe.ui.form.on("Job Applicant", {
 		}
 
 		if (!frm.doc.__islocal && frm.doc.status == "Accepted") {
+			if (frm.doc.__onload && frm.doc.__onload.employee) {
+				frm.add_custom_button(__("Show Employee"), function () {
+					frappe.set_route("Form", "Employee", frm.doc.__onload.employee);
+				});
+			} else {
+				frm.add_custom_button(__("Create Employee"), function () {
+					frm.make_methods.Employee();
+				});
+			}
+
 			if (frm.doc.__onload && frm.doc.__onload.job_offer) {
 				$('[data-doctype="Employee Onboarding"]').find("button").show();
 				$('[data-doctype="Job Offer"]').find("button").hide();

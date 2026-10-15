@@ -38,7 +38,7 @@ class PayrollEntry(Document):
 			return
 
 		# check if salary slips were manually submitted
-		entries = frappe.db.count("Salary Slip", {"payroll_entry": self.name, "docstatus": 1}, ["name"])
+		entries = frappe.db.count("Salary Slip", {"payroll_entry": self.name, "docstatus": 1})
 		if cint(entries) == len(self.employees):
 			self.set_onload("submitted_ss", True)
 
@@ -240,7 +240,7 @@ class PayrollEntry(Document):
 			if employee.employee in withheld_salaries:
 				employee.is_salary_withheld = 1
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def create_salary_slips(self):
 		"""
 		Creates salary slip for selected employees if already not created
@@ -304,7 +304,7 @@ class PayrollEntry(Document):
 
 		return ss_list
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def submit_salary_slips(self):
 		self.check_permission("write")
 		salary_slips = self.get_sal_slip_list(ss_status=0)
@@ -904,7 +904,7 @@ class PayrollEntry(Document):
 			),
 		}
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def make_bank_entry(self, for_withheld_salaries=False):
 		self.check_permission("write")
 		self.employee_based_payroll_payable_entries = {}

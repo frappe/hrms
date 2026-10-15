@@ -27,7 +27,7 @@ class LeaveControlPanel(Document):
 			mandatory_fields.extend(["leave_type", "no_of_days"])
 		validate_bulk_tool_fields(self, mandatory_fields, employees, "from_date", "to_date")
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def allocate_leave(self, employees: list):
 		self.validate_fields(employees)
 		if self.allocate_based_on_leave_policy:

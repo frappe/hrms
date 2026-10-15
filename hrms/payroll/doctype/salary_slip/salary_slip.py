@@ -1230,6 +1230,11 @@ class SalarySlip(TransactionBase):
 
 		# shallow copy of data to store default amounts (without payment days) for tax calculation
 		default_data = data.copy()
+		# reset to a full, un-prorated cycle so formulas like base/total_working_days*payment_days
+		# resolve consistently with the un-prorated component defaults set below
+		default_data.payment_days = default_data.total_working_days
+		default_data.leave_without_pay = 0
+		default_data.absent_days = 0
 
 		for key in ("earnings", "deductions"):
 			for d in self.get(key):
@@ -1583,10 +1588,12 @@ class SalarySlip(TransactionBase):
 
 		if has_additional_salary_tax_component:
 			self.current_structured_tax_amount = self.additional_salary_amount
-		else:
+		elif self.remaining_sub_periods > 0:
 			self.current_structured_tax_amount = (
 				self.total_structured_tax_amount - self.previous_total_paid_taxes
 			) / self.remaining_sub_periods
+		else:
+			self.current_structured_tax_amount = 0.0
 
 		# Total taxable earnings with additional earnings with full tax
 		self.full_tax_on_additional_earnings = 0.0
@@ -2418,7 +2425,7 @@ def _check_attributes(code: str) -> None:
 		if attribute in code:
 			raise SyntaxError(f'Illegal rule {frappe.bold(code)}. Cannot use "{attribute}"')
 
-	BLOCKED_NODES = (ast.NamedExpr,)
+	BLOCKED_NODES = (ast.NamedExpr, ast.Lambda)
 
 	tree = ast.parse(code, mode="eval")
 	for node in ast.walk(tree):
@@ -2428,7 +2435,7 @@ def _check_attributes(code: str) -> None:
 			raise SyntaxError(f'Illegal rule {frappe.bold(code)}. Cannot use "{node.attr}"')
 
 
-@frappe.whitelist()
+@frappe.whitelist(methods=["POST"])
 def enqueue_email_salary_slips(names) -> None:
 	"""enqueue bulk emailing salary slips"""
 	import json

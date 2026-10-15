@@ -66,7 +66,7 @@ const options = createResource({
 	},
 	method: "POST",
 	transform: (data) => {
-		return data.map((doc) => {
+		const mappedOptions = data.map((doc) => {
 			let title = null;
 			if (doc.label && doc.label !== doc.value) {
 				title = doc.label;
@@ -78,6 +78,20 @@ const options = createResource({
 				value: doc.value,
 			};
 		});
+
+		// ensure the currently selected value is always resolvable, even if
+		// the (possibly unfiltered/reloaded) result set doesn't include it
+		if (
+			props.modelValue &&
+			!mappedOptions.some((option) => option.value === props.modelValue)
+		) {
+			mappedOptions.unshift({
+				label: props.modelValue,
+				value: props.modelValue,
+			});
+		}
+
+		return mappedOptions;
 	},
 });
 

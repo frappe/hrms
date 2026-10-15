@@ -193,7 +193,7 @@ class SalaryStructure(Document):
 
 		return employees
 
-	@frappe.whitelist()
+	@frappe.whitelist(methods=["POST"])
 	def assign_salary_structure(
 		self,
 		branch=None,
@@ -418,6 +418,7 @@ def get_employees(salary_structure):
 
 
 @frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
 def get_salary_component(doctype, txt, searchfield, start, page_len, filters):
 	sc = frappe.qb.DocType("Salary Component")
 	sca = frappe.qb.DocType("Salary Component Account")

@@ -141,23 +141,51 @@ frappe.ui.form.on("Employee Advance", {
 	},
 
 	make_return_entry: function (frm) {
-		frappe.call({
-			method: "hrms.hr.doctype.employee_advance.employee_advance.make_return_entry",
-			args: {
-				employee: frm.doc.employee,
-				company: frm.doc.company,
-				employee_advance_name: frm.doc.name,
-				return_amount: flt(frm.doc.paid_amount - frm.doc.claimed_amount),
-				advance_account: frm.doc.advance_account,
-				mode_of_payment: frm.doc.mode_of_payment,
-				currency: frm.doc.currency,
-				exchange_rate: frm.doc.exchange_rate,
-			},
-			callback: function (r) {
-				const doclist = frappe.model.sync(r.message);
-				frappe.set_route("Form", doclist[0].doctype, doclist[0].name);
+		let dialog = new frappe.ui.Dialog({
+			title: __("Return Advance"),
+			fields: [
+				{
+					label: __("Bank/Cash Account"),
+					fieldname: "bank_account",
+					fieldtype: "Link",
+					options: "Account",
+					description: __(
+						"Optional. Leave blank to use the Mode of Payment set on this Advance, or the Company's Default Cash Account.",
+					),
+					get_query: () => ({
+						filters: {
+							company: frm.doc.company,
+							account_type: ["in", ["Bank", "Cash"]],
+							account_currency: frm.doc.currency,
+							is_group: 0,
+						},
+					}),
+				},
+			],
+			primary_action_label: __("Create"),
+			primary_action: (values) => {
+				dialog.hide();
+				frappe.call({
+					method: "hrms.hr.doctype.employee_advance.employee_advance.make_return_entry",
+					args: {
+						employee: frm.doc.employee,
+						company: frm.doc.company,
+						employee_advance_name: frm.doc.name,
+						return_amount: flt(frm.doc.paid_amount - frm.doc.claimed_amount),
+						advance_account: frm.doc.advance_account,
+						mode_of_payment: frm.doc.mode_of_payment,
+						currency: frm.doc.currency,
+						exchange_rate: frm.doc.exchange_rate,
+						bank_account: values.bank_account,
+					},
+					callback: function (r) {
+						const doclist = frappe.model.sync(r.message);
+						frappe.set_route("Form", doclist[0].doctype, doclist[0].name);
+					},
+				});
 			},
 		});
+		dialog.show();
 	},
 
 	employee: function (frm) {
@@ -187,13 +215,25 @@ frappe.ui.form.on("Employee Advance", {
 				company_currency = erpnext.get_currency(frm.doc.company);
 			}
 			if (from_currency != company_currency) {
-				frm.events.set_exchange_rate(frm, from_currency, company_currency);
+				frappe.confirm(
+					__(
+						"The selected currency {0} differs from the company's default currency {1}. This advance will not be available for Expense Claims. Do you want to proceed?",
+						[from_currency.bold(), company_currency.bold()],
+					),
+					() => {
+						frm.events.set_exchange_rate(frm, from_currency, company_currency);
+						frm.refresh_fields();
+					},
+					() => {
+						frm.set_value("currency", company_currency);
+					},
+				);
 			} else {
 				frm.set_value("exchange_rate", 1.0);
 				frm.set_df_property("exchange_rate", "hidden", 1);
 				frm.set_df_property("exchange_rate", "description", "");
+				frm.refresh_fields();
 			}
-			frm.refresh_fields();
 		}
 	},
 

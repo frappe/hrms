@@ -210,16 +210,61 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		row = report[1][0]
 		self.assertEqual(row["employee"], self.employee)
 
-		# 4 present + half day absent 0.5
+		# 4 present + half day worked 0.5 (not leave-backed)
 		self.assertEqual(row["total_present"], 4.5)
-		# 1 present
-		self.assertEqual(row["total_absent"], 1)
-		# leave days + half day leave 0.5
-		self.assertEqual(row["total_leaves"], leave_application.total_leave_days + 0.5)
+		# 1 absent + half day absent 0.5 (not leave-backed, defaults to absent)
+		self.assertEqual(row["total_absent"], 1.5)
+		# leave days only, half day isn't leave-backed
+		self.assertEqual(row["total_leaves"], leave_application.total_leave_days)
 
 		self.assertEqual(row["_test_leave_type"], leave_application.total_leave_days)
 		self.assertEqual(row["total_late_entries"], 1)
 		self.assertEqual(row["total_early_exits"], 1)
+
+	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	def test_summarized_view_with_leave_backed_half_day(self):
+		previous_month_first = get_first_day_for_prev_month()
+
+		mark_attendance(self.employee, previous_month_first, "Absent")
+		mark_attendance(self.employee, previous_month_first + relativedelta(days=1), "Present")
+
+		year_start = getdate(get_year_start(previous_month_first))
+		year_end = getdate(get_year_ending(previous_month_first))
+		try:
+			make_allocation_record(employee=self.employee, from_date=year_start, to_date=year_end)
+		except OverlapError:
+			pass
+
+		leave_backed_day = previous_month_first + relativedelta(days=5)
+		make_leave_application(
+			self.employee,
+			leave_backed_day,
+			leave_backed_day,
+			"_Test Leave Type",
+			half_day=True,
+			half_day_date=leave_backed_day,
+		)
+
+		filters = frappe._dict(
+			{
+				"month": previous_month_first.month,
+				"year": previous_month_first.year,
+				"company": self.company,
+				"summarized_view": 1,
+				"filter_based_on": self.filter_based_on,
+			}
+		)
+		report = execute(filters=filters)
+
+		row = report[1][0]
+		self.assertEqual(row["employee"], self.employee)
+
+		# 1 present + half day worked 0.5 (leave-backed)
+		self.assertEqual(row["total_present"], 1.5)
+		# 1 absent, half day doesn't count as absent (leave-backed)
+		self.assertEqual(row["total_absent"], 1)
+		# half day leave 0.5 (leave-backed)
+		self.assertEqual(row["total_leaves"], 0.5)
 
 	@set_holiday_list("Salary Slip Test Holiday List", "_Test Company")
 	def test_attendance_with_group_by_filter(self):
@@ -474,16 +519,60 @@ class TestMonthlyAttendanceSheet(FrappeTestCase):
 		row = report[1][0]
 		self.assertEqual(row["employee"], self.employee)
 
-		# 4 present + half day absent 0.5
+		# 4 present + half day worked 0.5 (not leave-backed)
 		self.assertEqual(row["total_present"], 4.5)
-		# 1 present
-		self.assertEqual(row["total_absent"], 1)
-		# leave days + half day leave 0.5
-		self.assertEqual(row["total_leaves"], leave_application.total_leave_days + 0.5)
+		# 1 absent + half day absent 0.5 (not leave-backed, defaults to absent)
+		self.assertEqual(row["total_absent"], 1.5)
+		# leave days only, half day isn't leave-backed
+		self.assertEqual(row["total_leaves"], leave_application.total_leave_days)
 
 		self.assertEqual(row["_test_leave_type"], leave_application.total_leave_days)
 		self.assertEqual(row["total_late_entries"], 1)
 		self.assertEqual(row["total_early_exits"], 1)
+
+	def test_summarised_view_with_date_range_across_month_boundary(self):
+		"""
+		Total Holidays must count a holiday even if an earlier date
+		in a different month shares its day-of-month.
+		"""
+		previous_month_first = get_first_day_for_prev_month()
+
+		start_date = previous_month_first.replace(day=5)
+		end_date = start_date + relativedelta(months=1)  # same day-of-month, next month
+
+		hl = make_holiday_list(
+			"Test Cross Month HL",
+			from_date=add_days(start_date, -1),
+			to_date=add_days(end_date, 1),
+			add_weekly_offs=False,
+		)
+
+		holiday_list = frappe.get_doc("Holiday List", hl)
+		holiday_list.append(
+			"holidays", {"holiday_date": end_date, "description": "Test Holiday"}
+		)  # holiday only on the later, colliding day-of-month
+		holiday_list.save()
+
+		frappe.db.set_value("Employee", self.employee, "holiday_list", hl)
+
+		# attendance on the earlier date sharing the same day-of-month as the holiday
+		mark_attendance(self.employee, start_date, "Present")
+
+		filters = frappe._dict(
+			{
+				"filter_based_on": "Date Range",
+				"start_date": start_date,
+				"end_date": end_date,
+				"company": self.company,
+				"summarized_view": 1,
+			}
+		)
+		report = execute(filters=filters)
+		row = report[1][0]
+
+		# end_date's holiday must still be counted despite start_date (same day-of-month, different month)
+		# already having an attendance record
+		self.assertEqual(row["total_holidays"], 1)
 
 	def test_detailed_view_with_date_range_filter(self):
 		today = getdate()

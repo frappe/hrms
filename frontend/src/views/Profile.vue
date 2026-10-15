@@ -71,7 +71,6 @@
 						<!-- Settings -->
 						<div
 							class="flex flex-col gap-5 my-4 w-full"
-							v-if="allowPushNotifications"
 						>
 							<div class="flex flex-col bg-white rounded">
 								<router-link
@@ -118,13 +117,14 @@
 				:breakpoints="[0, 1]"
 			>
 				<ProfileInfoModal
+					v-if="selectedItem"
 					:title="selectedItem.title"
 					:data="
 						selectedItem.fields.map((field) => {
 							const [label, fieldtype] = getFieldInfo(field)
 							return {
 								fieldname: field,
-								value: employeeDoc.doc[field],
+								value: getFieldValue(field),
 								label: label,
 								fieldtype: fieldtype,
 							}
@@ -132,15 +132,16 @@
 					"
 				/>
 			</ion-modal>
-		</ion-content>
-	</ion-page>
+
+	</ion-content>
+</ion-page>
 </template>
 
 <script setup>
-import { computed, inject, ref, onMounted, onBeforeUnmount } from "vue"
+import { computed, inject, ref, watch, onMounted, onBeforeUnmount } from "vue"
 import { useRouter } from "vue-router"
-import { IonModal, IonPage, IonContent } from "@ionic/vue"
-import { FeatherIcon, createDocumentResource, createResource } from "frappe-ui"
+import { IonPage, IonContent } from "@ionic/vue"
+import { FeatherIcon, createDocumentResource, createResource, toast } from "frappe-ui"
 
 import { showErrorAlert } from "@/utils/dialogs"
 import { formatCurrency } from "@/utils/formatters"
@@ -243,6 +244,19 @@ const employeeDoc = createDocumentResource({
 	},
 })
 
+const reportsToName = createResource({
+	url: "hrms.api.get_reports_to_employee_name",
+})
+
+watch(
+	() => employeeDoc.doc?.reports_to,
+	(reports_to) => {
+		if (reports_to) {
+			reportsToName.submit({ employee: reports_to })
+		}
+	}
+)
+
 const employeeDocType = createResource({
 	url: "hrms.api.get_doctype_fields",
 	params: { doctype: DOCTYPE },
@@ -256,15 +270,27 @@ const getFieldInfo = (fieldname) => {
 	return [__(field?.label, null, "Employee"), field?.fieldtype]
 }
 
+const getFieldValue = (fieldname) => {
+	if (fieldname === "employee_number" && !employeeDoc.doc[fieldname]) {
+		return employeeDoc.doc["name"]
+	}
+	if (fieldname === "reports_to") {
+		return reportsToName.data || employeeDoc.doc[fieldname]
+	}
+	return employeeDoc.doc[fieldname]
+}
+
 const logout = async () => {
 	try {
 		await session.logout.submit()
 	} catch (e) {
-		const msg = "An error occurred while attempting to log out!"
+		const msg = __("An error occurred while attempting to log out!")
 		console.error(msg, e)
 		showErrorAlert(msg)
 	}
 }
+
+
 
 onMounted(() => {
 	socket.emit("doctype_subscribe", DOCTYPE)
