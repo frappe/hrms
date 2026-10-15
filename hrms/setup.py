@@ -54,7 +54,7 @@ EMPLOYEE_DETAILS_TAB_LABEL = {"doc_type": "Employee", "field_name": "basic_detai
 
 
 def rename_employee_details_tab():
-	"""The Overview tab HRMS adds comes first, so the old first tab is renamed to Details."""
+	"""The first tab is also labelled Overview, so it is renamed to Details."""
 	from frappe.custom.doctype.property_setter.property_setter import make_property_setter
 
 	make_property_setter(
@@ -259,6 +259,7 @@ def get_custom_fields():
 				"fieldname": "overview_tab",
 				"fieldtype": "Tab Break",
 				"label": _("Overview"),
+				"insert_after": "basic_details_tab",
 			},
 			{
 				"fieldname": "overview_html",

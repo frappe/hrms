@@ -116,7 +116,10 @@ class TestEmployeeOverview(HRMSTestSuite):
 		finally:
 			frappe.set_user("Administrator")
 
-	def test_overview_tab_comes_first(self):
+	def test_overview_tab_comes_second(self):
 		meta = frappe.get_meta("Employee")
-		self.assertEqual([f.fieldname for f in meta.fields[:2]], ["overview_tab", "overview_html"])
+		tabs = [f.fieldname for f in meta.fields if f.fieldtype == "Tab Break"]
+		self.assertEqual(tabs[:2], ["basic_details_tab", "overview_tab"])
+		fieldnames = [f.fieldname for f in meta.fields]
+		self.assertEqual(fieldnames.index("overview_html"), fieldnames.index("overview_tab") + 1)
 		self.assertEqual(meta.get_field("basic_details_tab").label, "Details")
