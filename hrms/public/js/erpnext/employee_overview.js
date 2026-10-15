@@ -623,6 +623,7 @@ hrms.EmployeeOverview = class EmployeeOverview {
 			only_input: true,
 		});
 		control.refresh();
+		control.set_value(__("All Document Types"));
 		control.$input.on("change", () => {
 			this.state.doc_type = types[control.$input.prop("selectedIndex")] || "All";
 			this.refresh_list();
