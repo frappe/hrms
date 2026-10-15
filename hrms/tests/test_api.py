@@ -11,6 +11,7 @@ from hrms.api import (
 )
 from hrms.overrides.employee_master import get_timeline_data
 from hrms.tests.utils import HRMSTestSuite, make_company_restricted_user
+from hrms.utils.holiday_list import get_holiday_list_for_employee
 
 
 class TestAPI(HRMSTestSuite):
@@ -41,6 +42,8 @@ class TestAPI(HRMSTestSuite):
 	def test_employee_can_load_own_holidays_and_approvers(self):
 		user = "test_pwa_employee@example.com"
 		employee = make_employee(user, company="_Test Company")
+		self.assertTrue(frappe.db.get_value("Employee", employee, "department"))
+		self.assertTrue(get_holiday_list_for_employee(employee, raise_exception=False))
 
 		frappe.set_user(user)
 		try:
