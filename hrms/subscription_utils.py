@@ -1,6 +1,7 @@
 import requests
 
 import frappe
+from frappe.core.doctype.installed_applications.installed_applications import get_setup_wizard_completed_apps
 
 STANDARD_ROLES = [
 	# standard roles
@@ -70,12 +71,12 @@ def subscription_updated(app: str, plan: str):
 
 
 def set_hrms_as_default_app(*args):
-	if is_hr_only_site() and not frappe.get_system_settings("default_app"):
+	if not frappe.get_system_settings("default_app"):
 		frappe.db.set_single_value("System Settings", "default_app", "hrms")
 
 
-def is_hr_only_site() -> bool:
-	return bool(frappe.conf.sk_hrms and not (frappe.conf.sk_erpnext_smb or frappe.conf.sk_erpnext))
+def is_new_hr_site() -> bool:
+	return bool(frappe.conf.sk_hrms) and "frappe" not in get_setup_wizard_completed_apps()
 
 
 def update_erpnext_access(user_input: dict | None):
