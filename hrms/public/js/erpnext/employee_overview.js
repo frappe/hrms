@@ -408,6 +408,8 @@ hrms.EmployeeOverview = class EmployeeOverview {
 	}
 
 	render_charts() {
+		(this.charts || []).forEach((chart) => chart.destroy?.());
+		this.charts = [];
 		this.$charts.empty();
 		const data = this.data;
 		const show_attendance =
@@ -433,27 +435,38 @@ hrms.EmployeeOverview = class EmployeeOverview {
 			return;
 		}
 		const c = a.counts;
-		const $chart = $('<div class="eo-chart eo-donut">').appendTo($panel);
-		frappe.ui
-			.donut({
-				segments: [
-					{ label: __("Present"), value: c.Present, color: "var(--green-600)" },
-					{
-						label: __("Work From Home"),
-						value: c["Work From Home"],
-						color: "var(--green-400)",
-					},
-					{ label: __("Half Day"), value: c["Half Day"], color: "var(--orange-400)" },
-					{ label: __("On Leave"), value: c["On Leave"], color: "var(--blue-400)" },
-					{ label: __("Absent"), value: c.Absent, color: "var(--red-500)" },
-				],
+		const segments = [
+			{ label: __("Present"), value: c.Present, color: "--green-600" },
+			{ label: __("Work From Home"), value: c["Work From Home"], color: "--green-400" },
+			{ label: __("Half Day"), value: c["Half Day"], color: "--orange-400" },
+			{ label: __("On Leave"), value: c["On Leave"], color: "--blue-400" },
+			{ label: __("Absent"), value: c.Absent, color: "--red-500" },
+		].filter((s) => s.value > 0);
+		const $chart = $('<div class="eo-chart">').appendTo($panel);
+		this.charts.push(
+			new frappe.Chart($chart[0], {
+				type: "donut",
+				height: 300,
+				data: {
+					labels: segments.map((s) => s.label),
+					datasets: [{ values: segments.map((s) => s.value) }],
+				},
+				colors: this.resolve_colors(
+					$chart[0],
+					segments.map((s) => s.color),
+				),
 				center: {
 					value: String(a.marked),
 					label: a.marked === 1 ? __("day") : __("days"),
 				},
-				format: (v) => COUNT.days(v),
-			})
-			.appendTo($chart);
+				tooltipOptions: { formatTooltipY: (v) => COUNT.days(v) },
+			}),
+		);
+	}
+
+	resolve_colors(el, tokens) {
+		const style = getComputedStyle(el);
+		return tokens.map((token) => style.getPropertyValue(token).trim());
 	}
 
 	render_leave() {
@@ -468,18 +481,23 @@ hrms.EmployeeOverview = class EmployeeOverview {
 			this.empty_note($panel, __("No leave allocated"), 180);
 			return;
 		}
-		frappe.ui
-			.bar_list({
-				items: l.types.map((t) => ({
-					label: t.leave_type,
-					value: t.remaining,
-					formatted: t.total ? __("{0} of {1}", [flt(t.remaining), flt(t.total)]) : null,
-				})),
-				format: (v) => String(flt(v)),
-				color: "var(--eo-series-1)",
-				label_width: 120,
-			})
-			.appendTo($('<div class="eo-bar-chart">').appendTo($panel));
+		const $chart = $('<div class="eo-chart eo-bar-chart">').appendTo($panel);
+		this.charts.push(
+			new frappe.Chart($chart[0], {
+				type: "bar",
+				data: {
+					labels: l.types.map((t) => t.leave_type),
+					datasets: [
+						{ name: __("Remaining"), values: l.types.map((t) => flt(t.remaining)) },
+						{ name: __("Taken"), values: l.types.map((t) => flt(t.taken)) },
+					],
+				},
+				colors: this.resolve_colors($chart[0], ["--eo-series-1", "--eo-series-2"]),
+				barOptions: { horizontal: 1, stacked: 1, labelWidth: 120 },
+				axisOptions: { numberFormatter: (v) => String(flt(v)) },
+				tooltipOptions: { formatTooltipY: (v) => COUNT.days(v) },
+			}),
+		);
 		const taken = l.types.reduce((sum, t) => sum + flt(t.taken), 0);
 		$('<div class="eo-note">')
 			.text(

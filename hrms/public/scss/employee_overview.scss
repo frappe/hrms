@@ -104,6 +104,17 @@
 		margin: 0 calc(-1 * var(--padding-sm));
 	}
 
+	.eo-chart .chart-container {
+		--charts-label-color: var(--ink-gray-5);
+		--charts-muted-color: var(--ink-gray-5);
+		--charts-legend-label: var(--ink-gray-7);
+		--charts-tooltip-title: var(--ink-gray-5);
+		--charts-tooltip-label: var(--ink-gray-7);
+		--charts-tooltip-value: var(--ink-gray-9);
+		--charts-tooltip-bg: var(--surface-elevation-2);
+		--charts-tooltip-border: var(--outline-elevation-2);
+	}
+
 	.eo-panel .eo-chart,
 	.eo-panel .eo-bar-chart {
 		padding-top: var(--margin-md);
@@ -114,11 +125,6 @@
 		flex: 1;
 		flex-direction: column;
 		margin-top: var(--margin-sm);
-	}
-
-	.eo-donut {
-		display: flex;
-		justify-content: center;
 	}
 
 	.eo-loading .eo-chart,
