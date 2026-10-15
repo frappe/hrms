@@ -5,7 +5,7 @@ from frappe import _
 from frappe.utils import add_days, date_diff, flt, get_link_to_form, month_diff
 
 from hrms.hr.utils import get_salary_assignments
-from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
+from hrms.payroll.doctype.salary_structure.salary_structure import _make_salary_slip
 
 
 def calculate_annual_eligible_hra_exemption(doc):
@@ -104,10 +104,11 @@ def get_end_date_for_assignment(assignment_dates, idx, payroll_period):
 
 
 def get_component_amt_from_salary_slip(employee, salary_structure, basic_component, hra_component, from_date):
-	salary_slip = make_salary_slip(
+	salary_slip = _make_salary_slip(
 		salary_structure,
 		employee=employee,
 		for_preview=1,
+		ignore_permissions=True,
 		posting_date=from_date,
 	)
 

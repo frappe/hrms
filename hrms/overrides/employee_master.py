@@ -124,7 +124,7 @@ def get_timeline_data(doctype, name):
 
 	out = {}
 
-	frappe.has_permission(doctype, "read", name, throw=True)
+	frappe.has_permission("Employee", "read", name, throw=True)
 	frappe.has_permission("Attendance", "read", throw=True)
 
 	open_count = get_open_count(doctype, name)

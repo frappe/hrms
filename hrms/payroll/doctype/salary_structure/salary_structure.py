@@ -365,6 +365,30 @@ def make_salary_slip(
 	print_format=None,
 	for_preview=0,
 ):
+	if employee:
+		frappe.has_permission("Employee", "read", employee, throw=True)
+
+	return _make_salary_slip(
+		source_name,
+		target_doc=target_doc,
+		employee=employee,
+		posting_date=posting_date,
+		as_print=as_print,
+		print_format=print_format,
+		for_preview=for_preview,
+	)
+
+
+def _make_salary_slip(
+	source_name,
+	target_doc=None,
+	employee=None,
+	posting_date=None,
+	as_print=False,
+	print_format=None,
+	for_preview=0,
+	ignore_permissions=False,
+):
 	def postprocess(source, target):
 		if employee:
 			target.employee = employee
@@ -389,6 +413,7 @@ def make_salary_slip(
 		target_doc,
 		postprocess,
 		ignore_child_tables=True,
+		ignore_permissions=ignore_permissions,
 		cached=True,
 	)
 
