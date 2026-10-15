@@ -148,14 +148,12 @@ function add_email_button(frm) {
 	}
 
 	const resend = frm.doc.status === "Awaiting Response";
-	const button = frm.add_custom_button(
-		resend ? __("Resend Offer Letter") : __("Email Offer Letter"),
-		() => {
-			capture_job_offer_event("offer_letter_email_opened", { resend });
-			email_offer_letter(frm);
-		},
-	);
-	if (!resend) button.removeClass("btn-default").addClass("btn-primary");
+	const label = resend ? __("Resend Offer Letter") : __("Email Offer Letter");
+	frm.add_custom_button(label, () => {
+		capture_job_offer_event("offer_letter_email_opened", { resend });
+		email_offer_letter(frm);
+	});
+	if (!resend) frm.change_custom_button_type(label, null, "primary");
 }
 
 async function email_offer_letter(frm) {
