@@ -244,5 +244,16 @@ class TestAttendance(FrappeTestCase):
 		)
 		self.assertEqual(len(attendances), 1)
 
+	def test_unmarked_days_of_another_employee(self):
+		user = "test_unmarked_days_user@example.com"
+		make_employee(user)
+		employee = make_employee("test_unmarked_days_other@example.com")
+
+		frappe.set_user(user)
+		try:
+			self.assertRaises(frappe.PermissionError, get_unmarked_days, employee, getdate(), getdate())
+		finally:
+			frappe.set_user("Administrator")
+
 	def tearDown(self):
 		frappe.db.rollback()

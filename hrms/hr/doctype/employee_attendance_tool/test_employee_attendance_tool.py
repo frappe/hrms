@@ -69,6 +69,21 @@ class TestEmployeeAttendanceTool(FrappeTestCase):
 		self.assertEqual(attendance.shift, shift.name)
 		self.assertEqual(attendance.late_entry, 1)
 
+	def test_update_half_day_attendance_of_another_employee(self):
+		frappe.set_user("test_present@example.com")
+		try:
+			self.assertRaises(
+				frappe.PermissionError,
+				mark_employee_attendance,
+				[],
+				"Present",
+				getdate(),
+				mark_half_day=True,
+				half_day_employee_list=[self.employee2],
+			)
+		finally:
+			frappe.set_user("Administrator")
+
 	def test_get_employees_for_half_day_attendance(self):
 		# only half day attendance created from leave type should be fetched to update in the tool
 		employee = frappe.get_doc("Employee", self.employee1)
