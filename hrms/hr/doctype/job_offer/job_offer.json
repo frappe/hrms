@@ -68,7 +68,6 @@
   "column_break_16",
   "letter_head",
   "offer_letter_preview_section",
-  "email_offer_letter",
   "offer_letter_preview",
   "amended_from"
  ],
@@ -455,19 +454,13 @@
    "allow_on_submit": 1,
    "fieldname": "signature",
    "fieldtype": "Attach Image",
-   "label": "HR's signature to show on offer letter",
+   "label": "Sign to show on offer letter",
    "print_hide": 1
   },
   {
    "depends_on": "offer_letter_print_format",
    "fieldname": "offer_letter_preview_section",
    "fieldtype": "Section Break"
-  },
-  {
-   "depends_on": "eval:doc.docstatus == 1 && [\"Ready to Send\", \"Awaiting Response\"].includes(doc.status)",
-   "fieldname": "email_offer_letter",
-   "fieldtype": "Button",
-   "label": "Email Offer Letter"
   },
   {
    "description": "You can email this offer letter to the applicant once the job offer is submitted.",
@@ -488,7 +481,7 @@
  "icon": "handshake",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-06 13:48:30.000000",
+ "modified": "2026-10-15 19:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",

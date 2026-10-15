@@ -91,7 +91,7 @@ frappe.ui.form.on("Job Offer", {
 		set_per_cycle_label(frm);
 		bind_regional_inputs(frm);
 		bind_grade_reselect(frm);
-		set_email_button_label(frm);
+		add_email_button(frm);
 		render_offer_letter_preview(frm);
 
 		if (
@@ -110,17 +110,6 @@ frappe.ui.form.on("Job Offer", {
 				frappe.set_route("Form", "Employee", frm.doc.__onload.employee);
 			});
 		}
-	},
-
-	status: function (frm) {
-		set_email_button_label(frm);
-	},
-
-	email_offer_letter: function (frm) {
-		capture_job_offer_event("offer_letter_email_opened", {
-			resend: frm.doc.status === "Awaiting Response",
-		});
-		email_offer_letter(frm);
 	},
 
 	on_tab_change: function (frm) {
@@ -150,16 +139,23 @@ function capture_tab_view(frm) {
 	});
 }
 
-function set_email_button_label(frm) {
+function add_email_button(frm) {
+	if (
+		frm.doc.docstatus !== 1 ||
+		!["Ready to Send", "Awaiting Response"].includes(frm.doc.status)
+	) {
+		return;
+	}
+
 	const resend = frm.doc.status === "Awaiting Response";
-	frm.set_df_property(
-		"email_offer_letter",
-		"label",
-		resend ? "Resend Offer Letter" : "Email Offer Letter",
+	const button = frm.add_custom_button(
+		resend ? __("Resend Offer Letter") : __("Email Offer Letter"),
+		() => {
+			capture_job_offer_event("offer_letter_email_opened", { resend });
+			email_offer_letter(frm);
+		},
 	);
-	frm.get_field("email_offer_letter")
-		.$input?.attr("class", "es-button")
-		.attr("data-variant", resend ? "subtle" : "solid");
+	if (!resend) button.removeClass("btn-default").addClass("btn-primary");
 }
 
 async function email_offer_letter(frm) {
@@ -186,10 +182,8 @@ let offer_letter_preview_request = 0;
 async function render_offer_letter_preview(frm) {
 	const field = frm.get_field("offer_letter_preview");
 	const $wrapper = field.$wrapper;
-	const $button = frm.get_field("email_offer_letter").$wrapper;
 	const request = ++offer_letter_preview_request;
 	if (!frm.doc.offer_letter_print_format || frm.doc.docstatus === 2) {
-		$button.detach();
 		$wrapper.empty();
 		return;
 	}
@@ -217,9 +211,7 @@ async function render_offer_letter_preview(frm) {
 			<style>${(message.style || "").replace(/<\//g, "<\\/")}</style>
 		</head><body><div class="print-format">${message.html || ""}</div></body></html>`;
 
-	const $head = $(`<div class="flex justify-between align-items-start">
-		<div class="text-base-medium mb-3">${__(field.df.label)}</div>
-	</div>`).append($button.detach());
+	const $head = $(`<div class="text-base-medium mb-3">${__(field.df.label)}</div>`);
 	$wrapper.empty().append($head, $iframe);
 }
 
