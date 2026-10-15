@@ -127,30 +127,32 @@ class EmployeeHoursReport:
 		self.stats_by_employee = filtered_data
 
 	def generate_filtered_time_logs(self):
-		additional_filters = ""
+		Timesheet = frappe.qb.DocType("Timesheet")
+		TimesheetDetail = frappe.qb.DocType("Timesheet Detail")
 
-		filter_fields = ["employee", "project", "company"]
-
-		for field in filter_fields:
-			if self.filters.get(field):
-				if field == "project":
-					additional_filters += f" AND ttd.{field} = {self.filters.get(field)!r}"
-				else:
-					additional_filters += f" AND tt.{field} = {self.filters.get(field)!r}"
-
-		# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
-		self.filtered_time_logs = frappe.db.sql(
-			f"""
-			SELECT tt.employee AS employee, ttd.hours AS hours, ttd.is_billable AS is_billable, ttd.project AS project
-			FROM `tabTimesheet Detail` AS ttd
-			JOIN `tabTimesheet` AS tt
-				ON ttd.parent = tt.name
-			WHERE tt.employee IS NOT NULL
-			AND tt.start_date BETWEEN '{self.filters.from_date}' AND '{self.filters.to_date}'
-			AND tt.end_date BETWEEN '{self.filters.from_date}' AND '{self.filters.to_date}'
-			{additional_filters}
-		"""
+		query = (
+			frappe.qb.from_(TimesheetDetail)
+			.join(Timesheet)
+			.on(TimesheetDetail.parent == Timesheet.name)
+			.select(
+				Timesheet.employee.as_("employee"),
+				TimesheetDetail.hours.as_("hours"),
+				TimesheetDetail.is_billable.as_("is_billable"),
+				TimesheetDetail.project.as_("project"),
+			)
+			.where(Timesheet.employee.isnotnull())
+			.where(Timesheet.start_date[self.from_date : self.to_date])
+			.where(Timesheet.end_date[self.from_date : self.to_date])
 		)
+
+		for field in ("employee", "company"):
+			if self.filters.get(field):
+				query = query.where(Timesheet[field] == self.filters.get(field))
+
+		if self.filters.get("project"):
+			query = query.where(TimesheetDetail.project == self.filters.get("project"))
+
+		self.filtered_time_logs = query.run()
 
 	def generate_stats_by_employee(self):
 		self.stats_by_employee = frappe._dict()

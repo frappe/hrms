@@ -285,6 +285,8 @@ def get_filters(
 
 @frappe.whitelist()
 def get_shift_request_approvers(employee: str) -> str | list[str]:
+	frappe.has_permission("Employee", "read", employee, throw=True)
+
 	shift_request_approver, department = frappe.get_cached_value(
 		"Employee",
 		employee,
@@ -415,6 +417,8 @@ def get_leave_balance_map() -> dict[str, dict[str, float]]:
 
 @frappe.whitelist()
 def get_holidays_for_employee(employee: str) -> list[dict]:
+	frappe.has_permission("Employee", "read", employee, throw=True)
+
 	holiday_list = get_holiday_list_for_employee(employee, raise_exception=False)
 	if not holiday_list:
 		return []
@@ -435,6 +439,7 @@ def get_holidays_for_employee(employee: str) -> list[dict]:
 
 @frappe.whitelist()
 def get_leave_approval_details(employee: str) -> dict:
+	frappe.has_permission("Employee", "read", employee, throw=True)
 	leave_approver, department = frappe.get_cached_value(
 		"Employee",
 		employee,
@@ -498,6 +503,7 @@ def get_leave_types(employee: str, date: str) -> list:
 
 	date = date or getdate()
 
+	# Get leave details validate leave access internally
 	leave_details = get_leave_details(employee, date)
 	leave_types = list(leave_details["leave_allocation"].keys()) + leave_details["lwps"]
 
@@ -610,6 +616,7 @@ def get_expense_claim_types() -> list[dict]:
 
 @frappe.whitelist()
 def get_expense_approval_details(employee: str) -> dict:
+	frappe.has_permission("Employee", "read", employee, throw=True)
 	expense_approver, department = frappe.get_cached_value(
 		"Employee",
 		employee,
@@ -764,6 +771,8 @@ def upload_base64_file(content, filename, dt=None, dn=None, fieldname=None):
 			file_content = file_content.getvalue()
 	else:
 		file_content = decoded_content
+
+	frappe.has_permission(dt, "write", dn, throw=True)
 
 	return frappe.get_doc(
 		{
