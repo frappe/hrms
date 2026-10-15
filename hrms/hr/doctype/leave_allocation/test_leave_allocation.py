@@ -9,15 +9,11 @@ from hrms.hr.doctype.leave_allocation.leave_allocation import (
 	BackDatedAllocationError,
 	OverAllocationError,
 )
-<<<<<<< HEAD
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import (
 	expire_allocation,
 	process_expired_allocation,
 )
-=======
-from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import process_expired_allocation
 from hrms.hr.doctype.leave_period.test_leave_period import create_leave_period
->>>>>>> 0cd31a6 (fix: use leave period for max leaves only when it contains the allocation)
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 
 
