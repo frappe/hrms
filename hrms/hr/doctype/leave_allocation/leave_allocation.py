@@ -53,22 +53,21 @@ class LeaveAllocation(Document):
 		self.validate_leave_allocation_days()
 
 	def validate_leave_allocation_days(self):
-		company = frappe.db.get_value("Employee", self.employee, "company")
-		leave_period = get_leave_period(self.from_date, self.to_date, company)
 		max_leaves_allowed = frappe.db.get_value("Leave Type", self.leave_type, "max_leaves_allowed")
-
 		if max_leaves_allowed > 0:
-			leave_allocated = 0
-			if leave_period:
-				leave_allocated = get_leave_allocation_for_period(
-					self.employee,
-					self.leave_type,
-					leave_period[0].from_date,
-					leave_period[0].to_date,
-					exclude_allocation=self.name,
-				)
-			leave_allocated += flt(self.new_leaves_allocated)
-			if leave_allocated > max_leaves_allowed:
+			from_date, to_date = self.from_date, self.to_date
+			company = frappe.db.get_value("Employee", self.employee, "company")
+			for period in get_leave_period(self.from_date, self.to_date, company) or []:
+				if period.from_date <= getdate(self.from_date) and getdate(self.to_date) <= period.to_date:
+					from_date, to_date = period.from_date, period.to_date
+			leave_allocated = get_leave_allocation_for_period(
+				self.employee,
+				self.leave_type,
+				from_date,
+				to_date,
+				exclude_allocation=self.name,
+			)
+			if leave_allocated + flt(self.new_leaves_allocated) > max_leaves_allowed:
 				frappe.throw(
 					_(
 						"Total allocated leaves are more than maximum allocation allowed for {0} leave type for employee {1} in the period"
