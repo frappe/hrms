@@ -17,14 +17,14 @@ from frappe.utils.telemetry import site_age
 APP = "hrms"
 ACTIVATION_WINDOW_DAYS = 30
 
+JOB_OFFER_STATUSES = {"Draft", "Ready to Send", "Awaiting Response", "Accepted", "Rejected", "Cancelled"}
+
 # The only string properties that may be sent, each restricted to the standard
 # Select options of the field it comes from. Anything else becomes "other".
 FIXED_VOCABULARIES = {
 	"reason": {"Work From Home", "On Duty"},
 	"log_type": {"IN", "OUT"},
 	"status": {
-		"Draft",
-		"Ready to Send",
 		"Awaiting Response",
 		"Accepted",
 		"Rejected",
@@ -34,6 +34,9 @@ FIXED_VOCABULARIES = {
 		"Cleared",
 	},
 	"payroll_frequency": {"Monthly", "Fortnightly", "Bimonthly", "Weekly", "Daily"},
+	"compensation_mode": {"Base and Variable", "CTC"},
+	"from_status": JOB_OFFER_STATUSES,
+	"to_status": JOB_OFFER_STATUSES,
 }
 
 
@@ -265,11 +268,46 @@ def on_job_offer_submit(doc, method=None):
 	capture(
 		"job_offer_made",
 		{
-			"status": doc.status,
+			"compensation_mode": doc.calculate_component_amount_from,
+			"has_salary_structure": bool(doc.salary_structure),
+			"component_count": len(
+				[row for row in doc.get("ctc_breakup") or [] if not row.get("is_summary")]
+			),
+			"has_leave_policy": bool(doc.leave_policy),
+			"has_holiday_list": bool(doc.holiday_list),
 			"has_terms": bool(doc.get("offer_terms")),
 			"from_template": bool(doc.job_offer_term_template),
+			"custom_print_format": bool(doc.offer_letter_print_format),
 		},
 	)
+	capture_first("first_job_offer_made")
+
+
+def on_job_offer_change(doc, method=None):
+	previous = doc.get_doc_before_save()
+	if not previous or previous.status == doc.status:
+		return
+
+	capture(
+		"job_offer_status_changed",
+		{
+			"from_status": previous.status,
+			"to_status": doc.status,
+			"days_since_offer": _days_since(doc.offer_date),
+		},
+	)
+
+
+def on_employee_from_job_offer(doc, method=None):
+	if not doc.get("job_offer"):
+		return
+
+	offer_date = frappe.db.get_value("Job Offer", doc.job_offer, "offer_date")
+	capture("employee_created_from_job_offer", {"days_since_offer": _days_since(offer_date)})
+
+
+def _days_since(date) -> int | None:
+	return date_diff(today(), date) if date else None
 
 
 def on_appraisal_submit(doc, method=None):

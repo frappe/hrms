@@ -117,9 +117,35 @@ frappe.ui.form.on("Job Offer", {
 	},
 
 	email_offer_letter: function (frm) {
+		capture_job_offer_event("offer_letter_email_opened", {
+			resend: frm.doc.status === "Awaiting Response",
+		});
 		email_offer_letter(frm);
 	},
+
+	on_tab_change: function (frm) {
+		capture_tab_view(frm);
+	},
 });
+
+function capture_job_offer_event(event, props) {
+	if (!frappe.telemetry?.enabled) return;
+	frappe.telemetry.capture(event, "hrms", props);
+}
+
+function capture_tab_view(frm) {
+	const tab = frm.get_active_tab()?.df?.fieldname;
+	const key = `${frm.docname}:${tab}`;
+	frm.viewed_tabs ??= new Set();
+	if (!tab || frm.viewed_tabs.has(key)) return;
+
+	frm.viewed_tabs.add(key);
+	capture_job_offer_event("job_offer_tab_viewed", {
+		tab,
+		is_new: frm.is_new(),
+		docstatus: frm.doc.docstatus,
+	});
+}
 
 function set_email_button_label(frm) {
 	const resend = frm.doc.status === "Awaiting Response";

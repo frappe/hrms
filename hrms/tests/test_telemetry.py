@@ -3,6 +3,7 @@ from unittest.mock import patch
 import frappe
 from frappe.utils import add_days, getdate
 
+from hrms.hr.doctype.job_offer.test_job_offer import add_offer_email, create_job_offer
 from hrms.telemetry import (
 	CONVERSION_EVENT,
 	FIRST_CAPTURE_MILESTONE,
@@ -13,6 +14,7 @@ from hrms.telemetry import (
 	on_appraisal_submit,
 	on_attendance_request_submit,
 	on_employee_checkin,
+	on_employee_from_job_offer,
 	on_expense_claim_submit,
 	on_interview_submit,
 	on_job_offer_submit,
@@ -277,7 +279,18 @@ class TestTelemetry(HRMSTestSuite):
 			),
 			(
 				on_job_offer_submit,
-				frappe._dict(status="Accepted", offer_terms=[{}], job_offer_term_template=None),
+				frappe._dict(
+					calculate_component_amount_from="CTC",
+					salary_structure="SS1",
+					ctc=1200000,
+					base=800000,
+					ctc_breakup=[{"is_summary": 0}, {"is_summary": 0}, {"is_summary": 1}],
+					leave_policy="LP1",
+					holiday_list=None,
+					offer_terms=[{}],
+					job_offer_term_template=None,
+					offer_letter_print_format="Job Offer Minimal",
+				),
 			),
 			(
 				on_appraisal_submit,
@@ -307,20 +320,79 @@ class TestTelemetry(HRMSTestSuite):
 			"latitude",
 			"longitude",
 			"device_id",
+			"ctc",
+			"base",
+			"salary_structure",
+			"leave_policy",
+			"offer_letter_print_format",
 		}
 		for event, props in self.captured:
 			self.assertFalse(forbidden & set(props), f"{event} leaks {forbidden & set(props)}")
 			for key, value in props.items():
 				if isinstance(value, str):
 					self.assertIn(
-						key, ("reason", "log_type", "status", "payroll_frequency"), f"{event}.{key}"
+						key,
+						("reason", "log_type", "status", "payroll_frequency", "compensation_mode"),
+						f"{event}.{key}",
 					)
 				else:
 					self.assertTrue(value is None or isinstance(value, bool | int | float), f"{event}.{key}")
 
 		self.assertEqual(self.events("attendance_request_submitted")[0]["reason"], "other")
-		self.assertEqual(self.events("job_offer_made")[0]["status"], "Accepted")
+		self.assertEqual(self.events("job_offer_made")[0]["compensation_mode"], "CTC")
+		self.assertEqual(self.events("job_offer_made")[0]["component_count"], 2)
 		self.assertEqual(self.events("employee_checkin")[0]["has_geolocation"], True)
+
+	def test_job_offer_status_changes_follow_the_offer_funnel(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		job_offer = create_job_offer(status="Draft", offer_date=add_days(FROZEN_TODAY, -2))
+		job_offer.save()
+		job_offer.submit()
+		add_offer_email(job_offer, "Sent")
+		job_offer.reload()
+		job_offer.status = "Accepted"
+		job_offer.save()
+
+		self.assertEqual(
+			self.events("job_offer_status_changed"),
+			[
+				{"from_status": "Draft", "to_status": "Ready to Send", "days_since_offer": 2},
+				{"from_status": "Ready to Send", "to_status": "Awaiting Response", "days_since_offer": 2},
+				{"from_status": "Awaiting Response", "to_status": "Accepted", "days_since_offer": 2},
+			],
+		)
+
+	def test_job_offer_save_without_status_change_sends_nothing(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		job_offer = create_job_offer()
+		job_offer.save()
+		job_offer.save()
+
+		self.assertEqual(self.events("job_offer_status_changed"), [])
+
+	def test_job_offer_made_fires_first_offer_milestone_once(self):
+		self.release_milestone("first_job_offer_made")
+		doc = frappe._dict(calculate_component_amount_from="Base and Variable")
+
+		on_job_offer_submit(doc)
+		on_job_offer_submit(doc)
+
+		self.assertEqual(len(self.events("job_offer_made")), 2)
+		self.assertEqual(len(self.events("first_job_offer_made")), 1)
+
+	def test_employee_from_job_offer_carries_days_since_offer(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		job_offer = create_job_offer(offer_date=add_days(FROZEN_TODAY, -5))
+		job_offer.save()
+
+		on_employee_from_job_offer(frappe._dict(job_offer=job_offer.name))
+
+		self.assertEqual(self.events("employee_created_from_job_offer"), [{"days_since_offer": 5}])
+
+	def test_employee_without_job_offer_sends_nothing(self):
+		on_employee_from_job_offer(frappe._dict(job_offer=None))
+
+		self.assertEqual(self.events("employee_created_from_job_offer"), [])
 
 	# ---- first-time milestones ----
 
