@@ -125,6 +125,9 @@ frappe.ui.form.on("Job Offer", {
 
 	on_tab_change: function (frm) {
 		capture_tab_view(frm);
+		if (frm.get_active_tab()?.df?.fieldname === "printing_tab") {
+			render_offer_letter_preview(frm);
+		}
 	},
 });
 
@@ -184,13 +187,13 @@ async function render_offer_letter_preview(frm) {
 	const field = frm.get_field("offer_letter_preview");
 	const $wrapper = field.$wrapper;
 	const $button = frm.get_field("email_offer_letter").$wrapper;
+	const request = ++offer_letter_preview_request;
 	if (!frm.doc.offer_letter_print_format || frm.doc.docstatus === 2) {
 		$button.detach();
 		$wrapper.empty();
 		return;
 	}
 
-	const request = ++offer_letter_preview_request;
 	const { message } = await frappe.call({
 		method: "frappe.www.printview.get_html_and_style",
 		args: {
@@ -454,11 +457,12 @@ function set_holiday_summary(frm) {
 		return;
 	}
 
+	const holiday_list = frm.doc.holiday_list;
 	frappe.call({
 		method: "hrms.hr.doctype.job_offer.job_offer.get_holiday_summary",
-		args: { holiday_list: frm.doc.holiday_list },
+		args: { holiday_list },
 		callback: function (r) {
-			if (r.message) frm.set_value(r.message);
+			if (r.message && frm.doc.holiday_list === holiday_list) frm.set_value(r.message);
 		},
 	});
 }

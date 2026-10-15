@@ -356,7 +356,7 @@ def get_breakup_rows(assignment, periods: int, total_ctc: float) -> list[dict]:
 		return []
 
 	gross = flt(assignment.annual_gross_earning) / periods
-	deductions = sum(flt(r.default_amount) for r in payable("deductions"))
+	deductions = sum(flt(r.default_amount) for r in payable("deductions") if not r.do_not_include_in_total)
 
 	breakup = [row(r.salary_component, flt(r.default_amount), 0) for r in earnings]
 	breakup.append(row(_("Gross Pay"), gross, 1))
@@ -469,12 +469,21 @@ def get_leave_allocations(leave_policy: str | None = None) -> list[dict]:
 	if not leave_policy:
 		return []
 
-	return frappe.get_all(
-		"Leave Policy Detail",
-		filters={"parent": leave_policy, "parenttype": "Leave Policy"},
-		fields=["leave_type", "annual_allocation"],
-		order_by="idx",
-	)
+	LeavePolicyDetail = frappe.qb.DocType("Leave Policy Detail")
+	LeaveType = frappe.qb.DocType("Leave Type")
+
+	return (
+		frappe.qb.from_(LeavePolicyDetail)
+		.join(LeaveType)
+		.on(LeavePolicyDetail.leave_type == LeaveType.name)
+		.select(LeavePolicyDetail.leave_type, LeavePolicyDetail.annual_allocation)
+		.where(
+			(LeavePolicyDetail.parent == leave_policy)
+			& (LeavePolicyDetail.parenttype == "Leave Policy")
+			& (LeaveType.is_lwp == 0)
+		)
+		.orderby(LeavePolicyDetail.idx)
+	).run(as_dict=True)
 
 
 @frappe.whitelist()

@@ -5,9 +5,9 @@ import frappe
 from frappe import _
 from frappe.model import numeric_fieldtypes
 from frappe.model.create_new import get_new_doc
+from frappe.model.document import Document
 from frappe.query_builder import DocType
 from frappe.query_builder.functions import Extract
-from frappe.model.document import Document
 from frappe.utils import (
 	ceil,
 	floor,
@@ -205,20 +205,32 @@ def solve_base_for_ctc(
 
 	low_probe, high_probe = scale / 2, scale
 	low_ctc, high_ctc = ctc_at(low_probe), ctc_at(high_probe)
-	slope = (high_ctc - low_ctc) / (high_probe - low_probe)
+	if high_ctc > low_ctc:
+		solved = _solve_on_line(ctc_at, target_ctc, (low_probe, low_ctc), (high_probe, high_ctc), tolerance)
+		return solved or _bisect_base_for_ctc(ctc_at, target_ctc, scale, tolerance)
 
-	if slope <= 0:
+	base, achieved = _bisect_base_for_ctc(ctc_at, target_ctc, scale, tolerance)
+	if abs(achieved - high_ctc) <= tolerance:
 		base = flt(low_probe, BASE_PRECISION)
 		return base, ctc_at(base)
 
-	intercept = low_ctc - slope * low_probe
-	candidate = flt((target_ctc - intercept) / slope, BASE_PRECISION)
-	if candidate >= 0:
-		achieved = ctc_at(candidate)
-		if abs(achieved - target_ctc) <= tolerance:
-			return candidate, achieved
+	solved = _solve_on_line(ctc_at, target_ctc, (base / 2, ctc_at(base / 2)), (base, achieved), tolerance)
+	return solved or (base, ctc_at(base))
 
-	return _bisect_base_for_ctc(ctc_at, target_ctc, scale, tolerance)
+
+def _solve_on_line(ctc_at, target_ctc: float, low: tuple, high: tuple, tolerance: float):
+	(low_base, low_ctc), (high_base, high_ctc) = low, high
+	slope = (high_ctc - low_ctc) / (high_base - low_base)
+	if slope <= 0:
+		return None
+
+	candidate = flt(low_base + (target_ctc - low_ctc) / slope, BASE_PRECISION)
+	if candidate < 0:
+		return None
+
+	achieved = ctc_at(candidate)
+	if abs(achieved - target_ctc) <= tolerance:
+		return candidate, achieved
 
 
 def _bisect_base_for_ctc(ctc_at, target_ctc: float, scale: float, tolerance: float) -> tuple[float, float]:

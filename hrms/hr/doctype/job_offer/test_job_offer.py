@@ -388,6 +388,45 @@ class TestJobOffer(HRMSTestSuite):
 
 		self.assertNotIn("JO Test PT", [row["fixed_components"] for row in details["components"]])
 
+	def test_take_home_ignores_deductions_not_included_in_total(self):
+		base = 50000
+		_make_component("JO Test Basic", "JOTB", "Earning", amount_based_on_formula=1, formula="base * 0.5")
+		_make_component(
+			"JO Test Memo Deduction",
+			"JOTMD",
+			"Deduction",
+			amount=500,
+			depends_on_payment_days=0,
+			do_not_include_in_total=1,
+		)
+		structure = make_salary_structure(
+			"Test Offer Memo Deduction Structure",
+			"Monthly",
+			currency="INR",
+			earnings=[
+				{
+					"salary_component": "JO Test Basic",
+					"abbr": "JOTB",
+					"amount_based_on_formula": 1,
+					"formula": "base * 0.5",
+				}
+			],
+			deductions=[
+				{
+					"salary_component": "JO Test Memo Deduction",
+					"abbr": "JOTMD",
+					"amount": 500,
+					"do_not_include_in_total": 1,
+				}
+			],
+		)
+		details = compute_from_base(structure.name, base)
+
+		summaries = summary_rows(details)
+		self.assertAlmostEqual(
+			summaries[TAKE_HOME]["per_cycle"], summaries["Gross Pay"]["per_cycle"], places=2
+		)
+
 	def test_gross_excludes_employer_contributions(self):
 		base = 50000
 		structure = make_capped_pf_structure("Test Offer Gross Structure")
@@ -551,6 +590,30 @@ class TestJobOffer(HRMSTestSuite):
 		self.assertAlmostEqual(details["ctc"], 312000, delta=1)
 		self.assertNotAlmostEqual(details["ctc"], 300500, delta=1)
 
+	def test_ctc_below_a_capped_probe_range_is_still_solved(self):
+		formula = "min(base * 3, 60000)"
+		_make_component("JO Test Capped", "JOTC", "Earning", amount_based_on_formula=1, formula=formula)
+		structure = make_salary_structure(
+			"Test Offer Capped Structure",
+			"Monthly",
+			currency="INR",
+			earnings=[
+				{
+					"salary_component": "JO Test Capped",
+					"abbr": "JOTC",
+					"amount_based_on_formula": 1,
+					"formula": formula,
+				}
+			],
+			deductions=[],
+		)
+
+		details = compute_from_ctc(structure.name, 540000)
+
+		self.assertFalse(details["ctc_adjusted"])
+		self.assertEqual(details["ctc"], 540000)
+		self.assertEqual(details["base"], 15000)
+
 	def test_base_independent_structure_does_not_divide_by_zero(self):
 		_make_component("JO Test Flat", "JOTF", "Earning")
 		structure = make_salary_structure(
@@ -657,6 +720,20 @@ class TestJobOffer(HRMSTestSuite):
 		offer.leave_policy = None
 		offer.save()
 		self.assertFalse(offer.leave_allocations)
+
+	def test_leave_allocations_skip_leave_without_pay(self):
+		if not frappe.db.exists("Leave Type", "_Test Offer LWP"):
+			frappe.get_doc(
+				{"doctype": "Leave Type", "leave_type_name": "_Test Offer LWP", "is_lwp": 1}
+			).insert()
+		policy = make_leave_policy(
+			"Test Offer LWP Policy", [("_Test Leave Type", 15), ("_Test Offer LWP", 10)]
+		)
+
+		self.assertEqual(
+			[(row.leave_type, row.annual_allocation) for row in get_leave_allocations(policy.name)],
+			[("_Test Leave Type", 15)],
+		)
 
 	def test_weekly_off_reads_the_days_not_the_holiday_list_field(self):
 		holiday_list = make_holiday_list("Test Offer Weekend List", weekly_offs=["Saturday", "Sunday"])
