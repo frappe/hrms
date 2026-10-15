@@ -1,0 +1,22 @@
+{
+ "action": "Create Entry",
+ "action_label": "Add Employee",
+ "creation": "2026-10-05 12:00:00.000000",
+ "description": "The people you manage, with their joining date, department and reporting manager. See [Employee](https://docs.frappe.io/hr/employee).",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "intro_video_url": "https://www.youtube.com/watch?v=Q6BIhSLj_08",
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-10-05 13:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "Create Employee",
+ "owner": "Administrator",
+ "reference_document": "Employee",
+ "show_form_tour": 0,
+ "show_full_form": 1,
+ "title": "Add your employees",
+ "validate_action": 1
+}

@@ -2,22 +2,36 @@ import frappe
 from frappe import _
 from frappe.utils.telemetry import capture
 
+from hrms.subscription_utils import is_new_hr_site, set_hrms_as_default_app
+
 
 def get_setup_stages(wizard_args=None):
 	if not frappe.conf.sk_hrms:
 		return []
 
+	tasks = [
+		{
+			"fn": capture_user_persona,
+			"args": persona_from_wizard_args(wizard_args) if wizard_args else None,
+			"fail_msg": _("Failed to personalize your setup"),
+		}
+	]
+
+	# frappe's own stage marks it complete before this task runs, so decide while building stages
+	if is_new_hr_site():
+		tasks.append(
+			{
+				"fn": set_hrms_as_default_app,
+				"args": None,
+				"fail_msg": _("Failed to personalize your setup"),
+			}
+		)
+
 	return [
 		{
 			"status": _("Personalizing your setup"),
 			"fail_msg": _("Failed to personalize your setup"),
-			"tasks": [
-				{
-					"fn": capture_user_persona,
-					"args": persona_from_wizard_args(wizard_args) if wizard_args else None,
-					"fail_msg": _("Failed to personalize your setup"),
-				}
-			],
+			"tasks": tasks,
 		}
 	]
 

@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Add Job Applicant",
+ "creation": "2026-10-05 12:00:00.000000",
+ "description": "Someone who applied for a job opening. Applications from the job portal arrive here. See [Job Applicant](https://docs.frappe.io/hr/job-applicant).",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "Create Job Applicant",
+ "owner": "Administrator",
+ "reference_document": "Job Applicant",
+ "show_form_tour": 0,
+ "show_full_form": 0,
+ "title": "Add an applicant",
+ "validate_action": 1
+}

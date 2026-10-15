@@ -3,6 +3,7 @@
  "allow_copy": 1,
  "creation": "2024-01-25 12:52:26.250137",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/salary-structure-assignment-tool",
  "engine": "InnoDB",
  "field_order": [
   "set_assignment_details_section",
@@ -145,9 +146,10 @@
   }
  ],
  "hide_toolbar": 1,
+ "icon": "users",
  "issingle": 1,
  "links": [],
- "modified": "2026-03-26 15:09:09.658299",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Bulk Salary Structure Assignment",

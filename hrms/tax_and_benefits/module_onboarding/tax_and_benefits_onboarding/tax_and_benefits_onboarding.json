@@ -1,0 +1,51 @@
+{
+ "allow_roles": [
+  {
+   "role": "HR Manager"
+  },
+  {
+   "role": "HR User"
+  }
+ ],
+ "creation": "2026-10-05 12:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Module Onboarding",
+ "idx": 0,
+ "is_complete": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Tax and Benefits",
+ "name": "Tax and Benefits Onboarding",
+ "owner": "Administrator",
+ "steps": [
+  {
+   "is_optional": 0,
+   "step": "Create Payroll Period"
+  },
+  {
+   "is_optional": 0,
+   "step": "Create Income Tax Slab"
+  },
+  {
+   "is_optional": 0,
+   "step": "Create Employee Tax Exemption Declaration"
+  },
+  {
+   "is_optional": 1,
+   "step": "Create Employee Tax Exemption Proof Submission"
+  },
+  {
+   "is_optional": 1,
+   "step": "Create Employee Benefit Application"
+  },
+  {
+   "is_optional": 1,
+   "step": "Create Gratuity Rule"
+  },
+  {
+   "is_optional": 1,
+   "step": "View Income Tax Computation"
+  }
+ ],
+ "title": "Deduct the right tax"
+}

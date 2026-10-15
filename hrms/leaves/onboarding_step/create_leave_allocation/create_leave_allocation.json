@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Allocate Leave",
+ "creation": "2026-10-05 12:00:00.000000",
+ "description": "The days an employee can take of a leave type in a period. See [Leave Allocation](https://docs.frappe.io/hr/leave-allocation).",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "Create Leave Allocation",
+ "owner": "Administrator",
+ "reference_document": "Leave Allocation",
+ "show_form_tour": 0,
+ "show_full_form": 1,
+ "title": "Give an employee leave",
+ "validate_action": 1
+}

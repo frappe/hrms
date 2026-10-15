@@ -4,6 +4,7 @@
  "autoname": "field:offer_term",
  "creation": "2015-03-05 13:00:30.900471",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/job-offer",
  "document_type": "Setup",
  "engine": "InnoDB",
  "field_order": [
@@ -19,8 +20,9 @@
    "unique": 1
   }
  ],
+ "icon": "file-text",
  "links": [],
- "modified": "2026-04-09 18:33:35.969104",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Offer Term",

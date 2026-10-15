@@ -1,0 +1,21 @@
+{
+ "action": "Create Entry",
+ "action_label": "Create Declaration",
+ "creation": "2026-10-05 12:00:00.000000",
+ "description": "The investments and expenses an employee plans to claim against tax. See [Employee Tax Exemption Declaration](https://docs.frappe.io/hr/employee-tax-exemption-declaration).",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "Create Employee Tax Exemption Declaration",
+ "owner": "Administrator",
+ "reference_document": "Employee Tax Exemption Declaration",
+ "show_form_tour": 0,
+ "show_full_form": 1,
+ "title": "Declare tax exemptions",
+ "validate_action": 1
+}

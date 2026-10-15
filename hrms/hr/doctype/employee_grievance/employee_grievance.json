@@ -201,10 +201,11 @@
    "reqd": 1
   }
  ],
+ "icon": "message-square-warning",
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-09-01 18:39:51.520758",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Grievance",

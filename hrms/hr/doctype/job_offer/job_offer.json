@@ -4,6 +4,7 @@
  "autoname": "HR-OFF-.YYYY.-.#####",
  "creation": "2015-03-04 14:20:17.662207",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/job-offer",
  "document_type": "Document",
  "engine": "InnoDB",
  "field_order": [
@@ -484,6 +485,7 @@
    "read_only": 1
   }
  ],
+ "icon": "handshake",
  "is_submittable": 1,
  "links": [],
  "modified": "2026-10-06 13:48:30.000000",

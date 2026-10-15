@@ -1,0 +1,21 @@
+{
+ "action": "Complete Onboarding",
+ "action_label": "Open Recruitment",
+ "creation": "2026-10-05 12:00:00.000000",
+ "description": "Open a job, add an applicant and make them an offer.",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-10-05 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module_onboarding": "Recruitment Onboarding",
+ "name": "Complete Recruitment Onboarding",
+ "owner": "Administrator",
+ "show_form_tour": 0,
+ "show_full_form": 0,
+ "title": "Hire your first employee",
+ "validate_action": 1
+}

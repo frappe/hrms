@@ -4,6 +4,7 @@
  "autoname": "HR-EMP-ONT-.#####",
  "creation": "2018-05-09 05:27:02.393377",
  "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/employee-onboarding",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -68,8 +69,9 @@
    "options": "Employee Boarding Activity"
   }
  ],
+ "icon": "clipboard-list",
  "links": [],
- "modified": "2026-09-01 18:39:51.520758",
+ "modified": "2026-10-05 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Onboarding Template",

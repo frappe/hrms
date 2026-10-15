@@ -1,0 +1,22 @@
+{
+ "action": "Create Entry",
+ "action_label": "Create Leave Type",
+ "creation": "2026-10-05 12:00:00.000000",
+ "description": "A kind of leave, such as casual or sick, and its rules. See [Leave Type](https://docs.frappe.io/hr/leave-type).",
+ "docstatus": 0,
+ "doctype": "Onboarding Step",
+ "idx": 0,
+ "intro_video_url": "https://www.youtube.com/watch?v=MbRXbB-Qdiw",
+ "is_complete": 0,
+ "is_single": 0,
+ "is_skipped": 0,
+ "modified": "2026-10-05 13:00:00.000000",
+ "modified_by": "Administrator",
+ "name": "Create Leave Type",
+ "owner": "Administrator",
+ "reference_document": "Leave Type",
+ "show_form_tour": 0,
+ "show_full_form": 1,
+ "title": "Add a leave type",
+ "validate_action": 1
+}
