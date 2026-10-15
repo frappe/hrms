@@ -148,9 +148,12 @@ def get_timeline_data(doctype: str, name: str) -> dict:
 	"""Return timeline for attendance"""
 	from frappe.desk.notifications import get_open_count
 
+	if doctype != "Employee":
+		frappe.throw(_("Timeline data is only available for Employee"))
+
 	out = {}
 
-	frappe.has_permission(doctype, "read", name, throw=True)
+	frappe.has_permission("Employee", "read", name, throw=True)
 	frappe.has_permission("Attendance", "read", throw=True)
 
 	open_count = get_open_count(doctype, name)
