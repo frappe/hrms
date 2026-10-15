@@ -92,7 +92,6 @@ frappe.ui.form.on("Job Offer", {
 		bind_regional_inputs(frm);
 		bind_grade_reselect(frm);
 		set_email_button_label(frm);
-		add_email_toolbar_button(frm);
 		render_offer_letter_preview(frm);
 
 		if (
@@ -117,18 +116,9 @@ frappe.ui.form.on("Job Offer", {
 		set_email_button_label(frm);
 	},
 
-	before_save: function (frm) {
-		frm.tab_before_save = frm.get_active_tab()?.df?.fieldname;
-	},
-
-	after_save: function (frm) {
-		if (frm.tab_before_save) frm.layout.select_tab(frm.tab_before_save);
-	},
-
 	email_offer_letter: function (frm) {
 		capture_job_offer_event("offer_letter_email_opened", {
 			resend: frm.doc.status === "Awaiting Response",
-			source: "form",
 		});
 		email_offer_letter(frm);
 	},
@@ -158,25 +148,6 @@ function capture_tab_view(frm) {
 		is_new: frm.is_new(),
 		docstatus: frm.doc.docstatus,
 	});
-}
-
-function add_email_toolbar_button(frm) {
-	if (
-		frm.doc.docstatus !== 1 ||
-		!["Ready to Send", "Awaiting Response"].includes(frm.doc.status)
-	) {
-		return;
-	}
-
-	const resend = frm.doc.status === "Awaiting Response";
-	const button = frm.add_custom_button(
-		resend ? __("Resend Offer Letter") : __("Email Offer Letter"),
-		() => {
-			capture_job_offer_event("offer_letter_email_opened", { resend, source: "toolbar" });
-			email_offer_letter(frm);
-		},
-	);
-	if (!resend) button.removeClass("btn-default").addClass("btn-primary");
 }
 
 function set_email_button_label(frm) {
