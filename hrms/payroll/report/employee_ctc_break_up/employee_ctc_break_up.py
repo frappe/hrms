@@ -128,7 +128,7 @@ class SalaryBreakupReport:
 				"component_type": "employer_contributions",
 			}
 			for component in evaluated_components["employer_contributions"]
-			if not component.statistical_component
+			if not component.statistical_component and component.condition_met
 		]
 
 	def calculate_yearly_amounts_and_percent_of_ctc(self):

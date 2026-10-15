@@ -47,7 +47,7 @@ from hrms.payroll.doctype.salary_slip.salary_slip import (
 	make_salary_slip_from_timesheet,
 )
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
-from hrms.tests.test_utils import get_email_by_subject, get_first_sunday
+from hrms.tests.test_utils import add_date_to_holiday_list, get_email_by_subject, get_first_sunday
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -537,6 +537,171 @@ class TestSalarySlip(HRMSTestSuite):
 		self.assertEqual(ss.leave_without_pay, 10)
 		self.assertEqual(ss.payment_days, 17)
 
+	@HRMSTestSuite.change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
+	def test_component_condition_based_on_leave_without_pay(self):
+		"""A condition on a slip value (leave_without_pay) is false in the Salary Structure
+		Assignment's full-cycle context, so the slip must evaluate it with its own values."""
+		from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+			create_holiday_list_assignment,
+		)
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+		from hrms.payroll.report.employee_ctc_break_up.employee_ctc_break_up import SalaryBreakupReport
+
+		holiday_list = make_holiday_list("Test LWP Condition Holiday List", "2024-01-01", "2024-12-31")
+		make_salary_component(
+			[
+				{"salary_component": "LWP Cond Basic", "abbr": "LCB", "type": "Earning"},
+				{
+					"salary_component": "LWP Cond Bonus",
+					"abbr": "LCBN",
+					"type": "Earning",
+					"depends_on_payment_days": 0,
+				},
+				{
+					"salary_component": "LWP Cond Accrual",
+					"abbr": "LCA",
+					"type": "Earning",
+					"accrual_component": 1,
+				},
+				{
+					"salary_component": "LWP Cond Fixed",
+					"abbr": "LCF",
+					"type": "Deduction",
+					"depends_on_payment_days": 0,
+				},
+				{
+					"salary_component": "LWP Cond Formula",
+					"abbr": "LCFM",
+					"type": "Deduction",
+					"depends_on_payment_days": 0,
+				},
+				{
+					"salary_component": "LWP Cond Basic Share",
+					"abbr": "LCBS",
+					"type": "Deduction",
+					"depends_on_payment_days": 0,
+				},
+				{
+					"salary_component": "LWP Cond Employer",
+					"abbr": "LCE",
+					"type": "Employer Contribution",
+				},
+			],
+			test_tax=False,
+			company_list=["_Test Company"],
+		)
+		earnings = [
+			{
+				"salary_component": "LWP Cond Basic",
+				"abbr": "LCB",
+				"amount_based_on_formula": 1,
+				"formula": "base",
+			},
+			{
+				"salary_component": "LWP Cond Accrual",
+				"abbr": "LCA",
+				"condition": "leave_without_pay == 0",
+				"amount": 1000,
+			},
+			{
+				"salary_component": "LWP Cond Bonus",
+				"abbr": "LCBN",
+				"condition": "leave_without_pay > 0",
+				"amount_based_on_formula": 1,
+				"formula": "LCB * 0.1 + 500",
+			},
+		]
+		deductions = [
+			{
+				"salary_component": "LWP Cond Fixed",
+				"abbr": "LCF",
+				"condition": "leave_without_pay > 0",
+				"amount": 500,
+			},
+			{
+				"salary_component": "LWP Cond Formula",
+				"abbr": "LCFM",
+				"condition": "leave_without_pay > 0",
+				"amount_based_on_formula": 1,
+				"formula": "leave_without_pay * 100",
+			},
+			{
+				"salary_component": "LWP Cond Basic Share",
+				"abbr": "LCBS",
+				"condition": "leave_without_pay > 0",
+				"amount_based_on_formula": 1,
+				"formula": "LCB * 0.1",
+			},
+		]
+		employer_contributions = [
+			{
+				"salary_component": "LWP Cond Employer",
+				"abbr": "LCE",
+				"condition": "leave_without_pay > 0",
+				"amount": 300,
+			},
+		]
+
+		def make_slip(email, with_lwp):
+			emp_id = make_employee(email, holiday_list=holiday_list, company="_Test Company")
+			create_holiday_list_assignment("Employee", emp_id, holiday_list)
+			if with_lwp:
+				make_leave_application(emp_id, "2024-07-10", "2024-07-13", "Leave Without Pay")
+
+			structure = make_salary_structure(
+				"Test LWP Condition Structure",
+				"Monthly",
+				employee=emp_id,
+				company="_Test Company",
+				from_date="2024-07-01",
+				base=30000,
+				earnings=earnings,
+				deductions=deductions,
+				other_details={"employer_contributions": employer_contributions},
+			)
+			ss = make_salary_slip(structure.name, employee=emp_id, posting_date="2024-07-01")
+			ss.insert()
+			return ss
+
+		ss = make_slip("test_lwp_condition@salary.com", with_lwp=True)
+		self.assertEqual(ss.leave_without_pay, 4)
+		deductions_by_component = {d.salary_component: d.amount for d in ss.deductions}
+		self.assertEqual(deductions_by_component.get("LWP Cond Fixed"), 500)
+		self.assertEqual(deductions_by_component.get("LWP Cond Formula"), 400)
+		basic = next(d for d in ss.earnings if d.salary_component == "LWP Cond Basic")
+		basic_share = next(d for d in ss.deductions if d.salary_component == "LWP Cond Basic Share")
+		self.assertEqual(basic_share.amount, flt(basic.amount * 0.1, 2))
+		self.assertEqual(basic_share.default_amount, 3000)
+		bonus = next(d for d in ss.earnings if d.salary_component == "LWP Cond Bonus")
+		self.assertEqual(bonus.amount, flt(basic.amount * 0.1 + 500, 2))
+		self.assertEqual(bonus.default_amount, 3500)
+		preview = make_salary_slip(
+			"Test LWP Condition Structure", employee=ss.employee, posting_date="2024-07-01"
+		)
+		preview_bonus = next(d for d in preview.earnings if d.salary_component == "LWP Cond Bonus")
+		self.assertEqual(preview_bonus.default_amount, 3500)
+		self.assertIn("LWP Cond Employer", [d.salary_component for d in ss.employer_contributions])
+		# condition false on the slip, so the accrual must not be recorded
+		self.assertNotIn("LWP Cond Accrual", [d.salary_component for d in ss.accrued_benefits])
+
+		ss = make_slip("test_no_lwp_condition@salary.com", with_lwp=False)
+		self.assertEqual(ss.leave_without_pay, 0)
+		self.assertNotIn("LWP Cond Fixed", [d.salary_component for d in ss.deductions])
+		self.assertNotIn("LWP Cond Formula", [d.salary_component for d in ss.deductions])
+		self.assertIn("LWP Cond Accrual", [d.salary_component for d in ss.accrued_benefits])
+		self.assertNotIn("LWP Cond Employer", [d.salary_component for d in ss.employer_contributions])
+
+		frappe.flags.posting_date = getdate("2024-07-01")
+		self.addCleanup(frappe.flags.pop, "posting_date", None)
+		report = SalaryBreakupReport(ss.employee, ss._salary_structure_assignment.name)
+		report.get_data()
+		self.assertFalse(
+			any(
+				"LWP Cond Employer" in c.get("salary_component")
+				for c in report.employer_contribution_components
+			)
+		)
+
 	@HRMSTestSuite.change_settings("Payroll Settings", {"payroll_based_on": "Attendance"})
 	def test_payment_days_in_salary_slip_based_on_timesheet(self):
 		from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet
@@ -706,6 +871,153 @@ class TestSalarySlip(HRMSTestSuite):
 		days_in_month = get_no_of_days()[0]
 		self.assertEqual(ss.total_working_days, days_in_month - sundays_before_today)
 		self.assertEqual(ss.payment_days, days_in_month - sundays_before_today)
+
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings", {"include_holidays_in_total_working_days": 0, "payroll_based_on": "Leave"}
+	)
+	def test_salary_slip_with_half_day_holiday(self):
+		"""Tests that a holiday marked as half day is counted as half a working day"""
+		no_of_days = get_no_of_days()
+		emp_id, _half_day_holiday = setup_employee_with_half_day_holiday(
+			"Test Half Day Holiday List", "test_half_day_holiday@salary.com"
+		)
+
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test Salary Slip With Half Day Holiday")
+
+		# weekly offs are excluded in full, the half day holiday is excluded by half only
+		expected_working_days = no_of_days[0] - no_of_days[1] - 0.5
+		self.assertEqual(ss.total_working_days, expected_working_days)
+		self.assertEqual(ss.payment_days, expected_working_days)
+
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings", {"include_holidays_in_total_working_days": 0, "payroll_based_on": "Leave"}
+	)
+	def test_lwp_on_half_day_holiday(self):
+		"""Tests that leave without pay on a half day holiday is unpaid for half the day only"""
+		no_of_days = get_no_of_days()
+		emp_id, half_day_holiday = setup_employee_with_half_day_holiday(
+			"Test LWP Half Day Holiday List", "test_lwp_on_half_day_holiday@salary.com"
+		)
+		frappe.db.set_value("Leave Type", "Leave Without Pay", "include_holiday", 0)
+
+		# leave on the half day holiday and on the working day after it
+		make_leave_application(emp_id, half_day_holiday, add_days(half_day_holiday, 1), "Leave Without Pay")
+
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test LWP On Half Day Holiday")
+
+		# 0.5 for the half day holiday + 1 for the full working day
+		expected_working_days = no_of_days[0] - no_of_days[1] - 0.5
+		self.assertEqual(ss.leave_without_pay, 1.5)
+		self.assertEqual(ss.total_working_days, expected_working_days)
+		self.assertEqual(ss.payment_days, expected_working_days - 1.5)
+
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings",
+		{
+			"include_holidays_in_total_working_days": 0,
+			"payroll_based_on": "Attendance",
+			"consider_unmarked_attendance_as": "Present",
+		},
+	)
+	def test_absent_on_half_day_holiday(self):
+		"""Tests that being absent on a half day holiday deducts half a day"""
+		no_of_days = get_no_of_days()
+		emp_id, half_day_holiday = setup_employee_with_half_day_holiday(
+			"Test Absent Half Day Holiday List", "test_absent_on_half_day_holiday@salary.com"
+		)
+
+		mark_attendance(emp_id, half_day_holiday, "Absent", ignore_validate=True)
+
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test Absent On Half Day Holiday")
+
+		expected_working_days = no_of_days[0] - no_of_days[1] - 0.5
+		self.assertEqual(ss.absent_days, 0.5)
+		self.assertEqual(ss.total_working_days, expected_working_days)
+		self.assertEqual(ss.payment_days, expected_working_days - 0.5)
+
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings",
+		{
+			"include_holidays_in_total_working_days": 0,
+			"payroll_based_on": "Attendance",
+			"consider_unmarked_attendance_as": "Absent",
+		},
+	)
+	def test_marked_attendance_on_half_day_holiday_with_unmarked_days_as_absent(self):
+		"""Tests that attendance marked on a half day holiday accounts for half a working day"""
+		no_of_days = get_no_of_days()
+		emp_id, half_day_holiday = setup_employee_with_half_day_holiday(
+			"Test Marked Half Day Holiday List", "test_marked_on_half_day_holiday@salary.com"
+		)
+
+		# only the half day holiday is marked, every other working day stays unmarked
+		mark_attendance(emp_id, half_day_holiday, "Present", ignore_validate=True)
+
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test Marked Attendance On Half Day Holiday")
+
+		# the half day holiday is the only day worked, and it is worth half a day
+		expected_working_days = no_of_days[0] - no_of_days[1] - 0.5
+		self.assertEqual(ss.total_working_days, expected_working_days)
+		self.assertEqual(ss.absent_days, expected_working_days - 0.5)
+		self.assertEqual(ss.payment_days, 0.5)
+
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings",
+		{
+			"include_holidays_in_total_working_days": 0,
+			"payroll_based_on": "Attendance",
+			"consider_unmarked_attendance_as": "Present",
+			"daily_wages_fraction_for_half_day": 0.5,
+		},
+	)
+	def test_half_day_absent_on_half_day_holiday(self):
+		"""Tests that being absent for the working half of a half day holiday deducts half a day"""
+		no_of_days = get_no_of_days()
+		emp_id, half_day_holiday = setup_employee_with_half_day_holiday(
+			"Test Half Absent Half Day Holiday List", "test_half_absent_on_half_day_holiday@salary.com"
+		)
+
+		mark_attendance(emp_id, half_day_holiday, "Half Day", ignore_validate=True, half_day_status="Absent")
+
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test Half Absent On Half Day Holiday")
+
+		expected_working_days = no_of_days[0] - no_of_days[1] - 0.5
+		self.assertEqual(ss.absent_days, 0.5)
+		self.assertEqual(ss.total_working_days, expected_working_days)
+		self.assertEqual(ss.payment_days, expected_working_days - 0.5)
+
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings",
+		{
+			"include_holidays_in_total_working_days": 0,
+			"payroll_based_on": "Attendance",
+			"consider_unmarked_attendance_as": "Present",
+			"daily_wages_fraction_for_half_day": 0.5,
+		},
+	)
+	def test_half_day_lwp_on_half_day_holiday(self):
+		"""Tests that a half day leave without pay on a half day holiday is unpaid for half a day"""
+		no_of_days = get_no_of_days()
+		emp_id, half_day_holiday = setup_employee_with_half_day_holiday(
+			"Test Half LWP Half Day Holiday List", "test_half_lwp_on_half_day_holiday@salary.com"
+		)
+		frappe.db.set_value("Leave Type", "Leave Without Pay", "include_holiday", 0)
+
+		mark_attendance(
+			emp_id,
+			half_day_holiday,
+			"Half Day",
+			leave_type="Leave Without Pay",
+			ignore_validate=True,
+			half_day_status="Present",
+		)
+
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test Half LWP On Half Day Holiday")
+
+		expected_working_days = no_of_days[0] - no_of_days[1] - 0.5
+		self.assertEqual(ss.leave_without_pay, 0.5)
+		self.assertEqual(ss.total_working_days, expected_working_days)
+		self.assertEqual(ss.payment_days, expected_working_days - 0.5)
 
 	@HRMSTestSuite.change_settings(
 		"Payroll Settings",
@@ -2852,6 +3164,31 @@ def make_payroll_period(company=None):
 
 		if not payroll_period:
 			create_payroll_period(company=company, name=company_based_payroll_period[company])
+
+
+def setup_employee_with_half_day_holiday(list_name: str, employee_email: str) -> tuple[str, str]:
+	"""Creates a holiday list with weekly offs and one half day holiday, assigned to a new employee.
+
+	Returns the employee and the half day holiday date."""
+	from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+		create_holiday_list_assignment,
+	)
+
+	holiday_list = make_holiday_list(list_name)
+	# the day after the first weekly off, so that it does not fall on one
+	half_day_holiday = add_days(get_first_sunday(holiday_list), 1)
+	add_date_to_holiday_list(half_day_holiday, holiday_list, is_half_day=1)
+
+	emp_id = make_employee(
+		employee_email,
+		relieving_date=None,
+		status="Active",
+		company="_Test Company",
+		holiday_list=holiday_list,
+	)
+	create_holiday_list_assignment("Employee", emp_id, holiday_list)
+
+	return emp_id, half_day_holiday
 
 
 def make_holiday_list(

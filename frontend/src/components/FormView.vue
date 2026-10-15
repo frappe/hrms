@@ -336,6 +336,7 @@ import WorkflowActionSheet from "@/components/WorkflowActionSheet.vue"
 import { FileAttachment, guessStatusColor } from "@/composables"
 import useWorkflow from "@/composables/workflow"
 import { getCompanyCurrency } from "@/data/currencies"
+import { getLeaveStatus } from "@/data/leaves"
 import { formatCurrency } from "@/utils/formatters"
 import { useDownloadPDF } from "@/utils/commonUtils"
 
@@ -420,6 +421,8 @@ const status = computed(() => {
 		const stateField = workflow.value.getWorkflowStateField()
 		if (stateField) return formModel.value[stateField]
 	}
+
+	if (props.doctype === "Leave Application") return getLeaveStatus(formModel.value)
 
 	return formModel.value.status || formModel.value.approval_status
 })
