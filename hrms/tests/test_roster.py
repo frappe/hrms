@@ -2,6 +2,8 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, getdate
 
+from erpnext.setup.doctype.employee.test_employee import make_employee
+
 from hrms.api.roster import get_shifts, insert_shift
 
 
@@ -79,6 +81,34 @@ class TestRoster(FrappeTestCase):
 			},
 		)
 		self.assertTrue(new_assignment)
+
+	def test_insert_shift_for_another_employee(self):
+		employee = create_employee(f"_Test Roster Other {frappe.generate_hash(length=8)}")
+		shift_type = create_shift_type(
+			f"_Test Roster Shift {frappe.generate_hash(length=8)}",
+			start_time="08:00:00",
+			end_time="17:00:00",
+			color="Blue",
+		)
+		create_shift_assignment(shift_type.name, employee.name, "2026-07-01")
+
+		user = "test_roster_user@example.com"
+		make_employee(user)
+
+		frappe.set_user(user)
+		try:
+			self.assertRaises(
+				frappe.PermissionError,
+				insert_shift,
+				employee=employee.name,
+				company="_Test Company",
+				shift_type=shift_type.name,
+				start_date="2026-07-02",
+				end_date="2026-07-05",
+				status="Active",
+			)
+		finally:
+			frappe.set_user("Administrator")
 
 
 def create_employee(employee_name: str):
