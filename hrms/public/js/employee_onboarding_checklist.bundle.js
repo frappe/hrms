@@ -2,8 +2,6 @@ import { get_action_handler } from "./onboarding_actions.js";
 
 frappe.provide("hrms.ui");
 
-const ROW_CLICK_KEY = "employee_onboarding_checklist_row_click";
-
 const STATUS = { "In Progress": "in_progress", Stuck: "stuck" };
 
 const ROW_STATUS = { in_progress: "In Progress", stuck: "Stuck" };
@@ -13,7 +11,6 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 		this.frm = frm;
 		this.checklist = new frappe.ui.Checklist({
 			title: __("Onboarding Checklist"),
-			row_click: get_row_click(),
 			on_skip: (item) => this.call("skip_activity", { row: item.id }),
 			on_unskip: (item) => this.call("unskip_activity", { row: item.id }),
 			on_assign: (item, user) => this.call("assign_activity", { row: item.id, user }),
@@ -31,7 +28,7 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 		const $wrapper = this.frm.fields_dict.onboarding_checklist.$wrapper;
 		if (!$.contains($wrapper[0], this.checklist.el)) {
 			this.$hint = $('<div class="eoc-template-hint"></div>');
-			$wrapper.empty().append(this.make_demo_switch(), this.$hint, this.checklist.$el);
+			$wrapper.empty().append(this.$hint, this.checklist.$el);
 		}
 		this.render_template_hint();
 		this.checklist.set_items((this.frm.doc.activities || []).map((row) => this.get_item(row)));
@@ -54,25 +51,6 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 				}),
 			}),
 		);
-	}
-
-	// Demo only: flips the checklist between action buttons and clickable rows.
-	make_demo_switch() {
-		const tabs = new frappe.ui.TabButtons({
-			label: __("Checklist style"),
-			options: [
-				{ label: __("Buttons"), value: "buttons" },
-				{ label: __("Clickable rows"), value: "rows" },
-			],
-			value: get_row_click() ? "rows" : "buttons",
-			on_change: (value) => {
-				try {
-					localStorage.setItem(ROW_CLICK_KEY, value === "rows" ? "1" : "0");
-				} catch (e) {}
-				this.checklist.set_row_click(value === "rows");
-			},
-		});
-		return $('<div class="eoc-demo-switch"></div>').append(tabs.$el);
 	}
 
 	get_item(row) {
@@ -122,11 +100,3 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 		if (this.frm.is_new() || this.frm.is_dirty()) await this.frm.save();
 	}
 };
-
-function get_row_click() {
-	try {
-		return localStorage.getItem(ROW_CLICK_KEY) === "1";
-	} catch (e) {
-		return false;
-	}
-}

@@ -5,12 +5,6 @@
 	border-radius: var(--radius-md);
 }
 
-.eoc-demo-switch {
-	display: flex;
-	justify-content: flex-end;
-	margin-bottom: calc(var(--spacing) * 2);
-}
-
 .eoc-template-hint:not(:empty) {
 	margin-bottom: calc(var(--spacing) * 3);
 }
