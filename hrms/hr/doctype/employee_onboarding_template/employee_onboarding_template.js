@@ -11,4 +11,17 @@ frappe.ui.form.on("Employee Onboarding Template", {
 			};
 		});
 	},
+
+	onload: function (frm) {
+		if (!frm.is_new() || frm.doc.activities?.length) return;
+
+		frappe
+			.xcall(
+				"hrms.hr.doctype.employee_onboarding_template.employee_onboarding_template.get_standard_activities",
+			)
+			.then((activities) => {
+				activities.forEach((activity) => frm.add_child("activities", activity));
+				frm.refresh_field("activities");
+			});
+	},
 });

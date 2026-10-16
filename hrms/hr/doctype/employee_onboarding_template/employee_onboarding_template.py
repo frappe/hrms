@@ -7,6 +7,7 @@ from frappe import _
 from frappe.model.document import Document
 
 from hrms.hr.doctype.employee_onboarding.onboarding_activities import (
+	STANDARD_ACTIVITIES,
 	add_standard_activities,
 	set_action_defaults,
 	validate_unique_actions,
@@ -55,6 +56,12 @@ class EmployeeOnboardingTemplate(Document):
 				"is_default",
 				0,
 			)
+
+
+@frappe.whitelist()
+def get_standard_activities() -> list[dict]:
+	frappe.has_permission("Employee Onboarding Template", "create", throw=True)
+	return [dict(activity) for activity in STANDARD_ACTIVITIES]
 
 
 def create_default_template() -> None:

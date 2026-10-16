@@ -6,6 +6,9 @@ from frappe.utils import add_days, getdate
 
 from hrms.hr.doctype.employee_onboarding.employee_onboarding import make_employee, split_full_name
 from hrms.hr.doctype.employee_onboarding.onboarding_activities import STANDARD_ACTIVITIES
+from hrms.hr.doctype.employee_onboarding_template.employee_onboarding_template import (
+	get_standard_activities,
+)
 from hrms.hr.doctype.job_offer.job_offer import make_employee_onboarding
 from hrms.hr.doctype.job_offer.test_job_offer import create_job_offer
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
@@ -73,6 +76,12 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		template.activities = [row for row in template.activities if row.action != "Appointment Letter"]
 		template.save()
 		self.assertNotIn("Appointment Letter", [row.activity_name for row in template.activities])
+
+	def test_template_prefilled_by_the_form_keeps_one_of_each_standard_activity(self):
+		template = make_template("_Test Prefilled Template", get_standard_activities())
+
+		standard = [activity["activity_name"] for activity in STANDARD_ACTIVITIES]
+		self.assertEqual([row.activity_name for row in template.activities], standard)
 
 	def test_template_rejects_a_duplicate_action(self):
 		template = make_template("_Test Duplicate Template")
