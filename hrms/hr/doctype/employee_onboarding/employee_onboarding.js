@@ -77,21 +77,6 @@ frappe.ui.form.on("Employee Onboarding", {
 				frm.trigger("render_checklist");
 			},
 		});
-
-		if (frm.doc.documents?.length) return;
-
-		frappe.db
-			.get_doc("Employee Onboarding Template", frm.doc.employee_onboarding_template)
-			.then((template) => {
-				(template.required_documents || []).forEach((row) =>
-					frm.add_child("documents", {
-						document_name: row.document_name,
-						required: row.required,
-						description: row.description,
-					}),
-				);
-				refresh_field("documents");
-			});
 	},
 
 	job_applicant: function (frm) {
