@@ -227,6 +227,7 @@ doc_events = {
 		"after_insert": [
 			"hrms.overrides.employee_master.update_job_applicant_and_offer",
 			"hrms.telemetry.on_milestone_insert",
+			"hrms.telemetry.on_employee_from_job_offer",
 		],
 		"on_trash": "hrms.overrides.employee_master.update_employee_transfer",
 		"after_delete": "hrms.overrides.employee_master.publish_update",
@@ -240,7 +241,10 @@ doc_events = {
 	"Shift Request": {"on_submit": "hrms.telemetry.on_shift_request_submit"},
 	"Employee Checkin": {"after_insert": "hrms.telemetry.on_employee_checkin"},
 	"Payroll Entry": {"on_submit": "hrms.telemetry.on_payroll_entry_submit"},
-	"Job Offer": {"on_submit": "hrms.telemetry.on_job_offer_submit"},
+	"Job Offer": {
+		"on_submit": "hrms.telemetry.on_job_offer_submit",
+		"on_change": "hrms.telemetry.on_job_offer_change",
+	},
 	"Appraisal": {"on_submit": "hrms.telemetry.on_appraisal_submit"},
 	"Interview": {"on_submit": "hrms.telemetry.on_interview_submit"},
 	# ---- Activation telemetry: post-install setup funnel (first-time milestones) ----
