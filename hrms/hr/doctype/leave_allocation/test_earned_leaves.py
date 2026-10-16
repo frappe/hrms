@@ -1042,13 +1042,11 @@ class TestLeaveAllocation(HRMSTestSuite):
 		self.assertEqual(total_leaves_allocated, 2)
 		frappe.db.set_value("Leave Type", self.leave_type, "max_leaves_allowed", 2)
 		frappe.flags.current_date = add_months(get_year_start(getdate()), 1)
-		existing_logs = self.get_leave_allocation_error_logs()
+		error_logs = frappe.get_all("Error Log", {"reference_doctype": "Leave Allocation"}, limit=0)
 		allocate_earned_leaves()
-		self.assertTrue(self.get_leave_allocation_error_logs() - existing_logs)
-
-	def get_leave_allocation_error_logs(self) -> set[str]:
-		return set(
-			frappe.get_all("Error Log", filters={"reference_doctype": "Leave Allocation"}, pluck="name")
+		self.assertGreater(
+			len(frappe.get_all("Error Log", {"reference_doctype": "Leave Allocation"}, limit=0)),
+			len(error_logs),
 		)
 
 	def test_send_email_for_failed_allocations(self):
