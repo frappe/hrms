@@ -273,9 +273,14 @@ function bind_grade_reselect(frm) {
 function set_base_from_grade(frm, grade) {
 	if (frm.doc.calculate_component_amount_from === "CTC") return;
 
+	const requested_base = frm.doc.base;
 	frappe.db.get_value("Employee Grade", grade, "default_base_pay").then((r) => {
+		const inputs_unchanged =
+			frm.doc.grade === grade &&
+			frm.doc.calculate_component_amount_from !== "CTC" &&
+			frm.doc.base === requested_base;
 		const base = r.message && r.message.default_base_pay;
-		if (base && base !== frm.doc.base) frm.set_value("base", base);
+		if (inputs_unchanged && base && base !== frm.doc.base) frm.set_value("base", base);
 	});
 }
 
