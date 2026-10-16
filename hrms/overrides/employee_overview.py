@@ -10,6 +10,7 @@ from erpnext.selling.doctype.customer.customer_overview import (
 	permitted,
 	resolve_period,
 )
+from erpnext.setup.utils import get_exchange_rate
 
 ATTENDANCE_STATUS = ("Present", "Work From Home", "Half Day", "On Leave", "Absent")
 UNPAID_CLAIM_STATUS = ("Unpaid", "Partially Paid")
@@ -39,10 +40,10 @@ def get_employee_overview(employee: str, period: str = "Current Fiscal Year"):
 	}
 
 	for key, fn, args in (
-		("pay", pay, (employee, from_date, to_date)),
+		("pay", pay, (employee, company, from_date, to_date)),
 		("attendance", attendance, (employee, from_date, min(to_date, as_of))),
 		("leave", leave_balances, (employee, as_of)),
-		("pipeline", pipeline, (employee, payload["currency"])),
+		("pipeline", pipeline, (employee, company, payload["currency"])),
 	):
 		try:
 			payload[key] = fn(*args)
@@ -64,11 +65,11 @@ def payroll_access():
 	return bool(frappe.has_permission("Salary Slip", "read"))
 
 
-def slip_totals(employee, from_date, to_date):
+def slip_totals(employee, company, from_date, to_date):
 	ss = DocType("Salary Slip")
 	row = permitted(
 		"Salary Slip",
-		slip_filters(employee, from_date, to_date),
+		slip_filters(employee, company, from_date, to_date),
 		[
 			Coalesce(Sum(ss.base_gross_pay), 0).as_("gross"),
 			Coalesce(Sum(ss.base_net_pay), 0).as_("net"),
@@ -78,27 +79,30 @@ def slip_totals(employee, from_date, to_date):
 	return flt(row.gross), flt(row.net), cint(row.count)
 
 
-def slip_filters(employee, from_date, to_date):
+def slip_filters(employee, company, from_date, to_date):
 	return [
 		["docstatus", "=", 1],
 		["employee", "=", employee],
+		["company", "=", company],
 		["start_date", ">=", from_date],
 		["start_date", "<=", to_date],
 	]
 
 
-def pay(employee, from_date, to_date):
+def pay(employee, company, from_date, to_date):
 	if not payroll_access():
 		return None
 
-	gross, net, count = slip_totals(employee, from_date, to_date)
-	prev_gross, prev_net, _count = slip_totals(employee, add_months(from_date, -12), add_months(to_date, -12))
+	gross, net, count = slip_totals(employee, company, from_date, to_date)
+	prev_gross, prev_net, _count = slip_totals(
+		employee, company, add_months(from_date, -12), add_months(to_date, -12)
+	)
 
 	ss = DocType("Salary Slip")
 	by_month = {}
 	for row in permitted(
 		"Salary Slip",
-		slip_filters(employee, from_date, to_date),
+		slip_filters(employee, company, from_date, to_date),
 		[
 			"start_date",
 			Sum(ss.base_gross_pay).as_("gross"),
@@ -138,6 +142,7 @@ def attendance(employee, from_date, to_date):
 
 	att = DocType("Attendance")
 	counts = dict.fromkeys(ATTENDANCE_STATUS, 0)
+	half_days_absent = 0
 	for row in permitted(
 		"Attendance",
 		[
@@ -146,13 +151,15 @@ def attendance(employee, from_date, to_date):
 			["attendance_date", ">=", from_date],
 			["attendance_date", "<=", to_date],
 		],
-		["status", Count(att.name).as_("count")],
-		group_by="status",
+		["status", "half_day_status", Count(att.name).as_("count")],
+		group_by="status, half_day_status",
 	):
 		if row.status in counts:
-			counts[row.status] = cint(row.count)
+			counts[row.status] += cint(row.count)
+		if row.status == "Half Day" and row.half_day_status == "Absent":
+			half_days_absent += cint(row.count)
 
-	worked = counts["Present"] + counts["Work From Home"] + counts["Half Day"] * 0.5
+	worked = counts["Present"] + counts["Work From Home"] + (counts["Half Day"] - half_days_absent) * 0.5
 	working_days = counts["Present"] + counts["Work From Home"] + counts["Half Day"] + counts["Absent"]
 	return {
 		"counts": counts,
@@ -187,22 +194,24 @@ def leave_balances(employee, as_of):
 	}
 
 
-def pipeline(employee, currency):
+def pipeline(employee, company, currency):
 	tiles = {}
 	if frappe.has_permission("Leave Application", "read"):
 		tiles["leave_requests"] = open_leave_requests(employee)
 	if frappe.has_permission("Expense Claim", "read"):
-		tiles.update(claim_tiles(employee))
+		tiles.update(claim_tiles(employee, company))
 	if frappe.has_permission("Employee Advance", "read"):
-		tiles["advances"] = advance_tile(employee, currency)
+		tiles["advances"] = advance_tile(employee, company, currency)
 	return tiles
 
 
 def advance_rate(row, currency):
-	paid = flt(row.paid_amount)
-	if row.currency == currency or not paid or not flt(row.base_paid_amount):
+	if row.currency == currency:
 		return 1
-	return flt(row.base_paid_amount) / paid
+	paid = flt(row.paid_amount)
+	if paid and flt(row.base_paid_amount):
+		return flt(row.base_paid_amount) / paid
+	return flt(get_exchange_rate(row.currency, currency, row.posting_date))
 
 
 def open_leave_requests(employee):
@@ -219,11 +228,11 @@ def open_leave_requests(employee):
 	return {"value": flt(row.days), "count": cint(row.count), "started": cint(row.started)}
 
 
-def claim_tiles(employee):
+def claim_tiles(employee, company):
 	ec = DocType("Expense Claim")
 	awaiting = permitted(
 		"Expense Claim",
-		{"docstatus": 0, "employee": employee, "approval_status": "Draft"},
+		{"docstatus": 0, "employee": employee, "company": company, "approval_status": "Draft"},
 		[
 			Coalesce(Sum(ec.total_claimed_amount * ec.exchange_rate), 0).as_("value"),
 			Count(ec.name).as_("count"),
@@ -234,6 +243,7 @@ def claim_tiles(employee):
 		{
 			"docstatus": 1,
 			"employee": employee,
+			"company": company,
 			"approval_status": "Approved",
 			"status": ["in", UNPAID_CLAIM_STATUS],
 		},
@@ -248,12 +258,13 @@ def claim_tiles(employee):
 	}
 
 
-def advance_tile(employee, currency):
+def advance_tile(employee, company, currency):
 	rows = permitted(
 		"Employee Advance",
-		{"docstatus": 1, "employee": employee},
+		{"docstatus": 1, "employee": employee, "company": company},
 		[
 			"name",
+			"posting_date",
 			"status",
 			"currency",
 			"advance_amount",
@@ -279,22 +290,21 @@ def advance_tile(employee, currency):
 
 @frappe.whitelist()
 def get_employee_transactions(employee: str, doc_type: str = "All", limit: int = 20):
-	company = check_access(employee)
+	check_access(employee)
 
 	limit = min(cint(limit) or 20, 100)
 	wanted = [doc_type] if doc_type in TRANSACTION_TYPES else list(TRANSACTION_TYPES)
-	currency = frappe.get_cached_value("Company", company, "default_currency")
 
 	rows = []
 	for doctype in wanted:
 		if frappe.has_permission(doctype, "read"):
-			rows.extend(transaction_rows(doctype, employee, limit, currency))
+			rows.extend(transaction_rows(doctype, employee, limit))
 
 	rows.sort(key=lambda r: (r["date"], r["name"]), reverse=True)
 	return rows[:limit]
 
 
-def transaction_rows(doctype, employee, limit, currency):
+def transaction_rows(doctype, employee, limit):
 	fields = {
 		"Salary Slip": ["start_date as date", "base_net_pay as amount"],
 		"Leave Application": ["from_date as date", "total_leave_days as days", "docstatus"],
@@ -311,7 +321,6 @@ def transaction_rows(doctype, employee, limit, currency):
 			"currency",
 			"advance_amount",
 			"paid_amount",
-			"base_paid_amount",
 			"claimed_amount",
 			"return_amount",
 		],
@@ -327,24 +336,30 @@ def transaction_rows(doctype, employee, limit, currency):
 			"type_label": _(doctype),
 			"date": str(r.date),
 			"status": r.status,
-			"amount": row_amount(doctype, r, currency),
+			"amount": row_amount(doctype, r),
 			"days": flt(r.days) if doctype == "Leave Application" else None,
-			"outstanding": row_outstanding(doctype, r, currency),
-			"currency": currency,
+			"outstanding": row_outstanding(doctype, r),
+			"currency": row_currency(doctype, r),
 		}
 		for r in frappe.get_list(
 			doctype,
 			filters=filters,
-			fields=["name", "status", *fields],
+			fields=["name", "status", "company", *fields],
 			order_by="date desc, creation desc",
 			limit=limit,
 		)
 	]
 
 
-def row_amount(doctype, row, currency):
+def row_currency(doctype, row):
 	if doctype == "Employee Advance":
-		return flt(row.advance_amount) * advance_rate(row, currency)
+		return row.currency
+	return frappe.get_cached_value("Company", row.company, "default_currency")
+
+
+def row_amount(doctype, row):
+	if doctype == "Employee Advance":
+		return flt(row.advance_amount)
 	if doctype == "Expense Claim":
 		return flt(row.total_claimed_amount) * flt(row.exchange_rate or 1)
 	if doctype == "Leave Application":
@@ -352,12 +367,11 @@ def row_amount(doctype, row, currency):
 	return flt(row.amount)
 
 
-def row_outstanding(doctype, row, currency):
+def row_outstanding(doctype, row):
 	if doctype == "Expense Claim" and row.docstatus == 1:
 		return (flt(row.grand_total) - flt(row.total_amount_reimbursed)) * flt(row.exchange_rate or 1)
 	if doctype == "Employee Advance":
-		unsettled = flt(row.paid_amount) - flt(row.claimed_amount) - flt(row.return_amount)
-		return unsettled * advance_rate(row, currency)
+		return flt(row.paid_amount) - flt(row.claimed_amount) - flt(row.return_amount)
 	return None
 
 

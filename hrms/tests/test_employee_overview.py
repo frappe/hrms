@@ -37,15 +37,35 @@ class TestEmployeeOverview(HRMSTestSuite):
 		self.assertEqual(pay["gross"]["count"], 1)
 		self.assertEqual(flt(sum(p["gross"] for p in pay["points"]), 2), flt(slip.base_gross_pay, 2))
 
+	def test_pay_leaves_out_slips_from_other_companies(self):
+		slip = make_employee_salary_slip(self.employee, "Monthly")
+		slip.submit()
+		frappe.db.set_value("Salary Slip", slip.name, "company", "_Test Company 3")
+
+		pay = self.overview()["pay"]
+		self.assertEqual((pay["gross"]["value"], pay["gross"]["count"]), (0, 0))
+
 	def test_attendance_rate_counts_half_days(self):
 		as_of = getdate(today())
-		for days_ago, status in ((3, "Present"), (2, "Half Day"), (1, "Absent")):
-			mark_attendance(self.employee, add_days(as_of, -days_ago), status, ignore_validate=True)
+		for days_ago, status, half_day_status in (
+			(4, "Present", None),
+			(3, "Half Day", "Present"),
+			(2, "Half Day", "Absent"),
+			(1, "Absent", None),
+		):
+			mark_attendance(
+				self.employee,
+				add_days(as_of, -days_ago),
+				status,
+				ignore_validate=True,
+				half_day_status=half_day_status,
+			)
 
 		attendance = self.overview()["attendance"]
-		self.assertEqual(attendance["marked"], 3)
+		self.assertEqual(attendance["marked"], 4)
+		self.assertEqual(attendance["counts"]["Half Day"], 2)
 		self.assertEqual(attendance["days_worked"], 1.5)
-		self.assertEqual(attendance["rate"], 50.0)
+		self.assertEqual(attendance["rate"], 37.5)
 
 	def test_leave_balance_and_open_requests(self):
 		allocation = create_leave_allocation(
@@ -104,6 +124,7 @@ class TestEmployeeOverview(HRMSTestSuite):
 		rows = employee_overview.get_employee_transactions(self.employee)
 		self.assertEqual([r["name"] for r in rows], [advance.name])
 		self.assertEqual(rows[0]["amount"], 1000)
+		self.assertEqual(rows[0]["currency"], advance.currency)
 
 	def test_user_without_employee_access_is_refused(self):
 		user = make_user("employee_overview_blocked@example.com", "Website Manager")
@@ -122,4 +143,5 @@ class TestEmployeeOverview(HRMSTestSuite):
 		self.assertEqual(tabs[:2], ["basic_details_tab", "overview_tab"])
 		fieldnames = [f.fieldname for f in meta.fields]
 		self.assertEqual(fieldnames.index("overview_html"), fieldnames.index("overview_tab") + 1)
+		self.assertLess(fieldnames.index("first_name"), fieldnames.index("overview_tab"))
 		self.assertEqual(meta.get_field("basic_details_tab").label, "Details")

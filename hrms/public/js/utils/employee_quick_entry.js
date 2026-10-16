@@ -56,12 +56,36 @@ frappe.ui.form.EmployeeQuickEntryForm = class EmployeeQuickEntryForm extends (
 
 	set_meta_and_mandatory_fields() {
 		this.meta = frappe.get_meta(this.doctype);
+		const essentials = employee_essentials();
+		essentials[0].push(...this.missing_mandatory_fields(essentials));
+		this.essentials = new Set(essentials.flat());
+		this.extras.forEach((extra) => {
+			extra.columns = extra.columns.map((column) =>
+				column.filter((fieldname) => !this.essentials.has(fieldname)),
+			);
+		});
+		this.extras = this.extras.filter((extra) => this.extra_fieldnames(extra).length);
 		this.docfields = [
-			...this.columns_to_fields("essentials", employee_essentials()),
+			...this.columns_to_fields("essentials", essentials),
 			...this.extras.flatMap((extra) => this.extra_fields(extra)),
 			{ fieldtype: "Section Break", fieldname: "add_more_section" },
 			{ fieldtype: "HTML", fieldname: "add_more" },
 		];
+	}
+
+	missing_mandatory_fields(essentials) {
+		const shown = new Set(essentials.flat());
+		return this.meta.fields
+			.filter(
+				(df) =>
+					df.reqd &&
+					!df.hidden &&
+					!df.read_only &&
+					!frappe.model.no_value_type.includes(df.fieldtype) &&
+					!this.doc[df.fieldname] &&
+					!shown.has(df.fieldname),
+			)
+			.map((df) => df.fieldname);
 	}
 
 	get_df(fieldname) {

@@ -149,19 +149,26 @@ hrms.EmployeeOverview = class EmployeeOverview {
 		const employee = this.employee;
 		const token = (this.activity_seq = (this.activity_seq || 0) + 1);
 		this.ready = false;
-		return frappe.xcall(OVERVIEW_METHOD + ".has_activity", { employee }).then((active) => {
-			if (employee !== this.employee || token !== this.activity_seq) return;
-			if (!active) {
-				this.render_no_activity();
-				return;
-			}
-			this.$empty.hide();
-			this.$header.show();
-			this.$body.show();
-			this.ready = true;
-			this.load();
-			this.refresh_list();
-		});
+		return frappe
+			.xcall(OVERVIEW_METHOD + ".has_activity", { employee })
+			.then((active) => {
+				if (employee !== this.employee || token !== this.activity_seq) return;
+				if (!active) {
+					this.render_no_activity();
+					return;
+				}
+				this.$empty.hide();
+				this.$header.show();
+				this.$body.show();
+				this.ready = true;
+				this.load();
+				this.refresh_list();
+			})
+			.catch(() => {
+				if (employee !== this.employee || token !== this.activity_seq) return;
+				this.needs_refresh = true;
+				this.render_activity_error();
+			});
 	}
 
 	refresh_list() {
@@ -197,8 +204,6 @@ hrms.EmployeeOverview = class EmployeeOverview {
 	}
 
 	render_no_activity() {
-		this.$body.hide();
-		this.$header.hide();
 		const actions = ["Leave Application", "Expense Claim"]
 			.filter((doctype) => frappe.model.can_create(doctype))
 			.map((doctype) => ({
@@ -206,19 +211,31 @@ hrms.EmployeeOverview = class EmployeeOverview {
 				icon: "plus",
 				onclick: () => frappe.new_doc(doctype, { employee: this.frm.doc.name }),
 			}));
-		this.$empty
-			.empty()
-			.append(
-				frappe.ui.empty_state({
-					icon: "inbox",
-					title: __("No activity yet"),
-					description: __(
-						"Salary slips, attendance, leaves and expense claims for this employee will show up here.",
-					),
-					actions,
-				}),
-			)
-			.show();
+		this.show_empty({
+			icon: "inbox",
+			title: __("No activity yet"),
+			description: __(
+				"Salary slips, attendance, leaves and expense claims for this employee will show up here.",
+			),
+			actions,
+		});
+	}
+
+	render_activity_error() {
+		this.show_empty({
+			icon: "circle-alert",
+			title: __("Could not load the overview"),
+			description: __("Something went wrong while loading this employee's activity."),
+			actions: [
+				{ label: __("Try again"), icon: "refresh-cw", onclick: () => this.refresh() },
+			],
+		});
+	}
+
+	show_empty(opts) {
+		this.$body.hide();
+		this.$header.hide();
+		this.$empty.empty().append(frappe.ui.empty_state(opts)).show();
 	}
 
 	get data() {
@@ -678,16 +695,11 @@ hrms.EmployeeOverview = class EmployeeOverview {
 			],
 			get_data() {
 				if (!me.ready) return Promise.resolve([]);
-				return frappe
-					.xcall(OVERVIEW_METHOD + ".get_employee_transactions", {
-						employee: me.frm.doc.name,
-						doc_type: me.state.doc_type,
-						limit: RECENT_LIMIT,
-					})
-					.then((rows) => {
-						if (rows[0]) me.currency = me.currency || rows[0].currency;
-						return rows;
-					});
+				return frappe.xcall(OVERVIEW_METHOD + ".get_employee_transactions", {
+					employee: me.frm.doc.name,
+					doc_type: me.state.doc_type,
+					limit: RECENT_LIMIT,
+				});
 			},
 		});
 		this.refresh_list();
@@ -695,13 +707,16 @@ hrms.EmployeeOverview = class EmployeeOverview {
 
 	amount_cell(row) {
 		if (row.days != null) return `<div class="text-right">${COUNT.days(row.days)}</div>`;
-		return `<div class="text-right">${this.money(row.amount)}</div>`;
+		return `<div class="text-right">${format_currency(flt(row.amount), row.currency)}</div>`;
 	}
 
 	outstanding_cell(row) {
 		if (row.outstanding == null || flt(row.outstanding) <= 0)
 			return '<div class="text-right text-ink-gray-4">—</div>';
-		return `<div class="text-right">${this.money(row.outstanding)}</div>`;
+		return `<div class="text-right">${format_currency(
+			flt(row.outstanding),
+			row.currency,
+		)}</div>`;
 	}
 
 	section_head($parent, { title, subtitle, right } = {}) {
