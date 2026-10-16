@@ -4,7 +4,11 @@
 frappe.listview_settings["Job Offer"] = {
 	add_fields: ["company", "designation", "job_applicant", "status"],
 	get_indicator: function (doc) {
-		if (doc.status == "Accepted") {
+		if (doc.status == "Draft") {
+			return [__(doc.status), "red", "status,=," + doc.status];
+		} else if (doc.status == "Ready to Send") {
+			return [__(doc.status), "blue", "status,=," + doc.status];
+		} else if (doc.status == "Accepted") {
 			return [__(doc.status), "green", "status,=," + doc.status];
 		} else if (doc.status == "Awaiting Response") {
 			return [__(doc.status), "orange", "status,=," + doc.status];
