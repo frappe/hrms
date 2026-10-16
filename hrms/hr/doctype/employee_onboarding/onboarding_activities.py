@@ -77,7 +77,8 @@ STANDARD_ACTIVITIES = [
 class OnboardingActivities:
 	"""The checklist rows of an Employee Onboarding.
 
-	The rows come from the onboarding's template, or the standard activities when it has none.
+	The rows come from the onboarding's template only, so HR decides there which standard
+	activities an onboarding gets and who each one is assigned to.
 	A row with an action is completed by the record it creates, not by whoever ticks it; only
 	Manual rows are completed by hand. An unfinished row may carry a status, In Progress or Stuck.
 	Row changes are written per row, so several people can work the same onboarding at once
@@ -325,7 +326,7 @@ def get_matching_template(doc) -> str | None:
 
 def get_template_activities(template: str | None) -> list[dict]:
 	if not template:
-		return [dict(row) for row in STANDARD_ACTIVITIES]
+		return []
 	return frappe.get_all(
 		"Employee Boarding Activity",
 		fields=TEMPLATE_ROW_FIELDS,

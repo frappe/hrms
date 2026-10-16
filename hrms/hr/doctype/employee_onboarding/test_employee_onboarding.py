@@ -5,7 +5,10 @@ import frappe
 from frappe.utils import add_days, getdate
 
 from hrms.hr.doctype.employee_onboarding.employee_onboarding import make_employee, split_full_name
-from hrms.hr.doctype.employee_onboarding.onboarding_activities import STANDARD_ACTIVITIES
+from hrms.hr.doctype.employee_onboarding.onboarding_activities import (
+	STANDARD_ACTIVITIES,
+	get_template_activities,
+)
 from hrms.hr.doctype.employee_onboarding_template.employee_onboarding_template import (
 	get_standard_activities,
 )
@@ -82,6 +85,9 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 
 		standard = [activity["activity_name"] for activity in STANDARD_ACTIVITIES]
 		self.assertEqual([row.activity_name for row in template.activities], standard)
+
+	def test_an_onboarding_without_a_template_gets_no_activities(self):
+		self.assertEqual(get_template_activities(None), [])
 
 	def test_template_rejects_a_duplicate_action(self):
 		template = make_template("_Test Duplicate Template")
