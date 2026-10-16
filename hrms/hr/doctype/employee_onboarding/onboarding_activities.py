@@ -4,6 +4,8 @@
 import frappe
 from frappe import _
 from frappe.desk.form.assign_to import notify_assignment
+from frappe.query_builder import Order
+from frappe.query_builder.functions import IfNull
 from frappe.utils import add_days
 
 ASSIGNMENTS = {
@@ -34,6 +36,8 @@ ACTION_DOCTYPES = {
 }
 
 PROGRESS_STATUSES = ("In Progress", "Stuck")
+
+TEMPLATE_MATCH_FIELDS = ("company", "department", "designation", "employee_grade")
 
 TEMPLATE_ROW_FIELDS = [
 	"activity_name",
@@ -80,11 +84,9 @@ class OnboardingActivities:
 	without one save overwriting another.
 	"""
 
-	def set_default_template(self):
+	def set_template(self):
 		if not self.employee_onboarding_template:
-			self.employee_onboarding_template = frappe.db.get_value(
-				"Employee Onboarding Template", {"is_default": 1}
-			)
+			self.employee_onboarding_template = get_matching_template(self)
 
 	def set_activities(self):
 		if not self.activities:
@@ -104,9 +106,9 @@ class OnboardingActivities:
 		validate_unique_actions(self.activities, _("this onboarding"))
 
 	def get_template_hint(self) -> str | None:
-		"""The default template, while it still has only the standard activities."""
+		"""The onboarding's template, while it still has only the standard activities."""
 		template = self.employee_onboarding_template
-		if not template or not frappe.db.get_value("Employee Onboarding Template", template, "is_default"):
+		if not template:
 			return None
 		has_own_rows = frappe.db.exists(
 			"Employee Boarding Activity",
@@ -306,6 +308,19 @@ def close_todo(name: str, status: str) -> None:
 	todo.save(ignore_permissions=True)
 	if status == "Cancelled":
 		notify_assignment(todo.assigned_by, todo.allocated_to, todo.reference_type, todo.reference_name)
+
+
+def get_matching_template(doc) -> str | None:
+	"""The newest template whose company, department, designation and grade each match the
+	onboarding's or are left blank, so a blank template applies to everyone."""
+	Template = frappe.qb.DocType("Employee Onboarding Template")
+	query = frappe.qb.from_(Template).select(Template.name).orderby(Template.creation, order=Order.desc)
+	for field in TEMPLATE_MATCH_FIELDS:
+		is_blank = IfNull(Template[field], "") == ""
+		value = doc.get(field)
+		query = query.where(is_blank | (Template[field] == value) if value else is_blank)
+	templates = query.limit(1).run(pluck=True)
+	return templates[0] if templates else None
 
 
 def get_template_activities(template: str | None) -> list[dict]:

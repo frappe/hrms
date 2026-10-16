@@ -13,16 +13,6 @@ frappe.ui.form.on("Employee Onboarding", {
 		});
 	},
 
-	onload: function (frm) {
-		if (!frm.is_new() || frm.doc.employee_onboarding_template) return;
-		frappe.db
-			.get_value("Employee Onboarding Template", { is_default: 1 }, "name")
-			.then((r) => {
-				const template = r.message?.name;
-				if (template) frm.set_value("employee_onboarding_template", template);
-			});
-	},
-
 	onload_post_render: function (frm) {
 		frappe.require("employee_onboarding_checklist.bundle.js", () => {
 			frm.trigger("render_checklist");

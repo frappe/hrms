@@ -9,7 +9,6 @@
  "engine": "InnoDB",
  "field_order": [
   "title",
-  "is_default",
   "company",
   "department",
   "column_break_7",
@@ -81,18 +80,11 @@
    "fieldtype": "Table",
    "label": "Required Documents",
    "options": "Employee Onboarding Document"
-  },
-  {
-   "default": "0",
-   "description": "New onboardings use this template when none is picked.",
-   "fieldname": "is_default",
-   "fieldtype": "Check",
-   "label": "Default"
   }
  ],
  "icon": "clipboard-list",
  "links": [],
- "modified": "2026-10-09 14:46:30.669336",
+ "modified": "2026-10-16 13:53:55.584133",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Onboarding Template",

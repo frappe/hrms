@@ -97,26 +97,37 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		with self.assertRaises(frappe.ValidationError):
 			template.save()
 
-	def test_only_one_template_is_the_default(self):
-		keep_default_template(self)
-		first = make_template("_Test First Default", is_default=1)
-		second = make_template("_Test Second Default", is_default=1)
-
-		self.assertFalse(frappe.db.get_value("Employee Onboarding Template", first.name, "is_default"))
-		self.assertTrue(frappe.db.get_value("Employee Onboarding Template", second.name, "is_default"))
-
-	def test_new_onboarding_uses_the_default_template(self):
-		keep_default_template(self)
-		template = make_template("_Test Default For New Onboardings", [{"activity_name": "Book a desk"}], 1)
+	def test_new_onboarding_uses_the_newest_matching_template(self):
+		make_template("_Test Older Engineer Template", designation="Engineer")
+		newest = make_template(
+			"_Test Newer Engineer Template", [{"activity_name": "Book a desk"}], designation="Engineer"
+		)
+		make_template(
+			"_Test Other Designation Template", designation=make_designation("_Test Designation Elsewhere")
+		)
 
 		onboarding = create_employee_onboarding(submit=False, with_activities=False)
 
-		self.assertEqual(onboarding.employee_onboarding_template, template.name)
+		self.assertEqual(onboarding.employee_onboarding_template, newest.name)
 		self.assertIn("Book a desk", [row.activity_name for row in onboarding.activities])
 
-	def test_hint_shows_until_the_default_template_has_own_tasks(self):
-		keep_default_template(self)
-		template = make_template("_Test Hint Template", is_default=1)
+	def test_a_blank_template_applies_to_every_onboarding(self):
+		blank = make_template("_Test Blank Template")
+
+		onboarding = create_employee_onboarding(submit=False, with_activities=False)
+
+		self.assertEqual(onboarding.employee_onboarding_template, blank.name)
+
+	def test_a_template_set_for_another_value_is_never_picked(self):
+		make_template("_Test Blank Fallback Template")
+		other = make_template("_Test Other Grade Template", employee_grade=make_grade("_Test Other Grade"))
+
+		onboarding = create_employee_onboarding(submit=False, with_activities=False)
+
+		self.assertNotEqual(onboarding.employee_onboarding_template, other.name)
+
+	def test_hint_shows_until_the_template_has_own_tasks(self):
+		template = make_template("_Test Hint Template")
 		onboarding = create_employee_onboarding(submit=False, with_activities=False)
 		self.assertEqual(onboarding.get_template_hint(), template.name)
 
@@ -449,22 +460,22 @@ def get_test_template():
 	)
 
 
-def make_template(title, activities=None, is_default=0):
+def make_template(title, activities=None, **fields):
 	template = frappe.new_doc("Employee Onboarding Template")
 	template.title = title
-	template.is_default = is_default
+	template.update(fields)
 	for activity in activities or []:
 		template.append("activities", activity)
 	return template.insert()
 
 
-def keep_default_template(test):
-	"""Restore whichever template is the default once the test is over."""
-	default = frappe.db.get_value("Employee Onboarding Template", {"is_default": 1})
-	test.addCleanup(restore_default_template, default)
+def make_designation(name):
+	if not frappe.db.exists("Designation", name):
+		frappe.get_doc({"doctype": "Designation", "designation_name": name}).insert()
+	return name
 
 
-def restore_default_template(default):
-	frappe.db.set_value("Employee Onboarding Template", {"is_default": 1}, "is_default", 0)
-	if default:
-		frappe.db.set_value("Employee Onboarding Template", default, "is_default", 1)
+def make_grade(name):
+	if not frappe.db.exists("Employee Grade", name):
+		frappe.get_doc({"doctype": "Employee Grade", "__newname": name}).insert()
+	return name

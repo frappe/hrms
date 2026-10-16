@@ -35,7 +35,6 @@ class EmployeeOnboardingTemplate(Document):
 		department: DF.Link | None
 		designation: DF.Link | None
 		employee_grade: DF.Link | None
-		is_default: DF.Check
 		required_documents: DF.Table[EmployeeOnboardingDocument]
 		title: DF.Data
 	# end: auto-generated types
@@ -48,15 +47,6 @@ class EmployeeOnboardingTemplate(Document):
 			set_action_defaults(row)
 		validate_unique_actions(self.activities, _("this template"))
 
-	def on_update(self):
-		if self.is_default:
-			frappe.db.set_value(
-				"Employee Onboarding Template",
-				{"is_default": 1, "name": ("!=", self.name)},
-				"is_default",
-				0,
-			)
-
 
 @frappe.whitelist()
 def get_standard_activities() -> list[dict]:
@@ -65,10 +55,10 @@ def get_standard_activities() -> list[dict]:
 
 
 def create_default_template() -> None:
-	if frappe.db.exists("Employee Onboarding Template", {"is_default": 1}):
+	"""Ship one template with the standard activities, for sites that have none yet."""
+	if frappe.db.exists("Employee Onboarding Template"):
 		return
 
 	template = frappe.new_doc("Employee Onboarding Template")
 	template.title = _("Standard Onboarding")
-	template.is_default = 1
 	template.insert(ignore_permissions=True)
