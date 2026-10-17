@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.utils import getdate
+from frappe.utils import flt, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
@@ -110,6 +110,76 @@ class TestSalaryWithholding(HRMSTestSuite):
 		self.assertEqual(salary_slip.status, "Withheld")
 		payroll_employee = self._get_payroll_employee_row(payroll_entry)
 		self.assertEqual(payroll_employee.is_salary_withheld, 1)
+
+	def test_get_withheld_salaries(self):
+		create_salary_withholding(self.employee1, MONTH_1_START, 1).submit()
+		create_salary_withholding(self.employee2, MONTH_1_START, 1).submit()
+		payroll_entry = self._make_payroll_entry()
+
+		withheld_salaries = payroll_entry.get_withheld_salaries()
+
+		self.assertEqual(
+			[row["employee"] for row in withheld_salaries],
+			sorted([self.employee1, self.employee2]),
+		)
+		for row in withheld_salaries:
+			self.assertTrue(row["employee_name"])
+			self.assertGreater(row["amount"], 0)
+
+	def test_release_withheld_salary_for_selected_employee(self):
+		create_salary_withholding(self.employee1, MONTH_1_START, 1).submit()
+		create_salary_withholding(self.employee2, MONTH_1_START, 1).submit()
+		payroll_entry = self._make_payroll_entry()
+
+		withheld_salaries = {row["employee"]: row["amount"] for row in payroll_entry.get_withheld_salaries()}
+		bank_entry = payroll_entry.make_bank_entry(for_withheld_salaries=1, employees=[self.employee1])
+
+		self.assertEqual(flt(bank_entry.total_debit), flt(withheld_salaries[self.employee1]))
+		self._submit_bank_entry(bank_entry)
+
+		self.assertEqual(get_salary_slip_details(payroll_entry.name, self.employee1).status, "Submitted")
+		self.assertEqual(get_salary_slip_details(payroll_entry.name, self.employee2).status, "Withheld")
+
+		self.assertEqual([row["employee"] for row in payroll_entry.get_withheld_salaries()], [self.employee2])
+
+	def test_release_without_selected_employees(self):
+		create_salary_withholding(self.employee1, MONTH_1_START, 1).submit()
+		create_salary_withholding(self.employee2, MONTH_1_START, 1).submit()
+		payroll_entry = self._make_payroll_entry()
+
+		self.assertIsNone(payroll_entry.make_bank_entry(for_withheld_salaries=1, employees=[]))
+
+		for employee in (self.employee1, self.employee2):
+			self.assertEqual(get_salary_slip_details(payroll_entry.name, employee).status, "Withheld")
+
+	def test_withheld_salary_awaiting_release_is_not_paid_twice(self):
+		create_salary_withholding(self.employee1, MONTH_1_START, 1).submit()
+		payroll_entry = self._make_payroll_entry()
+
+		bank_entry = payroll_entry.make_bank_entry(for_withheld_salaries=1)
+		self.assertIsNotNone(bank_entry)
+
+		self.assertEqual(payroll_entry.get_withheld_salaries(), [])
+		self.assertIsNone(payroll_entry.make_bank_entry(for_withheld_salaries=1))
+
+		self._submit_bank_entry(bank_entry)
+		self.assertEqual(get_salary_slip_details(payroll_entry.name, self.employee1).status, "Submitted")
+
+	def test_release_is_retried_after_the_release_entry_is_deleted(self):
+		create_salary_withholding(self.employee1, MONTH_1_START, 1).submit()
+		payroll_entry = self._make_payroll_entry()
+
+		bank_entry = payroll_entry.make_bank_entry(for_withheld_salaries=1)
+		frappe.delete_doc("Journal Entry", bank_entry.name, force=True)
+
+		# the cycle still points at the deleted entry, but the salary is pending release again
+		self.assertEqual([row["employee"] for row in payroll_entry.get_withheld_salaries()], [self.employee1])
+
+		retried_entry = payroll_entry.make_bank_entry(for_withheld_salaries=1)
+		self.assertIsNotNone(retried_entry)
+
+		self._submit_bank_entry(retried_entry)
+		self.assertEqual(get_salary_slip_details(payroll_entry.name, self.employee1).status, "Submitted")
 
 	def _make_payroll_entry(self, date: str | None = None):
 		dates = get_start_end_dates("Monthly", date or MONTH_1_START)
