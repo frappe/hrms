@@ -859,6 +859,30 @@ class TestPayrollEntry(HRMSTestSuite):
 
 		self.assertTrue(journal_entry)
 
+	def test_accrual_for_manually_submitted_salary_slips(self):
+		payroll_entry = make_payroll_entry_for_manual_submission()
+		salary_slips = frappe.get_all("Salary Slip", {"payroll_entry": payroll_entry.name}, pluck="name")
+		for salary_slip in salary_slips:
+			frappe.get_doc("Salary Slip", salary_slip).submit()
+
+		# all slips are submitted but not accrued, so "Make Bank Entry" should not be shown yet
+		payroll_entry.reload()
+		payroll_entry.onload()
+		self.assertFalse(payroll_entry.get_onload().get("submitted_ss"))
+
+		payroll_entry.submit_salary_slips()
+		payroll_entry.reload()
+		self.assertEqual(payroll_entry.salary_slips_submitted, 1)
+		assert_salary_slips_accrued(self, payroll_entry)
+
+	def test_accrual_for_partially_manually_submitted_salary_slips(self):
+		payroll_entry = make_payroll_entry_for_manual_submission()
+		salary_slip = frappe.get_all("Salary Slip", {"payroll_entry": payroll_entry.name}, pluck="name")[0]
+		frappe.get_doc("Salary Slip", salary_slip).submit()
+
+		payroll_entry.submit_salary_slips()
+		assert_salary_slips_accrued(self, payroll_entry)
+
 	@if_lending_app_installed
 	@HRMSTestSuite.change_settings(
 		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0}
@@ -1480,6 +1504,51 @@ def make_payroll_entry(**args):
 		payroll_entry.make_bank_entry()
 
 	return payroll_entry
+
+
+def make_payroll_entry_for_manual_submission():
+	company_doc = frappe.get_doc("Company", "_Test Company")
+	department = create_department("Manual Submission Test")
+	for email in ("test_manual_ss1@payroll.com", "test_manual_ss2@payroll.com"):
+		employee = make_employee(email, company=company_doc.name, department=department)
+		setup_salary_structure(employee, company_doc)
+
+	dates = get_start_end_dates("Monthly", nowdate())
+	payroll_entry = get_payroll_entry(
+		start_date=dates.start_date,
+		end_date=dates.end_date,
+		payable_account=company_doc.default_payroll_payable_account,
+		currency=company_doc.default_currency,
+		company=company_doc.name,
+		department=department,
+		cost_center="Main - _TC",
+	)
+	payroll_entry.submit()
+	return payroll_entry
+
+
+def assert_salary_slips_accrued(test, payroll_entry):
+	salary_slips = frappe.get_all(
+		"Salary Slip",
+		{"payroll_entry": payroll_entry.name},
+		["docstatus", "journal_entry", "net_pay"],
+	)
+	test.assertEqual(len(salary_slips), 2)
+	test.assertTrue(all(slip.docstatus == 1 for slip in salary_slips))
+
+	# every slip should be linked to the same accrual entry
+	journal_entries = {slip.journal_entry for slip in salary_slips}
+	test.assertEqual(len(journal_entries), 1)
+	journal_entry = journal_entries.pop()
+	test.assertTrue(journal_entry)
+
+	jea = frappe.qb.DocType("Journal Entry Account")
+	payable_credit = (
+		frappe.qb.from_(jea)
+		.select(Sum(jea.credit))
+		.where((jea.parent == journal_entry) & (jea.account == payroll_entry.payroll_payable_account))
+	).run()[0][0]
+	test.assertEqual(flt(payable_credit, 2), flt(sum(slip.net_pay for slip in salary_slips), 2))
 
 
 def get_payment_account():
