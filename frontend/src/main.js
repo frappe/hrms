@@ -45,7 +45,6 @@ app.component("Input", Input)
 app.component("FormControl", FormControl)
 app.component("EmptyState", EmptyState)
 
-app.use(router)
 app.use(IonicVue, getIonicConfig())
 
 if (session?.isLoggedIn && !employeeResource?.data) {
@@ -95,7 +94,7 @@ const registerServiceWorker = async () => {
 	}
 }
 
-router.isReady().then(async () => {
+const translationsReady = (async () => {
 	if (import.meta.env.DEV) {
 		await frappeRequest({
 			url: "/api/method/hrms.www.hrms.get_context_for_dev",
@@ -105,12 +104,18 @@ router.isReady().then(async () => {
 		})
 	}
 
-	await translationsPlugin.isReady();
+	await translationsPlugin.isReady()
+})()
+
+router.isReady().then(() => {
 	registerServiceWorker()
 	app.mount("#app")
 })
 
 router.beforeEach(async (to, _, next) => {
+	// Route modules can format resource dates as soon as they are imported.
+	await translationsReady
+
 	let isLoggedIn = session.isLoggedIn
 
 	try {
@@ -146,3 +151,5 @@ router.beforeEach(async (to, _, next) => {
 		next()
 	}
 })
+
+app.use(router)
