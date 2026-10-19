@@ -71,3 +71,30 @@ class TestTrainingResult(HRMSTestSuite):
 		message = frappe.render_template(notification.message, context, restrict_globals=True)
 		self.assertIn("Test Training Event", message)
 		self.assertIn("Please share your feedback", message)
+
+	def test_submit_completes_training_event(self):
+		create_training_program("Basic Training")
+		employees = [
+			make_employee(f"training-result-{i}@example.com", company="_Test Company") for i in range(3)
+		]
+		event = create_training_event(
+			[
+				{"employee": employees[0], "attendance": "Present"},
+				{"employee": employees[1], "attendance": "Absent"},
+				{"employee": employees[2], "attendance": "Present", "status": "Feedback Submitted"},
+			],
+			event_name="Training Completion Event",
+		)
+		event.submit()
+		result = frappe.get_doc(
+			{
+				"doctype": "Training Result",
+				"training_event": event.name,
+				"employees": [{"employee": employee} for employee in employees],
+			}
+		).insert()
+		result.submit()
+		event.reload()
+
+		self.assertEqual(event.event_status, "Completed")
+		self.assertEqual([row.status for row in event.employees], ["Completed", "Open", "Feedback Submitted"])
