@@ -216,6 +216,12 @@ def create_goal(
 	appraisal_cycle=None,
 	progress=0,
 ):
+	start_date = "2023-01-01"
+	if appraisal_cycle:
+		start_date = frappe.db.get_value("Appraisal Cycle", appraisal_cycle, "start_date")
+	elif parent_goal:
+		start_date = frappe.db.get_value("Goal", parent_goal, "start_date")
+
 	return frappe.get_doc(
 		{
 			"doctype": "Goal",
@@ -224,7 +230,7 @@ def create_goal(
 			"kra": kra,
 			"is_group": is_group,
 			"parent_goal": parent_goal,
-			"start_date": "2023-01-01",
+			"start_date": start_date,
 			"appraisal_cycle": appraisal_cycle,
 			"progress": progress,
 		}
