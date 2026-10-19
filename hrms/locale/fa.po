@@ -21,7 +21,7 @@ msgstr ""
 #. Label of a Check field in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json:335
 msgid " Unlink Payment on Cancellation of Employee Advance"
-msgstr ""
+msgstr " قطع ارتباط پرداخت در صورت لغو پیش‌پرداخت کارمند"
 
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:23
 msgid "\"From Date\" can not be greater than or equal to \"To Date\""
@@ -46,170 +46,170 @@ msgstr ") برای {0}"
 
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.js:52
 msgid "...Fetching Employees"
-msgstr ""
+msgstr "...واکشی کارکنان"
 
 #. Option for the 'Rounding' (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json:172
 msgid "0.25"
-msgstr ""
+msgstr "0.25"
 
 #. Option for the 'Rounding' (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json:172
 msgid "0.5"
-msgstr ""
+msgstr "0.5"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "00:00"
-msgstr ""
+msgstr "00:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "01:00"
-msgstr ""
+msgstr "01:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "02:00"
-msgstr ""
+msgstr "02:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "03:00"
-msgstr ""
+msgstr "03:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "04:00"
-msgstr ""
+msgstr "04:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "05:00"
-msgstr ""
+msgstr "05:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "06:00"
-msgstr ""
+msgstr "06:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "07:00"
-msgstr ""
+msgstr "07:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "08:00"
-msgstr ""
+msgstr "08:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "09:00"
-msgstr ""
+msgstr "09:00"
 
 #. Option for the 'Rounding' (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json:172
 msgid "1.0"
-msgstr ""
+msgstr "1.0"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "10:00"
-msgstr ""
+msgstr "10:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "11:00"
-msgstr ""
+msgstr "11:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "12:00"
-msgstr ""
+msgstr "12:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "13:00"
-msgstr ""
+msgstr "13:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "14:00"
-msgstr ""
+msgstr "14:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "15:00"
-msgstr ""
+msgstr "15:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "16:00"
-msgstr ""
+msgstr "16:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "17:00"
-msgstr ""
+msgstr "17:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "18:00"
-msgstr ""
+msgstr "18:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "19:00"
-msgstr ""
+msgstr "19:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "20:00"
-msgstr ""
+msgstr "20:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "21:00"
-msgstr ""
+msgstr "21:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "22:00"
-msgstr ""
+msgstr "22:00"
 
 #. Option for the 'Send Emails At' (Select) field in DocType 'Daily Work
 #. Summary Group'
 #: hrms/hr/doctype/daily_work_summary_group/daily_work_summary_group.json:126
 msgid "23:00"
-msgstr ""
+msgstr "23:00"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:272
 msgid "<b>Base</b> amount has not been set for the following employee(s): {0}"
-msgstr ""
+msgstr "مبلغ <b>پایه</b> برای کارمند(ان) زیر تعیین نشده است: {0}"
 
 #. Description of the 'Password Policy' (Data) field in DocType 'Payroll
 #. Settings'
@@ -273,7 +273,29 @@ msgid ""
 "<pre><code>Condition: employment_type==\"Intern\"</code></pre>\n"
 "<pre><code>Amount: 1000</code></pre></li>\n"
 "</ol>"
-msgstr ""
+msgstr "<h3>راهنما</h3>\n"
+"\n"
+"<p>یادداشت‌ها:</p>\n"
+"\n"
+"<ol>\n"
+"<li>از فیلد <code>base</code> برای استفاده از حقوق پایه کارمند استفاده کنید</li>\n"
+"<li>از اختصارات مؤلفه‌های حقوق در شرایط و فرمول‌ها استفاده کنید. <code>BS = حقوق پایه</code></li>\n"
+"<li>برای جزئیات کارمند در شرایط و فرمول‌ها از نام فیلد استفاده کنید. <code>نوع اشتغال = employment_type</code><code>شعبه = branch</code></li>\n"
+"<li>در شرایط و فرمول‌ها از نام فیلد فیش حقوقی استفاده کنید. <code>روزهای پرداخت = payment_days</code><code>مرخصی بدون حقوق = leave_without_pay</code></li>\n"
+"<li>مبلغ مستقیم را می‌توان بر اساس شرط نیز وارد کرد. به مثال ۳ مراجعه کنید</li></ol>\n"
+"\n"
+"<h4>مثال‌ها</h4>\n"
+"<ol>\n"
+"<li>محاسبه حقوق پایه بر اساس <code>base</code>\n"
+"<pre><code>شرط: base &lt; 10000</code></pre>\n"
+"<pre><code>فرمول: base * .2</code></pre></li>\n"
+"<li>محاسبه HRA بر اساس حقوق پایه <code>BS</code> \n"
+"<pre><code>شرط: BS &gt; 2000</code></pre>\n"
+"<pre><code>فرمول: BS * .1</code></pre></li>\n"
+"<li>محاسبه TDS بر اساس نوع اشتغال <code>employment_type</code> \n"
+"<pre><code>شرط: employment_type==\"Intern\"</code></pre>\n"
+"<pre><code>مبلغ: 1000</code></pre></li>\n"
+"</ol>"
 
 #. Description of the Onboarding Step 'Create Holiday List'
 #: hrms/hr/onboarding_step/create_holiday_list/create_holiday_list.json:5
@@ -317,25 +339,31 @@ msgid ""
 "<code>Condition: gender==\"Male\"</code></li><br>\n"
 "<li>Applying tax by Salary Component<br>\n"
 "<code>Condition: base &gt; 10000</code></li></ol>"
-msgstr ""
+msgstr "<h4>نمونه‌های شرط</h4>\n"
+"<ol>\n"
+"<li>اعمال مالیات اگر کارمند بین 31-12-1937 و 01-01-1958 متولد شده باشد (کارمندان ۶۰ تا ۸۰ ساله)<br>\n"
+"<code>شرط: date_of_birth&gt;date(1937, 12, 31) and date_of_birth&lt;date(1958, 01, 01)</code></li><br><li>اعمال مالیات بر اساس جنسیت کارمند<br>\n"
+"<code>شرط: gender==\"Male\"</code></li><br>\n"
+"<li>اعمال مالیات بر اساس مؤلفه حقوق<br>\n"
+"<code>شرط: base &gt; 10000</code></li></ol>"
 
 #. Content of the 'Half Day Marked Employee Header' (HTML) field in DocType
 #. 'Employee Attendance Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json:168
 msgid "<h5>Employees on Half Day</h5>"
-msgstr ""
+msgstr "<h5>کارمندان در نیم روز</h5>"
 
 #. Content of the 'Unmarked Employee Header' (HTML) field in DocType 'Employee
 #. Attendance Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json:162
 msgid "<h5>Unmarked Employees</h5>"
-msgstr ""
+msgstr "<h5>کارمندان بدون علامت‌گذاری</h5>"
 
 #. Content of the 'Horizontal Break' (HTML) field in DocType 'Employee
 #. Attendance Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json:174
 msgid "<hr>"
-msgstr ""
+msgstr "<hr>"
 
 #. Header text in the Performance Workspace
 #: hrms/hr/workspace/performance/performance.json:3
@@ -354,7 +382,7 @@ msgstr "<span style=\"font-size: 18px;\"><b>مستندات و گزارش ها</b
 
 #: hrms/public/js/utils/index.js:164
 msgid "<table class='table table-bordered'><tr><th>{0}</th><th>{1}</th></tr>"
-msgstr ""
+msgstr "<table class='table table-bordered'><tr><th>{0}</th><th>{1}</th></tr>"
 
 #: hrms/hr/doctype/job_requisition/job_requisition.py:30
 msgid "A Job Requisition for {0} requested by {1} already exists: {2}"
@@ -435,7 +463,7 @@ msgstr "ورود مجله Accruable برای حقوق از {0} به {1}"
 
 #: hrms/hr/doctype/attendance_request/attendance_warnings.html:8
 msgid "Action on Submission"
-msgstr ""
+msgstr "اقدام هنگام ارسال"
 
 #. Label of a Data field in DocType 'Employee Boarding Activity'
 #: hrms/hr/doctype/employee_boarding_activity/employee_boarding_activity.json:26
@@ -469,7 +497,7 @@ msgstr "افزودن اموال کارکنان"
 
 #: frontend/src/components/ExpensesTable.vue:123
 msgid "Add Expense"
-msgstr ""
+msgstr "افزودن هزینه"
 
 #: hrms/public/js/performance/performance_feedback.js:95
 msgid "Add Feedback"
@@ -628,7 +656,7 @@ msgstr "تخصیص منقضی شده است!"
 #. Label of a Check field in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json:313
 msgid "Allow Employee Checkin from Mobile App"
-msgstr ""
+msgstr "اجازه ثبت ورود به کارمند از برنامه تلفن همراه"
 
 #. Label of a Check field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json:139
@@ -716,19 +744,19 @@ msgstr "مقدار در فرمول بر اساس"
 #. Advance'
 #: hrms/hr/doctype/employee_advance/employee_advance.json:116
 msgid "Amount claimed via Expense Claim"
-msgstr ""
+msgstr "مبلغ مطالبه شده از طریق مطالبه هزینه"
 
 #. Description of the 'Advance Amount' (Currency) field in DocType 'Employee
 #. Advance'
 #: hrms/hr/doctype/employee_advance/employee_advance.json:98
 msgid "Amount of expense"
-msgstr ""
+msgstr "مبلغ هزینه"
 
 #. Description of the 'Paid Amount' (Currency) field in DocType 'Leave
 #. Encashment'
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json:212
 msgid "Amount paid against this encashment"
-msgstr ""
+msgstr "مبلغ پرداختی بابت این بازخرید"
 
 #. Description of the 'Returned Amount' (Currency) field in DocType 'Employee
 #. Advance'
@@ -744,7 +772,7 @@ msgstr "مبلغ نباید کمتر از صفر باشد"
 #. Advance'
 #: hrms/hr/doctype/employee_advance/employee_advance.json:107
 msgid "Amount that has been paid against this advance"
-msgstr ""
+msgstr "مبلغ پرداخت شده بابت این پیش‌پرداخت"
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:58
 msgid "An amount of {0} already claimed for the component {1}, set the amount equal or greater than {2}"
@@ -752,7 +780,7 @@ msgstr "مبلغ {0} قبلاً برای مؤلفه {1} ادعا شده است،
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:54
 msgid "An attendance record is linked to this checkin. Please cancel the attendance before modifying time."
-msgstr ""
+msgstr "سابقه حضور و غیاب به این ورود پیوند داده شده است. لطفا قبل از تغییر ساعت، حضور را لغو کنید."
 
 #. Label of a Float field in DocType 'Leave Policy Detail'
 #: hrms/hr/doctype/leave_policy_detail/leave_policy_detail.json:62
@@ -761,7 +789,7 @@ msgstr "توزیع سالانه"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:372
 msgid "Annual Allocation Exceeded"
-msgstr ""
+msgstr "تخصیص سالانه بیش از حد است"
 
 #: hrms/setup.py:399
 msgid "Annual Salary"
@@ -1015,7 +1043,7 @@ msgstr "وضعیت تایید باید &quot;تایید&quot; یا &quot;رد&qu
 #: frontend/src/components/RequestActionSheet.vue:108
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:119
 msgid "Approve"
-msgstr ""
+msgstr "تأیید"
 
 #. Option for the 'Approval Status' (Select) field in DocType 'Expense Claim'
 #. Option for the 'Status' (Select) field in DocType 'Leave Application'
@@ -1039,7 +1067,7 @@ msgstr "تصویب"
 
 #: hrms/setup.py:132 hrms/setup.py:234
 msgid "Approvers"
-msgstr ""
+msgstr "تأییدکنندگان"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:39
 #: hrms/public/js/salary_slip_deductions_report_filters.js:22
@@ -1073,7 +1101,7 @@ msgstr "همانطور که در ساختار حقوق شما تعیین شده 
 
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:97
 msgid "Asset Recovery Cost for {0}: {1}"
-msgstr ""
+msgstr "هزینه بازیابی دارایی برای {0}: {1}"
 
 #. Label of a Section Break field in DocType 'Full and Final Statement'
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.json:120
@@ -1082,31 +1110,31 @@ msgstr "دارایی های تخصیص یافته"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:283
 msgid "Assign Salary Structure to {0} employee(s)?"
-msgstr ""
+msgstr "اختصاص ساختار حقوق و دستمزد به {0} کارمند(ان)؟"
 
 #. Option for the 'Action' (Select) field in DocType 'Shift Assignment Tool'
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:110
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json:45
 msgid "Assign Shift"
-msgstr ""
+msgstr "اختصاص شیفت"
 
 #. Option for the 'Action' (Select) field in DocType 'Shift Assignment Tool'
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:114
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json:45
 msgid "Assign Shift Schedule"
-msgstr ""
+msgstr "اختصاص زمان‌بندی شیفت"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:53
 msgid "Assign Structure"
-msgstr ""
+msgstr "اختصاص ساختار"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:298
 msgid "Assigning Salary Structure"
-msgstr ""
+msgstr "در حال تخصیص ساختار حقوق"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.py:113
 msgid "Assigning Structure..."
-msgstr ""
+msgstr "در حال تخصیص ساختار..."
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:282
 msgid "Assigning Structures..."
@@ -1140,7 +1168,7 @@ msgstr "حداقل یک مصاحبه باید انتخاب شود."
 #. Detail'
 #: hrms/payroll/doctype/employee_tax_exemption_proof_submission_detail/employee_tax_exemption_proof_submission_detail.json:66
 msgid "Attach Proof"
-msgstr ""
+msgstr "پیوست مدرک"
 
 #. Name of a DocType
 #. Label of a Select field in DocType 'Training Event Employee'
@@ -1164,7 +1192,7 @@ msgstr "حضور"
 
 #: frontend/src/components/AttendanceCalendar.vue:3
 msgid "Attendance Calendar"
-msgstr ""
+msgstr "تقویم حضور و غیاب"
 
 #. Label of a chart in the Shift & Attendance Workspace
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json:5
@@ -1214,7 +1242,7 @@ msgstr "درخواست حضور"
 
 #: frontend/src/views/attendance/AttendanceRequestList.vue:5
 msgid "Attendance Request History"
-msgstr ""
+msgstr "سابقه درخواست حضور و غیاب"
 
 #. Label of a Section Break field in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json:324
@@ -1252,11 +1280,11 @@ msgstr "حضور کارمند {0} قبلاً برای تاریخ {1} مشخص ش
 
 #: hrms/hr/doctype/leave_application/leave_application.py:614
 msgid "Attendance for employee {0} is already marked for the following dates: {1}"
-msgstr ""
+msgstr "حضور و غیاب کارمند {0} قبلاً برای تاریخ‌های زیر ثبت شده است: {1}"
 
 #: hrms/hr/doctype/attendance_request/attendance_warnings.html:2
 msgid "Attendance for the following dates will be skipped/overwritten on submission"
-msgstr ""
+msgstr "حضور و غیاب برای تاریخ‌های زیر در هنگام ارسال رد می‌شود یا بازنویسی می‌شود"
 
 #: hrms/hr/doctype/attendance/attendance_list.js:94
 msgid "Attendance from {0} to {1} has already been marked for the Employee {2}"
@@ -1264,11 +1292,11 @@ msgstr "حضور از {0} تا {1} قبلاً برای کارمند {2} علام
 
 #: hrms/public/js/templates/employees_with_unmarked_attendance.html:36
 msgid "Attendance has been marked for all the employees between the selected payroll dates."
-msgstr ""
+msgstr "حضور و غیاب برای همه کارمندان در بازه تاریخ‌های حقوق و دستمزد انتخاب‌شده ثبت شده است."
 
 #: hrms/public/js/templates/employees_with_unmarked_attendance.html:6
 msgid "Attendance is pending for these employees between the selected payroll dates. Mark attendance to proceed. Refer {0} for details."
-msgstr ""
+msgstr "حضور و غیاب این کارمندان بین تاریخ‌های حقوق و دستمزد انتخاب‌شده در انتظار است. برای ادامه، حضور و غیاب را ثبت کنید. برای جزئیات به {0} مراجعه کنید."
 
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.js:289
 msgid "Attendance marked successfully"
@@ -1294,7 +1322,7 @@ msgstr "حضور فقط بعد از این تاریخ به طور خودکار �
 
 #: frontend/src/views/attendance/Dashboard.vue:19
 msgid "AttendanceRequestListView"
-msgstr ""
+msgstr "AttendanceRequestListView"
 
 #. Label of a Section Break field in DocType 'Training Event'
 #: hrms/hr/doctype/training_event/training_event.json:173
@@ -1335,7 +1363,7 @@ msgstr "به طور خودکار تمام دارایی های تخصیص یاف�
 #. Label of a Check field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json:187
 msgid "Automatically update Last Sync of Checkin"
-msgstr ""
+msgstr "به‌روزرسانی خودکار آخرین همگام‌سازی ثبت ورود"
 
 #. Label of a Float field in DocType 'Salary Slip Leave'
 #: hrms/payroll/doctype/salary_slip_leave/salary_slip_leave.json:61
@@ -1361,11 +1389,11 @@ msgstr "میانگین امتیاز"
 #. Description of the 'Final Score' (Float) field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json:288
 msgid "Average of Goal Score, Feedback Score, and Self Appraisal Score"
-msgstr ""
+msgstr "میانگین امتیاز هدف، امتیاز بازخورد و امتیاز خودارزیابی"
 
 #: hrms/public/js/templates/interview_feedback.html:16
 msgid "Average rating of demonstrated skills"
-msgstr ""
+msgstr "میانگین امتیاز مهارت‌های نشان داده شده"
 
 #: hrms/hr/report/appraisal_overview/appraisal_overview.py:52
 msgid "Avg Feedback Score"
@@ -1544,12 +1572,12 @@ msgstr ""
 #. DocType 'Appraisal Cycle'
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json:173
 msgid "By default, the Final Score is calculated as the average of Goal Score, Feedback Score, and Self Appraisal Score. Enable this to set a different formula"
-msgstr ""
+msgstr "به طور پیش‌فرض، امتیاز نهایی به صورت میانگین امتیاز هدف، امتیاز بازخورد و امتیاز خودارزیابی محاسبه می‌شود. برای تنظیم فرمول متفاوت، این گزینه را فعال کنید"
 
 #. Label of a Currency field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json:594
 msgid "CTC"
-msgstr ""
+msgstr "CTC"
 
 #. Label of a Check field in DocType 'Appraisal Cycle'
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json:176
@@ -1582,27 +1610,27 @@ msgstr "در صف لغو"
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:53
 msgid "Cannot Modify Time"
-msgstr ""
+msgstr "نمی‌توان زمان را تغییر داد"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:323
 msgid "Cannot allocate leaves outside the allocation period {0} - {1}"
-msgstr ""
+msgstr "نمی‌توان مرخصی را خارج از دوره تخصیص {0} - {1} اختصاص داد"
 
 #: hrms/api/roster.py:134
 msgid "Cannot break shift after end date"
-msgstr ""
+msgstr "نمی‌توان شیفت را پس از تاریخ پایان قطع کرد."
 
 #: hrms/api/roster.py:136
 msgid "Cannot break shift before start date"
-msgstr ""
+msgstr "نمی‌توان شیفت را پیش از تاریخ شروع قطع کرد."
 
 #: hrms/hr/doctype/shift_assignment/shift_assignment.py:71
 msgid "Cannot cancel Shift Assignment: {0} as it is linked to Attendance: {1}"
-msgstr ""
+msgstr "نمی‌توان شیفت تخصیص داده شده را لغو کرد: {0} زیرا به حضور و غیاب مرتبط است: {1}"
 
 #: hrms/hr/doctype/shift_assignment/shift_assignment.py:54
 msgid "Cannot cancel Shift Assignment: {0} as it is linked to Employee Checkin: {1}"
-msgstr ""
+msgstr "نمی‌توان تخصیص شیفت را لغو کرد: {0} زیرا به ثبت ورود کارمند مرتبط است: {1}"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:616
 msgid "Cannot create Expense Claim for Employee Advance {0}. The advance currency {1} differs from the company's default currency {2}."
@@ -1622,7 +1650,7 @@ msgstr "نمی‌توان یک متقاضی شغل در برابر یک فرصت
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:201
 msgid "Cannot create or change transactions against an Appraisal Cycle with status {0}."
-msgstr ""
+msgstr "نمی‌توان تراکنش‌ها را در برابر چرخه ارزیابی با وضعیت {0} ایجاد یا تغییر داد."
 
 #: hrms/hr/doctype/leave_application/leave_application.py:631
 msgid "Cannot find active Leave Period"
@@ -1667,15 +1695,15 @@ msgstr "علت شکایت"
 
 #: hrms/hr/doctype/attendance_request/attendance_request.py:150
 msgid "Changed the status from {0} to {1} and Status for Other Half to {2} via Attendance Request"
-msgstr ""
+msgstr "وضعیت از {0} به {1} تغییر کرد و وضعیت نیمه دیگر به {2} از طریق درخواست حضور و غیاب"
 
 #: hrms/hr/doctype/attendance_request/attendance_request.py:154
 msgid "Changed the status from {0} to {1} via Attendance Request"
-msgstr ""
+msgstr "از طریق درخواست حضور و غیاب، وضعیت را از {0} به {1} تغییر داد"
 
 #: hrms/hr/doctype/leave_application/leave_application.js:187
 msgid "Changing '{0}' to {1}."
-msgstr ""
+msgstr "تغییر '{0}' به {1}."
 
 #: hrms/hr/doctype/goal/goal.js:112
 msgid "Changing KRA in this parent goal will align all the child goals to the same KRA, if any."
@@ -1683,7 +1711,7 @@ msgstr "تغییر KRA در این هدف والد، همه اهداف فرزن�
 
 #: hrms/public/js/utils/index.js:145
 msgid "Check <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> for more details"
-msgstr ""
+msgstr "برای جزئیات بیشتر، <a href='/app/List/Error Log?reference_doctype={0}'>{1}</a> را بررسی کنید"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1481
 msgid "Check Error Log {0} for more details."
@@ -1691,11 +1719,11 @@ msgstr "برای جزئیات بیشتر، Log خطا {0} را بررسی کنی
 
 #: frontend/src/components/CheckInPanel.vue:121
 msgid "Check In"
-msgstr ""
+msgstr "ثبت ورود"
 
 #: frontend/src/components/CheckInPanel.vue:120
 msgid "Check Out"
-msgstr ""
+msgstr "ثبت خروج"
 
 #. Label of a Check field in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json:241
@@ -1709,7 +1737,7 @@ msgstr "برای جزئیات بیشتر، {0} را بررسی کنید"
 
 #: frontend/src/components/CheckInPanel.vue:157
 msgid "Check-in"
-msgstr ""
+msgstr "ثبت ورود"
 
 #. Label of a Date field in DocType 'Travel Itinerary'
 #: hrms/hr/doctype/travel_itinerary/travel_itinerary.json:377
@@ -1718,7 +1746,7 @@ msgstr "تاریخ ورود"
 
 #: frontend/src/components/CheckInPanel.vue:157
 msgid "Check-out"
-msgstr ""
+msgstr "ثبت خروج"
 
 #. Label of a Date field in DocType 'Travel Itinerary'
 #: hrms/hr/doctype/travel_itinerary/travel_itinerary.json:409
@@ -1728,7 +1756,7 @@ msgstr "چک کردن تاریخ"
 #. Label of a Int field in DocType 'Shift Location'
 #: hrms/hr/doctype/shift_location/shift_location.json:31
 msgid "Checkin Radius"
-msgstr ""
+msgstr "شعاع ثبت تردد"
 
 #: hrms/hr/doctype/goal/goal_tree.js:52
 msgid "Child nodes can only be created under 'Group' type nodes"
@@ -1778,7 +1806,7 @@ msgstr "پاک شد"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.js:296
 msgid "Click {0} to change the configuration and then resave salary slip"
-msgstr ""
+msgstr "برای تغییر پیکربندی و سپس ذخیره مجدد فیش حقوقی، روی {0} کلیک کنید"
 
 #. Label of a Date field in DocType 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json:239
@@ -1809,7 +1837,7 @@ msgstr ""
 
 #: frontend/src/views/Profile.vue:178
 msgid "Company Information"
-msgstr ""
+msgstr "اطلاعات شرکت"
 
 #. Name of a DocType
 #. Label of a Link field in DocType 'Leave Allocation'
@@ -1861,7 +1889,7 @@ msgstr "کنفرانس"
 
 #: frontend/src/components/CheckInPanel.vue:74
 msgid "Confirm {0}"
-msgstr ""
+msgstr "تأیید {0}"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.js:58
 msgid "Consider Grace Period"
@@ -1919,16 +1947,16 @@ msgstr "اهداف به‌روزرسانی نشد"
 
 #: hrms/overrides/company.py:38
 msgid "Country Fixture Deletion Failed"
-msgstr ""
+msgstr "حذف پیش‌فرض‌های کشور ناموفق بود"
 
 #: hrms/overrides/company.py:51
 msgid "Country Setup failed"
-msgstr ""
+msgstr "راه‌اندازی کشور ناموفق بود"
 
 #. Label of a field in the job-application Web Form
 #: hrms/hr/web_form/job_application/job_application.json:94
 msgid "Country of Residence"
-msgstr ""
+msgstr "کشور محل سکونت"
 
 #. Label of a Data field in DocType 'Training Event'
 #. Label of a Data field in DocType 'Training Feedback'
@@ -2068,11 +2096,11 @@ msgstr "ایجاد ناموفق بود"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.py:73
 msgid "Creation of Salary Structure Assignments has been queued. It may take a few minutes."
-msgstr ""
+msgstr "ایجاد تخصیص‌های ساختار حقوق در صف قرار گرفت. ممکن است چند دقیقه طول بکشد."
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:200
 msgid "Creation of {0} has been queued. It may take a few minutes."
-msgstr ""
+msgstr "ایجاد {0} در صف قرار گرفته است. ممکن است چند دقیقه طول بکشد."
 
 #. Description of the 'Rating Criteria' (Table) field in DocType 'Appraisal
 #. Template'
@@ -2202,7 +2230,7 @@ msgstr "روزانه کار خلاصه پاسخ ها"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:187
 msgid "Date Range Exceeded"
-msgstr ""
+msgstr "از بازه تاریخ فراتر رفته است"
 
 #: hrms/hr/doctype/leave_block_list/leave_block_list.py:19
 msgid "Date is repeated"
@@ -2220,7 +2248,7 @@ msgstr "تاریخ ها بر اساس"
 
 #: hrms/setup.py:120
 msgid "Days for which Holidays are blocked for this department."
-msgstr ""
+msgstr "روزهایی که تعطیلی برای این دپارتمان مسدود شده است."
 
 #: hrms/payroll/report/bank_remittance/bank_remittance.py:19
 msgid "Debit A/C Number"
@@ -2323,7 +2351,7 @@ msgstr "حساب پرداختی پیش‌فرض برای مطالبه هزینه
 
 #: hrms/overrides/company.py:133 hrms/setup.py:95
 msgid "Default Payroll Payable Account"
-msgstr ""
+msgstr "حساب پرداختنی پیش فرض حقوق و دستمزد"
 
 #. Label of a Link field in DocType 'Employee Grade'
 #: hrms/hr/doctype/employee_grade/employee_grade.json:19
@@ -2412,7 +2440,7 @@ msgstr "برای ادامه، {0} یا {1} را غیرفعال کنید."
 
 #: frontend/src/views/AppSettings.vue:65
 msgid "Disabling Push Notifications..."
-msgstr ""
+msgstr "غیرفعال کردن اعلان‌های فوری..."
 
 #. Label of a Currency field in DocType 'Employee Benefit Application'
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.json:125
@@ -2424,7 +2452,7 @@ msgstr "مقدار اعطا شده (امتیاز داده شده)"
 #: hrms/payroll/doctype/salary_component/salary_component.json:274
 #: hrms/payroll/doctype/salary_detail/salary_detail.json:262
 msgid "Do Not Include in Accounting Entries"
-msgstr ""
+msgstr "در ثبت‌های حسابداری لحاظ نشود"
 
 #. Label of a Check field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json:92
@@ -2463,11 +2491,11 @@ msgstr "حقوق بازنویسی شده تکراری"
 
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.py:43
 msgid "Duplicate Salary Withholding"
-msgstr ""
+msgstr "تکرار کردن نگه‌داشت حقوق"
 
 #: hrms/public/js/utils/index.js:210
 msgid "ERROR({0}): {1}"
-msgstr ""
+msgstr "خطا({0}): {1}"
 
 #. Label of a Check field in DocType 'Attendance'
 #. Label of a Check field in DocType 'Employee Attendance Tool'
@@ -2550,11 +2578,11 @@ msgstr "درآمد و کسر"
 
 #: frontend/src/components/ExpensesTable.vue:213
 msgid "Edit Expense Item"
-msgstr ""
+msgstr "ویرایش آیتم هزینه"
 
 #: frontend/src/components/ExpenseTaxesTable.vue:221
 msgid "Edit Expense Tax"
-msgstr ""
+msgstr "ویرایش مالیات هزینه"
 
 #. Label of a Date field in DocType 'Leave Policy Assignment'
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json:65
@@ -2597,7 +2625,7 @@ msgstr "شماره A / C کارمند"
 
 #: frontend/src/views/expense_claim/Dashboard.vue:35
 msgid "Employee Advance Balance"
-msgstr ""
+msgstr "تراز پیش‌پرداخت کارمند"
 
 #. Name of a report
 #. Label of a Link in the Expense Claims Workspace
@@ -2675,7 +2703,7 @@ msgstr "بررسی کارمندان"
 
 #: frontend/src/views/attendance/EmployeeCheckinList.vue:5
 msgid "Employee Checkin History"
-msgstr ""
+msgstr "تاریخچه ورود کارمند"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_cost_center/employee_cost_center.json:37
@@ -2809,7 +2837,7 @@ msgstr "اطلاعات استخدامی"
 #. Label of a Card Break in the Employee Lifecycle Workspace
 #: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json:54
 msgid "Employee Journey"
-msgstr ""
+msgstr "مسیر کارمند"
 
 #. Name of a report
 #. Label of a Link in the HR Workspace
@@ -2921,7 +2949,7 @@ msgstr "ارجاع کارمند {0} برای پاداش ارجاع قابل اس
 
 #: hrms/hr/doctype/job_requisition/job_requisition.js:15
 msgid "Employee Referrals"
-msgstr ""
+msgstr "معرفی‌نامه‌های کارمند"
 
 #. Label of a Link field in DocType 'Employee Grievance'
 #: hrms/hr/doctype/employee_grievance/employee_grievance.json:92
@@ -3051,7 +3079,7 @@ msgstr ""
 
 #: hrms/hr/doctype/employee_advance/employee_advance.py:76
 msgid "Employee advance account {0} should be of type {1}."
-msgstr ""
+msgstr "حساب پیش‌پرداخت کارمند {0} باید از نوع {1} باشد."
 
 #: hrms/hr/doctype/hr_settings/hr_settings.js:27
 msgid "Employee can be named by Employee ID if you assign one, or via Naming Series. Select your preference here."
@@ -3082,7 +3110,7 @@ msgstr "کارمند به دلیل عدم رعایت آستانه ساعات ک�
 
 #: hrms/hr/doctype/shift_type/shift_type.py:403
 msgid "Employee was marked Absent for other half due to missing Employee Checkins."
-msgstr ""
+msgstr "به دلیل نبود ثبت ورود کارمند، کارمند برای نیمه دیگر به عنوان غایب ثبت شد."
 
 #: hrms/hr/doctype/attendance_request/attendance_request.py:112
 msgid "Employee {0} already has an Attendance Request {1} that overlaps with this period"
@@ -3126,7 +3154,7 @@ msgstr "کارمند {0} در روز نیمه در {1}"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:630
 msgid "Employee {0} relieved on {1} must be set as 'Left'"
-msgstr ""
+msgstr "کارمند {0} که در تاریخ {1} از کار برکنار شده است، باید به عنوان 'چپ' تنظیم شود"
 
 #. Subtitle of the Module Onboarding 'Human Resource'
 #: hrms/hr/module_onboarding/human_resource/human_resource.json:44
@@ -3170,7 +3198,7 @@ msgstr "کارمندان نمی‌توانند به خودشان بازخورد 
 #. Label of a HTML field in DocType 'Employee Attendance Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json:134
 msgid "Employees on Half Day HTML"
-msgstr ""
+msgstr "کارمندان در نیم‌روز HTML"
 
 #: hrms/hr/doctype/hr_settings/hr_settings.py:81
 msgid "Employees will miss holiday reminders from {} until {}. <br> Do you want to proceed with this change?"
@@ -3230,11 +3258,11 @@ msgstr "فعال کردن علامت گذاری ورود دیرهنگام"
 
 #: frontend/src/views/AppSettings.vue:50
 msgid "Enable Push Notifications"
-msgstr ""
+msgstr "فعال کردن اعلان‌های فوری"
 
 #: frontend/src/views/AppSettings.vue:65
 msgid "Enabling Push Notifications..."
-msgstr ""
+msgstr "فعال کردن اعلان‌های فوری..."
 
 #. Label of a Section Break field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json:133
@@ -3290,7 +3318,7 @@ msgstr ""
 
 #: frontend/src/components/FormField.vue:42
 msgid "Enter {0}"
-msgstr ""
+msgstr "{0}را وارد کنید"
 
 #: frontend/src/components/FormView.vue:531
 msgid "Error creating {0}"
@@ -3454,11 +3482,11 @@ msgstr "معافیت زیر رده"
 
 #: hrms/hr/doctype/attendance_request/attendance_warnings.html:10
 msgid "Existing Record"
-msgstr ""
+msgstr "رکورد موجود"
 
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.py:37
 msgid "Existing Shift Assignments"
-msgstr ""
+msgstr "تخصیص‌های شیفت موجود"
 
 #. Option for the 'Final Decision' (Select) field in DocType 'Exit Interview'
 #: hrms/hr/doctype/exit_interview/exit_interview.json:201
@@ -3469,7 +3497,7 @@ msgstr "خروج تایید شد"
 #. Label of a Section Break field in DocType 'Salary Withholding'
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json:107
 msgid "Exit Details"
-msgstr ""
+msgstr "جزئیات خروج"
 
 #. Name of a DocType
 #. Label of a Link in the Employee Lifecycle Workspace
@@ -3523,7 +3551,7 @@ msgstr "خروج از فرم وب پرسشنامه"
 #. Label of a quick_list in the Employee Lifecycle Workspace
 #: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json:310
 msgid "Exits (This Month)"
-msgstr ""
+msgstr "خروج‌ها (این ماه)"
 
 #. Label of a Rating field in DocType 'Interview'
 #. Label of a Rating field in DocType 'Interview Round'
@@ -3545,7 +3573,7 @@ msgstr "غرامت مورد انتظار"
 #. Label of a field in the job-application Web Form
 #: hrms/hr/web_form/job_application/job_application.json:144
 msgid "Expected Salary Range per month"
-msgstr ""
+msgstr "محدوده حقوق مورد انتظار در ماه"
 
 #. Name of a DocType
 #: hrms/hr/doctype/expected_skill_set/expected_skill_set.json:34
@@ -3630,7 +3658,7 @@ msgstr "هزینه عضویت"
 
 #: frontend/src/components/ExpensesTable.vue:211
 msgid "Expense Item"
-msgstr ""
+msgstr "قلم هزینه"
 
 #. Label of a Section Break field in DocType 'Employee Benefit Claim'
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json:121
@@ -3639,7 +3667,7 @@ msgstr "اثبات هزینه"
 
 #: frontend/src/components/ExpenseTaxesTable.vue:219
 msgid "Expense Tax"
-msgstr ""
+msgstr "مالیات هزینه"
 
 #. Label of a Table field in DocType 'Expense Claim'
 #. Name of a DocType
@@ -3669,7 +3697,7 @@ msgstr "برگهای حمل شده Expire (روزها)"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:493
 msgid "Expire Leaves"
-msgstr ""
+msgstr "منقضی کردن مرخصی‌ها"
 
 #. Label of a Float field in DocType 'Salary Slip Leave'
 #: hrms/payroll/doctype/salary_slip_leave/salary_slip_leave.json:37
@@ -3700,7 +3728,7 @@ msgstr "ایجاد/ارائه {0} برای کارمندان انجام نشد:"
 
 #: hrms/overrides/company.py:36
 msgid "Failed to delete defaults for country {0}."
-msgstr ""
+msgstr "حذف پیش‌فرض‌ها برای کشور {0} ناموفق بود."
 
 #: hrms/api/__init__.py:797
 msgid "Failed to download Salary Slip PDF"
@@ -3716,7 +3744,7 @@ msgstr "اعلان زمان‌بندی مجدد مصاحبه ارسال نشد. 
 
 #: hrms/overrides/company.py:49
 msgid "Failed to setup defaults for country {0}."
-msgstr ""
+msgstr "تنظیم پیش‌فرض‌ها برای کشور {0} ناموفق بود."
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:383
 msgid "Failed to submit some leave policy assignments:"
@@ -3732,7 +3760,7 @@ msgstr "به روز رسانی وضعیت متقاضی شغل ناموفق بو�
 
 #: hrms/public/js/utils/index.js:143
 msgid "Failed to {0} {1} for employees:"
-msgstr ""
+msgstr "{0} {1} برای کارمندان ناموفق بود:"
 
 #. Label of a Tab Break field in DocType 'Payroll Entry'
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json:256
@@ -3776,7 +3804,7 @@ msgstr "بازخورد ارائه"
 
 #: hrms/public/js/templates/interview_feedback.html:14
 msgid "Feedback Summary"
-msgstr ""
+msgstr "خلاصه بازخورد"
 
 #: hrms/hr/doctype/interview_feedback/interview_feedback.py:52
 msgid "Feedback already submitted for the Interview {0}. Please cancel the previous Interview Feedback {1} to continue."
@@ -3795,15 +3823,15 @@ msgstr "بازخورد {0} با موفقیت اضافه شد"
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json:168
 #: hrms/hr/doctype/shift_location/shift_location.json:59
 msgid "Fetch Geolocation"
-msgstr ""
+msgstr "دریافت موقعیت جغرافیایی"
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.js:33
 msgid "Fetch Shift"
-msgstr ""
+msgstr "واکشی شیفت"
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:9
 msgid "Fetch Shifts"
-msgstr ""
+msgstr "واکشی شیفت‌ها"
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.js:109
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:110
@@ -3812,11 +3840,11 @@ msgstr "واکشی کارکنان"
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.js:38
 msgid "Fetching Shift"
-msgstr ""
+msgstr "در حال واکشی شیفت"
 
 #: hrms/public/js/utils/index.js:193
 msgid "Fetching your geolocation"
-msgstr ""
+msgstr "دریافت موقعیت جغرافیایی شما"
 
 #: frontend/src/components/FilePreviewModal.vue:4
 msgid "File Preview"
@@ -3962,7 +3990,7 @@ msgstr "هزینه کسری"
 
 #: frontend/src/components/BaseLayout.vue:9
 msgid "Frappe HR"
-msgstr ""
+msgstr "Frappe HR"
 
 #. Label of a Currency field in DocType 'Taxable Salary Slab'
 #: hrms/payroll/doctype/taxable_salary_slab/taxable_salary_slab.json:21
@@ -3999,7 +4027,7 @@ msgstr "از اینجا می‌توانید بازخرید را برای ترا�
 
 #: hrms/payroll/report/salary_register/salary_register.html:8
 msgid "From {0} to {1}"
-msgstr ""
+msgstr "از {0} تا {1}"
 
 #. Label of a Int field in DocType 'Gratuity Rule Slab'
 #: hrms/payroll/doctype/gratuity_rule_slab/gratuity_rule_slab.json:25
@@ -4009,7 +4037,7 @@ msgstr "از (سال)"
 #. Option for the 'Roster Color' (Select) field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json:180
 msgid "Fuchsia"
-msgstr ""
+msgstr "سرخابی"
 
 #: hrms/hr/report/vehicle_expenses/vehicle_expenses.py:45
 msgid "Fuel Expense"
@@ -4066,12 +4094,12 @@ msgstr "تاریخ های آینده مجاز نیست"
 
 #: hrms/public/js/utils/index.js:186 hrms/public/js/utils/index.js:214
 msgid "Geolocation Error"
-msgstr ""
+msgstr "خطای موقعیت جغرافیایی"
 
 #: frontend/src/components/CheckInPanel.vue:141
 #: hrms/public/js/utils/index.js:185
 msgid "Geolocation is not supported by your current browser"
-msgstr ""
+msgstr "موقعیت جغرافیایی توسط مرورگر فعلی شما پشتیبانی نمی‌شود"
 
 #: hrms/payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.js:47
 msgid "Get Details From Declaration"
@@ -4098,11 +4126,11 @@ msgstr "دریافت قالب"
 
 #: frontend/src/components/InstallPrompt.vue:8
 msgid "Get the app on your device for easy access & a better experience!"
-msgstr ""
+msgstr "برنامه را روی دستگاه خود نصب کنید تا دسترسی آسان‌تر و تجربه‌ای بهتر داشته باشید!"
 
 #: frontend/src/components/InstallPrompt.vue:41
 msgid "Get the app on your iPhone for easy access & a better experience"
-msgstr ""
+msgstr "برنامه را روی آیفون خود نصب کنید تا دسترسی آسان‌تر و تجربه‌ای بهتر داشته باشید"
 
 #. Option for the 'Meal Preference' (Select) field in DocType 'Travel
 #. Itinerary'
@@ -4112,11 +4140,11 @@ msgstr "گلوتن رایگان"
 
 #: frontend/src/views/InvalidEmployee.vue:12
 msgid "Go to Login"
-msgstr ""
+msgstr "رفتن به ورود"
 
 #: frontend/src/views/Login.vue:29
 msgid "Go to Reset Password page"
-msgstr ""
+msgstr "رفتن به صفحه بازنشانی گذرواژه"
 
 #. Label of a Percent field in DocType 'Appraisal KRA'
 #: hrms/hr/doctype/appraisal_kra/appraisal_kra.json:50
@@ -4231,7 +4259,7 @@ msgstr "نوع شکایت"
 
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.py:646
 msgid "Gross Earnings"
-msgstr ""
+msgstr "درآمد ناخالص"
 
 #. Label of a Currency field in DocType 'Salary Slip'
 #: frontend/src/components/SalarySlipItem.vue:13
@@ -4331,7 +4359,7 @@ msgstr "تاریخ نود روز باید بین کار از تاریخ و تا�
 #. Label of a HTML field in DocType 'Employee Attendance Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json:167
 msgid "Half Day Marked Employee Header"
-msgstr ""
+msgstr "سرآیند کارمندان با نیم‌روز ثبت‌شده"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.py:172
 msgid "Half Day Records"
@@ -4401,7 +4429,7 @@ msgstr "تعطیلات این هفته"
 #. Label of a HTML field in DocType 'Employee Attendance Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json:173
 msgid "Horizontal Break"
-msgstr ""
+msgstr "خط جداکننده افقی"
 
 #. Label of a Currency field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json:437
@@ -4489,7 +4517,7 @@ msgstr "در صورت فعال بودن، روزهای پرداخت را برا�
 #: hrms/payroll/doctype/salary_component/salary_component.json:271
 #: hrms/payroll/doctype/salary_detail/salary_detail.json:259
 msgid "If enabled, the amount will be excluded from accounting entries during Journal Entry creation."
-msgstr ""
+msgstr "اگر فعال باشد، مبلغ هنگام ایجاد ثبت دفتر روزنامه از ثبت‌های حسابداری حذف می‌شود."
 
 #. Description of the 'Variable Based On Taxable Salary' (Check) field in
 #. DocType 'Salary Component'
@@ -4513,7 +4541,7 @@ msgstr "در صورت فعال بودن، در صورت صفر بودن مبلغ
 #. 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json:251
 msgid "If enabled, the total no. of applications received for this opening will be displayed on the website"
-msgstr ""
+msgstr "در صورت فعال بودن، تعداد کل درخواست‌های دریافت‌شده برای این موقعیت شغلی در وب‌سایت نمایش داده می‌شود"
 
 #. Description of the 'Statistical Component' (Check) field in DocType 'Salary
 #. Component'
@@ -4580,7 +4608,7 @@ msgstr "شامل فرزندان شرکت می‌شود"
 #. Label of a Check field in DocType 'Attendance Request'
 #: hrms/hr/doctype/attendance_request/attendance_request.json:135
 msgid "Include Holidays"
-msgstr ""
+msgstr "شامل تعطیلات"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.js:64
 msgid "Include Shift Attendance Without Checkins"
@@ -4660,7 +4688,7 @@ msgstr "سایر اسناد مالیات بر درآمد"
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:77
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
-msgstr ""
+msgstr "طبقه مالیات بر درآمد اجباری است، زیرا ساختار حقوق {0} دارای جزء مالیاتی {1} است"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1642
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
@@ -4696,7 +4724,7 @@ msgstr "بازرسی"
 
 #: frontend/src/components/InstallPrompt.vue:13
 msgid "Install"
-msgstr ""
+msgstr "نصب"
 
 #: frontend/src/components/InstallPrompt.vue:5
 #: frontend/src/components/InstallPrompt.vue:28
@@ -4881,11 +4909,11 @@ msgstr "مصاحبه ها"
 #. Label of a quick_list in the Recruitment Workspace
 #: hrms/hr/workspace/recruitment/recruitment.json:194
 msgid "Interviews (This Week)"
-msgstr ""
+msgstr "مصاحبه‌ها (این هفته)"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:215
 msgid "Invalid Additional Salary"
-msgstr ""
+msgstr "حقوق اضافی نامعتبر"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:326
 msgid "Invalid Dates"
@@ -4902,7 +4930,7 @@ msgstr "حساب پرداختی حقوق و دستمزد نامعتبر است. 
 #: hrms/hr/doctype/shift_type/shift_type.py:48
 #: hrms/hr/doctype/shift_type/shift_type.py:57
 msgid "Invalid Shift Times"
-msgstr ""
+msgstr "زمان‌های شیفت نامعتبر است"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:717
 msgid "Invalid parameters provided. Please pass the required arguments."
@@ -5005,12 +5033,12 @@ msgstr "حقوق اضافی تکراری است"
 #. Label of a Check field in DocType 'Salary Withholding Cycle'
 #: hrms/payroll/doctype/salary_withholding_cycle/salary_withholding_cycle.json:37
 msgid "Is Salary Released"
-msgstr ""
+msgstr "آیا حقوق آزاد شده است"
 
 #. Label of a Check field in DocType 'Payroll Employee Detail'
 #: hrms/payroll/doctype/payroll_employee_detail/payroll_employee_detail.json:59
 msgid "Is Salary Withheld"
-msgstr ""
+msgstr "آیا حقوق نگه‌داشته شده است"
 
 #. Label of a Check field in DocType 'Salary Component'
 #. Label of a Check field in DocType 'Salary Detail'
@@ -5059,7 +5087,7 @@ msgstr "متقاضیان کار مجاز به حضور دو بار برای یک
 #. Title of the job-application Web Form
 #: hrms/hr/web_form/job_application/job_application.json:36
 msgid "Job Application"
-msgstr ""
+msgstr "درخواست کار"
 
 #. Label of a Data field in DocType 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json:168
@@ -5137,7 +5165,7 @@ msgstr "همکار افتتاحیه کار"
 #: hrms/hr/doctype/job_opening/job_opening.json:259
 #: hrms/hr/doctype/job_opening_template/job_opening_template.json:65
 msgid "Job Opening Template"
-msgstr ""
+msgstr "قالب موقعیت شغلی"
 
 #: hrms/www/jobs/index.html:2 hrms/www/jobs/index.html:5
 msgid "Job Openings"
@@ -5264,7 +5292,7 @@ msgstr "آخرین همگام سازی Checkin"
 
 #: frontend/src/components/CheckInPanel.vue:9
 msgid "Last {0} was at {1}"
-msgstr ""
+msgstr "آخرین {0} در {1} بود"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.py:184
 msgid "Late Entries"
@@ -5294,7 +5322,7 @@ msgstr "دوره تأخیر ورود"
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:98
 msgid "Latitude and longitude values are required for checking in."
-msgstr ""
+msgstr "برای ثبت ورود، مقادیر عرض و طول جغرافیایی الزامی است."
 
 #: frontend/src/components/CheckInPanel.vue:129
 msgid "Latitude: {0}°"
@@ -5322,7 +5350,7 @@ msgstr "ترک تخصیص"
 
 #: hrms/hr/doctype/leave_type/leave_type.py:68
 msgid "Leave Allocation Exists"
-msgstr ""
+msgstr "تخصیص مرخصی وجود دارد"
 
 #. Label of a Section Break field in DocType 'Leave Policy'
 #: hrms/hr/doctype/leave_policy/leave_policy.json:19
@@ -5463,7 +5491,7 @@ msgstr "ورود ورود به سیستم را ترک کنید"
 
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.py:20
 msgid "Leave Ledger Entry's To date needs to be after From date. Currently, From Date is {0} and To Date is {1}"
-msgstr ""
+msgstr "تاریخ پایان ثبت دفتر مرخصی باید بعد از تاریخ شروع باشد. در حال حاضر، تاریخ شروع {0} و تاریخ پایان {1} است"
 
 #. Label of a Link field in DocType 'Leave Allocation'
 #. Option for the 'Dates Based On' (Select) field in DocType 'Leave Control
@@ -5610,7 +5638,7 @@ msgstr "ترک بدون پرداخت با سوابق تأیید شده {} مطا
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:122
 msgid "Leave allocation is skipped for {0}, because number of leaves to be allocated is 0."
-msgstr ""
+msgstr "تخصیص مرخصی برای {0} رد شد، زیرا تعداد مرخصی‌هایی که باید تخصیص داده شود ۰ است."
 
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.py:56
 msgid "Leave allocation {0} is linked with the Leave Application {1}"
@@ -5683,7 +5711,7 @@ msgstr "برگ های اختصاص یافته"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:487
 msgid "Leaves Expired"
-msgstr ""
+msgstr "مرخصی‌ها منقضی شده‌اند"
 
 #: hrms/hr/doctype/leave_application/leave_application_dashboard.html:10
 msgid "Leaves Pending Approval"
@@ -5762,7 +5790,7 @@ msgstr "وام از حقوق کارمند {0} قابل بازپرداخت نیس
 
 #: frontend/src/components/CheckInPanel.vue:143
 msgid "Locating..."
-msgstr ""
+msgstr "مکان‌یابی..."
 
 #. Label of a Data field in DocType 'Employee Checkin'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json:83
@@ -5776,7 +5804,7 @@ msgstr "اسکان ضروری است"
 
 #: frontend/src/views/Profile.vue:106
 msgid "Log Out"
-msgstr ""
+msgstr "خروج"
 
 #. Label of a Select field in DocType 'Employee Checkin'
 #: frontend/src/views/attendance/EmployeeCheckinList.vue:25
@@ -5790,11 +5818,11 @@ msgstr "ورود به سیستم برای ورود به سیستم در شیفت
 
 #: frontend/src/views/InvalidEmployee.vue:7
 msgid "Login Failed"
-msgstr ""
+msgstr "ورود ناموفق بود"
 
 #: frontend/src/views/Login.vue:38
 msgid "Login to Frappe HR"
-msgstr ""
+msgstr "ورود به Frappe HR"
 
 #: frontend/src/components/CheckInPanel.vue:130
 msgid "Longitude: {0}°"
@@ -5876,7 +5904,7 @@ msgstr "حضور و علامت گذاری بر اساس &quot;Checkin Employee&q
 
 #: hrms/hr/doctype/shift_type/shift_type.py:97
 msgid "Mark attendance for existing check-in/out logs before changing shift settings"
-msgstr ""
+msgstr "قبل از تغییر تنظیمات شیفت، برای لاگ‌های ورود/خروج موجود ثبت حضور انجام دهید"
 
 #: hrms/hr/doctype/goal/goal_tree.js:262
 msgid "Mark {0} as Completed?"
@@ -5984,7 +6012,7 @@ msgstr "حداکثر میزان معافیت"
 #. Label of a Float field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json:55
 msgid "Maximum Leave Allocation Allowed per Leave Period"
-msgstr ""
+msgstr "حداکثر تخصیص مرخصی مجاز در هر دوره مرخصی"
 
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:65
 msgid "Maximum amount eligible for the component {0} exceeds {1}"
@@ -5994,7 +6022,7 @@ msgstr "حداکثر واجد شرایط برای کامپوننت {0} بیش ا
 #. in DocType 'Income Tax Slab'
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json:113
 msgid "Maximum annual taxable income eligible for full tax relief. No tax is applied if income does not exceed this limit"
-msgstr ""
+msgstr "حداکثر درآمد مشمول مالیات سالانه که واجد شرایط معافیت کامل مالیاتی است. اگر درآمد از این محدودیت فراتر نرود، هیچ مالیاتی اعمال نمی‌شود"
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:140
 msgid "Maximum benefit amount of component {0} exceeds {1}"
@@ -6054,19 +6082,19 @@ msgstr "حداقل سال برای انعام"
 #. field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json:58
 msgid "Minimum working days required since Date of Joining to apply for this leave"
-msgstr ""
+msgstr "حداقل روزهای کاری مورد نیاز از تاریخ پیوستن برای درخواست این مرخصی"
 
 #: hrms/hr/doctype/employee_advance/employee_advance.py:47
 msgid "Missing Advance Account"
-msgstr ""
+msgstr "حساب پیش‌پرداخت مفقود است"
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:83
 msgid "Missing Mandatory Field"
-msgstr ""
+msgstr "فیلد اجباری ناموجود است"
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:167
 msgid "Missing Opening Entries"
-msgstr ""
+msgstr "ثبت‌های افتتاحیه مفقود"
 
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:44
 msgid "Missing Relieving Date"
@@ -6074,11 +6102,11 @@ msgstr "از دست رفته تاریخ برکناری"
 
 #: hrms/payroll/report/provident_fund_deductions/provident_fund_deductions.py:20
 msgid "Missing Salary Components"
-msgstr ""
+msgstr "مؤلفه‌های حقوق مفقود"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1633
 msgid "Missing Tax Slab"
-msgstr ""
+msgstr "طبقه مالیاتی گم شده"
 
 #. Label of a Select field in DocType 'Travel Itinerary'
 #: hrms/hr/doctype/travel_itinerary/travel_itinerary.json:92
@@ -6184,11 +6212,11 @@ msgstr "شناسه کارمند جدید"
 
 #: frontend/src/components/ExpensesTable.vue:213
 msgid "New Expense Item"
-msgstr ""
+msgstr "آیتم هزینه جدید"
 
 #: frontend/src/components/ExpenseTaxesTable.vue:221
 msgid "New Expense Tax"
-msgstr ""
+msgstr "مالیات هزینه جدید"
 
 #: hrms/public/js/templates/performance_feedback.html:26
 msgid "New Feedback"
@@ -6197,7 +6225,7 @@ msgstr "بازخورد جدید"
 #. Label of a quick_list in the Employee Lifecycle Workspace
 #: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json:300
 msgid "New Hires (This Month)"
-msgstr ""
+msgstr "استخدام‌های جدید (این ماه)"
 
 #. Label of a Float field in DocType 'Leave Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json:117
@@ -6249,7 +6277,7 @@ msgstr "هیچ فیش حقوقی برای کارمند: {0} یافت نشد"
 
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.py:116
 msgid "No Salary Structure Assignment found for employee {0} on or before {1}"
-msgstr ""
+msgstr "هیچ تخصیص ساختار حقوق برای کارمند {0} در تاریخ {1} یا قبل از آن یافت نشد"
 
 #: hrms/hr/doctype/leave_encashment/leave_encashment.py:36
 msgid "No Salary Structure assigned to Employee {0} on the given date {1}"
@@ -6269,7 +6297,7 @@ msgstr "هیچ برنامه انکشافی برای این تعیین نشد"
 
 #: frontend/src/views/InvalidEmployee.vue:8
 msgid "No active employee found associated with the email ID {0}. Try logging in with your employee email ID or contact your HR manager for access."
-msgstr ""
+msgstr "هیچ کارمند فعالی مرتبط با آدرس ایمیل {0} یافت نشد. با آدرس ایمیل کارمندی خود وارد شوید یا برای دسترسی با مدیر منابع انسانی خود تماس بگیرید."
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:425
 msgid "No active or default Salary Structure found for employee {0} for the given dates"
@@ -6281,19 +6309,19 @@ msgstr "هیچ هزینه اضافی اضافه نشده است"
 
 #: frontend/src/components/ExpenseAdvancesTable.vue:63
 msgid "No advances found"
-msgstr ""
+msgstr "هیچ پیش‌پرداختی یافت نشد"
 
 #: hrms/payroll/doctype/gratuity/gratuity.py:276
 msgid "No applicable Earning component found in last salary slip for Gratuity Rule: {0}"
-msgstr ""
+msgstr "هیچ جزء درآمد قابل اعمالی در آخرین فیش حقوقی برای قانون حق سنوات یافت نشد: {0}"
 
 #: hrms/payroll/doctype/gratuity/gratuity.py:289
 msgid "No applicable Earning components found for Gratuity Rule: {0}"
-msgstr ""
+msgstr "هیچ جزء درآمدی قابل اعمالی برای قانون حق سنوات یافت نشد: {0}"
 
 #: hrms/payroll/doctype/gratuity/gratuity.py:254
 msgid "No applicable slab found for the calculation of gratuity amount as per the Gratuity Rule: {0}"
-msgstr ""
+msgstr "هیچ پله قابل اعمالی برای محاسبه مبلغ حق سنوات بر اساس قانون حق سنوات یافت نشد: {0}"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:71
 msgid "No attendance records found for this criteria."
@@ -6329,11 +6357,11 @@ msgstr "هیچ کارمندی با فیلترهای انتخابی و ساختا
 
 #: frontend/src/components/ExpensesTable.vue:64
 msgid "No expenses added"
-msgstr ""
+msgstr "هیچ هزینه ای اضافه نشده است"
 
 #: hrms/public/js/templates/feedback_history.html:55
 msgid "No feedback has been received yet"
-msgstr ""
+msgstr "هنوز هیچ بازخوردی دریافت نشده است"
 
 #: hrms/hr/doctype/goal/goal_list.js:94
 msgid "No items selected"
@@ -6370,23 +6398,23 @@ msgstr "هیچ لغزش حقوق و دستمزد برای ارائه معیار�
 
 #: frontend/src/views/salary_slip/Dashboard.vue:50
 msgid "No salary slips found"
-msgstr ""
+msgstr "فیش حقوقی پیدا نشد"
 
 #: frontend/src/components/ExpenseTaxesTable.vue:56
 msgid "No taxes added"
-msgstr ""
+msgstr "هیچ مالیاتی اضافه نشده است"
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.js:51
 msgid "No valid shift found for log time"
-msgstr ""
+msgstr "شیفت معتبری برای زمان لاگ یافت نشد"
 
 #: hrms/public/js/utils/index.js:48
 msgid "No {0} Selected"
-msgstr ""
+msgstr "{0} انتخاب نشده است"
 
 #: frontend/src/components/SalaryDetailTable.vue:32
 msgid "No {0} added"
-msgstr ""
+msgstr "هیچ {0} اضافه نشده است"
 
 #. Option for the 'Meal Preference' (Select) field in DocType 'Travel
 #. Itinerary'
@@ -6429,7 +6457,7 @@ msgstr "توجه: مجموع مرخصی‌های تخصیص‌یافته {0} ن�
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1973
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
-msgstr ""
+msgstr "یادداشت: فیش حقوقی شما با گذرواژه محافظت شده است؛ گذرواژه باز کردن فایل PDF با قالب {0} است."
 
 #: hrms/hr/employee_property_update.js:176
 msgid "Nothing to change"
@@ -6468,7 +6496,7 @@ msgstr "تعداد موقعیت ها"
 #. Label of a Int field in DocType 'Salary Withholding'
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json:76
 msgid "Number of Withholding Cycles"
-msgstr ""
+msgstr "تعداد چرخه‌های نگه‌داشت"
 
 #. Description of the 'Actual Encashable Days' (Float) field in DocType 'Leave
 #. Encashment'
@@ -6478,11 +6506,11 @@ msgstr "تعداد مرخصی‌های واجد شرایط برای بازخری
 
 #: frontend/src/views/Login.vue:105
 msgid "OTP Code"
-msgstr ""
+msgstr "کد یکبار مصرف"
 
 #: frontend/src/views/Login.vue:96
 msgid "OTP Verification"
-msgstr ""
+msgstr "تأیید OTP"
 
 #. Option for the 'Log Type' (Select) field in DocType 'Employee Checkin'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json:56
@@ -6510,12 +6538,12 @@ msgstr "مقدار کیلومتر شمار"
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:5
 msgid "Off-Shift"
-msgstr ""
+msgstr "خارج از شیفت"
 
 #. Label of a Check field in DocType 'Employee Checkin'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json:175
 msgid "Off-shift"
-msgstr ""
+msgstr "خارج از شیفت"
 
 #. Label of a Link field in DocType 'Job Offer Term'
 #. Name of a DocType
@@ -6617,7 +6645,7 @@ msgstr "باز و تایید شده"
 
 #: hrms/public/js/templates/feedback_history.html:44
 msgid "Open Feedback"
-msgstr ""
+msgstr "باز کردن بازخورد"
 
 #: hrms/hr/doctype/leave_application/leave_application_email_template.html:30
 msgid "Open Now"
@@ -6666,7 +6694,7 @@ msgstr "بیش از تخصیص"
 
 #: hrms/public/js/templates/interview_feedback.html:4
 msgid "Overall Average Rating"
-msgstr ""
+msgstr "میانگین کلی امتیاز"
 
 #: hrms/hr/doctype/attendance_request/attendance_request.py:117
 msgid "Overlapping Attendance Request"
@@ -6770,7 +6798,7 @@ msgstr "پرداخت حق بیمه"
 #. Label of a Check field in DocType 'Leave Encashment'
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json:198
 msgid "Pay Via Payment Entry"
-msgstr ""
+msgstr "پرداخت از طریق ثبت پرداخت"
 
 #. Label of a Check field in DocType 'Gratuity'
 #: hrms/payroll/doctype/gratuity/gratuity.json:172
@@ -6803,7 +6831,7 @@ msgstr "وابستگی روزهای پرداخت"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.js:284
 msgid "Payment Days calculations are based on these Payroll Settings"
-msgstr ""
+msgstr "محاسبات روزهای پرداخت بر اساس این تنظیمات حقوق و دستمزد انجام می‌شود"
 
 #. Label of a Tab Break field in DocType 'Gratuity'
 #: hrms/payroll/doctype/gratuity/gratuity.json:108
@@ -6944,11 +6972,11 @@ msgstr ""
 #. Advance'
 #: hrms/hr/doctype/employee_advance/employee_advance.json:191
 msgid "Pending (unpaid) amount from previous advances"
-msgstr ""
+msgstr "مبلغ در انتظار (پرداخت نشده) از پیش‌پرداخت‌های قبلی"
 
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:69
 msgid "Pending Asset Returns"
-msgstr ""
+msgstr "مرجوعی‌های دارایی در انتظار"
 
 #: hrms/hr/report/employee_exits/employee_exits.py:227
 msgid "Pending FnF"
@@ -6974,11 +7002,11 @@ msgstr "کارایی"
 
 #: frontend/src/components/FormView.vue:286
 msgid "Permanently cancel {0}"
-msgstr ""
+msgstr "لغو {0} برای همیشه"
 
 #: frontend/src/components/FormView.vue:255
 msgid "Permanently submit {0}"
-msgstr ""
+msgstr "ارسال {0} برای همیشه"
 
 #: hrms/setup.py:389
 msgid "Piecework"
@@ -7043,7 +7071,7 @@ msgstr ""
 
 #: hrms/hr/doctype/shift_type/shift_type.py:58
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
-msgstr ""
+msgstr "لطفاً {0} را کاهش دهید تا زمان شیفت با خودش همپوشانی نداشته باشد"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1962
 msgid "Please see attachment"
@@ -7064,23 +7092,23 @@ msgstr "لطفاً ابتدا کارمند را انتخاب کنید."
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:41
 msgid "Please select Filter Based On"
-msgstr ""
+msgstr "لطفاً فیلتر بر اساس را انتخاب کنید"
 
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.js:25
 msgid "Please select From Date and Payroll Frequency first"
-msgstr ""
+msgstr "لطفاً ابتدا تاریخ از و دوره حقوق و دستمزد را انتخاب کنید"
 
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:113
 msgid "Please select From Date."
-msgstr ""
+msgstr "لطفاً تاریخ «از» را انتخاب کنید."
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:167
 msgid "Please select Shift Schedule and assignment date(s)."
-msgstr ""
+msgstr "لطفا زمان‌بندی شیفت و تاریخ(های) تخصیص را انتخاب کنید."
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:160
 msgid "Please select Shift Type and assignment date(s)."
-msgstr ""
+msgstr "لطفا نوع شیفت و تاریخ(های) اختصاص را انتخاب کنید."
 
 #: hrms/public/js/hierarchy_chart/hierarchy_chart_mobile.js:233
 msgid "Please select a company first"
@@ -7105,15 +7133,15 @@ msgstr "لطفاً یک متقاضی را انتخاب کنید"
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:260
 msgid "Please select at least one Shift Request to perform this action."
-msgstr ""
+msgstr "لطفا حداقل یک درخواست شیفت برای انجام این کار انتخاب کنید."
 
 #: hrms/hr/utils.py:860
 msgid "Please select at least one employee to perform this action."
-msgstr ""
+msgstr "لطفا حداقل یک کارمند را برای انجام این کار انتخاب کنید."
 
 #: hrms/public/js/utils/index.js:47
 msgid "Please select at least one row to perform this action."
-msgstr ""
+msgstr "لطفا حداقل یک ردیف را برای انجام این کار انتخاب کنید."
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:55
 msgid "Please select company."
@@ -7130,7 +7158,7 @@ msgstr "لطفاً کارکنانی را برای ایجاد ارزیابی ان
 
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.js:254
 msgid "Please select half day attendance status."
-msgstr ""
+msgstr "لطفاً وضعیت حضور و غیاب نیم‌روز را انتخاب کنید."
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:44
 msgid "Please select month and year."
@@ -7180,7 +7208,7 @@ msgstr "لطفاً یک حساب پیش‌فرض نقدی را در پیش‌ف�
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:186
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:52
 msgid "Please set a date range less than 90 days."
-msgstr ""
+msgstr "لطفاً بازه تاریخی کمتر از ۹۰ روز تنظیم کنید."
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:344
 msgid "Please set account in Salary Component {0}"
@@ -7212,7 +7240,7 @@ msgstr "لطفا لیست تعطیلات را تنظیم کنید."
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:48
 msgid "Please set the date range."
-msgstr ""
+msgstr "لطفا محدوده تاریخ را تعیین کنید."
 
 #: hrms/hr/doctype/exit_interview/exit_interview.js:21
 #: hrms/hr/doctype/exit_interview/exit_interview.py:21
@@ -7254,7 +7282,7 @@ msgstr "لطفا متقاضی کار را مشخص کنید تا به روز ش�
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:158
 msgid "Please specify {0} and {1} (if any), for the correct tax calculation in future salary slips."
-msgstr ""
+msgstr "لطفاً {0} و {1} (در صورت وجود) را برای محاسبه صحیح مالیات در فیش های حقوقی آینده مشخص کنید."
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:157
 msgid "Please submit the {0} before marking the cycle as Completed"
@@ -7307,12 +7335,12 @@ msgstr "رکوردهای حاضر"
 #. Label of a Check field in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json:347
 msgid "Prevent self approval for expense claims even if user has permissions"
-msgstr ""
+msgstr "جلوگیری از تأیید خودی مطالبه هزینه حتی اگر کاربر دسترسی داشته باشد"
 
 #. Label of a Check field in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json:341
 msgid "Prevent self approval for leaves even if user has permissions"
-msgstr ""
+msgstr "جلوگیری از خود تأییدی درخواست‌های مرخصی حتی اگر کاربر مجوز داشته باشد"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:155
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:193
@@ -7327,7 +7355,7 @@ msgstr "مبلغ اصلی"
 
 #: hrms/payroll/report/salary_register/salary_register.html:40
 msgid "Printed On {0}"
-msgstr ""
+msgstr "چاپ شده در {0}"
 
 #: hrms/setup.py:368 hrms/setup.py:369
 msgid "Privilege Leave"
@@ -7357,34 +7385,34 @@ msgstr "فرآیند ثبت حسابداری حقوق و دستمزد بر اس�
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:130
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:132
 msgid "Process Requests"
-msgstr ""
+msgstr "پردازش درخواست‌ها"
 
 #. Option for the 'Action' (Select) field in DocType 'Shift Assignment Tool'
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json:45
 msgid "Process Shift Requests"
-msgstr ""
+msgstr "پردازش درخواست‌های شیفت"
 
 #. Description of the 'Pay Via Payment Entry' (Check) field in DocType 'Leave
 #. Encashment'
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json:195
 msgid "Process leave encashment via a separate Payment Entry instead of Salary Slip"
-msgstr ""
+msgstr "بازخرید مرخصی استفاده‌نشده را از طریق سند پرداخت جداگانه انجام دهید، نه فیش حقوقی"
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:289
 msgid "Process {0} Shift Request(s) as <b>{1}</b>?"
-msgstr ""
+msgstr "آیا {0} درخواست شیفت را به عنوان <b>{1}</b> پردازش می‌کنید؟"
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:305
 msgid "Processing Requests"
-msgstr ""
+msgstr "در حال پردازش درخواست‌ها"
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:299
 msgid "Processing Requests..."
-msgstr ""
+msgstr "در حال پردازش درخواست‌ها..."
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.py:271
 msgid "Processing of Shift Requests has been queued. It may take a few minutes."
-msgstr ""
+msgstr "پردازش درخواست‌های شیفت در صف قرار گرفت. ممکن است چند دقیقه طول بکشد."
 
 #. Name of a report
 #. Label of a Link in the Salary Payout Workspace
@@ -7433,7 +7461,7 @@ msgstr "کسر صندوق تأمین مالی"
 #. Label of a Check field in DocType 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json:254
 msgid "Publish Applications Received"
-msgstr ""
+msgstr "انتشار درخواست‌های دریافت‌شده"
 
 #. Label of a Check field in DocType 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json:174
@@ -7463,15 +7491,15 @@ msgstr "هدف سفر"
 
 #: frontend/src/views/AppSettings.vue:152
 msgid "Push Notification permission denied"
-msgstr ""
+msgstr "مجوز اعلان‌های پوش رد شد"
 
 #: frontend/src/views/AppSettings.vue:121
 msgid "Push notifications disabled"
-msgstr ""
+msgstr "اعلان‌های فوری غیرفعال شدند"
 
 #: frontend/src/views/AppSettings.vue:106
 msgid "Push notifications have been disabled on your site"
-msgstr ""
+msgstr "اعلان‌های فوری در سایت شما غیرفعال شده‌اند"
 
 #. Label of a Check field in DocType 'Exit Interview'
 #: hrms/hr/doctype/exit_interview/exit_interview.json:170
@@ -7496,7 +7524,7 @@ msgstr "لینک های سریع"
 #. Description of the 'Checkin Radius' (Int) field in DocType 'Shift Location'
 #: hrms/hr/doctype/shift_location/shift_location.json:28
 msgid "Radius within which check-in is allowed (in meters)"
-msgstr ""
+msgstr "شعاعی که در داخل آن ثبت ورود مجاز است (بر حسب متر)"
 
 #. Label of a Check field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json:248
@@ -7528,7 +7556,7 @@ msgstr "دلیل درخواست"
 #. Label of a Small Text field in DocType 'Salary Withholding'
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json:131
 msgid "Reason for Withholding Salary"
-msgstr ""
+msgstr "دلیل نگه‌داشت حقوق"
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:369
 msgid "Reason for skipping auto attendance:"
@@ -7536,11 +7564,11 @@ msgstr "دلیل عدم حضور خودکار:"
 
 #: frontend/src/views/attendance/Dashboard.vue:14
 msgid "Recent Attendance Requests"
-msgstr ""
+msgstr "درخواست‌های حضور و غیاب اخیر"
 
 #: frontend/src/views/expense_claim/Dashboard.vue:23
 msgid "Recent Expenses"
-msgstr ""
+msgstr "هزینه های اخیر"
 
 #: frontend/src/views/leave/Dashboard.vue:21
 msgid "Recent Leaves"
@@ -7548,18 +7576,18 @@ msgstr "مرخصی های اخیر"
 
 #: frontend/src/views/attendance/Dashboard.vue:40
 msgid "Recent Shift Requests"
-msgstr ""
+msgstr "درخواست‌های شیفت اخیر"
 
 #. Description of the 'Automatically update Last Sync of Checkin' (Check) field
 #. in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json:184
 msgid "Recommended for a single biometric device / checkins via mobile app"
-msgstr ""
+msgstr "توصیه شده برای دستگاه بیومتریک تکی / ثبت ورود از طریق اپلیکیشن موبایل"
 
 #. Option for the 'Action' (Select) field in DocType 'Full and Final Asset'
 #: hrms/hr/doctype/full_and_final_asset/full_and_final_asset.json:70
 msgid "Recover Cost"
-msgstr ""
+msgstr "بازیابی هزینه"
 
 #. Name of a Workspace
 #: hrms/hr/workspace/recruitment/recruitment.json:16
@@ -7582,7 +7610,7 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_type/leave_type.py:69
 msgid "Reducing maximum leaves allowed after allocation may cause scheduler to allocate incorrect number of earned leaves. Proceed with caution."
-msgstr ""
+msgstr "کاهش حداکثر مرخصی مجاز پس از تخصیص ممکن است باعث شود زمانبند تعداد نادرستی از مرخصی‌های استحقاقی را اختصاص دهد. با احتیاط عمل کنید."
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:371
 #: hrms/hr/doctype/leave_application/leave_application.py:534
@@ -7624,7 +7652,7 @@ msgstr "اطلاعات سوختگیری"
 #: frontend/src/components/RequestActionSheet.vue:96
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:126
 msgid "Reject"
-msgstr ""
+msgstr "رد"
 
 #: hrms/hr/doctype/employee_referral/employee_referral.js:7
 msgid "Reject Employee Referral"
@@ -7632,16 +7660,16 @@ msgstr "رد معرفی کارمند"
 
 #: frontend/src/components/RequestActionSheet.vue:298
 msgid "Rejection"
-msgstr ""
+msgstr "رد"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:162
 msgid "Release Withheld Salaries"
-msgstr ""
+msgstr "آزاد کردن حقوق‌های نگه‌داشته شده"
 
 #. Option for the 'Status' (Select) field in DocType 'Salary Withholding'
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json:161
 msgid "Released"
-msgstr ""
+msgstr "آزاد شده"
 
 #. Label of a Date field in DocType 'Full and Final Statement'
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.json:106
@@ -7699,7 +7727,7 @@ msgstr "بازپرداخت مبلغ مطالبه نشده از حقوق"
 #. Label of a Table field in DocType 'Shift Schedule'
 #: hrms/hr/doctype/shift_schedule/shift_schedule.json:32
 msgid "Repeat On Days"
-msgstr ""
+msgstr "تکرار در روزها"
 
 #: hrms/hr/report/daily_work_summary_replies/daily_work_summary_replies.py:22
 msgid "Replies"
@@ -7716,7 +7744,7 @@ msgstr "گزارش به"
 
 #: frontend/src/views/Home.vue:32 frontend/src/views/attendance/Dashboard.vue:9
 msgid "Request Attendance"
-msgstr ""
+msgstr "درخواست حضور و غیاب"
 
 #: frontend/src/views/Home.vue:42
 msgid "Request Leave"
@@ -7849,12 +7877,12 @@ msgstr "نقش مجاز به ایجاد برنامه مرخصی با سابقه 
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json:249
 #: hrms/public/js/utils/index.js:252 hrms/public/js/utils/index.js:273
 msgid "Roster"
-msgstr ""
+msgstr "لیست شیفت کاری"
 
 #. Label of a Select field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json:179
 msgid "Roster Color"
-msgstr ""
+msgstr "رنگ لیست شیفت کاری"
 
 #. Label of a Data field in DocType 'Interview Round'
 #: hrms/hr/doctype/interview_round/interview_round.json:24
@@ -7905,7 +7933,7 @@ msgstr "ردیف {0} # مقدار اختصاص داده شده {1} نمیتوا�
 
 #: hrms/hr/doctype/leave_encashment/leave_encashment.py:288
 msgid "Row {0}# Paid Amount cannot be greater than Encashment amount"
-msgstr ""
+msgstr "ردیف {0}#: مبلغ پرداخت‌شده نمی‌تواند بیشتر از مبلغ بازخرید باشد"
 
 #: hrms/payroll/doctype/gratuity/gratuity.py:133
 msgid "Row {0}# Paid Amount cannot be greater than Total amount"
@@ -7921,7 +7949,7 @@ msgstr "ردیف {0}: از (سال) نمی‌تواند بزرگتر از تا (
 
 #: hrms/hr/doctype/appraisal/appraisal.py:137
 msgid "Row {0}: Goal Score cannot be greater than {1}"
-msgstr ""
+msgstr "ردیف {0}: امتیاز هدف نمی‌تواند بیشتر از {1} باشد"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip_loan_utils.py:59
 msgid "Row {0}: Paid amount {1} is greater than pending accrued amount {2} against loan {3}"
@@ -7976,7 +8004,7 @@ msgstr "کامپوننت حقوق و دستمزد حقوق و دستمزد بر 
 
 #: hrms/payroll/doctype/salary_component/salary_component.js:97
 msgid "Salary Component {0} is currently not used in any Salary Structure."
-msgstr ""
+msgstr "مؤلفه حقوق {0} در حال حاضر در هیچ ساختار حقوقی استفاده نمی‌شود."
 
 #. Name of a DocType
 #: hrms/payroll/doctype/salary_detail/salary_detail.json:270
@@ -7995,7 +8023,7 @@ msgstr "انتظار حقوق"
 
 #: frontend/src/views/Profile.vue:201
 msgid "Salary Information"
-msgstr ""
+msgstr "اطلاعات حقوق"
 
 #. Label of a Select field in DocType 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json:245
@@ -8114,7 +8142,7 @@ msgstr "فیش حقوقی {0} ناموفق بود. می‌توانید {1} را 
 
 #: frontend/src/views/salary_slip/Dashboard.vue:2
 msgid "Salary Slips"
-msgstr ""
+msgstr "فیش‌های حقوقی"
 
 #. Label of a Check field in DocType 'Payroll Entry'
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json:197
@@ -8186,7 +8214,7 @@ msgstr "ساختار حقوق و دستمزد {0} متعلق به شرکت {1} �
 
 #: hrms/payroll/doctype/salary_component/salary_component.js:134
 msgid "Salary Structures updated successfully"
-msgstr ""
+msgstr "ساختارهای حقوق با موفقیت به‌روزرسانی شدند"
 
 #. Label of a Link field in DocType 'Salary Slip'
 #. Name of a DocType
@@ -8206,7 +8234,7 @@ msgstr "چرخه کسر حقوق"
 
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.py:39
 msgid "Salary Withholding {0} already exists for employee {1} for the selected period"
-msgstr ""
+msgstr "نگه‌داشت حقوق {0} از قبل برای کارمند {1} برای دوره انتخاب شده وجود دارد"
 
 #: hrms/hr/doctype/leave_application/leave_application.py:374
 msgid "Salary already processed for period between {0} and {1}, Leave application period cannot be between this date range."
@@ -8220,7 +8248,7 @@ msgstr "فروپاشی حقوق و دستمزد بر اساس سود و کسر."
 
 #: hrms/payroll/report/provident_fund_deductions/provident_fund_deductions.py:17
 msgid "Salary components of type Provident Fund, Additional Provident Fund or Provident Fund Loan are not set up."
-msgstr ""
+msgstr "مؤلفه‌های حقوق از نوع صندوق بازنشستگی، صندوق بازنشستگی تکمیلی یا وام صندوق بازنشستگی تنظیم نشده‌اند."
 
 #. Description of the 'Applicable Earnings Component' (Table MultiSelect) field
 #. in DocType 'Gratuity Rule'
@@ -8288,7 +8316,7 @@ msgstr "فرکانس حقوق و دستمزد را انتخاب کنید."
 
 #: frontend/src/views/salary_slip/Dashboard.vue:23
 msgid "Select Payroll Period"
-msgstr ""
+msgstr "انتخاب دوره حقوق و دستمزد"
 
 #: hrms/hr/employee_property_update.js:109
 msgid "Select Property"
@@ -8296,7 +8324,7 @@ msgstr "املاک را انتخاب کنید"
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:134
 msgid "Select Shift Requests"
-msgstr ""
+msgstr "انتخاب درخواست‌های شیفت"
 
 #. Label of a Link field in DocType 'Job Offer'
 #: hrms/hr/doctype/job_offer/job_offer.json:116
@@ -8380,7 +8408,7 @@ msgstr "خود ارزیابی در انتظار: {0}"
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.js:89
 msgid "Self Appraisal Score"
-msgstr ""
+msgstr "امتیاز خودارزیابی"
 
 #: hrms/hr/report/appraisal_overview/appraisal_overview.py:56
 #: hrms/hr/report/appraisal_overview/appraisal_overview.py:123
@@ -8394,11 +8422,11 @@ msgstr "خودخوان"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:119
 msgid "Self-approval for Expense Claims is not allowed"
-msgstr ""
+msgstr "خودتأییدی مطالبه هزینه مجاز نیست"
 
 #: hrms/hr/doctype/leave_application/leave_application.py:875
 msgid "Self-approval for leaves is not allowed"
-msgstr ""
+msgstr "خود تأییدی برای مرخصی مجاز نیست"
 
 #. Option for the 'Type' (Select) field in DocType 'Training Event'
 #: hrms/hr/doctype/training_event/training_event.json:81
@@ -8439,7 +8467,7 @@ msgstr ""
 
 #: hrms/hr/doctype/exit_interview/exit_interview.py:136
 msgid "Sending Failed due to missing email information for employee(s): {1}"
-msgstr ""
+msgstr "ارسال ناموفق بود زیرا اطلاعات ایمیل کارمند(ان) وجود ندارد: {1}"
 
 #: hrms/hr/doctype/exit_interview/exit_interview.py:132
 msgid "Sent Successfully: {0}"
@@ -8499,7 +8527,7 @@ msgstr "فیلترهایی را برای واکشی کارمندان تنظیم 
 #. 'Salary Structure Assignment'
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json:206
 msgid "Set opening balances for earnings and taxes from the previous employer"
-msgstr ""
+msgstr "مانده‌های اولیه درآمد و مالیات را از کارفرمای قبلی تنظیم کنید"
 
 #. Description of the 'Filters' (Section Break) field in DocType 'Appraisal
 #. Cycle'
@@ -8536,7 +8564,7 @@ msgstr "تنظیمات از دست رفته است"
 
 #: frontend/src/components/ExpenseAdvancesTable.vue:4
 msgid "Settle against Advances"
-msgstr ""
+msgstr "تسویه با پیش‌پرداخت‌ها"
 
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:51
 msgid "Settle all Payables and Receivables before submission"
@@ -8544,7 +8572,7 @@ msgstr "همه پرداختنی‌ها و دریافتنی‌ها را قبل ا
 
 #: hrms/hr/utils.py:712
 msgid "Shared document with the user {0} with 'Submit' permission"
-msgstr ""
+msgstr "سند با کاربر {0} با مجوز 'ارسال' به اشتراک گذاشته شد"
 
 #. Name of a Workspace
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json:18
@@ -8603,7 +8631,7 @@ msgstr "تکلیف شیفت: {0} برای کارمند ایجاد شده است:
 
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.py:135
 msgid "Shift Assignments created for the schedule between {0} and {1} via background job"
-msgstr ""
+msgstr "تخصیص‌های شیفت برای زمان‌بندی بین {0} و {1} از طریق کار پس‌زمینه ایجاد شدند"
 
 #. Name of a report
 #. Label of a Link in the Shift & Attendance Workspace
@@ -8664,12 +8692,12 @@ msgstr "فیلترهای درخواست شیفت"
 #. Tool'
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json:160
 msgid "Shift Requests ending before this date will be excluded."
-msgstr ""
+msgstr "درخواست‌های شیفتی که قبل از این تاریخ به پایان برسند، مستثنی خواهند بود."
 
 #. Description of the 'To Date' (Date) field in DocType 'Shift Assignment Tool'
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json:166
 msgid "Shift Requests starting after this date will be excluded."
-msgstr ""
+msgstr "درخواست‌های شیفتی که پس از این تاریخ شروع شوند، مستثنی خواهند بود."
 
 #. Label of a Link field in DocType 'Shift Assignment Tool'
 #. Name of a DocType
@@ -8715,7 +8743,7 @@ msgstr "وضعیت شیفت"
 #. Label of a Section Break field in DocType 'Employee Checkin'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json:136
 msgid "Shift Timings"
-msgstr ""
+msgstr "زمان‌بندی شیفت"
 
 #: hrms/public/js/utils/index.js:248 hrms/public/js/utils/index.js:256
 #: hrms/public/js/utils/index.js:270 hrms/public/js/utils/index.js:277
@@ -8743,7 +8771,7 @@ msgstr "نوع تغییر"
 
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.py:21
 msgid "Shift assignments for {0} after {1} are already created. Please change {2} date to a date later than {3} {4}"
-msgstr ""
+msgstr "تخصیص‌های شیفت برای {0} پس از {1} از قبل ایجاد شده‌اند. لطفاً تاریخ {2} را به تاریخی بعد از {3} {4} تغییر دهید"
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.js:42
 msgid "Shift has been successfully updated to {0}."
@@ -8833,7 +8861,7 @@ msgstr "منبع و رتبه بندی"
 
 #: hrms/api/roster.py:95
 msgid "Source and target shifts cannot be the same"
-msgstr ""
+msgstr "شیفت مبدا و مقصد نمی‌توانند یکسان باشند"
 
 #. Label of a Currency field in DocType 'Travel Request Costing'
 #: hrms/hr/doctype/travel_request_costing/travel_request_costing.json:32
@@ -8888,7 +8916,7 @@ msgstr "تاریخ شروع و پایان را در یک دوره ثبت نام 
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:50
 msgid "Start date cannot be greater than end date."
-msgstr ""
+msgstr "تاریخ شروع نمی‌تواند بعد از تاریخ پایان باشد."
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:225
 msgid "Start date: {0}"
@@ -8896,7 +8924,7 @@ msgstr "تاریخ شروع: {0}"
 
 #: hrms/hr/doctype/shift_type/shift_type.py:49
 msgid "Start time and end time cannot be same."
-msgstr ""
+msgstr "زمان شروع و پایان نمی‌تواند یکسان باشد."
 
 #. Label of a Check field in DocType 'Salary Component'
 #. Label of a Check field in DocType 'Salary Detail'
@@ -8910,7 +8938,7 @@ msgstr "کامپوننت آماری"
 #: hrms/hr/doctype/attendance/attendance.json:212
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json:139
 msgid "Status for Other Half"
-msgstr ""
+msgstr "وضعیت برای نیمه دیگر"
 
 #: hrms/setup.py:403
 msgid "Stock Options"
@@ -8943,7 +8971,7 @@ msgstr "ارسال ناموفق بود"
 
 #: hrms/hr/doctype/interview_feedback/interview_feedback.py:39
 msgid "Submission of {0} before {1} is not allowed"
-msgstr ""
+msgstr "ارسال {0} قبل از {1} مجاز نیست"
 
 #: hrms/hr/doctype/interview/interview.js:57
 #: hrms/hr/doctype/interview/interview.js:61
@@ -8985,11 +9013,11 @@ msgstr "شرکت های تابعه قبلاً برای {1} جای خالی با 
 
 #: hrms/hr/utils.py:888
 msgid "Successfully created {0} for employees:"
-msgstr ""
+msgstr "{0} با موفقیت برای کارمندان ایجاد شد:"
 
 #: hrms/public/js/utils/index.js:160
 msgid "Successfully {0} {1} for the following employees:"
-msgstr ""
+msgstr "{0} {1} با موفقیت برای کارمندان زیر انجام شد:"
 
 #. Option for the 'Calculate Gratuity Amount Based On' (Select) field in
 #. DocType 'Gratuity Rule'
@@ -9071,7 +9099,7 @@ msgstr "درآمد مشمول مالیات تا تاریخ"
 #. Label of a Currency field in DocType 'Income Tax Slab'
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json:116
 msgid "Taxable Income Relief Threshold Limit"
-msgstr ""
+msgstr "حد آستانه معافیت درآمد مشمول مالیات"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/taxable_salary_slab/taxable_salary_slab.json:61
@@ -9102,7 +9130,7 @@ msgstr "تاکسی"
 
 #: frontend/src/views/employee_advance/List.vue:19
 msgid "Team Advances"
-msgstr ""
+msgstr "پیش‌پرداخت‌های تیم"
 
 #: frontend/src/views/expense_claim/List.vue:19
 msgid "Team Claims"
@@ -9124,7 +9152,7 @@ msgstr "به روز رسانی تیم"
 #. Success message of the job-application Web Form
 #: hrms/hr/web_form/job_application/job_application.json:34
 msgid "Thank you for applying."
-msgstr ""
+msgstr "ممنون که درخواست دادید."
 
 #. Success message of the Module Onboarding 'Human Resource'
 #: hrms/hr/module_onboarding/human_resource/human_resource.json:45
@@ -9138,7 +9166,7 @@ msgstr ""
 
 #: hrms/overrides/company.py:131
 msgid "The currency of {0} should be same as the company's default currency. Please select another account."
-msgstr ""
+msgstr "واحد پول {0} باید با واحد پول پیش‌فرض شرکت یکسان باشد. لطفاً حساب دیگری انتخاب کنید."
 
 #. Description of the 'Payroll Date' (Date) field in DocType 'Additional
 #. Salary'
@@ -9175,11 +9203,11 @@ msgstr "کسری از حقوق روزانه که باید برای حضور در
 
 #: hrms/hr/report/project_profitability/project_profitability.py:101
 msgid "The metrics for this report are calculated based on the {0}. Please set {0} in {1}."
-msgstr ""
+msgstr "معیارهای این گزارش بر اساس {0} محاسبه می‌شوند. لطفاً {0} را در {1} تنظیم کنید."
 
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:35
 msgid "The metrics for this report are calculated based on {0}. Please set {0} in {1}."
-msgstr ""
+msgstr "معیارهای این گزارش بر اساس {0} محاسبه می‌شوند. لطفاً {0} را در {1} تنظیم کنید."
 
 #. Description of the 'Encrypt Salary Slips in Emails' (Check) field in DocType
 #. 'Payroll Settings'
@@ -9230,7 +9258,7 @@ msgstr "طبق برنامه کارمندان هیچ خالی وجود ندارد
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:20
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:200
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
-msgstr ""
+msgstr "هیچ ساختار حقوقی به {0} اختصاص داده نشده است. ابتدا یک ساختار حقوق اختصاص دهید."
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:414
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
@@ -9247,7 +9275,7 @@ msgstr "این اقدام از ایجاد تغییرات در بازخورد/ا�
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.js:9
 msgid "This check-in is outside assigned shift hours and will not be considered for attendance. If a shift is assigned, adjust its time window and Fetch Shift again."
-msgstr ""
+msgstr "این ورود خارج از ساعات شیفت تعیین‌شده است و برای حضور و غیاب در نظر گرفته نخواهد شد. اگر شیفتی تعیین‌شده است، پنجره زمانی آن را تنظیم کنید و دوباره شیفت را دریافت کنید."
 
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:97
 msgid "This compensatory leave will be applicable from {0}."
@@ -9287,7 +9315,7 @@ msgstr ""
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:201
 msgid "This will overwrite the tax component {0} in the salary slip and tax won't be calculated based on the Income Tax Slabs"
-msgstr ""
+msgstr "این کار جزء مالیاتی {0} را در فیش حقوقی بازنویسی می‌کند و مالیات بر اساس طبقات مالیات بر درآمد محاسبه نخواهد شد"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:395
 msgid "This will submit Salary Slips and create accrual Journal Entry. Do you want to proceed?"
@@ -9359,7 +9387,7 @@ msgstr "تا تاریخ نمیتواند بیشتر از تاریخ تسکین �
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:212
 msgid "To overwrite the salary component amount for a tax component, please enable {0}"
-msgstr ""
+msgstr "برای بازنویسی مبلغ مؤلفه حقوق برای یک جزء مالیاتی، لطفاً {0} را فعال کنید"
 
 #. Label of a Int field in DocType 'Gratuity Rule Slab'
 #: hrms/payroll/doctype/gratuity_rule_slab/gratuity_rule_slab.json:34
@@ -9380,7 +9408,7 @@ msgstr "امروز {0} در شرکت ما! 🎉"
 
 #: hrms/controllers/employee_reminders.py:241
 msgid "Today {0} completed {1} {2} at our Company! 🎉"
-msgstr ""
+msgstr "امروز {0} {1} {2} را در شرکت ما به پایان رساند! 🎉"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:149
 msgid "Total Absent"
@@ -9418,7 +9446,7 @@ msgstr "مبلغ کل نمی‌تواند صفر باشد"
 #. Label of a Currency field in DocType 'Full and Final Statement'
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.json:184
 msgid "Total Asset Recovery Cost"
-msgstr ""
+msgstr "کل هزینه بازیابی دارایی"
 
 #. Label of a Currency field in DocType 'Expense Claim'
 #: frontend/src/components/ExpenseClaimSummary.vue:9
@@ -9479,11 +9507,11 @@ msgstr "مجموع مبلغ معافیت"
 
 #: hrms/setup.py:294
 msgid "Total Expense Claim (via Expense Claim)"
-msgstr ""
+msgstr "مجموع مطالبه هزینه (از طریق مطالبه هزینه)"
 
 #: hrms/setup.py:285
 msgid "Total Expense Claim (via Expense Claims)"
-msgstr ""
+msgstr "مجموع مطالبه هزینه (از طریق مطالبه‌های هزینه)"
 
 #. Label of a Float field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json:137
@@ -9506,7 +9534,7 @@ msgstr "مالیات بر درآمد کل"
 
 #: hrms/setup.py:786
 msgid "Total Interest Amount"
-msgstr ""
+msgstr "مجموع مبلغ بهره"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:168
 msgid "Total Late Entries"
@@ -9563,7 +9591,7 @@ msgstr "در حال حاضر مجموع"
 
 #: hrms/setup.py:777
 msgid "Total Principal Amount"
-msgstr ""
+msgstr "مجموع مبلغ اصل"
 
 #. Label of a Currency field in DocType 'Full and Final Statement'
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.json:178
@@ -9617,7 +9645,7 @@ msgstr "مجموع به حروف (ارز شرکت)"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:367
 msgid "Total leaves allocated cannot exceed annual allocation of {0}."
-msgstr ""
+msgstr "کل مرخصی‌های اختصاص داده شده نمی‌تواند از تخصیص سالانه {0} تجاوز کند."
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:253
 msgid "Total leaves allocated is mandatory for Leave Type {0}"
@@ -9754,7 +9782,7 @@ msgstr "آموزشها"
 #. Label of a quick_list in the Employee Lifecycle Workspace
 #: hrms/hr/workspace/employee_lifecycle/employee_lifecycle.json:305
 msgid "Trainings (This Week)"
-msgstr ""
+msgstr "آموزش‌ها (این هفته)"
 
 #: hrms/hr/utils.py:735
 msgid "Transactions cannot be created for an Inactive Employee {0}."
@@ -9828,7 +9856,7 @@ msgstr "یافتن جزء حقوق و دستمزد {0} یافت نشد"
 
 #: hrms/public/js/utils/index.js:208
 msgid "Unable to retrieve your location"
-msgstr ""
+msgstr "امکان دریافت مکان شما وجود ندارد"
 
 #: hrms/hr/doctype/goal/goal.js:55
 msgid "Unarchive"
@@ -9864,7 +9892,7 @@ msgstr "حضور در روز بدون علامت"
 
 #: hrms/hr/doctype/shift_type/shift_type.py:96
 msgid "Unmarked Check-in Logs Found"
-msgstr ""
+msgstr "لاگ‌های ثبت ورود بدون علامت‌گذاری یافت شد"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:157
 #: hrms/public/js/templates/employees_with_unmarked_attendance.html:19
@@ -9874,12 +9902,12 @@ msgstr "روزهای بدون علامت"
 #. Label of a HTML field in DocType 'Employee Attendance Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json:161
 msgid "Unmarked Employee Header"
-msgstr ""
+msgstr "سرآیند کارمندان علامت‌گذاری‌نشده"
 
 #. Label of a HTML field in DocType 'Employee Attendance Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json:128
 msgid "Unmarked Employees HTML"
-msgstr ""
+msgstr "HTML کارمندان علامت‌گذاری‌نشده"
 
 #. Label of a Float field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json:398
@@ -9901,7 +9929,7 @@ msgstr "بی قرار"
 
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:52
 msgid "Unsettled Transactions"
-msgstr ""
+msgstr "تراکنش‌های تسویه‌نشده"
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:158
 msgid "Unsubmitted Appraisals"
@@ -10159,7 +10187,7 @@ msgstr "بین وزنها (٪)"
 #. Tool'
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json:71
 msgid "When set to 'Inactive', employees with conflicting active shifts will not be excluded."
-msgstr ""
+msgstr "هنگامی که روی 'غیرفعال' تنظیم شود، کارمندانی که شیفت‌های فعال متناقض دارند، حذف نخواهند شد."
 
 #: hrms/hr/doctype/leave_type/leave_type.py:36
 msgid "Whereas allocation for Compensatory Leaves is automatically created or updated on submission of Compensatory Leave Request."
@@ -10175,7 +10203,7 @@ msgstr "چرا این کاندید واجد شرایط این موقعیت اس�
 #: hrms/payroll/doctype/salary_slip/salary_slip.json:175
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.json:161
 msgid "Withheld"
-msgstr ""
+msgstr "نگه‌داشت"
 
 #. Label of a Check field in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json:169
@@ -10195,7 +10223,7 @@ msgstr "تاریخ پایان کار"
 #. Label of a Select field in DocType 'Gratuity Rule'
 #: hrms/payroll/doctype/gratuity_rule/gratuity_rule.json:66
 msgid "Work Experience Calculation Method"
-msgstr ""
+msgstr "روش محاسبه سابقه کار"
 
 #. Label of a Date field in DocType 'Compensatory Leave Request'
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.json:262
@@ -10319,27 +10347,27 @@ msgstr "شما فقط می‌توانید اسناد JPG، PNG، PDF، TXT یا 
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:505
 msgid "You do not have permission to complete this action"
-msgstr ""
+msgstr "شما مجوز تکمیل این عمل را ندارید"
 
 #: frontend/src/components/EmployeeAdvanceBalance.vue:26
 msgid "You have no advances"
-msgstr ""
+msgstr "هیچ پیش‌پرداختی ندارید"
 
 #: frontend/src/components/LeaveBalance.vue:42
 msgid "You have no leaves allocated"
-msgstr ""
+msgstr "شما هیچ مرخصی تخصیص‌داده‌شده‌ای ندارید"
 
 #: frontend/src/views/Notifications.vue:91
 msgid "You have no notifications"
-msgstr ""
+msgstr "هیچ اعلانی ندارید"
 
 #: frontend/src/components/RequestList.vue:31
 msgid "You have no requests"
-msgstr ""
+msgstr "هیچ درخواستی ندارید"
 
 #: frontend/src/components/Holidays.vue:32
 msgid "You have no upcoming holidays"
-msgstr ""
+msgstr "شما هیچ تعطیلات پیش رویی ندارید"
 
 #: frontend/src/views/attendance/Dashboard.vue:29
 msgid "You have no upcoming shifts"
@@ -10351,7 +10379,7 @@ msgstr "شما می‌توانید جزئیات بیشتری را در صورت 
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:125
 msgid "You must be within {0} meters of your shift location to check in."
-msgstr ""
+msgstr "برای ثبت ورود باید در فاصله {0} متری از محل شیفت خود باشید."
 
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:52
 msgid "You were only present for Half Day on {}. Cannot apply for a full day compensatory leave"
@@ -10367,7 +10395,7 @@ msgstr ""
 
 #: frontend/src/views/Login.vue:22
 msgid "Your password has expired. Please reset your password to continue"
-msgstr ""
+msgstr "گذرواژه شما منقضی شده است. لطفا برای ادامه، گذرواژه خود را بازنشانی کنید"
 
 #: hrms/hr/doctype/attendance_request/attendance_request.py:46
 msgid "action"
@@ -10383,7 +10411,7 @@ msgstr "بر اساس"
 
 #: frontend/src/components/RequestActionSheet.vue:300
 msgid "cancellation"
-msgstr ""
+msgstr "لغو"
 
 #: frontend/src/components/RequestActionSheet.vue:291
 msgid "cancelled"
@@ -10391,7 +10419,7 @@ msgstr "لغو شد"
 
 #: hrms/public/js/utils/index.js:131
 msgid "create/submit"
-msgstr ""
+msgstr "ایجاد/ارسال"
 
 #: hrms/public/js/utils/index.js:132
 msgid "created"
@@ -10411,24 +10439,24 @@ msgstr ""
 
 #: frontend/src/views/Login.vue:46
 msgid "johndoe@mail.com"
-msgstr ""
+msgstr "johndoe@mail.com"
 
 #. Label of a Check field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json:221
 msgid "modify_half_day_status"
-msgstr ""
+msgstr "modify_half_day_status"
 
 #: hrms/hr/doctype/department_approver/department_approver.py:89
 msgid "or for the Employee's Department: {0}"
-msgstr ""
+msgstr "یا برای دپارتمان کارمند: {0}"
 
 #: hrms/public/js/utils/index.js:134
 msgid "process"
-msgstr ""
+msgstr "پردازش"
 
 #: hrms/public/js/utils/index.js:135
 msgid "processed"
-msgstr ""
+msgstr "پردازش‌شده"
 
 #: hrms/hr/doctype/attendance_request/attendance_request.py:45
 msgid "reason"
@@ -10456,15 +10484,15 @@ msgstr "ارسال شده"
 
 #: hrms/payroll/doctype/salary_component/salary_component.py:101
 msgid "via Salary Component sync"
-msgstr ""
+msgstr "از طریق همگام‌سازی مؤلفه حقوق"
 
 #: hrms/controllers/employee_reminders.py:265
 msgid "year"
-msgstr ""
+msgstr "سال"
 
 #: hrms/controllers/employee_reminders.py:265
 msgid "years"
-msgstr ""
+msgstr "سال"
 
 #: hrms/controllers/employee_reminders.py:120
 #: hrms/controllers/employee_reminders.py:254
@@ -10474,7 +10502,7 @@ msgstr "{0} و {1}"
 
 #: frontend/src/components/ExpenseClaimItem.vue:84
 msgid "{0} & {1} more"
-msgstr ""
+msgstr "{0} و {1} مورد دیگر"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:2298
 msgid "{0} <br> This error can be due to missing or deleted field."
@@ -10486,7 +10514,7 @@ msgstr "{0} ارزیابی(های) هنوز ارسال نشده است"
 
 #: hrms/public/js/utils/index.js:231
 msgid "{0} Field"
-msgstr ""
+msgstr "فیلد {0}"
 
 #: hrms/hr/doctype/department_approver/department_approver.py:92
 msgid "{0} Missing"
@@ -10502,7 +10530,7 @@ msgstr "{0} ردیف #{1}: برای در نظر گرفتن فرمول باید {
 
 #: frontend/src/views/Notifications.vue:27
 msgid "{0} Unread"
-msgstr ""
+msgstr "{0} خوانده نشده"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:203
 msgid "{0} already allocated for Employee {1} for period {2} to {3}"
@@ -10527,7 +10555,7 @@ msgstr "{0} تراز"
 
 #: hrms/controllers/employee_reminders.py:253
 msgid "{0} completed {1} {2}"
-msgstr ""
+msgstr "{0} {1} {2} را به پایان رساند"
 
 #: frontend/src/components/FormView.vue:516
 msgid "{0} created successfully!"
@@ -10540,11 +10568,11 @@ msgstr "{0} با موفقیت حذف شد!"
 #: frontend/src/components/CheckInPanel.vue:184
 #: frontend/src/components/RequestActionSheet.vue:298
 msgid "{0} failed!"
-msgstr ""
+msgstr "{0} ناموفق بود!"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:208
 msgid "{0} has {1} enabled"
-msgstr ""
+msgstr "{0} دارای {1} فعال است"
 
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:69
 msgid "{0} is not a holiday."
@@ -10564,15 +10592,15 @@ msgstr "{0} در یک دوره ثبت نام معتبر نیست"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:361
 msgid "{0} leaves allocated successfully"
-msgstr ""
+msgstr "{0} مرخصی با موفقیت اختصاص داده شدند"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:488
 msgid "{0} leaves from allocation for {1} leave type have expired and will be processed during the next scheduled job. It is recommended to expire them now before creating new leave policy assignments."
-msgstr ""
+msgstr "{0} مرخصی از تخصیص مربوط به نوع مرخصی {1} منقضی شده‌اند و در هنگام اجرای برنامه زمان‌بندی‌شده بعدی پردازش خواهند شد. توصیه می‌شود پیش از ایجاد سیاست‌های تخصیص مرخصی جدید، آن‌ها را همین حالا منقضی کنید."
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:356
 msgid "{0} leaves were manually allocated by {1} on {2}"
-msgstr ""
+msgstr "{0} مرخصی به‌صورت دستی توسط {1} در {2} تخصیص داده شد"
 
 #: hrms/hr/doctype/training_feedback/training_feedback.py:14
 #: hrms/hr/doctype/training_result/training_result.py:16
@@ -10593,7 +10621,7 @@ msgstr "{0} با موفقیت!"
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:261
 msgid "{0} to {1} employee(s)?"
-msgstr ""
+msgstr "{0} برای {1} کارمند؟"
 
 #: frontend/src/components/FormView.vue:549
 msgid "{0} updated successfully!"
@@ -10605,7 +10633,7 @@ msgstr "{0} جای خالی و {1} بودجه برای {2} که قبلاً بر�
 
 #: hrms/payroll/doctype/salary_component/salary_component.js:114
 msgid "{0} will be updated for the following Salary Structures: {1}."
-msgstr ""
+msgstr "{0} برای ساختارهای حقوق و دستمزد زیر به‌روزرسانی خواهد شد: {1}."
 
 #: hrms/hr/doctype/goal/goal_list.js:69
 msgid "{0} {1} {2}?"
@@ -10624,12 +10652,12 @@ msgstr "{0}: از {0} از نوع {1}"
 #: frontend/src/components/ShiftAssignmentItem.vue:12
 #: frontend/src/components/ShiftRequestItem.vue:17
 msgid "{0}d"
-msgstr ""
+msgstr "{0} روز"
 
 #. Count format of shortcut in the Shift & Attendance Workspace
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json:270
 msgid "{} "
-msgstr ""
+msgstr "{} "
 
 #. Count format of shortcut in the Recruitment Workspace
 #: hrms/hr/workspace/recruitment/recruitment.json:229
