@@ -107,11 +107,7 @@ const checkins = createListResource({
 checkins.reload()
 
 const lastLog = computed(() => {
-<<<<<<< HEAD
-	if (checkins.list.loading || !checkins.data?.length) return null
-=======
-	if (!checkins.data?.length) return {}
->>>>>>> b22e55f (fix(pwa): retain last checkin log while list resource reloads)
+	if (!checkins.data?.length) return null
 	return checkins.data[0]
 })
 
