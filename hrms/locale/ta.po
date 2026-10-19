@@ -3351,7 +3351,7 @@ msgstr "பணியாளர் {0} {1} அன்று அரை நாள்"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:644
 msgid "Employee {0} relieved on {1} must be set as 'Left'"
-msgstr "{1} அன்று விடுவிக்கப்பட்ட பணியாளர் {0} 'இடது' என அமைக்கப்பட வேண்டும்"
+msgstr "{1} அன்று விடுவிக்கப்பட்ட பணியாளர் {0} 'வெளியேறியவர்' என அமைக்கப்பட வேண்டும்"
 
 #: hrms/payroll/doctype/gratuity/gratuity.py:161
 msgid "Employee: {0} have to complete minimum {1} years for gratuity"
