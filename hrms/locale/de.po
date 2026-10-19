@@ -5757,7 +5757,7 @@ msgstr "Blätter, die du gegen einen Feiertag nutzen kannst, an dem du gearbeite
 #: hrms/hr/report/leave_ledger/leave_ledger.js:41
 msgctxt "Employee"
 msgid "Left"
-msgstr "Links"
+msgstr "Entlassen"
 
 #. Title of the Module Onboarding 'Human Resource'
 #: hrms/hr/module_onboarding/human_resource/human_resource.json:46
