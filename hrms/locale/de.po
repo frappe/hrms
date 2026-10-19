@@ -21,7 +21,7 @@ msgstr ""
 #. Description of the 'Arrear Start Date' (Date) field in DocType 'Arrear'
 #: hrms/payroll/doctype/arrear/arrear.json
 msgid " Salary slips starting on or after this date will be considered for arrear calculations"
-msgstr ""
+msgstr " Gehaltsabrechnungen, die am oder nach diesem Datum beginnen, werden bei der Berechnung der Nachzahlungen berücksichtigt."
 
 #. Label of the unlink_payment_on_cancellation_of_employee_advance (Check)
 #. field in DocType 'HR Settings'
@@ -35,11 +35,11 @@ msgstr "\"Das Ab-Datum kann nicht größer als das Bis-Datum sein\""
 
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:86
 msgid "% Utilization (B + NB) / T"
-msgstr ""
+msgstr "% Auslastung (B + NB) / T"
 
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:92
 msgid "% Utilization (B / T)"
-msgstr ""
+msgstr "% Auslastung (Abgerechnet / Gesamt)"
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:157
 msgid "'employee_field_value' and 'timestamp' are required."
@@ -250,7 +250,29 @@ msgid "<h3>Help</h3>\n\n"
 "<pre><code>Condition: employment_type==\"Intern\"</code></pre>\n"
 "<pre><code>Amount: 1000</code></pre></li>\n"
 "</ol>"
-msgstr ""
+msgstr "<h3>Hilfe</h3>\n"
+"\n"
+"<p>Hinweise:</p>\n"
+"\n"
+"<ol>\n"
+"<li>Verwenden Sie das Feld <code>base</code>, um das Grundgehalt des Mitarbeiters zu nutzen</li>\n"
+"<li>Verwenden Sie Abkürzungen der Gehaltskomponenten in Bedingungen und Formeln. <code>BS = Grundgehalt</code></li>\n"
+"<li>Verwenden Sie den Feldnamen für Mitarbeiterdetails in Bedingungen und Formeln. <code>Employment Type = employment_type</code><code>Branch = branch</code></li>\n"
+"<li>Verwenden Sie den Feldnamen aus dem Gehaltszettel in Bedingungen und Formeln. <code>Payment Days = payment_days</code><code>Leave without pay = leave_without_pay</code></li>\n"
+"<li>Ein direkter Betrag kann ebenfalls basierend auf einer Bedingung eingegeben werden. Siehe Beispiel 3</li></ol>\n"
+"\n"
+"<h4>Beispiele</h4>\n"
+"<ol>\n"
+"<li>Berechnung des Grundgehalts basierend auf <code>base</code>\n"
+"<pre><code>Bedingung: base &lt; 10000</code></pre>\n"
+"<pre><code>Formel: base * .2</code></pre></li>\n"
+"<li>Berechnung der HRA basierend auf dem Grundgehalt <code>BS</code> \n"
+"<pre><code>Bedingung: BS &gt; 2000</code></pre>\n"
+"<pre><code>Formel: BS * .1</code></pre></li>\n"
+"<li>Berechnung der TDS basierend auf Beschäftigungsart <code>employment_type</code> \n"
+"<pre><code>Bedingung: employment_type==\"Intern\"</code></pre>\n"
+"<pre><code>Betrag: 1000</code></pre></li>\n"
+"</ol>"
 
 #. Content of the 'html_6' (HTML) field in DocType 'Taxable Salary Slab'
 #: hrms/payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
@@ -279,13 +301,13 @@ msgstr "<h5>Mitarbeiter mit halben Tagen</h5>"
 #. Attendance Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgid "<h5>Unmarked Employees</h5>"
-msgstr ""
+msgstr "<h5>Nicht markierte Mitarbeiter</h5>"
 
 #. Content of the 'Horizontal Break' (HTML) field in DocType 'Employee
 #. Attendance Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgid "<hr>"
-msgstr ""
+msgstr "<hr>"
 
 #. Header text in the Payroll Workspace
 #: hrms/payroll/workspace/payroll/payroll.json
@@ -350,7 +372,7 @@ msgstr "Konto Nr"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:115
 msgid "Account type should be set {0} for payroll payable account {1}, please set and try again"
-msgstr ""
+msgstr "Der Kontotyp muss für das Konto für Verbindlichkeiten aus Lohn und Gehalt {1} auf {0} festgelegt werden. Bitte legen Sie ihn fest und versuchen Sie es erneut"
 
 #: hrms/hr/doctype/expense_claim_type/expense_claim_type.py:29
 msgid "Account {0} does not match with Company {1}"
@@ -377,33 +399,33 @@ msgstr "Konten für die Gehaltskomponente nicht eingerichtet {0}"
 #. Benefit Ledger'
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 msgid "Accrual"
-msgstr ""
+msgstr "Aufbau"
 
 #. Label of the accrual_arrears (Table) field in DocType 'Arrear'
 #. Label of the accrual_arrears (Table) field in DocType 'Payroll Correction'
 #: hrms/payroll/doctype/arrear/arrear.json
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
 msgid "Accrual Arrears"
-msgstr ""
+msgstr "Nachzahlungen aus Aufbau"
 
 #. Label of the accrual_component (Check) field in DocType 'Salary Component'
 #. Label of the accrual_component (Check) field in DocType 'Salary Detail'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 msgid "Accrual Component"
-msgstr ""
+msgstr "Abgrenzungskomponente"
 
 #: hrms/payroll/doctype/salary_component/salary_component.py:66
 msgid "Accrual Component can only be set for Earning Salary Components."
-msgstr ""
+msgstr "Die Abgrenzungskomponente kann nur für Gehaltskomponenten vom Typ Bezug festgelegt werden."
 
 #: hrms/payroll/doctype/salary_component/salary_component.py:86
 msgid "Accrual Component can only be set for Flexible Benefit Salary Components with accrual payout methods."
-msgstr ""
+msgstr "Abgrenzungskomponente kann nur für Gehaltskomponenten der Flexiblen Zusatzleistung mit Abgrenzungs-Auszahlungsmethoden festgelegt werden."
 
 #: hrms/payroll/doctype/salary_component/salary_component.py:78
 msgid "Accrual Component must be set for Flexible Benefit Salary Components with accrual payout methods."
-msgstr ""
+msgstr "Die Abgrenzungskomponente muss für Gehaltskomponenten mit flexibler Zusatzleistung und Auszahlungsmethoden auf Basis von Abgrenzungen festgelegt werden."
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:627
 msgid "Accrual Journal Entry for salaries from {0} to {1}"
@@ -412,26 +434,26 @@ msgstr "Abgrenzungsjournalbuchung für Gehälter von {0} bis {1}"
 #. Option for the 'Payout Method' (Select) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Accrue and payout at end of payroll period"
-msgstr ""
+msgstr "Auflaufen lassen und am Ende der Abrechnungsperiode auszahlen"
 
 #. Option for the 'Payout Method' (Select) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Accrue per cycle, pay only on claim"
-msgstr ""
+msgstr "Pro Zyklus auflaufen lassen, nur bei Antrag auszahlen"
 
 #. Label of the accrued_benefits (Table) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Accrued Benefits"
-msgstr ""
+msgstr "Aufgelaufene Leistungen"
 
 #. Name of a report
 #: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.json
 msgid "Accrued Earnings Report"
-msgstr ""
+msgstr "Bericht über aufgelaufene Bezüge"
 
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.py:99
 msgid "Accrued amount {0} is less than paid amount {1} for Benefit {2} in payroll period {3}"
-msgstr ""
+msgstr "Der aufgelaufene Betrag {0} ist kleiner als der gezahlte Betrag {1} für Leistung {2} im Abrechnungszeitraum {3}"
 
 #: hrms/hr/doctype/attendance_request/attendance_warnings.html:8
 msgid "Action on Submission"
@@ -459,7 +481,7 @@ msgstr "Tatsächliche einlösbare Tage"
 #. Label of the actual_overtime_duration (Float) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
 msgid "Actual Overtime Duration"
-msgstr ""
+msgstr "Ist-Dauer der Überstunden"
 
 #: hrms/hr/doctype/leave_application/leave_application.py:422
 msgid "Actual balances aren't available because the leave application spans over different leave allocations. You can still apply for leaves which would be compensated during the next allocation."
@@ -476,7 +498,7 @@ msgstr "Mitarbeitereigenschaft hinzufügen"
 
 #: frontend/src/components/ExpensesTable.vue:123
 msgid "Add Expense"
-msgstr ""
+msgstr "Ausgabe hinzufügen"
 
 #: hrms/public/js/performance/performance_feedback.js:95
 msgid "Add Feedback"
@@ -484,7 +506,7 @@ msgstr "Feedback hinzufügen"
 
 #: frontend/src/components/ExpenseTaxesTable.vue:118
 msgid "Add Tax"
-msgstr ""
+msgstr "Steuer hinzufügen"
 
 #: hrms/hr/employee_property_update.js:116
 msgid "Add to Details"
@@ -564,16 +586,16 @@ msgstr "Adresse des Veranstalters"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.js:51
 msgid "Adjust Allocation"
-msgstr ""
+msgstr "Zuweisung anpassen"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:412
 msgid "Adjustment Created Successfully"
-msgstr ""
+msgstr "Korrektur erfolgreich erstellt"
 
 #. Label of the adjustment_type (Select) field in DocType 'Leave Adjustment'
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
 msgid "Adjustment Type"
-msgstr ""
+msgstr "Korrekturtyp"
 
 #. Option for the 'Level' (Select) field in DocType 'Training Event'
 #: hrms/hr/doctype/training_event/training_event.json
@@ -586,7 +608,7 @@ msgstr ""
 
 #: hrms/hr/doctype/employee_advance/employee_advance.py:79
 msgid "Advance Account {} currency should be same as Salary Currency of Employee {}. Please select same currency Advance Account"
-msgstr ""
+msgstr "Die Währung des Anzahlungskontos {} muss mit der Gehaltswährung des Mitarbeiters {} übereinstimmen. Bitte wählen Sie für das Anzahlungskonto dieselbe Währung aus."
 
 #. Label of the base_advance_paid (Currency) field in DocType 'Expense Claim
 #. Advance'
@@ -608,7 +630,7 @@ msgstr "Erweiterte Filter"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:422
 msgid "All Exchange Gain/Loss amount of {0} has been booked through {1}"
-msgstr ""
+msgstr "Der gesamte Betrag der Wechselkursgewinne/-verluste von {0} wurde über {1} gebucht."
 
 #: hrms/hr/doctype/goal/goal_tree.js:215
 msgid "All Goals"
@@ -649,7 +671,7 @@ msgstr "Zuteilung an Tag"
 #. Claim Advance'
 #: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgid "Allocated Amount (Company Currency)"
-msgstr ""
+msgstr "Zugewiesener Betrag (Unternehmenswährung)"
 
 #. Label of the allocated_leaves (Float) field in DocType 'Leave Adjustment'
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
@@ -660,7 +682,7 @@ msgstr "Zugewiesene Abwesenheiten"
 #. Label of the allocated_via (Select) field in DocType 'Earned Leave Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Allocated Via"
-msgstr ""
+msgstr "Zugeordnet über"
 
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.js:205
 msgid "Allocating Leave"
@@ -669,13 +691,13 @@ msgstr "Abwesenheit wird zugewiesen"
 #. Label of the allocation_date (Date) field in DocType 'Earned Leave Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Allocation Date"
-msgstr ""
+msgstr "Zuweisungsdatum"
 
 #. Label of the section_break_etvg (Section Break) field in DocType 'Leave
 #. Adjustment'
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
 msgid "Allocation Details"
-msgstr ""
+msgstr "Zuweisungsdetails"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.js:119
 msgid "Allocation Expired!"
@@ -683,20 +705,20 @@ msgstr "Zuteilung abgelaufen!"
 
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.py:60
 msgid "Allocation is greater than the maximum allowed {0} for leave type {1}"
-msgstr ""
+msgstr "Zuweisung ist größer als das maximal zulässige {0} für Abwesenheitsart {1}"
 
 #. Label of the leave_allocation (Link) field in DocType 'Leave Adjustment'
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
 msgid "Allocation to Adjust"
-msgstr ""
+msgstr "Zuweisung zur Korrektur"
 
 #: hrms/hr/utils.py:438
 msgid "Allocation was skipped due to exceeding annual allocation set in leave policy"
-msgstr ""
+msgstr "Zuweisung wurde übersprungen, da die in der Abwesenheitsrichtlinie festgelegte jährliche Zuweisung überschritten wurde"
 
 #: hrms/hr/utils.py:428
 msgid "Allocation was skipped due to maximum leave allocation limit set in leave type. Please increase the limit and retry failed allocation."
-msgstr ""
+msgstr "Die Zuweisung wurde übersprungen, da das im Abwesenheitstyp festgelegte maximale Abwesenheitskontingent erreicht ist. Bitte erhöhen Sie das Limit und wiederholen Sie die fehlgeschlagene Zuweisung."
 
 #. Label of the allow_employee_checkin_from_mobile_app (Check) field in DocType
 #. 'HR Settings'
@@ -761,7 +783,7 @@ msgstr "Auschecken nach Schichtende erlauben (in Minuten)"
 #. Option for the 'Payout Method' (Select) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Allow claim for full benefit amount"
-msgstr ""
+msgstr "Anspruch auf vollen Leistungsbetrag zulassen"
 
 #. Description of the 'Allow Users' (Section Break) field in DocType 'Leave
 #. Block List'
@@ -811,13 +833,13 @@ msgstr "Betrag der Ausgaben"
 #. Encashment'
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
 msgid "Amount paid against this encashment"
-msgstr ""
+msgstr "Betrag, der für diese Auszahlung bezahlt wurde"
 
 #. Description of the 'Returned Amount' (Currency) field in DocType 'Employee
 #. Advance'
 #: hrms/hr/doctype/employee_advance/employee_advance.json
 msgid "Amount scheduled for deduction via salary"
-msgstr ""
+msgstr "Betrag, für den ein Abzug vom Gehalt geplant ist"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:37
 msgid "Amount should not be less than zero"
@@ -833,7 +855,7 @@ msgstr "Betrag, der auf diesen Vorschuss gezahlt wurde"
 
 #: hrms/payroll/doctype/arrear/arrear.py:92
 msgid "An Arrear document already exists for employee {0} with salary structure {1} in payroll period {2}"
-msgstr ""
+msgstr "Für Mitarbeiter {0} mit Gehaltsstruktur {1} im Abrechnungszeitraum {2} existiert bereits ein Dokument für Nachzahlung"
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:56
 msgid "An attendance record is linked to this checkin. Please cancel the attendance before modifying time."
@@ -878,7 +900,7 @@ msgstr "Anwendbare Einkommenskomponente"
 #. DocType 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Applicable Salary Components"
-msgstr ""
+msgstr "Anwendbare Gehaltskomponenten"
 
 #. Description of the 'Required for Employee Creation' (Check) field in DocType
 #. 'Employee Boarding Activity'
@@ -961,12 +983,12 @@ msgstr "Jetzt bewerben"
 #. 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Apply for Public Holiday"
-msgstr ""
+msgstr "Für öffentlichen arbeitsfreien Tag anwenden"
 
 #. Label of the applicable_for_weekend (Check) field in DocType 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Apply for Weekend"
-msgstr ""
+msgstr "Für Wochenende anwenden"
 
 #. Label of the appointment_date (Date) field in DocType 'Appointment Letter'
 #: hrms/hr/doctype/appointment_letter/appointment_letter.json
@@ -1166,26 +1188,26 @@ msgstr "Möchten Sie die Mitarbeiterempfehlung wirklich ablehnen?"
 #. Name of a DocType
 #: hrms/payroll/doctype/arrear/arrear.json
 msgid "Arrear"
-msgstr ""
+msgstr "Nachzahlung"
 
 #. Label of the arrear_component (Check) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Arrear Component"
-msgstr ""
+msgstr "Nachzahlungskomponente"
 
 #: hrms/payroll/doctype/salary_component/salary_component.py:95
 msgid "Arrear Component cannot be set for Salary Components based on taxable salary."
-msgstr ""
+msgstr "Die Nachzahlungskomponente kann nicht für Gehaltskomponenten festgelegt werden, die auf dem steuerpflichtigen Gehalt basieren."
 
 #. Label of the arrear_start_date (Date) field in DocType 'Arrear'
 #: hrms/payroll/doctype/arrear/arrear.json
 msgid "Arrear Start Date"
-msgstr ""
+msgstr "Startdatum der Nachzahlung"
 
 #. Label of the arrears_tab (Tab Break) field in DocType 'Arrear'
 #: hrms/payroll/doctype/arrear/arrear.json
 msgid "Arrears"
-msgstr ""
+msgstr "Nachzahlungen"
 
 #. Label of the arrival_date (Datetime) field in DocType 'Travel Itinerary'
 #: hrms/hr/doctype/travel_itinerary/travel_itinerary.json
@@ -1198,7 +1220,7 @@ msgstr "Gemäß Ihrer aktuellen Gehaltsstruktur können Sie keine Leistungen bea
 
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:101
 msgid "Asset Recovery Cost for {0}: {1}"
-msgstr ""
+msgstr "Rückgewinnungsaufwand für Vermögensgegenstand {0}: {1}"
 
 #. Label of the section_break_15 (Section Break) field in DocType 'Full and
 #. Final Statement'
@@ -1274,7 +1296,7 @@ msgstr "Nachweis anhängen"
 #. Label of the attempted (Check) field in DocType 'Earned Leave Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Attempted"
-msgstr ""
+msgstr "Versucht"
 
 #. Name of a DocType
 #. Label of the attendance (Select) field in DocType 'Training Event Employee'
@@ -1422,7 +1444,7 @@ msgstr "Die Teilnahme wird erst nach diesem Datum automatisch markiert."
 
 #: frontend/src/views/attendance/Dashboard.vue:19
 msgid "AttendanceRequestListView"
-msgstr ""
+msgstr "AttendanceRequestListView"
 
 #. Label of the section_break_18 (Section Break) field in DocType 'Training
 #. Event'
@@ -1458,7 +1480,7 @@ msgstr "Automatisiert auf Basis des Zielfortschritts"
 
 #: hrms/hr/utils.py:482
 msgid "Automatic Leave Allocation has failed for the following Earned Leaves: {0}. Please check {1} for more details."
-msgstr ""
+msgstr "Die automatische Zuweisung von Abwesenheiten ist für die folgenden verdienten Urlaubstage fehlgeschlagen: {0}. Bitte prüfen Sie {1} für weitere Details."
 
 #. Description of the 'Assets Allocated' (Section Break) field in DocType 'Full
 #. and Final Statement'
@@ -1495,7 +1517,7 @@ msgstr "Durchschnittliche Bewertung"
 #. Description of the 'Final Score' (Float) field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json
 msgid "Average of Goal Score, Feedback Score, and Self Appraisal Score"
-msgstr ""
+msgstr "Durchschnitt aus Zielpunktzahl, Feedback-Punktzahl und Selbstbeurteilung"
 
 #: hrms/public/js/templates/interview_feedback.html:16
 msgid "Average rating of demonstrated skills"
@@ -1562,25 +1584,25 @@ msgstr "Vorteil"
 #. Label of the amount (Currency) field in DocType 'Employee Benefit Detail'
 #: hrms/payroll/doctype/employee_benefit_detail/employee_benefit_detail.json
 msgid "Benefit Amount"
-msgstr ""
+msgstr "Leistungsbetrag"
 
 #. Label of the employee_benefit_details_section (Section Break) field in
 #. DocType 'Employee Benefit Ledger'
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 msgid "Benefit Details"
-msgstr ""
+msgstr "Leistungsdetails"
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:36
 msgid "Benefit amount of component {0} exceeds {1}"
-msgstr ""
+msgstr "Leistungsbetrag der Komponente {0} überschreitet {1}"
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:30
 msgid "Benefit amount of component {0} should be greater than 0"
-msgstr ""
+msgstr "Der Leistungsbetrag der Komponente {0} muss größer als 0 sein"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:451
 msgid "Benefit amount {0} for Salary Component {1} should not be greater than maximum benefit amount {2} set in {3}"
-msgstr ""
+msgstr "Der Leistungsbetrag {0} für die Gehaltskomponente {1} darf den in {3} festgelegten maximalen Leistungsbetrag {2} nicht überschreiten"
 
 #. Label of the section_break_4 (Section Break) field in DocType 'Employee
 #. Benefit Application'
@@ -1707,7 +1729,7 @@ msgstr "Endergebnis anhand Formel berechnen"
 #. 'Gratuity Rule'
 #: hrms/payroll/doctype/gratuity_rule/gratuity_rule.json
 msgid "Calculate Gratuity Amount Based On"
-msgstr ""
+msgstr "Gratifikationsbetrag berechnen basierend auf"
 
 #. Label of the payroll_based_on (Select) field in DocType 'Payroll Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
@@ -1738,11 +1760,11 @@ msgstr "Abwesenheiten können nicht außerhalb der Abwesenheitsperiode {0} - {1}
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:446
 msgid "Cannot allocate more leaves due to maximum leave allocation limit of {0} in leave policy assignment"
-msgstr ""
+msgstr "Es können keine weiteren Abwesenheiten zugewiesen werden, da das maximale Abwesenheitskontingent von {0} in der Zuordnung der Abwesenheitsrichtlinie erreicht ist"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:438
 msgid "Cannot allocate more leaves due to maximum leaves allowed limit of {0} in {1} leave type."
-msgstr ""
+msgstr "Es können keine weiteren Abwesenheiten zugewiesen werden, da die maximal zulässige Anzahl von {0} in der Abwesenheitsart {1} erreicht ist."
 
 #: hrms/api/roster.py:139
 msgid "Cannot break shift after end date"
@@ -1774,7 +1796,7 @@ msgstr "Es kann kein Bewerber für eine geschlossene Stellenausschreibung erstel
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:201
 msgid "Cannot create or change transactions against an Appraisal Cycle with status {0}."
-msgstr ""
+msgstr "Transaktionen zu einem Beurteilungszyklus mit dem Status {0} können nicht erstellt oder geändert werden."
 
 #: hrms/hr/doctype/leave_application/leave_application.py:604
 msgid "Cannot find active Leave Period"
@@ -1821,7 +1843,7 @@ msgstr "Grund der Beschwerde"
 
 #: hrms/hr/doctype/attendance_request/attendance_request.py:105
 msgid "Changed the status from {0} to {1} and Status for Other Half to {2} via Attendance Request"
-msgstr ""
+msgstr "Status von {0} auf {1} geändert und Status der anderen Hälfte auf {2} über Anwesenheitsanfrage"
 
 #: hrms/hr/doctype/attendance_request/attendance_request.py:109
 msgid "Changed the status from {0} to {1} via Attendance Request"
@@ -1901,7 +1923,7 @@ msgstr ""
 #. Correction'
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
 msgid "Choose the date on which you want to create these components as arrears."
-msgstr ""
+msgstr "Wählen Sie das Datum aus, an dem diese Komponenten als Nachzahlung erstellt werden sollen."
 
 #. Label of the earning_component (Link) field in DocType 'Employee Benefit
 #. Claim'
@@ -1931,11 +1953,11 @@ msgstr "Anspruchsbetrag"
 
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:34
 msgid "Claimed amount of employee {0} exceeds maximum amount eligible for claim {1}"
-msgstr ""
+msgstr "Der beantragte Betrag von Mitarbeiter {0} überschreitet den für Anspruch {1} maximal zulässigen Betrag"
 
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:30
 msgid "Claimed amount of employee {0} should be greater than 0"
-msgstr ""
+msgstr "Der beantragte Betrag von Mitarbeiter {0} muss größer als 0 sein"
 
 #. Label of a Card Break in the Expenses Workspace
 #: hrms/hr/workspace/expenses/expenses.json
@@ -2036,7 +2058,7 @@ msgstr "Konferenz"
 
 #: frontend/src/components/CheckInPanel.vue:73
 msgid "Confirm {0}"
-msgstr ""
+msgstr "{0} bestätigen"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.js:58
 msgid "Consider Grace Period"
@@ -2092,7 +2114,7 @@ msgstr "Ziele konnten nicht aktualisiert werden"
 
 #: hrms/overrides/company.py:38
 msgid "Country Fixture Deletion Failed"
-msgstr ""
+msgstr "Löschung der Ländervorgaben fehlgeschlagen"
 
 #: hrms/overrides/company.py:51
 msgid "Country Setup failed"
@@ -2101,7 +2123,7 @@ msgstr "Ländereinrichtung fehlgeschlagen"
 #. Label of a field in the job-application Web Form
 #: hrms/hr/web_form/job_application/job_application.json
 msgid "Country of Residence"
-msgstr ""
+msgstr "Wohnsitzland"
 
 #. Label of the course (Data) field in DocType 'Training Event'
 #. Label of the course (Data) field in DocType 'Training Feedback'
@@ -2149,11 +2171,11 @@ msgstr "Erstellen Sie eine neue Mitarbeiter-ID"
 #. Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Create Overtime Slip For Eligible Employee(s)"
-msgstr ""
+msgstr "Overtime Slip für berechtigte Mitarbeiter erstellen"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:83
 msgid "Create Overtime Slips"
-msgstr ""
+msgstr "Overtime Slips erstellen"
 
 #: hrms/public/js/erpnext/timesheet.js:8
 msgid "Create Salary Slip"
@@ -2261,13 +2283,13 @@ msgstr "Aktuelle Eröffnungen"
 #. Label of the current_payroll_period (Link) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Current Payroll Period"
-msgstr ""
+msgstr "Aktuelle Abrechnungsperiode"
 
 #. Option for the 'Calculate Gratuity Amount Based On' (Select) field in
 #. DocType 'Gratuity Rule'
 #: hrms/payroll/doctype/gratuity_rule/gratuity_rule.json
 msgid "Current Slab"
-msgstr ""
+msgstr "Aktuelle Stufe"
 
 #. Label of the current_work_experience (Float) field in DocType 'Gratuity'
 #. Label of the gratuity_rule_slabs (Table) field in DocType 'Gratuity Rule'
@@ -2332,7 +2354,7 @@ msgstr "Tägliche Arbeit Zusammenfassung Antworten"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:167
 msgid "Date Range Exceeded"
-msgstr ""
+msgstr "Datumsbereich überschritten"
 
 #: hrms/hr/doctype/leave_block_list/leave_block_list.py:19
 msgid "Date is repeated"
@@ -2340,7 +2362,7 @@ msgstr "Ereignis wiederholen"
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:59
 msgid "Date {0} is repeated in Overtime Details"
-msgstr ""
+msgstr "Datum {0} wird in den Überstundendetails wiederholt"
 
 #. Label of the section_break_5 (Section Break) field in DocType 'Leave
 #. Application'
@@ -2360,11 +2382,11 @@ msgstr "Tage, für die Arbeitsfreie Tage für diese Abteilung gesperrt sind."
 #. Label of the days_to_reverse (Float) field in DocType 'Payroll Correction'
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
 msgid "Days to Reverse"
-msgstr ""
+msgstr "Zu stornierende Tage"
 
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.py:19
 msgid "Days to Reverse must be greater than zero."
-msgstr ""
+msgstr "Die Tage zur Umkehrung müssen größer als null sein."
 
 #: hrms/payroll/report/bank_remittance/bank_remittance.py:19
 msgid "Debit A/C Number"
@@ -2424,12 +2446,12 @@ msgstr "Abzug"
 #: hrms/payroll/doctype/arrear/arrear.json
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
 msgid "Deduction Arrears"
-msgstr ""
+msgstr "Nachzahlungen für Abzüge"
 
 #. Label of a Card Break in the Payroll Workspace
 #: hrms/payroll/workspace/payroll/payroll.json
 msgid "Deduction Reports"
-msgstr ""
+msgstr "Abzugsberichte"
 
 #: hrms/hr/doctype/employee_advance/employee_advance.js:84
 msgid "Deduction from Salary"
@@ -2466,15 +2488,15 @@ msgstr "Standard-Grundgehalt"
 
 #: hrms/setup.py:81
 msgid "Default Employee Advance Account"
-msgstr ""
+msgstr "Standardkonto für Mitarbeitervorschuss"
 
 #: hrms/setup.py:73
 msgid "Default Expense Claim Payable Account"
-msgstr ""
+msgstr "Standard-Verbindlichkeitskonto für Spesenabrechnung"
 
 #: hrms/overrides/company.py:133 hrms/setup.py:96
 msgid "Default Payroll Payable Account"
-msgstr ""
+msgstr "Standardkonto für Verbindlichkeiten aus Lohn und Gehalt"
 
 #. Label of the default_salary_structure (Link) field in DocType 'Employee
 #. Grade'
@@ -2493,7 +2515,7 @@ msgstr "Anhang löschen"
 
 #: frontend/src/components/FormView.vue:224
 msgid "Delete {0}"
-msgstr ""
+msgstr "{0} löschen"
 
 #. Name of a DocType
 #: hrms/hr/doctype/department_approver/department_approver.json
@@ -2576,7 +2598,7 @@ msgstr "Push-Benachrichtigungen werden deaktiviert..."
 #: hrms/payroll/doctype/salary_component/salary_component.json
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 msgid "Do Not Include in Accounting Entries"
-msgstr ""
+msgstr "Nicht in Buchungen einbeziehen"
 
 #. Label of the do_not_include_in_total (Check) field in DocType 'Salary
 #. Component'
@@ -2609,7 +2631,7 @@ msgstr "Doppelte Anwesenheit"
 
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:57
 msgid "Duplicate Claim Detected"
-msgstr ""
+msgstr "Doppelter Antrag erkannt"
 
 #: hrms/hr/doctype/job_requisition/job_requisition.py:35
 msgid "Duplicate Job Requisition"
@@ -2617,7 +2639,7 @@ msgstr "Doppeltes Stellengesuch"
 
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.py:40
 msgid "Duplicate Leave Adjustment"
-msgstr ""
+msgstr "Doppelte Urlaubsanpassung"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:158
 msgid "Duplicate Overwritten Salary"
@@ -2668,7 +2690,7 @@ msgstr "Verdiente Austrittsfrequenz"
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 msgid "Earned Leave Schedule"
-msgstr ""
+msgstr "Zeitplan für verdiente Urlaubstage"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:141
 msgid "Earned Leaves"
@@ -2698,7 +2720,7 @@ msgstr "Einkommen"
 #: hrms/payroll/doctype/arrear/arrear.json
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
 msgid "Earning Arrears"
-msgstr ""
+msgstr "Nachzahlungen für Bezüge"
 
 #. Label of the earning_component (Link) field in DocType 'Leave Type'
 #. Label of the salary_component (Link) field in DocType 'Employee Benefit
@@ -2713,7 +2735,7 @@ msgstr "Verdienende Komponente"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:112
 msgid "Earning Salary Component is required for Employee Referral Bonus."
-msgstr ""
+msgstr "Für den Mitarbeiterempfehlungsbonus ist eine Gehaltskomponente vom Typ Bezug erforderlich."
 
 #. Label of the earnings (Table) field in DocType 'Salary Slip'
 #. Label of the earnings (Table) field in DocType 'Salary Structure'
@@ -2733,11 +2755,11 @@ msgstr "Erträge & Abzüge"
 
 #: frontend/src/components/ExpensesTable.vue:213
 msgid "Edit Expense Item"
-msgstr ""
+msgstr "Ausgabeartikel bearbeiten"
 
 #: frontend/src/components/ExpenseTaxesTable.vue:221
 msgid "Edit Expense Tax"
-msgstr ""
+msgstr "Steuer für Ausgabe bearbeiten"
 
 #. Label of the effective_from (Date) field in DocType 'Leave Policy
 #. Assignment'
@@ -2783,7 +2805,7 @@ msgstr "Mitarbeiter-A / C-Nummer"
 #: hrms/patches/v16_0/create_custom_field_for_employee_advance_in_employee_master.py:11
 #: hrms/setup.py:267
 msgid "Employee Advance Account"
-msgstr ""
+msgstr "Mitarbeitervorschusskonto"
 
 #: frontend/src/views/expense_claim/Dashboard.vue:35
 msgid "Employee Advance Balance"
@@ -2834,12 +2856,12 @@ msgstr "Leistungsanspruch des Arbeitnehmers"
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_benefit_detail/employee_benefit_detail.json
 msgid "Employee Benefit Detail"
-msgstr ""
+msgstr "Details zur Mitarbeiterleistung"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 msgid "Employee Benefit Ledger"
-msgstr ""
+msgstr "Mitarbeiterleistungs-Ledger"
 
 #. Label of the employee_benefits_section (Section Break) field in DocType
 #. 'Salary Structure Assignment'
@@ -3115,7 +3137,7 @@ msgstr "Mitarbeiterempfehlung"
 
 #: hrms/hr/doctype/employee_referral/employee_referral.py:26
 msgid "Employee Referral {0} already exists for email: {1}"
-msgstr ""
+msgstr "Die Mitarbeiterempfehlung {0} existiert bereits für die E-Mail-Adresse: {1}"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:108
 msgid "Employee Referral {0} is not applicable for referral bonus."
@@ -3210,7 +3232,7 @@ msgstr "Kategorie Steuerbefreiungserklärungen für Arbeitnehmer"
 #: hrms/payroll/doctype/employee_tax_exemption_proof_submission/employee_tax_exemption_proof_submission.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Employee Tax Exemption Proof Submission"
-msgstr ""
+msgstr "Employee Tax Exemption Proof Submission"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/employee_tax_exemption_proof_submission_detail/employee_tax_exemption_proof_submission_detail.json
@@ -3254,7 +3276,7 @@ msgstr "Der Mitarbeitertransfer kann nicht vor dem Transferdatum gebucht werden"
 #: hrms/hr/doctype/employee_advance/employee_advance.py:69
 #: hrms/hr/doctype/employee_advance/employee_advance.py:139
 msgid "Employee advance account {0} should be of type {1}."
-msgstr ""
+msgstr "Das Konto für Mitarbeitervorschüsse {0} muss vom Typ {1} sein."
 
 #: hrms/hr/doctype/hr_settings/hr_settings.js:27
 msgid "Employee can be named by Employee ID if you assign one, or via Naming Series. Select your preference here."
@@ -3281,11 +3303,11 @@ msgstr "Der Mitarbeiter wurde als abwesend markiert, weil er die Arbeitszeitgren
 
 #: hrms/hr/doctype/shift_type/shift_type.py:401
 msgid "Employee was marked Absent for other half due to missing Employee Checkins."
-msgstr ""
+msgstr "Der Mitarbeiter wurde für die andere Hälfte als abwesend markiert, da Mitarbeiter-Check-ins fehlen."
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:456
 msgid "Employee {0} : {1}"
-msgstr ""
+msgstr "Mitarbeiter {0} : {1}"
 
 #: hrms/hr/doctype/attendance_request/attendance_request.py:67
 msgid "Employee {0} already has an Attendance Request {1} that overlaps with this period"
@@ -3309,7 +3331,7 @@ msgstr "Mitarbeiter {0} hat zwischen {2} und {3} bereits {1} beantragt: {4}"
 
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:48
 msgid "Employee {0} has already claimed the benefit '{1}' for {2} ({3}).<br>To prevent overpayments, only one claim per benefit type is allowed in each payroll cycle."
-msgstr ""
+msgstr "Der Mitarbeiter {0} hat die Leistung '{1}' für {2} ({3}) bereits beantragt.<br>Um Überzahlungen zu vermeiden, ist pro Leistungsart nur ein Antrag je Abrechnungszyklus zulässig."
 
 #: hrms/hr/doctype/attendance/attendance.py:211
 msgid "Employee {0} is not active or does not exist"
@@ -3358,7 +3380,7 @@ msgstr "Mitarbeiter können sich selbst kein Feedback geben. Verwenden Sie statt
 #. Attendance Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgid "Employees on Half Day HTML"
-msgstr ""
+msgstr "Mitarbeiter mit halbem Tag HTML"
 
 #: hrms/hr/doctype/hr_settings/hr_settings.py:81
 msgid "Employees will miss holiday reminders from {} until {}. <br> Do you want to proceed with this change?"
@@ -3425,19 +3447,19 @@ msgstr "Push-Benachrichtigungen aktivieren"
 #. 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Enable this to use a specific multiplier for public holidays. If unchecked, the standard multiplier will be used instead."
-msgstr ""
+msgstr "Aktivieren Sie diese Option, um für arbeitsfreie Tage einen speziellen Multiplikator zu verwenden. Wenn sie nicht aktiviert ist, wird stattdessen der Standard-Multiplikator verwendet."
 
 #. Description of the 'Apply for Weekend' (Check) field in DocType 'Overtime
 #. Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Enable this to use a specific multiplier for weekends. If unchecked, the standard multiplier will be used instead."
-msgstr ""
+msgstr "Aktivieren Sie diese Option, um für Wochenenden einen speziellen Multiplikator zu verwenden. Wenn sie nicht aktiviert ist, wird stattdessen der Standard-Multiplikator verwendet."
 
 #. Description of the 'Flexible Benefit' (Check) field in DocType 'Employee
 #. Benefit Ledger'
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 msgid "Enabled only for Employee Benefit components from Salary Structure Assignment"
-msgstr ""
+msgstr "Nur für Komponenten der Mitarbeiterleistung aus der Zuordnung der Gehaltsstruktur aktiviert"
 
 #: frontend/src/views/AppSettings.vue:40
 msgid "Enabling Push Notifications..."
@@ -3491,7 +3513,7 @@ msgstr ""
 
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.py:48
 msgid "Enter a non-zero value to adjust."
-msgstr ""
+msgstr "Geben Sie einen Wert ungleich null zur Korrektur ein."
 
 #: hrms/hr/doctype/hr_settings/hr_settings.js:34
 msgid "Enter the Standard Working Hours for a normal work day. These hours will be used in calculations of reports such as Employee Hours Utilization and Project Profitability analysis."
@@ -3501,7 +3523,7 @@ msgstr "Geben Sie die Standardarbeitsstunden für einen normalen Arbeitstag ein.
 #. Correction'
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
 msgid "Enter the number of Leave Without Pay (LWP) days you want to reverse. This value cannot exceed the total LWP days recorded for the selected month"
-msgstr ""
+msgstr "Geben Sie die Anzahl der Tage mit unbezahltem Urlaub (LWP) ein, die Sie rückgängig machen möchten. Dieser Wert darf die für den ausgewählten Monat erfassten gesamten LWP-Tage nicht überschreiten"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.js:259
 msgid "Enter the number of leaves you want to allocate for the period."
@@ -3511,7 +3533,7 @@ msgstr "Geben Sie die Anzahl der Abwesenheiten ein, die Sie für den Zeitraum zu
 #. Structure'
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 msgid "Enter yearly benefit amounts"
-msgstr ""
+msgstr "Geben Sie die jährlichen Leistungsbeträge ein"
 
 #: frontend/src/components/FormField.vue:42
 msgid "Enter {0}"
@@ -3527,7 +3549,7 @@ msgstr "Fehler beim Löschen von {0}"
 
 #: frontend/src/utils/commonUtils.js:46
 msgid "Error downloading PDF"
-msgstr ""
+msgstr "Fehler beim Herunterladen der PDF"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1320
 msgid "Error in formula or condition"
@@ -3547,7 +3569,7 @@ msgstr "Fehler beim Aktualisieren von {0}"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:2614
 msgid "Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
-msgstr ""
+msgstr "Fehler beim Auswerten von {doctype} {doclink} in Zeile {row_id}. <br><br> <b>Fehler:</b> {error} <br><br> <b>Hinweis:</b> {description}"
 
 #. Label of the estimated_cost_per_position (Currency) field in DocType
 #. 'Staffing Plan Detail'
@@ -3638,7 +3660,7 @@ msgstr "Prüfung"
 #. Advance'
 #: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgid "Exchange rate of Payment Entry against Employee Advance"
-msgstr ""
+msgstr "Wechselkurs der Zahlung zum Mitarbeitervorschuss"
 
 #: hrms/hr/doctype/attendance/attendance_list.js:85
 msgid "Exclude Holidays"
@@ -3692,7 +3714,7 @@ msgstr "Bestehender Datensatz"
 
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.py:37
 msgid "Existing Shift Assignments"
-msgstr ""
+msgstr "Vorhandene Schicht-Zuordnungen"
 
 #. Option for the 'Final Decision' (Select) field in DocType 'Exit Interview'
 #: hrms/hr/doctype/exit_interview/exit_interview.json
@@ -3762,7 +3784,7 @@ msgstr "Austrittsfragebogen Web-Formular"
 #. Label of a quick_list in the Tenure Workspace
 #: hrms/hr/workspace/tenure/tenure.json
 msgid "Exits (This Month)"
-msgstr ""
+msgstr "Austritte (diesen Monat)"
 
 #. Label of the expected_average_rating (Rating) field in DocType 'Interview'
 #. Label of the expected_average_rating (Rating) field in DocType 'Interview
@@ -3786,7 +3808,7 @@ msgstr "Erwartete Vergütung"
 #. Label of a field in the job-application Web Form
 #: hrms/hr/web_form/job_application/job_application.json
 msgid "Expected Salary Range per month"
-msgstr ""
+msgstr "Erwarteter Gehaltsbereich pro Monat"
 
 #. Name of a DocType
 #: hrms/hr/doctype/expected_skill_set/expected_skill_set.json
@@ -3863,7 +3885,7 @@ msgstr "Datum der Auslage"
 
 #: frontend/src/components/ExpensesTable.vue:211
 msgid "Expense Item"
-msgstr ""
+msgstr "Ausgabenposition"
 
 #. Label of the section_break_9 (Section Break) field in DocType 'Employee
 #. Benefit Claim'
@@ -3873,7 +3895,7 @@ msgstr "Auslagenbeleg"
 
 #: frontend/src/components/ExpenseTaxesTable.vue:219
 msgid "Expense Tax"
-msgstr ""
+msgstr "Ausgabensteuer"
 
 #. Label of the taxes (Table) field in DocType 'Expense Claim'
 #. Name of a DocType
@@ -3935,7 +3957,7 @@ msgstr "Das Löschen der Standardeinstellungen für das Land {0} ist fehlgeschla
 
 #: hrms/api/__init__.py:769
 msgid "Failed to download PDF: {0}"
-msgstr ""
+msgstr "PDF konnte nicht heruntergeladen werden: {0}"
 
 #: hrms/hr/doctype/interview/interview.py:117
 msgid "Failed to send the Interview Reschedule notification. Please configure your email account."
@@ -3955,7 +3977,7 @@ msgstr "Der Status des Bewerbers konnte nicht aktualisiert werden"
 
 #: hrms/public/js/utils/index.js:143
 msgid "Failed to {0} {1} for employees:"
-msgstr ""
+msgstr "{0} {1} für Mitarbeiter fehlgeschlagen:"
 
 #. Label of the failure_details_section (Tab Break) field in DocType 'Payroll
 #. Entry'
@@ -3967,11 +3989,11 @@ msgstr "Fehlerdetails"
 #. Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Failure Reason"
-msgstr ""
+msgstr "Ausfallgrund"
 
 #: hrms/hr/utils.py:481
 msgid "Failure of Automatic Allocation of Earned Leaves"
-msgstr ""
+msgstr "Fehlgeschlagene automatische Zuweisung verdienter Urlaubstage"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:37
 #: hrms/public/js/salary_slip_deductions_report_filters.js:20
@@ -4035,7 +4057,7 @@ msgstr "Standort abrufen"
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.js:7
 msgid "Fetch Overtime Details"
-msgstr ""
+msgstr "Überstundendetails abrufen"
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.js:33
 msgid "Fetch Shift"
@@ -4082,7 +4104,7 @@ msgstr "Mitarbeiter filtern"
 #. Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgid "Filter by Shift"
-msgstr ""
+msgstr "Nach Schicht filtern"
 
 #. Label of the employee_status (Select) field in DocType 'Exit Interview'
 #: hrms/hr/doctype/exit_interview/exit_interview.json
@@ -4127,7 +4149,7 @@ msgstr "Das Geschäftsjahr {0} nicht gefunden"
 #. 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Fixed Hourly Rate"
-msgstr ""
+msgstr "Fester Stundensatz"
 
 #. Label of a Card Break in the Expenses Workspace
 #: hrms/hr/workspace/expenses/expenses.json
@@ -4139,7 +4161,7 @@ msgstr "Fuhrparkverwaltung"
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 #: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.js:90
 msgid "Flexible Benefit"
-msgstr ""
+msgstr "Flexible Zusatzleistung"
 
 #. Label of the employee_benefits (Table) field in DocType 'Employee Benefit
 #. Application'
@@ -4157,7 +4179,7 @@ msgstr "Geldwertevorteile"
 
 #: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.py:64
 msgid "Flexible Component"
-msgstr ""
+msgstr "Flexible Komponente"
 
 #. Option for the 'Mode of Travel' (Select) field in DocType 'Travel Itinerary'
 #: hrms/hr/doctype/travel_itinerary/travel_itinerary.json
@@ -4166,7 +4188,7 @@ msgstr "Flug"
 
 #: hrms/hr/report/employee_exits/employee_exits.js:73
 msgid "FnF Pending"
-msgstr ""
+msgstr "FnF ausstehend"
 
 #. Label of the follow_via_email (Check) field in DocType 'Leave Application'
 #: hrms/hr/doctype/leave_application/leave_application.json
@@ -4223,7 +4245,7 @@ msgstr "Bruchteil des Tagesgehalts pro Abwesenheit"
 
 #: hrms/hr/report/project_profitability/project_profitability.py:191
 msgid "Fractional Cost"
-msgstr ""
+msgstr "Anteiliger Aufwand"
 
 #: frontend/src/components/BaseLayout.vue:9
 msgid "Frappe HR"
@@ -4240,7 +4262,7 @@ msgstr "Von-Datum muss vor Bis-Datum liegen"
 
 #: hrms/payroll/doctype/arrear/arrear.py:47
 msgid "From Date {0} cannot be after Payroll Period end date {1}"
-msgstr ""
+msgstr "Das Von-Datum {0} darf nicht nach dem Enddatum der Abrechnungsperiode {1} liegen"
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:59
 msgid "From Date {0} cannot be after employee's relieving Date {1}"
@@ -4248,7 +4270,7 @@ msgstr "Ab Datum {0} kann nicht nach dem Entlastungsdatum des Mitarbeiters sein 
 
 #: hrms/payroll/doctype/arrear/arrear.py:41
 msgid "From Date {0} cannot be before Payroll Period start date {1}"
-msgstr ""
+msgstr "Das Von-Datum {0} darf nicht vor dem Startdatum der Abrechnungsperiode {1} liegen"
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:51
 msgid "From Date {0} cannot be before employee's joining Date {1}"
@@ -4264,7 +4286,7 @@ msgstr "Ab dem Datum darf das Beitrittsdatum des Mitarbeiters nicht unterschritt
 
 #: hrms/hr/doctype/leave_type/leave_type.js:54
 msgid "From here, you can enable encashment for the balance leaves."
-msgstr ""
+msgstr "Hier können Sie die Auszahlung für die verbleibenden Abwesenheiten aktivieren."
 
 #: hrms/payroll/report/salary_register/salary_register.html:8
 msgid "From {0} to {1}"
@@ -4303,12 +4325,12 @@ msgstr "Kraftstoff-Menge"
 #. Name of a DocType
 #: hrms/hr/doctype/full_and_final_asset/full_and_final_asset.json
 msgid "Full and Final Asset"
-msgstr ""
+msgstr "Vermögensgegenstand der Schlussabrechnung"
 
 #. Name of a DocType
 #: hrms/hr/doctype/full_and_final_outstanding_statement/full_and_final_outstanding_statement.json
 msgid "Full and Final Outstanding Statement"
-msgstr ""
+msgstr "Abschließender Kontoauszug über Ausstehendes"
 
 #: hrms/setup.py:389
 msgid "Full-time"
@@ -4338,7 +4360,7 @@ msgstr "Zukünftige Termine sind nicht erlaubt"
 #. Label of the gain_loss_account (Link) field in DocType 'Expense Claim'
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 msgid "Gain Loss Account"
-msgstr ""
+msgstr "Gewinn-/Verlustkonto"
 
 #: hrms/public/js/utils/index.js:186 hrms/public/js/utils/index.js:214
 msgid "Geolocation Error"
@@ -4394,7 +4416,7 @@ msgstr "Zum Login"
 
 #: frontend/src/views/Login.vue:70
 msgid "Go to Reset Password page"
-msgstr ""
+msgstr "Zur Seite „Passwort zurücksetzen“ gehen"
 
 #. Label of the goal_completion (Percent) field in DocType 'Appraisal KRA'
 #: hrms/hr/doctype/appraisal_kra/appraisal_kra.json
@@ -4464,7 +4486,7 @@ msgstr "Gratifikation"
 #. Name of a DocType
 #: hrms/payroll/doctype/gratuity_applicable_component/gratuity_applicable_component.json
 msgid "Gratuity Applicable Component"
-msgstr ""
+msgstr "Abfindungsrelevante Komponente"
 
 #. Label of the gratuity_rule (Link) field in DocType 'Gratuity'
 #. Name of a DocType
@@ -4476,7 +4498,7 @@ msgstr "Gratifikationsregel"
 #. Name of a DocType
 #: hrms/payroll/doctype/gratuity_rule_slab/gratuity_rule_slab.json
 msgid "Gratuity Rule Slab"
-msgstr ""
+msgstr "Stufe der Abfindungsregel"
 
 #. Label of a Card Break in the Tenure Workspace
 #: hrms/hr/workspace/tenure/tenure.json
@@ -4512,7 +4534,7 @@ msgstr "Beschwerdetyp"
 
 #: hrms/payroll/report/income_tax_computation/income_tax_computation.py:630
 msgid "Gross Earnings"
-msgstr ""
+msgstr "Bruto-Bezüge"
 
 #. Label of the gross_pay (Currency) field in DocType 'Salary Slip'
 #: frontend/src/components/SalarySlipItem.vue:13
@@ -4613,7 +4635,7 @@ msgstr "Das Halbtagesdatum sollte zwischen Arbeitstag und Enddatum liegen"
 #. 'Employee Attendance Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgid "Half Day Marked Employee Header"
-msgstr ""
+msgstr "Kopfzeile für als halber Tag markierte Mitarbeiter"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.py:168
 msgid "Half Day Records"
@@ -4652,7 +4674,7 @@ msgstr "Hallo {}! Diese E-Mail soll Sie an die bevorstehenden Feiertage erinnern
 
 #: frontend/src/components/CheckInPanel.vue:4
 msgid "Hey, {0} 👋"
-msgstr ""
+msgstr "Guten Tag, {0} 👋"
 
 #: hrms/hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:55
 msgid "Hiring Count"
@@ -4691,7 +4713,7 @@ msgstr "Stundensatz (Währung des Unternehmens)"
 #. Label of the hourly_rate (Currency) field in DocType 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Hourly Rate"
-msgstr ""
+msgstr "Stundeneinzelpreis"
 
 #: hrms/regional/india/utils.py:184
 msgid "House rent paid days overlapping with {0}"
@@ -4742,7 +4764,7 @@ msgstr "Falls aktiviert, wird die Lohn- und Gehaltsabrechnung für jeden Mitarbe
 #. 'Payroll Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "If checked, flexible benefits are considered only if benefit application exists"
-msgstr ""
+msgstr "Wenn aktiviert, werden flexible Zusatzleistungen nur berücksichtigt, wenn ein Leistungsantrag vorhanden ist"
 
 #. Description of the 'Disable Rounded Total' (Check) field in DocType 'Payroll
 #. Settings'
@@ -4754,7 +4776,7 @@ msgstr "Wenn diese Option aktiviert ist, wird das Feld &quot;Gerundete Summe&quo
 #. field in DocType 'Payroll Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "If checked, overtime slip creation can be handled as part of payroll processing"
-msgstr ""
+msgstr "Wenn aktiviert, kann die Erstellung des Overtime Slip als Teil der Lohn- und Gehaltsabrechnung erfolgen"
 
 #. Description of the 'Exempted from Income Tax' (Check) field in DocType
 #. 'Salary Component'
@@ -4787,7 +4809,7 @@ msgstr "Falls aktiviert, werden Zahlungstage für Abwesenheit an Feiertagen abge
 #: hrms/payroll/doctype/salary_component/salary_component.json
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 msgid "If enabled, the amount will be excluded from accounting entries during Journal Entry creation."
-msgstr ""
+msgstr "Wenn aktiviert, wird der Betrag bei der Erstellung von Journaleinträgen von den Buchungen ausgeschlossen."
 
 #. Description of the 'Variable Based On Taxable Salary' (Check) field in
 #. DocType 'Salary Component'
@@ -4823,13 +4845,13 @@ msgstr "Falls aktiviert, trägt der in dieser Komponente angegebene oder berechn
 #. Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "If enabled, this component allows to accrue amounts without adding them to earnings. The accrued balance is tracked in the Employee Benefit Ledger and can be paid out later as needed."
-msgstr ""
+msgstr "Wenn aktiviert, ermöglicht diese Komponente die Ansammlung von Beträgen, ohne diese den Bezügen hinzuzufügen. Das aufgelaufene Guthaben wird im Employee Benefit Ledger erfasst und kann bei Bedarf später ausgezahlt werden."
 
 #. Description of the 'Arrear Component' (Check) field in DocType 'Salary
 #. Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "If enabled, this component will be included in arrear calculations"
-msgstr ""
+msgstr "Wenn aktiviert, wird diese Komponente in die Berechnung von Nachzahlungen einbezogen"
 
 #. Description of the 'Include holidays in Total no. of Working Days' (Check)
 #. field in DocType 'Payroll Settings'
@@ -4841,7 +4863,7 @@ msgstr "Falls aktiviert, werden in der Gesamtzahl der Arbeitstage auch die arbei
 #. 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "If greater than zero, this sets the maximum benefit amount assignable to any employee"
-msgstr ""
+msgstr "Wenn größer als null, legt dies den maximalen Leistungsbetrag fest, der einem Mitarbeiter zugewiesen werden kann"
 
 #. Description of the 'Applies to Company' (Check) field in DocType 'Leave
 #. Block List'
@@ -4894,7 +4916,7 @@ msgstr "Anreizbetrag"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:102
 msgid "Include Company Descendants"
-msgstr ""
+msgstr "Tochtergesellschaften einbeziehen"
 
 #. Label of the include_holidays (Check) field in DocType 'Attendance Request'
 #: hrms/hr/doctype/attendance_request/attendance_request.json
@@ -5018,7 +5040,7 @@ msgstr "Kontrolle"
 
 #: frontend/src/components/InstallPrompt.vue:13
 msgid "Install"
-msgstr ""
+msgstr "Installieren"
 
 #: frontend/src/components/InstallPrompt.vue:5
 #: frontend/src/components/InstallPrompt.vue:28
@@ -5204,13 +5226,13 @@ msgstr "Bewerbungsgespräche"
 #. Label of a quick_list in the Recruitment Workspace
 #: hrms/hr/workspace/recruitment/recruitment.json
 msgid "Interviews (This Week)"
-msgstr ""
+msgstr "Bewerbungsgespräche (diese Woche)"
 
 #: hrms/payroll/doctype/salary_component/salary_component.py:67
 #: hrms/payroll/doctype/salary_component/salary_component.py:81
 #: hrms/payroll/doctype/salary_component/salary_component.py:89
 msgid "Invalid Accrual Component"
-msgstr ""
+msgstr "Ungültige Abgrenzungskomponente"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:182
 msgid "Invalid Additional Salary"
@@ -5218,11 +5240,11 @@ msgstr "Ungültiges zusätzliches Gehalt"
 
 #: hrms/payroll/doctype/salary_component/salary_component.py:96
 msgid "Invalid Arrear Component"
-msgstr ""
+msgstr "Ungültige Komponente für Nachzahlung"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:467
 msgid "Invalid Benefit Amounts"
-msgstr ""
+msgstr "Ungültige Leistungsbeträge"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:326
 msgid "Invalid Dates"
@@ -5230,11 +5252,11 @@ msgstr "Ungültige Daten"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:2646
 msgid "Invalid LWP Days Reversed"
-msgstr ""
+msgstr "Ungültige stornierte Tage unbezahlten Urlaubs"
 
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.py:25
 msgid "Invalid Leave Ledger Entry"
-msgstr ""
+msgstr "Ungültiger Abwesenheits-Hauptbucheintrag"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:294
 msgid "Invalid Payroll Payable Account. The account currency must be {0} or {1}"
@@ -5247,7 +5269,7 @@ msgstr "Ungültige Schichtzeiten"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:933
 msgid "Invalid parameters provided. Please pass the required arguments."
-msgstr ""
+msgstr "Ungültige Parameter übergeben. Bitte übergeben Sie die erforderlichen Argumente."
 
 #. Option for the 'Status' (Select) field in DocType 'Employee Grievance'
 #: hrms/hr/doctype/employee_grievance/employee_grievance.json
@@ -5273,7 +5295,7 @@ msgstr "Rechnung Ref"
 #. Label of the is_allocated (Check) field in DocType 'Earned Leave Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Is Allocated"
-msgstr ""
+msgstr "Ist zugeordnet"
 
 #. Label of the is_applicable_for_referral_bonus (Check) field in DocType
 #. 'Employee Referral'
@@ -5411,7 +5433,7 @@ msgstr "Bewerber dürfen nicht zweimal zum selben Vorstellungsgespräch erschein
 #. Title of the job-application Web Form
 #: hrms/hr/web_form/job_application/job_application.json
 msgid "Job Application"
-msgstr ""
+msgstr "Bewerbung"
 
 #. Label of the job_application_route (Data) field in DocType 'Job Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json
@@ -5488,7 +5510,7 @@ msgstr "Stellenausschreibung verknüpft"
 #: hrms/hr/doctype/job_opening/job_opening.json
 #: hrms/hr/doctype/job_opening_template/job_opening_template.json
 msgid "Job Opening Template"
-msgstr ""
+msgstr "Vorlage für Stellenausschreibung"
 
 #: hrms/www/jobs/index.html:2 hrms/www/jobs/index.html:5
 msgid "Job Openings"
@@ -5593,7 +5615,7 @@ msgstr "Key Result Area"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:2643
 msgid "LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
-msgstr ""
+msgstr "Stornierte unbezahlte Urlaubstage ({0}) stimmen nicht mit der tatsächlichen Summe der Payroll Corrections ({1}) für Mitarbeiter {2} vom {3} bis {4} überein"
 
 #. Option for the 'Allocate on Day' (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
@@ -5622,7 +5644,7 @@ msgstr "Der letzte {0} war um {1}"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.py:180
 msgid "Late Entries"
-msgstr ""
+msgstr "Verspätete Einträge"
 
 #. Label of the late_entry (Check) field in DocType 'Attendance'
 #. Label of the late_entry (Check) field in DocType 'Employee Attendance Tool'
@@ -5636,7 +5658,7 @@ msgstr "Späte Einreise"
 #. field in DocType 'Shift Type'
 #: hrms/hr/doctype/shift_type/shift_type.json
 msgid "Late Entry & Early Exit Settings for Auto Attendance"
-msgstr ""
+msgstr "Einstellungen für Spätantritt & Frühabgang (Auto-Anwesenheit)"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.py:85
 msgid "Late Entry By"
@@ -5666,11 +5688,11 @@ msgstr "Verlassen"
 #. Name of a DocType
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
 msgid "Leave Adjustment"
-msgstr ""
+msgstr "Abwesenheitskorrektur"
 
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.py:41
 msgid "Leave Adjustment for this allocation already exists: {0}. Please amend existing adjustment."
-msgstr ""
+msgstr "Für diese Zuweisung existiert bereits eine Leave Adjustment: {0}. Bitte berichtigen Sie die bestehende Korrektur."
 
 #. Label of the leave_allocation (Link) field in DocType 'Compensatory Leave
 #. Request'
@@ -5687,7 +5709,7 @@ msgstr "Abwesenheitskontingent"
 
 #: hrms/hr/doctype/leave_type/leave_type.py:68
 msgid "Leave Allocation Exists"
-msgstr ""
+msgstr "Abwesenheitskontingent vorhanden"
 
 #. Label of the leave_allocations_section (Section Break) field in DocType
 #. 'Leave Policy'
@@ -5831,7 +5853,7 @@ msgstr "Ledger-Eintrag verlassen"
 
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.py:18
 msgid "Leave Ledger Entry's To date needs to be after From date. Currently, From Date is {0} and To Date is {1}"
-msgstr ""
+msgstr "Das „Bis-Datum“ des Urlaubskonto-Eintrags muss nach dem „Von-Datum“ liegen. Aktuell ist das Von-Datum {0} und das Bis-Datum {1}"
 
 #. Label of the leave_period (Link) field in DocType 'Leave Allocation'
 #. Option for the 'Dates Based On' (Select) field in DocType 'Leave Control
@@ -5983,7 +6005,7 @@ msgstr "Urlaub ohne Bezahlung stimmt nicht mit genehmigten {} Datensätzen über
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:130
 msgid "Leave allocation is skipped for {0}, because number of leaves to be allocated is 0."
-msgstr ""
+msgstr "Die Zuweisung des Abwesenheitskontingents für {0} wird übersprungen, da die zuzuweisende Anzahl an Abwesenheiten 0 beträgt."
 
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.py:54
 msgid "Leave allocation {0} is linked with the Leave Application {1}"
@@ -5991,7 +6013,7 @@ msgstr "Das Abwesenheitskontingent {0} ist mit dem Abwesenheitsantrag {1} verkn�
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:90
 msgid "Leave already have been assigned for this Leave Policy Assignment"
-msgstr ""
+msgstr "Für diese Zuordnung der Abwesenheitsrichtlinien wurden bereits Abwesenheiten zugewiesen."
 
 #. Label of the leave_and_expense_claim_settings (Section Break) field in
 #. DocType 'HR Settings'
@@ -6051,7 +6073,7 @@ msgstr "Abwesenheiten & Feiertage"
 #. Adjustment'
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
 msgid "Leaves After Adjustment"
-msgstr ""
+msgstr "Abwesenheiten nach Korrektur"
 
 #. Label of the leaves_allocated (Check) field in DocType 'Leave Policy
 #. Assignment'
@@ -6078,11 +6100,11 @@ msgstr "Abwesenheiten pro Jahr"
 #. Label of the leaves_to_adjust (Float) field in DocType 'Leave Adjustment'
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
 msgid "Leaves to Adjust"
-msgstr ""
+msgstr "Anzupassende Abwesenheiten"
 
 #: hrms/hr/doctype/leave_type/leave_type.js:42
 msgid "Leaves you can avail against a holiday you worked on. You can claim Compensatory Off Leave using Compensatory Leave Request. Click {0} to know more"
-msgstr ""
+msgstr "Abwesenheiten, die Sie für einen Feiertag geltend machen können, an dem Sie gearbeitet haben. Den Ausgleich können Sie über den Ausgleichsurlaubsantrag beantragen. Klicken Sie {0}, um mehr zu erfahren"
 
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.js:47
 #: hrms/hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:43
@@ -6135,7 +6157,7 @@ msgstr "Das Darlehen kann nicht vom Gehalt des Mitarbeiters {0} zurückgezahlt w
 
 #: frontend/src/components/CheckInPanel.vue:145
 msgid "Locating..."
-msgstr ""
+msgstr "Standort wird ermittelt..."
 
 #. Label of the device_id (Data) field in DocType 'Employee Checkin'
 #: hrms/hr/doctype/employee_checkin/employee_checkin.json
@@ -6149,7 +6171,7 @@ msgstr "Unterkunft erforderlich"
 
 #: frontend/src/views/Profile.vue:107
 msgid "Log Out"
-msgstr ""
+msgstr "Abmelden"
 
 #. Label of the log_type (Select) field in DocType 'Employee Checkin'
 #: frontend/src/views/attendance/EmployeeCheckinList.vue:25
@@ -6163,7 +6185,7 @@ msgstr "Der Protokolltyp ist für Eincheckvorgänge in der Schicht erforderlich:
 
 #: frontend/src/views/InvalidEmployee.vue:7
 msgid "Login Failed"
-msgstr ""
+msgstr "Anmeldung fehlgeschlagen"
 
 #: frontend/src/views/Login.vue:8
 msgid "Login to Frappe HR"
@@ -6194,7 +6216,7 @@ msgstr "Bankeintrag erstellen"
 #. Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Mandatory Benefit Application"
-msgstr ""
+msgstr "Pflicht-Leistungsantrag"
 
 #: hrms/public/js/utils/index.js:37
 msgid "Mandatory fields required for this action:"
@@ -6210,7 +6232,7 @@ msgstr "Manuelle Bewertung"
 #. Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Manually"
-msgstr ""
+msgstr "Manuell"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:38
 #: hrms/public/js/salary_slip_deductions_report_filters.js:21
@@ -6258,7 +6280,7 @@ msgstr "Markieren Sie die Anwesenheit basierend auf dem &quot;Einchecken von Mit
 
 #: hrms/hr/doctype/shift_type/shift_type.py:97
 msgid "Mark attendance for existing check-in/out logs before changing shift settings"
-msgstr ""
+msgstr "Erfassen Sie die Anwesenheit für bestehende Einstempel-/Ausstempel-Protokolle, bevor Sie die Schichteinstellungen ändern"
 
 #: hrms/hr/doctype/goal/goal_tree.js:262
 msgid "Mark {0} as Completed?"
@@ -6288,7 +6310,7 @@ msgstr "Anwesenheit markieren"
 #. Benefit Claim'
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 msgid "Max Amount Eligible For Claim"
-msgstr ""
+msgstr "Maximal anspruchsberechtigter Betrag"
 
 #. Label of the max_benefit_amount (Currency) field in DocType 'Employee
 #. Benefit Application Detail'
@@ -6342,7 +6364,7 @@ msgstr "Max Arbeitszeit gegen Stundenzettel"
 #. Assignment'
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 msgid "Maximum Benefit Amount"
-msgstr ""
+msgstr "Maximaler Leistungsbetrag"
 
 #. Label of the maximum_carry_forwarded_leaves (Float) field in DocType 'Leave
 #. Type'
@@ -6379,25 +6401,25 @@ msgstr "Maximaler Ausnahmebetrag"
 #. Label of the max_leaves_allowed (Float) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
 msgid "Maximum Leave Allocation Allowed per Leave Period"
-msgstr ""
+msgstr "Maximal zulässiges Abwesenheitskontingent je Abwesenheitsperiode"
 
 #. Label of the maximum_overtime_hours_allowed (Float) field in DocType
 #. 'Overtime Details'
 #: hrms/hr/doctype/overtime_details/overtime_details.json
 msgid "Maximum Overtime Hours Allowed"
-msgstr ""
+msgstr "Maximal zulässige Überstunden"
 
 #. Label of the maximum_overtime_hours_allowed (Float) field in DocType
 #. 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Maximum Overtime Hours Allowed Per Day"
-msgstr ""
+msgstr "Maximal zulässige Überstunden pro Tag"
 
 #. Description of the 'Taxable Income Relief Threshold Limit' (Currency) field
 #. in DocType 'Income Tax Slab'
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
 msgid "Maximum annual taxable income eligible for full tax relief. No tax is applied if income does not exceed this limit"
-msgstr ""
+msgstr "Maximales jährliches zu versteuerndes Einkommen, das für die vollständige Steuerentlastung infrage kommt. Es wird keine Steuer erhoben, wenn das Einkommen diese Grenze nicht überschreitet"
 
 #: hrms/hr/doctype/leave_encashment/leave_encashment.py:117
 msgid "Maximum encashable leaves for {0} are {1}"
@@ -6446,7 +6468,7 @@ msgstr ""
 
 #: hrms/hr/doctype/employee_advance/employee_advance.py:47
 msgid "Missing Advance Account"
-msgstr ""
+msgstr "Anzahlungskonto fehlt"
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:85
 msgid "Missing Mandatory Field"
@@ -6454,7 +6476,7 @@ msgstr "Fehlendes Pflichtfeld"
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:167
 msgid "Missing Opening Entries"
-msgstr ""
+msgstr "Fehlende Eröffnungsbuchungen"
 
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:48
 msgid "Missing Relieving Date"
@@ -6462,11 +6484,11 @@ msgstr "Fehlendes Austrittsdatum"
 
 #: hrms/payroll/report/provident_fund_deductions/provident_fund_deductions.py:18
 msgid "Missing Salary Components"
-msgstr ""
+msgstr "Fehlende Gehaltskomponenten"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1860
 msgid "Missing Tax Slab"
-msgstr ""
+msgstr "Fehlende Steuerstufe"
 
 #. Label of the mode_of_travel (Select) field in DocType 'Travel Itinerary'
 #: hrms/hr/doctype/travel_itinerary/travel_itinerary.json
@@ -6502,7 +6524,7 @@ msgstr "Mehr als eine Auswahl für {0} ist nicht zulässig"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:285
 msgid "Multiple Additional Salaries with overwrite property exist for Salary Component {0} between {1} and {2}."
-msgstr ""
+msgstr "Für die Gehaltskomponente {0} zwischen {1} und {2} existieren mehrere zusätzliche Gehälter mit Überschreibungseigenschaft."
 
 #: hrms/hr/doctype/shift_assignment/shift_assignment.py:110
 msgid "Multiple Shift Assignments"
@@ -6512,7 +6534,8 @@ msgstr "Mehrere Schichtzuweisungen"
 #. 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Multipliers that adjust the hourly overtime amount for specific scenarios\n\n"
-msgstr ""
+msgstr "Multiplikatoren, die den stündlichen Überstundenbetrag für bestimmte Szenarien anpassen\n"
+"\n"
 
 #: frontend/src/views/employee_advance/List.vue:19
 msgid "My Advances"
@@ -6578,11 +6601,11 @@ msgstr "Neue Mitarbeiter-ID"
 
 #: frontend/src/components/ExpensesTable.vue:213
 msgid "New Expense Item"
-msgstr ""
+msgstr "Neue Ausgabenposition"
 
 #: frontend/src/components/ExpenseTaxesTable.vue:221
 msgid "New Expense Tax"
-msgstr ""
+msgstr "Neue Ausgabensteuer"
 
 #: hrms/public/js/templates/performance_feedback.html:26
 msgid "New Feedback"
@@ -6591,7 +6614,7 @@ msgstr "Neues Feedback"
 #. Label of a quick_list in the Tenure Workspace
 #: hrms/hr/workspace/tenure/tenure.json
 msgid "New Hires (This Month)"
-msgstr ""
+msgstr "Neueinstellungen (diesen Monat)"
 
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:61
 msgid "New Leave(s) Allocated"
@@ -6616,7 +6639,7 @@ msgstr "Neue Schichtzuweisungen werden nach diesem Datum erstellt."
 
 #: hrms/hr/doctype/employee_advance/employee_advance.py:375
 msgid "No Bank/Cash Account found for currency {0}. Please create one under company {1}."
-msgstr ""
+msgstr "Kein Bank- oder Kassenkonto für Währung {0} gefunden. Bitte erstellen Sie eines unter Unternehmen {1}."
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:218
 msgid "No Employee Found"
@@ -6648,15 +6671,15 @@ msgstr "Keine Gehaltsabrechnung für Mitarbeiter gefunden: {0}"
 
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.py:81
 msgid "No Salary Slips with {0} found for employee {1} for payroll period {2}."
-msgstr ""
+msgstr "Für Mitarbeiter {1} wurden im Abrechnungszeitraum {2} keine Gehaltsabrechnungen mit {0} gefunden."
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:69
 msgid "No Salary Structure Assignment found for employee {0} on date {1}"
-msgstr ""
+msgstr "Für Mitarbeiter {0} wurde zum Datum {1} keine Zuordnung der Gehaltsstruktur gefunden"
 
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.py:119
 msgid "No Salary Structure Assignment found for employee {0} on or before {1}"
-msgstr ""
+msgstr "Für Mitarbeiter {0} wurde am oder vor {1} keine Zuordnung der Gehaltsstruktur gefunden"
 
 #: hrms/hr/doctype/leave_encashment/leave_encashment.py:36
 msgid "No Salary Structure assigned to Employee {0} on the given date {1}"
@@ -6676,11 +6699,11 @@ msgstr "Für diese Position wurden keine Stellenpläne gefunden"
 
 #: hrms/payroll/doctype/arrear/arrear.py:71
 msgid "No active Salary Structure Assignment found for employee {0} with salary structure {1} on or after arrear start date {2}"
-msgstr ""
+msgstr "Keine aktive Zuordnung der Gehaltsstruktur für Mitarbeiter {0} mit Gehaltsstruktur {1} am oder nach dem Startdatum der Nachzahlung {2} gefunden"
 
 #: frontend/src/views/InvalidEmployee.vue:8
 msgid "No active employee found associated with the email ID {0}. Try logging in with your employee email ID or contact your HR manager for access."
-msgstr ""
+msgstr "Kein aktiver Mitarbeiter mit der E-Mail-Adresse {0} gefunden. Melden Sie sich mit Ihrer Mitarbeiter-E-Mail-Adresse an oder wenden Sie sich für den Zugang an Ihren Personalverantwortlichen."
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:435
 msgid "No active or default Salary Structure found for employee {0} for the given dates"
@@ -6696,32 +6719,32 @@ msgstr "Keine Vorschüsse gefunden"
 
 #: hrms/payroll/doctype/gratuity/gratuity.py:281
 msgid "No applicable Earning component found in last salary slip for Gratuity Rule: {0}"
-msgstr ""
+msgstr "In der letzten Gehaltsabrechnung wurde keine anwendbare Komponente für Bezüge für die Gratifikationsregel gefunden: {0}"
 
 #: hrms/payroll/doctype/gratuity/gratuity.py:294
 msgid "No applicable Earning components found for Gratuity Rule: {0}"
-msgstr ""
+msgstr "Für die Gratifikationsregel wurden keine anwendbaren Bezugskomponenten gefunden: {0}"
 
 #: hrms/payroll/doctype/gratuity/gratuity.py:254
 msgid "No applicable slab found for the calculation of gratuity amount as per the Gratuity Rule: {0}"
-msgstr ""
+msgstr "Für die Berechnung des Gratifikationsbetrags gemäß der Gratifikationsregel wurde keine anwendbare Stufe gefunden: {0}"
 
 #: hrms/payroll/doctype/arrear/arrear.py:194
 msgid "No arrear components found in the existing salary slips."
-msgstr ""
+msgstr "In den vorhandenen Gehaltsabrechnungen wurden keine Nachzahlungskomponenten gefunden."
 
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.py:160
 msgid "No arrear components found in the salary slip. Ensure Arrear Component is checked in the Salary Component master."
-msgstr ""
+msgstr "In der Gehaltsabrechnung wurden keine Nachzahlungskomponenten gefunden. Stellen Sie sicher, dass in den Stammdaten der Gehaltskomponente die Option Nachzahlungskomponente aktiviert ist."
 
 #: hrms/payroll/doctype/arrear/arrear.py:407
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.py:187
 msgid "No arrear details found"
-msgstr ""
+msgstr "Keine Details zur Nachzahlung gefunden"
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:164
 msgid "No attendance records found for employee {0} between {1} and {2}"
-msgstr ""
+msgstr "Für Mitarbeiter {0} wurden zwischen {1} und {2} keine Anwesenheitsdatensätze gefunden."
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:71
 msgid "No attendance records found for this criteria."
@@ -6769,7 +6792,7 @@ msgstr "Keine Elemente ausgewählt"
 
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.js:46
 msgid "No leave allocation found for {0} for {1} on given date."
-msgstr ""
+msgstr "Für {0} wurde am angegebenen Datum kein Abwesenheitskontingent für {1} gefunden."
 
 #: hrms/hr/doctype/attendance/attendance.py:197
 msgid "No leave record found for employee {0} on {1}"
@@ -6802,7 +6825,7 @@ msgstr "Keine Gehaltsabrechnungen gefunden"
 
 #: hrms/payroll/doctype/arrear/arrear.py:136
 msgid "No salary slips found for the selected employee from {0}"
-msgstr ""
+msgstr "Für den ausgewählten Mitarbeiter ab {0} wurden keine Gehaltsabrechnungen gefunden."
 
 #: frontend/src/components/ExpenseTaxesTable.vue:56
 msgid "No taxes added"
@@ -6904,7 +6927,7 @@ msgstr "Anzahl der Positionen"
 #. Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Number of Leaves"
-msgstr ""
+msgstr "Anzahl der Abwesenheiten"
 
 #. Label of the number_of_withholding_cycles (Int) field in DocType 'Salary
 #. Withholding'
@@ -7055,7 +7078,7 @@ msgstr "Offen & Genehmigt"
 
 #: hrms/public/js/templates/feedback_history.html:44
 msgid "Open Feedback"
-msgstr ""
+msgstr "Feedback öffnen"
 
 #: hrms/hr/doctype/leave_application/leave_application_email_template.html:30
 msgid "Open Now"
@@ -7092,7 +7115,7 @@ msgstr "Andere"
 #: hrms/hr/doctype/attendance/attendance.json
 #: hrms/hr/report/shift_attendance/shift_attendance.py:73
 msgid "Out Time"
-msgstr ""
+msgstr "Austrittszeit"
 
 #. Label of a chart in the Payroll Workspace
 #: hrms/payroll/workspace/payroll/payroll.json
@@ -7130,29 +7153,29 @@ msgstr "Überlappende Schichten"
 #: hrms/hr/doctype/shift_type/shift_type.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Overtime"
-msgstr ""
+msgstr "Überstunden"
 
 #. Label of the overtime_calculation_method (Select) field in DocType 'Overtime
 #. Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Overtime Amount Calculation"
-msgstr ""
+msgstr "Berechnung des Überstundenbetrags"
 
 #. Name of a DocType
 #. Label of the overtime_details (Table) field in DocType 'Overtime Slip'
 #: hrms/hr/doctype/overtime_details/overtime_details.json
 #: hrms/hr/doctype/overtime_slip/overtime_slip.json
 msgid "Overtime Details"
-msgstr ""
+msgstr "Überstundendetails"
 
 #. Label of the overtime_duration (Float) field in DocType 'Overtime Details'
 #: hrms/hr/doctype/overtime_details/overtime_details.json
 msgid "Overtime Duration"
-msgstr ""
+msgstr "Überstundendauer"
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:73
 msgid "Overtime Duration for {0} is greater than Maximum Overtime Hours Allowed"
-msgstr ""
+msgstr "Die Überstundendauer für {0} überschreitet die maximal zulässigen Überstunden."
 
 #. Name of a DocType
 #. Label of the overtime_salary_component (Link) field in DocType 'Overtime
@@ -7160,63 +7183,63 @@ msgstr ""
 #: hrms/hr/doctype/overtime_salary_component/overtime_salary_component.json
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Overtime Salary Component"
-msgstr ""
+msgstr "Gehaltskomponente für Überstunden"
 
 #. Name of a DocType
 #. Label of a Link in the Shift & Attendance Workspace
 #: hrms/hr/doctype/overtime_slip/overtime_slip.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Overtime Slip"
-msgstr ""
+msgstr "Overtime Slip"
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:457
 msgid "Overtime Slip Creation Error for {0}"
-msgstr ""
+msgstr "Fehler bei der Erstellung des Overtime Slip für {0}"
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:468
 msgid "Overtime Slip Creation Failed"
-msgstr ""
+msgstr "Erstellung des Overtime Slip fehlgeschlagen"
 
 #. Label of the overtime_step (Select) field in DocType 'Payroll Entry'
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 msgid "Overtime Slip Step"
-msgstr ""
+msgstr "Overtime Slip-Schritt"
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:491
 msgid "Overtime Slip Submission Error for {0}"
-msgstr ""
+msgstr "Fehler bei der Buchung von Overtime Slip für {0}"
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:502
 msgid "Overtime Slip Submission Failed"
-msgstr ""
+msgstr "Buchung von Overtime Slip fehlgeschlagen"
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:497
 msgid "Overtime Slip Submitted"
-msgstr ""
+msgstr "Overtime Slip gebucht"
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:461
 msgid "Overtime Slip created for {0} employee(s)"
-msgstr ""
+msgstr "Overtime Slip für {0} Mitarbeiter erstellt"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1247
 msgid "Overtime Slip creation is queued. It may take a few minutes"
-msgstr ""
+msgstr "Die Erstellung von Overtime Slips ist in der Warteschlange. Dies kann einige Minuten dauern"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1271
 msgid "Overtime Slip submission is queued. It may take a few minutes"
-msgstr ""
+msgstr "Die Buchung von Overtime Slips ist in der Warteschlange. Dies kann einige Minuten dauern"
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:48
 msgid "Overtime Slip:{0} has been created between {1} and {2}"
-msgstr ""
+msgstr "Overtime Slip:{0} wurde zwischen {1} und {2} erstellt"
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:463
 msgid "Overtime Slips Created"
-msgstr ""
+msgstr "Overtime Slips erstellt"
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:495
 msgid "Overtime Slips submitted for {0} employee(s)"
-msgstr ""
+msgstr "Overtime Slips für {0} Mitarbeiter gebucht"
 
 #. Label of the overtime_type (Link) field in DocType 'Attendance'
 #. Label of the overtime_type (Link) field in DocType 'Employee Checkin'
@@ -7233,13 +7256,13 @@ msgstr ""
 #: hrms/hr/doctype/shift_type/shift_type.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Overtime Type"
-msgstr ""
+msgstr "Overtime Type"
 
 #. Description of the 'Overtime Salary Component' (Link) field in DocType
 #. 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Overtime earnings will be booked under this salary component for payout."
-msgstr ""
+msgstr "Überstundenbezüge werden zur Auszahlung unter dieser Gehaltskomponente gebucht."
 
 #. Label of the overwrite_salary_structure_amount (Check) field in DocType
 #. 'Additional Salary'
@@ -7313,13 +7336,13 @@ msgstr "Die Kennwortrichtlinie für Gehaltsabrechnungen ist nicht festgelegt"
 #. 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Pay Rate Multipliers"
-msgstr ""
+msgstr "Vergütungs-Multiplikatoren"
 
 #. Label of the pay_via_payment_entry (Check) field in DocType 'Leave
 #. Encashment'
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
 msgid "Pay Via Payment Entry"
-msgstr ""
+msgstr "Über Zahlung auszahlen"
 
 #. Label of the pay_via_salary_slip (Check) field in DocType 'Gratuity'
 #: hrms/payroll/doctype/gratuity/gratuity.json
@@ -7355,11 +7378,11 @@ msgstr "Hilfe zur Berechnung der Zahlungstage"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:114
 msgid "Payment Days Dependency"
-msgstr ""
+msgstr "Abhängigkeit von Zahlungstagen"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.js:282
 msgid "Payment Days calculations are based on these Payroll Settings"
-msgstr ""
+msgstr "Die Berechnung der Zahlungstage basiert auf diesen Einstellungen zur Gehaltsabrechnung"
 
 #. Label of the section_break_5 (Tab Break) field in DocType 'Gratuity'
 #: hrms/payroll/doctype/gratuity/gratuity.json
@@ -7374,18 +7397,18 @@ msgstr "Zahlung von {0} von {1} an {2}"
 #. Benefit Ledger'
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 msgid "Payout"
-msgstr ""
+msgstr "Auszahlung"
 
 #. Label of the payout_method (Select) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Payout Method"
-msgstr ""
+msgstr "Auszahlungsmethode"
 
 #. Label of the final_cycle_accrual_payout (Check) field in DocType 'Salary
 #. Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Payout Unclaimed Amount in Final Payroll Cycle"
-msgstr ""
+msgstr "Auszahlung nicht beanspruchter Beträge im letzten Abrechnungszyklus"
 
 #. Label of the payroll (Section Break) field in DocType 'Leave Encashment'
 #. Name of a Workspace
@@ -7404,16 +7427,16 @@ msgstr "Lohn- und Gehaltsabrechnung auf Basis von"
 #. Name of a DocType
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
 msgid "Payroll Correction"
-msgstr ""
+msgstr "Payroll Correction"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/payroll_correction_child/payroll_correction_child.json
 msgid "Payroll Correction Child"
-msgstr ""
+msgstr "Untergeordnete Lohnkorrektur"
 
 #: hrms/setup.py:111 hrms/setup.py:281
 msgid "Payroll Cost Center"
-msgstr ""
+msgstr "Kostenstelle Lohn- und Gehaltsabrechnung"
 
 #. Label of the section_break_17 (Section Break) field in DocType 'Salary
 #. Structure Assignment'
@@ -7546,7 +7569,7 @@ msgstr "Das Abrechnungsdatum darf nicht unter dem Beitrittsdatum des Mitarbeiter
 
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:24
 msgid "Payroll date cannot be in the past. This is to ensure that claims are made for the current or future payroll cycles."
-msgstr ""
+msgstr "Das Abrechnungsdatum darf nicht in der Vergangenheit liegen. Dadurch wird sichergestellt, dass Ansprüche für die aktuellen oder zukünftigen Abrechnungszyklen geltend gemacht werden."
 
 #. Description of the 'Pending Amount' (Currency) field in DocType 'Employee
 #. Advance'
@@ -7556,11 +7579,11 @@ msgstr "Ausstehender (unbezahlter) Betrag aus früheren Vorschüssen"
 
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:73
 msgid "Pending Asset Returns"
-msgstr ""
+msgstr "Ausstehende Rückgaben von Vermögensgegenständen"
 
 #: hrms/hr/report/employee_exits/employee_exits.py:227
 msgid "Pending FnF"
-msgstr ""
+msgstr "Ausstehende FnF"
 
 #: hrms/hr/report/employee_exits/employee_exits.py:221
 msgid "Pending Interviews"
@@ -7608,7 +7631,7 @@ msgstr "Bitte wählen Sie zuerst das Unternehmen aus"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:832
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
-msgstr ""
+msgstr "Bitte weisen Sie zuerst dem Mitarbeiter {0} eine Gehaltsstruktur zu, die ab oder vor {1} gültig ist."
 
 #: hrms/hr/doctype/attendance_request/attendance_request.py:41
 msgid "Please check if employee is on leave or attendance with the same status exists for selected day(s)."
@@ -7636,11 +7659,11 @@ msgstr "Bitte geben Sie die Position ein"
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.js:11
 msgid "Please fill in Employee, Posting Date, and Company before fetching overtime details."
-msgstr ""
+msgstr "Bitte füllen Sie Mitarbeiter, Buchungsdatum und Unternehmen aus, bevor Sie die Überstundendetails abrufen."
 
 #: hrms/hr/doctype/shift_type/shift_type.py:58
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
-msgstr ""
+msgstr "Bitte verringern Sie {0}, um zu vermeiden, dass sich die Schichtzeit mit sich selbst überschneidet."
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:2158
 msgid "Please see attachment"
@@ -7661,7 +7684,7 @@ msgstr "Bitte wählen Sie zuerst Mitarbeiter."
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:41
 msgid "Please select Filter Based On"
-msgstr ""
+msgstr "Bitte wählen Sie Filter basiert auf"
 
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.js:25
 msgid "Please select From Date and Payroll Frequency first"
@@ -7673,7 +7696,7 @@ msgstr "Bitte wählen Sie ein „Ab Datum“."
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:167
 msgid "Please select Shift Schedule and assignment date(s)."
-msgstr ""
+msgstr "Bitte wählen Sie den Schichtplan und das/die Zuweisungsdatum/-daten aus."
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:160
 msgid "Please select Shift Type and assignment date(s)."
@@ -7727,7 +7750,7 @@ msgstr "Bitte wählen Sie Mitarbeiter aus, für die Sie Beurteilungen erstellen 
 
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.js:256
 msgid "Please select half day attendance status."
-msgstr ""
+msgstr "Bitte wählen Sie den Anwesenheitsstatus für den halben Tag aus."
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:44
 msgid "Please select month and year."
@@ -7755,7 +7778,7 @@ msgstr "Bitte setzen Sie das Standard-Verbindlichkeitskonto für Lohn- und Gehal
 
 #: hrms/regional/india/utils.py:18
 msgid "Please set Basic and HRA component in Company {0}"
-msgstr ""
+msgstr "Bitte legen Sie die Komponenten Basic und HRA im Unternehmen {0} fest."
 
 #: hrms/hr/doctype/leave_encashment/leave_encashment.py:162
 msgid "Please set Earning Component for Leave type: {0}."
@@ -7772,7 +7795,7 @@ msgstr "Bitte legen Sie das Austrittsdatum für den Mitarbeiter fest: {0}"
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:166
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:52
 msgid "Please set a date range less than 90 days."
-msgstr ""
+msgstr "Bitte legen Sie einen Datumsbereich von weniger als 90 Tagen fest."
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:357
 msgid "Please set account in Salary Component {0}"
@@ -7804,7 +7827,7 @@ msgstr "Bitte stellen Sie die Liste der arbeitsfreien Tage ein."
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:48
 msgid "Please set the date range."
-msgstr ""
+msgstr "Bitte legen Sie den Datumsbereich fest."
 
 #: hrms/hr/doctype/exit_interview/exit_interview.js:21
 #: hrms/hr/doctype/exit_interview/exit_interview.py:21
@@ -7846,7 +7869,7 @@ msgstr "Bitte geben Sie den Bewerber an, der aktualisiert werden soll."
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:158
 msgid "Please specify {0} and {1} (if any), for the correct tax calculation in future salary slips."
-msgstr ""
+msgstr "Bitte geben Sie {0} und {1} (falls vorhanden) an, damit die Steuerberechnung in künftigen Gehaltsabrechnungen korrekt erfolgt."
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:157
 msgid "Please submit the {0} before marking the cycle as Completed"
@@ -7893,13 +7916,13 @@ msgstr "Anwesend"
 
 #: hrms/hr/report/shift_attendance/shift_attendance.py:162
 msgid "Present Records"
-msgstr ""
+msgstr "Anwesende Datensätze"
 
 #. Label of the prevent_self_expense_approval (Check) field in DocType 'HR
 #. Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json
 msgid "Prevent self approval for expense claims even if user has permissions"
-msgstr ""
+msgstr "Selbstgenehmigung von Spesenabrechnungen verhindern, auch wenn der Benutzer über Berechtigungen verfügt"
 
 #. Label of the prevent_self_leave_approval (Check) field in DocType 'HR
 #. Settings'
@@ -7916,7 +7939,7 @@ msgstr "Vorschau Gehaltsabrechnung"
 #. Label of the principal_amount (Currency) field in DocType 'Salary Slip Loan'
 #: hrms/payroll/doctype/salary_slip_loan/salary_slip_loan.json
 msgid "Principal Amount"
-msgstr ""
+msgstr "Hauptbetrag"
 
 #: hrms/payroll/report/salary_register/salary_register.html:40
 msgid "Printed On {0}"
@@ -7944,7 +7967,7 @@ msgstr "Anwesenheit verarbeiten nach"
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 #: hrms/setup.py:856
 msgid "Process Payroll Accounting Entry based on Employee"
-msgstr ""
+msgstr "Lohnbuchungen je Mitarbeiter verarbeiten"
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:123
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:130
@@ -7961,7 +7984,7 @@ msgstr "Schichtanfragen verarbeiten"
 #. Encashment'
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
 msgid "Process leave encashment via a separate Payment Entry instead of Salary Slip"
-msgstr ""
+msgstr "Auszahlung von Urlaub über eine separate Zahlung statt über die Gehaltsabrechnung verarbeiten"
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:289
 msgid "Process {0} Shift Request(s) as <b>{1}</b>?"
@@ -8027,7 +8050,7 @@ msgstr "Provident Fund Abzüge"
 #. Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Public Holiday Multiplier"
-msgstr ""
+msgstr "Multiplikator für Feiertage"
 
 #. Label of the publish_applications_received (Check) field in DocType 'Job
 #. Opening'
@@ -8093,7 +8116,7 @@ msgstr "Schnellfilter"
 
 #: frontend/src/components/QuickLinks.vue:3 frontend/src/views/Home.vue:6
 msgid "Quick Links"
-msgstr ""
+msgstr "Schnellzugriff"
 
 #. Description of the 'Checkin Radius' (Int) field in DocType 'Shift Location'
 #: hrms/hr/doctype/shift_location/shift_location.json
@@ -8126,7 +8149,7 @@ msgstr "Abwesenheiten neu zuteilen"
 #. Adjustment'
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
 msgid "Reason for Adjustment"
-msgstr ""
+msgstr "Grund für die Korrektur"
 
 #. Label of the reason_for_requesting (Text) field in DocType 'Job Requisition'
 #: hrms/hr/doctype/job_requisition/job_requisition.json
@@ -8168,7 +8191,7 @@ msgstr "Empfohlen für ein einzelnes biometrisches Gerät / Check-ins über eine
 #. Option for the 'Action' (Select) field in DocType 'Full and Final Asset'
 #: hrms/hr/doctype/full_and_final_asset/full_and_final_asset.json
 msgid "Recover Cost"
-msgstr ""
+msgstr "Kosten einfordern"
 
 #. Name of a Workspace
 #: hrms/hr/workspace/recruitment/recruitment.json
@@ -8187,15 +8210,15 @@ msgstr "Rekrutierungsanalyse"
 #. Adjustment'
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
 msgid "Reduce"
-msgstr ""
+msgstr "Verringern"
 
 #: hrms/hr/doctype/leave_type/leave_type.py:69
 msgid "Reducing maximum leaves allowed after allocation may cause scheduler to allocate incorrect number of earned leaves. Proceed with caution."
-msgstr ""
+msgstr "Die Verringerung der maximal zulässigen Abwesenheiten nach der Zuweisung kann dazu führen, dass der Planer eine falsche Anzahl verdienter Urlaubstage zuweist. Fahren Sie mit Vorsicht fort."
 
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.py:75
 msgid "Reduction is more than {0}'s available leave balance {1} for leave type {2}"
-msgstr ""
+msgstr "Die Reduzierung übersteigt den verfügbaren Abwesenheitssaldo von {0} in Höhe von {1} für die Abwesenheitsart {2}"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:371
 #: hrms/hr/doctype/leave_application/leave_application.py:507
@@ -8231,7 +8254,7 @@ msgstr "Name des Empfehlers"
 #. 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json
 msgid "Reflections"
-msgstr ""
+msgstr "Reflexionen"
 
 #. Label of the refuelling_details (Section Break) field in DocType 'Vehicle
 #. Log'
@@ -8250,7 +8273,7 @@ msgstr "Mitarbeiterempfehlung ablehnen"
 
 #: frontend/src/components/RequestActionSheet.vue:290
 msgid "Rejection"
-msgstr ""
+msgstr "Ablehnung"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:188
 msgid "Release Withheld Salaries"
@@ -8438,21 +8461,21 @@ msgstr "Renteneintrittsalter (in Jahren)"
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:441
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:449
 msgid "Retry Failed"
-msgstr ""
+msgstr "Fehlgeschlagene wiederholen"
 
 #. Label of the retry_failed_allocations (Button) field in DocType 'Leave
 #. Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 msgid "Retry Failed Allocations"
-msgstr ""
+msgstr "Fehlgeschlagene Zuweisungen wiederholen"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.js:191
 msgid "Retry Successful"
-msgstr ""
+msgstr "Wiederholung erfolgreich"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.js:188
 msgid "Retrying allocations"
-msgstr ""
+msgstr "Zuweisungen werden wiederholt"
 
 #: hrms/hr/doctype/employee_advance/employee_advance.py:185
 msgid "Return amount cannot be greater than unclaimed amount"
@@ -8466,7 +8489,7 @@ msgstr "Überprüfen Sie verschiedene andere Einstellungen in Bezug auf Abwesenh
 #. Feedback'
 #: hrms/hr/doctype/employee_performance_feedback/employee_performance_feedback.json
 msgid "Reviewer"
-msgstr ""
+msgstr "Prüfer"
 
 #. Label of the reviewer_name (Data) field in DocType 'Employee Performance
 #. Feedback'
@@ -8477,7 +8500,7 @@ msgstr "Name des Überprüfers"
 #. Label of the revised_ctc (Currency) field in DocType 'Employee Promotion'
 #: hrms/hr/doctype/employee_promotion/employee_promotion.json
 msgid "Revised CTC"
-msgstr ""
+msgstr "Überarbeitetes CTC"
 
 #. Label of the role_allowed_to_create_backdated_leave_application (Link) field
 #. in DocType 'HR Settings'
@@ -8547,7 +8570,7 @@ msgstr "Zeile {0} # Der zugewiesene Betrag {1} darf nicht größer sein als der 
 
 #: hrms/hr/doctype/leave_encashment/leave_encashment.py:270
 msgid "Row {0}# Paid Amount cannot be greater than Encashment amount"
-msgstr ""
+msgstr "Zeile {0}#: Der gezahlte Betrag darf nicht größer sein als der Auszahlungsbetrag"
 
 #: hrms/payroll/doctype/gratuity/gratuity.py:133
 msgid "Row {0}# Paid Amount cannot be greater than Total amount"
@@ -8563,7 +8586,7 @@ msgstr "Zeile {0}: Von (Jahr) kann nicht größer sein als Bis (Jahr)"
 
 #: hrms/hr/doctype/appraisal/appraisal.py:137
 msgid "Row {0}: Goal Score cannot be greater than {1}"
-msgstr ""
+msgstr "Zeile {0}: Die Zielpunktzahl darf nicht größer als {1} sein"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip_loan_utils.py:59
 msgid "Row {0}: Paid amount {1} is greater than pending accrued amount {2} against loan {3}"
@@ -8621,7 +8644,7 @@ msgstr "Gehaltskomponente Account"
 #. 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Salary Component Based"
-msgstr ""
+msgstr "Basierend auf Gehaltskomponente"
 
 #. Label of the type (Data) field in DocType 'Additional Salary'
 #: hrms/payroll/doctype/additional_salary/additional_salary.json
@@ -8636,7 +8659,7 @@ msgstr "Gehaltskomponente für Zeiterfassung basierte Abrechnung."
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:440
 msgid "Salary Component {0} cannot be selected more than once in Employee Benefits"
-msgstr ""
+msgstr "Gehaltskomponente {0} kann in den Mitarbeiterleistungen nicht mehr als einmal ausgewählt werden"
 
 #: hrms/payroll/doctype/salary_component/salary_component.js:113
 msgid "Salary Component {0} is currently not used in any Salary Structure."
@@ -8644,7 +8667,7 @@ msgstr "Die Gehaltskomponente {0} wird derzeit in keiner Gehaltsstruktur verwend
 
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.py:15
 msgid "Salary Component {0} must be of type 'Earning' to be used in Employee Benefit Ledger"
-msgstr ""
+msgstr "Gehaltskomponente {0} muss vom Typ 'Bezug' sein, um im Mitarbeiterleistungs-Ledger verwendet zu werden"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
@@ -8734,7 +8757,7 @@ msgstr "Gehaltsabrechnung ID"
 #. Name of a DocType
 #: hrms/payroll/doctype/salary_slip_leave/salary_slip_leave.json
 msgid "Salary Slip Leave"
-msgstr ""
+msgstr "Abwesenheit in Gehaltsabrechnung"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/salary_slip_loan/salary_slip_loan.json
@@ -8745,7 +8768,7 @@ msgstr "Gehaltsabrechnung Vorschuss"
 #. Correction'
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
 msgid "Salary Slip Reference"
-msgstr ""
+msgstr "Referenz Gehaltsabrechnung"
 
 #. Label of the timesheets (Table) field in DocType 'Salary Slip'
 #. Name of a DocType
@@ -8764,7 +8787,7 @@ msgstr "Die Erstellung der Gehaltsabrechnung befindet sich in der Warteschlange.
 
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.py:121
 msgid "Salary Slip not found."
-msgstr ""
+msgstr "Gehaltsabrechnung nicht gefunden."
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:336
 msgid "Salary Slip of employee {0} already created for this period"
@@ -8780,11 +8803,11 @@ msgstr "Die Buchung der Gehaltsabrechnung steht in der Warteschlange. Es kann ei
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1525
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
-msgstr ""
+msgstr "Gehaltsabrechnung {0} fehlgeschlagen für Personalabrechnung {1}"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:117
 msgid "Salary Slip {0} failed. You can resolve the {1} and retry {0}."
-msgstr ""
+msgstr "Gehaltsabrechnung {0} fehlgeschlagen. Sie können das {1} lösen und {0} wiederholen."
 
 #: frontend/src/views/salary_slip/Dashboard.vue:2
 msgid "Salary Slips"
@@ -8802,7 +8825,7 @@ msgstr "Gehaltszettel eingereicht"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1567
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
-msgstr ""
+msgstr "Für die Mitarbeiter {} existieren bereits Gehaltsabrechnungen. Diese werden von dieser Lohnabrechnung nicht verarbeitet."
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1592
 msgid "Salary Slips submitted for period from {0} to {1}"
@@ -8836,7 +8859,7 @@ msgstr "Zuordnung der Gehaltsstruktur"
 
 #: hrms/public/js/utils/payroll_utils.js:31
 msgid "Salary Structure Assignment field"
-msgstr ""
+msgstr "Feld der Zuordnung der Gehaltsstruktur"
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:46
 msgid "Salary Structure Assignment for Employee already exists"
@@ -8844,7 +8867,7 @@ msgstr "Die Gehaltsstrukturzuordnung für den Mitarbeiter ist bereits vorhanden"
 
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:223
 msgid "Salary Structure Assignment not found for employee {0} on date {1}"
-msgstr ""
+msgstr "Zuordnung der Gehaltsstruktur für Mitarbeiter {0} zum Datum {1} nicht gefunden"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:438
 msgid "Salary Structure Missing"
@@ -8856,7 +8879,7 @@ msgstr "Die Gehaltsstruktur muss vor der Einreichung von {0} gebucht werden"
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:92
 msgid "Salary Structure not assigned for employee {0} for date {1}"
-msgstr ""
+msgstr "Gehaltsstruktur ist für Mitarbeiter {0} zum Datum {1} nicht zugewiesen"
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:70
 msgid "Salary Structure {0} does not belong to company {1}"
@@ -8898,7 +8921,7 @@ msgstr "Gehaltsaufteilung nach Einkommen und Abzügen."
 
 #: hrms/payroll/report/provident_fund_deductions/provident_fund_deductions.py:15
 msgid "Salary components of type Provident Fund, Additional Provident Fund or Provident Fund Loan are not set up."
-msgstr ""
+msgstr "Gehaltskomponenten vom Typ Pensionsfonds, Zusätzlicher Pensionsfonds oder Pensionsfonds-Darlehen sind nicht eingerichtet."
 
 #. Description of the 'Applicable Earnings Component' (Table MultiSelect) field
 #. in DocType 'Gratuity Rule'
@@ -8921,7 +8944,7 @@ msgstr "Genehmigter Betrag"
 #. Claim Detail'
 #: hrms/hr/doctype/expense_claim_detail/expense_claim_detail.json
 msgid "Sanctioned Amount (Company Currency)"
-msgstr ""
+msgstr "Genehmigter Betrag (Unternehmenswährung)"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:545
 msgid "Sanctioned Amount cannot be greater than Claim Amount in Row {0}."
@@ -8951,7 +8974,7 @@ msgstr "Nach Stellen suchen"
 
 #: hrms/hr/doctype/overtime_type/overtime_type.py:16
 msgid "Select Applicable Components for Overtime Type"
-msgstr ""
+msgstr "Anwendbare Komponenten für Overtime Type auswählen"
 
 #: hrms/hr/doctype/interview/interview.js:209
 msgid "Select Interview Round First"
@@ -8959,13 +8982,13 @@ msgstr ""
 
 #: hrms/hr/doctype/interview_feedback/interview_feedback.js:49
 msgid "Select Interview first"
-msgstr ""
+msgstr "Bitte wählen Sie zuerst ein Bewerbungsgespräch aus"
 
 #. Label of the month_for_lwp_reversal (Select) field in DocType 'Payroll
 #. Correction'
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
 msgid "Select Month for LWP Reversal"
-msgstr ""
+msgstr "Monat für Stornierung des unbezahlten Urlaubs auswählen"
 
 #. Description of the 'Payment Account' (Link) field in DocType 'Payroll Entry'
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
@@ -9031,7 +9054,7 @@ msgstr "Wählen Sie das Enddatum für Ihren Abwesenheitsantrag."
 #. in DocType 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Select the salary components whose total will be used from the salary slip to calculate the hourly overtime rate."
-msgstr ""
+msgstr "Wählen Sie die Gehaltskomponenten aus, deren Summe aus der Gehaltsabrechnung zur Berechnung des Stundensatzes für Überstunden verwendet wird."
 
 #: hrms/hr/doctype/leave_application/leave_application.js:312
 msgid "Select the start date for your Leave Application."
@@ -9077,7 +9100,7 @@ msgstr "Selbststudium"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:121
 msgid "Self-approval for Expense Claims is not allowed"
-msgstr ""
+msgstr "Selbstgenehmigung von Spesenabrechnungen ist nicht zulässig"
 
 #: hrms/hr/doctype/leave_application/leave_application.py:847
 msgid "Self-approval for leaves is not allowed"
@@ -9086,7 +9109,7 @@ msgstr "Selbstgenehmigung für Abwesenheiten ist nicht erlaubt"
 #. Option for the 'Type' (Select) field in DocType 'Training Event'
 #: hrms/hr/doctype/training_event/training_event.json
 msgid "Seminar"
-msgstr ""
+msgstr "Seminar"
 
 #. Label of the send_emails_at (Select) field in DocType 'Daily Work Summary
 #. Group'
@@ -9121,7 +9144,7 @@ msgstr "Abwesenheitsbenachrichtigung senden"
 #. Label of the sender_copy (Link) field in DocType 'Payroll Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json
 msgid "Sender Copy"
-msgstr ""
+msgstr "Kopie an Absender"
 
 #: hrms/hr/doctype/exit_interview/exit_interview.py:139
 msgid "Sending Failed due to missing email information for employee(s): {1}"
@@ -9226,7 +9249,7 @@ msgstr "Einstellungen fehlen"
 
 #: frontend/src/components/ExpenseAdvancesTable.vue:4
 msgid "Settle against Advances"
-msgstr ""
+msgstr "Mit Anzahlungen verrechnen"
 
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:55
 msgid "Settle all Payables and Receivables before submission"
@@ -9234,7 +9257,7 @@ msgstr "Begleichen Sie alle Verbindlichkeiten und Forderungen vor der Buchung"
 
 #: hrms/hr/utils.py:773
 msgid "Shared document with the user {0} with 'Submit' permission"
-msgstr ""
+msgstr "Dokument mit dem Benutzer {0} mit der Berechtigung „Buchen“ freigegeben"
 
 #. Name of a Workspace
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
@@ -9275,7 +9298,7 @@ msgstr "Details zur Schichtzuweisung"
 
 #: frontend/src/views/attendance/ShiftAssignmentList.vue:5
 msgid "Shift Assignment History"
-msgstr ""
+msgstr "Verlauf der Schicht-Zuordnungen"
 
 #. Name of a DocType
 #. Label of a Link in the Shift & Attendance Workspace
@@ -9291,7 +9314,7 @@ msgstr "Schichtzuweisung: {0} erstellt für Mitarbeiter: {1}"
 
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.py:135
 msgid "Shift Assignments created for the schedule between {0} and {1} via background job"
-msgstr ""
+msgstr "Schicht-Zuordnungen für den Zeitplan zwischen {0} und {1} über Hintergrundjob erstellt"
 
 #. Name of a report
 #. Label of a Link in the Shift & Attendance Workspace
@@ -9384,7 +9407,7 @@ msgstr "Zeitplan für die Schicht"
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Schedule Assignment"
-msgstr ""
+msgstr "Shift Schedule Assignment"
 
 #. Label of the shift_settings_section (Section Break) field in DocType 'HR
 #. Settings'
@@ -9441,7 +9464,7 @@ msgstr "Schicht-Art"
 
 #: hrms/hr/doctype/shift_schedule_assignment/shift_schedule_assignment.py:21
 msgid "Shift assignments for {0} after {1} are already created. Please change {2} date to a date later than {3} {4}"
-msgstr ""
+msgstr "Schicht-Zuordnungen für {0} nach {1} wurden bereits erstellt. Bitte ändern Sie das Datum von {2} auf ein Datum nach {3} {4}"
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.js:42
 msgid "Shift has been successfully updated to {0}."
@@ -9474,7 +9497,7 @@ msgstr "Anzeigen Gehaltsabrechnung"
 
 #: hrms/www/jobs/index.html:121
 msgid "Showing"
-msgstr ""
+msgstr "Anzeige von"
 
 #: hrms/setup.py:365 hrms/setup.py:366
 msgid "Sick Leave"
@@ -9570,7 +9593,7 @@ msgstr "Personalplan {0} existiert bereits für Position {1}"
 #. Label of the standard_multiplier (Float) field in DocType 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Standard Multiplier"
-msgstr ""
+msgstr "Standard-Multiplikator"
 
 #. Label of the standard_tax_exemption_amount (Currency) field in DocType
 #. 'Income Tax Slab'
@@ -9599,11 +9622,11 @@ msgstr "Start- und Enddatum, die nicht in einer gültigen Abrechnungsperiode sin
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:27
 msgid "Start date cannot be greater than end date"
-msgstr ""
+msgstr "Das Startdatum darf nicht nach dem Enddatum liegen."
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:50
 msgid "Start date cannot be greater than end date."
-msgstr ""
+msgstr "Das Startdatum darf nicht nach dem Enddatum liegen."
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:239
 msgid "Start date: {0}"
@@ -9675,7 +9698,7 @@ msgstr "Jetzt einreichen"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:90
 msgid "Submit Overtime Slips"
-msgstr ""
+msgstr "Overtime Slips buchen"
 
 #: hrms/payroll/doctype/employee_tax_exemption_declaration/employee_tax_exemption_declaration.js:43
 msgid "Submit Proof"
@@ -9697,7 +9720,7 @@ msgstr "Übergeben Sie dies, um den Mitarbeiterdatensatz zu erstellen"
 #. Slip'
 #: hrms/hr/doctype/overtime_slip/overtime_slip.json
 msgid "Submitted via Payroll Entry"
-msgstr ""
+msgstr "Gebucht über Personalabrechnung"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:430
 msgid "Submitting Salary Slips and creating Journal Entry..."
@@ -9723,11 +9746,11 @@ msgstr "Erfolgreich {0} {1} für die folgenden Mitarbeiter:"
 #. DocType 'Gratuity Rule'
 #: hrms/payroll/doctype/gratuity_rule/gratuity_rule.json
 msgid "Sum of all previous slabs"
-msgstr ""
+msgstr "Summe aller vorherigen Stufen"
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:44
 msgid "Sum of benefit amounts {0} exceeds maximum limit of {1}"
-msgstr ""
+msgstr "Die Summe der Leistungsbeträge {0} überschreitet das maximale Limit von {1}"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:108
 msgid "Summarized View"
@@ -9749,7 +9772,7 @@ msgstr "Syntaxfehler in der Bedingung: {0} in der Einkommensteuertabelle"
 #. DocType 'Gratuity Rule'
 #: hrms/payroll/doctype/gratuity_rule/gratuity_rule.json
 msgid "Take Exact Completed Years"
-msgstr ""
+msgstr "Exakte abgeschlossene Jahre berücksichtigen"
 
 #. Name of a Workspace
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
@@ -9811,7 +9834,7 @@ msgstr "Steuerpflichtiges Einkommen bis heute"
 #. Label of the tax_relief_limit (Currency) field in DocType 'Income Tax Slab'
 #: hrms/payroll/doctype/income_tax_slab/income_tax_slab.json
 msgid "Taxable Income Relief Threshold Limit"
-msgstr ""
+msgstr "Obergrenze des Schwellenwerts für Entlastung des zu versteuernden Einkommens"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
@@ -9845,11 +9868,11 @@ msgstr "Taxi"
 
 #: frontend/src/views/employee_advance/List.vue:19
 msgid "Team Advances"
-msgstr ""
+msgstr "Team-Anzahlungen"
 
 #: frontend/src/views/expense_claim/List.vue:19
 msgid "Team Claims"
-msgstr ""
+msgstr "Team-Abrechnungen"
 
 #: frontend/src/views/leave/List.vue:19
 msgid "Team Leaves"
@@ -9866,16 +9889,16 @@ msgstr "Team-Updates"
 #. Name of a Workspace
 #: hrms/hr/workspace/tenure/tenure.json
 msgid "Tenure"
-msgstr ""
+msgstr "Betriebszugehörigkeit"
 
 #. Success message of the job-application Web Form
 #: hrms/hr/web_form/job_application/job_application.json
 msgid "Thank you for applying."
-msgstr ""
+msgstr "Vielen Dank für Ihre Bewerbung."
 
 #: hrms/overrides/company.py:131
 msgid "The currency of {0} should be same as the company's default currency. Please select another account."
-msgstr ""
+msgstr "Die Währung von {0} muss mit der Standardwährung des Unternehmens übereinstimmen. Bitte wählen Sie ein anderes Konto aus."
 
 #. Description of the 'Payroll Date' (Date) field in DocType 'Additional
 #. Salary'
@@ -9898,7 +9921,7 @@ msgstr "Die Tage zwischen {0} und {1} sind keine gültigen Feiertage."
 
 #: hrms/setup.py:130
 msgid "The first Approver in the list will be set as the default Approver."
-msgstr ""
+msgstr "Der erste Genehmiger in der Liste wird automatisch als Standard festgelegt."
 
 #: hrms/hr/doctype/leave_type/leave_type.py:51
 msgid "The fraction of Daily Salary per Leave should be between 0 and 1"
@@ -9912,11 +9935,11 @@ msgstr "Der Bruchteil des Tageslohns, der für die halbtägige Anwesenheit zu za
 
 #: hrms/hr/report/project_profitability/project_profitability.py:101
 msgid "The metrics for this report are calculated based on the {0}. Please set {0} in {1}."
-msgstr ""
+msgstr "Die Kennzahlen für diesen Bericht werden auf Grundlage der {0} berechnet. Bitte legen Sie {0} unter {1} fest."
 
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:35
 msgid "The metrics for this report are calculated based on {0}. Please set {0} in {1}."
-msgstr ""
+msgstr "Die Kennzahlen für diesen Bericht werden auf Grundlage von {0} berechnet. Bitte legen Sie {0} unter {1} fest."
 
 #. Description of the 'Encrypt Salary Slips in Emails' (Check) field in DocType
 #. 'Payroll Settings'
@@ -9953,7 +9976,7 @@ msgstr "Es gibt mehr Feiertage als Arbeitstage in diesem Monat."
 
 #: hrms/payroll/doctype/arrear/arrear.py:384
 msgid "There are no arrear differences between existing and new salary structure components."
-msgstr ""
+msgstr "Es gibt keine Nachzahlungsdifferenzen zwischen den bestehenden und den neuen Gehaltsstrukturkomponenten."
 
 #: hrms/hr/doctype/job_offer/job_offer.py:39
 msgid "There are no vacancies under staffing plan {0}"
@@ -9963,7 +9986,7 @@ msgstr "Es gibt keine offenen Stellen im Besetzungsplan {0}"
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:20
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:207
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
-msgstr ""
+msgstr "Für {0} ist keine Gehaltsstruktur zugewiesen. Weisen Sie zuerst eine Gehaltsstruktur zu."
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:392
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
@@ -9980,7 +10003,7 @@ msgstr "Diese Aktion verhindert, dass Sie Änderungen an den verknüpften Beurte
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.js:9
 msgid "This check-in is outside assigned shift hours and will not be considered for attendance. If a shift is assigned, adjust its time window and Fetch Shift again."
-msgstr ""
+msgstr "Diese Einstempelung liegt außerhalb der zugewiesenen Schichtzeiten und wird nicht für die Anwesenheit berücksichtigt. Wenn eine Schicht zugewiesen ist, passen Sie deren Zeitfenster an und rufen Sie die Schicht erneut ab."
 
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:97
 msgid "This compensatory leave will be applicable from {0}."
@@ -10125,7 +10148,7 @@ msgstr "Heute {0} in unserem Unternehmen! 🎉"
 
 #: hrms/controllers/employee_reminders.py:241
 msgid "Today {0} completed {1} {2} at our Company! 🎉"
-msgstr ""
+msgstr "Heute hat {0} {1} {2} in unserem Unternehmen vollendet! 🎉"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:149
 msgid "Total Absent"
@@ -10133,7 +10156,7 @@ msgstr "Summe Abwesenheit"
 
 #: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.py:46
 msgid "Total Accrued"
-msgstr ""
+msgstr "Summe aufgelaufen"
 
 #. Label of the total_actual_amount (Currency) field in DocType 'Employee Tax
 #. Exemption Proof Submission'
@@ -10151,7 +10174,7 @@ msgstr "Anzahlungen (gesamt)"
 #. Claim'
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 msgid "Total Advance Amount (Company Currency)"
-msgstr ""
+msgstr "Summe der Anzahlungen (Unternehmenswährung)"
 
 #. Label of the total_allocated_leaves (Float) field in DocType 'Salary Slip
 #. Leave'
@@ -10177,7 +10200,7 @@ msgstr "Der Gesamtbetrag kann nicht Null sein"
 #. Final Statement'
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.json
 msgid "Total Asset Recovery Cost"
-msgstr ""
+msgstr "Gesamter Rückgewinnungsaufwand für Vermögensgegenstände"
 
 #. Label of the total_claimed_amount (Currency) field in DocType 'Expense
 #. Claim'
@@ -10190,12 +10213,12 @@ msgstr "Gesamtforderung"
 #. Claim'
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 msgid "Total Claimed Amount (Company Currency)"
-msgstr ""
+msgstr "Summe des beantragten Betrags (Unternehmenswährung)"
 
 #. Label of the lwp_days (Float) field in DocType 'Payroll Correction'
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
 msgid "Total Days Without Pay"
-msgstr ""
+msgstr "Summe unbezahlter Tage"
 
 #. Label of the total_declared_amount (Currency) field in DocType 'Employee Tax
 #. Exemption Declaration'
@@ -10247,7 +10270,7 @@ msgstr "Geschätzte Gesamtkosten"
 #. Claim'
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 msgid "Total Exchange Gain/Loss"
-msgstr ""
+msgstr "Gesamte Wechselkursgewinne/-verluste"
 
 #. Label of the total_exemption_amount (Currency) field in DocType 'Employee
 #. Tax Exemption Declaration'
@@ -10260,11 +10283,11 @@ msgstr "Gesamtbefreiungsbetrag"
 
 #: hrms/setup.py:299
 msgid "Total Expense Claim (via Expense Claim)"
-msgstr ""
+msgstr "Summe Spesenabrechnung (über Spesenabrechnung)"
 
 #: hrms/setup.py:290
 msgid "Total Expense Claim (via Expense Claims)"
-msgstr ""
+msgstr "Summe Spesenabrechnungen (über Spesenabrechnungen)"
 
 #. Label of the total_score (Float) field in DocType 'Appraisal'
 #: hrms/hr/doctype/appraisal/appraisal.json
@@ -10278,7 +10301,7 @@ msgstr "Bruttogehalt Gesamt"
 
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:66
 msgid "Total Hours (T)"
-msgstr ""
+msgstr "Gesamtstunden (T)"
 
 #. Label of the total_income_tax (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
@@ -10334,7 +10357,7 @@ msgstr "Nicht in Rechnung gestellte Stunden insgesamt"
 #. Slip'
 #: hrms/hr/doctype/overtime_slip/overtime_slip.json
 msgid "Total Overtime Duration"
-msgstr ""
+msgstr "Gesamte Überstundendauer"
 
 #. Label of the total_payable_amount (Currency) field in DocType 'Full and
 #. Final Statement'
@@ -10349,7 +10372,7 @@ msgstr "Gesamte Zahlung"
 
 #: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.py:52
 msgid "Total Payout"
-msgstr ""
+msgstr "Summe Auszahlung"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:143
 msgid "Total Present"
@@ -10357,7 +10380,7 @@ msgstr "Summe Anwesend"
 
 #: hrms/setup.py:793
 msgid "Total Principal Amount"
-msgstr ""
+msgstr "Gesamter Hauptbetrag"
 
 #. Label of the total_receivable_amount (Currency) field in DocType 'Full and
 #. Final Statement'
@@ -10379,7 +10402,7 @@ msgstr "Summe genehmigter Beträge"
 #. 'Expense Claim'
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 msgid "Total Sanctioned Amount (Company Currency)"
-msgstr ""
+msgstr "Summe des genehmigten Betrags (Unternehmenswährung)"
 
 #. Label of the total_score (Float) field in DocType 'Employee Performance
 #. Feedback'
@@ -10424,7 +10447,7 @@ msgstr "Die Summe der zugewiesenen Abwesenheiten ist für die Abwesenheitsart {0
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:464
 msgid "Total of all employee benefits cannot be greater that Max Benefits Amount {0}"
-msgstr ""
+msgstr "Die Gesamtsumme aller Mitarbeiterleistungen darf den maximalen Leistungsbetrag {0} nicht überschreiten"
 
 #. Description of the 'Year To Date' (Currency) field in DocType 'Salary
 #. Detail'
@@ -10558,11 +10581,11 @@ msgstr "Schulungen"
 #. Label of a quick_list in the Tenure Workspace
 #: hrms/hr/workspace/tenure/tenure.json
 msgid "Trainings (This Week)"
-msgstr ""
+msgstr "Schulungen (diese Woche)"
 
 #: hrms/hr/utils.py:796
 msgid "Transactions cannot be created for an Inactive Employee {0}."
-msgstr ""
+msgstr "Für den inaktiven Mitarbeiter {0} können keine Transaktionen erstellt werden."
 
 #. Label of the transfer_date (Date) field in DocType 'Employee Transfer'
 #: hrms/hr/doctype/employee_transfer/employee_transfer.json
@@ -10646,7 +10669,7 @@ msgstr "Nicht in Anspruch genommener Betrag"
 #. Claim Advance'
 #: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgid "Unclaimed Amount (Company Currency)"
-msgstr ""
+msgstr "Nicht beanspruchter Betrag (Unternehmenswährung)"
 
 #. Option for the 'Status' (Select) field in DocType 'Interview'
 #: hrms/hr/doctype/interview/interview.json
@@ -10684,13 +10707,13 @@ msgstr "Nicht markierte Tage"
 #. Attendance Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgid "Unmarked Employee Header"
-msgstr ""
+msgstr "Kopfzeile für nicht erfasste Mitarbeiter"
 
 #. Label of the unmarked_employees_html (HTML) field in DocType 'Employee
 #. Attendance Tool'
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json
 msgid "Unmarked Employees HTML"
-msgstr ""
+msgstr "HTML nicht erfasster Mitarbeiter"
 
 #. Label of the unmarked_days (Float) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
@@ -10699,7 +10722,7 @@ msgstr "Nicht markierte Tage"
 
 #: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.py:58
 msgid "Unpaid Accrual"
-msgstr ""
+msgstr "Unbezahlte Abgrenzung"
 
 #. Name of a report
 #. Label of a Link in the Expenses Workspace
@@ -10749,7 +10772,7 @@ msgstr "Kommende Schichten"
 
 #: frontend/src/components/ExpensesTable.vue:123
 msgid "Update Expense"
-msgstr ""
+msgstr "Ausgabe aktualisieren"
 
 #: hrms/hr/doctype/interview/interview.py:71
 msgid "Update Job Applicant"
@@ -10961,7 +10984,7 @@ msgstr "Website-Liste"
 #. Label of the weekend_multiplier (Float) field in DocType 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Weekend Multiplier"
-msgstr ""
+msgstr "Wochenendmultiplikator"
 
 #. Label of the per_weightage (Float) field in DocType 'Appraisal Goal'
 #. Label of the per_weightage (Percent) field in DocType 'Appraisal KRA'
@@ -11119,14 +11142,14 @@ msgstr "Laufendes Jahr (Unternehmenswährung)"
 #. Claim'
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
 msgid "Yearly Amount"
-msgstr ""
+msgstr "Jährlicher Betrag"
 
 #. Label of the yearly_benefit (Currency) field in DocType 'Employee Benefit
 #. Ledger'
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 #: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.py:40
 msgid "Yearly Benefit"
-msgstr ""
+msgstr "Jährliche Leistung"
 
 #: hrms/hr/doctype/hr_settings/hr_settings.py:86
 msgid "Yes, Proceed"
@@ -11142,7 +11165,7 @@ msgstr "Sie sind nicht den ganzen Tag (oder mehreren Tagen) zwischen den Ausglei
 
 #: hrms/payroll/doctype/gratuity_rule/gratuity_rule.py:24
 msgid "You can not define multiple slabs if you have a slab with no lower and upper limits."
-msgstr ""
+msgstr "Es können keine mehreren Stufen definiert werden, wenn eine Stufe ohne untere und obere Grenze vorhanden ist."
 
 #: hrms/hr/doctype/shift_request/shift_request.py:82
 msgid "You can not request for your Default Shift: {0}"
@@ -11162,7 +11185,7 @@ msgstr "Sie können nur JPG-, PNG-, PDF-, TXT- oder Microsoft-Dokumente hochlade
 
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.py:48
 msgid "You cannot reverse more than the total LWP days {0}. You have already reversed {1} days for this employee."
-msgstr ""
+msgstr "Sie können nicht mehr als die gesamten LWP-Tage {0} stornieren. Sie haben für diesen Mitarbeiter bereits {1} Tage storniert."
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:417
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:580
@@ -11244,7 +11267,7 @@ msgstr "maxmustermann@email.de"
 #. Label of the modify_half_day_status (Check) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
 msgid "modify_half_day_status"
-msgstr ""
+msgstr "Halbtagsstatus ändern"
 
 #: hrms/hr/doctype/department_approver/department_approver.py:89
 msgid "or for the Employee's Department: {0}"
@@ -11288,7 +11311,7 @@ msgstr "jahr"
 
 #: hrms/controllers/employee_reminders.py:265
 msgid "years"
-msgstr ""
+msgstr "Jahre"
 
 #: hrms/controllers/employee_reminders.py:120
 #: hrms/controllers/employee_reminders.py:254
@@ -11302,7 +11325,7 @@ msgstr "{0} & {1} mehr"
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:489
 msgid "{0} : {1}"
-msgstr ""
+msgstr "{0} : {1}"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:2529
 msgid "{0} <br> This error can be due to missing or deleted field."
@@ -11355,7 +11378,7 @@ msgstr "{0} balance"
 
 #: hrms/controllers/employee_reminders.py:253
 msgid "{0} completed {1} {2}"
-msgstr ""
+msgstr "{0} hat {1} {2} vollendet"
 
 #: frontend/src/components/FormView.vue:528
 msgid "{0} created successfully!"
@@ -11376,11 +11399,11 @@ msgstr "{0} hat {1} aktiviert"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:187
 msgid "{0} is an Accrual Component and this will be recorded as a payout in Employee Benefits Ledger"
-msgstr ""
+msgstr "{0} ist eine Abgrenzungskomponente, und dies wird als Auszahlung im Mitarbeiterleistungs-Hauptbuch erfasst"
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:228
 msgid "{0} is an invalid Attendance Status."
-msgstr ""
+msgstr "{0} ist ein ungültiger Anwesenheitsstatus."
 
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:69
 msgid "{0} is not a holiday."
@@ -11445,7 +11468,7 @@ msgstr "{0} {1} {2}?"
 
 #: hrms/hr/utils.py:454
 msgid "{0}. Check error log for more details."
-msgstr ""
+msgstr "{0}. Prüfen Sie das Fehlerprotokoll für weitere Details."
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:2190
 msgid "{0}: Employee email not found, hence email not sent"
