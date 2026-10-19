@@ -293,7 +293,6 @@ def get_shift_request_approvers(employee: str) -> str | list[str]:
 
 	department_approvers = []
 	if department:
-		frappe.has_permission("Department", "read", department, throw=True)
 		department_approvers = get_department_approvers(department, "shift_request_approver")
 		if not shift_request_approver:
 			shift_request_approver = frappe.db.get_value(
@@ -417,11 +416,11 @@ def get_leave_balance_map() -> dict[str, dict[str, float]]:
 
 @frappe.whitelist()
 def get_holidays_for_employee(employee: str) -> list[dict]:
+	frappe.has_permission("Employee", "read", employee, throw=True)
+
 	holiday_list = get_holiday_list_for_employee(employee, raise_exception=False)
 	if not holiday_list:
 		return []
-
-	frappe.has_permission("Holiday List", "read", holiday_list, throw=True)
 
 	Holiday = frappe.qb.DocType("Holiday")
 	holidays = (
@@ -447,7 +446,6 @@ def get_leave_approval_details(employee: str) -> dict:
 	)
 
 	if not leave_approver and department:
-		frappe.has_permission("Department", "read", department, throw=True)
 		leave_approver = frappe.db.get_value(
 			"Department Approver",
 			{"parent": department, "parentfield": "leave_approvers", "idx": 1},
@@ -626,7 +624,6 @@ def get_expense_approval_details(employee: str) -> dict:
 	)
 
 	if not expense_approver and department:
-		frappe.has_permission("Department", "read", department, throw=True)
 		expense_approver = frappe.db.get_value(
 			"Department Approver",
 			{"parent": department, "parentfield": "expense_approvers", "idx": 1},
