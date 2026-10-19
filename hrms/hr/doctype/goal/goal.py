@@ -26,7 +26,7 @@ class Goal(NestedSet):
 
 		validate_active_employee(self.employee)
 		self.validate_parent_fields()
-		self.validate_from_to_dates(self.start_date, self.end_date)
+		self.validate_from_to_dates("start_date", "end_date")
 		self.validate_progress()
 		self.set_status()
 
