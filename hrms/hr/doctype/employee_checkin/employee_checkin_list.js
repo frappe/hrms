@@ -17,12 +17,6 @@ frappe.listview_settings["Employee Checkin"] = {
 			});
 		});
 
-		if (frappe.perm.has_perm("Employee Checkin", 0, "create")) {
-			listview.page.add_inner_button(__("Add Checkin for Another Employee"), () =>
-				frappe.new_doc("Employee Checkin"),
-			);
-		}
-
 		setup_checkin_action(listview);
 	},
 	before_render: function () {
@@ -30,9 +24,10 @@ frappe.listview_settings["Employee Checkin"] = {
 	},
 	primary_action: function () {
 		const listview = cur_list;
-		if (listview?.checkin_employee) {
-			start_checkin(listview, listview.next_checkin || get_next_checkin());
+		if (!listview?.checkin_employee) {
+			return frappe.new_doc("Employee Checkin");
 		}
+		start_checkin(listview, listview.next_checkin || get_next_checkin());
 	},
 };
 
@@ -55,6 +50,12 @@ function get_next_checkin(last_log_type) {
 async function setup_checkin_action(listview) {
 	const employee = await frappe.xcall("hrms.api.get_current_employee_info");
 	if (!employee) return;
+
+	if (frappe.perm.has_perm("Employee Checkin", 0, "create")) {
+		listview.page.add_inner_button(__("Add Checkin for Another Employee"), () =>
+			frappe.new_doc("Employee Checkin"),
+		);
+	}
 
 	listview.checkin_employee = employee;
 	listview.track_geolocation = await frappe.db.get_single_value(
