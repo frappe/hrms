@@ -58,10 +58,8 @@ async function setup_checkin_action(listview) {
 	}
 
 	listview.checkin_employee = employee;
-	listview.track_geolocation = await frappe.db.get_single_value(
-		"HR Settings",
-		"allow_geolocation_tracking",
-	);
+	const { allow_geolocation_tracking } = await frappe.xcall("hrms.api.get_hr_settings");
+	listview.track_geolocation = allow_geolocation_tracking;
 	listview.set_primary_action = () => {
 		const next = listview.next_checkin;
 		if (!next) return;
