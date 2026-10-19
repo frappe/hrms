@@ -35,13 +35,7 @@ class TrainingResult(Document):
 
 	def on_submit(self):
 		training_event = frappe.get_doc("Training Event", self.training_event)
-		training_event.status = "Completed"
-		for e in self.employees:
-			for e1 in training_event.employees:
-				if e1.employee == e.employee:
-					e1.status = "Completed"
-					break
-
+		training_event.event_status = "Completed"
 		training_event.save()
 
 
