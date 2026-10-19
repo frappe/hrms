@@ -15,6 +15,7 @@ from hrms.subscription_utils import is_new_hr_site, set_hrms_as_default_app
 
 def after_install():
 	create_custom_fields(get_custom_fields(), ignore_validate=True)
+	rename_employee_details_tab()
 	create_salary_slip_loan_fields()
 	make_fixtures()
 	create_default_template()
@@ -34,7 +35,20 @@ def after_install():
 def before_uninstall():
 	delete_custom_fields(get_custom_fields())
 	delete_custom_fields(get_salary_slip_loan_fields())
+	frappe.db.delete("Property Setter", EMPLOYEE_DETAILS_TAB_LABEL)
 	delete_company_fixtures()
+
+
+EMPLOYEE_DETAILS_TAB_LABEL = {"doc_type": "Employee", "field_name": "basic_details_tab", "property": "label"}
+
+
+def rename_employee_details_tab():
+	"""The first tab is also labelled Overview, so it is renamed to Details."""
+	from frappe.custom.doctype.property_setter.property_setter import make_property_setter
+
+	make_property_setter(
+		"Employee", "basic_details_tab", "label", "Details", "Data", validate_fields_for_doctype=False
+	)
 
 
 def after_app_install(app_name):
@@ -187,6 +201,19 @@ def get_custom_fields():
 			},
 		],
 		"Employee": [
+			{
+				"fieldname": "overview_tab",
+				"fieldtype": "Tab Break",
+				"label": _("Overview"),
+				"insert_after": "basic_details_tab",
+			},
+			{
+				"fieldname": "overview_html",
+				"fieldtype": "HTML",
+				"label": _("Overview HTML"),
+				"insert_after": "overview_tab",
+				"depends_on": "eval:!doc.__islocal",
+			},
 			{
 				"fieldname": "employment_type",
 				"fieldtype": "Link",
