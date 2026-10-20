@@ -192,7 +192,8 @@ def get_assignable_masters(company: str) -> dict[str, bool]:
 	}
 
 	return {
-		doctype: bool(frappe.get_list(doctype, filters=filters, limit=1, pluck="name"))
+		doctype: frappe.has_permission(doctype, "select")
+		and bool(frappe.get_list(doctype, filters=filters, limit=1, pluck="name"))
 		for doctype, filters in masters.items()
 	}
 
