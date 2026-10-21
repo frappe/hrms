@@ -221,7 +221,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-10-17 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Exit Interview",
@@ -229,6 +229,8 @@
  "owner": "Administrator",
  "permissions": [
   {
+   "amend": 1,
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -238,13 +240,17 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "submit": 1,
    "write": 1
   },
   {
    "read": 1,
+   "report": 1,
    "role": "HR User"
   },
   {
+   "amend": 1,
+   "cancel": 1,
    "create": 1,
    "email": 1,
    "print": 1,
@@ -252,6 +258,7 @@
    "report": 1,
    "role": "HR Manager",
    "share": 1,
+   "submit": 1,
    "write": 1
   }
  ],

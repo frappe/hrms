@@ -58,16 +58,18 @@ class PayrollCorrection(Document):
 	def validate_days(self):
 		if self.days_to_reverse and self.salary_slip_reference:
 			salary_slip = frappe.get_doc("Salary Slip", self.salary_slip_reference)
+			self.validate_salary_slip(salary_slip)
 			self.working_days = salary_slip.total_working_days
 			self.payment_days = salary_slip.payment_days
-			self.lwp_days = max((salary_slip.total_working_days - salary_slip.payment_days), 0)
+			self.lwp_days = min(
+				flt(salary_slip.leave_without_pay) + flt(salary_slip.absent_days),
+				max((salary_slip.total_working_days - salary_slip.payment_days), 0),
+			)
 			payroll_corrections = frappe.get_all(
 				"Payroll Correction",
 				filters={
 					"docstatus": 1,
-					"payroll_period": self.payroll_period,
 					"salary_slip_reference": self.salary_slip_reference,
-					"employee": self.employee,
 					"name": ["!=", self.name],
 				},
 				fields=["days_to_reverse"],
@@ -79,6 +81,24 @@ class PayrollCorrection(Document):
 						"You cannot reverse more than the total LWP days {0}. You have already reversed {1} days for this employee."
 					).format(self.lwp_days, total_days_reversed)
 				)
+
+	def validate_salary_slip(self, salary_slip):
+		salary_slip.check_permission("read")
+		if (
+			salary_slip.docstatus != 1
+			or salary_slip.employee != self.employee
+			or salary_slip.company != self.company
+			or salary_slip.current_payroll_period != self.payroll_period
+		):
+			frappe.throw(
+				_(
+					"Salary Slip {0} is not a submitted salary slip of employee {1} for payroll period {2}"
+				).format(
+					frappe.bold(salary_slip.name),
+					frappe.bold(self.employee),
+					frappe.bold(self.payroll_period),
+				)
+			)
 
 	def on_cancel(self):
 		delete_employee_benefit_ledger_entry("reference_document", self.name)
@@ -103,6 +123,8 @@ class PayrollCorrection(Document):
 				"payment_days",
 				"start_date",
 				"total_working_days",
+				"leave_without_pay",
+				"absent_days",
 			],
 		)
 
@@ -158,7 +180,7 @@ class PayrollCorrection(Document):
 		arrear_components = []
 		for section in ["earnings", "deductions"]:
 			for item in getattr(salary_slip, section, []):
-				if not item.additional_salary:
+				if not item.additional_salary and flt(item.amount) < flt(item.default_amount):
 					salary_slip_components[item.salary_component] = {
 						"default_amount": item.default_amount or 0,
 						"section": "earning_arrears" if section == "earnings" else "deduction_arrears",

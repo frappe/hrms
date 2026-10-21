@@ -222,3 +222,21 @@ class TestEmployeeExits(HRMSTestSuite):
 		]
 
 		self.assertEqual(expected_data, report[1])  # rows
+
+	def test_cancelled_records_and_multiple_fnf(self):
+		self.interview3.reload()
+		self.interview3.status = "Completed"
+		self.interview3.employee_status = "Exit Confirmed"
+		self.interview3.submit()
+		self.interview3.cancel()
+
+		fnf = create_full_and_final_statement(self.emp1)
+		filters = {"company": "Test Company", "from_date": getdate(), "to_date": add_days(getdate(), 30)}
+		report = execute(filters)
+
+		rows = {row.employee: row for row in report[1]}
+		self.assertEqual(len(report[1]), 4)
+		self.assertIsNone(rows[self.emp3].exit_interview)
+		self.assertIn(rows[self.emp1].full_and_final_statement, (self.fnf1.name, fnf.name))
+		self.assertEqual(report[4][0]["value"], 4)
+		self.assertEqual(report[4][1]["value"], 2)

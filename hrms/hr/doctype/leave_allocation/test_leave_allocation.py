@@ -632,6 +632,73 @@ class TestLeaveAllocation(HRMSTestSuite):
 		leave_allocation.total_leaves_allocated = leave_application.total_leave_days - 1
 		self.assertRaises(frappe.ValidationError, leave_allocation.submit)
 
+	def test_carry_forwarded_count_set_on_previous_allocation_only_on_submit(self):
+		leave_type = create_leave_type(leave_type_name="_Test_CF_count", is_carry_forward=1).name
+		previous = create_leave_allocation(
+			employee=self.employee.name,
+			leave_type=leave_type,
+			from_date=add_months(nowdate(), -12),
+			to_date=add_days(nowdate(), -1),
+			new_leaves_allocated=7,
+		)
+		previous.submit()
+
+		def carry_forwarded_count():
+			return frappe.db.get_value("Leave Allocation", previous.name, "carry_forwarded_leaves_count")
+
+		allocation = create_leave_allocation(
+			employee=self.employee.name, leave_type=leave_type, carry_forward=1, new_leaves_allocated=5
+		)
+		allocation.set_total_leaves_allocated()
+		self.assertEqual(allocation.unused_leaves, 7)
+		self.assertEqual(carry_forwarded_count(), 0)
+
+		allocation.insert()
+		self.assertEqual(carry_forwarded_count(), 0)
+
+		allocation.submit()
+		self.assertEqual(carry_forwarded_count(), 7)
+
+		allocation.cancel()
+		self.assertEqual(carry_forwarded_count(), 0)
+
+	def test_manual_allocation_does_not_exceed_max_leaves_allowed(self):
+		from hrms.hr.doctype.leave_application.leave_application import get_leave_balance_on
+
+		leave_type = create_leave_type(
+			leave_type_name="_Test_manual_allocation_max",
+			is_carry_forward=1,
+			maximum_carry_forwarded_leaves=3,
+			max_leaves_allowed=10,
+		).name
+		leave_policy = frappe.get_doc(
+			{
+				"doctype": "Leave Policy",
+				"title": "_Test Manual Allocation Max",
+				"leave_policy_details": [{"leave_type": leave_type, "annual_allocation": 10}],
+			}
+		).insert()
+		leave_policy.submit()
+
+		create_leave_allocation(
+			employee=self.employee.name,
+			leave_type=leave_type,
+			from_date=add_months(nowdate(), -12),
+			to_date=add_days(nowdate(), -1),
+			new_leaves_allocated=10,
+		).submit()
+		allocation = create_leave_allocation(
+			employee=self.employee.name, leave_type=leave_type, carry_forward=1, new_leaves_allocated=5
+		)
+		allocation.leave_policy = leave_policy.name
+		allocation.submit()
+		self.assertEqual(allocation.total_leaves_allocated, 8)
+
+		allocation.allocate_leaves_manually(4)
+		allocation.reload()
+		self.assertEqual(allocation.total_leaves_allocated, 10)
+		self.assertEqual(get_leave_balance_on(self.employee.name, leave_type, nowdate()), 10)
+
 
 def create_leave_allocation(**args):
 	args = frappe._dict(args)

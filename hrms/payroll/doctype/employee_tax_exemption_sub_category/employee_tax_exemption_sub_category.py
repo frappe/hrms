@@ -27,7 +27,7 @@ class EmployeeTaxExemptionSubCategory(Document):
 		category_max_amount = frappe.db.get_value(
 			"Employee Tax Exemption Category", self.exemption_category, "max_amount"
 		)
-		if flt(self.max_amount) > flt(category_max_amount):
+		if flt(category_max_amount) and flt(self.max_amount) > flt(category_max_amount):
 			frappe.throw(
 				_(
 					"Max Exemption Amount cannot be greater than maximum exemption amount {0} of Tax Exemption Category {1}"

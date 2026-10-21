@@ -1,0 +1,64 @@
+{
+ "actions": [],
+ "creation": "2026-10-21 12:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "salary_slip",
+  "arrear_type",
+  "salary_component",
+  "amount"
+ ],
+ "fields": [
+  {
+   "fieldname": "salary_slip",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Salary Slip",
+   "options": "Salary Slip",
+   "read_only": 1,
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "arrear_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Type",
+   "options": "Earning\nDeduction\nAccrual",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "salary_component",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Salary Component",
+   "options": "Salary Component",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Amount",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-10-21 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Payroll",
+ "name": "Arrear Salary Slip Detail",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

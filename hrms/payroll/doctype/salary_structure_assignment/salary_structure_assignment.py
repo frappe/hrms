@@ -5,7 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cint, date_diff, flt, get_first_day, get_last_day, get_link_to_form, getdate
+from frappe.utils import cint, date_diff, flt, get_first_day, get_last_day, get_link_to_form, getdate, nowdate
 
 import hrms
 from hrms.payroll.doctype.payroll_period.payroll_period import get_payroll_period
@@ -90,12 +90,14 @@ class SalaryStructureAssignment(Document):
 		self.validate_company()
 		self.validate_income_tax_slab()
 		self.set_payroll_payable_account()
+		self.validate_payroll_payable_account()
 		validate_max_benefit_for_flexible_benefit(self.employee_benefits, self.max_benefits)
 
 		if not self.get("payroll_cost_centers"):
 			self.set_payroll_cost_centers()
 
 		self.validate_cost_centers()
+		self.validate_opening_entries()
 		self.warn_about_missing_opening_entries()
 		self.calculate_ctc_and_gross()
 
@@ -132,13 +134,20 @@ class SalaryStructureAssignment(Document):
 				)
 
 	def validate_company(self):
-		salary_structure_company = frappe.db.get_value(
-			"Salary Structure", self.salary_structure, "company", cache=True
+		salary_structure = frappe.db.get_value(
+			"Salary Structure", self.salary_structure, ["company", "docstatus", "is_active"], as_dict=True
 		)
-		if self.company != salary_structure_company:
+		if self.company != salary_structure.company:
 			frappe.throw(
 				_("Salary Structure {0} does not belong to company {1}").format(
 					frappe.bold(self.salary_structure), frappe.bold(self.company)
+				)
+			)
+
+		if salary_structure.docstatus != 1 or salary_structure.is_active != "Yes":
+			frappe.throw(
+				_("Salary Structure {0} must be submitted and active").format(
+					get_link_to_form("Salary Structure", self.salary_structure)
 				)
 			)
 
@@ -158,11 +167,20 @@ class SalaryStructureAssignment(Document):
 		if not self.income_tax_slab:
 			return
 
-		income_tax_slab_currency = frappe.db.get_value("Income Tax Slab", self.income_tax_slab, "currency")
-		if self.currency != income_tax_slab_currency:
+		income_tax_slab = frappe.db.get_value(
+			"Income Tax Slab", self.income_tax_slab, ["currency", "docstatus", "disabled"], as_dict=True
+		)
+		if income_tax_slab.docstatus != 1 or income_tax_slab.disabled:
+			frappe.throw(
+				_("Income Tax Slab {0} must be submitted and enabled").format(
+					get_link_to_form("Income Tax Slab", self.income_tax_slab)
+				)
+			)
+
+		if self.currency != income_tax_slab.currency:
 			frappe.throw(
 				_("Currency of selected Income Tax Slab should be {0} instead of {1}").format(
-					self.currency, income_tax_slab_currency
+					self.currency, income_tax_slab.currency
 				)
 			)
 
@@ -182,6 +200,35 @@ class SalaryStructureAssignment(Document):
 					},
 				)
 			self.payroll_payable_account = payroll_payable_account
+
+	def validate_payroll_payable_account(self):
+		if not self.payroll_payable_account:
+			return
+
+		account = frappe.db.get_value(
+			"Account",
+			self.payroll_payable_account,
+			["company", "is_group", "root_type", "account_currency"],
+			as_dict=True,
+		)
+		currencies = {self.currency, frappe.get_cached_value("Company", self.company, "default_currency")}
+		if (
+			not account
+			or account.company != self.company
+			or account.is_group
+			or account.root_type != "Liability"
+			or account.account_currency not in currencies
+		):
+			frappe.throw(
+				_(
+					"Payroll Payable Account {0} must be a non-group Liability account of company {1} in {2}"
+				).format(
+					frappe.bold(self.payroll_payable_account),
+					frappe.bold(self.company),
+					" / ".join(sorted(c for c in currencies if c)),
+				),
+				title=_("Invalid Payroll Payable Account"),
+			)
 
 	@frappe.whitelist()
 	def set_payroll_cost_centers(self) -> None:
@@ -216,8 +263,45 @@ class SalaryStructureAssignment(Document):
 
 			total_percentage += flt(entry.percentage)
 
-		if total_percentage != 100:
+		if flt(total_percentage, 2) != 100:
 			frappe.throw(_("Total percentage against cost centers should be 100"))
+
+	def validate_opening_entries(self):
+		if not (flt(self.taxable_earnings_till_date) or flt(self.tax_deducted_till_date)):
+			return
+
+		payroll_period = get_payroll_period(self.from_date, self.from_date, self.company)
+		if not payroll_period:
+			return
+
+		SSA = frappe.qb.DocType("Salary Structure Assignment")
+		earlier_assignment = (
+			frappe.qb.from_(SSA)
+			.select(SSA.name)
+			.where(
+				(SSA.employee == self.employee)
+				& (SSA.company == self.company)
+				& (SSA.docstatus == 1)
+				& (SSA.name != (self.name or ""))
+				& (SSA.from_date >= payroll_period.start_date)
+				& (SSA.from_date < self.from_date)
+				& ((SSA.taxable_earnings_till_date != 0) | (SSA.tax_deducted_till_date != 0))
+			)
+			.orderby(SSA.from_date)
+			.limit(1)
+		).run()
+		if earlier_assignment:
+			frappe.throw(
+				_(
+					"Opening entries for Payroll Period {0} are already set in {1}. Leave {2} and {3} empty on later assignments."
+				).format(
+					frappe.bold(payroll_period.name),
+					get_link_to_form("Salary Structure Assignment", earlier_assignment[0][0]),
+					frappe.bold(_("Taxable Earnings Till Date")),
+					frappe.bold(_("Tax Deducted Till Date")),
+				),
+				title=_("Duplicate Opening Entries"),
+			)
 
 	def warn_about_missing_opening_entries(self):
 		if (
@@ -226,7 +310,7 @@ class SalaryStructureAssignment(Document):
 			and not self.tax_deducted_till_date
 		):
 			msg = _(
-				"Please specify {0} and {1} (if any), for the correct tax calculation in future salary slips."
+				"Please specify {0} and {1} from the previous employer (if any), for the correct tax calculation in future salary slips."
 			).format(
 				frappe.bold(_("Taxable Earnings Till Date")),
 				frappe.bold(_("Tax Deducted Till Date")),
@@ -277,7 +361,7 @@ class SalaryStructureAssignment(Document):
 		)
 
 	def calculate_ctc_and_gross(self) -> None:
-		if not self.base or not self.salary_structure:
+		if not self.salary_structure:
 			self.annual_gross_earning = 0
 			self.ctc = 0
 			return
@@ -510,7 +594,16 @@ class SalaryStructureAssignment(Document):
 		if payroll_period and getdate(self.from_date) <= getdate(payroll_period.start_date):
 			return False
 
-		return True
+		return not frappe.db.exists(
+			"Salary Structure Assignment",
+			{
+				"employee": self.employee,
+				"company": self.company,
+				"docstatus": 1,
+				"from_date": ("<", self.from_date),
+				"name": ("!=", self.name or ""),
+			},
+		)
 
 
 def get_assigned_salary_structure(employee, on_date):
@@ -536,7 +629,17 @@ def get_assigned_salary_structure(employee, on_date):
 @frappe.whitelist()
 def get_employee_currency(employee: str) -> str:
 	frappe.has_permission("Employee", "read", employee, throw=True)
-	employee_currency = frappe.db.get_value("Salary Structure Assignment", {"employee": employee}, "currency")
+	employee_currency = frappe.db.get_value(
+		"Salary Structure Assignment",
+		{"employee": employee, "docstatus": 1, "from_date": ("<=", nowdate())},
+		"currency",
+		order_by="from_date desc",
+	) or frappe.db.get_value(
+		"Salary Structure Assignment",
+		{"employee": employee, "docstatus": 1},
+		"currency",
+		order_by="from_date asc",
+	)
 	if not employee_currency:
 		frappe.throw(
 			_("There is no Salary Structure assigned to {0}. First assign a Salary Structure.").format(

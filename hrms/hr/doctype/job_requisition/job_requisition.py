@@ -58,10 +58,26 @@ class JobRequisition(Document):
 
 	@frappe.whitelist(methods=["POST"])
 	def associate_job_opening(self, job_opening: str) -> None:
-		frappe.has_permission("Job Opening", "write", job_opening, throw=True)
-		frappe.db.set_value(
-			"Job Opening", job_opening, {"job_requisition": self.name, "vacancies": self.no_of_positions}
-		)
+		if self.status != "Open & Approved":
+			frappe.throw(_("Only an approved Job Requisition can be associated with a Job Opening"))
+
+		opening = frappe.get_doc("Job Opening", job_opening)
+		opening.check_permission("write")
+		if (
+			opening.status != "Open"
+			or opening.company != self.company
+			or opening.designation != self.designation
+			or (self.department and opening.department != self.department)
+		):
+			frappe.throw(
+				_(
+					"Job Opening {0} must be open and match the company, designation and department of this Job Requisition"
+				).format(frappe.bold(job_opening))
+			)
+
+		opening.job_requisition = self.name
+		opening.vacancies = self.no_of_positions
+		opening.save()
 		frappe.msgprint(
 			_("Job Requisition {0} has been associated with Job Opening {1}").format(
 				frappe.bold(self.name), get_link_to_form("Job Opening", job_opening)

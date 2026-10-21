@@ -80,6 +80,37 @@ class TestRoster(HRMSTestSuite):
 		)
 		self.assertTrue(new_assignment)
 
+	def test_insert_shift_merge_is_validated(self):
+		from hrms.hr.doctype.shift_assignment.shift_assignment import MultipleShiftError
+
+		employee = create_employee(f"_Test Roster Merge {frappe.generate_hash(length=8)}")
+		day = create_shift_type(
+			f"_Test Merge Day {frappe.generate_hash(length=8)}", "09:00:00", "17:00:00", "Blue"
+		)
+		mid = create_shift_type(
+			f"_Test Merge Mid {frappe.generate_hash(length=8)}", "12:00:00", "20:00:00", "Red"
+		)
+		first = create_shift_assignment(day.name, employee.name, "2026-11-02")
+		create_shift_assignment(mid.name, employee.name, "2026-11-04")
+
+		frappe.db.set_single_value("HR Settings", "allow_multiple_shift_assignments", 0)
+		frappe.db.savepoint("before_merge")
+		self.assertRaises(
+			MultipleShiftError,
+			insert_shift,
+			employee.name,
+			"_Test Company",
+			day.name,
+			"2026-11-03",
+			"2026-11-04",
+			"Active",
+		)
+		frappe.db.rollback(save_point="before_merge")
+
+		insert_shift(employee.name, "_Test Company", day.name, "2026-11-03", "2026-11-03", "Active")
+		first.reload()
+		self.assertEqual(str(first.end_date), "2026-11-03")
+
 
 def create_employee(employee_name: str):
 	create_company()

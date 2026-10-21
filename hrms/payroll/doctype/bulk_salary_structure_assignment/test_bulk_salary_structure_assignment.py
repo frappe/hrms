@@ -40,6 +40,7 @@ class TestBulkSalaryStructureAssignment(HRMSTestSuite):
 		args = {
 			"doctype": "Bulk Salary Structure Assignment",
 			"from_date": today,
+			"company": "_Test Company",
 			"department": self.department,
 		}
 		bulk_assignment = BulkSalaryStructureAssignment(args)
@@ -59,6 +60,28 @@ class TestBulkSalaryStructureAssignment(HRMSTestSuite):
 		# no employee grade
 		self.assertEqual(employees[1].base, 0)
 		self.assertEqual(len(employees), 2)
+
+	def test_grade_base_not_prefilled_in_another_currency(self):
+		structure = make_salary_structure(
+			"Salary Structure INR", "Monthly", company="_Test Company", currency="INR"
+		)
+		frappe.db.set_value("Employee Grade", self.grade.name, "currency", "USD")
+
+		bulk_assignment = BulkSalaryStructureAssignment(
+			{
+				"doctype": "Bulk Salary Structure Assignment",
+				"from_date": getdate(),
+				"company": "_Test Company",
+				"department": self.department,
+				"salary_structure": structure.name,
+			}
+		)
+		employees = bulk_assignment.get_employees([["Employee", "name", "=", self.emp1]])
+		self.assertEqual(employees[0].base, 0)
+
+		frappe.db.set_value("Employee Grade", self.grade.name, "currency", "INR")
+		employees = bulk_assignment.get_employees([["Employee", "name", "=", self.emp1]])
+		self.assertEqual(employees[0].base, self.grade.default_base_pay)
 
 	def test_bulk_assign_structure(self):
 		today = getdate()
@@ -98,3 +121,42 @@ class TestBulkSalaryStructureAssignment(HRMSTestSuite):
 		)
 		self.assertEqual(ssa2.base, 40000)
 		self.assertEqual(ssa2.variable, 0)
+
+	def test_user_permissions_applied(self):
+		today = getdate()
+		other_employee = make_employee("employee6@bssa.com", company="_Test Company 1")
+		salary_structure = make_salary_structure("Salary Structure 1", "Monthly", company="_Test Company")
+
+		user = "bssa_restricted@example.com"
+		if not frappe.db.exists("User", user):
+			frappe.get_doc({"doctype": "User", "email": user, "first_name": "BSSA"}).insert()
+		frappe.get_doc("User", user).add_roles("HR User", "HR Manager")
+		frappe.get_doc(
+			{"doctype": "User Permission", "user": user, "allow": "Company", "for_value": "_Test Company"}
+		).insert()
+
+		bulk_assignment = BulkSalaryStructureAssignment(
+			{
+				"doctype": "Bulk Salary Structure Assignment",
+				"salary_structure": salary_structure.name,
+				"from_date": today,
+				"company": "_Test Company 1",
+			}
+		)
+		frappe.set_user(user)
+		try:
+			self.assertEqual(bulk_assignment.get_employees([]), [])
+
+			bulk_assignment.company = "_Test Company"
+			employees = bulk_assignment.get_employees([["Employee", "company", "=", "_Test Company 1"]])
+			self.assertEqual(employees, [])
+
+			self.assertRaises(
+				frappe.PermissionError,
+				bulk_assignment.bulk_assign_structure,
+				[{"employee": other_employee, "base": 99999, "variable": 0}],
+			)
+		finally:
+			frappe.set_user("Administrator")
+
+		self.assertFalse(frappe.db.exists("Salary Structure Assignment", {"employee": other_employee}))

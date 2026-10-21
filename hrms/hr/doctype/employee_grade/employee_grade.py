@@ -1,7 +1,8 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
-
+import frappe
+from frappe import _
 from frappe.model.document import Document
 
 
@@ -19,4 +20,19 @@ class EmployeeGrade(Document):
 		default_salary_structure: DF.Link | None
 	# end: auto-generated types
 
-	pass
+	def validate(self):
+		self.validate_default_salary_structure()
+
+	def validate_default_salary_structure(self):
+		if not self.default_salary_structure:
+			return
+
+		structure = frappe.db.get_value(
+			"Salary Structure", self.default_salary_structure, ["docstatus", "is_active"], as_dict=True
+		)
+		if structure.docstatus != 1 or structure.is_active != "Yes":
+			frappe.throw(
+				_("Default Salary Structure {0} must be submitted and active").format(
+					frappe.bold(self.default_salary_structure)
+				)
+			)

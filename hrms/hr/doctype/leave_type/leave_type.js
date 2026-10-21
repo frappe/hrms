@@ -1,5 +1,7 @@
 frappe.ui.form.on("Leave Type", {
-	refresh: function (frm) {},
+	refresh: function (frm) {
+		frm.trigger("earned_leave_frequency");
+	},
 
 	earned_leave_frequency: function (frm) {
 		if (frm.doc.earned_leave_frequency != "Monthly") {

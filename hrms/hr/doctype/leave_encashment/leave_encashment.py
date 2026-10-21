@@ -10,9 +10,12 @@ from frappe.utils import flt, format_date, get_link_to_form, getdate
 from erpnext.accounts.general_ledger import make_gl_entries
 from erpnext.controllers.accounts_controller import AccountsController
 
-from hrms.hr.doctype.leave_application.leave_application import get_leaves_for_period
+from hrms.hr.doctype.full_and_final_statement.full_and_final_statement import (
+	get_amount_paid_via_full_and_final_statement,
+)
+from hrms.hr.doctype.leave_application.leave_application import get_leave_balance_on
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import create_leave_ledger_entry
-from hrms.hr.utils import set_employee_name, validate_active_employee
+from hrms.hr.utils import get_leave_period, set_employee_name, validate_active_employee
 from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
 	get_assigned_salary_structure,
 )
@@ -58,8 +61,22 @@ class LeaveEncashment(AccountsController):
 		self.get_leave_details_for_encashment()
 		self.set_status()
 
-		if not self.pay_via_payment_entry:
+		if self.pay_via_payment_entry:
+			self.validate_payment_entry_currency()
+		else:
 			self.set_salary_structure()
+
+	def validate_payment_entry_currency(self):
+		self.currency = (
+			frappe.db.get_value("Salary Structure", self._salary_structure, "currency") or self.currency
+		)
+		company_currency = frappe.get_cached_value("Company", self.company, "default_currency")
+		if self.currency != company_currency:
+			frappe.throw(
+				_(
+					"Leave Encashment in {0} cannot be paid via Payment Entry. Use the company currency {1} or pay it through payroll."
+				).format(bold(self.currency), bold(company_currency))
+			)
 
 	def set_salary_structure(self):
 		self._salary_structure = get_assigned_salary_structure(self.employee, self.encashment_date)
@@ -175,12 +192,13 @@ class LeaveEncashment(AccountsController):
 			)
 
 		self.leave_balance = (
-			allocation.total_leaves_allocated
-			- allocation.carry_forwarded_leaves_count
-			# adding this because the function returns a -ve number
-			+ get_leaves_for_period(
-				self.employee, self.leave_type, allocation.from_date, self.encashment_date
+			get_leave_balance_on(
+				self.employee,
+				self.leave_type,
+				self.encashment_date,
+				consider_all_leaves_in_the_allocation_period=True,
 			)
+			- allocation.carry_forwarded_leaves_count
 		)
 		self.leave_allocation = allocation.name
 
@@ -316,6 +334,7 @@ class LeaveEncashment(AccountsController):
 				& (aple.delinked == 0)
 			)
 		).run(as_dict=True)[0].paid_amount or 0
+		paid_amount = flt(paid_amount) + get_amount_paid_via_full_and_final_statement(self.doctype, self.name)
 		if flt(paid_amount) > self.encashment_amount:
 			frappe.throw(_("Row {0}# Paid Amount cannot be greater than Encashment amount"))
 
@@ -372,13 +391,30 @@ def create_leave_encashment(leave_allocation):
 	for allocation in leave_allocation:
 		if not get_assigned_salary_structure(allocation.employee, allocation.to_date):
 			continue
-		leave_encashment = frappe.get_doc(
-			dict(
-				doctype="Leave Encashment",
-				leave_period=allocation.leave_period,
-				employee=allocation.employee,
-				leave_type=allocation.leave_type,
-				encashment_date=allocation.to_date,
+
+		savepoint = "before_leave_encashment"
+		try:
+			frappe.db.savepoint(savepoint)
+			leave_encashment = frappe.get_doc(
+				dict(
+					doctype="Leave Encashment",
+					leave_period=allocation.leave_period or get_leave_period_for_allocation(allocation),
+					employee=allocation.employee,
+					leave_type=allocation.leave_type,
+					encashment_date=allocation.to_date,
+				)
 			)
-		)
-		leave_encashment.insert(ignore_permissions=True)
+			leave_encashment.insert(ignore_permissions=True)
+		except Exception:
+			frappe.db.rollback(save_point=savepoint)
+			frappe.log_error(
+				title=_("Leave Encashment creation failed"),
+				reference_doctype="Leave Allocation",
+				reference_name=allocation.get("name"),
+			)
+
+
+def get_leave_period_for_allocation(allocation):
+	company = frappe.db.get_value("Employee", allocation.employee, "company")
+	leave_period = get_leave_period(allocation.to_date, allocation.to_date, company)
+	return leave_period[0].name if leave_period else None

@@ -5,10 +5,7 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import format_date
-
-# Wether to proceed with frequency change
-PROCEED_WITH_FREQUENCY_CHANGE = False
+from frappe.utils import cint, format_date
 
 
 class HRSettings(Document):
@@ -59,12 +56,14 @@ class HRSettings(Document):
 
 	def validate(self):
 		self.set_naming_series()
+		self.validate_retirement_age()
 
-		# Based on proceed flag
-		global PROCEED_WITH_FREQUENCY_CHANGE
-		if not PROCEED_WITH_FREQUENCY_CHANGE:
+		if not self.get("__proceed_with_frequency_change"):
 			self.validate_frequency_change()
-		PROCEED_WITH_FREQUENCY_CHANGE = False
+
+	def validate_retirement_age(self):
+		if self.retirement_age and cint(self.retirement_age) <= 0:
+			frappe.throw(frappe._("Retirement Age must be a positive number of years"))
 
 	def set_naming_series(self):
 		from erpnext.utilities.naming import set_by_naming_series
@@ -133,10 +132,3 @@ class HRSettings(Document):
 			},
 			raise_exception=raise_exception,
 		)
-
-
-@frappe.whitelist()
-def set_proceed_with_frequency_change():
-	"""Enables proceed with frequency change"""
-	global PROCEED_WITH_FREQUENCY_CHANGE
-	PROCEED_WITH_FREQUENCY_CHANGE = True

@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.utils import add_days, now_datetime, today
+from frappe.utils import add_days, flt, now_datetime, today
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 from erpnext.stock.doctype.purchase_receipt.test_purchase_receipt import make_purchase_receipt
@@ -12,6 +12,7 @@ from hrms.tests.utils import HRMSTestSuite
 
 class TestFullandFinalStatement(HRMSTestSuite):
 	def setUp(self):
+		frappe.db.set_single_value("HR Settings", "expense_approver_mandatory_in_expense_claim", 0)
 		self.setup_fnf()
 
 	def setup_fnf(self):
@@ -190,6 +191,137 @@ class TestFullandFinalStatement(HRMSTestSuite):
 		advance_rows = [row for row in self.fnf.receivables if row.component == "Employee Advance"]
 		self.assertEqual(len(advance_rows), 1)
 		self.assertFalse(advance_rows[0].reference_document)
+
+	def test_expense_claim_paid_through_fnf_journal_entry(self):
+		from hrms.hr.doctype.expense_claim.test_expense_claim import (
+			get_payable_account,
+			make_expense_claim,
+		)
+		from hrms.hr.doctype.full_and_final_statement.full_and_final_statement import (
+			get_account_and_amount,
+		)
+
+		frappe.db.set_value("Account", "Payroll Payable - _TC", "account_type", "Payable")
+		claim = make_expense_claim(
+			get_payable_account("_Test Company"),
+			1000,
+			1000,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			employee=self.employee,
+		)
+		account, amount = get_account_and_amount("Expense Claim", claim.name, "_Test Company")
+		self.assertEqual(amount, 1000)
+
+		self.fnf.payables = []
+		self.fnf.receivables = []
+		self.fnf.assets_allocated[0].status = "Returned"
+		self.fnf.append(
+			"payables",
+			{
+				"component": "Expense Claim",
+				"reference_document_type": "Expense Claim",
+				"reference_document": claim.name,
+				"account": account,
+				"amount": amount,
+				"status": "Settled",
+			},
+		)
+		self.fnf.submit()
+
+		jv = self.fnf.create_journal_entry()
+		self.assertEqual(jv.accounts[0].reference_type, "Expense Claim")
+		self.assertEqual(jv.accounts[0].reference_name, claim.name)
+		jv.accounts[-1].account = "_Test Bank - _TC"
+		jv.cheque_no = "FNF-EC-001"
+		jv.cheque_date = today()
+		jv.submit()
+
+		claim.reload()
+		self.assertEqual(claim.total_amount_reimbursed, 1000)
+		self.assertEqual(claim.status, "Paid")
+
+		jv.cancel()
+		claim.reload()
+		self.assertEqual(claim.total_amount_reimbursed, 0)
+		self.assertEqual(claim.status, "Unpaid")
+
+	def test_reference_document_of_another_employee_is_rejected(self):
+		from hrms.hr.doctype.expense_claim.test_expense_claim import (
+			get_payable_account,
+			make_expense_claim,
+		)
+
+		other_employee = make_employee("test_fnf_other@example.com", company="_Test Company")
+		claim = make_expense_claim(
+			get_payable_account("_Test Company"),
+			700,
+			700,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			employee=other_employee,
+		)
+
+		self.fnf.payables = []
+		self.fnf.append(
+			"payables",
+			{
+				"component": "Expense Claim",
+				"reference_document_type": "Expense Claim",
+				"reference_document": claim.name,
+				"account": claim.payable_account,
+				"amount": 700,
+				"status": "Settled",
+			},
+		)
+		self.assertRaises(frappe.ValidationError, self.fnf.save)
+
+	def test_journal_entry_balanced_with_payable_paid_via_salary_slip(self):
+		self.fnf.payables = []
+		self.fnf.receivables = []
+		self.fnf.append(
+			"payables",
+			{"component": "Salary Slip", "amount": 5000, "paid_via_salary_slip": 1, "status": "Settled"},
+		)
+		self.fnf.append(
+			"payables",
+			{"component": "Bonus", "account": "Payroll Payable - _TC", "amount": 1000, "status": "Settled"},
+		)
+		self.fnf.save()
+		self.assertEqual(self.fnf.total_payable_amount, 6000)
+
+		jv = self.fnf.create_journal_entry()
+		self.assertEqual(sum(flt(d.debit_in_account_currency) for d in jv.accounts), 1000)
+		self.assertEqual(sum(flt(d.credit_in_account_currency) for d in jv.accounts), 1000)
+
+	def test_asset_reissued_to_employee_listed_once(self):
+		asset = frappe.db.get_value("Asset Movement Item", {"parent": self.movement}, "asset")
+		other_employee = make_employee("test_fnf_other@example.com", company="_Test Company")
+		for from_employee, to_employee, days in (
+			(self.employee, other_employee, 1),
+			(other_employee, self.employee, 2),
+		):
+			movement = frappe.get_doc(
+				{
+					"doctype": "Asset Movement",
+					"company": "_Test Company",
+					"purpose": "Issue",
+					"transaction_date": add_days(now_datetime(), days),
+					"docstatus": 1,
+					"assets": [{"asset": asset, "from_employee": from_employee, "to_employee": to_employee}],
+				}
+			)
+			movement.set_new_name()
+			movement.db_insert()
+			for row in movement.assets:
+				row.parent = movement.name
+				row.docstatus = 1
+				row.db_insert()
+			latest_movement = movement.name
+
+		assets = self.fnf.get_assets_movement()
+		self.assertEqual(len(assets), 1)
+		self.assertEqual(assets[0]["reference"], latest_movement)
 
 	def test_status_on_discard(self):
 		self.fnf.discard()

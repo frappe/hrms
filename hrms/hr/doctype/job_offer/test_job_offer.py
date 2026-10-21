@@ -70,6 +70,42 @@ class TestJobOffer(HRMSTestSuite):
 		self.assertEqual(job_applicant.status, "Rejected")
 		frappe.db.set_single_value("HR Settings", "check_vacancies", 1)
 
+	def test_cancel_resets_offer_and_applicant_status(self):
+		job_applicant = create_job_applicant(email_id="test_job_offer_cancel@example.com")
+		job_offer = create_job_offer(job_applicant=job_applicant.name)
+		job_offer.submit()
+		self.assertEqual(frappe.db.get_value("Job Applicant", job_applicant.name, "status"), "Accepted")
+
+		job_offer.cancel()
+
+		self.assertEqual(frappe.db.get_value("Job Offer", job_offer.name, "status"), "Cancelled")
+		self.assertEqual(frappe.db.get_value("Job Applicant", job_applicant.name, "status"), "Open")
+
+	def test_rejected_job_offers_do_not_use_vacancies(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 1)
+		create_staffing_plan(
+			name="Test Rejected Offers",
+			staffing_details=[
+				{"designation": "UX Designer", "vacancies": 1, "estimated_cost_per_position": 5000}
+			],
+			company="_Test Company",
+		)
+		job_applicant = create_job_applicant(email_id="test_rejected_offer_vacancy@example.com")
+		create_job_offer(
+			job_applicant=job_applicant.name, designation="UX Designer", status="Rejected"
+		).submit()
+
+		another_applicant = create_job_applicant(email_id="test_offer_after_rejection@example.com")
+		job_offer = create_job_offer(job_applicant=another_applicant.name, designation="UX Designer")
+		job_offer.submit()
+		self.assertEqual(job_offer.docstatus, 1)
+
+		third_applicant = create_job_applicant(email_id="test_offer_without_vacancy@example.com")
+		self.assertRaises(
+			frappe.ValidationError,
+			create_job_offer(job_applicant=third_applicant.name, designation="UX Designer").insert,
+		)
+
 	def test_recruitment_metrics(self):
 		job_applicant1 = create_job_applicant(email_id="test_job_applicant1@example.com")
 		job_applicant2 = create_job_applicant(email_id="test_job_applicant2@example.com")

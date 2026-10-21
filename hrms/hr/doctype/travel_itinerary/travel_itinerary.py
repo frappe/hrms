@@ -14,7 +14,7 @@ class TravelItinerary(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		advance_amount: DF.Data | None
+		advance_amount: DF.Currency
 		arrival_date: DF.Datetime | None
 		check_in_date: DF.Date | None
 		check_out_date: DF.Date | None

@@ -7,7 +7,7 @@ from datetime import date, datetime, timedelta
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cint, get_datetime
+from frappe.utils import cint, get_datetime, getdate
 
 from hrms.hr.doctype.shift_assignment.shift_assignment import get_actual_start_end_datetime_of_shift
 from hrms.hr.utils import (
@@ -100,7 +100,9 @@ class EmployeeCheckin(Document):
 			return
 
 		if (
-			shift_actual_timings.shift_type.determine_check_in_and_check_out
+			frappe.get_cached_value(
+				"Shift Type", shift_actual_timings.shift_type.name, "determine_check_in_and_check_out"
+			)
 			== "Strictly based on Log Type in Employee Checkin"
 			and not self.log_type
 			and not self.skip_auto_attendance
@@ -123,23 +125,26 @@ class EmployeeCheckin(Document):
 		if not frappe.db.get_single_value("HR Settings", "allow_geolocation_tracking"):
 			return
 
-		if not (self.latitude or self.longitude):
-			frappe.throw(_("Latitude and longitude values are required for checking in."))
-
+		shift_date = getdate(self.shift_start or self.time)
 		assignment_locations = frappe.get_all(
 			"Shift Assignment",
 			filters={
 				"employee": self.employee,
 				"shift_type": self.shift,
-				"start_date": ["<=", self.time],
+				"start_date": ["<=", shift_date],
 				"shift_location": ["is", "set"],
 				"docstatus": 1,
 				"status": "Active",
 			},
-			or_filters=[["end_date", ">=", self.time], ["end_date", "is", "not set"]],
+			or_filters=[["end_date", ">=", shift_date], ["end_date", "is", "not set"]],
 			pluck="shift_location",
 		)
 		if not assignment_locations:
+			return
+
+		if not (self.latitude or self.longitude):
+			if frappe.db.get_value("Employee", self.employee, "user_id") == frappe.session.user:
+				frappe.throw(_("Latitude and longitude values are required for checking in."))
 			return
 
 		checkin_radius, latitude, longitude = frappe.db.get_value(
@@ -387,6 +392,7 @@ def get_existing_half_day_attendance(employee, attendance_date):
 			"status": "Half Day",
 			"modify_half_day_status": 1,
 			"leave_type": ("is", "set"),
+			"docstatus": 1,
 		},
 	)
 
@@ -423,9 +429,10 @@ def calculate_working_hours(logs, check_in_out_type, working_hours_calc_type):
 		if working_hours_calc_type == "First Check-in and Last Check-out":
 			first_in_log_index = find_index_in_dict(logs, "log_type", "IN")
 			first_in_log = logs[first_in_log_index] if first_in_log_index or first_in_log_index == 0 else None
-			last_out_log_index = find_index_in_dict(reversed(logs), "log_type", "OUT")
+			out_logs = logs[first_in_log_index:] if first_in_log else logs
+			last_out_log_index = find_index_in_dict(reversed(out_logs), "log_type", "OUT")
 			last_out_log = (
-				logs[len(logs) - 1 - last_out_log_index]
+				out_logs[len(out_logs) - 1 - last_out_log_index]
 				if last_out_log_index or last_out_log_index == 0
 				else None
 			)

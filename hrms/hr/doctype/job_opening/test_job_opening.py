@@ -4,6 +4,7 @@
 import frappe
 from frappe.utils import add_days, getdate
 
+from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.job_opening.job_opening import close_expired_job_openings
@@ -131,6 +132,64 @@ class TestJobOpening(HRMSTestSuite):
 		self.assertEqual(opening_1.status, "Closed")
 		self.assertEqual(opening_1.closed_on, today)
 		self.assertEqual(opening_2.status, "Open")
+
+	def test_duplicate_job_title_gets_unique_route(self):
+		opening_1 = get_job_opening(job_title="Designer Route").insert()
+		opening_2 = frappe.get_doc(
+			{
+				"doctype": "Job Opening",
+				"job_title": "Designer Route",
+				"designation": "Designer",
+				"company": "_Test Opening Company",
+				"status": "Open",
+			}
+		).insert()
+
+		self.assertEqual(opening_1.route, "jobs/_test_opening_company/designer-route")
+		self.assertEqual(
+			opening_2.route, f"{opening_1.route}-{frappe.scrub(opening_2.name).replace('_', '-')}"
+		)
+
+	def test_vacancies_checked_against_staffing_plan(self):
+		make_staffing_plan(vacancies=2)
+
+		self.assertRaises(
+			frappe.ValidationError, get_job_opening(job_title="Designer Three", vacancies=3).insert
+		)
+		get_job_opening(job_title="Designer Two", vacancies=2).insert()
+		self.assertRaises(
+			frappe.ValidationError, get_job_opening(job_title="Designer One", vacancies=1).insert
+		)
+
+	def test_designation_change_re_resolves_staffing_plan(self):
+		make_staffing_plan(vacancies=1)
+		opening = get_job_opening(job_title="Designer Plan").insert()
+		self.assertEqual(opening.staffing_plan, "_Test Opening Plan")
+
+		opening.designation = create_designation(designation_name="_Test Unplanned Designation").name
+		opening.save()
+
+		self.assertFalse(opening.staffing_plan)
+		self.assertFalse(opening.planned_vacancies)
+
+
+def make_staffing_plan(vacancies):
+	staffing_plan = frappe.get_doc(
+		{
+			"doctype": "Staffing Plan",
+			"company": "_Test Opening Company",
+			"name": "_Test Opening Plan",
+			"from_date": getdate(),
+			"to_date": add_days(getdate(), 10),
+		}
+	)
+	staffing_plan.append(
+		"staffing_details",
+		{"designation": "Designer", "vacancies": vacancies, "estimated_cost_per_position": 50000},
+	)
+	staffing_plan.insert()
+	staffing_plan.submit()
+	return staffing_plan
 
 
 def get_job_opening(**args):

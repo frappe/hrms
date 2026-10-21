@@ -95,6 +95,7 @@
   },
   {
    "fetch_from": "employee_onboarding_template.company",
+   "fetch_if_empty": 1,
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
@@ -103,6 +104,7 @@
   },
   {
    "fetch_from": "employee_onboarding_template.department",
+   "fetch_if_empty": 1,
    "fieldname": "department",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -111,6 +113,7 @@
   },
   {
    "fetch_from": "employee_onboarding_template.designation",
+   "fetch_if_empty": 1,
    "fieldname": "designation",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -119,6 +122,7 @@
   },
   {
    "fetch_from": "employee_onboarding_template.employee_grade",
+   "fetch_if_empty": 1,
    "fieldname": "employee_grade",
    "fieldtype": "Link",
    "label": "Employee Grade",
@@ -177,7 +181,7 @@
  "icon": "user-plus",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-10-19 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Onboarding",

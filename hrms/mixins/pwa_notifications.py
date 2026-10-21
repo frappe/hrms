@@ -17,7 +17,7 @@ class PWANotificationsMixin:
 			from_user_name = self._get_user_name(from_user)
 			to_user = self._get_employee_user()
 
-			if from_user == to_user:
+			if not to_user or from_user == to_user:
 				return
 
 			notification = frappe.new_doc("PWA Notification")

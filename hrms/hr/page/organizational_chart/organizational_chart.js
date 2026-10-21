@@ -4,10 +4,11 @@ Object.assign(hrms.organizational_chart, {
 	get_employee_count(company) {
 		const args = {
 			doctype: "Employee",
+			filters: { status: "Active" },
 		};
 
 		if (company) {
-			args.filters = { company };
+			args.filters.company = company;
 		}
 
 		return frappe

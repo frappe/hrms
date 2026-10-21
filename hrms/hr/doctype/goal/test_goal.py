@@ -33,6 +33,18 @@ class TestGoal(HRMSTestSuite):
 		# parent goal and child goal should have same employee
 		self.assertRaises(frappe.ValidationError, child_goal.insert)
 
+	def test_validate_dates(self):
+		goal = frappe.get_doc(
+			{
+				"doctype": "Goal",
+				"goal_name": "Test",
+				"employee": self.employee1,
+				"start_date": "2023-03-31",
+				"end_date": "2023-01-01",
+			}
+		)
+		self.assertRaises(frappe.ValidationError, goal.insert)
+
 	def test_set_status(self):
 		goal = create_goal(self.employee1, "Development")
 		self.assertEqual(goal.status, "Pending")
@@ -216,9 +228,10 @@ def create_goal(
 	appraisal_cycle=None,
 	progress=0,
 ):
+	cycle = appraisal_cycle or (parent_goal and frappe.db.get_value("Goal", parent_goal, "appraisal_cycle"))
 	start_date = "2023-01-01"
-	if appraisal_cycle:
-		start_date = frappe.db.get_value("Appraisal Cycle", appraisal_cycle, "start_date")
+	if cycle:
+		start_date = frappe.db.get_value("Appraisal Cycle", cycle, "start_date")
 	elif parent_goal:
 		start_date = frappe.db.get_value("Goal", parent_goal, "start_date")
 

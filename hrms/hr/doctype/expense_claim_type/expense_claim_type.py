@@ -46,3 +46,24 @@ class ExpenseClaimType(Document):
 						entry.default_account, entry.company
 					)
 				)
+
+		self.validate_account_types()
+
+	def validate_account_types(self):
+		previous = self.get_doc_before_save()
+		existing_accounts = {d.default_account for d in previous.accounts} if previous else set()
+		root_type = "Asset" if self.deferred_expense_account else "Expense"
+
+		for entry in self.accounts:
+			if not entry.default_account or entry.default_account in existing_accounts:
+				continue
+
+			account = frappe.db.get_value(
+				"Account", entry.default_account, ["is_group", "root_type"], as_dict=True
+			)
+			if account.is_group or account.root_type != root_type:
+				frappe.throw(
+					_("Row {0}: Account {1} must be a non-group account of root type {2}").format(
+						entry.idx, frappe.bold(entry.default_account), frappe.bold(_(root_type))
+					)
+				)

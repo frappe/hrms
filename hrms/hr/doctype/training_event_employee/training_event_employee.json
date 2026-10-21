@@ -51,6 +51,7 @@
    "options": "Open\nInvited\nCompleted\nFeedback Submitted"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "attendance",
    "fieldtype": "Select",
    "in_list_view": 1,
@@ -69,7 +70,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-27 13:10:54.148593",
+ "modified": "2026-10-19 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Training Event Employee",

@@ -921,6 +921,121 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 			== "L"
 		)
 
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	def test_chart_counts_half_days(self):
+		previous_month_first = get_first_day_for_prev_month()
+		mark_attendance(self.employee, previous_month_first, "Half Day", half_day_status="Absent")
+		attendance = mark_attendance(self.employee, add_days(previous_month_first, 1), "Half Day")
+		frappe.db.set_value("Attendance", attendance, "half_day_status", "Present")
+
+		filters = frappe._dict(
+			{
+				"month": previous_month_first.month,
+				"year": previous_month_first.year,
+				"company": self.company,
+				"filter_based_on": self.filter_based_on,
+			}
+		)
+		absent, present, leaves = (d["values"] for d in execute(filters=filters)[3]["data"]["datasets"])
+
+		self.assertEqual((present[0], absent[0], leaves[0]), (0.5, 0.5, 0))
+		self.assertEqual((present[1], absent[1], leaves[1]), (0.5, 0, 0.5))
+
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	def test_group_by_keeps_employees_without_group_value(self):
+		previous_month_first = get_first_day_for_prev_month()
+		frappe.db.set_value("Employee", self.employee, "branch", None)
+		mark_attendance(self.employee, previous_month_first, "Present")
+
+		for summarized_view in (0, 1):
+			filters = frappe._dict(
+				{
+					"month": previous_month_first.month,
+					"year": previous_month_first.year,
+					"company": self.company,
+					"group_by": "Branch",
+					"summarized_view": summarized_view,
+					"filter_based_on": self.filter_based_on,
+				}
+			)
+			data = execute(filters=filters)[1]
+			self.assertEqual(data[0], {"branch": "Not Set"})
+			self.assertEqual(data[1]["employee"], self.employee)
+
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	def test_summarized_view_ignores_days_after_relieving_date(self):
+		previous_month_first = get_first_day_for_prev_month()
+		employee = make_employee("test_relieved_employee@example.com", company=self.company)
+		mark_attendance(employee, previous_month_first, "Present")
+		frappe.db.set_value(
+			"Employee", employee, {"relieving_date": add_days(previous_month_first, 9), "status": "Left"}
+		)
+
+		filters = frappe._dict(
+			{
+				"month": previous_month_first.month,
+				"year": previous_month_first.year,
+				"company": self.company,
+				"employee": employee,
+				"summarized_view": 1,
+				"filter_based_on": self.filter_based_on,
+			}
+		)
+		row = execute(filters=filters)[1][0]
+		self.assertEqual(row["total_holidays"] + row["unmarked_days"], 9)
+
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	def test_leave_type_column_skips_half_day_without_leave_application(self):
+		previous_month_first = get_first_day_for_prev_month()
+		mark_attendance(self.employee, previous_month_first, "Half Day", leave_type="_Test Leave Type")
+		leave_application = get_leave_application(self.employee)
+
+		filters = frappe._dict(
+			{
+				"month": previous_month_first.month,
+				"year": previous_month_first.year,
+				"company": self.company,
+				"summarized_view": 1,
+				"filter_based_on": self.filter_based_on,
+			}
+		)
+		row = execute(filters=filters)[1][0]
+		self.assertEqual(row["total_leaves"], leave_application.total_leave_days)
+		self.assertEqual(row["_test_leave_type"], leave_application.total_leave_days)
+
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	def test_chart_respects_user_permissions(self):
+		from frappe.desk.query_report import run
+		from frappe.permissions import add_user_permission
+
+		previous_month_first = get_first_day_for_prev_month()
+		other_employee = make_employee("test_employee_hidden@example.com", company=self.company)
+		mark_attendance(self.employee, previous_month_first, "Present")
+		mark_attendance(other_employee, previous_month_first, "Present")
+		mark_attendance(other_employee, add_days(previous_month_first, 1), "Absent")
+
+		user = "test_restricted_hr_user@example.com"
+		make_employee(user, company=self.company)
+		frappe.get_doc("User", user).add_roles("HR User")
+		add_user_permission("Employee", self.employee, user)
+
+		frappe.set_user(user)
+		try:
+			report = run(
+				"Monthly Attendance Sheet",
+				filters={
+					"month": previous_month_first.month,
+					"year": previous_month_first.year,
+					"company": self.company,
+					"filter_based_on": self.filter_based_on,
+				},
+			)
+		finally:
+			frappe.set_user("Administrator")
+
+		self.assertEqual({row.get("employee") for row in report["result"]}, {self.employee})
+		self.assertEqual(sum(sum(d["values"]) for d in report["chart"]["data"]["datasets"]), 1)
+
 
 def get_leave_application(employee, date=None):
 	if not date:

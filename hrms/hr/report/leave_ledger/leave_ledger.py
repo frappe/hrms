@@ -143,11 +143,7 @@ def get_data(filters: Filters) -> list[dict]:
 			Ledger.company,
 			Ledger.holiday_list,
 		)
-		.where(
-			(Ledger.docstatus == 1)
-			& (Ledger.from_date[from_date:to_date])
-			& (Ledger.to_date[from_date:to_date])
-		)
+		.where((Ledger.docstatus == 1) & (Ledger.from_date <= to_date) & (Ledger.to_date >= from_date))
 	)
 
 	for field in ("employee", "leave_type", "company", "transaction_type", "transaction_name"):

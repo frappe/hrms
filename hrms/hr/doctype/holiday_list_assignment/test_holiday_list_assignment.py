@@ -311,6 +311,51 @@ class IntegrationTestHolidayListAssignment(HRMSTestSuite):
 			},
 		)
 
+	def test_company_default_holiday_list_used_without_assignments(self):
+		employee = make_employee("test_hla_company_default@example.com", company="_Test Company")
+		year_start, year_end = get_year_start(getdate()), get_year_ending(getdate())
+		frappe.db.set_value("Company", "_Test Company", "default_holiday_list", self.holiday_list)
+
+		self.assertEqual(get_holiday_list_for_employee(employee, as_on=getdate()), self.holiday_list)
+		ranges = get_holiday_list_ranges_for_employees({employee: "_Test Company"}, year_start, year_end)
+		self.assertEqual(
+			[(r.holiday_list, r.from_date, r.to_date) for r in ranges[employee]],
+			[(self.holiday_list, year_start, year_end)],
+		)
+
+		company_holiday_list = make_holiday_list(
+			list_name="Test HLA Company Assignment", from_date=year_start, to_date=year_end
+		)
+		create_holiday_list_assignment("Company", "_Test Company", company_holiday_list, from_date=year_start)
+		self.assertEqual(get_holiday_list_for_employee(employee, as_on=getdate()), company_holiday_list)
+
+	def test_employee_details_set_on_validate(self):
+		hla = frappe.get_doc(
+			{
+				"doctype": "Holiday List Assignment",
+				"applicable_for": "Employee",
+				"assigned_to": self.employee,
+				"holiday_list": self.holiday_list,
+				"from_date": get_year_start(getdate()),
+			}
+		).insert()
+		self.assertEqual(
+			(hla.employee_name, hla.employee_company),
+			frappe.db.get_value("Employee", self.employee, ["employee_name", "company"]),
+		)
+
+		hla = frappe.get_doc(
+			{
+				"doctype": "Holiday List Assignment",
+				"applicable_for": "Company",
+				"assigned_to": "_Test Company",
+				"employee_company": "_Test Company",
+				"holiday_list": self.holiday_list,
+				"from_date": get_year_start(getdate()),
+			}
+		).insert()
+		self.assertIsNone(hla.employee_company)
+
 
 def create_holiday_list_assignment(
 	applicable_for,

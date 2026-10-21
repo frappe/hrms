@@ -141,3 +141,42 @@ class TestLeaveControlPanel(HRMSTestSuite):
 		# advanced filter applied
 		self.assertNotIn(self.emp4, employee_names)
 		self.assertEqual(len(employees), 2)
+
+	def test_employees_joining_after_period_are_not_listed(self):
+		future_joiner = make_employee(
+			"employee5@example.com",
+			company=self.company,
+			date_of_joining=date(2031, 2, 1),
+		)
+		args = {
+			"doctype": "Leave Control Panel",
+			"company": self.company,
+			"dates_based_on": "Leave Period",
+			"leave_period": self.leave_period.name,
+			"allocate_based_on_leave_policy": 1,
+			"leave_policy": self.leave_policy.name,
+		}
+		employee_names = [d.name for d in LeaveControlPanel(args).get_employees([])]
+
+		self.assertIn(self.emp1, employee_names)
+		self.assertNotIn(future_joiner, employee_names)
+
+	def test_allocate_leave_returns_result_and_sets_leave_period(self):
+		args = {
+			"doctype": "Leave Control Panel",
+			"dates_based_on": "Leave Period",
+			"leave_period": self.leave_period.name,
+			"allocate_based_on_leave_policy": 0,
+			"leave_type": "Sick Leave",
+			"no_of_days": 5,
+		}
+		result = LeaveControlPanel(args).allocate_leave([self.emp1])
+
+		self.assertEqual(len(result["success"]), 1)
+		self.assertEqual(result["failure"], [])
+		self.assertEqual(
+			frappe.db.get_value(
+				"Leave Allocation", {"employee": self.emp1, "leave_type": "Sick Leave"}, "leave_period"
+			),
+			self.leave_period.name,
+		)

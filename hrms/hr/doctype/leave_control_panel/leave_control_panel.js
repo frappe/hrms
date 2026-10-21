@@ -209,7 +209,7 @@ frappe.ui.form.on("Leave Control Panel", {
 			freeze_message: __("Allocating Leave"),
 		}).then((r) => {
 			// don't refresh on complete failure
-			if (r.message.failed && !r.message.success) return;
+			if (r.message?.failure?.length && !r.message.success?.length) return;
 			frm.refresh();
 		});
 	},

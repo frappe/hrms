@@ -31,7 +31,18 @@ class EmployeeIncentive(Document):
 
 	def validate(self):
 		validate_active_employee(self.employee)
+		self.validate_company()
 		self.validate_salary_structure()
+
+	def validate_company(self):
+		company = frappe.db.get_value("Employee", self.employee, "company")
+		if company != self.company:
+			frappe.throw(
+				_("Employee {0} belongs to company {1}, not {2}").format(
+					frappe.bold(self.employee), frappe.bold(company), frappe.bold(self.company)
+				),
+				title=_("Company Mismatch"),
+			)
 
 	def validate_salary_structure(self):
 		if not frappe.db.exists("Salary Structure Assignment", {"employee": self.employee}):
@@ -55,3 +66,11 @@ class EmployeeIncentive(Document):
 		additional_salary.ref_doctype = self.doctype
 		additional_salary.ref_docname = self.name
 		additional_salary.submit()
+
+	def on_cancel(self):
+		additional_salary = frappe.db.get_value(
+			"Additional Salary",
+			{"ref_doctype": self.doctype, "ref_docname": self.name, "docstatus": 1},
+		)
+		if additional_salary:
+			frappe.get_doc("Additional Salary", additional_salary).cancel()

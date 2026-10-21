@@ -178,3 +178,15 @@ class TestSalaryRegister(HRMSTestSuite):
 		self.assertEqual(data[0][deduction_column["fieldname"]], 500)
 		self.assertEqual(data[0][contribution_column["fieldname"]], 1800)
 		self.assertEqual(data[0]["total_employer_contribution"], 1800)
+
+	def test_column_widths_are_set_by_fieldname(self):
+		salary_structure = self.create_structure_with_employer_contribution()
+		salary_slip = self.create_salary_slip(salary_structure.name, self.end_date)
+		self.assertIsNotNone(salary_slip.leave_without_pay)
+
+		columns, data = self.get_report()
+
+		widths = {column["fieldname"]: column.get("width") for column in columns}
+		self.assertEqual(widths["leave_without_pay"], 120)
+		self.assertEqual(widths["data_of_joining"], 80)
+		self.assertEqual(widths["end_date"], 80)

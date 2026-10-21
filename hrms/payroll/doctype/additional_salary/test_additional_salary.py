@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.utils import add_days, add_months, nowdate
+from frappe.utils import add_days, add_months, get_first_day, nowdate
 
 import erpnext
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -185,6 +185,96 @@ class TestAdditionalSalary(HRMSTestSuite):
 		)
 		with self.assertRaises(frappe.ValidationError):
 			additional_salary_doc.save()
+
+	def test_recurring_additional_salary_ending_mid_period(self):
+		emp_id = make_employee("test_additional@salary.com", company="_Test Company")
+		salary_structure = make_salary_structure(
+			"Test Salary Structure Additional Salary",
+			"Monthly",
+			employee=emp_id,
+			from_date=add_days(nowdate(), -50),
+			company="_Test Company",
+		)
+		create_salary_component("Recurring Salary Component")
+		recurring = frappe.get_doc(
+			{
+				"doctype": "Additional Salary",
+				"employee": emp_id,
+				"company": "_Test Company",
+				"currency": "INR",
+				"salary_component": "Recurring Salary Component",
+				"amount": 5000,
+				"is_recurring": 1,
+				"from_date": add_months(get_first_day(nowdate()), -1),
+				"to_date": add_days(get_first_day(nowdate()), 9),
+			}
+		).insert()
+		recurring.submit()
+
+		ss = make_employee_salary_slip(emp_id, "Monthly", salary_structure=salary_structure.name)
+		self.assertIn(
+			recurring.name,
+			[earning.additional_salary for earning in ss.earnings if earning.additional_salary],
+		)
+
+	def test_duplicate_overwrite_additional_salary_in_same_period(self):
+		emp_id = make_employee("test_additional@salary.com", company="_Test Company")
+		make_salary_structure(
+			"Test Salary Structure Additional Salary",
+			"Monthly",
+			employee=emp_id,
+			from_date=add_days(nowdate(), -50),
+			company="_Test Company",
+		)
+		month_start = get_first_day(nowdate())
+		get_additional_salary(emp_id, recurring=False, payroll_date=month_start, overwrite_salary_structure=1)
+
+		def additional_salary(**kwargs):
+			return frappe.get_doc(
+				{
+					"doctype": "Additional Salary",
+					"employee": emp_id,
+					"company": "_Test Company",
+					"currency": "INR",
+					"salary_component": "Recurring Salary Component",
+					"amount": 3000,
+					"overwrite_salary_structure_amount": 1,
+					**kwargs,
+				}
+			)
+
+		self.assertRaises(
+			frappe.ValidationError, additional_salary(payroll_date=add_days(month_start, 19)).save
+		)
+		self.assertRaises(
+			frappe.ValidationError,
+			additional_salary(
+				is_recurring=1, from_date=add_months(month_start, -1), to_date=add_months(month_start, 1)
+			).save,
+		)
+
+	def test_currency_must_match_salary_structure_assignment(self):
+		emp_id = make_employee("test_additional@salary.com", company="_Test Company")
+		make_salary_structure(
+			"Test Salary Structure Additional Salary",
+			"Monthly",
+			employee=emp_id,
+			from_date=add_days(nowdate(), -50),
+			company="_Test Company",
+		)
+		create_salary_component("Recurring Salary Component")
+		additional_salary = frappe.get_doc(
+			{
+				"doctype": "Additional Salary",
+				"employee": emp_id,
+				"company": "_Test Company",
+				"currency": "USD",
+				"salary_component": "Recurring Salary Component",
+				"amount": 100,
+				"payroll_date": nowdate(),
+			}
+		)
+		self.assertRaisesRegex(frappe.ValidationError, "Currency", additional_salary.save)
 
 
 def get_additional_salary(

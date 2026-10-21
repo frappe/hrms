@@ -21,6 +21,8 @@
    "fieldtype": "Link",
    "label": "Employee",
    "options": "Employee",
+   "reqd": 1,
+   "set_only_once": 1,
    "unique": 1
   },
   {
@@ -64,7 +66,7 @@
  ],
  "icon": "network",
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-10-19 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Skill Map",

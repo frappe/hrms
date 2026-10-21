@@ -89,15 +89,11 @@ class SalaryWithholding(Document):
 
 	@frappe.whitelist()
 	def set_withholding_cycles_and_to_date(self) -> None:
-		self.to_date = self.get_to_date()
-
-		cycle_from_date = cycle_to_date = getdate(self.from_date)
+		cycle_from_date = getdate(self.from_date)
 		self.cycles = []
 
-		while cycle_to_date < getdate(self.to_date):
-			cycle_to_date = add_to_date(cycle_from_date, **self.get_frequency_kwargs()) - relativedelta(
-				days=1
-			)
+		for _cycle in range(cint(self.number_of_withholding_cycles) or 1):
+			cycle_to_date = self.get_cycle_end_date(cycle_from_date)
 			self.append(
 				"cycles",
 				{
@@ -108,20 +104,22 @@ class SalaryWithholding(Document):
 			)
 			cycle_from_date = add_days(cycle_to_date, 1)
 
-	def get_to_date(self) -> str:
-		from_date = getdate(self.from_date)
-		kwargs = self.get_frequency_kwargs(self.number_of_withholding_cycles)
-		to_date = add_to_date(from_date, **kwargs) - relativedelta(days=1)
-		return to_date
+		self.to_date = cycle_to_date
 
-	def get_frequency_kwargs(self, withholding_cycles: int = 0) -> dict:
-		cycles = cint(withholding_cycles) or 1
+	def get_cycle_end_date(self, cycle_from_date: date) -> date:
+		if self.payroll_frequency == "Bimonthly":
+			from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
+
+			return getdate(get_start_end_dates("Bimonthly", cycle_from_date, self.company).end_date)
+
+		return add_to_date(cycle_from_date, **self.get_frequency_kwargs()) - relativedelta(days=1)
+
+	def get_frequency_kwargs(self) -> dict:
 		frequency_dict = {
-			"Monthly": {"months": 1 * cycles},
-			"Bimonthly": {"months": 2 * cycles},
-			"Fortnightly": {"days": 14 * cycles},
-			"Weekly": {"days": 7 * cycles},
-			"Daily": {"days": 1 * cycles},
+			"Monthly": {"months": 1},
+			"Fortnightly": {"days": 14},
+			"Weekly": {"days": 7},
+			"Daily": {"days": 1},
 		}
 		return frequency_dict.get(self.payroll_frequency)
 
@@ -203,14 +201,26 @@ def _update_payment_status_in_payroll(withholdings: list[dict], cancel: bool = F
 		)
 	).run()
 
-	employees = [withholding.employee for withholding in withholdings]
+	payroll_employees = frappe.get_all(
+		"Salary Slip",
+		filters={
+			"salary_withholding_cycle": ("in", [w.salary_withholding_cycle for w in withholdings]),
+			"docstatus": 1,
+		},
+		fields=["employee", "payroll_entry"],
+	)
 	is_salary_withheld = 1 if cancel else 0
 	PayrollEmployee = frappe.qb.DocType("Payroll Employee Detail")
-	(
-		frappe.qb.update(PayrollEmployee)
-		.set(PayrollEmployee.is_salary_withheld, is_salary_withheld)
-		.where(PayrollEmployee.employee.isin(employees))
-	).run()
+	for row in payroll_employees:
+		(
+			frappe.qb.update(PayrollEmployee)
+			.set(PayrollEmployee.is_salary_withheld, is_salary_withheld)
+			.where(
+				(PayrollEmployee.employee == row.employee)
+				& (PayrollEmployee.parent == row.payroll_entry)
+				& (PayrollEmployee.parenttype == "Payroll Entry")
+			)
+		).run()
 
 
 def _update_salary_withholdings(withholdings: list[dict], cancel: bool = False) -> None:

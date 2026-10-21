@@ -33,8 +33,19 @@ class RetentionBonus(Document):
 
 	def validate(self):
 		validate_active_employee(self.employee)
+		self.validate_company()
 		if getdate(self.bonus_payment_date) < getdate():
 			frappe.throw(_("Bonus Payment Date cannot be a past date"))
+
+	def validate_company(self):
+		company = frappe.db.get_value("Employee", self.employee, "company")
+		if company != self.company:
+			frappe.throw(
+				_("Employee {0} belongs to company {1}, not {2}").format(
+					frappe.bold(self.employee), frappe.bold(company), frappe.bold(self.company)
+				),
+				title=_("Company Mismatch"),
+			)
 
 	def on_submit(self):
 		company = frappe.db.get_value("Employee", self.employee, "company")
@@ -80,7 +91,6 @@ class RetentionBonus(Document):
 				"employee": self.employee,
 				"salary_component": self.salary_component,
 				"payroll_date": self.bonus_payment_date,
-				"company": self.company,
 				"docstatus": 1,
 				"ref_doctype": self.doctype,
 				"ref_docname": self.name,

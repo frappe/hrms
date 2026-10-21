@@ -242,7 +242,7 @@ def insert_shift(
 		"shift_type": shift_type,
 		"status": status,
 		"shift_location": shift_location,
-		"docstatus": ["!=", 2],
+		"docstatus": 1,
 	}
 	prev_shift = frappe.db.exists(dict({"end_date": add_days(start_date, -1)}, **filters))
 	next_shift = (
@@ -250,18 +250,23 @@ def insert_shift(
 	)
 
 	if prev_shift:
-		frappe.has_permission("Shift Assignment", "write", prev_shift, throw=True)
+		prev_shift_doc = frappe.get_doc("Shift Assignment", prev_shift)
+		prev_shift_doc.check_permission("write")
 		if next_shift:
 			frappe.has_permission("Shift Assignment", "write", next_shift, throw=True)
 			end_date = frappe.db.get_value("Shift Assignment", next_shift, "end_date")
 			frappe.has_permission("Shift Assignment", "delete", next_shift, throw=True)
 			frappe.db.set_value("Shift Assignment", next_shift, "docstatus", 2)
 			frappe.delete_doc("Shift Assignment", next_shift)
-		frappe.db.set_value("Shift Assignment", prev_shift, "end_date", end_date or None)
+		prev_shift_doc.end_date = end_date or None
+		prev_shift_doc.save()
 
 	elif next_shift:
-		frappe.has_permission("Shift Assignment", "write", next_shift, throw=True)
-		frappe.db.set_value("Shift Assignment", next_shift, "start_date", start_date)
+		next_shift_doc = frappe.get_doc("Shift Assignment", next_shift)
+		next_shift_doc.check_permission("write")
+		next_shift_doc.start_date = start_date
+		next_shift_doc.validate()
+		next_shift_doc.db_set("start_date", start_date)
 
 	else:
 		create_shift_assignment(employee, company, shift_type, start_date, end_date, status, shift_location)

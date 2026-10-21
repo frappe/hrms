@@ -156,10 +156,18 @@ class SalaryComponent(Document):
 		)
 
 	@frappe.whitelist(methods=["POST"])
-	def update_salary_structures(
-		self, field: str, value: str | int | float | None, structures: list | None = None
-	) -> None:
+	def update_salary_structures(self, field: str, structures: list | None = None) -> None:
+		if field not in ("condition", "formula"):
+			frappe.throw(_("Only Condition and Formula can be synced to Salary Structures"))
+
 		is_formula_related = field == "formula"
+		saved = frappe.db.get_value(
+			"Salary Component",
+			self.name,
+			["type", "condition", "formula", "amount_based_on_formula", "amount"],
+			as_dict=True,
+		)
+		value = saved.get(field)
 
 		if not structures:
 			structures = self.get_structures_to_be_updated()
@@ -175,7 +183,7 @@ class SalaryComponent(Document):
 			salary_detail_row = next(
 				(
 					d
-					for d in salary_structure.get(COMPONENT_TYPE_TO_PARENTFIELD[self.type])
+					for d in salary_structure.get(COMPONENT_TYPE_TO_PARENTFIELD[saved.type])
 					if d.salary_component == self.name
 				),
 				None,
@@ -184,8 +192,10 @@ class SalaryComponent(Document):
 				continue
 
 			if is_formula_related:
-				value = value if self.amount_based_on_formula else None
-				salary_detail_row.set("amount_based_on_formula", self.amount_based_on_formula)
+				value = value if saved.amount_based_on_formula else None
+				salary_detail_row.set("amount_based_on_formula", saved.amount_based_on_formula)
+				if not saved.amount_based_on_formula:
+					salary_detail_row.set("amount", saved.amount)
 
 			salary_detail_row.set(field, value)
 			salary_structure.db_update_all()

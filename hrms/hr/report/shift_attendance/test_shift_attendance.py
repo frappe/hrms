@@ -273,6 +273,49 @@ class TestShiftAttendance(HRMSTestSuite):
 		self.assertEqual(chart_data.late_entries, 3)
 		self.assertEqual(chart_data.early_exits, 2)
 
+	def test_late_entry_and_early_exit_filters_without_grace_period(self):
+		frappe.db.set_value(
+			"Attendance", {"employee": self.emp1, "attendance_date": date(2023, 1, 2)}, "late_entry", 0
+		)
+		frappe.db.set_value(
+			"Attendance", {"employee": self.emp1, "attendance_date": date(2023, 1, 3)}, "early_exit", 0
+		)
+		filters = frappe._dict(
+			{
+				"company": "_Test Company",
+				"from_date": date(2023, 1, 1),
+				"to_date": date(2023, 1, 3),
+				"employee": self.emp1,
+			}
+		)
+
+		def get_dates(**kwargs):
+			return [d.attendance_date for d in execute(frappe._dict({**filters, **kwargs}))[1]]
+
+		self.assertEqual(get_dates(late_entry=1, consider_grace_period=1), [])
+		self.assertEqual(get_dates(late_entry=1), [date(2023, 1, 2)])
+		self.assertEqual(get_dates(early_exit=1, consider_grace_period=1), [])
+		self.assertEqual(get_dates(early_exit=1), [date(2023, 1, 3)])
+
+	def test_work_from_home_and_leave_are_not_absent_records(self):
+		emp = make_employee("test_shift_report_wfh@example.com", company="_Test Company")
+		mark_attendance(emp, date(2023, 1, 1), "Work From Home", "Shift 1")
+		mark_attendance(emp, date(2023, 1, 2), "On Leave", "Shift 1")
+
+		filters = frappe._dict(
+			{
+				"company": "_Test Company",
+				"from_date": date(2023, 1, 1),
+				"to_date": date(2023, 1, 3),
+				"employee": emp,
+				"include_attendance_without_checkins": 1,
+			}
+		)
+		chart_data = get_chart_data(execute(filters))
+		self.assertEqual(chart_data.total_records, 2)
+		self.assertEqual(chart_data.present_records, 1)
+		self.assertEqual(chart_data.absent_records, 0)
+
 
 def get_chart_data(report):
 	return frappe._dict(

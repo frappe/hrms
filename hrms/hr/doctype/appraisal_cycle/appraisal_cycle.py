@@ -40,6 +40,40 @@ class AppraisalCycle(Document):
 	def validate(self):
 		self.validate_from_to_dates("start_date", "end_date")
 		self.validate_evaluation_method_change()
+		self.validate_final_score_formula()
+		self.validate_appraisee_company()
+
+	def validate_final_score_formula(self):
+		if self.calculate_final_score_based_on_formula and not (self.final_score_formula or "").strip():
+			frappe.throw(
+				_("{0} is mandatory when {1} is enabled").format(
+					frappe.bold(_(self.meta.get_label("final_score_formula"))),
+					frappe.bold(_(self.meta.get_label("calculate_final_score_based_on_formula"))),
+				),
+				frappe.MandatoryError,
+			)
+
+	def validate_appraisee_company(self):
+		employees = {row.employee for row in self.appraisees if row.employee}
+		doc_before_save = self.get_doc_before_save()
+		if doc_before_save and not self.has_value_changed("company"):
+			employees -= {row.employee for row in doc_before_save.appraisees}
+
+		if not employees:
+			return
+
+		other_company = frappe.get_all(
+			"Employee",
+			filters={"name": ("in", list(employees)), "company": ("!=", self.company)},
+			pluck="name",
+		)
+		if other_company:
+			frappe.throw(
+				_("Employees {0} do not belong to company {1}").format(
+					", ".join(frappe.bold(e) for e in other_company), frappe.bold(self.company)
+				),
+				title=_("Invalid Appraisees"),
+			)
 
 	def validate_evaluation_method_change(self):
 		if self.is_new():

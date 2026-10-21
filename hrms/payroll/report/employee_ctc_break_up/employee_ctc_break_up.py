@@ -3,11 +3,13 @@
 
 import frappe
 from frappe import _
-from frappe.utils import flt, get_link_to_form, has_common
+from frappe.utils import add_days, flt, get_link_to_form, getdate, has_common
 from frappe.utils.formatters import fmt_money
 from frappe.utils.jinja import render_template
 
+from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
 from hrms.payroll.doctype.salary_structure.salary_structure import _make_salary_slip
+from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import PERIODS_PER_YEAR
 
 
 class SalaryBreakupReport:
@@ -15,32 +17,40 @@ class SalaryBreakupReport:
 		self.employee = employee
 		self.salary_structure_assignment = salary_structure_assignment
 
-		self.salary_structure, self.currency, self.assignment_date, self.income_tax_slab, self.ctc = (
-			frappe.get_value(
-				"Salary Structure Assignment",
-				{"name": salary_structure_assignment, "employee": employee},
-				["salary_structure", "currency", "from_date", "income_tax_slab", "ctc"],
-			)
+		assignment = frappe.get_value(
+			"Salary Structure Assignment",
+			{"name": salary_structure_assignment, "employee": employee, "docstatus": 1},
+			["salary_structure", "currency", "from_date", "income_tax_slab", "ctc", "company"],
 		)
+		if not assignment:
+			frappe.throw(
+				_("Salary Structure Assignment {0} does not belong to employee {1}").format(
+					frappe.bold(salary_structure_assignment), frappe.bold(employee)
+				),
+				title=_("Invalid Salary Structure Assignment"),
+			)
+
+		(
+			self.salary_structure,
+			self.currency,
+			self.assignment_date,
+			self.income_tax_slab,
+			self.ctc,
+			self.company,
+		) = assignment
 		self.validate_ctc()
 		self.salary_slip = _make_salary_slip(
 			self.salary_structure,
 			employee=self.employee,
 			for_preview=1,
 			as_print=False,
-			posting_date=frappe.flags.posting_date if frappe.flags.in_test else None,
+			posting_date=self.get_preview_posting_date(),
 			ignore_permissions=True,
 		)
 		self.net_pay = self.salary_slip.net_pay
 		self.gross_pay = self.salary_slip.gross_pay
 		self.payroll_frequency = self.salary_slip.payroll_frequency
-		self.cycle_multiplier = {
-			"Monthly": 12,
-			"Fortnightly": 24,
-			"Bimonthly": 6,
-			"Weekly": 52,
-			"Daily": 365,
-		}.get(self.payroll_frequency)
+		self.cycle_multiplier = PERIODS_PER_YEAR.get(self.payroll_frequency)
 		self.salary_components = []
 		self.earning_components = []
 		self.deduction_components = []
@@ -48,6 +58,37 @@ class SalaryBreakupReport:
 		self.employer_contribution_components = []
 		self.total_net_earnings = []
 		self.total_gross_earnings = []
+
+	def get_preview_posting_date(self):
+		if frappe.flags.in_test and frappe.flags.posting_date:
+			return frappe.flags.posting_date
+
+		assignment_date = getdate(self.assignment_date)
+		next_assignment_date = frappe.db.get_value(
+			"Salary Structure Assignment",
+			{"employee": self.employee, "docstatus": 1, "from_date": (">", assignment_date)},
+			"from_date",
+			order_by="from_date asc",
+		)
+		relieving_date = frappe.db.get_value("Employee", self.employee, "relieving_date")
+		valid_till = min(
+			(getdate(d) for d in (next_assignment_date, relieving_date and add_days(relieving_date, 1)) if d),
+			default=None,
+		)
+
+		today = getdate()
+		posting_date = (
+			today if assignment_date <= today and (not valid_till or today < valid_till) else assignment_date
+		)
+
+		frequency = frappe.get_cached_value("Salary Structure", self.salary_structure, "payroll_frequency")
+		cycle = get_start_end_dates(frequency, posting_date, self.company)
+		if getdate(cycle.start_date) < assignment_date:
+			next_cycle_start = add_days(cycle.end_date, 1)
+			if not valid_till or next_cycle_start < valid_till:
+				return next_cycle_start
+
+		return posting_date
 
 	def validate_ctc(self):
 		if not self.ctc:
@@ -344,7 +385,7 @@ def execute(filters: dict | None = None):
 			title=_("Missing value for filters"),
 		)
 
-	validate_employee_access(employee)
+	validate_employee_access(employee, salary_structure_assignment)
 
 	salary_breakup_report = SalaryBreakupReport(employee, salary_structure_assignment)
 
@@ -357,11 +398,15 @@ def execute(filters: dict | None = None):
 ROLES_ALLOWED_TO_VIEW_ANY_EMPLOYEE = ("System Manager", "HR Manager", "HR User")
 
 
-def validate_employee_access(employee: str):
-	can_view_any_employee = has_common(ROLES_ALLOWED_TO_VIEW_ANY_EMPLOYEE, frappe.get_roles())
+def validate_employee_access(employee: str, salary_structure_assignment: str):
 	is_own_record = frappe.db.get_value("Employee", employee, "user_id") == frappe.session.user
+	can_view_employee = (
+		has_common(ROLES_ALLOWED_TO_VIEW_ANY_EMPLOYEE, frappe.get_roles())
+		and frappe.has_permission("Employee", doc=employee)
+		and frappe.has_permission("Salary Structure Assignment", doc=salary_structure_assignment)
+	)
 
-	if not can_view_any_employee and not is_own_record:
+	if not can_view_employee and not is_own_record:
 		frappe.throw(
 			_("You are not permitted to access the CTC report of another employee."),
 			frappe.PermissionError,

@@ -7,12 +7,15 @@ import datetime
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.query_builder.functions import Avg
-from frappe.utils import cint, cstr, get_datetime, get_link_to_form, getdate, nowtime
+from frappe.query_builder.functions import Avg, Timestamp
+from frappe.utils import cint, cstr, get_datetime, get_link_to_form, get_time, getdate, now_datetime
 
 
 class DuplicateInterviewRoundError(frappe.ValidationError):
 	pass
+
+
+INTERVIEW_MANAGER_ROLES = ("HR Manager", "HR User", "System Manager")
 
 
 class Interview(Document):
@@ -46,6 +49,12 @@ class Interview(Document):
 	def validate(self):
 		self.validate_duplicate_interview()
 		self.validate_designation()
+		if self.is_new() or self.has_value_changed("from_time") or self.has_value_changed("to_time"):
+			validate_interview_time(self.from_time, self.to_time)
+		if self.is_new() or any(
+			self.has_value_changed(field) for field in ("scheduled_on", "from_time", "to_time")
+		):
+			self.show_overlap_warning(self.scheduled_on, self.from_time, self.to_time)
 
 	def on_submit(self):
 		if self.status not in ["Cleared", "Rejected"]:
@@ -54,6 +63,9 @@ class Interview(Document):
 				title=_("Not Allowed"),
 			)
 		self.show_job_applicant_update_dialog()
+
+	def on_cancel(self):
+		self.db_set("status", "Cancelled")
 
 	def validate_duplicate_interview(self):
 		duplicate_interview = frappe.db.exists(
@@ -69,6 +81,49 @@ class Interview(Document):
 					frappe.bold(get_link_to_form("Interview", duplicate_interview)),
 					frappe.bold(self.job_applicant),
 				)
+			)
+
+	def show_overlap_warning(self, scheduled_on, from_time, to_time):
+		if not (scheduled_on and from_time and to_time):
+			return
+
+		Interview = frappe.qb.DocType("Interview")
+		InterviewDetail = frappe.qb.DocType("Interview Detail")
+		interviewers = [d.interviewer for d in self.interview_details if d.interviewer]
+
+		panel_overlap = Interview.job_applicant == self.job_applicant
+		if interviewers:
+			panel_overlap |= Interview.name.isin(
+				frappe.qb.from_(InterviewDetail)
+				.select(InterviewDetail.parent)
+				.where(
+					(InterviewDetail.parenttype == "Interview")
+					& (InterviewDetail.interviewer.isin(interviewers))
+				)
+			)
+
+		overlap = (
+			frappe.qb.from_(Interview)
+			.select(Interview.name)
+			.where(
+				(Interview.name != (self.name or ""))
+				& (Interview.docstatus != 2)
+				& (Interview.status != "Cancelled")
+				& (Interview.scheduled_on == getdate(scheduled_on))
+				& (Interview.from_time < get_time(to_time))
+				& (Interview.to_time > get_time(from_time))
+				& panel_overlap
+			)
+			.limit(1)
+		).run(pluck=True)
+
+		if overlap:
+			frappe.msgprint(
+				_("This interview overlaps with {0} for the same applicant or interviewer.").format(
+					get_link_to_form("Interview", overlap[0])
+				),
+				indicator="orange",
+				title=_("Overlapping Interview"),
 			)
 
 	def validate_designation(self):
@@ -111,7 +166,19 @@ class Interview(Document):
 	def reschedule_interview(
 		self, scheduled_on: datetime.date, from_time: datetime.time, to_time: datetime.time
 	) -> None:
-		if scheduled_on == self.scheduled_on and from_time == self.from_time and to_time == self.to_time:
+		self.check_permission("write")
+		docstatus, status = frappe.db.get_value("Interview", self.name, ["docstatus", "status"])
+		if docstatus != 0 or status != "Pending":
+			frappe.throw(_("Only Interviews in draft with Pending status can be rescheduled."))
+
+		validate_interview_time(from_time, to_time)
+		self.show_overlap_warning(scheduled_on, from_time, to_time)
+
+		if (
+			getdate(scheduled_on) == getdate(self.scheduled_on)
+			and get_time(from_time) == get_time(self.from_time)
+			and get_time(to_time) == get_time(self.to_time)
+		):
 			frappe.msgprint(
 				_("No changes found in timings."), indicator="orange", title=_("Interview Not Rescheduled")
 			)
@@ -121,7 +188,7 @@ class Interview(Document):
 		original_from_time = self.from_time
 		original_to_time = self.to_time
 
-		self.db_set({"scheduled_on": scheduled_on, "from_time": from_time, "to_time": to_time})
+		self.db_set({"scheduled_on": scheduled_on, "from_time": from_time, "to_time": to_time, "reminded": 0})
 		self.notify_update()
 
 		recipients = get_recipients(self.name)
@@ -154,6 +221,53 @@ class Interview(Document):
 		self.db_set("status", "Cancelled")
 
 
+def is_panel_restricted(user):
+	roles = frappe.get_roles(user)
+	return "Interviewer" in roles and not set(roles).intersection(INTERVIEW_MANAGER_ROLES)
+
+
+def get_panel_interviews_condition(user, interview_field):
+	return (
+		f"{interview_field} in (select `parent` from `tabInterview Detail`"
+		f" where `parenttype` = 'Interview' and `interviewer` = {frappe.db.escape(user)})"
+	)
+
+
+def get_permission_query_conditions(user: str | None = None) -> str:
+	user = user or frappe.session.user
+	if not is_panel_restricted(user):
+		return ""
+	return get_panel_interviews_condition(user, "`tabInterview`.`name`")
+
+
+def has_permission(doc, ptype=None, user=None) -> bool:
+	user = user or frappe.session.user
+	if not is_panel_restricted(user):
+		return True
+	if doc.is_new():
+		return any(d.interviewer == user for d in doc.get("interview_details", []))
+	return bool(frappe.db.exists("Interview Detail", {"parent": doc.name, "interviewer": user}))
+
+
+def get_feedback_permission_query_conditions(user: str | None = None) -> str:
+	user = user or frappe.session.user
+	if not is_panel_restricted(user):
+		return ""
+	return get_panel_interviews_condition(user, "`tabInterview Feedback`.`interview`")
+
+
+def has_feedback_permission(doc, ptype=None, user=None) -> bool:
+	user = user or frappe.session.user
+	if not is_panel_restricted(user):
+		return True
+	return bool(frappe.db.exists("Interview Detail", {"parent": doc.interview, "interviewer": user}))
+
+
+def validate_interview_time(from_time, to_time):
+	if from_time and to_time and get_time(to_time) <= get_time(from_time):
+		frappe.throw(_("To Time must be later than From Time."), title=_("Invalid Time"))
+
+
 @frappe.whitelist()
 def get_interviewers(interview_type: str) -> list[dict]:
 	frappe.has_permission("Interview Type", "read", interview_type, throw=True)
@@ -179,6 +293,7 @@ def get_recipients(name, for_feedback=0):
 @frappe.whitelist()
 def get_feedback(interview: str) -> list[dict]:
 	frappe.has_permission("Interview Feedback", "read", throw=True)
+	frappe.has_permission("Interview", "read", interview, throw=True)
 
 	interview_feedback = frappe.qb.DocType("Interview Feedback")
 	employee = frappe.qb.DocType("Employee")
@@ -257,19 +372,22 @@ def send_interview_reminder():
 
 	remind_before = cstr(frappe.db.get_single_value("HR Settings", "remind_before")) or "01:00:00"
 	remind_before = datetime.datetime.strptime(remind_before, "%H:%M:%S")
-	reminder_date_time = datetime.datetime.now() + datetime.timedelta(
+	now = now_datetime()
+	reminder_date_time = now + datetime.timedelta(
 		hours=remind_before.hour, minutes=remind_before.minute, seconds=remind_before.second
 	)
 
-	interviews = frappe.get_all(
-		"Interview",
-		filters=[
-			["scheduled_on", "between", [datetime.datetime.now(), reminder_date_time]],
-			["status", "=", "Pending"],
-			["reminded", "=", 0],
-			["docstatus", "!=", 2],
-		],
-	)
+	Interview = frappe.qb.DocType("Interview")
+	interviews = (
+		frappe.qb.from_(Interview)
+		.select(Interview.name)
+		.where(
+			(Timestamp(Interview.scheduled_on, Interview.from_time)[now:reminder_date_time])
+			& (Interview.status == "Pending")
+			& (Interview.reminded == 0)
+			& (Interview.docstatus != 2)
+		)
+	).run(as_dict=True)
 
 	interview_template = frappe.get_doc("Email Template", reminder_settings.interview_reminder_template)
 
@@ -310,16 +428,16 @@ def send_daily_feedback_reminder():
 		"Email Template", reminder_settings.feedback_reminder_notification_template
 	)
 
-	interviews = frappe.get_all(
-		"Interview",
-		filters={
-			"status": "Under Review",
-			"docstatus": ["!=", 2],
-			"scheduled_on": ["<=", getdate()],
-			"to_time": ["<=", nowtime()],
-		},
-		pluck="name",
-	)
+	Interview = frappe.qb.DocType("Interview")
+	interviews = (
+		frappe.qb.from_(Interview)
+		.select(Interview.name)
+		.where(
+			(Interview.status.isin(["Pending", "Under Review"]))
+			& (Interview.docstatus != 2)
+			& (Timestamp(Interview.scheduled_on, Interview.to_time) <= now_datetime())
+		)
+	).run(pluck=True)
 
 	for interview in interviews:
 		recipients = get_recipients(interview, for_feedback=1)
@@ -352,8 +470,7 @@ def get_expected_skill_set(interview_type: str):
 def create_interview_feedback(data: str | dict, interview_name: str, interviewer: str, job_applicant: str):
 	import json
 
-	if isinstance(data, str):
-		data = frappe._dict(json.loads(data))
+	data = frappe._dict(json.loads(data) if isinstance(data, str) else data)
 
 	if frappe.session.user != interviewer:
 		frappe.throw(_("Only Interviewer Are allowed to submit Interview Feedback"))
@@ -424,6 +541,8 @@ def get_events(start: str, end: str, filters: str | None = None):
 	}
 
 	conditions = get_event_conditions("Interview", filters)
+	if panel_condition := get_permission_query_conditions():
+		conditions += f" and {panel_condition}"
 
 	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
 	interviews = frappe.db.sql(

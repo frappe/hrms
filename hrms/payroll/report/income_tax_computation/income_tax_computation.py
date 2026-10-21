@@ -72,6 +72,8 @@ class IncomeTaxComputationReport:
 					continue
 
 				d.update(ss_assignments[d.employee])
+				d.total_exemption = 0.0
+				d.non_taxable_earnings = 0.0
 				self.employees.setdefault(d.employee, d)
 
 		if not self.employees:
@@ -80,10 +82,11 @@ class IncomeTaxComputationReport:
 	def get_employee_filters(self):
 		filters = {"company": self.filters.company}
 		if self.filters.employee:
-			filters = {"name": self.filters.employee}
-		elif self.filters.department:
-			filters.update({"department": self.filters.department})
-		elif self.filters.employee_status:
+			return {"name": self.filters.employee}
+
+		if self.filters.department:
+			filters["department"] = self.filters.department
+		if self.filters.employee_status:
 			filters["status"] = self.filters.employee_status
 
 		return filters
@@ -94,11 +97,12 @@ class IncomeTaxComputationReport:
 			filters={
 				"employee": ["in", employees],
 				"docstatus": 1,
-				"salary_structure": ["is", "set"],
-				"income_tax_slab": ["is", "set"],
+				"from_date": ["<=", self.payroll_period_end_date],
 			},
 			fields=[
 				"employee",
+				"company",
+				"currency",
 				"from_date",
 				"income_tax_slab",
 				"salary_structure",
@@ -108,33 +112,52 @@ class IncomeTaxComputationReport:
 			order_by="from_date desc",
 		)
 
-		employee_ss_assignments = frappe._dict()
+		assignments_by_employee = frappe._dict()
 		for d in ss_assignments:
-			if d.employee not in list(employee_ss_assignments.keys()):
+			assignments_by_employee.setdefault(d.employee, []).append(d)
+
+		employee_ss_assignments = frappe._dict()
+		for employee, assignments in assignments_by_employee.items():
+			for d in assignments:
+				if not (d.salary_structure and d.income_tax_slab):
+					continue
+
 				tax_slab = frappe.get_cached_value(
 					"Income Tax Slab", d.income_tax_slab, ["allow_tax_exemption", "disabled"], as_dict=1
 				)
+				if not tax_slab or tax_slab.disabled:
+					continue
 
-				if tax_slab and not tax_slab.disabled:
-					# opening entries are valid only when the SSA was created within the payroll period
-					opening_entries_applicable = getdate(d.from_date) >= getdate(
-						self.payroll_period_start_date
-					)
-					employee_ss_assignments.setdefault(
-						d.employee,
-						{
-							"salary_structure": d.salary_structure,
-							"income_tax_slab": d.income_tax_slab,
-							"allow_tax_exemption": tax_slab.allow_tax_exemption,
-							"taxable_earnings_till_date": flt(d.taxable_earnings_till_date)
-							if opening_entries_applicable
-							else 0.0,
-							"tax_deducted_till_date": flt(d.tax_deducted_till_date)
-							if opening_entries_applicable
-							else 0.0,
-						},
-					)
+				employee_ss_assignments[employee] = {
+					"salary_structure": d.salary_structure,
+					"currency": d.currency,
+					"income_tax_slab": d.income_tax_slab,
+					"allow_tax_exemption": tax_slab.allow_tax_exemption,
+					"first_assignment_date": assignments[-1].from_date,
+					"taxable_earnings_till_date": self.get_opening_for(
+						"taxable_earnings_till_date", d, assignments
+					),
+					"tax_deducted_till_date": self.get_opening_for("tax_deducted_till_date", d, assignments),
+				}
+				break
+
 		return employee_ss_assignments
+
+	def get_opening_for(self, fieldname, assignment, assignments):
+		# opening entries are valid only when the SSA was created within the payroll period
+		if getdate(assignment.from_date) < getdate(self.payroll_period_start_date):
+			return 0.0
+
+		if flt(assignment.get(fieldname)):
+			return flt(assignment.get(fieldname))
+
+		for d in reversed(assignments):
+			if d.company == assignment.company and getdate(d.from_date) >= getdate(
+				self.payroll_period_start_date
+			):
+				return flt(d.get(fieldname))
+
+		return 0.0
 
 	def get_future_salary_slips(self):
 		self.future_salary_slips = frappe._dict()
@@ -147,11 +170,15 @@ class IncomeTaxComputationReport:
 			if last_ss:
 				ss_start_date = add_days(last_ss.end_date, 1)
 			else:
-				ss_start_date = self.payroll_period_start_date
+				ss_start_date = self.get_first_salary_slip_start_date(employee)
+				salary_structure = self.employees[employee].get("salary_structure")
 				last_ss = frappe._dict(
 					{
-						"payroll_frequency": "Monthly",
-						"salary_structure": self.employees[employee].get("salary_structure"),
+						"payroll_frequency": frappe.get_cached_value(
+							"Salary Structure", salary_structure, "payroll_frequency"
+						)
+						or "Monthly",
+						"salary_structure": salary_structure,
 					}
 				)
 
@@ -175,6 +202,14 @@ class IncomeTaxComputationReport:
 
 				ss_start_date = add_days(ss_end_date, 1)
 
+	def get_first_salary_slip_start_date(self, employee):
+		emp_details = self.employees[employee]
+		return max(
+			getdate(self.payroll_period_start_date),
+			getdate(emp_details.date_of_joining),
+			getdate(emp_details.first_assignment_date),
+		)
+
 	def get_last_salary_slip(self, employee):
 		last_salary_slip = frappe.db.get_value(
 			"Salary Slip",
@@ -196,7 +231,7 @@ class IncomeTaxComputationReport:
 		existing_ss = frappe._dict(
 			(
 				frappe.qb.from_(ss)
-				.select(ss.employee, Sum(ss.base_gross_pay).as_("amount"))
+				.select(ss.employee, Sum(ss.gross_pay).as_("amount"))
 				.where(ss.docstatus == 1)
 				.where(ss.employee.isin(list(self.employees.keys())))
 				.where(ss.start_date >= self.payroll_period_start_date)
@@ -217,7 +252,7 @@ class IncomeTaxComputationReport:
 	def get_future_earnings(self, employee):
 		future_earnings = 0.0
 		for ss in self.future_salary_slips.get(employee, []):
-			future_earnings += flt(ss.base_gross_pay)
+			future_earnings += flt(ss.gross_pay)
 
 		return future_earnings
 
@@ -249,6 +284,8 @@ class IncomeTaxComputationReport:
 		for d in records:
 			existing_ss_exemptions.setdefault(d.employee, {}).setdefault(scrub(d.salary_component), d.amount)
 
+		non_taxable_earnings = {scrub(d) for d in self.nontaxable_earning_components}
+
 		for employee in list(self.employees.keys()):
 			if not self.employees[employee]["allow_tax_exemption"]:
 				continue
@@ -257,9 +294,10 @@ class IncomeTaxComputationReport:
 			self.add_exemptions_from_future_salary_slips(employee, exemptions)
 			self.employees[employee].update(exemptions)
 
-			total_exemptions = sum(list(exemptions.values()))
-			self.employees[employee]["total_exemption"] = 0
-			self.employees[employee]["total_exemption"] += total_exemptions
+			self.employees[employee]["total_exemption"] += sum(list(exemptions.values()))
+			self.employees[employee]["non_taxable_earnings"] = sum(
+				amount for component, amount in exemptions.items() if component in non_taxable_earnings
+			)
 
 	def add_exemptions_from_future_salary_slips(self, employee, exemptions):
 		for ss in self.future_salary_slips.get(employee, []):
@@ -277,7 +315,7 @@ class IncomeTaxComputationReport:
 
 	def get_tax_exempted_components(self):
 		# nontaxable earning components
-		nontaxable_earning_components = [
+		self.nontaxable_earning_components = nontaxable_earning_components = [
 			d.name
 			for d in frappe.get_all(
 				"Salary Component", {"type": "Earning", "is_tax_applicable": 0, "disabled": 0}
@@ -406,20 +444,13 @@ class IncomeTaxComputationReport:
 	def get_standard_tax_exemption(self):
 		self.add_column("Standard Tax Exemption")
 
-		standard_exemptions_per_slab = dict(
-			frappe.get_all(
-				"Income Tax Slab",
-				filters={"company": self.filters.company, "docstatus": 1, "disabled": 0},
-				fields=["name", "standard_tax_exemption_amount"],
-				as_list=1,
-			)
-		)
-
 		for emp_details in self.employees.values():
-			income_tax_slab = emp_details.get("income_tax_slab")
-			standard_exemption = standard_exemptions_per_slab.get(income_tax_slab, 0)
+			standard_exemption = flt(
+				frappe.get_cached_value(
+					"Income Tax Slab", emp_details.income_tax_slab, "standard_tax_exemption_amount"
+				)
+			)
 			emp_details["standard_tax_exemption"] = standard_exemption
-			emp_details.setdefault("total_exemption", 0)
 			emp_details["total_exemption"] += standard_exemption
 
 		self.add_column("Total Exemption")
@@ -454,8 +485,9 @@ class IncomeTaxComputationReport:
 			) = 0.0
 
 			last_ss = self.get_last_salary_slip(employee)
+			future_salary_slips = self.future_salary_slips.get(employee, [])
 
-			if last_ss and last_ss.end_date == self.payroll_period_end_date:
+			if last_ss and (last_ss.end_date == self.payroll_period_end_date or not future_salary_slips):
 				(
 					annual_taxable_amount,
 					tax_exemption_declaration,
@@ -471,14 +503,12 @@ class IncomeTaxComputationReport:
 						"standard_tax_exemption_amount",
 					],
 				)
-			else:
-				future_salary_slips = self.future_salary_slips.get(employee, [])
-				if future_salary_slips:
-					last_ss = future_salary_slips[0]
-					annual_taxable_amount = last_ss.get("annual_taxable_amount", 0.0)
-					tax_exemption_declaration = last_ss.get("tax_exemption_declaration", 0.0)
-					standard_tax_exemption_amount = last_ss.get("standard_tax_exemption_amount", 0.0)
-					deductions_before_tax_calculation = last_ss.get("deductions_before_tax_calculation", 0.0)
+			elif future_salary_slips:
+				last_ss = future_salary_slips[0]
+				annual_taxable_amount = last_ss.get("annual_taxable_amount", 0.0)
+				tax_exemption_declaration = last_ss.get("tax_exemption_declaration", 0.0)
+				standard_tax_exemption_amount = last_ss.get("standard_tax_exemption_amount", 0.0)
+				deductions_before_tax_calculation = last_ss.get("deductions_before_tax_calculation", 0.0)
 
 			if annual_taxable_amount:
 				# Remove exemptions already factored into salary slip so that report can apply its own logic (declaration vs proof)
@@ -487,7 +517,7 @@ class IncomeTaxComputationReport:
 					+ flt(tax_exemption_declaration)
 					+ flt(standard_tax_exemption_amount)
 					+ flt(deductions_before_tax_calculation)
-					- emp_details["total_exemption"]
+					- (emp_details["total_exemption"] - emp_details["non_taxable_earnings"])
 				)
 
 			emp_details["total_taxable_amount"] = total_taxable_amount
@@ -535,14 +565,17 @@ class IncomeTaxComputationReport:
 			salary_slip = frappe.new_doc("Salary Slip")
 			salary_slip.employee = emp
 			salary_slip.salary_structure = emp_details.salary_structure
-			salary_slip.start_date = max(self.payroll_period_start_date, emp_details.date_of_joining)
+			salary_slip.start_date = self.get_first_salary_slip_start_date(emp)
 			salary_slip.payroll_frequency = frappe.db.get_value(
 				"Salary Structure", emp_details.salary_structure, "payroll_frequency"
 			)
 			salary_slip.end_date = get_start_end_dates(
 				salary_slip.payroll_frequency, salary_slip.start_date
 			).end_date
-			salary_slip.process_salary_structure()
+			try:
+				salary_slip.process_salary_structure()
+			except frappe.ValidationError:
+				return None, None
 
 		eval_locals, __ = salary_slip.get_data_for_eval()
 
@@ -560,6 +593,10 @@ class IncomeTaxComputationReport:
 			.where(SalaryComponent.type == "Deduction")
 			.where(SalaryComponent.disabled == 0)
 		).run(pluck="name")
+
+		for emp_details in self.employees.values():
+			emp_details["total_tax_deducted"] = flt(emp_details.get("tax_deducted_till_date"))
+
 		if not tax_components:
 			return []
 
@@ -583,8 +620,7 @@ class IncomeTaxComputationReport:
 		).run(as_dict=True)
 
 		for d in records:
-			total_tax_deducted = flt(self.employees[d.employee].get("tax_deducted_till_date", 0)) + d.amount
-			self.employees[d.employee].setdefault("total_tax_deducted", total_tax_deducted)
+			self.employees[d.employee]["total_tax_deducted"] += flt(d.amount)
 
 	def get_payable_tax(self):
 		self.add_column("Payable Tax")
@@ -596,11 +632,12 @@ class IncomeTaxComputationReport:
 			emp_details["payable_tax"] = payable_tax
 
 	def add_column(self, label, fieldname=None, fieldtype=None, options=None, width=None):
+		fieldtype = fieldtype or "Currency"
 		col = {
 			"label": _(label),
 			"fieldname": fieldname or scrub(label),
-			"fieldtype": fieldtype or "Currency",
-			"options": options,
+			"fieldtype": fieldtype,
+			"options": options or ("currency" if fieldtype == "Currency" else None),
 			"width": width or "140px",
 		}
 		self.columns.append(col)
@@ -643,9 +680,17 @@ class IncomeTaxComputationReport:
 				"width": "140px",
 			},
 			{
+				"label": _("Currency"),
+				"fieldname": "currency",
+				"fieldtype": "Link",
+				"options": "Currency",
+				"width": "90px",
+			},
+			{
 				"label": _("Gross Earnings"),
 				"fieldname": "gross_earnings",
 				"fieldtype": "Currency",
+				"options": "currency",
 				"width": "140px",
 			},
 		]

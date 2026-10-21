@@ -1,5 +1,5 @@
 import frappe
-from frappe.utils import add_months, flt, get_year_start, getdate
+from frappe.utils import add_months, flt, get_first_day, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
@@ -10,7 +10,11 @@ from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 	create_salary_structure_assignment,
 	make_salary_structure,
 )
-from hrms.payroll.report.employee_ctc_break_up.employee_ctc_break_up import SalaryBreakupReport
+from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import PERIODS_PER_YEAR
+from hrms.payroll.report.employee_ctc_break_up.employee_ctc_break_up import (
+	SalaryBreakupReport,
+	validate_employee_access,
+)
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -53,7 +57,7 @@ class TestEmployeeCTCBreakup(HRMSTestSuite):
 				"currency": "USD",
 				# test
 				"annual_ctc": "$ 648,000.00",
-				"per_cycle_ctc": 27000,
+				"per_cycle_ctc": 24923.08,
 				"gross_pay": 27000,
 				"net_pay": 26800,  # gross pay - professional tax
 			},
@@ -76,6 +80,7 @@ class TestEmployeeCTCBreakup(HRMSTestSuite):
 			self.assertEqual(ctc_breakup.get_per_cycle_ctc(), data["per_cycle_ctc"])
 			self.assertEqual(ctc_breakup.gross_pay, data["gross_pay"])
 			self.assertEqual(ctc_breakup.net_pay, data["net_pay"])
+			self.assertEqual(ctc_breakup.cycle_multiplier, PERIODS_PER_YEAR[payroll_frequency])
 
 	def test_income_tax_net_pay_calculation_at_the_start_of_payroll_period(self):
 		employee = make_employee("test_ctc@example.com", company="_Test Company")
@@ -339,3 +344,82 @@ class TestEmployeeCTCBreakup(HRMSTestSuite):
 		salary_structure_assignment.save()
 		ctc_breakup = SalaryBreakupReport(employee, salary_structure_assignment.name)
 		self.assertEqual(ctc_breakup.ctc, 1116000)
+
+	def test_report_uses_selected_assignment(self):
+		employee = make_employee("test_ctc_revision@example.com", company="_Test Company")
+		salary_structure = make_salary_structure(
+			"Test CTC Breakup Revision", payroll_frequency="Monthly", currency="INR"
+		)
+		old_assignment = create_salary_structure_assignment(
+			employee,
+			salary_structure.name,
+			base=40000,
+			currency="INR",
+			from_date=get_first_day(add_months(getdate(), -3)),
+		)
+		create_salary_structure_assignment(
+			employee,
+			salary_structure.name,
+			base=60000,
+			currency="INR",
+			from_date=get_first_day(getdate()),
+			allow_duplicate=True,
+		)
+
+		frappe.flags.posting_date = None
+		ctc_breakup = SalaryBreakupReport(employee, old_assignment.name)
+		ctc_breakup.get_data()
+		basic = next(
+			row for row in ctc_breakup.earning_components if row["salary_component"] == "Basic Salary (BS)"
+		)
+		self.assertEqual(basic["per_cycle"], 40000)
+
+	def test_assignment_of_another_employee(self):
+		employee = make_employee("test_ctc@example.com", company="_Test Company")
+		other_employee = make_employee("test_ctc_other@example.com", company="_Test Company")
+		salary_structure = make_salary_structure(
+			"Test CTC Breakup", payroll_frequency="Monthly", currency="INR"
+		)
+		salary_structure_assignment = create_salary_structure_assignment(
+			other_employee, salary_structure.name, base=60000, currency="INR"
+		)
+
+		self.assertRaises(
+			frappe.ValidationError, SalaryBreakupReport, employee, salary_structure_assignment.name
+		)
+
+	def test_user_permissions_apply_to_hr_users(self):
+		employee = make_employee("test_ctc@example.com", company="_Test Company")
+		other_employee = make_employee("test_ctc_other@example.com", company="_Test Company")
+		salary_structure = make_salary_structure(
+			"Test CTC Breakup", payroll_frequency="Monthly", currency="INR"
+		)
+		salary_structure_assignment = create_salary_structure_assignment(
+			other_employee, salary_structure.name, base=60000, currency="INR"
+		)
+
+		hr_user = frappe.get_doc("User", "test_ctc@example.com")
+		hr_user.add_roles("HR User")
+		if not frappe.db.exists(
+			"User Permission", {"user": hr_user.name, "allow": "Employee", "for_value": employee}
+		):
+			frappe.get_doc(
+				{
+					"doctype": "User Permission",
+					"user": hr_user.name,
+					"allow": "Employee",
+					"for_value": employee,
+					"apply_to_all_doctypes": 1,
+				}
+			).insert(ignore_permissions=True)
+
+		frappe.set_user(hr_user.name)
+		try:
+			self.assertRaises(
+				frappe.PermissionError,
+				validate_employee_access,
+				other_employee,
+				salary_structure_assignment.name,
+			)
+		finally:
+			frappe.set_user("Administrator")

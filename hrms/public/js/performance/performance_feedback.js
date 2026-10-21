@@ -160,6 +160,7 @@ hrms.PerformanceFeedback = class PerformanceFeedback {
 						fieldtype: "Percent",
 						in_list_view: 1,
 						label: "Weightage",
+						read_only: 1,
 					},
 					{
 						fieldname: "rating",

@@ -60,6 +60,13 @@ def execute(filters: Filters | None = None) -> tuple:
 		if filters.include_company_descendants:
 			filters.companies.extend(get_descendants_of("Company", filters.company))
 
+	filters.employees = frappe.get_list(
+		"Employee", filters={"company": ["in", filters.companies]}, pluck="name"
+	)
+	if not filters.employees:
+		frappe.msgprint(_("No attendance records found."), alert=True, indicator="orange")
+		return [], [], None, None
+
 	attendance_map = get_attendance_map(filters)
 	if not attendance_map:
 		frappe.msgprint(_("No attendance records found."), alert=True, indicator="orange")
@@ -251,14 +258,11 @@ def get_data(filters: Filters, attendance_map: dict) -> list[dict]:
 	if filters.group_by:
 		group_by_column = frappe.scrub(filters.group_by)
 
-		for value in group_by_param_values:
-			if not value:
-				continue
-
+		for value in sorted(group_by_param_values, key=lambda v: not v):
 			records = get_rows(employee_details[value], filters, employee_holiday_map, attendance_map)
 
 			if records:
-				data.append({group_by_column: value})
+				data.append({group_by_column: value or _("Not Set")})
 				data.extend(records)
 
 	else:
@@ -340,6 +344,7 @@ def get_attendance_records(filters: Filters) -> list[dict]:
 		.where(
 			(Attendance.docstatus == 1)
 			& (Attendance.company.isin(filters.companies))
+			& (Attendance.employee.isin(filters.employees))
 			& (attendance_date_condition)
 		)
 	)
@@ -383,6 +388,7 @@ def get_employee_related_details(filters: Filters) -> tuple[dict, list]:
 			Employee.branch,
 			Employee.company,
 			(Employee.date_of_joining).as_("joined_date"),
+			Employee.relieving_date,
 			Case()
 			.when(
 				joining_date_condition,
@@ -391,7 +397,7 @@ def get_employee_related_details(filters: Filters) -> tuple[dict, list]:
 			.else_(0)
 			.as_("joined_in_current_period"),
 		)
-		.where(Employee.company.isin(filters.companies))
+		.where(Employee.company.isin(filters.companies) & Employee.name.isin(filters.employees))
 	)
 
 	if filters.employee:
@@ -463,7 +469,12 @@ def get_rows(
 
 		if filters.summarized_view:
 			attendance = get_attendance_status_for_summarized_view(
-				employee, filters, holidays, details.joined_in_current_period, details.joined_date
+				employee,
+				filters,
+				holidays,
+				details.joined_in_current_period,
+				details.joined_date,
+				details.relieving_date,
 			)
 			if not attendance:
 				continue
@@ -502,7 +513,12 @@ def set_defaults_for_summarized_view(filters, row):
 
 
 def get_attendance_status_for_summarized_view(
-	employee: str, filters: Filters, holidays: list, joined_in_current_period: int, joined_date: int
+	employee: str,
+	filters: Filters,
+	holidays: list,
+	joined_in_current_period: int,
+	joined_date: int,
+	relieving_date: date | None = None,
 ) -> dict:
 	"""Returns dict of attendance status for employee like
 	{'total_present': 1.5, 'total_leaves': 0.5, 'total_absent': 13.5, 'total_holidays': 8, 'unmarked_days': 5}
@@ -516,7 +532,11 @@ def get_attendance_status_for_summarized_view(
 
 	for d in total_days:
 		d = getdate(d)
-		if d in attendance_days or (joined_in_current_period and d < joined_date):
+		if (
+			d in attendance_days
+			or (joined_in_current_period and d < joined_date)
+			or (relieving_date and d > relieving_date)
+		):
 			continue
 
 		status = get_holiday_status(d, holidays)
@@ -674,7 +694,12 @@ def get_leave_summary(employee: str, filters: Filters) -> dict[str, float]:
 	{'leave_without_pay': 1.0, 'sick_leave': 2.0}
 	"""
 	Attendance = frappe.qb.DocType("Attendance")
-	day_case = frappe.qb.terms.Case().when(Attendance.status == "Half Day", 0.5).else_(1)
+	day_case = (
+		frappe.qb.terms.Case()
+		.when((Attendance.status == "Half Day") & (Coalesce(Attendance.leave_application, "") != ""), 0.5)
+		.when(Attendance.status == "Half Day", 0)
+		.else_(1)
+	)
 	sum_leave_days = Sum(day_case).as_("leave_days")
 
 	attendance_date_condition = get_date_condition(Attendance.attendance_date, filters)
@@ -686,7 +711,7 @@ def get_leave_summary(employee: str, filters: Filters) -> dict[str, float]:
 			(Attendance.employee == employee)
 			& (Attendance.docstatus == 1)
 			& (Attendance.company.isin(filters.companies))
-			& ((Attendance.leave_type.isnotnull()) | (Attendance.leave_type != ""))
+			& (Coalesce(Attendance.leave_type, "") != "")
 			& (attendance_date_condition)
 		)
 		.groupby(Attendance.leave_type)
@@ -767,9 +792,12 @@ def get_chart_data(attendance_map: dict, filters: Filters) -> dict:
 					total_absent_on_day += 1
 				elif attendance_on_day in ["Present", "Work From Home"]:
 					total_present_on_day += 1
-				elif attendance_on_day == "Half Day":
+				elif attendance_on_day == "Half Day/Other Half Present":
 					total_present_on_day += 0.5
 					total_leaves_on_day += 0.5
+				elif attendance_on_day == "Half Day/Other Half Absent":
+					total_present_on_day += 0.5
+					total_absent_on_day += 0.5
 
 		absent.append(total_absent_on_day)
 		present.append(total_present_on_day)

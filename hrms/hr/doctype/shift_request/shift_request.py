@@ -5,10 +5,13 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import get_link_to_form
+from frappe.utils import add_days, get_link_to_form
 
 import hrms
-from hrms.hr.doctype.shift_assignment.shift_assignment import has_overlapping_timings
+from hrms.hr.doctype.shift_assignment.shift_assignment import (
+	get_overlapping_day_offsets,
+	has_overlapping_timings,
+)
 from hrms.hr.utils import share_doc_with_approver, validate_active_employee
 from hrms.mixins.pwa_notifications import PWANotificationsMixin
 
@@ -34,7 +37,7 @@ class ShiftRequest(Document, PWANotificationsMixin):
 		employee_name: DF.Data | None
 		from_date: DF.Date
 		shift_type: DF.Link
-		status: DF.Literal["Draft", "Approved", "Rejected"]
+		status: DF.Literal["Draft", "Approved", "Rejected", "Cancelled"]
 		to_date: DF.Date | None
 	# end: auto-generated types
 
@@ -125,7 +128,10 @@ class ShiftRequest(Document, PWANotificationsMixin):
 		if len(overlapping_dates):
 			# if dates are overlapping, check if timings are overlapping, else allow
 			for d in overlapping_dates:
-				if has_overlapping_timings(self.shift_type, d.shift_type):
+				day_offsets = get_overlapping_day_offsets(
+					self.from_date, self.to_date, d.from_date, d.to_date
+				)
+				if has_overlapping_timings(self.shift_type, d.shift_type, day_offsets):
 					self.throw_overlap_error(d)
 
 	def get_overlapping_dates(self):
@@ -135,17 +141,18 @@ class ShiftRequest(Document, PWANotificationsMixin):
 		shift = frappe.qb.DocType("Shift Request")
 		query = (
 			frappe.qb.from_(shift)
-			.select(shift.name, shift.shift_type)
+			.select(shift.name, shift.shift_type, shift.from_date, shift.to_date)
 			.where(
 				(shift.employee == self.employee)
 				& (shift.docstatus < 2)
+				& (shift.status != "Rejected")
 				& (shift.name != self.name)
-				& ((shift.to_date >= self.from_date) | (shift.to_date.isnull()))
+				& ((shift.to_date >= add_days(self.from_date, -1)) | (shift.to_date.isnull()))
 			)
 		)
 
 		if self.to_date:
-			query = query.where(shift.from_date <= self.to_date)
+			query = query.where(shift.from_date <= add_days(self.to_date, 1))
 
 		return query.run(as_dict=True)
 

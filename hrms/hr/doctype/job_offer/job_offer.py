@@ -192,6 +192,36 @@ class JobOffer(Document):
 	def on_change(self):
 		update_job_applicant(self.status, self.job_applicant)
 
+	def on_cancel(self):
+		status = self.status
+		self.db_set("status", "Cancelled")
+		self.reset_job_applicant_status(status)
+
+	def reset_job_applicant_status(self, status):
+		if not self.job_applicant or status not in ("Accepted", "Rejected"):
+			return
+		if frappe.db.get_value("Job Applicant", self.job_applicant, "status") != status:
+			return
+
+		other_statuses = frappe.get_all(
+			"Job Offer",
+			filters={
+				"job_applicant": self.job_applicant,
+				"docstatus": 1,
+				"status": ("in", ["Accepted", "Rejected"]),
+				"name": ("!=", self.name),
+			},
+			pluck="status",
+		)
+		if "Accepted" in other_statuses:
+			new_status = "Accepted"
+		elif "Rejected" in other_statuses:
+			new_status = "Rejected"
+		else:
+			new_status = "Open"
+
+		frappe.set_value("Job Applicant", self.job_applicant, "status", new_status)
+
 	def get_job_offer(self, from_date, to_date):
 		"""Returns job offer created during a time period"""
 		return frappe.get_all(
@@ -201,6 +231,8 @@ class JobOffer(Document):
 				"designation": self.designation,
 				"company": self.company,
 				"docstatus": 1,
+				"status": ("not in", ["Rejected", "Cancelled"]),
+				"name": ("!=", self.name),
 			},
 			fields=["name"],
 		)
