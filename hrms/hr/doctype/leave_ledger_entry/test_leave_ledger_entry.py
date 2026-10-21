@@ -37,6 +37,24 @@ class TestLeaveLedgerEntry(FrappeTestCase):
 
 		self.assertEqual(allocation.expired, 1)
 
+	def test_expire_allocation_by_employee(self):
+		allocation = frappe.get_doc(
+			{
+				"doctype": "Leave Allocation",
+				"employee": self.employee.name,
+				"leave_type": "_Test Leave Type",
+				"from_date": today(),
+				"to_date": add_to_date(today(), days=30),
+				"new_leaves_allocated": 5,
+			}
+		).submit()
+
+		frappe.set_user(self.employee.user_id)
+		try:
+			self.assertRaises(frappe.PermissionError, expire_allocation, allocation)
+		finally:
+			frappe.set_user("Administrator")
+
 	def tearDown(self):
 		frappe.db.rollback()
 
