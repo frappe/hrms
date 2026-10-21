@@ -46,10 +46,9 @@ def get_columns() -> list[dict]:
 		},
 		{
 			"label": _("Employee Name"),
-			"fieldtype": "Dynamic Link",
+			"fieldtype": "Data",
 			"fieldname": "employee_name",
 			"width": 100,
-			"options": "employee",
 		},
 		{
 			"label": _("Opening Balance"),
@@ -123,12 +122,13 @@ def get_balance_details(employee: str, leave_type: str, filters: Filters, precis
 		filters.from_date, filters.to_date, employee, leave_type
 	)
 	on_allocation_boundary = is_opening_balance_on_allocation_boundary(employee, leave_type, filters)
-	opening = get_opening_balance(
-		employee, leave_type, filters, carry_forwarded_leaves, on_allocation_boundary
+	opening_cf_leaves = (
+		get_cf_leaves(filters.from_date, filters.from_date, employee, leave_type)
+		if on_allocation_boundary
+		else 0
 	)
-	allocated_leaves = new_allocation + carry_forwarded_leaves
-	if on_allocation_boundary:
-		allocated_leaves -= carry_forwarded_leaves
+	opening = get_opening_balance(employee, leave_type, filters, opening_cf_leaves, on_allocation_boundary)
+	allocated_leaves = new_allocation + carry_forwarded_leaves - opening_cf_leaves
 
 	leaves_expired = flt(expired_leaves, precision)
 	closing = allocated_leaves + opening - (leaves_expired + leaves_taken)
@@ -269,7 +269,21 @@ def get_expired_leaves(from_date, to_date, employee, leave_type):
 			& (ledger.is_expired == 1)
 		)
 	).run()[0][0]
-	return expired_leaves if expired_leaves else 0.0
+
+	reversed_leaves = (
+		frappe.qb.from_(ledger)
+		.select(Sum(ledger.leaves))
+		.where(
+			(ledger.docstatus == 1)
+			& (ledger.transaction_type.isin(["Leave Application", "Leave Encashment"]))
+			& (ledger.employee == employee)
+			& (ledger.leave_type == leave_type)
+			& (ledger.from_date[from_date:to_date])
+			& (ledger.leaves > 0)
+		)
+	).run()[0][0]
+
+	return flt(expired_leaves) - flt(reversed_leaves)
 
 
 def get_cf_leaves(from_date, to_date, employee, leave_type):

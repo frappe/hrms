@@ -4,7 +4,7 @@ import frappe
 from frappe import _
 from frappe.query_builder import Order
 from frappe.query_builder.functions import Count
-from frappe.utils import pretty_date
+from frappe.utils import cint, pretty_date
 
 
 def get_context(context):
@@ -126,6 +126,6 @@ def get_filters_txt_sort_offset(page_len=20):
 			if args["sort"][0]:
 				sort = args["sort"][0]
 		elif d == "page":
-			offset = (int(args["page"][0]) - 1) * page_len
+			offset = max(cint(args["page"][0]) - 1, 0) * page_len
 
 	return filters, txt, sort, offset

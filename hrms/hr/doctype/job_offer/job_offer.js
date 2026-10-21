@@ -274,12 +274,14 @@ function set_base_from_grade(frm, grade) {
 	if (frm.doc.calculate_component_amount_from === "CTC") return;
 
 	const requested_base = frm.doc.base;
-	frappe.db.get_value("Employee Grade", grade, "default_base_pay").then((r) => {
+	frappe.db.get_value("Employee Grade", grade, ["default_base_pay", "currency"]).then((r) => {
 		const inputs_unchanged =
 			frm.doc.grade === grade &&
 			frm.doc.calculate_component_amount_from !== "CTC" &&
 			frm.doc.base === requested_base;
 		const base = r.message && r.message.default_base_pay;
+		const grade_currency = r.message && r.message.currency;
+		if (grade_currency && grade_currency !== frm.doc.currency) return;
 		if (inputs_unchanged && base && base !== frm.doc.base) frm.set_value("base", base);
 	});
 }

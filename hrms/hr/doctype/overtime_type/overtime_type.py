@@ -4,6 +4,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.utils import flt
 
 
 class OvertimeType(Document):
@@ -34,6 +35,20 @@ class OvertimeType(Document):
 	def validate(self):
 		if self.overtime_calculation_method == "Salary Component Based":
 			self.validate_applicable_components()
+		self.validate_rates()
+
+	def validate_rates(self):
+		fields = ["standard_multiplier"]
+		if self.applicable_for_weekend:
+			fields.append("weekend_multiplier")
+		if self.applicable_for_public_holiday:
+			fields.append("public_holiday_multiplier")
+		if self.overtime_calculation_method == "Fixed Hourly Rate":
+			fields.append("hourly_rate")
+
+		for fieldname in fields:
+			if flt(self.get(fieldname)) <= 0:
+				frappe.throw(_("{0} must be greater than zero").format(_(self.meta.get_label(fieldname))))
 
 	def validate_applicable_components(self):
 		if not len(self.applicable_salary_component):

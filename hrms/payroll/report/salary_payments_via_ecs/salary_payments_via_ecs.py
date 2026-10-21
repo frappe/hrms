@@ -28,9 +28,8 @@ def get_columns(filters):
 		},
 		{
 			"label": _("Employee Name"),
-			"options": "Employee",
 			"fieldname": "employee_name",
-			"fieldtype": "Link",
+			"fieldtype": "Data",
 			"width": 160,
 		},
 		{
@@ -113,8 +112,11 @@ def get_data(filters):
 		base_where = base_where & clause
 
 	entry = (
-		frappe.qb.from_(SalarySlip)
-		.select(SalarySlip.employee, SalarySlip.employee_name, SalarySlip.gross_pay, SalarySlip.net_pay)
+		frappe.qb.get_query(
+			"Salary Slip",
+			fields=["employee", "employee_name", "base_gross_pay", "base_net_pay"],
+			ignore_permissions=False,
+		)
 		.where(base_where)
 		.run(as_dict=True)
 	)
@@ -122,12 +124,15 @@ def get_data(filters):
 	data = []
 
 	for d in entry:
+		if d.employee not in employee_data_dict:
+			continue
+
 		employee = {
 			"branch": employee_data_dict.get(d.employee).get("branch"),
 			"employee_name": d.employee_name,
 			"employee": d.employee,
-			"gross_pay": d.gross_pay,
-			"net_pay": d.net_pay,
+			"gross_pay": d.base_gross_pay,
+			"net_pay": d.base_net_pay,
 		}
 
 		if employee_data_dict.get(d.employee).get("salary_mode") == "Bank":

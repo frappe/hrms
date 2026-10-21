@@ -2,12 +2,22 @@
 # See license.txt
 
 import frappe
-from frappe.utils import get_first_day, get_last_day, nowdate
+from frappe.utils import add_days, add_months, get_first_day, get_last_day, nowdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
+from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_exemption_declaration import (
+	create_payroll_period,
+)
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
-from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+	create_salary_structure_assignment,
+	get_payable_account,
+	make_salary_structure,
+)
+from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
+	get_employee_currency,
+)
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -118,9 +128,16 @@ class TestSalaryStructureAssignment(HRMSTestSuite):
 		self.assertEqual(ssa.annual_gross_earning, 50000 * 12)
 		self.assertEqual(ssa.ctc, (50000 + 2700) * 12)
 
-	def test_ctc_reset_when_base_missing(self):
+	def test_ctc_for_fixed_amount_structure_without_base(self):
 		emp = make_employee("ssa_ctc_nobase@test.com", company="_Test Company")
-		make_salary_structure("SSA Test No Base Structure", "Monthly", company="_Test Company")
+		_make_component("SSA Test Fixed Basic", "SSATFB", "Earning")
+		make_salary_structure(
+			"SSA Test No Base Structure",
+			"Monthly",
+			company="_Test Company",
+			earnings=[{"salary_component": "SSA Test Fixed Basic", "abbr": "SSATFB", "amount": 30000}],
+			deductions=[],
+		)
 		ssa = frappe.new_doc("Salary Structure Assignment")
 		ssa.employee = emp
 		ssa.salary_structure = "SSA Test No Base Structure"
@@ -128,8 +145,12 @@ class TestSalaryStructureAssignment(HRMSTestSuite):
 		ssa.from_date = get_first_day(nowdate())
 		ssa.base = 0
 		ssa.calculate_ctc_and_gross()
+		self.assertEqual(ssa.ctc, 30000 * 12)
+		self.assertEqual(ssa.annual_gross_earning, 30000 * 12)
+
+		ssa.salary_structure = None
+		ssa.calculate_ctc_and_gross()
 		self.assertEqual(ssa.ctc, 0)
-		self.assertEqual(ssa.annual_gross_earning, 0)
 
 	def test_get_evaluated_components_does_not_mutate_cached_structure(self):
 		emp = make_employee("ssa_cache@test.com", company="_Test Company")
@@ -493,3 +514,147 @@ class TestSalaryStructureAssignment(HRMSTestSuite):
 
 				slip = make_salary_slip(structure.name, employee=emp)
 				self.assertIn("SSA Test Cycle Days", [r.salary_component for r in slip.earnings])
+
+	def _new_assignment(self, emp, structure, **kwargs):
+		ssa = frappe.new_doc("Salary Structure Assignment")
+		ssa.update(
+			{
+				"employee": emp,
+				"salary_structure": structure,
+				"company": "_Test Company",
+				"currency": "INR",
+				"from_date": get_first_day(nowdate()),
+				"base": 50000,
+				"payroll_payable_account": get_payable_account("_Test Company"),
+			}
+		)
+		ssa.update(kwargs)
+		return ssa
+
+	def _fixed_structure(self, name, **kwargs):
+		_make_component("SSA Test Fixed Basic", "SSATFB", "Earning")
+		return make_salary_structure(
+			name,
+			"Monthly",
+			company="_Test Company",
+			earnings=[{"salary_component": "SSA Test Fixed Basic", "abbr": "SSATFB", "amount": 30000}],
+			deductions=[],
+			**kwargs,
+		)
+
+	def test_opening_entries_only_for_first_assignment_in_period(self):
+		payroll_period = create_payroll_period(company="_Test Company")
+		structure = make_salary_structure(
+			"SSA Test Opening Structure", "Monthly", company="_Test Company", test_tax=True
+		)
+		first_from = add_months(payroll_period.start_date, 2)
+		emp = make_employee(
+			"ssa_opening_revision@test.com", company="_Test Company", date_of_joining=first_from
+		)
+
+		first = self._new_assignment(emp, structure.name, from_date=first_from)
+		self.assertTrue(first.are_opening_entries_required())
+
+		create_salary_structure_assignment(
+			emp, structure.name, from_date=first_from, payroll_period=payroll_period
+		)
+		revision = self._new_assignment(
+			emp, structure.name, from_date=add_months(payroll_period.start_date, 6)
+		)
+		self.assertFalse(revision.are_opening_entries_required())
+
+	def test_opening_entries_rejected_when_already_set_in_period(self):
+		payroll_period = create_payroll_period(company="_Test Company")
+		structure = make_salary_structure(
+			"SSA Test Opening Structure", "Monthly", company="_Test Company", test_tax=True
+		)
+		first_from = add_months(payroll_period.start_date, 2)
+		emp = make_employee(
+			"ssa_opening_duplicate@test.com", company="_Test Company", date_of_joining=first_from
+		)
+		create_salary_structure_assignment(
+			emp, structure.name, from_date=first_from, payroll_period=payroll_period
+		)
+		first = frappe.get_last_doc("Salary Structure Assignment", {"employee": emp})
+		first.db_set({"taxable_earnings_till_date": 300000, "tax_deducted_till_date": 10000})
+
+		revision_from = add_months(payroll_period.start_date, 6)
+		income_tax_slab = first.income_tax_slab
+		for opening in ({"taxable_earnings_till_date": 300000}, {"tax_deducted_till_date": 5000}):
+			revision = self._new_assignment(
+				emp, structure.name, from_date=revision_from, income_tax_slab=income_tax_slab, **opening
+			)
+			self.assertRaises(frappe.ValidationError, revision.insert)
+
+		self._new_assignment(
+			emp, structure.name, from_date=revision_from, income_tax_slab=income_tax_slab
+		).insert()
+
+	def test_structure_and_tax_slab_must_be_submitted(self):
+		emp = make_employee("ssa_draft_links@test.com", company="_Test Company")
+		draft_structure = self._fixed_structure("SSA Test Draft Structure", dont_submit=True)
+		self.assertRaises(frappe.ValidationError, self._new_assignment(emp, draft_structure.name).insert)
+
+		structure = self._fixed_structure("SSA Test Submitted Structure")
+		if frappe.db.exists("Income Tax Slab", "_Test SSA Draft Slab"):
+			frappe.delete_doc("Income Tax Slab", "_Test SSA Draft Slab", force=True)
+		draft_slab = frappe.get_doc(
+			{
+				"doctype": "Income Tax Slab",
+				"name": "_Test SSA Draft Slab",
+				"effective_from": get_first_day(nowdate()),
+				"currency": "INR",
+				"slabs": [{"from_amount": 0, "to_amount": 0, "percent_deduction": 10}],
+			}
+		).insert()
+		self.assertRaises(
+			frappe.ValidationError,
+			self._new_assignment(emp, structure.name, income_tax_slab=draft_slab.name).insert,
+		)
+
+	def test_cost_center_percentages_summing_to_100(self):
+		emp = make_employee("ssa_cost_centers@test.com", company="_Test Company")
+		structure = self._fixed_structure("SSA Test Cost Center Structure")
+		parent = frappe.db.get_value("Cost Center", {"company": "_Test Company", "is_group": 1})
+		cost_centers = []
+		for i in range(3):
+			name = frappe.db.get_value("Cost Center", {"cost_center_name": f"_Test SSA CC {i}"})
+			if not name:
+				name = (
+					frappe.get_doc(
+						{
+							"doctype": "Cost Center",
+							"cost_center_name": f"_Test SSA CC {i}",
+							"company": "_Test Company",
+							"parent_cost_center": parent,
+						}
+					)
+					.insert()
+					.name
+				)
+			cost_centers.append(name)
+
+		ssa = self._new_assignment(emp, structure.name)
+		for cost_center, percentage in zip(cost_centers, (28.57, 44.44, 26.99), strict=True):
+			ssa.append("payroll_cost_centers", {"cost_center": cost_center, "percentage": percentage})
+		ssa.validate_cost_centers()
+
+	def test_payroll_payable_account_of_other_company_rejected(self):
+		emp = make_employee("ssa_payable_account@test.com", company="_Test Company")
+		structure = self._fixed_structure("SSA Test Payable Structure")
+		other_account = frappe.db.get_value(
+			"Account", {"company": "_Test Company 1", "root_type": "Liability", "is_group": 0}
+		)
+		ssa = self._new_assignment(emp, structure.name, payroll_payable_account=other_account)
+		self.assertRaises(frappe.ValidationError, ssa.validate_payroll_payable_account)
+
+	def test_employee_currency_from_submitted_assignment(self):
+		emp = make_employee("ssa_employee_currency@test.com", company="_Test Company")
+		inr_structure = self._fixed_structure("SSA Test Currency INR")
+		self._new_assignment(emp, inr_structure.name, from_date=add_days(nowdate(), -30)).submit()
+		usd_structure = self._fixed_structure("SSA Test Currency USD", currency="USD")
+		self._new_assignment(
+			emp, usd_structure.name, currency="USD", from_date=add_days(nowdate(), -10)
+		).insert()
+
+		self.assertEqual(get_employee_currency(emp), "INR")

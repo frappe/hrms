@@ -19,6 +19,7 @@ from hrms.hr.doctype.employee_advance.employee_advance import (
 from hrms.payroll.doctype.payroll_entry.payroll_entry import (
 	PayrollEntry,
 	get_end_date,
+	get_payroll_entries_for_jv,
 	get_start_end_dates,
 	set_match_conditions,
 )
@@ -1478,6 +1479,261 @@ class TestPayrollEntry(HRMSTestSuite):
 		self.assertIn("'A'", query_sql)
 		self.assertNotIn("Employee Grade", query_sql)
 		self.assertNotIn("Unknown Doctype", query_sql)
+
+	def _make_department_payroll_entry(self, department, submit=True):
+		company = frappe.get_doc("Company", "_Test Company")
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = get_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company.default_payroll_payable_account,
+			currency=company.default_currency,
+			company=company.name,
+			cost_center="Main - _TC",
+			department=department,
+		)
+		if submit:
+			payroll_entry.submit()
+		return payroll_entry
+
+	def test_bank_entry_only_pays_accrued_salary_slips(self):
+		department = create_department("Unaccrued Slips Test")
+		company = frappe.get_doc("Company", "_Test Company")
+		employees = [
+			make_employee(f"test_unaccrued_slip{i}@payroll.com", company=company.name, department=department)
+			for i in range(2)
+		]
+		for employee in employees:
+			setup_salary_structure(employee, company)
+
+		payroll_entry = self._make_department_payroll_entry(department)
+		salary_slips = frappe.get_all("Salary Slip", {"payroll_entry": payroll_entry.name}, pluck="name")
+		frappe.get_doc("Salary Slip", salary_slips[0]).submit()
+
+		# a slip submitted outside the payroll entry is not accrued yet, so it must not be paid
+		self.assertIsNone(payroll_entry.make_bank_entry())
+
+		payroll_entry.submit_salary_slips()
+		accrual_entries = {frappe.db.get_value("Salary Slip", slip, "journal_entry") for slip in salary_slips}
+		self.assertEqual(len(accrual_entries), 1)
+		self.assertTrue(all(accrual_entries))
+
+		accrual_entry = frappe.get_doc("Journal Entry", accrual_entries.pop())
+		payable_credit = sum(
+			row.credit
+			for row in accrual_entry.accounts
+			if row.account == company.default_payroll_payable_account
+		)
+		payroll_entry.reload()
+		bank_entry = payroll_entry.make_bank_entry()
+		self.assertEqual(bank_entry.total_credit, payable_credit)
+		self.assertEqual(bank_entry.total_debit, payable_credit)
+
+	def test_failed_salary_slip_submission_is_rolled_back(self):
+		from hrms.payroll.doctype.salary_slip.salary_slip import SalarySlip
+
+		department = create_department("Failed Slip Submission Test")
+		company = frappe.get_doc("Company", "_Test Company")
+		employees = [
+			make_employee(f"test_failed_slip{i}@payroll.com", company=company.name, department=department)
+			for i in range(2)
+		]
+		for employee in employees:
+			setup_salary_structure(employee, company)
+
+		payroll_entry = self._make_department_payroll_entry(department)
+		failing_slip = frappe.db.get_value(
+			"Salary Slip", {"payroll_entry": payroll_entry.name, "employee": employees[1]}
+		)
+		create_benefits_ledger_entry = SalarySlip.create_benefits_ledger_entry
+
+		def fail_on_submit(salary_slip):
+			if salary_slip.name == failing_slip:
+				frappe.throw("Failed on submit")
+			return create_benefits_ledger_entry(salary_slip)
+
+		with patch.object(SalarySlip, "create_benefits_ledger_entry", fail_on_submit):
+			payroll_entry.submit_salary_slips()
+
+		self.assertEqual(frappe.db.get_value("Salary Slip", failing_slip, "docstatus"), 0)
+		payroll_entry.reload()
+		bank_entry = payroll_entry.make_bank_entry()
+		self.assertNotIn(employees[1], [row.party for row in bank_entry.accounts])
+		self.assertEqual(
+			bank_entry.total_credit,
+			frappe.db.get_value(
+				"Salary Slip", {"payroll_entry": payroll_entry.name, "employee": employees[0]}, "net_pay"
+			),
+		)
+
+	def test_bank_entry_guards(self):
+		department = create_department("Bank Entry Guard Test")
+		company = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee(
+			"test_bank_entry_guard@payroll.com", company=company.name, department=department
+		)
+		setup_salary_structure(employee, company)
+
+		payroll_entry = self._make_department_payroll_entry(department)
+		payroll_entry.submit_salary_slips()
+		payroll_entry.reload()
+		bank_entry = payroll_entry.make_bank_entry()
+		self.assertRaises(frappe.ValidationError, payroll_entry.make_bank_entry)
+
+		bank_entry.cheque_no = "123456"
+		bank_entry.cheque_date = nowdate()
+		bank_entry.submit()
+		self.assertNotIn(
+			payroll_entry.name,
+			[
+				d[0]
+				for d in get_payroll_entries_for_jv("Payroll Entry", payroll_entry.name, "name", 0, 20, {})
+			],
+		)
+
+		bank_entry.cancel()
+		self.assertFalse(payroll_entry.has_bank_entries()["has_bank_entries"])
+		self.assertIn(
+			payroll_entry.name,
+			[
+				d[0]
+				for d in get_payroll_entries_for_jv("Payroll Entry", payroll_entry.name, "name", 0, 20, {})
+			],
+		)
+		self.assertTrue(payroll_entry.make_bank_entry())
+
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 1}
+	)
+	def test_employee_wise_accrual_with_fractional_cost_center_split(self):
+		department = create_department("Fractional Cost Center Split Test")
+		company = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee(
+			"test_fractional_split@payroll.com", company=company.name, department=department
+		)
+
+		component = "Fractional Fixed Pay"
+		if not frappe.db.exists("Salary Component", component):
+			frappe.get_doc(
+				{
+					"doctype": "Salary Component",
+					"salary_component": component,
+					"salary_component_abbr": "FFP",
+					"type": "Earning",
+					"depends_on_payment_days": 0,
+					"accounts": [{"company": company.name, "account": "Salary - _TC"}],
+				}
+			).insert()
+
+		structure = make_salary_structure(
+			"Test Fractional Cost Center Split",
+			"Monthly",
+			employee,
+			company=company.name,
+			currency=company.default_currency,
+			earnings=[{"salary_component": component, "abbr": "FFP", "amount": 10000.05}],
+			deductions=[],
+		)
+		ssa = frappe.get_doc(
+			"Salary Structure Assignment",
+			{"employee": employee, "salary_structure": structure.name, "docstatus": 1},
+		)
+		ssa.payroll_cost_centers = []
+		ssa.append("payroll_cost_centers", {"cost_center": "_Test Cost Center - _TC", "percentage": 50})
+		ssa.append("payroll_cost_centers", {"cost_center": "_Test Cost Center 2 - _TC", "percentage": 50})
+		ssa.save()
+
+		payroll_entry = self._make_department_payroll_entry(department)
+		payroll_entry.submit_salary_slips()
+		payroll_entry.reload()
+		self.assertNotEqual(payroll_entry.status, "Failed")
+
+		accrual_entry = frappe.db.get_value(
+			"Salary Slip", {"payroll_entry": payroll_entry.name}, "journal_entry"
+		)
+		self.assertEqual(frappe.db.get_value("Journal Entry", accrual_entry, "total_credit"), 10000.05)
+
+		bank_entry = payroll_entry.make_bank_entry()
+		self.assertEqual(bank_entry.total_debit, 10000.05)
+		self.assertEqual(bank_entry.total_credit, 10000.05)
+
+	def test_get_employees_uses_salary_structure_assignment_in_force(self):
+		department = create_department("Current Assignment Test")
+		company = frappe.get_doc("Company", "_Test Company")
+		dates = get_start_end_dates("Monthly", nowdate())
+		monthly_employee = make_employee(
+			"test_current_ssa_monthly@payroll.com", company=company.name, department=department
+		)
+		moved_employee = make_employee(
+			"test_current_ssa_weekly@payroll.com", company=company.name, department=department
+		)
+		for employee in (monthly_employee, moved_employee):
+			make_salary_structure(
+				"Test Current Assignment Monthly",
+				"Monthly",
+				employee,
+				from_date=add_months(dates.start_date, -2),
+				company=company.name,
+				currency=company.default_currency,
+			)
+		make_salary_structure(
+			"Test Current Assignment Weekly",
+			"Weekly",
+			moved_employee,
+			from_date=add_months(dates.start_date, -1),
+			company=company.name,
+			currency=company.default_currency,
+		)
+
+		payroll_entry = self._make_department_payroll_entry(department, submit=False)
+		self.assertEqual([row.employee for row in payroll_entry.employees], [monthly_employee])
+
+	def test_get_employees_applies_user_permissions(self):
+		allowed_department = create_department("Allowed Payroll Department")
+		other_department = create_department("Other Payroll Department")
+		company = frappe.get_doc("Company", "_Test Company")
+		for department in (allowed_department, other_department):
+			employee = make_employee(
+				f"test_{frappe.scrub(department)}@payroll.com", company=company.name, department=department
+			)
+			setup_salary_structure(employee, company)
+
+		user = "test_payroll_user_permission@payroll.com"
+		if not frappe.db.exists("User", user):
+			frappe.get_doc({"doctype": "User", "email": user, "first_name": "Payroll User"}).insert()
+		frappe.get_doc("User", user).add_roles("HR Manager", "HR User", "Accounts User")
+		frappe.get_doc(
+			{
+				"doctype": "User Permission",
+				"user": user,
+				"allow": "Department",
+				"for_value": allowed_department,
+			}
+		).insert()
+
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = frappe.get_doc(
+			{
+				"doctype": "Payroll Entry",
+				"company": company.name,
+				"start_date": dates.start_date,
+				"end_date": dates.end_date,
+				"posting_date": nowdate(),
+				"payroll_frequency": "Monthly",
+				"payroll_payable_account": company.default_payroll_payable_account,
+				"currency": company.default_currency,
+				"exchange_rate": 1,
+				"salary_slip_based_on_timesheet": 0,
+			}
+		)
+		frappe.set_user(user)
+		try:
+			payroll_entry.fill_employee_details()
+		finally:
+			frappe.set_user("Administrator")
+
+		departments = {row.department for row in payroll_entry.employees}
+		self.assertEqual(departments, {allowed_department})
 
 
 def get_payroll_entry(**args):

@@ -4,11 +4,17 @@
 import frappe
 from frappe.utils import add_days, add_months, get_year_ending, get_year_start, getdate
 
+from erpnext.setup.doctype.employee.test_employee import make_employee
+
 from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.attendance_request.attendance_request import OverlappingAttendanceRequestError
+from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+	create_holiday_list_assignment,
+)
 from hrms.hr.doctype.leave_application.test_leave_application import make_allocation_record
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
+	make_holiday_list,
 	make_leave_application,
 )
 from hrms.tests.test_utils import add_date_to_holiday_list, get_first_sunday
@@ -413,20 +419,14 @@ class TestAttendanceRequest(HRMSTestSuite):
 
 	def test_expired_shift_assignment_is_auto_fetched(self):
 		"""Backdated attendance requests should auto-fetch the shift even after the
-		assignment has been marked Inactive by mark_expired_shift_assignments_as_inactive."""
-		from hrms.hr.doctype.shift_assignment.shift_assignment import (
-			mark_expired_shift_assignments_as_inactive,
-		)
-
+		assignment has been marked Inactive by the removed expiry job."""
 		today = getdate()
 		shift_start = add_days(today, -10)
 		shift_end = add_days(today, -5)
 
 		shift_type = create_shift("Test Expired Shift", "09:00:00", "17:00:00")
-		create_shift_assignment(self.employee.name, shift_type.name, shift_start, shift_end)
-
-		# Cron auto-marks the assignment Inactive because its end_date is in the past
-		mark_expired_shift_assignments_as_inactive()
+		assignment = create_shift_assignment(self.employee.name, shift_type.name, shift_start, shift_end)
+		frappe.db.set_value("Shift Assignment", assignment.name, "status", "Inactive")
 
 		assignment_status = frappe.db.get_value(
 			"Shift Assignment",
@@ -513,6 +513,92 @@ class TestAttendanceRequest(HRMSTestSuite):
 		)
 
 		self.assertEqual(len(attendances), 2)
+
+	def test_holiday_checked_against_holiday_list_on_attendance_date(self):
+		today = getdate()
+		holiday = add_days(today, -20)
+		employee = make_employee("test_attendance_request_hl@example.com", company="_Test Company")
+		make_holiday_list(
+			"_Test Attendance Request HL 1",
+			from_date=add_days(today, -40),
+			to_date=add_days(today, -11),
+			add_weekly_offs=False,
+		)
+		make_holiday_list(
+			"_Test Attendance Request HL 2",
+			from_date=add_days(today, -10),
+			to_date=add_days(today, 30),
+			add_weekly_offs=False,
+		)
+		add_date_to_holiday_list(holiday, "_Test Attendance Request HL 1")
+		create_holiday_list_assignment("Employee", employee, "_Test Attendance Request HL 1")
+		create_holiday_list_assignment("Employee", employee, "_Test Attendance Request HL 2")
+
+		attendance_request = create_attendance_request(
+			employee=employee, from_date=add_days(holiday, -1), to_date=add_days(holiday, 1)
+		)
+
+		self.assertEqual(
+			[w["date"] for w in attendance_request.get_attendance_warnings() if w["reason"] == "Holiday"],
+			[holiday],
+		)
+		records = self.get_attendance_records(attendance_request.name)
+		self.assertEqual(
+			sorted(r.attendance_date for r in records), [add_days(holiday, -1), add_days(holiday, 1)]
+		)
+
+	def test_open_ended_shift_assignment_is_auto_fetched(self):
+		shift_type = create_shift("Test Open Ended Shift", "09:00:00", "17:00:00")
+		create_shift_assignment(self.employee.name, shift_type.name, add_days(getdate(), -10), None)
+
+		attendance_request = frappe.get_doc(
+			{
+				"doctype": "Attendance Request",
+				"employee": self.employee.name,
+				"from_date": getdate(),
+				"to_date": getdate(),
+				"reason": "On Duty",
+				"company": "_Test Company",
+			}
+		).save()
+
+		self.assertEqual(attendance_request.shift, shift_type.name)
+
+	def test_overwrite_attendance_without_shift(self):
+		shift_type = create_shift("Test Overwrite Shift", "09:00:00", "17:00:00")
+		attendance_name = mark_attendance(self.employee.name, getdate(), "Absent")
+
+		create_attendance_request(
+			employee=self.employee.name, from_date=getdate(), to_date=getdate(), shift=shift_type.name
+		)
+
+		attendance = frappe.db.get_value(
+			"Attendance", attendance_name, ["status", "shift", "docstatus"], as_dict=True
+		)
+		self.assertEqual(attendance.status, "Present")
+		self.assertEqual(attendance.shift, shift_type.name)
+		self.assertEqual(attendance.docstatus, 1)
+
+	def test_cancel_keeps_overwritten_attendance(self):
+		today = getdate()
+		frappe.db.delete("Holiday", {"parent": self.holiday_list})
+		attendance_name = mark_attendance(self.employee.name, today, "Absent")
+
+		attendance_request = create_attendance_request(employee=self.employee.name)
+		created = frappe.db.get_value(
+			"Attendance",
+			{"attendance_request": attendance_request.name, "attendance_date": add_days(today, -1)},
+			"name",
+		)
+		attendance_request.cancel()
+
+		overwritten = frappe.db.get_value(
+			"Attendance", attendance_name, ["status", "docstatus", "attendance_request"], as_dict=True
+		)
+		self.assertEqual(overwritten.status, "Present")
+		self.assertEqual(overwritten.docstatus, 1)
+		self.assertIsNone(overwritten.attendance_request)
+		self.assertEqual(frappe.db.get_value("Attendance", created, "docstatus"), 2)
 
 
 def get_employee():

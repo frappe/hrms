@@ -44,12 +44,18 @@ class EmployeePerformanceFeedback(Document, AppraisalMixin):
 		validate_active_appraisal_cycle(self.appraisal_cycle)
 
 		self.validate_employee()
+		self.validate_reviewer_is_session_user()
 		self.validate_appraisal()
+		self.set_weightage_from_template()
 		self.validate_total_weightage("feedback_ratings", "Feedback Ratings")
 		self.set_total_score()
 
 	def on_submit(self):
 		self.update_avg_feedback_score_in_appraisal()
+
+	def before_cancel(self):
+		validate_active_appraisal_cycle(self.appraisal_cycle)
+		self.validate_reviewer_is_session_user()
 
 	def on_cancel(self):
 		self.update_avg_feedback_score_in_appraisal()
@@ -65,6 +71,17 @@ class EmployeePerformanceFeedback(Document, AppraisalMixin):
 		validate_active_employee(self.employee)
 		validate_active_employee(self.reviewer)
 
+	def validate_reviewer_is_session_user(self):
+		if self.is_hr_user():
+			return
+
+		if self.reviewer != frappe.db.get_value("Employee", {"user_id": frappe.session.user}):
+			frappe.throw(
+				_("Only the reviewer can create, change or cancel this feedback"),
+				frappe.PermissionError,
+				title=_("Not Allowed"),
+			)
+
 	def validate_appraisal(self):
 		employee = frappe.db.get_value("Appraisal", self.appraisal, "employee")
 
@@ -73,10 +90,27 @@ class EmployeePerformanceFeedback(Document, AppraisalMixin):
 				_("Appraisal {0} does not belong to Employee {1}").format(self.appraisal, self.employee)
 			)
 
+	def set_weightage_from_template(self):
+		template = frappe.db.get_value("Appraisal", self.appraisal, "appraisal_template")
+		if not template:
+			return
+
+		weightage = dict(
+			frappe.get_all(
+				"Employee Feedback Rating",
+				filters={"parent": template, "parenttype": "Appraisal Template"},
+				fields=["criteria", "per_weightage"],
+				as_list=True,
+			)
+		)
+		for entry in self.feedback_ratings:
+			entry.per_weightage = flt(weightage.get(entry.criteria))
+
 	def set_total_score(self):
 		total = 0
 		for entry in self.feedback_ratings:
-			score = flt(entry.rating) * 5 * flt(entry.per_weightage / 100)
+			entry.rating = self.get_bounded_rating(entry.rating)
+			score = entry.rating * 5 * flt(entry.per_weightage) / 100
 			total += flt(score)
 
 		self.total_score = flt(total, self.precision("total_score"))

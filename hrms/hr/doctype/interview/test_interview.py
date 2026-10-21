@@ -7,13 +7,14 @@ import os
 import frappe
 from frappe import _
 from frappe.core.doctype.user_permission.test_user_permission import create_user
-from frappe.utils import add_days, get_datetime, get_time, getdate, nowtime
+from frappe.utils import add_days, get_datetime, get_time, getdate, now_datetime
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.interview.interview import (
 	DuplicateInterviewRoundError,
+	create_interview_feedback,
 	get_feedback,
 	get_skill_wise_average_rating,
 	update_job_applicant_status,
@@ -64,9 +65,14 @@ class TestInterview(HRMSTestSuite):
 		setup_reminder_settings()
 
 		job_applicant = create_job_applicant()
-		scheduled_on = datetime.datetime.now() + datetime.timedelta(minutes=10)
+		scheduled_on = now_datetime() + datetime.timedelta(minutes=10)
 
-		create_interview_and_dependencies(job_applicant.name, scheduled_on=scheduled_on)
+		create_interview_and_dependencies(
+			job_applicant.name,
+			scheduled_on=scheduled_on,
+			from_time=scheduled_on.time().replace(microsecond=0),
+			to_time=datetime.time(23, 59, 59),
+		)
 
 		frappe.db.delete("Email Queue")
 
@@ -101,6 +107,204 @@ class TestInterview(HRMSTestSuite):
 		frappe.db.set_single_value("HR Settings", "send_interview_feedback_reminder", 1)
 		send_daily_feedback_reminder()
 		self.assertTrue(get_email_by_subject("Subject: Interview Feedback Reminder"))
+
+	def test_interview_reminder_window(self):
+		from hrms.hr.doctype.interview.interview import send_interview_reminder
+
+		setup_reminder_settings()
+		frappe.db.set_single_value("HR Settings", "send_interview_reminder", 1)
+		frappe.db.set_single_value("HR Settings", "remind_before", "01:00:00")
+
+		now = now_datetime()
+		due = now + datetime.timedelta(minutes=30)
+		over = now - datetime.timedelta(hours=3)
+		later = now + datetime.timedelta(hours=3)
+
+		def make(start):
+			end = min(
+				start + datetime.timedelta(minutes=5),
+				datetime.datetime.combine(start, datetime.time(23, 59, 59)),
+			)
+			return create_interview_and_dependencies(
+				create_job_applicant().name,
+				scheduled_on=start.date(),
+				from_time=start.time().replace(microsecond=0),
+				to_time=end.time().replace(microsecond=0),
+			)
+
+		due_interview, over_interview, later_interview = make(due), make(over), make(later)
+		send_interview_reminder()
+
+		self.assertEqual(frappe.db.get_value("Interview", due_interview.name, "reminded"), 1)
+		self.assertEqual(frappe.db.get_value("Interview", over_interview.name, "reminded"), 0)
+		self.assertEqual(frappe.db.get_value("Interview", later_interview.name, "reminded"), 0)
+
+	def test_feedback_reminder_for_interview_ended_yesterday(self):
+		from hrms.hr.doctype.interview.interview import send_daily_feedback_reminder
+
+		setup_reminder_settings()
+		frappe.db.set_single_value("HR Settings", "send_interview_feedback_reminder", 1)
+
+		interview = create_interview_and_dependencies(
+			create_job_applicant().name,
+			scheduled_on=add_days(getdate(), -1),
+			from_time="22:00:00",
+			to_time="23:00:00",
+			status="Under Review",
+		)
+		frappe.db.delete("Email Queue")
+
+		send_daily_feedback_reminder()
+		self.assertTrue(
+			frappe.db.exists(
+				"Email Queue", {"reference_doctype": "Interview", "reference_name": interview.name}
+			)
+		)
+
+	def test_feedback_reminder_for_pending_interview(self):
+		from hrms.hr.doctype.interview.interview import send_daily_feedback_reminder
+
+		setup_reminder_settings()
+		frappe.db.set_single_value("HR Settings", "send_interview_feedback_reminder", 1)
+
+		interview = create_interview_and_dependencies(
+			create_job_applicant().name, scheduled_on=add_days(getdate(), -1)
+		)
+		frappe.db.delete("Email Queue")
+
+		send_daily_feedback_reminder()
+		self.assertTrue(
+			frappe.db.exists(
+				"Email Queue", {"reference_doctype": "Interview", "reference_name": interview.name}
+			)
+		)
+
+	def test_overlap_warning(self):
+		scheduled_on = add_days(getdate(), 5)
+		first = create_interview_and_dependencies(
+			create_job_applicant().name, scheduled_on=scheduled_on, from_time="10:00:00", to_time="11:00:00"
+		)
+
+		frappe.clear_messages()
+		second = create_interview_and_dependencies(
+			create_job_applicant().name, scheduled_on=scheduled_on, from_time="10:30:00", to_time="11:30:00"
+		)
+		self.assertTrue(second.name)
+		self.assertIn(first.name, str(frappe.get_message_log()))
+
+		frappe.clear_messages()
+		create_interview_and_dependencies(
+			create_job_applicant().name, scheduled_on=scheduled_on, from_time="11:00:00", to_time="12:00:00"
+		)
+		self.assertNotIn(first.name, str(frappe.get_message_log()))
+
+	def test_interviewer_sees_only_own_panel(self):
+		from hrms.hr.doctype.interview.interview import get_events
+
+		interview = create_interview_and_dependencies(create_job_applicant().name)
+		create_user("test_interviewer3@example.com", "Interviewer")
+
+		frappe.set_user("test_interviewer3@example.com")
+		try:
+			self.assertFalse(frappe.has_permission("Interview", "read", interview.name))
+			self.assertFalse(frappe.get_list("Interview", filters={"name": interview.name}))
+			self.assertNotIn(
+				interview.name,
+				[d.name for d in get_events(str(interview.scheduled_on), str(interview.scheduled_on))],
+			)
+			self.assertRaises(frappe.PermissionError, get_feedback, interview.name)
+		finally:
+			frappe.set_user("Administrator")
+
+		frappe.set_user("test_interviewer1@example.com")
+		try:
+			self.assertTrue(frappe.has_permission("Interview", "read", interview.name))
+			self.assertTrue(frappe.get_list("Interview", filters={"name": interview.name}))
+		finally:
+			frappe.set_user("Administrator")
+
+	def test_time_validation(self):
+		interview = create_interview_and_dependencies(
+			create_job_applicant().name, from_time="15:00:00", to_time="11:00:00", save=False
+		)
+		self.assertRaises(frappe.ValidationError, interview.save)
+
+	def test_reschedule_validations(self):
+		interview = create_interview_and_dependencies(
+			create_job_applicant().name,
+			scheduled_on=add_days(getdate(), 2),
+			from_time="10:00:00",
+			to_time="11:00:00",
+		)
+		interview.db_set("reminded", 1)
+
+		self.assertRaises(
+			frappe.ValidationError,
+			interview.reschedule_interview,
+			add_days(getdate(), 3),
+			datetime.time(9, 0),
+			datetime.time(8, 0),
+		)
+
+		interview.reschedule_interview(add_days(getdate(), 3), datetime.time(9, 0), datetime.time(10, 0))
+		self.assertEqual(frappe.db.get_value("Interview", interview.name, "reminded"), 0)
+
+		frappe.db.delete("Email Queue")
+		interview.reload()
+		interview.reschedule_interview(str(interview.scheduled_on), "09:00:00", "10:00:00")
+		self.assertFalse(frappe.db.exists("Email Queue", {"reference_name": interview.name}))
+
+		create_user("test_interview_reader@example.com", "Employee")
+		frappe.set_user("test_interview_reader@example.com")
+		try:
+			self.assertRaises(
+				frappe.PermissionError,
+				interview.reschedule_interview,
+				add_days(getdate(), 4),
+				datetime.time(9, 0),
+				datetime.time(10, 0),
+			)
+		finally:
+			frappe.set_user("Administrator")
+
+		interview.reload()
+		interview.status = "Cleared"
+		interview.submit()
+		self.assertRaises(
+			frappe.ValidationError,
+			interview.reschedule_interview,
+			add_days(getdate(), 4),
+			datetime.time(9, 0),
+			datetime.time(10, 0),
+		)
+
+	def test_status_on_cancel(self):
+		interview = create_interview_and_dependencies(create_job_applicant().name, status="Cleared")
+		interview.submit()
+		interview.cancel()
+		self.assertEqual(frappe.db.get_value("Interview", interview.name, "status"), "Cancelled")
+
+	def test_create_interview_feedback_with_dict_data(self):
+		interview = create_interview_and_dependencies(
+			create_job_applicant().name, scheduled_on=add_days(getdate(), -1)
+		)
+		frappe.set_user("test_interviewer1@example.com")
+		try:
+			create_interview_feedback(
+				{"skill_set": [{"skill": "Python", "rating": 0.8}], "result": "Cleared"},
+				interview.name,
+				"test_interviewer1@example.com",
+				interview.job_applicant,
+			)
+		finally:
+			frappe.set_user("Administrator")
+
+		self.assertTrue(
+			frappe.db.exists(
+				"Interview Feedback",
+				{"interview": interview.name, "interviewer": "test_interviewer1@example.com", "docstatus": 1},
+			)
+		)
 
 	def test_get_interview_details_for_applicant_dashboard(self):
 		job_applicant = create_job_applicant()
@@ -246,8 +450,8 @@ def create_interview_and_dependencies(
 	interview.interview_type = interview_type.name
 	interview.job_applicant = job_applicant
 	interview.scheduled_on = scheduled_on or getdate()
-	interview.from_time = from_time or nowtime()
-	interview.to_time = to_time or nowtime()
+	interview.from_time = from_time or "10:00:00"
+	interview.to_time = to_time or "11:00:00"
 	interview.append("interview_details", {"interviewer": "test_interviewer1@example.com"})
 	interview.append("interview_details", {"interviewer": "test_interviewer2@example.com"})
 
@@ -262,7 +466,13 @@ def create_interview_and_dependencies(
 
 def create_interview_type(name, skill_set, interviewers=None, designation=None, save=True):
 	create_skill_set(skill_set)
-	interview_type = frappe.new_doc("Interview Type")
+	if frappe.db.exists("Interview Type", name):
+		interview_type = frappe.get_doc("Interview Type", name)
+		interview_type.designation = None
+		interview_type.expected_skill_set = []
+		interview_type.interviewers = []
+	else:
+		interview_type = frappe.new_doc("Interview Type")
 	interview_type.interview_type_name = name
 	interview_type.description = "_Test_Description"
 	# average rating = 4

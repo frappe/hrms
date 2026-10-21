@@ -6,7 +6,12 @@ from collections import OrderedDict
 import frappe
 from frappe import _, msgprint
 from frappe.query_builder import Order
-from frappe.utils import scrub
+from frappe.utils import flt, scrub
+
+import erpnext
+from erpnext.setup.utils import get_exchange_rate
+
+AMOUNT_FIELDS = ("advance_amount", "paid_amount", "claimed_amount", "return_amount", "outstanding_amount")
 
 
 def execute(filters=None):
@@ -21,81 +26,33 @@ def execute(filters=None):
 		msgprint(_("No record found"))
 		return columns, advances_list
 
-	grouped = OrderedDict()
-	group_totals = OrderedDict()
-	group_labels = OrderedDict()
-
 	for advance in advances_list:
 		advance.outstanding_amount = advance.paid_amount - (advance.claimed_amount + advance.return_amount)
 		advance.department = advance.department or advance.employee_department
 
-		if filters.get("group_by"):
-			group_key = advance.get(scrub(filters.get("group_by")))
-
-			grouped.setdefault(group_key, []).append(advance)
-
-			if group_key not in group_totals:
-				group_labels[group_key] = (
-					f"{advance.employee}: {advance.employee_name}"
-					if filters.get("group_by") == "Employee" and advance.employee_name
-					else group_key
-				) or group_key
-
-				group_totals[group_key] = frappe._dict(
-					advance_amount=0,
-					paid_amount=0,
-					claimed_amount=0,
-					return_amount=0,
-					outstanding_amount=0,
-					currency=advance.currency,
-				)
-
-			group_totals[group_key].advance_amount += advance.advance_amount or 0
-			group_totals[group_key].paid_amount += advance.paid_amount or 0
-			group_totals[group_key].claimed_amount += advance.claimed_amount or 0
-			group_totals[group_key].return_amount += advance.return_amount or 0
-			group_totals[group_key].outstanding_amount += advance.outstanding_amount
-
 	if not filters.get("group_by"):
 		for row in advances_list:
 			row.title = row.name
-			row.outstanding_amount = row.paid_amount - (row.claimed_amount + row.return_amount)
-			row.department = row.department or row.employee_department
 			if row.employee_name:
 				row.employee = f"{row.employee}: {row.employee_name}"
-		return columns, advances_list
+		return columns, [*advances_list, get_total_row(advances_list, _("Total"))], None, None, None, 1
+
+	grouped = OrderedDict()
+	group_labels = OrderedDict()
+	for advance in advances_list:
+		group_key = advance.get(scrub(filters.get("group_by")))
+		grouped.setdefault(group_key, []).append(advance)
+
+		if group_key not in group_labels:
+			group_labels[group_key] = (
+				f"{advance.employee}: {advance.employee_name}"
+				if filters.get("group_by") == "Employee" and advance.employee_name
+				else group_key
+			) or group_key
 
 	result = []
-	grand_total = frappe._dict(
-		advance_amount=0, paid_amount=0, claimed_amount=0, return_amount=0, outstanding_amount=0
-	)
-	first_currency = None
-
 	for key, rows in grouped.items():
-		totals = group_totals[key]
-
-		if not first_currency:
-			first_currency = totals.currency
-
-		grand_total.advance_amount += totals.advance_amount
-		grand_total.paid_amount += totals.paid_amount
-		grand_total.claimed_amount += totals.claimed_amount
-		grand_total.return_amount += totals.return_amount
-		grand_total.outstanding_amount += totals.outstanding_amount
-
-		result.append(
-			frappe._dict(
-				title=group_labels.get(key) or _("Not Set"),
-				advance_amount=totals.advance_amount,
-				paid_amount=totals.paid_amount,
-				claimed_amount=totals.claimed_amount,
-				return_amount=totals.return_amount,
-				outstanding_amount=totals.outstanding_amount,
-				currency=totals.currency,
-				bold=1,
-				indent=0,
-			)
-		)
+		result.append(get_total_row(rows, group_labels.get(key) or _("Not Set")))
 
 		for row in rows:
 			result.append(
@@ -118,21 +75,27 @@ def execute(filters=None):
 				)
 			)
 
-	result.append(
-		frappe._dict(
-			title=_("Total"),
-			advance_amount=grand_total.advance_amount,
-			paid_amount=grand_total.paid_amount,
-			claimed_amount=grand_total.claimed_amount,
-			return_amount=grand_total.return_amount,
-			outstanding_amount=grand_total.outstanding_amount,
-			currency=first_currency,
-			bold=1,
-			indent=0,
-		)
-	)
+	result.append(get_total_row(advances_list, _("Total")))
 
 	return columns, result, None, None, None, 1
+
+
+def get_total_row(rows, title):
+	currencies = {row.currency for row in rows}
+	currency = currencies.pop() if len(currencies) == 1 else erpnext.get_company_currency(rows[0].company)
+
+	total = frappe._dict(title=title, currency=currency, bold=1, indent=0)
+	for field in AMOUNT_FIELDS:
+		total[field] = sum(flt(row.get(field)) * get_conversion_rate(row, currency) for row in rows)
+	return total
+
+
+def get_conversion_rate(row, currency):
+	if row.currency == currency:
+		return 1
+	if flt(row.paid_amount):
+		return flt(row.base_paid_amount) / flt(row.paid_amount)
+	return flt(get_exchange_rate(row.currency, currency, row.posting_date)) or 1
 
 
 def get_columns():
@@ -250,8 +213,14 @@ def get_advances(filters):
 			EmployeeAdvance.company,
 			EmployeeAdvance.posting_date,
 			EmployeeAdvance.currency,
+			EmployeeAdvance.base_paid_amount,
 		)
 		.where(EmployeeAdvance.docstatus < 2)
+		.where(
+			EmployeeAdvance.name.isin(
+				frappe.qb.get_query("Employee Advance", fields=["name"], ignore_permissions=False)
+			)
+		)
 	)
 
 	if filters.get("employee"):

@@ -25,10 +25,9 @@ frappe.ui.form.on("Full and Final Statement", {
 			};
 		});
 
-		let filters = {};
-
 		frm.set_query("reference_document", type, function (doc, cdt, cdn) {
 			let fnf_doc = frappe.get_doc(cdt, cdn);
+			let filters = {};
 
 			frappe.model.with_doctype(fnf_doc.reference_document_type, function () {
 				if (frappe.model.is_tree(fnf_doc.reference_document_type)) {
@@ -50,6 +49,11 @@ frappe.ui.form.on("Full and Final Statement", {
 				if (fnf_doc.reference_document_type === "Leave Encashment") {
 					filters["status"] = "Unpaid";
 					filters["pay_via_payment_entry"] = 1;
+				}
+
+				if (fnf_doc.reference_document_type === "Gratuity") {
+					filters["status"] = "Unpaid";
+					filters["pay_via_salary_slip"] = 0;
 				}
 			});
 

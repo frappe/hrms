@@ -2,7 +2,8 @@
 # For license information, please see license.txt
 
 
-# import frappe
+import frappe
+from frappe import _
 from frappe.model.document import Document
 
 
@@ -19,10 +20,12 @@ class EmployeeSkillMap(Document):
 		from hrms.hr.doctype.employee_training.employee_training import EmployeeTraining
 
 		designation: DF.ReadOnly | None
-		employee: DF.Link | None
+		employee: DF.Link
 		employee_name: DF.ReadOnly | None
 		employee_skills: DF.Table[EmployeeSkill]
 		trainings: DF.Table[EmployeeTraining]
 	# end: auto-generated types
 
-	pass
+	def validate(self):
+		if not self.is_new() and self.has_value_changed("employee"):
+			frappe.throw(_("Employee cannot be changed on an existing Employee Skill Map"))

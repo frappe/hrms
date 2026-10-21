@@ -4,6 +4,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.query_builder.functions import Sum
 from frappe.utils import flt
 
 
@@ -17,7 +18,7 @@ class EmployeeBenefitLedger(Document):
 		from frappe.types import DF
 
 		amount: DF.Currency
-		company: DF.Data | None
+		company: DF.Link | None
 		employee: DF.Link | None
 		employee_name: DF.Data | None
 		flexible_benefit: DF.Check
@@ -105,7 +106,9 @@ def delete_employee_benefit_ledger_entry(ref_field, ref_value):
 	return
 
 
-def get_max_claim_eligible(employee, payroll_period, benefit_component, current_month_benefit_amount=0):
+def get_max_claim_eligible(
+	employee, payroll_period, benefit_component, current_month_benefit_amount=0, exclude_claim=None
+):
 	payout_method = benefit_component.payout_method
 	precision = frappe.get_precision("Employee Benefit Detail", "amount")
 	claim_eligible = 0
@@ -113,11 +116,12 @@ def get_max_claim_eligible(employee, payroll_period, benefit_component, current_
 	amounts = get_benefit_amount(employee, payroll_period, benefit_component.name)
 	accrued = flt(amounts.get("Accrual", 0), precision)
 	paid = flt(amounts.get("Payout", 0), precision)
+	unpaid_claims = get_unpaid_claimed_amount(employee, payroll_period, benefit_component.name, exclude_claim)
 
 	if payout_method == "Accrue per cycle, pay only on claim":
 		accrued += current_month_benefit_amount
 		if accrued >= paid:
-			claim_eligible = flt((accrued - paid), precision)
+			claim_eligible = max(flt((accrued - paid - unpaid_claims), precision), 0)
 		else:
 			frappe.throw(
 				_(
@@ -125,9 +129,54 @@ def get_max_claim_eligible(employee, payroll_period, benefit_component, current_
 				).format(accrued, paid, benefit_component.name, payroll_period)
 			)
 	elif payout_method == "Allow claim for full benefit amount":
-		claim_eligible = benefit_component.amount - paid
+		claim_eligible = max(flt(benefit_component.amount - paid - unpaid_claims, precision), 0)
 
 	return claim_eligible
+
+
+def get_unpaid_claimed_amount(employee, payroll_period, salary_component, exclude_claim=None):
+	"""Claims submitted in the payroll period whose Additional Salary is not yet on a submitted salary slip"""
+	start_date, end_date = frappe.db.get_value("Payroll Period", payroll_period, ["start_date", "end_date"])
+
+	Claim = frappe.qb.DocType("Employee Benefit Claim")
+	AdditionalSalary = frappe.qb.DocType("Additional Salary")
+	SalarySlip = frappe.qb.DocType("Salary Slip")
+	SalaryDetail = frappe.qb.DocType("Salary Detail")
+
+	paid_additional_salaries = (
+		frappe.qb.from_(SalaryDetail)
+		.join(SalarySlip)
+		.on(SalarySlip.name == SalaryDetail.parent)
+		.select(SalaryDetail.additional_salary)
+		.where(
+			(SalarySlip.employee == employee)
+			& (SalarySlip.docstatus == 1)
+			& (SalaryDetail.parenttype == "Salary Slip")
+			& SalaryDetail.additional_salary.isnotnull()
+		)
+	)
+
+	query = (
+		frappe.qb.from_(Claim)
+		.join(AdditionalSalary)
+		.on(
+			(AdditionalSalary.ref_doctype == "Employee Benefit Claim")
+			& (AdditionalSalary.ref_docname == Claim.name)
+		)
+		.select(Sum(Claim.claimed_amount))
+		.where(
+			(Claim.employee == employee)
+			& (Claim.earning_component == salary_component)
+			& (Claim.docstatus == 1)
+			& (Claim.payroll_date.between(start_date, end_date))
+			& (AdditionalSalary.docstatus == 1)
+			& (AdditionalSalary.name.notin(paid_additional_salaries))
+		)
+	)
+	if exclude_claim:
+		query = query.where(Claim.name != exclude_claim)
+
+	return flt(query.run()[0][0])
 
 
 def get_benefit_amount(employee, payroll_period, salary_component):

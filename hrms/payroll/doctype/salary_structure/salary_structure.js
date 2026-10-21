@@ -274,11 +274,12 @@ var calculate_totals = function (doc) {
 
 	var total_earn = 0;
 	var total_ded = 0;
+	var is_counted = (row) => !row.statistical_component && !row.do_not_include_in_total;
 	for (var i = 0; i < tbl1.length; i++) {
-		total_earn += flt(tbl1[i].amount);
+		if (is_counted(tbl1[i])) total_earn += flt(tbl1[i].amount);
 	}
 	for (var j = 0; j < tbl2.length; j++) {
-		total_ded += flt(tbl2[j].amount);
+		if (is_counted(tbl2[j])) total_ded += flt(tbl2[j].amount);
 	}
 	doc.total_earning = total_earn;
 	doc.total_deduction = total_ded;

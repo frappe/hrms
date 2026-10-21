@@ -3,7 +3,7 @@
 
 
 import frappe
-from frappe.utils import add_days, flt, get_year_ending, get_year_start, getdate
+from frappe.utils import add_days, add_months, flt, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
@@ -174,3 +174,22 @@ class TestEmployeeLeaveBalance(HRMSTestSuite):
 		)
 		report = execute(filters)
 		self.assertEqual(len(report[1]), 1)
+
+	@assign_holiday_list("_Test Emp Balance Holiday List", "_Test Company")
+	def test_leave_after_date_not_deducted(self):
+		frappe.get_doc(test_records[0]).insert()
+
+		allocation = make_allocation_record(
+			employee=self.employee_id, from_date=self.year_start, to_date=self.year_end
+		)
+		first_sunday = get_first_sunday(self.holiday_list, for_date=add_months(self.year_start, 6))
+		make_leave_application(
+			self.employee_id, add_days(first_sunday, 1), add_days(first_sunday, 2), "_Test Leave Type"
+		)
+
+		filters = frappe._dict(
+			{"date": add_months(self.year_start, 3), "company": "_Test Company", "employee": self.employee_id}
+		)
+		report = execute(filters)
+
+		self.assertEqual(report[1][0][3], flt(allocation.new_leaves_allocated))

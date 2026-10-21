@@ -11,6 +11,7 @@ from hrms.telemetry import (
 	_claim_milestone,
 	capture,
 	capture_daily_attendance_pulse,
+	capture_first,
 	on_appraisal_submit,
 	on_attendance_request_submit,
 	on_employee_checkin,
@@ -61,10 +62,11 @@ def create_leave_type(**flags):
 
 class TestTelemetry(HRMSTestSuite):
 	def setUp(self):
-		self.captured = []
+		self._captured = []
+		frappe.db.after_commit.reset()
 
 		def collect(event, app, properties=None):
-			self.captured.append((event, properties or {}))
+			self._captured.append((event, properties or {}))
 
 		# Tests are a skipped context by design, and `_capture` would talk to the
 		# real provider — stub both so the surrounding logic can be exercised.
@@ -80,6 +82,12 @@ class TestTelemetry(HRMSTestSuite):
 		for p in patches:
 			p.start()
 			self.addCleanup(p.stop)
+
+	@property
+	def captured(self) -> list[tuple]:
+		"""Events are sent after commit; run the pending callbacks as a commit would."""
+		frappe.db.after_commit.run()
+		return self._captured
 
 	def events(self, name: str) -> list[dict]:
 		return [props for event, props in self.captured if event == name]
@@ -487,6 +495,25 @@ class TestTelemetry(HRMSTestSuite):
 		capture_daily_attendance_pulse()
 
 		self.assertEqual(self.events(CONVERSION_EVENT), [])
+
+	# ---- events follow the transaction ----
+
+	def test_events_are_sent_only_after_commit(self):
+		self.release_milestone("_test_first")
+
+		capture_first("_test_first")
+		self.assertEqual(self._captured, [])
+		self.assertEqual(len(self.events("_test_first")), 1)
+
+	def test_rolled_back_first_event_is_sent_once(self):
+		self.release_milestone("_test_first")
+
+		capture_first("_test_first")
+		frappe.db.rollback()
+		self.assertFalse(frappe.db.exists(MILESTONE_DOCTYPE, "_test_first"))
+
+		capture_first("_test_first")
+		self.assertEqual(len(self.events("_test_first")), 1)
 
 	# ---- the claim is atomic ----
 

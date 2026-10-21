@@ -29,6 +29,7 @@ frappe.query_reports["Employee Birthday"] = {
 			fieldtype: "Link",
 			options: "Company",
 			default: frappe.defaults.get_user_default("Company"),
+			reqd: 1,
 		},
 	],
 };

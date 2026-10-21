@@ -49,6 +49,7 @@ def get_or_insert_shift_schedule(shift_type: str, frequency: str, repeat_on_days
 		if sorted(repeat_on_days) == sorted(shift_schedule_days):
 			return shift_schedule.name
 
+	frappe.has_permission("Shift Schedule", "create", throw=True)
 	doc = frappe.get_doc(
 		{
 			"doctype": "Shift Schedule",
@@ -57,6 +58,8 @@ def get_or_insert_shift_schedule(shift_type: str, frequency: str, repeat_on_days
 			"frequency": frequency,
 			"repeat_on_days": [{"day": day} for day in repeat_on_days],
 		}
-	).insert()
+	)
+	doc.flags.ignore_permissions = True
+	doc.insert()
 	doc.submit()
 	return doc.name

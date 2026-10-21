@@ -132,15 +132,15 @@ const markAllAsRead = createResource({
 	},
 })
 
+const markNotificationAsRead = createResource({
+	url: "hrms.api.mark_notification_as_read",
+	onSuccess() {
+		refreshNotifications()
+	},
+})
+
 function markAsRead(name) {
-	notifications.setValue.submit(
-		{ name, read: 1 },
-		{
-			onSuccess: () => {
-				refreshNotifications()
-			},
-		}
-	)
+	markNotificationAsRead.submit({ name })
 }
 
 function getItemRoute(item) {

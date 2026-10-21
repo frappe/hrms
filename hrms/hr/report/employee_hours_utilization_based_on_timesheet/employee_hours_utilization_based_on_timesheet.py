@@ -4,7 +4,10 @@
 
 import frappe
 from frappe import _
-from frappe.utils import flt, getdate
+from frappe.query_builder.functions import Date
+from frappe.utils import date_diff, flt, getdate
+
+from hrms.utils.holiday_list import get_holiday_list_ranges_for_employees, get_holidays_in_ranges_map
 
 
 def execute(filters=None):
@@ -24,7 +27,7 @@ class EmployeeHoursReport:
 		self.validate_standard_working_hours()
 
 	def validate_dates(self):
-		self.day_span = (self.to_date - self.from_date).days
+		self.day_span = date_diff(self.to_date, self.from_date) + 1
 
 		if self.day_span <= 0:
 			frappe.throw(_("From Date must come before To Date"))
@@ -141,8 +144,8 @@ class EmployeeHoursReport:
 				TimesheetDetail.project.as_("project"),
 			)
 			.where(Timesheet.employee.isnotnull())
-			.where(Timesheet.start_date[self.from_date : self.to_date])
-			.where(Timesheet.end_date[self.from_date : self.to_date])
+			.where(Timesheet.docstatus == 1)
+			.where(Date(TimesheetDetail.from_time).between(self.from_date, self.to_date))
 		)
 
 		for field in ("employee", "company"):
@@ -173,30 +176,50 @@ class EmployeeHoursReport:
 
 		employee_details = {
 			employee["name"]: employee
-			for employee in frappe.get_all(
+			for employee in frappe.get_list(
 				"Employee",
 				filters={"name": ["in", list(self.stats_by_employee)]},
-				fields=["name", "employee_name", "department"],
+				fields=["name", "employee_name", "department", "company"],
 			)
 		}
 
+		self.stats_by_employee = frappe._dict(
+			{emp: stats for emp, stats in self.stats_by_employee.items() if emp in employee_details}
+		)
 		for emp, stats in self.stats_by_employee.items():
-			employee = employee_details.get(emp)
-			stats["employee_name"] = employee.get("employee_name") if employee else None
-			stats["department"] = employee.get("department") if employee else None
+			employee = employee_details[emp]
+			stats["employee_name"] = employee.get("employee_name")
+			stats["department"] = employee.get("department")
+			stats["company"] = employee.get("company")
+
+	def get_holiday_count_by_employee(self):
+		holiday_list_ranges = get_holiday_list_ranges_for_employees(
+			{emp: data.pop("company", None) for emp, data in self.stats_by_employee.items()},
+			self.from_date,
+			self.to_date,
+		)
+		return {
+			employee: len(holidays)
+			for employee, holidays in get_holidays_in_ranges_map(holiday_list_ranges).items()
+		}
 
 	def calculate_utilizations(self):
-		TOTAL_HOURS = flt(self.standard_working_hours * self.day_span, 2)
-		for __, data in self.stats_by_employee.items():
-			data["total_hours"] = TOTAL_HOURS
-			data["untracked_hours"] = flt(TOTAL_HOURS - data["billed_hours"] - data["non_billed_hours"], 2)
+		holiday_count = self.get_holiday_count_by_employee()
+		for emp, data in self.stats_by_employee.items():
+			total_hours = flt(self.standard_working_hours * (self.day_span - holiday_count.get(emp, 0)), 2)
+			data["total_hours"] = total_hours
+			data["untracked_hours"] = flt(total_hours - data["billed_hours"] - data["non_billed_hours"], 2)
 
 			# To handle overtime edge-case
 			if data["untracked_hours"] < 0:
 				data["untracked_hours"] = 0.0
 
-			data["per_util"] = flt(((data["billed_hours"] + data["non_billed_hours"]) / TOTAL_HOURS) * 100, 2)
-			data["per_util_billed_only"] = flt((data["billed_hours"] / TOTAL_HOURS) * 100, 2)
+			if not total_hours:
+				data["per_util"] = data["per_util_billed_only"] = 0.0
+				continue
+
+			data["per_util"] = flt(((data["billed_hours"] + data["non_billed_hours"]) / total_hours) * 100, 2)
+			data["per_util_billed_only"] = flt((data["billed_hours"] / total_hours) * 100, 2)
 
 	def generate_report_summary(self):
 		self.report_summary = []

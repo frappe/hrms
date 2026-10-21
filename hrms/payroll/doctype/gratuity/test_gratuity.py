@@ -175,7 +175,9 @@ class TestGratuity(HRMSTestSuite):
 		date = getdate("2024-01-01")
 		create_salary_slip(self.employee, date)
 
-		setup_gratuity_rule("Rule Under Limited Contract (UAE)")
+		rule = setup_gratuity_rule("Rule Under Limited Contract (UAE)")
+		rule.work_experience_calculation_function = "Round off Work Experience"
+		rule.save()
 		set_mode_of_payment_account()
 
 		gratuity = create_gratuity(
@@ -240,6 +242,93 @@ class TestGratuity(HRMSTestSuite):
 		gratuity.reload()
 		self.assertEqual(gratuity.status, "Unpaid")
 
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	def test_fnf_settles_outstanding_gratuity_after_partial_payment(self):
+		from hrms.hr.doctype.full_and_final_statement.full_and_final_statement import (
+			get_account_and_amount,
+		)
+		from hrms.hr.doctype.full_and_final_statement.test_full_and_final_statement import (
+			create_full_and_final_statement,
+		)
+		from hrms.overrides.employee_payment_entry import get_payment_entry_for_employee
+
+		create_salary_slip(self.employee)
+		setup_gratuity_rule("Rule Under Limited Contract (UAE)")
+		set_mode_of_payment_account()
+		gratuity = create_gratuity(
+			expense_account="Payment Account - _TC", mode_of_payment="Cash", employee=self.employee
+		)
+
+		partial_amount = flt(gratuity.amount / 4, 2)
+		pe = get_payment_entry_for_employee(gratuity.doctype, gratuity.name, party_amount=partial_amount)
+		pe.reference_no = "1"
+		pe.reference_date = getdate()
+		pe.submit()
+
+		account, outstanding = get_account_and_amount("Gratuity", gratuity.name, "_Test Company")
+		self.assertEqual(account, gratuity.payable_account)
+		self.assertEqual(flt(outstanding, 2), flt(gratuity.amount - partial_amount, 2))
+
+		fnf = create_full_and_final_statement(self.employee)
+		fnf.payables = []
+		fnf.receivables = []
+		row = {
+			"component": "Gratuity",
+			"reference_document_type": "Gratuity",
+			"reference_document": gratuity.name,
+			"amount": gratuity.amount,
+			"account": account,
+			"status": "Settled",
+		}
+		fnf.append("payables", row)
+		self.assertRaises(frappe.ValidationError, fnf.save)
+
+		fnf.reload()
+		fnf.payables = []
+		fnf.receivables = []
+		fnf.append("payables", {**row, "amount": outstanding})
+		fnf.submit()
+
+		jv = fnf.create_journal_entry()
+		jv.accounts[1].account = "_Test Bank - _TC"
+		jv.cheque_no = "123456"
+		jv.cheque_date = getdate()
+		jv.submit()
+
+		gratuity.reload()
+		self.assertEqual(flt(gratuity.paid_amount, 2), flt(gratuity.amount, 2))
+		self.assertEqual(gratuity.status, "Paid")
+
+		jv.cancel()
+		gratuity.reload()
+		self.assertEqual(flt(gratuity.paid_amount, 2), partial_amount)
+		self.assertEqual(gratuity.status, "Unpaid")
+
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	def test_gratuity_paid_via_salary_slip_cannot_be_settled_in_fnf(self):
+		from hrms.hr.doctype.full_and_final_statement.test_full_and_final_statement import (
+			create_full_and_final_statement,
+		)
+
+		create_salary_slip(self.employee)
+		rule = setup_gratuity_rule("Rule Under Unlimited Contract on termination (UAE)")
+		gratuity = create_gratuity(pay_via_salary_slip=1, employee=self.employee, rule=rule.name)
+
+		fnf = create_full_and_final_statement(self.employee)
+		fnf.payables = []
+		fnf.append(
+			"payables",
+			{
+				"component": "Gratuity",
+				"reference_document_type": "Gratuity",
+				"reference_document": gratuity.name,
+				"amount": gratuity.amount,
+				"account": get_payable_account("_Test Company"),
+				"status": "Settled",
+			},
+		)
+		self.assertRaises(frappe.ValidationError, fnf.save)
+
 	def test_status_on_discard(self):
 		create_salary_slip(self.employee)
 		setup_gratuity_rule("Rule Under Limited Contract (UAE)")
@@ -254,6 +343,83 @@ class TestGratuity(HRMSTestSuite):
 		gratuity.discard()
 		gratuity.reload()
 		self.assertEqual(gratuity.status, "Cancelled")
+
+	def test_duplicate_gratuity_rejected(self):
+		create_salary_slip(self.employee)
+		setup_gratuity_rule("Rule Under Limited Contract (UAE)")
+		set_mode_of_payment_account()
+		create_gratuity(
+			expense_account="Payment Account - _TC", mode_of_payment="Cash", employee=self.employee
+		)
+
+		self.assertRaisesRegex(
+			frappe.ValidationError,
+			"already exists",
+			create_gratuity,
+			expense_account="Payment Account - _TC",
+			mode_of_payment="Cash",
+			employee=self.employee,
+		)
+
+	def test_lwp_and_half_days_reduce_service_days(self):
+		setup_gratuity_rule("Rule Under Limited Contract (UAE)")
+		gratuity = frappe.new_doc("Gratuity")
+		gratuity.employee = self.employee
+		gratuity.gratuity_rule = "Rule Under Limited Contract (UAE)"
+
+		calendar_days = (get_datetime(self.relieving_date) - get_datetime(self.date_of_joining)).days
+		base = add_days(self.relieving_date, -30)
+		mark_attendance(self.employee, base, "On Leave", leave_type="_Test Leave Type LWP")
+		mark_attendance(self.employee, add_days(base, 1), "On Leave", leave_type="_Test Leave Type LWP")
+		half_day = mark_attendance(
+			self.employee,
+			add_days(base, 2),
+			"Half Day",
+			leave_type="_Test Leave Type LWP",
+		)
+		mark_attendance(self.employee, add_days(base, 3), "Absent")
+
+		with self.change_settings("Payroll Settings", {"payroll_based_on": "Leave"}):
+			self.assertEqual(gratuity.get_total_working_days(), calendar_days - 2.5)
+		with self.change_settings("Payroll Settings", {"payroll_based_on": "Attendance"}):
+			# no leave application, so the other half of the half day is marked absent
+			self.assertEqual(gratuity.get_total_working_days(), calendar_days - 4)
+			frappe.db.set_value("Attendance", half_day, "half_day_status", "Present")
+			self.assertEqual(gratuity.get_total_working_days(), calendar_days - 3.5)
+
+	def test_round_off_work_experience_rounds_half_up(self):
+		rule = setup_gratuity_rule("Rule Under Limited Contract (UAE)")
+		rule.work_experience_calculation_function = "Round off Work Experience"
+		rule.minimum_year_for_gratuity = 0
+		rule.total_working_days_per_year = 365
+		rule.save()
+
+		gratuity = frappe.new_doc("Gratuity")
+		gratuity.employee = self.employee
+		gratuity.gratuity_rule = rule.name
+		for days, expected in ((4.5 * 365, 5), (5.5 * 365, 6)):
+			with self.subTest(days=days):
+				gratuity.get_total_working_days = lambda days=days: days
+				self.assertEqual(gratuity.get_work_experience(), expected)
+
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	def test_cancel_gratuity_paid_via_salary_slip(self):
+		create_salary_slip(self.employee)
+		rule = setup_gratuity_rule("Rule Under Unlimited Contract on termination (UAE)")
+		gratuity = create_gratuity(pay_via_salary_slip=1, employee=self.employee, rule=rule.name)
+		additional_salary = frappe.db.get_value("Additional Salary", {"ref_docname": gratuity.name})
+
+		gratuity.cancel()
+
+		self.assertEqual(gratuity.status, "Cancelled")
+		self.assertEqual(frappe.db.get_value("Additional Salary", additional_salary, "docstatus"), 2)
+
+	def test_uae_rules_use_exact_completed_years(self):
+		from hrms.regional.united_arab_emirates.setup import get_gratuity_rules
+
+		for rule in get_gratuity_rules():
+			doc = frappe.get_doc(rule)
+			self.assertEqual(doc.work_experience_calculation_function, "Take Exact Completed Years")
 
 
 def setup_gratuity_rule(name: str) -> dict:

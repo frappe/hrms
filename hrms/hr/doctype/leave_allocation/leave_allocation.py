@@ -111,6 +111,8 @@ class LeaveAllocation(Document):
 
 	def on_submit(self):
 		self.create_leave_ledger_entry()
+		if self.carry_forward:
+			self.set_carry_forwarded_leaves_in_previous_allocation()
 
 		# expire all unused leaves in the ledger on creation of carry forward allocation
 		allocation = get_previous_allocation(self.from_date, self.leave_type, self.employee)
@@ -282,9 +284,6 @@ class LeaveAllocation(Document):
 
 		self.limit_carry_forward_based_on_max_allowed_leaves()
 
-		if self.carry_forward:
-			self.set_carry_forwarded_leaves_in_previous_allocation()
-
 		if (
 			not self.total_leaves_allocated
 			and not frappe.db.get_value("Leave Type", self.leave_type, "is_earned_leave")
@@ -390,17 +389,20 @@ class LeaveAllocation(Document):
 			# annual allocation as per policy should not be exceeded
 			and new_allocation_without_cf <= annual_allocation
 		):
+			leaves_to_add = flt(
+				new_allocation - flt(self.total_leaves_allocated), self.precision("total_leaves_allocated")
+			)
 			self.db_set("total_leaves_allocated", new_allocation, update_modified=False)
 
 			date = from_date or frappe.flags.current_date or getdate()
-			create_additional_leave_ledger_entry(self, new_leaves, date)
+			create_additional_leave_ledger_entry(self, leaves_to_add, date)
 
 			text = _("{0} leaves were manually allocated by {1} on {2}").format(
-				frappe.bold(new_leaves), frappe.session.user, frappe.bold(formatdate(date))
+				frappe.bold(leaves_to_add), frappe.session.user, frappe.bold(formatdate(date))
 			)
 			self.add_comment(comment_type="Info", text=text)
 			frappe.msgprint(
-				_("{0} leaves allocated successfully").format(frappe.bold(new_leaves)),
+				_("{0} leaves allocated successfully").format(frappe.bold(leaves_to_add)),
 				indicator="green",
 				alert=True,
 			)

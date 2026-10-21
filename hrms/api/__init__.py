@@ -128,6 +128,17 @@ def mark_all_notifications_as_read() -> None:
 	)
 
 
+@frappe.whitelist(methods=["POST"])
+def mark_notification_as_read(name: int | str) -> None:
+	frappe.db.set_value(
+		"PWA Notification",
+		{"name": name, "to_user": frappe.session.user},
+		"read",
+		1,
+		update_modified=False,
+	)
+
+
 @frappe.whitelist()
 def are_push_notifications_enabled() -> bool:
 	try:
@@ -558,46 +569,29 @@ def get_expense_claims(
 def get_expense_claim_summary() -> dict:
 	employee = get_current_employee()
 
-	from frappe.query_builder.functions import Sum
+	from frappe.query_builder.functions import IfNull, Sum
 
 	Claim = frappe.qb.DocType("Expense Claim")
+	company = frappe.db.get_value("Employee", employee, "company")
 
-	pending_claims_case = (
-		frappe.qb.terms.Case().when(Claim.approval_status == "Draft", Claim.total_claimed_amount).else_(0)
-	)
-	sum_pending_claims = Sum(pending_claims_case).as_("total_pending_amount")
-
-	approved_claims_case = (
-		frappe.qb.terms.Case()
-		.when(Claim.approval_status == "Approved", Claim.total_sanctioned_amount)
-		.else_(0)
-	)
-	sum_approved_claims = Sum(approved_claims_case).as_("total_approved_amount")
-
-	approved_total_claimed_case = (
-		frappe.qb.terms.Case().when(Claim.approval_status == "Approved", Claim.total_claimed_amount).else_(0)
-	)
-	sum_approved_total_claimed = Sum(approved_total_claimed_case).as_("total_claimed_in_approved")
-
-	rejected_claims_case = (
-		frappe.qb.terms.Case().when(Claim.approval_status == "Rejected", Claim.total_claimed_amount).else_(0)
-	)
-	sum_rejected_claims = Sum(rejected_claims_case).as_("total_rejected_amount")
+	def sum_for(approval_status, field):
+		return IfNull(
+			Sum(frappe.qb.terms.Case().when(Claim.approval_status == approval_status, field).else_(0)), 0
+		)
 
 	summary = (
 		frappe.qb.from_(Claim)
 		.select(
-			sum_pending_claims,
-			sum_approved_claims,
-			sum_rejected_claims,
-			sum_approved_total_claimed,
-			Claim.company,
+			sum_for("Draft", Claim.base_total_claimed_amount).as_("total_pending_amount"),
+			sum_for("Approved", Claim.base_total_sanctioned_amount).as_("total_approved_amount"),
+			sum_for("Rejected", Claim.base_total_claimed_amount).as_("total_rejected_amount"),
+			sum_for("Approved", Claim.base_total_claimed_amount).as_("total_claimed_in_approved"),
 		)
-		.where((Claim.docstatus != 2) & (Claim.employee == employee))
+		.where((Claim.docstatus != 2) & (Claim.employee == employee) & (Claim.company == company))
 	).run(as_dict=True)[0]
 
-	currency = frappe.db.get_value("Company", summary.company, "default_currency")
-	summary["currency"] = currency
+	summary["company"] = company
+	summary["currency"] = frappe.db.get_value("Company", company, "default_currency")
 
 	return summary
 

@@ -63,7 +63,8 @@ class EmployeeReferral(Document):
 		self.full_name = " ".join(filter(None, [self.first_name, self.last_name]))
 
 	def set_status(self):
-		self.status = "Pending"
+		if self.is_new():
+			self.status = "Pending"
 
 	def set_referral_bonus_payment_status(self):
 		if not self.is_applicable_for_referral_bonus:
@@ -79,15 +80,25 @@ class EmployeeReferral(Document):
 @frappe.whitelist(methods=["POST"])
 def create_job_applicant(source_name: str, target_doc: str | Document | None = None) -> Document:
 	emp_ref = frappe.get_doc("Employee Referral", source_name)
-	# just for Api call if some set status apart from default Status
-	status = emp_ref.status
-	if emp_ref.status in ["Pending", "In process"]:
-		status = "Open"
+	emp_ref.check_permission("read")
+
+	if emp_ref.docstatus != 1 or emp_ref.status != "Pending":
+		frappe.throw(
+			_("Job Applicant can only be created from a submitted Employee Referral with Pending status")
+		)
+
+	if existing := frappe.db.exists("Job Applicant", {"employee_referral": emp_ref.name}):
+		frappe.throw(
+			_("Job Applicant {0} already exists for this Employee Referral").format(
+				get_link_to_form("Job Applicant", existing)
+			),
+			frappe.DuplicateEntryError,
+		)
 
 	job_applicant = frappe.new_doc("Job Applicant")
 	job_applicant.source = "Employee Referral"
 	job_applicant.employee_referral = emp_ref.name
-	job_applicant.status = status
+	job_applicant.status = "Open"
 	job_applicant.designation = emp_ref.for_designation
 	job_applicant.applicant_name = emp_ref.full_name
 	job_applicant.email_id = emp_ref.email
@@ -112,13 +123,24 @@ def create_job_applicant(source_name: str, target_doc: str | Document | None = N
 @frappe.whitelist()
 def create_additional_salary(employee_referral: str) -> Document:
 	doc = frappe.get_doc("Employee Referral", employee_referral)
+	doc.check_permission("read")
 
-	if not frappe.db.exists("Additional Salary", {"ref_docname": doc.name}):
-		additional_salary = frappe.new_doc("Additional Salary")
-		additional_salary.employee = doc.referrer
-		additional_salary.company = frappe.db.get_value("Employee", doc.referrer, "company")
-		additional_salary.overwrite_salary_structure_amount = 0
-		additional_salary.ref_doctype = doc.doctype
-		additional_salary.ref_docname = doc.name
+	if existing := frappe.db.exists(
+		"Additional Salary",
+		{"ref_doctype": doc.doctype, "ref_docname": doc.name, "docstatus": ("!=", 2)},
+	):
+		frappe.throw(
+			_("Additional Salary {0} already exists for this Employee Referral").format(
+				get_link_to_form("Additional Salary", existing)
+			),
+			frappe.DuplicateEntryError,
+		)
+
+	additional_salary = frappe.new_doc("Additional Salary")
+	additional_salary.employee = doc.referrer
+	additional_salary.company = frappe.db.get_value("Employee", doc.referrer, "company")
+	additional_salary.overwrite_salary_structure_amount = 0
+	additional_salary.ref_doctype = doc.doctype
+	additional_salary.ref_docname = doc.name
 
 	return additional_salary

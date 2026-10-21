@@ -5,7 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import flt
+from frappe.utils import cint, flt
 
 
 class VehicleLog(Document):
@@ -43,6 +43,17 @@ class VehicleLog(Document):
 				)
 			)
 
+	def before_submit(self):
+		current_odometer = flt(
+			frappe.db.get_value("Vehicle", self.license_plate, "last_odometer", for_update=True)
+		)
+		if flt(self.odometer) < current_odometer:
+			frappe.throw(
+				_(
+					"Current Odometer Value {0} cannot be less than the Vehicle's current odometer reading {1}"
+				).format(self.odometer, current_odometer)
+			)
+
 	def on_submit(self):
 		frappe.db.set_value("Vehicle", self.license_plate, "last_odometer", self.odometer)
 
@@ -61,19 +72,27 @@ class VehicleLog(Document):
 				expense_claim.delete()
 
 	def on_cancel(self):
-		distance_travelled = self.odometer - self.last_odometer
-		if distance_travelled > 0:
-			updated_odometer_value = (
-				int(frappe.db.get_value("Vehicle", self.license_plate, "last_odometer")) - distance_travelled
-			)
-			frappe.db.set_value("Vehicle", self.license_plate, "last_odometer", updated_odometer_value)
+		if flt(self.odometer) < flt(frappe.db.get_value("Vehicle", self.license_plate, "last_odometer")):
+			return
+
+		latest_odometer = frappe.db.get_value(
+			"Vehicle Log",
+			{"license_plate": self.license_plate, "docstatus": 1, "name": ("!=", self.name)},
+			[{"MAX": "odometer"}],
+		)
+		frappe.db.set_value(
+			"Vehicle",
+			self.license_plate,
+			"last_odometer",
+			max(cint(latest_odometer), cint(self.last_odometer)),
+		)
 
 
 @frappe.whitelist()
 def make_expense_claim(docname: str) -> dict:
 	frappe.has_permission("Vehicle Log", "read", docname, throw=True)
 
-	expense_claim = frappe.db.exists("Expense Claim", {"vehicle_log": docname})
+	expense_claim = frappe.db.exists("Expense Claim", {"vehicle_log": docname, "docstatus": ("<", 2)})
 	if expense_claim:
 		frappe.throw(_("Expense Claim {0} already exists for the Vehicle Log").format(expense_claim))
 

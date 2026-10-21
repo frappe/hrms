@@ -4,8 +4,12 @@
 
 import frappe
 from frappe import _
+from frappe.utils import cint, flt
 
-from hrms.hr.doctype.leave_application.leave_application import get_leave_details
+from hrms.hr.doctype.leave_application.leave_application import (
+	get_leave_allocation_records,
+	get_leave_balance_on,
+)
 
 
 def execute(filters=None):
@@ -56,15 +60,18 @@ def get_data(filters, leave_types):
 		fields=["name", "employee_name", "department", "user_id"],
 	)
 
+	precision = cint(frappe.db.get_single_value("System Settings", "float_precision")) or 2
 	data = []
 	for employee in active_employees:
 		row = [employee.name, employee.employee_name, employee.department]
-		available_leave = get_leave_details(employee.name, filters.date)
+		allocated_leave_types = get_leave_allocation_records(employee.name, filters.date)
 		for leave_type in leave_types:
 			remaining = 0
-			if leave_type in available_leave["leave_allocation"]:
-				# opening balance
-				remaining = available_leave["leave_allocation"][leave_type]["remaining_leaves"]
+			if leave_type in allocated_leave_types:
+				remaining = flt(
+					get_leave_balance_on(employee.name, leave_type, filters.date, to_date=filters.date),
+					precision,
+				)
 
 			row += [remaining]
 

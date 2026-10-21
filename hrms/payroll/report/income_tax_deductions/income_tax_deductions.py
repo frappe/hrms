@@ -4,7 +4,7 @@
 
 import frappe
 from frappe import _
-from frappe.query_builder.functions import Extract
+from frappe.query_builder.functions import Coalesce, Extract, NullIf
 
 import erpnext
 
@@ -109,8 +109,8 @@ def get_income_tax_deductions(filters: Filters) -> list[dict]:
 			SalarySlip.employee_name,
 			SalarySlip.posting_date,
 			SalaryDetail.salary_component,
-			SalaryDetail.amount,
-			SalarySlip.gross_pay,
+			(SalaryDetail.amount * Coalesce(NullIf(SalarySlip.exchange_rate, 0), 1)).as_("amount"),
+			SalarySlip.base_gross_pay.as_("gross_pay"),
 		)
 		.where(
 			(SalarySlip.docstatus == 1)

@@ -22,6 +22,7 @@ from hrms.hr.doctype.employee_checkin.employee_checkin import (
 	add_log_based_on_employee_field,
 	bulk_fetch_shift,
 	calculate_working_hours,
+	create_or_update_attendance,
 	mark_attendance_and_link_log,
 )
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
@@ -103,6 +104,67 @@ class TestEmployeeCheckin(HRMSTestSuite):
 			{"status": "Present", "working_hours": 8.2, "employee": employee, "attendance_date": now_date},
 		)
 		self.assertEqual(attendance_count, 1)
+
+	def test_strict_first_last_ignores_out_before_first_in(self):
+		date = getdate()
+		logs = [
+			frappe._dict(time=datetime.combine(date, get_time("08:55:00")), log_type="OUT"),
+			frappe._dict(time=datetime.combine(date, get_time("09:00:00")), log_type="IN"),
+			frappe._dict(time=datetime.combine(date, get_time("17:00:00")), log_type="IN"),
+		]
+		working_hours = calculate_working_hours(
+			logs, "Strictly based on Log Type in Employee Checkin", "First Check-in and Last Check-out"
+		)
+		self.assertEqual(working_hours, (0, logs[1].time, None))
+
+	def test_log_type_required_for_strict_shift(self):
+		shift = setup_shift_type(
+			shift_type="_Test Strict Shift",
+			determine_check_in_and_check_out="Strictly based on Log Type in Employee Checkin",
+		)
+		employee = make_employee("test_strict_log_type@example.com", company="_Test Company")
+		make_shift_assignment(shift.name, employee, add_days(getdate(), -1))
+
+		log = frappe.get_doc(
+			{
+				"doctype": "Employee Checkin",
+				"employee": employee,
+				"time": datetime.combine(getdate(), get_time("08:05:00")),
+			}
+		)
+		self.assertRaisesRegex(frappe.ValidationError, "Log Type is required", log.insert)
+
+	def test_cancelled_half_day_attendance_is_not_reused(self):
+		shift = setup_shift_type()
+		employee = make_employee(
+			"test_cancelled_half_day@example.com", company="_Test Company", default_shift=shift.name
+		)
+		leave_type = create_leave_type(leave_type_name="_Test Half Day", include_holidays=0)
+		date = add_days(getdate(), -1)
+
+		half_day = frappe.get_doc(
+			{
+				"doctype": "Attendance",
+				"employee": employee,
+				"attendance_date": date,
+				"status": "Half Day",
+				"leave_type": leave_type.name,
+				"half_day_status": "Present",
+				"modify_half_day_status": 1,
+				"company": "_Test Company",
+			}
+		)
+		half_day.flags.ignore_validate = True
+		half_day.insert()
+		half_day.submit()
+		half_day.cancel()
+
+		shift.mark_absent_for_half_day_dates(employee)
+		self.assertEqual(frappe.db.get_value("Attendance", half_day.name, "half_day_status"), "Present")
+
+		attendance = create_or_update_attendance(employee, date, "Present", shift=shift.name)
+		self.assertNotEqual(attendance.name, half_day.name)
+		self.assertEqual(attendance.docstatus, 1)
 
 	def test_unlink_attendance_on_cancellation(self):
 		employee = make_employee("test_mark_attendance_and_link_log@example.com", company="_Test Company")
@@ -545,6 +607,34 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		)
 		# not allowed as distance (15004m) is not within checkin radius
 		self.assertRaises(CheckinRadiusExceededError, log.insert)
+
+	@HRMSTestSuite.change_settings("HR Settings", {"allow_geolocation_tracking": 1})
+	def test_coordinates_required_only_for_own_checkin_at_shift_location(self):
+		user = "test_geofence_coordinates@example.com"
+		employee = make_employee(user, company="_Test Company")
+		shift = setup_shift_type(shift_type="Geofence Coordinates Shift")
+		date = getdate()
+
+		def own_checkin(time):
+			frappe.set_user(user)
+			try:
+				return frappe.get_doc(
+					{
+						"doctype": "Employee Checkin",
+						"employee": employee,
+						"time": datetime.combine(date, time),
+					}
+				).insert(ignore_permissions=True)
+			finally:
+				frappe.set_user("Administrator")
+
+		own_checkin(get_time("09:00:00"))
+
+		location = make_shift_location("Geofence Coordinates Loc", 24, 72)
+		make_shift_assignment(shift.name, employee, date, shift_location=location.name)
+		make_checkin(employee, datetime.combine(date, get_time("10:00:00")))
+
+		self.assertRaises(frappe.ValidationError, own_checkin, get_time("11:00:00"))
 
 	def test_bulk_fetch_shift(self):
 		emp1 = make_employee("emp1@example.com", company="_Test Company")

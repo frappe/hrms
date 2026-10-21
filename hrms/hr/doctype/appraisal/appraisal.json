@@ -93,6 +93,7 @@
    "read_only": 1
   },
   {
+   "fetch_from": "employee.company",
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
@@ -251,12 +252,14 @@
    "read_only": 1
   },
   {
+   "fetch_from": "appraisal_cycle.start_date",
    "fieldname": "start_date",
    "fieldtype": "Date",
    "label": "Start Date",
    "read_only": 1
   },
   {
+   "fetch_from": "appraisal_cycle.end_date",
    "fieldname": "end_date",
    "fieldtype": "Date",
    "label": "End Date",
@@ -300,7 +303,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-10-21 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appraisal",

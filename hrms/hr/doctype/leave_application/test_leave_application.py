@@ -1375,13 +1375,14 @@ class TestLeaveApplication(HRMSTestSuite):
 			half_day=1,
 			half_day_date=half_day_date,
 		)
-		half_day_status_after_second_application = frappe.get_value(
+		attendance = frappe.get_value(
 			"Attendance",
 			filters={"attendance_date": nowdate(), "leave_application": second_leave_application.name},
-			fieldname="half_day_status",
+			fieldname=["status", "half_day_status"],
+			as_dict=True,
 		)
-		# the status should remain unchanged after creating second half day leave application
-		self.assertEqual(half_day_status_after_second_application, "Present")
+		self.assertEqual(attendance.status, "On Leave")
+		self.assertIsNone(attendance.half_day_status)
 
 	def test_leave_balance_when_allocation_is_expired_manually(self):
 		leave_type = create_leave_type(leave_type_name="Compensatory Off")
@@ -1609,6 +1610,201 @@ class TestLeaveApplication(HRMSTestSuite):
 			leave_application.from_date,
 			leave_application=own_leave_application.name,
 		)
+
+	def _make_employee_with_holiday_list(self, user, holidays=None, from_date=None, to_date=None):
+		from_date = from_date or add_days(getdate(), -60)
+		to_date = to_date or add_days(getdate(), 60)
+		holiday_list = make_holiday_list(user, from_date=from_date, to_date=to_date, add_weekly_offs=False)
+		for holiday in holidays or []:
+			add_date_to_holiday_list(holiday, holiday_list)
+		employee = make_employee(user, company="_Test Company")
+		create_holiday_list_assignment("Employee", employee, holiday_list)
+		return employee
+
+	def test_calendar_does_not_show_leaves_outside_user_permissions(self):
+		from hrms.hr.doctype.leave_application.leave_application import get_events
+
+		user = "test_calendar_viewer@example.com"
+		viewer = self._make_employee_with_holiday_list(user)
+		other = self._make_employee_with_holiday_list("test_calendar_other@example.com")
+		leave_type = create_leave_type(leave_type_name="_Test Calendar Leave").name
+		make_allocation_record(
+			other, leave_type, add_days(getdate(), -60), add_days(getdate(), 60), leaves=10
+		)
+		application = make_leave_application(other, getdate(), getdate(), leave_type)
+
+		add_user_permission("Employee", viewer, user)
+		frappe.set_user(user)
+		with self.change_settings("HR Settings", {"show_leaves_of_all_department_members_in_calendar": 1}):
+			start, end = str(add_days(getdate(), -1)), str(add_days(getdate(), 1))
+			events = get_events(start, end, "[]")
+			self.assertNotIn(application.name, [event.get("name") for event in events])
+			get_events(start, end)
+		frappe.set_user("Administrator")
+
+	def test_half_day_holiday_check_uses_holiday_list_on_half_day_date(self):
+		from hrms.hr.doctype.leave_application.leave_application import get_number_of_leave_days
+
+		start = getdate()
+		holiday = add_days(start, 11)
+		employee = make_employee("test_half_day_hl_switch@example.com", company="_Test Company")
+		make_holiday_list(
+			"_Test Half Day HL 1",
+			from_date=add_days(start, -10),
+			to_date=add_days(start, 9),
+			add_weekly_offs=False,
+		)
+		make_holiday_list(
+			"_Test Half Day HL 2",
+			from_date=add_days(start, 10),
+			to_date=add_days(start, 30),
+			add_weekly_offs=False,
+		)
+		add_date_to_holiday_list(holiday, "_Test Half Day HL 2")
+		create_holiday_list_assignment("Employee", employee, "_Test Half Day HL 1")
+		create_holiday_list_assignment("Employee", employee, "_Test Half Day HL 2")
+		leave_type = frappe.get_doc(
+			{"doctype": "Leave Type", "leave_type_name": "_Test Half Day HL Switch", "include_holiday": False}
+		).insert()
+		make_allocation_record(
+			employee, leave_type.name, add_days(start, -10), add_days(start, 30), leaves=10
+		)
+
+		self.assertEqual(
+			get_number_of_leave_days(employee, leave_type.name, add_days(start, 10), holiday, 1, holiday), 1
+		)
+		with self.assertRaisesRegex(frappe.ValidationError, "Half Day Date cannot be a holiday"):
+			make_leave_application(
+				employee,
+				add_days(start, 10),
+				holiday,
+				leave_type.name,
+				half_day=1,
+				half_day_date=holiday,
+				submit=False,
+			)
+
+	def test_half_day_without_half_day_date(self):
+		employee = self._make_employee_with_holiday_list("test_half_day_no_date@example.com")
+		leave_type = create_leave_type(leave_type_name="_Test Half Day No Date").name
+		make_allocation_record(
+			employee, leave_type, add_days(getdate(), -60), add_days(getdate(), 60), leaves=10
+		)
+		application = make_leave_application(
+			employee, getdate(), getdate(), leave_type, half_day=1, submit=False
+		)
+		self.assertEqual(application.total_leave_days, 0.5)
+		self.assertEqual(getdate(application.half_day_date), getdate())
+
+	def test_cancel_keeps_attendance_of_other_half_day_leave(self):
+		employee = self._make_employee_with_holiday_list("test_two_half_days_cancel@example.com")
+		leave_type = create_leave_type(leave_type_name="_Test Two Half Days").name
+		make_allocation_record(
+			employee, leave_type, add_days(getdate(), -60), add_days(getdate(), 60), leaves=10
+		)
+		date = getdate()
+		first = make_leave_application(employee, date, date, leave_type, half_day=1, half_day_date=date)
+		second = make_leave_application(employee, date, date, leave_type, half_day=1, half_day_date=date)
+
+		filters = {"employee": employee, "attendance_date": date, "docstatus": ("!=", 2)}
+		attendance = frappe.db.get_value("Attendance", filters, ["status", "leave_application"], as_dict=True)
+		self.assertEqual(attendance.status, "On Leave")
+		self.assertEqual(attendance.leave_application, second.name)
+
+		second.reload()
+		second.cancel()
+		attendance = frappe.db.get_value("Attendance", filters, ["status", "leave_application"], as_dict=True)
+		self.assertEqual(attendance.status, "Half Day")
+		self.assertEqual(attendance.leave_application, first.name)
+
+		first.reload()
+		first.cancel()
+		self.assertFalse(frappe.db.exists("Attendance", filters))
+
+	def test_cancel_first_of_two_half_day_leaves(self):
+		employee = self._make_employee_with_holiday_list("test_two_half_days_cancel_first@example.com")
+		leave_type = create_leave_type(leave_type_name="_Test Two Half Days First").name
+		make_allocation_record(
+			employee, leave_type, add_days(getdate(), -60), add_days(getdate(), 60), leaves=10
+		)
+		date = getdate()
+		first = make_leave_application(employee, date, date, leave_type, half_day=1, half_day_date=date)
+		second = make_leave_application(employee, date, date, leave_type, half_day=1, half_day_date=date)
+
+		first.reload()
+		first.cancel()
+		filters = {"employee": employee, "attendance_date": date, "docstatus": ("!=", 2)}
+		attendance = frappe.db.get_value(
+			"Attendance", filters, ["status", "half_day_status", "leave_application"], as_dict=True
+		)
+		self.assertEqual(attendance.status, "Half Day")
+		self.assertEqual(attendance.half_day_status, "Present")
+		self.assertEqual(attendance.leave_application, second.name)
+
+	def test_two_half_day_leaves_of_different_types_stay_half_day(self):
+		employee = self._make_employee_with_holiday_list("test_two_half_days_mixed@example.com")
+		leave_types = [
+			create_leave_type(leave_type_name="_Test Half Day Mixed A").name,
+			create_leave_type(leave_type_name="_Test Half Day Mixed B").name,
+		]
+		for leave_type in leave_types:
+			make_allocation_record(
+				employee, leave_type, add_days(getdate(), -60), add_days(getdate(), 60), leaves=10
+			)
+		date = getdate()
+		for leave_type in leave_types:
+			make_leave_application(employee, date, date, leave_type, half_day=1, half_day_date=date)
+
+		filters = {"employee": employee, "attendance_date": date, "docstatus": ("!=", 2)}
+		self.assertEqual(frappe.db.get_value("Attendance", filters, "status"), "Half Day")
+
+	def test_backdated_application_after_expiry_with_default_posting_date(self):
+		employee = get_employee().name
+		previous_month_start = get_first_day(add_months(getdate(), -1))
+		previous_month_end = get_last_day(previous_month_start)
+		leave_type = create_leave_type(leave_type_name="_Test_backdated_application_today").name
+		allocation = make_allocation_record(
+			employee, leave_type, previous_month_start, previous_month_end, leaves=10
+		)
+		expire_allocation(allocation)
+		doc = make_leave_application(employee, previous_month_start, previous_month_start, leave_type)
+
+		self.assertEqual(getdate(doc.posting_date), getdate())
+		self.assertEqual(get_leave_balance_on(employee, leave_type, previous_month_end), 9)
+		ledger_leaves = frappe.get_all(
+			"Leave Ledger Entry", filters={"transaction_name": doc.name}, pluck="leaves", order_by="leaves"
+		)
+		self.assertEqual(ledger_leaves, [doc.total_leave_days * -1, doc.total_leave_days])
+
+	def test_backdated_restriction_does_not_block_approval(self):
+		approver = "test_backdated_approver@example.com"
+		make_employee(approver, company="_Test Company")
+		employee = self._make_employee_with_holiday_list("test_backdated_applicant@example.com")
+		frappe.db.set_value("Employee", employee, "leave_approver", approver)
+		frappe.get_doc("User", approver).add_roles("Leave Approver")
+		leave_type = create_leave_type(leave_type_name="_Test Backdated Approval").name
+		make_allocation_record(
+			employee, leave_type, add_days(getdate(), -60), add_days(getdate(), 60), leaves=10
+		)
+		yesterday = add_days(getdate(), -1)
+		application = make_leave_application(
+			employee, yesterday, yesterday, leave_type, status="Open", leave_approver=approver, submit=False
+		)
+
+		with self.change_settings(
+			"HR Settings",
+			{
+				"restrict_backdated_leave_application": 1,
+				"role_allowed_to_create_backdated_leave_application": "HR Manager",
+			},
+		):
+			frappe.set_user(approver)
+			application.reload()
+			application.status = "Approved"
+			application.submit()
+			frappe.set_user("Administrator")
+
+		self.assertEqual(application.docstatus, 1)
 
 
 def create_carry_forwarded_allocation(employee, leave_type, date=None):

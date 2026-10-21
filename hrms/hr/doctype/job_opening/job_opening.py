@@ -7,7 +7,8 @@
 import frappe
 from frappe import _
 from frappe.model.naming import set_name_from_naming_options
-from frappe.utils import get_link_to_form, getdate, pretty_date
+from frappe.utils import cint, get_link_to_form, getdate, pretty_date
+from frappe.utils.nestedset import get_descendants_of
 from frappe.website.website_generator import WebsiteGenerator
 
 from hrms.hr.doctype.staffing_plan.staffing_plan import (
@@ -64,13 +65,19 @@ class JobOpening(WebsiteGenerator):
 
 	def validate(self):
 		if not self.route:
-			self.route = f"jobs/{frappe.scrub(self.company)}/{frappe.scrub(self.job_title).replace('_', '-')}"
+			self.set_route()
 		self.update_closing_date()
 		self.validate_dates()
 		self.validate_current_vacancies()
 
 	def on_update(self):
 		self.update_job_requisition_status()
+
+	def set_route(self):
+		route = f"jobs/{frappe.scrub(self.company)}/{frappe.scrub(self.job_title).replace('_', '-')}"
+		if frappe.db.exists("Job Opening", {"route": route, "name": ("!=", self.name)}):
+			route = f"{route}-{frappe.scrub(self.name).replace('_', '-')}"
+		self.route = route
 
 	def update_closing_date(self):
 		old_doc = self.get_doc_before_save()
@@ -111,6 +118,14 @@ class JobOpening(WebsiteGenerator):
 		if self.status == "Closed":
 			return
 
+		if (
+			self.staffing_plan
+			and not self.is_new()
+			and (self.has_value_changed("designation") or self.has_value_changed("company"))
+		):
+			self.staffing_plan = None
+			self.planned_vacancies = 0
+
 		if not self.staffing_plan:
 			staffing_plan = get_active_staffing_plan_details(self.company, self.designation)
 			if staffing_plan:
@@ -124,16 +139,22 @@ class JobOpening(WebsiteGenerator):
 			)
 
 		if self.staffing_plan and self.planned_vacancies:
-			designation_counts = get_designation_counts(self.designation, self.company, self.name)
-			current_count = designation_counts["employee_count"] + designation_counts["job_openings"]
-
 			number_of_positions = frappe.db.get_value(
 				"Staffing Plan Detail",
 				{"parent": self.staffing_plan, "designation": self.designation},
 				"number_of_positions",
 			)
+			if number_of_positions is None:
+				return
 
-			if number_of_positions <= current_count:
+			designation_counts = get_designation_counts(self.designation, self.company, self.name)
+			required_count = (
+				designation_counts["employee_count"]
+				+ self.get_vacancies_in_other_open_openings()
+				+ (cint(self.vacancies) or 1)
+			)
+
+			if required_count > number_of_positions:
 				frappe.throw(
 					_(
 						"Job Openings for the designation {0} are already open or the hiring is complete as per the Staffing Plan {1}"
@@ -143,6 +164,24 @@ class JobOpening(WebsiteGenerator):
 					title=_("Vacancies fulfilled"),
 				)
 
+	def get_vacancies_in_other_open_openings(self):
+		company_set = get_descendants_of("Company", self.company)
+		company_set.append(self.company)
+
+		Opening = frappe.qb.DocType("Job Opening")
+		vacancies = (
+			frappe.qb.from_(Opening)
+			.select(Opening.vacancies)
+			.where(
+				(Opening.designation == self.designation)
+				& (Opening.status == "Open")
+				& (Opening.company.isin(company_set))
+				& (Opening.name != self.name)
+			)
+		).run(pluck=True)
+
+		return sum(cint(v) or 1 for v in vacancies)
+
 	def is_opening_being_closed(self):
 		if self.is_new() or self.status != "Closed":
 			return False
@@ -150,10 +189,15 @@ class JobOpening(WebsiteGenerator):
 		return frappe.db.get_value(self.doctype, self.name, "status") == "Open"
 
 	def update_job_requisition_status(self):
-		if self.status == "Closed" and self.job_requisition:
+		if (
+			self.status == "Closed"
+			and self.job_requisition
+			and self.has_value_changed("status")
+			and not self.flags.closed_by_scheduler
+		):
 			job_requisition = frappe.get_doc("Job Requisition", self.job_requisition)
 			job_requisition.status = "Filled"
-			job_requisition.completed_on = getdate()
+			job_requisition.completed_on = self.closed_on or getdate()
 			job_requisition.flags.ignore_permissions = True
 			job_requisition.flags.ignore_mandatory = True
 			job_requisition.save()
@@ -162,6 +206,13 @@ class JobOpening(WebsiteGenerator):
 		context.no_of_applications = frappe.db.count("Job Applicant", {"job_title": self.name})
 		context.parents = [{"route": "jobs", "title": _("All Jobs")}]
 		context.posted_on = pretty_date(self.posted_on)
+
+
+@frappe.whitelist(allow_guest=True)
+def get_published_job_title(job_opening: str) -> str | None:
+	return frappe.db.get_value(
+		"Job Opening", {"name": job_opening, "publish": 1, "status": "Open"}, "job_title"
+	)
 
 
 def close_expired_job_openings():
@@ -177,6 +228,7 @@ def close_expired_job_openings():
 	for d in openings:
 		doc = frappe.get_doc("Job Opening", d)
 		doc.status = "Closed"
+		doc.flags.closed_by_scheduler = True
 		doc.flags.ignore_permissions = True
 		doc.flags.ignore_mandatory = True
 		doc.save()

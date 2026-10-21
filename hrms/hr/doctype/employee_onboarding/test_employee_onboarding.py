@@ -11,7 +11,7 @@ from hrms.hr.doctype.employee_onboarding.employee_onboarding import (
 from hrms.hr.doctype.job_offer.test_job_offer import create_job_offer
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
 from hrms.tests.test_utils import create_company
-from hrms.tests.utils import HRMSTestSuite
+from hrms.tests.utils import HRMSTestSuite, make_user
 
 
 class TestEmployeeOnboarding(HRMSTestSuite):
@@ -78,6 +78,45 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		self.assertEqual(project.status, "Completed")
 		for task_status in frappe.get_all("Task", dict(project=project.name), pluck="status"):
 			self.assertEqual(task_status, "Completed")
+
+	def test_employee_linked_after_onboarding_completed(self):
+		onboarding = create_employee_onboarding()
+		onboarding.mark_onboarding_as_completed()
+
+		employee = make_employee(onboarding.name)
+		self.assertEqual(employee.first_name, "Test Engineer")
+		employee.date_of_joining = getdate()
+		employee.date_of_birth = "1990-05-08"
+		employee.gender = "Female"
+		employee.insert()
+
+		onboarding.reload()
+		self.assertEqual(onboarding.employee, employee.name)
+		self.assertRaises(frappe.ValidationError, make_employee, onboarding.name)
+
+	def test_onboarding_against_rejected_job_offer(self):
+		applicant = get_job_applicant()
+		job_offer = create_job_offer(job_applicant=applicant.name, company="_Test Company", status="Rejected")
+		job_offer.submit()
+
+		onboarding = frappe.new_doc("Employee Onboarding")
+		onboarding.job_applicant = applicant.name
+		onboarding.job_offer = job_offer.name
+		onboarding.date_of_joining = onboarding.boarding_begins_on = getdate()
+		onboarding.company = "_Test Company"
+		self.assertRaises(frappe.ValidationError, onboarding.insert)
+
+	def test_mark_onboarding_as_completed_by_hr_user(self):
+		onboarding = create_employee_onboarding()
+		frappe.set_user(make_user("onboarding_hr_user@example.com", "HR User"))
+		try:
+			frappe.get_doc("Employee Onboarding", onboarding.name).mark_onboarding_as_completed()
+		finally:
+			frappe.set_user("Administrator")
+
+		self.assertEqual(
+			frappe.db.get_value("Employee Onboarding", onboarding.name, "boarding_status"), "Completed"
+		)
 
 
 def get_job_applicant():

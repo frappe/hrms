@@ -1060,6 +1060,80 @@ class TestShiftType(HRMSTestSuite):
 		self.assertEqual(attendance3.working_hours, 1)
 		self.assertEqual(attendance3.status, "Absent")
 
+	def test_do_not_mark_absent_for_next_day_of_shift_starting_after_midnight(self):
+		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
+
+		employee = make_employee("test_early_shift@example.com", company="_Test Company")
+		today = getdate()
+		yesterday = add_days(today, -1)
+		# check-in window is 23:30 (previous day) to 09:30
+		shift_type = setup_shift_type(
+			shift_type="Test Early Shift",
+			start_time="00:30:00",
+			end_time="08:30:00",
+			auto_update_last_sync=1,
+			absent_buffer_days=0,
+			process_attendance_after=yesterday,
+			last_sync_of_checkin=datetime.combine(yesterday, get_time("09:31:00")),
+		)
+		make_shift_assignment(shift_type.name, employee, yesterday)
+		make_checkin(employee, datetime.combine(yesterday, get_time("00:28:00")), log_type="IN")
+		make_checkin(employee, datetime.combine(yesterday, get_time("08:33:00")), log_type="OUT")
+
+		shift_type.process_auto_attendance()
+		self.assertEqual(
+			frappe.db.get_value("Attendance", {"employee": employee, "attendance_date": yesterday}, "status"),
+			"Present",
+		)
+		self.assertIsNone(frappe.db.get_value("Attendance", {"employee": employee, "attendance_date": today}))
+
+		frappe.flags.current_datetime = datetime.combine(today, get_time("10:00:00"))
+		update_last_sync_of_checkin()
+		frappe.flags.current_datetime = None
+		shift_type.reload()
+		self.assertEqual(shift_type.last_sync_of_checkin, datetime.combine(today, get_time("09:31:00")))
+
+	def test_do_not_mark_other_half_absent_before_process_attendance_after(self):
+		shift_type = setup_shift_type(shift_type="Test Half Day Cut-off")
+		employee = make_employee(
+			"test_half_day_cutoff@example.com", company="_Test Company", default_shift=shift_type.name
+		)
+		attendance = frappe.get_doc(
+			{
+				"doctype": "Attendance",
+				"employee": employee,
+				"attendance_date": add_days(shift_type.process_attendance_after, -5),
+				"status": "Half Day",
+				"company": "_Test Company",
+			}
+		).submit()
+		# as left by a half day leave application
+		attendance.db_set({"half_day_status": "Present", "modify_half_day_status": 1})
+
+		shift_type.process_auto_attendance()
+		attendance.reload()
+		self.assertEqual(attendance.half_day_status, "Present")
+		self.assertEqual(attendance.modify_half_day_status, 1)
+
+	def test_logs_before_process_attendance_after_do_not_block_shift_time_change(self):
+		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
+
+		shift = setup_shift_type(shift_type="Test Shift Cut-off", start_time="10:00:00", end_time="18:00:00")
+		employee = make_employee(
+			"test_shift_cutoff@example.com", company="_Test Company", default_shift=shift.name
+		)
+		log = make_checkin(
+			employee, datetime.combine(add_days(shift.process_attendance_after, -3), get_time("10:00:00"))
+		)
+		self.assertEqual(log.shift, shift.name)
+
+		shift.process_auto_attendance()
+		shift.start_time = get_time("10:15:00")
+		shift.save()
+		self.assertEqual(
+			get_time(frappe.db.get_value("Shift Type", shift.name, "start_time")), get_time("10:15:00")
+		)
+
 
 def setup_shift_type(**args):
 	args = frappe._dict(args)

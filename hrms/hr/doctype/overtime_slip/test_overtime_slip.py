@@ -6,6 +6,7 @@ from frappe.utils import add_days, flt, get_first_day, getdate, nowdate, today
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
+from hrms.hr.doctype.attendance.attendance import mark_attendance
 from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 from hrms.hr.doctype.overtime_type.test_overtime_type import create_overtime_type
 from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
@@ -240,6 +241,54 @@ class TestOvertimeSlip(HRMSTestSuite):
 			getdate(relieving_date),
 			"end_date must be capped at relieving_date when dates are passed as strings",
 		)
+
+	def test_overtime_rows_validated_against_slip(self):
+		employee = make_employee("test_overtime_slip_rows@example.com", company="_Test Company")
+		other_employee = make_employee("test_overtime_slip_rows2@example.com", company="_Test Company")
+		overtime_type = create_overtime_type(
+			overtime_calculation_method="Fixed Hourly Rate", maximum_overtime_hours_allowed=4
+		)
+		start_date = get_first_day(getdate())
+		end_date = add_days(start_date, 9)
+
+		own_attendance = mark_attendance(employee, add_days(start_date, 1), "Present")
+		other_attendance = mark_attendance(other_employee, add_days(start_date, 2), "Present")
+		for attendance in (own_attendance, other_attendance):
+			frappe.db.set_value("Attendance", attendance, "actual_overtime_duration", 2)
+
+		def make_slip(**row):
+			return frappe.get_doc(
+				{
+					"doctype": "Overtime Slip",
+					"employee": employee,
+					"company": "_Test Company",
+					"posting_date": start_date,
+					"start_date": start_date,
+					"end_date": end_date,
+					"overtime_details": [
+						{
+							"date": add_days(start_date, 1),
+							"overtime_type": overtime_type.name,
+							"overtime_duration": 2,
+							"standard_working_hours": 8,
+							**row,
+						}
+					],
+				}
+			)
+
+		invalid_rows = (
+			{"date": add_days(start_date, -1)},
+			{"date": add_days(start_date, 2), "reference_document": other_attendance},
+			{"reference_document": own_attendance, "overtime_duration": 3},
+			{"overtime_duration": 5},
+			{"standard_working_hours": 0},
+		)
+		for row in invalid_rows:
+			self.assertRaises(frappe.ValidationError, make_slip(**row).insert)
+
+		slip = make_slip(reference_document=own_attendance).insert()
+		self.assertEqual(slip.total_overtime_duration, 2)
 
 
 def create_overtime_slip(employee):

@@ -58,6 +58,7 @@ class SalaryStructure(Document):
 
 	def validate(self):
 		self.set_missing_values()
+		self.calculate_totals()
 		self.validate_amount()
 		self.validate_component_based_on_tax_slab()
 		self.validate_payment_days_based_dependent_component()
@@ -123,6 +124,23 @@ class SalaryStructure(Document):
 					).format(row.idx, row.salary_component)
 				)
 
+	def calculate_totals(self):
+		totals = {}
+		for table in ("earnings", "deductions"):
+			totals[table] = sum(
+				flt(d.amount)
+				for d in self.get(table)
+				if not (d.statistical_component or d.do_not_include_in_total)
+			)
+
+		self.total_earning = flt(totals["earnings"], self.precision("total_earning"))
+		self.total_deduction = flt(totals["deductions"], self.precision("total_deduction"))
+		self.net_pay = (
+			0
+			if self.salary_slip_based_on_timesheet
+			else flt(self.total_earning - self.total_deduction, self.precision("net_pay"))
+		)
+
 	def validate_amount(self):
 		if flt(self.net_pay) < 0 and self.salary_slip_based_on_timesheet:
 			frappe.throw(_("Net pay cannot be negative"))
@@ -164,7 +182,7 @@ class SalaryStructure(Document):
 				frappe.msgprint(
 					_(
 						"Row #{0}: Timesheet amount will overwrite the Earning component amount for the Salary Component {1}"
-					).format(self.idx, frappe.bold(self.salary_component)),
+					).format(component.idx, frappe.bold(self.salary_component)),
 					title=_("Warning"),
 					indicator="orange",
 				)
@@ -463,8 +481,9 @@ def get_salary_component(
 ) -> list:
 	sc = frappe.qb.DocType("Salary Component")
 	sca = frappe.qb.DocType("Salary Component Account")
+	company = filters.get("company")
 
-	salary_components = (
+	query = (
 		frappe.qb.from_(sc)
 		.left_join(sca)
 		.on(sca.parent == sc.name)
@@ -476,17 +495,11 @@ def get_salary_component(
 		)
 		.limit(page_len)
 		.offset(start)
-	).run(as_dict=True)
+	)
+	if company:
+		query = query.where((sca.company == company) | sca.company.isnull())
 
-	accounts = []
-	for component in salary_components:
-		if not component.company:
-			accounts.append((component.name, component.account, component.company))
-		else:
-			if component.company == filters["company"]:
-				accounts.append((component.name, component.account, component.company))
-
-	return accounts
+	return [(d.name, d.account, d.company) for d in query.run(as_dict=True)]
 
 
 def validate_max_benefit_for_flexible_benefit(employee_benefits, max_benefits=None):

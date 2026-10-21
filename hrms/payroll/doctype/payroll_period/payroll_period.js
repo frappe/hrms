@@ -6,12 +6,17 @@ frappe.ui.form.on("Payroll Period", {
 		frm.trigger("set_start_date");
 	},
 
+	company: function (frm) {
+		frm.trigger("set_start_date");
+	},
+
 	set_start_date: function (frm) {
-		if (!frm.doc.__islocal) return;
+		if (!frm.doc.__islocal || !frm.doc.company) return;
 
 		frappe.db
 			.get_list("Payroll Period", {
 				fields: ["end_date"],
+				filters: { company: frm.doc.company },
 				order_by: "end_date desc",
 				limit: 1,
 			})

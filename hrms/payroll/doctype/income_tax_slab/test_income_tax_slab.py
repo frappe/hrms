@@ -183,6 +183,52 @@ class TestIncomeTaxSlab(HRMSTestSuite):
 
 		self.assertEqual(tds, expected_tds)
 
+	def test_invalid_slab_rows_rejected(self):
+		def new_slab(rows):
+			return frappe.get_doc(
+				{
+					"doctype": "Income Tax Slab",
+					"name": "_Test Slab Row Validation",
+					"effective_from": "2024-04-01",
+					"currency": "INR",
+					"slabs": [{"from_amount": a, "to_amount": b, "percent_deduction": c} for a, b, c in rows],
+				}
+			)
+
+		for rows in (
+			((0, 0, 10), (500000, 250000, 10)),
+			((0, 300000, 0), (200000, 0, 10)),
+			((0, 0, 10), (500000, 0, 20)),
+			((0, 0, -5),),
+		):
+			with self.subTest(rows=rows):
+				self.assertRaises(frappe.ValidationError, new_slab(rows).validate)
+
+		new_slab(((0, 250000, 0), (250000, 500000, 5), (500001, 0, 20))).validate()
+
+	def test_both_slab_boundary_conventions_tax_exactly(self):
+		shared = make_income_tax_slab(
+			[
+				{"from_amount": 0, "to_amount": 250000, "percent_deduction": 0},
+				{"from_amount": 250000, "to_amount": 500000, "percent_deduction": 5},
+				{"from_amount": 500000, "to_amount": 0, "percent_deduction": 20},
+			]
+		)
+		plus_one = make_income_tax_slab(
+			[
+				{"from_amount": 0, "to_amount": 250000, "percent_deduction": 0},
+				{"from_amount": 250001, "to_amount": 500000, "percent_deduction": 5},
+				{"from_amount": 500001, "to_amount": 0, "percent_deduction": 20},
+			]
+		)
+		flat = make_income_tax_slab([{"from_amount": 0, "to_amount": 0, "percent_deduction": 10}])
+
+		for slab in (shared, plus_one):
+			self.assertAlmostEqual(calculate_base_tax_from_tax_slabs(800000, slab, None, {}), 72500)
+			self.assertAlmostEqual(calculate_base_tax_from_tax_slabs(250000.5, slab, None, {}), 0.025)
+			self.assertAlmostEqual(calculate_base_tax_from_tax_slabs(250000, slab, None, {}), 0)
+		self.assertAlmostEqual(calculate_base_tax_from_tax_slabs(600000, flat, None, {}), 60000)
+
 
 def make_income_tax_slab(slabs, other_taxes_and_charges=None, tax_relief_limit=0):
 	return frappe._dict(

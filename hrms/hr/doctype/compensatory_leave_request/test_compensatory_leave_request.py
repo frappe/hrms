@@ -11,6 +11,7 @@ from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import
 from hrms.hr.doctype.leave_allocation.test_leave_allocation import create_leave_allocation
 from hrms.hr.doctype.leave_application.leave_application import get_leave_balance_on
 from hrms.hr.doctype.leave_period.test_leave_period import create_leave_period
+from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 from hrms.tests.test_utils import add_date_to_holiday_list
 from hrms.tests.utils import HRMSTestSuite
 
@@ -217,6 +218,66 @@ class TestCompensatoryLeaveRequest(HRMSTestSuite):
 		create_leave_period("2024-01-01", "2024-12-31", "_Test Company")
 		compensatory_leave_request.reload()
 		compensatory_leave_request.submit()
+
+	def test_carry_forwarded_leaves_not_added_to_new_leaves(self):
+		employee = get_employee()
+		leave_type = create_leave_type(leave_type_name="_Test Compensatory CF", is_carry_forward=1)
+		leave_type.db_set("is_compensatory", 1)
+
+		create_leave_allocation(
+			leave_type=leave_type.name,
+			employee=employee.name,
+			from_date=add_months(today(), -9),
+			to_date=add_days(add_months(today(), -3), -1),
+			new_leaves_allocated=5,
+		).submit()
+		allocation = create_leave_allocation(
+			leave_type=leave_type.name,
+			employee=employee.name,
+			from_date=add_months(today(), -3),
+			to_date=add_months(today(), 3),
+			new_leaves_allocated=10,
+			carry_forward=1,
+		)
+		allocation.submit()
+		self.assertEqual(allocation.unused_leaves, 5)
+
+		mark_attendance(employee)
+		request = frappe.get_doc(
+			dict(
+				doctype="Compensatory Leave Request",
+				employee=employee.name,
+				leave_type=leave_type.name,
+				work_from_date=today(),
+				work_end_date=today(),
+				reason="test",
+			)
+		).insert()
+		request.submit()
+
+		allocation.reload()
+		self.assertEqual(allocation.new_leaves_allocated, 11)
+		self.assertEqual(allocation.total_leaves_allocated, 16)
+
+		request.cancel()
+		allocation.reload()
+		self.assertEqual(allocation.new_leaves_allocated, 10)
+		self.assertEqual(allocation.total_leaves_allocated, 15)
+
+	def test_non_compensatory_leave_type(self):
+		employee = get_employee()
+		mark_attendance(employee)
+		request = frappe.get_doc(
+			dict(
+				doctype="Compensatory Leave Request",
+				employee=employee.name,
+				leave_type="_Test Leave Type",
+				work_from_date=today(),
+				work_end_date=today(),
+				reason="test",
+			)
+		)
+		self.assertRaises(frappe.ValidationError, request.insert)
 
 
 def get_compensatory_leave_request(employee, leave_date=None):

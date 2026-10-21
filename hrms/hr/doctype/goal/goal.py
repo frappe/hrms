@@ -73,6 +73,9 @@ class Goal(NestedSet):
 		self.update_goal_progress_in_appraisal()
 
 	def on_trash(self):
+		if self.appraisal_cycle:
+			validate_active_appraisal_cycle(self.appraisal_cycle)
+
 		NestedSet.on_trash(self, allow_root_deletion=True)
 
 	def after_delete(self):
@@ -145,8 +148,8 @@ class Goal(NestedSet):
 
 		parent_goal_doc = frappe.get_doc("Goal", parent_goal)
 		parent_goal_doc.progress = flt(avg_goal_completion, parent_goal_doc.precision("progress"))
-		parent_goal_doc.ignore_permissions = True
-		parent_goal_doc.ignore_mandatory = True
+		parent_goal_doc.flags.ignore_permissions = True
+		parent_goal_doc.flags.ignore_mandatory = True
 		parent_goal_doc.save()
 
 	def update_goal_progress_in_appraisal(self):
@@ -154,7 +157,8 @@ class Goal(NestedSet):
 			return
 
 		appraisal = frappe.db.get_value(
-			"Appraisal", {"employee": self.employee, "appraisal_cycle": self.appraisal_cycle}
+			"Appraisal",
+			{"employee": self.employee, "appraisal_cycle": self.appraisal_cycle, "docstatus": 0},
 		)
 		if appraisal:
 			appraisal = frappe.get_doc("Appraisal", appraisal)

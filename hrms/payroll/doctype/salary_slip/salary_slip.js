@@ -138,7 +138,8 @@ frappe.ui.form.on("Salary Slip", {
 	},
 
 	hide_loan_section: function (frm) {
-		frm.set_df_property("section_break_43", "hidden", 1);
+		frm.set_df_property("loan_repayment_sb_1", "hidden", 1);
+		frm.set_df_property("loan_details_sb_1", "hidden", 1);
 	},
 
 	change_form_labels: function (frm) {
@@ -248,7 +249,7 @@ frappe.ui.form.on("Salary Slip", {
 
 	toggle_fields: function (frm) {
 		frm.toggle_display(
-			["hourly_wages", "timesheets"],
+			["timesheets_section", "timesheets"],
 			cint(frm.doc.salary_slip_based_on_timesheet) === 1,
 		);
 	},

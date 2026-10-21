@@ -2,6 +2,11 @@
 # License: GNU General Public License v3. See license.txt
 
 import frappe
+from frappe.utils import add_days, nowdate
+
+from erpnext.setup.doctype.employee.test_employee import make_employee
+
+from hrms.tests.utils import HRMSTestSuite
 
 # test_records = frappe.get_test_records("Leave Type")
 
@@ -40,3 +45,41 @@ def create_leave_type(**args):
 	leave_type.insert()
 
 	return leave_type
+
+
+class TestLeaveType(HRMSTestSuite):
+	def test_date_of_joining_only_for_monthly_earned_leave(self):
+		for frequency in ("Quarterly", "Half-Yearly", "Yearly"):
+			with self.assertRaises(frappe.ValidationError):
+				create_leave_type(
+					leave_type_name="_Test Earned Leave DOJ",
+					is_earned_leave=1,
+					earned_leave_frequency=frequency,
+					allocate_on_day="Date of Joining",
+				)
+
+		leave_type = create_leave_type(
+			leave_type_name="_Test Earned Leave DOJ",
+			is_earned_leave=1,
+			earned_leave_frequency="Monthly",
+			allocate_on_day="Date of Joining",
+		)
+		self.assertEqual(leave_type.allocate_on_day, "Date of Joining")
+
+	def test_draft_allocation_does_not_block_lwp(self):
+		leave_type = create_leave_type(leave_type_name="_Test LWP Draft Allocation")
+		employee = make_employee("test_lwp_draft_allocation@example.com", company="_Test Company")
+		frappe.get_doc(
+			{
+				"doctype": "Leave Allocation",
+				"employee": employee,
+				"leave_type": leave_type.name,
+				"from_date": add_days(nowdate(), -10),
+				"to_date": add_days(nowdate(), 10),
+				"new_leaves_allocated": 5,
+			}
+		).insert()
+
+		leave_type.is_lwp = 1
+		leave_type.save()
+		self.assertEqual(frappe.db.get_value("Leave Type", leave_type.name, "is_lwp"), 1)

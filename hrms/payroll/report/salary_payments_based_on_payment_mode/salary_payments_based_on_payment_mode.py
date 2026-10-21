@@ -5,20 +5,24 @@
 import frappe
 from frappe import _
 from frappe.query_builder import DocType
+from frappe.utils import flt
 
 import erpnext
 
 from hrms.payroll.utils import get_conditions
 
+MODE_NOT_SET = "mode_not_set"
+
 
 def execute(filters=None):
-	mode_of_payments = get_payment_modes()
+	salary_slips = get_salary_slips(filters)
+	mode_of_payments = get_payment_modes(salary_slips)
 
 	if not len(mode_of_payments):
 		return [], []
 
 	columns = get_columns(filters, mode_of_payments)
-	data, total_rows, report_summary = get_data(filters, mode_of_payments)
+	data, total_rows, report_summary = get_data(filters, mode_of_payments, salary_slips)
 	chart = get_chart(mode_of_payments, total_rows)
 
 	return columns, data, None, chart, report_summary
@@ -36,77 +40,69 @@ def get_columns(filters, mode_of_payments):
 	]
 
 	for mode in mode_of_payments:
-		columns.append({"label": _(mode), "fieldname": mode, "fieldtype": "Currency", "width": 160})
+		columns.append(
+			{"label": get_mode_label(mode), "fieldname": mode, "fieldtype": "Currency", "width": 160}
+		)
 
 	columns.append({"label": _("Total"), "fieldname": "total", "fieldtype": "Currency", "width": 140})
 
 	return columns
 
 
-def get_payment_modes():
+def get_salary_slips(filters):
 	SalarySlip = DocType("Salary Slip")
-	mode_of_payments = (
-		frappe.qb.from_(SalarySlip)
-		.select(SalarySlip.mode_of_payment)
-		.where(SalarySlip.docstatus == 1)
-		.distinct()
-		.run(pluck=True)
+
+	base_where = SalarySlip.docstatus == 1
+	for clause in get_conditions(filters):
+		base_where = base_where & clause
+
+	salary_slips = (
+		frappe.qb.get_query(
+			"Salary Slip",
+			fields=["branch", "mode_of_payment", "base_net_pay", "base_gross_pay"],
+			ignore_permissions=False,
+		)
+		.where(base_where)
+		.run(as_dict=True)
 	)
-	return mode_of_payments
+	for slip in salary_slips:
+		slip.mode_of_payment = slip.mode_of_payment or MODE_NOT_SET
+
+	return salary_slips
 
 
-def prepare_data(entry):
+def get_payment_modes(salary_slips):
+	return sorted({slip.mode_of_payment for slip in salary_slips})
+
+
+def get_mode_label(mode):
+	return _("Not Set") if mode == MODE_NOT_SET else _(mode)
+
+
+def prepare_data(salary_slips):
 	branch_wise_entries = {}
 	gross_pay = 0
 
-	for d in entry:
-		gross_pay += d.gross_pay
-		if branch_wise_entries.get(d.branch):
-			branch_wise_entries[d.branch][d.mode_of_payment] = d.net_pay
-		else:
-			branch_wise_entries.setdefault(d.branch, {}).setdefault(d.mode_of_payment, d.net_pay)
+	for d in salary_slips:
+		gross_pay += flt(d.base_gross_pay)
+		modes = branch_wise_entries.setdefault(d.branch, {})
+		modes[d.mode_of_payment] = flt(modes.get(d.mode_of_payment)) + flt(d.base_net_pay)
 
 	return branch_wise_entries, gross_pay
 
 
-def get_data(filters, mode_of_payments):
+def get_data(filters, mode_of_payments, salary_slips):
 	data = []
-	SalarySlip = DocType("Salary Slip")
 
-	filter_clauses = get_conditions(filters)
+	branch_wise_entries, gross_pay = prepare_data(salary_slips)
 
-	base_where = SalarySlip.docstatus == 1
-	for clause in filter_clauses:
-		base_where = base_where & clause
-
-	entry = (
-		frappe.qb.from_(SalarySlip)
-		.select(
-			SalarySlip.branch,
-			SalarySlip.mode_of_payment,
-			frappe.query_builder.functions.Sum(SalarySlip.net_pay).as_("net_pay"),
-			frappe.query_builder.functions.Sum(SalarySlip.gross_pay).as_("gross_pay"),
-		)
-		.where(base_where)
-		.groupby(SalarySlip.branch, SalarySlip.mode_of_payment)
-		.run(as_dict=True)
-	)
-
-	branch_wise_entries, gross_pay = prepare_data(entry)
-
-	branches = (
-		frappe.qb.from_(SalarySlip).select(SalarySlip.branch).where(base_where).distinct().run(pluck=True)
-	)
-
-	total_row = {"total": 0, "branch": "Total"}
-
-	for branch in branches:
+	for branch, modes in branch_wise_entries.items():
 		total = 0
 		row = {"branch": branch}
 		for mode in mode_of_payments:
-			if branch_wise_entries.get(branch).get(mode):
-				row[mode] = branch_wise_entries.get(branch).get(mode)
-				total += branch_wise_entries.get(branch).get(mode)
+			if modes.get(mode):
+				row[mode] = modes.get(mode)
+				total += modes.get(mode)
 
 		row["total"] = total
 		data.append(row)
@@ -119,9 +115,9 @@ def get_data(filters, mode_of_payments):
 	if data:
 		data.append(total_row)
 		data.append({})
-		data.append({"branch": "Total Gross Pay", mode_of_payments[0]: gross_pay})
-		data.append({"branch": "Total Deductions", mode_of_payments[0]: total_deductions})
-		data.append({"branch": "Total Net Pay", mode_of_payments[0]: total_row.get("total")})
+		data.append({"branch": "Total Gross Pay", "total": gross_pay})
+		data.append({"branch": "Total Deductions", "total": total_deductions})
+		data.append({"branch": "Total Net Pay", "total": total_row.get("total")})
 
 		currency = erpnext.get_company_currency(filters.company)
 		report_summary = get_report_summary(gross_pay, total_deductions, total_row.get("total"), currency)
@@ -174,7 +170,7 @@ def get_chart(mode_of_payments, data):
 
 		for mode in mode_of_payments:
 			values.append(data[mode])
-			labels.append([mode])
+			labels.append([get_mode_label(mode)])
 
 		chart = {"data": {"labels": labels, "datasets": [{"name": "Mode Of Payments", "values": values}]}}
 		chart["type"] = "bar"

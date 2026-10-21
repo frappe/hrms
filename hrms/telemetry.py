@@ -70,8 +70,12 @@ def capture(event: str, properties: dict | None = None) -> None:
 	if _should_skip():
 		return
 
-	_capture(event, APP, properties=sanitize_properties(properties))
+	_capture_after_commit(event, sanitize_properties(properties))
 	_track_conversion()
+
+
+def _capture_after_commit(event: str, properties: dict) -> None:
+	frappe.db.after_commit.add(lambda: _capture(event, APP, properties=properties))
 
 
 MILESTONE_DOCTYPE = "HR Telemetry Milestone"
@@ -133,10 +137,9 @@ def _track_conversion() -> None:
 		return
 
 	if _claim_milestone(CONVERSION_EVENT):
-		_capture(
+		_capture_after_commit(
 			CONVERSION_EVENT,
-			APP,
-			properties={
+			{
 				"days_since_first_capture": days_since_first_capture,
 				"day_since_install": site_age(),
 			},

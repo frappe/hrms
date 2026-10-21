@@ -1,6 +1,8 @@
 # Copyright (c) 2020, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
+import math
+
 import frappe
 from frappe import _, bold
 from frappe.query_builder.functions import Abs, Sum
@@ -8,6 +10,10 @@ from frappe.utils import cstr, flt, get_datetime, get_link_to_form
 
 from erpnext.accounts.general_ledger import make_gl_entries
 from erpnext.controllers.accounts_controller import AccountsController
+
+from hrms.hr.doctype.full_and_final_statement.full_and_final_statement import (
+	get_amount_paid_via_full_and_final_statement,
+)
 
 
 class Gratuity(AccountsController):
@@ -41,10 +47,22 @@ class Gratuity(AccountsController):
 	# end: auto-generated types
 
 	def validate(self):
+		self.validate_duplicate()
 		data = self.calculate_work_experience_and_amount()
 		self.current_work_experience = data["current_work_experience"]
 		self.amount = data["amount"]
 		self.set_status()
+
+	def validate_duplicate(self):
+		if existing := frappe.db.exists(
+			"Gratuity", {"employee": self.employee, "docstatus": ("<", 2), "name": ("!=", self.name or "")}
+		):
+			frappe.throw(
+				_("Gratuity {0} already exists for employee {1}").format(
+					get_link_to_form("Gratuity", existing), bold(self.employee)
+				),
+				title=_("Duplicate Gratuity"),
+			)
 
 	@property
 	def gratuity_settings(self):
@@ -86,8 +104,18 @@ class Gratuity(AccountsController):
 
 	def on_cancel(self):
 		self.ignore_linked_doctypes = ["GL Entry", "Payment Ledger Entry", "Advance Payment Ledger Entry"]
-		self.create_gl_entries(cancel=True)
+		if self.pay_via_salary_slip:
+			self.cancel_additional_salary()
+		else:
+			self.create_gl_entries(cancel=True)
 		self.set_status(update=True)
+
+	def cancel_additional_salary(self):
+		additional_salary = frappe.db.get_value(
+			"Additional Salary", {"ref_doctype": self.doctype, "ref_docname": self.name, "docstatus": 1}
+		)
+		if additional_salary:
+			frappe.get_doc("Additional Salary", additional_salary).cancel()
 
 	def create_gl_entries(self, cancel=False):
 		gl_entries = self.get_gl_entries()
@@ -157,6 +185,7 @@ class Gratuity(AccountsController):
 				& (aple.delinked == 0)
 			)
 		).run(as_dict=True)[0].paid_amount or 0
+		paid_amount = flt(paid_amount) + get_amount_paid_via_full_and_final_statement(self.doctype, self.name)
 
 		if flt(paid_amount) > self.amount:
 			frappe.throw(_("Row {0}# Paid Amount cannot be greater than Total amount"))
@@ -181,7 +210,7 @@ class Gratuity(AccountsController):
 		work_experience = total_working_days / (rule.total_working_days_per_year or 1)
 
 		if rule.method == "Round off Work Experience":
-			work_experience = round(work_experience)
+			work_experience = math.floor(work_experience + 0.5)
 		else:
 			work_experience = flt(work_experience, self.precision("current_work_experience"))
 
@@ -207,29 +236,47 @@ class Gratuity(AccountsController):
 		total_working_days = (get_datetime(relieving_date) - get_datetime(date_of_joining)).days
 
 		payroll_based_on = frappe.db.get_single_value("Payroll Settings", "payroll_based_on") or "Leave"
-		if payroll_based_on == "Leave":
-			total_lwp = self.get_non_working_days(relieving_date, "On Leave")
-			total_working_days -= total_lwp
-		elif payroll_based_on == "Attendance":
-			total_absent = self.get_non_working_days(relieving_date, "Absent")
-			total_working_days -= total_absent
+		total_working_days -= self.get_non_working_days(relieving_date, payroll_based_on == "Attendance")
 
 		return total_working_days
 
-	def get_non_working_days(self, relieving_date: str, status: str) -> float:
-		filters = {
-			"docstatus": 1,
-			"status": status,
-			"employee": self.employee,
-			"attendance_date": ("<=", get_datetime(relieving_date)),
+	def get_non_working_days(self, relieving_date: str, include_absence: bool) -> float:
+		attendance = frappe.get_all(
+			"Attendance",
+			filters={
+				"docstatus": 1,
+				"status": ("in", ["On Leave", "Half Day", "Absent"]),
+				"employee": self.employee,
+				"attendance_date": ("<=", get_datetime(relieving_date)),
+			},
+			fields=["status", "leave_type", "half_day_status"],
+		)
+		leave_types = {
+			d.name: d
+			for d in frappe.get_all(
+				"Leave Type",
+				filters={"name": ("in", list({d.leave_type for d in attendance if d.leave_type}))},
+				fields=["name", "is_lwp", "is_ppl", "fraction_of_daily_salary_per_leave"],
+			)
 		}
 
-		if status == "On Leave":
-			lwp_leave_types = frappe.get_all("Leave Type", filters={"is_lwp": 1}, pluck="name")
-			filters["leave_type"] = ("IN", lwp_leave_types)
+		non_working_days = 0
+		for d in attendance:
+			if d.status == "Absent":
+				non_working_days += 1 if include_absence else 0
+				continue
 
-		record = frappe.get_all("Attendance", filters=filters, fields=[{"COUNT": "*", "as": "total_lwp"}])
-		return record[0].total_lwp if len(record) else 0
+			day_fraction = 0.5 if d.status == "Half Day" else 1
+			leave_type = leave_types.get(d.leave_type)
+			if leave_type and leave_type.is_lwp:
+				non_working_days += day_fraction
+			elif leave_type and leave_type.is_ppl:
+				non_working_days += day_fraction * (1 - flt(leave_type.fraction_of_daily_salary_per_leave))
+
+			if include_absence and d.status == "Half Day" and d.half_day_status == "Absent":
+				non_working_days += 0.5
+
+		return non_working_days
 
 	def get_gratuity_amount(self, experience: float) -> float:
 		total_component_amount = self.get_total_component_amount()

@@ -93,6 +93,18 @@ frappe.query_reports["Accrued Earnings Report"] = {
 			default: "",
 		},
 	],
+	formatter: function (value, row, column, data, default_formatter) {
+		if (column.fieldname === "create_additional_salary" && data?.create_additional_salary) {
+			const esc = frappe.utils.escape_html;
+			return `<a data-employee="${esc(data.employee)}"
+				data-salary-component="${esc(data.salary_component)}"
+				data-amount="${esc(String(data.unpaid_accrual))}"
+				onclick="create_additional_salary(this.dataset.employee, this.dataset.salaryComponent, flt(this.dataset.amount))">
+				${esc(data.create_additional_salary)}
+			</a>`;
+		}
+		return default_formatter(value, row, column, data);
+	},
 };
 
 // To create additional salary with pre-populated fields

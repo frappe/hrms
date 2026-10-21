@@ -5,7 +5,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.query_builder.functions import Sum
-from frappe.utils import getdate
+from frappe.utils import flt, getdate
 
 from hrms.payroll.doctype.employee_benefit_ledger.employee_benefit_ledger import (
 	delete_employee_benefit_ledger_entry,
@@ -22,6 +22,9 @@ class Arrear(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		from hrms.payroll.doctype.arrear_salary_slip_detail.arrear_salary_slip_detail import (
+			ArrearSalarySlipDetail,
+		)
 		from hrms.payroll.doctype.payroll_correction_child.payroll_correction_child import (
 			PayrollCorrectionChild,
 		)
@@ -37,6 +40,7 @@ class Arrear(Document):
 		employee_name: DF.Data | None
 		payroll_date: DF.Date
 		payroll_period: DF.Link
+		salary_slip_arrears: DF.Table[ArrearSalarySlipDetail]
 		salary_structure: DF.Link
 	# end: auto-generated types
 
@@ -135,11 +139,14 @@ class Arrear(Document):
 		new_structure_components = self.generate_preview_components(existing_salary_slips)
 
 		component_differences = self.compute_component_differences(
-			existing_components, new_structure_components
+			sum_by_component(existing_components), sum_by_component(new_structure_components)
 		)
 
 		if component_differences:
 			self.populate_arrear_tables(component_differences)
+			self.populate_salary_slip_arrears(
+				existing_components, new_structure_components, component_differences
+			)
 
 	def get_existing_salary_slips(self):
 		salary_slips = []
@@ -147,8 +154,10 @@ class Arrear(Document):
 		if self.employee and self.arrear_start_date:
 			filters = {
 				"employee": self.employee,
+				"company": self.company,
 				"docstatus": 1,
 				"start_date": (">=", self.arrear_start_date),
+				"end_date": ("<=", self.payroll_period_details.end_date),
 			}
 
 			salary_slips = frappe.get_all(
@@ -166,7 +175,7 @@ class Arrear(Document):
 
 	def fetch_existing_salary_components(self, salary_slips: list):
 		"""Fetch salary components and amounts from existing salary slips with arrear_component enabled.
-		Returns a dict: {"earnings": {component: total}, "deductions": {component: total}, "accruals": {component: total}}
+		Returns a dict: {"earnings": {slip: {component: amount}}, "deductions": {...}, "accruals": {...}}
 		"""
 		SalarySlipDetail = frappe.qb.DocType("Salary Detail")
 		SalaryComponent = frappe.qb.DocType("Salary Component")
@@ -176,6 +185,7 @@ class Arrear(Document):
 			.join(SalaryComponent)
 			.on(SalarySlipDetail.salary_component == SalaryComponent.name)
 			.select(
+				SalarySlipDetail.parent,
 				SalarySlipDetail.parentfield,
 				SalarySlipDetail.salary_component,
 				SalarySlipDetail.amount,
@@ -188,38 +198,30 @@ class Arrear(Document):
 			)
 		).run(as_dict=True)
 
-		earnings_totals = {}
-		deductions_totals = {}
+		existing = {"earnings": {}, "deductions": {}, "accruals": {}}
 
-		# Sum amounts per component grouped by parentfield
 		for detail in slip_details:
-			comp = detail.salary_component
-			amt = detail.amount
-			parentfield = detail.parentfield
-			if parentfield == "earnings":
-				earnings_totals[comp] = earnings_totals.get(comp, 0.0) + amt
-			elif parentfield == "deductions":
-				deductions_totals[comp] = deductions_totals.get(comp, 0.0) + amt
+			if detail.parentfield in ("earnings", "deductions"):
+				add_amount(
+					existing[detail.parentfield], detail.parent, detail.salary_component, detail.amount
+				)
 
-		accrual_totals = self.fetch_existing_accrual_components(salary_slips)
+		existing["accruals"] = self.fetch_existing_accrual_components(salary_slips)
 
-		# Fetch and include existing Payroll Correction amounts for these salary slips
-		payroll_correction_totals = self.fetch_existing_payroll_corrections(salary_slips)
+		# Include submitted Payroll Corrections and earlier Arrears for these salary slips
+		for adjustments in (
+			self.fetch_existing_payroll_corrections(salary_slips),
+			self.fetch_existing_arrears(salary_slips),
+		):
+			for section, slips in adjustments.items():
+				for slip, components in slips.items():
+					for component, amount in components.items():
+						add_amount(existing[section], slip, component, amount)
 
-		# Add payroll correction amounts to existing component totals
-		for component, amount in payroll_correction_totals.get("earnings", {}).items():
-			earnings_totals[component] = earnings_totals.get(component, 0.0) + amount
-
-		for component, amount in payroll_correction_totals.get("deductions", {}).items():
-			deductions_totals[component] = deductions_totals.get(component, 0.0) + amount
-
-		for component, amount in payroll_correction_totals.get("accruals", {}).items():
-			accrual_totals[component] = accrual_totals.get(component, 0.0) + amount
-
-		if not (earnings_totals or deductions_totals or accrual_totals):
+		if not any(existing.values()):
 			frappe.throw(_("No arrear components found in the existing salary slips."))
 
-		return {"earnings": earnings_totals, "deductions": deductions_totals, "accruals": accrual_totals}
+		return existing
 
 	def fetch_existing_accrual_components(self, salary_slips: list):
 		"""Fetch accrual components from existing salary slips with arrear_component enabled."""
@@ -234,19 +236,18 @@ class Arrear(Document):
 			.inner_join(SalaryComponent)
 			.on(AccruedBenefit.salary_component == SalaryComponent.name)
 			.select(
+				AccruedBenefit.parent,
 				AccruedBenefit.salary_component,
 				AccruedBenefit.amount,
 			)
 			.where((AccruedBenefit.parent.isin(salary_slips)) & (SalaryComponent.arrear_component == 1))
 		).run(as_dict=True)
 
-		accrual_totals = {}
+		accruals = {}
 		for detail in accrual_details:
-			comp = detail.get("salary_component")
-			amt = detail.get("amount", 0.0)
-			accrual_totals[comp] = accrual_totals.get(comp, 0.0) + amt
+			add_amount(accruals, detail.parent, detail.salary_component, detail.amount)
 
-		return accrual_totals
+		return accruals
 
 	def fetch_existing_payroll_corrections(self, salary_slips: list):
 		# fetch payroll correction amounts for existing salary slips with arrear_component enabled.
@@ -264,6 +265,7 @@ class Arrear(Document):
 			.join(SalaryComponent)
 			.on(PCChild.salary_component == SalaryComponent.name)
 			.select(
+				PayrollCorrection.salary_slip_reference,
 				PCChild.parentfield,
 				PCChild.salary_component,
 				PCChild.amount,
@@ -275,33 +277,63 @@ class Arrear(Document):
 			)
 		).run(as_dict=True)
 
-		earnings_totals = {}
-		deductions_totals = {}
-		accrual_totals = {}
-
-		# Sum corrections per component grouped by parentfield
+		sections = {
+			"earning_arrears": "earnings",
+			"deduction_arrears": "deductions",
+			"accrual_arrears": "accruals",
+		}
+		existing = {"earnings": {}, "deductions": {}, "accruals": {}}
 		for detail in corrections:
-			comp = detail.salary_component
-			amt = detail.amount or 0.0
-			parentfield = detail.parentfield
+			if section := sections.get(detail.parentfield):
+				add_amount(
+					existing[section], detail.salary_slip_reference, detail.salary_component, detail.amount
+				)
 
-			if parentfield == "earning_arrears":
-				earnings_totals[comp] = earnings_totals.get(comp, 0.0) + amt
-			elif parentfield == "deduction_arrears":
-				deductions_totals[comp] = deductions_totals.get(comp, 0.0) + amt
-			elif parentfield == "accrual_arrears":
-				accrual_totals[comp] = accrual_totals.get(comp, 0.0) + amt
+		return existing
 
-		return {"earnings": earnings_totals, "deductions": deductions_totals, "accruals": accrual_totals}
+	def fetch_existing_arrears(self, salary_slips: list):
+		existing = {"earnings": {}, "deductions": {}, "accruals": {}}
+		if not salary_slips:
+			return existing
+
+		Arrear = frappe.qb.DocType("Arrear")
+		ArrearDetail = frappe.qb.DocType("Arrear Salary Slip Detail")
+
+		arrears = (
+			frappe.qb.from_(Arrear)
+			.join(ArrearDetail)
+			.on(Arrear.name == ArrearDetail.parent)
+			.select(
+				ArrearDetail.salary_slip,
+				ArrearDetail.arrear_type,
+				ArrearDetail.salary_component,
+				ArrearDetail.amount,
+			)
+			.where(
+				(ArrearDetail.parenttype == "Arrear")
+				& (ArrearDetail.salary_slip.isin(salary_slips))
+				& (Arrear.docstatus == 1)
+				& (Arrear.name != (self.name or ""))
+			)
+		).run(as_dict=True)
+
+		sections = {"Earning": "earnings", "Deduction": "deductions", "Accrual": "accruals"}
+		for detail in arrears:
+			add_amount(
+				existing[sections[detail.arrear_type]],
+				detail.salary_slip,
+				detail.salary_component,
+				detail.amount,
+			)
+
+		return existing
 
 	def generate_preview_components(self, salary_slips: list):
 		# Generate preview salary slip with new salary structure and return component and amounts.
 		if not salary_slips:
 			return {}
 
-		preview_earnings = {}
-		preview_deductions = {}
-		preview_accruals = {}
+		preview = {"earnings": {}, "deductions": {}, "accruals": {}}
 
 		def is_arrear_component(component):
 			return frappe.get_cached_value("Salary Component", component, "arrear_component")
@@ -343,9 +375,7 @@ class Arrear(Document):
 				if (not getattr(row, "additional_salary", None)) and is_arrear_component(
 					row.salary_component
 				):
-					preview_earnings[row.salary_component] = preview_earnings.get(
-						row.salary_component, 0.0
-					) + getattr(row, "amount", 0.0)
+					add_amount(preview["earnings"], slip.name, row.salary_component, row.amount)
 
 			# deductions
 			for row in preview_slip.get("deductions", []) or []:
@@ -354,18 +384,14 @@ class Arrear(Document):
 					and not getattr(row, "variable_based_on_taxable_salary", False)
 					and is_arrear_component(row.salary_component)
 				):
-					preview_deductions[row.salary_component] = preview_deductions.get(
-						row.salary_component, 0.0
-					) + getattr(row, "amount", 0.0)
+					add_amount(preview["deductions"], slip.name, row.salary_component, row.amount)
 
 			# accruals
 			for row in getattr(preview_slip, "accrued_benefits", []) or []:
 				if is_arrear_component(row.salary_component):
-					preview_accruals[row.salary_component] = preview_accruals.get(
-						row.salary_component, 0.0
-					) + getattr(row, "amount", 0.0)
+					add_amount(preview["accruals"], slip.name, row.salary_component, row.amount)
 
-		return {"earnings": preview_earnings, "deductions": preview_deductions, "accruals": preview_accruals}
+		return preview
 
 	def compute_component_differences(self, existing_components: dict, new_components: dict):
 		"""Calculate component differences between existing and preview salary slips.
@@ -427,6 +453,32 @@ class Arrear(Document):
 		for comp, total_amount in component_differences.get("accruals", {}).items():
 			self.append("accrual_arrears", {"salary_component": comp, "amount": total_amount})
 
+	def populate_salary_slip_arrears(
+		self, existing_components: dict, new_components: dict, component_differences: dict
+	):
+		# per-slip breakdown of the arrears paid, so that later Arrears for these slips can subtract it
+		self.set("salary_slip_arrears", [])
+		arrear_types = {"earnings": "Earning", "deductions": "Deduction", "accruals": "Accrual"}
+
+		for section, components in component_differences.items():
+			new_slips = new_components.get(section, {})
+			existing_slips = existing_components.get(section, {})
+			for slip in sorted(set(new_slips) | set(existing_slips)):
+				for component in components:
+					amount = flt(new_slips.get(slip, {}).get(component)) - flt(
+						existing_slips.get(slip, {}).get(component)
+					)
+					if amount:
+						self.append(
+							"salary_slip_arrears",
+							{
+								"salary_slip": slip,
+								"arrear_type": arrear_types[section],
+								"salary_component": component,
+								"amount": amount,
+							},
+						)
+
 	def validate_arrear_details(self):
 		# Ensure that there are arrear details to process
 		if not (self.earning_arrears or self.deduction_arrears or self.accrual_arrears):
@@ -479,3 +531,18 @@ class Arrear(Document):
 					"flexible_benefit": is_flexible_benefit,
 				}
 			).insert()
+
+
+def add_amount(target: dict, salary_slip: str, component: str, amount: float):
+	components = target.setdefault(salary_slip, {})
+	components[component] = components.get(component, 0.0) + flt(amount)
+
+
+def sum_by_component(components_by_slip: dict) -> dict:
+	totals = {}
+	for section, slips in components_by_slip.items():
+		section_totals = totals.setdefault(section, {})
+		for components in slips.values():
+			for component, amount in components.items():
+				section_totals[component] = section_totals.get(component, 0.0) + amount
+	return totals

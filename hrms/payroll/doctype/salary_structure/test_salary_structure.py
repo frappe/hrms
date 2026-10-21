@@ -160,6 +160,82 @@ class TestSalaryStructure(HRMSTestSuite):
 		self.assertEqual(row.depends_on_payment_days, 0)
 		self.assertEqual(row.amount, 6000)
 
+	def test_totals_computed_on_server(self):
+		sal_struct = make_salary_structure(
+			"Salary Structure Server Totals", "Monthly", dont_submit=True, company="_Test Company"
+		)
+		sal_struct.earnings = [sal_struct.earnings[0]]
+		sal_struct.earnings[0].amount_based_on_formula = 0
+		sal_struct.earnings[0].formula = ""
+		sal_struct.earnings[0].amount = 30000
+		sal_struct.deductions = [sal_struct.deductions[0]]
+		sal_struct.deductions[0].amount_based_on_formula = 0
+		sal_struct.deductions[0].formula = ""
+		sal_struct.deductions[0].condition = ""
+		sal_struct.deductions[0].amount = 1800
+		sal_struct.total_earning = 1
+		sal_struct.net_pay = -5
+		sal_struct.save()
+
+		self.assertEqual(sal_struct.total_earning, 30000)
+		self.assertEqual(sal_struct.total_deduction, 1800)
+		self.assertEqual(sal_struct.net_pay, 28200)
+
+	def test_salary_component_search_filters_company_before_limit(self):
+		from hrms.payroll.doctype.salary_structure.salary_structure import get_salary_component
+
+		companies = ["_Test Company", "_Test Company 1"]
+		names = []
+		for i in range(3):
+			name = f"_Test Search Component {i}"
+			if frappe.db.exists("Salary Component", name):
+				frappe.delete_doc("Salary Component", name, force=True)
+			doc = frappe.get_doc(
+				{
+					"doctype": "Salary Component",
+					"salary_component": name,
+					"salary_component_abbr": f"_TSC{i}",
+					"type": "Earning",
+					"accounts": [
+						{
+							"company": company,
+							"account": frappe.db.get_value(
+								"Account", {"company": company, "is_group": 0, "root_type": "Expense"}
+							),
+						}
+						for company in companies
+					],
+				}
+			).insert()
+			names.append(doc.name)
+
+		result = get_salary_component(
+			"Salary Component",
+			"_Test Search Component",
+			"name",
+			0,
+			3,
+			{"component_type": "Earning", "company": "_Test Company"},
+		)
+		self.assertEqual(sorted(r[0] for r in result), names)
+		self.assertTrue(all(r[2] == "_Test Company" for r in result))
+
+		result = get_salary_component(
+			"Salary Component", "_Test Search Component", "name", 0, 10, {"component_type": "Earning"}
+		)
+		self.assertTrue(result)
+
+	def test_timesheet_warning_names_component_row(self):
+		sal_struct = make_salary_structure(
+			"Salary Structure Timesheet Warning", "Monthly", dont_submit=True, company="_Test Company"
+		)
+		sal_struct.salary_slip_based_on_timesheet = 1
+		sal_struct.salary_component = sal_struct.earnings[1].salary_component
+		sal_struct.hour_rate = 100
+		frappe.clear_messages()
+		sal_struct.validate_timesheet_component()
+		self.assertTrue(any("Row #2: Timesheet amount" in str(m) for m in frappe.message_log))
+
 
 def make_salary_structure(
 	salary_structure,

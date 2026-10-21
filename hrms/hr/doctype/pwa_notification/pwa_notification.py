@@ -56,5 +56,23 @@ class PWANotification(Document):
 			return f"{base_url}/leave-applications/{self.reference_document_name}"
 		elif self.reference_document_type == "Expense Claim":
 			return f"{base_url}/expense-claims/{self.reference_document_name}"
+		elif self.reference_document_type == "Shift Request":
+			return f"{base_url}/shift-requests/{self.reference_document_name}"
 
 		return base_url
+
+
+def is_system_manager(user: str) -> bool:
+	return user == "Administrator" or "System Manager" in frappe.get_roles(user)
+
+
+def get_permission_query_conditions(user: str | None = None) -> str:
+	user = user or frappe.session.user
+	if is_system_manager(user):
+		return ""
+	return f"(`tabPWA Notification`.`to_user` = {frappe.db.escape(user)})"
+
+
+def has_permission(doc, ptype: str | None = None, user: str | None = None) -> bool:
+	user = user or frappe.session.user
+	return is_system_manager(user) or doc.to_user == user

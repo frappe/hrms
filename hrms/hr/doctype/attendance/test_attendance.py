@@ -21,6 +21,7 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.attendance.attendance import (
 	DuplicateAttendanceError,
 	OverlappingShiftAttendanceError,
+	get_employee_shift,
 	get_events,
 	get_unmarked_days,
 	mark_attendance,
@@ -352,6 +353,66 @@ class TestAttendance(HRMSTestSuite):
 			frappe.set_user("Administrator")
 
 		self.assertFalse(frappe.db.exists("Attendance", {"employee": other_company_employee}))
+
+	def test_get_employee_shift_ignores_ended_assignment(self):
+		from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
+
+		default_shift = setup_shift_type(
+			shift_type="Default Shift", start_time="08:00:00", end_time="12:00:00"
+		)
+		assigned_shift = setup_shift_type(shift_type="Shift 1", start_time="14:00:00", end_time="18:00:00")
+		employee = make_employee(
+			"test_employee_shift@example.com", company="_Test Company", default_shift=default_shift.name
+		)
+		date = getdate()
+		make_shift_assignment(assigned_shift.name, employee, add_days(date, -10), add_days(date, -5))
+
+		self.assertEqual(get_employee_shift(employee, add_days(date, -7)), assigned_shift.name)
+		self.assertEqual(get_employee_shift(employee, date), default_shift.name)
+
+	def test_duplicate_attendance_on_half_day_leave_date(self):
+		employee = make_employee("test_duplicate_attendance@example.com", company="_Test Company")
+		leave_type = frappe.get_all("Leave Type", pluck="name", limit=1)[0]
+		date = nowdate()
+
+		attendance = frappe.get_doc(
+			{
+				"doctype": "Attendance",
+				"employee": employee,
+				"attendance_date": date,
+				"status": "Half Day",
+				"leave_type": leave_type,
+				"half_day_status": "Present",
+				"modify_half_day_status": 1,
+				"company": "_Test Company",
+			}
+		)
+		attendance.flags.ignore_validate = True
+		attendance.insert()
+		attendance.submit()
+
+		self.assertIsNone(mark_attendance(employee, date, "Present"))
+		self.assertEqual(
+			frappe.db.count("Attendance", {"employee": employee, "attendance_date": date, "docstatus": 1}), 1
+		)
+
+	def test_bulk_attendance_reports_failed_dates(self):
+		employee = make_employee(
+			"test_bulk_failure@example.com", company="_Test Company", date_of_joining=getdate()
+		)
+		frappe.local.message_log = []
+		data = frappe._dict(
+			unmarked_days=[add_days(getdate(), -2), add_days(getdate(), -1)],
+			employee=employee,
+			status="Present",
+			shift="",
+		)
+		mark_bulk_attendance(data)
+
+		messages = [frappe.parse_json(m).get("message") for m in frappe.local.message_log]
+		self.assertFalse(frappe.db.exists("Attendance", {"employee": employee}))
+		self.assertFalse(any("successfully" in m for m in messages))
+		self.assertTrue(any(m.startswith("Attendance could not be marked") for m in messages))
 
 	def tearDown(self):
 		frappe.db.rollback()

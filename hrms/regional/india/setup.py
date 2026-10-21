@@ -267,7 +267,7 @@ def create_gratuity_rule_for_india():
 		{
 			"name": "Indian Standard Gratuity Rule",
 			"calculate_gratuity_amount_based_on": "Current Slab",
-			"work_experience_calculation_method": "Round Off Work Experience",
+			"work_experience_calculation_function": "Round off Work Experience",
 			"minimum_year_for_gratuity": 5,
 			"gratuity_rule_slabs": [
 				{

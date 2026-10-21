@@ -77,6 +77,8 @@ class LeaveControlPanel(Document):
 				allocation.to_date = to_date
 				allocation.carry_forward = cint(self.carry_forward)
 				allocation.new_leaves_allocated = flt(self.no_of_days)
+				if self.dates_based_on == "Leave Period":
+					allocation.leave_period = self.leave_period
 				allocation.insert()
 				allocation.submit()
 				success.append(
@@ -94,6 +96,7 @@ class LeaveControlPanel(Document):
 			doctype="Bulk Salary Structure Assignment",
 			after_commit=True,
 		)
+		return {"success": success, "failure": failure}
 
 	def create_leave_policy_assignments(self, employees: list) -> dict:
 		from_date, to_date = self.get_from_to_date()
@@ -135,6 +138,7 @@ class LeaveControlPanel(Document):
 			doctype="Bulk Salary Structure Assignment",
 			after_commit=True,
 		)
+		return {"success": success, "failure": failure}
 
 	def get_from_to_date(self):
 		if self.dates_based_on == "Joining Date":
@@ -151,7 +155,7 @@ class LeaveControlPanel(Document):
 		if to_date and (from_date or self.dates_based_on == "Joining Date"):
 			if all_employees := frappe.get_list(
 				"Employee",
-				filters=self.get_filters() + advanced_filters,
+				filters=[*self.get_filters(), ["date_of_joining", "<=", to_date], *advanced_filters],
 				fields=["name", "employee", "employee_name", "company", "department", "date_of_joining"],
 			):
 				return self.get_employees_without_allocations(all_employees, from_date, to_date)

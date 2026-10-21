@@ -889,6 +889,9 @@ class TestSalarySlip(HRMSTestSuite):
 		self.assertEqual(ss.total_working_days, expected_working_days)
 		self.assertEqual(ss.payment_days, expected_working_days)
 
+		basic = next(d for d in ss.earnings if d.salary_component == "Basic Salary")
+		self.assertEqual(basic.amount, basic.default_amount)
+
 	@HRMSTestSuite.change_settings(
 		"Payroll Settings", {"include_holidays_in_total_working_days": 0, "payroll_based_on": "Leave"}
 	)
@@ -2579,6 +2582,356 @@ class TestSalarySlip(HRMSTestSuite):
 
 		self.assertIn("Allowance", earnings)
 		self.assertEqual(earnings["Allowance"], 0.0)
+
+	def test_rows_left_unprorated_are_not_reprorated_in_totals(self):
+		emp_id = make_employee("test_unprorated_rows@salary.com", company="_Test Company")
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test Unprorated Rows")
+		ss.payment_days = flt(ss.total_working_days) - 3
+
+		row = ss.append(
+			"earnings",
+			{
+				"salary_component": "Basic Salary",
+				"abbr": "BS",
+				"accrual_component": 1,
+				"depends_on_payment_days": 1,
+				"default_amount": 3000,
+				"amount": 3000,
+			},
+		)
+		self.assertEqual(ss.get_amount_based_on_payment_days(row)[0], 3000)
+
+	def test_payment_days_component_formula_and_condition_use_slip_values(self):
+		from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+			create_holiday_list_assignment,
+		)
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		holiday_list = make_holiday_list("Test Slip Context Holiday List", "2024-01-01", "2024-12-31")
+		make_salary_component(
+			[
+				{"salary_component": "Slip Ctx Basic", "abbr": "SCB", "type": "Earning"},
+				{"salary_component": "Slip Ctx No LWP Bonus", "abbr": "SCNB", "type": "Earning"},
+				{"salary_component": "Slip Ctx Cond Bonus", "abbr": "SCCB", "type": "Earning"},
+			],
+			test_tax=False,
+			company_list=["_Test Company"],
+		)
+		earnings = [
+			{
+				"salary_component": "Slip Ctx Basic",
+				"abbr": "SCB",
+				"amount_based_on_formula": 1,
+				"formula": "base",
+			},
+			{
+				"salary_component": "Slip Ctx No LWP Bonus",
+				"abbr": "SCNB",
+				"amount_based_on_formula": 1,
+				"formula": "2000 if leave_without_pay == 0 else 0",
+			},
+			{
+				"salary_component": "Slip Ctx Cond Bonus",
+				"abbr": "SCCB",
+				"condition": "leave_without_pay == 0",
+				"amount": 1000,
+			},
+		]
+
+		def make_slip(email, with_lwp):
+			emp_id = make_employee(email, holiday_list=holiday_list, company="_Test Company")
+			create_holiday_list_assignment("Employee", emp_id, holiday_list)
+			if with_lwp:
+				make_leave_application(emp_id, "2024-07-10", "2024-07-13", "Leave Without Pay")
+
+			structure = make_salary_structure(
+				"Test Slip Context Structure",
+				"Monthly",
+				employee=emp_id,
+				company="_Test Company",
+				from_date="2024-07-01",
+				base=31000,
+				earnings=earnings,
+				deductions=[],
+			)
+			ss = make_salary_slip(structure.name, employee=emp_id, posting_date="2024-07-01")
+			ss.insert()
+			return ss
+
+		def amounts(ss):
+			return {d.salary_component: d.amount for d in ss.earnings}
+
+		ss = make_slip("test_slip_context_lwp@salary.com", with_lwp=True)
+		self.assertEqual(ss.leave_without_pay, 4)
+		self.assertEqual(amounts(ss).get("Slip Ctx No LWP Bonus", 0), 0)
+		self.assertNotIn("Slip Ctx Cond Bonus", amounts(ss))
+
+		ss = make_slip("test_slip_context_no_lwp@salary.com", with_lwp=False)
+		self.assertEqual(amounts(ss)["Slip Ctx No LWP Bonus"], 2000)
+		self.assertEqual(amounts(ss)["Slip Ctx Cond Bonus"], 1000)
+
+		ss.leave_without_pay = 3
+		ss.save()
+		self.assertEqual(amounts(ss).get("Slip Ctx No LWP Bonus", 0), 0)
+		self.assertNotIn("Slip Ctx Cond Bonus", amounts(ss))
+		self.assertEqual(ss.gross_pay, sum(d.amount for d in ss.earnings))
+
+	def test_draft_income_tax_slab_is_rejected(self):
+		slab = frappe.new_doc("Income Tax Slab")
+		slab.update(
+			{
+				"name": "Test Draft Slab For Slip",
+				"effective_from": "2024-01-01",
+				"currency": "INR",
+				"slabs": [{"from_amount": 0, "percent_deduction": 10}],
+			}
+		)
+		slab.insert()
+
+		ss = frappe.new_doc("Salary Slip")
+		ss._salary_structure_assignment = frappe._dict(name="Test SSA", income_tax_slab=slab.name)
+		self.assertRaisesRegex(frappe.ValidationError, "not submitted", ss.get_income_tax_slabs)
+
+	def test_payment_days_formula_is_not_prorated_twice(self):
+		from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
+			create_holiday_list_assignment,
+		)
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		holiday_list = make_holiday_list("Test PD Formula Holiday List", "2024-01-01", "2024-12-31")
+		make_salary_component(
+			[{"salary_component": "PD Formula Basic", "abbr": "PDFB", "type": "Earning"}],
+			test_tax=False,
+			company_list=["_Test Company"],
+		)
+		emp_id = make_employee(
+			"test_pd_formula@salary.com", holiday_list=holiday_list, company="_Test Company"
+		)
+		create_holiday_list_assignment("Employee", emp_id, holiday_list)
+		make_leave_application(emp_id, "2024-07-10", "2024-07-13", "Leave Without Pay")
+
+		structure = make_salary_structure(
+			"Test PD Formula Structure",
+			"Monthly",
+			employee=emp_id,
+			company="_Test Company",
+			from_date="2024-07-01",
+			base=31000,
+			earnings=[
+				{
+					"salary_component": "PD Formula Basic",
+					"abbr": "PDFB",
+					"amount_based_on_formula": 1,
+					"formula": "base * payment_days / total_working_days",
+				}
+			],
+			deductions=[],
+		)
+		ss = make_salary_slip(structure.name, employee=emp_id, posting_date="2024-07-01")
+		ss.insert()
+
+		row = next(d for d in ss.earnings if d.salary_component == "PD Formula Basic")
+		self.assertEqual(ss.leave_without_pay, 4)
+		self.assertEqual(row.default_amount, 31000)
+		self.assertEqual(row.amount, flt(31000 * ss.payment_days / ss.total_working_days, 2))
+
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings",
+		{
+			"include_holidays_in_total_working_days": 0,
+			"payroll_based_on": "Attendance",
+			"consider_unmarked_attendance_as": "Present",
+			"daily_wages_fraction_for_half_day": 0.75,
+		},
+	)
+	def test_attendance_based_partial_pay_deducts_unpaid_fraction(self):
+		emp_id, half_day_holiday = setup_employee_with_half_day_holiday(
+			"Test Partial Pay Fraction Holiday List", "test_partial_pay_fraction@salary.com"
+		)
+		leave_type = create_leave_type(
+			leave_type_name="Test PPL 75 Percent", is_ppl=1, fraction_of_daily_salary_per_leave=0.75
+		).name
+		clear_cache()
+
+		mark_attendance(
+			emp_id, add_days(half_day_holiday, 1), "Half Day", ignore_validate=True, half_day_status="Absent"
+		)
+		mark_attendance(
+			emp_id, add_days(half_day_holiday, 2), "On Leave", ignore_validate=True, leave_type=leave_type
+		)
+
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test Partial Pay Fraction")
+
+		self.assertEqual(ss.absent_days, 0.25)
+		self.assertEqual(ss.leave_without_pay, 0.25)
+		self.assertEqual(ss.payment_days, ss.total_working_days - 0.5)
+
+	def test_year_to_date_excludes_later_slips(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		year_start = get_year_start(nowdate())
+		emp_id = make_employee(
+			"test_ytd_later_slips@salary.com", company="_Test Company", date_of_joining=year_start
+		)
+		structure = make_salary_structure(
+			"Test YTD Later Slips", "Monthly", employee=emp_id, company="_Test Company", from_date=year_start
+		)
+
+		june = make_salary_slip(structure.name, employee=emp_id, posting_date=add_months(year_start, 5))
+		june.insert()
+		june.submit()
+
+		may = make_salary_slip(structure.name, employee=emp_id, posting_date=add_months(year_start, 4))
+		may.insert()
+
+		self.assertEqual(may.year_to_date, may.net_pay)
+		self.assertEqual(may.gross_year_to_date, may.gross_pay)
+		self.assertEqual(may.base_year_to_date, may.base_net_pay)
+		self.assertEqual(may.base_gross_year_to_date, may.base_gross_pay)
+		self.assertEqual(may.base_month_to_date, may.base_net_pay)
+		for row in may.earnings:
+			self.assertEqual(row.year_to_date, row.amount)
+
+	def test_opening_from_first_assignment_after_revision(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+			create_salary_structure_assignment,
+			make_salary_structure,
+		)
+
+		year_start = get_year_start(nowdate())
+		emp_id = make_employee(
+			"test_opening_after_revision@salary.com",
+			company="_Test Company",
+			date_of_joining=add_months(year_start, 3),
+		)
+		structure = make_salary_structure("Test Opening After Revision", "Monthly", company="_Test Company")
+		ssa = create_salary_structure_assignment(
+			emp_id, structure.name, from_date=add_months(year_start, 3), company="_Test Company"
+		)
+		ssa.db_set({"taxable_earnings_till_date": 300000, "tax_deducted_till_date": 10000})
+		create_salary_structure_assignment(
+			emp_id,
+			structure.name,
+			from_date=add_months(year_start, 6),
+			company="_Test Company",
+			allow_duplicate=True,
+		)
+
+		ss = make_salary_slip(structure.name, employee=emp_id, posting_date=add_months(year_start, 7))
+		ss.set_salary_structure_assignment()
+		self.assertEqual(
+			getdate(ss._salary_structure_assignment.from_date), getdate(add_months(year_start, 6))
+		)
+		self.assertEqual(ss.get_opening_for("taxable_earnings_till_date", None, None), 300000)
+		self.assertEqual(ss.get_opening_for("tax_deducted_till_date", None, None), 10000)
+
+	def test_recurring_additional_salary_projection_stops_at_its_to_date(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		year_start = get_year_start(nowdate())
+		emp_id = make_employee(
+			"test_recurring_projection@salary.com", company="_Test Company", date_of_joining=year_start
+		)
+		make_salary_structure(
+			"Test Recurring Projection",
+			"Monthly",
+			employee=emp_id,
+			company="_Test Company",
+			from_date=year_start,
+		)
+		create_recurring_additional_salary(
+			emp_id, "Recurring Salary Component", 1000, year_start, get_last_day(add_months(year_start, 2))
+		)
+		additional_salary = frappe.db.get_value(
+			"Additional Salary", {"employee": emp_id, "is_recurring": 1, "docstatus": 1}
+		)
+
+		ss = frappe.get_doc(
+			{
+				"doctype": "Salary Slip",
+				"employee": emp_id,
+				"company": "_Test Company",
+				"start_date": year_start,
+				"end_date": get_last_day(year_start),
+				"relieving_date": get_last_day(add_months(year_start, 9)),
+			}
+		)
+		self.assertEqual(ss.get_future_recurring_period(additional_salary), 2)
+
+	def test_future_period_dates_for_formula(self):
+		def evaluate(frequency, start_date, end_date, formula, sub_period):
+			ss = frappe.get_doc(
+				{
+					"doctype": "Salary Slip",
+					"payroll_frequency": frequency,
+					"start_date": start_date,
+					"end_date": end_date,
+					"posting_date": end_date,
+				}
+			)
+			ss.data = frappe._dict()
+			row = frappe._dict(
+				condition=None, amount_based_on_formula=1, formula=formula, amount=0, precision=2, abbr="FD"
+			)
+			return ss.get_amount_from_formula(row, sub_period)
+
+		monday = "100 if getdate(start_date).weekday() == 0 else 0"
+		for sub_period in (1, 2, 3):
+			self.assertEqual(evaluate("Weekly", "2026-05-04", "2026-05-10", monday, sub_period), 100)
+			self.assertEqual(evaluate("Fortnightly", "2026-05-04", "2026-05-17", monday, sub_period), 100)
+
+		self.assertEqual(evaluate("Daily", "2026-05-04", "2026-05-04", "getdate(start_date).day", 1), 5)
+		self.assertEqual(evaluate("Bimonthly", "2026-05-01", "2026-05-15", "getdate(start_date).day", 1), 16)
+		self.assertEqual(evaluate("Bimonthly", "2026-05-01", "2026-05-15", "getdate(end_date).day", 2), 15)
+		self.assertEqual(evaluate("Monthly", "2026-02-01", "2026-02-28", "getdate(end_date).day", 1), 31)
+
+	def test_mid_period_assignment_on_another_structure(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+			create_salary_structure_assignment,
+			make_salary_structure,
+		)
+
+		year_start = get_year_start(nowdate())
+		emp_id = make_employee(
+			"test_mid_period_structure@salary.com", company="_Test Company", date_of_joining=year_start
+		)
+		structure_a = make_salary_structure("Test Mid Period Structure A", "Monthly", company="_Test Company")
+		structure_b = make_salary_structure("Test Mid Period Structure B", "Monthly", company="_Test Company")
+		create_salary_structure_assignment(
+			emp_id, structure_a.name, from_date=year_start, company="_Test Company"
+		)
+		create_salary_structure_assignment(
+			emp_id,
+			structure_b.name,
+			from_date=add_days(add_months(year_start, 4), 14),
+			company="_Test Company",
+			allow_duplicate=True,
+		)
+
+		ss = frappe.get_doc(
+			{
+				"doctype": "Salary Slip",
+				"employee": emp_id,
+				"company": "_Test Company",
+				"payroll_frequency": "Monthly",
+				"posting_date": add_months(year_start, 4),
+				"start_date": add_months(year_start, 4),
+			}
+		).insert()
+		self.assertEqual(ss.salary_structure, structure_a.name)
+
+	def test_set_totals_excludes_rows_not_included_in_total(self):
+		emp_id = make_employee("test_set_totals@salary.com", company="_Test Company")
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test Set Totals")
+		gross_pay, net_pay = ss.gross_pay, ss.net_pay
+
+		ss.append(
+			"earnings",
+			{"salary_component": "HRA", "abbr": "H", "amount": 5000, "do_not_include_in_total": 1},
+		)
+		ss.set_totals()
+		self.assertEqual(ss.gross_pay, gross_pay)
+		self.assertEqual(ss.net_pay, net_pay)
 
 
 class TestSalarySlipSafeEval(HRMSTestSuite):

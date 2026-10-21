@@ -49,26 +49,59 @@ class TestProjectProfitability(HRMSTestSuite):
 		row = report[1][0]
 		timesheet = frappe.get_doc("Timesheet", self.timesheet.name)
 
-		self.assertEqual(self.sales_invoice.customer, row.customer_name)
-		self.assertEqual(timesheet.title, row.employee_name)
-		self.assertEqual(self.sales_invoice.base_grand_total, row.base_grand_total)
+		self.assertEqual(self.sales_invoice.customer, row.customer)
+		self.assertEqual(timesheet.employee_name, row.employee_name)
+		self.assertEqual(
+			flt(self.sales_invoice.timesheets[0].billing_amount * self.sales_invoice.conversion_rate),
+			row.base_grand_total,
+		)
 		self.assertEqual(self.salary_slip.base_gross_pay, row.base_gross_pay)
 		self.assertEqual(timesheet.total_billed_hours, row.total_billed_hours)
 		self.assertEqual(self.salary_slip.total_working_days, row.total_working_days)
 		self.assertEqual(self.salary_slip.name, row.salary_slip)
-
-		standard_working_hours = frappe.db.get_single_value("HR Settings", "standard_working_hours")
-		utilization = flt(
-			timesheet.total_billed_hours / (self.salary_slip.total_working_days * standard_working_hours), 2
+		self.assertEqual(
+			frappe.get_cached_value("Company", "_Test Company", "default_currency"), row.currency
 		)
 
-		self.assertEqual(utilization, row.utilization)
+		standard_working_hours = frappe.db.get_single_value("HR Settings", "standard_working_hours")
+		utilization = timesheet.total_billed_hours / (
+			self.salary_slip.total_working_days * standard_working_hours
+		)
 
-		profit = self.sales_invoice.base_grand_total - self.salary_slip.base_gross_pay * utilization
+		self.assertEqual(flt(utilization * 100, 2), row.utilization)
+
+		fractional_cost = flt(self.salary_slip.base_gross_pay * utilization, 2)
+		self.assertEqual(fractional_cost, row.fractional_cost)
+
+		profit = flt(row.base_grand_total - fractional_cost, 2)
 		self.assertEqual(profit, row.profit)
 
-		fractional_cost = self.salary_slip.base_gross_pay * utilization
-		self.assertEqual(fractional_cost, row.fractional_cost)
+	def test_cost_hidden_without_salary_slip_permission(self):
+		from frappe.desk.query_report import run
+
+		user = "project_profitability_projects_user@example.com"
+		if not frappe.db.exists("User", user):
+			frappe.get_doc(
+				{"doctype": "User", "email": user, "first_name": "Projects", "send_welcome_email": 0}
+			).insert()
+		frappe.get_doc("User", user).add_roles("Projects User")
+
+		filters = {
+			"company": "_Test Company",
+			"start_date": add_days(self.timesheet.start_date, -3),
+			"end_date": add_days(self.timesheet.end_date, 1),
+		}
+		frappe.set_user(user)
+		try:
+			report = run("Project Profitability", filters=filters)
+		finally:
+			frappe.set_user("Administrator")
+
+		fieldnames = {column["fieldname"] for column in report["columns"]}
+		self.assertTrue(report["result"])
+		self.assertFalse(fieldnames & {"base_gross_pay", "fractional_cost", "profit"})
+		for row in report["result"]:
+			self.assertFalse({"base_gross_pay", "fractional_cost", "profit"} & set(row))
 
 
 def create_activity_type(activity_type: str) -> str:

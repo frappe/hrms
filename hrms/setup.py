@@ -749,6 +749,7 @@ def get_user_types_data():
 				"Timesheet": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
 				# trainings
 				"Training Program": ["read"],
+				"Training Event": ["read"],
 				"Training Feedback": ["read", "write", "create", "delete", "submit", "cancel", "amend"],
 				# shifts
 				"Employee Checkin": ["read"],

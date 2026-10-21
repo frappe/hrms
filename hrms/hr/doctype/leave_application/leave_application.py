@@ -22,7 +22,7 @@ from frappe.utils import (
 )
 
 from erpnext.buying.doctype.supplier_scorecard.supplier_scorecard import daterange
-from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee, is_holiday
+from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
 
 import hrms
 from hrms.api import get_current_employee_info
@@ -109,6 +109,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 	def validate(self):
 		validate_active_employee(self.employee)
 		set_employee_name(self)
+		self.set_half_day_date()
 		self.validate_dates()
 		self.validate_balance_leaves()
 		self.validate_leave_overlap()
@@ -117,7 +118,6 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		self.validate_block_days()
 		self.validate_salary_processed_days()
 		self.validate_attendance()
-		self.set_half_day_date()
 		if frappe.db.get_value("Leave Type", self.leave_type, "is_optional_leave"):
 			self.validate_optional_leave()
 		self.validate_applicable_after()
@@ -149,12 +149,16 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		self.create_leave_ledger_entry()
 		# create a reverse ledger entry for backdated leave applications for whom expiry entry already exists
 		leave_allocation = self.get_leave_allocation()
-		if not leave_allocation:
+		if not leave_allocation or self.status != "Approved":
 			return
 		to_date = leave_allocation.get("to_date")
 		can_expire = not frappe.db.get_value("Leave Type", self.leave_type, "is_carry_forward")
+		is_expired = frappe.db.exists(
+			"Leave Ledger Entry",
+			{"transaction_name": leave_allocation.name, "is_expired": 1, "docstatus": 1},
+		)
 
-		if to_date < getdate() and can_expire:
+		if to_date < getdate() and can_expire and is_expired:
 			args = frappe._dict(
 				leaves=self.total_leave_days, from_date=to_date, to_date=to_date, is_carry_forward=0
 			)
@@ -200,7 +204,9 @@ class LeaveApplication(Document, PWANotificationsMixin):
 						)
 
 	def validate_dates(self):
-		if frappe.db.get_single_value("HR Settings", "restrict_backdated_leave_application"):
+		if frappe.db.get_single_value("HR Settings", "restrict_backdated_leave_application") and (
+			self.is_new() or self.has_value_changed("from_date")
+		):
 			if self.from_date and getdate(self.from_date) < getdate():
 				allowed_role = frappe.db.get_single_value(
 					"HR Settings", "role_allowed_to_create_backdated_leave_application"
@@ -290,11 +296,11 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			)
 
 	def get_leave_allocation(self):
-		date = self.posting_date or getdate()
+		date = self.from_date
 		LeaveAllocation = frappe.qb.DocType("Leave Allocation")
 		leave_allocation = (
 			frappe.qb.from_(LeaveAllocation)
-			.select(LeaveAllocation.to_date)
+			.select(LeaveAllocation.name, LeaveAllocation.to_date)
 			.where(
 				((LeaveAllocation.from_date <= date) & (date <= LeaveAllocation.to_date))
 				& (LeaveAllocation.docstatus == 1)
@@ -346,6 +352,14 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		if attendance_name:
 			# update existing attendance, change absent to on leave or half day
 			doc = frappe.get_doc("Attendance", attendance_name)
+			if (
+				status == "Half Day"
+				and doc.status == "Half Day"
+				and doc.leave_application
+				and doc.leave_application != self.name
+				and doc.leave_type == self.leave_type
+			):
+				status = "On Leave"
 			half_day_status = None if status == "On Leave" else "Present"
 			modify_half_day_status = 1 if doc.status == "Absent" and status == "Half Day" else 0
 			doc.db_set(
@@ -374,20 +388,72 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			doc.submit()
 
 	def cancel_attendance(self):
-		if self.docstatus == 2:
-			Attendance = frappe.qb.DocType("Attendance")
-			attendance = (
-				frappe.qb.from_(Attendance)
-				.select(Attendance.name)
-				.where(
-					(Attendance.employee == self.employee)
-					& (Attendance.attendance_date.between(self.from_date, self.to_date))
-					& (Attendance.docstatus < 2)
-					& (Attendance.status.isin(["On Leave", "Half Day"]))
+		if self.docstatus != 2:
+			return
+
+		Attendance = frappe.qb.DocType("Attendance")
+		attendance = (
+			frappe.qb.from_(Attendance)
+			.select(
+				Attendance.name,
+				Attendance.attendance_date,
+				Attendance.status,
+				Attendance.leave_application,
+				Attendance.docstatus,
+			)
+			.where(
+				(Attendance.employee == self.employee)
+				& (Attendance.attendance_date.between(self.from_date, self.to_date))
+				& (Attendance.docstatus < 2)
+				& (Attendance.status.isin(["On Leave", "Half Day"]))
+			)
+		).run(as_dict=1)
+
+		for att in attendance:
+			is_own_half_of_full_day = (
+				att.status == "On Leave"
+				and self.half_day
+				and getdate(att.attendance_date) == getdate(self.half_day_date)
+			)
+			if att.leave_application != self.name and not is_own_half_of_full_day:
+				continue
+
+			if other := self.get_other_approved_leave_on(att.attendance_date):
+				is_half_day = other.half_day and getdate(other.half_day_date) == getdate(att.attendance_date)
+				frappe.db.set_value(
+					"Attendance",
+					att.name,
+					{
+						"status": "Half Day" if is_half_day else "On Leave",
+						"leave_type": other.leave_type,
+						"leave_application": other.name,
+						"half_day_status": "Present" if is_half_day else None,
+						"modify_half_day_status": 1 if is_half_day else 0,
+					},
 				)
-			).run(as_dict=1)
-			for name in attendance:
-				frappe.db.set_value("Attendance", name, "docstatus", 2)
+			elif att.leave_application == self.name:
+				if att.docstatus == 1:
+					doc = frappe.get_doc("Attendance", att.name)
+					doc.flags.ignore_permissions = True
+					doc.cancel()
+				else:
+					frappe.db.set_value("Attendance", att.name, "docstatus", 2)
+
+	def get_other_approved_leave_on(self, date):
+		leaves = frappe.get_all(
+			"Leave Application",
+			filters={
+				"employee": self.employee,
+				"name": ("!=", self.name),
+				"docstatus": 1,
+				"status": "Approved",
+				"from_date": ("<=", date),
+				"to_date": (">=", date),
+			},
+			fields=["name", "leave_type", "half_day", "half_day_date"],
+			limit=1,
+		)
+		return leaves[0] if leaves else None
 
 	def validate_salary_processed_days(self):
 		if not frappe.db.get_value("Leave Type", self.leave_type, "is_lwp"):
@@ -400,10 +466,8 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			.where(
 				(SalarySlip.docstatus == 1)
 				& (SalarySlip.employee == self.employee)
-				& (
-					((SalarySlip.start_date <= self.to_date) & (self.to_date <= SalarySlip.end_date))
-					| ((SalarySlip.start_date <= self.from_date) & (self.from_date <= SalarySlip.end_date))
-				)
+				& (SalarySlip.start_date <= self.to_date)
+				& (SalarySlip.end_date >= self.from_date)
 			)
 			.orderby(SalarySlip.creation, order=Order.desc)
 			.limit(1)
@@ -841,7 +905,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 					"Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
 				).format(
 					get_link_to_form("Leave Allocation", alloc_on_from_date.name),
-					get_link_to_form("Leave Allocation", alloc_on_to_date),
+					get_link_to_form("Leave Allocation", alloc_on_to_date.name),
 				)
 			)
 
@@ -979,7 +1043,7 @@ class LeaveApplication(Document, PWANotificationsMixin):
 		if not self.half_day:
 			return
 
-		if is_holiday(employee=self.employee, date=self.half_day_date):
+		if is_holiday_on(self.employee, getdate(self.half_day_date)):
 			frappe.throw(_("Half Day Date cannot be a holiday"))
 
 		if not (getdate(self.from_date) <= getdate(self.half_day_date) <= getdate(self.to_date)):
@@ -1050,7 +1114,7 @@ def get_number_of_leave_days(
 		is_valid_half_day = (
 			half_day_date
 			and getdate(from_date) <= getdate(half_day_date) <= getdate(to_date)
-			and not is_holiday(employee=employee, date=half_day_date)
+			and not is_holiday_on(employee, half_day_date)
 		)
 		if is_valid_half_day:
 			number_of_days -= 0.5
@@ -1450,6 +1514,10 @@ def get_holidays(
 	return len(holidays)
 
 
+def is_holiday_on(employee, date):
+	return bool(get_holiday_dates_between_range(employee, date, date))
+
+
 def is_lwp(leave_type):
 	LeaveType = frappe.qb.DocType("Leave Type")
 	lwp = (frappe.qb.from_(LeaveType).select(LeaveType.is_lwp).where(LeaveType.name == leave_type)).run()
@@ -1460,7 +1528,7 @@ def is_lwp(leave_type):
 def get_events(start: str, end: str, filters: str | None = None) -> list[dict]:
 	import json
 
-	filters = json.loads(filters)
+	filters = json.loads(filters or "[]")
 	for idx, filter in enumerate(filters):
 		# taking relevant fields from the list [doctype, fieldname, condition, value, hidden]
 		filters[idx] = filter[1:-1]
@@ -1494,10 +1562,13 @@ def add_department_leaves(events, start, end, employee, company):
 			"Employee", filters={"department": department, "company": company}, pluck="name"
 		)
 		filters = [["employee", "in", department_employees]]
-		add_leaves(events, start, end, filters=filters)
+		show_leaves_of_all_members = frappe.db.get_single_value(
+			"HR Settings", "show_leaves_of_all_department_members_in_calendar"
+		)
+		add_leaves(events, start, end, filters=filters, ignore_permissions=cint(show_leaves_of_all_members))
 
 
-def add_leaves(events, start, end, filters=None):
+def add_leaves(events, start, end, filters=None, ignore_permissions=False):
 	if not filters:
 		filters = []
 	filters.extend(
@@ -1519,10 +1590,7 @@ def add_leaves(events, start, end, filters=None):
 		"leave_type",
 	]
 
-	show_leaves_of_all_members = frappe.db.get_single_value(
-		"HR Settings", "show_leaves_of_all_department_members_in_calendar"
-	)
-	if cint(show_leaves_of_all_members):
+	if ignore_permissions:
 		leave_applications = frappe.get_all("Leave Application", filters=filters, fields=fields)
 	else:
 		leave_applications = frappe.get_list("Leave Application", filters=filters, fields=fields)

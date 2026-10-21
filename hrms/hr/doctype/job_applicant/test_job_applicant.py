@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.utils import nowdate
+from frappe.utils import add_days, getdate, nowdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
@@ -10,6 +10,7 @@ from hrms.hr.doctype.interview.test_interview import create_interview_type
 from hrms.hr.doctype.job_applicant.job_applicant import create_interview
 from hrms.hr.doctype.job_applicant.job_applicant import make_employee as map_applicant_to_employee
 from hrms.hr.doctype.job_offer.test_job_offer import create_job_offer
+from hrms.hr.doctype.job_opening.job_opening import get_published_job_title
 from hrms.hr.doctype.job_opening.test_job_opening import get_job_opening
 from hrms.tests.test_utils import create_job_applicant
 from hrms.tests.utils import HRMSTestSuite, make_user
@@ -33,6 +34,37 @@ class TestJobApplicant(HRMSTestSuite):
 		applicant.onload()
 		onload = applicant.get("__onload") or {}
 		self.assertEqual(onload.get("job_offer"), active_job_offer.name)
+
+	def test_web_form_application_needs_published_open_opening(self):
+		opening = get_job_opening(job_title="Web Form Opening", company="_Test Company").insert()
+
+		def apply(email):
+			return frappe.get_doc(
+				{
+					"doctype": "Job Applicant",
+					"applicant_name": "_Test Web Applicant",
+					"email_id": email,
+					"job_title": opening.name,
+				}
+			).insert()
+
+		frappe.flags.in_web_form = True
+		try:
+			self.assertRaises(frappe.ValidationError, apply, "web_form_unpublished@example.com")
+			self.assertIsNone(get_published_job_title(opening.name))
+
+			opening.reload()
+			opening.publish = 1
+			opening.posted_on = add_days(getdate(), -5)
+			opening.closes_on = add_days(getdate(), -1)
+			opening.save()
+			self.assertRaises(frappe.ValidationError, apply, "web_form_expired@example.com")
+
+			opening.db_set("closes_on", None)
+			self.assertEqual(apply("web_form_published@example.com").job_title, opening.name)
+			self.assertEqual(get_published_job_title(opening.name), "Web Form Opening")
+		finally:
+			frappe.flags.in_web_form = False
 
 	def test_job_applicant_naming(self):
 		applicant = frappe.get_doc(

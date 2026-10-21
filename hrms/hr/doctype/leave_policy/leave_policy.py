@@ -25,7 +25,17 @@ class LeavePolicy(Document):
 
 	def validate(self):
 		if self.leave_policy_details:
+			leave_types = set()
 			for lp_detail in self.leave_policy_details:
+				if lp_detail.leave_type in leave_types:
+					frappe.throw(
+						_("Row #{0}: Leave Type {1} is already added in the policy").format(
+							lp_detail.idx, frappe.bold(lp_detail.leave_type)
+						),
+						title=_("Duplicate Leave Type"),
+					)
+				leave_types.add(lp_detail.leave_type)
+
 				max_leaves_allowed = frappe.db.get_value(
 					"Leave Type", lp_detail.leave_type, "max_leaves_allowed"
 				)

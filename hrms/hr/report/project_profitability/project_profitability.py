@@ -3,23 +3,27 @@
 
 import frappe
 from frappe import _
+from frappe.query_builder import Criterion
 from frappe.utils import cint, flt
+
+from erpnext.accounts.utils import build_qb_match_conditions
 
 
 def execute(filters=None):
-	data = get_data(filters)
-	columns = get_columns()
+	show_cost = bool(frappe.has_permission("Salary Slip", "read"))
+	data = get_data(filters, show_cost)
+	columns = get_columns(show_cost)
 	charts = get_chart_data(data)
 	return columns, data, None, charts
 
 
-def get_data(filters):
-	data = get_rows(filters)
-	data = calculate_cost_and_profit(data)
+def get_data(filters, show_cost=True):
+	data = get_rows(filters, show_cost)
+	data = calculate_cost_and_profit(data, show_cost)
 	return data
 
 
-def get_rows(filters):
+def get_rows(filters, show_cost=True):
 	Timesheet = frappe.qb.DocType("Timesheet")
 	SalarySlip = frappe.qb.DocType("Salary Slip")
 	SalesInvoice = frappe.qb.DocType("Sales Invoice")
@@ -37,11 +41,13 @@ def get_rows(filters):
 		.inner_join(SalesInvoice)
 		.on(SalesInvoiceTimesheet.parent == SalesInvoice.name)
 		.select(
+			SalesInvoice.customer,
 			SalesInvoice.customer_name,
-			SalesInvoice.base_grand_total,
+			(SalesInvoiceTimesheet.billing_amount * SalesInvoice.conversion_rate).as_("base_grand_total"),
 			SalesInvoice.name.as_("voucher_no"),
 			Timesheet.employee,
-			Timesheet.title.as_("employee_name"),
+			Timesheet.employee_name,
+			Timesheet.company,
 			Timesheet.parent_project.as_("project"),
 			Timesheet.start_date,
 			Timesheet.end_date,
@@ -50,11 +56,14 @@ def get_rows(filters):
 			SalarySlip.base_gross_pay,
 			SalarySlip.name.as_("salary_slip"),
 			SalarySlip.total_working_days,
-			Timesheet.total_billed_hours,
 		)
 		.distinct()
 		.where((SalesInvoice.docstatus == 1) & (SalarySlip.docstatus == 1))
+		.where(Criterion.all(build_qb_match_conditions("Timesheet")))
 	)
+
+	if show_cost:
+		query = query.where(Criterion.all(build_qb_match_conditions("Salary Slip")))
 
 	if filters.get("company"):
 		query = query.where(Timesheet.company == filters.get("company"))
@@ -74,10 +83,16 @@ def get_rows(filters):
 	if filters.get("project"):
 		query = query.where(Timesheet.parent_project == filters.get("project"))
 
-	return query.run(as_dict=True)
+	data = query.run(as_dict=True)
+	for row in data:
+		row.currency = frappe.get_cached_value("Company", row.company, "default_currency")
+		if not show_cost:
+			row.pop("base_gross_pay")
+
+	return data
 
 
-def calculate_cost_and_profit(data):
+def calculate_cost_and_profit(data, show_cost=True):
 	standard_working_hours = get_standard_working_hours()
 	precision = cint(frappe.db.get_default("float_precision")) or 2
 
@@ -90,15 +105,14 @@ def calculate_cost_and_profit(data):
 				),
 			)
 
-		row.utilization = flt(
-			flt(row.total_billed_hours) / (flt(row.total_working_days) * flt(standard_working_hours)),
-			precision,
+		utilization = flt(row.total_billed_hours) / (
+			flt(row.total_working_days) * flt(standard_working_hours)
 		)
-		row.fractional_cost = flt(flt(row.base_gross_pay) * flt(row.utilization), precision)
+		row.utilization = flt(utilization * 100, precision)
 
-		row.profit = flt(
-			flt(row.base_grand_total) - flt(row.base_gross_pay) * flt(row.utilization), precision
-		)
+		if show_cost:
+			row.fractional_cost = flt(flt(row.base_gross_pay) * utilization, precision)
+			row.profit = flt(flt(row.base_grand_total) - row.fractional_cost, precision)
 
 	return data
 
@@ -135,15 +149,16 @@ def get_chart_data(data):
 	return charts
 
 
-def get_columns():
-	return [
+def get_columns(show_cost=True):
+	columns = [
 		{
-			"fieldname": "customer_name",
+			"fieldname": "customer",
 			"label": _("Customer"),
 			"fieldtype": "Link",
 			"options": "Customer",
 			"width": 150,
 		},
+		{"fieldname": "customer_name", "label": _("Customer Name"), "fieldtype": "Data", "width": 150},
 		{
 			"fieldname": "employee",
 			"label": _("Employee"),
@@ -198,7 +213,8 @@ def get_columns():
 		{
 			"fieldname": "fractional_cost",
 			"label": _("Fractional Cost"),
-			"fieldtype": "Int",
+			"fieldtype": "Currency",
+			"options": "currency",
 			"width": 120,
 		},
 		{
@@ -217,3 +233,10 @@ def get_columns():
 			"width": 80,
 		},
 	]
+
+	if not show_cost:
+		columns = [
+			c for c in columns if c["fieldname"] not in ("base_gross_pay", "profit", "fractional_cost")
+		]
+
+	return columns

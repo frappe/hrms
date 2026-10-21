@@ -7,6 +7,7 @@ from frappe import _, bold
 from frappe.model.document import Document
 from frappe.utils import comma_and, date_diff, flt, fmt_money, formatdate, get_link_to_form, getdate
 
+from hrms.hr.doctype.employee_advance.employee_advance import get_advance_return_balance
 from hrms.hr.utils import validate_active_employee
 
 
@@ -70,16 +71,16 @@ class AdditionalSalary(Document):
 			self.validate_employee_advance_return()
 
 	def validate_salary_structure(self):
-		salary_structure = frappe.db.get_value(
+		salary_structure, currency = frappe.db.get_value(
 			"Salary Structure Assignment",
 			{
 				"employee": self.employee,
 				"docstatus": 1,
 				"from_date": ["<=", self.payroll_date or self.from_date],
 			},
-			"salary_structure",
+			["salary_structure", "currency"],
 			order_by="from_date desc",
-		)
+		) or (None, None)
 
 		if not salary_structure:
 			frappe.throw(
@@ -87,6 +88,18 @@ class AdditionalSalary(Document):
 					self.employee
 				)
 			)
+
+		if self.currency and currency and self.currency != currency:
+			frappe.throw(
+				_(
+					"Currency {0} must be the same as the currency {1} of the employee's Salary Structure Assignment"
+				).format(frappe.bold(self.currency), frappe.bold(currency)),
+				title=_("Invalid Currency"),
+			)
+
+		self._payroll_frequency = frappe.db.get_value(
+			"Salary Structure", salary_structure, "payroll_frequency"
+		)
 
 		if self.overwrite_salary_structure_amount:
 			is_structure_component = frappe.db.get_value(
@@ -185,10 +198,26 @@ class AdditionalSalary(Document):
 					).format(frappe.bold(_("Accepted")))
 				)
 
+			if existing := frappe.db.exists(
+				"Additional Salary",
+				{
+					"ref_doctype": self.ref_doctype,
+					"ref_docname": self.ref_docname,
+					"docstatus": 1,
+					"name": ("!=", self.name),
+				},
+			):
+				frappe.throw(
+					_(
+						"Referral bonus for Employee Referral {0} is already added in Additional Salary {1}"
+					).format(self.ref_docname, get_link_to_form("Additional Salary", existing))
+				)
+
 	def validate_duplicate_additional_salary(self):
 		if not self.overwrite_salary_structure_amount:
 			return
 
+		start_date, end_date = self.get_payroll_period_dates()
 		AdditionalSalary = frappe.qb.DocType("Additional Salary")
 		existing_additional_salary = (
 			(
@@ -202,10 +231,14 @@ class AdditionalSalary(Document):
 					& (AdditionalSalary.docstatus == 1)
 					& (AdditionalSalary.disabled == 0)
 					& (
-						(AdditionalSalary.payroll_date == self.payroll_date)
+						(
+							(AdditionalSalary.is_recurring == 0)
+							& (AdditionalSalary.payroll_date[start_date:end_date])
+						)
 						| (
-							(AdditionalSalary.from_date <= self.payroll_date)
-							& (AdditionalSalary.to_date >= self.payroll_date)
+							(AdditionalSalary.is_recurring == 1)
+							& (AdditionalSalary.from_date <= end_date)
+							& (AdditionalSalary.to_date >= start_date)
 						)
 					)
 				)
@@ -223,6 +256,19 @@ class AdditionalSalary(Document):
 				get_link_to_form("Additional Salary", existing_additional_salary)
 			)
 			frappe.throw(msg, title=_("Duplicate Overwritten Salary"))
+
+	def get_payroll_period_dates(self) -> tuple:
+		from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
+
+		start_date = getdate(self.from_date if self.is_recurring else self.payroll_date)
+		end_date = getdate(self.to_date if self.is_recurring else self.payroll_date)
+
+		frequency = getattr(self, "_payroll_frequency", None)
+		if frequency in ("Monthly", "Bimonthly"):
+			start_date = getdate(get_start_end_dates(frequency, start_date, self.company).start_date)
+			end_date = getdate(get_start_end_dates(frequency, end_date, self.company).end_date)
+
+		return start_date, end_date
 
 	def validate_tax_component_overwrite(self):
 		if not frappe.db.get_value(
@@ -264,28 +310,14 @@ class AdditionalSalary(Document):
 
 		precision = self.precision("amount")
 		advance = frappe.get_doc("Employee Advance", self.ref_docname)
-
-		AdditionalSalary = frappe.qb.DocType("Additional Salary")
-		scheduled_deductions = (
-			frappe.qb.from_(AdditionalSalary)
-			.select(AdditionalSalary.name, AdditionalSalary.amount)
-			.where(
-				(AdditionalSalary.ref_doctype == "Employee Advance")
-				& (AdditionalSalary.ref_docname == self.ref_docname)
-				& (AdditionalSalary.docstatus == 1)
-				& (AdditionalSalary.name != self.name)
-			)
-		).run(as_dict=True) or []
-
-		available_return_amount = flt(advance.paid_amount - advance.claimed_amount, precision)
-		scheduled_return_amount = flt(sum(flt(d.amount, precision) for d in scheduled_deductions), precision)
-		remaining_return_amount = flt(available_return_amount - scheduled_return_amount, precision)
+		balance = get_advance_return_balance(advance, exclude_additional_salary=self.name)
+		scheduled_deductions = balance.scheduled_deductions
+		remaining_return_amount = balance.remaining_return_amount
 
 		if flt(self.amount, precision) <= remaining_return_amount:
 			return
 
-		# scheduled via AS but not yet processed through payroll
-		pending_scheduled = max(0, flt(scheduled_return_amount - advance.return_amount, precision))
+		pending_scheduled = balance.pending_scheduled_amount
 
 		if pending_scheduled > 0:
 			msg = _(
@@ -308,7 +340,17 @@ class AdditionalSalary(Document):
 
 	def update_employee_referral(self, cancel=False):
 		if self.ref_doctype == "Employee Referral":
-			status = "Unpaid" if cancel else "Paid"
+			status = "Paid"
+			if cancel and not frappe.db.exists(
+				"Additional Salary",
+				{
+					"ref_doctype": self.ref_doctype,
+					"ref_docname": self.ref_docname,
+					"docstatus": 1,
+					"name": ("!=", self.name),
+				},
+			):
+				status = "Unpaid"
 			frappe.db.set_value("Employee Referral", self.ref_docname, "referral_payment_status", status)
 
 	def get_amount(self, sal_start_date, sal_end_date):
@@ -362,7 +404,7 @@ def get_additional_salaries(employee, start_date, end_date, component_type):
 						[  # is recurring and additional salary dates fall within the payroll period
 							additional_sal.is_recurring == 1,
 							additional_sal.from_date <= end_date,
-							additional_sal.to_date >= end_date,
+							additional_sal.to_date >= start_date,
 						]
 					),
 					Criterion.all(

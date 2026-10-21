@@ -147,11 +147,11 @@ def get_report_summary(data):
 	present_records = half_day_records = absent_records = late_entries = early_exits = 0
 
 	for entry in data:
-		if entry.status == "Present":
+		if entry.status in ("Present", "Work From Home"):
 			present_records += 1
 		elif entry.status == "Half Day":
 			half_day_records += 1
-		else:
+		elif entry.status == "Absent":
 			absent_records += 1
 
 		if entry.late_entry:
@@ -233,16 +233,16 @@ def get_attendance_with_checkins(filters):
 			shift_type.early_exit_grace_period,
 		)
 	)
-	for field in filters:
-		if field == "late_entry" and not filters.consider_grace_period:
+	if not filters.consider_grace_period:
+		if filters.late_entry:
 			query = query.where(attendance.in_time > checkin.shift_start)
-		elif field == "early_exit" and not filters.consider_grace_period:
+		if filters.early_exit:
 			query = query.where(attendance.out_time < checkin.shift_end)
 	result = query.run(as_dict=True)
 	return result
 
 
-def get_base_attendance_query(filters):
+def get_base_attendance_query(filters, with_checkins=True):
 	attendance = frappe.qb.DocType("Attendance")
 	shift_type = frappe.qb.DocType("Shift Type")
 
@@ -276,6 +276,9 @@ def get_base_attendance_query(filters):
 			query = query.where(attendance.attendance_date <= filters.to_date)
 		elif field in ["consider_grace_period", "include_attendance_without_checkins"]:
 			continue
+		elif field in ["late_entry", "early_exit"]:
+			if filters[field] and (filters.consider_grace_period or not with_checkins):
+				query = query.where(attendance[field] == 1)
 		elif field == "employment_type":
 			if filters.employment_type:
 				employee = frappe.qb.DocType("Employee")
@@ -296,7 +299,7 @@ def get_attendance_without_checkins(filters):
 	checkin = frappe.qb.DocType("Employee Checkin")
 
 	query = (
-		get_base_attendance_query(filters)
+		get_base_attendance_query(filters, with_checkins=False)
 		.left_join(checkin)
 		.on(checkin.attendance == attendance.name)
 		.where(checkin.attendance.isnull())

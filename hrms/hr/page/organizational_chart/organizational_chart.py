@@ -1,49 +1,49 @@
 import frappe
-from frappe.query_builder.functions import Count
+from frappe import _
 
 
 @frappe.whitelist()
 def get_children(parent: str | None = None, company: str | None = None, exclude_node: str | None = None):
+	if not frappe.get_doc("Page", "organizational-chart").is_permitted():
+		frappe.throw(_("Not Permitted"), frappe.PermissionError)
+
 	filters = [["status", "=", "Active"]]
 	if company and company != "All Companies":
+		frappe.has_permission("Company", "read", company, throw=True)
 		filters.append(["company", "=", company])
 
 	if parent and company and parent != company:
-		filters.append(["reports_to", "=", parent])
-	else:
-		filters.append(["reports_to", "=", ""])
+		parent_bounds = frappe.db.get_value("Employee", parent, ["lft", "rgt"], as_dict=True)
+		if not parent_bounds:
+			return []
+		filters.extend([["lft", ">", parent_bounds.lft], ["rgt", "<", parent_bounds.rgt]])
 
-	if exclude_node:
-		filters.append(["name", "!=", exclude_node])
-
-	employees = frappe.get_list(
+	employees = frappe.get_all(
 		"Employee",
 		fields=[
 			"employee_name as name",
 			"name as id",
 			"lft",
 			"rgt",
-			"reports_to",
 			"image",
 			"designation as title",
+			"department",
 		],
 		filters=filters,
-		order_by="name",
+		order_by="lft",
 	)
 
+	nodes = []
 	for employee in employees:
-		employee.connections = get_connections(employee.id, employee.lft, employee.rgt)
-		employee.expandable = bool(employee.connections)
+		if nodes and employee.lft < nodes[-1].rgt:
+			nodes[-1].connections += 1
+		else:
+			employee.connections = 0
+			nodes.append(employee)
 
-	return employees
+	for node in nodes:
+		node.expandable = bool(node.connections)
+		node.pop("lft")
+		node.pop("rgt")
 
-
-def get_connections(employee: str, lft: int, rgt: int) -> int:
-	Employee = frappe.qb.DocType("Employee")
-	query = (
-		frappe.qb.from_(Employee)
-		.select(Count(Employee.name))
-		.where((Employee.lft > lft) & (Employee.rgt < rgt) & (Employee.status == "Active"))
-	).run()
-
-	return query[0][0]
+	return sorted((node for node in nodes if node.id != exclude_node), key=lambda node: node.id)

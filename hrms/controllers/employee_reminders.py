@@ -1,11 +1,13 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
+import calendar
+
 import frappe
 from frappe import _
 from frappe.query_builder import DatePart
 from frappe.query_builder.functions import Extract
-from frappe.utils import add_days, add_months, comma_sep, getdate
+from frappe.utils import add_days, comma_sep, get_last_day, getdate
 
 from erpnext.setup.doctype.employee.employee import get_all_employee_emails, get_employee_email
 
@@ -39,11 +41,11 @@ def send_advance_holiday_reminders(frequency):
 	"""
 	if frequency == "Weekly":
 		start_date = getdate()
-		end_date = add_days(getdate(), 7)
+		end_date = add_days(getdate(), 6)
 	elif frequency == "Monthly":
 		# Sent on 1st of every month
 		start_date = getdate()
-		end_date = add_months(getdate(), 1)
+		end_date = get_last_day(start_date)
 	else:
 		return
 
@@ -98,8 +100,7 @@ def send_birthday_reminders():
 
 	for company, birthday_persons in employees_born_today.items():
 		employee_emails = get_all_employee_emails(company)
-		birthday_person_emails = [get_employee_email(doc) for doc in birthday_persons]
-		recipients = list(set(employee_emails) - set(birthday_person_emails))
+		recipients = list(set(employee_emails) - get_all_emails_of(birthday_persons))
 
 		reminder_text, message = get_birthday_reminder_text_and_message(birthday_persons)
 		send_birthday_reminder(recipients, reminder_text, birthday_persons, message, sender)
@@ -168,6 +169,14 @@ def get_employees_having_an_event_today(event_type):
 	Employee = frappe.qb.DocType("Employee")
 	event_date = Employee[condition_column]
 
+	day_and_month = (Extract(DatePart.day, event_date) == today_date.day) & (
+		Extract(DatePart.month, event_date) == today_date.month
+	)
+	if today_date.month == 2 and today_date.day == 28 and not calendar.isleap(today_date.year):
+		day_and_month |= (Extract(DatePart.day, event_date) == 29) & (
+			Extract(DatePart.month, event_date) == 2
+		)
+
 	employees_born_today = (
 		frappe.qb.from_(Employee)
 		.select(
@@ -180,8 +189,7 @@ def get_employees_having_an_event_today(event_type):
 			Employee.date_of_joining,
 		)
 		.where(
-			(Extract(DatePart.day, event_date) == today_date.day)
-			& (Extract(DatePart.month, event_date) == today_date.month)
+			day_and_month
 			& (Extract(DatePart.year, event_date) < today_date.year)
 			& (Employee.status == "Active")
 		)
@@ -213,8 +221,7 @@ def send_work_anniversary_reminders():
 
 	for company, anniversary_persons in employees_joined_today.items():
 		employee_emails = get_all_employee_emails(company)
-		anniversary_person_emails = [get_employee_email(doc) for doc in anniversary_persons]
-		recipients = list(set(employee_emails) - set(anniversary_person_emails))
+		recipients = list(set(employee_emails) - get_all_emails_of(anniversary_persons))
 
 		reminder_text = get_work_anniversary_reminder_text(anniversary_persons)
 		send_work_anniversary_reminder(recipients, reminder_text, anniversary_persons, message, sender)
@@ -278,6 +285,15 @@ def send_work_anniversary_reminder(
 		),
 		header=_("Work Anniversary Reminder"),
 	)
+
+
+def get_all_emails_of(employees: list) -> set:
+	return {
+		email
+		for employee in employees
+		for email in (employee.user_id, employee.company_email, employee.personal_email)
+		if email
+	}
 
 
 def get_sender_email() -> str | None:

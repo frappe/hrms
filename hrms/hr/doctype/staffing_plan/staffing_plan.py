@@ -6,7 +6,6 @@ import datetime
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.query_builder.functions import Sum
 from frappe.utils import cint, flt, getdate, nowdate
 from frappe.utils.nestedset import get_descendants_of
 
@@ -41,16 +40,30 @@ class StaffingPlan(Document):
 
 	def validate(self):
 		self.validate_period()
-		self.validate_details()
+		self.validate_duplicate_designations()
 		self.set_total_estimated_budget()
+		self.validate_details()
 
 	def validate_period(self):
 		# Validate Dates
 		if self.from_date and self.to_date and self.from_date > self.to_date:
 			frappe.throw(_("From Date cannot be greater than To Date"))
 
+	def validate_duplicate_designations(self):
+		designations = set()
+		for detail in self.get("staffing_details"):
+			if detail.designation in designations:
+				frappe.throw(
+					_("Row {0}: Designation {1} is already added in this Staffing Plan").format(
+						detail.idx, frappe.bold(detail.designation)
+					),
+					frappe.DuplicateEntryError,
+				)
+			designations.add(detail.designation)
+
 	def validate_details(self):
 		for detail in self.get("staffing_details"):
+			self.validate_current_openings(detail)
 			self.validate_overlap(detail)
 			self.validate_with_subsidiary_plans(detail)
 			self.validate_with_parent_plan(detail)
@@ -72,6 +85,14 @@ class StaffingPlan(Document):
 					)
 
 			self.total_estimated_budget += detail.total_estimated_cost
+
+	def validate_current_openings(self, detail):
+		if cint(detail.vacancies) < cint(detail.current_openings):
+			frappe.throw(
+				_("Row {0}: Vacancies for {1} cannot be lower than the current openings ({2})").format(
+					detail.idx, frappe.bold(detail.designation), cint(detail.current_openings)
+				)
+			)
 
 	def set_number_of_positions(self, detail):
 		detail.number_of_positions = cint(detail.vacancies) + cint(detail.current_count)
@@ -131,32 +152,9 @@ class StaffingPlan(Document):
 				ParentCompanyError,
 			)
 
-		# Get vacanices already planned for all companies down the hierarchy of Parent Company
-		lft, rgt = frappe.get_cached_value("Company", parent_company, ["lft", "rgt"])
-		spd = frappe.qb.DocType("Staffing Plan Detail")
-		sp = frappe.qb.DocType("Staffing Plan")
-		company = frappe.qb.DocType("Company")
-		all_sibling_details = (
-			frappe.qb.from_(spd)
-			.join(sp)
-			.on(spd.parent == sp.name)
-			.select(
-				Sum(spd.vacancies).as_("vacancies"),
-				Sum(spd.total_estimated_cost).as_("total_estimated_cost"),
-			)
-			.where(
-				(spd.designation == staffing_plan_detail.designation)
-				& (sp.docstatus == 1)
-				& (sp.to_date >= self.from_date)
-				& (sp.from_date <= self.to_date)
-				& sp.company.isin(
-					frappe.qb.from_(company)
-					.select(company.name)
-					.where((company.lft > lft) & (company.rgt < rgt))
-				)
-			)
-			.run(as_dict=1)
-		)[0]
+		all_sibling_details = self.get_planned_for_subsidiaries(
+			parent_company, staffing_plan_detail.designation
+		)
 
 		if (
 			cint(parent_plan_details[0].vacancies)
@@ -180,37 +178,11 @@ class StaffingPlan(Document):
 			)
 
 	def validate_with_subsidiary_plans(self, staffing_plan_detail):
-		# Valdate this plan with all child company plan
-		spd = frappe.qb.DocType("Staffing Plan Detail")
-		sp = frappe.qb.DocType("Staffing Plan")
-		company = frappe.qb.DocType("Company")
-		children_details = (
-			frappe.qb.from_(spd)
-			.join(sp)
-			.on(spd.parent == sp.name)
-			.select(
-				Sum(spd.vacancies).as_("vacancies"),
-				Sum(spd.total_estimated_cost).as_("total_estimated_cost"),
-			)
-			.where(
-				(spd.designation == staffing_plan_detail.designation)
-				& (sp.docstatus == 1)
-				& (sp.to_date >= self.from_date)
-				& (sp.from_date <= self.to_date)
-				& sp.company.isin(
-					frappe.qb.from_(company)
-					.select(company.name)
-					.where(company.parent_company == self.company)
-				)
-			)
-			.run(as_dict=1)
-		)[0]
+		children_details = self.get_planned_for_subsidiaries(self.company, staffing_plan_detail.designation)
 
-		if (
-			children_details
-			and cint(staffing_plan_detail.vacancies) < cint(children_details.vacancies)
-			or flt(staffing_plan_detail.total_estimated_cost) < flt(children_details.total_estimated_cost)
-		):
+		if cint(staffing_plan_detail.vacancies) < cint(children_details.vacancies) or flt(
+			staffing_plan_detail.total_estimated_cost
+		) < flt(children_details.total_estimated_cost):
 			frappe.throw(
 				_(
 					"Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
@@ -223,6 +195,41 @@ class StaffingPlan(Document):
 				SubsidiaryCompanyError,
 			)
 
+	def get_planned_for_subsidiaries(self, company, designation):
+		lft, rgt = frappe.get_cached_value("Company", company, ["lft", "rgt"])
+		spd = frappe.qb.DocType("Staffing Plan Detail")
+		sp = frappe.qb.DocType("Staffing Plan")
+		Company = frappe.qb.DocType("Company")
+		plans = (
+			frappe.qb.from_(spd)
+			.join(sp)
+			.on(spd.parent == sp.name)
+			.join(Company)
+			.on(sp.company == Company.name)
+			.select(Company.lft, Company.rgt, spd.vacancies, spd.total_estimated_cost)
+			.where(
+				(spd.designation == designation)
+				& (sp.docstatus == 1)
+				& (sp.to_date >= self.from_date)
+				& (sp.from_date <= self.to_date)
+				& (Company.lft > lft)
+				& (Company.rgt < rgt)
+			)
+		).run(as_dict=True)
+
+		planned_companies = [(d.lft, d.rgt) for d in plans]
+		if company != self.company:
+			planned_companies.append(tuple(frappe.get_cached_value("Company", self.company, ["lft", "rgt"])))
+
+		totals = frappe._dict(vacancies=0, total_estimated_cost=0)
+		for d in plans:
+			if any(p_lft < d.lft and p_rgt > d.rgt for p_lft, p_rgt in planned_companies):
+				continue
+			totals.vacancies += cint(d.vacancies)
+			totals.total_estimated_cost += flt(d.total_estimated_cost)
+
+		return totals
+
 	@frappe.whitelist()
 	def set_job_requisitions(self, job_reqs: list[str]) -> Document:
 		if job_reqs:
@@ -234,6 +241,15 @@ class StaffingPlan(Document):
 
 			self.staffing_details = []
 			for req in requisitions:
+				if row := next((d for d in self.staffing_details if d.designation == req.designation), None):
+					total_cost = cint(row.vacancies) * flt(row.estimated_cost_per_position) + cint(
+						req.no_of_positions
+					) * flt(req.expected_compensation)
+					row.vacancies = cint(row.vacancies) + cint(req.no_of_positions)
+					row.number_of_positions = cint(row.number_of_positions) + cint(req.no_of_positions)
+					row.estimated_cost_per_position = total_cost / row.vacancies if row.vacancies else 0
+					continue
+
 				current_count = get_designation_counts(req.designation, self.company)["employee_count"]
 				self.append(
 					"staffing_details",
@@ -250,6 +266,9 @@ class StaffingPlan(Document):
 
 @frappe.whitelist()
 def get_designation_counts(designation: str, company: str, job_opening: str | None = None) -> dict | bool:
+	if not (frappe.has_permission("Staffing Plan", "read") or frappe.has_permission("Job Opening", "read")):
+		frappe.throw_permission_error()
+
 	if not designation:
 		return False
 

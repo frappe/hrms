@@ -14,8 +14,8 @@ from hrms.hr.doctype.shift_assignment.shift_assignment import (
 	MultipleShiftError,
 	OverlappingShiftError,
 	get_actual_start_end_datetime_of_shift,
+	get_employee_shift,
 	get_events,
-	mark_expired_shift_assignments_as_inactive,
 )
 from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
 from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
@@ -154,10 +154,12 @@ class TestShiftAssignment(HRMSTestSuite):
 
 		shift_type = setup_shift_type(shift_type="Shift 1", start_time="08:00:00", end_time="12:00:00")
 		date = getdate()
-		shift1 = make_shift_assignment(shift_type.name, employee1, date)  # 1 day
+		shift1 = make_shift_assignment(shift_type.name, employee1, date)  # open-ended, 31 days in the window
 		make_shift_assignment(shift_type.name, employee2, date)  # excluded due to employee filter
 		make_shift_assignment(shift_type.name, employee3, add_days(date, -3), add_days(date, -2))  # excluded
-		shift2 = make_shift_assignment(shift_type.name, employee3, add_days(date, -1), date)  # 2 days
+		shift2 = make_shift_assignment(
+			shift_type.name, employee3, add_days(date, -1), date
+		)  # 1 day in the window
 		shift3 = make_shift_assignment(
 			shift_type.name, employee3, add_days(date, 1), add_days(date, 2)
 		)  # 2 days
@@ -171,9 +173,49 @@ class TestShiftAssignment(HRMSTestSuite):
 			end=add_days(date, 30),
 			filters=[["Shift Assignment", "employee", "!=", employee2]],
 		)
-		self.assertEqual(len(events), 6)
+		self.assertEqual(len(events), 35)
 		for shift in events:
 			self.assertIn(shift["name"], [shift1.name, shift2.name, shift3.name, shift4.name])
+
+	def test_calendar_for_open_ended_assignment_in_a_future_window(self):
+		employee = make_employee("test_shift_assignment1@example.com", company="_Test Company")
+		shift_type = setup_shift_type(shift_type="Shift 1", start_time="08:00:00", end_time="12:00:00")
+		date = getdate()
+		make_shift_assignment(shift_type.name, employee, add_days(date, -60))
+
+		events = get_events(
+			start=add_days(date, 30),
+			end=add_days(date, 39),
+			filters=[["Shift Assignment", "employee", "=", employee]],
+		)
+		self.assertEqual(len(events), 10)
+		self.assertEqual(events[0]["start_date"], get_datetime(f"{add_days(date, 30)} 08:00:00"))
+
+	def test_overlap_for_overnight_shift_tail_on_next_day(self):
+		employee = make_employee("test_shift_assignment@example.com", company="_Test Company")
+		date = getdate()
+		frappe.db.set_single_value("HR Settings", "allow_multiple_shift_assignments", 1)
+
+		night = setup_shift_type(shift_type="Night Tail", start_time="22:00:00", end_time="06:00:00")
+		early = setup_shift_type(shift_type="Early Tail", start_time="05:00:00", end_time="09:00:00")
+		make_shift_assignment(night.name, employee, date, date)
+
+		# night shift of `date` runs till 06:00 the next day
+		assignment = make_shift_assignment(early.name, employee, add_days(date, 1), add_days(date, 1), True)
+		self.assertRaises(OverlappingShiftError, assignment.save)
+
+		# same single date does not overlap
+		make_shift_assignment(early.name, employee, date, date)
+
+	def test_cannot_cancel_open_ended_assignment_with_linked_records(self):
+		employee = make_employee("test_shift_assignment@example.com", company="_Test Company")
+		shift_type = setup_shift_type(shift_type="Shift 1", start_time="08:00:00", end_time="12:00:00")
+		date = add_days(getdate(), -1)
+		assignment = make_shift_assignment(shift_type.name, employee, date)
+
+		checkin = make_checkin(employee, get_datetime(f"{date} 08:05:00"))
+		self.assertEqual(checkin.shift, shift_type.name)
+		self.assertRaises(frappe.ValidationError, assignment.cancel)
 
 	def test_calendar_for_night_shift(self):
 		employee1 = make_employee("test_shift_assignment1@example.com", company="_Test Company")
@@ -298,35 +340,20 @@ class TestShiftAssignment(HRMSTestSuite):
 		self.assertEqual(attendance.working_hours, 11.0)
 		self.assertEqual(attendance.actual_overtime_duration, 2.0)
 
-	def test_mark_expired_shift_assignments_as_inactive(self):
+	def test_ended_assignment_resolves_for_backdated_dates(self):
 		today = getdate()
-		yesterday = add_days(today, -1)
 		shift_type = setup_shift_type(shift_type="Expired Shift", start_time="08:00:00", end_time="16:00:00")
-
-		expired_employee = make_employee("test_expired_shift_assignment@example.com", company="_Test Company")
-		active_employee = make_employee("test_active_shift_assignment@example.com", company="_Test Company")
-		ongoing_employee = make_employee("test_ongoing_shift_assignment@example.com", company="_Test Company")
-
-		expired_assignment = make_shift_assignment(
-			shift_type.name,
-			expired_employee,
-			add_days(today, -7),
-			add_days(yesterday, -1),
+		employee = make_employee("test_expired_shift_assignment@example.com", company="_Test Company")
+		assignment = make_shift_assignment(
+			shift_type.name, employee, add_days(today, -7), add_days(today, -3)
 		)
-		active_assignment = make_shift_assignment(
-			shift_type.name,
-			active_employee,
-			add_days(today, -1),
-			add_days(today, 2),
+
+		self.assertNotIn(
+			"hrms.hr.doctype.shift_assignment.shift_assignment.mark_expired_shift_assignments_as_inactive",
+			frappe.get_hooks("scheduler_events").get("daily", []),
 		)
-		ongoing_assignment = make_shift_assignment(shift_type.name, ongoing_employee, add_days(today, -3))
+		self.assertEqual(assignment.status, "Active")
 
-		mark_expired_shift_assignments_as_inactive()
-
-		expired_assignment.reload()
-		active_assignment.reload()
-		ongoing_assignment.reload()
-
-		self.assertEqual(expired_assignment.status, "Inactive")
-		self.assertEqual(active_assignment.status, "Active")
-		self.assertEqual(ongoing_assignment.status, "Active")
+		shift = get_employee_shift(employee, get_datetime(f"{add_days(today, -5)} 10:00:00"))
+		self.assertEqual(shift.shift_type.name, shift_type.name)
+		self.assertFalse(get_employee_shift(employee, get_datetime(f"{add_days(today, -1)} 10:00:00")))

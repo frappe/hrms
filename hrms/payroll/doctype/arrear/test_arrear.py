@@ -3,7 +3,7 @@
 import calendar
 
 import frappe
-from frappe.utils import add_days, add_months, getdate
+from frappe.utils import add_days, add_months, get_first_day, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
@@ -193,3 +193,140 @@ class TestArrear(HRMSTestSuite):
 			self.assertIn("Accrued Earnings", accrual_components)
 
 		frappe.db.rollback()
+
+	def test_arrear_excludes_slips_after_payroll_period(self):
+		emp = make_employee(
+			"test_arrear_payroll_period_end@salary.com",
+			company="_Test Company",
+			date_of_joining="2021-01-01",
+		)
+		make_payroll_period(company="_Test Company")
+		payroll_period = frappe.get_last_doc("Payroll Period", filters={"company": "_Test Company"})
+		frappe.db.set_single_value("Payroll Settings", "payroll_based_on", "Leave")
+
+		next_period_start = add_days(payroll_period.end_date, 1)
+		next_period_name = f"Test Payroll Period {getdate(next_period_start).year}"
+		if not frappe.db.exists("Payroll Period", next_period_name):
+			frappe.get_doc(
+				{
+					"doctype": "Payroll Period",
+					"name": next_period_name,
+					"company": "_Test Company",
+					"start_date": next_period_start,
+					"end_date": add_months(payroll_period.end_date, 1),
+				}
+			).insert()
+
+		last_month_start = get_first_day(payroll_period.end_date)
+		old_salary_structure = make_salary_structure(
+			"Test Arrear Period End Old",
+			"Monthly",
+			company="_Test Company",
+			employee=emp,
+			from_date=add_months(last_month_start, -1),
+			test_arrear=True,
+			base=50000,
+		)
+		for posting_date in (last_month_start, next_period_start):
+			slip = make_salary_slip(old_salary_structure.name, employee=emp, posting_date=posting_date)
+			slip.save()
+			slip.submit()
+
+		new_salary_structure = make_salary_structure(
+			"Test Arrear Period End New",
+			"Monthly",
+			employee=emp,
+			from_date=last_month_start,
+			company="_Test Company",
+			base=75000,
+			test_arrear=True,
+		)
+
+		arrear_doc = frappe.get_doc(
+			{
+				"doctype": "Arrear",
+				"employee": emp,
+				"payroll_period": payroll_period.name,
+				"salary_structure": new_salary_structure.name,
+				"arrear_start_date": last_month_start,
+				"payroll_date": payroll_period.end_date,
+				"company": "_Test Company",
+			}
+		).save()
+
+		earning_arrears = {row.salary_component: row.amount for row in arrear_doc.earning_arrears}
+		self.assertEqual(earning_arrears.get("Basic Salary"), 25000)
+
+	def test_successive_arrears_do_not_repay_earlier_arrear(self):
+		emp = make_employee(
+			"test_successive_arrears@salary.com",
+			company="_Test Company",
+			date_of_joining="2021-01-01",
+		)
+		make_payroll_period(company="_Test Company")
+		payroll_period = frappe.get_last_doc("Payroll Period", filters={"company": "_Test Company"})
+		frappe.db.set_single_value("Payroll Settings", "payroll_based_on", "Leave")
+
+		first_month = get_first_day(payroll_period.start_date)
+		months = [add_months(first_month, i) for i in range(3)]
+		old_salary_structure = make_salary_structure(
+			"Test Successive Arrear S1",
+			"Monthly",
+			company="_Test Company",
+			employee=emp,
+			from_date=months[0],
+			test_arrear=True,
+			base=50000,
+		)
+		for posting_date in months:
+			slip = make_salary_slip(old_salary_structure.name, employee=emp, posting_date=posting_date)
+			slip.save()
+			slip.submit()
+
+		def make_arrear(structure, start_date):
+			arrear = frappe.get_doc(
+				{
+					"doctype": "Arrear",
+					"employee": emp,
+					"payroll_period": payroll_period.name,
+					"salary_structure": structure,
+					"arrear_start_date": start_date,
+					"payroll_date": add_months(months[-1], 1),
+					"company": "_Test Company",
+				}
+			).insert()
+			arrear.submit()
+			return arrear
+
+		def basic_arrear(arrear):
+			return {row.salary_component: row.amount for row in arrear.earning_arrears}.get("Basic Salary")
+
+		second_structure = make_salary_structure(
+			"Test Successive Arrear S2",
+			"Monthly",
+			employee=emp,
+			from_date=months[1],
+			company="_Test Company",
+			base=60000,
+			test_arrear=True,
+		)
+		first_arrear = make_arrear(second_structure.name, months[1])
+		self.assertEqual(basic_arrear(first_arrear), 20000)
+		basic_rows = [
+			(row.arrear_type, row.amount)
+			for row in first_arrear.salary_slip_arrears
+			if row.salary_component == "Basic Salary"
+		]
+		self.assertEqual(basic_rows, [("Earning", 10000), ("Earning", 10000)])
+
+		third_structure = make_salary_structure(
+			"Test Successive Arrear S3",
+			"Monthly",
+			employee=emp,
+			from_date=months[2],
+			company="_Test Company",
+			base=80000,
+			test_arrear=True,
+		)
+		second_arrear = make_arrear(third_structure.name, months[2])
+		self.assertEqual(basic_arrear(second_arrear), 20000)
