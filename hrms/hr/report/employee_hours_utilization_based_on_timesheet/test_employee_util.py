@@ -100,8 +100,8 @@ class TestEmployeeUtilization(FrappeTestCase):
 				"activity_type": get_random("Activity Type"),
 				"hours": 8,
 				"is_billable": 0,
-				"from_time": "2021-04-01 09:00:00",
-				"to_time": "2021-04-01 17:00:00",
+				"from_time": "2021-04-02 09:00:00",
+				"to_time": "2021-04-02 17:00:00",
 			},
 		)
 		timesheet.insert()
