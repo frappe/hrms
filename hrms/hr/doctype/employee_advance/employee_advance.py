@@ -27,12 +27,8 @@ class EmployeeAdvance(Document):
 
 	def validate(self):
 		validate_active_employee(self.employee)
-<<<<<<< HEAD
-		self.validate_exchange_rate()
-=======
 		self.validate_advance_amount()
-		self.validate_advance_account_currency()
->>>>>>> 7fc314b (fix: do not allow zero advance amount in Employee Advance)
+		self.validate_exchange_rate()
 		self.validate_advance_account_type()
 		self.set_status()
 		self.set_pending_amount()
@@ -67,15 +63,13 @@ class EmployeeAdvance(Document):
 		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
 		hrms.refetch_resource("hrms:employee_advance_balance", employee_user)
 
-<<<<<<< HEAD
-	def validate_exchange_rate(self):
-		if not self.exchange_rate:
-			frappe.throw(_("Exchange Rate cannot be zero."))
-=======
 	def validate_advance_amount(self):
 		if flt(self.advance_amount) <= 0:
 			frappe.throw(_("Advance Amount must be greater than zero."))
->>>>>>> 7fc314b (fix: do not allow zero advance amount in Employee Advance)
+
+	def validate_exchange_rate(self):
+		if not self.exchange_rate:
+			frappe.throw(_("Exchange Rate cannot be zero."))
 
 	def validate_advance_account_type(self):
 		if not self.advance_account:
