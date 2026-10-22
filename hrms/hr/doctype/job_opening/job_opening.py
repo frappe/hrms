@@ -117,7 +117,7 @@ class JobOpening(WebsiteGenerator):
 		if self.status == "Closed" and self.job_requisition:
 			job_requisition = frappe.get_doc("Job Requisition", self.job_requisition)
 			job_requisition.status = "Filled"
-			job_requisition.completed_on = getdate()
+			job_requisition.completed_on = self.closed_on or job_requisition.completed_on or getdate()
 			job_requisition.flags.ignore_permissions = True
 			job_requisition.flags.ignore_mandatory = True
 			job_requisition.save()
