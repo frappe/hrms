@@ -940,6 +940,8 @@ class SalarySlip(TransactionBase):
 		if self.salary_structure:
 			self.calculate_component_amounts("employer_contributions")
 
+		self.apply_regional_employer_contributions()
+
 		self.set_precision_for_component_amounts()
 		self.set_net_pay()
 		if not skip_tax_breakup_computation:
@@ -948,6 +950,11 @@ class SalarySlip(TransactionBase):
 	@hrms.allow_regional
 	def apply_regional_deductions(self):
 		"Hook point for region-specific salary slip deductions."
+		pass
+
+	@hrms.allow_regional
+	def apply_regional_employer_contributions(self):
+		"Hook point for region-specific employer contributions, after the structure rows are added."
 		pass
 
 	def set_net_pay(self):

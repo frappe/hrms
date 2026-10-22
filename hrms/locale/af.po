@@ -27,7 +27,7 @@ msgstr ""
 
 #: hr/report/employee_leave_balance/employee_leave_balance.py:22
 msgid "\"From Date\" can not be greater than or equal to \"To Date\""
-msgstr ""
+msgstr "\"Van Datum\" kan nie groter as of gelyk aan \"Tot Datum\" wees nie"
 
 #: public/frontend/assets/EmployeeAdvanceItem-2a5ba80f.js:1
 msgid "$dayjs"
@@ -43,11 +43,11 @@ msgstr ""
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:88
 msgid "% Utilization (B + NB) / T"
-msgstr ""
+msgstr "% Benutting (B + NB) / T"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:94
 msgid "% Utilization (B / T)"
-msgstr ""
+msgstr "% Benutting (Gefaktureer / Totaal)"
 
 #: hr/doctype/employee_checkin/employee_checkin.py:84
 msgid "'employee_field_value' and 'timestamp' are required."
@@ -232,7 +232,7 @@ msgstr "<b>Voorbeeld:</b> SAL- {first_name} - {date_of_birth.year} <br> Dit sal 
 #: hr/doctype/leave_allocation/leave_allocation.py:276
 #: hr/doctype/leave_allocation/leave_allocation.py:282
 msgid "<b>Total Leaves Allocated</b> are more than the number of days in the allocation period"
-msgstr ""
+msgstr "<b>Totaal toegekende verlof</b> is meer as die aantal dae in die toekenningsperiode"
 
 #. Description of the Onboarding Step 'Data Import'
 #: hr/onboarding_step/data_import/data_import.json
@@ -339,7 +339,7 @@ msgstr ""
 
 #: controllers/employee_reminders.py:123 controllers/employee_reminders.py:216
 msgid "A friendly reminder of an important date for our team."
-msgstr ""
+msgstr "'n Vriendelike herinnering aan 'n belangrike datum vir ons span."
 
 #: hr/utils.py:230 payroll/doctype/payroll_period/payroll_period.py:49
 msgid "A {0} exists between {1} and {2} ("
@@ -389,7 +389,7 @@ msgstr "Afwesige dae"
 
 #: hr/report/shift_attendance/shift_attendance.py:174
 msgid "Absent Records"
-msgstr ""
+msgstr "Afwesige rekords"
 
 #. Name of a role
 #: hr/doctype/interest/interest.json
@@ -456,7 +456,7 @@ msgstr ""
 
 #: hr/doctype/expense_claim_type/expense_claim_type.py:29
 msgid "Account {0} does not match with Company {1}"
-msgstr ""
+msgstr "Rekening {0} stem nie ooreen met Maatskappy {1} nie"
 
 #. Label of a Card Break in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
@@ -532,7 +532,7 @@ msgstr ""
 #: hr/workspace/expense_claims/expense_claims.json
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Accounting Reports"
-msgstr ""
+msgstr "Rekeningkundige verslae"
 
 #. Label of a Table field in DocType 'Expense Claim Type'
 #: hr/doctype/expense_claim_type/expense_claim_type.json
@@ -638,7 +638,7 @@ msgstr "Werklike bedrag"
 
 #: hr/doctype/leave_encashment/leave_encashment.py:136
 msgid "Actual Encashable Days"
-msgstr ""
+msgstr "Werklike uitbetaalbare dae"
 
 #. Label of a Float field in DocType 'Leave Encashment'
 #: hr/doctype/leave_encashment/leave_encashment.json
@@ -648,7 +648,7 @@ msgstr ""
 
 #: hr/doctype/leave_application/leave_application.py:399
 msgid "Actual balances aren't available because the leave application spans over different leave allocations. You can still apply for leaves which would be compensated during the next allocation."
-msgstr ""
+msgstr "Werklike saldo's is nie beskikbaar nie, omdat die verlofaansoek oor verskillende verloftoekennings strek. U kan steeds aansoek doen om verlof wat tydens die volgende toekenning vergoed sal word."
 
 #. Label of a Button field in DocType 'Leave Block List'
 #: hr/doctype/leave_block_list/leave_block_list.json
@@ -658,11 +658,11 @@ msgstr ""
 
 #: hr/employee_property_update.js:45
 msgid "Add Employee Property"
-msgstr ""
+msgstr "Voeg werknemer-eienskap by"
 
 #: public/js/performance/performance_feedback.js:93
 msgid "Add Feedback"
-msgstr ""
+msgstr "Voeg terugvoer by"
 
 #: hr/employee_property_update.js:88
 msgid "Add to Details"
@@ -694,7 +694,7 @@ msgstr ""
 
 #: payroll/doctype/salary_slip/salary_slip.py:1255
 msgid "Added tax components from the Salary Component master as the salary structure didn't have any tax component."
-msgstr ""
+msgstr "Belastingkomponente is by die Salariskomponent-meesterdata gevoeg omdat die salarisstruktuur geen belastingkomponent gehad het nie."
 
 #: hr/employee_property_update.js:163
 msgid "Added to details"
@@ -745,11 +745,11 @@ msgstr "Bykomende salaris"
 
 #: payroll/doctype/additional_salary/additional_salary.py:110
 msgid "Additional Salary for referral bonus can only be created against Employee Referral with status {0}"
-msgstr ""
+msgstr "Bykomende Salaris vir verwysingsbonus kan slegs geskep word teen Werknemerverwysing met status {0}"
 
 #: payroll/doctype/additional_salary/additional_salary.py:132
 msgid "Additional Salary for this salary component with {0} enabled already exists for this date"
-msgstr ""
+msgstr "Bykomende salaris vir hierdie salariskomponent met {0} geaktiveer bestaan reeds vir hierdie datum"
 
 #: payroll/doctype/additional_salary/additional_salary.py:62
 msgid "Additional Salary: {0} already exist for Salary Component: {1} for period {2} and {3}"
@@ -832,7 +832,7 @@ msgstr ""
 
 #: hr/doctype/goal/goal_tree.js:219
 msgid "All Goals"
-msgstr ""
+msgstr "Alle doelwitte"
 
 #: hr/doctype/job_opening/job_opening.py:106
 msgid "All Jobs"
@@ -840,11 +840,11 @@ msgstr "Alle Werk"
 
 #: hr/doctype/full_and_final_statement/full_and_final_statement.py:40
 msgid "All allocated assets should be returned before submission"
-msgstr ""
+msgstr "Alle toegekende bates moet voor indiening teruggestuur word"
 
 #: hr/doctype/employee_onboarding/employee_onboarding.py:48
 msgid "All the mandatory tasks for employee creation are not completed yet."
-msgstr ""
+msgstr "Nie al die verpligtende take vir die skepping van werknemers is nog voltooi nie."
 
 #. Label of a Check field in DocType 'Leave Control Panel'
 #: hr/doctype/leave_control_panel/leave_control_panel.json
@@ -854,7 +854,7 @@ msgstr ""
 
 #: hr/doctype/leave_control_panel/leave_control_panel.js:206
 msgid "Allocate Leave"
-msgstr ""
+msgstr "Ken verlof toe"
 
 #. Label of a Select field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
@@ -878,7 +878,7 @@ msgstr ""
 
 #: hr/doctype/leave_control_panel/leave_control_panel.js:228
 msgid "Allocating Leave"
-msgstr ""
+msgstr "Verlof word toegeken"
 
 #. Label of a Card Break in the Leaves Workspace
 #: hr/workspace/leaves/leaves.json
@@ -903,7 +903,7 @@ msgstr "Laat Encashment toe"
 
 #: hr/doctype/shift_assignment/shift_assignment.py:60
 msgid "Allow Multiple Shift Assignments for Same Date"
-msgstr ""
+msgstr "Laat meervoudige skoftoewysings vir dieselfde datum toe"
 
 #. Label of a Check field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
@@ -1301,7 +1301,7 @@ msgstr ""
 
 #: payroll/doctype/salary_structure/salary_structure.py:34
 msgid "Amount Based on Formula"
-msgstr ""
+msgstr "Bedrag gebaseer op formule"
 
 #. Label of a Check field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
@@ -1317,7 +1317,7 @@ msgstr "Bedrag gebaseer op formule"
 
 #: payroll/doctype/additional_salary/additional_salary.py:31
 msgid "Amount should not be less than zero"
-msgstr ""
+msgstr "Bedrag mag nie minder as nul wees nie"
 
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.py:58
 msgid "An amount of {0} already claimed for the component {1}, set the amount equal or greater than {2}"
@@ -1412,7 +1412,7 @@ msgstr "Aansoeker naam"
 #. Label of a Card Break in the Leaves Workspace
 #: hr/workspace/leaves/leaves.json
 msgid "Application"
-msgstr ""
+msgstr "Toepassing"
 
 #: hr/report/recruitment_analytics/recruitment_analytics.py:47
 msgid "Application Status"
@@ -1428,11 +1428,11 @@ msgstr "Aansoek tydperk kan nie buite verlof toekenning tydperk"
 
 #: templates/generators/job_opening.html:152
 msgid "Applications Received"
-msgstr ""
+msgstr "Aansoeke ontvang"
 
 #: www/jobs/index.html:211
 msgid "Applications received:"
-msgstr ""
+msgstr "Aansoeke ontvang:"
 
 #. Label of a Check field in DocType 'Leave Block List'
 #: hr/doctype/leave_block_list/leave_block_list.json
@@ -1528,7 +1528,7 @@ msgstr "evaluering"
 #: hr/report/appraisal_overview/appraisal_overview.js:18
 #: hr/report/appraisal_overview/appraisal_overview.py:37
 msgid "Appraisal Cycle"
-msgstr ""
+msgstr "Evalueringsiklus"
 
 #. Label of a Link field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
@@ -1562,11 +1562,11 @@ msgstr "Evalueringsdoel"
 #. Name of a DocType
 #: hr/doctype/appraisal_kra/appraisal_kra.json
 msgid "Appraisal KRA"
-msgstr ""
+msgstr "Evalueerings-KRA"
 
 #: hr/doctype/goal/goal_tree.js:98
 msgid "Appraisal Linking"
-msgstr ""
+msgstr "Evalueringskoppeling"
 
 #. Label of a Section Break field in DocType 'Goal'
 #: hr/doctype/goal/goal.json
@@ -1579,12 +1579,12 @@ msgstr ""
 #: hr/report/appraisal_overview/appraisal_overview.json
 #: hr/workspace/performance/performance.json
 msgid "Appraisal Overview"
-msgstr ""
+msgstr "Evalueringsoorsig"
 
 #. Name of a DocType
 #: hr/doctype/appraisal_template/appraisal_template.json
 msgid "Appraisal Template"
-msgstr ""
+msgstr "Evalueringsjabloon"
 
 #. Label of a Link field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
@@ -1611,7 +1611,7 @@ msgstr "Evalueringsjabloon doel"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:142
 msgid "Appraisal Template Missing"
-msgstr ""
+msgstr "Evalueringsjabloon ontbreek"
 
 #. Label of a Data field in DocType 'Appraisal Template'
 #: hr/doctype/appraisal_template/appraisal_template.json
@@ -1621,28 +1621,28 @@ msgstr "Appraisal Template Titel"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:135
 msgid "Appraisal Template not found for some designations."
-msgstr ""
+msgstr "Evalueringsjabloon nie gevind vir sommige aanwysings nie."
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:125
 msgid "Appraisal creation is queued. It may take a few minutes."
-msgstr ""
+msgstr "Skepping van evaluering is in die tou. Dit kan 'n paar minute neem."
 
 #: hr/doctype/appraisal/appraisal.py:54
 msgid "Appraisal {0} already exists for Employee {1} for this Appraisal Cycle or overlapping period"
-msgstr ""
+msgstr "Evaluering {0} bestaan reeds vir werknemer {1} vir hierdie evalueringsiklus of oorvleuelende tydperk"
 
 #: hr/doctype/employee_performance_feedback/employee_performance_feedback.py:44
 msgid "Appraisal {0} does not belong to Employee {1}"
-msgstr ""
+msgstr "Evaluering {0} behoort nie aan werknemer {1} nie"
 
 #. Name of a DocType
 #: hr/doctype/appraisee/appraisee.json
 msgid "Appraisee"
-msgstr ""
+msgstr "Evalueerde"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:113
 msgid "Appraisees: {0}"
-msgstr ""
+msgstr "Evalueerdes: {0}"
 
 #: setup.py:387
 msgid "Apprentice"
@@ -1711,7 +1711,7 @@ msgstr ""
 
 #: payroll/doctype/salary_slip/salary_slip_list.js:11
 msgid "Are you sure you want to email the selected salary slips?"
-msgstr ""
+msgstr "Is jy seker jy wil die gekose salarisstrokies per e-pos stuur?"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:87
 msgid "Are you sure you want to proceed?"
@@ -1719,7 +1719,7 @@ msgstr ""
 
 #: hr/doctype/employee_referral/employee_referral.js:9
 msgid "Are you sure you want to reject the Employee Referral?"
-msgstr ""
+msgstr "Is jy seker jy wil die Werknemerverwysing verwerp?"
 
 #. Label of a Datetime field in DocType 'Travel Itinerary'
 #: hr/doctype/travel_itinerary/travel_itinerary.json
@@ -1769,7 +1769,7 @@ msgstr ""
 #: hr/doctype/job_requisition/job_requisition.js:38
 #: hr/doctype/job_requisition/job_requisition.js:59
 msgid "Associate Job Opening"
-msgstr ""
+msgstr "Koppel Vakature"
 
 #. Label of a Dynamic Link field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
@@ -1832,7 +1832,7 @@ msgstr "Bywoning"
 #. Label of a chart in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Attendance Count"
-msgstr ""
+msgstr "Aantal Bywonings"
 
 #. Label of a shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
@@ -1861,7 +1861,7 @@ msgstr "Bywoning vanaf datum en bywoning tot datum is verpligtend"
 
 #: hr/report/shift_attendance/shift_attendance.py:123
 msgid "Attendance ID"
-msgstr ""
+msgstr "Bywoning-ID"
 
 #: hr/doctype/attendance/attendance_list.js:115
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.js:177
@@ -1901,11 +1901,11 @@ msgstr "Bywoning tot datum"
 
 #: hr/doctype/attendance_request/attendance_request.py:105
 msgid "Attendance Updated"
-msgstr ""
+msgstr "Bywoning Opgedateer"
 
 #: hr/doctype/attendance_request/attendance_request.js:19
 msgid "Attendance Warnings"
-msgstr ""
+msgstr "Bywoningswaarskuwings"
 
 #: hr/doctype/attendance/attendance.py:56
 msgid "Attendance can not be marked for future dates: {0}"
@@ -1913,19 +1913,19 @@ msgstr ""
 
 #: hr/doctype/attendance/attendance.py:62
 msgid "Attendance date {0} can not be less than employee {1}'s joining date: {2}"
-msgstr ""
+msgstr "Bywoningsdatum {0} kan nie minder wees as die indiensnemingsdatum {2} van werknemer {1} nie."
 
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.js:176
 msgid "Attendance for all the employees under this criteria has been marked already."
-msgstr ""
+msgstr "Bywoning vir alle werknemers onder hierdie kriteria is reeds aangeteken."
 
 #: hr/doctype/attendance/attendance.py:113
 msgid "Attendance for employee {0} is already marked for an overlapping shift {1}: {2}"
-msgstr ""
+msgstr "Bywoning vir werknemer {0} is reeds gemerk vir 'n oorvleuelende skof {1}: {2}"
 
 #: hr/doctype/attendance/attendance.py:74
 msgid "Attendance for employee {0} is already marked for the date {1}: {2}"
-msgstr ""
+msgstr "Bywoning vir werknemer {0} is reeds gemerk vir die datum {1}: {2}"
 
 #: hr/doctype/leave_application/leave_application.py:545
 msgid "Attendance for employee {0} is already marked for this day"
@@ -1933,7 +1933,7 @@ msgstr "Bywoning vir werknemer {0} is reeds gemerk vir hierdie dag"
 
 #: hr/doctype/attendance/attendance_list.js:95
 msgid "Attendance from {0} to {1} has already been marked for the Employee {2}"
-msgstr ""
+msgstr "Bywoning van {0} tot {1} is reeds vir die werknemer {2} gemerk."
 
 #: hr/doctype/shift_type/shift_type.js:29
 msgid "Attendance has been marked as per employee check-ins"
@@ -1941,7 +1941,7 @@ msgstr "Die bywoning is volgens die werknemers se inboeke gemerk"
 
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.js:218
 msgid "Attendance marked successfully"
-msgstr ""
+msgstr "Bywoning suksesvol gemerk"
 
 #: hr/doctype/attendance_request/attendance_request.py:123
 msgid "Attendance not submitted for {0} as it is a Holiday."
@@ -1949,7 +1949,7 @@ msgstr "Bywoning is nie vir {0} ingedien nie aangesien dit &#39;n Vakansiedag is
 
 #: hr/doctype/attendance_request/attendance_request.py:132
 msgid "Attendance not submitted for {0} as {1} is on leave."
-msgstr ""
+msgstr "Bywoning nie ingedien vir {0} nie, aangesien {1} met verlof is."
 
 #. Description of a Date field in DocType 'Shift Type'
 #: hr/doctype/shift_type/shift_type.json
@@ -1965,7 +1965,7 @@ msgstr "deelnemers"
 
 #: hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:45
 msgid "Attrition Count"
-msgstr ""
+msgstr "Uitvalgetal"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:20
 #: public/js/salary_slip_deductions_report_filters.js:26
@@ -2022,15 +2022,15 @@ msgstr ""
 
 #: hr/report/appraisal_overview/appraisal_overview.py:52
 msgid "Avg Feedback Score"
-msgstr ""
+msgstr "Gem. terugvoertelling"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:223
 msgid "Avg Utilization"
-msgstr ""
+msgstr "Gem. benutting"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:229
 msgid "Avg Utilization (Billed Only)"
-msgstr ""
+msgstr "Gemiddelde benutting (slegs gefaktureer)"
 
 #. Option for a Select field in DocType 'Job Offer'
 #: hr/doctype/job_offer/job_offer.json
@@ -2040,7 +2040,7 @@ msgstr "In afwagting van antwoord"
 
 #: hr/doctype/leave_application/leave_application.py:166
 msgid "Backdated Leave Application is restricted. Please set the {} in {}"
-msgstr ""
+msgstr "Teruggedateerde verlofaansoek is beperk. Stel asseblief die {} in {}."
 
 #: payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:48
 msgid "Bank"
@@ -2121,7 +2121,7 @@ msgstr "Beginner"
 
 #: controllers/employee_reminders.py:75
 msgid "Below is the list of upcoming holidays for you:"
-msgstr ""
+msgstr "Hieronder is die lys van komende vakansiedae vir u:"
 
 #: overrides/dashboard_overrides.py:30
 msgid "Benefit"
@@ -2130,7 +2130,7 @@ msgstr "voordeel"
 #. Label of a Card Break in the Tax & Benefits Workspace
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Benefits"
-msgstr ""
+msgstr "Voordele"
 
 #. Label of a Section Break field in DocType 'Employee Benefit Application'
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.json
@@ -2146,15 +2146,15 @@ msgstr ""
 
 #: hr/report/project_profitability/project_profitability.py:171
 msgid "Bill Amount"
-msgstr ""
+msgstr "Rekeningbedrag"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:254
 msgid "Billed Hours"
-msgstr ""
+msgstr "Gefaktureerde ure"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:70
 msgid "Billed Hours (B)"
-msgstr ""
+msgstr "Gefaktureerde ure (B)"
 
 #. Option for a Select field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
@@ -2180,7 +2180,7 @@ msgstr "Verjaardag Herinnering"
 
 #: controllers/employee_reminders.py:141
 msgid "Birthday Reminder 🎂"
-msgstr ""
+msgstr "Verjaardagherinnering 🎂"
 
 #. Label of a Check field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
@@ -2282,7 +2282,7 @@ msgstr ""
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:180
 msgid "Branch: {0}"
-msgstr ""
+msgstr "Tak: {0}"
 
 #: payroll/doctype/salary_structure/salary_structure.js:99
 msgid "Bulk Assign Structure"
@@ -2290,15 +2290,15 @@ msgstr ""
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment_list.js:3
 msgid "Bulk Leave Policy Assignment"
-msgstr ""
+msgstr "Massa verlofbeleidtoewysing"
 
 #: payroll/doctype/salary_structure/salary_structure.js:130
 msgid "Bulk Salary Structure Assignment"
-msgstr ""
+msgstr "Massa-toewysing van salarisstruktuur"
 
 #: payroll/report/income_tax_computation/income_tax_computation.py:515
 msgid "CTC"
-msgstr ""
+msgstr "CTC"
 
 #. Label of a Currency field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
@@ -2334,7 +2334,7 @@ msgstr ""
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:116
 msgid "Cancellation Queued"
-msgstr ""
+msgstr "Kansellasie in tou"
 
 #. Option for a Select field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
@@ -2404,15 +2404,15 @@ msgstr ""
 
 #: payroll/doctype/salary_slip/salary_slip.py:255
 msgid "Cannot create Salary Slip for Employee joining after Payroll Period"
-msgstr ""
+msgstr "Kan nie salarisstrokie skep vir werknemer met indiensneming na die betaalstaatperiode nie"
 
 #: payroll/doctype/salary_slip/salary_slip.py:258
 msgid "Cannot create Salary Slip for Employee who has left before Payroll Period"
-msgstr ""
+msgstr "Kan nie 'n Salarisstrokie skep vir 'n Werknemer wat voor die Betaalstaatperiode bedank het nie"
 
 #: hr/doctype/job_applicant/job_applicant.py:49
 msgid "Cannot create a Job Applicant against a closed Job Opening"
-msgstr ""
+msgstr "Kan nie 'n Werksaansoeker teen 'n gesluite Vakature skep nie"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:200
 msgid "Cannot create or change transactions against a {0} Appraisal Cycle."
@@ -2424,19 +2424,19 @@ msgstr "Kan nie aktiewe verlofperiode vind nie"
 
 #: hr/doctype/attendance/attendance.py:145
 msgid "Cannot mark attendance for an Inactive employee {0}"
-msgstr ""
+msgstr "Kan nie bywoning merk vir onaktiewe werknemer {0} nie"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:59
 msgid "Cannot submit. Attendance is not marked for some employees."
-msgstr ""
+msgstr "Kan nie indien nie. Bywoning is nie vir sommige werknemers aangeteken nie."
 
 #: hr/doctype/leave_allocation/leave_allocation.py:138
 msgid "Cannot update allocation for {0} after submission"
-msgstr ""
+msgstr "Kan nie toekenning vir {0} na indiening opdateer nie"
 
 #: hr/doctype/goal/goal_list.js:104
 msgid "Cannot update status of Goal groups"
-msgstr ""
+msgstr "Kan nie status van doelgroepe opdateer nie"
 
 #. Label of a Check field in DocType 'Leave Control Panel'
 #: hr/doctype/leave_control_panel/leave_control_panel.json
@@ -2474,7 +2474,7 @@ msgstr ""
 
 #: hr/doctype/goal/goal.js:96
 msgid "Changing KRA in this parent goal will align all the child goals to the same KRA, if any."
-msgstr ""
+msgstr "As die KRA in hierdie ouerdoelwit verander word, sal alle kinddoelwitte, indien daar is, na dieselfde KRA belyn word."
 
 #. Label of a Link in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
@@ -2490,7 +2490,7 @@ msgstr ""
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:1355
 msgid "Check Error Log {0} for more details."
-msgstr ""
+msgstr "Kontroleer Foutlog {0} vir meer besonderhede."
 
 #. Label of a Check field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
@@ -2501,7 +2501,7 @@ msgstr "Kyk na vakatures met die skep van werksaanbiedinge"
 #: hr/doctype/leave_control_panel/leave_control_panel.py:119
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:329
 msgid "Check {0} for more details"
-msgstr ""
+msgstr "Kontroleer {0} vir meer besonderhede"
 
 #. Label of a Date field in DocType 'Travel Itinerary'
 #: hr/doctype/travel_itinerary/travel_itinerary.json
@@ -2517,7 +2517,7 @@ msgstr "Check-out datum"
 
 #: hr/doctype/goal/goal_tree.js:52
 msgid "Child nodes can only be created under 'Group' type nodes"
-msgstr ""
+msgstr "Kindnodusse kan net onder nodusse van tipe 'Groep' geskep word."
 
 #. Label of a Link field in DocType 'Employee Benefit Claim'
 #: payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
@@ -2557,7 +2557,7 @@ msgstr "Eisbedrag"
 #: hr/workspace/expense_claims/expense_claims.json
 #: overrides/dashboard_overrides.py:81
 msgid "Claims"
-msgstr ""
+msgstr "Eise"
 
 #: www/jobs/index.html:20
 msgid "Clear All"
@@ -2599,7 +2599,7 @@ msgstr ""
 
 #: templates/generators/job_opening.html:170
 msgid "Closed On"
-msgstr ""
+msgstr "Gesluit op"
 
 #. Label of a Date field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
@@ -2609,7 +2609,7 @@ msgstr ""
 
 #: templates/generators/job_opening.html:170
 msgid "Closes On"
-msgstr ""
+msgstr "Sluit op"
 
 #. Label of a Date field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
@@ -2619,7 +2619,7 @@ msgstr ""
 
 #: www/jobs/index.html:216
 msgid "Closes on:"
-msgstr ""
+msgstr "Sluit op:"
 
 #: hr/report/employee_leave_balance/employee_leave_balance.py:78
 msgid "Closing Balance"
@@ -3095,7 +3095,7 @@ msgstr ""
 
 #: hr/doctype/employee_onboarding/employee_onboarding.js:95
 msgid "Completing onboarding"
-msgstr ""
+msgstr "Voltooi inskakeling"
 
 #. Label of a Data field in DocType 'Full and Final Outstanding Statement'
 #: hr/doctype/full_and_final_outstanding_statement/full_and_final_outstanding_statement.json
@@ -3141,7 +3141,7 @@ msgstr ""
 
 #: payroll/doctype/salary_structure/salary_structure.js:13
 msgid "Condition and Formula Help"
-msgstr ""
+msgstr "Voorwaarde- en formule-hulp"
 
 #. Label of a Section Break field in DocType 'Salary Detail'
 #: payroll/doctype/salary_detail/salary_detail.json
@@ -3181,7 +3181,7 @@ msgstr ""
 
 #: hr/report/shift_attendance/shift_attendance.js:58
 msgid "Consider Grace Period"
-msgstr ""
+msgstr "Oorweeg genadeperiode"
 
 #. Label of a Check field in DocType 'Payroll Settings'
 #: payroll/doctype/payroll_settings/payroll_settings.json
@@ -3191,7 +3191,7 @@ msgstr ""
 
 #: payroll/report/income_tax_computation/income_tax_computation.js:40
 msgid "Consider Tax Exemption Declaration"
-msgstr ""
+msgstr "Oorweeg belastingvrystellingsverklaring"
 
 #. Label of a Select field in DocType 'Payroll Settings'
 #: payroll/doctype/payroll_settings/payroll_settings.json
@@ -3201,7 +3201,7 @@ msgstr "Oorweeg ongemerkte bywoning as"
 
 #: hr/report/employee_leave_balance/employee_leave_balance.js:55
 msgid "Consolidate Leave Types"
-msgstr ""
+msgstr "Konsolideer verloftipes"
 
 #. Label of a Data field in DocType 'Travel Request'
 #: hr/doctype/travel_request/travel_request.json
@@ -3309,15 +3309,15 @@ msgstr "Koste Besonderhede"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:1416
 msgid "Could not submit some Salary Slips: {}"
-msgstr ""
+msgstr "Kon nie sommige Salarisstrokies indien nie: {}"
 
 #: hr/doctype/goal/goal_tree.js:299
 msgid "Could not update Goal"
-msgstr ""
+msgstr "Kon nie doel opdateer nie"
 
 #: hr/doctype/goal/goal_list.js:138
 msgid "Could not update goals"
-msgstr ""
+msgstr "Kon nie doelwitte opdateer nie"
 
 #. Label of a Link field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
@@ -3360,11 +3360,11 @@ msgstr ""
 
 #: hr/doctype/employee_referral/employee_referral.js:39
 msgid "Create Additional Salary"
-msgstr ""
+msgstr "Skep bykomende salaris"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:35
 msgid "Create Appraisals"
-msgstr ""
+msgstr "Skep evaluerings"
 
 #. Title of an Onboarding Step
 #: hr/onboarding_step/create_department/create_department.json
@@ -3386,24 +3386,24 @@ msgstr ""
 #. Title of an Onboarding Step
 #: hr/onboarding_step/create_holiday_list/create_holiday_list.json
 msgid "Create Holiday List"
-msgstr ""
+msgstr "Skep Vakansiedaglys"
 
 #. Title of an Onboarding Step
 #: payroll/onboarding_step/create_income_tax_slab/create_income_tax_slab.json
 msgid "Create Income Tax Slab"
-msgstr ""
+msgstr "Skep Inkomstebelastingskaal"
 
 #: hr/doctype/interview_round/interview_round.js:7
 msgid "Create Interview"
-msgstr ""
+msgstr "Skep onderhoud"
 
 #: hr/doctype/employee_referral/employee_referral.js:21
 msgid "Create Job Applicant"
-msgstr ""
+msgstr "Skep werksaansoeker"
 
 #: hr/doctype/job_requisition/job_requisition.js:31
 msgid "Create Job Opening"
-msgstr ""
+msgstr "Skep Vakature"
 
 #: hr/doctype/full_and_final_statement/full_and_final_statement.js:10
 msgid "Create Journal Entry"
@@ -3422,7 +3422,7 @@ msgstr ""
 #. Title of an Onboarding Step
 #: hr/onboarding_step/create_leave_type/create_leave_type.json
 msgid "Create Leave Type"
-msgstr ""
+msgstr "Skep Verloftipe"
 
 #. Label of a Check field in DocType 'Employee Transfer'
 #: hr/doctype/employee_transfer/employee_transfer.json
@@ -3437,12 +3437,12 @@ msgstr ""
 #. Title of an Onboarding Step
 #: payroll/onboarding_step/create_payroll_period/create_payroll_period.json
 msgid "Create Payroll Period"
-msgstr ""
+msgstr "Skep Betaalstaatperiode"
 
 #. Title of an Onboarding Step
 #: payroll/onboarding_step/create_salary_component/create_salary_component.json
 msgid "Create Salary Component"
-msgstr ""
+msgstr "Skep Salariskomponent"
 
 #. Title of an Onboarding Step
 #: payroll/onboarding_step/create_salary_slip/create_salary_slip.json
@@ -3459,7 +3459,7 @@ msgstr "Skep Salarisstrokies"
 #. Title of an Onboarding Step
 #: payroll/onboarding_step/create_salary_structure/create_salary_structure.json
 msgid "Create Salary Structure"
-msgstr ""
+msgstr "Skep salarisstruktuur"
 
 #. Label of a Check field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
@@ -3469,7 +3469,7 @@ msgstr "Skep &#39;n afsonderlike betaling inskrywing teen voordeel eis"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:191
 msgid "Creating Appraisals"
-msgstr ""
+msgstr "Evalueringe word geskep"
 
 #: payroll/doctype/payroll_entry/payroll_entry.js:412
 msgid "Creating Payment Entries......"
@@ -3481,7 +3481,7 @@ msgstr "Skep Salarisstrokies ..."
 
 #: hr/doctype/leave_control_panel/leave_control_panel.py:128
 msgid "Creation Failed"
-msgstr ""
+msgstr "Skepping misluk"
 
 #: hr/doctype/appraisal_template/appraisal_template.py:23
 msgid "Criteria"
@@ -3628,7 +3628,7 @@ msgstr ""
 
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:99
 msgid "Currency of selected Income Tax Slab should be {0} instead of {1}"
-msgstr ""
+msgstr "Geldeenheid van die gekose Inkomstebelastingskaal moet {0} wees in plaas van {1}"
 
 #: hr/employee_property_update.js:85
 msgid "Current"
@@ -3706,7 +3706,7 @@ msgstr ""
 
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.py:98
 msgid "Currently, there is no {0} leave period for this date to create/update leave allocation."
-msgstr ""
+msgstr "Tans is daar geen {0} verlofperiode vir hierdie datum om verlofoetekenning te skep/op te dateer nie."
 
 #. Option for a Select field in DocType 'Leave Control Panel'
 #: hr/doctype/leave_control_panel/leave_control_panel.json
@@ -3943,7 +3943,7 @@ msgstr "Des"
 
 #: hr/report/employee_exits/employee_exits.py:193
 msgid "Decision Pending"
-msgstr ""
+msgstr "Besluit hangende"
 
 #. Label of a Table field in DocType 'Employee Tax Exemption Declaration'
 #: payroll/doctype/employee_tax_exemption_declaration/employee_tax_exemption_declaration.json
@@ -4014,11 +4014,11 @@ msgstr "aftrekking"
 #. Label of a Card Break in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Deduction Reports"
-msgstr ""
+msgstr "Aftrekking Verslae"
 
 #: hr/doctype/employee_advance/employee_advance.js:74
 msgid "Deduction from Salary"
-msgstr ""
+msgstr "Aftrekking van salaris"
 
 #. Label of a Table field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
@@ -4387,11 +4387,11 @@ msgstr "Departement Goedkeuring"
 #. Label of a chart in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
 msgid "Department Wise Openings"
-msgstr ""
+msgstr "Vakatures per departement"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:182
 msgid "Department: {0}"
-msgstr ""
+msgstr "Departement: {0}"
 
 #. Label of a Datetime field in DocType 'Travel Itinerary'
 #: hr/doctype/travel_itinerary/travel_itinerary.json
@@ -4724,7 +4724,7 @@ msgstr "Aanwysingsvaardigheid"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:184
 msgid "Designation: {0}"
-msgstr ""
+msgstr "Aanwysing: {0}"
 
 #: templates/emails/training_event.html:4
 msgid "Details"
@@ -4798,11 +4798,11 @@ msgstr ""
 
 #: payroll/doctype/salary_structure/salary_structure.py:96
 msgid "Disable {0} for the {1} component, to prevent the amount from being deducted twice, as its formula already uses a payment-days-based component."
-msgstr ""
+msgstr "Deaktiveer {0} vir die {1}-komponent om te voorkom dat die bedrag twee keer afgetrek word, aangesien die formule reeds 'n komponent gebaseer op betaaldae gebruik."
 
 #: hr/doctype/leave_type/leave_type.py:39
 msgid "Disable {0} or {1} to proceed."
-msgstr ""
+msgstr "Deaktiveer {0} of {1} om voort te gaan."
 
 #. Label of a Check field in DocType 'Additional Salary'
 #: payroll/doctype/additional_salary/additional_salary.json
@@ -4846,7 +4846,7 @@ msgstr ""
 
 #: hr/doctype/interview/interview.py:70
 msgid "Do you want to update the Job Applicant {0} as {1} based on this interview result?"
-msgstr ""
+msgstr "Wil u die werksaansoeker {0} as {1} opdateer op grond van hierdie onderhoudresultaat?"
 
 #: payroll/report/salary_register/salary_register.js:48
 msgid "Document Status"
@@ -4914,7 +4914,7 @@ msgstr ""
 
 #: hr/doctype/attendance/attendance.py:79
 msgid "Duplicate Attendance"
-msgstr ""
+msgstr "Dubbele bywoning"
 
 #: hr/doctype/appraisal/appraisal.py:60
 msgid "Duplicate Entry"
@@ -4926,7 +4926,7 @@ msgstr ""
 
 #: payroll/doctype/additional_salary/additional_salary.py:139
 msgid "Duplicate Overwritten Salary"
-msgstr ""
+msgstr "Dupliseer oorskryfde salaris"
 
 #. Label of a Int field in DocType 'Employee Boarding Activity'
 #: hr/doctype/employee_boarding_activity/employee_boarding_activity.json
@@ -4952,7 +4952,7 @@ msgstr "Vroeë uitgang"
 
 #: hr/report/shift_attendance/shift_attendance.py:91
 msgid "Early Exit By"
-msgstr ""
+msgstr "Vroeë vertrek met"
 
 #. Label of a Int field in DocType 'Shift Type'
 #: hr/doctype/shift_type/shift_type.json
@@ -4962,7 +4962,7 @@ msgstr "Genade tydperk vir vroeë uitgang"
 
 #: hr/report/shift_attendance/shift_attendance.py:186
 msgid "Early Exits"
-msgstr ""
+msgstr "Vroeë vertrekke"
 
 #. Label of a Section Break field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
@@ -4978,19 +4978,19 @@ msgstr "Verdienstelike verloffrekwensie"
 
 #: hr/doctype/leave_allocation/leave_allocation.py:139
 msgid "Earned Leaves"
-msgstr ""
+msgstr "Verdiende verlof"
 
 #: hr/doctype/leave_type/leave_type.py:34
 msgid "Earned Leaves are allocated as per the configured frequency via scheduler."
-msgstr ""
+msgstr "Verdiende verlof word volgens die gekonfigureerde frekwensie via die skeduleerder toegeken."
 
 #: hr/doctype/leave_allocation/leave_allocation.py:142
 msgid "Earned Leaves are auto-allocated via scheduler based on the annual allocation set in the Leave Policy: {0}"
-msgstr ""
+msgstr "Verdiende verlof word outomaties via die skeduleerder toegeken op grond van die jaarlikse toekenning wat in die Verlofbeleid vasgestel is: {0}"
 
 #: hr/doctype/leave_type/leave_type.js:36
 msgid "Earned Leaves are leaves earned by an Employee after working with the company for a certain amount of time. Enabling this will allocate leaves on pro-rata basis by automatically updating Leave Allocation for leaves of this type at intervals set by 'Earned Leave Frequency."
-msgstr ""
+msgstr "Verdiende verlof is verlof wat 'n Werknemer na 'n sekere tydperk by die maatskappy verdien. Deur dit te aktiveer, word verlof pro rata toegeken deur Verloftoekenning vir verlof van hierdie tipe outomaties by te werk teen intervalle wat deur 'Earned Leave Frequency ingestel word."
 
 #: payroll/report/salary_register/salary_register.py:84
 #: payroll/report/salary_register/salary_register.py:90
@@ -5017,7 +5017,7 @@ msgstr "Verdien komponent"
 
 #: payroll/doctype/additional_salary/additional_salary.py:106
 msgid "Earning Salary Component is required for Employee Referral Bonus."
-msgstr ""
+msgstr "Verdienste-salariskomponent is vereis vir werknemerverwysingsbonus."
 
 #. Label of a Table field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
@@ -5099,7 +5099,7 @@ msgstr "E-pos Salarisstrokie aan Werknemer"
 
 #: payroll/doctype/salary_slip/salary_slip_list.js:5
 msgid "Email Salary Slips"
-msgstr ""
+msgstr "Stuur salarisstrokies per e-pos"
 
 #. Label of a Code field in DocType 'Daily Work Summary'
 #: hr/doctype/daily_work_summary/daily_work_summary.json
@@ -5485,7 +5485,7 @@ msgstr ""
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 #: hr/workspace/hr/hr.json
 msgid "Employee Analytics"
-msgstr ""
+msgstr "Werknemeranalise"
 
 #. Name of a DocType
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.json
@@ -5542,7 +5542,7 @@ msgstr "Werknemervoordele"
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 #: hr/workspace/hr/hr.json
 msgid "Employee Birthday"
-msgstr ""
+msgstr "Werknemerverjaardae"
 
 #. Name of a DocType
 #: hr/doctype/employee_boarding_activity/employee_boarding_activity.json
@@ -5566,7 +5566,7 @@ msgstr "Werknemer Checkin"
 #. Name of a DocType
 #: payroll/doctype/employee_cost_center/employee_cost_center.json
 msgid "Employee Cost Center"
-msgstr ""
+msgstr "Werknemer-kostesentrum"
 
 #. Label of a Section Break field in DocType 'Employee Onboarding'
 #: hr/doctype/employee_onboarding/employee_onboarding.json
@@ -5635,12 +5635,12 @@ msgstr ""
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 #: hr/workspace/hr/hr.json
 msgid "Employee Exits"
-msgstr ""
+msgstr "Werknemeruittredings"
 
 #. Name of a DocType
 #: hr/doctype/employee_feedback_criteria/employee_feedback_criteria.json
 msgid "Employee Feedback Criteria"
-msgstr ""
+msgstr "Werknemer-terugvoerkriteria"
 
 #. Label of a Link in the Performance Workspace
 #: hr/workspace/performance/performance.json
@@ -5651,7 +5651,7 @@ msgstr ""
 #. Name of a DocType
 #: hr/doctype/employee_feedback_rating/employee_feedback_rating.json
 msgid "Employee Feedback Rating"
-msgstr ""
+msgstr "Werknemer-terugvoerbeoordeling"
 
 #: payroll/doctype/salary_structure/salary_structure.js:132
 msgid "Employee Filters"
@@ -5702,7 +5702,7 @@ msgstr "Werknemersgraad"
 #. Name of a DocType
 #: hr/doctype/employee_grievance/employee_grievance.json
 msgid "Employee Grievance"
-msgstr ""
+msgstr "Werknemerklag"
 
 #. Label of a Link in the Employee Lifecycle Workspace
 #. Label of a shortcut in the Employee Lifecycle Workspace
@@ -5727,7 +5727,7 @@ msgstr "Werknemer Gesondheidsversekering"
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.json
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Employee Hours Utilization Based On Timesheet"
-msgstr ""
+msgstr "Werknemeruurbenutting gebaseer op tydstaat"
 
 #. Label of a Attach Image field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
@@ -5759,7 +5759,7 @@ msgstr ""
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 #: hr/workspace/hr/hr.json
 msgid "Employee Information"
-msgstr ""
+msgstr "Werknemerinligting"
 
 #. Name of a report
 #. Label of a Link in the HR Workspace
@@ -5767,7 +5767,7 @@ msgstr ""
 #: hr/report/employee_leave_balance/employee_leave_balance.json
 #: hr/workspace/hr/hr.json hr/workspace/leaves/leaves.json
 msgid "Employee Leave Balance"
-msgstr ""
+msgstr "Werknemerverlofsaldo"
 
 #. Name of a report
 #. Label of a Link in the HR Workspace
@@ -5775,7 +5775,7 @@ msgstr ""
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.json
 #: hr/workspace/hr/hr.json hr/workspace/leaves/leaves.json
 msgid "Employee Leave Balance Summary"
-msgstr ""
+msgstr "Werknemer verlofsaldo-opsomming"
 
 #. Name of a Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
@@ -6088,7 +6088,7 @@ msgstr "Werknemer Aan boord Sjabloon"
 
 #: hr/doctype/employee_onboarding/employee_onboarding.py:32
 msgid "Employee Onboarding: {0} already exists for Job Applicant: {1}"
-msgstr ""
+msgstr "Werknemer-inskakeling: {0} bestaan reeds vir Werksaansoeker: {1}"
 
 #. Name of a DocType
 #: payroll/doctype/employee_other_income/employee_other_income.json
@@ -6098,7 +6098,7 @@ msgstr "Ander werknemers se inkomste"
 #. Name of a DocType
 #: hr/doctype/employee_performance_feedback/employee_performance_feedback.json
 msgid "Employee Performance Feedback"
-msgstr ""
+msgstr "Werknemer-prestasieterugvoer"
 
 #. Linked DocType in Appraisal Cycle's connections
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
@@ -6134,7 +6134,7 @@ msgstr "Werknemersbevorderingsbesonderhede"
 
 #: hr/doctype/employee_promotion/employee_promotion.py:20
 msgid "Employee Promotion cannot be submitted before Promotion Date"
-msgstr ""
+msgstr "Werknemersbevordering kan nie voor die Bevorderingsdatum ingedien word nie"
 
 #. Name of a DocType
 #: hr/doctype/employee_property_history/employee_property_history.json
@@ -6160,7 +6160,7 @@ msgstr "Werknemer verwysing"
 
 #: payroll/doctype/additional_salary/additional_salary.py:102
 msgid "Employee Referral {0} is not applicable for referral bonus."
-msgstr ""
+msgstr "Werknemerverwysing {0} is nie van toepassing op verwysingsbonus nie."
 
 #. Label of a Link field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
@@ -6235,7 +6235,7 @@ msgstr "Werknemervaardighede"
 #: hr/report/employee_leave_balance/employee_leave_balance.js:42
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:36
 msgid "Employee Status"
-msgstr ""
+msgstr "Werknemerstatus"
 
 #. Name of a DocType
 #: payroll/doctype/employee_tax_exemption_category/employee_tax_exemption_category.json
@@ -6322,11 +6322,11 @@ msgstr "Werknemersoordragbesonderhede"
 
 #: hr/doctype/employee_transfer/employee_transfer.py:17
 msgid "Employee Transfer cannot be submitted before Transfer Date"
-msgstr ""
+msgstr "Werknemersoordrag kan nie ingedien word voor die Oordragdatum nie"
 
 #: hr/doctype/hr_settings/hr_settings.js:27
 msgid "Employee can be named by Employee ID if you assign one, or via Naming Series. Select your preference here."
-msgstr ""
+msgstr "Werknemer kan benoem word volgens Werknemer-ID as jy een toewys, of via Naamgewingreeks. Kies hier jou voorkeur."
 
 #. Label of a Data field in DocType 'Leave Policy Assignment'
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.json
@@ -6346,19 +6346,19 @@ msgstr "Werknemer verlig op {0} moet gestel word as &#39;Links&#39;"
 
 #: hr/doctype/shift_type/shift_type.py:168
 msgid "Employee was marked Absent due to missing Employee Checkins."
-msgstr ""
+msgstr "Werknemer is as afwesig gemerk weens ontbrekende klokregistrasies."
 
 #: hr/doctype/employee_checkin/employee_checkin.py:161
 msgid "Employee was marked Absent for not meeting the working hours threshold."
-msgstr ""
+msgstr "Werknemer is as Afwesig gemerk omdat die werksure-drempel nie bereik is nie."
 
 #: hr/doctype/attendance_request/attendance_request.py:52
 msgid "Employee {0} already has an Attendance Request {1} that overlaps with this period"
-msgstr ""
+msgstr "Werknemer {0} het reeds 'n Bywoningsversoek {1} wat oorvleuel met hierdie periode"
 
 #: hr/doctype/shift_assignment/shift_assignment.py:116
 msgid "Employee {0} already has an active Shift {1}: {2} that overlaps within this period."
-msgstr ""
+msgstr "Werknemer {0} het reeds 'n aktiewe Skof {1}: {2} wat binne hierdie periode oorvleuel."
 
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.py:151
 msgid "Employee {0} already submited an apllication {1} for the payroll period {2}"
@@ -6366,11 +6366,11 @@ msgstr "Werknemer {0} het reeds &#39;n aantekening {1} ingedien vir die betaalpe
 
 #: hr/doctype/shift_request/shift_request.py:128
 msgid "Employee {0} has already applied for Shift {1}: {2} that overlaps within this period"
-msgstr ""
+msgstr "Werknemer {0} het reeds aansoek gedoen vir Skof {1}: {2} wat binne hierdie periode oorvleuel"
 
 #: hr/doctype/leave_application/leave_application.py:455
 msgid "Employee {0} has already applied for {1} between {2} and {3} : {4}"
-msgstr ""
+msgstr "Werknemer {0} het reeds aansoek gedoen vir {1} tussen {2} en {3} : {4}"
 
 #: payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:25
 msgid "Employee {0} has no maximum benefit amount"
@@ -6386,7 +6386,7 @@ msgstr "Werknemer {0} is op verlof op {1}"
 
 #: hr/doctype/training_feedback/training_feedback.py:25
 msgid "Employee {0} not found in Training Event Participants."
-msgstr ""
+msgstr "Werknemer {0} nie gevind in Opleidingsgeleentheid-deelnemers nie."
 
 #: hr/doctype/attendance/attendance.py:173
 msgid "Employee {0} on Half day on {1}"
@@ -6399,7 +6399,7 @@ msgstr ""
 
 #: payroll/doctype/gratuity/gratuity.py:195
 msgid "Employee: {0} have to complete minimum {1} years for gratuity"
-msgstr ""
+msgstr "Werknemer: {0} moet minstens {1} jaar voltooi vir diensbeëindigingsvoordeel"
 
 #: hr/dashboard_chart_source/employees_by_age/employees_by_age.py:42
 msgid "Employees"
@@ -6444,23 +6444,23 @@ msgstr "Werknemers HTML"
 #. Label of a Link in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Employees Working on a Holiday"
-msgstr ""
+msgstr "Werknemers wat op 'n vakansiedag werk"
 
 #: hr/doctype/employee_performance_feedback/employee_performance_feedback.py:31
 msgid "Employees cannot give feedback to themselves. Use {0} instead: {1}"
-msgstr ""
+msgstr "Werknemers kan nie terugvoer aan hulself gee nie. Gebruik eerder {0}: {1}"
 
 #: hr/doctype/hr_settings/hr_settings.py:79
 msgid "Employees will miss holiday reminders from {} until {}. <br> Do you want to proceed with this change?"
-msgstr ""
+msgstr "Werknemers sal vakansiedag-herinneringe vanaf {} tot {} mis. <br> Wil u met hierdie verandering voortgaan?"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:115
 msgid "Employees without Feedback: {0}"
-msgstr ""
+msgstr "Werknemers sonder terugvoer: {0}"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:116
 msgid "Employees without Goals: {0}"
-msgstr ""
+msgstr "Werknemers sonder doelwitte: {0}"
 
 #. Name of a report
 #. Label of a Link in the Leaves Workspace
@@ -6475,7 +6475,7 @@ msgstr "Werknemers wat op vakansie werk"
 #: hr/doctype/employment_type/employment_type.json
 #: templates/generators/job_opening.html:134
 msgid "Employment Type"
-msgstr ""
+msgstr "Tipe indiensneming"
 
 #. Label of a Data field in DocType 'Employment Type'
 #: hr/doctype/employment_type/employment_type.json
@@ -6545,11 +6545,11 @@ msgstr ""
 
 #: hr/doctype/leave_encashment/leave_encashment.py:135
 msgid "Encashment Days cannot exceed {0} {1} as per Leave Type settings"
-msgstr ""
+msgstr "Uitbetalingsdae mag nie {0} {1} oorskry volgens die Verloftipe-instellings nie"
 
 #: hr/doctype/leave_encashment/leave_encashment.py:125
 msgid "Encashment Limit Applied"
-msgstr ""
+msgstr "Uitbetalingslimiet toegepas"
 
 #. Label of a Check field in DocType 'Payroll Settings'
 #: payroll/doctype/payroll_settings/payroll_settings.json
@@ -6635,7 +6635,7 @@ msgstr ""
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:188
 msgid "End date: {0}"
-msgstr ""
+msgstr "Einddatum: {0}"
 
 #: hr/doctype/training_event/training_event.py:26
 msgid "End time cannot be before start time"
@@ -6666,11 +6666,11 @@ msgstr ""
 
 #: hr/doctype/hr_settings/hr_settings.js:32
 msgid "Enter the Standard Working Hours for a normal work day. These hours will be used in calculations of reports such as Employee Hours Utilization and Project Profitability analysis."
-msgstr ""
+msgstr "Voer die Standaard Werksure vir 'n normale werksdag in. Hierdie ure sal gebruik word in berekeninge vir verslae soos Werknemer-urebenutting en Projekwinsgewendheidsanalise."
 
 #: hr/doctype/leave_allocation/leave_allocation.js:136
 msgid "Enter the number of leaves you want to allocate for the period."
-msgstr ""
+msgstr "Voer die aantal verlofdae in wat u vir die periode wil toeken."
 
 #: hr/doctype/goal/goal_list.js:103 hr/doctype/goal/goal_list.js:113
 #: payroll/doctype/additional_salary/additional_salary.py:234
@@ -6690,15 +6690,15 @@ msgstr ""
 
 #: payroll/doctype/salary_slip/salary_slip.py:1177
 msgid "Error in formula or condition"
-msgstr ""
+msgstr "Fout in formule of voorwaarde"
 
 #: payroll/doctype/salary_slip/salary_slip.py:2117
 msgid "Error in formula or condition: {0} in Income Tax Slab"
-msgstr ""
+msgstr "Fout in formule of voorwaarde: {0} in Inkomstebelastingskaal"
 
 #: payroll/doctype/salary_slip/salary_slip.py:2196
 msgid "Error while evaluating the {doctype} {doclink} at row {row_id}. <br><br> <b>Error:</b> {error} <br><br> <b>Hint:</b> {description}"
-msgstr ""
+msgstr "Fout tydens evaluering van die {doctype} {doclink} op ry {row_id}. <br><br> <b>Fout:</b> {error} <br><br> <b>Wenk:</b> {description}"
 
 #. Label of a Currency field in DocType 'Staffing Plan Detail'
 #: hr/doctype/staffing_plan_detail/staffing_plan_detail.json
@@ -6718,7 +6718,7 @@ msgstr "Evalueringsdatum"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:25
 msgid "Evaluation Method cannot be changed as there are existing appraisals created for this cycle"
-msgstr ""
+msgstr "Evalueringsmetode kan nie verander word nie, aangesien daar reeds evaluerings vir hierdie siklus geskep is"
 
 #. Label of a Section Break field in DocType 'Travel Request'
 #: hr/doctype/travel_request/travel_request.json
@@ -6765,11 +6765,11 @@ msgstr "Elke geldige in- en uitklok"
 
 #: controllers/employee_reminders.py:218
 msgid "Everyone, let’s congratulate them on their work anniversary!"
-msgstr ""
+msgstr "Almal, laat ons hulle geluk wens met hul werkjubileum!"
 
 #: controllers/employee_reminders.py:125
 msgid "Everyone, let’s congratulate {0} on their birthday."
-msgstr ""
+msgstr "Almal, laat ons {0} met hul verjaardag gelukwens."
 
 #. Option for a Select field in DocType 'Training Event'
 #: hr/doctype/training_event/training_event.json
@@ -6797,11 +6797,11 @@ msgstr ""
 
 #: hr/doctype/attendance/attendance_list.js:78
 msgid "Exclude Holidays"
-msgstr ""
+msgstr "Sluit vakansiedae uit"
 
 #: hr/doctype/leave_encashment/leave_encashment.py:111
 msgid "Excluded {0} Non-Encashable Leaves for {1}"
-msgstr ""
+msgstr "Uitgesluit {0} nie-uitbetaalbare verlof vir {1}"
 
 #. Label of a Check field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
@@ -6818,7 +6818,7 @@ msgstr "Vrygestel van inkomstebelasting"
 #. Label of a Card Break in the Tax & Benefits Workspace
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Exemption"
-msgstr ""
+msgstr "Vrystelling"
 
 #. Label of a Link field in DocType 'Employee Tax Exemption Declaration
 #. Category'
@@ -6863,7 +6863,7 @@ msgstr ""
 
 #: hr/report/employee_exits/employee_exits.py:193
 msgid "Exit Confirmed"
-msgstr ""
+msgstr "Uittrede bevestig"
 
 #. Option for a Select field in DocType 'Exit Interview'
 #: hr/doctype/exit_interview/exit_interview.json
@@ -6875,7 +6875,7 @@ msgstr ""
 #: hr/doctype/exit_interview/exit_interview.json
 #: hr/report/employee_exits/employee_exits.py:39
 msgid "Exit Interview"
-msgstr ""
+msgstr "Uittreegesprek"
 
 #. Label of a Link in the Employee Lifecycle Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
@@ -6885,7 +6885,7 @@ msgstr ""
 
 #: hr/report/employee_exits/employee_exits.js:63
 msgid "Exit Interview Pending"
-msgstr ""
+msgstr "Uittreegesprek hangende"
 
 #. Label of a Text Editor field in DocType 'Employee Separation'
 #: hr/doctype/employee_separation/employee_separation.json
@@ -6895,11 +6895,11 @@ msgstr "Uittreksel onderhoudsopsomming"
 
 #: hr/doctype/exit_interview/exit_interview.py:33
 msgid "Exit Interview {0} already exists for Employee: {1}"
-msgstr ""
+msgstr "Uittreegesprek {0} bestaan reeds vir werknemer: {1}"
 
 #: hr/doctype/exit_interview/exit_interview.py:145
 msgid "Exit Questionnaire"
-msgstr ""
+msgstr "Uittree-vraelys"
 
 #. Label of a Section Break field in DocType 'Exit Interview'
 #: hr/doctype/exit_interview/exit_interview.json
@@ -6912,7 +6912,7 @@ msgstr ""
 #: hr/doctype/exit_interview/test_exit_interview.py:120 setup.py:472
 #: setup.py:474 setup.py:495
 msgid "Exit Questionnaire Notification"
-msgstr ""
+msgstr "Uittree-vraelys-kennisgewing"
 
 #. Label of a Link field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
@@ -6922,7 +6922,7 @@ msgstr ""
 
 #: hr/report/employee_exits/employee_exits.js:68
 msgid "Exit Questionnaire Pending"
-msgstr ""
+msgstr "Uittree-vraelys hangende"
 
 #. Label of a Link field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
@@ -6962,7 +6962,7 @@ msgstr ""
 #. Name of a DocType
 #: hr/doctype/expected_skill_set/expected_skill_set.json
 msgid "Expected Skill Set"
-msgstr ""
+msgstr "Verwagte vaardighede"
 
 #. Label of a Section Break field in DocType 'Interview Round'
 #: hr/doctype/interview_round/interview_round.json
@@ -6990,7 +6990,7 @@ msgstr ""
 #: hr/doctype/employee_advance/employee_advance.json
 #: hr/doctype/expense_claim/expense_claim.json
 msgid "Expense Approver"
-msgstr ""
+msgstr "Uitgawe-goedkeurder"
 
 #. Label of a Link field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
@@ -7068,7 +7068,7 @@ msgstr "Uitgawe Eis {0} bestaan reeds vir die Voertuiglogboek"
 #. Label of a chart in the Expense Claims Workspace
 #: hr/workspace/expense_claims/expense_claims.json
 msgid "Expense Claims"
-msgstr ""
+msgstr "Uitgaweeise"
 
 #. Label of a shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
@@ -7159,7 +7159,7 @@ msgstr ""
 
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:129
 msgid "Exporting..."
-msgstr ""
+msgstr "Besig om uit te voer..."
 
 #. Option for a Select field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
@@ -7169,7 +7169,7 @@ msgstr ""
 
 #: hr/doctype/leave_control_panel/leave_control_panel.py:116
 msgid "Failed to create/submit {0} for employees:"
-msgstr ""
+msgstr "Mislukte om {0} vir werknemers te skep/in te dien:"
 
 #: overrides/company.py:37
 msgid "Failed to delete defaults for country {0}. Please contact support."
@@ -7181,7 +7181,7 @@ msgstr ""
 
 #: hr/doctype/interview/interview.py:119
 msgid "Failed to send the Interview Reschedule notification. Please configure your email account."
-msgstr ""
+msgstr "Kon nie die kennisgewing vir die herskedulering van die onderhoud stuur nie. Stel asseblief jou e-posrekening op."
 
 #: overrides/company.py:52
 msgid "Failed to setup defaults for country {0}. Please contact support."
@@ -7189,11 +7189,11 @@ msgstr ""
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:326
 msgid "Failed to submit some leave policy assignments:"
-msgstr ""
+msgstr "Mislukt om sommige verlofbeleidtoewysings in te dien:"
 
 #: hr/doctype/interview/interview.py:212
 msgid "Failed to update the Job Applicant status"
-msgstr ""
+msgstr "Kon nie die status van die werksaansoeker opdateer nie"
 
 #. Label of a Tab Break field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
@@ -7242,7 +7242,7 @@ msgstr ""
 
 #: hr/report/appraisal_overview/appraisal_overview.py:48
 msgid "Feedback Count"
-msgstr ""
+msgstr "Aantal terugvoer"
 
 #. Label of a HTML field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
@@ -7270,7 +7270,7 @@ msgstr ""
 
 #: hr/report/appraisal_overview/appraisal_overview.py:124
 msgid "Feedback Score"
-msgstr ""
+msgstr "Terugvoertelling"
 
 #. Option for a Select field in DocType 'Training Event Employee'
 #: hr/doctype/training_event_employee/training_event_employee.json
@@ -7280,20 +7280,20 @@ msgstr "Terugvoer ingedien"
 
 #: hr/doctype/interview_feedback/interview_feedback.py:52
 msgid "Feedback already submitted for the Interview {0}. Please cancel the previous Interview Feedback {1} to continue."
-msgstr ""
+msgstr "Terugvoer is reeds vir die onderhoud {0} ingedien. Kanselleer asseblief die vorige Onderhoudterugvoer {1} om voort te gaan."
 
 #: hr/doctype/training_feedback/training_feedback.py:31
 msgid "Feedback cannot be recorded for an absent Employee."
-msgstr ""
+msgstr "Terugvoer kan nie vir 'n afwesige werknemer aangeteken word nie."
 
 #: public/js/performance/performance_feedback.js:117
 msgid "Feedback {0} added successfully"
-msgstr ""
+msgstr "Terugvoer {0} suksesvol bygevoeg"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:64
 #: payroll/doctype/payroll_entry/payroll_entry.js:110
 msgid "Fetching Employees"
-msgstr ""
+msgstr "Werknemers word opgehaal"
 
 #. Label of a Data field in DocType 'Employee Property History'
 #: hr/doctype/employee_property_history/employee_property_history.json
@@ -7348,7 +7348,7 @@ msgstr ""
 #: hr/report/employee_exits/employee_exits.js:57
 #: hr/report/employee_exits/employee_exits.py:52
 msgid "Final Decision"
-msgstr ""
+msgstr "Finale Besluit"
 
 #. Label of a Select field in DocType 'Exit Interview'
 #: hr/doctype/exit_interview/exit_interview.json
@@ -7359,7 +7359,7 @@ msgstr ""
 #: hr/report/appraisal_overview/appraisal_overview.py:57
 #: hr/report/appraisal_overview/appraisal_overview.py:125
 msgid "Final Score"
-msgstr ""
+msgstr "Finale Telling"
 
 #. Label of a Float field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
@@ -7396,7 +7396,7 @@ msgstr "Fiskale jaar {0} nie gevind nie"
 #. Label of a Card Break in the Expense Claims Workspace
 #: hr/workspace/expense_claims/expense_claims.json
 msgid "Fleet Management"
-msgstr ""
+msgstr "Vlootbestuur"
 
 #. Name of a role
 #: hr/doctype/vehicle_log/vehicle_log.json
@@ -7417,7 +7417,7 @@ msgstr "Flight"
 
 #: hr/report/employee_exits/employee_exits.js:73
 msgid "FnF Pending"
-msgstr ""
+msgstr "FnF hangende"
 
 #. Label of a Check field in DocType 'Leave Application'
 #: hr/doctype/leave_application/leave_application.json
@@ -7502,7 +7502,7 @@ msgstr ""
 
 #: hr/report/project_profitability/project_profitability.py:193
 msgid "Fractional Cost"
-msgstr ""
+msgstr "Gedeeltelike koste"
 
 #. Label of a Select field in DocType 'Vehicle Service'
 #: hr/doctype/vehicle_service/vehicle_service.json
@@ -7604,7 +7604,7 @@ msgstr ""
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:30
 msgid "From Date must come before To Date"
-msgstr ""
+msgstr "Van-datum moet voor Tot-datum wees"
 
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:74
 msgid "From Date {0} cannot be after employee's relieving Date {1}"
@@ -7642,7 +7642,7 @@ msgstr "Van datum kan nie minder wees as die aansluitdatum van die werknemer nie
 
 #: hr/doctype/leave_type/leave_type.js:31
 msgid "From here, you can enable encashment for the balance leaves."
-msgstr ""
+msgstr "Hier kan u uitbetaling vir die oorblywende verlof aktiveer."
 
 #. Label of a Int field in DocType 'Gratuity Rule Slab'
 #: payroll/doctype/gratuity_rule_slab/gratuity_rule_slab.json
@@ -7656,7 +7656,7 @@ msgstr "Brandstofuitgawes"
 
 #: hr/report/vehicle_expenses/vehicle_expenses.py:166
 msgid "Fuel Expenses"
-msgstr ""
+msgstr "Brandstofuitgawes"
 
 #: hr/report/vehicle_expenses/vehicle_expenses.py:44
 msgid "Fuel Price"
@@ -7693,12 +7693,12 @@ msgstr ""
 #. Name of a DocType
 #: hr/doctype/full_and_final_asset/full_and_final_asset.json
 msgid "Full and Final Asset"
-msgstr ""
+msgstr "Volledige en Finale Bate"
 
 #. Name of a DocType
 #: hr/doctype/full_and_final_outstanding_statement/full_and_final_outstanding_statement.json
 msgid "Full and Final Outstanding Statement"
-msgstr ""
+msgstr "Finale Uitstaande Staat"
 
 #. Label of a Link in the Employee Lifecycle Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
@@ -7816,7 +7816,7 @@ msgstr ""
 #: hr/report/appraisal_overview/appraisal_overview.py:55
 #: hr/report/appraisal_overview/appraisal_overview.py:122
 msgid "Goal Score"
-msgstr ""
+msgstr "Doeltelling"
 
 #. Label of a Float field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
@@ -7832,23 +7832,23 @@ msgstr ""
 
 #: hr/doctype/goal/goal.py:81
 msgid "Goal progress percentage cannot be more than 100."
-msgstr ""
+msgstr "Die doelvorderingspersentasie kan nie meer as 100 wees nie."
 
 #: hr/doctype/goal/goal.py:71
 msgid "Goal should be aligned with the same KRA as its parent goal."
-msgstr ""
+msgstr "Doel moet met dieselfde KRA as sy ouerdoelwit belyn wees."
 
 #: hr/doctype/goal/goal.py:67
 msgid "Goal should be owned by the same employee as its parent goal."
-msgstr ""
+msgstr "Doel moet deur dieselfde werknemer besit word as sy ouerdoelwit."
 
 #: hr/doctype/goal/goal.py:75
 msgid "Goal should belong to the same Appraisal Cycle as its parent goal."
-msgstr ""
+msgstr "Doel moet aan dieselfde Evalueringsiklus behoort as sy ouerdoelwit."
 
 #: hr/doctype/goal/goal_tree.js:295
 msgid "Goal updated successfully"
-msgstr ""
+msgstr "Doel suksesvol opgedateer"
 
 #: hr/doctype/appraisal/appraisal.py:130
 msgid "Goals"
@@ -7862,7 +7862,7 @@ msgstr "Doelwitte"
 
 #: hr/doctype/goal/goal_list.js:134
 msgid "Goals updated successfully"
-msgstr ""
+msgstr "Doele suksesvol opgedateer"
 
 #. Label of a Link field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
@@ -7892,7 +7892,7 @@ msgstr ""
 #: payroll/doctype/gratuity/gratuity.json
 #: payroll/doctype/gratuity_rule/gratuity_rule_dashboard.py:7
 msgid "Gratuity"
-msgstr ""
+msgstr "Diensbeëindigingsvoordeel"
 
 #. Label of a Tab Break field in DocType 'Gratuity'
 #: payroll/doctype/gratuity/gratuity.json
@@ -7909,12 +7909,12 @@ msgstr ""
 #. Name of a DocType
 #: payroll/doctype/gratuity_applicable_component/gratuity_applicable_component.json
 msgid "Gratuity Applicable Component"
-msgstr ""
+msgstr "Toepaslike Diensbeëindigingsvoordeel-komponent"
 
 #. Name of a DocType
 #: payroll/doctype/gratuity_rule/gratuity_rule.json
 msgid "Gratuity Rule"
-msgstr ""
+msgstr "Diensbeëindigingsvoordeelreël"
 
 #. Label of a Link field in DocType 'Gratuity'
 #: payroll/doctype/gratuity/gratuity.json
@@ -7925,12 +7925,12 @@ msgstr ""
 #. Name of a DocType
 #: payroll/doctype/gratuity_rule_slab/gratuity_rule_slab.json
 msgid "Gratuity Rule Slab"
-msgstr ""
+msgstr "Diensbeëindigingsvoordeelreël-skaal"
 
 #. Label of a Card Break in the Employee Lifecycle Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgid "Grievance"
-msgstr ""
+msgstr "Klagte"
 
 #. Label of a Dynamic Link field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
@@ -7953,7 +7953,7 @@ msgstr ""
 #. Name of a DocType
 #: hr/doctype/grievance_type/grievance_type.json
 msgid "Grievance Type"
-msgstr ""
+msgstr "Klagtetipe"
 
 #. Label of a Link field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
@@ -8007,7 +8007,7 @@ msgstr ""
 
 #: hr/doctype/goal/goal.js:13
 msgid "Group goal's progress is auto-calculated based on the child goals."
-msgstr ""
+msgstr "Groepdoel se vordering word outomaties bereken op grond van die kinddoelwitte."
 
 #. Name of a role
 #: hr/doctype/job_opening/job_opening.json
@@ -8017,7 +8017,7 @@ msgstr "gaste"
 #. Name of a Workspace
 #: hr/workspace/hr/hr.json
 msgid "HR"
-msgstr ""
+msgstr "MH"
 
 #. Label of a shortcut in the HR Workspace
 #: hr/workspace/hr/hr.json
@@ -8230,7 +8230,7 @@ msgstr "HR-VLOG-.YYYY.-"
 
 #: config/desktop.py:5
 msgid "HRMS"
-msgstr ""
+msgstr "HRMS"
 
 #. Option for a Select field in DocType 'Attendance'
 #: hr/doctype/attendance/attendance.json
@@ -8294,7 +8294,7 @@ msgstr "Halfdag Datum moet tussen werk van datum en werk einddatum wees"
 
 #: hr/report/shift_attendance/shift_attendance.py:168
 msgid "Half Day Records"
-msgstr ""
+msgstr "Halfdag-rekords"
 
 #. Option for a Select field in DocType 'Vehicle Service'
 #: hr/doctype/vehicle_service/vehicle_service.json
@@ -8336,11 +8336,11 @@ msgstr ""
 
 #: controllers/employee_reminders.py:72
 msgid "Hey {}! This email is to remind you about the upcoming holidays."
-msgstr ""
+msgstr "Hallo {}! Hierdie e-pos is om u te herinner aan die komende vakansiedae."
 
 #: hr/dashboard_chart_source/hiring_vs_attrition_count/hiring_vs_attrition_count.py:44
 msgid "Hiring Count"
-msgstr ""
+msgstr "Werwingstelling"
 
 #. Label of a Section Break field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
@@ -8351,7 +8351,7 @@ msgstr "Instellings huur"
 #. Label of a chart in the HR Workspace
 #: hr/workspace/hr/hr.json
 msgid "Hiring vs Attrition Count"
-msgstr ""
+msgstr "Werwing teenoor uitval telling"
 
 #. Option for a Select field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
@@ -8412,11 +8412,11 @@ msgstr ""
 
 #: controllers/employee_reminders.py:65
 msgid "Holidays this Month."
-msgstr ""
+msgstr "Vakansiedae hierdie maand."
 
 #: controllers/employee_reminders.py:65
 msgid "Holidays this Week."
-msgstr ""
+msgstr "Vakansiedae hierdie week."
 
 #. Label of a Currency field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
@@ -8583,7 +8583,7 @@ msgstr ""
 
 #: patches/v15_0/notify_about_loan_app_separation.py:17
 msgid "If you are using loans in salary slips, please install the {0} app from Frappe Cloud Marketplace or GitHub to continue using loan integration with payroll."
-msgstr ""
+msgstr "As u lenings in salarisstrokies gebruik, installeer asseblief die {0}-app vanaf Frappe Cloud Marketplace of GitHub om die leningintegrasie met betaalstaat voort te gebruik."
 
 #. Label of a Section Break field in DocType 'Upload Attendance'
 #: hr/doctype/upload_attendance/upload_attendance.json
@@ -8643,7 +8643,7 @@ msgstr "Betyds"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:110
 msgid "In case of any error during this background process, the system will add a comment about the error on this Payroll Entry and revert to the Submitted status"
-msgstr ""
+msgstr "In geval van enige fout tydens hierdie agtergrondproses, sal die stelsel 'n kommentaar oor die fout by hierdie Betaalstaatinskrywing voeg en na die Ingedien-status terugkeer"
 
 #: hr/report/employee_leave_balance/employee_leave_balance.js:47
 #: hr/report/employee_leave_balance_summary/employee_leave_balance_summary.js:41
@@ -8713,7 +8713,7 @@ msgstr "Inkomstebelasting-komponent"
 #: payroll/workspace/salary_payout/salary_payout.json
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Income Tax Computation"
-msgstr ""
+msgstr "Inkomstebelastingberekening"
 
 #. Label of a Currency field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
@@ -8778,7 +8778,7 @@ msgstr ""
 #: hr/doctype/appraisal_template/appraisal_template.py:28
 #: hr/doctype/employee_performance_feedback/employee_performance_feedback.py:55
 msgid "Incorrect Weightage Allocation"
-msgstr ""
+msgstr "Verkeerde gewigstoekenning"
 
 #. Description of a Int field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
@@ -8794,11 +8794,11 @@ msgstr "inspeksie"
 
 #: hr/doctype/leave_application/leave_application.py:412
 msgid "Insufficient Balance"
-msgstr ""
+msgstr "Onvoldoende saldo"
 
 #: hr/doctype/leave_application/leave_application.py:410
 msgid "Insufficient leave balance for Leave Type {0}"
-msgstr ""
+msgstr "Onvoldoende verlofsaldo vir verloftipe {0}"
 
 #. Name of a DocType
 #: hr/doctype/interest/interest.json
@@ -8849,7 +8849,7 @@ msgstr "internet"
 #: hr/doctype/interview/interview.json
 #: hr/doctype/job_applicant/job_applicant.js:24
 msgid "Interview"
-msgstr ""
+msgstr "Onderhoud"
 
 #. Label of a Link in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
@@ -8866,7 +8866,7 @@ msgstr ""
 #. Name of a DocType
 #: hr/doctype/interview_detail/interview_detail.json
 msgid "Interview Detail"
-msgstr ""
+msgstr "Onderhoudsbesonderhede"
 
 #. Label of a Section Break field in DocType 'Exit Interview'
 #: hr/doctype/exit_interview/exit_interview.json
@@ -8877,7 +8877,7 @@ msgstr ""
 #. Name of a DocType
 #: hr/doctype/interview_feedback/interview_feedback.json
 msgid "Interview Feedback"
-msgstr ""
+msgstr "Onderhoudterugvoer"
 
 #. Linked DocType in Interview's connections
 #: hr/doctype/interview/interview.json
@@ -8897,15 +8897,15 @@ msgstr ""
 #: hr/doctype/interview/test_interview.py:318 setup.py:458 setup.py:460
 #: setup.py:493
 msgid "Interview Feedback Reminder"
-msgstr ""
+msgstr "Herinnering oor onderhoudterugvoer"
 
 #: hr/doctype/interview/interview.py:349
 msgid "Interview Feedback {0} submitted successfully"
-msgstr ""
+msgstr "Onderhoudterugvoer {0} is suksesvol ingedien"
 
 #: hr/doctype/interview/interview.py:89
 msgid "Interview Not Rescheduled"
-msgstr ""
+msgstr "Onderhoud nie herskeduleer nie"
 
 #: hr/doctype/interview/test_interview.py:284
 #: hr/doctype/interview/test_interview.py:293
@@ -8913,7 +8913,7 @@ msgstr ""
 #: hr/doctype/interview/test_interview.py:317 setup.py:446 setup.py:448
 #: setup.py:489
 msgid "Interview Reminder"
-msgstr ""
+msgstr "Onderhoudherinnering"
 
 #. Label of a Link field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
@@ -8923,7 +8923,7 @@ msgstr ""
 
 #: hr/doctype/interview/interview.py:122
 msgid "Interview Rescheduled successfully"
-msgstr ""
+msgstr "Onderhoud suksesvol herskeduleer"
 
 #. Name of a DocType
 #: hr/doctype/interview_round/interview_round.json
@@ -8965,11 +8965,11 @@ msgstr ""
 #: hr/report/employee_exits/employee_exits.js:51
 #: hr/report/employee_exits/employee_exits.py:46
 msgid "Interview Status"
-msgstr ""
+msgstr "Onderhoudstatus"
 
 #: hr/doctype/job_applicant/job_applicant.js:65
 msgid "Interview Summary"
-msgstr ""
+msgstr "Onderhoudopsomming"
 
 #. Label of a Text Editor field in DocType 'Exit Interview'
 #: hr/doctype/exit_interview/exit_interview.json
@@ -8986,7 +8986,7 @@ msgstr ""
 #. Name of a DocType
 #: hr/doctype/interview_type/interview_type.json
 msgid "Interview Type"
-msgstr ""
+msgstr "Onderhoudtipe"
 
 #. Label of a Link field in DocType 'Interview Round'
 #: hr/doctype/interview_round/interview_round.json
@@ -9002,7 +9002,7 @@ msgstr ""
 
 #: hr/doctype/interview/interview.py:105
 msgid "Interview: {0} Rescheduled"
-msgstr ""
+msgstr "Onderhoud: {0} herskeduleer"
 
 #. Name of a role
 #. Name of a DocType
@@ -9011,7 +9011,7 @@ msgstr ""
 #: hr/doctype/interview_round/interview_round.json
 #: hr/doctype/interviewer/interviewer.json
 msgid "Interviewer"
-msgstr ""
+msgstr "Onderhoudvoerder"
 
 #. Label of a Link field in DocType 'Interview Detail'
 #: hr/doctype/interview_detail/interview_detail.json
@@ -9046,7 +9046,7 @@ msgstr ""
 #. Label of a Card Break in the Recruitment Workspace
 #: hr/workspace/recruitment/recruitment.json
 msgid "Interviews"
-msgstr ""
+msgstr "Onderhoude"
 
 #. Label of a Long Text field in DocType 'Appointment Letter'
 #: hr/doctype/appointment_letter/appointment_letter.json
@@ -9074,7 +9074,7 @@ msgstr ""
 
 #: payroll/doctype/salary_structure/salary_structure.py:281
 msgid "Invalid Payroll Payable Account. The account currency must be {0} or {1}"
-msgstr ""
+msgstr "Ongeldige betaalbare salarisrekening. Die rekeningvaluta moet {0} of {1} wees"
 
 #. Option for a Select field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
@@ -9150,7 +9150,7 @@ msgstr "Is kompensatories"
 
 #: hr/doctype/leave_type/leave_type.py:40
 msgid "Is Compensatory Leave"
-msgstr ""
+msgstr "Is kompensasieverlof"
 
 #. Label of a Select field in DocType 'Salary Structure'
 #: payroll/doctype/salary_structure/salary_structure.json
@@ -9271,7 +9271,7 @@ msgstr "Jan."
 #: hr/doctype/job_applicant/job_applicant.json
 #: hr/report/recruitment_analytics/recruitment_analytics.py:39
 msgid "Job Applicant"
-msgstr ""
+msgstr "Werksaansoeker"
 
 #. Label of a Link field in DocType 'Appointment Letter'
 #: hr/doctype/appointment_letter/appointment_letter.json
@@ -9317,7 +9317,7 @@ msgstr "Job Applikant Bron"
 
 #: hr/doctype/employee_referral/employee_referral.py:51
 msgid "Job Applicant {0} created successfully."
-msgstr ""
+msgstr "Werksaansoeker {0} is suksesvol geskep."
 
 #: hr/doctype/interview/interview.py:39
 msgid "Job Applicants are not allowed to appear twice for the same Interview round. Interview {0} already scheduled for Job Applicant {1}"
@@ -9369,7 +9369,7 @@ msgstr "Job Aanbod Termyn"
 #. Name of a DocType
 #: hr/doctype/job_offer_term_template/job_offer_term_template.json
 msgid "Job Offer Term Template"
-msgstr ""
+msgstr "Werksaanbod-voorwaardesjabloon"
 
 #. Label of a Link field in DocType 'Job Offer'
 #: hr/doctype/job_offer/job_offer.json
@@ -9425,20 +9425,20 @@ msgstr "Job Opening"
 
 #: hr/doctype/job_requisition/job_requisition.py:51
 msgid "Job Opening Associated"
-msgstr ""
+msgstr "Vakature gekoppel"
 
 #: www/jobs/index.html:2 www/jobs/index.html:5
 msgid "Job Openings"
-msgstr ""
+msgstr "Vakatures"
 
 #: hr/doctype/job_opening/job_opening.py:87
 msgid "Job Openings for the designation {0} are already open or the hiring is complete as per the Staffing Plan {1}"
-msgstr ""
+msgstr "Vakatures vir die aanwysing {0} is reeds oop of die werwing is volledig volgens die Personeelplan {1}"
 
 #. Name of a DocType
 #: hr/doctype/job_requisition/job_requisition.json
 msgid "Job Requisition"
-msgstr ""
+msgstr "Werkaanvraag"
 
 #. Label of a Link field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
@@ -9454,7 +9454,7 @@ msgstr ""
 
 #: hr/doctype/job_requisition/job_requisition.py:48
 msgid "Job Requisition {0} has been associated with Job Opening {1}"
-msgstr ""
+msgstr "Werwingsaanvraag {0} is gekoppel aan vakature {1}"
 
 #. Label of a Data field in DocType 'Job Opening'
 #: hr/doctype/job_opening/job_opening.json
@@ -9551,7 +9551,7 @@ msgstr ""
 
 #: hr/doctype/goal/goal.py:99
 msgid "KRA updated for all child goals."
-msgstr ""
+msgstr "KRA opgedateer vir alle onderliggende doelwitte."
 
 #. Label of a Table field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
@@ -9562,7 +9562,7 @@ msgstr ""
 #: hr/doctype/appraisal/appraisal.py:140
 #: hr/doctype/appraisal_template/appraisal_template.py:23
 msgid "KRAs"
-msgstr ""
+msgstr "KRA's"
 
 #. Label of a Tab Break field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
@@ -9631,7 +9631,7 @@ msgstr "Laaste synchronisasie van Checkin"
 
 #: hr/report/shift_attendance/shift_attendance.py:180
 msgid "Late Entries"
-msgstr ""
+msgstr "Laat inskrywings"
 
 #: hr/report/shift_attendance/shift_attendance.js:48
 msgid "Late Entry"
@@ -9657,7 +9657,7 @@ msgstr ""
 
 #: hr/report/shift_attendance/shift_attendance.py:85
 msgid "Late Entry By"
-msgstr ""
+msgstr "Laat aankoms met"
 
 #. Label of a Int field in DocType 'Shift Type'
 #: hr/doctype/shift_type/shift_type.json
@@ -9727,7 +9727,7 @@ msgstr "Los aansoek"
 
 #: hr/doctype/leave_application/leave_application.py:705
 msgid "Leave Application period cannot be across two non-consecutive leave allocations {0} and {1}."
-msgstr ""
+msgstr "Verlofaansoek-tydperk kan nie oor twee nie-opeenvolgende verloftoekennings {0} en {1} strek nie."
 
 #: setup.py:423 setup.py:425 setup.py:485
 msgid "Leave Approval Notification"
@@ -9742,7 +9742,7 @@ msgstr "Verlaat goedkeuringskennisgewingsjabloon"
 #. Name of a role
 #: hr/doctype/leave_application/leave_application.json
 msgid "Leave Approver"
-msgstr ""
+msgstr "Verlofgoedkeurder"
 
 #. Label of a Link field in DocType 'Leave Application'
 #: hr/doctype/leave_application/leave_application.json
@@ -9777,7 +9777,7 @@ msgstr "Verlaatbalans voor aansoek"
 #. Name of a DocType
 #: hr/doctype/leave_block_list/leave_block_list.json
 msgid "Leave Block List"
-msgstr ""
+msgstr "Verlofblokkeerlys"
 
 #. Label of a Link in the Leaves Workspace
 #: hr/workspace/leaves/leaves.json
@@ -9925,7 +9925,7 @@ msgstr "Verlofbeleid"
 #. Name of a DocType
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.json
 msgid "Leave Policy Assignment"
-msgstr ""
+msgstr "Verlofbeleidtoewysing"
 
 #. Label of a Link field in DocType 'Leave Allocation'
 #: hr/doctype/leave_allocation/leave_allocation.json
@@ -9941,7 +9941,7 @@ msgstr ""
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:63
 msgid "Leave Policy Assignment Overlap"
-msgstr ""
+msgstr "Oorvleuel in verlofbeleidtoewysing"
 
 #. Name of a DocType
 #: hr/doctype/leave_policy_detail/leave_policy_detail.json
@@ -9956,7 +9956,7 @@ msgstr "Verlaat beleidsbesonderhede"
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:57
 msgid "Leave Policy: {0} already assigned for Employee {1} for period {2} to {3}"
-msgstr ""
+msgstr "Verlofbeleid: {0} is reeds toegewys aan werknemer {1} vir periode {2} tot {3}"
 
 #: setup.py:432 setup.py:434 setup.py:486
 msgid "Leave Status Notification"
@@ -10048,11 +10048,11 @@ msgstr "Verlaat tipe naam"
 
 #: hr/doctype/leave_type/leave_type.py:33
 msgid "Leave Type can either be compensatory or earned leave."
-msgstr ""
+msgstr "Verloftipe kan óf kompenserend óf verdiende verlof wees."
 
 #: hr/doctype/leave_type/leave_type.py:45
 msgid "Leave Type can either be without pay or partial pay"
-msgstr ""
+msgstr "Verloftipe kan óf sonder betaling óf gedeeltelik betaal wees"
 
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.py:35
 msgid "Leave Type is madatory"
@@ -10087,11 +10087,11 @@ msgstr "Verlof sonder betaling stem nie ooreen met goedgekeurde {} rekords nie"
 
 #: hr/doctype/leave_ledger_entry/leave_ledger_entry.py:42
 msgid "Leave allocation {0} is linked with the Leave Application {1}"
-msgstr ""
+msgstr "Verloftoekenning {0} is gekoppel met die Verlofaansoek {1}"
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:83
 msgid "Leave already have been assigned for this Leave Policy Assignment"
-msgstr ""
+msgstr "Verlof is reeds vir hierdie verlofbeleidtoewysing toegeken"
 
 #. Label of a Section Break field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
@@ -10113,11 +10113,11 @@ msgstr "Verlof kan nie voor {0} toegepas / gekanselleer word nie, aangesien verl
 
 #: hr/doctype/leave_application/leave_application.py:482
 msgid "Leave of type {0} cannot be longer than {1}."
-msgstr ""
+msgstr "Verlof van tipe {0} mag nie langer as {1} wees nie."
 
 #: hr/report/employee_leave_balance/employee_leave_balance.py:72
 msgid "Leave(s) Expired"
-msgstr ""
+msgstr "Verlof(e) Verval"
 
 #. Label of a Float field in DocType 'Salary Slip Leave'
 #: payroll/doctype/salary_slip_leave/salary_slip_leave.json
@@ -10127,7 +10127,7 @@ msgstr ""
 
 #: hr/report/employee_leave_balance/employee_leave_balance.py:66
 msgid "Leave(s) Taken"
-msgstr ""
+msgstr "Verlof(e) geneem"
 
 #. Label of a Card Break in the HR Workspace
 #. Name of a Workspace
@@ -10157,7 +10157,7 @@ msgstr "Blare toegeken"
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:76
 msgid "Leaves for the Leave Type {0} won't be carry-forwarded since carry-forwarding is disabled."
-msgstr ""
+msgstr "Verlof vir die Verloftipe {0} sal nie oorgedra word nie, aangesien oordrag gedeaktiveer is."
 
 #: setup.py:403
 msgid "Leaves per Year"
@@ -10230,7 +10230,7 @@ msgstr "Lewens siklus"
 
 #: hr/doctype/goal/goal_tree.js:99
 msgid "Link the cycle and tag KRA to your goal to update the appraisal's goal score based on the goal progress"
-msgstr ""
+msgstr "Skakel die siklus en etiket KRA aan u doel om die evaluering se doeltelling op grond van die doel se vordering by te werk"
 
 #. Description of a Section Break field in DocType 'Goal'
 #: hr/doctype/goal/goal.json
@@ -10240,7 +10240,7 @@ msgstr ""
 
 #: controllers/employee_boarding_controller.py:154
 msgid "Linked Project {} and Tasks deleted."
-msgstr ""
+msgstr "Gekoppelde projek {} en take verwyder."
 
 #. Label of a Link field in DocType 'Salary Slip Loan'
 #: payroll/doctype/salary_slip_loan/salary_slip_loan.json
@@ -10262,7 +10262,7 @@ msgstr ""
 
 #: payroll/report/salary_register/salary_register.py:223
 msgid "Loan Repayment"
-msgstr ""
+msgstr "Lening terugbetaling"
 
 #. Label of a Link field in DocType 'Salary Slip Loan'
 #: payroll/doctype/salary_slip_loan/salary_slip_loan.json
@@ -10272,7 +10272,7 @@ msgstr "Terugbetaling van lenings"
 
 #: hr/utils.py:702
 msgid "Loan cannot be repayed from salary for Employee {0} because salary is processed in currency {1}"
-msgstr ""
+msgstr "Lening kan nie uit salaris terugbetaal word vir Werknemer {0} nie, omdat salaris in geldeenheid {1} verwerk word"
 
 #: hr/report/vehicle_expenses/vehicle_expenses.py:33
 #: templates/generators/job_opening.html:61
@@ -10341,7 +10341,7 @@ msgstr ""
 
 #: payroll/doctype/payroll_entry/payroll_entry.js:161
 msgid "Make Bank Entry"
-msgstr ""
+msgstr "Maak bankinskrywing"
 
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.js:186
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.js:193
@@ -10351,7 +10351,7 @@ msgstr ""
 
 #: payroll/doctype/payroll_entry/payroll_entry.js:187
 msgid "Mandatory fields required in {0}"
-msgstr ""
+msgstr "Verpligte velde word benodig in {0}"
 
 #. Option for a Select field in DocType 'Appraisal Cycle'
 #: hr/doctype/appraisal_cycle/appraisal_cycle.json
@@ -10382,19 +10382,19 @@ msgstr ""
 #: hr/doctype/employee_onboarding/employee_onboarding.js:48
 #: hr/doctype/goal/goal_tree.js:262
 msgid "Mark as Completed"
-msgstr ""
+msgstr "Merk as voltooi"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:52
 msgid "Mark as In Progress"
-msgstr ""
+msgstr "Merk as in uitvoering"
 
 #: hr/doctype/interview/interview.py:75
 msgid "Mark as {0}"
-msgstr ""
+msgstr "Merk as {0}"
 
 #: hr/doctype/attendance/attendance_list.js:102
 msgid "Mark attendance as {0} for {1} on selected dates?"
-msgstr ""
+msgstr "Merk bywoning as {0} vir {1} op geselekteerde datums?"
 
 #. Description of a Check field in DocType 'Shift Type'
 #: hr/doctype/shift_type/shift_type.json
@@ -10408,11 +10408,11 @@ msgstr ""
 
 #: hr/doctype/goal/goal_tree.js:269
 msgid "Mark {0} as Completed?"
-msgstr ""
+msgstr "Merk {0} as voltooi?"
 
 #: hr/doctype/goal/goal_list.js:84
 msgid "Mark {0} {1} as {2}?"
-msgstr ""
+msgstr "Merk {0} {1} as {2}?"
 
 #. Label of a Section Break field in DocType 'Employee Attendance Tool'
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.json
@@ -10428,14 +10428,14 @@ msgstr "Gemerkte Bywoning HTML"
 
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.js:215
 msgid "Marking Attendance"
-msgstr ""
+msgstr "Bywoning word aangeteken"
 
 #. Label of a Card Break in the Performance Workspace
 #. Label of a Card Break in the Salary Payout Workspace
 #: hr/workspace/performance/performance.json
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Masters"
-msgstr ""
+msgstr "Meesters"
 
 #. Label of a Currency field in DocType 'Employee Benefit Claim'
 #: payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
@@ -10513,7 +10513,7 @@ msgstr ""
 
 #: hr/doctype/leave_application/leave_application.py:490
 msgid "Maximum Consecutive Leaves Exceeded"
-msgstr ""
+msgstr "Maksimum opeenvolgende verlof oorskry"
 
 #. Label of a Int field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
@@ -10564,7 +10564,7 @@ msgstr ""
 
 #: hr/doctype/leave_encashment/leave_encashment.py:122
 msgid "Maximum encashable leaves for {0} are {1}"
-msgstr ""
+msgstr "Maksimum uitbetaalbare verlof vir {0} is {1}"
 
 #: hr/doctype/leave_policy/leave_policy.py:19
 msgid "Maximum leave allowed in the leave type {0} is {1}"
@@ -10625,7 +10625,7 @@ msgstr ""
 
 #: hr/doctype/full_and_final_statement/full_and_final_statement.py:29
 msgid "Missing Relieving Date"
-msgstr ""
+msgstr "Ontbrekende ontslagdatum"
 
 #. Label of a Select field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
@@ -10772,11 +10772,11 @@ msgstr "Meer as een keuse vir {0} word nie toegelaat nie"
 
 #: payroll/doctype/additional_salary/additional_salary.py:231
 msgid "Multiple Additional Salaries with overwrite property exist for Salary Component {0} between {1} and {2}."
-msgstr ""
+msgstr "Meerdere bykomende salarisse met oorskryfeienskap bestaan vir salariskomponent {0} tussen {1} en {2}."
 
 #: hr/doctype/shift_assignment/shift_assignment.py:65
 msgid "Multiple Shift Assignments"
-msgstr ""
+msgstr "Veelvuldige skoftoewysings"
 
 #: www/jobs/index.py:11
 msgid "My Account"
@@ -10798,7 +10798,7 @@ msgstr ""
 #: payroll/doctype/salary_slip/salary_slip.py:1163
 #: payroll/doctype/salary_slip/salary_slip.py:2112
 msgid "Name error"
-msgstr ""
+msgstr "Naamfout"
 
 #. Label of a Data field in DocType 'Travel Request'
 #: hr/doctype/travel_request/travel_request.json
@@ -10888,7 +10888,7 @@ msgstr "Nuwe werknemer ID"
 
 #: hr/report/employee_leave_balance/employee_leave_balance.py:60
 msgid "New Leave(s) Allocated"
-msgstr ""
+msgstr "Nuwe Verlof Toegeken"
 
 #. Label of a Float field in DocType 'Leave Allocation'
 #: hr/doctype/leave_allocation/leave_allocation.json
@@ -10931,11 +10931,11 @@ msgstr "Geen werknemer gevind vir die gegewe werknemer se veldwaarde nie. &#39;{
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:111
 msgid "No Employees Selected"
-msgstr ""
+msgstr "Geen werknemers gekies nie"
 
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.py:105
 msgid "No Leave Period Found"
-msgstr ""
+msgstr "Geen verlofperiode gevind nie"
 
 #: hr/doctype/leave_encashment/leave_encashment.py:145
 msgid "No Leaves Allocated to Employee: {0} for Leave Type: {1}"
@@ -10947,7 +10947,7 @@ msgstr ""
 
 #: hr/doctype/leave_encashment/leave_encashment.py:30
 msgid "No Salary Structure assigned to Employee {0} on the given date {1}"
-msgstr ""
+msgstr "Geen salarisstruktuur toegewys aan werknemer {0} op die gegewe datum {1}"
 
 #: hr/doctype/job_opening/job_opening.js:32
 msgid "No Staffing Plans found for this Designation"
@@ -10967,15 +10967,15 @@ msgstr "Geen addisionele uitgawes is bygevoeg nie"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:45
 msgid "No attendance records found for this criteria."
-msgstr ""
+msgstr "Geen bywoningsrekords gevind vir hierdie kriteria nie."
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:37
 msgid "No attendance records found."
-msgstr ""
+msgstr "Geen bywoningsrekords gevind nie."
 
 #: hr/doctype/interview/interview.py:89
 msgid "No changes found in timings."
-msgstr ""
+msgstr "Geen veranderinge in tydsinstellings gevind nie."
 
 #: hr/doctype/leave_control_panel/leave_control_panel.py:33
 msgid "No employee(s) selected"
@@ -10983,23 +10983,23 @@ msgstr ""
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:189
 msgid "No employees found"
-msgstr ""
+msgstr "Geen werknemers gevind nie"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:172
 msgid "No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>Payroll Payable Account: {2}"
-msgstr ""
+msgstr "Geen werknemers gevind vir die genoemde kriteria nie:<br>Maatskappy: {0}<br> Geldeenheid: {1}<br>Betaalbare salarisrekening: {2}"
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:67
 msgid "No employees found for the selected criteria"
-msgstr ""
+msgstr "Geen werknemers gevind vir die gekose kriteria nie."
 
 #: payroll/report/income_tax_computation/income_tax_computation.py:70
 msgid "No employees found with selected filters and active salary structure"
-msgstr ""
+msgstr "Geen werknemers gevind met die gekose filters en aktiewe salarisstruktuur nie."
 
 #: hr/doctype/goal/goal_list.js:97
 msgid "No items selected"
-msgstr ""
+msgstr "Geen items gekies nie."
 
 #: hr/doctype/attendance/attendance.py:184
 msgid "No leave record found for employee {0} on {1}"
@@ -11041,11 +11041,11 @@ msgstr ""
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:255
 msgid "Non-Billed Hours"
-msgstr ""
+msgstr "Nie-gefaktureerde ure"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:76
 msgid "Non-Billed Hours (NB)"
-msgstr ""
+msgstr "Nie-gefaktureerde ure (NB)"
 
 #. Label of a Int field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
@@ -11088,7 +11088,7 @@ msgstr ""
 
 #: hr/doctype/leave_allocation/leave_allocation.py:154
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
-msgstr ""
+msgstr "Nota: Totale toegekende verlof {0} mag nie minder wees as reeds goedgekeurde verlof {1} vir die periode nie"
 
 #. Label of a Data field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
@@ -11170,7 +11170,7 @@ msgstr "Odometer Reading"
 
 #: hr/report/vehicle_expenses/vehicle_expenses.py:41
 msgid "Odometer Value"
-msgstr ""
+msgstr "Odometerwaarde"
 
 #: hr/report/recruitment_analytics/recruitment_analytics.py:60
 msgid "Offer Date"
@@ -11236,7 +11236,7 @@ msgstr "Op verlof"
 #. Label of a Card Break in the Employee Lifecycle Workspace
 #: hr/workspace/employee_lifecycle/employee_lifecycle.json
 msgid "Onboarding"
-msgstr ""
+msgstr "Inskakeling"
 
 #. Label of a Section Break field in DocType 'Employee Onboarding'
 #: hr/doctype/employee_onboarding/employee_onboarding.json
@@ -11256,19 +11256,19 @@ msgstr "Slegs kandidate kan hierdie versoek goedkeur."
 
 #: hr/doctype/exit_interview/exit_interview.py:45
 msgid "Only Completed documents can be submitted"
-msgstr ""
+msgstr "Slegs voltooide dokumente kan ingedien word"
 
 #: hr/doctype/employee_grievance/employee_grievance.py:13
 msgid "Only Employee Grievance with status {0} or {1} can be submitted"
-msgstr ""
+msgstr "Slegs werknemerklagte met status {0} of {1} kan ingedien word"
 
 #: hr/doctype/interview/interview.py:331
 msgid "Only Interviewer Are allowed to submit Interview Feedback"
-msgstr ""
+msgstr "Slegs die onderhoudvoerder mag onderhoudterugvoer indien."
 
 #: hr/doctype/interview/interview.py:26
 msgid "Only Interviews with Cleared or Rejected status can be submitted."
-msgstr ""
+msgstr "Slegs onderhoude met die status Verreken of Afgekeur kan ingedien word."
 
 #: hr/doctype/leave_application/leave_application.py:103
 msgid "Only Leave Applications with status 'Approved' and 'Rejected' can be submitted"
@@ -11290,7 +11290,7 @@ msgstr "Slegs vervalste toekenning kan gekanselleer word"
 
 #: hr/doctype/interview/interview.js:69
 msgid "Only interviewers can submit feedback"
-msgstr ""
+msgstr "Slegs onderhoudvoerders kan terugvoer indien."
 
 #: hr/doctype/leave_application/leave_application.py:174
 msgid "Only users with the {0} role can create backdated leave applications"
@@ -11298,7 +11298,7 @@ msgstr "Slegs gebruikers met die {0} -rol kan verouderde verloftoepassings skep"
 
 #: hr/doctype/goal/goal_list.js:115
 msgid "Only {0} Goals can be {1}"
-msgstr ""
+msgstr "Slegs {0}-doelwitte kan {1} word"
 
 #. Option for a Select field in DocType 'Daily Work Summary'
 #: hr/doctype/daily_work_summary/daily_work_summary.json
@@ -11344,7 +11344,7 @@ msgstr ""
 
 #: hr/doctype/leave_application/leave_application_email_template.html:30
 msgid "Open Now"
-msgstr ""
+msgstr "Maak nou oop"
 
 #: hr/report/employee_leave_balance/employee_leave_balance.py:54
 msgid "Opening Balance"
@@ -11352,7 +11352,7 @@ msgstr ""
 
 #: templates/generators/job_opening.html:34
 msgid "Opening closed."
-msgstr ""
+msgstr "Vakature gesluit."
 
 #: hr/doctype/leave_application/leave_application.py:558
 msgid "Optional Holiday List not set for leave period {0}"
@@ -11360,11 +11360,11 @@ msgstr "Opsionele vakansie lys nie vasgestel vir verlofperiode nie {0}"
 
 #: hr/doctype/leave_type/leave_type.js:21
 msgid "Optional Leaves are holidays that Employees can choose to avail from a list of holidays published by the company."
-msgstr ""
+msgstr "Opsionele verlof is vakansiedae waarvan werknemers kan kies om te benut, uit 'n lys vakansiedae wat deur die maatskappy gepubliseer is."
 
 #: hr/page/organizational_chart/organizational_chart.js:4
 msgid "Organizational Chart"
-msgstr ""
+msgstr "Organisasiediagram"
 
 #. Label of a Section Break field in DocType 'Leave Application'
 #: hr/doctype/leave_application/leave_application.json
@@ -11424,7 +11424,7 @@ msgstr ""
 #. Label of a chart in the Payroll Workspace
 #: payroll/workspace/payroll/payroll.json
 msgid "Outgoing Salary"
-msgstr ""
+msgstr "Uitgaande salaris"
 
 #: hr/report/unpaid_expense_claim/unpaid_expense_claim.py:23
 msgid "Outstanding Amount"
@@ -11432,23 +11432,23 @@ msgstr ""
 
 #: hr/doctype/leave_allocation/leave_allocation.py:284
 msgid "Over Allocation"
-msgstr ""
+msgstr "Oortoewysing"
 
 #: hr/doctype/attendance_request/attendance_request.py:60
 msgid "Overlapping Attendance Request"
-msgstr ""
+msgstr "Oorvleuelende bywoningsversoek"
 
 #: hr/doctype/attendance/attendance.py:118
 msgid "Overlapping Shift Attendance"
-msgstr ""
+msgstr "Oorvleuelende skofbywoning"
 
 #: hr/doctype/shift_request/shift_request.py:136
 msgid "Overlapping Shift Requests"
-msgstr ""
+msgstr "Oorvleuelende skofversoeke"
 
 #: hr/doctype/shift_assignment/shift_assignment.py:123
 msgid "Overlapping Shifts"
-msgstr ""
+msgstr "Oorvleuelende skofte"
 
 #. Label of a Tab Break field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
@@ -11505,7 +11505,7 @@ msgstr "PF-lening"
 #. Name of a DocType
 #: hr/doctype/pwa_notification/pwa_notification.json
 msgid "PWA Notification"
-msgstr ""
+msgstr "PWA Notification"
 
 #. Option for a Select field in DocType 'Employee Advance'
 #: hr/doctype/employee_advance/employee_advance.json
@@ -11648,7 +11648,7 @@ msgstr ""
 
 #: hr/doctype/expense_claim/expense_claim.py:100
 msgid "Payable Account is mandatory to submit an Expense Claim"
-msgstr ""
+msgstr "Krediteurerekening is verpligtend om 'n Uitgawe-eis in te dien"
 
 #. Label of a Section Break field in DocType 'Full and Final Statement'
 #: hr/doctype/full_and_final_statement/full_and_final_statement.json
@@ -11681,7 +11681,7 @@ msgstr "Betaalrekening is verpligtend"
 
 #: payroll/report/bank_remittance/bank_remittance.py:25
 msgid "Payment Date"
-msgstr ""
+msgstr "Betalingsdatum"
 
 #: payroll/report/salary_register/salary_register.py:181
 msgid "Payment Days"
@@ -11702,7 +11702,7 @@ msgstr ""
 
 #: payroll/doctype/salary_structure/salary_structure.py:101
 msgid "Payment Days Dependency"
-msgstr ""
+msgstr "Betaaldae-afhanklikheid"
 
 #. Label of a Link in the Expense Claims Workspace
 #. Label of a Link in the Salary Payout Workspace
@@ -11793,7 +11793,7 @@ msgstr ""
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:108
 msgid "Payroll Entry cancellation is queued. It may take a few minutes"
-msgstr ""
+msgstr "Annulering van Betaalstaatinskrywing is in die tou. Dit kan 'n paar minute neem"
 
 #. Label of a Select field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
@@ -11831,7 +11831,7 @@ msgstr ""
 
 #: payroll/doctype/salary_structure/salary_structure.js:138
 msgid "Payroll Payable Account"
-msgstr ""
+msgstr "Betaalbare salarisrekening"
 
 #. Label of a Link field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
@@ -11896,7 +11896,7 @@ msgstr "Payroll Periods"
 #. Label of a Card Break in the Salary Payout Workspace
 #: payroll/workspace/salary_payout/salary_payout.json
 msgid "Payroll Reports"
-msgstr ""
+msgstr "Betaalstaatverslae"
 
 #. Name of a DocType
 #. Title of an Onboarding Step
@@ -11969,15 +11969,15 @@ msgstr ""
 
 #: hr/report/employee_exits/employee_exits.py:227
 msgid "Pending FnF"
-msgstr ""
+msgstr "Hangende FnF"
 
 #: hr/report/employee_exits/employee_exits.py:221
 msgid "Pending Interviews"
-msgstr ""
+msgstr "Hangende Onderhoude"
 
 #: hr/report/employee_exits/employee_exits.py:233
 msgid "Pending Questionnaires"
-msgstr ""
+msgstr "Hangende Vraelyste"
 
 #. Label of a Percent field in DocType 'Income Tax Slab Other Charges'
 #: payroll/doctype/income_tax_slab_other_charges/income_tax_slab_other_charges.json
@@ -12000,7 +12000,7 @@ msgstr ""
 #. Name of a Workspace
 #: hr/workspace/performance/performance.json
 msgid "Performance"
-msgstr ""
+msgstr "Prestasie"
 
 #. Label of a Data field in DocType 'Job Applicant'
 #: hr/doctype/job_applicant/job_applicant.json
@@ -12020,11 +12020,11 @@ msgstr "Beplande aantal posisies"
 
 #: hr/doctype/shift_type/shift_type.js:11
 msgid "Please Enable Auto Attendance and complete the setup first."
-msgstr ""
+msgstr "Aktiveer asseblief Outomatiese bywoning en voltooi eers die opstelling."
 
 #: payroll/doctype/retention_bonus/retention_bonus.js:8
 msgid "Please Select Company First"
-msgstr ""
+msgstr "Kies asseblief eers 'n maatskappy"
 
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.py:94
 msgid "Please add the remaining benefits {0} to any of the existing component"
@@ -12036,7 +12036,7 @@ msgstr ""
 
 #: payroll/doctype/salary_slip/salary_slip.py:729
 msgid "Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
-msgstr ""
+msgstr "Wys asseblief eers 'n Salarisstruktuur aan Werknemer {0} toe wat van of voor {1} van toepassing is."
 
 #: templates/emails/training_event.html:17
 msgid "Please confirm once you have completed your training"
@@ -12044,11 +12044,11 @@ msgstr "Bevestig asseblief as jy jou opleiding voltooi het"
 
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.py:101
 msgid "Please create a new {0} for the date {1} first."
-msgstr ""
+msgstr "Skep eers 'n nuwe {0} vir die datum {1}."
 
 #: hr/doctype/employee_transfer/employee_transfer.py:57
 msgid "Please delete the Employee {0} to cancel this document"
-msgstr ""
+msgstr "Verwyder asseblief die Werknemer {0} om hierdie dokument te kanselleer"
 
 #: hr/doctype/daily_work_summary_group/daily_work_summary_group.py:20
 msgid "Please enable default incoming account before creating Daily Work Summary Group"
@@ -12077,12 +12077,12 @@ msgstr ""
 
 #: public/js/hierarchy_chart/hierarchy_chart_mobile.js:229
 msgid "Please select a company first"
-msgstr ""
+msgstr "Kies asseblief eers 'n maatskappy"
 
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:95
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:290
 msgid "Please select a company first."
-msgstr ""
+msgstr "Kies asseblief eers 'n maatskappy."
 
 #: hr/doctype/upload_attendance/upload_attendance.py:174
 msgid "Please select a csv file"
@@ -12090,39 +12090,39 @@ msgstr "Kies asseblief &#39;n CSV-lêer"
 
 #: hr/doctype/attendance/attendance.py:308
 msgid "Please select a date."
-msgstr ""
+msgstr "Kies asseblief 'n datum."
 
 #: hr/utils.py:693
 msgid "Please select an Applicant"
-msgstr ""
+msgstr "Kies asseblief 'n Aansoeker"
 
 #: hr/doctype/employee_advance/employee_advance.js:16
 msgid "Please select employee first"
-msgstr ""
+msgstr "Kies asseblief eers 'n werknemer."
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:111
 msgid "Please select employees to create appraisals for"
-msgstr ""
+msgstr "Kies asseblief werknemers om evaluerings vir te skep"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:33
 msgid "Please select month and year."
-msgstr ""
+msgstr "Kies asseblief maand en jaar."
 
 #: hr/doctype/goal/goal.js:87
 msgid "Please select the Appraisal Cycle first."
-msgstr ""
+msgstr "Kies asseblief eers die Evalueringsiklus."
 
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.js:192
 msgid "Please select the attendance status."
-msgstr ""
+msgstr "Kies asseblief die bywoningstatus."
 
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.js:185
 msgid "Please select the employees you want to mark attendance for."
-msgstr ""
+msgstr "Kies asseblief die werknemers vir wie jy bywoning wil merk."
 
 #: payroll/doctype/salary_slip/salary_slip_list.js:7
 msgid "Please select the salary slips to email"
-msgstr ""
+msgstr "Kies asseblief die salarisstrokies om per e-pos te stuur"
 
 #: payroll/doctype/employee_tax_exemption_declaration/employee_tax_exemption_declaration.js:19
 msgid "Please select {0}"
@@ -12130,15 +12130,15 @@ msgstr ""
 
 #: payroll/doctype/salary_structure/salary_structure.py:271
 msgid "Please set \"Default Payroll Payable Account\" in Company Defaults"
-msgstr ""
+msgstr "Stel asseblief \"Standaard betaalbare salarisrekening\" in Maatskappyverstekwaardes"
 
 #: regional/india/utils.py:18
 msgid "Please set Basic and HRA component in Company {0}"
-msgstr ""
+msgstr "Stel asseblief die Basic- en HRA-komponent in Maatskappy {0}."
 
 #: hr/doctype/leave_encashment/leave_encashment.py:49
 msgid "Please set Earning Component for Leave type: {0}."
-msgstr ""
+msgstr "Stel asseblief die Verdienstekomponent in vir Verloftipe: {0}."
 
 #: payroll/doctype/salary_slip/salary_slip.py:444
 msgid "Please set Payroll based on in Payroll settings"
@@ -12146,7 +12146,7 @@ msgstr "Stel Payroll in volgens die Payroll-instellings"
 
 #: payroll/doctype/gratuity/gratuity.py:152
 msgid "Please set Relieving Date for employee: {0}"
-msgstr ""
+msgstr "Stel asseblief die Ontslagdatum vir werknemer: {0}"
 
 #: hr/doctype/employee_advance/employee_advance.py:172
 #: hr/doctype/employee_advance/employee_advance.py:276
@@ -12155,7 +12155,7 @@ msgstr ""
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:297
 msgid "Please set account in Salary Component {0}"
-msgstr ""
+msgstr "Stel asseblief rekening in Salariskomponent {0}"
 
 #: hr/doctype/leave_application/leave_application.py:612
 msgid "Please set default template for Leave Approval Notification in HR Settings."
@@ -12167,7 +12167,7 @@ msgstr "Stel asb. Standaard sjabloon vir verlofstatus kennisgewing in MH-instell
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:137
 msgid "Please set the Appraisal Template for all the {0} or select the template in the Employees table below."
-msgstr ""
+msgstr "Stel asseblief die Evalueringsjabloon vir al die {0} of kies die jabloon in die Werknemers-tabel hieronder."
 
 #: hr/doctype/expense_claim/expense_claim.js:41
 msgid "Please set the Company"
@@ -12179,29 +12179,29 @@ msgstr "Stel asseblief die datum van aansluiting vir werknemer {0}"
 
 #: controllers/employee_boarding_controller.py:110
 msgid "Please set the Holiday List."
-msgstr ""
+msgstr "Stel asseblief die Vakansiedaglys."
 
 #: hr/doctype/exit_interview/exit_interview.js:17
 #: hr/doctype/exit_interview/exit_interview.py:21
 msgid "Please set the relieving date for employee {0}"
-msgstr ""
+msgstr "Stel asseblief die ontslagdatum vir werknemer {0} in."
 
 #: hr/doctype/exit_interview/exit_interview.py:124
 msgid "Please set {0} and {1} in {2}."
-msgstr ""
+msgstr "Stel asseblief {0} en {1} in {2}."
 
 #: hr/doctype/full_and_final_statement/full_and_final_statement.py:25
 msgid "Please set {0} for Employee {1}"
-msgstr ""
+msgstr "Stel asseblief {0} vir werknemer {1} in"
 
 #: hr/doctype/department_approver/department_approver.py:86
 msgid "Please set {0} for the Employee: {1}"
-msgstr ""
+msgstr "Stel asseblief {0} vir die werknemer: {1}"
 
 #: hr/doctype/shift_type/shift_type.js:16
 #: hr/doctype/shift_type/shift_type.js:21
 msgid "Please set {0}."
-msgstr ""
+msgstr "Stel asseblief {0} in."
 
 #: overrides/employee_master.py:16
 msgid "Please setup Employee Naming System in Human Resource > HR Settings"
@@ -12217,11 +12217,11 @@ msgstr "Deel asseblief u terugvoering aan die opleiding deur op &#39;Training Fe
 
 #: hr/doctype/interview/interview.py:198
 msgid "Please specify the job applicant to be updated."
-msgstr ""
+msgstr "Spesifiseer asseblief die werksaansoeker wat opgedateer moet word."
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:157
 msgid "Please submit the {0} before marking the cycle as Completed"
-msgstr ""
+msgstr "Dien asseblief die {0} in voordat die siklus as Voltooi gemerk word"
 
 #: templates/emails/training_event.html:13
 msgid "Please update your status for this training event"
@@ -12319,7 +12319,7 @@ msgstr "teenwoordig"
 
 #: hr/report/shift_attendance/shift_attendance.py:162
 msgid "Present Records"
-msgstr ""
+msgstr "Teenwoordige rekords"
 
 #: payroll/doctype/salary_structure/salary_structure.js:110
 #: payroll/doctype/salary_structure/salary_structure.js:197
@@ -12383,7 +12383,7 @@ msgstr "vaardigheid"
 
 #: hr/report/project_profitability/project_profitability.py:185
 msgid "Profit"
-msgstr ""
+msgstr "Wins"
 
 #: hr/doctype/goal/goal_tree.js:78
 msgid "Progress"
@@ -12444,7 +12444,7 @@ msgstr ""
 #: hr/report/project_profitability/project_profitability.json
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Project Profitability"
-msgstr ""
+msgstr "Projekwinsgewendheid"
 
 #. Label of a Card Break in the Performance Workspace
 #: hr/workspace/performance/performance.json
@@ -12550,7 +12550,7 @@ msgstr ""
 #. Label of a Card Break in the Payroll Workspace
 #: payroll/workspace/payroll/payroll.json
 msgid "Quick Links"
-msgstr ""
+msgstr "Vinnige skakels"
 
 #. Label of a Link field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
@@ -12649,7 +12649,7 @@ msgstr ""
 
 #: hr/doctype/employee_checkin/employee_checkin.py:251
 msgid "Reason for skipping auto attendance:"
-msgstr ""
+msgstr "Rede vir die oorslaan van outomatiese bywoning:"
 
 #. Label of a Section Break field in DocType 'Full and Final Statement'
 #: hr/doctype/full_and_final_statement/full_and_final_statement.json
@@ -12660,7 +12660,7 @@ msgstr ""
 #. Name of a Workspace
 #: hr/workspace/recruitment/recruitment.json
 msgid "Recruitment"
-msgstr ""
+msgstr "Werwing"
 
 #. Name of a report
 #. Label of a Link in the HR Workspace
@@ -12738,7 +12738,7 @@ msgstr ""
 #: hr/doctype/leave_application/leave_application.py:486
 #: payroll/doctype/additional_salary/additional_salary.py:136
 msgid "Reference: {0}"
-msgstr ""
+msgstr "Verwysing: {0}"
 
 #. Label of a Section Break field in DocType 'Additional Salary'
 #: payroll/doctype/additional_salary/additional_salary.json
@@ -12796,7 +12796,7 @@ msgstr "Aanwending besonderhede"
 
 #: hr/doctype/employee_referral/employee_referral.js:7
 msgid "Reject Employee Referral"
-msgstr ""
+msgstr "Verwerp Werknemerverwysing"
 
 #. Option for a Select field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
@@ -12872,7 +12872,7 @@ msgstr ""
 #: hr/doctype/exit_interview/exit_interview.js:19
 #: hr/doctype/exit_interview/exit_interview.py:24
 msgid "Relieving Date Missing"
-msgstr ""
+msgstr "Ontslagdatum ontbreek"
 
 #. Label of a Currency field in DocType 'Employee Benefit Application'
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.json
@@ -12979,7 +12979,7 @@ msgstr ""
 #: hr/report/employee_exits/employee_exits.js:45
 #: hr/report/employee_exits/employee_exits.py:79
 msgid "Reports To"
-msgstr ""
+msgstr "Rapporteer aan"
 
 #. Label of a Link field in DocType 'Employee Grievance'
 #: hr/doctype/employee_grievance/employee_grievance.json
@@ -13020,7 +13020,7 @@ msgstr "Benodig vir die skep van werknemers"
 
 #: hr/doctype/interview/interview.js:29
 msgid "Reschedule Interview"
-msgstr ""
+msgstr "Herskeduleer onderhoud"
 
 #. Label of a Date field in DocType 'Employee Separation'
 #: hr/doctype/employee_separation/employee_separation.json
@@ -13111,7 +13111,7 @@ msgstr ""
 
 #: hr/report/employee_exits/employee_exits.py:193
 msgid "Retained"
-msgstr ""
+msgstr "Behou"
 
 #. Name of a DocType
 #: payroll/doctype/retention_bonus/retention_bonus.json
@@ -13136,7 +13136,7 @@ msgstr ""
 
 #: hr/doctype/employee_advance/employee_advance.py:126
 msgid "Return amount cannot be greater than unclaimed amount"
-msgstr ""
+msgstr "Terugbetalingsbedrag mag nie groter wees as die ongeëisde bedrag nie"
 
 #. Option for a Select field in DocType 'Employee Advance'
 #: hr/doctype/employee_advance/employee_advance.json
@@ -13158,7 +13158,7 @@ msgstr ""
 
 #: hr/doctype/hr_settings/hr_settings.js:37
 msgid "Review various other settings related to Employee Leaves and Expense Claim"
-msgstr ""
+msgstr "Hersien verskeie ander instellings wat met werknemerverlof en uitgawe-eis verband hou"
 
 #. Label of a Link field in DocType 'Employee Performance Feedback'
 #: hr/doctype/employee_performance_feedback/employee_performance_feedback.json
@@ -13250,15 +13250,15 @@ msgstr "Ry # {0}: kan nie bedrag of formule vir salariskomponent {1} stel met ve
 
 #: payroll/doctype/salary_structure/salary_structure.py:90
 msgid "Row #{0}: The {1} Component has the options {2} and {3} enabled."
-msgstr ""
+msgstr "Ry #{0}: Die {1}-komponent het die opsies {2} en {3} geaktiveer."
 
 #: payroll/doctype/salary_structure/salary_structure.py:116
 msgid "Row #{0}: Timesheet amount will overwrite the Earning component amount for the Salary Component {1}"
-msgstr ""
+msgstr "Ry #{0}: Tydstaat-bedrag sal die verdienstekomponent-bedrag vir die salariskomponent {1} oorskryf"
 
 #: hr/doctype/expense_claim/expense_claim.py:580
 msgid "Row No {0}: Amount cannot be greater than the Outstanding Amount against Expense Claim {1}. Outstanding Amount is {2}"
-msgstr ""
+msgstr "Ry nr. {0}: Bedrag kan nie groter wees as die uitstaande bedrag teen die uitgawe-eis {1} nie. Uitstaande bedrag is {2}"
 
 #: hr/doctype/expense_claim/expense_claim.py:347
 msgid "Row {0}# Allocated amount {1} cannot be greater than unclaimed amount {2}"
@@ -13266,7 +13266,7 @@ msgstr "Ry {0} # Toegewysde hoeveelheid {1} kan nie groter wees as onopgeëiste 
 
 #: payroll/doctype/gratuity/gratuity.py:127
 msgid "Row {0}# Paid Amount cannot be greater than Total amount"
-msgstr ""
+msgstr "Ry {0}#: Betaalde bedrag kan nie groter wees as die totale bedrag nie"
 
 #: hr/doctype/employee_advance/employee_advance.py:121
 msgid "Row {0}# Paid Amount cannot be greater than requested advance amount"
@@ -13274,7 +13274,7 @@ msgstr "Ry {0} # Betaalbedrag kan nie groter wees as gevraagde voorskotbedrag ni
 
 #: payroll/doctype/gratuity_rule/gratuity_rule.py:15
 msgid "Row {0}: From (Year) can not be greater than To (Year)"
-msgstr ""
+msgstr "Ry {0}: Van (Jaar) kan nie groter wees as Tot (Jaar) nie"
 
 #: hr/doctype/appraisal/appraisal.py:133
 msgid "Row {0}: Goal Score cannot be greater than 5"
@@ -13282,7 +13282,7 @@ msgstr ""
 
 #: payroll/doctype/salary_slip/salary_slip_loan_utils.py:54
 msgid "Row {0}: Paid amount {1} is greater than pending accrued amount {2} against loan {3}"
-msgstr ""
+msgstr "Ry {0}: Betaalde bedrag {1} is groter as die hangende opgeloopte bedrag {2} teen lening {3}"
 
 #: hr/doctype/expense_claim/expense_claim.py:280
 msgid "Row {0}: {1} is required in the expenses table to book an expense claim."
@@ -13414,7 +13414,7 @@ msgstr ""
 
 #: templates/generators/job_opening.html:103
 msgid "Salary Range"
-msgstr ""
+msgstr "Salarisreeks"
 
 #. Name of a report
 #. Label of a shortcut in the Payroll Workspace
@@ -13429,7 +13429,7 @@ msgstr "Salarisregister"
 #. Name of a DocType
 #: payroll/doctype/salary_slip/salary_slip.json
 msgid "Salary Slip"
-msgstr ""
+msgstr "Salarisstrokie"
 
 #. Label of a Link field in DocType 'Employee Benefit Claim'
 #: payroll/doctype/employee_benefit_claim/employee_benefit_claim.json
@@ -13483,7 +13483,7 @@ msgstr "Salaris Slip ID"
 #. Name of a DocType
 #: payroll/doctype/salary_slip_leave/salary_slip_leave.json
 msgid "Salary Slip Leave"
-msgstr ""
+msgstr "Salarisstrokie-verlof"
 
 #. Name of a DocType
 #: payroll/doctype/salary_slip_loan/salary_slip_loan.json
@@ -13507,7 +13507,7 @@ msgstr ""
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:230
 msgid "Salary Slip creation is queued. It may take a few minutes"
-msgstr ""
+msgstr "Die skepping van salarisstrokies is in die tou. Dit kan 'n paar minute neem."
 
 #: payroll/doctype/salary_slip/salary_slip.py:285
 msgid "Salary Slip of employee {0} already created for this period"
@@ -13519,15 +13519,15 @@ msgstr "Salaris Slip van werknemer {0} reeds geskep vir tydskrif {1}"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:275
 msgid "Salary Slip submission is queued. It may take a few minutes"
-msgstr ""
+msgstr "Die indiening van salarisstrokies is in die tou. Dit kan 'n paar minute neem."
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:1343
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
-msgstr ""
+msgstr "Salarisstrokie {0} het misluk vir Betaalstaatinskrywing {1}"
 
 #: payroll/doctype/payroll_entry/payroll_entry.js:95
 msgid "Salary Slip {0} failed. You can resolve the {1} and retry {0}."
-msgstr ""
+msgstr "Salarisstrokie {0} het misluk. U kan die {1} oplos en {0} weer probeer."
 
 #. Label of a Check field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
@@ -13543,11 +13543,11 @@ msgstr "Salarisstrokies ingedien"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:1385
 msgid "Salary Slips already exist for employees {}, and will not be processed by this payroll."
-msgstr ""
+msgstr "Salarisstrokies bestaan reeds vir werknemers {}, en hierdie betaalstaat sal hulle nie verwerk nie."
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:1410
 msgid "Salary Slips submitted for period from {0} to {1}"
-msgstr ""
+msgstr "Salarisstrokies vir die tydperk van {0} tot {1} is ingedien"
 
 #. Name of a DocType
 #: payroll/doctype/salary_structure/salary_structure.json
@@ -13593,7 +13593,7 @@ msgstr "Salarisstruktuur ontbreek"
 
 #: regional/india/utils.py:30
 msgid "Salary Structure must be submitted before submission of {0}"
-msgstr ""
+msgstr "Salarisstruktuur moet ingedien word voordat {0} ingedien word"
 
 #: payroll/doctype/employee_benefit_application/employee_benefit_application.py:349
 msgid "Salary Structure not found for employee {0} and date {1}"
@@ -13605,7 +13605,7 @@ msgstr "Salarisstruktuur moet buigsame voordeelkomponent (e) hê om die voordeel
 
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:85
 msgid "Salary Structure {0} does not belong to company {1}"
-msgstr ""
+msgstr "Salarisstruktuur {0} behoort nie aan maatskappy {1} nie"
 
 #: hr/doctype/leave_application/leave_application.py:330
 msgid "Salary already processed for period between {0} and {1}, Leave application period cannot be between this date range."
@@ -13625,7 +13625,7 @@ msgstr ""
 
 #: payroll/doctype/salary_slip/salary_slip.py:2265
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
-msgstr ""
+msgstr "Salarisstrokie-e-posse is in die wagrij om gestuur te word. Kontroleer {0} vir status."
 
 #. Subtitle of the Module Onboarding 'Payroll'
 #: payroll/module_onboarding/payroll/payroll.json
@@ -13642,7 +13642,7 @@ msgstr ""
 
 #: hr/report/unpaid_expense_claim/unpaid_expense_claim.py:21
 msgid "Sanctioned Amount"
-msgstr ""
+msgstr "Goedgekeurde bedrag"
 
 #. Label of a Currency field in DocType 'Expense Claim Detail'
 #: hr/doctype/expense_claim_detail/expense_claim_detail.json
@@ -13700,11 +13700,11 @@ msgstr "Die telling moet minder as of gelyk wees aan 5"
 
 #: hr/doctype/appraisal/appraisal.js:96
 msgid "Scores"
-msgstr ""
+msgstr "Tellings"
 
 #: www/jobs/index.html:64
 msgid "Search for Jobs"
-msgstr ""
+msgstr "Soek vir werk"
 
 #: public/js/hierarchy_chart/hierarchy_chart_desktop.js:78
 #: public/js/hierarchy_chart/hierarchy_chart_mobile.js:69
@@ -13729,7 +13729,7 @@ msgstr ""
 
 #: hr/doctype/interview_feedback/interview_feedback.js:50
 msgid "Select Interview first"
-msgstr ""
+msgstr "Kies eers 'n onderhoud."
 
 #. Description of a Link field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
@@ -13739,7 +13739,7 @@ msgstr "Kies Betaalrekening om Bankinskrywing te maak"
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:1544
 msgid "Select Payroll Frequency."
-msgstr ""
+msgstr "Kies die betaalstaatfrekwensie."
 
 #: hr/employee_property_update.js:84
 msgid "Select Property"
@@ -13763,43 +13763,43 @@ msgstr "Kies &#39;n werknemer om die werknemer vooraf te kry."
 
 #: hr/doctype/leave_allocation/leave_allocation.js:116
 msgid "Select the Employee for which you want to allocate leaves."
-msgstr ""
+msgstr "Kies die werknemer aan wie u verlof wil toeken."
 
 #: hr/doctype/leave_application/leave_application.js:247
 msgid "Select the Employee."
-msgstr ""
+msgstr "Kies die werknemer."
 
 #: hr/doctype/leave_allocation/leave_allocation.js:121
 msgid "Select the Leave Type like Sick leave, Privilege Leave, Casual Leave, etc."
-msgstr ""
+msgstr "Kies die verloftipe soos siekteverlof, voorregverlof, gewone verlof, ens."
 
 #: hr/doctype/leave_allocation/leave_allocation.js:131
 msgid "Select the date after which this Leave Allocation will expire."
-msgstr ""
+msgstr "Kies die datum waarna hierdie Verloftoekenning sal verval."
 
 #: hr/doctype/leave_allocation/leave_allocation.js:126
 msgid "Select the date from which this Leave Allocation will be valid."
-msgstr ""
+msgstr "Kies die datum vanaf wanneer hierdie Verloftoekenning geldig sal wees."
 
 #: hr/doctype/leave_application/leave_application.js:262
 msgid "Select the end date for your Leave Application."
-msgstr ""
+msgstr "Kies die einddatum vir u Verlofaansoek."
 
 #: hr/doctype/leave_application/leave_application.js:257
 msgid "Select the start date for your Leave Application."
-msgstr ""
+msgstr "Kies die begindatum vir u Verlofaansoek."
 
 #: hr/doctype/leave_application/leave_application.js:252
 msgid "Select type of leave the employee wants to apply for, like Sick Leave, Privilege Leave, Casual Leave, etc."
-msgstr ""
+msgstr "Kies die soort verlof waarvoor die werknemer aansoek wil doen, soos Siekverlof, Voorregverlof, Gewone verlof, ens."
 
 #: hr/doctype/leave_application/leave_application.js:272
 msgid "Select your Leave Approver i.e. the person who approves or rejects your leaves."
-msgstr ""
+msgstr "Kies u Verlofgoedkeurder, d.w.s. die persoon wat u verlof goedkeur of afkeur."
 
 #: hr/doctype/employee_performance_feedback/employee_performance_feedback.py:32
 msgid "Self Appraisal"
-msgstr ""
+msgstr "Selfevaluering"
 
 #. Label of a Tab Break field in DocType 'Appraisal'
 #: hr/doctype/appraisal/appraisal.json
@@ -13809,12 +13809,12 @@ msgstr ""
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:114
 msgid "Self Appraisal Pending: {0}"
-msgstr ""
+msgstr "Selfevaluering hangende: {0}"
 
 #: hr/report/appraisal_overview/appraisal_overview.py:56
 #: hr/report/appraisal_overview/appraisal_overview.py:123
 msgid "Self Score"
-msgstr ""
+msgstr "Selftelling"
 
 #. Option for a Select field in DocType 'Training Event'
 #: hr/doctype/training_event/training_event.json
@@ -13836,11 +13836,11 @@ msgstr "Stuur e-pos aan"
 
 #: hr/doctype/exit_interview/exit_interview.js:7
 msgid "Send Exit Questionnaire"
-msgstr ""
+msgstr "Stuur Uittree-vraelys"
 
 #: hr/doctype/exit_interview/exit_interview_list.js:15
 msgid "Send Exit Questionnaires"
-msgstr ""
+msgstr "Stuur Uittree-vraelyste"
 
 #. Label of a Check field in DocType 'HR Settings'
 #: hr/doctype/hr_settings/hr_settings.json
@@ -14007,7 +14007,7 @@ msgstr ""
 
 #: hr/doctype/full_and_final_statement/full_and_final_statement.py:54
 msgid "Set Relieving Date for Employee: {0}"
-msgstr ""
+msgstr "Stel ontslagdatum vir werknemer: {0}"
 
 #. Description of a Section Break field in DocType 'Employee Attendance Tool'
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.json
@@ -14057,11 +14057,11 @@ msgstr ""
 
 #: hr/doctype/exit_interview/exit_interview.py:129
 msgid "Settings Missing"
-msgstr ""
+msgstr "Instellings ontbreek"
 
 #: hr/doctype/full_and_final_statement/full_and_final_statement.py:35
 msgid "Settle all Payables and Receivables before submission"
-msgstr ""
+msgstr "Vereffen alle Betaalbares en Ontvangbares voor indiening."
 
 #. Option for a Select field in DocType 'Full and Final Outstanding Statement'
 #: hr/doctype/full_and_final_outstanding_statement/full_and_final_outstanding_statement.json
@@ -14113,7 +14113,7 @@ msgstr "verskuiwing"
 #. Name of a Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift & Attendance"
-msgstr ""
+msgstr "Skof & Bywoning"
 
 #. Label of a Datetime field in DocType 'Employee Checkin'
 #: hr/doctype/employee_checkin/employee_checkin.json
@@ -14123,7 +14123,7 @@ msgstr "Wissel werklike einde"
 
 #: hr/report/shift_attendance/shift_attendance.py:117
 msgid "Shift Actual End Time"
-msgstr ""
+msgstr "Skof werklike eindtyd"
 
 #. Label of a Datetime field in DocType 'Employee Checkin'
 #: hr/doctype/employee_checkin/employee_checkin.json
@@ -14133,7 +14133,7 @@ msgstr "Skuif die werklike begin"
 
 #: hr/report/shift_attendance/shift_attendance.py:111
 msgid "Shift Actual Start Time"
-msgstr ""
+msgstr "Skof werklike begintyd"
 
 #. Name of a DocType
 #: hr/doctype/shift_assignment/shift_assignment.json
@@ -14155,7 +14155,7 @@ msgstr "Skoftoewysing: {0} geskep vir werknemer: {1}"
 #: hr/report/shift_attendance/shift_attendance.json
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shift Attendance"
-msgstr ""
+msgstr "Skofbywoning"
 
 #. Label of a Datetime field in DocType 'Employee Checkin'
 #: hr/doctype/employee_checkin/employee_checkin.json
@@ -14165,7 +14165,7 @@ msgstr "Shift End"
 
 #: hr/report/shift_attendance/shift_attendance.py:61
 msgid "Shift End Time"
-msgstr ""
+msgstr "Skof Eindtyd"
 
 #. Name of a DocType
 #: hr/doctype/shift_request/shift_request.json
@@ -14199,7 +14199,7 @@ msgstr "Skof begin"
 
 #: hr/report/shift_attendance/shift_attendance.py:55
 msgid "Shift Start Time"
-msgstr ""
+msgstr "Skofbegintyd"
 
 #. Name of a DocType
 #: hr/doctype/shift_type/shift_type.json
@@ -14228,7 +14228,7 @@ msgstr "Shift Type"
 #. Label of a Card Break in the Shift & Attendance Workspace
 #: hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Shifts"
-msgstr ""
+msgstr "Skofte"
 
 #: hr/doctype/job_offer/job_offer.js:48
 msgid "Show Employee"
@@ -14265,7 +14265,7 @@ msgstr ""
 
 #: www/jobs/index.html:103
 msgid "Showing"
-msgstr ""
+msgstr "Wys"
 
 #: setup.py:356 setup.py:357
 msgid "Sick Leave"
@@ -14304,7 +14304,7 @@ msgstr "vaardigheid"
 #: hr/doctype/interview/interview.js:134
 #: hr/doctype/skill_assessment/skill_assessment.json
 msgid "Skill Assessment"
-msgstr ""
+msgstr "Vaardigheidsassessering"
 
 #. Label of a Section Break field in DocType 'Interview Feedback'
 #: hr/doctype/interview_feedback/interview_feedback.json
@@ -14508,7 +14508,7 @@ msgstr "Begin en einddatum nie in &#39;n geldige betaalstaat nie, kan nie {0} be
 
 #: payroll/doctype/payroll_entry/payroll_entry.py:186
 msgid "Start date: {0}"
-msgstr ""
+msgstr "Begindatum: {0}"
 
 #. Label of a Check field in DocType 'Salary Component'
 #: payroll/doctype/salary_component/salary_component.json
@@ -14747,7 +14747,7 @@ msgstr "Inhandigingsdatum"
 
 #: hr/doctype/leave_policy_assignment/leave_policy_assignment.py:337
 msgid "Submission Failed"
-msgstr ""
+msgstr "Indiening misluk"
 
 #: hr/doctype/job_requisition/job_requisition.js:59
 #: public/js/performance/performance_feedback.js:97
@@ -14756,11 +14756,11 @@ msgstr ""
 
 #: hr/doctype/interview/interview.js:50 hr/doctype/interview/interview.js:129
 msgid "Submit Feedback"
-msgstr ""
+msgstr "Dien terugvoer in"
 
 #: hr/doctype/exit_interview/exit_questionnaire_notification_template.html:15
 msgid "Submit Now"
-msgstr ""
+msgstr "Dien nou in"
 
 #: payroll/doctype/employee_tax_exemption_declaration/employee_tax_exemption_declaration.js:43
 msgid "Submit Proof"
@@ -14814,7 +14814,7 @@ msgstr "Inhandiging van salarisstrokies ..."
 
 #: hr/doctype/staffing_plan/staffing_plan.py:162
 msgid "Subsidiary companies have already planned for {1} vacancies at a budget of {2}. Staffing Plan for {0} should allocate more vacancies and budget for {3} than planned for its subsidiary companies"
-msgstr ""
+msgstr "Filiaalmaatskappye het reeds {1} vakatures beplan teen 'n begroting van {2}. Personeelplan vir {0} moet meer vakatures en begroting toeken vir {3} as wat vir sy filiaalmaatskappye beplan is"
 
 #: hr/doctype/employee_referral/employee_referral.py:54
 #: hr/doctype/leave_control_panel/leave_control_panel.py:130
@@ -14864,11 +14864,11 @@ msgstr ""
 
 #: payroll/doctype/salary_slip/salary_slip.py:1170
 msgid "Syntax error"
-msgstr ""
+msgstr "Sintaksfout"
 
 #: payroll/doctype/salary_slip/salary_slip.py:2115
 msgid "Syntax error in condition: {0} in Income Tax Slab"
-msgstr ""
+msgstr "Sintaksfout in voorwaarde: {0} in Inkomstebelastingskaal"
 
 #. Name of a role
 #: hr/doctype/appointment_letter/appointment_letter.json
@@ -14954,11 +14954,11 @@ msgstr ""
 #. Name of a Workspace
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Tax & Benefits"
-msgstr ""
+msgstr "Belasting & Voordele"
 
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:41
 msgid "Tax Deducted Till Date"
-msgstr ""
+msgstr "Belasting afgetrek tot op datum"
 
 #. Label of a Currency field in DocType 'Salary Structure Assignment'
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
@@ -14993,7 +14993,7 @@ msgstr "Belastingvrystellingbewyse"
 #. Label of a Card Break in the Tax & Benefits Workspace
 #: payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Tax Setup"
-msgstr ""
+msgstr "Belastingopstelling"
 
 #. Label of a Currency field in DocType 'Salary Detail'
 #: payroll/doctype/salary_detail/salary_detail.json
@@ -15009,7 +15009,7 @@ msgstr "Belasting op buigsame voordeel"
 
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:40
 msgid "Taxable Earnings Till Date"
-msgstr ""
+msgstr "Belasbare verdienste tot op datum"
 
 #. Label of a Currency field in DocType 'Salary Structure Assignment'
 #: payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
@@ -15108,11 +15108,11 @@ msgstr "Die dag (en) waarop u aansoek doen om verlof, is vakansiedae. Jy hoef ni
 
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.py:65
 msgid "The days between {0} to {1} are not valid holidays."
-msgstr ""
+msgstr "Die dae tussen {0} tot {1} is nie geldige vakansiedae nie."
 
 #: hr/doctype/leave_type/leave_type.py:50
 msgid "The fraction of Daily Salary per Leave should be between 0 and 1"
-msgstr ""
+msgstr "Die fraksie van daaglikse salaris per verlof moet tussen 0 en 1 wees."
 
 #. Description of a Float field in DocType 'Payroll Settings'
 #: payroll/doctype/payroll_settings/payroll_settings.json
@@ -15171,7 +15171,7 @@ msgstr ""
 
 #: payroll/doctype/salary_structure/salary_structure.py:376
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
-msgstr ""
+msgstr "Daar is geen Werknemer met Salarisstruktuur: {0}. Ken {1} toe aan 'n Werknemer om die Salarisstrokie te voorskou"
 
 #. Description of a Check field in DocType 'Leave Type'
 #: hr/doctype/leave_type/leave_type.json
@@ -15181,11 +15181,11 @@ msgstr ""
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:85
 msgid "This action will prevent making changes to the linked appraisal feedback/goals."
-msgstr ""
+msgstr "Hierdie aksie sal verhoed dat veranderinge aan die gekoppelde evalueringsterugvoer/doelwitte aangebring word."
 
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.py:97
 msgid "This compensatory leave will be applicable from {0}."
-msgstr ""
+msgstr "Hierdie kompensasieverlof sal van {0} af van toepassing wees."
 
 #: hr/doctype/employee_checkin/employee_checkin.py:35
 msgid "This employee already has a log with the same timestamp.{0}"
@@ -15193,23 +15193,23 @@ msgstr "Hierdie werknemer het reeds &#39;n logboek met dieselfde tydstempel. {0}
 
 #: payroll/doctype/salary_slip/salary_slip.py:1178
 msgid "This error can be due to invalid formula or condition."
-msgstr ""
+msgstr "Hierdie fout kan te wyte wees aan 'n ongeldige formule of voorwaarde."
 
 #: payroll/doctype/salary_slip/salary_slip.py:1171
 msgid "This error can be due to invalid syntax."
-msgstr ""
+msgstr "Hierdie fout kan te wyte wees aan ongeldige sintaksis."
 
 #: payroll/doctype/salary_slip/salary_slip.py:1164
 msgid "This error can be due to missing or deleted field."
-msgstr ""
+msgstr "Hierdie fout kan te wyte wees aan 'n ontbrekende of verwyderde veld."
 
 #: hr/doctype/leave_type/leave_type.js:16
 msgid "This field allows you to set the maximum number of consecutive leaves an Employee can apply for."
-msgstr ""
+msgstr "Hierdie veld laat u toe om die maksimum aantal opeenvolgende verlofdae in te stel wat 'n werknemer kan aanvra."
 
 #: hr/doctype/leave_type/leave_type.js:11
 msgid "This field allows you to set the maximum number of leaves that can be allocated annually for this Leave Type while creating the Leave Policy"
-msgstr ""
+msgstr "Hierdie veld laat u toe om die maksimum aantal verlofdae in te stel wat jaarliks vir hierdie Verloftipe toegeken kan word wanneer die Verlofbeleid geskep word."
 
 #: overrides/dashboard_overrides.py:57
 msgid "This is based on the attendance of this Employee"
@@ -15426,11 +15426,11 @@ msgstr ""
 
 #: hr/doctype/shift_assignment/shift_assignment.py:59
 msgid "To allow this, enable {0} under {1}."
-msgstr ""
+msgstr "Om dit toe te laat, aktiveer {0} onder {1}."
 
 #: hr/doctype/leave_application/leave_application.js:267
 msgid "To apply for a Half Day check 'Half Day' and select the Half Day Date"
-msgstr ""
+msgstr "Om vir 'n halwe dag aansoek te doen, merk 'Halwe Dag' aan en kies die Halfdagdatum"
 
 #: hr/doctype/leave_period/leave_period.py:20
 msgid "To date can not be equal or less than from date"
@@ -15451,7 +15451,7 @@ msgstr "Tot op datum kan nie groter as werknemer se ontslagdatum nie"
 #: hr/doctype/leave_allocation/leave_allocation.py:178
 #: hr/doctype/leave_application/leave_application.py:180
 msgid "To date cannot be before from date"
-msgstr ""
+msgstr "Tot-datum kan nie voor van-datum wees nie"
 
 #: hr/doctype/leave_ledger_entry/leave_ledger_entry.py:14
 msgid "To date needs to be before from date"
@@ -15465,15 +15465,15 @@ msgstr ""
 
 #: payroll/doctype/gratuity_rule/gratuity_rule.js:37
 msgid "To(Year) year can not be less than From(year)"
-msgstr ""
+msgstr "Tot(Jaar)-jaar kan nie minder wees as Van(jaar) nie"
 
 #: controllers/employee_reminders.py:122
 msgid "Today is {0}'s birthday 🎉"
-msgstr ""
+msgstr "Vandag is dit {0} se verjaardag 🎉"
 
 #: controllers/employee_reminders.py:258
 msgid "Today {0} at our Company! 🎉"
-msgstr ""
+msgstr "Vandag {0} by ons maatskappy! 🎉"
 
 #: hr/report/daily_work_summary_replies/daily_work_summary_replies.py:29
 #: payroll/report/provident_fund_deductions/provident_fund_deductions.py:40
@@ -15627,7 +15627,7 @@ msgstr ""
 
 #: payroll/report/salary_payments_based_on_payment_mode/salary_payments_based_on_payment_mode.py:144
 msgid "Total Gross Pay"
-msgstr ""
+msgstr "Totale bruto betaling"
 
 #: hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:110
 msgid "Total Holidays"
@@ -15635,7 +15635,7 @@ msgstr ""
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:68
 msgid "Total Hours (T)"
-msgstr ""
+msgstr "Totale ure (T)"
 
 #. Label of a Currency field in DocType 'Salary Slip'
 #: payroll/doctype/salary_slip/salary_slip.json
@@ -15671,11 +15671,11 @@ msgstr "Totale blare ingesluit"
 
 #: payroll/report/salary_payments_based_on_payment_mode/salary_payments_based_on_payment_mode.py:158
 msgid "Total Net Pay"
-msgstr ""
+msgstr "Totale netto salaris"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:233
 msgid "Total Non-Billed Hours"
-msgstr ""
+msgstr "Totale nie-gefaktureerde ure"
 
 #. Label of a Currency field in DocType 'Full and Final Statement'
 #: hr/doctype/full_and_final_statement/full_and_final_statement.json
@@ -15701,7 +15701,7 @@ msgstr ""
 
 #: hr/report/employee_exits/employee_exits.py:215
 msgid "Total Resignations"
-msgstr ""
+msgstr "Totale bedankings"
 
 #. Label of a Currency field in DocType 'Expense Claim'
 #: hr/doctype/expense_claim/expense_claim.json
@@ -15743,11 +15743,11 @@ msgstr "Totale voorskotbedrag kan nie groter wees as die totale sanksiebedrag ni
 
 #: hr/doctype/leave_allocation/leave_allocation.py:71
 msgid "Total allocated leaves are more than maximum allocation allowed for {0} leave type for employee {1} in the period"
-msgstr ""
+msgstr "Totale toegekende verlof is meer as die maksimum toekenning toegelaat vir {0} verloftipe vir werknemer {1} in die periode"
 
 #: hr/doctype/leave_allocation/leave_allocation.py:160
 msgid "Total allocated leaves {0} cannot be less than already approved leaves {1} for the period"
-msgstr ""
+msgstr "Totale toegekende verlof {0} kan nie minder wees as reeds goedgekeurde verlof {1} vir die periode nie"
 
 #: payroll/doctype/salary_structure/salary_structure.py:150
 msgid "Total flexible benefit component amount {0} should not be less than max benefits {1}"
@@ -15798,7 +15798,7 @@ msgstr ""
 #: hr/doctype/appraisal/appraisal.py:151
 #: hr/doctype/appraisal_template/appraisal_template.py:25
 msgid "Total weightage for all {0} must add up to 100. Currently, it is {1}%"
-msgstr ""
+msgstr "Die totale gewig vir alle {0} moet 100 wees. Tans is dit {1}%"
 
 #. Label of a Int field in DocType 'Gratuity Rule'
 #: payroll/doctype/gratuity_rule/gratuity_rule.json
@@ -16006,7 +16006,7 @@ msgstr ""
 
 #: hr/utils.py:679
 msgid "Transactions cannot be created for an Inactive Employee {0}."
-msgstr ""
+msgstr "Transaksies kan nie vir 'n onaktiewe werknemer {0} geskep word nie."
 
 #. Label of a Date field in DocType 'Employee Transfer'
 #: hr/doctype/employee_transfer/employee_transfer.json
@@ -16116,7 +16116,7 @@ msgstr "Kan nie die salariskomponent {0} vind nie"
 
 #: hr/doctype/goal/goal.js:54
 msgid "Unarchive"
-msgstr ""
+msgstr "Dearchiveer"
 
 #. Label of a Currency field in DocType 'Expense Claim Advance'
 #: hr/doctype/expense_claim_advance/expense_claim_advance.json
@@ -16132,11 +16132,11 @@ msgstr ""
 
 #: hr/doctype/attendance/attendance.py:218
 msgid "Unlinked Attendance record from Employee Checkins: {}"
-msgstr ""
+msgstr "Bywoningsrekord ontkoppel van werknemer-inkloks: {}"
 
 #: hr/doctype/attendance/attendance.py:221
 msgid "Unlinked logs"
-msgstr ""
+msgstr "Ontkoppelde logs"
 
 #. Description of a Section Break field in DocType 'Employee Attendance Tool'
 #: hr/doctype/employee_attendance_tool/employee_attendance_tool.json
@@ -16203,15 +16203,15 @@ msgstr ""
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:158
 msgid "Unsubmitted Appraisals"
-msgstr ""
+msgstr "Nie-ingediende evaluerings"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:256
 msgid "Untracked Hours"
-msgstr ""
+msgstr "Ongemonitorde ure"
 
 #: hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:82
 msgid "Untracked Hours (U)"
-msgstr ""
+msgstr "Ongemonitorde ure (O)"
 
 #. Label of a Float field in DocType 'Leave Allocation'
 #: hr/doctype/leave_allocation/leave_allocation.json
@@ -16221,7 +16221,7 @@ msgstr "Ongebruikte blare"
 
 #: controllers/employee_reminders.py:69
 msgid "Upcoming Holidays Reminder"
-msgstr ""
+msgstr "Herinnering aan komende vakansiedae"
 
 #: hr/doctype/goal/goal_tree.js:256
 msgid "Update"
@@ -16229,11 +16229,11 @@ msgstr ""
 
 #: hr/doctype/interview/interview.py:73
 msgid "Update Job Applicant"
-msgstr ""
+msgstr "Opdateer werksaansoeker"
 
 #: hr/doctype/goal/goal_tree.js:237 hr/doctype/goal/goal_tree.js:243
 msgid "Update Progress"
-msgstr ""
+msgstr "Opdateer vordering"
 
 #: templates/emails/training_event.html:11
 msgid "Update Response"
@@ -16241,23 +16241,23 @@ msgstr "Update Response"
 
 #: hr/doctype/goal/goal_list.js:36
 msgid "Update Status"
-msgstr ""
+msgstr "Opdateer status"
 
 #: hr/doctype/attendance_request/attendance_request.py:99
 msgid "Updated status from {0} to {1} for date {2} in the attendance record {3}"
-msgstr ""
+msgstr "Status opgedateer van {0} na {1} vir datum {2} in die bywoningsrekord {3}"
 
 #: hr/doctype/interview/interview.py:205
 msgid "Updated the Job Applicant status to {0}"
-msgstr ""
+msgstr "Die status van die werksaansoeker is opgedateer na {0}"
 
 #: overrides/employee_master.py:77
 msgid "Updated the status of Job Offer {0} for the linked Job Applicant {1} to {2}"
-msgstr ""
+msgstr "Status van Werksaanbod {0} vir die gekoppelde Werksaansoeker {1} is na {2} opgedateer"
 
 #: overrides/employee_master.py:63
 msgid "Updated the status of linked Job Applicant {0} to {1}"
-msgstr ""
+msgstr "Status van gekoppelde werksaansoeker {0} is na {1} opgedateer"
 
 #. Name of a DocType
 #: hr/doctype/upload_attendance/upload_attendance.json
@@ -16360,7 +16360,7 @@ msgstr "Vakatures kan nie laer wees as die huidige openings nie"
 
 #: hr/doctype/job_opening/job_opening.py:92
 msgid "Vacancies fulfilled"
-msgstr ""
+msgstr "Vakatures vervul"
 
 #. Label of a Check field in DocType 'Payroll Entry'
 #: payroll/doctype/payroll_entry/payroll_entry.json
@@ -16427,7 +16427,7 @@ msgstr ""
 #: hr/report/vehicle_expenses/vehicle_expenses.json
 #: hr/workspace/expense_claims/expense_claims.json
 msgid "Vehicle Expenses"
-msgstr ""
+msgstr "Voertuiguitgawes"
 
 #. Name of a DocType
 #: hr/doctype/vehicle_log/vehicle_log.json
@@ -16455,7 +16455,7 @@ msgstr "Voertuigdiens"
 #. Name of a DocType
 #: hr/doctype/vehicle_service_item/vehicle_service_item.json
 msgid "Vehicle Service Item"
-msgstr ""
+msgstr "Voertuig-diensitem"
 
 #. Label of a Link in the Expense Claims Workspace
 #: hr/workspace/expense_claims/expense_claims.json
@@ -16478,11 +16478,11 @@ msgstr ""
 #: hr/doctype/appraisal/appraisal.js:48
 #: hr/doctype/appraisal_cycle/appraisal_cycle.js:21
 msgid "View Goals"
-msgstr ""
+msgstr "Bekyk doelwitte"
 
 #: patches/v15_0/notify_about_loan_app_separation.py:16
 msgid "WARNING: Loan Management module has been separated from ERPNext."
-msgstr ""
+msgstr "WAARSKUWING: Leningbestuursmodule is van ERPNext geskei."
 
 #: setup.py:390
 msgid "Walk In"
@@ -16498,11 +16498,11 @@ msgstr ""
 
 #: hr/doctype/leave_application/leave_application.py:395
 msgid "Warning: Insufficient leave balance for Leave Type {0} in this allocation."
-msgstr ""
+msgstr "Waarskuwing: Onvoldoende verlofsaldo vir Verloftipe {0} in hierdie toekenning."
 
 #: hr/doctype/leave_application/leave_application.py:403
 msgid "Warning: Insufficient leave balance for Leave Type {0}."
-msgstr ""
+msgstr "Waarskuwing: Onvoldoende verlofsaldo vir Verloftipe {0}."
 
 #: hr/doctype/leave_application/leave_application.py:348
 msgid "Warning: Leave application contains following block dates"
@@ -16510,7 +16510,7 @@ msgstr "Waarskuwing: Laat aansoek bevat die volgende blokdatums"
 
 #: hr/doctype/shift_assignment/shift_assignment.py:47
 msgid "Warning: {0} already has an active Shift Assignment {1} for some/all of these dates."
-msgstr ""
+msgstr "Waarskuwing: {0} het reeds 'n aktiewe Skoftoewysing {1} vir sommige of alle van hierdie datums."
 
 #: setup.py:389
 msgid "Website Listing"
@@ -16570,7 +16570,7 @@ msgstr ""
 
 #: hr/doctype/leave_type/leave_type.py:35
 msgid "Whereas allocation for Compensatory Leaves is automatically created or updated on submission of Compensatory Leave Request."
-msgstr ""
+msgstr "Terwyl toekenning vir Kompensasieverlof outomaties geskep of bygewerk word wanneer 'n Kompensasieverlofversoek ingedien word."
 
 #. Label of a Text Editor field in DocType 'Employee Referral'
 #: hr/doctype/employee_referral/employee_referral.json
@@ -16586,7 +16586,7 @@ msgstr ""
 
 #: controllers/employee_reminders.py:279 controllers/employee_reminders.py:286
 msgid "Work Anniversary Reminder"
-msgstr ""
+msgstr "Herinnering vir werksjubileum"
 
 #. Label of a Date field in DocType 'Compensatory Leave Request'
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.json
@@ -16753,7 +16753,7 @@ msgstr ""
 
 #: hr/doctype/hr_settings/hr_settings.py:84
 msgid "Yes, Proceed"
-msgstr ""
+msgstr "Ja, gaan voort"
 
 #: hr/doctype/leave_application/leave_application.py:358
 msgid "You are not authorized to approve leaves on Block Dates"
@@ -16769,7 +16769,7 @@ msgstr ""
 
 #: payroll/doctype/gratuity_rule/gratuity_rule.py:22
 msgid "You can not define multiple slabs if you have a slab with no lower and upper limits."
-msgstr ""
+msgstr "U kan nie meerdere skaale definieer as u 'n skaal sonder onder- en bovengrense het nie."
 
 #: hr/doctype/shift_request/shift_request.py:65
 msgid "You can not request for your Default Shift: {0}"
@@ -16777,7 +16777,7 @@ msgstr "U kan nie u verstekskof aanvra nie: {0}"
 
 #: hr/doctype/staffing_plan/staffing_plan.py:93
 msgid "You can only plan for upto {0} vacancies and budget {1} for {2} as per staffing plan {3} for parent company {4}."
-msgstr ""
+msgstr "Jy kan slegs beplan vir tot {0} vakatures en begroting {1} vir {2} volgens personeelplan {3} vir moedermaatskappy {4}."
 
 #: hr/doctype/leave_encashment/leave_encashment.py:37
 msgid "You can only submit Leave Encashment for a valid encashment amount"
@@ -16785,23 +16785,23 @@ msgstr "U kan slegs Verlof-inskrywing vir &#39;n geldige invoegingsbedrag indien
 
 #: api/__init__.py:546
 msgid "You can only upload JPG, PNG, PDF, TXT or Microsoft documents."
-msgstr ""
+msgstr "Jy kan slegs JPG-, PNG-, PDF-, TXT- of Microsoft-dokumente oplaai."
 
 #: overrides/employee_master.py:83
 msgid "You may add additional details, if any, and submit the offer."
-msgstr ""
+msgstr "U kan, indien nodig, bykomende besonderhede byvoeg en die aanbod indien."
 
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.py:53
 msgid "You were only present for Half Day on {}. Cannot apply for a full day compensatory leave"
-msgstr ""
+msgstr "U was slegs vir 'n halwe dag op {} teenwoordig. Kan nie vir 'n volle dag kompensasieverlof aansoek doen nie"
 
 #: hr/doctype/interview/interview.py:106
 msgid "Your Interview session is rescheduled from {0} {1} - {2} to {3} {4} - {5}"
-msgstr ""
+msgstr "U Onderhoud-sessie is herskeduleer van {0} {1} - {2} na {3} {4} - {5}"
 
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.py:100
 msgid "active"
-msgstr ""
+msgstr "aktiewe"
 
 #: hr/doctype/attendance_request/attendance_request.py:93
 msgid "changed the status from {0} to {1} via Attendance Request"
@@ -16841,27 +16841,27 @@ msgstr ""
 #: controllers/employee_reminders.py:120 controllers/employee_reminders.py:253
 #: controllers/employee_reminders.py:257
 msgid "{0} & {1}"
-msgstr ""
+msgstr "{0} en {1}"
 
 #: payroll/doctype/salary_slip/salary_slip.py:2111
 msgid "{0} <br> This error can be due to missing or deleted field."
-msgstr ""
+msgstr "{0} <br> Hierdie fout kan te wyte wees aan 'n ontbrekende of geskrapte veld."
 
 #: hr/doctype/appraisal_cycle/appraisal_cycle.py:155
 msgid "{0} Appraisal(s) are not submitted yet"
-msgstr ""
+msgstr "{0} Evaluering(s) is nog nie ingedien nie"
 
 #: hr/doctype/department_approver/department_approver.py:91
 msgid "{0} Missing"
-msgstr ""
+msgstr "{0} ontbreek"
 
 #: payroll/doctype/salary_structure/salary_structure.py:31
 msgid "{0} Row #{1}: Formula is set but {2} is disabled for the Salary Component {3}."
-msgstr ""
+msgstr "{0} Ry #{1}: Formule is gestel maar {2} is gedeaktiveer vir die salariskomponent {3}."
 
 #: payroll/doctype/salary_structure/salary_structure.js:311
 msgid "{0} Row #{1}: {2} needs to be enabled for the formula to be considered."
-msgstr ""
+msgstr "{0} Ry #{1}: {2} moet geaktiveer word sodat die formule in ag geneem word."
 
 #: hr/doctype/leave_allocation/leave_allocation.py:201
 msgid "{0} already allocated for Employee {1} for period {2} to {3}"
@@ -16873,7 +16873,7 @@ msgstr "{0} bestaan reeds vir werknemer {1} en periode {2}"
 
 #: hr/doctype/shift_assignment/shift_assignment.py:54
 msgid "{0} already has an active Shift Assignment {1} for some/all of these dates."
-msgstr ""
+msgstr "{0} het reeds 'n aktiewe Skoftoewysing {1} vir sommige of al hierdie datums."
 
 #: hr/doctype/leave_application/leave_application.py:151
 msgid "{0} applicable after {1} working days"
@@ -16893,11 +16893,11 @@ msgstr ""
 
 #: hr/doctype/compensatory_leave_request/compensatory_leave_request.py:69
 msgid "{0} is not a holiday."
-msgstr ""
+msgstr "{0} is nie 'n vakansiedag nie."
 
 #: hr/doctype/interview_feedback/interview_feedback.py:29
 msgid "{0} is not allowed to submit Interview Feedback for the Interview: {1}"
-msgstr ""
+msgstr "{0} mag nie Onderhoudterugvoer vir die Onderhoud indien nie: {1}"
 
 #: hr/doctype/leave_application/leave_application.py:566
 msgid "{0} is not in Optional Holiday List"
@@ -16918,7 +16918,7 @@ msgstr "{0} moet ingedien word"
 
 #: hr/doctype/goal/goal.py:194
 msgid "{0} of {1} Completed"
-msgstr ""
+msgstr "{0} van {1} voltooi"
 
 #: hr/doctype/interview_feedback/interview_feedback.py:39
 msgid "{0} submission before {1} is not allowed"
@@ -16926,11 +16926,11 @@ msgstr ""
 
 #: hr/doctype/staffing_plan/staffing_plan.py:129
 msgid "{0} vacancies and {1} budget for {2} already planned for subsidiary companies of {3}. You can only plan for upto {4} vacancies and and budget {5} as per staffing plan {6} for parent company {3}."
-msgstr ""
+msgstr "{0} vakatures en {1} begroting vir {2} is reeds beplan vir filiaalmaatskappye van {3}. Jy kan slegs tot {4} vakatures en begroting {5} beplan volgens personeelplan {6} vir moedermaatskappy {3}."
 
 #: hr/doctype/goal/goal_list.js:73
 msgid "{0} {1} {2}?"
-msgstr ""
+msgstr "{0} {1} {2}?"
 
 #: payroll/doctype/salary_slip/salary_slip.py:1823
 msgid "{0}: Employee email not found, hence email not sent"
@@ -16954,5 +16954,5 @@ msgstr "{} is &#39;n ongeldige bywoningstatus."
 
 #: hr/doctype/job_requisition/job_requisition.js:15
 msgid "{} {} open for this position."
-msgstr ""
+msgstr "{} {} oop vir hierdie posisie."
 

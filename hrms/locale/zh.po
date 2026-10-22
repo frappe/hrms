@@ -605,7 +605,7 @@ msgstr "预支账户为必填项。请在 <a href=\"/app/company/{0}#default_emp
 
 #: hrms/hr/doctype/employee_advance/employee_advance.py:79
 msgid "Advance Account {} currency should be same as Salary Currency of Employee {}. Please select same currency Advance Account"
-msgstr ""
+msgstr "预付科目 {} 的货币应与员工 {} 的工资货币相同。请为预付科目选择相同的货币。"
 
 #. Label of the base_advance_paid (Currency) field in DocType 'Expense Claim
 #. Advance'
@@ -627,7 +627,7 @@ msgstr "高级筛选"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:422
 msgid "All Exchange Gain/Loss amount of {0} has been booked through {1}"
-msgstr ""
+msgstr "{0} 的全部汇兑损益金额已通过 {1} 记账"
 
 #: hrms/hr/doctype/goal/goal_tree.js:215
 msgid "All Goals"
@@ -668,7 +668,7 @@ msgstr "按日分配"
 #. Claim Advance'
 #: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgid "Allocated Amount (Company Currency)"
-msgstr ""
+msgstr "已分配金额（公司货币）"
 
 #. Label of the allocated_leaves (Float) field in DocType 'Leave Adjustment'
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
@@ -679,7 +679,7 @@ msgstr "已分配假期"
 #. Label of the allocated_via (Select) field in DocType 'Earned Leave Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Allocated Via"
-msgstr ""
+msgstr "分配方式"
 
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.js:205
 msgid "Allocating Leave"
@@ -688,7 +688,7 @@ msgstr "假期分配中"
 #. Label of the allocation_date (Date) field in DocType 'Earned Leave Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Allocation Date"
-msgstr ""
+msgstr "分配日期"
 
 #. Label of the section_break_etvg (Section Break) field in DocType 'Leave
 #. Adjustment'
@@ -711,11 +711,11 @@ msgstr "待调整分配"
 
 #: hrms/hr/utils.py:438
 msgid "Allocation was skipped due to exceeding annual allocation set in leave policy"
-msgstr ""
+msgstr "由于超出休假政策中设置的年度分配额，已跳过分配"
 
 #: hrms/hr/utils.py:428
 msgid "Allocation was skipped due to maximum leave allocation limit set in leave type. Please increase the limit and retry failed allocation."
-msgstr ""
+msgstr "由于休假类型中设置了最大假期分配上限，已跳过该分配。请提高上限，并重试失败的分配。"
 
 #. Label of the allow_employee_checkin_from_mobile_app (Check) field in DocType
 #. 'HR Settings'
@@ -1293,7 +1293,7 @@ msgstr "附证明"
 #. Label of the attempted (Check) field in DocType 'Earned Leave Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Attempted"
-msgstr ""
+msgstr "已尝试"
 
 #. Name of a DocType
 #. Label of the attendance (Select) field in DocType 'Training Event Employee'
@@ -1477,7 +1477,7 @@ msgstr "基于目标进度自动化"
 
 #: hrms/hr/utils.py:482
 msgid "Automatic Leave Allocation has failed for the following Earned Leaves: {0}. Please check {1} for more details."
-msgstr ""
+msgstr "以下累计休假的自动假期分配失败：{0}。请查看 {1} 以获取更多详细信息。"
 
 #. Description of the 'Assets Allocated' (Section Break) field in DocType 'Full
 #. and Final Statement'
@@ -1757,11 +1757,11 @@ msgstr "不可在分配期间{0}-{1}外分配假期"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:446
 msgid "Cannot allocate more leaves due to maximum leave allocation limit of {0} in leave policy assignment"
-msgstr ""
+msgstr "由于休假政策分配中的最大休假分配限额为 {0}，无法分配更多休假"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:438
 msgid "Cannot allocate more leaves due to maximum leaves allowed limit of {0} in {1} leave type."
-msgstr ""
+msgstr "由于 {1} 休假类型中允许的最大休假数为 {0}，无法分配更多休假。"
 
 #: hrms/api/roster.py:139
 msgid "Cannot break shift after end date"
@@ -2690,7 +2690,7 @@ msgstr "带薪休假分配频率"
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 msgid "Earned Leave Schedule"
-msgstr ""
+msgstr "累计休假计划"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:141
 msgid "Earned Leaves"
@@ -2805,7 +2805,7 @@ msgstr "员工银行账号"
 #: hrms/patches/v16_0/create_custom_field_for_employee_advance_in_employee_master.py:11
 #: hrms/setup.py:267
 msgid "Employee Advance Account"
-msgstr ""
+msgstr "员工预支科目"
 
 #: frontend/src/views/expense_claim/Dashboard.vue:35
 msgid "Employee Advance Balance"
@@ -3137,7 +3137,7 @@ msgstr "员工推荐"
 
 #: hrms/hr/doctype/employee_referral/employee_referral.py:26
 msgid "Employee Referral {0} already exists for email: {1}"
-msgstr ""
+msgstr "电子邮件 {1} 的员工推荐 {0} 已存在"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:108
 msgid "Employee Referral {0} is not applicable for referral bonus."
@@ -3660,7 +3660,7 @@ msgstr "考试"
 #. Advance'
 #: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgid "Exchange rate of Payment Entry against Employee Advance"
-msgstr ""
+msgstr "针对员工预支的收付款凭证汇率"
 
 #: hrms/hr/doctype/attendance/attendance_list.js:85
 msgid "Exclude Holidays"
@@ -3989,11 +3989,11 @@ msgstr "故障详情"
 #. Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Failure Reason"
-msgstr ""
+msgstr "故障原因"
 
 #: hrms/hr/utils.py:481
 msgid "Failure of Automatic Allocation of Earned Leaves"
-msgstr ""
+msgstr "累计休假自动分配失败"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:37
 #: hrms/public/js/salary_slip_deductions_report_filters.js:20
@@ -4360,7 +4360,7 @@ msgstr "不允许未来日期"
 #. Label of the gain_loss_account (Link) field in DocType 'Expense Claim'
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 msgid "Gain Loss Account"
-msgstr ""
+msgstr "汇兑损益科目"
 
 #: hrms/public/js/utils/index.js:186 hrms/public/js/utils/index.js:214
 msgid "Geolocation Error"
@@ -5295,7 +5295,7 @@ msgstr "发票参考"
 #. Label of the is_allocated (Check) field in DocType 'Earned Leave Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Is Allocated"
-msgstr ""
+msgstr "已分配"
 
 #. Label of the is_applicable_for_referral_bonus (Check) field in DocType
 #. 'Employee Referral'
@@ -5510,7 +5510,7 @@ msgstr "关联职位空缺"
 #: hrms/hr/doctype/job_opening/job_opening.json
 #: hrms/hr/doctype/job_opening_template/job_opening_template.json
 msgid "Job Opening Template"
-msgstr ""
+msgstr "职位空缺模板"
 
 #: hrms/www/jobs/index.html:2 hrms/www/jobs/index.html:5
 msgid "Job Openings"
@@ -6005,7 +6005,7 @@ msgstr "无薪假与已批准的{}记录不符"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:130
 msgid "Leave allocation is skipped for {0}, because number of leaves to be allocated is 0."
-msgstr ""
+msgstr "由于待分配的假期数为 0，已跳过 {0} 的假期分配。"
 
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.py:54
 msgid "Leave allocation {0} is linked with the Leave Application {1}"
@@ -6232,7 +6232,7 @@ msgstr "手动评分"
 #. Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Manually"
-msgstr ""
+msgstr "手动"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:38
 #: hrms/public/js/salary_slip_deductions_report_filters.js:21
@@ -6638,7 +6638,7 @@ msgstr "新班次分配将在此日期后创建"
 
 #: hrms/hr/doctype/employee_advance/employee_advance.py:375
 msgid "No Bank/Cash Account found for currency {0}. Please create one under company {1}."
-msgstr ""
+msgstr "未找到货币 {0} 对应的银行/现金科目。请在公司 {1} 下创建一个。"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:218
 msgid "No Employee Found"
@@ -6926,7 +6926,7 @@ msgstr "岗位数量"
 #. Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Number of Leaves"
-msgstr ""
+msgstr "休假天数"
 
 #. Label of the number_of_withholding_cycles (Int) field in DocType 'Salary
 #. Withholding'
@@ -8460,21 +8460,21 @@ msgstr "退休年龄（年）"
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:441
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:449
 msgid "Retry Failed"
-msgstr ""
+msgstr "重试失败项"
 
 #. Label of the retry_failed_allocations (Button) field in DocType 'Leave
 #. Allocation'
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json
 msgid "Retry Failed Allocations"
-msgstr ""
+msgstr "重试失败的分配"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.js:191
 msgid "Retry Successful"
-msgstr ""
+msgstr "重试成功"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.js:188
 msgid "Retrying allocations"
-msgstr ""
+msgstr "正在重试分配"
 
 #: hrms/hr/doctype/employee_advance/employee_advance.py:185
 msgid "Return amount cannot be greater than unclaimed amount"
@@ -8943,7 +8943,7 @@ msgstr "批准金额"
 #. Claim Detail'
 #: hrms/hr/doctype/expense_claim_detail/expense_claim_detail.json
 msgid "Sanctioned Amount (Company Currency)"
-msgstr ""
+msgstr "批准金额（公司货币）"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:545
 msgid "Sanctioned Amount cannot be greater than Claim Amount in Row {0}."
@@ -9888,7 +9888,7 @@ msgstr "团队动态"
 #. Name of a Workspace
 #: hrms/hr/workspace/tenure/tenure.json
 msgid "Tenure"
-msgstr ""
+msgstr "工龄"
 
 #. Success message of the job-application Web Form
 #: hrms/hr/web_form/job_application/job_application.json
@@ -9985,7 +9985,7 @@ msgstr "人员配置计划{0}下无空缺岗位"
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:20
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:207
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
-msgstr ""
+msgstr "{0} 没有分配薪资结构。请先分配薪资结构。"
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:392
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
@@ -10147,7 +10147,7 @@ msgstr "今天是{0}在我司的纪念日！🎉"
 
 #: hrms/controllers/employee_reminders.py:241
 msgid "Today {0} completed {1} {2} at our Company! 🎉"
-msgstr ""
+msgstr "今天 {0} 在我们公司工作满 {1} {2}！🎉"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:149
 msgid "Total Absent"
@@ -10173,7 +10173,7 @@ msgstr "预支总金额"
 #. Claim'
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 msgid "Total Advance Amount (Company Currency)"
-msgstr ""
+msgstr "总预收/付金额（公司货币）"
 
 #. Label of the total_allocated_leaves (Float) field in DocType 'Salary Slip
 #. Leave'
@@ -10212,7 +10212,7 @@ msgstr "申报总金额"
 #. Claim'
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 msgid "Total Claimed Amount (Company Currency)"
-msgstr ""
+msgstr "总申报金额（公司货币）"
 
 #. Label of the lwp_days (Float) field in DocType 'Payroll Correction'
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.json
@@ -10269,7 +10269,7 @@ msgstr "总成本估算"
 #. Claim'
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 msgid "Total Exchange Gain/Loss"
-msgstr ""
+msgstr "汇兑损益总计"
 
 #. Label of the total_exemption_amount (Currency) field in DocType 'Employee
 #. Tax Exemption Declaration'
@@ -10401,7 +10401,7 @@ msgstr "批准总金额"
 #. 'Expense Claim'
 #: hrms/hr/doctype/expense_claim/expense_claim.json
 msgid "Total Sanctioned Amount (Company Currency)"
-msgstr ""
+msgstr "总批准金额（公司货币）"
 
 #. Label of the total_score (Float) field in DocType 'Employee Performance
 #. Feedback'
@@ -10668,7 +10668,7 @@ msgstr "未认领金额"
 #. Claim Advance'
 #: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgid "Unclaimed Amount (Company Currency)"
-msgstr ""
+msgstr "未报销金额（公司货币）"
 
 #. Option for the 'Status' (Select) field in DocType 'Interview'
 #: hrms/hr/doctype/interview/interview.json
@@ -11310,7 +11310,7 @@ msgstr "年度"
 
 #: hrms/controllers/employee_reminders.py:265
 msgid "years"
-msgstr ""
+msgstr "年"
 
 #: hrms/controllers/employee_reminders.py:120
 #: hrms/controllers/employee_reminders.py:254
@@ -11377,7 +11377,7 @@ msgstr "{0}余额"
 
 #: hrms/controllers/employee_reminders.py:253
 msgid "{0} completed {1} {2}"
-msgstr ""
+msgstr "{0} 已工作满 {1} {2}"
 
 #: frontend/src/components/FormView.vue:528
 msgid "{0} created successfully!"
@@ -11467,7 +11467,7 @@ msgstr "{0} {1} {2}?"
 
 #: hrms/hr/utils.py:454
 msgid "{0}. Check error log for more details."
-msgstr ""
+msgstr "{0}. 更多详细信息请查看错误日志。"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:2190
 msgid "{0}: Employee email not found, hence email not sent"

@@ -494,6 +494,15 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		finally:
 			frappe.db.set_value("Company", "_Test Company", "exchange_gain_loss_account", gain_loss_account)
 
+	def test_advance_amount_must_be_greater_than_zero(self):
+		employee_name = make_employee("Test_zero_amount@employee.advance", "_Test Company")
+		advance = make_employee_advance(employee_name, {"advance_amount": 0}, do_not_submit=True)
+		self.assertRaises(frappe.ValidationError, advance.insert)
+
+		advance.advance_amount = 1
+		advance.insert()
+		self.assertEqual(advance.status, "Draft")
+
 	def test_status_on_discard(self):
 		employee_name = make_employee("Test_status@employee.advance", "_Test Company")
 		advance = make_employee_advance(employee_name, do_not_submit=True)

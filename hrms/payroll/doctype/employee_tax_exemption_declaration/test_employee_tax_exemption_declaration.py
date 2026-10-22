@@ -169,6 +169,29 @@ class TestEmployeeTaxExemptionDeclaration(HRMSTestSuite):
 		# reset
 		frappe.flags.country = current_country
 
+	def test_india_hra_exemption_submitted_by_employee(self):
+		current_country = frappe.flags.country
+		frappe.flags.country = "India"
+
+		employee = frappe.get_value("Employee", {"user_id": "employee@taxexemption.com"}, "name")
+		setup_hra_exemption_prerequisites("Monthly", employee)
+
+		frappe.set_user("employee@taxexemption.com")
+		try:
+			declaration = frappe.get_doc(
+				{
+					"doctype": "Employee Tax Exemption Declaration",
+					"employee": employee,
+					"payroll_period": PAYROLL_PERIOD_NAME,
+					"monthly_house_rent": 50000,
+				}
+			).insert()
+		finally:
+			frappe.set_user("Administrator")
+			frappe.flags.country = current_country
+
+		self.assertEqual(declaration.monthly_hra_exemption, 3000)
+
 	def test_india_hra_exemption_with_daily_payroll_frequency(self):
 		# set country
 		current_country = frappe.flags.country
