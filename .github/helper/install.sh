@@ -18,7 +18,7 @@ paymentsbranch=${PAYMENTS_BRANCH:-${githubbranch%"-hotfix"}}
 lendingbranch="develop"
 
 git clone "https://github.com/${frappeuser}/frappe" --branch "${frappebranch}" --depth 1
-git -C frappe fetch --depth 1 origin 675455cfde1d16075f4f1ae5b33573179601256c
+git -C frappe fetch --depth 1 origin 68a47bb4315f2cec40913659a1ad00bf1656d233
 git -C frappe checkout -B "${frappebranch}" FETCH_HEAD
 bench init --skip-assets --frappe-path ~/frappe --python "$(which python)" frappe-bench
 
