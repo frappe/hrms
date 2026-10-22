@@ -2,11 +2,8 @@
 # See license.txt
 
 import frappe
-<<<<<<< HEAD
 from frappe.tests.utils import FrappeTestCase
-=======
 from frappe.utils import add_days, getdate
->>>>>>> 8aa67a7 (test: cover job requisition completion date)
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.doctype.employee.test_employee import make_employee
