@@ -58,6 +58,7 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		date_of_joining: DF.Date
 		department: DF.Link | None
 		designation: DF.Link | None
+		details_confirmed_on: DF.Datetime | None
 		details_submitted_on: DF.Datetime | None
 		documents: DF.Table[EmployeeOnboardingDocument]
 		documents_requested_on: DF.Datetime | None

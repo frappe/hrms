@@ -7,6 +7,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "section_break_kyxh",
   "job_offer",
   "job_applicant",
   "employee_name",
@@ -105,10 +106,10 @@
    "default": "Create User",
    "fieldname": "onboarding_stage",
    "fieldtype": "Select",
+   "hidden": 1,
    "label": "Onboarding Stage",
    "options": "Create User\nUpload Documents\nAppointment Letter\nCreate Employee\nAssign Masters\nActivities",
-   "read_only": 1,
-   "hidden": 1
+   "read_only": 1
   },
   {
    "allow_on_submit": 1,
@@ -165,8 +166,9 @@
   {
    "fieldname": "table_for_activity",
    "fieldtype": "Section Break",
-   "label": "Onboarding Activities",
-   "hidden": 1
+   "hidden": 1,
+   "hide_border": 1,
+   "label": "Onboarding Activities"
   },
   {
    "fieldname": "activities",
@@ -186,8 +188,9 @@
   {
    "fieldname": "details_section",
    "fieldtype": "Section Break",
-   "label": "Employee Details",
-   "hidden": 1
+   "hidden": 1,
+   "hide_border": 1,
+   "label": "Employee Details"
   },
   {
    "fieldname": "column_break_13",
@@ -208,8 +211,9 @@
   {
    "fieldname": "user_section",
    "fieldtype": "Section Break",
-   "label": "User Account",
-   "hidden": 1
+   "hidden": 1,
+   "hide_border": 1,
+   "label": "User Account"
   },
   {
    "fetch_from": "job_offer.applicant_email",
@@ -248,8 +252,9 @@
   {
    "fieldname": "documents_section",
    "fieldtype": "Section Break",
-   "label": "Documents to Upload",
-   "hidden": 1
+   "hidden": 1,
+   "hide_border": 1,
+   "label": "Documents to Upload"
   },
   {
    "fieldname": "documents",
@@ -286,8 +291,9 @@
   {
    "fieldname": "appointment_letter_section",
    "fieldtype": "Section Break",
-   "label": "Appointment Letter",
-   "hidden": 1
+   "hidden": 1,
+   "hide_border": 1,
+   "label": "Appointment Letter"
   },
   {
    "fieldname": "appointment_letter",
@@ -305,8 +311,9 @@
   {
    "fieldname": "employee_details_section",
    "fieldtype": "Section Break",
-   "label": "Employee Details",
-   "hidden": 1
+   "hidden": 1,
+   "hide_border": 1,
+   "label": "Employee Details"
   },
   {
    "fieldname": "branch",
@@ -343,17 +350,24 @@
   },
   {
    "fieldname": "checklist_section",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "hide_border": 1
   },
   {
    "fieldname": "onboarding_checklist",
    "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "section_break_kyxh",
+   "fieldtype": "Section Break",
+   "hide_border": 1
   }
  ],
+ "hide_toolbar": 1,
  "icon": "user-plus",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-16 17:36:25.601581",
+ "modified": "2026-10-22 18:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Onboarding",
