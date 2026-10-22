@@ -73,6 +73,31 @@ class TestEmployeeUtilization(HRMSTestSuite):
 		expected_data = self.get_expected_data_for_test_employees()
 		self.assertEqual(report[1], expected_data)
 
+	def test_cancelled_timesheets_are_excluded(self):
+		timesheet = frappe.new_doc("Timesheet")
+		timesheet.employee = self.test_emp1
+		timesheet.company = "_Test Company"
+		timesheet.append(
+			"time_logs",
+			{
+				"activity_type": get_random("Activity Type"),
+				"hours": 8,
+				"is_billable": 0,
+				"from_time": "2021-04-02 09:00:00",
+				"to_time": "2021-04-02 17:00:00",
+			},
+		)
+		timesheet.insert()
+		timesheet.submit()
+		timesheet.cancel()
+
+		filters = {"company": "_Test Company", "from_date": "2021-04-01", "to_date": "2021-04-03"}
+		report = execute(filters)
+		emp1_row = next(row for row in report[1] if row["employee"] == self.test_emp1)
+
+		self.assertEqual(emp1_row["billed_hours"], 5.0)
+		self.assertEqual(emp1_row["non_billed_hours"], 0.0)
+
 	def test_utilization_report_for_single_employee(self):
 		filters = {
 			"company": "_Test Company",
