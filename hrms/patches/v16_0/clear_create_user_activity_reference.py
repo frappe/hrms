@@ -7,7 +7,7 @@ def execute():
 		frappe.qb.update(activity)
 		.set(activity.reference_name, None)
 		.where(
-			(activity.parenttype == "Employee Onboarding")
+			(activity.parenttype == "Employee Preboarding")
 			& (activity.action == "Create User")
 			& activity.reference_name.isnotnull()
 		)

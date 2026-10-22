@@ -6,7 +6,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 
-from hrms.hr.doctype.employee_onboarding.onboarding_activities import (
+from hrms.hr.doctype.employee_preboarding.preboarding_activities import (
 	STANDARD_ACTIVITIES,
 	add_standard_activities,
 	set_action_defaults,

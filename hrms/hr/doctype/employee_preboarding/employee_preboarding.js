@@ -1,7 +1,7 @@
 // Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on("Employee Onboarding", {
+frappe.ui.form.on("Employee Preboarding", {
 	setup: function (frm) {
 		frm.set_query("job_offer", function () {
 			return {
@@ -14,7 +14,7 @@ frappe.ui.form.on("Employee Onboarding", {
 	},
 
 	onload_post_render: function (frm) {
-		frappe.require("employee_onboarding_checklist.bundle.js", () => {
+		frappe.require("employee_preboarding_checklist.bundle.js", () => {
 			frm.trigger("render_checklist");
 		});
 	},
@@ -43,10 +43,10 @@ frappe.ui.form.on("Employee Onboarding", {
 	},
 
 	render_checklist: function (frm) {
-		if (!hrms.ui?.EmployeeOnboardingChecklist) return;
+		if (!hrms.ui?.EmployeePreboardingChecklist) return;
 
-		frm._onboarding_checklist ??= new hrms.ui.EmployeeOnboardingChecklist({ frm });
-		frm._onboarding_checklist.render();
+		frm._preboarding_checklist ??= new hrms.ui.EmployeePreboardingChecklist({ frm });
+		frm._preboarding_checklist.render();
 	},
 
 	employee_onboarding_template: function (frm) {

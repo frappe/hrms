@@ -22,7 +22,7 @@ def after_install():
 	set_single_defaults()
 	setup_repost_defaults()
 	create_default_role_profiles()
-	create_onboarding_candidate_role()
+	create_preboarding_candidate_role()
 	create_default_onboarding_template()
 	run_post_install_patches()
 	add_default_hr_permissions()
@@ -780,24 +780,24 @@ def create_default_onboarding_template():
 	create_default_template()
 
 
-def create_onboarding_candidate_role():
-	from hrms.hr.doctype.employee_onboarding.employee_onboarding import (
-		ONBOARDING_CANDIDATE_ROLE,
+def create_preboarding_candidate_role():
+	from hrms.hr.doctype.employee_preboarding.employee_preboarding import (
 		PORTAL_ROUTE,
+		PREBOARDING_CANDIDATE_ROLE,
 	)
 
 	# Role.home_page is read first by frappe's get_home_page, so the candidate lands on
 	# the portal after logging in instead of the generic /me page.
 	home_page = PORTAL_ROUTE.lstrip("/")
 
-	if frappe.db.exists("Role", ONBOARDING_CANDIDATE_ROLE):
-		frappe.db.set_value("Role", ONBOARDING_CANDIDATE_ROLE, "home_page", home_page)
+	if frappe.db.exists("Role", PREBOARDING_CANDIDATE_ROLE):
+		frappe.db.set_value("Role", PREBOARDING_CANDIDATE_ROLE, "home_page", home_page)
 		return
 
 	frappe.get_doc(
 		{
 			"doctype": "Role",
-			"role_name": ONBOARDING_CANDIDATE_ROLE,
+			"role_name": PREBOARDING_CANDIDATE_ROLE,
 			"desk_access": 0,
 			"is_custom": 0,
 			"home_page": home_page,
@@ -988,7 +988,7 @@ def get_salary_slip_loan_fields():
 	}
 
 
-# Project and Task perms are needed for the Employee Onboarding / Separation flow, which
+# Project and Task perms are needed for the Employee Preboarding / Separation flow, which
 # creates a Project and Tasks and assigns them to users. assign_to.add() does a read check
 # on Task, and on_cancel deletes the Project and its Tasks.
 _PROJECT_TASK_PERMS = {

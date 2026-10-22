@@ -1,4 +1,4 @@
-// What each onboarding activity action shows and does. A template row names its action;
+// What each preboarding activity action shows and does. A template row names its action;
 // the row's value, lock and buttons come from the handler for that action.
 
 const USER_FIELDS = ["personal_email", "company_email", "create_user_for"];
@@ -85,7 +85,7 @@ function open_action(doctype, name) {
 	};
 }
 
-// The onboarding's own fields, edited in a dialog and saved before the action runs.
+// The preboarding's own fields, edited in a dialog and saved before the action runs.
 function open_fields_dialog(list, { title, fieldnames, primary_label, method, freeze_message }) {
 	const frm = list.frm;
 	const fields = fieldnames
@@ -135,7 +135,7 @@ function open_letter_dialog(list) {
 	});
 	dialog.fields_dict.preview.$wrapper.append(
 		$("<p class='text-ink-gray-6'></p>").text(__("Emails the letter to {0}.", [recipient])),
-		$('<iframe class="eoc-letter-preview"></iframe>').attr({
+		$('<iframe class="epc-letter-preview"></iframe>').attr({
 			src: url,
 			title: __("Appointment letter preview"),
 		}),
@@ -151,14 +151,14 @@ async function create_appointment_letter(list) {
 		applicant_name: doc.employee_name,
 		company: doc.company,
 		appointment_date: doc.date_of_joining,
-		employee_onboarding: doc.name,
+		employee_preboarding: doc.name,
 	});
 }
 
 async function create_employee(list) {
 	await list.save_if_dirty();
 	const doc = await frappe.xcall(
-		"hrms.hr.doctype.employee_onboarding.employee_onboarding.make_employee",
+		"hrms.hr.doctype.employee_preboarding.employee_preboarding.make_employee",
 		{ source_name: list.frm.doc.name },
 	);
 	const [employee] = frappe.model.sync(doc);

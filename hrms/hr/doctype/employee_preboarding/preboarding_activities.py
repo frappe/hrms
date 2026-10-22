@@ -74,14 +74,14 @@ STANDARD_ACTIVITIES = [
 ]
 
 
-class OnboardingActivities:
-	"""The checklist rows of an Employee Onboarding.
+class PreboardingActivities:
+	"""The checklist rows of an Employee Preboarding.
 
-	The rows come from the onboarding's template only, so HR decides there which standard
-	activities an onboarding gets and who each one is assigned to.
+	The rows come from the preboarding's template only, so HR decides there which standard
+	activities a preboarding gets and who each one is assigned to.
 	A row with an action is completed by the record it creates, not by whoever ticks it; only
 	Manual rows are completed by hand. An unfinished row may carry a status, In Progress or Stuck.
-	Row changes are written per row, so several people can work the same onboarding at once
+	Row changes are written per row, so several people can work the same preboarding at once
 	without one save overwriting another.
 	"""
 
@@ -104,10 +104,10 @@ class OnboardingActivities:
 			row.due_date = add_days(self.boarding_begins_on, row.begin_on or 0)
 
 	def validate_unique_activities(self):
-		validate_unique_actions(self.activities, _("this onboarding"))
+		validate_unique_actions(self.activities, _("this preboarding"))
 
 	def get_template_hint(self) -> str | None:
-		"""The onboarding's template, while it still has only the standard activities."""
+		"""The preboarding's template, while it still has only the standard activities."""
 		template = self.employee_onboarding_template
 		if not template:
 			return None
@@ -175,7 +175,7 @@ class OnboardingActivities:
 		}
 
 	def save_activity_states(self):
-		"""Persist reconciled rows and the status without saving the whole onboarding."""
+		"""Persist reconciled rows and the status without saving the whole preboarding."""
 		for row in self.reconcile_activities():
 			row.db_update()
 		self.set_boarding_status()
@@ -312,7 +312,7 @@ def close_todo(name: str, status: str) -> None:
 
 def get_matching_template(doc) -> str | None:
 	"""The newest template whose company, department, designation and grade each match the
-	onboarding's or are left blank, so a blank template applies to everyone."""
+	preboarding's or are left blank, so a blank template applies to everyone."""
 	Template = frappe.qb.DocType("Employee Onboarding Template")
 	query = frappe.qb.from_(Template).select(Template.name).orderby(Template.creation, order=Order.desc)
 	for field in TEMPLATE_MATCH_FIELDS:

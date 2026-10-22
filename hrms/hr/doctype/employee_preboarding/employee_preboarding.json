@@ -1,6 +1,6 @@
 {
  "actions": [],
- "autoname": "HR-EMP-ONB-.YYYY.-.#####",
+ "autoname": "HR-EMP-PRB-.YYYY.-.#####",
  "creation": "2018-05-09 04:57:20.016220",
  "doctype": "DocType",
  "documentation": "https://docs.frappe.io/hr/employee-onboarding",
@@ -17,10 +17,9 @@
   "boarding_begins_on",
   "employee_onboarding_template",
   "boarding_status",
-  "onboarding_stage",
   "project",
   "checklist_section",
-  "onboarding_checklist",
+  "preboarding_checklist",
   "details_section",
   "employee",
   "department",
@@ -103,15 +102,6 @@
    "read_only": 1
   },
   {
-   "default": "Create User",
-   "fieldname": "onboarding_stage",
-   "fieldtype": "Select",
-   "hidden": 1,
-   "label": "Onboarding Stage",
-   "options": "Create User\nUpload Documents\nAppointment Letter\nCreate Employee\nAssign Masters\nActivities",
-   "read_only": 1
-  },
-  {
    "allow_on_submit": 1,
    "default": "0",
    "fieldname": "notify_users_by_email",
@@ -168,7 +158,7 @@
    "fieldtype": "Section Break",
    "hidden": 1,
    "hide_border": 1,
-   "label": "Onboarding Activities"
+   "label": "Preboarding Activities"
   },
   {
    "fieldname": "activities",
@@ -181,7 +171,7 @@
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Employee Onboarding",
+   "options": "Employee Preboarding",
    "print_hide": 1,
    "read_only": 1
   },
@@ -199,7 +189,7 @@
   {
    "fieldname": "boarding_begins_on",
    "fieldtype": "Date",
-   "label": "Onboarding Begins On",
+   "label": "Preboarding Begins On",
    "reqd": 1
   },
   {
@@ -260,7 +250,7 @@
    "fieldname": "documents",
    "fieldtype": "Table",
    "label": "Documents",
-   "options": "Employee Onboarding Document"
+   "options": "Employee Preboarding Document"
   },
   {
    "fieldname": "documents_requested_on",
@@ -354,7 +344,7 @@
    "hide_border": 1
   },
   {
-   "fieldname": "onboarding_checklist",
+   "fieldname": "preboarding_checklist",
    "fieldtype": "HTML"
   },
   {
@@ -367,10 +357,10 @@
  "icon": "user-plus",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-22 18:00:00.000000",
+ "modified": "2026-10-22 19:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
- "name": "Employee Onboarding",
+ "name": "Employee Preboarding",
  "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [

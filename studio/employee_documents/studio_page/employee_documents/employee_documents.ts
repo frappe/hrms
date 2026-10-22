@@ -2,15 +2,15 @@ import { computed, ref } from "vue";
 import { call, toast } from "frappe-ui";
 
 const GET_FORM =
-	"hrms.hr.doctype.employee_onboarding.employee_onboarding_portal.get_onboarding_form";
+	"hrms.hr.doctype.employee_preboarding.employee_preboarding_portal.get_preboarding_form";
 const SAVE_FORM =
-	"hrms.hr.doctype.employee_onboarding.employee_onboarding_portal.save_onboarding_form";
+	"hrms.hr.doctype.employee_preboarding.employee_preboarding_portal.save_preboarding_form";
 const SUBMIT_FORM =
-	"hrms.hr.doctype.employee_onboarding.employee_onboarding_portal.submit_onboarding_form";
+	"hrms.hr.doctype.employee_preboarding.employee_preboarding_portal.submit_preboarding_form";
 
 const BLOCKED_MESSAGES: Record<string, string> = {
 	no_role: "This form is only open to people who were invited to it.",
-	no_onboarding: "No onboarding is assigned to this account. Check with your HR contact.",
+	no_preboarding: "No preboarding is assigned to this account. Check with your HR contact.",
 };
 
 const FULL_WIDTH = "100%";
@@ -279,7 +279,7 @@ export default async function setup() {
 			const response = await call(GET_FORM);
 			if (!response?.allowed) {
 				blockedMessage.value =
-					BLOCKED_MESSAGES[response?.reason] || BLOCKED_MESSAGES.no_onboarding;
+					BLOCKED_MESSAGES[response?.reason] || BLOCKED_MESSAGES.no_preboarding;
 				return;
 			}
 			form.value = response;

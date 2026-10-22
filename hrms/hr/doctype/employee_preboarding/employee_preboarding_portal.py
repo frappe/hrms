@@ -3,8 +3,8 @@
 
 """Backend for the Employee Documents portal.
 
-The onboarding employee holds the Employee Onboarding Candidate role, which carries no
-DocType permissions. Every method here resolves the onboarding from the session user and
+The preboarding employee holds the Employee Preboarding Candidate role, which carries no
+DocType permissions. Every method here resolves the preboarding from the session user and
 writes with ignore_permissions, so the session is the only gate and no HR field is
 reachable from the portal.
 """
@@ -173,19 +173,19 @@ SCALAR_FIELDNAMES = {field["fieldname"] for section in PORTAL_SECTIONS for field
 TABLE_FIELDNAMES = {table["fieldname"]: {f["fieldname"] for f in table["fields"]} for table in PORTAL_TABLES}
 
 
-def get_own_onboarding(for_update: bool = False) -> "frappe.Document":
-	"""Resolve the session user's onboarding, or refuse.
+def get_own_preboarding(for_update: bool = False) -> "frappe.Document":
+	"""Resolve the session user's preboarding, or refuse.
 
 	This is the only authorisation check in the portal. The candidate role grants no
-	DocType permission, so a user with no onboarding of their own reaches nothing.
+	DocType permission, so a user with no preboarding of their own reaches nothing.
 	"""
 	name = frappe.db.get_value(
-		"Employee Onboarding", {"user": frappe.session.user, "docstatus": ["!=", 2]}, "name"
+		"Employee Preboarding", {"user": frappe.session.user, "docstatus": ["!=", 2]}, "name"
 	)
 	if not name:
-		frappe.throw(_("No onboarding is assigned to you."), frappe.PermissionError)
+		frappe.throw(_("No preboarding is assigned to you."), frappe.PermissionError)
 
-	doc = frappe.get_doc("Employee Onboarding", name)
+	doc = frappe.get_doc("Employee Preboarding", name)
 	if for_update and (doc.details_confirmed_on or doc.employee):
 		frappe.throw(_("Your details are with HR now and can no longer be changed."))
 
@@ -193,27 +193,27 @@ def get_own_onboarding(for_update: bool = False) -> "frappe.Document":
 
 
 @frappe.whitelist()
-def get_onboarding_form() -> dict:
+def get_preboarding_form() -> dict:
 	"""Answer instead of throwing, so the portal can render a reason rather than a toast.
 
-	save_onboarding_form still refuses hard - this is for the page shell, not the gate.
+	save_preboarding_form still refuses hard - this is for the page shell, not the gate.
 	"""
-	from hrms.hr.doctype.employee_onboarding.employee_onboarding import ONBOARDING_CANDIDATE_ROLE
+	from hrms.hr.doctype.employee_preboarding.employee_preboarding import PREBOARDING_CANDIDATE_ROLE
 
-	if ONBOARDING_CANDIDATE_ROLE not in frappe.get_roles():
+	if PREBOARDING_CANDIDATE_ROLE not in frappe.get_roles():
 		return {"allowed": False, "reason": "no_role"}
 
 	name = frappe.db.get_value(
-		"Employee Onboarding", {"user": frappe.session.user, "docstatus": ["!=", 2]}, "name"
+		"Employee Preboarding", {"user": frappe.session.user, "docstatus": ["!=", 2]}, "name"
 	)
 	if not name:
-		return {"allowed": False, "reason": "no_onboarding"}
+		return {"allowed": False, "reason": "no_preboarding"}
 
-	doc = frappe.get_doc("Employee Onboarding", name)
+	doc = frappe.get_doc("Employee Preboarding", name)
 
 	return {
 		"allowed": True,
-		"onboarding": doc.name,
+		"preboarding": doc.name,
 		"employee_name": doc.employee_name,
 		"company": doc.company,
 		"designation": doc.designation,
@@ -241,8 +241,8 @@ def get_onboarding_form() -> dict:
 
 
 @frappe.whitelist(methods=["POST"])
-def save_onboarding_form(details: str | dict, documents: str | list | None = None) -> dict:
-	doc = get_own_onboarding(for_update=True)
+def save_preboarding_form(details: str | dict, documents: str | list | None = None) -> dict:
+	doc = get_own_preboarding(for_update=True)
 
 	clean = clean_details(details)
 	doc.db_set("submitted_details", json.dumps(clean), update_modified=False)
@@ -278,18 +278,18 @@ def get_link_options(doctype: str) -> list[str]:
 
 
 @frappe.whitelist(methods=["POST"])
-def submit_onboarding_form(details: str | dict, documents: str | list | None = None) -> dict:
+def submit_preboarding_form(details: str | dict, documents: str | list | None = None) -> dict:
 	"""Final hand-off. The employee cannot edit after this, only HR can."""
-	save_onboarding_form(details, documents)
+	save_preboarding_form(details, documents)
 
-	doc = get_own_onboarding(for_update=True)
+	doc = get_own_preboarding(for_update=True)
 	doc.db_set("details_confirmed_on", now_datetime(), update_modified=False)
 
 	return {"confirmed_on": doc.details_confirmed_on}
 
 
 def get_hr_contact(doc: "frappe.Document") -> str:
-	"""Who the employee should follow up with - whoever raised the onboarding."""
+	"""Who the employee should follow up with - whoever raised the preboarding."""
 	return frappe.db.get_value("User", doc.owner, "full_name") or doc.owner
 
 
@@ -312,7 +312,7 @@ def clean_details(details: str | dict) -> dict:
 
 
 def save_documents(doc: "frappe.Document", documents: str | list | None) -> None:
-	"""Write the uploaded file back to its row and attach it to the onboarding.
+	"""Write the uploaded file back to its row and attach it to the preboarding.
 
 	The portal uploads an unattached private File, which the employee owns and so may
 	create. Linking it here keeps it off the orphan list and lets HR read it.
@@ -329,11 +329,11 @@ def save_documents(doc: "frappe.Document", documents: str | list | None) -> None
 		if attachment is None or attachment == row.attachment:
 			continue
 
-		frappe.db.set_value("Employee Onboarding Document", row.name, "attachment", attachment)
-		attach_file_to_onboarding(doc, attachment)
+		frappe.db.set_value("Employee Preboarding Document", row.name, "attachment", attachment)
+		attach_file_to_preboarding(doc, attachment)
 
 
-def attach_file_to_onboarding(doc: "frappe.Document", file_url: str) -> None:
+def attach_file_to_preboarding(doc: "frappe.Document", file_url: str) -> None:
 	file_name = frappe.db.get_value("File", {"file_url": file_url, "attached_to_name": ["is", "not set"]})
 	if not file_name:
 		return
@@ -358,7 +358,7 @@ def parse_details(submitted_details: str | None) -> dict:
 
 def seed_details(doc: "frappe.Document") -> dict:
 	"""Pre-fill what HR already knows, so the employee is not retyping it."""
-	from hrms.hr.doctype.employee_onboarding.employee_onboarding import split_full_name
+	from hrms.hr.doctype.employee_preboarding.employee_preboarding import split_full_name
 
 	first_name, middle_name, last_name = split_full_name(doc.employee_name)
 

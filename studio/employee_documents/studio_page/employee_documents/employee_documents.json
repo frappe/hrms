@@ -58,7 +58,7 @@
            "componentId": "textblock-48",
            "componentName": "TextBlock",
            "componentProps": {
-            "text": "Onboarding",
+            "text": "Preboarding",
             "fontSize": "text-base",
             "tag": "h1"
            },
@@ -1458,7 +1458,7 @@
            "componentId": "textblock-48",
            "componentName": "TextBlock",
            "componentProps": {
-            "text": "Onboarding",
+            "text": "Preboarding",
             "fontSize": "text-base",
             "tag": "h1"
            },

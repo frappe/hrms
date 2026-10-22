@@ -1,4 +1,4 @@
-import { get_action_handler } from "./onboarding_actions.js";
+import { get_action_handler } from "./preboarding_actions.js";
 
 frappe.provide("hrms.ui");
 
@@ -6,11 +6,11 @@ const STATUS = { "In Progress": "in_progress", Stuck: "stuck" };
 
 const ROW_STATUS = { in_progress: "In Progress", stuck: "Stuck" };
 
-hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
+hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 	constructor({ frm }) {
 		this.frm = frm;
 		this.checklist = new frappe.ui.Checklist({
-			title: __("Onboarding Checklist"),
+			title: __("Preboarding Checklist"),
 			on_skip: (item) => this.call("skip_activity", { row: item.id }),
 			on_unskip: (item) => this.call("unskip_activity", { row: item.id }),
 			on_assign: (item, user) => this.update_row("assign_activity", { row: item.id, user }),
@@ -25,9 +25,9 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 	}
 
 	render() {
-		const $wrapper = this.frm.fields_dict.onboarding_checklist.$wrapper;
+		const $wrapper = this.frm.fields_dict.preboarding_checklist.$wrapper;
 		if (!$.contains($wrapper[0], this.checklist.el)) {
-			this.$hint = $('<div class="eoc-template-hint"></div>');
+			this.$hint = $('<div class="epc-template-hint"></div>');
 			$wrapper.empty().append(this.$hint, this.checklist.$el);
 		}
 		this.render_template_hint();
@@ -42,7 +42,7 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 
 		this.$hint.append(
 			frappe.ui.alert({
-				title: __("These are the standard onboarding tasks"),
+				title: __("These are the standard preboarding tasks"),
 				description: __("Edit the template to add your own tasks, owners and due dates."),
 				footer: frappe.ui.button({
 					label: __("Edit Template"),
@@ -89,7 +89,7 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 	}
 
 	// Activity methods write their row straight to the database, so the form reloads rather
-	// than saves; another user may be working on the same onboarding.
+	// than saves; another user may be working on the same preboarding.
 	async call(method, args = {}, freeze_message) {
 		await this.save_if_dirty();
 		await this.frm.call({ method, doc: this.frm.doc, args, freeze: true, freeze_message });

@@ -10,10 +10,10 @@ from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe.utils import get_link_to_form, now_datetime
 
-from hrms.hr.doctype.employee_onboarding.onboarding_activities import OnboardingActivities
+from hrms.hr.doctype.employee_preboarding.preboarding_activities import PreboardingActivities
 
 EMPLOYEE_SELF_SERVICE_ROLE = "Employee Self Service"
-ONBOARDING_CANDIDATE_ROLE = "Employee Onboarding Candidate"
+PREBOARDING_CANDIDATE_ROLE = "Employee Preboarding Candidate"
 PORTAL_ROUTE = "/employee-documents"
 
 
@@ -28,7 +28,7 @@ def split_full_name(full_name: str) -> tuple[str, str, str]:
 	return parts[0], parts[1], " ".join(parts[2:])
 
 
-class EmployeeOnboarding(OnboardingActivities, Document):
+class EmployeePreboarding(PreboardingActivities, Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -40,8 +40,8 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		from hrms.hr.doctype.employee_boarding_activity.employee_boarding_activity import (
 			EmployeeBoardingActivity,
 		)
-		from hrms.hr.doctype.employee_onboarding_document.employee_onboarding_document import (
-			EmployeeOnboardingDocument,
+		from hrms.hr.doctype.employee_preboarding_document.employee_preboarding_document import (
+			EmployeePreboardingDocument,
 		)
 
 		activities: DF.Table[EmployeeBoardingActivity]
@@ -60,7 +60,7 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		designation: DF.Link | None
 		details_confirmed_on: DF.Datetime | None
 		details_submitted_on: DF.Datetime | None
-		documents: DF.Table[EmployeeOnboardingDocument]
+		documents: DF.Table[EmployeePreboardingDocument]
 		documents_requested_on: DF.Datetime | None
 		employee: DF.Link | None
 		employee_grade: DF.Link | None
@@ -72,14 +72,6 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		job_applicant: DF.Link | None
 		job_offer: DF.Link
 		notify_users_by_email: DF.Check
-		onboarding_stage: DF.Literal[
-			"Create User",
-			"Upload Documents",
-			"Appointment Letter",
-			"Create Employee",
-			"Assign Masters",
-			"Activities",
-		]
 		personal_email: DF.Data | None
 		project: DF.Link | None
 		reports_to: DF.Link | None
@@ -96,7 +88,7 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 
 	def validate(self):
 		self.set_employee()
-		self.validate_duplicate_employee_onboarding()
+		self.validate_duplicate_employee_preboarding()
 		self.set_activities()
 		self.validate_unique_activities()
 		self.reconcile_activities()
@@ -112,14 +104,14 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		if not self.employee:
 			self.employee = frappe.db.get_value("Employee", {"job_offer": self.job_offer}, "name")
 
-	def validate_duplicate_employee_onboarding(self):
-		emp_onboarding = frappe.db.exists(
-			"Employee Onboarding", {"job_offer": self.job_offer, "docstatus": ("!=", 2)}
+	def validate_duplicate_employee_preboarding(self):
+		emp_preboarding = frappe.db.exists(
+			"Employee Preboarding", {"job_offer": self.job_offer, "docstatus": ("!=", 2)}
 		)
-		if emp_onboarding and emp_onboarding != self.name:
+		if emp_preboarding and emp_preboarding != self.name:
 			frappe.throw(
-				_("Employee Onboarding: {0} already exists for Job Offer: {1}").format(
-					frappe.bold(emp_onboarding), frappe.bold(self.job_offer)
+				_("Employee Preboarding: {0} already exists for Job Offer: {1}").format(
+					frappe.bold(emp_preboarding), frappe.bold(self.job_offer)
 				)
 			)
 
@@ -151,7 +143,7 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 
 		if frappe.db.exists("User", email):
 			self.db_set("user", email)
-			self.grant_onboarding_candidate_role()
+			self.grant_preboarding_candidate_role()
 			self.save_activity_states()
 			return email
 
@@ -168,14 +160,14 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 				"enabled": 1,
 			}
 		)
-		user.append_roles(ONBOARDING_CANDIDATE_ROLE)
+		user.append_roles(PREBOARDING_CANDIDATE_ROLE)
 		user.insert(ignore_permissions=True)
 
 		self.db_set("user", user.name)
 		self.save_activity_states()
 		return user.name
 
-	def grant_onboarding_candidate_role(self) -> None:
+	def grant_preboarding_candidate_role(self) -> None:
 		"""Let the linked user open the document upload portal.
 
 		The role carries no DocType permissions - the portal's whitelisted methods are
@@ -186,10 +178,10 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 			return
 
 		user = frappe.get_doc("User", self.user)
-		if ONBOARDING_CANDIDATE_ROLE in {row.role for row in user.roles}:
+		if PREBOARDING_CANDIDATE_ROLE in {row.role for row in user.roles}:
 			return
 
-		user.append_roles(ONBOARDING_CANDIDATE_ROLE)
+		user.append_roles(PREBOARDING_CANDIDATE_ROLE)
 		user.save(ignore_permissions=True)
 
 	def grant_employee_self_service(self) -> None:
@@ -240,7 +232,7 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		"""Schema and values for the HR-side review of what the employee sent."""
 		self.check_permission("read")
 
-		from hrms.hr.doctype.employee_onboarding.employee_onboarding_portal import (
+		from hrms.hr.doctype.employee_preboarding.employee_preboarding_portal import (
 			PORTAL_SECTIONS,
 			PORTAL_TABLES,
 			parse_details,
@@ -263,7 +255,7 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 				_("Employee {0} is already created").format(get_link_to_form("Employee", self.employee))
 			)
 
-		from hrms.hr.doctype.employee_onboarding.employee_onboarding_portal import clean_details
+		from hrms.hr.doctype.employee_preboarding.employee_preboarding_portal import clean_details
 
 		self.db_set("submitted_details", json.dumps(clean_details(details)))
 
@@ -274,7 +266,7 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		if self.appointment_letter:
 			return self.appointment_letter
 
-		letter = frappe.db.get_value("Appointment Letter", {"employee_onboarding": self.name}, "name")
+		letter = frappe.db.get_value("Appointment Letter", {"employee_preboarding": self.name}, "name")
 		if letter:
 			self.db_set("appointment_letter", letter)
 		return letter
@@ -323,7 +315,7 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		self.save_activity_states()
 
 	@frappe.whitelist(methods=["POST"])
-	def mark_onboarding_as_completed(self) -> None:
+	def mark_preboarding_as_completed(self) -> None:
 		self.check_permission("write")
 		self.complete_remaining_activities()
 		self.save()
@@ -344,10 +336,10 @@ def make_employee(source_name: str, target_doc: str | Document | None = None) ->
 		apply_submitted_details(source, target)
 
 	return get_mapped_doc(
-		"Employee Onboarding",
+		"Employee Preboarding",
 		source_name,
 		{
-			"Employee Onboarding": {
+			"Employee Preboarding": {
 				"doctype": "Employee",
 				"field_map": {"employee_grade": "grade"},
 				"field_no_map": ["employee_name", "amended_from", "naming_series"],
@@ -364,7 +356,7 @@ def apply_submitted_details(source: Document, target: Document) -> None:
 	HR's own values are set first, so anything the employee supplied wins. Blank entries
 	are skipped so an untouched portal field never clears a value HR already set.
 	"""
-	from hrms.hr.doctype.employee_onboarding.employee_onboarding_portal import (
+	from hrms.hr.doctype.employee_preboarding.employee_preboarding_portal import (
 		SCALAR_FIELDNAMES,
 		TABLE_FIELDNAMES,
 		parse_details,
@@ -385,19 +377,19 @@ def apply_submitted_details(source: Document, target: Document) -> None:
 
 
 def unlink_deleted_user(user: Document, method: str | None = None) -> None:
-	"""Clear a deleted user from its onboarding and open the Create User row again.
+	"""Clear a deleted user from its preboarding and open the Create User row again.
 
-	The onboarding keeps the user as a plain value, not a Link, so deleting the user is not
-	blocked by the onboarding.
+	The preboarding keeps the user as a plain value, not a Link, so deleting the user is not
+	blocked by the preboarding.
 	"""
-	for name in frappe.get_all("Employee Onboarding", filters={"user": user.name}, pluck="name"):
-		onboarding = frappe.get_doc("Employee Onboarding", name)
-		onboarding.db_set("user", None)
-		onboarding.save_activity_states()
+	for name in frappe.get_all("Employee Preboarding", filters={"user": user.name}, pluck="name"):
+		preboarding = frappe.get_doc("Employee Preboarding", name)
+		preboarding.db_set("user", None)
+		preboarding.save_activity_states()
 
 
-def rename_onboarding_user(
+def rename_preboarding_user(
 	user: Document, method: str | None, old_name: str, new_name: str, merge: bool = False
 ) -> None:
-	"""Keep the onboarding's user, a plain value, pointing at a renamed user."""
-	frappe.db.set_value("Employee Onboarding", {"user": old_name}, "user", new_name, update_modified=False)
+	"""Keep the preboarding's user, a plain value, pointing at a renamed user."""
+	frappe.db.set_value("Employee Preboarding", {"user": old_name}, "user", new_name, update_modified=False)

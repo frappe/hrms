@@ -1,5 +1,5 @@
-from hrms.setup import create_onboarding_candidate_role
+from hrms.setup import create_preboarding_candidate_role
 
 
 def execute():
-	create_onboarding_candidate_role()
+	create_preboarding_candidate_role()

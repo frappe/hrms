@@ -98,22 +98,22 @@ frappe.ui.form.on("Job Offer", {
 		const accepted =
 			!frm.doc.__islocal && frm.doc.status == "Accepted" && frm.doc.docstatus === 1;
 
-		if (accepted && !onload.employee_onboarding) {
+		if (accepted && !onload.employee_preboarding) {
 			frm.add_custom_button(
-				__("Employee Onboarding"),
+				__("Employee Preboarding"),
 				function () {
-					erpnext.job_offer.make_employee_onboarding(frm);
+					erpnext.job_offer.make_employee_preboarding(frm);
 				},
 				__("Create"),
 			);
 			frm.page.set_inner_btn_group_as_primary(__("Create"));
 		}
 
-		if (onload.employee_onboarding) {
+		if (onload.employee_preboarding) {
 			frm.add_custom_button(
-				__("Employee Onboarding"),
+				__("Employee Preboarding"),
 				function () {
-					frappe.set_route("Form", "Employee Onboarding", onload.employee_onboarding);
+					frappe.set_route("Form", "Employee Preboarding", onload.employee_preboarding);
 				},
 				__("View"),
 			);
@@ -256,9 +256,9 @@ function offer_letter_message(doc) {
 	return lines.map((line) => `<p>${line}</p>`).join("");
 }
 
-erpnext.job_offer.make_employee_onboarding = function (frm) {
+erpnext.job_offer.make_employee_preboarding = function (frm) {
 	const dialog = new frappe.ui.Dialog({
-		title: __("Create Employee Onboarding"),
+		title: __("Create Employee Preboarding"),
 		fields: [
 			{
 				fieldname: "date_of_joining",
@@ -271,7 +271,7 @@ erpnext.job_offer.make_employee_onboarding = function (frm) {
 			{
 				fieldname: "boarding_begins_on",
 				fieldtype: "Date",
-				label: __("Onboarding Begins On"),
+				label: __("Preboarding Begins On"),
 				default: frappe.datetime.get_today(),
 				reqd: 1,
 			},
@@ -280,14 +280,14 @@ erpnext.job_offer.make_employee_onboarding = function (frm) {
 		primary_action: (values) =>
 			frappe
 				.call({
-					method: "hrms.hr.doctype.job_offer.job_offer.create_employee_onboarding",
+					method: "hrms.hr.doctype.job_offer.job_offer.create_employee_preboarding",
 					args: { job_offer: frm.doc.name, ...values },
 					freeze: true,
-					freeze_message: __("Creating the onboarding"),
+					freeze_message: __("Creating the preboarding"),
 				})
 				.then((r) => {
 					dialog.hide();
-					frappe.set_route("Form", "Employee Onboarding", r.message);
+					frappe.set_route("Form", "Employee Preboarding", r.message);
 				}),
 	});
 	dialog.show();
