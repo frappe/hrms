@@ -20,8 +20,7 @@
    "in_list_view": 1,
    "label": "Training Event",
    "options": "Training Event",
-   "reqd": 1,
-   "unique": 1
+   "reqd": 1
   },
   {
    "fieldname": "section_break_3",
@@ -52,7 +51,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2022-01-18 19:31:44.900034",
+ "modified": "2026-10-20 00:27:30.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Training Result",
