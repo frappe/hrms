@@ -119,6 +119,7 @@ jobs:
         env:
           TYPE: server
           CAPTURE_COVERAGE: ${{ github.event_name != 'pull_request' }}
+          PYTHONFAULTHANDLER: "1"
 
       - name: Upload coverage data
         uses: actions/upload-artifact@v4
