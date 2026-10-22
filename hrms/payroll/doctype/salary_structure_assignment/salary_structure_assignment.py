@@ -102,6 +102,12 @@ class SalaryStructureAssignment(Document):
 	def on_update_after_submit(self):
 		self.validate_cost_centers()
 
+	def before_update_after_submit(self):
+		self.throw_if_used_by_submitted_salary_slips()
+
+	def before_cancel(self):
+		self.throw_if_used_by_submitted_salary_slips()
+
 	def validate_dates(self):
 		joining_date, relieving_date = frappe.db.get_value(
 			"Employee", self.employee, ["date_of_joining", "relieving_date"]
@@ -500,6 +506,57 @@ class SalaryStructureAssignment(Document):
 			evaluated_components.append(evaluated_component_row)
 
 		return evaluated_components
+
+	def throw_if_used_by_submitted_salary_slips(self):
+		"""Salary slips carry no link to their assignment -- they resolve it at runtime
+		(set_salary_structure_assignment) as the latest submitted assignment effective on
+		the slip's actual start date. Mirror that resolution here so the standard link
+		check (which scans Link fields only) can see the dependency: cancel or post-submit
+		edits are blocked until the slips are cancelled first."""
+		slips = self.get_submitted_salary_slips_using_this_assignment()
+		if not slips:
+			return
+
+		links = ", ".join(get_link_to_form("Salary Slip", slip.name) for slip in slips)
+		frappe.throw(
+			_(
+				"Cannot cancel or change this assignment as Salary Slip(s) {0} are submitted against it. Cancel them first."
+			).format(links),
+			title=_("Assignment In Use"),
+		)
+
+	def get_submitted_salary_slips_using_this_assignment(self):
+		slips = frappe.get_all(
+			"Salary Slip",
+			filters={"employee": self.employee, "salary_structure": self.salary_structure, "docstatus": 1},
+			fields=["name", "start_date", "end_date"],
+		)
+		joining_date = frappe.db.get_value("Employee", self.employee, "date_of_joining")
+
+		return [slip for slip in slips if self.is_effective_for_slip(slip, joining_date)]
+
+	def is_effective_for_slip(self, slip, joining_date) -> bool:
+		"""Mirror SalarySlip.actual_start_date (joining date overrides an earlier cycle
+		start), then keep only slips that resolve back to this assignment."""
+		actual_start_date = getdate(slip.start_date)
+		if joining_date and actual_start_date < getdate(joining_date) <= getdate(slip.end_date):
+			actual_start_date = getdate(joining_date)
+
+		if actual_start_date < getdate(self.from_date):
+			return False
+
+		# a later assignment effective on that date supersedes this one for the slip
+		return not frappe.get_all(
+			"Salary Structure Assignment",
+			filters=[
+				["employee", "=", self.employee],
+				["salary_structure", "=", self.salary_structure],
+				["from_date", ">", self.from_date],
+				["from_date", "<=", actual_start_date],
+				["docstatus", "=", 1],
+			],
+			limit=1,
+		)
 
 	@frappe.whitelist()
 	def are_opening_entries_required(self) -> bool:
