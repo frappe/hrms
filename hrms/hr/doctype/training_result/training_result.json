@@ -51,11 +51,7 @@
  ],
  "is_submittable": 1,
  "links": [],
-<<<<<<< HEAD
- "modified": "2022-01-18 19:31:44.900034",
-=======
  "modified": "2026-10-20 00:27:30.000000",
->>>>>>> dfa8950 (fix: allow amending cancelled training results)
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Training Result",

@@ -1,11 +1,9 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
-<<<<<<< HEAD
-from frappe.tests.utils import FrappeTestCase
-=======
 import frappe
->>>>>>> fdee585 (test: cover training result amendments and duplicate validation)
+from frappe.core.doctype.user_permission.test_user_permission import create_user
+from frappe.tests.utils import FrappeTestCase
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
@@ -13,16 +11,11 @@ from hrms.hr.doctype.training_event.test_training_event import (
 	create_training_event,
 	create_training_program,
 )
-from hrms.tests.utils import HRMSTestSuite, make_user
 
 
-<<<<<<< HEAD
 class TestTrainingResult(FrappeTestCase):
-	pass
-=======
-class TestTrainingResult(HRMSTestSuite):
 	def setUp(self):
-		self.user = make_user("training-manager@example.com")
+		self.user = create_user("training-manager@example.com", "HR Manager").name
 		create_training_program("Basic Training")
 		employee = make_employee("training-result-amendment@example.com", company="_Test Company")
 		event = create_training_event([{"employee": employee}])
@@ -67,4 +60,6 @@ class TestTrainingResult(HRMSTestSuite):
 					duplicate = frappe.copy_doc(self.result)
 					duplicate.docstatus = 0
 					self.assertRaises(frappe.UniqueValidationError, duplicate.insert)
->>>>>>> fdee585 (test: cover training result amendments and duplicate validation)
+
+	def tearDown(self):
+		frappe.db.rollback()
