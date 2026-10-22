@@ -179,6 +179,8 @@ doc_events = {
 			"erpnext.setup.doctype.employee.employee.validate_employee_role",
 			"hrms.overrides.employee_master.update_approver_user_roles",
 		],
+		"on_trash": "hrms.hr.doctype.employee_onboarding.employee_onboarding.unlink_deleted_user",
+		"after_rename": "hrms.hr.doctype.employee_onboarding.employee_onboarding.rename_onboarding_user",
 	},
 	"Company": {
 		"validate": "hrms.overrides.company.validate_default_accounts",

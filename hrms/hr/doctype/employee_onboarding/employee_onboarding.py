@@ -83,7 +83,7 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		project: DF.Link | None
 		reports_to: DF.Link | None
 		submitted_details: DF.Code | None
-		user: DF.Link | None
+		user: DF.Data | None
 	# end: auto-generated types
 
 	def onload(self):
@@ -379,3 +379,22 @@ def apply_submitted_details(source: Document, target: Document) -> None:
 	for table, allowed in TABLE_FIELDNAMES.items():
 		for row in details.get(table) or []:
 			target.append(table, {key: value for key, value in row.items() if key in allowed})
+
+
+def unlink_deleted_user(user: Document, method: str | None = None) -> None:
+	"""Clear a deleted user from its onboarding and open the Create User row again.
+
+	The onboarding keeps the user as a plain value, not a Link, so deleting the user is not
+	blocked by the onboarding.
+	"""
+	for name in frappe.get_all("Employee Onboarding", filters={"user": user.name}, pluck="name"):
+		onboarding = frappe.get_doc("Employee Onboarding", name)
+		onboarding.db_set("user", None)
+		onboarding.save_activity_states()
+
+
+def rename_onboarding_user(
+	user: Document, method: str | None, old_name: str, new_name: str, merge: bool = False
+) -> None:
+	"""Keep the onboarding's user, a plain value, pointing at a renamed user."""
+	frappe.db.set_value("Employee Onboarding", {"user": old_name}, "user", new_name, update_modified=False)

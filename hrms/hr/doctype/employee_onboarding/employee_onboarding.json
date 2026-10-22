@@ -240,9 +240,9 @@
   },
   {
    "fieldname": "user",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "label": "User",
-   "options": "User",
+   "options": "Email",
    "read_only": 1
   },
   {
@@ -353,7 +353,7 @@
  "icon": "user-plus",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-09 14:49:06.278486",
+ "modified": "2026-10-16 17:36:25.601581",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Onboarding",

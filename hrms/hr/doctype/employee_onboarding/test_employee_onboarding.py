@@ -2,6 +2,7 @@
 # See license.txt
 
 import frappe
+from frappe.desk.form.linked_with import get_linked_docs_to_delete
 from frappe.utils import add_days, getdate
 
 from hrms.hr.doctype.employee_onboarding.employee_onboarding import make_employee, split_full_name
@@ -160,6 +161,35 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		onboarding.create_user()
 		onboarding.reload()
 		self.assertEqual(onboarding.boarding_status, "In Process")
+		self.assertTrue(get_row(onboarding, "Create User").completed)
+
+	def test_deleting_the_user_keeps_the_onboarding_and_reopens_create_user(self):
+		onboarding = create_employee_onboarding(submit=False)
+		onboarding.db_set("company_email", "asha.unlink@example.com")
+		onboarding.reload()
+		user = onboarding.create_user()
+		onboarding.reload()
+		self.assertTrue(get_row(onboarding, "Create User").completed)
+		blockers = get_linked_docs_to_delete("User", user)["docs"]
+		self.assertNotIn("Employee Onboarding", [doc["doctype"] for doc in blockers])
+
+		frappe.delete_doc("User", user)
+
+		onboarding.reload()
+		self.assertFalse(frappe.db.exists("User", user))
+		self.assertIsNone(onboarding.user)
+		self.assertFalse(get_row(onboarding, "Create User").completed)
+
+	def test_renaming_the_user_keeps_the_onboarding_on_it(self):
+		onboarding = create_employee_onboarding(submit=False)
+		onboarding.db_set("company_email", "asha.rename@example.com")
+		onboarding.reload()
+		user = onboarding.create_user()
+
+		frappe.rename_doc("User", user, "asha.renamed@example.com", force=True)
+
+		onboarding.reload()
+		self.assertEqual(onboarding.user, "asha.renamed@example.com")
 		self.assertTrue(get_row(onboarding, "Create User").completed)
 
 	def test_create_user_uses_the_selected_email(self):

@@ -136,7 +136,6 @@ class OnboardingActivities:
 		reference_name = None
 		match row.action:
 			case "Create User":
-				reference_name = self.user
 				done = bool(self.user)
 			case "Appointment Letter":
 				reference_name = self.appointment_letter

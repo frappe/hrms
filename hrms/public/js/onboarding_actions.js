@@ -17,10 +17,10 @@ const EMPLOYEE_FIELDS = [
 
 const ACTION_HANDLERS = {
 	"Create User": {
-		get_value: (list, row) => row.reference_name,
+		get_value: (list) => list.frm.doc.user,
 		get_actions: (list, row, state) =>
 			state === "done"
-				? [open_action("User", row.reference_name)]
+				? [open_action("User", list.frm.doc.user)]
 				: [{ label: __("Create"), onclick: () => open_fields_dialog(list, user_dialog) }],
 	},
 	"Appointment Letter": {
