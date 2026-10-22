@@ -141,6 +141,7 @@ class EmployeeHoursReport:
 				TimesheetDetail.project.as_("project"),
 			)
 			.where(Timesheet.employee.isnotnull())
+			.where(Timesheet.docstatus == 1)
 			.where(Timesheet.start_date[self.from_date : self.to_date])
 			.where(Timesheet.end_date[self.from_date : self.to_date])
 		)
