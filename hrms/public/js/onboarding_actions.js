@@ -3,18 +3,6 @@
 
 const USER_FIELDS = ["personal_email", "company_email", "create_user_for"];
 
-const EMPLOYEE_FIELDS = [
-	"department",
-	"designation",
-	"employee_grade",
-	"branch",
-	"employment_type",
-	"reports_to",
-	"holiday_list",
-	"gender",
-	"date_of_birth",
-];
-
 const ACTION_HANDLERS = {
 	"Create User": {
 		get_value: (list) => list.frm.doc.user,
@@ -46,12 +34,7 @@ const ACTION_HANDLERS = {
 		get_actions: (list, row, state) =>
 			state === "done"
 				? [open_action("Employee", row.reference_name)]
-				: [
-						{
-							label: __("Create"),
-							onclick: () => open_fields_dialog(list, employee_dialog),
-						},
-				  ],
+				: [{ label: __("Create"), onclick: () => create_employee(list) }],
 	},
 	Assign: {
 		get_value: (list, row) =>
@@ -85,17 +68,6 @@ const user_dialog = {
 	freeze_message: __("Creating the user"),
 };
 
-const employee_dialog = {
-	title: __("Create Employee"),
-	description: __(
-		"Check the job details. Personal details come from what the new hire submitted.",
-	),
-	fieldnames: EMPLOYEE_FIELDS,
-	primary_label: __("Create Employee"),
-	method: "create_employee",
-	freeze_message: __("Creating the employee"),
-};
-
 function is_open(state) {
 	return state === "open";
 }
@@ -114,10 +86,7 @@ function open_action(doctype, name) {
 }
 
 // The onboarding's own fields, edited in a dialog and saved before the action runs.
-function open_fields_dialog(
-	list,
-	{ title, description, fieldnames, primary_label, method, freeze_message },
-) {
+function open_fields_dialog(list, { title, fieldnames, primary_label, method, freeze_message }) {
 	const frm = list.frm;
 	const fields = fieldnames
 		.map((fieldname) => frappe.meta.get_docfield(frm.doctype, fieldname, frm.doc.name))
@@ -135,15 +104,7 @@ function open_fields_dialog(
 
 	const dialog = new frappe.ui.Dialog({
 		title,
-		fields: description
-			? [
-					{
-						fieldtype: "HTML",
-						options: `<p class="text-ink-gray-6">${description}</p>`,
-					},
-					...fields,
-			  ]
-			: fields,
+		fields,
 		size: fields.length > 5 ? "large" : "small",
 		primary_action_label: primary_label,
 		primary_action: async (values) => {
@@ -192,6 +153,23 @@ async function create_appointment_letter(list) {
 		appointment_date: doc.date_of_joining,
 		employee_onboarding: doc.name,
 	});
+}
+
+async function create_employee(list) {
+	await list.save_if_dirty();
+	const doc = await frappe.xcall(
+		"hrms.hr.doctype.employee_onboarding.employee_onboarding.make_employee",
+		{ source_name: list.frm.doc.name },
+	);
+	const [employee] = frappe.model.sync(doc);
+	frappe.ui.form.make_quick_entry(
+		"Employee",
+		(created) =>
+			list.call("link_employee", { employee: created.name }, __("Linking the employee")),
+		null,
+		employee,
+		true,
+	);
 }
 
 // Reuses the Employee form's assignment engine, so the dialog keeps its Submit step, its

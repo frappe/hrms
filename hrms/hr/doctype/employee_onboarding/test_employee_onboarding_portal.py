@@ -11,7 +11,10 @@ from hrms.hr.doctype.employee_onboarding.employee_onboarding_portal import (
 	save_onboarding_form,
 	submit_onboarding_form,
 )
-from hrms.hr.doctype.employee_onboarding.test_employee_onboarding import create_employee_onboarding
+from hrms.hr.doctype.employee_onboarding.test_employee_onboarding import (
+	create_employee_onboarding,
+	create_onboarding_employee,
+)
 from hrms.tests.utils import HRMSTestSuite
 
 DETAILS = {
@@ -133,7 +136,7 @@ class TestEmployeeOnboardingPortal(HRMSTestSuite):
 		frappe.set_user("Administrator")
 		self.onboarding.reload()
 		self.onboarding.submit()
-		employee = frappe.get_doc("Employee", self.onboarding.create_employee())
+		employee = frappe.get_doc("Employee", create_onboarding_employee(self.onboarding))
 
 		self.assertEqual(employee.first_name, "Asha")
 		self.assertEqual(str(employee.date_of_birth), "1998-04-12")
@@ -150,7 +153,7 @@ class TestEmployeeOnboardingPortal(HRMSTestSuite):
 		frappe.set_user("Administrator")
 		self.onboarding.reload()
 		self.onboarding.submit()
-		self.onboarding.create_employee()
+		create_onboarding_employee(self.onboarding)
 
 		frappe.set_user(self.user)
 		with self.assertRaises(frappe.ValidationError):

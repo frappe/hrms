@@ -217,7 +217,7 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		self.assertNotIn("Employee Self Service", frappe.get_roles(user))
 
 		onboarding.reload()
-		onboarding.create_employee()
+		create_onboarding_employee(onboarding)
 
 		frappe.clear_cache(user=user)
 		self.assertIn("Employee Self Service", frappe.get_roles(user))
@@ -246,12 +246,24 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		self.assertEqual(employee.last_name, "Engineer")
 		self.assertEqual(employee.job_offer, onboarding.job_offer)
 
+	def test_linking_an_employee_from_another_job_offer_is_blocked(self):
+		onboarding = create_employee_onboarding(submit=False)
+		onboarding.db_set("gender", "Female")
+		onboarding.db_set("date_of_birth", "1990-05-08")
+		onboarding.reload()
+		employee = make_employee(onboarding.name)
+		employee.job_offer = None
+		employee.insert()
+
+		self.assertRaises(frappe.ValidationError, onboarding.link_employee, employee.name)
+		self.assertIsNone(frappe.db.get_value("Employee Onboarding", onboarding.name, "employee"))
+
 	def test_assignment_row_ticks_from_the_real_assignment(self):
 		onboarding = create_employee_onboarding(submit=False)
 		onboarding.db_set("gender", "Female")
 		onboarding.db_set("date_of_birth", "1990-05-08")
 		onboarding.reload()
-		employee = onboarding.create_employee()
+		employee = create_onboarding_employee(onboarding)
 
 		onboarding.reload()
 		self.assertTrue(get_row(onboarding, "Create Employee").completed)
@@ -469,6 +481,12 @@ def create_employee_onboarding(submit=False, with_activities=True):
 		onboarding.submit()
 
 	return onboarding
+
+
+def create_onboarding_employee(onboarding):
+	employee = make_employee(onboarding.name).insert()
+	onboarding.link_employee(employee.name)
+	return employee.name
 
 
 def get_row(onboarding, activity_name):

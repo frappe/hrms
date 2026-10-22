@@ -304,21 +304,23 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		self.save_activity_states()
 
 	@frappe.whitelist(methods=["POST"])
-	def create_employee(self) -> str:
+	def link_employee(self, employee: str) -> None:
 		self.check_permission("write")
 
-		if self.employee:
+		if self.employee and self.employee != employee:
 			frappe.throw(
 				_("Employee {0} is already created").format(get_link_to_form("Employee", self.employee))
 			)
+		if frappe.db.get_value("Employee", employee, "job_offer") != self.job_offer:
+			frappe.throw(
+				_("Employee {0} was not created from Job Offer {1}").format(
+					get_link_to_form("Employee", employee), get_link_to_form("Job Offer", self.job_offer)
+				)
+			)
 
-		employee = make_employee(self.name)
-		employee.insert()
-
-		self.db_set("employee", employee.name)
+		self.db_set("employee", employee)
 		self.grant_employee_self_service()
 		self.save_activity_states()
-		return employee.name
 
 	@frappe.whitelist(methods=["POST"])
 	def mark_onboarding_as_completed(self) -> None:
