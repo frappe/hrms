@@ -5,7 +5,7 @@ import frappe
 from frappe.desk.form.linked_with import get_linked_docs_to_delete
 from frappe.utils import add_days, getdate
 
-from hrms.hr.doctype.employee_onboarding_template.employee_onboarding_template import (
+from hrms.hr.doctype.employee_boarding_template.employee_boarding_template import (
 	get_standard_activities,
 )
 from hrms.hr.doctype.employee_preboarding.employee_preboarding import make_employee, split_full_name
@@ -77,17 +77,21 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		template = make_template("_Test Fresh Template", [{"activity_name": "Order a desk"}])
 
 		standard = [activity["activity_name"] for activity in STANDARD_ACTIVITIES]
-		self.assertEqual([row.activity_name for row in template.activities], [*standard, "Order a desk"])
+		self.assertEqual(
+			[row.activity_name for row in template.preboarding_activities], [*standard, "Order a desk"]
+		)
 
-		template.activities = [row for row in template.activities if row.action != "Appointment Letter"]
+		template.preboarding_activities = [
+			row for row in template.preboarding_activities if row.action != "Appointment Letter"
+		]
 		template.save()
-		self.assertNotIn("Appointment Letter", [row.activity_name for row in template.activities])
+		self.assertNotIn("Appointment Letter", [row.activity_name for row in template.preboarding_activities])
 
 	def test_template_prefilled_by_the_form_keeps_one_of_each_standard_activity(self):
 		template = make_template("_Test Prefilled Template", get_standard_activities())
 
 		standard = [activity["activity_name"] for activity in STANDARD_ACTIVITIES]
-		self.assertEqual([row.activity_name for row in template.activities], standard)
+		self.assertEqual([row.activity_name for row in template.preboarding_activities], standard)
 
 	def test_a_preboarding_without_a_template_gets_no_activities(self):
 		self.assertEqual(get_template_activities(None), [])
@@ -95,7 +99,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 	def test_template_rejects_a_duplicate_action(self):
 		template = make_template("_Test Duplicate Template")
 		template.append(
-			"activities",
+			"preboarding_activities",
 			{
 				"activity_name": "Assign Leave Policy again",
 				"action": "Assign",
@@ -117,7 +121,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 
 		preboarding = create_employee_preboarding(submit=False, with_activities=False)
 
-		self.assertEqual(preboarding.employee_onboarding_template, newest.name)
+		self.assertEqual(preboarding.employee_boarding_template, newest.name)
 		self.assertIn("Book a desk", [row.activity_name for row in preboarding.activities])
 
 	def test_a_blank_template_applies_to_every_preboarding(self):
@@ -125,7 +129,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 
 		preboarding = create_employee_preboarding(submit=False, with_activities=False)
 
-		self.assertEqual(preboarding.employee_onboarding_template, blank.name)
+		self.assertEqual(preboarding.employee_boarding_template, blank.name)
 
 	def test_a_template_set_for_another_value_is_never_picked(self):
 		make_template("_Test Blank Fallback Template")
@@ -133,14 +137,38 @@ class TestEmployeePreboarding(HRMSTestSuite):
 
 		preboarding = create_employee_preboarding(submit=False, with_activities=False)
 
-		self.assertNotEqual(preboarding.employee_onboarding_template, other.name)
+		self.assertNotEqual(preboarding.employee_boarding_template, other.name)
+
+	def test_a_template_without_preboarding_activities_is_never_picked(self):
+		blank = make_template("_Test Blank Preboarding Template")
+		offboarding_only = frappe.new_doc("Employee Boarding Template")
+		offboarding_only.title = "_Test Offboarding Only Template"
+		offboarding_only.append("offboarding_activities", {"activity_name": "Collect the laptop"})
+		offboarding_only.flags.skip_standard_activities = True
+		offboarding_only.insert()
+
+		preboarding = create_employee_preboarding(submit=False, with_activities=False)
+
+		self.assertEqual(preboarding.employee_boarding_template, blank.name)
+
+	def test_onboarding_and_offboarding_activities_are_manual(self):
+		template = make_template("_Test Phase Template")
+		template.append("onboarding_activities", {"activity_name": "Team lunch", "action": "Create User"})
+		template.append(
+			"offboarding_activities",
+			{"activity_name": "Revoke access", "action": "Assign", "reference_doctype": "Shift Assignment"},
+		)
+		template.save()
+
+		for row in template.onboarding_activities + template.offboarding_activities:
+			self.assertEqual((row.action, row.reference_doctype), ("Manual", None))
 
 	def test_hint_shows_until_the_template_has_own_tasks(self):
 		template = make_template("_Test Hint Template")
 		preboarding = create_employee_preboarding(submit=False, with_activities=False)
 		self.assertEqual(preboarding.get_template_hint(), template.name)
 
-		template.append("activities", {"activity_name": "Welcome lunch"})
+		template.append("preboarding_activities", {"activity_name": "Welcome lunch"})
 		template.save()
 		self.assertIsNone(preboarding.get_template_hint())
 
@@ -477,7 +505,7 @@ def create_employee_preboarding(submit=False, with_activities=True):
 	preboarding.designation = "Engineer"
 	preboarding.employee_name = applicant.applicant_name
 	if with_activities:
-		preboarding.employee_onboarding_template = get_test_template().name
+		preboarding.employee_boarding_template = get_test_template().name
 	preboarding.insert()
 	if submit:
 		preboarding.submit()
@@ -504,9 +532,9 @@ def get_test_user(email):
 
 
 def get_test_template():
-	name = frappe.db.get_value("Employee Onboarding Template", {"title": "_Test Engineering Preboarding"})
+	name = frappe.db.get_value("Employee Boarding Template", {"title": "_Test Engineering Preboarding"})
 	if name:
-		return frappe.get_doc("Employee Onboarding Template", name)
+		return frappe.get_doc("Employee Boarding Template", name)
 	return make_template(
 		"_Test Engineering Preboarding",
 		[
@@ -517,11 +545,11 @@ def get_test_template():
 
 
 def make_template(title, activities=None, **fields):
-	template = frappe.new_doc("Employee Onboarding Template")
+	template = frappe.new_doc("Employee Boarding Template")
 	template.title = title
 	template.update(fields)
 	for activity in activities or []:
-		template.append("activities", activity)
+		template.append("preboarding_activities", activity)
 	return template.insert()
 
 

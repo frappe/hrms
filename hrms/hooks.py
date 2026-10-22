@@ -409,8 +409,7 @@ company_data_to_be_ignored = [
 	"Income Tax Slab",
 	"Leave Period",
 	"Leave Policy Assignment",
-	"Employee Onboarding Template",
-	"Employee Separation Template",
+	"Employee Boarding Template",
 ]
 
 # List of apps whose translatable strings should be excluded from this app's translations.

@@ -49,7 +49,7 @@ frappe.ui.form.on("Employee Preboarding", {
 		frm._preboarding_checklist.render();
 	},
 
-	employee_onboarding_template: function (frm) {
+	employee_boarding_template: function (frm) {
 		// Finished rows stay; the new template's rows replace the rest.
 		const finished = (frm.doc.activities || []).filter((row) => row.completed || row.skipped);
 		const is_finished = (d) =>
@@ -60,13 +60,13 @@ frappe.ui.form.on("Employee Preboarding", {
 		frm.doc.activities = finished;
 		refresh_field("activities");
 		frm.trigger("render_checklist");
-		if (!frm.doc.employee_onboarding_template) return;
+		if (!frm.doc.employee_boarding_template) return;
 
 		frappe.call({
 			method: "hrms.controllers.employee_boarding_controller.get_onboarding_details",
 			args: {
-				parent: frm.doc.employee_onboarding_template,
-				parenttype: "Employee Onboarding Template",
+				parent: frm.doc.employee_boarding_template,
+				parentfield: "preboarding_activities",
 			},
 			callback: function (r) {
 				if (!r.message) return;

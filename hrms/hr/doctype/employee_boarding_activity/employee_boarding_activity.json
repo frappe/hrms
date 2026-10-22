@@ -37,7 +37,7 @@
   },
   {
    "default": "Manual",
-   "depends_on": "eval:in_list(['Employee Preboarding', 'Employee Onboarding Template'], doc.parenttype)",
+   "depends_on": "eval:doc.parenttype=='Employee Preboarding' || doc.parentfield=='preboarding_activities'",
    "fieldname": "action",
    "fieldtype": "Select",
    "label": "Action",
@@ -45,7 +45,7 @@
    "read_only": 1
   },
   {
-   "depends_on": "eval:in_list(['Employee Preboarding', 'Employee Onboarding Template'], doc.parenttype)",
+   "depends_on": "eval:doc.parenttype=='Employee Preboarding' || doc.parentfield=='preboarding_activities'",
    "fieldname": "reference_doctype",
    "fieldtype": "Link",
    "label": "Reference Document Type",
@@ -61,7 +61,7 @@
    "read_only": 1
   },
   {
-   "depends_on": "eval:in_list(['Employee Preboarding', 'Employee Onboarding Template'], doc.parenttype)",
+   "depends_on": "eval:doc.parenttype=='Employee Preboarding' || doc.parentfield=='preboarding_activities'",
    "fieldname": "depends_on_action",
    "fieldtype": "Select",
    "label": "Needs",
@@ -134,7 +134,7 @@
   },
   {
    "default": "0",
-   "depends_on": "eval:['Employee Preboarding', 'Employee Onboarding Template'].includes(doc.parenttype)",
+   "depends_on": "eval:doc.parenttype=='Employee Preboarding' || doc.parentfield=='preboarding_activities'",
    "description": "Applicable in the case of Employee Preboarding",
    "fieldname": "required_for_employee_creation",
    "fieldtype": "Check",

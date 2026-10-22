@@ -63,9 +63,9 @@ class EmployeePreboarding(PreboardingActivities, Document):
 		documents: DF.Table[EmployeePreboardingDocument]
 		documents_requested_on: DF.Datetime | None
 		employee: DF.Link | None
+		employee_boarding_template: DF.Link | None
 		employee_grade: DF.Link | None
 		employee_name: DF.Data
-		employee_onboarding_template: DF.Link | None
 		employment_type: DF.Link | None
 		gender: DF.Link | None
 		holiday_list: DF.Link | None

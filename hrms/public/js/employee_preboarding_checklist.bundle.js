@@ -47,7 +47,7 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 				footer: frappe.ui.button({
 					label: __("Edit Template"),
 					onclick: () =>
-						frappe.set_route("Form", "Employee Onboarding Template", template),
+						frappe.set_route("Form", "Employee Boarding Template", template),
 				}),
 			}),
 		);

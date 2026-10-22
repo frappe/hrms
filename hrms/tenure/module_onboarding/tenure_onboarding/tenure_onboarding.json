@@ -20,7 +20,7 @@
  "steps": [
   {
    "is_optional": 1,
-   "step": "Create Employee Onboarding Template"
+   "step": "Create Employee Boarding Template"
   },
   {
    "is_optional": 0,

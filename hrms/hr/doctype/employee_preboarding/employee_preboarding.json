@@ -15,7 +15,7 @@
   "column_break_7",
   "date_of_joining",
   "boarding_begins_on",
-  "employee_onboarding_template",
+  "employee_boarding_template",
   "boarding_status",
   "project",
   "checklist_section",
@@ -113,10 +113,10 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "employee_onboarding_template",
+   "fieldname": "employee_boarding_template",
    "fieldtype": "Link",
-   "label": "Employee Onboarding Template",
-   "options": "Employee Onboarding Template"
+   "label": "Employee Boarding Template",
+   "options": "Employee Boarding Template"
   },
   {
    "fieldname": "company",

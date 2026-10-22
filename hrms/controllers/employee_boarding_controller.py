@@ -147,8 +147,8 @@ class EmployeeBoardingController(Document):
 
 
 @frappe.whitelist()
-def get_onboarding_details(parent: str, parenttype: str):
-	frappe.has_permission(parenttype, "read", parent, throw=True)
+def get_onboarding_details(parent: str, parentfield: str):
+	frappe.has_permission("Employee Boarding Template", "read", parent, throw=True)
 	return frappe.get_all(
 		"Employee Boarding Activity",
 		fields=[
@@ -164,7 +164,7 @@ def get_onboarding_details(parent: str, parenttype: str):
 			"begin_on",
 			"duration",
 		],
-		filters={"parent": parent, "parenttype": parenttype},
+		filters={"parent": parent, "parenttype": "Employee Boarding Template", "parentfield": parentfield},
 		order_by="idx",
 	)
 

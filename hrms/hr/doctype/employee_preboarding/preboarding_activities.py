@@ -1,6 +1,8 @@
 # Copyright (c) 2026, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
+from pypika.terms import ExistsCriterion
+
 import frappe
 from frappe import _
 from frappe.desk.form.assign_to import notify_assignment
@@ -86,12 +88,12 @@ class PreboardingActivities:
 	"""
 
 	def set_template(self):
-		if not self.employee_onboarding_template:
-			self.employee_onboarding_template = get_matching_template(self)
+		if not self.employee_boarding_template:
+			self.employee_boarding_template = get_matching_template(self)
 
 	def set_activities(self):
 		if not self.activities:
-			for row in get_template_activities(self.employee_onboarding_template):
+			for row in get_template_activities(self.employee_boarding_template):
 				self.append("activities", row)
 		for row in self.activities:
 			self.set_activity_defaults(row)
@@ -108,12 +110,12 @@ class PreboardingActivities:
 
 	def get_template_hint(self) -> str | None:
 		"""The preboarding's template, while it still has only the standard activities."""
-		template = self.employee_onboarding_template
+		template = self.employee_boarding_template
 		if not template:
 			return None
 		has_own_rows = frappe.db.exists(
 			"Employee Boarding Activity",
-			{"parent": template, "parenttype": "Employee Onboarding Template", "action": "Manual"},
+			{"parent": template, "parentfield": "preboarding_activities", "action": "Manual"},
 		)
 		return None if has_own_rows else template
 
@@ -311,10 +313,23 @@ def close_todo(name: str, status: str) -> None:
 
 
 def get_matching_template(doc) -> str | None:
-	"""The newest template whose company, department, designation and grade each match the
-	preboarding's or are left blank, so a blank template applies to everyone."""
-	Template = frappe.qb.DocType("Employee Onboarding Template")
-	query = frappe.qb.from_(Template).select(Template.name).orderby(Template.creation, order=Order.desc)
+	"""The newest template with pre-boarding activities whose company, department, designation
+	and grade each match the preboarding's or are left blank, so a blank template applies to everyone."""
+	Template = frappe.qb.DocType("Employee Boarding Template")
+	Activity = frappe.qb.DocType("Employee Boarding Activity")
+	has_activities = (
+		frappe.qb.from_(Activity)
+		.select(Activity.name)
+		.where(Activity.parenttype == "Employee Boarding Template")
+		.where(Activity.parentfield == "preboarding_activities")
+		.where(Activity.parent == Template.name)
+	)
+	query = (
+		frappe.qb.from_(Template)
+		.select(Template.name)
+		.where(ExistsCriterion(has_activities))
+		.orderby(Template.creation, order=Order.desc)
+	)
 	for field in TEMPLATE_MATCH_FIELDS:
 		is_blank = IfNull(Template[field], "") == ""
 		value = doc.get(field)
@@ -329,7 +344,11 @@ def get_template_activities(template: str | None) -> list[dict]:
 	return frappe.get_all(
 		"Employee Boarding Activity",
 		fields=TEMPLATE_ROW_FIELDS,
-		filters={"parent": template, "parenttype": "Employee Onboarding Template"},
+		filters={
+			"parent": template,
+			"parenttype": "Employee Boarding Template",
+			"parentfield": "preboarding_activities",
+		},
 		order_by="idx",
 	)
 
@@ -359,13 +378,13 @@ def action_key(action: str | None, reference_doctype: str | None) -> tuple:
 
 def add_standard_activities(template) -> None:
 	"""Put the standard activities at the top of a new template; it may drop them later."""
-	present = {action_key(row.action, row.reference_doctype) for row in template.activities}
-	own_rows = list(template.activities)
-	template.activities = []
+	present = {action_key(row.action, row.reference_doctype) for row in template.preboarding_activities}
+	own_rows = list(template.preboarding_activities)
+	template.preboarding_activities = []
 	for activity in STANDARD_ACTIVITIES:
 		if action_key(activity["action"], activity.get("reference_doctype")) not in present:
-			template.append("activities", activity)
+			template.append("preboarding_activities", activity)
 	for row in own_rows:
-		template.append("activities", row)
-	for idx, row in enumerate(template.activities, start=1):
+		template.append("preboarding_activities", row)
+	for idx, row in enumerate(template.preboarding_activities, start=1):
 		row.idx = idx
