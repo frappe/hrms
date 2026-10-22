@@ -14,6 +14,7 @@ from hrms.hr.doctype.job_requisition.job_requisition import make_job_opening
 
 class TestJobRequisition(FrappeTestCase):
 	def setUp(self):
+		frappe.db.delete("Job Opening")
 		self.employee = make_employee("test_employee_1@company.com", company="_Test Company")
 
 	def test_make_job_opening(self):
