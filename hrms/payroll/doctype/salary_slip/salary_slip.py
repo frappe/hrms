@@ -867,15 +867,8 @@ class SalarySlip(TransactionBase):
 			elif d.status == "On Leave" and d.leave_type and d.leave_type in leave_type_map.keys():
 				equivalent_lwp = 1
 				if leave_type_map[d.leave_type]["is_ppl"]:
-<<<<<<< HEAD
-					equivalent_lwp *= (
-						fraction_of_daily_salary_per_leave if fraction_of_daily_salary_per_leave else 1
-					)
-				lwp += equivalent_lwp * day_fraction
-=======
 					equivalent_lwp *= 1 - flt(fraction_of_daily_salary_per_leave)
-				lwp += equivalent_lwp
->>>>>>> e844874 (fix(payroll): treat partially paid leave fraction consistently across payroll_based_on)
+				lwp += equivalent_lwp * day_fraction
 
 			elif d.status == "Absent":
 				absent += day_fraction
