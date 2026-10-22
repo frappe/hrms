@@ -13,11 +13,11 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 			title: __("Onboarding Checklist"),
 			on_skip: (item) => this.call("skip_activity", { row: item.id }),
 			on_unskip: (item) => this.call("unskip_activity", { row: item.id }),
-			on_assign: (item, user) => this.call("assign_activity", { row: item.id, user }),
+			on_assign: (item, user) => this.update_row("assign_activity", { row: item.id, user }),
 			on_due_date_change: (item, due_date) =>
-				this.call("set_activity_due_date", { row: item.id, due_date }),
+				this.update_row("set_activity_due_date", { row: item.id, due_date }),
 			on_status_change: (item, status) =>
-				this.call("set_activity_progress", {
+				this.update_row("set_activity_progress", {
 					row: item.id,
 					status: ROW_STATUS[status] || null,
 				}),
@@ -94,6 +94,12 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 		await this.save_if_dirty();
 		await this.frm.call({ method, doc: this.frm.doc, args, freeze: true, freeze_message });
 		await this.frm.reload_doc();
+	}
+
+	async update_row(method, args) {
+		await this.save_if_dirty();
+		await this.frm.call({ method, doc: this.frm.doc, args });
+		this.render();
 	}
 
 	async save_if_dirty() {
