@@ -324,6 +324,14 @@ const cardStyle = computed(() => {
   const x = tx.value + b.x * s.value
   const y = ty.value + b.y * s.value
   const nw = b.w * s.value
+  // Left to right, their team sits to the right, so the card opens below the node (above if no room).
+  if (orientation.value === 'horizontal') {
+    const nh = b.h * s.value
+    const below = y + nh + 8
+    const top = below + CARD_H > h - 16 ? y - CARD_H - 8 : below
+    const left = Math.min(Math.max(16, x), w - CARD_W - 16)
+    return { left: `${left}px`, top: `${Math.max(64, top)}px`, width: `${CARD_W}px` }
+  }
   let left = x + nw + 12
   if (left + CARD_W > w - 16) left = x - CARD_W - 12
   left = Math.min(Math.max(16, left), w - CARD_W - 16)
