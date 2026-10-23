@@ -46,7 +46,6 @@ class EmployeePreboarding(PreboardingActivities, Document):
 
 		activities: DF.Table[EmployeeBoardingActivity]
 		amended_from: DF.Link | None
-		appointment_letter: DF.Link | None
 		appointment_letter_sent_on: DF.Datetime | None
 		boarding_begins_on: DF.Date
 		boarding_status: DF.Literal["Pending", "In Process", "Completed"]
@@ -82,6 +81,7 @@ class EmployeePreboarding(PreboardingActivities, Document):
 	def onload(self):
 		self.set_onload("offer_defaults", self.get_offer_defaults())
 		self.set_onload("template_hint", self.get_template_hint())
+		self.set_onload("appointment_letter", self.get_appointment_letter())
 
 	def before_insert(self):
 		self.set_template()
@@ -259,23 +259,15 @@ class EmployeePreboarding(PreboardingActivities, Document):
 
 		self.db_set("submitted_details", json.dumps(clean_details(details)))
 
-	@frappe.whitelist(methods=["POST"])
-	def sync_appointment_letter(self) -> str | None:
-		self.check_permission("write")
-
-		if self.appointment_letter:
-			return self.appointment_letter
-
-		letter = frappe.db.get_value("Appointment Letter", {"employee_preboarding": self.name}, "name")
-		if letter:
-			self.db_set("appointment_letter", letter)
-		return letter
+	def get_appointment_letter(self) -> str | None:
+		return frappe.db.get_value("Appointment Letter", {"employee_preboarding": self.name}, "name")
 
 	@frappe.whitelist(methods=["POST"])
 	def send_appointment_letter(self) -> None:
 		self.check_permission("write")
 
-		if not self.appointment_letter:
+		letter = self.get_appointment_letter()
+		if not letter:
 			frappe.throw(_("Create the Appointment Letter first"))
 
 		recipient = self.get_employee_email()
@@ -288,7 +280,7 @@ class EmployeePreboarding(PreboardingActivities, Document):
 			message=_("Hello {0}, please find your appointment letter attached.").format(
 				frappe.utils.escape_html(self.employee_name)
 			),
-			attachments=[frappe.attach_print("Appointment Letter", self.appointment_letter)],
+			attachments=[frappe.attach_print("Appointment Letter", letter)],
 			reference_doctype=self.doctype,
 			reference_name=self.name,
 		)
@@ -386,6 +378,13 @@ def unlink_deleted_user(user: Document, method: str | None = None) -> None:
 		preboarding = frappe.get_doc("Employee Preboarding", name)
 		preboarding.db_set("user", None)
 		preboarding.save_activity_states()
+
+
+def reopen_appointment_letter(preboarding: str) -> None:
+	"""Open the Send Appointment Letter row again once its letter is deleted."""
+	doc = frappe.get_doc("Employee Preboarding", preboarding)
+	doc.db_set("appointment_letter_sent_on", None)
+	doc.save_activity_states()
 
 
 def rename_preboarding_user(

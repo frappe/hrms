@@ -40,7 +40,6 @@
   "details_submitted_on",
   "details_confirmed_on",
   "appointment_letter_section",
-  "appointment_letter",
   "appointment_letter_sent_on",
   "employee_details_section",
   "branch",
@@ -286,13 +285,6 @@
    "label": "Appointment Letter"
   },
   {
-   "fieldname": "appointment_letter",
-   "fieldtype": "Link",
-   "label": "Appointment Letter",
-   "options": "Appointment Letter",
-   "read_only": 1
-  },
-  {
    "fieldname": "appointment_letter_sent_on",
    "fieldtype": "Datetime",
    "label": "Appointment Letter Sent On",
@@ -357,7 +349,7 @@
  "icon": "user-plus",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-22 19:00:00.000000",
+ "modified": "2026-10-23 15:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Preboarding",

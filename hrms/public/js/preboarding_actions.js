@@ -16,14 +16,14 @@ const ACTION_HANDLERS = {
 			const sent_on = list.frm.doc.appointment_letter_sent_on;
 			if (sent_on)
 				return __("Sent on {0}", [frappe.datetime.str_to_user(sent_on, false, true)]);
-			return list.frm.doc.appointment_letter;
+			return get_letter(list);
 		},
 		// Appointment Letter still requires a Job Applicant, so an offer without one can't have a letter.
 		get_lock_reason: (list) =>
 			list.frm.doc.job_applicant ? null : __("Needs a Job Applicant on the Job Offer"),
 		get_actions: (list, row, state) => {
-			const letter = list.frm.doc.appointment_letter;
-			if (state === "done") return [open_action("Appointment Letter", letter)];
+			const letter = get_letter(list);
+			if (state === "done") return letter ? [open_action("Appointment Letter", letter)] : [];
 			if (!letter)
 				return [{ label: __("Create"), onclick: () => create_appointment_letter(list) }];
 			return [{ label: __("Send"), onclick: () => open_letter_dialog(list) }];
@@ -67,6 +67,10 @@ const user_dialog = {
 	method: "create_user",
 	freeze_message: __("Creating the user"),
 };
+
+function get_letter(list) {
+	return list.frm.doc.__onload?.appointment_letter;
+}
 
 function is_open(state) {
 	return state === "open";
@@ -119,7 +123,7 @@ function open_letter_dialog(list) {
 	const doc = list.frm.doc;
 	const url = `/printview?doctype=${encodeURIComponent(
 		"Appointment Letter",
-	)}&name=${encodeURIComponent(doc.appointment_letter)}&trigger_print=0`;
+	)}&name=${encodeURIComponent(get_letter(list))}&trigger_print=0`;
 	const recipient = doc.company_email || doc.personal_email || __("the new hire");
 
 	const dialog = new frappe.ui.Dialog({

@@ -139,7 +139,6 @@ class PreboardingActivities:
 			case "Create User":
 				done = bool(self.user)
 			case "Appointment Letter":
-				reference_name = self.appointment_letter
 				done = bool(self.appointment_letter_sent_on)
 			case "Create Employee":
 				reference_name = self.employee

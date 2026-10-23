@@ -319,6 +319,27 @@ class TestEmployeePreboarding(HRMSTestSuite):
 
 		self.assertRaises(frappe.ValidationError, preboarding.add_activity, "Order a desk")
 
+	def test_deleting_a_sent_appointment_letter_reopens_its_row(self):
+		preboarding = create_employee_preboarding(submit=False)
+		letter = make_appointment_letter(preboarding)
+		preboarding.db_set("appointment_letter_sent_on", frappe.utils.now_datetime())
+		preboarding.save_activity_states()
+		self.assertTrue(get_row(preboarding, "Send Appointment Letter").completed)
+
+		self.assertEqual(get_linked_docs_to_delete("Appointment Letter", letter.name)["docs"], [])
+		letter.delete()
+
+		preboarding.reload()
+		self.assertIsNone(preboarding.appointment_letter_sent_on)
+		self.assertFalse(get_row(preboarding, "Send Appointment Letter").completed)
+
+	def test_deleting_a_preboarding_offers_its_appointment_letter(self):
+		preboarding = create_employee_preboarding(submit=False)
+		letter = make_appointment_letter(preboarding)
+
+		linked = get_linked_docs_to_delete("Employee Preboarding", preboarding.name)["docs"]
+		self.assertIn(letter.name, [doc["name"] for doc in linked])
+
 	def test_assignment_row_ticks_from_the_real_assignment(self):
 		preboarding = create_employee_preboarding(submit=False)
 		preboarding.db_set("gender", "Female")
@@ -548,6 +569,19 @@ def create_preboarding_employee(preboarding):
 	employee = make_employee(preboarding.name).insert()
 	preboarding.link_employee(employee.name)
 	return employee.name
+
+
+def make_appointment_letter(preboarding):
+	return frappe.get_doc(
+		{
+			"doctype": "Appointment Letter",
+			"job_applicant": preboarding.job_applicant,
+			"applicant_name": preboarding.employee_name,
+			"company": preboarding.company,
+			"appointment_date": preboarding.date_of_joining,
+			"employee_preboarding": preboarding.name,
+		}
+	).insert(ignore_mandatory=True)
 
 
 def get_row(preboarding, activity_name):

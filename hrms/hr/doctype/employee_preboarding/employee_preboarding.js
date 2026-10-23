@@ -30,16 +30,7 @@ frappe.ui.form.on("Employee Preboarding", {
 			);
 		}
 
-		frm.trigger("sync_appointment_letter");
 		frm.trigger("render_checklist");
-	},
-
-	sync_appointment_letter: function (frm) {
-		if (frm.is_new() || frm.doc.appointment_letter) return;
-
-		frm.call({ method: "sync_appointment_letter", doc: frm.doc }).then((r) => {
-			if (r.message) frm.refresh();
-		});
 	},
 
 	render_checklist: function (frm) {
