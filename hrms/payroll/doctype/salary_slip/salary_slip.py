@@ -1712,16 +1712,14 @@ class SalarySlip(TransactionBase):
 
 		for additional_salary in additional_salaries:
 			component_data = get_salary_component_data(additional_salary.component)
-			# a tax component overwritten to zero stays on the slip, so that tax handling
-			# takes the tax as zero instead of calculating it from the slabs
+			# keep a zero tax overwrite so tax is not recalculated from the slabs
 			remove_if_zero_valued = (
 				frappe.get_cached_value(
 					"Salary Component", additional_salary.component, "remove_if_zero_valued"
 				)
 				and not component_data.variable_based_on_taxable_salary
 			)
-			# a zero amount that overwrites the structure amount still has to be applied,
-			# so that the component is removed instead of keeping the structure amount
+			# apply a zero overwrite so the structure amount is removed
 			if (
 				flt(additional_salary.amount) == 0
 				and remove_if_zero_valued
