@@ -261,18 +261,18 @@ erpnext.job_offer.make_employee_preboarding = function (frm) {
 		title: __("Create Employee Preboarding"),
 		fields: [
 			{
+				fieldname: "boarding_begins_on",
+				fieldtype: "Date",
+				label: __("Preboarding Begins On"),
+				default: frappe.datetime.get_today(),
+				reqd: 1,
+			},
+			{
 				fieldname: "date_of_joining",
 				fieldtype: "Date",
 				label: __("Date of Joining"),
 				default: frm.doc.date_of_joining,
 				read_only: frm.doc.date_of_joining ? 1 : 0,
-				reqd: 1,
-			},
-			{
-				fieldname: "boarding_begins_on",
-				fieldtype: "Date",
-				label: __("Preboarding Begins On"),
-				default: frappe.datetime.get_today(),
 				reqd: 1,
 			},
 		],
