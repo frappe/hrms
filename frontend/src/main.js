@@ -106,6 +106,10 @@ router.isReady().then(async () => {
 	}
 
 	await translationsPlugin.isReady();
+
+	const boot = window.frappe?.boot
+	if (boot?.lang) document.documentElement.lang = boot.lang
+	document.documentElement.dir = boot?.layout_direction || "ltr"
 	registerServiceWorker()
 	app.mount("#app")
 })
