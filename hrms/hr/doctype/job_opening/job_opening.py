@@ -164,6 +164,12 @@ class JobOpening(WebsiteGenerator):
 		context.posted_on = pretty_date(self.posted_on)
 
 
+@frappe.whitelist(allow_guest=True)
+def get_published_job_title(job_opening: str) -> str | None:
+	# the job application web form is open to guests, so only titles already public on the website are returned
+	return frappe.db.get_value("Job Opening", {"name": job_opening, "publish": 1}, "job_title")
+
+
 def close_expired_job_openings():
 	today = getdate()
 
