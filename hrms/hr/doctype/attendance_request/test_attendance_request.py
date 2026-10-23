@@ -449,6 +449,56 @@ class TestAttendanceRequest(HRMSTestSuite):
 
 		self.assertEqual(attendance_request.shift, shift_type.name)
 
+	def test_open_ended_shift_assignment_is_auto_fetched(self):
+		shift_type = create_shift("Test Open Ended Shift", "09:00:00", "17:00:00")
+		create_shift_assignment(self.employee.name, shift_type.name, getdate(), None)
+
+		attendance_request = frappe.get_doc(
+			{
+				"doctype": "Attendance Request",
+				"employee": self.employee.name,
+				"from_date": getdate(),
+				"to_date": getdate(),
+				"reason": "On Duty",
+			}
+		).save()
+
+		self.assertEqual(attendance_request.shift, shift_type.name)
+
+	def test_default_shift_is_auto_fetched(self):
+		shift_type = create_shift("Test Default Shift", "09:00:00", "17:00:00")
+		frappe.db.set_value("Employee", self.employee.name, "default_shift", shift_type.name)
+
+		attendance_request = frappe.get_doc(
+			{
+				"doctype": "Attendance Request",
+				"employee": self.employee.name,
+				"from_date": getdate(),
+				"to_date": getdate(),
+				"reason": "On Duty",
+			}
+		).save()
+
+		self.assertEqual(attendance_request.shift, shift_type.name)
+
+	def test_shift_not_assigned_to_employee(self):
+		assigned_shift = create_shift("Test Assigned Shift", "09:00:00", "17:00:00")
+		other_shift = create_shift("Test Other Shift", "09:00:00", "17:00:00")
+		create_shift_assignment(self.employee.name, assigned_shift.name, getdate(), getdate())
+
+		attendance_request = frappe.get_doc(
+			{
+				"doctype": "Attendance Request",
+				"employee": self.employee.name,
+				"from_date": getdate(),
+				"to_date": getdate(),
+				"reason": "On Duty",
+				"shift": other_shift.name,
+			}
+		)
+
+		self.assertRaises(frappe.ValidationError, attendance_request.save)
+
 	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": True})
 	def test_overlap_with_different_shifts(self):
 		shift_1 = create_shift("Morning Shift", "08:00:00", "12:00:00")

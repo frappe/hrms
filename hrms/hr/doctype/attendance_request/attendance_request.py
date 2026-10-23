@@ -5,7 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import add_days, date_diff, format_date, get_link_to_form, getdate
+from frappe.utils import add_days, comma_or, date_diff, format_date, get_link_to_form, getdate
 
 from erpnext.setup.doctype.employee.employee import is_holiday
 
@@ -77,34 +77,71 @@ class AttendanceRequest(Document):
 			)
 
 	def validate_shifts(self):
-		# Shift should be mentioned if employee has a shift assignment
+		# Shift should be one of the employee's assigned shifts, or the default shift if none is assigned
 		shifts = self.get_active_shifts()
-		if shifts and not self.shift:
+
+		if not self.shift:
 			if len(shifts) == 1:
 				self.shift = shifts[0]
-			else:
+			elif len(shifts) > 1:
 				frappe.throw(
 					_(
 						"There are multiple shifts assigned to the employee for the same period. Please mention the shift"
 					)
 				)
+		elif self.shift not in shifts:
+			msg = self.get_unassigned_shift_message(shifts)
+			if shifts:
+				frappe.throw(msg, title=_("Invalid Shift"))
+			elif self.docstatus == 0:
+				# nothing to validate against, so the selected shift is allowed with a warning
+				frappe.msgprint(msg, title=_("Shift Not Assigned"), indicator="orange")
+
+	def get_unassigned_shift_message(self, shifts: list[str]) -> str:
+		msg = _("Shift {0} is not assigned to Employee {1} for this period.").format(
+			frappe.bold(self.shift), frappe.bold(self.employee)
+		)
+		if shifts:
+			return (
+				msg
+				+ " "
+				+ _("Please select {0}.").format(
+					comma_or([frappe.bold(shift) for shift in shifts], add_quotes=False)
+				)
+			)
+		return msg + " " + _("On submission, attendance will be marked under this shift.")
 
 	def get_active_shifts(self):
 		# Attendance requests are typically posted after the shift period for corrections.
 		# Expired shift assignments are auto-marked Inactive, but should still be considered
 		# here so that the shift is auto-fetched for backdated requests.
-		shifts = frappe.get_all(
+		assignments = frappe.get_all(
 			"Shift Assignment",
 			filters={
 				"docstatus": 1,
 				"employee": self.employee,
-				"start_date": ("<=", self.from_date),
-				"end_date": (">=", self.to_date),
+				"start_date": ("<=", self.to_date),
 			},
-			pluck="shift_type",
+			or_filters=[["end_date", ">=", self.from_date], ["end_date", "is", "not set"]],
+			fields=["shift_type", "start_date", "end_date", "status"],
 		)
+		# an open-ended assignment set to Inactive has been stopped, auto attendance ignores it too
+		assignments = [
+			assignment for assignment in assignments if assignment.end_date or assignment.status == "Active"
+		]
 
-		return list(set(shifts))
+		if not assignments:
+			# auto attendance falls back to the default shift when no shift is assigned
+			default_shift = frappe.db.get_value("Employee", self.employee, "default_shift")
+			return [default_shift] if default_shift else []
+
+		shifts = {
+			assignment.shift_type
+			for assignment in assignments
+			if getdate(assignment.start_date) <= getdate(self.from_date)
+			and (not assignment.end_date or getdate(assignment.end_date) >= getdate(self.to_date))
+		}
+		return list(shifts)
 
 	def validate_request_overlap(self):
 		if not self.name:
@@ -138,6 +175,21 @@ class AttendanceRequest(Document):
 		)
 
 		frappe.throw(msg, title=_("Overlapping Attendance Request"), exc=OverlappingAttendanceRequestError)
+
+	def onload(self):
+		if self.docstatus != 0 or not self.shift:
+			return
+
+		# assignments can change after the request is saved, so check the shift again on every load
+		shifts = self.get_active_shifts()
+		if self.shift not in shifts:
+			self.set_onload(
+				"shift_warning",
+				{
+					"message": self.get_unassigned_shift_message(shifts),
+					"indicator": "red" if shifts else "orange",
+				},
+			)
 
 	def on_submit(self):
 		self.create_attendance_records()
