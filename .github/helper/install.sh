@@ -18,11 +18,9 @@ paymentsbranch=${PAYMENTS_BRANCH:-${githubbranch%"-hotfix"}}
 lendingbranch="develop"
 
 git clone "https://github.com/${frappeuser}/frappe" --branch "${frappebranch}" --depth 1
-git -C frappe fetch --depth 1 origin 9225fc665a1aed9351ee30ed1c28d00cd7d07c0e
+git -C frappe fetch --depth 1 origin pull/44933/head
 git -C frappe checkout -B "${frappebranch}" FETCH_HEAD
-sed -i 's|return plutoprint.ResourceData(ttf.read_bytes(), "font/ttf")|return plutoprint.default_resource_fetcher.fetch_url(ttf.resolve().as_uri())|' frappe/frappe/utils/pdf_generator/pluto.py
-grep -n "ttf.resolve().as_uri" frappe/frappe/utils/pdf_generator/pluto.py
-git -C frappe -c user.name=ci -c user.email=ci@example.com commit -qam "test font fix"
+git -C frappe log -1 --format='frappe under test: %H %s'
 bench init --skip-assets --frappe-path ~/frappe --python "$(which python)" frappe-bench
 
 mkdir ~/frappe-bench/sites/test_site
