@@ -321,16 +321,23 @@ class AttendanceRequest(Document):
 		return leaves[0].name if leaves else None
 
 	def get_attendance_doc(self, attendance_date: str) -> str | None:
-		attendance = frappe.db.exists(
+		# attendance without a shift counts as a duplicate for any shift, so it must be updated instead
+		shift_filters = [["shift", "is", "not set"]]
+		if self.shift:
+			shift_filters.append(["shift", "=", self.shift])
+
+		attendance = frappe.get_all(
 			"Attendance",
-			{
+			filters={
 				"employee": self.employee,
 				"attendance_date": attendance_date,
 				"docstatus": ("!=", 2),
-				"shift": self.shift,
 			},
+			or_filters=shift_filters,
+			pluck="name",
+			limit=1,
 		)
-		return frappe.get_doc("Attendance", attendance) if attendance else None
+		return frappe.get_doc("Attendance", attendance[0]) if attendance else None
 
 	def get_attendance_status(self, attendance_date: str) -> str:
 		if self.half_day and date_diff(getdate(self.half_day_date), getdate(attendance_date)) == 0:
