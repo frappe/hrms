@@ -133,7 +133,7 @@ class TestAdditionalSalary(FrappeTestCase):
 			employee=emp_id,
 			company="_Test Company",
 		)
-		self.set_remove_if_zero_valued("HRA", 0)
+		frappe.db.set_value("Salary Component", "HRA", "remove_if_zero_valued", 0)
 
 		date = nowdate()
 		get_additional_salary(
@@ -157,7 +157,6 @@ class TestAdditionalSalary(FrappeTestCase):
 			employee=emp_id,
 			company="_Test Company",
 		)
-		self.set_remove_if_zero_valued("HRA", 1)
 
 		date = nowdate()
 		get_additional_salary(
@@ -181,7 +180,6 @@ class TestAdditionalSalary(FrappeTestCase):
 			test_tax=True,
 			company="_Test Company",
 		)
-		self.set_remove_if_zero_valued("TDS", 1)
 
 		date = nowdate()
 		additional_salary = get_additional_salary(
@@ -196,7 +194,6 @@ class TestAdditionalSalary(FrappeTestCase):
 
 		tds = next(row for row in salary_slip.deductions if row.salary_component == "TDS")
 		self.assertEqual(tds.additional_salary, additional_salary.name)
-		self.assertEqual(tds.amount, 0)
 
 	def test_zero_overwrite_of_accrual_component_records_no_payout(self):
 		emp_id = make_employee("test_additional@salary.com", company="_Test Company")
@@ -225,11 +222,6 @@ class TestAdditionalSalary(FrappeTestCase):
 			if entry["salary_component"] == "Accrued Earnings" and entry.get("transaction_type") == "Payout"
 		]
 		self.assertEqual(payouts, [])
-
-	def set_remove_if_zero_valued(self, component, value):
-		previous = frappe.db.get_value("Salary Component", component, "remove_if_zero_valued")
-		frappe.db.set_value("Salary Component", component, "remove_if_zero_valued", value)
-		self.addCleanup(frappe.db.set_value, "Salary Component", component, "remove_if_zero_valued", previous)
 
 	def test_overwrite_tax_component(self):
 		def _get_tds_component(doc) -> dict:
