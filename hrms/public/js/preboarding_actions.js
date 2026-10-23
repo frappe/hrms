@@ -100,6 +100,7 @@ function open_fields_dialog(list, { title, fieldnames, primary_label, method, fr
 			fieldtype: df.fieldtype,
 			options: df.options,
 			reqd: df.reqd,
+			mandatory_depends_on: df.mandatory_depends_on,
 			default: frm.doc[df.fieldname],
 		}));
 	if (fields.length > 5)
