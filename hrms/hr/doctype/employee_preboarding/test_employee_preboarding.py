@@ -288,6 +288,35 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		self.assertRaises(frappe.ValidationError, preboarding.link_employee, employee.name)
 		self.assertIsNone(frappe.db.get_value("Employee Preboarding", preboarding.name, "employee"))
 
+	def test_activity_added_on_the_preboarding_is_a_flagged_manual_row(self):
+		preboarding = create_employee_preboarding(submit=False)
+		preboarding.add_activity("Order a desk")
+
+		preboarding.reload()
+		row = get_row(preboarding, "Order a desk")
+		self.assertEqual((row.action, row.added_on_preboarding), ("Manual", 1))
+		self.assertEqual(getdate(row.due_date), getdate(preboarding.boarding_begins_on))
+
+	def test_only_activities_added_on_the_preboarding_can_be_removed(self):
+		preboarding = create_employee_preboarding(submit=False)
+		preboarding.add_activity("Order a desk")
+		preboarding.reload()
+
+		preboarding.remove_activity(get_row(preboarding, "Order a desk").name)
+		preboarding.reload()
+		self.assertNotIn("Order a desk", [row.activity_name for row in preboarding.activities])
+		self.assertEqual(
+			[row.idx for row in preboarding.activities], list(range(1, len(preboarding.activities) + 1))
+		)
+
+		template_row = get_row(preboarding, "Assign ID Card")
+		self.assertRaises(frappe.ValidationError, preboarding.remove_activity, template_row.name)
+
+	def test_activities_cannot_be_added_to_a_submitted_preboarding(self):
+		preboarding = create_employee_preboarding(submit=True)
+
+		self.assertRaises(frappe.ValidationError, preboarding.add_activity, "Order a desk")
+
 	def test_assignment_row_ticks_from_the_real_assignment(self):
 		preboarding = create_employee_preboarding(submit=False)
 		preboarding.db_set("gender", "Female")

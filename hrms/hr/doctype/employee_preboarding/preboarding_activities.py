@@ -250,6 +250,36 @@ class PreboardingActivities:
 			frappe.db.set_value("ToDo", activity.todo, "date", due_date or None)
 
 	@frappe.whitelist(methods=["POST"])
+	def add_activity(self, activity_name: str) -> None:
+		self.check_permission("write")
+		self.validate_draft()
+		activity = self.append("activities", {"activity_name": activity_name, "added_on_preboarding": 1})
+		self.set_activity_defaults(activity)
+		activity.db_insert()
+		self.save_activity_states()
+
+	@frappe.whitelist(methods=["POST"])
+	def remove_activity(self, row: str) -> None:
+		self.check_permission("write")
+		self.validate_draft()
+		activity = self.get_activity(row)
+		if not activity.added_on_preboarding:
+			frappe.throw(_("Only activities added on this preboarding can be removed; skip the others"))
+
+		if activity.todo:
+			close_todo(activity.todo, "Cancelled")
+		self.remove(activity)
+		frappe.db.delete(activity.doctype, activity.name)
+		for idx, other in enumerate(self.activities, start=1):
+			if other.idx != idx:
+				other.db_set("idx", idx, update_modified=False)
+		self.save_activity_states()
+
+	def validate_draft(self):
+		if self.docstatus != 0:
+			frappe.throw(_("Activities can only be added or removed while the preboarding is a draft"))
+
+	@frappe.whitelist(methods=["POST"])
 	def complete_activity(self, row: str) -> None:
 		self.check_permission("write")
 		activity = self.get_activity(row)

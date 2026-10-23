@@ -16,6 +16,7 @@ class EmployeeBoardingActivity(Document):
 
 		action: DF.Literal["Manual", "Create User", "Appointment Letter", "Create Employee", "Assign"]
 		activity_name: DF.Data
+		added_on_preboarding: DF.Check
 		begin_on: DF.Int
 		completed: DF.Check
 		depends_on_action: DF.Literal["", "Create User", "Create Employee", "Appointment Letter"]

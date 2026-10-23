@@ -11,6 +11,8 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 		this.frm = frm;
 		this.checklist = new frappe.ui.Checklist({
 			title: __("Preboarding Checklist"),
+			add_label: __("Add activity"),
+			on_remove: (item) => this.update_row("remove_activity", { row: item.id }),
 			on_skip: (item) => this.call("skip_activity", { row: item.id }),
 			on_unskip: (item) => this.call("unskip_activity", { row: item.id }),
 			on_assign: (item, user) => this.update_row("assign_activity", { row: item.id, user }),
@@ -31,6 +33,9 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 			$wrapper.empty().append(this.$hint, this.checklist.$el);
 		}
 		this.render_template_hint();
+		this.checklist.opts.on_add = this.can_edit_activities()
+			? (label) => this.update_row("add_activity", { activity_name: label })
+			: null;
 		this.checklist.set_items((this.frm.doc.activities || []).map((row) => this.get_item(row)));
 	}
 
@@ -70,8 +75,13 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 			due_date: row.due_date,
 			locked: this.get_lock_reason(row) || handler.get_lock_reason?.(this, row),
 			skippable: saved,
+			removable: saved && Boolean(row.added_on_preboarding) && this.can_edit_activities(),
 			actions: handler.get_actions(this, row, state),
 		};
+	}
+
+	can_edit_activities() {
+		return this.frm.doc.docstatus === 0 && this.frm.has_perm("write");
 	}
 
 	get_lock_reason(row) {
