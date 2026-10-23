@@ -6,7 +6,7 @@
 // The face-and-count pill opens a team and keeps the node you clicked under your cursor.
 // Search flies to anyone. Clicking a person emits `select`; the page opens the sheet.
 import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, watch } from 'vue'
-import { Button, Combobox, Divider, Tooltip } from 'frappe-ui'
+import { Button, Combobox, Divider, TabButtons, Tooltip } from 'frappe-ui'
 import OrgNode from './OrgNode'
 import OrgPersonCard from './OrgPersonCard.vue'
 import { byId, chainOf, deptOf, meId, reportsOf, rootId, staff } from '../lib/people'
@@ -29,6 +29,22 @@ const expanded = ref(new Set<string>(pathTo(start)))
 const pickedId = ref<string | null>(known(props.person) || null)
 const selected = computed(() => pickedId.value || '')
 const emit = (e: 'select' | 'clear', id?: string) => (e === 'clear' ? (pickedId.value = null) : (pickedId.value = id ?? null))
+
+// ---- orientation: top to bottom, or left to right; remembered per browser ----------------
+type Orientation = 'vertical' | 'horizontal'
+const ORIENTATION_KEY = 'org-chart-orientation'
+function savedOrientation(): Orientation {
+  try {
+    return localStorage.getItem(ORIENTATION_KEY) === 'horizontal' ? 'horizontal' : 'vertical'
+  } catch {
+    return 'vertical'
+  }
+}
+const orientation = ref<Orientation>(savedOrientation())
+const orientations = [
+  { label: __('Top to bottom'), value: 'vertical', icon: 'lucide-move-down' },
+  { label: __('Left to right'), value: 'horizontal', icon: 'lucide-move-right' },
+]
 
 // ---- the view: one transform, owned here -------------------------------------------
 const vp = ref<HTMLElement>()
@@ -93,6 +109,27 @@ function center(id: string, zoom?: number) {
     s.value = ns
     tx.value = v.width / 2 - (b.x + b.w / 2) * ns
     ty.value = v.height * 0.4 - (b.y + b.h / 2) * ns
+  })
+}
+
+const homeScale = () => ((vp.value?.getBoundingClientRect().width ?? 1024) < 640 ? 0.8 : 1)
+
+// Brings the root into view at `zoom` (or the current zoom): top centre when the chart grows
+// down, left middle when it grows right.
+function showRoot(zoom?: number) {
+  const b = box(ROOT)
+  const v = vp.value?.getBoundingClientRect()
+  if (!b || !v) return
+  const ns = zoom ?? s.value
+  animate(() => {
+    s.value = ns
+    if (orientation.value === 'horizontal') {
+      tx.value = 64 - b.x * ns
+      ty.value = v.height / 2 - (b.y + b.h / 2) * ns
+    } else {
+      tx.value = v.width / 2 - (b.x + b.w / 2) * ns
+      ty.value = 88 - b.y * ns
+    }
   })
 }
 
@@ -211,15 +248,28 @@ async function openTeam(id: string) {
 }
 
 const allOpen = computed(() => PEOPLE.every((p) => !reportsOf(p.id).length || expanded.value.has(p.id)))
+// Expand all keeps your zoom; Fit is the way to see everything. Collapse all starts over.
 async function toggleAll() {
-  expanded.value = allOpen.value
-    ? new Set(pathTo(home))
-    : new Set(PEOPLE.filter((p) => reportsOf(p.id).length).map((p) => p.id))
+  const opening = !allOpen.value
+  expanded.value = opening ? new Set(PEOPLE.filter((p) => reportsOf(p.id).length).map((p) => p.id)) : new Set([ROOT])
   await nextTick()
-  allOpen.value ? fit() : center(home, 1)
+  if (selected.value && !box(selected.value)) emit('clear')
+  showRoot(opening ? undefined : homeScale())
 }
 
-provide('org', { byId, reportsOf, expanded, selected, you, toggle, select })
+async function setOrientation(value: string | number) {
+  if (value === orientation.value) return
+  orientation.value = value as Orientation
+  try {
+    localStorage.setItem(ORIENTATION_KEY, orientation.value)
+  } catch {}
+  await nextTick()
+  selBox.value = selected.value ? box(selected.value) : null
+  if (selected.value) center(selected.value)
+  else showRoot()
+}
+
+provide('org', { byId, reportsOf, expanded, selected, you, toggle, select, orientation })
 defineExpose({ reveal, openTeam })
 
 // Search flies to a person and opens them.
@@ -236,11 +286,18 @@ function onPick(id: string | null) {
 
 // Centre on the manager, not on you: you sit among your peers, your team below.
 function place() {
-  const target = focus.value || byId.value[start]?.manager || start
+  const wide = orientation.value === 'horizontal'
+  const target = focus.value || (wide ? start : byId.value[start]?.manager || start)
   const b = box(target)
   const v = vp.value?.getBoundingClientRect()
   if (!b || !v || !v.width) return
-  s.value = v.width < 640 ? 0.8 : 1
+  s.value = homeScale()
+  if (wide) {
+    const r = box(ROOT) ?? b
+    tx.value = Math.min(64 - r.x * s.value, v.width * 0.4 - (b.x + b.w / 2) * s.value)
+    ty.value = v.height / 2 - (b.y + b.h / 2) * s.value
+    return
+  }
   tx.value = v.width / 2 - (b.x + b.w / 2) * s.value
   ty.value = focus.value ? v.height * 0.35 - (b.y + b.h / 2) * s.value : Math.min(16, 96 - b.y * s.value)
 }
@@ -250,7 +307,7 @@ function place() {
 const vpSize = ref({ w: 0, h: 0 })
 const selBox = ref<ReturnType<typeof box>>(null)
 watch(
-  [selected, expanded],
+  [selected, expanded, orientation],
   async () => {
     await nextTick()
     selBox.value = selected.value ? box(selected.value) : null
@@ -310,7 +367,7 @@ watch(() => known(props.person), (id) => id && (pickedId.value = id))
     @wheel.prevent="wheel"
     @keydown="key"
   >
-    <div ref="stage" class="absolute left-0 top-0 inline-flex flex-col items-center p-10" :style="stageStyle">
+    <div ref="stage" class="absolute left-0 top-0 inline-flex flex-col items-center p-10" :class="orientation === 'horizontal' && '!pr-28'" :style="stageStyle">
       <OrgNode :id="ROOT" />
     </div>
 
@@ -345,7 +402,9 @@ watch(() => known(props.person), (id) => id && (pickedId.value = id))
       <Tooltip :text="__('Fit to screen')"><Button variant="ghost" icon="lucide-maximize" :aria-label="__('Fit to screen')" @click="fit" /></Tooltip>
       <Tooltip v-if="you" :text="__('Find me')"><Button variant="ghost" icon="lucide-locate-fixed" :aria-label="__('Find me')" @click="reveal(you)" /></Tooltip>
       <Divider orientation="vertical" class="mx-1 hidden !h-4 sm:block" />
-      <Button class="hidden sm:inline-flex" variant="ghost" :icon-left="allOpen ? 'lucide-fold-vertical' : 'lucide-unfold-vertical'" :label="allOpen ? __('Collapse') : __('Expand all')" @click="toggleAll" />
+      <Button class="hidden sm:inline-flex" variant="ghost" :icon-left="allOpen ? 'lucide-chevrons-down-up' : 'lucide-chevrons-up-down'" :label="allOpen ? __('Collapse all') : __('Expand all')" @click="toggleAll" />
+      <Divider orientation="vertical" class="mx-1 !h-4" />
+      <TabButtons :model-value="orientation" :options="orientations" :aria-label="__('Chart orientation')" @update:model-value="setOrientation" />
     </div>
   </div>
 </template>

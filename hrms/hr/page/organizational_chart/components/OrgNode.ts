@@ -19,7 +19,9 @@ const OrgNode = defineComponent({
       const open = org.expanded.value.has(props.id)
       const picked = org.selected.value === props.id
       const isYou = org.you.value === props.id
-      const stack = kids.length > 0 && kids.every((k: any) => !org.reportsOf(k.id).length)
+      const wide = org.orientation.value === 'horizontal'
+      // Left to right, every team is one column, so only top to bottom needs the stack.
+      const stack = !wide && kids.length > 0 && kids.every((k: any) => !org.reportsOf(k.id).length)
 
       const card = h(
         'button',
@@ -59,7 +61,8 @@ const OrgNode = defineComponent({
             {
               type: 'button',
               class: [
-                'absolute left-1/2 top-full z-10 -mt-1.5 flex h-6 -translate-x-1/2 items-center gap-1.5 rounded-4 border border-outline-gray-2 bg-surface-base text-sm text-ink-gray-7 transition-colors hover:bg-surface-gray-2',
+                wide ? 'absolute left-full top-1/2 z-10 -ml-1.5 -translate-y-1/2' : 'absolute left-1/2 top-full z-10 -mt-1.5 -translate-x-1/2',
+                'flex h-6 items-center gap-1.5 rounded-4 border border-outline-gray-2 bg-surface-base text-sm text-ink-gray-7 transition-colors hover:bg-surface-gray-2',
                 open ? 'px-1' : 'group pl-1 pr-1',
               ],
               'aria-expanded': open ? 'true' : 'false',
@@ -70,7 +73,7 @@ const OrgNode = defineComponent({
               },
             },
             open
-              ? [h('span', { class: 'lucide-chevron-up size-3.5 text-ink-gray-6', 'aria-hidden': 'true' })]
+              ? [h('span', { class: `${wide ? 'lucide-chevron-left' : 'lucide-chevron-up'} size-3.5 text-ink-gray-6`, 'aria-hidden': 'true' })]
               : [
                   h(
                     'span',
@@ -80,7 +83,7 @@ const OrgNode = defineComponent({
                     ),
                   ),
                   h('span', { class: 'tabular-nums' }, String(kids.length)),
-                  h('span', { class: 'lucide-chevron-down size-3.5 text-ink-gray-6', 'aria-hidden': 'true' }),
+                  h('span', { class: `${wide ? 'lucide-chevron-right' : 'lucide-chevron-down'} size-3.5 text-ink-gray-6`, 'aria-hidden': 'true' }),
                 ],
           )
         : null
@@ -90,7 +93,23 @@ const OrgNode = defineComponent({
       const n = kids.length
 
       let children = null
-      if (open && n && stack) {
+      if (open && n && wide) {
+        // One column to the right; each report joins a spine with an elbow.
+        const joins = (i: number) =>
+          n === 1
+            ? [line('left-0 top-1/2 w-8 border-t')]
+            : i === 0
+              ? [line('left-0 top-1/2 bottom-0 w-8 rounded-tl-[12px] border-l border-t')]
+              : i === n - 1
+                ? [line('left-0 top-0 bottom-[calc(50%_-_1px)] w-8 rounded-bl-[12px] border-l border-b')]
+                : [line('inset-y-0 left-0 border-l'), line('left-0 top-1/2 w-8 border-t')]
+        children = h('div', { class: 'relative flex flex-col justify-center pl-12' }, [
+          line('left-0 top-1/2 w-12 border-t'),
+          ...kids.map((k: any, i: number) =>
+            h('div', { key: k.id, class: 'relative py-1.5 pl-8' }, [...joins(i), h(OrgNode, { id: k.id })]),
+          ),
+        ])
+      } else if (open && n && stack) {
         children = h('div', { class: 'relative flex w-64 flex-col gap-2 pl-12 pt-8' }, [
           line('left-9 top-0 bottom-[40px] border-l'),
           ...kids.map((k: any, i: number) =>
@@ -119,7 +138,7 @@ const OrgNode = defineComponent({
         ])
       }
 
-      return h('div', { class: 'flex flex-col items-center' }, [h('div', { class: 'relative' }, [card, pill]), children])
+      return h('div', { class: wide ? 'flex items-center' : 'flex flex-col items-center' }, [h('div', { class: 'relative' }, [card, pill]), children])
     }
   },
 })
