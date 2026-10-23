@@ -6,7 +6,7 @@ from frappe.utils import add_days, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
-from hrms.hr.doctype.job_opening.job_opening import close_expired_job_openings
+from hrms.hr.doctype.job_opening.job_opening import close_expired_job_openings, get_published_job_title
 from hrms.hr.doctype.staffing_plan.test_staffing_plan import make_company
 from hrms.tests.utils import HRMSTestSuite
 
@@ -131,6 +131,16 @@ class TestJobOpening(HRMSTestSuite):
 		self.assertEqual(opening_1.status, "Closed")
 		self.assertEqual(opening_1.closed_on, today)
 		self.assertEqual(opening_2.status, "Open")
+
+	def test_published_job_title_for_guest(self):
+		published = get_job_opening(publish=1)
+		published.insert()
+		unpublished = get_job_opening(job_title="Designer Internal")
+		unpublished.insert()
+
+		frappe.set_user("Guest")
+		self.assertEqual(get_published_job_title(published.name), "Designer")
+		self.assertIsNone(get_published_job_title(unpublished.name))
 
 
 def get_job_opening(**args):
