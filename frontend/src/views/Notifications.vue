@@ -7,15 +7,11 @@
 						class="flex flex-row bg-white shadow-sm py-4 px-3 items-center justify-between border-b sticky top-0 z-10"
 					>
 						<div class="flex flex-row items-center">
-<<<<<<< HEAD
 							<Button
 								variant="ghost"
-								class="!pl-0 hover:bg-white"
+								class="!ps-0 hover:bg-white"
 								@click="router.back()"
 							>
-=======
-							<Button variant="ghost" class="!ps-0 hover:bg-white" @click="router.back()">
->>>>>>> 70e643d (fix: update pwa layout direction for rtl languages)
 								<FeatherIcon name="chevron-left" class="h-5 w-5" />
 							</Button>
 							<h2 class="text-xl font-semibold text-gray-900">{{ __("Notifications") }} </h2>
@@ -30,18 +26,7 @@
 							>
 								{{ __("{0} Unread", [unreadNotificationsCount.data]) }}
 							</div>
-<<<<<<< HEAD
-							<div class="flex ml-auto gap-1">
-=======
-							<div class="flex flex-wrap ms-auto gap-1">
-								<Button
-									variant="outline"
-									:disabled="notifications.list.loading"
-									@click="toggleReadFilter"
-								>
-									{{ showAll ? __("Show Unread") : __("Show All") }}
-								</Button>
->>>>>>> 70e643d (fix: update pwa layout direction for rtl languages)
+							<div class="flex ms-auto gap-1">
 								<Button
 									v-if="allowPushNotifications"
 									variant="outline"
@@ -97,14 +82,8 @@
 						<div v-if="notifications.data?.length && notifications.hasNextPage" class="flex">
 							<Button
 								variant="outline"
-<<<<<<< HEAD
-								class="ml-auto"
-								@click="loadMore"
-=======
 								class="ms-auto"
-								@click="notifications.next()"
-								:loading="notifications.list.loading"
->>>>>>> 70e643d (fix: update pwa layout direction for rtl languages)
+								@click="loadMore"
 							>
 								{{ __('Load more') }}
 							</Button>
