@@ -15,6 +15,8 @@ const OrgNode = defineComponent({
 		const org: any = inject("org");
 		return () => {
 			const p = org.byId.value[props.id];
+			// gone since the last reload (left, or no longer readable)
+			if (!p) return null;
 			const kids = org.reportsOf(props.id);
 			const open = org.expanded.value.has(props.id);
 			const picked = org.selected.value === props.id;

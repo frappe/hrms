@@ -83,11 +83,10 @@ async function fetchStaff() {
 	deriveDepartments();
 }
 
+// The server works out the back date from the employee's own holiday list.
 function awayLabel(leave: any) {
 	if (leave.leave_half_day) return __("Half day");
-	let back = dayjs(leave.leave_to_date).add(1, "day");
-	while (back.day() === 0 || back.day() === 6) back = back.add(1, "day");
-	return __("Back {0}", [back.format("ddd D")]);
+	return __("Back {0}", [dayjs(leave.leave_back_date).format("ddd D")]);
 }
 
 // A person with no department takes their manager's.
@@ -115,11 +114,14 @@ export const reportsOf = (id: string) =>
 		.filter((p) => p.manager === id)
 		.sort((a, b) => reportsCount(b.id) - reportsCount(a.id) || a.name.localeCompare(b.name));
 
+// Managers from the nearest up to the top. A loop in reports_to stops where it comes back round.
 export function chainOf(id: string) {
 	const out: string[] = [];
+	const seen = new Set([id]);
 	let cur = byId.value[id];
-	while (cur?.manager && out.length < 12) {
+	while (cur?.manager && !seen.has(cur.manager)) {
 		out.push(cur.manager);
+		seen.add(cur.manager);
 		cur = byId.value[cur.manager];
 	}
 	return out;
@@ -143,11 +145,14 @@ export const OFFICES = computed(() =>
 );
 
 const subtree = (id: string): number => reportsOf(id).reduce((n, p) => n + 1 + subtree(p.id), 0);
-// The chart hangs from whoever has no manager and the biggest team.
-export const rootId = computed(() => {
-	const tops = staff.value.filter((p) => !p.manager);
-	return [...tops].sort((a, b) => subtree(b.id) - subtree(a.id))[0]?.id || "";
-});
+// Everyone without a manager tops a tree of their own; the biggest tree comes first.
+export const rootIds = computed(() =>
+	staff.value
+		.filter((p) => !p.manager)
+		.map((p) => ({ id: p.id, name: p.name, size: subtree(p.id) }))
+		.sort((a, b) => b.size - a.size || a.name.localeCompare(b.name))
+		.map((p) => p.id),
+);
 
 // ---- who is looking ---------------------------------------------------------------------
 // The session's employee. Administrator and anyone without an employee record have none.

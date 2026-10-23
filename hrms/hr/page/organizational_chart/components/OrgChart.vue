@@ -9,7 +9,7 @@ import { computed, nextTick, onBeforeUnmount, onMounted, provide, ref, watch } f
 import { Button, Combobox, Divider, TabButtons, Tooltip } from "frappe-ui";
 import OrgNode from "./OrgNode";
 import OrgPersonCard from "./OrgPersonCard.vue";
-import { byId, chainOf, deptOf, meId, reportsOf, rootId, staff } from "../lib/people";
+import { byId, chainOf, deptOf, meId, reportsOf, rootIds, staff } from "../lib/people";
 
 declare const __: (text: string, args?: unknown[]) => string;
 
@@ -17,11 +17,16 @@ declare const __: (text: string, args?: unknown[]) => string;
 const props = defineProps<{ focus?: string; person?: string }>();
 const known = (id?: string) => (id && byId.value[id] ? id : "");
 const focus = computed(() => known(props.focus) || known(props.person));
-const ROOT = rootId.value;
-const PEOPLE = staff.value.filter((p) => p.id === ROOT || chainOf(p.id).includes(ROOT));
+// Each visit reloads `staff` behind the chart, so the trees and the people in them follow it.
+const ROOTS = rootIds;
+const ROOT = computed(() => ROOTS.value[0] || "");
+// Someone in a reports_to loop has no top, so no tree to sit in.
+const PEOPLE = computed(() =>
+	staff.value.filter((p) => !byId.value[chainOf(p.id).at(-1) ?? p.id]?.manager),
+);
 const you = computed(() => meId.value);
 // Administrator and anyone without an employee record open on the top of the chart.
-const home = you.value || ROOT;
+const home = you.value || ROOT.value;
 const start = focus.value || home;
 
 const pathTo = (id: string) => [...chainOf(id), id];
@@ -125,7 +130,7 @@ const homeScale = () => ((vp.value?.getBoundingClientRect().width ?? 1024) < 640
 // Brings the root into view at `zoom` (or the current zoom): top centre when the chart grows
 // down, left middle when it grows right.
 function showRoot(zoom?: number) {
-	const b = box(ROOT);
+	const b = box(ROOT.value);
 	const v = vp.value?.getBoundingClientRect();
 	if (!b || !v) return;
 	const ns = zoom ?? s.value;
@@ -146,7 +151,8 @@ function fit() {
 	if (!v || !stage.value) return;
 	const w = stage.value.offsetWidth;
 	const h = stage.value.offsetHeight;
-	const ns = clamp(Math.min((v.width - 64) / w, (v.height - 96) / h, 1));
+	// Fit may go below the zoom floor: a wide chart has to fit whole.
+	const ns = Math.min((v.width - 64) / w, (v.height - 96) / h, 1);
 	animate(() => {
 		s.value = ns;
 		tx.value = (v.width - w * ns) / 2;
@@ -256,14 +262,14 @@ async function openTeam(id: string) {
 }
 
 const allOpen = computed(() =>
-	PEOPLE.every((p) => !reportsOf(p.id).length || expanded.value.has(p.id)),
+	PEOPLE.value.every((p) => !reportsOf(p.id).length || expanded.value.has(p.id)),
 );
 // Expand all keeps your zoom; Fit is the way to see everything. Collapse all starts over.
 async function toggleAll() {
 	const opening = !allOpen.value;
 	expanded.value = opening
-		? new Set(PEOPLE.filter((p) => reportsOf(p.id).length).map((p) => p.id))
-		: new Set([ROOT]);
+		? new Set(PEOPLE.value.filter((p) => reportsOf(p.id).length).map((p) => p.id))
+		: new Set(ROOTS.value);
 	await nextTick();
 	if (selected.value && !box(selected.value)) emit("clear");
 	showRoot(opening ? undefined : homeScale());
@@ -287,7 +293,9 @@ defineExpose({ reveal, openTeam });
 // Search flies to a person and opens them.
 const pick = ref<string | null>(null);
 const query = ref("");
-const options = PEOPLE.map((p) => ({ label: p.name, value: p.id, description: deptOf(p.id) }));
+const options = computed(() =>
+	PEOPLE.value.map((p) => ({ label: p.name, value: p.id, description: deptOf(p.id) })),
+);
 function onPick(id: string | null) {
 	if (!id) return;
 	reveal(id);
@@ -305,7 +313,7 @@ function place() {
 	if (!b || !v || !v.width) return;
 	s.value = homeScale();
 	if (wide) {
-		const r = box(ROOT) ?? b;
+		const r = box(ROOT.value) ?? b;
 		tx.value = Math.min(64 - r.x * s.value, v.width * 0.4 - (b.x + b.w / 2) * s.value);
 		ty.value = v.height / 2 - (b.y + b.h / 2) * s.value;
 		return;
@@ -398,7 +406,12 @@ watch(
 			:class="orientation === 'horizontal' && '!pr-28'"
 			:style="stageStyle"
 		>
-			<OrgNode :id="ROOT" />
+			<div
+				class="flex items-start gap-16"
+				:class="orientation === 'horizontal' && 'flex-col'"
+			>
+				<OrgNode v-for="id in ROOTS" :key="id" :id="id" />
+			</div>
 		</div>
 
 		<Transition

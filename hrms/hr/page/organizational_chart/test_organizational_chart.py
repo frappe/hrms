@@ -72,3 +72,5 @@ class TestOrganizationalChart(HRMSTestSuite):
 		self.assertFalse(people[emp1].on_leave_today)
 		self.assertTrue(people[emp3].on_leave_today)
 		self.assertEqual(people[emp3].leave_to_date, getdate())
+		self.assertFalse(people[emp3].leave_half_day)
+		self.assertGreater(getdate(people[emp3].leave_back_date), getdate())

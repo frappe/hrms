@@ -1,6 +1,8 @@
 import frappe
 from frappe.query_builder.functions import Count
-from frappe.utils import nowdate
+from frappe.utils import add_days, getdate, nowdate
+
+from hrms.utils.holiday_list import get_holiday_list_for_employee
 
 
 @frappe.whitelist()
@@ -79,12 +81,13 @@ def get_people():
 		limit_page_length=0,
 	)
 
-	today = nowdate()
+	today = getdate(nowdate())
+	# get_list, so someone who may read an employee but not their leave does not see it
 	leaves = {
 		leave.employee: leave
-		for leave in frappe.get_all(
+		for leave in frappe.get_list(
 			"Leave Application",
-			fields=["employee", "half_day", "to_date"],
+			fields=["employee", "from_date", "to_date", "half_day", "half_day_date"],
 			filters={
 				"docstatus": 1,
 				"status": "Approved",
@@ -108,8 +111,38 @@ def get_people():
 		leave = leaves.get(person.name)
 		person.department_name = department_names.get(person.department) or ""
 		person.on_leave_today = 1 if leave else 0
-		person.leave_half_day = leave.half_day if leave else 0
+		person.leave_half_day = 1 if leave and is_half_day_today(leave, today) else 0
 		person.leave_to_date = leave.to_date if leave else None
+		person.leave_back_date = back_on(person.name, leave.to_date) if leave else None
 		person.reports = reports.get(person.name, 0)
 
 	return people
+
+
+def is_half_day_today(leave, today) -> bool:
+	# a multi-day leave is half a day only on its half_day_date
+	if not leave.half_day:
+		return False
+	if leave.half_day_date:
+		return getdate(leave.half_day_date) == today
+	return leave.from_date == leave.to_date
+
+
+def back_on(employee: str, to_date):
+	"""The first day after `to_date` that is not a holiday on the employee's own holiday list."""
+	day = add_days(to_date, 1)
+	holiday_list = get_holiday_list_for_employee(employee, raise_exception=False, as_on=day)
+	if not holiday_list:
+		return day
+	holidays = set(
+		frappe.get_all(
+			"Holiday",
+			filters={"parent": holiday_list, "holiday_date": [">=", day]},
+			pluck="holiday_date",
+			order_by="holiday_date",
+			limit=60,
+		)
+	)
+	while getdate(day) in holidays:
+		day = add_days(day, 1)
+	return day
