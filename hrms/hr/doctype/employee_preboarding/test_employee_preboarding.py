@@ -70,7 +70,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 	def test_due_date_defaults_to_the_offset_from_preboarding_start(self):
 		preboarding = create_employee_preboarding(submit=False)
 
-		self.assertEqual(getdate(get_row(preboarding, "Create User").due_date), getdate())
+		self.assertEqual(getdate(get_row(preboarding, "Create Portal Login").due_date), getdate())
 		self.assertEqual(getdate(get_row(preboarding, "Assign a laptop").due_date), add_days(getdate(), 1))
 
 	def test_new_template_starts_with_the_standard_activities_once(self):
@@ -85,7 +85,9 @@ class TestEmployeePreboarding(HRMSTestSuite):
 			row for row in template.preboarding_activities if row.action != "Appointment Letter"
 		]
 		template.save()
-		self.assertNotIn("Appointment Letter", [row.activity_name for row in template.preboarding_activities])
+		self.assertNotIn(
+			"Send Appointment Letter", [row.activity_name for row in template.preboarding_activities]
+		)
 
 	def test_template_prefilled_by_the_form_keeps_one_of_each_standard_activity(self):
 		template = make_template("_Test Prefilled Template", get_standard_activities())
@@ -191,7 +193,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		preboarding.create_user()
 		preboarding.reload()
 		self.assertEqual(preboarding.boarding_status, "In Process")
-		self.assertTrue(get_row(preboarding, "Create User").completed)
+		self.assertTrue(next(row for row in preboarding.activities if row.action == "Create User").completed)
 
 	def test_deleting_the_user_keeps_the_preboarding_and_reopens_create_user(self):
 		preboarding = create_employee_preboarding(submit=False)
@@ -199,7 +201,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		preboarding.reload()
 		user = preboarding.create_user()
 		preboarding.reload()
-		self.assertTrue(get_row(preboarding, "Create User").completed)
+		self.assertTrue(get_row(preboarding, "Create Portal Login").completed)
 		blockers = get_linked_docs_to_delete("User", user)["docs"]
 		self.assertNotIn("Employee Preboarding", [doc["doctype"] for doc in blockers])
 
@@ -208,7 +210,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		preboarding.reload()
 		self.assertFalse(frappe.db.exists("User", user))
 		self.assertIsNone(preboarding.user)
-		self.assertFalse(get_row(preboarding, "Create User").completed)
+		self.assertFalse(get_row(preboarding, "Create Portal Login").completed)
 
 	def test_renaming_the_user_keeps_the_preboarding_on_it(self):
 		preboarding = create_employee_preboarding(submit=False)
@@ -220,7 +222,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 
 		preboarding.reload()
 		self.assertEqual(preboarding.user, "asha.renamed@example.com")
-		self.assertTrue(get_row(preboarding, "Create User").completed)
+		self.assertTrue(get_row(preboarding, "Create Portal Login").completed)
 
 	def test_create_user_uses_the_selected_email(self):
 		preboarding = create_employee_preboarding(submit=False)
@@ -457,14 +459,14 @@ class TestEmployeePreboarding(HRMSTestSuite):
 
 	def test_due_date_change_reaches_the_todo(self):
 		preboarding = create_employee_preboarding(submit=False)
-		row = get_row(preboarding, "Create User")
+		row = get_row(preboarding, "Create Portal Login")
 		preboarding.assign_activity(row.name, get_test_user("preboarding_due@example.com"))
 
 		due_date = add_days(getdate(), 5)
 		preboarding.set_activity_due_date(row.name, str(due_date))
 		preboarding.reload()
 
-		row = get_row(preboarding, "Create User")
+		row = get_row(preboarding, "Create Portal Login")
 		self.assertEqual(getdate(row.due_date), due_date)
 		self.assertEqual(getdate(frappe.db.get_value("ToDo", row.todo, "date")), due_date)
 
