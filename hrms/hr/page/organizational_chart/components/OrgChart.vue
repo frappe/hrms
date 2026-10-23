@@ -70,7 +70,8 @@ function fitScale() {
 		1,
 	);
 }
-const clamp = (v: number) => Math.min(MAX, Math.max(Math.max(MIN, fitScale()), v));
+// Zooming out stops where the whole chart fits, even below MIN for a chart that big.
+const clamp = (v: number) => Math.min(MAX, Math.max(fitScale(), v));
 const reduced =
 	typeof window !== "undefined" &&
 	window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
