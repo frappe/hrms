@@ -26,7 +26,7 @@ const ACTION_HANDLERS = {
 			if (state === "done") return [open_action("Appointment Letter", letter)];
 			if (!letter)
 				return [{ label: __("Create"), onclick: () => create_appointment_letter(list) }];
-			return [{ label: __("Send"), icon: "send", onclick: () => open_letter_dialog(list) }];
+			return [{ label: __("Send"), onclick: () => open_letter_dialog(list) }];
 		},
 	},
 	"Create Employee": {
@@ -80,7 +80,6 @@ function open_action(doctype, name) {
 	return {
 		label: __("Open"),
 		variant: "subtle",
-		icon_right: "arrow-up-right",
 		onclick: () => frappe.set_route("Form", doctype, name),
 	};
 }
