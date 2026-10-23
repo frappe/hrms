@@ -80,7 +80,6 @@ class EmployeePreboarding(PreboardingActivities, Document):
 
 	def onload(self):
 		self.set_onload("offer_defaults", self.get_offer_defaults())
-		self.set_onload("template_hint", self.get_template_hint())
 		self.set_onload("appointment_letter", self.get_appointment_letter())
 
 	def before_insert(self):

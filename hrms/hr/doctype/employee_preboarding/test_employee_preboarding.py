@@ -165,15 +165,6 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		for row in template.onboarding_activities + template.offboarding_activities:
 			self.assertEqual((row.action, row.reference_doctype), ("Manual", None))
 
-	def test_hint_shows_until_the_template_has_own_tasks(self):
-		template = make_template("_Test Hint Template")
-		preboarding = create_employee_preboarding(submit=False, with_activities=False)
-		self.assertEqual(preboarding.get_template_hint(), template.name)
-
-		template.append("preboarding_activities", {"activity_name": "Welcome lunch"})
-		template.save()
-		self.assertIsNone(preboarding.get_template_hint())
-
 	def test_offer_defaults_come_from_the_job_offer(self):
 		preboarding = create_employee_preboarding(submit=False)
 		offer_holiday_list = frappe.db.get_value("Job Offer", preboarding.job_offer, "holiday_list")

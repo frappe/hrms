@@ -107,17 +107,6 @@ class PreboardingActivities:
 	def validate_unique_activities(self):
 		validate_unique_actions(self.activities, _("this preboarding"))
 
-	def get_template_hint(self) -> str | None:
-		"""The preboarding's template, while it still has only the standard activities."""
-		template = self.employee_boarding_template
-		if not template:
-			return None
-		has_own_rows = frappe.db.exists(
-			"Employee Boarding Activity",
-			{"parent": template, "parentfield": "preboarding_activities", "action": "Manual"},
-		)
-		return None if has_own_rows else template
-
 	def reconcile_activities(self) -> list:
 		"""Complete each row whose record exists, and return the changed rows."""
 		changed = []

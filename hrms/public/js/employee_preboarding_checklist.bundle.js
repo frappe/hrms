@@ -29,33 +29,12 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 	render() {
 		const $wrapper = this.frm.fields_dict.preboarding_checklist.$wrapper;
 		if (!$.contains($wrapper[0], this.checklist.el)) {
-			this.$hint = $('<div class="epc-template-hint"></div>');
-			$wrapper.empty().append(this.$hint, this.checklist.$el);
+			$wrapper.empty().append(this.checklist.$el);
 		}
-		this.render_template_hint();
 		this.checklist.opts.on_add = this.can_edit_activities()
 			? (label) => this.update_row("add_activity", { activity_name: label })
 			: null;
 		this.checklist.set_items((this.frm.doc.activities || []).map((row) => this.get_item(row)));
-	}
-
-	// Until the default template gets tasks of the company's own, point first-time users at it.
-	render_template_hint() {
-		const template = this.frm.doc.__onload?.template_hint;
-		this.$hint.empty();
-		if (!template) return;
-
-		this.$hint.append(
-			frappe.ui.alert({
-				title: __("These are the standard preboarding tasks"),
-				description: __("Edit the template to add your own tasks, owners and due dates."),
-				footer: frappe.ui.button({
-					label: __("Edit Template"),
-					onclick: () =>
-						frappe.set_route("Form", "Employee Boarding Template", template),
-				}),
-			}),
-		);
 	}
 
 	get_item(row) {

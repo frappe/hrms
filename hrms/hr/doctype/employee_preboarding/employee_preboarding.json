@@ -112,10 +112,12 @@
    "fieldtype": "Column Break"
   },
   {
+   "description": "Edit the template to add your own tasks, owners and due dates.",
    "fieldname": "employee_boarding_template",
    "fieldtype": "Link",
    "label": "Employee Boarding Template",
-   "options": "Employee Boarding Template"
+   "options": "Employee Boarding Template",
+   "show_description_on_click": 1
   },
   {
    "fieldname": "company",
@@ -349,7 +351,7 @@
  "icon": "user-plus",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-23 15:00:00.000000",
+ "modified": "2026-10-23 16:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Preboarding",
