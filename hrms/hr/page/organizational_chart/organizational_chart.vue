@@ -76,7 +76,11 @@ onUnmounted(() => {
 		<div v-else-if="view === 'chart'" class="h-full">
 			<OrgChart :focus="query.focus" :person="query.person" />
 		</div>
-		<PageBody v-else :heading="__('Company directory')" :subtitle="__('Search by name, team or role')">
+		<PageBody
+			v-else
+			:heading="__('Company directory')"
+			:subtitle="__('Search by name, team or role')"
+		>
 			<DirectoryPage />
 		</PageBody>
 	</FrappeUIProvider>
