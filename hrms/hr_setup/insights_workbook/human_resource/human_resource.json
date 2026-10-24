@@ -634,7 +634,7 @@
  "folders": [],
  "idx": 0,
  "is_standard": 1,
- "modified": "2026-09-28 12:09:41.771119",
+ "modified": "2026-10-24 18:58:56.235086",
  "modified_by": "Administrator",
  "module": "HR Setup",
  "name": "human-resource",
@@ -1054,80 +1054,15 @@
   },
   "human-resource-month-spine": {
    "folder": null,
-   "is_builder_query": 1,
-   "is_native_query": 0,
+   "is_builder_query": 0,
+   "is_native_query": 1,
    "is_script_query": 0,
    "name": "human-resource-month-spine",
    "operations": [
     {
-     "table": {
-      "data_source": "Site DB",
-      "table_name": "tabEmployee",
-      "type": "table"
-     },
-     "type": "source"
-    },
-    {
-     "column_names": [
-      "name"
-     ],
-     "type": "select"
-    },
-    {
-     "data_type": "Integer",
-     "expression": {
-      "expression": "row_number()",
-      "type": "expression"
-     },
-     "new_name": "months_back",
-     "type": "mutate"
-    },
-    {
-     "filters": [
-      {
-       "column": {
-        "column_name": "months_back",
-        "type": "column"
-       },
-       "operator": ">=",
-       "value": 1
-      },
-      {
-       "column": {
-        "column_name": "months_back",
-        "type": "column"
-       },
-       "operator": "<=",
-       "value": 12
-      }
-     ],
-     "logical_operator": "And",
-     "type": "filter_group"
-    },
-    {
-     "data_type": "Date",
-     "expression": {
-      "expression": "month_start(today()) - months_back.as_interval('M')",
-      "type": "expression"
-     },
-     "new_name": "period",
-     "type": "mutate"
-    },
-    {
-     "data_type": "Integer",
-     "expression": {
-      "expression": "ibis.literal(1)",
-      "type": "expression"
-     },
-     "new_name": "one_person",
-     "type": "mutate"
-    },
-    {
-     "column_names": [
-      "period",
-      "one_person"
-     ],
-     "type": "select"
+     "data_source": "Site DB",
+     "raw_sql": "SELECT 1 AS months_back, 1 AS one_person\nUNION ALL SELECT 2, 1\nUNION ALL SELECT 3, 1\nUNION ALL SELECT 4, 1\nUNION ALL SELECT 5, 1\nUNION ALL SELECT 6, 1\nUNION ALL SELECT 7, 1\nUNION ALL SELECT 8, 1\nUNION ALL SELECT 9, 1\nUNION ALL SELECT 10, 1\nUNION ALL SELECT 11, 1\nUNION ALL SELECT 12, 1",
+     "type": "sql"
     }
    ],
    "sort_order": 8,
@@ -1198,6 +1133,15 @@
       "workbook": "human-resource"
      },
      "type": "join"
+    },
+    {
+     "data_type": "Date",
+     "expression": {
+      "expression": "month_start(today()) - months_back.as_interval('M')",
+      "type": "expression"
+     },
+     "new_name": "period",
+     "type": "mutate"
     },
     {
      "data_type": "Date",
