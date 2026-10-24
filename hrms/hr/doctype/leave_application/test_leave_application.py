@@ -491,28 +491,29 @@ class TestLeaveApplication(HRMSTestSuite):
 		add_role("test@example.com", "Employee")
 		frappe.set_user("test@example.com")
 
-		# allocate leave covering today so the applications aren't rejected for
+		# anchor to a working day so the leave is not rejected for falling on a holiday
+		# when the suite runs on a weekend
+		leave_date = self.get_non_holiday_date(get_employee().name, nowdate())
+
+		# allocate leave covering the date so the applications aren't rejected for
 		# being outside the allocation period
-		date = getdate()
 		make_allocation_record(
 			employee=get_employee().name,
 			leave_type="_Test Leave Type",
-			from_date=get_year_start(date),
-			to_date=get_year_ending(date),
+			from_date=get_year_start(leave_date),
+			to_date=get_year_ending(leave_date),
 		)
 
-		# full day leave on today (half_day_date stays NULL)
+		# full day leave on the date (half_day_date stays NULL)
 		application = self.get_application(self.leave_application)
-		application.from_date = application.to_date = nowdate()
+		application.from_date = application.to_date = leave_date
 		application.insert()
 
-		# half day leave on the same day must overlap regardless of the date:
-		# a NULL half_day_date on the existing full day leave coerces to today via
-		# getdate(None), so the date must not be the only thing distinguishing them
+		# a half day leave on the same day must overlap the existing full day leave
 		application = self.get_application(self.leave_application)
-		application.from_date = application.to_date = nowdate()
+		application.from_date = application.to_date = leave_date
 		application.half_day = 1
-		application.half_day_date = nowdate()
+		application.half_day_date = leave_date
 
 		self.assertRaises(OverlapError, application.insert)
 
@@ -1281,11 +1282,11 @@ class TestLeaveApplication(HRMSTestSuite):
 		)
 
 		create_carry_forwarded_allocation(employee, leave_type)
+		half_day_date = self.get_non_holiday_date(employee.name, nowdate())
 		# when existing attendance is half day
 		attendance_name = mark_attendance(
-			employee=employee.name, attendance_date=nowdate(), status="Half Day", half_day_status="Absent"
+			employee=employee.name, attendance_date=half_day_date, status="Half Day", half_day_status="Absent"
 		)
-		half_day_date = self.get_non_holiday_date(employee.name, nowdate())
 		leave_application = make_leave_application(
 			employee.name,
 			half_day_date,
@@ -1315,10 +1316,11 @@ class TestLeaveApplication(HRMSTestSuite):
 		)
 
 		create_carry_forwarded_allocation(employee, leave_type)
-		# when existing attendance is absent
-		attendance_name = mark_attendance(employee=employee.name, attendance_date=nowdate(), status="Absent")
-
 		half_day_date = self.get_non_holiday_date(employee.name, nowdate())
+		# when existing attendance is absent
+		attendance_name = mark_attendance(
+			employee=employee.name, attendance_date=half_day_date, status="Absent"
+		)
 		leave_application = make_leave_application(
 			employee.name,
 			add_days(half_day_date, -3),
@@ -1361,7 +1363,7 @@ class TestLeaveApplication(HRMSTestSuite):
 		)
 		half_day_status_after_first_application = frappe.get_value(
 			"Attendance",
-			filters={"attendance_date": nowdate(), "leave_application": first_leave_application.name},
+			filters={"attendance_date": half_day_date, "leave_application": first_leave_application.name},
 			fieldname="half_day_status",
 		)
 		# default is present
@@ -1377,7 +1379,7 @@ class TestLeaveApplication(HRMSTestSuite):
 		)
 		half_day_status_after_second_application = frappe.get_value(
 			"Attendance",
-			filters={"attendance_date": nowdate(), "leave_application": second_leave_application.name},
+			filters={"attendance_date": half_day_date, "leave_application": second_leave_application.name},
 			fieldname="half_day_status",
 		)
 		# the status should remain unchanged after creating second half day leave application
