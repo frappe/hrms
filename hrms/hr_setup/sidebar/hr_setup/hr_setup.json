@@ -33,6 +33,18 @@
   {
    "child": 0,
    "collapsible": 1,
+   "icon": "network",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Org chart",
+   "link_to": "organizational-chart",
+   "link_type": "Page",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
    "icon": "square-user-round",
    "indent": 0,
    "is_default_module": 1,
@@ -40,18 +52,6 @@
    "label": "Employee",
    "link_to": "Employee",
    "link_type": "DocType",
-   "show_arrow": 0,
-   "type": "Link"
-  },
-  {
-   "child": 0,
-   "collapsible": 1,
-   "icon": "building-2",
-   "indent": 0,
-   "keep_closed": 0,
-   "label": "Organizational Chart",
-   "link_to": "organizational-chart",
-   "link_type": "Page",
    "show_arrow": 0,
    "type": "Link"
   },
@@ -148,7 +148,7 @@
    "url": "/desk/hr-settings#employee_tab"
   }
  ],
- "modified": "2026-10-05 12:00:00.000000",
+ "modified": "2026-10-22 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR Setup",
  "name": "HR Setup",

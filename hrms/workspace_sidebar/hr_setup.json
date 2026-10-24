@@ -49,7 +49,7 @@
    "icon": "building-2",
    "indent": 0,
    "keep_closed": 0,
-   "label": "Organizational Chart",
+   "label": "Org chart",
    "link_to": "organizational-chart",
    "link_type": "Page",
    "show_arrow": 0,
@@ -148,7 +148,7 @@
    "url": "/desk/hr-settings#employee_tab"
   }
  ],
- "modified": "2026-08-07 12:00:00.000000",
+ "modified": "2026-10-22 12:05:00.000000",
  "modified_by": "Administrator",
  "module": "HR Setup",
  "name": "HR Setup",
