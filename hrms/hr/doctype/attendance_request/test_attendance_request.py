@@ -11,7 +11,7 @@ from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_leave_application,
 )
-from hrms.tests.test_utils import add_date_to_holiday_list, get_first_sunday
+from hrms.tests.test_utils import add_date_to_holiday_list, get_first_sunday, get_non_holiday_date
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -19,6 +19,9 @@ class TestAttendanceRequest(HRMSTestSuite):
 	def setUp(self):
 		self.holiday_list = "Salary Slip Test Holiday List"
 		self.employee = get_employee()
+		# anchor to a working day so tests that mark attendance for "today" do not
+		# fail when the suite runs on a weekend / holiday
+		self.date = get_non_holiday_date(self.employee.name)
 
 	def test_attendance_request_overlap(self):
 		create_attendance_request(employee=self.employee.name, reason="On Duty", company="_Test Company")
@@ -55,8 +58,8 @@ class TestAttendanceRequest(HRMSTestSuite):
 			employee=self.employee.name,
 			reason="On Duty",
 			company="_Test Company",
-			from_date=getdate(),
-			to_date=getdate(),
+			from_date=self.date,
+			to_date=self.date,
 		)
 		records = self.get_attendance_records(attendance_request.name)
 
@@ -87,10 +90,14 @@ class TestAttendanceRequest(HRMSTestSuite):
 		self.assertEqual(records[0].docstatus, 2)
 
 	def test_overwrite_attendance(self):
-		attendance_name = mark_attendance(self.employee.name, getdate(), "Absent")
+		attendance_name = mark_attendance(self.employee.name, self.date, "Absent")
 
 		attendance_request = create_attendance_request(
-			employee=self.employee.name, reason="Work From Home", company="_Test Company"
+			employee=self.employee.name,
+			reason="Work From Home",
+			company="_Test Company",
+			from_date=self.date,
+			to_date=self.date,
 		)
 		prev_attendance = frappe.get_doc("Attendance", attendance_name)
 
@@ -197,11 +204,11 @@ class TestAttendanceRequest(HRMSTestSuite):
 			{
 				"doctype": "Attendance Request",
 				"employee": self.employee.name,
-				"from_date": getdate(),
-				"to_date": getdate(),
+				"from_date": self.date,
+				"to_date": self.date,
 				"reason": "On Duty",
 				"half_day": 1,
-				"half_day_date": getdate(),
+				"half_day_date": self.date,
 				"company": "_Test Company",
 			}
 		).save()
@@ -218,7 +225,7 @@ class TestAttendanceRequest(HRMSTestSuite):
 			{
 				"doctype": "Attendance",
 				"employee": self.employee.name,
-				"attendance_date": getdate(),
+				"attendance_date": self.date,
 				"status": "Absent",
 				"company": "_Test Company",
 			}
@@ -228,11 +235,11 @@ class TestAttendanceRequest(HRMSTestSuite):
 			{
 				"doctype": "Attendance Request",
 				"employee": self.employee.name,
-				"from_date": getdate(),
-				"to_date": getdate(),
+				"from_date": self.date,
+				"to_date": self.date,
 				"reason": "On Duty",
 				"half_day": 1,
-				"half_day_date": getdate(),
+				"half_day_date": self.date,
 				"company": "_Test Company",
 			}
 		).save()
@@ -245,7 +252,7 @@ class TestAttendanceRequest(HRMSTestSuite):
 
 	def test_half_day_absent_half_to_present(self):
 		"""Test attendance request updates half_day_status from Absent to Present when existing Half Day attendance has the other half marked absent"""
-		today = getdate()
+		today = self.date
 
 		mark_attendance(self.employee.name, today, "Half Day", half_day_status="Absent")
 
@@ -455,13 +462,13 @@ class TestAttendanceRequest(HRMSTestSuite):
 		shift_2 = create_shift("Evening Shift", "14:00:00", "18:00:00")
 
 		create_shift_assignment(
-			self.employee.name, shift_1.name, add_days(getdate(), -1), add_days(getdate(), 1)
+			self.employee.name, shift_1.name, add_days(self.date, -1), add_days(self.date, 1)
 		)
 		create_shift_assignment(
-			self.employee.name, shift_2.name, add_days(getdate(), -1), add_days(getdate(), 1)
+			self.employee.name, shift_2.name, add_days(self.date, -1), add_days(self.date, 1)
 		)
 
-		today = getdate()
+		today = self.date
 
 		frappe.get_doc(
 			{
