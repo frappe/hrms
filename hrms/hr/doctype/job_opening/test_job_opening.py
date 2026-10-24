@@ -6,8 +6,9 @@ from frappe.utils import add_days, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
-from hrms.hr.doctype.job_opening.job_opening import close_expired_job_openings, get_published_job_title
+from hrms.hr.doctype.job_opening.job_opening import close_expired_job_openings
 from hrms.hr.doctype.staffing_plan.test_staffing_plan import make_company
+from hrms.hr.web_form.job_application.job_application import get_context as get_job_application_context
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -132,15 +133,23 @@ class TestJobOpening(HRMSTestSuite):
 		self.assertEqual(opening_1.closed_on, today)
 		self.assertEqual(opening_2.status, "Open")
 
-	def test_published_job_title_for_guest(self):
+	def test_job_application_form_shows_published_job_title(self):
 		published = get_job_opening(publish=1)
 		published.insert()
 		unpublished = get_job_opening(job_title="Designer Internal")
 		unpublished.insert()
 
-		frappe.set_user("Guest")
-		self.assertEqual(get_published_job_title(published.name), "Designer")
-		self.assertIsNone(get_published_job_title(unpublished.name))
+		def get_title(job_opening):
+			context = frappe._dict(web_form_doc=frappe._dict())
+			frappe.form_dict.job_title = job_opening
+			try:
+				get_job_application_context(context)
+			finally:
+				frappe.form_dict.pop("job_title", None)
+			return context.web_form_doc.job_opening_title
+
+		self.assertEqual(get_title(published.name), "Designer")
+		self.assertIsNone(get_title(unpublished.name))
 
 
 def get_job_opening(**args):
