@@ -100,11 +100,14 @@ class SalaryStructureAssignment(Document):
 		self.warn_about_missing_opening_entries()
 		self.calculate_ctc_and_gross()
 
+	def before_update_after_submit(self):
+		self.validate_cost_center_changes()
+
 	def on_update_after_submit(self):
 		self.validate_cost_centers()
 
 	def before_cancel(self):
-		self.validate_submitted_salary_slips()
+		self.validate_submitted_salary_slips(action="cancel")
 
 	def validate_dates(self):
 		joining_date, relieving_date = frappe.db.get_value(
@@ -505,16 +508,36 @@ class SalaryStructureAssignment(Document):
 
 		return evaluated_components
 
-	def validate_submitted_salary_slips(self):
+	def validate_cost_center_changes(self):
+		# payroll_cost_centers stays editable after submit (for ctc/tax opening edits),
+		# but the payment entry and the accrual both read the live assignment splits
+		# (PayrollEntry.get_payroll_cost_centers_for_employee), so changing them while
+		# slips are submitted would make the payment post to different cost centers
+		# than the accrual. Block only that specific change.
+		previous = self.get_doc_before_save()
+		if not previous:
+			return
+
+		def splits(doc):
+			return {(row.cost_center, flt(row.percentage)) for row in doc.payroll_cost_centers}
+
+		if splits(self) != splits(previous):
+			self.validate_submitted_salary_slips(action="update")
+
+	def validate_submitted_salary_slips(self, action="cancel"):
 		# Salary slips have no link to their assignment; they use the latest submitted
 		# assignment effective on their start date (SalarySlip.set_salary_structure_assignment)
 		if not (slips := self.get_submitted_salary_slips()):
 			return
 
-		frappe.throw(
-			_("Cannot cancel this assignment as Salary Slip(s) {0} are submitted against it.").format(
-				", ".join(get_link_to_form("Salary Slip", slip) for slip in slips)
+		messages = {
+			"cancel": _("Cannot cancel this assignment as Salary Slip(s) {0} are submitted against it."),
+			"update": _(
+				"Cannot change cost centers as Salary Slip(s) {0} are submitted against this assignment."
 			),
+		}
+		frappe.throw(
+			messages[action].format(", ".join(get_link_to_form("Salary Slip", slip) for slip in slips)),
 			title=_("Assignment In Use"),
 		)
 
