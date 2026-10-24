@@ -180,3 +180,9 @@ def close_expired_job_openings():
 		doc.flags.ignore_permissions = True
 		doc.flags.ignore_mandatory = True
 		doc.save()
+
+
+@frappe.whitelist(allow_guest=True)
+def get_job_title(job_opening: str) -> str | None:
+	# used by the job application web form, which guests open from a published opening
+	return frappe.db.get_value("Job Opening", {"name": job_opening, "publish": 1}, "job_title")
