@@ -34,7 +34,7 @@ def readers_of(doctype):
 			pluck="parent",
 			distinct=True,
 		)
-		return set().union(*map(readers_of, parents))
+		return {role for parent in parents for role in readers_of(parent)}
 	return {p.role for p in meta.permissions if p.read and not p.permlevel}
 
 
