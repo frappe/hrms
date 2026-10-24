@@ -538,3 +538,49 @@ class TestSalaryStructureAssignment(HRMSTestSuite):
 		self.assertRaises(frappe.ValidationError, new_ssa.cancel)
 		old_ssa.reload().cancel()
 		self.assertEqual(old_ssa.docstatus, 2)
+
+	def test_cost_center_change_blocked_by_submitted_salary_slip(self):
+		emp = make_employee("ssa_cc_change@test.com", company="_Test Company")
+		structure = make_salary_structure(
+			"SSA Test CC Change",
+			"Monthly",
+			employee=emp,
+			from_date=get_first_day(nowdate()),
+			company="_Test Company",
+		)
+		ssa = frappe.get_last_doc("Salary Structure Assignment", filters={"employee": emp})
+		ssa.set("payroll_cost_centers", [{"cost_center": "_Test Cost Center - _TC", "percentage": 100}])
+		ssa.save()
+
+		slip = make_salary_slip(structure.name, employee=emp)
+		slip.submit()
+
+		# changing the cost center splits while a slip is submitted is blocked
+		ssa.reload()
+		ssa.set("payroll_cost_centers", [{"cost_center": "_Test Cost Center 2 - _TC", "percentage": 100}])
+		self.assertRaises(frappe.ValidationError, ssa.save)
+
+		# once the slip is cancelled, the change is allowed again
+		slip.cancel()
+		ssa.reload()
+		ssa.set("payroll_cost_centers", [{"cost_center": "_Test Cost Center 2 - _TC", "percentage": 100}])
+		ssa.save()
+		self.assertEqual(ssa.payroll_cost_centers[0].cost_center, "_Test Cost Center 2 - _TC")
+
+	def test_non_cost_center_edit_allowed_with_submitted_salary_slip(self):
+		emp = make_employee("ssa_other_edit@test.com", company="_Test Company")
+		structure = make_salary_structure(
+			"SSA Test Other Edit",
+			"Monthly",
+			employee=emp,
+			from_date=get_first_day(nowdate()),
+			company="_Test Company",
+		)
+		ssa = frappe.get_last_doc("Salary Structure Assignment", filters={"employee": emp})
+		make_salary_slip(structure.name, employee=emp).submit()
+
+		# editing an after-submit field other than the cost centers must still work
+		ssa.reload()
+		ssa.taxable_earnings_till_date = 1000
+		ssa.save()
+		self.assertEqual(ssa.taxable_earnings_till_date, 1000)
