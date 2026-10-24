@@ -170,6 +170,10 @@ class AttendanceRequest(Document):
 		shifts_by_date = {}
 		for day in range(date_diff(self.to_date, self.from_date) + 1):
 			date = getdate(add_days(self.from_date, day))
+			# attendance is not marked on these dates, so their shift does not matter
+			if (not self.include_holidays and is_holiday(self.employee, date)) or self.has_leave_record(date):
+				continue
+
 			shifts = {
 				assignment.shift_type
 				for assignment in assignments
