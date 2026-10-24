@@ -499,6 +499,26 @@ class TestAttendanceRequest(HRMSTestSuite):
 
 		self.assertRaises(frappe.ValidationError, attendance_request.save)
 
+	def test_shift_change_within_request_period(self):
+		shift_1 = create_shift("Test Assigned Shift", "09:00:00", "17:00:00")
+		shift_2 = create_shift("Test Other Shift", "09:00:00", "17:00:00")
+		create_shift_assignment(
+			self.employee.name, shift_1.name, add_days(getdate(), -1), add_days(getdate(), -1)
+		)
+		create_shift_assignment(self.employee.name, shift_2.name, getdate(), getdate())
+
+		attendance_request = frappe.get_doc(
+			{
+				"doctype": "Attendance Request",
+				"employee": self.employee.name,
+				"from_date": add_days(getdate(), -1),
+				"to_date": getdate(),
+				"reason": "On Duty",
+			}
+		)
+
+		self.assertRaises(frappe.ValidationError, attendance_request.save)
+
 	def test_overwrite_attendance_without_shift(self):
 		shift_type = create_shift("Test Assigned Shift", "09:00:00", "17:00:00")
 		create_shift_assignment(self.employee.name, shift_type.name, getdate(), getdate())
@@ -506,7 +526,9 @@ class TestAttendanceRequest(HRMSTestSuite):
 
 		create_attendance_request(employee=self.employee.name, from_date=getdate(), to_date=getdate())
 
-		self.assertEqual(frappe.db.get_value("Attendance", attendance_name, "status"), "Present")
+		attendance = frappe.db.get_value("Attendance", attendance_name, ["status", "shift"], as_dict=True)
+		self.assertEqual(attendance.status, "Present")
+		self.assertEqual(attendance.shift, shift_type.name)
 
 	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": True})
 	def test_overlap_with_different_shifts(self):
