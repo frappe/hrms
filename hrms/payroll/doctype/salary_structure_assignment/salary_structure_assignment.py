@@ -5,6 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.query_builder import Case
 from frappe.utils import cint, date_diff, flt, get_first_day, get_last_day, get_link_to_form, getdate
 
 import hrms
@@ -99,8 +100,14 @@ class SalaryStructureAssignment(Document):
 		self.warn_about_missing_opening_entries()
 		self.calculate_ctc_and_gross()
 
+	def before_update_after_submit(self):
+		self.validate_cost_center_changes()
+
 	def on_update_after_submit(self):
 		self.validate_cost_centers()
+
+	def before_cancel(self):
+		self.validate_submitted_salary_slips(action="cancel")
 
 	def validate_dates(self):
 		joining_date, relieving_date = frappe.db.get_value(
@@ -500,6 +507,76 @@ class SalaryStructureAssignment(Document):
 			evaluated_components.append(evaluated_component_row)
 
 		return evaluated_components
+
+	def validate_cost_center_changes(self):
+		# payroll_cost_centers stays editable after submit (for ctc/tax opening edits),
+		# but the payment entry and the accrual both read the live assignment splits
+		# (PayrollEntry.get_payroll_cost_centers_for_employee), so changing them while
+		# slips are submitted would make the payment post to different cost centers
+		# than the accrual. Block only that specific change.
+		previous = self.get_doc_before_save()
+		if not previous:
+			return
+
+		def splits(doc):
+			return {(row.cost_center, flt(row.percentage)) for row in doc.payroll_cost_centers}
+
+		if splits(self) != splits(previous):
+			self.validate_submitted_salary_slips(action="update")
+
+	def validate_submitted_salary_slips(self, action="cancel"):
+		# Salary slips have no link to their assignment; they use the latest submitted
+		# assignment effective on their start date (SalarySlip.set_salary_structure_assignment)
+		if not (slips := self.get_submitted_salary_slips()):
+			return
+
+		messages = {
+			"cancel": _("Cannot cancel this assignment as Salary Slip(s) {0} are submitted against it."),
+			"update": _(
+				"Cannot change cost centers as Salary Slip(s) {0} are submitted against this assignment."
+			),
+		}
+		frappe.throw(
+			messages[action].format(", ".join(get_link_to_form("Salary Slip", slip) for slip in slips)),
+			title=_("Assignment In Use"),
+		)
+
+	def get_submitted_salary_slips(self):
+		next_from_date = frappe.db.get_value(
+			"Salary Structure Assignment",
+			{
+				"employee": self.employee,
+				"salary_structure": self.salary_structure,
+				"from_date": (">", self.from_date),
+				"docstatus": 1,
+			},
+			"from_date",
+			order_by="from_date asc",
+		)
+
+		slip = frappe.qb.DocType("Salary Slip")
+		actual_start_date = slip.start_date
+		# same as SalarySlip.actual_start_date
+		if joining_date := frappe.db.get_value("Employee", self.employee, "date_of_joining"):
+			actual_start_date = (
+				Case()
+				.when((slip.start_date < joining_date) & (slip.end_date >= joining_date), joining_date)
+				.else_(slip.start_date)
+			)
+		query = (
+			frappe.qb.from_(slip)
+			.select(slip.name)
+			.where(
+				(slip.employee == self.employee)
+				& (slip.salary_structure == self.salary_structure)
+				& (slip.docstatus == 1)
+				& (actual_start_date >= self.from_date)
+			)
+		)
+		if next_from_date:
+			query = query.where(actual_start_date < next_from_date)
+
+		return query.run(pluck=True)
 
 	@frappe.whitelist()
 	def are_opening_entries_required(self) -> bool:
