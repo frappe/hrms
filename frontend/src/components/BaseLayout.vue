@@ -9,7 +9,7 @@
 								{{ props.pageTitle || __("Frappe HR") }}
 							</h2>
 						</div>
-						<div class="flex flex-row items-center gap-3 ml-auto">
+						<div class="flex flex-row items-center gap-3 ms-auto">
 							<router-link
 								:to="{ name: 'Notifications' }"
 								v-slot="{ navigate }"
@@ -19,7 +19,7 @@
 									<FeatherIcon name="bell" class="h-6 w-6" />
 									<span
 										v-if="unreadNotificationsCount.data"
-										class="absolute top-0 right-0.5 inline-block w-2 h-2 bg-red-600 rounded-full border border-white"
+										class="absolute top-0 end-0.5 inline-block w-2 h-2 bg-red-600 rounded-full border border-white"
 									>
 									</span>
 								</span>
