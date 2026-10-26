@@ -286,23 +286,6 @@ class EmployeePreboarding(PreboardingActivities, Document):
 		self.db_set("appointment_letter_sent_on", now_datetime())
 		self.save_activity_states()
 
-	@frappe.whitelist(methods=["POST"])
-	def link_employee(self, employee: str) -> None:
-		self.check_permission("write")
-
-		if self.employee and self.employee != employee:
-			frappe.throw(
-				_("Employee {0} is already created").format(get_link_to_form("Employee", self.employee))
-			)
-		if frappe.db.get_value("Employee", employee, "job_offer") != self.job_offer:
-			frappe.throw(
-				_("Employee {0} was not created from Job Offer {1}").format(
-					get_link_to_form("Employee", employee), get_link_to_form("Job Offer", self.job_offer)
-				)
-			)
-
-		self.attach_employee(employee)
-
 	def attach_employee(self, employee: str) -> None:
 		self.db_set("employee", employee)
 		self.grant_employee_self_service()

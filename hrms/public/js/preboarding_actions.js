@@ -166,14 +166,7 @@ async function create_employee(list) {
 		{ source_name: list.frm.doc.name },
 	);
 	const [employee] = frappe.model.sync(doc);
-	frappe.ui.form.make_quick_entry(
-		"Employee",
-		(created) =>
-			list.call("link_employee", { employee: created.name }, __("Linking the employee")),
-		null,
-		employee,
-		true,
-	);
+	frappe.ui.form.make_quick_entry("Employee", () => list.frm.reload_doc(), null, employee, true);
 }
 
 // Reuses the Employee form's assignment engine, so the dialog keeps its Submit step, its
@@ -203,6 +196,6 @@ function assign(list, row) {
 		...action,
 		prefill: (ctx) => ({ ...action.prefill(ctx), ...defaults }),
 		redirect: false,
-		on_created: () => list.call("sync_activities"),
+		on_created: () => frappe.after_ajax(() => list.call("sync_activities")),
 	});
 }

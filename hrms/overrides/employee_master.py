@@ -30,7 +30,7 @@ class EmployeeMaster(Employee):
 
 def link_preboarding(doc, method=None):
 	"""Link a saved Employee to the open Employee Preboarding of its job offer, however it was created."""
-	filters = {"docstatus": ("!=", 2), "boarding_status": ("!=", "Completed"), "employee": ("is", "not set")}
+	filters = {"docstatus": ("!=", 2), "employee": ("is", "not set")}
 	if doc.get("job_offer"):
 		filters["job_offer"] = doc.job_offer
 	elif doc.get("job_applicant"):

@@ -270,7 +270,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		self.assertEqual(employee.last_name, "Engineer")
 		self.assertEqual(employee.job_offer, preboarding.job_offer)
 
-	def test_linking_an_employee_from_another_job_offer_is_blocked(self):
+	def test_an_employee_from_another_job_offer_is_not_linked(self):
 		preboarding = create_employee_preboarding(submit=False)
 		preboarding.db_set("gender", "Female")
 		preboarding.db_set("date_of_birth", "1990-05-08")
@@ -280,7 +280,6 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		employee.job_applicant = None
 		employee.insert()
 
-		self.assertRaises(frappe.ValidationError, preboarding.link_employee, employee.name)
 		self.assertIsNone(frappe.db.get_value("Employee Preboarding", preboarding.name, "employee"))
 
 	def test_activity_added_on_the_preboarding_is_a_flagged_manual_row(self):
@@ -591,9 +590,7 @@ def create_employee_preboarding(submit=False, with_activities=True):
 
 
 def create_preboarding_employee(preboarding):
-	employee = make_employee(preboarding.name).insert()
-	preboarding.link_employee(employee.name)
-	return employee.name
+	return make_employee(preboarding.name).insert().name
 
 
 def make_appointment_letter(preboarding):
