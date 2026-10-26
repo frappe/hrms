@@ -132,7 +132,7 @@
 			class="flex w-full flex-row items-center justify-between gap-3 sticky bottom-0 border-t z-[100] p-4"
 		>
 			<Button
-				@click="updateDocumentStatus({ docstatus: 2 })"
+				@click="showCancelDialog = true"
 				class="w-full py-5"
 				variant="subtle"
 				theme="red"
@@ -152,6 +152,37 @@
 		>
 			<FilePreviewModal :file="selectedFile" />
 		</ion-modal>
+
+		<Dialog v-model="showCancelDialog">
+			<template #body-title>
+				<h2 class="text-xl font-bold">{{ __("Confirm") }}</h2>
+			</template>
+			<template #body-content>
+				<p>
+					{{ __("Permanently cancel {0}", [__(document.doc.doctype)]) }}
+					<span class="font-bold">{{ document.doc.name }}</span
+					>?
+				</p>
+			</template>
+			<template #actions>
+				<div class="flex flex-row gap-4">
+					<Button
+						variant="outline"
+						class="py-5 w-full"
+						@click="showCancelDialog = false"
+					>
+						{{ __("No") }}
+					</Button>
+					<Button
+						variant="solid"
+						class="py-5 w-full"
+						@click="cancelDocument"
+					>
+						{{ __("Yes") }}
+					</Button>
+				</div>
+			</template>
+		</Dialog>
 	</div>
 </template>
 
@@ -163,6 +194,7 @@ import {
 	toast,
 	createDocumentResource,
 	createResource,
+	Dialog,
 	FeatherIcon,
 } from "frappe-ui"
 
@@ -196,6 +228,7 @@ const props = defineProps({
 const router = useRouter()
 
 let showPreviewModal = ref(false)
+let showCancelDialog = ref(false)
 let selectedFile = ref({})
 let workflow = ref(null)
 
@@ -336,6 +369,11 @@ const updateDocumentStatus = ({ status = "", docstatus = 0 }) => {
 			},
 		}
 	)
+}
+
+const cancelDocument = () => {
+	showCancelDialog.value = false
+	updateDocumentStatus({ docstatus: 2 })
 }
 
 const openFormView = () => {
