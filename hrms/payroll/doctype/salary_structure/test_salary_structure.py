@@ -2,6 +2,7 @@
 # See license.txt
 
 import frappe
+from frappe.permissions import add_user_permission
 from frappe.utils import add_years, cstr, date_diff, get_first_day, nowdate
 from frappe.utils.make_random import get_random
 
@@ -20,7 +21,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 )
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
 from hrms.tests.test_utils import create_employee_grade
-from hrms.tests.utils import HRMSTestSuite
+from hrms.tests.utils import HRMSTestSuite, make_user
 
 
 class TestSalaryStructure(HRMSTestSuite):
@@ -107,6 +108,25 @@ class TestSalaryStructure(HRMSTestSuite):
 		self.assertEqual(salary_structure_assignment.docstatus, 1)
 		self.assertEqual(salary_structure_assignment.base, 5000)
 		self.assertEqual(salary_structure_assignment.variable, 200)
+
+	def test_assign_salary_structure_respects_employee_user_permissions(self):
+		salary_structure = make_salary_structure(
+			"Salary Structure Sample", "Monthly", currency="INR", company="_Test Company"
+		)
+		permitted = make_employee("test_ssa_permitted@salary.com", company="_Test Company")
+		restricted = make_employee("test_ssa_restricted@salary.com", company="_Test Company")
+		hr_user = make_user("test_ssa_hr_user@salary.com", "HR User")
+		add_user_permission("Employee", permitted, hr_user)
+
+		frappe.set_user(hr_user)
+		salary_structure.assign_salary_structure(employee=restricted, from_date="2013-01-01", base=5000)
+		salary_structure.assign_salary_structure(from_date="2013-01-01", base=5000, variable=200)
+		frappe.set_user("Administrator")
+
+		self.assertTrue(
+			frappe.db.exists("Salary Structure Assignment", {"employee": permitted, "docstatus": 1})
+		)
+		self.assertFalse(frappe.db.exists("Salary Structure Assignment", {"employee": restricted}))
 
 	def test_employee_grade_defaults(self):
 		salary_structure = make_salary_structure(
