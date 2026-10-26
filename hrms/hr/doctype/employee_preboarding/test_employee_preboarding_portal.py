@@ -196,9 +196,3 @@ class TestEmployeePreboardingPortal(HRMSTestSuite):
 
 		self.preboarding.reload()
 		self.assertEqual(json.loads(self.preboarding.submitted_details)["first_name"], "Corrected")
-
-	def test_the_candidate_role_lands_on_the_portal(self):
-		from hrms.hr.doctype.employee_preboarding.employee_preboarding import PORTAL_ROUTE
-
-		home_page = frappe.db.get_value("Role", PREBOARDING_CANDIDATE_ROLE, "home_page")
-		self.assertEqual(home_page, PORTAL_ROUTE.lstrip("/"))

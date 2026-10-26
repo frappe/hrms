@@ -781,17 +781,9 @@ def create_default_boarding_template():
 
 
 def create_preboarding_candidate_role():
-	from hrms.hr.doctype.employee_preboarding.employee_preboarding import (
-		PORTAL_ROUTE,
-		PREBOARDING_CANDIDATE_ROLE,
-	)
-
-	# Role.home_page is read first by frappe's get_home_page, so the candidate lands on
-	# the portal after logging in instead of the generic /me page.
-	home_page = PORTAL_ROUTE.lstrip("/")
+	from hrms.hr.doctype.employee_preboarding.employee_preboarding import PREBOARDING_CANDIDATE_ROLE
 
 	if frappe.db.exists("Role", PREBOARDING_CANDIDATE_ROLE):
-		frappe.db.set_value("Role", PREBOARDING_CANDIDATE_ROLE, "home_page", home_page)
 		return
 
 	frappe.get_doc(
@@ -800,7 +792,6 @@ def create_preboarding_candidate_role():
 			"role_name": PREBOARDING_CANDIDATE_ROLE,
 			"desk_access": 0,
 			"is_custom": 0,
-			"home_page": home_page,
 		}
 	).insert(ignore_permissions=True)
 

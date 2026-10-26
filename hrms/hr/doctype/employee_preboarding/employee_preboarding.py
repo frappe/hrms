@@ -14,7 +14,6 @@ from hrms.hr.doctype.employee_preboarding.preboarding_activities import Preboard
 
 EMPLOYEE_SELF_SERVICE_ROLE = "Employee Self Service"
 PREBOARDING_CANDIDATE_ROLE = "Employee Preboarding Candidate"
-PORTAL_ROUTE = "/employee-documents"
 
 
 def split_full_name(full_name: str) -> tuple[str, str, str]:
@@ -198,37 +197,6 @@ class EmployeePreboarding(PreboardingActivities, Document):
 		user = frappe.get_doc("User", self.user)
 		user.append_roles(EMPLOYEE_SELF_SERVICE_ROLE)
 		user.save(ignore_permissions=True)
-
-	@frappe.whitelist(methods=["POST"])
-	def send_documents_link(self) -> None:
-		self.check_permission("write")
-		self.validate_started()
-
-		recipient = self.get_employee_email()
-		if not recipient:
-			frappe.throw(_("Set a Company Email or Personal Email to send the request"))
-
-		if not self.documents:
-			frappe.throw(_("Add the documents you need from the employee"))
-
-		if not self.user:
-			frappe.throw(_("Create the user account before sending the request"))
-
-		rows = "".join(f"<li>{frappe.utils.escape_html(row.document_name)}</li>" for row in self.documents)
-		portal_url = frappe.utils.get_url(PORTAL_ROUTE)
-		frappe.sendmail(
-			recipients=[recipient],
-			subject=_("Share your details and documents"),
-			message=_("Hello {0}, please fill in your details and upload the following documents:").format(
-				frappe.utils.escape_html(self.employee_name)
-			)
-			+ f"<ul>{rows}</ul>"
-			+ f'<p><a href="{portal_url}">{_("Open the form")}</a></p>'
-			+ f"<p>{_('Sign in as {0}.').format(frappe.utils.escape_html(self.user))}</p>",
-			reference_doctype=self.doctype,
-			reference_name=self.name,
-		)
-		self.db_set("documents_requested_on", now_datetime())
 
 	@frappe.whitelist()
 	def get_submitted_details(self) -> dict:
