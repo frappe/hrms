@@ -294,13 +294,8 @@ def get_additional_salary(
 	add_sal.payroll_date = payroll_date
 	add_sal.overwrite_salary_structure_amount = overwrite_salary_structure
 
-<<<<<<< HEAD
-	add_sal.amount = 5000
-	add_sal.currency = erpnext.get_default_currency()
-=======
 	add_sal.amount = amount
 	add_sal.currency = "INR"
->>>>>>> 5b44ecb (test: add zero overwrite additional salary test)
 	add_sal.save()
 	add_sal.submit()
 

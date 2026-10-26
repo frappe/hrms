@@ -1363,37 +1363,6 @@ class SalarySlip(TransactionBase):
 				remove_if_zero_valued=remove_if_zero_valued,
 			)
 
-<<<<<<< HEAD
-=======
-			if (
-				component_type == "earnings"
-				and hasattr(self, "benefit_ledger_components")
-				and flt(additional_salary.amount)
-			):
-				if (
-					additional_salary.ref_doctype == "Employee Benefit Claim"
-					and component_data.is_flexible_benefit
-				) or component_data.accrual_component:
-					# track benefit claim or accrual component payout to record in Employee Benefit Ledger
-					if additional_salary.ref_doctype == "Employee Benefit Claim":
-						remarks = f"Payout against Employee Benefit Claim {additional_salary.ref_docname}"
-						flexible_benefit = 1
-					else:
-						remarks = "Accrual Component payout via Additional Salary"
-						flexible_benefit = 0
-
-					self.benefit_ledger_components.append(
-						{
-							"salary_component": additional_salary.component,
-							"amount": additional_salary.amount,
-							"is_accrual": 0,
-							"transaction_type": "Payout",
-							"flexible_benefit": flexible_benefit,
-							"remarks": remarks,
-						}
-					)
-
->>>>>>> 48fc187 (fix: update additional salary zero overwrite to remove structure amount)
 	def add_tax_components(self):
 		# Calculate variable_based_on_taxable_salary after all components updated in salary slip
 		tax_components, self.other_deduction_components = [], []
