@@ -15,14 +15,6 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 			on_remove: (item) => this.update_row("remove_activity", { row: item.id }),
 			on_skip: (item) => this.call("skip_activity", { row: item.id }),
 			on_unskip: (item) => this.call("unskip_activity", { row: item.id }),
-			on_assign: (item, user) => this.update_row("assign_activity", { row: item.id, user }),
-			on_due_date_change: (item, due_date) =>
-				this.update_row("set_activity_due_date", { row: item.id, due_date }),
-			on_status_change: (item, status) =>
-				this.update_row("set_activity_progress", {
-					row: item.id,
-					status: ROW_STATUS[status] || null,
-				}),
 		});
 	}
 
@@ -31,13 +23,30 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 		if (!$.contains($wrapper[0], this.checklist.el)) {
 			$wrapper.empty().append(this.checklist.$el);
 		}
-		const editable = this.can_edit_activities();
-		this.checklist.opts.on_add = editable
-			? (label) => this.update_row("add_activity", { activity_name: label })
-			: null;
-		this.checklist.opts.on_reorder = editable
-			? (ids) => this.update_row("reorder_activities", { rows: ids })
-			: null;
+		const planning = this.is_planning();
+		const started = this.is_started();
+		Object.assign(this.checklist.opts, {
+			on_add: planning
+				? (label) => this.update_row("add_activity", { activity_name: label })
+				: null,
+			on_reorder: planning
+				? (ids) => this.update_row("reorder_activities", { rows: ids })
+				: null,
+			on_assign: planning
+				? (item, user) => this.update_row("assign_activity", { row: item.id, user })
+				: null,
+			on_due_date_change: planning
+				? (item, due_date) =>
+						this.update_row("set_activity_due_date", { row: item.id, due_date })
+				: null,
+			on_status_change: started
+				? (item, status) =>
+						this.update_row("set_activity_progress", {
+							row: item.id,
+							status: ROW_STATUS[status] || null,
+						})
+				: null,
+		});
 		this.checklist.set_items((this.frm.doc.activities || []).map((row) => this.get_item(row)));
 	}
 
@@ -57,14 +66,19 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 			assignee: row.user,
 			due_date: row.due_date,
 			locked: this.get_lock_reason(row) || handler.get_lock_reason?.(this, row),
-			skippable: saved,
-			removable: saved && Boolean(row.added_on_preboarding) && this.can_edit_activities(),
-			actions: handler.get_actions(this, row, state),
+			skippable: saved && this.frm.doc.docstatus < 2,
+			removable: saved && Boolean(row.added_on_preboarding) && this.is_planning(),
+			actions:
+				this.is_started() || state === "done" ? handler.get_actions(this, row, state) : [],
 		};
 	}
 
-	can_edit_activities() {
+	is_planning() {
 		return this.frm.doc.docstatus === 0 && this.frm.has_perm("write");
+	}
+
+	is_started() {
+		return this.frm.doc.docstatus === 1 && this.frm.has_perm("write");
 	}
 
 	get_lock_reason(row) {

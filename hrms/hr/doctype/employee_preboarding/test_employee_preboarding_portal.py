@@ -32,7 +32,7 @@ DETAILS = {
 class TestEmployeePreboardingPortal(HRMSTestSuite):
 	def setUp(self):
 		frappe.set_user("Administrator")
-		self.preboarding = create_employee_preboarding(submit=False)
+		self.preboarding = create_employee_preboarding(submit=True)
 		self.preboarding.db_set("personal_email", "portal.candidate@example.com")
 		self.preboarding.db_set("create_user_for", "Personal Email")
 		self.preboarding.reload()
@@ -137,7 +137,6 @@ class TestEmployeePreboardingPortal(HRMSTestSuite):
 
 		frappe.set_user("Administrator")
 		self.preboarding.reload()
-		self.preboarding.submit()
 		employee = frappe.get_doc("Employee", create_preboarding_employee(self.preboarding))
 
 		self.assertEqual(employee.first_name, "Asha")
@@ -154,7 +153,6 @@ class TestEmployeePreboardingPortal(HRMSTestSuite):
 
 		frappe.set_user("Administrator")
 		self.preboarding.reload()
-		self.preboarding.submit()
 		create_preboarding_employee(self.preboarding)
 
 		frappe.set_user(self.user)

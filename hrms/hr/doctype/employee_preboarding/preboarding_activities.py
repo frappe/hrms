@@ -176,20 +176,19 @@ class PreboardingActivities:
 		self.sync_todos()
 
 	def set_boarding_status(self):
-		if self.boarding_status == "Completed":
+		if self.docstatus == 2:
 			return
 
-		rows = self.activities
-		if rows and all(is_finished(row) for row in rows):
-			self.boarding_status = "Completed"
-		elif any(row.completed or row.status for row in rows):
-			self.boarding_status = "In Process"
-		else:
+		if self.docstatus == 0:
 			self.boarding_status = "Pending"
+		elif all(is_finished(row) for row in self.activities):
+			self.boarding_status = "Completed"
+		else:
+			self.boarding_status = "In Process"
 
 	def sync_todos(self):
 		"""Give every open, assigned row a ToDo of its own, and close those of finished rows."""
-		if self.is_new():
+		if self.docstatus != 1:
 			return
 
 		for row in self.activities:
@@ -225,20 +224,14 @@ class PreboardingActivities:
 	@frappe.whitelist(methods=["POST"])
 	def assign_activity(self, row: str, user: str | None = None) -> None:
 		self.check_permission("write")
-		activity = self.get_activity(row)
-		if activity.todo:
-			close_todo(activity.todo, "Cancelled")
-			activity.db_set("todo", None)
-		activity.db_set("user", user or None)
-		self.sync_todos()
+		self.validate_draft()
+		self.get_activity(row).db_set("user", user or None)
 
 	@frappe.whitelist(methods=["POST"])
 	def set_activity_due_date(self, row: str, due_date: str | None = None) -> None:
 		self.check_permission("write")
-		activity = self.get_activity(row)
-		activity.db_set("due_date", due_date or None)
-		if activity.todo:
-			frappe.db.set_value("ToDo", activity.todo, "date", due_date or None)
+		self.validate_draft()
+		self.get_activity(row).db_set("due_date", due_date or None)
 
 	@frappe.whitelist(methods=["POST"])
 	def add_activity(self, activity_name: str) -> None:
@@ -257,8 +250,6 @@ class PreboardingActivities:
 		if not activity.added_on_preboarding:
 			frappe.throw(_("Only activities added on this preboarding can be removed; skip the others"))
 
-		if activity.todo:
-			close_todo(activity.todo, "Cancelled")
 		self.remove(activity)
 		frappe.db.delete(activity.doctype, activity.name)
 		for idx, other in enumerate(self.activities, start=1):
@@ -282,11 +273,20 @@ class PreboardingActivities:
 
 	def validate_draft(self):
 		if self.docstatus != 0:
-			frappe.throw(_("Activities can only be added or removed while the preboarding is a draft"))
+			frappe.throw(_("Activities can only be planned while the preboarding is a draft"))
+
+	def validate_started(self):
+		if self.docstatus != 1:
+			frappe.throw(_("Submit the preboarding to start its activities"))
+
+	def validate_not_cancelled(self):
+		if self.docstatus == 2:
+			frappe.throw(_("The preboarding is cancelled"))
 
 	@frappe.whitelist(methods=["POST"])
 	def complete_activity(self, row: str) -> None:
 		self.check_permission("write")
+		self.validate_started()
 		activity = self.get_activity(row)
 		if activity.action != "Manual":
 			frappe.throw(_("{0} is completed by its own record").format(activity.activity_name))
@@ -295,11 +295,13 @@ class PreboardingActivities:
 	@frappe.whitelist(methods=["POST"])
 	def skip_activity(self, row: str) -> None:
 		self.check_permission("write")
+		self.validate_not_cancelled()
 		self.finish_activity(self.get_activity(row), skipped=1)
 
 	@frappe.whitelist(methods=["POST"])
 	def unskip_activity(self, row: str) -> None:
 		self.check_permission("write")
+		self.validate_not_cancelled()
 		self.get_activity(row).db_set("skipped", 0)
 		self.save_activity_states()
 
@@ -307,6 +309,7 @@ class PreboardingActivities:
 	def set_activity_progress(self, row: str, status: str | None = None) -> None:
 		"""Mark an unfinished activity In Progress or Stuck, or clear that; finishing is by record."""
 		self.check_permission("write")
+		self.validate_started()
 		activity = self.get_activity(row)
 		if status and status not in PROGRESS_STATUSES:
 			frappe.throw(_("Status must be In Progress or Stuck"))
@@ -324,13 +327,15 @@ class PreboardingActivities:
 		activity.db_set({"completed": completed, "skipped": skipped, "status": None})
 		self.save_activity_states()
 
-	def complete_remaining_activities(self):
+	def close_todos(self):
 		for row in self.activities:
-			if not is_finished(row):
-				row.completed = int(row.action == "Manual")
-				row.skipped = int(row.action != "Manual")
-				row.status = None
-		self.boarding_status = "Completed"
+			if row.todo:
+				close_todo(row.todo, "Cancelled")
+				row.db_set("todo", None)
+
+	def clear_todos(self):
+		for row in self.activities:
+			row.todo = None
 
 
 def is_finished(row) -> bool:

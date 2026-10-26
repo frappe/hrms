@@ -84,6 +84,8 @@ class EmployeePreboarding(PreboardingActivities, Document):
 
 	def before_insert(self):
 		self.set_template()
+		if self.amended_from:
+			self.clear_todos()
 
 	def validate(self):
 		self.set_employee()
@@ -96,8 +98,8 @@ class EmployeePreboarding(PreboardingActivities, Document):
 	def on_update(self):
 		self.sync_todos()
 
-	def before_submit(self):
-		self.complete_remaining_activities()
+	def on_cancel(self):
+		self.close_todos()
 
 	def set_employee(self):
 		if not self.employee:
@@ -132,6 +134,7 @@ class EmployeePreboarding(PreboardingActivities, Document):
 	@frappe.whitelist(methods=["POST"])
 	def create_user(self) -> str:
 		self.check_permission("write")
+		self.validate_started()
 
 		if self.user:
 			frappe.throw(_("User {0} is already linked").format(get_link_to_form("User", self.user)))
@@ -199,6 +202,7 @@ class EmployeePreboarding(PreboardingActivities, Document):
 	@frappe.whitelist(methods=["POST"])
 	def send_documents_link(self) -> None:
 		self.check_permission("write")
+		self.validate_started()
 
 		recipient = self.get_employee_email()
 		if not recipient:
@@ -264,6 +268,7 @@ class EmployeePreboarding(PreboardingActivities, Document):
 	@frappe.whitelist(methods=["POST"])
 	def send_appointment_letter(self) -> None:
 		self.check_permission("write")
+		self.validate_started()
 
 		letter = self.get_appointment_letter()
 		if not letter:
@@ -291,15 +296,11 @@ class EmployeePreboarding(PreboardingActivities, Document):
 		self.grant_employee_self_service()
 		self.save_activity_states()
 
-	@frappe.whitelist(methods=["POST"])
-	def mark_preboarding_as_completed(self) -> None:
-		self.check_permission("write")
-		self.complete_remaining_activities()
-		self.save()
-
 
 @frappe.whitelist()
 def make_employee(source_name: str, target_doc: str | Document | None = None) -> Document:
+	frappe.get_doc("Employee Preboarding", source_name).validate_started()
+
 	def set_missing_values(source, target):
 		first_name, middle_name, last_name = split_full_name(source.employee_name)
 		target.first_name = first_name

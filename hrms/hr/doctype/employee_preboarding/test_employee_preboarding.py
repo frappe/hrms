@@ -176,19 +176,27 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		)
 		self.assertNotIn("Shift Assignment", defaults)
 
-	def test_boarding_status_tracks_progress(self):
-		preboarding = create_employee_preboarding(with_activities=False)
+	def test_boarding_status_is_pending_until_submit_and_then_follows_the_work(self):
+		preboarding = create_employee_preboarding(submit=False)
+		preboarding.skip_activity(get_row(preboarding, "Assign Shift Type").name)
+		preboarding.reload()
 		self.assertEqual(preboarding.boarding_status, "Pending")
 
-		preboarding.db_set("company_email", "asha.status@example.com")
+		preboarding.submit()
+		self.assertEqual(preboarding.boarding_status, "In Process")
+
+		for row in preboarding.activities:
+			if not (row.completed or row.skipped):
+				preboarding.skip_activity(row.name)
 		preboarding.reload()
-		preboarding.create_user()
+		self.assertEqual(preboarding.boarding_status, "Completed")
+
+		preboarding.unskip_activity(get_row(preboarding, "Assign Shift Type").name)
 		preboarding.reload()
 		self.assertEqual(preboarding.boarding_status, "In Process")
-		self.assertTrue(next(row for row in preboarding.activities if row.action == "Create User").completed)
 
 	def test_deleting_the_user_keeps_the_preboarding_and_reopens_create_user(self):
-		preboarding = create_employee_preboarding(submit=False)
+		preboarding = create_employee_preboarding(submit=True)
 		preboarding.db_set("company_email", "asha.unlink@example.com")
 		preboarding.reload()
 		user = preboarding.create_user()
@@ -205,7 +213,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		self.assertFalse(get_row(preboarding, "Create Portal Login").completed)
 
 	def test_renaming_the_user_keeps_the_preboarding_on_it(self):
-		preboarding = create_employee_preboarding(submit=False)
+		preboarding = create_employee_preboarding(submit=True)
 		preboarding.db_set("company_email", "asha.rename@example.com")
 		preboarding.reload()
 		user = preboarding.create_user()
@@ -217,7 +225,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		self.assertTrue(get_row(preboarding, "Create Portal Login").completed)
 
 	def test_create_user_uses_the_selected_email(self):
-		preboarding = create_employee_preboarding(submit=False)
+		preboarding = create_employee_preboarding(submit=True)
 		preboarding.db_set("company_email", "asha.company@example.com")
 		preboarding.db_set("personal_email", "asha.personal@example.com")
 		preboarding.db_set("create_user_for", "Personal Email")
@@ -230,7 +238,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		self.assertEqual(frappe.db.get_value("User", user, "first_name"), "Test")
 
 	def test_self_service_role_is_granted_with_the_employee(self):
-		preboarding = create_employee_preboarding(submit=False)
+		preboarding = create_employee_preboarding(submit=True)
 		preboarding.db_set("company_email", "asha.ess@example.com")
 		preboarding.db_set("create_user_for", "Company Email")
 		preboarding.db_set("gender", "Female")
@@ -246,18 +254,27 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		frappe.clear_cache(user=user)
 		self.assertIn("Employee Self Service", frappe.get_roles(user))
 
-	def test_submitting_completes_the_remaining_steps(self):
+	def test_submitting_starts_the_activities_without_finishing_them(self):
 		preboarding = create_employee_preboarding(submit=False)
-		self.assertEqual(preboarding.boarding_status, "Pending")
 
 		preboarding.submit()
 
-		self.assertEqual(preboarding.boarding_status, "Completed")
-		self.assertTrue(get_row(preboarding, "Assign ID Card").completed)
-		self.assertTrue(get_row(preboarding, "Create Employee").skipped)
+		self.assertFalse(get_row(preboarding, "Assign ID Card").completed)
+		self.assertFalse(get_row(preboarding, "Create Employee").skipped)
+
+	def test_activities_wait_for_submit(self):
+		preboarding = create_employee_preboarding(submit=False)
+		preboarding.db_set("company_email", "asha.draft@example.com")
+		preboarding.reload()
+		manual = get_row(preboarding, "Assign ID Card")
+
+		self.assertRaises(frappe.ValidationError, preboarding.complete_activity, manual.name)
+		self.assertRaises(frappe.ValidationError, preboarding.set_activity_progress, manual.name, "Stuck")
+		self.assertRaises(frappe.ValidationError, preboarding.create_user)
+		self.assertRaises(frappe.ValidationError, make_employee, preboarding.name)
 
 	def test_employee_is_created_from_the_preboarding(self):
-		preboarding = create_employee_preboarding(submit=False)
+		preboarding = create_employee_preboarding(submit=True)
 		preboarding.db_set("gender", "Female")
 		preboarding.db_set("date_of_birth", "1990-05-08")
 		preboarding.reload()
@@ -271,7 +288,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		self.assertEqual(employee.job_offer, preboarding.job_offer)
 
 	def test_an_employee_from_another_job_offer_is_not_linked(self):
-		preboarding = create_employee_preboarding(submit=False)
+		preboarding = create_employee_preboarding(submit=True)
 		preboarding.db_set("gender", "Female")
 		preboarding.db_set("date_of_birth", "1990-05-08")
 		preboarding.reload()
@@ -324,12 +341,28 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		self.assertRaises(frappe.ValidationError, preboarding.reorder_activities, names[1:])
 		self.assertRaises(frappe.ValidationError, preboarding.reorder_activities, [names[0], *names])
 
-	def test_activities_cannot_be_added_to_a_submitted_preboarding(self):
-		preboarding = create_employee_preboarding(submit=True)
+	def test_the_plan_is_frozen_once_submitted(self):
+		preboarding = create_employee_preboarding(submit=False)
+		preboarding.add_activity("Order a desk")
+		preboarding.reload()
+		preboarding.submit()
+		row = get_row(preboarding, "Assign ID Card")
 
-		self.assertRaises(frappe.ValidationError, preboarding.add_activity, "Order a desk")
+		self.assertRaises(frappe.ValidationError, preboarding.add_activity, "Order a chair")
+		self.assertRaises(
+			frappe.ValidationError, preboarding.remove_activity, get_row(preboarding, "Order a desk").name
+		)
 		names = [row.name for row in preboarding.activities]
 		self.assertRaises(frappe.ValidationError, preboarding.reorder_activities, names[::-1])
+		self.assertRaises(
+			frappe.ValidationError,
+			preboarding.assign_activity,
+			row.name,
+			get_test_user("preboarding_frozen@example.com"),
+		)
+		self.assertRaises(
+			frappe.ValidationError, preboarding.set_activity_due_date, row.name, str(add_days(getdate(), 5))
+		)
 
 	def test_deleting_a_sent_appointment_letter_reopens_its_row(self):
 		preboarding = create_employee_preboarding(submit=False)
@@ -353,7 +386,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		self.assertIn(letter.name, [doc["name"] for doc in linked])
 
 	def test_an_employee_saved_outside_the_checklist_completes_its_row(self):
-		preboarding = create_employee_preboarding(submit=False)
+		preboarding = create_employee_preboarding(submit=True)
 		preboarding.db_set("gender", "Female")
 		preboarding.db_set("date_of_birth", "1990-05-08")
 		preboarding.reload()
@@ -365,7 +398,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		self.assertTrue(get_row(preboarding, "Create Employee").completed)
 
 	def test_assignment_row_ticks_from_the_real_assignment(self):
-		preboarding = create_employee_preboarding(submit=False)
+		preboarding = create_employee_preboarding(submit=True)
 		preboarding.db_set("gender", "Female")
 		preboarding.db_set("date_of_birth", "1990-05-08")
 		preboarding.reload()
@@ -424,7 +457,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		self.assertTrue(get_row(preboarding, "Assign Shift Type").skipped)
 
 	def test_progress_status_is_set_by_hand_and_survives_a_resave(self):
-		preboarding = create_employee_preboarding(submit=False)
+		preboarding = create_employee_preboarding(submit=True)
 		row = get_row(preboarding, "Create Employee")
 
 		preboarding.set_activity_progress(row.name, "Stuck")
@@ -436,7 +469,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		self.assertEqual(get_row(preboarding, "Create Employee").status, "Stuck")
 
 	def test_progress_status_clears_by_hand_and_when_the_activity_finishes(self):
-		preboarding = create_employee_preboarding(submit=False)
+		preboarding = create_employee_preboarding(submit=True)
 		stuck, manual = get_row(preboarding, "Create Employee"), get_row(preboarding, "Assign ID Card")
 
 		preboarding.set_activity_progress(stuck.name, "Stuck")
@@ -450,7 +483,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		self.assertTrue(get_row(preboarding, "Assign ID Card").completed)
 
 	def test_progress_status_cannot_finish_or_reopen_an_activity(self):
-		preboarding = create_employee_preboarding(submit=False)
+		preboarding = create_employee_preboarding(submit=True)
 		row = get_row(preboarding, "Assign Shift Type")
 
 		with self.assertRaises(frappe.ValidationError):
@@ -473,7 +506,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		self.assertFalse(get_row(preboarding, "Assign Shift Type").completed)
 
 	def test_only_manual_activities_are_completed_by_hand(self):
-		preboarding = create_employee_preboarding(submit=False)
+		preboarding = create_employee_preboarding(submit=True)
 
 		preboarding.complete_activity(get_row(preboarding, "Assign ID Card").name)
 		preboarding.reload()
@@ -482,43 +515,36 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		with self.assertRaises(frappe.ValidationError):
 			preboarding.complete_activity(get_row(preboarding, "Create Employee").name)
 
-	def test_assigning_an_activity_gives_the_user_a_todo_of_their_own(self):
+	def test_assignees_get_their_todos_when_the_preboarding_is_submitted(self):
 		preboarding = create_employee_preboarding(submit=False)
 		first, second = (
 			get_test_user("preboarding_first@example.com"),
 			get_test_user("preboarding_second@example.com"),
 		)
 		row = get_row(preboarding, "Create Employee")
+		due_date = add_days(getdate(), 5)
 
 		preboarding.assign_activity(row.name, first)
-		preboarding.reload()
-		first_todo = get_row(preboarding, "Create Employee").todo
-		self.assertEqual(frappe.db.get_value("ToDo", first_todo, ["allocated_to", "status"]), (first, "Open"))
-
 		preboarding.assign_activity(row.name, second)
-		preboarding.reload()
-		second_todo = get_row(preboarding, "Create Employee").todo
-		self.assertNotEqual(first_todo, second_todo)
-		self.assertEqual(frappe.db.get_value("ToDo", first_todo, "status"), "Cancelled")
-		self.assertEqual(frappe.db.get_value("ToDo", second_todo, "allocated_to"), second)
-
-	def test_due_date_change_reaches_the_todo(self):
-		preboarding = create_employee_preboarding(submit=False)
-		row = get_row(preboarding, "Create Portal Login")
-		preboarding.assign_activity(row.name, get_test_user("preboarding_due@example.com"))
-
-		due_date = add_days(getdate(), 5)
 		preboarding.set_activity_due_date(row.name, str(due_date))
 		preboarding.reload()
+		self.assertFalse(get_row(preboarding, "Create Employee").todo)
+		self.assertFalse(frappe.db.exists("ToDo", {"reference_name": preboarding.name}))
 
-		row = get_row(preboarding, "Create Portal Login")
-		self.assertEqual(getdate(row.due_date), due_date)
-		self.assertEqual(getdate(frappe.db.get_value("ToDo", row.todo, "date")), due_date)
+		preboarding.submit()
+		preboarding.reload()
+
+		todo = get_row(preboarding, "Create Employee").todo
+		self.assertEqual(frappe.db.get_value("ToDo", todo, ["allocated_to", "status"]), (second, "Open"))
+		self.assertEqual(getdate(frappe.db.get_value("ToDo", todo, "date")), due_date)
+		self.assertEqual(frappe.db.count("ToDo", {"reference_name": preboarding.name}), 1)
 
 	def test_finishing_an_activity_closes_its_todo(self):
 		preboarding = create_employee_preboarding(submit=False)
 		row = get_row(preboarding, "Assign ID Card")
 		preboarding.assign_activity(row.name, get_test_user("preboarding_close@example.com"))
+		preboarding.reload()
+		preboarding.submit()
 		preboarding.reload()
 		todo = get_row(preboarding, "Assign ID Card").todo
 
@@ -526,14 +552,28 @@ class TestEmployeePreboarding(HRMSTestSuite):
 
 		self.assertEqual(frappe.db.get_value("ToDo", todo, "status"), "Closed")
 
-	def test_mark_preboarding_as_completed(self):
+	def test_cancelling_closes_the_todos_and_the_amendment_keeps_the_finished_rows(self):
 		preboarding = create_employee_preboarding(submit=False)
-		self.assertEqual(preboarding.boarding_status, "Pending")
+		row = get_row(preboarding, "Assign ID Card")
+		preboarding.assign_activity(row.name, get_test_user("preboarding_amend@example.com"))
+		preboarding.skip_activity(get_row(preboarding, "Assign Shift Type").name)
+		preboarding.reload()
+		preboarding.submit()
+		preboarding.reload()
+		todo = get_row(preboarding, "Assign ID Card").todo
 
-		preboarding.mark_preboarding_as_completed()
+		preboarding.cancel()
 
-		self.assertEqual(preboarding.boarding_status, "Completed")
-		self.assertTrue(all(row.completed or row.skipped for row in preboarding.activities))
+		self.assertEqual(frappe.db.get_value("ToDo", todo, "status"), "Cancelled")
+
+		amended = frappe.copy_doc(preboarding)
+		amended.amended_from = preboarding.name
+		amended.docstatus = 0
+		amended.insert()
+
+		self.assertFalse(any(row.todo for row in amended.activities))
+		self.assertTrue(get_row(amended, "Assign Shift Type").skipped)
+		self.assertEqual(amended.boarding_status, "Pending")
 
 
 def get_job_applicant():

@@ -248,6 +248,7 @@
    "label": "Documents to Upload"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "documents",
    "fieldtype": "Table",
    "label": "Documents",
@@ -351,7 +352,7 @@
  "icon": "user-plus",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-23 16:00:00.000000",
+ "modified": "2026-10-26 16:16:40.596720",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Preboarding",
