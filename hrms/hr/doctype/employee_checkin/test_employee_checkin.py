@@ -886,13 +886,7 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		self.assertEqual(attendance[0].out_time, out_log.time)
 
 	def test_half_day_attendance_not_closed_before_shift_actually_ends(self):
-		from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
-
-		# anchor to a working day so the half day leave is not rejected on a weekend
 		today = getdate()
-		holiday_list = frappe.db.get_value("Company", "_Test Company", "default_holiday_list")
-		while holiday_list and is_holiday(holiday_list, today):
-			today = add_days(today, -1)
 		shift = setup_shift_type(
 			shift_type="_Test Half Day Premature Close",
 			start_time="08:00:00",
@@ -900,10 +894,15 @@ class TestEmployeeCheckin(HRMSTestSuite):
 			allow_check_out_after_shift_end_time=630,
 			working_hours_threshold_for_half_day=3,
 			last_sync_of_checkin=datetime.combine(today, get_time("15:00:00")),
-			process_attendance_after=add_days(today, -1),
 		)
 		emp = make_employee("testhalfday5@example.com", company="_Test Company", default_shift=shift.name)
 		employee = frappe.get_doc("Employee", emp)
+		# anchor to the employee's working day so the half day leave is not rejected on a
+		# weekend, and align the shift's sync/processing window to that day
+		today = get_non_holiday_date(emp, getdate())
+		shift.last_sync_of_checkin = datetime.combine(today, get_time("15:00:00"))
+		shift.process_attendance_after = add_days(today, -1)
+		shift.save()
 		# create attendance from leave
 		leave_type = create_leave_type(leave_type_name="_Test Half Day", include_holidays=0)
 		create_leave_allocation(
