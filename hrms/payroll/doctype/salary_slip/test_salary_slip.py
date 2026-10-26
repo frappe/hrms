@@ -5,7 +5,6 @@ import calendar
 import random
 
 import frappe
-from frappe.core.doctype.user_permission.test_user_permission import create_user
 from frappe.model.document import Document
 from frappe.query_builder.functions import Sum
 from frappe.utils import (
@@ -47,7 +46,12 @@ from hrms.payroll.doctype.salary_slip.salary_slip import (
 	make_salary_slip_from_timesheet,
 )
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
-from hrms.tests.test_utils import add_date_to_holiday_list, get_email_by_subject, get_first_sunday
+from hrms.tests.test_utils import (
+	add_date_to_holiday_list,
+	create_user,
+	get_email_by_subject,
+	get_first_sunday,
+)
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -764,7 +768,7 @@ class TestSalarySlip(HRMSTestSuite):
 
 	@HRMSTestSuite.change_settings("Payroll Settings", {"payroll_based_on": "Attendance"})
 	def test_payment_days_in_salary_slip_based_on_timesheet(self):
-		from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet
+		from hrms.tests.test_utils import make_timesheet
 
 		emp = make_employee(
 			"test_employee_timesheet@salary.com",
@@ -1678,7 +1682,7 @@ class TestSalarySlip(HRMSTestSuite):
 		frappe.db.rollback()
 
 	def test_salary_slip_from_timesheet(self):
-		from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet
+		from hrms.tests.test_utils import make_timesheet
 
 		emp = make_employee("test_employee_6@salary.com", company="_Test Company")
 		make_salary_structure_for_timesheet(emp, "_Test Company")

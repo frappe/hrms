@@ -4,7 +4,6 @@
 import frappe
 from frappe.utils import add_days, get_weekday, getdate, nowdate
 
-from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.job_applicant.job_applicant import get_applicant_to_hire_percentage
@@ -25,7 +24,7 @@ from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignmen
 from hrms.payroll.doctype.salary_structure_assignment.test_salary_structure_assignment import (
 	_make_component,
 )
-from hrms.tests.test_utils import create_job_applicant
+from hrms.tests.test_utils import create_designation, create_job_applicant
 from hrms.tests.utils import HRMSTestSuite
 
 TAKE_HOME = "Take Home* (Income Tax applicable as per IT Act)"
