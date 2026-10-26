@@ -277,6 +277,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		preboarding.reload()
 		employee = make_employee(preboarding.name)
 		employee.job_offer = None
+		employee.job_applicant = None
 		employee.insert()
 
 		self.assertRaises(frappe.ValidationError, preboarding.link_employee, employee.name)
@@ -351,6 +352,18 @@ class TestEmployeePreboarding(HRMSTestSuite):
 
 		linked = get_linked_docs_to_delete("Employee Preboarding", preboarding.name)["docs"]
 		self.assertIn(letter.name, [doc["name"] for doc in linked])
+
+	def test_an_employee_saved_outside_the_checklist_completes_its_row(self):
+		preboarding = create_employee_preboarding(submit=False)
+		preboarding.db_set("gender", "Female")
+		preboarding.db_set("date_of_birth", "1990-05-08")
+		preboarding.reload()
+
+		employee = make_employee(preboarding.name).insert()
+
+		preboarding.reload()
+		self.assertEqual(preboarding.employee, employee.name)
+		self.assertTrue(get_row(preboarding, "Create Employee").completed)
 
 	def test_assignment_row_ticks_from_the_real_assignment(self):
 		preboarding = create_employee_preboarding(submit=False)

@@ -301,6 +301,9 @@ class EmployeePreboarding(PreboardingActivities, Document):
 				)
 			)
 
+		self.attach_employee(employee)
+
+	def attach_employee(self, employee: str) -> None:
 		self.db_set("employee", employee)
 		self.grant_employee_self_service()
 		self.save_activity_states()

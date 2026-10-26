@@ -28,22 +28,18 @@ class EmployeeMaster(Employee):
 		self.employee = self.name
 
 
-def validate_preboarding_process(doc, method=None):
-	"""Link a new Employee back to its open Employee Preboarding."""
-	job_applicant = doc.get("job_applicant")
-	job_offer = doc.get("job_offer")
-
-	filters = {"docstatus": 1, "boarding_status": ("!=", "Completed")}
-	if job_offer:
-		filters["job_offer"] = job_offer
-	elif job_applicant:
-		filters["job_applicant"] = job_applicant
+def link_preboarding(doc, method=None):
+	"""Link a saved Employee to the open Employee Preboarding of its job offer, however it was created."""
+	filters = {"docstatus": ("!=", 2), "boarding_status": ("!=", "Completed"), "employee": ("is", "not set")}
+	if doc.get("job_offer"):
+		filters["job_offer"] = doc.job_offer
+	elif doc.get("job_applicant"):
+		filters["job_applicant"] = doc.job_applicant
 	else:
 		return
 
-	employee_preboarding = frappe.get_all("Employee Preboarding", filters=filters, pluck="name")
-	if employee_preboarding:
-		frappe.db.set_value("Employee Preboarding", employee_preboarding[0], "employee", doc.name)
+	if preboarding := frappe.db.get_value("Employee Preboarding", filters):
+		frappe.get_doc("Employee Preboarding", preboarding).attach_employee(doc.name)
 
 
 def publish_update(doc, method=None):
