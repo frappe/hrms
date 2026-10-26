@@ -306,10 +306,30 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		template_row = get_row(preboarding, "Assign ID Card")
 		self.assertRaises(frappe.ValidationError, preboarding.remove_activity, template_row.name)
 
+	def test_activities_can_be_reordered(self):
+		preboarding = create_employee_preboarding(submit=False)
+		names = [row.name for row in preboarding.activities]
+		reordered = [names[-1], *names[:-1]]
+
+		preboarding.reorder_activities(reordered)
+
+		preboarding.reload()
+		self.assertEqual([row.name for row in preboarding.activities], reordered)
+		self.assertEqual([row.idx for row in preboarding.activities], list(range(1, len(names) + 1)))
+
+	def test_reordering_needs_every_activity_once(self):
+		preboarding = create_employee_preboarding(submit=False)
+		names = [row.name for row in preboarding.activities]
+
+		self.assertRaises(frappe.ValidationError, preboarding.reorder_activities, names[1:])
+		self.assertRaises(frappe.ValidationError, preboarding.reorder_activities, [names[0], *names])
+
 	def test_activities_cannot_be_added_to_a_submitted_preboarding(self):
 		preboarding = create_employee_preboarding(submit=True)
 
 		self.assertRaises(frappe.ValidationError, preboarding.add_activity, "Order a desk")
+		names = [row.name for row in preboarding.activities]
+		self.assertRaises(frappe.ValidationError, preboarding.reorder_activities, names[::-1])
 
 	def test_deleting_a_sent_appointment_letter_reopens_its_row(self):
 		preboarding = create_employee_preboarding(submit=False)

@@ -31,8 +31,12 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 		if (!$.contains($wrapper[0], this.checklist.el)) {
 			$wrapper.empty().append(this.checklist.$el);
 		}
-		this.checklist.opts.on_add = this.can_edit_activities()
+		const editable = this.can_edit_activities();
+		this.checklist.opts.on_add = editable
 			? (label) => this.update_row("add_activity", { activity_name: label })
+			: null;
+		this.checklist.opts.on_reorder = editable
+			? (ids) => this.update_row("reorder_activities", { rows: ids })
 			: null;
 		this.checklist.set_items((this.frm.doc.activities || []).map((row) => this.get_item(row)));
 	}

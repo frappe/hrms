@@ -266,6 +266,20 @@ class PreboardingActivities:
 				other.db_set("idx", idx, update_modified=False)
 		self.save_activity_states()
 
+	@frappe.whitelist(methods=["POST"])
+	def reorder_activities(self, rows: list[str] | str) -> None:
+		self.check_permission("write")
+		self.validate_draft()
+		rows = frappe.parse_json(rows)
+		if sorted(rows) != sorted(row.name for row in self.activities):
+			frappe.throw(_("Pass every activity of this preboarding once to reorder them"))
+
+		position = {name: idx for idx, name in enumerate(rows, start=1)}
+		for row in self.activities:
+			if row.idx != position[row.name]:
+				row.db_set("idx", position[row.name], update_modified=False)
+		self.activities.sort(key=lambda row: row.idx)
+
 	def validate_draft(self):
 		if self.docstatus != 0:
 			frappe.throw(_("Activities can only be added or removed while the preboarding is a draft"))
