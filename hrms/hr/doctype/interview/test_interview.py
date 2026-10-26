@@ -7,6 +7,7 @@ import os
 import frappe
 from frappe import _
 from frappe.core.doctype.user_permission.test_user_permission import create_user
+from frappe.permissions import add_user_permission
 from frappe.utils import add_days, get_datetime, get_time, getdate, nowtime
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
@@ -187,6 +188,19 @@ class TestInterview(HRMSTestSuite):
 		]
 
 		self.assertEqual(feedback, expected_data)
+
+	def test_get_feedback_requires_interview_access(self):
+		interview = create_interview_and_dependencies(create_job_applicant().name)
+		other_applicant = create_job_applicant(
+			applicant_name="_Test Other Applicant", email_id="test_other_applicant@example.com"
+		)
+		interviewer = "test_restricted_interviewer@example.com"
+		create_user(interviewer, "Interviewer")
+		add_user_permission("Job Applicant", other_applicant.name, interviewer)
+
+		frappe.set_user(interviewer)
+		self.assertRaises(frappe.PermissionError, get_feedback, interview.name)
+		frappe.set_user("Administrator")
 
 	def test_job_applicant_status_update_on_interview_submit(self):
 		job_applicant = create_job_applicant()
