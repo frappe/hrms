@@ -484,36 +484,41 @@ class TestLeaveApplication(HRMSTestSuite):
 		application.insert()
 
 	def test_overlap_with_half_day_on_today(self):
+		from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
+
 		self._clear_roles()
 
 		from frappe.utils.user import add_role
 
+		# a NULL half_day_date on the full day leave coerces to today (getdate(None)), so
+		# the overlap must be exercised on today itself; make today a working day so the
+		# test still holds when the suite runs on a weekend
+		holiday_list = get_holiday_list_for_employee(get_employee().name)
+		frappe.db.delete("Holiday", {"parent": holiday_list, "holiday_date": nowdate()})
+
 		add_role("test@example.com", "Employee")
 		frappe.set_user("test@example.com")
 
-		# anchor to a working day so the leave is not rejected for falling on a holiday
-		# when the suite runs on a weekend
-		leave_date = self.get_non_holiday_date(get_employee().name, nowdate())
-
-		# allocate leave covering the date so the applications aren't rejected for
+		# allocate leave covering today so the applications aren't rejected for
 		# being outside the allocation period
+		date = getdate()
 		make_allocation_record(
 			employee=get_employee().name,
 			leave_type="_Test Leave Type",
-			from_date=get_year_start(leave_date),
-			to_date=get_year_ending(leave_date),
+			from_date=get_year_start(date),
+			to_date=get_year_ending(date),
 		)
 
-		# full day leave on the date (half_day_date stays NULL)
+		# full day leave on today (half_day_date stays NULL)
 		application = self.get_application(self.leave_application)
-		application.from_date = application.to_date = leave_date
+		application.from_date = application.to_date = nowdate()
 		application.insert()
 
 		# a half day leave on the same day must overlap the existing full day leave
 		application = self.get_application(self.leave_application)
-		application.from_date = application.to_date = leave_date
+		application.from_date = application.to_date = nowdate()
 		application.half_day = 1
-		application.half_day_date = leave_date
+		application.half_day_date = nowdate()
 
 		self.assertRaises(OverlapError, application.insert)
 
