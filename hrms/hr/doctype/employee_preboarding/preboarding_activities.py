@@ -66,12 +66,16 @@ def make_assign_activity(title, doctype):
 # The tasks the checklist can do itself. Each new template starts with them.
 STANDARD_ACTIVITIES = [
 	{"activity_name": "Create Portal Login", "action": "Create User"},
-	{"activity_name": "Send Appointment Letter", "action": "Appointment Letter"},
 	{"activity_name": "Create Employee", "action": "Create Employee"},
 	make_assign_activity("Assign Holiday List", "Holiday List Assignment"),
 	make_assign_activity("Assign Leave Policy", "Leave Policy Assignment"),
 	make_assign_activity("Assign Salary Structure", "Salary Structure Assignment"),
 	make_assign_activity("Assign Shift Type", "Shift Assignment"),
+	{
+		"activity_name": "Send Appointment Letter",
+		"action": "Appointment Letter",
+		"depends_on_action": "Create Employee",
+	},
 ]
 
 

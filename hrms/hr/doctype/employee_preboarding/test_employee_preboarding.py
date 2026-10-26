@@ -58,6 +58,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 			get_row(preboarding, "Assign Leave Policy").reference_doctype, "Leave Policy Assignment"
 		)
 		self.assertEqual(get_row(preboarding, "Assign Leave Policy").depends_on_action, "Create Employee")
+		self.assertEqual(get_row(preboarding, "Send Appointment Letter").depends_on_action, "Create Employee")
 		self.assertEqual(get_row(preboarding, "Assign ID Card").action, "Manual")
 
 	def test_resaving_keeps_the_rows_without_duplicates(self):
