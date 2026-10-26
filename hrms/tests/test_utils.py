@@ -1,9 +1,31 @@
 import frappe
+from frappe.core.doctype.user_permission.test_user_permission import create_user
+from frappe.tests.test_webform import create_custom_doctype, create_webform
 from frappe.utils import add_months, get_first_day, get_last_day, getdate, now_datetime
 
 from erpnext.setup.doctype.department.department import get_abbreviated_name
 from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.utils import enable_all_roles_and_domains
+
+# Upstream test helpers are re-exported from this module so hrms test suites import them
+# from a single place. When an upstream app relocates a helper (as lending did when it
+# consolidated its test setup), only this file changes instead of every test module.
+#
+# create_account and make_timesheet live in erpnext modules that run preset setup at
+# import time (via erpnext.tests.utils), so they are wrapped here to defer that import
+# until the helper is actually called by a test, keeping this module cheap to import.
+
+
+def create_account(*args, **kwargs):
+	from erpnext.accounts.doctype.account.test_account import create_account as _create_account
+
+	return _create_account(*args, **kwargs)
+
+
+def make_timesheet(*args, **kwargs):
+	from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet as _make_timesheet
+
+	return _make_timesheet(*args, **kwargs)
 
 
 def before_tests():

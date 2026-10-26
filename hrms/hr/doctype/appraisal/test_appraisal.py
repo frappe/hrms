@@ -3,7 +3,6 @@
 
 import frappe
 
-from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.appraisal_cycle.appraisal_cycle import get_appraisal_cycle_summary
@@ -13,7 +12,7 @@ from hrms.hr.doctype.employee_performance_feedback.test_employee_performance_fee
 	create_performance_feedback,
 )
 from hrms.hr.doctype.goal.test_goal import create_goal
-from hrms.tests.test_utils import create_company
+from hrms.tests.test_utils import create_company, create_designation
 from hrms.tests.utils import HRMSTestSuite
 
 
