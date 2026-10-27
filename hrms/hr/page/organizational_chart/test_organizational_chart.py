@@ -48,6 +48,7 @@ class TestOrganizationalChart(HRMSTestSuite):
 		self.assertEqual({child.id: child.reports for child in children}, {emp2: 1, emp3: 0})
 		self.assertEqual(children[0].manager.email, "testemp1@mail.com")
 
+	@HRMSTestSuite.change_settings("HR Settings", {"show_org_chart_to_all_employees": 1})
 	def test_employee_sees_whole_company(self):
 		manager = make_employee("orgchart_view_manager@mail.com", company=self.company)
 		employee = make_employee("orgchart_view_report@mail.com", company=self.company, reports_to=manager)
@@ -73,6 +74,7 @@ class TestOrganizationalChart(HRMSTestSuite):
 		self.assertEqual((roots[0].can_open, roots[0].can_email), (False, False))
 		self.assertEqual((team[0].can_open, team[0].can_email), (True, True))
 
+	@HRMSTestSuite.change_settings("HR Settings", {"show_org_chart_to_all_employees": 1})
 	def test_manager_in_unseen_company_shows_only_who(self):
 		other_company = create_company("Test Org Chart Other").name
 		manager = make_employee("orgchart_unseen_manager@mail.com", company=other_company)
@@ -88,6 +90,7 @@ class TestOrganizationalChart(HRMSTestSuite):
 		self.assertEqual(set(roots[employee].manager), {"id", "name", "image", "company"})
 		self.assertEqual(roots[employee].manager.company, other_company)
 
+	@HRMSTestSuite.change_settings("HR Settings", {"show_org_chart_to_all_employees": 1})
 	def test_chart_access(self):
 		other_company = create_company("Test Org Chart Other").name
 		make_employee("orgchart_access@mail.com", company=self.company)
@@ -109,6 +112,29 @@ class TestOrganizationalChart(HRMSTestSuite):
 				self.assertRaises(frappe.PermissionError, get_children, company)
 			finally:
 				frappe.set_user("Administrator")
+
+	@HRMSTestSuite.change_settings("HR Settings", {"show_org_chart_to_all_employees": 0})
+	def test_chart_hidden_from_employees(self):
+		employee = make_employee("orgchart_hidden@mail.com", company=self.company)
+		create_user("orgchart_hidden_hr@mail.com", "HR User")
+
+		# an employee gets no company, and the page says why
+		frappe.set_user("orgchart_hidden@mail.com")
+		try:
+			context = get_chart_context()
+			self.assertRaises(frappe.PermissionError, get_children, self.company)
+		finally:
+			frappe.set_user("Administrator")
+		self.assertEqual(context["companies"], [])
+		self.assertTrue(context["hidden_from_employees"])
+
+		# HR, who may read every Employee, still sees the chart
+		frappe.set_user("orgchart_hidden_hr@mail.com")
+		try:
+			self.assertIn(self.company, get_chart_context()["companies"])
+			self.assertEqual([node.id for node in get_children(self.company)], [employee])
+		finally:
+			frappe.set_user("Administrator")
 
 	def test_portal_user_has_no_access(self):
 		portal_user = frappe.get_doc(
@@ -143,6 +169,7 @@ class TestOrganizationalChart(HRMSTestSuite):
 		with patch("hrms.hr.page.organizational_chart.organizational_chart.EXPAND_ALL_LIMIT", 1):
 			self.assertRaises(frappe.ValidationError, get_all_nodes, self.company)
 
+	@HRMSTestSuite.change_settings("HR Settings", {"show_org_chart_to_all_employees": 1})
 	def test_get_chart_context(self):
 		employee = make_employee("orgchart_context@mail.com", company=self.company)
 
