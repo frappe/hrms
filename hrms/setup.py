@@ -22,7 +22,6 @@ def after_install():
 	set_single_defaults()
 	setup_repost_defaults()
 	create_default_role_profiles()
-	create_preboarding_candidate_role()
 	create_default_boarding_template()
 	run_post_install_patches()
 	add_default_hr_permissions()
@@ -778,22 +777,6 @@ def create_default_boarding_template():
 	)
 
 	create_default_template()
-
-
-def create_preboarding_candidate_role():
-	from hrms.hr.doctype.employee_preboarding.employee_preboarding import PREBOARDING_CANDIDATE_ROLE
-
-	if frappe.db.exists("Role", PREBOARDING_CANDIDATE_ROLE):
-		return
-
-	frappe.get_doc(
-		{
-			"doctype": "Role",
-			"role_name": PREBOARDING_CANDIDATE_ROLE,
-			"desk_access": 0,
-			"is_custom": 0,
-		}
-	).insert(ignore_permissions=True)
 
 
 def create_custom_role(data):

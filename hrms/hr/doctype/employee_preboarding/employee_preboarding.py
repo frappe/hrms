@@ -2,8 +2,6 @@
 # For license information, please see license.txt
 
 
-import json
-
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -13,7 +11,6 @@ from frappe.utils import get_link_to_form, now_datetime
 from hrms.hr.doctype.employee_preboarding.preboarding_activities import PreboardingActivities
 
 EMPLOYEE_SELF_SERVICE_ROLE = "Employee Self Service"
-PREBOARDING_CANDIDATE_ROLE = "Employee Preboarding Candidate"
 
 
 def split_full_name(full_name: str) -> tuple[str, str, str]:
@@ -39,9 +36,6 @@ class EmployeePreboarding(PreboardingActivities, Document):
 		from hrms.hr.doctype.employee_boarding_activity.employee_boarding_activity import (
 			EmployeeBoardingActivity,
 		)
-		from hrms.hr.doctype.employee_preboarding_document.employee_preboarding_document import (
-			EmployeePreboardingDocument,
-		)
 
 		activities: DF.Table[EmployeeBoardingActivity]
 		amended_from: DF.Link | None
@@ -56,10 +50,6 @@ class EmployeePreboarding(PreboardingActivities, Document):
 		date_of_joining: DF.Date
 		department: DF.Link | None
 		designation: DF.Link | None
-		details_confirmed_on: DF.Datetime | None
-		details_submitted_on: DF.Datetime | None
-		documents: DF.Table[EmployeePreboardingDocument]
-		documents_requested_on: DF.Datetime | None
 		employee: DF.Link | None
 		employee_boarding_template: DF.Link | None
 		employee_grade: DF.Link | None
@@ -73,7 +63,6 @@ class EmployeePreboarding(PreboardingActivities, Document):
 		personal_email: DF.Data | None
 		project: DF.Link | None
 		reports_to: DF.Link | None
-		submitted_details: DF.Code | None
 		user: DF.Data | None
 	# end: auto-generated types
 
@@ -144,7 +133,6 @@ class EmployeePreboarding(PreboardingActivities, Document):
 
 		if frappe.db.exists("User", email):
 			self.db_set("user", email)
-			self.grant_preboarding_candidate_role()
 			self.save_activity_states()
 			return email
 
@@ -161,35 +149,17 @@ class EmployeePreboarding(PreboardingActivities, Document):
 				"enabled": 1,
 			}
 		)
-		user.append_roles(PREBOARDING_CANDIDATE_ROLE)
 		user.insert(ignore_permissions=True)
 
 		self.db_set("user", user.name)
 		self.save_activity_states()
 		return user.name
 
-	def grant_preboarding_candidate_role(self) -> None:
-		"""Let the linked user open the document upload portal.
-
-		The role carries no DocType permissions - the portal's whitelisted methods are
-		the gate. erpnext's validate_employee_role strips "Employee" and "Employee Self
-		Service" from a user no Employee points at, so neither name can be used here.
-		"""
-		if not self.user:
-			return
-
-		user = frappe.get_doc("User", self.user)
-		if PREBOARDING_CANDIDATE_ROLE in {row.role for row in user.roles}:
-			return
-
-		user.append_roles(PREBOARDING_CANDIDATE_ROLE)
-		user.save(ignore_permissions=True)
-
 	def grant_employee_self_service(self) -> None:
 		"""Add the self-service role once an Employee is mapped.
 
 		erpnext's validate_employee_role strips this role from a User that no Employee
-		points at, so it cannot be granted while creating the user in step 1.
+		points at, so it cannot be granted when the user is created.
 		"""
 		if not self.user:
 			return
@@ -197,38 +167,6 @@ class EmployeePreboarding(PreboardingActivities, Document):
 		user = frappe.get_doc("User", self.user)
 		user.append_roles(EMPLOYEE_SELF_SERVICE_ROLE)
 		user.save(ignore_permissions=True)
-
-	@frappe.whitelist()
-	def get_submitted_details(self) -> dict:
-		"""Schema and values for the HR-side review of what the employee sent."""
-		self.check_permission("read")
-
-		from hrms.hr.doctype.employee_preboarding.employee_preboarding_portal import (
-			PORTAL_SECTIONS,
-			PORTAL_TABLES,
-			parse_details,
-		)
-
-		return {
-			"sections": PORTAL_SECTIONS,
-			"tables": PORTAL_TABLES,
-			"details": parse_details(self.submitted_details),
-			"submitted_on": self.details_submitted_on,
-		}
-
-	@frappe.whitelist(methods=["POST"])
-	def update_submitted_details(self, details: str | dict) -> None:
-		"""Let HR correct the employee's answers before the Employee is created."""
-		self.check_permission("write")
-
-		if self.employee:
-			frappe.throw(
-				_("Employee {0} is already created").format(get_link_to_form("Employee", self.employee))
-			)
-
-		from hrms.hr.doctype.employee_preboarding.employee_preboarding_portal import clean_details
-
-		self.db_set("submitted_details", json.dumps(clean_details(details)))
 
 	def get_appointment_letter(self) -> str | None:
 		return frappe.db.get_value("Appointment Letter", {"employee_preboarding": self.name}, "name")
@@ -279,7 +217,6 @@ def make_employee(source_name: str, target_doc: str | Document | None = None) ->
 		target.user_id = source.user
 		target.job_offer = source.job_offer
 		target.status = "Active"
-		apply_submitted_details(source, target)
 
 	return get_mapped_doc(
 		"Employee Preboarding",
@@ -294,32 +231,6 @@ def make_employee(source_name: str, target_doc: str | Document | None = None) ->
 		target_doc,
 		set_missing_values,
 	)
-
-
-def apply_submitted_details(source: Document, target: Document) -> None:
-	"""Overlay what the employee filled in on the portal onto the new Employee.
-
-	HR's own values are set first, so anything the employee supplied wins. Blank entries
-	are skipped so an untouched portal field never clears a value HR already set.
-	"""
-	from hrms.hr.doctype.employee_preboarding.employee_preboarding_portal import (
-		SCALAR_FIELDNAMES,
-		TABLE_FIELDNAMES,
-		parse_details,
-	)
-
-	details = parse_details(source.submitted_details)
-	if not details:
-		return
-
-	for fieldname in SCALAR_FIELDNAMES:
-		value = details.get(fieldname)
-		if value not in (None, ""):
-			target.set(fieldname, value)
-
-	for table, allowed in TABLE_FIELDNAMES.items():
-		for row in details.get(table) or []:
-			target.append(table, {key: value for key, value in row.items() if key in allowed})
 
 
 def unlink_deleted_user(user: Document, method: str | None = None) -> None:

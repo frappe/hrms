@@ -33,12 +33,6 @@
   "column_break_user",
   "create_user_for",
   "user",
-  "documents_section",
-  "documents",
-  "documents_requested_on",
-  "submitted_details",
-  "details_submitted_on",
-  "details_confirmed_on",
   "appointment_letter_section",
   "appointment_letter_sent_on",
   "employee_details_section",
@@ -241,46 +235,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "documents_section",
-   "fieldtype": "Section Break",
-   "hidden": 1,
-   "hide_border": 1,
-   "label": "Documents to Upload"
-  },
-  {
-   "allow_on_submit": 1,
-   "fieldname": "documents",
-   "fieldtype": "Table",
-   "label": "Documents",
-   "options": "Employee Preboarding Document"
-  },
-  {
-   "fieldname": "documents_requested_on",
-   "fieldtype": "Datetime",
-   "label": "Documents Requested On",
-   "read_only": 1
-  },
-  {
-   "fieldname": "submitted_details",
-   "fieldtype": "Code",
-   "hidden": 1,
-   "label": "Submitted Details",
-   "options": "JSON",
-   "read_only": 1
-  },
-  {
-   "fieldname": "details_submitted_on",
-   "fieldtype": "Datetime",
-   "label": "Details Submitted On",
-   "read_only": 1
-  },
-  {
-   "fieldname": "details_confirmed_on",
-   "fieldtype": "Datetime",
-   "label": "Details Confirmed On",
-   "read_only": 1
-  },
-  {
    "fieldname": "appointment_letter_section",
    "fieldtype": "Section Break",
    "hidden": 1,
@@ -352,7 +306,7 @@
  "icon": "user-plus",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-26 16:16:40.596720",
+ "modified": "2026-10-27 10:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Preboarding",

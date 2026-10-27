@@ -1,11 +1,7 @@
 import frappe
 
 RENAMES = {
-	"DocType": [
-		("Employee Onboarding Document", "Employee Preboarding Document"),
-		("Employee Onboarding", "Employee Preboarding"),
-	],
-	"Role": [("Employee Onboarding Candidate", "Employee Preboarding Candidate")],
+	"DocType": [("Employee Onboarding", "Employee Preboarding")],
 	"Number Card": [("Onboardings (This Month)", "Preboardings (This Month)")],
 	"Onboarding Step": [("Create Employee Onboarding", "Create Employee Preboarding")],
 }

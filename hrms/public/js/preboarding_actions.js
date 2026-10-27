@@ -61,9 +61,9 @@ const ACTION_HANDLERS = {
 };
 
 const user_dialog = {
-	title: __("Create Portal Login"),
+	title: __("Create User Login"),
 	fieldnames: USER_FIELDS,
-	primary_label: __("Create Portal Login"),
+	primary_label: __("Create User Login"),
 	method: "create_user",
 	freeze_message: __("Creating the user"),
 };
