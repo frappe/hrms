@@ -178,6 +178,7 @@ def get_recipients(name, for_feedback=0):
 
 @frappe.whitelist()
 def get_feedback(interview: str) -> list[dict]:
+	frappe.has_permission("Interview", "read", interview, throw=True)
 	frappe.has_permission("Interview Feedback", "read", throw=True)
 
 	interview_feedback = frappe.qb.DocType("Interview Feedback")
