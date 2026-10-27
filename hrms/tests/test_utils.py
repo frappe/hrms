@@ -7,15 +7,9 @@ from erpnext.setup.doctype.department.department import get_abbreviated_name
 from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.utils import enable_all_roles_and_domains
 
-# Upstream test helpers are re-exported from this module so hrms test suites import them
-# from a single place. When an upstream app relocates a helper (as lending did when it
-# consolidated its test setup), only this file changes instead of every test module.
-#
-# create_account and make_timesheet live in erpnext modules that run preset setup at
-# import time (via erpnext.tests.utils), so they are wrapped here to defer that import
-# until the helper is actually called by a test, keeping this module cheap to import.
 
-
+# Wrapped instead of imported at module level: these erpnext test modules run preset
+# setup at import time via erpnext.tests.utils, so the import is deferred to call time.
 def create_account(*args, **kwargs):
 	from erpnext.accounts.doctype.account.test_account import create_account as _create_account
 
