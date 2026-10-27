@@ -12,6 +12,7 @@
   "naming_series",
   "employee",
   "employee_name",
+  "employee_email",
   "column_break_4",
   "leave_type",
   "company",
@@ -66,6 +67,15 @@
    "fieldtype": "Data",
    "in_global_search": 1,
    "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "employee_email",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Employee Email",
+   "options": "Email",
    "read_only": 1
   },
   {
