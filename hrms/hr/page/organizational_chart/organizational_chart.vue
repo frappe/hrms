@@ -46,44 +46,33 @@ const all_loaded = ref(false);
 // `top` is what the search list shows before anything is typed
 const search = reactive({ query: "", results: [], top: [], loading: false });
 
-// tree: teams across, columns: each team to the right of its manager, list: teams indented
+// tree: teams across, columns: each team to the right of its manager
 const VIEWS = [
-	{ value: "tree", label: __("Tree"), icon: "lucide-network" },
-	{ value: "columns", label: __("Columns"), icon: "lucide-columns-3" },
-	{ value: "list", label: __("List"), icon: "lucide-list-tree" },
+	{ value: "tree", label: __("Tree"), iconLeft: "lucide-network" },
+	{ value: "columns", label: __("Columns"), iconLeft: "lucide-columns-3" },
 ];
-// on a phone the switch shows icons only, and the labels stay as accessible names
+const VIEW_KEY = "hrms:organizational_chart:view";
+// a phone has no switch: the chart stacks every team down the screen
 const narrow = useMediaQuery("(max-width: 639px)");
-const view_options = computed(() =>
-	VIEWS.map(({ icon, ...option }) =>
-		narrow.value ? { ...option, icon } : { ...option, iconLeft: icon },
-	),
-);
-// remembered separately for phone width and wider screens
-const view_key = () => `hrms:organizational_chart:view:${narrow.value ? "phone" : "wide"}`;
-const view = ref(read_saved_view());
+const chosen_view = ref(read_saved_view());
+const view = computed(() => (narrow.value ? "list" : chosen_view.value));
 
-// phones default to the list. Blocked storage counts as no saved choice.
+// blocked storage counts as no saved choice
 function read_saved_view() {
-	const fallback = narrow.value ? "list" : "tree";
 	try {
-		const saved = localStorage.getItem(view_key());
-		return VIEWS.some((option) => option.value === saved) ? saved : fallback;
+		const saved = localStorage.getItem(VIEW_KEY);
+		return VIEWS.some((option) => option.value === saved) ? saved : "tree";
 	} catch {
-		return fallback;
+		return "tree";
 	}
 }
 
-// resizing across phone width picks up that width's view
-watch(narrow, () => (view.value = read_saved_view()));
-
-// only a pick from the switch is saved, not a view changed by resizing
 function choose_view(value) {
-	view.value = value;
+	chosen_view.value = value;
 	try {
-		localStorage.setItem(view_key(), value);
+		localStorage.setItem(VIEW_KEY, value);
 	} catch {
-		// storage is blocked, so the next visit opens the default view
+		// storage is blocked, so the next visit opens the tree
 	}
 }
 
@@ -343,10 +332,10 @@ onMounted(async () => {
 				/>
 			</template>
 
-			<template #corner>
+			<template v-if="!narrow" #corner>
 				<TabButtons
 					:model-value="view"
-					:options="view_options"
+					:options="VIEWS"
 					@update:model-value="choose_view"
 				/>
 			</template>
