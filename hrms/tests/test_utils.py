@@ -1,9 +1,25 @@
 import frappe
+from frappe.core.doctype.user_permission.test_user_permission import create_user
+from frappe.tests.test_webform import create_custom_doctype, create_webform
 from frappe.utils import add_months, get_first_day, get_last_day, getdate, now_datetime
 
 from erpnext.setup.doctype.department.department import get_abbreviated_name
 from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.utils import enable_all_roles_and_domains
+
+
+# Wrapped instead of imported at module level: these erpnext test modules run preset
+# setup at import time via erpnext.tests.utils, so the import is deferred to call time.
+def create_account(*args, **kwargs):
+	from erpnext.accounts.doctype.account.test_account import create_account as _create_account
+
+	return _create_account(*args, **kwargs)
+
+
+def make_timesheet(*args, **kwargs):
+	from erpnext.projects.doctype.timesheet.test_timesheet import make_timesheet as _make_timesheet
+
+	return _make_timesheet(*args, **kwargs)
 
 
 def before_tests():

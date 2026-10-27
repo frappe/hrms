@@ -2,7 +2,6 @@ from unittest.mock import patch
 
 import frappe
 
-from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.appraisal_cycle.test_appraisal_cycle import create_appraisal_cycle
@@ -11,7 +10,7 @@ from hrms.hr.doctype.employee_performance_feedback.test_employee_performance_fee
 	create_performance_feedback,
 )
 from hrms.hr.report.appraisal_overview.appraisal_overview import execute, get_data
-from hrms.tests.test_utils import create_company
+from hrms.tests.test_utils import create_company, create_designation
 from hrms.tests.utils import HRMSTestSuite
 
 

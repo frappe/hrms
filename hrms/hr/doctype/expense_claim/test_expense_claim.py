@@ -6,7 +6,6 @@ from frappe.utils import flt, nowdate, random_string, today
 
 import erpnext
 from erpnext import get_company_currency
-from erpnext.accounts.doctype.account.test_account import create_account
 from erpnext.setup.doctype.employee.test_employee import make_employee
 from erpnext.setup.utils import get_exchange_rate
 
@@ -16,6 +15,7 @@ from hrms.hr.doctype.expense_claim.expense_claim import (
 	get_outstanding_amount_for_claim,
 	make_expense_claim_for_delivery_trip,
 )
+from hrms.tests.test_utils import create_account
 from hrms.tests.utils import HRMSTestSuite, make_user
 
 company_name = "_Test Company 3"
