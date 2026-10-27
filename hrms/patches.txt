@@ -55,3 +55,10 @@ hrms.patches.v16_0.enable_multi_currency_expense_claim_for_existing_users
 hrms.patches.v16_0.update_partially_paid_expense_claim_status
 hrms.patches.v16_0.set_job_offer_in_employee
 hrms.patches.v16_0.delete_old_salary_slip_print_formats
+<<<<<<< HEAD
+=======
+hrms.patches.v16_0.delete_job_offer_print_format
+hrms.patches.v16_0.set_draft_status_in_job_offer
+hrms.patches.v16_0.add_employee_overview_tab
+hrms.patches.v16_0.reset_salary_slip_print_format_renderer
+>>>>>>> f9beebc (fix(payroll): salary slip preview with the standard print formats)
