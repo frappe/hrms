@@ -274,11 +274,10 @@ defineExpose({ fit, show_top, center, keep_in_place, find_card, save_image });
 			<slot name="panel" />
 		</div>
 
-		<!-- on a phone this moves down beside the toolbar -->
 		<div
 			v-if="$slots.corner"
 			data-panel
-			class="absolute bottom-4 right-4 rounded-4 bg-surface-base sm:bottom-auto sm:top-4"
+			class="absolute right-4 top-4 rounded-4 bg-surface-base"
 		>
 			<slot name="corner" />
 		</div>
