@@ -65,6 +65,7 @@ class BulkSalaryStructureAssignment(Document):
 				Employee,
 				fields=[Employee.employee, Employee.employee_name, Employee.grade],
 				filters=filters,
+				ignore_permissions=False,
 			)
 			.where(
 				(Employee.status == "Active")
