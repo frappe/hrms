@@ -157,6 +157,8 @@ class LeaveApplication(Document, PWANotificationsMixin):
 
 	def before_cancel(self):
 		self.status = "Cancelled"
+		# refresh in case the employee's email changed since this was last saved
+		self.employee_email = get_employee_email(self.employee)
 
 	def on_discard(self):
 		self.db_set("status", "Cancelled")
