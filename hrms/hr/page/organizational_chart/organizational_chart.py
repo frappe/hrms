@@ -1,6 +1,6 @@
 """The chart is the company directory: it shows every active employee of a company the user may
 see, not only the records they may read. `check_access` gates each endpoint, and reads select
-directory fields only.
+directory fields only. HR Settings can limit the chart to HR.
 """
 
 from datetime import date
@@ -54,18 +54,28 @@ def check_access(company: str) -> set[str]:
 
 
 def get_allowed_companies() -> list[str]:
-	"""HR sees every company they have access to. An employee sees only their own: reading the
-	Company list is a far wider permission than working there."""
+	"""HR sees every company they have access to. An employee sees only their own, and only if HR
+	Settings allows it: reading the Company list is a far wider permission than working there."""
 	companies = frappe.get_list("Company", pluck="name", order_by="name")
-	if frappe.has_permission("Employee", ptype="read") and not frappe.permissions.get_user_permissions(
-		frappe.session.user
-	).get("Employee"):
+	if can_read_all_employees():
 		return companies
+	if not is_shown_to_all_employees():
+		return []
 
 	own_company = frappe.db.get_value(
 		"Employee", {"user_id": frappe.session.user, "status": "Active"}, "company"
 	)
 	return [company for company in companies if company == own_company]
+
+
+def can_read_all_employees() -> bool:
+	return frappe.has_permission("Employee", ptype="read") and not frappe.permissions.get_user_permissions(
+		frappe.session.user
+	).get("Employee")
+
+
+def is_shown_to_all_employees() -> bool:
+	return bool(frappe.db.get_single_value("HR Settings", "show_org_chart_to_all_employees"))
 
 
 @frappe.whitelist()
@@ -80,7 +90,13 @@ def get_chart_context() -> dict:
 	if company not in companies:
 		company = companies[0] if companies else None
 
-	return {"companies": companies, "company": company, "employee": employee and employee.name}
+	return {
+		"companies": companies,
+		"company": company,
+		"employee": employee and employee.name,
+		# so the page can say why it is empty
+		"hidden_from_employees": not companies and not is_shown_to_all_employees(),
+	}
 
 
 @frappe.whitelist()

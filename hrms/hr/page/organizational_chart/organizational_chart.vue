@@ -31,6 +31,8 @@ const companies = ref([]);
 const company = ref(null);
 const roots = ref([]);
 const loading = ref(true);
+// HR Settings hides the chart from employees
+const hidden_from_employees = ref(false);
 
 // loaded cards by id, and the ids of each loaded team by manager
 const nodes = reactive({});
@@ -278,6 +280,13 @@ async function expand_all() {
 	canvas.value.fit();
 }
 
+const empty_text = computed(() => {
+	if (company.value) return __("No active employees in {0}", [company.value]);
+	if (hidden_from_employees.value)
+		return __("Your HR team has not shared the Organizational Chart with employees");
+	return __("No company found");
+});
+
 provide("org_chart", { nodes, teams, expanded, me, selected, view, toggle, select });
 
 watch(company, load_chart);
@@ -290,6 +299,7 @@ onMounted(async () => {
 		const context = await frappe.xcall(`${API}.get_chart_context`);
 		companies.value = context.companies;
 		me.value = context.employee;
+		hidden_from_employees.value = context.hidden_from_employees;
 		company.value = context.company;
 	} finally {
 		if (!company.value) loading.value = false;
@@ -307,11 +317,7 @@ onMounted(async () => {
 			v-else-if="!roots.length"
 			class="flex h-full flex-col items-center justify-center gap-3"
 		>
-			<p class="text-base text-ink-gray-6">
-				{{
-					company ? __("No active employees in {0}", [company]) : __("No company found")
-				}}
-			</p>
+			<p class="text-base text-ink-gray-6">{{ empty_text }}</p>
 			<Button
 				v-if="company"
 				:label="__('Add Employee')"
