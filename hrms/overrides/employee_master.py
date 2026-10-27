@@ -28,24 +28,18 @@ class EmployeeMaster(Employee):
 		self.employee = self.name
 
 
-def validate_onboarding_process(doc, method=None):
-	"""Validates Employee Creation for linked Employee Onboarding"""
-	job_applicant = doc.get("job_applicant")
-	job_offer = doc.get("job_offer")
-
-	filters = {"docstatus": 1, "boarding_status": ("!=", "Completed")}
-	if job_offer:
-		filters["job_offer"] = job_offer
-	elif job_applicant:
-		filters["job_applicant"] = job_applicant
+def link_preboarding(doc, method=None):
+	"""Link a saved Employee to the open Employee Preboarding of its job offer, however it was created."""
+	filters = {"docstatus": ("!=", 2), "employee": ("is", "not set")}
+	if doc.get("job_offer"):
+		filters["job_offer"] = doc.job_offer
+	elif doc.get("job_applicant"):
+		filters["job_applicant"] = doc.job_applicant
 	else:
 		return
 
-	employee_onboarding = frappe.get_all("Employee Onboarding", filters=filters)
-	if employee_onboarding:
-		onboarding = frappe.get_doc("Employee Onboarding", employee_onboarding[0].name)
-		onboarding.validate_employee_creation()
-		onboarding.db_set("employee", doc.name)
+	if preboarding := frappe.db.get_value("Employee Preboarding", filters):
+		frappe.get_doc("Employee Preboarding", preboarding).attach_employee(doc.name)
 
 
 def publish_update(doc, method=None):

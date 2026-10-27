@@ -6,11 +6,21 @@
  "engine": "InnoDB",
  "field_order": [
   "activity_name",
+  "action",
+  "reference_doctype",
+  "reference_name",
+  "depends_on_action",
+  "status",
+  "due_date",
+  "todo",
   "user",
   "role",
   "begin_on",
   "duration",
   "column_break_3",
+  "completed",
+  "skipped",
+  "added_on_preboarding",
   "task",
   "task_weight",
   "required_for_employee_creation",
@@ -25,6 +35,60 @@
    "in_list_view": 1,
    "label": "Activity Name",
    "reqd": 1
+  },
+  {
+   "default": "Manual",
+   "depends_on": "eval:doc.parenttype=='Employee Preboarding' || doc.parentfield=='preboarding_activities'",
+   "fieldname": "action",
+   "fieldtype": "Select",
+   "label": "Action",
+   "options": "Manual\nCreate User\nAppointment Letter\nCreate Employee\nAssign",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.parenttype=='Employee Preboarding' || doc.parentfield=='preboarding_activities'",
+   "fieldname": "reference_doctype",
+   "fieldtype": "Link",
+   "label": "Reference Document Type",
+   "options": "DocType",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.parenttype=='Employee Preboarding'",
+   "fieldname": "reference_name",
+   "fieldtype": "Dynamic Link",
+   "label": "Reference Name",
+   "options": "reference_doctype",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.parenttype=='Employee Preboarding' || doc.parentfield=='preboarding_activities'",
+   "fieldname": "depends_on_action",
+   "fieldtype": "Select",
+   "label": "Needs",
+   "options": "\nCreate User\nCreate Employee\nAppointment Letter",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.parenttype=='Employee Preboarding'",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nIn Progress\nStuck"
+  },
+  {
+   "depends_on": "eval:doc.parenttype=='Employee Preboarding'",
+   "fieldname": "due_date",
+   "fieldtype": "Date",
+   "label": "Due Date"
+  },
+  {
+   "fieldname": "todo",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "ToDo",
+   "options": "ToDo",
+   "read_only": 1
   },
   {
    "columns": 2,
@@ -48,6 +112,14 @@
    "fieldtype": "Column Break"
   },
   {
+   "columns": 1,
+   "default": "0",
+   "fieldname": "completed",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Completed"
+  },
+  {
    "fieldname": "task",
    "fieldtype": "Link",
    "label": "Task",
@@ -63,8 +135,8 @@
   },
   {
    "default": "0",
-   "depends_on": "eval:['Employee Onboarding', 'Employee Onboarding Template'].includes(doc.parenttype)",
-   "description": "Applicable in the case of Employee Onboarding",
+   "depends_on": "eval:doc.parenttype=='Employee Preboarding' || doc.parentfield=='preboarding_activities'",
+   "description": "Applicable in the case of Employee Preboarding",
    "fieldname": "required_for_employee_creation",
    "fieldtype": "Check",
    "label": "Required for Employee Creation"
@@ -93,17 +165,34 @@
    "in_list_view": 1,
    "label": "Begin On (Days)",
    "non_negative": 1
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.parenttype=='Employee Preboarding'",
+   "fieldname": "skipped",
+   "fieldtype": "Check",
+   "label": "Skipped",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "added_on_preboarding",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Added on Preboarding",
+   "read_only": 1
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2026-08-06 13:01:43.187327",
+ "modified": "2026-10-23 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Boarding Activity",
  "owner": "Administrator",
  "permissions": [],
  "quick_entry": 1,
+ "row_format": "Dynamic",
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],

@@ -2,12 +2,15 @@ import frappe
 
 
 def execute():
-	onboarding_template = frappe.qb.DocType("Employee Onboarding Template")
+	onboarding_template = frappe.qb.DocType("Employee Boarding Template")
 	(
 		frappe.qb.update(onboarding_template)
 		.set(onboarding_template.title, onboarding_template.designation)
 		.where(onboarding_template.title.isnull())
 	).run()
+
+	if not frappe.db.table_exists("Employee Separation Template"):
+		return
 
 	separation_template = frappe.qb.DocType("Employee Separation Template")
 	(

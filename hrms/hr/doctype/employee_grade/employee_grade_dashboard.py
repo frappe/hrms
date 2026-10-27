@@ -4,6 +4,6 @@ def get_data():
 			{
 				"items": ["Employee"],
 			},
-			{"items": ["Employee Onboarding Template", "Employee Separation Template"]},
+			{"items": ["Employee Boarding Template"]},
 		]
 	}

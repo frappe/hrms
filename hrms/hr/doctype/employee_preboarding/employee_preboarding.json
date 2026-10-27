@@ -1,29 +1,47 @@
 {
  "actions": [],
- "autoname": "HR-EMP-ONB-.YYYY.-.#####",
+ "autoname": "HR-EMP-PRB-.YYYY.-.#####",
  "creation": "2018-05-09 04:57:20.016220",
  "doctype": "DocType",
  "documentation": "https://docs.frappe.io/hr/employee-onboarding",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "section_break_kyxh",
   "job_offer",
   "job_applicant",
-  "employee_onboarding_template",
-  "column_break_7",
+  "employee_name",
   "company",
+  "column_break_7",
+  "date_of_joining",
+  "boarding_begins_on",
+  "employee_boarding_template",
   "boarding_status",
   "project",
+  "checklist_section",
+  "preboarding_checklist",
   "details_section",
   "employee",
-  "employee_name",
   "department",
   "designation",
   "employee_grade",
   "holiday_list",
   "column_break_13",
-  "date_of_joining",
-  "boarding_begins_on",
+  "user_section",
+  "personal_email",
+  "company_email",
+  "column_break_user",
+  "create_user_for",
+  "user",
+  "appointment_letter_section",
+  "appointment_letter_sent_on",
+  "employee_details_section",
+  "branch",
+  "employment_type",
+  "reports_to",
+  "column_break_employee_details",
+  "gender",
+  "date_of_birth",
   "table_for_activity",
   "activities",
   "notify_users_by_email",
@@ -88,13 +106,14 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "employee_onboarding_template",
+   "description": "Edit the template to add your own tasks, owners and due dates.",
+   "fieldname": "employee_boarding_template",
    "fieldtype": "Link",
-   "label": "Employee Onboarding Template",
-   "options": "Employee Onboarding Template"
+   "label": "Employee Boarding Template",
+   "options": "Employee Boarding Template",
+   "show_description_on_click": 1
   },
   {
-   "fetch_from": "employee_onboarding_template.company",
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
@@ -102,7 +121,6 @@
    "reqd": 1
   },
   {
-   "fetch_from": "employee_onboarding_template.department",
    "fieldname": "department",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -110,7 +128,6 @@
    "options": "Department"
   },
   {
-   "fetch_from": "employee_onboarding_template.designation",
    "fieldname": "designation",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -118,7 +135,6 @@
    "options": "Designation"
   },
   {
-   "fetch_from": "employee_onboarding_template.employee_grade",
    "fieldname": "employee_grade",
    "fieldtype": "Link",
    "label": "Employee Grade",
@@ -127,6 +143,7 @@
   {
    "fieldname": "project",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Project",
    "options": "Project",
    "read_only": 1
@@ -134,10 +151,11 @@
   {
    "fieldname": "table_for_activity",
    "fieldtype": "Section Break",
-   "label": "Onboarding Activities"
+   "hidden": 1,
+   "hide_border": 1,
+   "label": "Preboarding Activities"
   },
   {
-   "allow_on_submit": 1,
    "fieldname": "activities",
    "fieldtype": "Table",
    "label": "Activities",
@@ -148,13 +166,15 @@
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Employee Onboarding",
+   "options": "Employee Preboarding",
    "print_hide": 1,
    "read_only": 1
   },
   {
    "fieldname": "details_section",
    "fieldtype": "Section Break",
+   "hidden": 1,
+   "hide_border": 1,
    "label": "Employee Details"
   },
   {
@@ -164,7 +184,7 @@
   {
    "fieldname": "boarding_begins_on",
    "fieldtype": "Date",
-   "label": "Onboarding Begins On",
+   "label": "Preboarding Begins On",
    "reqd": 1
   },
   {
@@ -172,15 +192,124 @@
    "fieldtype": "Link",
    "label": "Holiday List",
    "options": "Holiday List"
+  },
+  {
+   "fieldname": "user_section",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "hide_border": 1,
+   "label": "User Account"
+  },
+  {
+   "fetch_from": "job_offer.applicant_email",
+   "fetch_if_empty": 1,
+   "fieldname": "personal_email",
+   "fieldtype": "Data",
+   "label": "Personal Email",
+   "mandatory_depends_on": "eval:doc.create_user_for=='Personal Email'",
+   "options": "Email"
+  },
+  {
+   "fieldname": "company_email",
+   "fieldtype": "Data",
+   "label": "Company Email",
+   "mandatory_depends_on": "eval:doc.create_user_for=='Company Email'",
+   "options": "Email"
+  },
+  {
+   "fieldname": "column_break_user",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Company Email",
+   "fieldname": "create_user_for",
+   "fieldtype": "Select",
+   "label": "Create User For",
+   "options": "Company Email\nPersonal Email"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Data",
+   "label": "User",
+   "options": "Email",
+   "read_only": 1
+  },
+  {
+   "fieldname": "appointment_letter_section",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "hide_border": 1,
+   "label": "Appointment Letter"
+  },
+  {
+   "fieldname": "appointment_letter_sent_on",
+   "fieldtype": "Datetime",
+   "label": "Appointment Letter Sent On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "employee_details_section",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "hide_border": 1,
+   "label": "Employee Details"
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Link",
+   "label": "Branch",
+   "options": "Branch"
+  },
+  {
+   "fieldname": "employment_type",
+   "fieldtype": "Link",
+   "label": "Employment Type",
+   "options": "Employment Type"
+  },
+  {
+   "fieldname": "reports_to",
+   "fieldtype": "Link",
+   "label": "Reports To",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "column_break_employee_details",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "gender",
+   "fieldtype": "Link",
+   "label": "Gender",
+   "options": "Gender"
+  },
+  {
+   "fieldname": "date_of_birth",
+   "fieldtype": "Date",
+   "label": "Date of Birth"
+  },
+  {
+   "fieldname": "checklist_section",
+   "fieldtype": "Section Break",
+   "hide_border": 1
+  },
+  {
+   "fieldname": "preboarding_checklist",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "section_break_kyxh",
+   "fieldtype": "Section Break",
+   "hide_border": 1
   }
  ],
+ "hide_toolbar": 1,
  "icon": "user-plus",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-10-27 10:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
- "name": "Employee Onboarding",
+ "name": "Employee Preboarding",
  "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
