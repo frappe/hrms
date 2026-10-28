@@ -417,3 +417,7 @@ employee_holiday_list = ["hrms.utils.holiday_list.get_holiday_list_for_employee"
 export_python_type_annotations = True
 require_type_annotated_api_methods = True
 repost_allowed_doctypes = ["Expense Claim"]
+
+# Expose method source code through the API discovery endpoints. Safe for open
+# source apps and helps API clients understand what a method does.
+expose_discovery_source = True
