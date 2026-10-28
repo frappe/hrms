@@ -13,6 +13,7 @@ import {
 import { useMediaQuery } from "@vueuse/core";
 import ChartCanvas from "./components/ChartCanvas.vue";
 import EmployeePopover from "./components/EmployeePopover.vue";
+import DirectoryView from "./components/DirectoryView.vue";
 import TreeNode from "./components/TreeNode.vue";
 
 defineProps({
@@ -45,38 +46,69 @@ const selected = ref(null);
 const all_loaded = ref(false);
 // `top` is what the search list shows before anything is typed
 const search = reactive({ query: "", results: [], top: [], loading: false });
+// everyone in the company, loaded when the directory first opens
+const directory = ref(null);
 
-// tree: teams across, columns: each team to the right of its manager
-const VIEWS = [
-	{ value: "tree", label: __("Tree"), iconLeft: "lucide-network" },
-	{ value: "columns", label: __("Columns"), iconLeft: "lucide-columns-3" },
+// the people of a company as a directory or an org chart
+const PAGE_VIEWS = [
+	{ value: "directory", label: __("Directory"), icon: "lucide-list" },
+	{ value: "chart", label: __("Org chart"), icon: "lucide-network" },
 ];
-const VIEW_KEY = "hrms:organizational_chart:view";
-// a phone has no switch: the chart stacks every team down the screen
+// tree: teams across the page, columns: each team to the right of its manager
+const LAYOUTS = [
+	{ value: "tree", label: __("Top to bottom"), icon: "lucide-network" },
+	{ value: "columns", label: __("Left to right"), icon: "lucide-columns-3" },
+];
+const PAGE_VIEW_KEY = "hrms:organizational_chart:view";
+const LAYOUT_KEY = "hrms:organizational_chart:layout";
+
 const narrow = useMediaQuery("(max-width: 639px)");
-const chosen_view = ref(read_saved_view());
-const view = computed(() => (narrow.value ? "list" : chosen_view.value));
+// words on a wider screen, as in the design, and icons on a phone, where the labels become their
+// names and tooltips
+const page_view_options = computed(() =>
+	PAGE_VIEWS.map(({ icon, ...option }) => (narrow.value ? { ...option, icon } : option)),
+);
+const page_view = ref(read_saved(PAGE_VIEW_KEY, PAGE_VIEWS, "chart"));
+const chosen_layout = ref(read_saved(LAYOUT_KEY, LAYOUTS, "tree"));
+// a phone has no layout toggle: the chart stacks every team down the screen
+const view = computed(() => (narrow.value ? "list" : chosen_layout.value));
 
 // blocked storage counts as no saved choice
-function read_saved_view() {
+function read_saved(key, options, fallback) {
 	try {
-		const saved = localStorage.getItem(VIEW_KEY);
-		return VIEWS.some((option) => option.value === saved) ? saved : "tree";
+		const saved = localStorage.getItem(key);
+		return options.some((option) => option.value === saved) ? saved : fallback;
 	} catch {
-		return "tree";
+		return fallback;
 	}
 }
 
-function choose_view(value) {
-	chosen_view.value = value;
+function save(key, value) {
 	try {
-		localStorage.setItem(VIEW_KEY, value);
+		localStorage.setItem(key, value);
 	} catch {
-		// storage is blocked, so the next visit opens the tree
+		// storage is blocked, so the next visit opens the default
 	}
+}
+
+function choose_page_view(value) {
+	page_view.value = value;
+	save(PAGE_VIEW_KEY, value);
+}
+
+function choose_layout(value) {
+	chosen_layout.value = value;
+	save(LAYOUT_KEY, value);
 }
 
 watch(view, async () => {
+	await nextTick();
+	canvas.value?.show_top();
+});
+
+// the chart is drawn afresh on its way back from the directory
+watch(page_view, async (value) => {
+	if (value === "directory") return load_directory();
 	await nextTick();
 	canvas.value?.show_top();
 });
@@ -99,6 +131,8 @@ async function load_chart() {
 	selected.value = null;
 	all_loaded.value = false;
 	search.top = [];
+	directory.value = null;
+	if (page_view.value === "directory") load_directory();
 
 	// a failed call leaves the chart empty rather than loading forever
 	try {
@@ -114,6 +148,21 @@ async function load_chart() {
 
 	await nextTick();
 	canvas.value?.show_top();
+}
+
+// the company load the directory was asked for, so it is asked for once per company
+let directory_load_id = null;
+
+async function load_directory() {
+	if (directory.value || directory_load_id === load_id || !company.value) return;
+	const id = (directory_load_id = load_id);
+	try {
+		const list = await frappe.xcall(`${API}.get_directory`, { company: company.value });
+		if (id === load_id) directory.value = list;
+	} catch {
+		// the server's message is on screen, and the directory shows no one rather than loading forever
+		if (id === load_id) directory.value = [];
+	}
 }
 
 async function open_team(employee) {
@@ -298,7 +347,35 @@ onMounted(async () => {
 
 <template>
 	<div class="relative h-full min-h-0 w-full">
-		<div v-if="loading" class="flex h-full items-center justify-center">
+		<!-- the directory has its switch in its own top row -->
+		<div
+			v-if="company && page_view === 'chart'"
+			class="absolute bottom-4 right-4 z-20 rounded-4 bg-surface-base sm:bottom-auto sm:top-4"
+		>
+			<TabButtons
+				:model-value="page_view"
+				:options="page_view_options"
+				@update:model-value="choose_page_view"
+			/>
+		</div>
+
+		<DirectoryView
+			v-if="company && page_view === 'directory'"
+			v-model:company="company"
+			:people="directory"
+			:me="me"
+			:companies="companies"
+		>
+			<template #switch>
+				<TabButtons
+					:model-value="page_view"
+					:options="page_view_options"
+					@update:model-value="choose_page_view"
+				/>
+			</template>
+		</DirectoryView>
+
+		<div v-else-if="loading" class="flex h-full items-center justify-center">
 			<LoadingIndicator class="size-5 text-ink-gray-5" />
 		</div>
 
@@ -329,14 +406,6 @@ onMounted(async () => {
 					@close="selected = null"
 					@show_manager="show_manager"
 					@toggle_team="toggle(selected)"
-				/>
-			</template>
-
-			<template v-if="!narrow" #corner>
-				<TabButtons
-					:model-value="view"
-					:options="VIEWS"
-					@update:model-value="choose_view"
 				/>
 			</template>
 
@@ -387,6 +456,17 @@ onMounted(async () => {
 						icon="lucide-download"
 						:aria-label="__('Export as image')"
 						@click="save_image"
+					/>
+				</Tooltip>
+				<Divider orientation="vertical" class="mx-1 hidden !h-4 sm:block" />
+				<Tooltip v-for="layout in LAYOUTS" :key="layout.value" :text="layout.label">
+					<Button
+						class="hidden sm:inline-flex"
+						:variant="view === layout.value ? 'subtle' : 'ghost'"
+						:icon="layout.icon"
+						:aria-label="layout.label"
+						:aria-pressed="view === layout.value"
+						@click="choose_layout(layout.value)"
 					/>
 				</Tooltip>
 			</template>
