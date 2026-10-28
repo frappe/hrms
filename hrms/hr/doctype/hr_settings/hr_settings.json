@@ -2,8 +2,8 @@
  "actions": [],
  "creation": "2013-08-02 13:45:23",
  "doctype": "DocType",
- "documentation": "https://docs.frappe.io/hr/hr-settings",
  "document_type": "Other",
+ "documentation": "https://docs.frappe.io/hr/hr-settings",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
@@ -13,6 +13,7 @@
   "standard_working_hours",
   "column_break_lrow",
   "retirement_age",
+  "show_org_chart_to_all_employees",
   "reminders_section",
   "column_break_11",
   "send_work_anniversary_reminders",
@@ -359,13 +360,21 @@
    "fieldname": "employee_exit_settings_section",
    "fieldtype": "Section Break",
    "label": "Employee Exit Settings"
+  },
+  {
+   "default": "1",
+   "description": "When unchecked, only users who can read all employees, such as HR, see the chart",
+   "fieldname": "show_org_chart_to_all_employees",
+   "fieldtype": "Check",
+   "label": "Show Organizational Chart to All Employees"
   }
  ],
  "icon": "settings",
  "idx": 1,
  "issingle": 1,
+ "link_display_mode": "Search",
  "links": [],
- "modified": "2026-10-06 14:00:00.000000",
+ "modified": "2026-10-27 16:22:38.481405",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",

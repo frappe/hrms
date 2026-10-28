@@ -50,6 +50,7 @@ class HRSettings(Document):
 		sender: DF.Link | None
 		sender_email: DF.Data | None
 		show_leaves_of_all_department_members_in_calendar: DF.Check
+		show_org_chart_to_all_employees: DF.Check
 		standard_working_hours: DF.Float
 		unlink_payment_on_cancellation_of_employee_advance: DF.Check
 	# end: auto-generated types
