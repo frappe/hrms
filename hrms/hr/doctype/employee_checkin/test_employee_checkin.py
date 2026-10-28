@@ -27,6 +27,7 @@ from hrms.hr.doctype.employee_checkin.employee_checkin import (
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list, make_leave_application
+from hrms.tests.test_utils import get_non_holiday_date
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -664,6 +665,10 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		shift = setup_shift_type(working_hours_threshold_for_half_day=3)
 		emp = make_employee("testhalfday@example.com", company="_Test Company", default_shift=shift.name)
 		employee = frappe.get_doc("Employee", emp)
+		# anchor to a working day so the half day leave is not rejected on a weekend
+		date = get_non_holiday_date(emp, nowdate())
+		shift.process_attendance_after = add_days(date, -1)
+		shift.save()
 		# create attendance from leave
 		leave_type = create_leave_type(leave_type_name="_Test Half Day", include_holidays=0)
 		create_leave_allocation(
@@ -676,21 +681,21 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		make_leave_application(
 			leave_type=leave_type.name,
 			employee=emp,
-			from_date=nowdate(),
-			to_date=nowdate(),
+			from_date=date,
+			to_date=date,
 			half_day=1,
-			half_day_date=nowdate(),
+			half_day_date=date,
 		)
 
-		in_time = datetime.combine(getdate(), get_time("08:00:00"))
-		out_time = datetime.combine(getdate(), get_time("10:00:00"))
+		in_time = datetime.combine(date, get_time("08:00:00"))
+		out_time = datetime.combine(date, get_time("10:00:00"))
 		in_log = make_checkin(emp, in_time)
 		out_log = make_checkin(emp, out_time)
 
 		shift.process_auto_attendance()
 		attendance = frappe.get_all(
 			"Attendance",
-			filters={"leave_type": leave_type.name, "employee": emp, "attendance_date": nowdate()},
+			filters={"leave_type": leave_type.name, "employee": emp, "attendance_date": date},
 			fields=[
 				"name",
 				"status",
@@ -715,6 +720,10 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		shift = setup_shift_type(working_hours_threshold_for_half_day=1)
 		emp = make_employee("testhalfday2@example.com", company="_Test Company", default_shift=shift.name)
 		employee = frappe.get_doc("Employee", emp)
+		# anchor to a working day so the half day leave is not rejected on a weekend
+		date = get_non_holiday_date(emp, nowdate())
+		shift.process_attendance_after = add_days(date, -1)
+		shift.save()
 		# create attendance from leave
 		leave_type = create_leave_type(leave_type_name="_Test Half Day", include_holidays=0)
 		create_leave_allocation(
@@ -727,17 +736,17 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		make_leave_application(
 			leave_type=leave_type.name,
 			employee=emp,
-			from_date=nowdate(),
-			to_date=nowdate(),
+			from_date=date,
+			to_date=date,
 			half_day=1,
-			half_day_date=nowdate(),
+			half_day_date=date,
 		)
 
 		shift.process_auto_attendance()
 
 		attendance = frappe.get_all(
 			"Attendance",
-			filters={"leave_type": leave_type.name, "employee": emp, "attendance_date": nowdate()},
+			filters={"leave_type": leave_type.name, "employee": emp, "attendance_date": date},
 			fields=[
 				"name",
 				"status",
@@ -765,6 +774,10 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		)
 		emp = make_employee("testhalfday3@example.com", company="_Test Company", default_shift=shift.name)
 		employee = frappe.get_doc("Employee", emp)
+		# anchor to a working day so the half day leave is not rejected on a weekend
+		date = get_non_holiday_date(emp, nowdate())
+		shift.process_attendance_after = add_days(date, -1)
+		shift.save()
 		# create attendance from leave
 		leave_type = create_leave_type(leave_type_name="_Test Half Day", include_holidays=0)
 		create_leave_allocation(
@@ -777,20 +790,20 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		make_leave_application(
 			leave_type=leave_type.name,
 			employee=emp,
-			from_date=nowdate(),
-			to_date=nowdate(),
+			from_date=date,
+			to_date=date,
 			half_day=1,
-			half_day_date=nowdate(),
+			half_day_date=date,
 		)
-		in_time = datetime.combine(getdate(), get_time("08:00:00"))
-		out_time = datetime.combine(getdate(), get_time("09:00:00"))
+		in_time = datetime.combine(date, get_time("08:00:00"))
+		out_time = datetime.combine(date, get_time("09:00:00"))
 		in_log = make_checkin(emp, in_time)
 		out_log = make_checkin(emp, out_time)
 		shift.process_auto_attendance()
 
 		attendance = frappe.get_all(
 			"Attendance",
-			filters={"leave_type": leave_type.name, "employee": emp, "attendance_date": nowdate()},
+			filters={"leave_type": leave_type.name, "employee": emp, "attendance_date": date},
 			fields=[
 				"name",
 				"status",
@@ -821,6 +834,10 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		)
 		emp = make_employee("testhalfday4@example.com", company="_Test Company", default_shift=shift.name)
 		employee = frappe.get_doc("Employee", emp)
+		# anchor to a working day so the half day leave is not rejected on a weekend
+		date = get_non_holiday_date(emp, nowdate())
+		shift.process_attendance_after = add_days(date, -1)
+		shift.save()
 		# create attendance from leave
 		leave_type = create_leave_type(leave_type_name="_Test Half Day", include_holidays=0)
 		create_leave_allocation(
@@ -833,20 +850,20 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		make_leave_application(
 			leave_type=leave_type.name,
 			employee=emp,
-			from_date=nowdate(),
-			to_date=nowdate(),
+			from_date=date,
+			to_date=date,
 			half_day=1,
-			half_day_date=nowdate(),
+			half_day_date=date,
 		)
-		in_time = datetime.combine(getdate(), get_time("08:00:00"))
-		out_time = datetime.combine(getdate(), get_time("15:00:00"))
+		in_time = datetime.combine(date, get_time("08:00:00"))
+		out_time = datetime.combine(date, get_time("15:00:00"))
 		in_log = make_checkin(emp, in_time)
 		out_log = make_checkin(emp, out_time)
 		shift.process_auto_attendance()
 
 		attendance = frappe.get_all(
 			"Attendance",
-			filters={"leave_type": leave_type.name, "employee": emp, "attendance_date": nowdate()},
+			filters={"leave_type": leave_type.name, "employee": emp, "attendance_date": date},
 			fields=[
 				"name",
 				"status",
@@ -880,6 +897,12 @@ class TestEmployeeCheckin(HRMSTestSuite):
 		)
 		emp = make_employee("testhalfday5@example.com", company="_Test Company", default_shift=shift.name)
 		employee = frappe.get_doc("Employee", emp)
+		# anchor to the employee's working day so the half day leave is not rejected on a
+		# weekend, and align the shift's sync/processing window to that day
+		today = get_non_holiday_date(emp, getdate())
+		shift.last_sync_of_checkin = datetime.combine(today, get_time("15:00:00"))
+		shift.process_attendance_after = add_days(today, -1)
+		shift.save()
 		# create attendance from leave
 		leave_type = create_leave_type(leave_type_name="_Test Half Day", include_holidays=0)
 		create_leave_allocation(
