@@ -178,12 +178,21 @@ def validate_default_accounts(doc, method=None):
 				)
 			)
 
-		if get_account_currency(doc.default_payroll_payable_account) != doc.default_currency:
+		if get_account_currency(doc.default_payroll_payable_account) not in get_allowed_account_currencies(
+			doc
+		):
 			frappe.throw(
 				_(
 					"The currency of {0} should be same as the company's default currency. Please select another account."
 				).format(frappe.bold(_("Default Payroll Payable Account")))
 			)
+
+
+def get_allowed_account_currencies(doc):
+	account_currencies = {doc.default_currency}
+	if getattr(doc, "currency_changed", False):
+		account_currencies.add(doc.previous_default_currency)
+	return account_currencies
 
 
 def handle_linked_docs(doc, method=None):
