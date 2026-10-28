@@ -275,14 +275,6 @@ defineExpose({ fit, show_top, center, keep_in_place, find_card, save_image });
 		</div>
 
 		<div
-			v-if="$slots.corner"
-			data-panel
-			class="absolute right-4 top-4 rounded-4 bg-surface-base"
-		>
-			<slot name="corner" />
-		</div>
-
-		<div
 			data-panel
 			class="absolute bottom-4 left-4 flex items-center gap-0.5 rounded-5 border border-outline-gray-2 bg-surface-base p-1"
 		>

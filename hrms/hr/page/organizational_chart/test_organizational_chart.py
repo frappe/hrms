@@ -18,6 +18,7 @@ from hrms.hr.page.organizational_chart.organizational_chart import (
 	get_all_nodes,
 	get_chart_context,
 	get_children,
+	get_directory,
 	get_path,
 	search_employees,
 )
@@ -203,6 +204,73 @@ class TestOrganizationalChart(HRMSTestSuite):
 		self.assertEqual(set(roots[reports_to_left_manager].manager), {"id", "name", "image", "company"})
 		# each chart shows one company, so the manager's chart does not show the report
 		self.assertEqual(get_children(other_company, parent=other_company_manager), [])
+
+	@HRMSTestSuite.change_settings("HR Settings", {"show_org_chart_to_all_employees": 1})
+	def test_get_directory(self):
+		other_company = create_company("Test Org Chart Other").name
+		make_employee("orgchart_directory_other@mail.com", company=other_company)
+		with freeze_time(f"{getdate().year}-06-10"):
+			today = getdate()
+			manager = make_employee(
+				"orgchart_directory_manager@mail.com",
+				company=self.company,
+				date_of_joining=add_days(today, -400),
+			)
+			joiner = make_employee(
+				"orgchart_directory_joiner@mail.com",
+				company=self.company,
+				reports_to=manager,
+				date_of_joining=add_days(today, -5),
+			)
+
+			frappe.set_user("orgchart_directory_joiner@mail.com")
+			try:
+				people = {person.id: person for person in get_directory(self.company)}
+				self.assertRaises(frappe.PermissionError, get_directory, other_company)
+			finally:
+				frappe.set_user("Administrator")
+
+		# the whole company, with who reports to whom and who joined recently, but not the joining date
+		self.assertEqual(list(people), [manager, joiner])
+		self.assertEqual(people[joiner].manager, manager)
+		self.assertEqual(
+			{name: person.new_joiner for name, person in people.items()}, {manager: False, joiner: True}
+		)
+		self.assertNotIn("date_of_joining", people[joiner])
+		self.assertEqual((people[manager].can_open, people[joiner].can_open), (False, True))
+
+	@HRMSTestSuite.change_settings(
+		"HR Settings",
+		{
+			"show_org_chart_to_all_employees": 1,
+			"send_birthday_reminders": 1,
+			"send_work_anniversary_reminders": 0,
+		},
+	)
+	def test_directory_celebrations(self):
+		with freeze_time(f"{getdate().year}-06-10"):
+			today = getdate()
+			birthday = make_employee(
+				"orgchart_birthday@mail.com", company=self.company, date_of_birth=f"{today.year - 30}-06-10"
+			)
+			anniversary = make_employee(
+				"orgchart_anniversary@mail.com",
+				company=self.company,
+				date_of_joining=f"{today.year - 5}-06-10",
+			)
+			people = {person.id: person for person in get_directory(self.company)}
+			frappe.db.set_single_value(
+				"HR Settings", {"send_birthday_reminders": 0, "send_work_anniversary_reminders": 1}
+			)
+			later = {person.id: person.celebrating for person in get_directory(self.company)}
+
+		# each shows only while HR Settings announces it to the company anyway, and never its date
+		self.assertEqual(
+			{name: person.celebrating for name, person in people.items()},
+			{birthday: {"birthday": True}, anniversary: None},
+		)
+		self.assertEqual(later, {birthday: None, anniversary: {"years": 5}})
+		self.assertNotIn("date_of_birth", people[birthday])
 
 	def test_get_path(self):
 		emp1 = make_employee("orgchart_path1@mail.com", company=self.company)

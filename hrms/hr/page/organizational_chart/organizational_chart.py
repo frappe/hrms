@@ -7,7 +7,7 @@ from datetime import date
 
 import frappe
 from frappe import _
-from frappe.utils import add_days, escape_html, getdate
+from frappe.utils import add_days, cint, escape_html, getdate
 
 from hrms.utils.holiday_list import get_holiday_list_ranges_for_employees, get_holidays_in_ranges_map
 
@@ -19,6 +19,8 @@ SEARCH_TEXT_LIMIT = 140
 EXPAND_ALL_LIMIT = 1000
 # how far ahead to look for an employee's return from leave
 RETURN_LOOKAHEAD_DAYS = 60
+# how long someone shows as a new joiner in the directory
+NEW_JOINER_DAYS = 30
 
 # Directory fields only. No user_id or preferred email, which can be personal addresses.
 NODE_FIELDS = [
@@ -133,6 +135,52 @@ def get_all_nodes(company: str) -> list[dict]:
 
 
 @frappe.whitelist()
+def get_directory(company: str) -> list[dict]:
+	"""Everyone in the company, the top of the chart first"""
+	check_access(company)
+	employees = get_employees(
+		company, fields=[*NODE_FIELDS, "date_of_joining", "date_of_birth"], order_by="lft"
+	)
+	names = [employee.name for employee in employees]
+	leave_status = get_leave_status({name: company for name in names})
+	access = get_profile_access(names)
+	today = getdate()
+	# only whether someone joined recently, not the date
+	joined_after = add_days(today, -NEW_JOINER_DAYS)
+	# the reminders HR Settings already sends the whole company
+	reminders = frappe._dict(
+		birthdays=cint(frappe.db.get_single_value("HR Settings", "send_birthday_reminders")),
+		anniversaries=cint(frappe.db.get_single_value("HR Settings", "send_work_anniversary_reminders")),
+	)
+
+	return [
+		frappe._dict(
+			get_person(employee, leave_status, access),
+			manager=employee.reports_to,
+			new_joiner=bool(employee.date_of_joining and getdate(employee.date_of_joining) > joined_after),
+			celebrating=get_celebration(employee, today, reminders),
+		)
+		for employee in employees
+	]
+
+
+def get_celebration(employee: frappe._dict, today: date, reminders: frappe._dict) -> dict | None:
+	"""A birthday or work anniversary today, where the reminders announce it anyway. Never the date."""
+	if reminders.birthdays and is_anniversary(employee.date_of_birth, today):
+		return {"birthday": True}
+	if reminders.anniversaries and is_anniversary(employee.date_of_joining, today):
+		return {"years": today.year - getdate(employee.date_of_joining).year}
+	return None
+
+
+def is_anniversary(day: date | None, today: date) -> bool:
+	if not day:
+		return False
+	day = getdate(day)
+	return (day.month, day.day) == (today.month, today.day) and day.year < today.year
+
+
+@frappe.whitelist()
 def search_employees(company: str, txt: str = "") -> list[dict]:
 	"""Matches for "Find a person". With nothing typed, `lft` puts the top of the chart first."""
 	check_access(company)
@@ -164,14 +212,17 @@ def get_path(company: str, employee: str) -> list[str]:
 
 
 def get_employees(
-	company: str, filters: dict | None = None, fields: list[str] | None = None
+	company: str,
+	filters: dict | None = None,
+	fields: list[str] | None = None,
+	order_by: str = "employee_name",
 ) -> list[frappe._dict]:
 	"""Active employees of the company. Callers check access first."""
 	return frappe.get_all(
 		"Employee",
 		filters={"company": company, "status": "Active", **(filters or {})},
 		fields=fields or NODE_FIELDS,
-		order_by="employee_name",
+		order_by=order_by,
 		limit=0,
 	)
 
