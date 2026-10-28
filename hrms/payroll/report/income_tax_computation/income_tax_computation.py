@@ -20,6 +20,7 @@ class IncomeTaxComputationReport:
 		self.columns = []
 		self.data = []
 		self.employees = frappe._dict()
+		self._last_salary_slip_cache = {}
 		self.payroll_period_start_date = None
 		self.payroll_period_end_date = None
 		if self.filters.payroll_period:
@@ -176,6 +177,9 @@ class IncomeTaxComputationReport:
 				ss_start_date = add_days(ss_end_date, 1)
 
 	def get_last_salary_slip(self, employee):
+		if employee in self._last_salary_slip_cache:
+			return self._last_salary_slip_cache[employee]
+
 		last_salary_slip = frappe.db.get_value(
 			"Salary Slip",
 			{
@@ -183,11 +187,22 @@ class IncomeTaxComputationReport:
 				"docstatus": 1,
 				"start_date": ["between", [self.payroll_period_start_date, self.payroll_period_end_date]],
 			},
-			["name", "start_date", "end_date", "salary_structure", "payroll_frequency"],
+			[
+				"name",
+				"start_date",
+				"end_date",
+				"salary_structure",
+				"payroll_frequency",
+				"annual_taxable_amount",
+				"tax_exemption_declaration",
+				"deductions_before_tax_calculation",
+				"standard_tax_exemption_amount",
+			],
 			order_by="start_date desc",
 			as_dict=1,
 		)
 
+		self._last_salary_slip_cache[employee] = last_salary_slip
 		return last_salary_slip
 
 	def get_gross_earnings(self):
@@ -427,22 +442,21 @@ class IncomeTaxComputationReport:
 	def get_income_from_other_sources(self):
 		self.add_column("Other Income")
 
-		for employee in list(self.employees.keys()):
-			other_income = (
-				frappe.get_all(
-					"Employee Other Income",
-					filters={
-						"employee": employee,
-						"payroll_period": self.filters.payroll_period,
-						"company": self.filters.company,
-						"docstatus": 1,
-					},
-					fields=[{"SUM": "amount", "as": "total_amount"}],
-				)[0].total_amount
-				or 0.0
-			)
+		other_income = frappe.qb.DocType("Employee Other Income")
+		records = (
+			frappe.qb.from_(other_income)
+			.select(other_income.employee, Sum(other_income.amount).as_("total_amount"))
+			.where(other_income.employee.isin(list(self.employees.keys())))
+			.where(other_income.payroll_period == self.filters.payroll_period)
+			.where(other_income.company == self.filters.company)
+			.where(other_income.docstatus == 1)
+			.groupby(other_income.employee)
+		).run(as_dict=True)
 
-			self.employees[employee].setdefault("other_income", other_income)
+		income_by_employee = {d.employee: d.total_amount for d in records}
+
+		for employee in list(self.employees.keys()):
+			self.employees[employee].setdefault("other_income", flt(income_by_employee.get(employee)))
 
 	def get_total_taxable_amount(self):
 		self.add_column("Total Taxable Amount")
@@ -456,21 +470,10 @@ class IncomeTaxComputationReport:
 			last_ss = self.get_last_salary_slip(employee)
 
 			if last_ss and last_ss.end_date == self.payroll_period_end_date:
-				(
-					annual_taxable_amount,
-					tax_exemption_declaration,
-					deductions_before_tax_calculation,
-					standard_tax_exemption_amount,
-				) = frappe.db.get_value(
-					"Salary Slip",
-					last_ss.name,
-					[
-						"annual_taxable_amount",
-						"tax_exemption_declaration",
-						"deductions_before_tax_calculation",
-						"standard_tax_exemption_amount",
-					],
-				)
+				annual_taxable_amount = last_ss.annual_taxable_amount
+				tax_exemption_declaration = last_ss.tax_exemption_declaration
+				deductions_before_tax_calculation = last_ss.deductions_before_tax_calculation
+				standard_tax_exemption_amount = last_ss.standard_tax_exemption_amount
 			else:
 				future_salary_slips = self.future_salary_slips.get(employee, [])
 				if future_salary_slips:
