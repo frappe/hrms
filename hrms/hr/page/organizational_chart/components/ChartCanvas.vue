@@ -269,7 +269,7 @@ defineExpose({ fit, show_top, center, keep_in_place, find_card, save_image });
 			v-if="$slots.panel"
 			ref="panel"
 			data-panel
-			class="absolute left-4 right-4 top-4 rounded-4 bg-surface-base sm:right-auto sm:w-72"
+			class="absolute left-4 right-4 top-4 rounded-4 bg-surface-base sm:right-auto"
 		>
 			<slot name="panel" />
 		</div>
