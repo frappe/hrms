@@ -355,6 +355,13 @@ class TestEmployeeAdvance(FrappeTestCase):
 		self.assertEqual(advance.status, "Paid")
 		self.assertEqual(advance.paid_amount, 1000)
 
+	def test_advance_amount_must_be_greater_than_zero(self):
+		employee_name = make_employee("Test_zero_amount@employee.advance", "_Test Company")
+		for amount in (0, -100):
+			self.assertRaises(
+				frappe.ValidationError, make_employee_advance, employee_name, {"advance_amount": amount}
+			)
+
 	def update_company_in_fiscal_year(self):
 		fy_entries = frappe.get_all("Fiscal Year")
 		for fy_entry in fy_entries:
