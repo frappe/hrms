@@ -179,10 +179,16 @@ async function open_team(employee) {
 	expanded.add(employee);
 }
 
-function toggle(employee) {
-	return canvas.value.keep_in_place(canvas.value.find_card(employee), () =>
-		expanded.has(employee) ? expanded.delete(employee) : open_team(employee),
-	);
+// A closed team leaves its manager where they were. An opened one is brought into view with them.
+async function toggle(employee) {
+	const card = canvas.value.find_card(employee);
+	if (expanded.has(employee)) {
+		return canvas.value.keep_in_place(card, () => expanded.delete(employee));
+	}
+
+	await canvas.value.keep_in_place(card, () => open_team(employee));
+	await nextTick();
+	canvas.value.reveal([employee, ...(teams[employee] || [])].map(canvas.value.find_card));
 }
 
 function select(employee) {
