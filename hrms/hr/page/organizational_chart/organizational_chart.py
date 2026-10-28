@@ -189,7 +189,7 @@ def search_employees(company: str, txt: str = "") -> list[dict]:
 		"Employee",
 		filters={"company": company, "status": "Active"},
 		or_filters={"employee_name": ["like", f"%{txt}%"], "name": ["like", f"%{txt}%"]} if txt else None,
-		fields=["name", "employee_name", "designation", "department.department_name as department"],
+		fields=["name", "employee_name", "image", "designation", "department.department_name as department"],
 		order_by="employee_name" if txt else "lft",
 		limit=SEARCH_LIMIT,
 	)
