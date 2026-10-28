@@ -1,6 +1,7 @@
 <script setup>
 import { computed, nextTick, onMounted, provide, reactive, ref, watch } from "vue";
 import {
+	Avatar,
 	Button,
 	Combobox,
 	Divider,
@@ -219,6 +220,7 @@ const to_options = (list) =>
 	list.map((employee) => ({
 		label: employee.employee_name,
 		value: employee.name,
+		image: employee.image,
 		description: employee.department || employee.designation,
 	}));
 
@@ -422,7 +424,11 @@ onMounted(async () => {
 						:empty-text="search.query ? __('No one found') : __('Type a name')"
 						variant="outline"
 						@update:model-value="pick_result"
-					/>
+					>
+						<template #item-prefix="{ item }">
+							<Avatar :image="item.image" :label="item.label" size="sm" />
+						</template>
+					</Combobox>
 					<Select
 						v-if="companies.length > 1"
 						v-model="company"
