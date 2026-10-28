@@ -12,8 +12,8 @@ const emit = defineEmits(["deselect"]);
 
 const __ = window.__;
 
-const MIN_SCALE = 0.25;
-const MAX_SCALE = 2;
+// past the scale the whole chart fits at, zooming out only makes the cards harder to read
+const MAX_SCALE = 1.5;
 const ZOOM_STEP = 1.2;
 const GRID_SIZE = 20;
 // gap between a card and its popover, and the popover's minimum distance from the canvas edge
@@ -28,6 +28,7 @@ const canvas = ref(null);
 const content = ref(null);
 const popover = ref(null);
 const panel = ref(null);
+const toolbar = ref(null);
 const popover_style = ref({ visibility: "hidden" });
 const view = reactive({ x: 0, y: 0, scale: 1 });
 const dragging = ref(false);
@@ -42,9 +43,16 @@ const content_style = computed(() => ({
 	transformOrigin: "0 0",
 }));
 
+// the scale the whole chart fits the canvas at, and never above full size
+function fit_scale() {
+	const rect = canvas.value.getBoundingClientRect();
+	const { offsetWidth: width, offsetHeight: height } = content.value;
+	return Math.min(1, rect.width / width, rect.height / height);
+}
+
 // zooms around `point` (default: the middle), so it stays under the pointer
 function zoom_to(scale, point) {
-	const next = Math.min(MAX_SCALE, Math.max(MIN_SCALE, scale));
+	const next = Math.min(MAX_SCALE, Math.max(fit_scale(), scale));
 	const rect = canvas.value.getBoundingClientRect();
 	const { x, y } = point || { x: rect.width / 2, y: rect.height / 2 };
 	view.x = x - ((x - view.x) * next) / view.scale;
@@ -55,7 +63,7 @@ function zoom_to(scale, point) {
 function fit() {
 	const rect = canvas.value.getBoundingClientRect();
 	const { offsetWidth: width, offsetHeight: height } = content.value;
-	view.scale = Math.max(MIN_SCALE, Math.min(1, rect.width / width, rect.height / height));
+	view.scale = fit_scale();
 	view.x = (rect.width - width * view.scale) / 2;
 	view.y = (rect.height - height * view.scale) / 2;
 }
@@ -89,6 +97,44 @@ async function keep_in_place(element, change) {
 	const after = element.getBoundingClientRect();
 	view.x += before.left - after.left;
 	view.y += before.top - after.top;
+}
+
+// Moves the view, and zooms out as far as it must, so every one of `elements` is in sight
+// between the panel and the toolbar. Nothing moves when they already are.
+function reveal(elements) {
+	const boxes = elements.filter(Boolean).map((element) => element.getBoundingClientRect());
+	if (!boxes.length) return;
+
+	const rect = canvas.value.getBoundingClientRect();
+	const area = {
+		left: EDGE_GAP,
+		right: rect.width - EDGE_GAP,
+		top: (panel.value ? panel.value.offsetTop + panel.value.offsetHeight : 0) + EDGE_GAP,
+		bottom: (toolbar.value ? toolbar.value.offsetTop : rect.height) - EDGE_GAP,
+	};
+	let left = Math.min(...boxes.map((box) => box.left)) - rect.left;
+	let top = Math.min(...boxes.map((box) => box.top)) - rect.top;
+	// the last row of cards has its team pills hanging below
+	let right = Math.max(...boxes.map((box) => box.right)) - rect.left;
+	let bottom = Math.max(...boxes.map((box) => box.bottom)) - rect.top + TEAM_PILL_DROP;
+	if (left >= area.left && right <= area.right && top >= area.top && bottom <= area.bottom)
+		return;
+
+	const room = Math.min(
+		(area.right - area.left) / (right - left),
+		(area.bottom - area.top) / (bottom - top),
+	);
+	if (room < 1) {
+		const before = view.scale;
+		zoom_to(view.scale * room, { x: left, y: top });
+		right = left + ((right - left) * view.scale) / before;
+		bottom = top + ((bottom - top) * view.scale) / before;
+	}
+
+	// centred across the free area, and only as far down or up as it takes
+	view.x += Math.max(area.left - left, (area.left + area.right - left - right) / 2);
+	if (top < area.top) view.y += area.top - top;
+	else if (bottom > area.bottom) view.y += Math.max(area.bottom - bottom, area.top - top);
 }
 
 const find_card = (id) => content.value?.querySelector(`[data-node="${CSS.escape(id)}"]`);
@@ -228,7 +274,7 @@ function on_keydown(event) {
 // the chart at full size whatever the zoom, with the open teams
 const save_image = (file_name) => export_image(content.value, file_name);
 
-defineExpose({ fit, show_top, center, keep_in_place, find_card, save_image });
+defineExpose({ fit, show_top, center, keep_in_place, reveal, find_card, save_image });
 </script>
 
 <template>
@@ -275,6 +321,7 @@ defineExpose({ fit, show_top, center, keep_in_place, find_card, save_image });
 		</div>
 
 		<div
+			ref="toolbar"
 			data-panel
 			class="absolute bottom-4 left-4 flex items-center gap-0.5 rounded-5 border border-outline-gray-2 bg-surface-base p-1"
 		>
