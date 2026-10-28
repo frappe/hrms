@@ -62,6 +62,66 @@ class TestEmployeeTransfer(HRMSTestSuite):
 		self.assertEqual(frappe.get_value("Employee", transfer.new_employee_id, "status"), "Active")
 		self.assertEqual(frappe.get_value("Employee", transfer.employee, "status"), "Left")
 
+	def test_cancel_restores_disabled_department(self):
+		employee = make_employee(
+			"disabled-department-employee_transfer@example.com",
+			company="_Test Company",
+			department="_Test Department - _TC",
+		)
+		doc = frappe.get_doc(
+			doctype="Employee Transfer",
+			employee=employee,
+			transfer_date=getdate(),
+			transfer_details=[
+				{
+					"property": "Department",
+					"fieldname": "department",
+					"current": "_Test Department - _TC",
+					"new": "_Test Department 1 - _TC",
+				}
+			],
+		).insert()
+		doc.submit()
+		self.assertEqual(frappe.get_doc("Employee", employee).department, "_Test Department 1 - _TC")
+		department = frappe.get_doc("Department", "_Test Department - _TC")
+		department.disabled = 1
+		department.save()
+		doc.cancel()
+		self.assertEqual(frappe.get_doc("Employee", employee).department, "_Test Department - _TC")
+		employee = frappe.get_doc("Employee", employee)
+		employee.department = "_Test Department 1 - _TC"
+		employee.save()
+		employee.department = "_Test Department - _TC"
+		self.assertRaisesRegex(frappe.ValidationError, "disabled Department", employee.save)
+
+	def test_cancel_cannot_restore_a_different_disabled_department(self):
+		employee = make_employee(
+			"department-cancel-payload@example.com",
+			company="_Test Company",
+			department="_Test Department - _TC",
+		)
+		middle = frappe.get_doc(
+			doctype="Department", department_name=frappe.generate_hash(), company="_Test Company"
+		).insert()
+		for current, new in (
+			("_Test Department - _TC", middle.name),
+			(middle.name, "_Test Department 1 - _TC"),
+		):
+			transfer = frappe.get_doc(
+				doctype="Employee Transfer",
+				employee=employee,
+				transfer_date=getdate(),
+				transfer_details=[
+					{"property": "Department", "fieldname": "department", "current": current, "new": new}
+				],
+			).insert()
+			transfer.submit()
+		department = frappe.get_doc("Department", "_Test Department - _TC")
+		department.disabled = 1
+		department.save()
+		transfer.transfer_details[0].current = department.name
+		self.assertRaisesRegex(frappe.ValidationError, "disabled Department", transfer.cancel)
+
 	def test_employee_history(self):
 		employee = make_employee(
 			"employee4@transfers.com",

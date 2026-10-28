@@ -56,7 +56,9 @@ class EmployeePromotion(Document):
 
 	def on_cancel(self):
 		employee = frappe.get_doc("Employee", self.employee)
-		employee = update_employee_work_history(employee, self.promotion_details, cancel=True)
+		employee = update_employee_work_history(
+			employee, self.promotion_details, cancel=True, previous_doc=self.get_doc_before_save()
+		)
 
 		if self.revised_ctc:
 			employee.ctc = self.current_ctc
