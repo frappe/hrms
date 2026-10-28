@@ -33,6 +33,14 @@ def get_approvers(doctype: str, txt: str, searchfield: str, start: int, page_len
 	if not filters.get("employee"):
 		frappe.throw(_("Please select Employee first."))
 
+	if not frappe.has_permission("Employee", "read", filters.get("employee")) and not (
+		filters.get("doctype") in ("Leave Application", "Expense Claim", "Shift Request")
+		and frappe.get_list(
+			filters.get("doctype"), filters={"employee": filters.get("employee")}, limit=1, pluck="name"
+		)
+	):
+		frappe.throw(_("Not permitted"), frappe.PermissionError)
+
 	approvers = []
 	department_details = {}
 	department_list = []
@@ -43,7 +51,7 @@ def get_approvers(doctype: str, txt: str, searchfield: str, start: int, page_len
 		as_dict=True,
 	)
 
-	employee_department = filters.get("department") or employee.department
+	employee_department = employee.department
 	if employee_department:
 		department_details = frappe.db.get_value(
 			"Department", {"name": employee_department}, ["lft", "rgt"], as_dict=True

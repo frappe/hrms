@@ -18,6 +18,7 @@ from erpnext.setup.doctype.employee.employee import is_holiday
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.attendance.attendance import mark_attendance
+from hrms.hr.doctype.department_approver.department_approver import get_approvers
 from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
 	assign_holiday_list,
 	create_holiday_list_assignment,
@@ -43,7 +44,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
 )
-from hrms.tests.test_utils import add_date_to_holiday_list, get_first_sunday
+from hrms.tests.test_utils import add_date_to_holiday_list, create_department, get_first_sunday
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -1609,6 +1610,44 @@ class TestLeaveApplication(HRMSTestSuite):
 			leave_application.from_date,
 			leave_application=own_leave_application.name,
 		)
+
+	def test_leave_approver_options_for_shared_leave_application(self):
+		user = "leave_approver_options_reviewer@example.com"
+		make_employee(user, "_Test Company")
+
+		employee = make_employee(
+			"leave_approver_options_employee@example.com", "_Test Company", leave_approver="test@example.com"
+		)
+		make_allocation_record(employee, from_date="2026-04-01", to_date="2027-03-31")
+		leave_application = make_leave_application(
+			employee, "2026-04-20", "2026-04-20", "_Test Leave Type", submit=False
+		)
+		filters = {"employee": employee, "doctype": "Leave Application"}
+
+		frappe.set_user(user)
+		self.assertRaises(frappe.PermissionError, get_approvers, "User", "", "name", 0, 20, filters)
+
+		frappe.share.add_docshare(
+			"Leave Application", leave_application.name, user, flags={"ignore_share_permission": True}
+		)
+		approvers = get_approvers("User", "", "name", 0, 20, filters)
+		self.assertIn("test@example.com", {approver[0] for approver in approvers})
+
+	def test_leave_approver_options_from_employee_department(self):
+		own_department = frappe.get_doc("Department", create_department("Leave Approver Options Own"))
+		own_department.append("leave_approvers", {"approver": "test@example.com"})
+		own_department.save()
+		other_department = frappe.get_doc("Department", create_department("Leave Approver Options Other"))
+		other_department.append("leave_approvers", {"approver": "test1@example.com"})
+		other_department.save()
+		employee = make_employee(
+			"leave_approver_options_department@example.com", "_Test Company", department=own_department.name
+		)
+		filters = {"employee": employee, "doctype": "Leave Application", "department": other_department.name}
+
+		approvers = {approver[0] for approver in get_approvers("User", "", "name", 0, 20, filters)}
+		self.assertIn("test@example.com", approvers)
+		self.assertNotIn("test1@example.com", approvers)
 
 
 def create_carry_forwarded_allocation(employee, leave_type, date=None):
