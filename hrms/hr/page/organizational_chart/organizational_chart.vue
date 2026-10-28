@@ -341,8 +341,9 @@ onMounted(async () => {
 			</template>
 
 			<template #panel>
-				<div class="flex flex-col gap-2">
+				<div class="flex gap-2">
 					<Combobox
+						class="min-w-0 flex-1 sm:w-72 sm:flex-none"
 						:model-value="null"
 						v-model:query="search.query"
 						:options="search.results"
@@ -358,7 +359,7 @@ onMounted(async () => {
 						v-model="company"
 						:options="companies"
 						variant="outline"
-						class="w-full"
+						class="w-36 shrink-0 sm:w-44"
 					/>
 				</div>
 			</template>
