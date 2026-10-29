@@ -78,6 +78,14 @@ class JobOffer(Document):
 		employee = frappe.db.get_value("Employee", {"job_offer": self.name}, "name") or ""
 		self.set_onload("employee", employee)
 
+		preboarding = (
+			frappe.db.get_value(
+				"Employee Preboarding", {"job_offer": self.name, "docstatus": ("!=", 2)}, "name"
+			)
+			or ""
+		)
+		self.set_onload("employee_preboarding", preboarding)
+
 	def validate(self):
 		self.set_status()
 		self.validate_vacancies()
@@ -505,3 +513,38 @@ def get_holiday_summary(holiday_list: str | None = None) -> dict:
 		"weekly_off_days": ", ".join(_(day) for day in sorted(off_days, key=weekdays.index)),
 		"total_public_holidays": sum(1 for holiday in holidays if not holiday.weekly_off),
 	}
+
+
+@frappe.whitelist()
+def make_employee_preboarding(source_name: str, target_doc: str | Document | None = None):
+	def set_missing_values(source, target):
+		target.personal_email = source.applicant_email
+		target.boarding_begins_on = source.date_of_joining
+
+	return get_mapped_doc(
+		"Job Offer",
+		source_name,
+		{
+			"Job Offer": {
+				"doctype": "Employee Preboarding",
+				"field_map": {
+					"name": "job_offer",
+					"applicant_name": "employee_name",
+					"grade": "employee_grade",
+				},
+			}
+		},
+		target_doc,
+		set_missing_values,
+	)
+
+
+@frappe.whitelist(methods=["POST"])
+def create_employee_preboarding(
+	job_offer: str, boarding_begins_on: str, date_of_joining: str | None = None
+) -> str:
+	preboarding = make_employee_preboarding(job_offer)
+	preboarding.date_of_joining = preboarding.date_of_joining or date_of_joining
+	preboarding.boarding_begins_on = boarding_begins_on
+	preboarding.insert()
+	return preboarding.name

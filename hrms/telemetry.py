@@ -223,7 +223,7 @@ CREATION_MILESTONES = {
 	"Salary Structure": "salary_structure_created",
 	"Job Opening": "recruitment_started",
 	"Appraisal Cycle": "performance_cycle_started",
-	"Employee Onboarding": "employee_onboarding_started",
+	"Employee Preboarding": "employee_onboarding_started",
 }
 
 # doctype -> milestone event, fired the first time such a doc is *submitted*

@@ -11,6 +11,7 @@ from hrms.hr.doctype.job_applicant.job_applicant import get_applicant_to_hire_pe
 from hrms.hr.doctype.job_offer.job_offer import (
 	compute_compensation,
 	copy_regional_config,
+	create_employee_preboarding,
 	get_holiday_summary,
 	get_leave_allocations,
 	get_offer_acceptance_rate,
@@ -198,6 +199,44 @@ class TestJobOffer(HRMSTestSuite):
 
 		job_offer.run_method("onload")
 		self.assertEqual(job_offer.get_onload("employee"), employee.name)
+
+	def test_create_employee_preboarding_keeps_offer_joining_date(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		joining = add_days(nowdate(), 10)
+		job_offer = create_job_offer(
+			applicant_name="Preboarding Candidate",
+			applicant_email="preboarding_candidate@example.com",
+			status="Awaiting Response",
+			date_of_joining=joining,
+		)
+		job_offer.submit()
+
+		name = create_employee_preboarding(
+			job_offer.name, boarding_begins_on=nowdate(), date_of_joining=add_days(nowdate(), 30)
+		)
+
+		preboarding = frappe.get_doc("Employee Preboarding", name)
+		self.assertEqual(preboarding.job_offer, job_offer.name)
+		self.assertEqual(preboarding.employee_name, "Preboarding Candidate")
+		self.assertEqual(getdate(preboarding.boarding_begins_on), getdate(nowdate()))
+		self.assertEqual(getdate(preboarding.date_of_joining), getdate(joining))
+
+	def test_create_employee_preboarding_fills_missing_joining_date(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		job_offer = create_job_offer(
+			applicant_name="Undated Candidate",
+			applicant_email="undated_candidate@example.com",
+			status="Awaiting Response",
+		)
+		job_offer.submit()
+
+		joining = add_days(nowdate(), 5)
+		name = create_employee_preboarding(
+			job_offer.name, boarding_begins_on=nowdate(), date_of_joining=joining
+		)
+
+		preboarding = frappe.get_doc("Employee Preboarding", name)
+		self.assertEqual(getdate(preboarding.date_of_joining), getdate(joining))
 
 	def test_onload_employee_ignores_unrelated_offers(self):
 		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)

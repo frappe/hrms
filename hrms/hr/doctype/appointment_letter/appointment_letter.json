@@ -10,6 +10,7 @@
  "field_order": [
   "appointment_tab",
   "job_offer",
+  "employee_preboarding",
   "applicant_name",
   "applicant_email",
   "employee",
@@ -49,6 +50,13 @@
    "label": "Job Offer",
    "options": "Job Offer",
    "reqd": 1
+  },
+  {
+   "fieldname": "employee_preboarding",
+   "fieldtype": "Link",
+   "label": "Employee Preboarding",
+   "options": "Employee Preboarding",
+   "read_only": 1
   },
   {
    "fetch_from": "job_offer.applicant_name",

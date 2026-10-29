@@ -26,9 +26,9 @@ class EmployeeSeparation(EmployeeBoardingController):
 		department: DF.Link | None
 		designation: DF.Link | None
 		employee: DF.Link
+		employee_boarding_template: DF.Link | None
 		employee_grade: DF.Link | None
 		employee_name: DF.Data | None
-		employee_separation_template: DF.Link | None
 		exit_interview: DF.TextEditor | None
 		notify_users_by_email: DF.Check
 		project: DF.Link | None

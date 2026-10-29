@@ -20,7 +20,7 @@ def get_dashboard_for_employee(data):
 			{
 				"label": _("Lifecycle"),
 				"items": [
-					"Employee Onboarding",
+					"Employee Preboarding",
 					"Employee Transfer",
 					"Employee Promotion",
 					"Employee Grievance",

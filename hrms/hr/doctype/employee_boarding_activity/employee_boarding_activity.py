@@ -14,17 +14,27 @@ class EmployeeBoardingActivity(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		action: DF.Literal["Manual", "Create User", "Appointment Letter", "Create Employee", "Assign"]
 		activity_name: DF.Data
+		added_on_preboarding: DF.Check
 		begin_on: DF.Int
+		completed: DF.Check
+		depends_on_action: DF.Literal["", "Create User", "Create Employee", "Appointment Letter"]
 		description: DF.TextEditor | None
+		due_date: DF.Date | None
 		duration: DF.Int
 		parent: DF.Data
 		parentfield: DF.Data
 		parenttype: DF.Data
+		reference_doctype: DF.Link | None
+		reference_name: DF.DynamicLink | None
 		required_for_employee_creation: DF.Check
 		role: DF.Link | None
+		skipped: DF.Check
+		status: DF.Literal["", "In Progress", "Stuck"]
 		task: DF.Link | None
 		task_weight: DF.Float
+		todo: DF.Link | None
 		user: DF.Link | None
 	# end: auto-generated types
 
