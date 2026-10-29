@@ -179,6 +179,8 @@ doc_events = {
 			"erpnext.setup.doctype.employee.employee.validate_employee_role",
 			"hrms.overrides.employee_master.update_approver_user_roles",
 		],
+		"on_trash": "hrms.hr.doctype.employee_preboarding.employee_preboarding.unlink_deleted_user",
+		"after_rename": "hrms.hr.doctype.employee_preboarding.employee_preboarding.rename_preboarding_user",
 	},
 	"Company": {
 		"validate": "hrms.overrides.company.validate_default_accounts",
@@ -219,8 +221,8 @@ doc_events = {
 	},
 	"Loan": {"validate": "hrms.hr.utils.validate_loan_repay_from_salary"},
 	"Employee": {
-		"validate": "hrms.overrides.employee_master.validate_onboarding_process",
 		"on_update": [
+			"hrms.overrides.employee_master.link_preboarding",
 			"hrms.overrides.employee_master.update_approver_role",
 			"hrms.overrides.employee_master.publish_update",
 		],
@@ -253,7 +255,7 @@ doc_events = {
 	"Salary Structure": {"after_insert": "hrms.telemetry.on_milestone_insert"},
 	"Job Opening": {"after_insert": "hrms.telemetry.on_milestone_insert"},
 	"Appraisal Cycle": {"after_insert": "hrms.telemetry.on_milestone_insert"},
-	"Employee Onboarding": {"after_insert": "hrms.telemetry.on_milestone_insert"},
+	"Employee Preboarding": {"after_insert": "hrms.telemetry.on_milestone_insert"},
 	"Salary Slip": {"on_submit": "hrms.telemetry.on_milestone_submit"},
 }
 
@@ -407,8 +409,7 @@ company_data_to_be_ignored = [
 	"Income Tax Slab",
 	"Leave Period",
 	"Leave Policy Assignment",
-	"Employee Onboarding Template",
-	"Employee Separation Template",
+	"Employee Boarding Template",
 ]
 
 # List of apps whose translatable strings should be excluded from this app's translations.

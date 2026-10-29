@@ -96,13 +96,13 @@ frappe.ui.form.on("Job Applicant", {
 			}
 
 			if (frm.doc.__onload && frm.doc.__onload.job_offer) {
-				$('[data-doctype="Employee Onboarding"]').find("button").show();
+				$('[data-doctype="Employee Preboarding"]').find("button").show();
 				$('[data-doctype="Job Offer"]').find("button").hide();
 				frm.add_custom_button(__("View Job Offer"), function () {
 					frappe.set_route("Form", "Job Offer", frm.doc.__onload.job_offer);
 				});
 			} else {
-				$('[data-doctype="Employee Onboarding"]').find("button").hide();
+				$('[data-doctype="Employee Preboarding"]').find("button").hide();
 				$('[data-doctype="Job Offer"]').find("button").show();
 				frm.add_custom_button(__("Create Job Offer"), function () {
 					frappe.route_options = {

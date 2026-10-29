@@ -1,4 +1,4 @@
-frappe.listview_settings["Employee Onboarding"] = {
+frappe.listview_settings["Employee Preboarding"] = {
 	add_fields: ["boarding_status", "employee_name", "date_of_joining", "department"],
 	filters: [["boarding_status", "=", "Pending"]],
 	get_indicator: function (doc) {

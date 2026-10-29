@@ -1,0 +1,86 @@
+// Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and contributors
+// For license information, please see license.txt
+
+frappe.ui.form.on("Employee Preboarding", {
+	setup: function (frm) {
+		frm.set_query("job_offer", function () {
+			return {
+				filters: {
+					status: "Accepted",
+					docstatus: 1,
+				},
+			};
+		});
+	},
+
+	onload_post_render: function (frm) {
+		frappe.require("employee_preboarding_checklist.bundle.js", () => {
+			frm.trigger("render_checklist");
+		});
+	},
+
+	refresh: function (frm) {
+		if (frm.doc.employee) {
+			frm.add_custom_button(
+				__("Employee"),
+				function () {
+					frappe.set_route("Form", "Employee", frm.doc.employee);
+				},
+				__("View"),
+			);
+		}
+
+		frm.trigger("render_checklist");
+	},
+
+	render_checklist: function (frm) {
+		if (!hrms.ui?.EmployeePreboardingChecklist) return;
+
+		frm._preboarding_checklist ??= new hrms.ui.EmployeePreboardingChecklist({ frm });
+		frm._preboarding_checklist.render();
+	},
+
+	employee_boarding_template: function (frm) {
+		// Finished rows stay; the new template's rows replace the rest.
+		const finished = (frm.doc.activities || []).filter((row) => row.completed || row.skipped);
+		const is_finished = (d) =>
+			d.action !== "Manual" &&
+			finished.some(
+				(row) => row.action === d.action && row.reference_doctype === d.reference_doctype,
+			);
+		frm.doc.activities = finished;
+		refresh_field("activities");
+		frm.trigger("render_checklist");
+		if (!frm.doc.employee_boarding_template) return;
+
+		frappe.call({
+			method: "hrms.controllers.employee_boarding_controller.get_onboarding_details",
+			args: {
+				parent: frm.doc.employee_boarding_template,
+				parentfield: "preboarding_activities",
+			},
+			callback: function (r) {
+				if (!r.message) return;
+				r.message
+					.filter((d) => !is_finished(d))
+					.forEach((d) => frm.add_child("activities", d));
+				refresh_field("activities");
+				frm.trigger("render_checklist");
+			},
+		});
+	},
+
+	job_applicant: function (frm) {
+		frm.trigger("render_checklist");
+	},
+
+	job_offer: function (frm) {
+		if (!frm.doc.job_offer) {
+			frm.set_value("employee", "");
+			return;
+		}
+		frappe.db.get_value("Employee", { job_offer: frm.doc.job_offer }, "name", (r) => {
+			frm.set_value("employee", r && r.name ? r.name : "");
+		});
+	},
+});

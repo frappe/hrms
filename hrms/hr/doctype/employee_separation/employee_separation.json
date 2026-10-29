@@ -19,7 +19,7 @@
   "boarding_begins_on",
   "project",
   "table_for_activity",
-  "employee_separation_template",
+  "employee_boarding_template",
   "activities",
   "notify_users_by_email",
   "section_break_14",
@@ -71,10 +71,10 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "employee_separation_template",
+   "fieldname": "employee_boarding_template",
    "fieldtype": "Link",
-   "label": "Employee Separation Template",
-   "options": "Employee Separation Template"
+   "label": "Employee Boarding Template",
+   "options": "Employee Boarding Template"
   },
   {
    "fetch_from": "employee.company",
@@ -157,7 +157,7 @@
  "icon": "user-minus",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-10-22 19:30:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Separation",

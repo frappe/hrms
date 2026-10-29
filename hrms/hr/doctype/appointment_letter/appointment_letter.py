@@ -24,6 +24,7 @@ from frappe.utils import (
 from hrms.hr.doctype.appointment_letter_template.appointment_letter_template import (
 	get_default_template,
 )
+from hrms.hr.doctype.employee_preboarding.employee_preboarding import reopen_appointment_letter
 
 
 class AppointmentLetter(Document):
@@ -43,6 +44,7 @@ class AppointmentLetter(Document):
 		appointment_letter_template: DF.Link | None
 		company: DF.Link
 		employee: DF.Link | None
+		employee_preboarding: DF.Link | None
 		end_time: DF.Time | None
 		job_offer: DF.Link
 		letter_body: DF.TextEditor | None
@@ -60,6 +62,10 @@ class AppointmentLetter(Document):
 		if not self.letter_body:
 			self.appointment_letter_template = self.appointment_letter_template or get_default_template()
 			self.letter_body = self.get_template_body()
+
+	def on_trash(self):
+		if self.employee_preboarding:
+			reopen_appointment_letter(self.employee_preboarding)
 
 	def validate(self):
 		if not self.working_hours:

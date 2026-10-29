@@ -1,23 +1,33 @@
 {
  "actions": [],
  "allow_import": 1,
- "autoname": "HR-EMP-STP-.#####",
- "creation": "2018-05-09 06:31:44.498557",
+ "autoname": "HR-EMP-BRT-.#####",
+ "creation": "2018-05-09 05:27:02.393377",
  "doctype": "DocType",
- "documentation": "https://docs.frappe.io/hr/employee-separation",
+ "documentation": "https://docs.frappe.io/hr/employee-onboarding",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "details_tab",
   "title",
   "company",
   "department",
   "column_break_7",
   "designation",
   "employee_grade",
-  "section_break_7",
-  "activities"
+  "preboarding_tab",
+  "preboarding_activities",
+  "onboarding_tab",
+  "onboarding_activities",
+  "offboarding_tab",
+  "offboarding_activities"
  ],
  "fields": [
+  {
+   "fieldname": "details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Details"
+  },
   {
    "fieldname": "title",
    "fieldtype": "Data",
@@ -58,12 +68,34 @@
    "options": "Employee Grade"
   },
   {
-   "fieldname": "section_break_7",
-   "fieldtype": "Section Break",
-   "label": "Activities"
+   "fieldname": "preboarding_tab",
+   "fieldtype": "Tab Break",
+   "label": "Pre-boarding"
   },
   {
-   "fieldname": "activities",
+   "fieldname": "preboarding_activities",
+   "fieldtype": "Table",
+   "label": "Activities",
+   "options": "Employee Boarding Activity"
+  },
+  {
+   "fieldname": "onboarding_tab",
+   "fieldtype": "Tab Break",
+   "label": "On-boarding"
+  },
+  {
+   "fieldname": "onboarding_activities",
+   "fieldtype": "Table",
+   "label": "Activities",
+   "options": "Employee Boarding Activity"
+  },
+  {
+   "fieldname": "offboarding_tab",
+   "fieldtype": "Tab Break",
+   "label": "Off-boarding"
+  },
+  {
+   "fieldname": "offboarding_activities",
    "fieldtype": "Table",
    "label": "Activities",
    "options": "Employee Boarding Activity"
@@ -71,10 +103,10 @@
  ],
  "icon": "clipboard-list",
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-10-22 19:30:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
- "name": "Employee Separation Template",
+ "name": "Employee Boarding Template",
  "owner": "Administrator",
  "permissions": [
   {
@@ -91,14 +123,19 @@
   },
   {
    "create": 1,
-   "delete": 1,
    "read": 1,
-   "role": "HR Manager",
+   "report": 1,
+   "role": "HR User",
    "write": 1
   },
   {
+   "create": 1,
+   "delete": 1,
+   "export": 1,
    "read": 1,
-   "role": "HR User"
+   "report": 1,
+   "role": "HR Manager",
+   "write": 1
   }
  ],
  "row_format": "Dynamic",
