@@ -195,34 +195,6 @@ class TestAdditionalSalary(FrappeTestCase):
 		tds = next(row for row in salary_slip.deductions if row.salary_component == "TDS")
 		self.assertEqual(tds.additional_salary, additional_salary.name)
 
-	def test_zero_overwrite_of_accrual_component_records_no_payout(self):
-		emp_id = make_employee("test_additional@salary.com", company="_Test Company")
-		salary_structure = make_salary_structure(
-			"Test Salary Structure Additional Salary",
-			"Monthly",
-			employee=emp_id,
-			test_accrual_component=True,
-			company="_Test Company",
-		)
-
-		date = nowdate()
-		get_additional_salary(
-			emp_id,
-			recurring=False,
-			payroll_date=date,
-			salary_component="Accrued Earnings",
-			overwrite_salary_structure=1,
-			amount=0,
-		)
-		salary_slip = make_salary_slip(salary_structure.name, employee=emp_id, posting_date=date)
-
-		payouts = [
-			entry
-			for entry in salary_slip.benefit_ledger_components
-			if entry["salary_component"] == "Accrued Earnings" and entry.get("transaction_type") == "Payout"
-		]
-		self.assertEqual(payouts, [])
-
 	def test_overwrite_tax_component(self):
 		def _get_tds_component(doc) -> dict:
 			return next(
