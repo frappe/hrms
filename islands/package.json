@@ -1,0 +1,29 @@
+{
+	"name": "hrms-islands",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"scripts": {
+		"build": "node build-islands.mjs --production",
+		"watch": "node build-islands.mjs --watch",
+		"postinstall": "patch-package --patch-dir node_modules/@framework/ui/patches"
+	},
+	"dependencies": {
+		"frappe-ui": "github:frappe/frappe-ui#85de151a6937f61fc4bf46ff71a3ae40eb0ac2f0",
+		"vue": "^3.5.41",
+		"vue-router": "^4.6.4"
+	},
+	"devDependencies": {
+		"@framework/ui": "link:../../frappe/ui",
+		"@vitejs/plugin-vue": "^6.0.8",
+		"@vueuse/core": "^11.3.0",
+		"autoprefixer": "^10.5.4",
+		"patch-package": "^8.0.1",
+		"tailwindcss": "^3.4.19",
+		"typescript": "^5.9.3",
+		"vite": "^8.2.4"
+	},
+	"resolutions": {
+		"reka-ui": "2.10.1"
+	}
+}
