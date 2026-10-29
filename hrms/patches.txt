@@ -2,6 +2,8 @@
 hrms.patches.v15_0.check_version_compatibility_with_frappe #2023-06-27
 hrms.patches.v16_0.merge_interview_round_with_interview_type
 hrms.patches.v16_0.make_people_workspace_sidebar_standard
+hrms.patches.v16_0.rename_employee_onboarding_to_preboarding
+hrms.patches.v16_0.rename_onboarding_template_to_boarding_template
 
 [post_model_sync]
 hrms.patches.post_install.set_payroll_entry_status
@@ -60,3 +62,10 @@ hrms.patches.v16_0.delete_old_salary_slip_print_formats
 hrms.patches.v16_0.delete_job_offer_print_format
 hrms.patches.v16_0.set_draft_status_in_job_offer
 hrms.patches.v16_0.add_employee_overview_tab
+hrms.patches.v16_0.create_default_onboarding_template
+hrms.patches.v16_0.split_onboarding_activity_status
+hrms.patches.v16_0.set_onboarding_activity_dependency
+hrms.patches.v16_0.clear_create_user_activity_reference
+hrms.patches.v16_0.rename_appointment_letter_preboarding_field
+hrms.patches.v16_0.merge_separation_templates_into_boarding_templates
+hrms.patches.v16_0.clear_appointment_letter_activity_reference

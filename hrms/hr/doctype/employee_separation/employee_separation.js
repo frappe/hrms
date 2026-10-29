@@ -3,10 +3,10 @@
 
 frappe.ui.form.on("Employee Separation", {
 	setup: function (frm) {
-		frm.add_fetch("employee_separation_template", "company", "company");
-		frm.add_fetch("employee_separation_template", "department", "department");
-		frm.add_fetch("employee_separation_template", "designation", "designation");
-		frm.add_fetch("employee_separation_template", "employee_grade", "employee_grade");
+		frm.add_fetch("employee_boarding_template", "company", "company");
+		frm.add_fetch("employee_boarding_template", "department", "department");
+		frm.add_fetch("employee_boarding_template", "designation", "designation");
+		frm.add_fetch("employee_boarding_template", "employee_grade", "employee_grade");
 	},
 
 	refresh: function (frm) {
@@ -37,14 +37,14 @@ frappe.ui.form.on("Employee Separation", {
 		}
 	},
 
-	employee_separation_template: function (frm) {
+	employee_boarding_template: function (frm) {
 		frm.set_value("activities", "");
-		if (frm.doc.employee_separation_template) {
+		if (frm.doc.employee_boarding_template) {
 			frappe.call({
 				method: "hrms.controllers.employee_boarding_controller.get_onboarding_details",
 				args: {
-					parent: frm.doc.employee_separation_template,
-					parenttype: "Employee Separation Template",
+					parent: frm.doc.employee_boarding_template,
+					parentfield: "offboarding_activities",
 				},
 				callback: function (r) {
 					if (r.message) {

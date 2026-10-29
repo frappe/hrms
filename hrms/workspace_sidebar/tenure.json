@@ -36,8 +36,8 @@
    "icon": "user-star",
    "indent": 0,
    "keep_closed": 0,
-   "label": "Employee Onboarding",
-   "link_to": "Employee Onboarding",
+   "label": "Employee Preboarding",
+   "link_to": "Employee Preboarding",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
@@ -222,7 +222,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-08-07 12:00:00.000000",
+ "modified": "2026-10-22 19:30:00.000000",
  "modified_by": "Administrator",
  "module": "Tenure",
  "name": "Tenure",

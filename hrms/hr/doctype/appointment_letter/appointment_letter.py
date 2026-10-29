@@ -5,6 +5,8 @@
 import frappe
 from frappe.model.document import Document
 
+from hrms.hr.doctype.employee_preboarding.employee_preboarding import reopen_appointment_letter
+
 
 class AppointmentLetter(Document):
 	# begin: auto-generated types
@@ -24,10 +26,15 @@ class AppointmentLetter(Document):
 		appointment_letter_template: DF.Link
 		closing_notes: DF.Text | None
 		company: DF.Link
+		employee_preboarding: DF.Link | None
 		introduction: DF.LongText
 		job_applicant: DF.Link
 		terms: DF.Table[AppointmentLettercontent]
 	# end: auto-generated types
+
+	def on_trash(self):
+		if self.employee_preboarding:
+			reopen_appointment_letter(self.employee_preboarding)
 
 	pass
 
