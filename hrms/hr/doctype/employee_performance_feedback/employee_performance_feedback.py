@@ -44,12 +44,17 @@ class EmployeePerformanceFeedback(Document, AppraisalMixin):
 		validate_active_appraisal_cycle(self.appraisal_cycle)
 
 		self.validate_employee()
+		self.validate_reviewer()
 		self.validate_appraisal()
+		self.set_weightage_from_template()
 		self.validate_total_weightage("feedback_ratings", "Feedback Ratings")
 		self.set_total_score()
 
 	def on_submit(self):
 		self.update_avg_feedback_score_in_appraisal()
+
+	def before_cancel(self):
+		self.validate_reviewer()
 
 	def on_cancel(self):
 		self.update_avg_feedback_score_in_appraisal()
@@ -65,6 +70,20 @@ class EmployeePerformanceFeedback(Document, AppraisalMixin):
 		validate_active_employee(self.employee)
 		validate_active_employee(self.reviewer)
 
+	def validate_reviewer(self):
+		if {"HR User", "HR Manager", "System Manager"} & set(frappe.get_roles()):
+			return
+
+		reviewers = {self.reviewer}
+		if previous := self.get_doc_before_save():
+			reviewers.add(previous.reviewer)
+		for reviewer in reviewers:
+			if frappe.db.get_value("Employee", reviewer, "user_id") != frappe.session.user:
+				frappe.throw(
+					_("Only the reviewer can create, change or cancel this feedback"),
+					frappe.PermissionError,
+				)
+
 	def validate_appraisal(self):
 		employee = frappe.db.get_value("Appraisal", self.appraisal, "employee")
 
@@ -73,10 +92,27 @@ class EmployeePerformanceFeedback(Document, AppraisalMixin):
 				_("Appraisal {0} does not belong to Employee {1}").format(self.appraisal, self.employee)
 			)
 
+	def set_weightage_from_template(self):
+		template_name = frappe.db.get_value("Appraisal", self.appraisal, "appraisal_template")
+		if not template_name:
+			return
+
+		template = frappe.get_cached_doc("Appraisal Template", template_name)
+		weightages = {row.criteria: flt(row.per_weightage) for row in template.rating_criteria}
+		criteria = [row.criteria for row in self.feedback_ratings]
+		if len(criteria) != len(weightages) or set(criteria) != set(weightages):
+			frappe.throw(_("Feedback rating criteria must match the Appraisal Template"))
+
+		for row in self.feedback_ratings:
+			row.per_weightage = weightages[row.criteria]
+
 	def set_total_score(self):
 		total = 0
 		for entry in self.feedback_ratings:
-			score = flt(entry.rating) * 5 * flt(entry.per_weightage / 100)
+			rating = flt(entry.rating)
+			if not 0 <= rating <= 1:
+				frappe.throw(_("Row {0}: Rating must be between 0 and 1").format(entry.idx))
+			score = rating * 5 * flt(entry.per_weightage) / 100
 			total += flt(score)
 
 		self.total_score = flt(total, self.precision("total_score"))
