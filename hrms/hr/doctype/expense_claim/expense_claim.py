@@ -1005,15 +1005,22 @@ def validate_expense_claim_in_jv(doc, method=None):
 	if doc.voucher_type == "Exchange Gain Or Loss":
 		return
 
-	for d in doc.accounts:
-		if d.reference_type == "Expense Claim":
-			outstanding_amt = get_outstanding_amount_for_claim(d.reference_name)
-			if d.debit and (d.debit > outstanding_amt):
-				frappe.throw(
-					_(
-						"Row No {0}: Amount cannot be greater than the Outstanding Amount against Expense Claim {1}. Outstanding Amount is {2}"
-					).format(d.idx, d.reference_name, outstanding_amt)
-				)
+	claim_amounts = {}
+	for row in doc.accounts:
+		if row.reference_type == "Expense Claim":
+			claim_amounts.setdefault(row.reference_name, 0)
+			claim_amounts[row.reference_name] += flt(row.debit_in_account_currency) - flt(
+				row.credit_in_account_currency
+			)
+
+	for claim, amount in claim_amounts.items():
+		outstanding_amt = get_outstanding_amount_for_claim(claim)
+		if amount > 0 and amount > outstanding_amt:
+			frappe.throw(
+				_(
+					"Amount cannot be greater than the Outstanding Amount against Expense Claim {0}. Outstanding Amount is {1}"
+				).format(claim, outstanding_amt)
+			)
 
 
 @frappe.whitelist()
