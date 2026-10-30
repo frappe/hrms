@@ -1289,18 +1289,29 @@ class SalarySlip(TransactionBase):
 		if self.payroll_frequency == "Monthly":
 			start_date = frappe.utils.add_months(self.start_date, sub_period)
 			end_date = frappe.utils.add_months(self.end_date, sub_period)
+			if getdate(self.end_date) == get_last_day(self.end_date):
+				end_date = get_last_day(end_date)
 			posting_date = frappe.utils.add_months(self.posting_date, sub_period)
+
+		elif self.payroll_frequency == "Bimonthly":
+			start_date = getdate(self.start_date)
+			for _i in range(sub_period):
+				start_date = add_days(
+					get_last_day(start_date) if start_date.day > 15 else start_date.replace(day=15), 1
+				)
+			end_date = start_date.replace(day=15) if start_date.day <= 15 else get_last_day(start_date)
+			posting_date = start_date
 
 		else:
 			days_to_add = 0
 			if self.payroll_frequency == "Weekly":
-				days_to_add = sub_period * 6
+				days_to_add = sub_period * 7
 
 			if self.payroll_frequency == "Fortnightly":
-				days_to_add = sub_period * 13
+				days_to_add = sub_period * 14
 
 			if self.payroll_frequency == "Daily":
-				days_to_add = start_date
+				days_to_add = sub_period
 
 			start_date = frappe.utils.add_days(self.start_date, days_to_add)
 			end_date = frappe.utils.add_days(self.end_date, days_to_add)
