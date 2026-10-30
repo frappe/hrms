@@ -307,11 +307,15 @@ def create_return_through_additional_salary(doc: str | dict | Document) -> Docum
 	if isinstance(doc, str):
 		doc = frappe._dict(json.loads(doc))
 
+	doc = frappe.get_doc("Employee Advance", doc.get("name"))
+	doc.check_permission("read")
+	balance = get_advance_return_balance(doc)
+
 	additional_salary = frappe.new_doc("Additional Salary")
 	additional_salary.employee = doc.employee
 	additional_salary.currency = doc.currency
 	additional_salary.overwrite_salary_structure_amount = 0
-	additional_salary.amount = doc.paid_amount - doc.claimed_amount
+	additional_salary.amount = max(0, balance.remaining_return_amount)
 	additional_salary.company = doc.company
 	additional_salary.ref_doctype = doc.doctype
 	additional_salary.ref_docname = doc.name
@@ -438,22 +442,65 @@ def get_voucher_type(mode_of_payment=None):
 def get_employee_advance_return(employee_advance: str):
 	frappe.has_permission("Employee Advance", ptype="read", doc=employee_advance, throw=True)
 
-	AdditionalSalary = frappe.qb.DocType("Additional Salary")
-	return_entries = (
-		frappe.qb.from_(AdditionalSalary)
-		.select(Sum(AdditionalSalary.amount).as_("total_return_scheduled"))
-		.where(
-			(AdditionalSalary.ref_doctype == "Employee Advance")
-			& (AdditionalSalary.ref_docname == employee_advance)
-			& (AdditionalSalary.docstatus == 1)
-		)
-	).run(as_dict=True)
-
-	total_return_scheduled = flt(return_entries[0].total_return_scheduled)
-	already_returned = flt(frappe.db.get_value("Employee Advance", employee_advance, "return_amount"))
-	pending_scheduled = max(0, total_return_scheduled - already_returned)
+	balance = get_advance_return_balance(frappe.get_doc("Employee Advance", employee_advance))
 
 	return {
-		"total_return_scheduled": pending_scheduled,
-		"has_return_scheduled": bool(pending_scheduled),
+		"total_return_scheduled": balance.pending_scheduled_amount,
+		"has_return_scheduled": bool(balance.pending_scheduled_amount),
 	}
+
+
+def get_advance_return_balance(advance, exclude_additional_salary: str | None = None) -> frappe._dict:
+	precision = advance.precision("return_amount")
+
+	AdditionalSalary = frappe.qb.DocType("Additional Salary")
+	query = (
+		frappe.qb.from_(AdditionalSalary)
+		.select(AdditionalSalary.name, AdditionalSalary.amount)
+		.where(
+			(AdditionalSalary.ref_doctype == "Employee Advance")
+			& (AdditionalSalary.ref_docname == advance.name)
+			& (AdditionalSalary.docstatus == 1)
+		)
+	)
+	if exclude_additional_salary:
+		query = query.where(AdditionalSalary.name != exclude_additional_salary)
+	scheduled_deductions = query.run(as_dict=True)
+
+	JournalEntryAccount = frappe.qb.DocType("Journal Entry Account")
+	payroll_journal_entries = (
+		frappe.qb.from_(JournalEntryAccount)
+		.select(JournalEntryAccount.parent)
+		.where((JournalEntryAccount.reference_type == "Payroll Entry") & (JournalEntryAccount.docstatus == 1))
+	)
+	returned_via_payroll = (
+		frappe.qb.from_(JournalEntryAccount)
+		.select(
+			Sum(
+				JournalEntryAccount.credit_in_account_currency - JournalEntryAccount.debit_in_account_currency
+			)
+		)
+		.where(
+			(JournalEntryAccount.reference_type == "Employee Advance")
+			& (JournalEntryAccount.reference_name == advance.name)
+			& (JournalEntryAccount.docstatus == 1)
+			& (JournalEntryAccount.parent.isin(payroll_journal_entries))
+		)
+	).run()[0][0]
+	returned_via_payroll = flt(returned_via_payroll, precision)
+
+	scheduled_amount = flt(sum(flt(d.amount) for d in scheduled_deductions), precision)
+	pending_scheduled_amount = max(0.0, flt(scheduled_amount - returned_via_payroll, precision))
+	remaining_return_amount = flt(
+		flt(advance.paid_amount)
+		- flt(advance.claimed_amount)
+		- flt(advance.return_amount)
+		- pending_scheduled_amount,
+		precision,
+	)
+
+	return frappe._dict(
+		scheduled_deductions=scheduled_deductions,
+		pending_scheduled_amount=pending_scheduled_amount,
+		remaining_return_amount=remaining_return_amount,
+	)

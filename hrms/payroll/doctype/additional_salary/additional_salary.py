@@ -7,6 +7,7 @@ from frappe import _, bold
 from frappe.model.document import Document
 from frappe.utils import comma_and, date_diff, flt, fmt_money, formatdate, get_link_to_form, getdate
 
+from hrms.hr.doctype.employee_advance.employee_advance import get_advance_return_balance
 from hrms.hr.utils import validate_active_employee
 
 
@@ -265,27 +266,14 @@ class AdditionalSalary(Document):
 		precision = self.precision("amount")
 		advance = frappe.get_doc("Employee Advance", self.ref_docname)
 
-		AdditionalSalary = frappe.qb.DocType("Additional Salary")
-		scheduled_deductions = (
-			frappe.qb.from_(AdditionalSalary)
-			.select(AdditionalSalary.name, AdditionalSalary.amount)
-			.where(
-				(AdditionalSalary.ref_doctype == "Employee Advance")
-				& (AdditionalSalary.ref_docname == self.ref_docname)
-				& (AdditionalSalary.docstatus == 1)
-				& (AdditionalSalary.name != self.name)
-			)
-		).run(as_dict=True) or []
-
-		available_return_amount = flt(advance.paid_amount - advance.claimed_amount, precision)
-		scheduled_return_amount = flt(sum(flt(d.amount, precision) for d in scheduled_deductions), precision)
-		remaining_return_amount = flt(available_return_amount - scheduled_return_amount, precision)
+		balance = get_advance_return_balance(advance, exclude_additional_salary=self.name)
+		scheduled_deductions = balance.scheduled_deductions
+		remaining_return_amount = balance.remaining_return_amount
 
 		if flt(self.amount, precision) <= remaining_return_amount:
 			return
 
-		# scheduled via AS but not yet processed through payroll
-		pending_scheduled = max(0, flt(scheduled_return_amount - advance.return_amount, precision))
+		pending_scheduled = balance.pending_scheduled_amount
 
 		if pending_scheduled > 0:
 			msg = _(

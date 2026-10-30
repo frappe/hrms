@@ -12,6 +12,7 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.employee_advance.employee_advance import (
 	EmployeeAdvanceOverPayment,
 	create_return_through_additional_salary,
+	get_employee_advance_return,
 	get_same_currency_bank_cash_account,
 	make_return_entry,
 )
@@ -244,6 +245,8 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		self.assertEqual(deduction_row.additional_salary, payroll_details.additional_salary)
 		advance.reload()
 		self.assertEqual(advance.status, "Returned")
+		self.assertEqual(get_employee_advance_return(advance.name)["total_return_scheduled"], 0)
+		self.assertEqual(create_return_through_additional_salary(advance).amount, 0)
 
 	def test_advance_return_posts_to_advance_account_when_component_account_differs(self):
 		company_doc = frappe.get_doc("Company", "_Test Company")
@@ -512,6 +515,52 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		advance.discard()
 		advance.reload()
 		self.assertEqual(advance.status, "Cancelled")
+
+	def test_salary_deduction_excludes_amount_already_returned(self):
+		employee_name = make_employee("_T@employee.advance", "_Test Company")
+		advance = make_employee_advance(employee_name, {"repay_unclaimed_amount_from_salary": 1})
+		make_payment_entry(advance)
+		advance.reload()
+
+		entry = frappe.get_doc(
+			make_return_entry(
+				employee=advance.employee,
+				company=advance.company,
+				employee_advance_name=advance.name,
+				return_amount=400,
+				advance_account=advance.advance_account,
+				mode_of_payment=advance.mode_of_payment,
+				currency=advance.currency,
+			)
+		)
+		entry.insert()
+		entry.submit()
+		advance.reload()
+
+		create_salary_component("Advance Salary - Deduction", **{"type": "Deduction"})
+		make_salary_structure(
+			"Test Additional Salary for Advance Return",
+			"Monthly",
+			employee=employee_name,
+			company="_Test Company",
+		)
+		additional_salary = create_return_through_additional_salary(advance)
+		self.assertEqual(additional_salary.amount, 600)
+		forged_advance = advance.as_dict()
+		forged_advance.update(paid_amount=100000, return_amount=0, employee="OTHER-EMPLOYEE")
+		generated_salary = create_return_through_additional_salary(forged_advance)
+		self.assertEqual(generated_salary.amount, 600)
+		self.assertEqual(generated_salary.employee, advance.employee)
+
+		additional_salary.salary_component = "Advance Salary - Deduction"
+		additional_salary.payroll_date = nowdate()
+		additional_salary.amount = 1000
+		self.assertRaises(frappe.ValidationError, additional_salary.insert)
+
+		additional_salary.amount = 600
+		additional_salary.insert()
+		additional_salary.submit()
+		self.assertEqual(get_employee_advance_return(advance.name)["total_return_scheduled"], 600)
 
 
 def manual_journal_entry_for_advance(advance) -> dict:
