@@ -665,8 +665,11 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 				)
 
 	def set_expense_account(self, validate=False):
+		can_set_account = False
+		if validate:
+			can_set_account = frappe.has_permission("Account", "write")
 		for expense in self.expenses:
-			if not expense.default_account or not validate:
+			if not expense.default_account or not can_set_account:
 				expense.default_account = get_expense_claim_account(expense.expense_type, self.company)[
 					"account"
 				]

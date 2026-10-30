@@ -40,6 +40,49 @@ class TestExpenseClaim(HRMSTestSuite):
 		frappe.db.set_value("Account", "Payroll Payable - _TC", "account_type", "Payable")
 		frappe.set_user("Administrator")
 
+		# Self-service claims must resolve their account from the Expense Claim Type.
+		expense_type = frappe.get_doc("Expense Claim Type", "Travel")
+		for company, account in (
+			("_Test Company", "Travel Expenses - _TC"),
+			(company_name, "Travel Expenses - _TC3"),
+		):
+			row = next((row for row in expense_type.accounts if row.company == company), None)
+			if not row:
+				row = expense_type.append("accounts", {"company": company})
+			row.default_account = account
+		expense_type.save()
+
+	def test_expense_account_override_requires_account_write_permission(self):
+		default_account = "Travel Expenses - _TC3"
+
+		override_account = frappe.db.get_value(
+			"Account",
+			{"company": company_name, "is_group": 0, "root_type": "Expense", "name": ["!=", default_account]},
+		)
+		self.assertTrue(override_account)
+		employee = make_employee("expense-account-auth@example.com", company=company_name)
+		claim = make_expense_claim(
+			get_payable_account(company_name),
+			100,
+			100,
+			company_name,
+			override_account,
+			employee=employee,
+			approval_status="Draft",
+			do_not_submit=True,
+		)
+		with self.set_user("expense-account-auth@example.com"):
+			self.assertFalse(frappe.has_permission("Account", "write"))
+			claim.insert()
+			self.assertEqual(claim.expenses[0].default_account, default_account)
+
+		self.assertTrue(frappe.has_permission("Account", "write"))
+		claim.expenses[0].default_account = override_account
+		claim.save()
+		self.assertEqual(claim.expenses[0].default_account, override_account)
+		claim.set_expense_account()
+		self.assertEqual(claim.expenses[0].default_account, default_account)
+
 	def test_total_expense_claim_for_project(self):
 		project = create_project("_Test Project 1", company="_Test Company")
 
