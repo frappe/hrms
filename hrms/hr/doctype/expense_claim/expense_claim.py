@@ -599,9 +599,13 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		self.total_advance_amount = 0
 		precision = self.precision("total_advance_amount")
 
-		for d in self.get("advances"):
+		# Acquire advance locks in a consistent order when several claims overlap.
+		for d in sorted(self.get("advances"), key=lambda row: row.employee_advance or ""):
 			self.validate_advance_row(d, precision)
 
+		self.validate_allocation_against_advance_balance(precision)
+
+		for d in self.get("advances"):
 			self.total_advance_amount += flt(d.allocated_amount)
 			self.set_base_fields_amount(d, ["advance_paid", "unclaimed_amount"], d.exchange_rate)
 			self.set_base_fields_amount(d, ["allocated_amount"])
@@ -615,6 +619,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 			d.employee_advance,
 			["employee", "currency", "advance_account", "paid_amount"],
 			as_dict=True,
+			for_update=self.docstatus == 1,
 		)
 		if not advance_details or self.employee != advance_details.employee:
 			frappe.throw(_("Selected employee advance is not of employee {}").format(self.employee))
@@ -623,14 +628,68 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		self.validate_advance_linkage(d)
 
 		self.round_floats_in(d)
-		if d.allocated_amount and flt(d.allocated_amount) > flt(
-			flt(d.unclaimed_amount) - flt(d.return_amount), precision
-		):
-			frappe.throw(
-				_("Row {0}# Allocated amount {1} cannot be greater than unclaimed amount {2}").format(
-					d.idx, d.allocated_amount, d.unclaimed_amount
-				)
+		if flt(d.allocated_amount) < 0:
+			frappe.throw(_("Row {0}: Allocated amount cannot be negative").format(d.idx))
+
+	def validate_allocation_against_advance_balance(self, precision):
+		if not self.advances:
+			return
+
+		company_currency = erpnext.get_company_currency(self.company)
+		rows_by_advance = {}
+		for d in self.get("advances"):
+			rows_by_advance.setdefault(d.employee_advance, []).append(d)
+
+		for employee_advance, rows in rows_by_advance.items():
+			advance = frappe.db.get_value(
+				"Employee Advance",
+				employee_advance,
+				["name", "advance_account", "paid_amount", "return_amount"],
+				as_dict=True,
 			)
+			payments = {
+				(p.voucher_type, p.voucher_no): p for p in get_advance_payment_balances(self, advance)
+			}
+
+			allocated_by_payment = {}
+			for d in rows:
+				payment_reference = (d.reference_type, d.reference_name)
+				payment = payments.get(payment_reference)
+				if not payment:
+					if d.allocated_amount:
+						frappe.throw(
+							_("Row {0}: {1} {2} is not a payment against Employee Advance {3}").format(
+								d.idx,
+								d.reference_type,
+								frappe.bold(d.reference_name),
+								frappe.bold(employee_advance),
+							)
+						)
+					continue
+
+				d.advance_account = advance.advance_account
+				d.advance_paid = payment.amount
+				d.unclaimed_amount = payment.unclaimed_amount
+				d.return_amount = payment.return_amount
+				d.exchange_rate = 1 if self.currency == company_currency else payment.exchange_rate
+
+				allocated = allocated_by_payment.get(payment_reference, 0) + flt(d.allocated_amount)
+				allocated_by_payment[payment_reference] = allocated
+				if flt(allocated, precision) > flt(payment.unclaimed_amount, precision):
+					frappe.throw(
+						_("Row {0}# Allocated amount {1} cannot be greater than unclaimed amount {2}").format(
+							d.idx, d.allocated_amount, payment.unclaimed_amount
+						)
+					)
+
+			available = sum(flt(p.unclaimed_amount) for p in payments.values()) - flt(advance.return_amount)
+			total_allocated = sum(flt(d.allocated_amount) for d in rows)
+			if flt(total_allocated, precision) > flt(available, precision):
+				frappe.throw(
+					_(
+						"Total allocated amount {0} against Employee Advance {1} cannot be greater than its unclaimed amount {2}"
+					).format(total_allocated, frappe.bold(employee_advance), flt(available, precision))
+				)
 
 	def validate_advance_linkage(self, d):
 		# advance_account and the payment reference are set by get_advances; a row added
@@ -900,6 +959,30 @@ def get_default_payable_account(company: str) -> str | None:
 
 
 def get_expense_claim_advances(expense_claim, employee_advance):
+	for advance in get_advance_payment_balances(expense_claim, employee_advance):
+		allocated_amount = flt(advance.unclaimed_amount) - flt(advance.return_amount)
+		if allocated_amount <= 0:
+			continue
+
+		expense_claim.append(
+			"advances",
+			{
+				"advance_account": employee_advance.advance_account,
+				"employee_advance": employee_advance.name,
+				"posting_date": employee_advance.posting_date,
+				"advance_paid": advance.amount,
+				"base_advance_paid": flt(advance.base_amount),
+				"unclaimed_amount": advance.unclaimed_amount,
+				"allocated_amount": allocated_amount,
+				"return_amount": advance.return_amount,
+				"exchange_rate": advance.exchange_rate,
+				"reference_type": advance.voucher_type,
+				"reference_name": advance.voucher_no,
+			},
+		)
+
+
+def get_advance_payment_balances(expense_claim, employee_advance):
 	advance_payments = frappe.get_all(
 		"Advance Payment Ledger Entry",
 		filters={
@@ -911,61 +994,43 @@ def get_expense_claim_advances(expense_claim, employee_advance):
 			"amount": [">", 0],
 		},
 		fields=["voucher_type", "voucher_no", "amount", "base_amount", "exchange_rate", "creation"],
+		order_by="creation",
 	)
-
 	if not advance_payments:
-		return
+		return []
 
-	advance_payments.sort(key=lambda x: x.get("creation"))
-	advance_payment_voucher_nos = [payment["voucher_no"] for payment in advance_payments]
-
-	claimed_payments = frappe.get_all(
-		"Advance Payment Ledger Entry",
-		filters={
-			"company": expense_claim.company,
-			"event": "Adjustment",
-			"against_voucher_no": ["in", advance_payment_voucher_nos],
-			"delinked": False,
-		},
-		fields=[
-			"against_voucher_type",
-			"against_voucher_no",
-			"amount",
-		],
+	ec = frappe.qb.DocType("Expense Claim")
+	eca = frappe.qb.DocType("Expense Claim Advance")
+	query = (
+		frappe.qb.from_(eca)
+		.join(ec)
+		.on(ec.name == eca.parent)
+		.select(eca.reference_type, eca.reference_name, Sum(eca.allocated_amount).as_("claimed_amount"))
+		.where(
+			(eca.employee_advance == employee_advance.name)
+			& (eca.allocated_amount > 0)
+			& (ec.docstatus == 1)
+			& (ec.approval_status == "Approved")
+		)
+		.groupby(eca.reference_type, eca.reference_name)
 	)
+	if expense_claim.get("name"):
+		query = query.where(ec.name != expense_claim.name)
 
-	adjustment_map = {}
-	for adjustment_entry in claimed_payments:
-		payment_reference = (adjustment_entry["against_voucher_type"], adjustment_entry["against_voucher_no"])
-		adjustment_map[payment_reference] = adjustment_map.get(payment_reference, 0) + abs(
-			adjustment_entry["amount"]
-		)
+	claimed_map = {
+		(d.reference_type, d.reference_name): flt(d.claimed_amount) for d in query.run(as_dict=True)
+	}
 
-	for advance in advance_payments:
-		paid_amount = flt(advance["amount"])
-		claimed_amount = adjustment_map.get((advance["voucher_type"], advance["voucher_no"]), 0)
-		unclaimed_amount = paid_amount - claimed_amount
-		return_amount = flt(employee_advance.return_amount)
-		allocated_amount = get_allocation_amount(
-			paid_amount=paid_amount, claimed_amount=claimed_amount, return_amount=return_amount
+	return_to_allocate = flt(employee_advance.return_amount)
+	for payment in advance_payments:
+		payment.amount = flt(payment.amount)
+		payment.unclaimed_amount = payment.amount - claimed_map.get(
+			(payment.voucher_type, payment.voucher_no), 0
 		)
+		payment.return_amount = min(return_to_allocate, max(payment.unclaimed_amount, 0))
+		return_to_allocate -= payment.return_amount
 
-		expense_claim.append(
-			"advances",
-			{
-				"advance_account": employee_advance.advance_account,
-				"employee_advance": employee_advance.name,
-				"posting_date": employee_advance.posting_date,
-				"advance_paid": paid_amount,
-				"base_advance_paid": flt(advance["base_amount"]),
-				"unclaimed_amount": unclaimed_amount,
-				"allocated_amount": allocated_amount,
-				"return_amount": return_amount,
-				"exchange_rate": advance["exchange_rate"],
-				"reference_type": advance["voucher_type"],
-				"reference_name": advance["voucher_no"],
-			},
-		)
+	return advance_payments
 
 
 def update_payment_for_expense_claim(doc, method=None):

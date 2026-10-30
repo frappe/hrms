@@ -22,6 +22,153 @@ company_name = "_Test Company 3"
 
 
 class TestExpenseClaim(HRMSTestSuite):
+	def test_duplicate_and_negative_advance_rows_cannot_bypass_balance(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			get_advances_for_claim,
+			make_employee_advance,
+			make_payment_entry,
+		)
+
+		employee = make_employee("test_advance_duplicate_rows@example.com", "_Test Company")
+		advance = make_employee_advance(employee)
+		make_payment_entry(advance)
+		claim = make_expense_claim(
+			get_payable_account("_Test Company"),
+			2000,
+			2000,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			employee=employee,
+			do_not_submit=True,
+		)
+		get_advances_for_claim(claim, advance.name)
+		first = claim.advances[0]
+		second = claim.append(
+			"advances",
+			{
+				field: first.get(field)
+				for field in (
+					"employee_advance",
+					"advance_account",
+					"reference_type",
+					"reference_name",
+					"exchange_rate",
+				)
+			},
+		)
+		for amounts in ((600, 600), (-500, 1500)):
+			with self.subTest(amounts=amounts):
+				first.allocated_amount, second.allocated_amount = amounts
+				self.assertRaises(frappe.ValidationError, claim.save)
+
+	def test_advance_cannot_be_settled_by_two_claims(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			get_advances_for_claim,
+			make_employee_advance,
+			make_payment_entry,
+		)
+
+		employee = make_employee("test_advance_double_claim@example.com", "_Test Company")
+		advance = make_employee_advance(employee)
+		make_payment_entry(advance)
+		payable_account = get_payable_account("_Test Company")
+
+		claims = []
+		for _ in range(2):
+			claim = make_expense_claim(
+				payable_account,
+				1000,
+				1000,
+				"_Test Company",
+				"Travel Expenses - _TC",
+				employee=employee,
+				do_not_submit=True,
+			)
+			claims.append(get_advances_for_claim(claim, advance.name).save())
+
+		claims[0].submit()
+		claims[1].reload()
+		self.assertRaises(frappe.ValidationError, claims[1].submit)
+
+		advance.reload()
+		self.assertEqual(advance.claimed_amount, 1000)
+		self.assertEqual(advance.status, "Claimed")
+		self.assertFalse(get_advances(claims[1], advance.name))
+
+	def test_advance_allocation_ignores_client_unclaimed_amount(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			get_advances_for_claim,
+			make_employee_advance,
+			make_payment_entry,
+		)
+
+		employee = make_employee("test_advance_client_unclaimed@example.com", "_Test Company")
+		advance = make_employee_advance(employee)
+		make_payment_entry(advance)
+
+		claim = make_expense_claim(
+			get_payable_account("_Test Company"),
+			3000,
+			3000,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			employee=employee,
+			do_not_submit=True,
+		)
+		claim = get_advances_for_claim(claim, advance.name)
+		claim.advances[0].unclaimed_amount = 5000
+		claim.advances[0].allocated_amount = 3000
+		self.assertRaises(frappe.ValidationError, claim.save)
+
+	def test_advance_return_is_applied_once_across_payments(self):
+		from hrms.hr.doctype.employee_advance.employee_advance import make_return_entry
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			get_advances_for_claim,
+			make_employee_advance,
+			make_payment_entry,
+		)
+
+		employee = make_employee("test_advance_return_two_payments@example.com", "_Test Company")
+		advance = make_employee_advance(employee)
+		make_payment_entry(advance, 500)
+		make_payment_entry(advance, 500)
+		advance.reload()
+
+		entry = frappe.get_doc(
+			make_return_entry(
+				employee=employee,
+				company=advance.company,
+				employee_advance_name=advance.name,
+				return_amount=200,
+				advance_account=advance.advance_account,
+				mode_of_payment=advance.mode_of_payment,
+				currency=advance.currency,
+			)
+		)
+		entry.insert()
+		entry.submit()
+
+		claim = make_expense_claim(
+			get_payable_account("_Test Company"),
+			800,
+			800,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			employee=employee,
+			do_not_submit=True,
+		)
+		claim = get_advances_for_claim(claim, advance.name)
+		self.assertEqual(sum(row.allocated_amount for row in claim.advances), 800)
+
+		for row in claim.advances:
+			row.allocated_amount = 400
+		claim.save()
+		claim.submit()
+
+		advance.reload()
+		self.assertEqual(advance.claimed_amount, 800)
+		self.assertEqual(advance.status, "Partly Claimed and Returned")
+
 	def setUp(self):
 		if not frappe.db.get_value("Cost Center", {"company": company_name}):
 			cost_center = frappe.new_doc("Cost Center")
