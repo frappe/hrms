@@ -1965,16 +1965,7 @@ class SalarySlip(TransactionBase):
 
 		component_row.amount = amount
 
-		# Skip payment days adjustment for:
-		# 1. Arrear/Payroll Correction additional salary - already calculated based on LWP days in previous cycles
-		# 2. Employee Benefit Claim - payout often includes amount for previous cycles
-		# 2. Accrual components - paid based on accrual amounts from previous cycles
-		skip_payment_days_adjustment = (
-			additional_salary
-			and additional_salary.get("ref_doctype")
-			in ["Arrear", "Payroll Correction", "Employee Benefit Claim"]
-		) or component_row.accrual_component
-		if not skip_payment_days_adjustment:
+		if not self.skip_payment_days_adjustment(component_row, additional_salary):
 			self.update_component_amount_based_on_payment_days(component_row, remove_if_zero_valued)
 
 		if data:
@@ -2247,7 +2238,25 @@ class SalarySlip(TransactionBase):
 			)  # Used earning.additional_amount to consider the amount for the full month
 		return future_recurring_additional_amount
 
+	def skip_payment_days_adjustment(self, row, additional_salary=None):
+		# These payouts include amounts already earned in earlier payroll cycles.
+		if row.accrual_component:
+			return True
+
+		if not row.additional_salary:
+			return False
+
+		ref_doctype = (
+			additional_salary.get("ref_doctype")
+			if additional_salary
+			else frappe.db.get_value("Additional Salary", row.additional_salary, "ref_doctype", cache=True)
+		)
+		return ref_doctype in ("Arrear", "Payroll Correction", "Employee Benefit Claim")
+
 	def get_amount_based_on_payment_days(self, row):
+		if self.skip_payment_days_adjustment(row):
+			return row.amount, row.additional_amount
+
 		amount, additional_amount = row.amount, row.additional_amount
 		timesheet_component = getattr(self, "_timesheet_component", None)
 
