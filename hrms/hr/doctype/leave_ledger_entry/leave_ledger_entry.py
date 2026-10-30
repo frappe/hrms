@@ -124,7 +124,14 @@ def delete_ledger_entry(ledger):
 
 
 def get_previous_expiry_ledger_entry(ledger):
-	"""Returns the expiry ledger entry having same creation date as the ledger entry to be cancelled"""
+	"""Find the previous allocation's expiry created by a carry-forward allocation."""
+	from hrms.hr.doctype.leave_allocation.leave_allocation import get_previous_allocation
+
+	if ledger.transaction_type != "Leave Allocation" or not frappe.db.get_value(
+		"Leave Allocation", ledger.transaction_name, "carry_forward"
+	):
+		return None
+
 	creation_date = frappe.db.get_value(
 		"Leave Ledger Entry",
 		filters={
@@ -135,12 +142,19 @@ def get_previous_expiry_ledger_entry(ledger):
 		fieldname=["creation"],
 	)
 
-	creation_date = creation_date.strftime(DATE_FORMAT) if creation_date else ""
+	if not creation_date:
+		return None
+
+	previous_allocation = get_previous_allocation(ledger.from_date, ledger.leave_type, ledger.employee)
+	if not previous_allocation:
+		return None
 
 	return frappe.db.get_value(
 		"Leave Ledger Entry",
 		filters={
-			"creation": ("like", creation_date + "%"),
+			"transaction_type": "Leave Allocation",
+			"transaction_name": previous_allocation.name,
+			"creation": ("like", creation_date.strftime(DATE_FORMAT) + "%"),
 			"employee": ledger.employee,
 			"leave_type": ledger.leave_type,
 			"is_expired": 1,
