@@ -25,58 +25,6 @@ company_name = "_Test Company 3"
 
 
 class TestExpenseClaim(HRMSTestSuite):
-	def test_journal_entry_cannot_overpay_claim_across_rows(self):
-		claim = make_expense_claim(
-			get_payable_account(company_name), 1000, 1000, company_name, "Travel Expenses - _TC3"
-		)
-		journal = make_journal_entry(claim, do_not_submit=True)
-		payable = journal.accounts[0]
-		payable.debit_in_account_currency = 600
-		journal.append(
-			"accounts",
-			{
-				"account": payable.account,
-				"debit_in_account_currency": 600,
-				"reference_type": "Expense Claim",
-				"reference_name": claim.name,
-				"party_type": "Employee",
-				"party": claim.employee,
-				"cost_center": payable.cost_center,
-			},
-		)
-		journal.accounts[1].credit_in_account_currency = 1200
-		self.assertRaises(frappe.ValidationError, journal.submit)
-
-		journal.docstatus = 0
-		journal.accounts[0].debit_in_account_currency = 400
-		journal.accounts[1].credit_in_account_currency = 1000
-		journal.submit()
-		self.assertEqual(get_outstanding_amount_for_claim(claim.name), 0)
-
-	def test_journal_entry_claim_validation_uses_account_currency(self):
-		journal = frappe._dict(
-			voucher_type="Bank Entry",
-			accounts=[
-				frappe._dict(
-					reference_type="Expense Claim",
-					reference_name="TEST-CLAIM",
-					debit=8000,
-					debit_in_account_currency=100,
-					credit_in_account_currency=0,
-				)
-			],
-		)
-		with patch(
-			"hrms.hr.doctype.expense_claim.expense_claim.get_outstanding_amount_for_claim",
-			return_value=100,
-		):
-			validate_expense_claim_in_jv(journal)
-			journal.accounts[0].debit_in_account_currency = 101
-			self.assertRaises(frappe.ValidationError, validate_expense_claim_in_jv, journal)
-			journal.accounts[0].debit_in_account_currency = 0
-			journal.accounts[0].credit_in_account_currency = 100
-			validate_expense_claim_in_jv(journal)
-
 	def setUp(self):
 		if not frappe.db.get_value("Cost Center", {"company": company_name}):
 			cost_center = frappe.new_doc("Cost Center")
@@ -776,6 +724,58 @@ class TestExpenseClaim(HRMSTestSuite):
 		delivery_trip = create_delivery_trip(driver, address, company="_Test Company")
 		expense_claim = make_expense_claim_for_delivery_trip(delivery_trip.name)
 		self.assertEqual(delivery_trip.name, expense_claim.delivery_trip)
+
+	def test_journal_entry_cannot_overpay_claim_across_rows(self):
+		claim = make_expense_claim(
+			get_payable_account(company_name), 1000, 1000, company_name, "Travel Expenses - _TC3"
+		)
+		journal = make_journal_entry(claim, do_not_submit=True)
+		payable = journal.accounts[0]
+		payable.debit_in_account_currency = 600
+		journal.append(
+			"accounts",
+			{
+				"account": payable.account,
+				"debit_in_account_currency": 600,
+				"reference_type": "Expense Claim",
+				"reference_name": claim.name,
+				"party_type": "Employee",
+				"party": claim.employee,
+				"cost_center": payable.cost_center,
+			},
+		)
+		journal.accounts[1].credit_in_account_currency = 1200
+		self.assertRaises(frappe.ValidationError, journal.submit)
+
+		journal.docstatus = 0
+		journal.accounts[0].debit_in_account_currency = 400
+		journal.accounts[1].credit_in_account_currency = 1000
+		journal.submit()
+		self.assertEqual(get_outstanding_amount_for_claim(claim.name), 0)
+
+	def test_journal_entry_claim_validation_uses_account_currency(self):
+		journal = frappe._dict(
+			voucher_type="Bank Entry",
+			accounts=[
+				frappe._dict(
+					reference_type="Expense Claim",
+					reference_name="TEST-CLAIM",
+					debit=8000,
+					debit_in_account_currency=100,
+					credit_in_account_currency=0,
+				)
+			],
+		)
+		with patch(
+			"hrms.hr.doctype.expense_claim.expense_claim.get_outstanding_amount_for_claim",
+			return_value=100,
+		):
+			validate_expense_claim_in_jv(journal)
+			journal.accounts[0].debit_in_account_currency = 101
+			self.assertRaises(frappe.ValidationError, validate_expense_claim_in_jv, journal)
+			journal.accounts[0].debit_in_account_currency = 0
+			journal.accounts[0].credit_in_account_currency = 100
+			validate_expense_claim_in_jv(journal)
 
 	def test_journal_entry_against_expense_claim(self):
 		payable_account = get_payable_account(company_name)
