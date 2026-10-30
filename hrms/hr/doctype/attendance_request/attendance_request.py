@@ -140,9 +140,9 @@ class AttendanceRequest(Document):
 		frappe.throw(msg, title=_("Overlapping Attendance Request"), exc=OverlappingAttendanceRequestError)
 
 	def on_submit(self):
-		self._attendance_changes = {}
+		self.flags.attendance_changes = {}
 		self.create_attendance_records()
-		self.db_set("attendance_changes", frappe.as_json(self._attendance_changes))
+		self.db_set("attendance_changes", frappe.as_json(self.flags.attendance_changes))
 
 	def before_cancel(self):
 		# The saved snapshot is authoritative; never accept cancellation data from the client.
@@ -192,7 +192,7 @@ class AttendanceRequest(Document):
 
 		if doc:
 			# update existing attendance, change the status
-			self._attendance_changes.setdefault(
+			self.flags.attendance_changes.setdefault(
 				doc.name,
 				{
 					"status": doc.status,
@@ -255,7 +255,7 @@ class AttendanceRequest(Document):
 			doc.half_day_status = "Absent" if status == "Half Day" else None
 			doc.insert(ignore_permissions=True)
 			doc.submit()
-			self._attendance_changes[doc.name] = None
+			self.flags.attendance_changes[doc.name] = None
 
 	def should_mark_attendance(self, attendance_date: str) -> bool:
 		# Check if attendance_date is a holiday
