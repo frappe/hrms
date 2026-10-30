@@ -24,7 +24,8 @@
   "reason",
   "column_break_4",
   "explanation",
-  "amended_from"
+  "amended_from",
+  "attendance_changes"
  ],
  "fields": [
   {
@@ -134,12 +135,21 @@
    "fieldname": "include_holidays",
    "fieldtype": "Check",
    "label": "Include Holidays"
+  },
+  {
+   "fieldname": "attendance_changes",
+   "fieldtype": "Code",
+   "options": "JSON",
+   "label": "Attendance Changes",
+   "hidden": 1,
+   "read_only": 1,
+   "no_copy": 1
   }
  ],
  "icon": "calendar-plus",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-10-30 16:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Attendance Request",

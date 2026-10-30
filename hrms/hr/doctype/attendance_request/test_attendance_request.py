@@ -98,6 +98,47 @@ class TestAttendanceRequest(HRMSTestSuite):
 		self.assertEqual(prev_attendance.status, "Work From Home")
 		self.assertEqual(prev_attendance.attendance_request, attendance_request.name)
 
+	def test_cancellation_restores_overwritten_attendance(self):
+		for status, half_day_status in (("Absent", None), ("Half Day", "Absent")):
+			with self.subTest(status=status):
+				frappe.db.savepoint("attendance_restore")
+				attendance_name = mark_attendance(
+					self.employee.name, getdate(), status, half_day_status=half_day_status
+				)
+				request = create_attendance_request(
+					employee=self.employee.name, reason="Work From Home", company="_Test Company"
+				)
+				created = frappe.get_all(
+					"Attendance",
+					filters={"attendance_request": request.name, "name": ["!=", attendance_name]},
+					pluck="name",
+				)
+				request.reload()
+				request.attendance_changes = "{}"  # client input must not replace the saved snapshot
+				request.cancel()
+				attendance = frappe.get_doc("Attendance", attendance_name)
+				self.assertEqual(attendance.docstatus, 1)
+				self.assertEqual(attendance.status, status)
+				self.assertEqual(attendance.half_day_status, half_day_status)
+				self.assertFalse(attendance.attendance_request)
+				self.assertTrue(created)
+				for name in created:
+					self.assertEqual(frappe.db.get_value("Attendance", name, "docstatus"), 2)
+				frappe.db.rollback(save_point="attendance_restore")
+
+	def test_legacy_overwritten_attendance_is_not_cancelled(self):
+		attendance_name = mark_attendance(self.employee.name, getdate(), "Absent")
+		request = create_attendance_request(
+			employee=self.employee.name,
+			reason="Work From Home",
+			company="_Test Company",
+			from_date=getdate(),
+			to_date=getdate(),
+		)
+		request.db_set("attendance_changes", None, update_modified=False)
+		self.assertRaises(frappe.ValidationError, request.cancel)
+		self.assertEqual(frappe.db.get_value("Attendance", attendance_name, "docstatus"), 1)
+
 	def test_skip_attendance_on_holiday(self):
 		today = getdate()
 		frappe.db.delete("Holiday", {"parent": self.holiday_list})
@@ -271,6 +312,15 @@ class TestAttendanceRequest(HRMSTestSuite):
 		)
 		self.assertEqual(updated.status, "Half Day")
 		self.assertEqual(updated.half_day_status, "Present")
+		attendance_request.cancel()
+		self.assertEqual(
+			frappe.db.get_value(
+				"Attendance",
+				{"employee": self.employee.name, "attendance_date": today, "docstatus": 1},
+				"half_day_status",
+			),
+			"Absent",
+		)
 
 	def test_half_day_with_shift_auto_absent(self):
 		"""Test half-day attendance request after shift_type auto-flags the other half as absent due to missing checkins"""

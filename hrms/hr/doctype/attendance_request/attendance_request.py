@@ -5,7 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import add_days, date_diff, format_date, get_link_to_form, getdate
+from frappe.utils import add_days, date_diff, format_date, get_datetime, get_link_to_form, getdate
 
 from erpnext.setup.doctype.employee.employee import is_holiday
 
@@ -140,16 +140,44 @@ class AttendanceRequest(Document):
 		frappe.throw(msg, title=_("Overlapping Attendance Request"), exc=OverlappingAttendanceRequestError)
 
 	def on_submit(self):
+		self._attendance_changes = {}
 		self.create_attendance_records()
+		self.db_set("attendance_changes", frappe.as_json(self._attendance_changes))
+
+	def before_cancel(self):
+		# The saved snapshot is authoritative; never accept cancellation data from the client.
+		self.attendance_changes = self.get_doc_before_save().get("attendance_changes")
 
 	def on_cancel(self):
+		changes = frappe.parse_json(self.attendance_changes or "{}")
 		attendance_list = frappe.get_all(
-			"Attendance", {"employee": self.employee, "attendance_request": self.name, "docstatus": 1}
+			"Attendance", {"employee": self.employee, "attendance_request": self.name, "docstatus": ["<", 2]}
 		)
-		if attendance_list:
-			for attendance in attendance_list:
-				attendance_obj = frappe.get_doc("Attendance", attendance["name"])
-				attendance_obj.cancel()
+		for attendance in attendance_list:
+			attendance_doc = frappe.get_doc("Attendance", attendance.name)
+			if attendance.name in changes:
+				previous_values = changes[attendance.name]
+				if previous_values is None:
+					attendance_doc.cancel()
+				else:
+					attendance_doc.db_set(previous_values)
+					attendance_doc.add_comment(
+						"Info",
+						_("Restored attendance after cancellation of Attendance Request {0}").format(
+							self.name
+						),
+					)
+			elif not self.attendance_changes and get_datetime(attendance_doc.creation) >= get_datetime(
+				self.get_doc_before_save().modified
+			):
+				# Legacy requests have no snapshot. Only cancel records created after submission.
+				attendance_doc.cancel()
+			else:
+				frappe.throw(
+					_(
+						"Cannot restore Attendance {0} because its previous state was not recorded. Please resolve the linked attendance before cancelling this request."
+					).format(get_link_to_form("Attendance", attendance.name))
+				)
 
 	def create_attendance_records(self):
 		request_days = date_diff(self.to_date, self.from_date) + 1
@@ -164,6 +192,14 @@ class AttendanceRequest(Document):
 
 		if doc:
 			# update existing attendance, change the status
+			self._attendance_changes.setdefault(
+				doc.name,
+				{
+					"status": doc.status,
+					"half_day_status": doc.half_day_status,
+					"attendance_request": doc.attendance_request,
+				},
+			)
 			old_status = doc.status
 
 			if old_status != status:
@@ -219,6 +255,7 @@ class AttendanceRequest(Document):
 			doc.half_day_status = "Absent" if status == "Half Day" else None
 			doc.insert(ignore_permissions=True)
 			doc.submit()
+			self._attendance_changes[doc.name] = None
 
 	def should_mark_attendance(self, attendance_date: str) -> bool:
 		# Check if attendance_date is a holiday
