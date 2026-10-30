@@ -30,16 +30,16 @@
 			{% for value in values %}
 			<div class="form-group form-check">
 				<input
-					id="{{ 'desktop-' ~ value }}"
-					name="{{ name }}"
-					value="{{ value }}"
+					id="{{ ('desktop-' ~ value) | e }}"
+					name="{{ name | e }}"
+					value="{{ value | e }}"
 					class="form-check-input desktop-filters"
 					type="checkbox"
 					role="button"
 				/>
 				<label
 					class="form-check-label align-top"
-					for="{{ 'desktop-' ~ value }}"
+					for="{{ ('desktop-' ~ value) | e }}"
 					role="button"
 				>
 					{{ value }}
@@ -126,7 +126,7 @@
 			{% for jo in job_openings %}
 			<div class="mb-8 col-sm-6">
 				<div
-					id="{{ jo.route }}"
+					id="{{ jo.route | e }}"
 					name="card"
 					class="card border h-100 flex flex-col"
 					role="button"
@@ -136,7 +136,7 @@
 							<div class="col-12 {{ 'col-lg-9' if jo.employment_type }} px-0">
 								<h4
 									class="mt-0 mb-1 jobs-page text-truncate"
-									title="{{ jo.job_title }}"
+									title="{{ jo.job_title | e }}"
 								>
 									{{ jo.job_title }}
 								</h4>
@@ -327,16 +327,16 @@
 				{% for value in values %}
 				<div class="form-group form-check">
 					<input
-						id="{{ 'mobile-' ~ value }}"
-						name="{{ name }}"
-						value="{{ value }}"
+						id="{{ ('mobile-' ~ value) | e }}"
+						name="{{ name | e }}"
+						value="{{ value | e }}"
 						class="form-check-input mobile-filters"
 						type="checkbox"
 						role="button"
 					/>
 					<label
 						class="form-check-label align-top"
-						for="{{ 'mobile-' ~ value }}"
+						for="{{ ('mobile-' ~ value) | e }}"
 						role="button"
 					>
 						{{ value }}

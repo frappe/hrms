@@ -1,4 +1,11 @@
 import html2canvas from "html2canvas";
+
+hrms.escape_css_url = (url) =>
+	(url || "").replace(
+		/['"()\\\s]/g,
+		(char) => "%" + char.charCodeAt(0).toString(16).padStart(2, "0"),
+	);
+
 hrms.HierarchyChart = class {
 	/* Options:
 		- doctype

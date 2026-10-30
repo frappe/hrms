@@ -475,7 +475,7 @@ hrms.HierarchyChartMobile = class {
 				${html}
 				<span class="avatar avatar-small">
 					<div class="avatar-frame standard-image avatar-extra-count"
-						title="${extra_nodes.map((node) => node.name).join(", ")}">
+						title="${frappe.utils.escape_html(extra_nodes.map((node) => node.name).join(", "))}">
 						+${extra_nodes.length}
 					</div>
 				</span>
@@ -499,8 +499,11 @@ hrms.HierarchyChartMobile = class {
 	}
 
 	get_avatar(node) {
-		return `<span class="avatar avatar-small" title="${node.name}">
-			<span class="avatar-frame" src=${node.image} style="background-image: url(${node.image})"></span>
+		const name = frappe.utils.escape_html(node.name);
+		const image = frappe.utils.escape_html(node.image);
+		const background_image = frappe.utils.escape_html(hrms.escape_css_url(node.image));
+		return `<span class="avatar avatar-small" title="${name}">
+			<span class="avatar-frame" src="${image}" style="background-image: url('${background_image}')"></span>
 		</span>`;
 	}
 
