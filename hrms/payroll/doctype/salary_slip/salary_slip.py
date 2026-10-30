@@ -860,17 +860,14 @@ class SalarySlip(TransactionBase):
 				equivalent_lwp = 1 - daily_wages_fraction_for_half_day
 
 				if leave_type_map[d.leave_type]["is_ppl"]:
-					equivalent_lwp *= (
-						fraction_of_daily_salary_per_leave if fraction_of_daily_salary_per_leave else 1
-					)
+					# fraction is the paid share of the day, so the rest is leave without pay
+					equivalent_lwp *= 1 - flt(fraction_of_daily_salary_per_leave)
 				lwp += equivalent_lwp
 
 			elif d.status == "On Leave" and d.leave_type and d.leave_type in leave_type_map.keys():
 				equivalent_lwp = 1
 				if leave_type_map[d.leave_type]["is_ppl"]:
-					equivalent_lwp *= (
-						fraction_of_daily_salary_per_leave if fraction_of_daily_salary_per_leave else 1
-					)
+					equivalent_lwp *= 1 - flt(fraction_of_daily_salary_per_leave)
 				lwp += equivalent_lwp * day_fraction
 
 			elif d.status == "Absent":
@@ -1642,10 +1639,19 @@ class SalarySlip(TransactionBase):
 
 		for additional_salary in additional_salaries:
 			component_data = get_salary_component_data(additional_salary.component)
-			remove_if_zero_valued = frappe.get_cached_value(
-				"Salary Component", additional_salary.component, "remove_if_zero_valued"
+			# keep a zero tax overwrite so tax is not recalculated from the slabs
+			remove_if_zero_valued = (
+				frappe.get_cached_value(
+					"Salary Component", additional_salary.component, "remove_if_zero_valued"
+				)
+				and not component_data.variable_based_on_taxable_salary
 			)
-			if flt(additional_salary.amount) == 0 and remove_if_zero_valued:
+			# apply a zero overwrite so the structure amount is removed
+			if (
+				flt(additional_salary.amount) == 0
+				and remove_if_zero_valued
+				and not additional_salary.overwrite
+			):
 				continue
 			self.update_component_row(
 				component_data,
@@ -1653,9 +1659,14 @@ class SalarySlip(TransactionBase):
 				component_type,
 				additional_salary,
 				is_recurring=additional_salary.is_recurring,
+				remove_if_zero_valued=remove_if_zero_valued,
 			)
 
-			if component_type == "earnings" and hasattr(self, "benefit_ledger_components"):
+			if (
+				component_type == "earnings"
+				and hasattr(self, "benefit_ledger_components")
+				and flt(additional_salary.amount)
+			):
 				if (
 					additional_salary.ref_doctype == "Employee Benefit Claim"
 					and component_data.is_flexible_benefit
@@ -2190,7 +2201,11 @@ class SalarySlip(TransactionBase):
 			and cint(row.depends_on_payment_days)
 		):
 			amount, additional_amount = 0, 0
-		elif not row.amount and row.additional_amount:
+		elif (
+			not row.amount
+			and row.additional_amount
+			and not (row.additional_salary and row.default_amount)  # overwritten amount is final
+		):
 			amount = flt(row.additional_amount)
 
 		# apply rounding
