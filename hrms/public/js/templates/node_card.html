@@ -1,13 +1,13 @@
 <div class="node-card card cursor-pointer" id="{%= id %}" data-parent="{%= parent %}">
 	<div class="node-meta d-flex flex-row">
 		<div class="mr-3">
-			<span class="avatar node-image" title="{{ name }}">
-				<span class="avatar-frame" src={{image}} style="background-image: url('{{ image }}')"></span>
+			<span class="avatar node-image" title="{{ frappe.utils.escape_html(name) }}">
+				<span class="avatar-frame" src="{{ frappe.utils.escape_html(image) }}" style="background-image: url('{{ frappe.utils.escape_html(hrms.escape_css_url(image)) }}')"></span>
 			</span>
 		</div>
 		<div>
 			<div class="node-name d-flex flex-row mb-1">
-				<span class="ellipsis">{{ name }}</span>
+				<span class="ellipsis">{{ frappe.utils.escape_html(name) }}</span>
 				<div class="btn-sm btn-edit-node">
 					<a class="node-edit-icon">
 						<svg class="icon icon-xs">
@@ -19,7 +19,7 @@
 			</div>
 			<div class="node-info d-flex flex-row mb-1">
 				{% if title %}
-					<div class="node-title text-muted ellipsis">{{ title }}&nbsp;&middot;&nbsp;</div>
+					<div class="node-title text-muted ellipsis">{{ frappe.utils.escape_html(title) }}&nbsp;&middot;&nbsp;</div>
 				{% endif %}
 
 				{% if is_mobile %}

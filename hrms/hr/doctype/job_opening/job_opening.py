@@ -4,6 +4,8 @@
 # For license information, please see license.txt
 
 
+import re
+
 import frappe
 from frappe import _
 from frappe.model.naming import set_name_from_naming_options
@@ -67,6 +69,7 @@ class JobOpening(WebsiteGenerator):
 			self.route = f"jobs/{frappe.scrub(self.company)}/{frappe.scrub(self.job_title).replace('_', '-')}"
 		self.update_closing_date()
 		self.validate_dates()
+		self.validate_job_application_route()
 		self.validate_current_vacancies()
 
 	def on_update(self):
@@ -84,6 +87,18 @@ class JobOpening(WebsiteGenerator):
 
 		elif old_doc.status == "Closed" and self.status == "Open":
 			self.closed_on = None
+
+	def validate_job_application_route(self):
+		if not self.job_application_route:
+			return
+
+		self.job_application_route = self.job_application_route.strip().strip("/")
+		if not re.fullmatch(r"[\w\-/]+", self.job_application_route):
+			frappe.throw(
+				_("{0} can only contain letters, numbers, hyphens, underscores and slashes").format(
+					frappe.bold(_("Application Web Form Route"))
+				)
+			)
 
 	def validate_dates(self):
 		if self.status == "Open":

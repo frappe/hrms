@@ -90,7 +90,7 @@
 	<div class="profile-card d-flex align-items-start">
 		<div class="image-card mr-4">
             {% if image %}
-			<img src={{image}} class="image">
+			<img src="{{ image | e }}" class="image">
             {% else %}
 		    <div class="image avatar"> {{frappe.utils.get_abbr(employee_name)}}</div>
 		    {% endif %}
