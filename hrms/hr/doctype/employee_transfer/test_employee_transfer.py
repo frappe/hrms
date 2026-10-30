@@ -13,6 +13,29 @@ class TestEmployeeTransfer(HRMSTestSuite):
 	def setUp(self):
 		create_company()
 
+	def test_cancel_preserves_other_employee_history(self):
+		employees = []
+		transfers = []
+		for index in range(2):
+			employee = make_employee(
+				f"transfer_history_scope_{index}@example.com",
+				company="Test Company",
+				date_of_joining=add_days(getdate(), -30),
+				department="Accounts - TC",
+				designation="Accountant",
+			)
+			transfers.append(create_employee_transfer(employee))
+			employees.append(frappe.get_doc("Employee", employee))
+
+		other_history = [row.as_dict() for row in employees[1].internal_work_history]
+		transfers[0].cancel()
+
+		self.assertEqual(
+			[row.as_dict() for row in employees[1].reload().internal_work_history], other_history
+		)
+		self.assertEqual(len(employees[0].reload().internal_work_history), 1)
+		self.assertIsNone(employees[0].internal_work_history[0].to_date)
+
 	def test_submit_before_transfer_date(self):
 		make_employee("employee2@transfers.com", company="Test Company")
 

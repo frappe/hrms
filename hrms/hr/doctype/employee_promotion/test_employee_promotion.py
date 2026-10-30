@@ -9,6 +9,56 @@ from hrms.tests.utils import HRMSTestSuite
 
 
 class TestEmployeePromotion(HRMSTestSuite):
+	def test_cancel_preserves_other_employees_and_earlier_history(self):
+		employees = []
+		promotions = []
+		for index in range(2):
+			employee = frappe.get_doc(
+				"Employee",
+				make_employee(
+					f"promotion_history_scope_{index}@example.com",
+					company="_Test Company",
+					date_of_joining=add_days(getdate(), -30),
+					designation="Software Developer",
+				),
+			)
+			employee.append(
+				"internal_work_history",
+				{"designation": "Project Manager", "from_date": add_days(getdate(), -30)},
+			)
+			employee.append(
+				"internal_work_history",
+				{"designation": "Software Developer", "from_date": add_days(getdate(), -20)},
+			)
+			employee.save()
+			promotion = frappe.get_doc(
+				{
+					"doctype": "Employee Promotion",
+					"employee": employee.name,
+					"promotion_date": getdate(),
+					"promotion_details": [
+						{
+							"property": "Designation",
+							"fieldname": "designation",
+							"current": "Software Developer",
+							"new": "Project Manager",
+						}
+					],
+				}
+			).submit()
+			employees.append(employee.reload())
+			promotions.append(promotion)
+
+		other_history = [row.as_dict() for row in employees[1].internal_work_history]
+		retained_names = [row.name for row in employees[0].internal_work_history[:-1]]
+		promotions[0].cancel()
+
+		self.assertEqual(
+			[row.as_dict() for row in employees[1].reload().internal_work_history], other_history
+		)
+		self.assertEqual([row.name for row in employees[0].reload().internal_work_history], retained_names)
+		self.assertIsNone(employees[0].internal_work_history[-1].to_date)
+
 	def test_submit_before_promotion_date(self):
 		employee = make_employee("employee@promotions.com", company="_Test Company")
 		promotion = frappe.get_doc(
