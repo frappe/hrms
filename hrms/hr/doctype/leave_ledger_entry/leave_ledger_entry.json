@@ -181,7 +181,7 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "All"
+   "role": "Employee"
   }
  ],
  "sort_field": "creation",
