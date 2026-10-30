@@ -1384,7 +1384,7 @@ class SalarySlip(TransactionBase):
 			self.default_data[struct_row.abbr] = flt(amount)
 			if struct_row.depends_on_payment_days:
 				amount = (
-					flt(amount) * flt(self.payment_days) / cint(self.total_working_days)
+					flt(amount) * flt(self.payment_days) / flt(self.total_working_days)
 					if self.total_working_days
 					else 0
 				)
@@ -1604,7 +1604,9 @@ class SalarySlip(TransactionBase):
 			current_period_benefit = benefit.yearly_amount / total_sub_periods if total_sub_periods else 0
 			if benefit.depends_on_payment_days:
 				current_period_benefit = (
-					flt(current_period_benefit) * flt(self.payment_days) / cint(self.total_working_days)
+					flt(current_period_benefit) * flt(self.payment_days) / flt(self.total_working_days)
+					if self.total_working_days
+					else 0
 				)
 
 			# Get accrued and paid totals for this benefit
@@ -2256,7 +2258,7 @@ class SalarySlip(TransactionBase):
 		elif (
 			self.salary_structure
 			and cint(row.depends_on_payment_days)
-			and cint(self.total_working_days)
+			and flt(self.total_working_days)
 			and not (
 				row.additional_salary and row.default_amount
 			)  # to identify overwritten additional salary
@@ -2267,12 +2269,12 @@ class SalarySlip(TransactionBase):
 			)
 		):
 			additional_amount = flt(
-				(flt(row.additional_amount) * flt(self.payment_days) / cint(self.total_working_days)),
+				(flt(row.additional_amount) * flt(self.payment_days) / flt(self.total_working_days)),
 				row.precision("additional_amount"),
 			)
 			amount = (
 				flt(
-					(flt(row.default_amount) * flt(self.payment_days) / cint(self.total_working_days)),
+					(flt(row.default_amount) * flt(self.payment_days) / flt(self.total_working_days)),
 					row.precision("amount"),
 				)
 				+ additional_amount
