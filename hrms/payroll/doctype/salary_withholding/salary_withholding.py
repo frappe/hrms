@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import add_days, add_to_date, cint, get_link_to_form, getdate
+from frappe.utils import add_days, add_to_date, cint, get_last_day, get_link_to_form, getdate
 
 
 class SalaryWithholding(Document):
@@ -89,15 +89,15 @@ class SalaryWithholding(Document):
 
 	@frappe.whitelist()
 	def set_withholding_cycles_and_to_date(self) -> None:
-		self.to_date = self.get_to_date()
-
-		cycle_from_date = cycle_to_date = getdate(self.from_date)
+		cycle_from_date = getdate(self.from_date)
 		self.cycles = []
 
-		while cycle_to_date < getdate(self.to_date):
-			cycle_to_date = add_to_date(cycle_from_date, **self.get_frequency_kwargs()) - relativedelta(
-				days=1
-			)
+		cycle_count = cint(self.number_of_withholding_cycles) or 1
+		if cycle_count < 1:
+			frappe.throw(_("Number of withholding cycles must be greater than zero"))
+
+		for _cycle in range(cycle_count):
+			cycle_to_date = self.get_cycle_end_date(cycle_from_date)
 			self.append(
 				"cycles",
 				{
@@ -108,20 +108,24 @@ class SalaryWithholding(Document):
 			)
 			cycle_from_date = add_days(cycle_to_date, 1)
 
-	def get_to_date(self) -> str:
-		from_date = getdate(self.from_date)
-		kwargs = self.get_frequency_kwargs(self.number_of_withholding_cycles)
-		to_date = add_to_date(from_date, **kwargs) - relativedelta(days=1)
-		return to_date
+		self.to_date = cycle_to_date
 
-	def get_frequency_kwargs(self, withholding_cycles: int = 0) -> dict:
-		cycles = cint(withholding_cycles) or 1
+	def get_cycle_end_date(self, cycle_from_date: date) -> date:
+		if self.payroll_frequency == "Bimonthly":
+			return (
+				cycle_from_date.replace(day=15)
+				if cycle_from_date.day <= 15
+				else get_last_day(cycle_from_date)
+			)
+
+		return add_to_date(cycle_from_date, **self.get_frequency_kwargs()) - relativedelta(days=1)
+
+	def get_frequency_kwargs(self) -> dict:
 		frequency_dict = {
-			"Monthly": {"months": 1 * cycles},
-			"Bimonthly": {"months": 2 * cycles},
-			"Fortnightly": {"days": 14 * cycles},
-			"Weekly": {"days": 7 * cycles},
-			"Daily": {"days": 1 * cycles},
+			"Monthly": {"months": 1},
+			"Fortnightly": {"days": 14},
+			"Weekly": {"days": 7},
+			"Daily": {"days": 1},
 		}
 		return frequency_dict.get(self.payroll_frequency)
 
