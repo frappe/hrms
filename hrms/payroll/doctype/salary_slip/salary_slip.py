@@ -1377,6 +1377,20 @@ class SalarySlip(TransactionBase):
 		# (proration cascades through dependent formulas, e.g. SA = BS * 0.5 inherits BS's proration).
 		amount = self.eval_condition_and_formula(struct_row, self.data)
 		# amount is None when the component's condition is false for this slip
+		if amount is None:
+			for row in list(self.get(component_type)):
+				if row.salary_component == struct_row.salary_component and not row.additional_salary:
+					self.remove(row)
+
+			# Keep independent Additional Salary payouts, but discard the old structure
+			# amount from both contexts before evaluating dependent components.
+			remaining_rows = [
+				row for row in self.get(component_type) if row.salary_component == struct_row.salary_component
+			]
+			self.data[struct_row.abbr] = sum(flt(row.amount) for row in remaining_rows)
+			self.default_data[struct_row.abbr] = sum(flt(row.default_amount) for row in remaining_rows)
+			return
+
 		condition_met = amount is not None
 		if struct_row.statistical_component or struct_row.accrual_component:
 			# update statistical component amount in reference data based on payment days
