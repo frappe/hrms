@@ -35,12 +35,19 @@ const ACTION_HANDLERS = {
 				: [{ label: __("Create"), onclick: () => create_employee(list) }],
 	},
 	Assign: {
-		get_value: (list, row) =>
-			row.reference_name || list.get_offer_default(row.reference_doctype)?.value,
+		get_value: (list, row) => {
+			if (row.reference_name) return row.reference_name;
+			const draft = get_draft(list, row);
+			if (draft) return __("Draft {0} to submit", [draft]);
+			return list.get_offer_default(row.reference_doctype)?.value;
+		},
 		get_actions: (list, row, state) => {
 			if (row.reference_name)
 				return [open_action(row.reference_doctype, row.reference_name)];
 			if (!is_open(state)) return [];
+			const draft = get_draft(list, row);
+			if (draft)
+				return [{ ...open_action(row.reference_doctype, draft), label: __("Open Draft") }];
 			return [{ label: __("Assign"), onclick: () => assign(list, row) }];
 		},
 	},
@@ -60,6 +67,10 @@ const ACTION_HANDLERS = {
 
 function get_letter(list) {
 	return list.frm.doc.__onload?.appointment_letter;
+}
+
+function get_draft(list, row) {
+	return list.frm.doc.__onload?.draft_assignments?.[row.reference_doctype];
 }
 
 function is_open(state) {
@@ -192,6 +203,6 @@ function assign(list, row) {
 		...action,
 		prefill: (ctx) => ({ ...action.prefill(ctx), ...defaults }),
 		redirect: false,
-		on_created: () => frappe.after_ajax(() => list.call("sync_activities")),
+		on_hide: () => frappe.after_ajax(() => list.call("sync_activities")),
 	});
 }

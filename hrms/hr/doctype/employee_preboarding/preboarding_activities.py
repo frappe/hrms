@@ -179,6 +179,17 @@ class PreboardingActivities:
 		self.update_modified()
 		self.notify_update()
 
+	def get_draft_assignments(self) -> dict:
+		if not self.employee:
+			return {}
+
+		drafts = {}
+		for doctype, config in ASSIGNMENTS.items():
+			filters = {config["employee_field"]: self.employee, "docstatus": 0, **config.get("filters", {})}
+			if frappe.get_meta(doctype).is_submittable and (draft := frappe.db.get_value(doctype, filters)):
+				drafts[doctype] = draft
+		return drafts
+
 	def get_assignee_info(self) -> dict:
 		user_info = {}
 		frappe.utils.add_user_info({row.user for row in self.activities if row.user}, user_info)

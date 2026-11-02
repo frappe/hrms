@@ -101,6 +101,8 @@ function open_assignment(ctx, action) {
 }
 
 function setup_dialog(dialog, action, ctx) {
+	if (action.on_hide) dialog.$wrapper.one("hidden.bs.modal", action.on_hide);
+
 	for (const [fieldname, filters] of Object.entries(action.queries?.(ctx) || {}))
 		dialog.set_query(fieldname, () => ({ filters }));
 
