@@ -235,6 +235,22 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		self.assertEqual(preboarding.user, user)
 		self.assertEqual(frappe.db.get_value("User", user, "first_name"), "Test")
 
+	def test_create_user_stores_the_email_typed_in_the_dialog(self):
+		preboarding = create_employee_preboarding(submit=True)
+		self.assertRaises(
+			frappe.InvalidEmailAddressError,
+			preboarding.create_user,
+			"Company Email",
+			company_email="not-an-email",
+		)
+
+		user = preboarding.create_user("Personal Email", personal_email=" asha.typed@example.com ")
+
+		self.assertEqual(user, "asha.typed@example.com")
+		self.assertEqual(
+			frappe.db.get_value("Employee Preboarding", preboarding.name, "personal_email"), user
+		)
+
 	def test_self_service_role_is_granted_with_the_employee(self):
 		preboarding = create_employee_preboarding(submit=True)
 		preboarding.db_set("company_email", "asha.ess@example.com")

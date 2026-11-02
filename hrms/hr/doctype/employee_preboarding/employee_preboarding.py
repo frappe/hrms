@@ -6,7 +6,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
-from frappe.utils import get_link_to_form, now_datetime
+from frappe.utils import get_link_to_form, now_datetime, validate_email_address
 
 from hrms.hr.doctype.employee_preboarding.preboarding_activities import PreboardingActivities
 
@@ -115,9 +115,15 @@ class EmployeePreboarding(PreboardingActivities, Document):
 		return self.company_email or self.personal_email
 
 	@frappe.whitelist(methods=["POST"])
-	def create_user(self, create_user_for: str = "Company Email") -> str:
+	def create_user(
+		self,
+		create_user_for: str = "Company Email",
+		personal_email: str | None = None,
+		company_email: str | None = None,
+	) -> str:
 		self.check_permission("write")
 		self.validate_started()
+		self.set_user_emails(personal_email=personal_email, company_email=company_email)
 
 		if self.user:
 			frappe.throw(_("User {0} is already linked").format(get_link_to_form("User", self.user)))
@@ -148,6 +154,17 @@ class EmployeePreboarding(PreboardingActivities, Document):
 		self.db_set("user", user.name)
 		self.save_activity_states()
 		return user.name
+
+	def set_user_emails(self, **emails) -> None:
+		changed = {
+			fieldname: email.strip()
+			for fieldname, email in emails.items()
+			if email and email.strip() != self.get(fieldname)
+		}
+		for email in changed.values():
+			validate_email_address(email, throw=True)
+		if changed:
+			self.db_set(changed)
 
 	def grant_employee_self_service(self) -> None:
 		"""Add the self-service role once an Employee is mapped.
