@@ -1,11 +1,11 @@
 <template>
 	<section
-		class="checklist rounded-lg bg-surface-gray-1 px-3 py-4"
+		class="checklist rounded-6 bg-surface-gray-1 px-3 py-4"
 		:data-collapsed="collapsed || null"
 	>
 		<button
 			type="button"
-			class="flex w-full items-center gap-2 px-2 text-left focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
+			class="flex w-full items-center gap-2 px-2 text-left focus-visible:rounded-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
 			:aria-expanded="!collapsed"
 			@click="collapsed = !collapsed"
 		>
@@ -51,7 +51,7 @@
 					/>
 					<label
 						v-if="onAdd"
-						class="m-0 flex cursor-text items-center gap-3 rounded-md p-2 hover:bg-surface-gray-3 focus-within:bg-surface-base"
+						class="m-0 flex cursor-text items-center gap-3 rounded-5 p-2 hover:bg-surface-gray-3 focus-within:bg-surface-base"
 					>
 						<LucidePlus class="size-4 shrink-0 text-ink-gray-4" />
 						<input
