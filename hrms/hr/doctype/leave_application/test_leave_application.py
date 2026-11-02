@@ -42,7 +42,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
 )
-from hrms.tests.test_utils import add_date_to_holiday_list, get_first_sunday
+from hrms.tests.test_utils import add_date_to_holiday_list, get_first_sunday, get_non_holiday_date
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -1290,7 +1290,7 @@ class TestLeaveApplication(HRMSTestSuite):
 		)
 
 		create_carry_forwarded_allocation(employee, leave_type)
-		half_day_date = self.get_non_holiday_date(employee.name, nowdate())
+		half_day_date = get_non_holiday_date(employee.name, nowdate())
 		# when existing attendance is half day
 		attendance_name = mark_attendance(
 			employee=employee.name, attendance_date=half_day_date, status="Half Day", half_day_status="Absent"
@@ -1324,7 +1324,7 @@ class TestLeaveApplication(HRMSTestSuite):
 		)
 
 		create_carry_forwarded_allocation(employee, leave_type)
-		half_day_date = self.get_non_holiday_date(employee.name, nowdate())
+		half_day_date = get_non_holiday_date(employee.name, nowdate())
 		# when existing attendance is absent
 		attendance_name = mark_attendance(
 			employee=employee.name, attendance_date=half_day_date, status="Absent"
@@ -1358,7 +1358,7 @@ class TestLeaveApplication(HRMSTestSuite):
 			expire_carry_forwarded_leaves_after_days=90,
 		)
 		create_carry_forwarded_allocation(employee, leave_type)
-		half_day_date = self.get_non_holiday_date(employee.name, nowdate())
+		half_day_date = get_non_holiday_date(employee.name, nowdate())
 		# attendance from one half leave
 		first_leave_application = make_leave_application(
 			employee.name,
