@@ -259,6 +259,7 @@ class PreboardingActivities:
 	def add_activity(self, activity_name: str) -> None:
 		self.check_permission("write")
 		self.validate_draft()
+		activity_name = self.validate_new_activity_name(activity_name)
 		activity = self.append("activities", {"activity_name": activity_name, "added_on_preboarding": 1})
 		self.set_activity_defaults(activity)
 		activity.db_insert()
@@ -293,6 +294,17 @@ class PreboardingActivities:
 				row.db_set("idx", position[row.name], update_modified=False)
 		self.activities.sort(key=lambda row: row.idx)
 		self.publish_change()
+
+	def validate_new_activity_name(self, activity_name: str) -> str:
+		activity_name = " ".join(activity_name.split())
+		max_length = frappe.get_meta("Employee Boarding Activity").get_field("activity_name").length or 140
+		if not activity_name:
+			frappe.throw(_("Enter a name for the activity"))
+		if len(activity_name) > max_length:
+			frappe.throw(_("Keep the activity name within {0} characters").format(max_length))
+		if any(row.activity_name.casefold() == activity_name.casefold() for row in self.activities):
+			frappe.throw(_("{0} is already on the checklist").format(frappe.bold(activity_name)))
+		return activity_name
 
 	def validate_draft(self):
 		if self.docstatus != 0:

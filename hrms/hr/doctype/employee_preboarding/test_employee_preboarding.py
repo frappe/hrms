@@ -314,6 +314,15 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		self.assertEqual((row.action, row.added_on_preboarding), ("Manual", 1))
 		self.assertEqual(getdate(row.due_date), getdate(preboarding.boarding_begins_on))
 
+	def test_a_new_activity_name_is_tidied_and_must_be_new_and_short(self):
+		preboarding = create_employee_preboarding(submit=False)
+		preboarding.add_activity("  Order   a desk ")
+		preboarding.reload()
+
+		self.assertTrue(get_row(preboarding, "Order a desk"))
+		for name in ("order A DESK", "   ", "x" * 141):
+			self.assertRaises(frappe.ValidationError, preboarding.add_activity, name)
+
 	def test_a_row_write_stops_an_open_form_from_saving_over_it(self):
 		preboarding = create_employee_preboarding(submit=False)
 		open_form = frappe.get_doc("Employee Preboarding", preboarding.name)
