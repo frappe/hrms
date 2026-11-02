@@ -9,6 +9,7 @@ const ROW_STATUS = { in_progress: "In Progress", stuck: "Stuck" };
 hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 	constructor({ frm }) {
 		this.frm = frm;
+		this.pending = Promise.resolve();
 	}
 
 	render() {
@@ -145,16 +146,37 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 
 	// Activity methods write their row straight to the database, so the form reloads rather
 	// than saves; another user may be working on the same preboarding.
-	async call(method, args = {}, freeze_message) {
-		await this.save_if_dirty();
-		await this.frm.call({ method, doc: this.frm.doc, args, freeze: true, freeze_message });
-		await this.frm.reload_doc();
+	call(method, args = {}, freeze_message) {
+		return this.enqueue(async () => {
+			await this.save_if_dirty();
+			await this.run(method, args, { freeze: true, freeze_message });
+			await this.frm.reload_doc();
+		});
 	}
 
-	async update_row(method, args) {
-		await this.save_if_dirty();
-		await this.frm.call({ method, doc: this.frm.doc, args });
-		this.render();
+	update_row(method, args) {
+		return this.enqueue(async () => {
+			await this.save_if_dirty();
+			await this.run(method, args);
+			this.frm.refresh_fields();
+			this.render();
+		});
+	}
+
+	enqueue(task) {
+		const result = this.pending.then(task);
+		this.pending = result.catch(() => {});
+		return result;
+	}
+
+	async run(method, args, opts = {}) {
+		const { doctype, name, __onload } = this.frm.doc;
+		await frappe.call({
+			method: "run_doc_method",
+			args: { dt: doctype, dn: name, method, args },
+			...opts,
+		});
+		this.frm.doc.__onload ??= __onload;
 	}
 
 	async save_if_dirty() {
