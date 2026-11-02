@@ -91,7 +91,7 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 					frappe.datetime.get_diff(row.due_date, frappe.datetime.get_today()) < 0,
 			),
 			locked: this.get_lock_reason(row) || handler.get_lock_reason?.(this, row),
-			skippable: saved && this.frm.doc.docstatus < 2,
+			skippable: saved && this.frm.doc.docstatus < 2 && this.frm.has_perm("write"),
 			removable: saved && Boolean(row.added_on_preboarding) && this.is_planning(),
 			actions: this.get_actions(handler, row, state).map(({ onclick, ...action }) => ({
 				...action,
