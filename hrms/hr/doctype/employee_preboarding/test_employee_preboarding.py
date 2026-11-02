@@ -551,6 +551,17 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		with self.assertRaises(frappe.ValidationError):
 			preboarding.complete_activity(get_row(preboarding, "Create Employee").name)
 
+	def test_a_manual_activity_marked_done_by_mistake_can_be_reopened(self):
+		preboarding = create_employee_preboarding(submit=True)
+		preboarding.complete_activity(get_row(preboarding, "Assign ID Card").name)
+
+		preboarding.reopen_activity(get_row(preboarding, "Assign ID Card").name)
+		preboarding.reload()
+
+		self.assertFalse(get_row(preboarding, "Assign ID Card").completed)
+		with self.assertRaises(frappe.ValidationError):
+			preboarding.reopen_activity(get_row(preboarding, "Create Employee").name)
+
 	def test_assignees_get_their_todos_when_the_preboarding_is_submitted(self):
 		preboarding = create_employee_preboarding(submit=False)
 		first, second = (

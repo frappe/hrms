@@ -319,6 +319,16 @@ class PreboardingActivities:
 		self.finish_activity(activity, completed=1)
 
 	@frappe.whitelist(methods=["POST"])
+	def reopen_activity(self, row: str) -> None:
+		self.check_permission("write")
+		self.validate_started()
+		activity = self.get_activity(row)
+		if activity.action != "Manual":
+			frappe.throw(_("{0} is completed by its own record").format(activity.activity_name))
+		activity.db_set("completed", 0)
+		self.save_activity_states()
+
+	@frappe.whitelist(methods=["POST"])
 	def skip_activity(self, row: str) -> None:
 		self.check_permission("write")
 		self.validate_not_cancelled()

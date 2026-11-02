@@ -53,15 +53,24 @@ const ACTION_HANDLERS = {
 	},
 	Manual: {
 		get_value: () => null,
-		get_actions: (list, row, state) =>
-			is_open(state)
-				? [
-						{
-							label: __("Mark Done"),
-							onclick: () => list.call("complete_activity", { row: row.name }),
-						},
-				  ]
-				: [],
+		get_actions: (list, row, state) => {
+			if (is_open(state))
+				return [
+					{
+						label: __("Mark Done"),
+						onclick: () => list.call("complete_activity", { row: row.name }),
+					},
+				];
+			if (state === "done" && list.is_started())
+				return [
+					{
+						label: __("Undo"),
+						variant: "subtle",
+						onclick: () => list.call("reopen_activity", { row: row.name }),
+					},
+				];
+			return [];
+		},
 	},
 };
 
