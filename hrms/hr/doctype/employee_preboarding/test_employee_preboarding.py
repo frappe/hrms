@@ -347,6 +347,20 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		template_row = get_row(preboarding, "Assign ID Card")
 		self.assertRaises(frappe.ValidationError, preboarding.remove_activity, template_row.name)
 
+	def test_removing_a_row_renumbers_the_rows_below_it(self):
+		preboarding = create_employee_preboarding(submit=False)
+		preboarding.add_activity("Order a desk")
+		preboarding.add_activity("Book a parking spot")
+		preboarding.reload()
+
+		preboarding.remove_activity(get_row(preboarding, "Order a desk").name)
+		preboarding.reload()
+
+		self.assertEqual(
+			[row.idx for row in preboarding.activities], list(range(1, len(preboarding.activities) + 1))
+		)
+		self.assertEqual(preboarding.activities[-1].activity_name, "Book a parking spot")
+
 	def test_activities_can_be_reordered(self):
 		preboarding = create_employee_preboarding(submit=False)
 		names = [row.name for row in preboarding.activities]
