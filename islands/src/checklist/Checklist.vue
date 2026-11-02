@@ -16,7 +16,7 @@
 				:class="collapsed ? '' : 'rotate-180'"
 			/>
 		</button>
-		<div v-if="progress.total" class="mt-4 px-2">
+		<div v-if="progress.total" class="progress mt-4 px-2">
 			<Progress :value="percent" :intervals="progress.total" size="md" />
 		</div>
 		<div class="fold" :inert="collapsed || null">
@@ -239,6 +239,9 @@ function cancelAdd(input) {
 }
 .checklist[data-collapsed] .fold {
 	grid-template-rows: 0fr;
+}
+.progress :deep(.bg-surface-gray-10) {
+	background-color: var(--surface-gray-8);
 }
 .items > :first-child {
 	margin-top: 1rem;
