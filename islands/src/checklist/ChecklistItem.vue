@@ -251,7 +251,7 @@ const buttons = computed(() => {
 		label: action.label,
 		variant: action.variant || (index ? "subtle" : "solid"),
 		disabled: Boolean(lockReason.value) || Boolean(action.disabled),
-		onClick: () => action.onClick?.(),
+		onClick: () => call(action.onClick),
 	}));
 	if (item.skippable && !item.done) actions.push(subtle(__("Skip"), () => call(props.onSkip)));
 	return [...actions, ...remove];

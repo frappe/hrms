@@ -180,6 +180,12 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 	}
 
 	async save_if_dirty() {
-		if (this.frm.is_new() || this.frm.is_dirty()) await this.frm.save();
+		if (!this.frm.is_new() && !this.frm.is_dirty()) return;
+		if (!frappe.ui.form.check_mandatory(this.frm)) throw new Error("Mandatory fields missing");
+
+		let failed = false;
+		const action = this.frm.doc.docstatus === 1 ? "Update" : "Save";
+		await this.frm.save(action, null, null, () => (failed = true));
+		if (failed || this.frm.is_new() || this.frm.is_dirty()) throw new Error("Save failed");
 	}
 };
