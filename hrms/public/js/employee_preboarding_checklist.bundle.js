@@ -95,7 +95,7 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 			removable: saved && Boolean(row.added_on_preboarding) && this.is_planning(),
 			actions: this.get_actions(handler, row, state).map(({ onclick, ...action }) => ({
 				...action,
-				onClick: onclick,
+				onClick: () => this.run_once(onclick),
 			})),
 		};
 	}
@@ -164,6 +164,16 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 
 	get_offer_default(doctype) {
 		return this.frm.doc.__onload?.offer_defaults?.[doctype];
+	}
+
+	async run_once(onclick) {
+		if (this.action_running) return;
+		this.action_running = true;
+		try {
+			await onclick();
+		} finally {
+			this.action_running = false;
+		}
 	}
 
 	// Activity methods write their row straight to the database, so the form reloads rather
