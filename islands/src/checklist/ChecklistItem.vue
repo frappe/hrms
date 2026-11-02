@@ -42,10 +42,10 @@
 						:aria-label="__('Set status')"
 						:title="__('Set status')"
 					>
-						<component :is="MARKERS[state]" class="size-4" />
+						<StatusMark :state="state" />
 					</button>
 				</Dropdown>
-				<component :is="MARKERS[state]" v-else class="size-4" />
+				<StatusMark v-else :state="state" />
 			</span>
 			<button
 				type="button"
@@ -168,26 +168,16 @@
 
 <script setup>
 import { Avatar, Badge, Button, Combobox, DatePicker, Dropdown, Tooltip } from "frappe-ui";
-import { computed, ref } from "vue";
+import { computed, h, ref } from "vue";
 import LucideCalendar from "~icons/lucide/calendar";
 import LucideGripVertical from "~icons/lucide/grip-vertical";
 import LucideLock from "~icons/lucide/lock";
-import LucideSquare from "~icons/lucide/square";
-import LucideSquareCheck from "~icons/lucide/square-check";
-import LucideSquareDashed from "~icons/lucide/square-dashed";
-import LucideSquareDot from "~icons/lucide/square-dot";
-import LucideSquareExclamationPoint from "~icons/lucide/square-exclamation-point";
 
 import { __ } from "../translate.js";
 import { getState, hasBody, isFinished } from "./item.js";
+import StatusMark from "./StatusMark.vue";
 
-const MARKERS = {
-	pending: LucideSquare,
-	in_progress: LucideSquareDot,
-	stuck: LucideSquareExclamationPoint,
-	done: LucideSquareCheck,
-	skipped: LucideSquareDashed,
-};
+const statusIcon = (state) => () => h(StatusMark, { state });
 
 const STATUS_LABELS = { in_progress: __("In Progress"), stuck: __("Stuck") };
 
@@ -230,13 +220,13 @@ const statusOptions = computed(() => {
 		.filter((status) => status !== props.item.status)
 		.map((status) => ({
 			label: STATUS_LABELS[status],
-			icon: MARKERS[status],
+			icon: statusIcon(status),
 			onClick: () => call(props.onStatus, status),
 		}));
 	if (props.item.status) {
 		options.push({
 			label: __("Clear status"),
-			icon: LucideSquare,
+			icon: statusIcon("pending"),
 			onClick: () => call(props.onStatus, null),
 		});
 	}
