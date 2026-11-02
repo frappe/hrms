@@ -78,7 +78,7 @@
 			>
 				<Combobox
 					v-if="canAssign || item.assignee"
-					class="min-w-0 max-w-full"
+					class="w-full min-w-0"
 					trigger="button"
 					variant="ghost"
 					:model-value="item.assignee?.value ?? null"
@@ -396,11 +396,8 @@ function dragEnd() {
 }
 @container (max-width: 560px) {
 	.row {
-		grid-template-columns: auto auto auto minmax(56px, 1fr) auto;
+		grid-template-columns: auto minmax(0, 1fr) auto 72px 132px;
 		column-gap: 0.5rem;
-	}
-	.owner {
-		justify-content: end;
 	}
 	.content {
 		padding-inline-start: calc(16px + 0.5rem);
