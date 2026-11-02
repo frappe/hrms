@@ -125,28 +125,31 @@ def holiday_list_from_wizard_args(wizard_args: dict) -> dict:
 	}
 
 
-def create_default_holiday_list(args: dict | None):
+def create_default_holiday_list(details: dict | None):
 	"""Create the company's default holiday list for its first fiscal year, never failing the setup."""
-	if not args or not args.get("company") or not frappe.db.exists("Company", args.get("company")):
+	company = details.get("company") if details else None
+	if not company or not frappe.db.exists("Company", company):
 		return
 
-	if frappe.db.get_value("Company", args.get("company"), "default_holiday_list"):
+	if frappe.db.get_value("Company", company, "default_holiday_list"):
 		return
 
 	frappe.db.savepoint("default_holiday_list")
 	try:
-		holiday_list = make_holiday_list(args)
-		frappe.db.set_value("Company", args.get("company"), "default_holiday_list", holiday_list.name)
+		holiday_list = make_holiday_list(
+			company, details.get("country"), details.get("from_date"), details.get("to_date")
+		)
+		frappe.db.set_value("Company", company, "default_holiday_list", holiday_list.name)
 	except Exception:
 		frappe.db.rollback(save_point="default_holiday_list")
 		frappe.log_error(title="Failed to create the default holiday list")
 
 
-def make_holiday_list(args: dict):
-	from_date = getdate(args.get("from_date") or f"{getdate().year}-01-01")
-	to_date = getdate(args.get("to_date") or f"{from_date.year}-12-31")
+def make_holiday_list(company: str, country: str | None, from_date: str | None, to_date: str | None):
+	from_date = getdate(from_date or f"{getdate().year}-01-01")
+	to_date = getdate(to_date or f"{from_date.year}-12-31")
 	year = str(from_date.year) if from_date.year == to_date.year else f"{from_date.year}-{to_date.year}"
-	name = f"{args.get('company')} {year}"
+	name = f"{company} {year}"
 
 	if frappe.db.exists("Holiday List", name):
 		return frappe.get_doc("Holiday List", name)
@@ -156,7 +159,7 @@ def make_holiday_list(args: dict):
 	holiday_list.from_date = from_date
 	holiday_list.to_date = to_date
 
-	country_code = get_country_code(args.get("country"))
+	country_code = get_country_code(country)
 	if is_supported_by_holidays_library(country_code):
 		holiday_list.country = country_code
 		holiday_list.get_local_holidays()
