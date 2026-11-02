@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="item relative rounded-md p-2"
+		class="item relative rounded-5 p-2"
 		:class="{ 'opacity-40': dragging }"
 		:data-status="state"
 		:data-open="open || null"
@@ -14,7 +14,7 @@
 		<button
 			v-if="sortable"
 			type="button"
-			class="grip absolute -left-3 top-2 flex h-7 w-3 cursor-grab items-center justify-center rounded-sm text-ink-gray-4 opacity-0 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
+			class="grip absolute -left-3 top-2 flex h-7 w-3 cursor-grab items-center justify-center rounded-1 text-ink-gray-4 opacity-0 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
 			:aria-label="__('Move')"
 			@pointerdown="draggable = true"
 			@pointerup="draggable = false"
@@ -27,7 +27,7 @@
 			<span class="marker flex text-ink-gray-4" data-control>
 				<Tooltip v-if="lockReason" :text="lockReason">
 					<span
-						class="flex rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
+						class="flex rounded-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
 						tabindex="0"
 						role="img"
 						:aria-label="lockReason"
@@ -38,7 +38,7 @@
 				<Dropdown v-else-if="canSetStatus && !finished" :options="statusOptions">
 					<button
 						type="button"
-						class="flex rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
+						class="flex rounded-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
 						:aria-label="__('Set status')"
 						:title="__('Set status')"
 					>
@@ -49,7 +49,7 @@
 			</span>
 			<button
 				type="button"
-				class="toggle flex min-w-0 flex-col gap-0.5 text-left focus-visible:rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
+				class="toggle flex min-w-0 flex-col gap-0.5 text-left focus-visible:rounded-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
 				:aria-expanded="open"
 			>
 				<span class="flex min-w-0 items-center gap-2">
