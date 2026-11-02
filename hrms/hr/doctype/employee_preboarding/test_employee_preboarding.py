@@ -298,6 +298,15 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		self.assertEqual((row.action, row.added_on_preboarding), ("Manual", 1))
 		self.assertEqual(getdate(row.due_date), getdate(preboarding.boarding_begins_on))
 
+	def test_a_row_write_stops_an_open_form_from_saving_over_it(self):
+		preboarding = create_employee_preboarding(submit=False)
+		open_form = frappe.get_doc("Employee Preboarding", preboarding.name)
+
+		preboarding.assign_activity(get_row(preboarding, "Assign ID Card").name, "Administrator")
+
+		open_form.boarding_begins_on = add_days(open_form.boarding_begins_on, 1)
+		self.assertRaises(frappe.TimestampMismatchError, open_form.save)
+
 	def test_only_activities_added_on_the_preboarding_can_be_removed(self):
 		preboarding = create_employee_preboarding(submit=False)
 		preboarding.add_activity("Order a desk")

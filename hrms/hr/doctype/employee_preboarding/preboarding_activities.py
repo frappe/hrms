@@ -172,8 +172,12 @@ class PreboardingActivities:
 		for row in self.reconcile_activities():
 			row.db_update()
 		self.set_boarding_status()
-		self.db_set("boarding_status", self.boarding_status)
+		self.db_set("boarding_status", self.boarding_status, notify=True)
 		self.sync_todos()
+
+	def publish_change(self):
+		self.update_modified()
+		self.notify_update()
 
 	def set_boarding_status(self):
 		if self.docstatus == 2:
@@ -226,12 +230,14 @@ class PreboardingActivities:
 		self.check_permission("write")
 		self.validate_draft()
 		self.get_activity(row).db_set("user", user or None)
+		self.publish_change()
 
 	@frappe.whitelist(methods=["POST"])
 	def set_activity_due_date(self, row: str, due_date: str | None = None) -> None:
 		self.check_permission("write")
 		self.validate_draft()
 		self.get_activity(row).db_set("due_date", due_date or None)
+		self.publish_change()
 
 	@frappe.whitelist(methods=["POST"])
 	def add_activity(self, activity_name: str) -> None:
@@ -270,6 +276,7 @@ class PreboardingActivities:
 			if row.idx != position[row.name]:
 				row.db_set("idx", position[row.name], update_modified=False)
 		self.activities.sort(key=lambda row: row.idx)
+		self.publish_change()
 
 	def validate_draft(self):
 		if self.docstatus != 0:
