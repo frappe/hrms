@@ -179,6 +179,11 @@ class PreboardingActivities:
 		self.update_modified()
 		self.notify_update()
 
+	def get_assignee_info(self) -> dict:
+		user_info = {}
+		frappe.utils.add_user_info({row.user for row in self.activities if row.user}, user_info)
+		return user_info
+
 	def set_boarding_status(self):
 		if self.docstatus == 2:
 			return
