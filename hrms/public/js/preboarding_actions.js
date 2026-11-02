@@ -108,9 +108,8 @@ function open_user_dialog(list) {
 			},
 		],
 		primary_action_label: __("Create User Login"),
-		primary_action: async ({ create_user_for, ...emails }) => {
-			await frm.set_value(emails);
-			await list.call("create_user", { create_user_for }, __("Creating the user"));
+		primary_action: async (values) => {
+			await list.call("create_user", values, __("Creating the user"));
 			dialog.hide();
 		},
 	});
