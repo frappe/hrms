@@ -71,13 +71,9 @@
 					size="sm"
 				/>
 			</div>
-			<div
-				class="owner flex min-w-0 justify-center text-ink-gray-4"
-				:inert="!canAssign || null"
-				data-control
-			>
+			<div class="owner flex min-w-0 justify-center text-ink-gray-4" data-control>
 				<Combobox
-					v-if="canAssign || item.assignee"
+					v-if="canAssign"
 					class="w-full min-w-0"
 					trigger="button"
 					variant="ghost"
@@ -101,7 +97,7 @@
 					<template #item-prefix="{ item: option }">
 						<Avatar :label="option.label" :image="option.image" size="sm" />
 					</template>
-					<template v-if="canAssign && item.assignee" #footer="{ clear, close }">
+					<template v-if="item.assignee" #footer="{ clear, close }">
 						<Button
 							class="w-full !justify-start"
 							variant="ghost"
@@ -110,15 +106,22 @@
 						/>
 					</template>
 				</Combobox>
+				<span
+					v-else-if="item.assignee"
+					class="flex min-w-0 items-center gap-2 text-p-sm text-ink-gray-7"
+					:title="item.assignee.description || item.assignee.label"
+				>
+					<Avatar :label="item.assignee.label" :image="item.assignee.image" size="sm" />
+					<span class="truncate">{{ item.assignee.label }}</span>
+				</span>
 			</div>
 			<div
 				class="due justify-self-end whitespace-nowrap text-p-sm"
 				:class="item.overdue && !finished ? 'text-ink-red-7' : 'text-ink-gray-6'"
-				:inert="!canSetDueDate || null"
 				data-control
 			>
 				<DatePicker
-					v-if="canSetDueDate || item.due_date"
+					v-if="canSetDueDate"
 					:model-value="item.due_date || ''"
 					align="end"
 					@update:model-value="setDueDate"
@@ -134,10 +137,11 @@
 							<template #prefix><LucideCalendar class="size-4" /></template>
 						</Button>
 					</template>
-					<template v-if="canSetDueDate && item.due_date" #actions="{ clear }">
+					<template v-if="item.due_date" #actions="{ clear }">
 						<Button variant="ghost" :label="__('Clear')" @click="clear" />
 					</template>
 				</DatePicker>
+				<template v-else>{{ item.due_date_label }}</template>
 			</div>
 		</div>
 		<div class="drawer" :inert="!open || null">
