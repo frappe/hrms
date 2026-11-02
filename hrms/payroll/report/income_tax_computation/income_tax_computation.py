@@ -20,8 +20,6 @@ class IncomeTaxComputationReport:
 		self.columns = []
 		self.data = []
 		self.employees = frappe._dict()
-		# employees left out of the report because a preview salary slip could not be
-		# evaluated for them in this period, mapped to the reason (shown as one message)
 		self.skipped_employees = {}
 		self.payroll_period_start_date = None
 		self.payroll_period_end_date = None
@@ -38,8 +36,6 @@ class IncomeTaxComputationReport:
 	def get_data(self):
 		self.get_employee_details()
 		if not self.employees:
-			# every matching employee was skipped; show why and stop before the
-			# remaining queries, which cannot run against an empty employee list
 			self.notify_skipped_employees()
 			return
 
@@ -53,6 +49,10 @@ class IncomeTaxComputationReport:
 		self.get_total_taxable_amount()
 		self.get_applicable_tax()
 		self.exclude_skipped_employees()
+		if not self.employees:
+			self.notify_skipped_employees()
+			return
+
 		self.get_total_deducted_tax()
 		self.get_payable_tax()
 
@@ -85,12 +85,9 @@ class IncomeTaxComputationReport:
 
 				d.update(ss_assignments[d.employee])
 
-				# an income tax slab that only becomes effective after the period start
-				# cannot be used to compute tax for this period; leave the employee out
-				# with a clear reason instead of letting the slip build fail the report
 				if getdate(d.slab_effective_from) > getdate(self.payroll_period_start_date):
 					self.skipped_employees[d.employee] = _(
-						"assigned Income Tax Slab {0} is effective from {1}, after the payroll period start date {2}"
+						"Assigned Income Tax Slab {0} is effective from {1}, after the payroll period start date {2}"
 					).format(
 						d.income_tax_slab,
 						formatdate(d.slab_effective_from),
@@ -539,8 +536,6 @@ class IncomeTaxComputationReport:
 			if tax_slab:
 				eval_data = self.get_data_for_eval(emp, emp_details)
 				if eval_data is None:
-					# preview slip could not be built; employee is recorded in
-					# skipped_employees and dropped after this loop
 					continue
 				tax_slab = frappe.get_cached_doc("Income Tax Slab", tax_slab)
 				eval_globals, eval_locals = eval_data
@@ -570,8 +565,6 @@ class IncomeTaxComputationReport:
 		else:
 			salary_slip = frappe.new_doc("Salary Slip")
 			salary_slip.employee = emp
-			# resolve the payroll period against the employee's own company, not the
-			# viewing user's default company that new_doc would otherwise fill in
 			salary_slip.company = emp_details.company
 			salary_slip.salary_structure = emp_details.salary_structure
 			salary_slip.start_date = max(self.payroll_period_start_date, emp_details.date_of_joining)
@@ -584,12 +577,9 @@ class IncomeTaxComputationReport:
 			try:
 				salary_slip.process_salary_structure()
 			except Exception:
-				# any other reason the preview slip cannot be built for this employee
-				# (e.g. no salary structure assignment effective on the slip start date)
-				# must not abort the report; leave the employee out with a reason
 				self.skipped_employees.setdefault(
 					emp,
-					_("a salary slip could not be evaluated for this payroll period"),
+					_("A salary slip could not be evaluated for this payroll period"),
 				)
 				return None
 
