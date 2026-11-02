@@ -5,7 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import add_days, comma_and, comma_or, date_diff, format_date, get_link_to_form, getdate
+from frappe.utils import add_days, comma_or, date_diff, format_date, get_link_to_form, getdate
 
 from erpnext.setup.doctype.employee.employee import is_holiday
 
@@ -77,14 +77,9 @@ class AttendanceRequest(Document):
 			)
 
 	def validate_shifts(self):
-		# Shift should be the employee's shift on every requested date, or any shift if the employee has none
-		shifts_by_date = self.get_shifts_by_date()
+		# Shift should be one of the employee's shifts in this period, or any shift if the employee has none
+		shifts_by_date, allowed_shifts = self.get_shifts_by_date()
 		shifts = self.get_active_shifts(shifts_by_date)
-
-		if not shifts and any(shifts_by_date.values()):
-			frappe.throw(
-				self.get_shift_change_message(shifts_by_date), title=_("Shift Changes Within Period")
-			)
 
 		if not self.shift:
 			if len(shifts) == 1:
@@ -95,15 +90,15 @@ class AttendanceRequest(Document):
 						"There are multiple shifts assigned to the employee for the same period. Please mention the shift"
 					)
 				)
-		elif self.shift not in shifts:
-			msg = self.get_unassigned_shift_message(shifts)
-			if shifts:
+		elif self.shift not in allowed_shifts:
+			msg = self.get_unassigned_shift_message(allowed_shifts)
+			if allowed_shifts:
 				frappe.throw(msg, title=_("Invalid Shift"))
 			elif self.docstatus == 0:
 				# nothing to validate against, so the selected shift is allowed with a warning
 				frappe.msgprint(msg, title=_("Shift Not Assigned"), indicator="orange")
 
-	def get_unassigned_shift_message(self, shifts: list[str]) -> str:
+	def get_unassigned_shift_message(self, shifts: set[str]) -> str:
 		msg = _("Shift {0} is not assigned to Employee {1} for this period.").format(
 			frappe.bold(self.shift), frappe.bold(self.employee)
 		)
@@ -112,40 +107,18 @@ class AttendanceRequest(Document):
 				msg
 				+ " "
 				+ _("Please select {0}.").format(
-					comma_or([frappe.bold(shift) for shift in shifts], add_quotes=False)
+					comma_or([frappe.bold(shift) for shift in sorted(shifts)], add_quotes=False)
 				)
 			)
 		return msg + " " + _("On submission, attendance will be marked under this shift.")
-
-	def get_shift_change_message(self, shifts_by_date: dict) -> str:
-		periods = []
-		for date, shifts in shifts_by_date.items():
-			if periods and periods[-1]["shifts"] == shifts:
-				periods[-1]["to_date"] = date
-			else:
-				periods.append({"from_date": date, "to_date": date, "shifts": shifts})
-
-		rows = []
-		for period in periods:
-			dates = format_date(period["from_date"])
-			if period["to_date"] != period["from_date"]:
-				dates = _("{0} to {1}").format(dates, format_date(period["to_date"]))
-			shifts = comma_and([frappe.bold(shift) for shift in sorted(period["shifts"])], add_quotes=False)
-			rows.append(f"<li>{dates}: {shifts or _('No Shift')}</li>")
-
-		return (
-			_(
-				"The shift of Employee {0} changes within this period. Please create a separate Attendance Request for each shift:"
-			).format(frappe.bold(self.employee))
-			+ f"<ul>{''.join(rows)}</ul>"
-		)
 
 	def get_active_shifts(self, shifts_by_date: dict) -> list[str]:
 		"""Shifts that apply on every requested date that has a shift"""
 		dates_with_shift = [shifts for shifts in shifts_by_date.values() if shifts]
 		return sorted(set.intersection(*dates_with_shift)) if dates_with_shift else []
 
-	def get_shifts_by_date(self) -> dict:
+	def get_shifts_by_date(self) -> tuple[dict, set]:
+		"""Returns the shift to fill in for each requested date, and all shifts the employee has in this period"""
 		# Attendance requests are typically posted after the shift period for corrections.
 		# Expired shift assignments are auto-marked Inactive, but should still be considered
 		# here so that the shift is auto-fetched for backdated requests.
@@ -159,30 +132,36 @@ class AttendanceRequest(Document):
 			or_filters=[["end_date", ">=", self.from_date], ["end_date", "is", "not set"]],
 			fields=["shift_type", "start_date", "end_date", "status"],
 		)
-		# an open-ended assignment set to Inactive has been stopped, auto attendance ignores it too
-		assignments = [
-			assignment for assignment in assignments if assignment.end_date or assignment.status == "Active"
-		]
-
 		# auto attendance falls back to the default shift on dates without a shift assignment
 		default_shift = frappe.db.get_value("Employee", self.employee, "default_shift")
+		today = getdate()
 
 		shifts_by_date = {}
+		allowed_shifts = {default_shift} if default_shift else set()
 		for day in range(date_diff(self.to_date, self.from_date) + 1):
 			date = getdate(add_days(self.from_date, day))
 			# attendance is not marked on these dates, so their shift does not matter
 			if (not self.include_holidays and is_holiday(self.employee, date)) or self.has_leave_record(date):
 				continue
 
-			shifts = {
-				assignment.shift_type
+			assigned = [
+				assignment
 				for assignment in assignments
 				if getdate(assignment.start_date) <= date
 				and (not assignment.end_date or date <= getdate(assignment.end_date))
+			]
+			# an assignment set to Inactive before its end date has been stopped, auto attendance ignores it too
+			shifts = {
+				assignment.shift_type
+				for assignment in assigned
+				if assignment.status == "Active"
+				or (assignment.end_date and getdate(assignment.end_date) < today)
 			}
 			shifts_by_date[date] = shifts or ({default_shift} if default_shift else set())
+			# the date it was stopped is not recorded, so a stopped shift may still have applied on this date
+			allowed_shifts.update(assignment.shift_type for assignment in assigned)
 
-		return shifts_by_date
+		return shifts_by_date, allowed_shifts
 
 	def validate_request_overlap(self):
 		if not self.name:
@@ -222,16 +201,17 @@ class AttendanceRequest(Document):
 			return
 
 		# assignments can change after the request is saved, so check the shift again on every load
-		shifts_by_date = self.get_shifts_by_date()
-		shifts = self.get_active_shifts(shifts_by_date)
-		if not shifts and any(shifts_by_date.values()):
-			message, indicator = self.get_shift_change_message(shifts_by_date), "red"
-		elif self.shift not in shifts:
-			message, indicator = self.get_unassigned_shift_message(shifts), "red" if shifts else "orange"
-		else:
+		allowed_shifts = self.get_shifts_by_date()[1]
+		if self.shift in allowed_shifts:
 			return
 
-		self.set_onload("shift_warning", {"message": message, "indicator": indicator})
+		self.set_onload(
+			"shift_warning",
+			{
+				"message": self.get_unassigned_shift_message(allowed_shifts),
+				"indicator": "red" if allowed_shifts else "orange",
+			},
+		)
 
 	def on_submit(self):
 		self.create_attendance_records()
