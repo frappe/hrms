@@ -10,6 +10,7 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 	constructor({ frm }) {
 		this.frm = frm;
 		this.pending = Promise.resolve();
+		this.user_options = {};
 	}
 
 	render() {
@@ -75,7 +76,7 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 			status: STATUS[row.status],
 			description: row.description && frappe.utils.html2text(row.description),
 			value: handler.get_value(this, row),
-			assignee: row.user ? this.get_user_option(row.user) : null,
+			assignee: row.user ? this.get_assignee(row.user) : null,
 			due_date: row.due_date,
 			due_date_label: row.due_date ? frappe.datetime.str_to_user(row.due_date) : "",
 			overdue: Boolean(
@@ -92,13 +93,18 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 		};
 	}
 
-	get_user_option(user, description) {
-		const info = frappe.user_info(user);
+	get_assignee(user) {
+		if (this.user_options[user]) return this.user_options[user];
+		const info = this.frm.doc.__onload?.user_info?.[user] || frappe.user_info(user);
+		return this.get_user_option(user, info.fullname !== user ? info.fullname : "", info.image);
+	}
+
+	get_user_option(user, fullname, image) {
 		return {
 			value: user,
-			label: description || info.fullname || user,
-			description: description ? user : "",
-			image: info.image,
+			label: fullname || user,
+			description: fullname ? user : "",
+			image: image || frappe.user_info(user).image,
 		};
 	}
 
@@ -109,7 +115,10 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 			{ user_type: "System User", enabled: 1 },
 			20,
 		);
-		return users.map(({ value, description }) => this.get_user_option(value, description));
+		return users.map(({ value, description }) => {
+			this.user_options[value] = this.get_user_option(value, description);
+			return this.user_options[value];
+		});
 	}
 
 	is_planning() {

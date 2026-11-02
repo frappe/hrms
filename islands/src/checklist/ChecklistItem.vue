@@ -98,12 +98,14 @@
 						<Avatar :label="option.label" :image="option.image" size="sm" />
 					</template>
 				</Combobox>
-				<Avatar
+				<span
 					v-else-if="item.assignee"
-					:label="item.assignee.label"
-					:image="item.assignee.image"
-					size="sm"
-				/>
+					class="flex min-w-0 items-center gap-2 text-p-sm text-ink-gray-7"
+					:title="item.assignee.description || item.assignee.label"
+				>
+					<Avatar :label="item.assignee.label" :image="item.assignee.image" size="sm" />
+					<span class="truncate">{{ item.assignee.label }}</span>
+				</span>
 			</div>
 			<div
 				class="due justify-self-end whitespace-nowrap text-p-sm"
