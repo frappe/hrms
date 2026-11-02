@@ -38,6 +38,7 @@ frappe.ui.form.on("Employee Preboarding", {
 
 		frm._preboarding_checklist ??= new hrms.ui.EmployeePreboardingChecklist({ frm });
 		frm._preboarding_checklist.render();
+		frm._preboarding_checklist.sync_if_needed();
 	},
 
 	employee_boarding_template: function (frm) {

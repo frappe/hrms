@@ -63,7 +63,9 @@ class EmployeePreboarding(PreboardingActivities, Document):
 	def onload(self):
 		self.set_onload("offer_defaults", self.get_offer_defaults())
 		self.set_onload("appointment_letter", self.get_appointment_letter())
+		self.set_onload("draft_assignments", self.get_draft_assignments())
 		self.set_onload("user_info", self.get_assignee_info())
+		self.set_onload("needs_sync", self.docstatus == 1 and bool(self.reconcile_activities()))
 
 	def before_insert(self):
 		self.set_template()

@@ -32,6 +32,13 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 		return this.docname === name || frappe.model.new_names[this.docname] === name;
 	}
 
+	sync_if_needed() {
+		const onload = this.frm.doc.__onload;
+		if (!onload?.needs_sync || !this.is_started()) return;
+		onload.needs_sync = false;
+		this.call("sync_activities");
+	}
+
 	get_props() {
 		const planning = this.is_planning();
 		const started = this.is_started();

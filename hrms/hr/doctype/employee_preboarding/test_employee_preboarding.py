@@ -437,6 +437,33 @@ class TestEmployeePreboarding(HRMSTestSuite):
 		self.assertTrue(row.completed)
 		self.assertEqual(row.reference_name, assignment.name)
 
+	def test_a_draft_assignment_is_offered_and_its_submit_is_picked_up_on_load(self):
+		preboarding = create_employee_preboarding(submit=True)
+		employee = create_preboarding_employee(preboarding)
+		assignment = frappe.get_doc(
+			{
+				"doctype": "Holiday List Assignment",
+				"applicable_for": "Employee",
+				"assigned_to": employee,
+				"employee_company": preboarding.company,
+				"holiday_list": get_boarding_holiday_list(),
+				"from_date": getdate(),
+			}
+		).insert()
+
+		preboarding.reload()
+		preboarding.run_method("onload")
+		self.assertEqual(
+			preboarding.get_onload().draft_assignments, {"Holiday List Assignment": assignment.name}
+		)
+		self.assertFalse(preboarding.get_onload().needs_sync)
+
+		assignment.submit()
+		preboarding.reload()
+		preboarding.run_method("onload")
+		self.assertEqual(preboarding.get_onload().draft_assignments, {})
+		self.assertTrue(preboarding.get_onload().needs_sync)
+
 	def test_company_holiday_list_prefers_the_company_assignment(self):
 		preboarding = create_employee_preboarding(submit=False)
 
