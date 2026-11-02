@@ -170,23 +170,23 @@
 import { Avatar, Badge, Button, Combobox, DatePicker, Dropdown, Tooltip } from "frappe-ui";
 import { computed, ref } from "vue";
 import LucideCalendar from "~icons/lucide/calendar";
-import LucideCircle from "~icons/lucide/circle";
-import LucideCircleAlert from "~icons/lucide/circle-alert";
-import LucideCircleCheck from "~icons/lucide/circle-check";
-import LucideCircleDashed from "~icons/lucide/circle-dashed";
-import LucideCircleDotDashed from "~icons/lucide/circle-dot-dashed";
 import LucideGripVertical from "~icons/lucide/grip-vertical";
 import LucideLock from "~icons/lucide/lock";
+import LucideSquare from "~icons/lucide/square";
+import LucideSquareCheck from "~icons/lucide/square-check";
+import LucideSquareDashed from "~icons/lucide/square-dashed";
+import LucideSquareDot from "~icons/lucide/square-dot";
+import LucideSquareExclamationPoint from "~icons/lucide/square-exclamation-point";
 
 import { __ } from "../translate.js";
 import { getState, hasBody, isFinished } from "./item.js";
 
 const MARKERS = {
-	pending: LucideCircle,
-	in_progress: LucideCircleDotDashed,
-	stuck: LucideCircleAlert,
-	done: LucideCircleCheck,
-	skipped: LucideCircleDashed,
+	pending: LucideSquare,
+	in_progress: LucideSquareDot,
+	stuck: LucideSquareExclamationPoint,
+	done: LucideSquareCheck,
+	skipped: LucideSquareDashed,
 };
 
 const STATUS_LABELS = { in_progress: __("In Progress"), stuck: __("Stuck") };
@@ -236,7 +236,7 @@ const statusOptions = computed(() => {
 	if (props.item.status) {
 		options.push({
 			label: __("Clear status"),
-			icon: LucideCircle,
+			icon: LucideSquare,
 			onClick: () => call(props.onStatus, null),
 		});
 	}
