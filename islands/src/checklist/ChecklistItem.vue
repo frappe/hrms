@@ -71,7 +71,7 @@
 					size="sm"
 				/>
 			</div>
-			<div class="owner flex min-w-0 justify-center text-ink-gray-4" data-control>
+			<div class="owner flex min-w-0 text-ink-gray-4" data-control>
 				<Combobox
 					v-if="canAssign"
 					class="w-full min-w-0"
@@ -108,7 +108,7 @@
 				</Combobox>
 				<span
 					v-else-if="item.assignee"
-					class="flex min-w-0 items-center gap-2 text-p-sm text-ink-gray-7"
+					class="flex min-w-0 items-center gap-2 px-2 text-p-sm text-ink-gray-7"
 					:title="item.assignee.description || item.assignee.label"
 				>
 					<Avatar :label="item.assignee.label" :image="item.assignee.image" size="sm" />
