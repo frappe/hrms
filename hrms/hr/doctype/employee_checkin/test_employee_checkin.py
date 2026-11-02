@@ -28,11 +28,7 @@ from hrms.hr.doctype.employee_checkin.employee_checkin import (
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
 from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list, make_leave_application
-<<<<<<< HEAD
-=======
 from hrms.tests.test_utils import get_non_holiday_date
-from hrms.tests.utils import HRMSTestSuite
->>>>>>> bd2e045 (test: stop attendance and leave tests failing on weekends)
 
 
 class TestEmployeeCheckin(FrappeTestCase):

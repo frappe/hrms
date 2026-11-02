@@ -73,9 +73,6 @@ def get_first_day_for_prev_month():
 	return prev_month_first
 
 
-<<<<<<< HEAD
-def add_date_to_holiday_list(date: str, holiday_list: str) -> None:
-=======
 def get_non_holiday_date(employee: str, for_date=None):
 	"""Return the most recent date on or before `for_date` that is a working day for
 	the employee. Tests that mark attendance/leave for "today" use this so they do not
@@ -90,8 +87,7 @@ def get_non_holiday_date(employee: str, for_date=None):
 	return date
 
 
-def add_date_to_holiday_list(date: str, holiday_list: str, is_half_day: bool = 0) -> None:
->>>>>>> bd2e045 (test: stop attendance and leave tests failing on weekends)
+def add_date_to_holiday_list(date: str, holiday_list: str) -> None:
 	if frappe.db.exists("Holiday", {"parent": holiday_list, "holiday_date": date}):
 		return
 
