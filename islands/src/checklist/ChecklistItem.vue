@@ -97,6 +97,14 @@
 					<template #item-prefix="{ item: option }">
 						<Avatar :label="option.label" :image="option.image" size="sm" />
 					</template>
+					<template v-if="item.assignee" #footer="{ clear, close }">
+						<Button
+							class="w-full !justify-start"
+							variant="ghost"
+							:label="__('Unassign')"
+							@click="clear(), close()"
+						/>
+					</template>
 				</Combobox>
 				<span
 					v-else-if="item.assignee"
@@ -128,6 +136,9 @@
 						>
 							<template #prefix><LucideCalendar class="size-4" /></template>
 						</Button>
+					</template>
+					<template v-if="item.due_date" #actions="{ clear }">
+						<Button variant="ghost" :label="__('Clear')" @click="clear" />
 					</template>
 				</DatePicker>
 				<template v-else>{{ item.due_date_label }}</template>
