@@ -275,9 +275,8 @@ class PreboardingActivities:
 
 		self.remove(activity)
 		frappe.db.delete(activity.doctype, activity.name)
-		for idx, other in enumerate(self.activities, start=1):
-			if other.idx != idx:
-				other.db_set("idx", idx, update_modified=False)
+		for other in self.activities:
+			other.db_set("idx", other.idx, update_modified=False)
 		self.save_activity_states()
 
 	@frappe.whitelist(methods=["POST"])
