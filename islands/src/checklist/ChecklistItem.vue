@@ -131,7 +131,7 @@
 							variant="ghost"
 							:class="dueClass"
 							:label="item.due_date_label || __('Add due date')"
-							:tooltip="__('Due date')"
+							:tooltip="item.due_date_title || __('Due date')"
 							@click="setOpen(!pickerOpen)"
 						>
 							<template #prefix><LucideCalendar class="size-4" /></template>
@@ -141,7 +141,7 @@
 						<Button variant="ghost" :label="__('Clear')" @click="clear" />
 					</template>
 				</DatePicker>
-				<template v-else>{{ item.due_date_label }}</template>
+				<span v-else :title="item.due_date_title">{{ item.due_date_label }}</span>
 			</div>
 		</div>
 		<div class="drawer" :inert="!open || null">

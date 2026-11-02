@@ -85,7 +85,8 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 			value: handler.get_value(this, row),
 			assignee: row.user ? this.get_assignee(row.user) : null,
 			due_date: row.due_date,
-			due_date_label: row.due_date ? frappe.datetime.str_to_user(row.due_date) : "",
+			due_date_label: row.due_date ? this.get_due_label(row.due_date) : "",
+			due_date_title: row.due_date ? frappe.datetime.str_to_user(row.due_date) : "",
 			overdue: Boolean(
 				row.due_date &&
 					frappe.datetime.get_diff(row.due_date, frappe.datetime.get_today()) < 0,
@@ -150,6 +151,19 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 					message: __("Submit the preboarding to start its activities"),
 				}),
 		}));
+	}
+
+	get_due_label(date) {
+		const days = frappe.datetime.get_diff(date, frappe.datetime.get_today());
+		if (days === 0) return __("Today");
+		if (days === 1) return __("Tomorrow");
+		if (days === -1) return __("Yesterday");
+
+		const due = moment(date);
+		const weeks = due.clone().startOf("week").diff(moment().startOf("week"), "weeks");
+		if (days > 0 && weeks === 0) return due.format("dddd");
+		if (weeks === 1) return __("Next {0}", [due.format("dddd")]);
+		return due.format(due.isSame(moment(), "year") ? "D MMM" : "D MMM YYYY");
 	}
 
 	get_lock_reason(row) {
