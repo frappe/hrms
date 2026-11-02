@@ -118,6 +118,7 @@ class ShiftRequest(Document, PWANotificationsMixin):
 			.where(
 				(shift.employee == self.employee)
 				& (shift.docstatus < 2)
+				& (shift.status != "Rejected")
 				& (shift.name != self.name)
 				& ((shift.to_date >= self.from_date) | (shift.to_date.isnull()))
 			)

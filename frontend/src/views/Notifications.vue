@@ -9,7 +9,7 @@
 						<div class="flex flex-row items-center">
 							<Button
 								variant="ghost"
-								class="!pl-0 hover:bg-white"
+								class="!ps-0 hover:bg-white"
 								@click="router.back()"
 							>
 								<FeatherIcon name="chevron-left" class="h-5 w-5" />
@@ -26,7 +26,7 @@
 							>
 								{{ __("{0} Unread", [unreadNotificationsCount.data]) }}
 							</div>
-							<div class="flex ml-auto gap-1">
+							<div class="flex ms-auto gap-1">
 								<Button
 									v-if="allowPushNotifications"
 									variant="outline"
@@ -58,7 +58,7 @@
 							<router-link
 								:class="[
 									'flex flex-row items-start p-4 justify-between border-b before:mt-3',
-									`before:content-[''] before:mr-2 before:shrink-0 before:w-1.5 before:h-1.5 before:rounded-full`,
+									`before:content-[''] before:me-2 before:shrink-0 before:w-1.5 before:h-1.5 before:rounded-full`,
 									item.read ? 'bg-white-500' : 'before:bg-blue-500',
 								]"
 								v-for="item in notifications.data"
@@ -67,7 +67,7 @@
 								@click="markAsRead(item.name)"
 							>
 								<EmployeeAvatar :userID="item.from_user" size="lg" />
-								<div class="flex flex-col gap-0.5 grow ml-3">
+								<div class="flex flex-col gap-0.5 grow ms-3">
 									<div
 										class="text-sm leading-5 font-normal text-gray-800"
 										v-html="item.message"
@@ -82,7 +82,7 @@
 						<div v-if="notifications.data?.length && notifications.hasNextPage" class="flex">
 							<Button
 								variant="outline"
-								class="ml-auto"
+								class="ms-auto"
 								@click="loadMore"
 							>
 								{{ __('Load more') }}

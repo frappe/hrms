@@ -139,6 +139,9 @@ def get_children(doctype: str, parent: str, is_root: bool = False, **filters) ->
 	query_filters = [["status", "!=", "Archived"]]
 	query_or_filters = []
 
+	if filters.get("company"):
+		query_filters.append(["company", "=", filters.get("company")])
+
 	if filters.get("employee"):
 		query_filters.append(["employee", "=", filters.get("employee")])
 

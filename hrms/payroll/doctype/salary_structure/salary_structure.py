@@ -154,15 +154,8 @@ class SalaryStructure(Document):
 		self.db_update_all()
 
 	def get_employees(self, **kwargs):
-		Employee = frappe.qb.DocType("Employee")
-		query = frappe.qb.from_(Employee).select(Employee.name).where(Employee.status == "Active")
-		for field, value in kwargs.items():
-			if value:
-				query = query.where(Employee[field] == value)
-
-		employees = query.run(pluck="name")
-
-		return employees
+		filters = {field: value for field, value in kwargs.items() if value}
+		return frappe.get_list("Employee", filters={"status": "Active", **filters}, pluck="name")
 
 	@frappe.whitelist(methods=["POST"])
 	def assign_salary_structure(
@@ -301,7 +294,7 @@ def create_salary_structure_assignment(
 	assignment.base = base
 	assignment.variable = variable
 	assignment.income_tax_slab = income_tax_slab
-	assignment.save(ignore_permissions=True)
+	assignment.save()
 	assignment.submit()
 
 	return assignment.name
