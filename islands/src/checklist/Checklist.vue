@@ -1,5 +1,6 @@
 <template>
 	<section
+		ref="sectionRef"
 		class="checklist rounded-6 bg-surface-gray-1 px-3 py-4"
 		:data-collapsed="collapsed || null"
 	>
@@ -73,7 +74,7 @@
 
 <script setup>
 import { Progress } from "frappe-ui";
-import { computed, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import LucideChevronDown from "~icons/lucide/chevron-down";
 import LucidePlus from "~icons/lucide/plus";
 
@@ -96,6 +97,7 @@ const props = defineProps({
 	onStatusChange: { type: Function, default: null },
 });
 
+const sectionRef = ref(null);
 const collapsed = ref(false);
 const openId = ref(null);
 const openWasFinished = ref(false);
@@ -217,6 +219,23 @@ function add(input) {
 			input.focus();
 		});
 }
+
+// In a shadow root, reka-ui's combobox closes when focus moves into its list.
+function keepFocusInComboboxSearch(event) {
+	if (event.target.closest?.('[role="listbox"]') && !event.target.closest("input")) {
+		event.preventDefault();
+	}
+}
+
+onMounted(() => {
+	sectionRef.value.getRootNode().addEventListener("mousedown", keepFocusInComboboxSearch, true);
+});
+
+onBeforeUnmount(() => {
+	sectionRef.value
+		?.getRootNode()
+		.removeEventListener("mousedown", keepFocusInComboboxSearch, true);
+});
 
 function cancelAdd(input) {
 	newLabel.value = "";
