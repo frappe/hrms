@@ -1297,12 +1297,12 @@ class TestLeaveApplication(HRMSTestSuite):
 		)
 		leave_application = make_leave_application(
 			employee.name,
-			nowdate(),
-			nowdate(),
+			half_day_date,
+			half_day_date,
 			leave_type.name,
 			submit=True,
 			half_day=1,
-			half_day_date=nowdate(),
+			half_day_date=half_day_date,
 		)
 		attendance = frappe.get_value(
 			"Attendance",
@@ -1324,25 +1324,19 @@ class TestLeaveApplication(HRMSTestSuite):
 		)
 
 		create_carry_forwarded_allocation(employee, leave_type)
-<<<<<<< HEAD
-		# when existing attendance is absent
-		attendance_name = mark_attendance(employee=employee.name, attendance_date=nowdate(), status="Absent")
-
-=======
 		half_day_date = self.get_non_holiday_date(employee.name, nowdate())
 		# when existing attendance is absent
 		attendance_name = mark_attendance(
 			employee=employee.name, attendance_date=half_day_date, status="Absent"
 		)
->>>>>>> bd2e045 (test: stop attendance and leave tests failing on weekends)
 		leave_application = make_leave_application(
 			employee.name,
-			add_days(nowdate(), -3),
-			add_days(nowdate(), 3),
+			add_days(half_day_date, -3),
+			add_days(half_day_date, 3),
 			leave_type.name,
 			submit=True,
 			half_day=1,
-			half_day_date=nowdate(),
+			half_day_date=half_day_date,
 		)
 		attendance = frappe.get_value(
 			"Attendance",
@@ -1364,15 +1358,16 @@ class TestLeaveApplication(HRMSTestSuite):
 			expire_carry_forwarded_leaves_after_days=90,
 		)
 		create_carry_forwarded_allocation(employee, leave_type)
+		half_day_date = self.get_non_holiday_date(employee.name, nowdate())
 		# attendance from one half leave
 		first_leave_application = make_leave_application(
 			employee.name,
-			nowdate(),
-			nowdate(),
+			half_day_date,
+			half_day_date,
 			leave_type.name,
 			submit=True,
 			half_day=1,
-			half_day_date=nowdate(),
+			half_day_date=half_day_date,
 		)
 		half_day_status_after_first_application = frappe.get_value(
 			"Attendance",
@@ -1383,12 +1378,12 @@ class TestLeaveApplication(HRMSTestSuite):
 		self.assertEqual(half_day_status_after_first_application, "Present")
 		second_leave_application = make_leave_application(
 			employee.name,
-			nowdate(),
-			nowdate(),
+			half_day_date,
+			half_day_date,
 			leave_type.name,
 			submit=True,
 			half_day=1,
-			half_day_date=nowdate(),
+			half_day_date=half_day_date,
 		)
 		half_day_status_after_second_application = frappe.get_value(
 			"Attendance",
