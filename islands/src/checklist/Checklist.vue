@@ -61,9 +61,8 @@
 							:placeholder="addLabel"
 							:aria-label="addLabel"
 							:readonly="adding"
-							@keydown.enter.prevent="add($event.target, true)"
+							@keydown.enter.prevent="add($event.target)"
 							@keydown.esc="cancelAdd($event.target)"
-							@blur="add($event.target, false)"
 						/>
 					</label>
 				</div>
@@ -206,7 +205,7 @@ function dragEnd() {
 	reorder(ids());
 }
 
-function add(input, refocus) {
+function add(input) {
 	const label = newLabel.value.trim();
 	if (adding.value || !label) return;
 	adding.value = true;
@@ -215,7 +214,7 @@ function add(input, refocus) {
 		.catch(() => {})
 		.finally(() => {
 			adding.value = false;
-			if (refocus) input.focus();
+			input.focus();
 		});
 }
 
