@@ -15,14 +15,20 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 	render() {
 		const wrapper = this.frm.fields_dict.preboarding_checklist.wrapper;
 		const props = this.get_props();
-		if (this.island && this.wrapper === wrapper) {
+		if (this.island && this.wrapper === wrapper && this.is_same_doc()) {
 			this.island.update(props);
 			return;
 		}
 		this.island?.unmount();
 		this.wrapper = wrapper;
+		this.docname = this.frm.doc.name;
 		$(wrapper).empty();
 		this.island = frappe.ui.mount_island("hrms.checklist", wrapper, props);
+	}
+
+	is_same_doc() {
+		const name = this.frm.doc.name;
+		return this.docname === name || frappe.model.new_names[this.docname] === name;
 	}
 
 	get_props() {
