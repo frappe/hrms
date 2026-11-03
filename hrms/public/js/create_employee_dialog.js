@@ -30,7 +30,7 @@ export class CreateEmployeeDialog {
 		});
 		this.tabs = new frappe.ui.Tabs({ vertical: true, tabs: this.make_tabs() });
 		this.dialog.$wrapper.addClass("epc-create-employee");
-		this.dialog.$wrapper.find(".modal-title").empty().append(this.make_header());
+		this.tabs.el.prepend(this.make_profile()[0]);
 		this.dialog.fields_dict.body.$wrapper.empty().append(this.tabs.el);
 		this.dialog.show();
 	}
@@ -50,24 +50,24 @@ export class CreateEmployeeDialog {
 		];
 	}
 
-	make_header() {
+	make_profile() {
 		const { first_name, middle_name, last_name } = this.employee;
 		const name = [first_name, middle_name, last_name].filter(Boolean).join(" ");
 		const email = this.employee.personal_email || this.employee.company_email || "";
-		const header = $('<div class="d-flex align-items-center">');
-		header.append(
+		const profile = $('<div class="epc-profile">');
+		profile.append(
 			frappe.ui.avatar({
 				image: this.details.photo,
 				label: name,
 				size: "lg",
 				theme: "auto",
 			}),
-			$('<div class="ml-3">').append(
-				$('<div class="text-base font-weight-bold text-ink-gray-8">').text(name),
-				$('<div class="text-p-sm text-ink-gray-5">').text(email),
+			$('<div class="epc-profile__text">').append(
+				$('<div class="text-base font-weight-bold text-ink-gray-8 ellipsis">').text(name),
+				$('<div class="text-p-sm text-ink-gray-5 ellipsis">').text(email),
 			),
 		);
-		return header;
+		return profile;
 	}
 
 	make_group(section) {
