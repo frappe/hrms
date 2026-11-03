@@ -38,9 +38,36 @@
         "text": "Preboarding"
        },
        "componentSlots": {}
+      },
+      {
+       "baseStyles": {
+        "flex": "1"
+       },
+       "componentId": "div-2",
+       "componentName": "div",
+       "componentProps": {},
+       "componentSlots": {},
+       "originalElement": "div"
+      },
+      {
+       "componentEvents": {
+        "click": {
+         "action": "Run Script",
+         "event": "click",
+         "script": "call('logout').then(() => window.location.assign('/login?redirect-to=/preboarding'))"
+        }
+       },
+       "componentId": "button-3",
+       "componentName": "Button",
+       "componentProps": {
+        "iconLeft": "lucide-log-out",
+        "label": "Log out",
+        "variant": "ghost"
+       },
+       "componentSlots": {}
       }
      ],
-     "componentId": "div-2",
+     "componentId": "div-4",
      "componentName": "div",
      "componentProps": {},
      "componentSlots": {},
@@ -81,7 +108,7 @@
            "baseStyles": {
             "color": "var(--ink-gray-5)"
            },
-           "componentId": "icon-3",
+           "componentId": "icon-5",
            "componentName": "Icon",
            "componentProps": {
             "icon": "lucide-circle-check"
@@ -89,7 +116,7 @@
            "componentSlots": {}
           }
          ],
-         "componentId": "div-4",
+         "componentId": "div-6",
          "componentName": "div",
          "componentProps": {},
          "componentSlots": {},
@@ -99,7 +126,7 @@
          "baseStyles": {
           "color": "var(--ink-gray-7)"
          },
-         "componentId": "textblock-5",
+         "componentId": "textblock-7",
          "componentName": "TextBlock",
          "componentProps": {
           "fontSize": "text-base",
@@ -111,7 +138,7 @@
          "baseStyles": {
           "color": "var(--ink-gray-5)"
          },
-         "componentId": "textblock-6",
+         "componentId": "textblock-8",
          "componentName": "TextBlock",
          "componentProps": {
           "fontSize": "text-sm",
@@ -120,14 +147,14 @@
          "componentSlots": {}
         }
        ],
-       "componentId": "div-7",
+       "componentId": "div-9",
        "componentName": "div",
        "componentProps": {},
        "componentSlots": {},
        "originalElement": "div"
       }
      ],
-     "componentId": "div-34",
+     "componentId": "div-70",
      "componentName": "div",
      "componentProps": {},
      "componentSlots": {},
@@ -147,7 +174,7 @@
  "frappe_app": "hrms",
  "idx": 0,
  "is_standard": 1,
- "modified": "2026-11-03 13:45:49.651195",
+ "modified": "2026-11-03 14:16:23.347443",
  "modified_by": "Administrator",
  "name": "preboarding_completed",
  "owner": "Administrator",
