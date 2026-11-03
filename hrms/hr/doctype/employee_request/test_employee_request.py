@@ -104,6 +104,8 @@ class TestEmployeeRequest(HRMSTestSuite):
 		request = get_request(preboarding)
 		fill_mandatory_details(request)
 		request.update({"bank_name": "HDFC Bank", "cell_number": "+91-9876543210"})
+		request.documents[0].attachment = upload_file("old_pan.txt").file_url
+		request.save()
 		request.documents[0].attachment = upload_file("pan.txt").file_url
 		request.save()
 
@@ -125,15 +127,13 @@ class TestEmployeeRequest(HRMSTestSuite):
 		self.assertEqual(employee.cell_number, "+91-9876543210")
 		self.assertFalse(frappe.db.exists("Employee Request", request.name))
 		self.assertNotIn(PREBOARDING_CANDIDATE_ROLE, frappe.get_roles(CANDIDATE_EMAIL))
-		self.assertTrue(
-			frappe.db.exists(
+		self.assertEqual(
+			frappe.get_all(
 				"File",
-				{
-					"attached_to_doctype": "Employee",
-					"attached_to_name": employee.name,
-					"file_name": "PAN Card.txt",
-				},
-			)
+				filters={"attached_to_doctype": "Employee", "attached_to_name": employee.name},
+				pluck="file_name",
+			),
+			["PAN Card.txt"],
 		)
 
 
