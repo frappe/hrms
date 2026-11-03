@@ -237,17 +237,17 @@ def get_translated_fields(doctype: str) -> list[dict]:
 	]
 
 
-def get_review_sections() -> list[dict]:
+def get_review_fields() -> list[str]:
 	employee_meta = frappe.get_meta("Employee")
-	sections, tab = [], None
+	tab = None
+	fields = []
 	for df in frappe.get_meta("Employee Request").fields:
 		if df.fieldtype == "Tab Break":
-			tab = None if df.fieldname in REVIEW_SKIPPED_TABS else {"title": _(df.label), "fields": []}
-			if tab:
-				sections.append(tab)
-		elif tab and df.fieldtype not in display_fieldtypes and employee_meta.has_field(df.fieldname):
-			tab["fields"].append(df.fieldname)
-	return [section for section in sections if section["fields"]]
+			tab = df.fieldname
+		elif tab not in REVIEW_SKIPPED_TABS and df.fieldtype not in display_fieldtypes:
+			if employee_meta.has_field(df.fieldname):
+				fields.append(df.fieldname)
+	return fields
 
 
 def get_apply_summary(filled: int, moved: int) -> str:
