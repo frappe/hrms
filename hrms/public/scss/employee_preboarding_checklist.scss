@@ -5,38 +5,16 @@
 	border-radius: var(--radius-md);
 }
 
-.epc-create-employee {
-	.es-tabs {
-		display: grid;
-		grid-template-columns: minmax(200px, max-content) 1fr;
-		grid-template-rows: auto 1fr;
-		min-height: 480px;
-	}
+.epc-profile {
+	display: flex;
+	align-items: center;
+	gap: var(--padding-sm);
+	min-width: 0;
+	padding: var(--padding-xs) var(--padding-sm) var(--padding-md);
+}
 
-	.epc-profile {
-		grid-column: 1;
-		grid-row: 1;
-		display: flex;
-		align-items: center;
-		gap: var(--padding-sm);
-		min-width: 0;
-		padding: 0 var(--padding-md) var(--padding-sm) var(--padding-xs);
-		border-inline-end: 1px solid var(--outline-gray-1);
-	}
-
-	.epc-profile__text {
-		min-width: 0;
-	}
-
-	.es-tabs__list {
-		grid-column: 1;
-		grid-row: 2;
-	}
-
-	.es-tabs__panel {
-		grid-column: 2;
-		grid-row: 1 / span 2;
-	}
+.epc-profile__text {
+	min-width: 0;
 }
 
 .epc-document {
