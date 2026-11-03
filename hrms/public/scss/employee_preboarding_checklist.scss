@@ -4,3 +4,20 @@
 	border: 1px solid var(--outline-gray-2);
 	border-radius: var(--radius-md);
 }
+
+.epc-create-employee .es-tabs {
+	min-height: 480px;
+}
+
+.epc-document {
+	display: flex;
+	align-items: center;
+	gap: var(--padding-sm);
+	padding: var(--padding-sm) 0;
+	border-bottom: 1px solid var(--outline-gray-1);
+	color: var(--ink-gray-8);
+}
+
+.epc-document .icon {
+	margin: 0;
+}

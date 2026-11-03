@@ -140,19 +140,9 @@ class EmployeeRequest(Document):
 		return values
 
 	def get_review(self) -> dict:
-		employee_meta = frappe.get_meta("Employee")
-		sections, tab = [], None
-		for df in self.meta.fields:
-			if df.fieldtype == "Tab Break":
-				tab = None if df.fieldname in REVIEW_SKIPPED_TABS else {"title": _(df.label), "fields": []}
-				if tab:
-					sections.append(tab)
-			elif tab and df.fieldtype not in display_fieldtypes and employee_meta.has_field(df.fieldname):
-				tab["fields"].append(df.fieldname)
 		return {
 			"name": self.name,
-			"submitted": bool(self.submitted_on),
-			"sections": [section for section in sections if section["fields"]],
+			"photo": self.image,
 			"documents": [
 				{"label": row.document_name, "url": row.attachment}
 				for row in self.documents
@@ -245,6 +235,19 @@ def get_translated_fields(doctype: str) -> list[dict]:
 		{**df.as_dict(no_default_fields=True), "label": _(df.label) if df.label else df.label}
 		for df in frappe.get_meta(doctype).fields
 	]
+
+
+def get_review_sections() -> list[dict]:
+	employee_meta = frappe.get_meta("Employee")
+	sections, tab = [], None
+	for df in frappe.get_meta("Employee Request").fields:
+		if df.fieldtype == "Tab Break":
+			tab = None if df.fieldname in REVIEW_SKIPPED_TABS else {"title": _(df.label), "fields": []}
+			if tab:
+				sections.append(tab)
+		elif tab and df.fieldtype not in display_fieldtypes and employee_meta.has_field(df.fieldname):
+			tab["fields"].append(df.fieldname)
+	return [section for section in sections if section["fields"]]
 
 
 def get_apply_summary(filled: int, moved: int) -> str:
