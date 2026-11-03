@@ -40,7 +40,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
 )
-from hrms.tests.test_utils import get_first_sunday
+from hrms.tests.test_utils import get_first_sunday, get_non_holiday_date
 
 test_dependencies = ["Leave Type", "Leave Allocation", "Leave Block List", "Employee"]
 
@@ -543,9 +543,17 @@ class TestLeaveApplication(FrappeTestCase):
 		application.insert()
 
 	def test_overlap_with_half_day_on_today(self):
+		from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employee
+
 		self._clear_roles()
 
 		from frappe.utils.user import add_role
+
+		# a NULL half_day_date on the full day leave coerces to today (getdate(None)), so
+		# the overlap must be exercised on today itself; make today a working day so the
+		# test still holds when the suite runs on a weekend
+		holiday_list = get_holiday_list_for_employee(get_employee().name)
+		frappe.db.delete("Holiday", {"parent": holiday_list, "holiday_date": nowdate()})
 
 		add_role("test@example.com", "Employee")
 		frappe.set_user("test@example.com")
@@ -1327,18 +1335,19 @@ class TestLeaveApplication(FrappeTestCase):
 		)
 
 		create_carry_forwarded_allocation(employee, leave_type)
+		half_day_date = get_non_holiday_date(employee.name, nowdate())
 		# when existing attendance is half day
 		attendance_name = mark_attendance(
-			employee=employee.name, attendance_date=nowdate(), status="Half Day", half_day_status="Absent"
+			employee=employee.name, attendance_date=half_day_date, status="Half Day", half_day_status="Absent"
 		)
 		leave_application = make_leave_application(
 			employee.name,
-			nowdate(),
-			nowdate(),
+			half_day_date,
+			half_day_date,
 			leave_type.name,
 			submit=True,
 			half_day=1,
-			half_day_date=nowdate(),
+			half_day_date=half_day_date,
 		)
 		attendance = frappe.get_value(
 			"Attendance",
@@ -1360,17 +1369,19 @@ class TestLeaveApplication(FrappeTestCase):
 		)
 
 		create_carry_forwarded_allocation(employee, leave_type)
+		half_day_date = get_non_holiday_date(employee.name, nowdate())
 		# when existing attendance is absent
-		attendance_name = mark_attendance(employee=employee.name, attendance_date=nowdate(), status="Absent")
-
+		attendance_name = mark_attendance(
+			employee=employee.name, attendance_date=half_day_date, status="Absent"
+		)
 		leave_application = make_leave_application(
 			employee.name,
-			add_days(nowdate(), -3),
-			add_days(nowdate(), 3),
+			add_days(half_day_date, -3),
+			add_days(half_day_date, 3),
 			leave_type.name,
 			submit=True,
 			half_day=1,
-			half_day_date=nowdate(),
+			half_day_date=half_day_date,
 		)
 		attendance = frappe.get_value(
 			"Attendance",
@@ -1392,35 +1403,36 @@ class TestLeaveApplication(FrappeTestCase):
 			expire_carry_forwarded_leaves_after_days=90,
 		)
 		create_carry_forwarded_allocation(employee, leave_type)
+		half_day_date = get_non_holiday_date(employee.name, nowdate())
 		# attendance from one half leave
 		first_leave_application = make_leave_application(
 			employee.name,
-			nowdate(),
-			nowdate(),
+			half_day_date,
+			half_day_date,
 			leave_type.name,
 			submit=True,
 			half_day=1,
-			half_day_date=nowdate(),
+			half_day_date=half_day_date,
 		)
 		half_day_status_after_first_application = frappe.get_value(
 			"Attendance",
-			filters={"attendance_date": nowdate(), "leave_application": first_leave_application.name},
+			filters={"attendance_date": half_day_date, "leave_application": first_leave_application.name},
 			fieldname="half_day_status",
 		)
 		# default is present
 		self.assertEqual(half_day_status_after_first_application, "Present")
 		second_leave_application = make_leave_application(
 			employee.name,
-			nowdate(),
-			nowdate(),
+			half_day_date,
+			half_day_date,
 			leave_type.name,
 			submit=True,
 			half_day=1,
-			half_day_date=nowdate(),
+			half_day_date=half_day_date,
 		)
 		half_day_status_after_second_application = frappe.get_value(
 			"Attendance",
-			filters={"attendance_date": nowdate(), "leave_application": second_leave_application.name},
+			filters={"attendance_date": half_day_date, "leave_application": second_leave_application.name},
 			fieldname="half_day_status",
 		)
 		# the status should remain unchanged after creating second half day leave application

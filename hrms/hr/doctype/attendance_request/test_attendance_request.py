@@ -14,7 +14,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_holiday_list,
 	make_leave_application,
 )
-from hrms.tests.test_utils import add_date_to_holiday_list
+from hrms.tests.test_utils import add_date_to_holiday_list, get_non_holiday_date
 
 test_dependencies = ["Employee"]
 
@@ -38,6 +38,9 @@ class TestAttendanceRequest(FrappeTestCase):
 
 		self.employee = get_employee()
 		frappe.db.set_value("Employee", self.employee.name, "holiday_list", self.holiday_list)
+		# anchor to a working day so tests that mark attendance for "today" do not
+		# fail when the suite runs on a weekend / holiday
+		self.date = get_non_holiday_date(self.employee.name)
 
 	def test_attendance_request_overlap(self):
 		create_attendance_request(employee=self.employee.name, reason="On Duty", company="_Test Company")
@@ -71,11 +74,15 @@ class TestAttendanceRequest(FrappeTestCase):
 	def test_on_duty_attendance_request(self):
 		"Test creation of Attendance from Attendance Request, on duty."
 		attendance_request = create_attendance_request(
-			employee=self.employee.name, reason="On Duty", company="_Test Company"
+			employee=self.employee.name,
+			reason="On Duty",
+			company="_Test Company",
+			from_date=self.date,
+			to_date=self.date,
 		)
 		records = self.get_attendance_records(attendance_request.name)
 
-		self.assertEqual(len(records), 2)
+		self.assertEqual(len(records), 1)
 		self.assertEqual(records[0].status, "Present")
 		self.assertEqual(records[0].docstatus, 1)
 
@@ -102,10 +109,14 @@ class TestAttendanceRequest(FrappeTestCase):
 		self.assertEqual(records[0].docstatus, 2)
 
 	def test_overwrite_attendance(self):
-		attendance_name = mark_attendance(self.employee.name, getdate(), "Absent")
+		attendance_name = mark_attendance(self.employee.name, self.date, "Absent")
 
 		attendance_request = create_attendance_request(
-			employee=self.employee.name, reason="Work From Home", company="_Test Company"
+			employee=self.employee.name,
+			reason="Work From Home",
+			company="_Test Company",
+			from_date=self.date,
+			to_date=self.date,
 		)
 		prev_attendance = frappe.get_doc("Attendance", attendance_name)
 
@@ -207,11 +218,11 @@ class TestAttendanceRequest(FrappeTestCase):
 			{
 				"doctype": "Attendance Request",
 				"employee": self.employee.name,
-				"from_date": getdate(),
-				"to_date": getdate(),
+				"from_date": self.date,
+				"to_date": self.date,
 				"reason": "On Duty",
 				"half_day": 1,
-				"half_day_date": getdate(),
+				"half_day_date": self.date,
 				"company": "_Test Company",
 			}
 		).save()
@@ -228,7 +239,7 @@ class TestAttendanceRequest(FrappeTestCase):
 			{
 				"doctype": "Attendance",
 				"employee": self.employee.name,
-				"attendance_date": getdate(),
+				"attendance_date": self.date,
 				"status": "Absent",
 				"company": "_Test Company",
 			}
@@ -238,11 +249,11 @@ class TestAttendanceRequest(FrappeTestCase):
 			{
 				"doctype": "Attendance Request",
 				"employee": self.employee.name,
-				"from_date": getdate(),
-				"to_date": getdate(),
+				"from_date": self.date,
+				"to_date": self.date,
 				"reason": "On Duty",
 				"half_day": 1,
-				"half_day_date": getdate(),
+				"half_day_date": self.date,
 				"company": "_Test Company",
 			}
 		).save()
@@ -255,7 +266,7 @@ class TestAttendanceRequest(FrappeTestCase):
 
 	def test_half_day_absent_half_to_present(self):
 		"""Test attendance request updates half_day_status from Absent to Present when existing Half Day attendance has the other half marked absent"""
-		today = getdate()
+		today = self.date
 
 		mark_attendance(self.employee.name, today, "Half Day", half_day_status="Absent")
 
