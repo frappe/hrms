@@ -1,0 +1,16 @@
+{
+ "app_home": "page-b838549e",
+ "app_name": "preboarding",
+ "app_title": "Preboarding",
+ "creation": "2026-11-03 13:34:24.227618",
+ "docstatus": 0,
+ "doctype": "Studio App",
+ "frappe_app": "hrms",
+ "idx": 0,
+ "is_standard": 1,
+ "modified": "2026-11-03 13:45:49.656290",
+ "modified_by": "Administrator",
+ "name": "preboarding",
+ "owner": "Administrator",
+ "route": "preboarding"
+}
