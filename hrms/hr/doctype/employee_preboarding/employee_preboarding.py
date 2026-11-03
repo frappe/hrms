@@ -13,7 +13,7 @@ from hrms.hr.doctype.employee_request.employee_request import (
 	PREBOARDING_CANDIDATE_ROLE,
 	PREBOARDING_INVITE_TEMPLATE,
 	PREBOARDING_ROUTE,
-	get_review_sections,
+	get_review_fields,
 )
 
 EMPLOYEE_SELF_SERVICE_ROLE = "Employee Self Service"
@@ -304,7 +304,7 @@ def make_employee(source_name: str, target_doc: str | Document | None = None) ->
 			target.update(request.get_employee_values())
 		target.set_onload(
 			"employee_details",
-			{"sections": get_review_sections(), **(request.get_review() if request else {"documents": []})},
+			{"fields": get_review_fields(), **(request.get_review() if request else {"documents": []})},
 		)
 
 	return get_mapped_doc(

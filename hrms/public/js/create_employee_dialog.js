@@ -14,7 +14,7 @@ const WIDE_FIELDTYPES = ["Table", "Text Editor", "Long Text"];
 export class CreateEmployeeDialog {
 	constructor({ employee, on_created }) {
 		this.employee = employee;
-		this.details = employee.__onload?.employee_details || { sections: [], documents: [] };
+		this.details = employee.__onload?.employee_details || { fields: [], documents: [] };
 		this.on_created = on_created;
 		this.groups = [];
 	}
@@ -36,12 +36,12 @@ export class CreateEmployeeDialog {
 	}
 
 	make_tabs() {
-		const sections = [{ title: __("Job"), fields: JOB_FIELDS }, ...this.details.sections];
+		const shown = new Set([...JOB_FIELDS, ...this.details.fields].filter(is_reviewable));
 		return [
-			...sections
-				.map((section) => ({ ...section, fields: section.fields.filter(is_reviewable) }))
-				.filter((section) => section.fields.length)
-				.map((section) => ({ label: section.title, content: this.make_group(section) })),
+			...get_employee_tabs(shown).map((tab) => ({
+				label: tab.label,
+				content: this.make_group(tab.sections),
+			})),
 			{
 				label: __("Documents"),
 				icon: "paperclip",
@@ -70,14 +70,19 @@ export class CreateEmployeeDialog {
 		return profile;
 	}
 
-	make_group(section) {
+	make_group(sections) {
 		const body = document.createElement("div");
 		const group = new frappe.ui.FieldGroup({
 			body,
-			fields: get_layout(section.fields, this.employee),
+			fields: get_layout(sections, this.employee),
 		});
 		group.make();
-		group.set_values(pick_values(this.employee, section.fields));
+		group.set_values(
+			pick_values(
+				this.employee,
+				sections.flatMap((section) => section.fields),
+			),
+		);
 		this.groups.push(group);
 		return body;
 	}
@@ -121,18 +126,44 @@ function is_reviewable(fieldname) {
 	return fieldname !== PHOTO_FIELD && frappe.meta.has_field("Employee", fieldname);
 }
 
-function get_layout(fieldnames, employee) {
-	const fields = fieldnames.map((fieldname) => get_docfield(fieldname, employee));
-	const wide = fields.filter((df) => WIDE_FIELDTYPES.includes(df.fieldtype));
-	const narrow = fields.filter((df) => !wide.includes(df));
-	const half = Math.ceil(narrow.length / 2);
-	return [
-		...narrow.slice(0, half),
-		{ fieldtype: "Column Break", fieldname: "column_break" },
-		...narrow.slice(half),
-		...(wide.length ? [{ fieldtype: "Section Break", fieldname: "wide_section" }] : []),
-		...wide,
-	];
+function get_employee_tabs(shown) {
+	const tabs = [];
+	let tab = null;
+	let section = null;
+	for (const df of frappe.get_meta("Employee").fields) {
+		if (df.fieldtype === "Tab Break") {
+			tab = { label: __(df.label), sections: [] };
+			tabs.push(tab);
+			section = { label: "", fields: [] };
+		} else if (df.fieldtype === "Section Break") {
+			section = { label: df.label ? __(df.label) : "", fields: [] };
+		} else if (tab && shown.has(df.fieldname)) {
+			if (!tab.sections.includes(section)) tab.sections.push(section);
+			section.fields.push(df.fieldname);
+		}
+	}
+	return tabs.filter((tab) => tab.sections.length);
+}
+
+function get_layout(sections, employee) {
+	return sections.flatMap((section, index) => {
+		const fields = section.fields.map((fieldname) => get_docfield(fieldname, employee));
+		const wide = fields.filter((df) => WIDE_FIELDTYPES.includes(df.fieldtype));
+		const narrow = fields.filter((df) => !wide.includes(df));
+		const half = Math.ceil(narrow.length / 2);
+		return [
+			{ fieldtype: "Section Break", fieldname: `section_${index}`, label: section.label },
+			...narrow.slice(0, half),
+			...(narrow.length
+				? [{ fieldtype: "Column Break", fieldname: `column_${index}` }]
+				: []),
+			...narrow.slice(half),
+			...(narrow.length && wide.length
+				? [{ fieldtype: "Section Break", fieldname: `wide_${index}` }]
+				: []),
+			...wide,
+		];
+	});
 }
 
 function get_docfield(fieldname, employee) {
