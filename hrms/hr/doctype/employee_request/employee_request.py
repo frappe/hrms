@@ -186,8 +186,15 @@ class EmployeeRequest(Document):
 
 	def move_attachments(self, employee: str) -> int:
 		document_names = {row.attachment: row.document_name for row in self.documents if row.attachment}
+		in_use = [url for url in (self.image, *document_names) if url]
 		files = frappe.get_all(
-			"File", filters={"attached_to_doctype": self.doctype, "attached_to_name": self.name}, pluck="name"
+			"File",
+			filters={
+				"attached_to_doctype": self.doctype,
+				"attached_to_name": self.name,
+				"file_url": ["in", in_use],
+			},
+			pluck="name",
 		)
 		for name in files:
 			file = frappe.get_doc("File", name)
