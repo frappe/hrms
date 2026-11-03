@@ -6,9 +6,14 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
-from frappe.utils import get_link_to_form, now_datetime, validate_email_address
+from frappe.utils import formatdate, get_link_to_form, get_url, now_datetime, validate_email_address
 
 from hrms.hr.doctype.employee_preboarding.preboarding_activities import PreboardingActivities
+from hrms.hr.doctype.employee_request.employee_request import (
+	PREBOARDING_CANDIDATE_ROLE,
+	PREBOARDING_INVITE_TEMPLATE,
+	PREBOARDING_ROUTE,
+)
 
 EMPLOYEE_SELF_SERVICE_ROLE = "Employee Self Service"
 OFFER_EMPLOYEE_FIELDS = ("branch", "employment_type", "reports_to")
@@ -135,11 +140,13 @@ class EmployeePreboarding(PreboardingActivities, Document):
 		if not email:
 			frappe.throw(_("Set the {0} to create a user").format(frappe.bold(_(create_user_for))))
 
-		if frappe.db.exists("User", email):
-			self.db_set("user", email)
-			self.save_activity_states()
-			return email
+		user = email if frappe.db.exists("User", email) else self.insert_user(email)
+		self.db_set("user", user)
+		self.start_employee_request()
+		self.save_activity_states()
+		return user
 
+	def insert_user(self, email: str) -> str:
 		first_name, middle_name, last_name = split_full_name(self.employee_name)
 		user = frappe.new_doc("User")
 		user.update(
@@ -152,10 +159,50 @@ class EmployeePreboarding(PreboardingActivities, Document):
 			}
 		)
 		user.insert(ignore_permissions=True)
-
-		self.db_set("user", user.name)
-		self.save_activity_states()
 		return user.name
+
+	def start_employee_request(self) -> None:
+		frappe.get_doc("User", self.user).add_roles(PREBOARDING_CANDIDATE_ROLE)
+		if request := frappe.db.get_value("Employee Request", {"employee_preboarding": self.name}):
+			frappe.db.set_value("Employee Request", request, "user", self.user)
+		else:
+			self.make_employee_request().insert()
+		self.send_preboarding_invite()
+
+	def make_employee_request(self) -> Document:
+		first_name, middle_name, last_name = split_full_name(self.employee_name)
+		request = frappe.new_doc("Employee Request")
+		request.update(
+			{
+				"employee_preboarding": self.name,
+				"user": self.user,
+				"first_name": first_name,
+				"middle_name": middle_name,
+				"last_name": last_name,
+				"personal_email": self.personal_email,
+			}
+		)
+		for row in get_required_documents(self.employee_boarding_template):
+			request.append("documents", row)
+		return request
+
+	def send_preboarding_invite(self) -> None:
+		template = frappe.get_doc("Email Template", PREBOARDING_INVITE_TEMPLATE)
+		email = template.get_formatted_email(
+			{
+				"employee_name": self.employee_name,
+				"company": self.company,
+				"date_of_joining": formatdate(self.date_of_joining),
+				"preboarding_url": get_url(PREBOARDING_ROUTE),
+			}
+		)
+		frappe.sendmail(
+			recipients=[self.user],
+			subject=email["subject"],
+			message=email["message"],
+			reference_doctype=self.doctype,
+			reference_name=self.name,
+		)
 
 	def set_user_emails(self, **emails) -> None:
 		changed = {
@@ -213,7 +260,24 @@ class EmployeePreboarding(PreboardingActivities, Document):
 	def attach_employee(self, employee: str) -> None:
 		self.db_set("employee", employee)
 		self.grant_employee_self_service()
+		if request := self.get_employee_request():
+			request.apply_to(employee)
 		self.save_activity_states()
+
+	def get_employee_request(self) -> Document | None:
+		name = frappe.db.get_value("Employee Request", {"employee_preboarding": self.name})
+		return name and frappe.get_doc("Employee Request", name)
+
+
+def get_required_documents(template: str | None) -> list[dict]:
+	if not template:
+		return []
+	return frappe.get_all(
+		"Employee Boarding Document",
+		fields=["document_name", "required", "description"],
+		filters={"parent": template, "parenttype": "Employee Boarding Template"},
+		order_by="idx",
+	)
 
 
 @frappe.whitelist()
@@ -234,6 +298,9 @@ def make_employee(source_name: str, target_doc: str | Document | None = None) ->
 			target.update(
 				frappe.db.get_value("Job Offer", source.job_offer, OFFER_EMPLOYEE_FIELDS, as_dict=True) or {}
 			)
+		if request := source.get_employee_request():
+			target.update(request.get_employee_values())
+			target.set_onload("employee_request", request.get_review())
 
 	return get_mapped_doc(
 		"Employee Preboarding",
@@ -260,6 +327,7 @@ def unlink_deleted_user(user: Document, method: str | None = None) -> None:
 		preboarding = frappe.get_doc("Employee Preboarding", name)
 		preboarding.db_set("user", None)
 		preboarding.save_activity_states()
+	frappe.db.set_value("Employee Request", {"user": user.name}, "user", None)
 
 
 def reopen_appointment_letter(preboarding: str) -> None:
