@@ -148,6 +148,10 @@ before_app_uninstall = "hrms.setup.before_app_uninstall"
 # -----------
 # Permissions evaluated in scripted ways
 
+studio_app_boot = {
+	"preboarding": "hrms.hr.doctype.employee_request.employee_request.get_preboarding_boot",
+}
+
 permission_query_conditions = {
 	"Employee Request": "hrms.hr.doctype.employee_request.employee_request.get_permission_query_conditions",
 }

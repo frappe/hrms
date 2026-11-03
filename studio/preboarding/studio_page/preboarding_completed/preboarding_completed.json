@@ -1,0 +1,160 @@
+{
+ "allow_guest": 0,
+ "blocks": [
+  {
+   "baseStyles": {
+    "background": "var(--surface-base)",
+    "display": "flex",
+    "flexDirection": "column",
+    "minHeight": "100vh",
+    "width": "100%"
+   },
+   "blockName": "body",
+   "children": [
+    {
+     "baseStyles": {
+      "alignItems": "center",
+      "background": "var(--surface-base)",
+      "borderColor": "var(--outline-gray-1)",
+      "borderStyle": "solid",
+      "borderWidth": "0px 0px 1px 0px",
+      "display": "flex",
+      "flexDirection": "row",
+      "gap": "8px",
+      "minHeight": "48px",
+      "padding": "0px 20px"
+     },
+     "blockName": "App bar",
+     "children": [
+      {
+       "baseStyles": {
+        "color": "var(--ink-gray-8)",
+        "fontWeight": "600"
+       },
+       "componentId": "textblock-1",
+       "componentName": "TextBlock",
+       "componentProps": {
+        "fontSize": "text-lg",
+        "text": "Preboarding"
+       },
+       "componentSlots": {}
+      }
+     ],
+     "componentId": "div-2",
+     "componentName": "div",
+     "componentProps": {},
+     "componentSlots": {},
+     "originalElement": "div"
+    },
+    {
+     "baseStyles": {
+      "display": "flex",
+      "flexDirection": "column",
+      "gap": "16px",
+      "margin": "0px auto",
+      "maxWidth": "720px",
+      "padding": "20px",
+      "width": "100%"
+     },
+     "blockName": "Main",
+     "children": [
+      {
+       "baseStyles": {
+        "alignItems": "center",
+        "display": "flex",
+        "flexDirection": "column",
+        "gap": "12px",
+        "padding": "64px 0px",
+        "textAlign": "center"
+       },
+       "blockName": "Nothing to fill in",
+       "children": [
+        {
+         "baseStyles": {
+          "background": "var(--surface-gray-2)",
+          "borderRadius": "9999px",
+          "display": "flex",
+          "padding": "12px"
+         },
+         "children": [
+          {
+           "baseStyles": {
+            "color": "var(--ink-gray-5)"
+           },
+           "componentId": "icon-3",
+           "componentName": "Icon",
+           "componentProps": {
+            "icon": "lucide-circle-check"
+           },
+           "componentSlots": {}
+          }
+         ],
+         "componentId": "div-4",
+         "componentName": "div",
+         "componentProps": {},
+         "componentSlots": {},
+         "originalElement": "div"
+        },
+        {
+         "baseStyles": {
+          "color": "var(--ink-gray-7)"
+         },
+         "componentId": "textblock-5",
+         "componentName": "TextBlock",
+         "componentProps": {
+          "fontSize": "text-base",
+          "text": "Nothing to fill in"
+         },
+         "componentSlots": {}
+        },
+        {
+         "baseStyles": {
+          "color": "var(--ink-gray-5)"
+         },
+         "componentId": "textblock-6",
+         "componentName": "TextBlock",
+         "componentProps": {
+          "fontSize": "text-sm",
+          "text": "Your preboarding is complete, or there is nothing for you to fill in yet."
+         },
+         "componentSlots": {}
+        }
+       ],
+       "componentId": "div-7",
+       "componentName": "div",
+       "componentProps": {},
+       "componentSlots": {},
+       "originalElement": "div"
+      }
+     ],
+     "componentId": "div-34",
+     "componentName": "div",
+     "componentProps": {},
+     "componentSlots": {},
+     "originalElement": "div"
+    }
+   ],
+   "componentId": "root",
+   "componentName": "div",
+   "componentProps": {},
+   "componentSlots": {},
+   "originalElement": "body"
+  }
+ ],
+ "creation": "2026-11-03 13:45:49.647704",
+ "docstatus": 0,
+ "doctype": "Studio Page",
+ "frappe_app": "hrms",
+ "idx": 0,
+ "is_standard": 1,
+ "modified": "2026-11-03 13:45:49.651195",
+ "modified_by": "Administrator",
+ "name": "preboarding_completed",
+ "owner": "Administrator",
+ "page_name": "page-d5f5d094",
+ "page_title": "Preboarding Completed",
+ "published": 1,
+ "route": "/done",
+ "studio_app": "preboarding",
+ "tab_title": "Preboarding"
+}

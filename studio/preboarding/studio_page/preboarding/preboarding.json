@@ -1,0 +1,473 @@
+{
+ "allow_guest": 0,
+ "blocks": [
+  {
+   "baseStyles": {
+    "background": "var(--surface-base)",
+    "display": "flex",
+    "flexDirection": "column",
+    "minHeight": "100vh",
+    "width": "100%"
+   },
+   "blockName": "body",
+   "children": [
+    {
+     "baseStyles": {
+      "alignItems": "center",
+      "background": "var(--surface-base)",
+      "borderColor": "var(--outline-gray-1)",
+      "borderStyle": "solid",
+      "borderWidth": "0px 0px 1px 0px",
+      "display": "flex",
+      "flexDirection": "row",
+      "gap": "8px",
+      "minHeight": "48px",
+      "padding": "0px 20px"
+     },
+     "blockName": "App bar",
+     "children": [
+      {
+       "baseStyles": {
+        "color": "var(--ink-gray-8)",
+        "fontWeight": "600"
+       },
+       "componentId": "textblock-1",
+       "componentName": "TextBlock",
+       "componentProps": {
+        "fontSize": "text-lg",
+        "text": "Preboarding"
+       },
+       "componentSlots": {}
+      }
+     ],
+     "componentId": "div-2",
+     "componentName": "div",
+     "componentProps": {},
+     "componentSlots": {},
+     "originalElement": "div"
+    },
+    {
+     "baseStyles": {
+      "display": "flex",
+      "flexDirection": "column",
+      "gap": "24px",
+      "margin": "0px auto",
+      "maxWidth": "720px",
+      "padding": "20px 20px 40px 20px",
+      "width": "100%"
+     },
+     "blockName": "Main",
+     "children": [
+      {
+       "baseStyles": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gap": "24px"
+       },
+       "blockName": "Preboarding form",
+       "children": [
+        {
+         "baseStyles": {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "4px"
+         },
+         "blockName": "Step header",
+         "children": [
+          {
+           "baseStyles": {
+            "color": "var(--ink-gray-5)"
+           },
+           "componentId": "textblock-8",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "fontSize": "text-sm",
+            "text": "{{ stepCaption }}"
+           },
+           "componentSlots": {}
+          },
+          {
+           "baseStyles": {
+            "color": "var(--ink-gray-8)",
+            "fontWeight": "600"
+           },
+           "componentId": "textblock-9",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "fontSize": "text-2xl",
+            "text": "{{ stepTitle }}"
+           },
+           "componentSlots": {}
+          },
+          {
+           "baseStyles": {
+            "marginTop": "8px"
+           },
+           "componentId": "progress-10",
+           "componentName": "Progress",
+           "componentProps": {
+            "intervals": "{{ steps.length }}",
+            "size": "md",
+            "value": "{{ progressValue }}"
+           },
+           "componentSlots": {}
+          }
+         ],
+         "componentId": "div-11",
+         "componentName": "div",
+         "componentProps": {},
+         "componentSlots": {},
+         "originalElement": "div"
+        },
+        {
+         "componentId": "alert-12",
+         "componentName": "Alert",
+         "componentProps": {
+          "description": "You can still change your details until your first day.",
+          "theme": "green",
+          "title": "{{ submittedTitle }}"
+         },
+         "componentSlots": {},
+         "visibilityCondition": "{{ submittedTitle }}"
+        },
+        {
+         "blockName": "Form step",
+         "componentId": "formlayout-13",
+         "componentName": "FormLayout",
+         "componentProps": {
+          "doc": "{{ request.doc }}",
+          "layout": "{{ currentLayout }}"
+         },
+         "componentSlots": {},
+         "visibilityCondition": "{{ isFormStep }}"
+        },
+        {
+         "baseStyles": {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "16px"
+         },
+         "blockName": "Documents step",
+         "children": [
+          {
+           "baseStyles": {
+            "color": "var(--ink-gray-6)"
+           },
+           "componentId": "textblock-22",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "fontSize": "text-sm",
+            "text": "Upload a clear photo or PDF of each document."
+           },
+           "componentSlots": {}
+          },
+          {
+           "baseStyles": {
+            "display": "flex",
+            "flexDirection": "column",
+            "width": "100%"
+           },
+           "children": [
+            {
+             "baseStyles": {
+              "alignItems": "center",
+              "borderColor": "var(--outline-gray-1)",
+              "borderStyle": "solid",
+              "borderWidth": "0px 0px 1px 0px",
+              "display": "flex",
+              "flexDirection": "row",
+              "gap": "16px",
+              "padding": "12px 0px",
+              "width": "100%"
+             },
+             "blockName": "Document row",
+             "children": [
+              {
+               "baseStyles": {
+                "display": "flex",
+                "flex": "1",
+                "flexDirection": "column",
+                "gap": "4px",
+                "minWidth": "0px"
+               },
+               "children": [
+                {
+                 "baseStyles": {
+                  "alignItems": "center",
+                  "display": "flex",
+                  "flexDirection": "row",
+                  "gap": "8px"
+                 },
+                 "children": [
+                  {
+                   "baseStyles": {
+                    "color": "var(--ink-gray-8)"
+                   },
+                   "componentId": "textblock-14",
+                   "componentName": "TextBlock",
+                   "componentProps": {
+                    "fontSize": "text-base",
+                    "text": "{{ dataItem.document_name }}"
+                   },
+                   "componentSlots": {}
+                  },
+                  {
+                   "componentId": "badge-15",
+                   "componentName": "Badge",
+                   "componentProps": {
+                    "label": "Required",
+                    "theme": "gray",
+                    "variant": "subtle"
+                   },
+                   "componentSlots": {},
+                   "visibilityCondition": "{{ dataItem.required && !dataItem.attachment }}"
+                  },
+                  {
+                   "componentId": "badge-16",
+                   "componentName": "Badge",
+                   "componentProps": {
+                    "label": "Uploaded",
+                    "theme": "green",
+                    "variant": "subtle"
+                   },
+                   "componentSlots": {},
+                   "visibilityCondition": "{{ dataItem.attachment }}"
+                  }
+                 ],
+                 "componentId": "div-17",
+                 "componentName": "div",
+                 "componentProps": {},
+                 "componentSlots": {},
+                 "originalElement": "div"
+                },
+                {
+                 "baseStyles": {
+                  "color": "var(--ink-gray-5)"
+                 },
+                 "componentId": "textblock-18",
+                 "componentName": "TextBlock",
+                 "componentProps": {
+                  "fontSize": "text-sm",
+                  "text": "{{ dataItem.description }}"
+                 },
+                 "componentSlots": {},
+                 "visibilityCondition": "{{ dataItem.description }}"
+                }
+               ],
+               "componentId": "div-19",
+               "componentName": "div",
+               "componentProps": {},
+               "componentSlots": {},
+               "originalElement": "div"
+              },
+              {
+               "componentEvents": {
+                "success": {
+                 "action": "Run Script",
+                 "event": "success",
+                 "script": "function handleEvent(file) { attachDocument(dataItem, file) }"
+                }
+               },
+               "componentId": "fileuploader-20",
+               "componentName": "FileUploader",
+               "componentProps": {
+                "docname": "{{ request.doc.name }}",
+                "doctype": "Employee Request",
+                "fieldname": "attachment",
+                "fileTypes": [
+                 "image/*",
+                 "application/pdf"
+                ],
+                "private": true
+               },
+               "componentSlots": {}
+              }
+             ],
+             "componentId": "div-21",
+             "componentName": "div",
+             "componentProps": {},
+             "componentSlots": {},
+             "originalElement": "div"
+            }
+           ],
+           "componentId": "repeater-23",
+           "componentName": "Repeater",
+           "componentProps": {
+            "data": "{{ request.doc.documents }}",
+            "dataKey": "name"
+           },
+           "componentSlots": {}
+          }
+         ],
+         "componentId": "div-24",
+         "componentName": "div",
+         "componentProps": {},
+         "componentSlots": {},
+         "originalElement": "div",
+         "visibilityCondition": "{{ isDocumentsStep }}"
+        },
+        {
+         "baseStyles": {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "16px"
+         },
+         "blockName": "Review step",
+         "children": [
+          {
+           "componentId": "alert-25",
+           "componentName": "Alert",
+           "componentProps": {
+            "description": "{{ missingSummary }}",
+            "theme": "amber",
+            "title": "Fill these in before you submit"
+           },
+           "componentSlots": {},
+           "visibilityCondition": "{{ missing.length }}"
+          },
+          {
+           "baseStyles": {
+            "color": "var(--ink-gray-7)"
+           },
+           "componentId": "textblock-26",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "fontSize": "text-base",
+            "text": "Everything is filled in. Submit to let HR know your details are ready."
+           },
+           "componentSlots": {},
+           "visibilityCondition": "{{ !missing.length }}"
+          }
+         ],
+         "componentId": "div-27",
+         "componentName": "div",
+         "componentProps": {},
+         "componentSlots": {},
+         "originalElement": "div",
+         "visibilityCondition": "{{ isReviewStep }}"
+        },
+        {
+         "baseStyles": {
+          "alignItems": "center",
+          "display": "flex",
+          "flexDirection": "row",
+          "gap": "8px",
+          "paddingTop": "8px"
+         },
+         "blockName": "Footer",
+         "children": [
+          {
+           "componentEvents": {
+            "click": {
+             "action": "Run Script",
+             "event": "click",
+             "script": "back()"
+            }
+           },
+           "componentId": "button-28",
+           "componentName": "Button",
+           "componentProps": {
+            "label": "Back",
+            "variant": "subtle"
+           },
+           "componentSlots": {},
+           "visibilityCondition": "{{ step > 0 }}"
+          },
+          {
+           "baseStyles": {
+            "flex": "1"
+           },
+           "componentId": "div-29",
+           "componentName": "div",
+           "componentProps": {},
+           "componentSlots": {},
+           "originalElement": "div"
+          },
+          {
+           "componentEvents": {
+            "click": {
+             "action": "Run Script",
+             "event": "click",
+             "script": "primaryAction()"
+            }
+           },
+           "componentId": "button-30",
+           "componentName": "Button",
+           "componentProps": {
+            "disabled": "{{ isReviewStep && missing.length > 0 }}",
+            "label": "{{ primaryLabel }}",
+            "loading": "{{ saving }}",
+            "variant": "solid"
+           },
+           "componentSlots": {}
+          }
+         ],
+         "componentId": "div-31",
+         "componentName": "div",
+         "componentProps": {},
+         "componentSlots": {},
+         "originalElement": "div"
+        }
+       ],
+       "componentId": "div-32",
+       "componentName": "div",
+       "componentProps": {},
+       "componentSlots": {},
+       "originalElement": "div",
+       "visibilityCondition": "{{ request?.doc }}"
+      }
+     ],
+     "componentId": "div-33",
+     "componentName": "div",
+     "componentProps": {},
+     "componentSlots": {},
+     "mobileStyles": {
+      "padding": "12px 12px 40px 12px"
+     },
+     "originalElement": "div"
+    }
+   ],
+   "componentId": "root",
+   "componentName": "div",
+   "componentProps": {},
+   "componentSlots": {},
+   "originalElement": "body"
+  }
+ ],
+ "creation": "2026-11-03 13:34:24.310380",
+ "docstatus": 0,
+ "doctype": "Studio Page",
+ "frappe_app": "hrms",
+ "idx": 0,
+ "is_standard": 1,
+ "modified": "2026-11-03 13:45:49.642312",
+ "modified_by": "Administrator",
+ "name": "preboarding",
+ "owner": "Administrator",
+ "page_name": "page-b838549e",
+ "page_title": "Preboarding",
+ "published": 1,
+ "resources": [
+  {
+   "auto": 1,
+   "document_type": "Employee Request",
+   "fetch_document_using_filters": 1,
+   "filters": "{\"name\": \"{{ boot.request }}\"}",
+   "limit": 0,
+   "method": "GET",
+   "resource_name": "request",
+   "resource_type": "Document",
+   "whitelisted_methods": "[\"submit_details\"]"
+  }
+ ],
+ "route": "/",
+ "studio_app": "preboarding",
+ "tab_title": "Preboarding",
+ "variables": [
+  {
+   "initial_value": "0",
+   "variable_name": "step",
+   "variable_type": "Number"
+  }
+ ]
+}

@@ -218,6 +218,28 @@ class EmployeeRequest(Document):
 		)
 
 
+def get_preboarding_boot() -> dict:
+	if frappe.session.user == "Guest":
+		return {}
+	request = frappe.db.get_value("Employee Request", {"user": frappe.session.user})
+	if not request:
+		return {"request": None}
+
+	meta = frappe.get_meta("Employee Request")
+	return {
+		"request": request,
+		"fields": get_translated_fields(meta.name),
+		"child_metas": {df.options: get_translated_fields(df.options) for df in meta.get_table_fields()},
+	}
+
+
+def get_translated_fields(doctype: str) -> list[dict]:
+	return [
+		{**df.as_dict(no_default_fields=True), "label": _(df.label) if df.label else df.label}
+		for df in frappe.get_meta(doctype).fields
+	]
+
+
 def get_apply_summary(filled: int, moved: int) -> str:
 	parts = []
 	if filled:
