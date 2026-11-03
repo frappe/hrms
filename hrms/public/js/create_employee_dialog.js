@@ -30,7 +30,8 @@ export class CreateEmployeeDialog {
 		});
 		this.tabs = new frappe.ui.Tabs({ vertical: true, tabs: this.make_tabs() });
 		this.dialog.$wrapper.addClass("epc-create-employee");
-		this.dialog.fields_dict.body.$wrapper.empty().append(this.make_header(), this.tabs.el);
+		this.dialog.$wrapper.find(".modal-title").empty().append(this.make_header());
+		this.dialog.fields_dict.body.$wrapper.empty().append(this.tabs.el);
 		this.dialog.show();
 	}
 
@@ -53,16 +54,16 @@ export class CreateEmployeeDialog {
 		const { first_name, middle_name, last_name } = this.employee;
 		const name = [first_name, middle_name, last_name].filter(Boolean).join(" ");
 		const email = this.employee.personal_email || this.employee.company_email || "";
-		const header = $('<div class="d-flex align-items-center mb-4">');
+		const header = $('<div class="d-flex align-items-center">');
 		header.append(
 			frappe.ui.avatar({
 				image: this.details.photo,
 				label: name,
-				size: "2xl",
+				size: "lg",
 				theme: "auto",
 			}),
 			$('<div class="ml-3">').append(
-				$('<div class="text-lg font-weight-bold text-ink-gray-8">').text(name),
+				$('<div class="text-base font-weight-bold text-ink-gray-8">').text(name),
 				$('<div class="text-p-sm text-ink-gray-5">').text(email),
 			),
 		);
