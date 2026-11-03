@@ -26,6 +26,9 @@ class EmployeeBoardingTemplate(Document):
 		from hrms.hr.doctype.employee_boarding_activity.employee_boarding_activity import (
 			EmployeeBoardingActivity,
 		)
+		from hrms.hr.doctype.employee_boarding_document.employee_boarding_document import (
+			EmployeeBoardingDocument,
+		)
 
 		company: DF.Link | None
 		department: DF.Link | None
@@ -34,6 +37,7 @@ class EmployeeBoardingTemplate(Document):
 		offboarding_activities: DF.Table[EmployeeBoardingActivity]
 		onboarding_activities: DF.Table[EmployeeBoardingActivity]
 		preboarding_activities: DF.Table[EmployeeBoardingActivity]
+		required_documents: DF.Table[EmployeeBoardingDocument]
 		title: DF.Data
 	# end: auto-generated types
 

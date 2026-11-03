@@ -17,6 +17,8 @@
   "employee_grade",
   "preboarding_tab",
   "preboarding_activities",
+  "required_documents_tab",
+  "required_documents",
   "onboarding_tab",
   "onboarding_activities",
   "offboarding_tab",
@@ -99,11 +101,23 @@
    "fieldtype": "Table",
    "label": "Activities",
    "options": "Employee Boarding Activity"
+  },
+  {
+   "fieldname": "required_documents_tab",
+   "fieldtype": "Tab Break",
+   "label": "Required Documents"
+  },
+  {
+   "fieldname": "required_documents",
+   "fieldtype": "Table",
+   "label": "Required Documents",
+   "options": "Employee Boarding Document"
   }
  ],
  "icon": "clipboard-list",
+ "link_display_mode": "Search",
  "links": [],
- "modified": "2026-10-22 19:30:00.000000",
+ "modified": "2026-11-03 13:23:03.971702",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Boarding Template",
