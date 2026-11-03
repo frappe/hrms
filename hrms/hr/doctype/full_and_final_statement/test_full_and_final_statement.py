@@ -66,6 +66,15 @@ class TestFullandFinalStatement(HRMSTestSuite):
 		self.assertEqual(debit_entry.reference_type, "Full and Final Statement")
 		self.assertEqual(debit_entry.reference_name, self.fnf.name)
 
+	def test_journal_entry_party_for_receivable_and_payable_accounts(self):
+		self.fnf.append("payables", {"component": "Salary", "account": "Creditors - _TC", "amount": 1000})
+		self.fnf.append("receivables", {"component": "Recovery", "account": "Debtors - _TC", "amount": 500})
+
+		jv = self.fnf.create_journal_entry()
+
+		self.assertEqual((jv.accounts[0].party_type, jv.accounts[0].party), ("Employee", self.employee))
+		self.assertEqual((jv.accounts[1].party_type, jv.accounts[1].party), ("Employee", self.employee))
+
 	def test_employee_advance_settlement(self):
 		from hrms.hr.doctype.employee_advance.test_employee_advance import (
 			make_employee_advance,
