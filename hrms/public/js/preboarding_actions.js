@@ -1,3 +1,5 @@
+import { CreateEmployeeDialog } from "./create_employee_dialog.js";
+
 // What each preboarding activity action shows and does. A template row names its action;
 // the row's value, lock and buttons come from the handler for that action.
 
@@ -181,8 +183,10 @@ async function create_employee(list) {
 		"hrms.hr.doctype.employee_preboarding.employee_preboarding.make_employee",
 		{ source_name: list.frm.doc.name },
 	);
-	const [employee] = frappe.model.sync(doc);
-	frappe.ui.form.make_quick_entry("Employee", () => list.frm.reload_doc(), null, employee, true);
+	new CreateEmployeeDialog({
+		employee: doc,
+		on_created: () => list.frm.reload_doc(),
+	}).show();
 }
 
 // Reuses the Employee form's assignment engine, so the dialog keeps its Submit step, its

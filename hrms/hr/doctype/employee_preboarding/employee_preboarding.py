@@ -13,6 +13,7 @@ from hrms.hr.doctype.employee_request.employee_request import (
 	PREBOARDING_CANDIDATE_ROLE,
 	PREBOARDING_INVITE_TEMPLATE,
 	PREBOARDING_ROUTE,
+	get_review_sections,
 )
 
 EMPLOYEE_SELF_SERVICE_ROLE = "Employee Self Service"
@@ -298,9 +299,13 @@ def make_employee(source_name: str, target_doc: str | Document | None = None) ->
 			target.update(
 				frappe.db.get_value("Job Offer", source.job_offer, OFFER_EMPLOYEE_FIELDS, as_dict=True) or {}
 			)
-		if request := source.get_employee_request():
+		request = source.get_employee_request()
+		if request:
 			target.update(request.get_employee_values())
-			target.set_onload("employee_request", request.get_review())
+		target.set_onload(
+			"employee_details",
+			{"sections": get_review_sections(), **(request.get_review() if request else {"documents": []})},
+		)
 
 	return get_mapped_doc(
 		"Employee Preboarding",

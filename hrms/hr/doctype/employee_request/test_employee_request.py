@@ -93,11 +93,11 @@ class TestEmployeeRequest(HRMSTestSuite):
 		request.save()
 
 		employee = make_employee(preboarding.name)
-		review = employee.get_onload().employee_request
+		details = employee.get_onload().employee_details
 
 		self.assertEqual((employee.gender, employee.bank_name), ("Female", "HDFC Bank"))
-		self.assertEqual(review["name"], request.name)
-		self.assertIn("bank_name", [field for section in review["sections"] for field in section["fields"]])
+		self.assertEqual(details["name"], request.name)
+		self.assertIn("bank_name", [field for section in details["sections"] for field in section["fields"]])
 
 	def test_employee_from_the_list_fills_only_blank_fields_and_retires_the_request(self):
 		preboarding = start_preboarding()
