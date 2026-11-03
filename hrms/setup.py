@@ -25,6 +25,7 @@ def after_install():
 	setup_repost_defaults()
 	create_default_role_profiles()
 	create_default_boarding_template()
+	setup_preboarding_candidate()
 	run_post_install_patches()
 	add_default_hr_permissions()
 
@@ -771,6 +772,12 @@ def create_default_boarding_template():
 	)
 
 	create_default_template()
+
+
+def setup_preboarding_candidate():
+	from hrms.hr.doctype.employee_request.employee_request import setup_preboarding_candidate
+
+	setup_preboarding_candidate()
 
 
 def create_custom_role(data):

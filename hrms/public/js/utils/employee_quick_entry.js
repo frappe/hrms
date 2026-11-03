@@ -53,14 +53,18 @@ frappe.ui.form.EmployeeQuickEntryForm = class EmployeeQuickEntryForm extends (
 		essentials[0].push(...this.missing_mandatory_fields(essentials));
 		const shown = new Set(essentials.flat());
 
-		this.detail_sections = employee_sections()
+		this.detail_sections = [...this.employee_request_sections(), ...employee_sections()]
 			.map((section) => ({
 				...section,
 				columns: section.columns.map((column) =>
-					column.filter((fieldname) => !shown.has(fieldname) && this.get_df(fieldname)),
+					column.filter((fieldname) => {
+						if (shown.has(fieldname) || !this.get_df(fieldname)) return false;
+						shown.add(fieldname);
+						return true;
+					}),
 				),
 			}))
-			.filter((section) => section.columns.flat().length);
+			.filter((section) => section.documents || section.columns.flat().length);
 		this.detail_fields = [];
 
 		this.docfields = [
@@ -70,6 +74,35 @@ frappe.ui.form.EmployeeQuickEntryForm = class EmployeeQuickEntryForm extends (
 			{ fieldtype: "Section Break", fieldname: "more_details_section", hide_border: 1 },
 			{ fieldtype: "HTML", fieldname: "more_details" },
 		];
+	}
+
+	employee_request_sections() {
+		const request = this.doc.__onload?.employee_request;
+		if (!request) return [];
+
+		const sections = request.sections.map((section) => ({
+			title: section.title,
+			columns: this.split_columns(section.fields),
+			added: true,
+		}));
+		if (request.documents.length) {
+			sections.push({
+				title: __("Documents"),
+				columns: [],
+				documents: request.documents,
+				added: true,
+			});
+		}
+		return sections;
+	}
+
+	split_columns(fieldnames) {
+		const has_table = fieldnames.some((fieldname) =>
+			frappe.model.table_fields.includes(this.get_df(fieldname)?.fieldtype),
+		);
+		if (has_table) return [fieldnames];
+		const half = Math.ceil(fieldnames.length / 2);
+		return [fieldnames.slice(0, half), fieldnames.slice(half)];
 	}
 
 	missing_mandatory_fields(essentials) {
@@ -113,7 +146,11 @@ frappe.ui.form.EmployeeQuickEntryForm = class EmployeeQuickEntryForm extends (
 			label: __("Add more now"),
 			sections: this.detail_sections.map((section, i) => ({
 				title: section.title,
-				content: () => this.make_detail_section(section, i),
+				added: section.added,
+				content: () =>
+					section.documents
+						? this.make_documents_section(section.documents)
+						: this.make_detail_section(section, i),
 			})),
 			on_remove: (i) => this.clear_detail_section(i),
 		});
@@ -126,12 +163,34 @@ frappe.ui.form.EmployeeQuickEntryForm = class EmployeeQuickEntryForm extends (
 			body,
 			fields: this.columns_to_fields(`section_${i}`, section.columns, (df) => ({
 				...df,
+				...(frappe.model.table_fields.includes(df.fieldtype) && {
+					fields: frappe.meta.get_docfields(df.options),
+				}),
 				...EMPLOYEE_FIELD_OVERRIDES[df.fieldname]?.(),
 			})),
 		});
 		fields.make();
+		fields.set_values(
+			Object.fromEntries(
+				section.columns
+					.flat()
+					.filter((fieldname) => this.doc[fieldname] != null)
+					.map((fieldname) => [fieldname, this.doc[fieldname]]),
+			),
+		);
 		this.detail_fields[i] = fields;
 		return body;
+	}
+
+	make_documents_section(documents) {
+		const list = $('<div class="flex flex-col gap-2">');
+		for (const document of documents) {
+			$('<a target="_blank" rel="noopener">')
+				.attr("href", document.url)
+				.text(document.label)
+				.appendTo(list);
+		}
+		return list[0];
 	}
 
 	clear_detail_section(i) {

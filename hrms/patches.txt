@@ -73,3 +73,4 @@ hrms.patches.v16_0.clear_create_user_activity_reference
 hrms.patches.v16_0.rename_appointment_letter_preboarding_field
 hrms.patches.v16_0.merge_separation_templates_into_boarding_templates
 hrms.patches.v16_0.clear_appointment_letter_activity_reference
+hrms.patches.v16_0.setup_preboarding_candidate
