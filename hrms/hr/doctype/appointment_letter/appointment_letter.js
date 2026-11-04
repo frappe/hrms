@@ -7,7 +7,7 @@ frappe.ui.form.on("Appointment Letter", {
 	},
 
 	onload: function (frm) {
-		set_default_letter_body(frm);
+		set_default_template(frm);
 		frm.set_query("appointment_letter_print_format", function () {
 			return { filters: { doc_type: "Appointment Letter", disabled: 0 } };
 		});
@@ -67,12 +67,21 @@ frappe.ui.form.on("Appointment Letter", {
 	},
 });
 
-async function set_default_letter_body(frm) {
+async function set_default_template(frm) {
 	if (!frm.is_new() || frm.doc.letter_body || frm.doc.appointment_letter_template) return;
-	const { message } = await frappe.call(
+	const { message: template } = await frappe.db.get_value(
+		"Appointment Letter Template",
+		{ is_default: 1 },
+		"name",
+	);
+	if (template?.name) {
+		frm.set_value("appointment_letter_template", template.name);
+		return;
+	}
+	const { message: body } = await frappe.call(
 		"hrms.hr.doctype.appointment_letter_template.appointment_letter_template.get_default_letter_body",
 	);
-	frm.set_value("letter_body", message);
+	frm.set_value("letter_body", body);
 }
 
 async function email_appointment_letter(frm) {

@@ -9,7 +9,10 @@ from frappe.model.document import Document
 from frappe.utils import cint, flt, fmt_money, format_time, getdate, global_date_format, in_words
 from frappe.utils.jinja import validate_template
 
-from hrms.hr.doctype.appointment_letter_template.appointment_letter_template import get_default_letter_body
+from hrms.hr.doctype.appointment_letter_template.appointment_letter_template import (
+	get_default_letter_body,
+	get_default_template,
+)
 
 
 class AppointmentLetter(Document):
@@ -48,6 +51,7 @@ class AppointmentLetter(Document):
 		if not self.shift_type:
 			self.set_shift_from_employee()
 		if not self.letter_body:
+			self.appointment_letter_template = self.appointment_letter_template or get_default_template()
 			self.letter_body = self.get_template_body()
 
 	def validate(self):
