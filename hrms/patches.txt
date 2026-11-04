@@ -56,3 +56,4 @@ hrms.patches.v16_0.update_partially_paid_expense_claim_status
 hrms.patches.v16_0.set_job_offer_in_employee
 hrms.patches.v16_0.delete_old_salary_slip_print_formats
 hrms.patches.v16_0.reset_salary_slip_print_format_renderer
+hrms.patches.v16_0.hide_org_chart_from_employees_on_existing_sites
