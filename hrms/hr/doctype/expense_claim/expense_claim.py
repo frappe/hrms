@@ -8,7 +8,7 @@ from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe.model.workflow import get_workflow_name
 from frappe.query_builder.functions import Sum
-from frappe.utils import cstr, flt, get_link_to_form, today
+from frappe.utils import cstr, flt, fmt_money, get_link_to_form, today
 
 import erpnext
 from erpnext.accounts.doctype.repost_accounting_ledger.repost_accounting_ledger import (
@@ -606,8 +606,52 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 			self.set_base_fields_amount(d, ["advance_paid", "unclaimed_amount"], d.exchange_rate)
 			self.set_base_fields_amount(d, ["allocated_amount"])
 
+		self.validate_scheduled_advance_return(precision)
+
 		if self.total_advance_amount:
 			self.validate_total_advance_amount(precision)
+
+	def validate_scheduled_advance_return(self, precision):
+		"""Prevent claiming an advance amount already scheduled for return via Additional Salary"""
+		from hrms.hr.doctype.employee_advance.employee_advance import get_pending_scheduled_return
+
+		allocated_by_advance = {}
+		for d in self.get("advances"):
+			if flt(d.allocated_amount):
+				allocated_by_advance.setdefault(d.employee_advance, 0)
+				allocated_by_advance[d.employee_advance] += flt(d.allocated_amount)
+
+		for employee_advance, allocated_amount in allocated_by_advance.items():
+			pending_scheduled = get_pending_scheduled_return(employee_advance)
+			if not pending_scheduled:
+				continue
+
+			advance = frappe.db.get_value(
+				"Employee Advance",
+				employee_advance,
+				["paid_amount", "claimed_amount", "return_amount"],
+				as_dict=True,
+			)
+			available_amount = flt(
+				flt(advance.paid_amount)
+				- flt(advance.claimed_amount)
+				- flt(advance.return_amount)
+				- pending_scheduled,
+				precision,
+			)
+
+			if flt(allocated_amount, precision) > max(0, available_amount):
+				frappe.throw(
+					_(
+						"Allocated amount {0} against Employee Advance {1} cannot be greater than {2}, as {3} is already scheduled for return via Additional Salary."
+					).format(
+						frappe.bold(fmt_money(allocated_amount, currency=self.currency)),
+						get_link_to_form("Employee Advance", employee_advance),
+						frappe.bold(fmt_money(max(0, available_amount), currency=self.currency)),
+						frappe.bold(fmt_money(pending_scheduled, currency=self.currency)),
+					),
+					title=_("Advance Scheduled for Return"),
+				)
 
 	def validate_advance_row(self, d, precision):
 		advance_details = frappe.db.get_value(
@@ -941,6 +985,11 @@ def get_expense_claim_advances(expense_claim, employee_advance):
 			adjustment_entry["amount"]
 		)
 
+	from hrms.hr.doctype.employee_advance.employee_advance import get_pending_scheduled_return
+
+	# amount scheduled for return via Additional Salary is not available for claiming
+	pending_scheduled = get_pending_scheduled_return(employee_advance.name)
+
 	for advance in advance_payments:
 		paid_amount = flt(advance["amount"])
 		claimed_amount = adjustment_map.get((advance["voucher_type"], advance["voucher_no"]), 0)
@@ -949,6 +998,11 @@ def get_expense_claim_advances(expense_claim, employee_advance):
 		allocated_amount = get_allocation_amount(
 			paid_amount=paid_amount, claimed_amount=claimed_amount, return_amount=return_amount
 		)
+
+		if pending_scheduled and allocated_amount > 0:
+			reduction = min(allocated_amount, pending_scheduled)
+			allocated_amount -= reduction
+			pending_scheduled -= reduction
 
 		expense_claim.append(
 			"advances",
