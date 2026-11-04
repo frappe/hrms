@@ -180,6 +180,7 @@ class EmployeeHoursReport:
 				"Employee",
 				filters={"name": ["in", list(self.stats_by_employee)]},
 				fields=["name", "employee_name", "department", "company"],
+				limit=0,
 			)
 		}
 

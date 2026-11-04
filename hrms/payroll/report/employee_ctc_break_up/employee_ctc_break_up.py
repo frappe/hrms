@@ -398,15 +398,17 @@ def execute(filters: dict | None = None):
 ROLES_ALLOWED_TO_VIEW_ANY_EMPLOYEE = ("System Manager", "HR Manager", "HR User")
 
 
-def validate_employee_access(employee: str, salary_structure_assignment: str):
-	is_own_record = frappe.db.get_value("Employee", employee, "user_id") == frappe.session.user
-	can_view_employee = (
+def can_view_any_employee(employee: str, salary_structure_assignment: str) -> bool:
+	return (
 		has_common(ROLES_ALLOWED_TO_VIEW_ANY_EMPLOYEE, frappe.get_roles())
 		and frappe.has_permission("Employee", doc=employee)
 		and frappe.has_permission("Salary Structure Assignment", doc=salary_structure_assignment)
 	)
 
-	if not can_view_employee and not is_own_record:
+
+def validate_employee_access(employee: str, salary_structure_assignment: str):
+	is_own_record = frappe.db.get_value("Employee", employee, "user_id") == frappe.session.user
+	if not is_own_record and not can_view_any_employee(employee, salary_structure_assignment):
 		frappe.throw(
 			_("You are not permitted to access the CTC report of another employee."),
 			frappe.PermissionError,

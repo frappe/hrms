@@ -396,13 +396,11 @@ def create_leave_encashment(leave_allocation):
 		try:
 			frappe.db.savepoint(savepoint)
 			leave_encashment = frappe.get_doc(
-				dict(
-					doctype="Leave Encashment",
-					leave_period=allocation.leave_period or get_leave_period_for_allocation(allocation),
-					employee=allocation.employee,
-					leave_type=allocation.leave_type,
-					encashment_date=allocation.to_date,
-				)
+				doctype="Leave Encashment",
+				leave_period=allocation.leave_period or get_leave_period_for_allocation(allocation),
+				employee=allocation.employee,
+				leave_type=allocation.leave_type,
+				encashment_date=allocation.to_date,
 			)
 			leave_encashment.insert(ignore_permissions=True)
 		except Exception:

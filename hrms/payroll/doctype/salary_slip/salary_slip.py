@@ -1437,6 +1437,8 @@ class SalarySlip(TransactionBase):
 						if d.salary_component != struct_row.salary_component or d.additional_salary
 					],
 				)
+				self.data[struct_row.abbr] = 0
+				self.default_data[struct_row.abbr] = 0
 				return
 
 			if (

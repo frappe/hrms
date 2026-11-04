@@ -301,14 +301,12 @@ class LeaveAllocation(Document):
 	def set_carry_forwarded_leaves_in_previous_allocation(self, on_cancel=False):
 		"""Set carry forwarded leaves in previous allocation"""
 		previous_allocation = get_previous_allocation(self.from_date, self.leave_type, self.employee)
-		if on_cancel:
-			self.unused_leaves = 0.0
 		if previous_allocation:
 			frappe.db.set_value(
 				"Leave Allocation",
 				previous_allocation.name,
 				"carry_forwarded_leaves_count",
-				self.unused_leaves,
+				0.0 if on_cancel else self.unused_leaves,
 			)
 
 	def validate_total_leaves_allocated(self):

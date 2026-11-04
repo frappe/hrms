@@ -1548,7 +1548,7 @@ class TestPayrollEntry(HRMSTestSuite):
 
 		def fail_on_submit(salary_slip):
 			if salary_slip.name == failing_slip:
-				frappe.throw("Failed on submit")
+				raise frappe.ValidationError("Failed on submit")
 			return create_benefits_ledger_entry(salary_slip)
 
 		with patch.object(SalarySlip, "create_benefits_ledger_entry", fail_on_submit):

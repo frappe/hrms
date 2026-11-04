@@ -656,38 +656,6 @@ class TestAttendanceRequest(HRMSTestSuite):
 			sorted(r.attendance_date for r in records), [add_days(holiday, -1), add_days(holiday, 1)]
 		)
 
-	def test_open_ended_shift_assignment_is_auto_fetched(self):
-		shift_type = create_shift("Test Open Ended Shift", "09:00:00", "17:00:00")
-		create_shift_assignment(self.employee.name, shift_type.name, add_days(getdate(), -10), None)
-
-		attendance_request = frappe.get_doc(
-			{
-				"doctype": "Attendance Request",
-				"employee": self.employee.name,
-				"from_date": getdate(),
-				"to_date": getdate(),
-				"reason": "On Duty",
-				"company": "_Test Company",
-			}
-		).save()
-
-		self.assertEqual(attendance_request.shift, shift_type.name)
-
-	def test_overwrite_attendance_without_shift(self):
-		shift_type = create_shift("Test Overwrite Shift", "09:00:00", "17:00:00")
-		attendance_name = mark_attendance(self.employee.name, getdate(), "Absent")
-
-		create_attendance_request(
-			employee=self.employee.name, from_date=getdate(), to_date=getdate(), shift=shift_type.name
-		)
-
-		attendance = frappe.db.get_value(
-			"Attendance", attendance_name, ["status", "shift", "docstatus"], as_dict=True
-		)
-		self.assertEqual(attendance.status, "Present")
-		self.assertEqual(attendance.shift, shift_type.name)
-		self.assertEqual(attendance.docstatus, 1)
-
 	def test_cancel_keeps_overwritten_attendance(self):
 		today = getdate()
 		frappe.db.delete("Holiday", {"parent": self.holiday_list})

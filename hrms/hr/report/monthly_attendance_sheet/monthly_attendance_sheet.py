@@ -61,7 +61,7 @@ def execute(filters: Filters | None = None) -> tuple:
 			filters.companies.extend(get_descendants_of("Company", filters.company))
 
 	filters.employees = frappe.get_list(
-		"Employee", filters={"company": ["in", filters.companies]}, pluck="name"
+		"Employee", filters={"company": ["in", filters.companies]}, pluck="name", limit=0
 	)
 	if not filters.employees:
 		frappe.msgprint(_("No attendance records found."), alert=True, indicator="orange")

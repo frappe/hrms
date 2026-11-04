@@ -10,7 +10,7 @@ from erpnext.accounts.utils import build_qb_match_conditions
 
 
 def execute(filters=None):
-	show_cost = bool(frappe.has_permission("Salary Slip", "read"))
+	show_cost = frappe.has_permission("Salary Slip", "read")
 	data = get_data(filters, show_cost)
 	columns = get_columns(show_cost)
 	charts = get_chart_data(data)

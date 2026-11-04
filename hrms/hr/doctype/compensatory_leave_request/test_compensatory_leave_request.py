@@ -244,14 +244,12 @@ class TestCompensatoryLeaveRequest(HRMSTestSuite):
 
 		mark_attendance(employee)
 		request = frappe.get_doc(
-			dict(
-				doctype="Compensatory Leave Request",
-				employee=employee.name,
-				leave_type=leave_type.name,
-				work_from_date=today(),
-				work_end_date=today(),
-				reason="test",
-			)
+			doctype="Compensatory Leave Request",
+			employee=employee.name,
+			leave_type=leave_type.name,
+			work_from_date=today(),
+			work_end_date=today(),
+			reason="test",
 		).insert()
 		request.submit()
 
@@ -268,14 +266,12 @@ class TestCompensatoryLeaveRequest(HRMSTestSuite):
 		employee = get_employee()
 		mark_attendance(employee)
 		request = frappe.get_doc(
-			dict(
-				doctype="Compensatory Leave Request",
-				employee=employee.name,
-				leave_type="_Test Leave Type",
-				work_from_date=today(),
-				work_end_date=today(),
-				reason="test",
-			)
+			doctype="Compensatory Leave Request",
+			employee=employee.name,
+			leave_type="_Test Leave Type",
+			work_from_date=today(),
+			work_end_date=today(),
+			reason="test",
 		)
 		self.assertRaises(frappe.ValidationError, request.insert)
 

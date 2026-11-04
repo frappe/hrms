@@ -129,6 +129,7 @@ class BulkSalaryStructureAssignment(Document):
 				"Employee",
 				filters={"name": ("in", list(selected)), "company": self.company},
 				pluck="name",
+				limit=0,
 			)
 		)
 		if invalid := selected - allowed:

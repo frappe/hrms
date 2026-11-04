@@ -2671,6 +2671,7 @@ class TestSalarySlip(HRMSTestSuite):
 				{"salary_component": "Slip Ctx Basic", "abbr": "SCB", "type": "Earning"},
 				{"salary_component": "Slip Ctx No LWP Bonus", "abbr": "SCNB", "type": "Earning"},
 				{"salary_component": "Slip Ctx Cond Bonus", "abbr": "SCCB", "type": "Earning"},
+				{"salary_component": "Slip Ctx Bonus Share", "abbr": "SCBS", "type": "Earning"},
 			],
 			test_tax=False,
 			company_list=["_Test Company"],
@@ -2693,6 +2694,12 @@ class TestSalarySlip(HRMSTestSuite):
 				"abbr": "SCCB",
 				"condition": "leave_without_pay == 0",
 				"amount": 1000,
+			},
+			{
+				"salary_component": "Slip Ctx Bonus Share",
+				"abbr": "SCBS",
+				"amount_based_on_formula": 1,
+				"formula": "SCCB * 0.1",
 			},
 		]
 
@@ -2727,11 +2734,13 @@ class TestSalarySlip(HRMSTestSuite):
 		ss = make_slip("test_slip_context_no_lwp@salary.com", with_lwp=False)
 		self.assertEqual(amounts(ss)["Slip Ctx No LWP Bonus"], 2000)
 		self.assertEqual(amounts(ss)["Slip Ctx Cond Bonus"], 1000)
+		self.assertEqual(amounts(ss)["Slip Ctx Bonus Share"], 100)
 
 		ss.leave_without_pay = 3
 		ss.save()
 		self.assertEqual(amounts(ss).get("Slip Ctx No LWP Bonus", 0), 0)
 		self.assertNotIn("Slip Ctx Cond Bonus", amounts(ss))
+		self.assertEqual(amounts(ss).get("Slip Ctx Bonus Share", 0), 0)
 		self.assertEqual(ss.gross_pay, sum(d.amount for d in ss.earnings))
 
 	def test_draft_income_tax_slab_is_rejected(self):
