@@ -21,17 +21,15 @@
   "address",
   "terms_of_appointment_tab",
   "appointment_terms_section",
+  "place_of_posting",
   "shift_type",
   "start_time",
   "end_time",
   "column_break_terms",
   "retirement_age",
-  "duties_section",
-  "job_responsibilities",
   "body_section",
   "appointment_letter_template",
-  "introduction",
-  "terms",
+  "letter_body",
   "printing_tab",
   "printing_details",
   "letter_head",
@@ -48,11 +46,11 @@
    "label": "Employee Details"
   },
   {
+   "description": "Role, pay, leave, probation and notice print from this offer.",
    "fieldname": "job_offer",
    "fieldtype": "Link",
    "label": "Job Offer",
    "options": "Job Offer",
-   "description": "Role, pay, leave, probation and notice print from this offer.",
    "reqd": 1
   },
   {
@@ -66,11 +64,11 @@
   },
   {
    "fetch_from": "job_offer.applicant_email",
+   "fetch_if_empty": 1,
    "fieldname": "applicant_email",
    "fieldtype": "Data",
    "label": "Applicant Email Address",
-   "options": "Email",
-   "fetch_if_empty": 1
+   "options": "Email"
   },
   {
    "fieldname": "employee",
@@ -83,6 +81,8 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "job_offer.company",
+   "fetch_if_empty": 1,
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
@@ -148,36 +148,16 @@
    "label": "Retirement Age (Years)"
   },
   {
-   "fieldname": "duties_section",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "job_responsibilities",
-   "fieldtype": "Text Editor",
-   "label": "Duties and Responsibilities"
-  },
-  {
    "fieldname": "body_section",
    "fieldtype": "Section Break",
-   "label": "Additional Clauses"
+   "label": "Letter Body"
   },
   {
+   "description": "Picking a template replaces the letter body with the template's text.",
    "fieldname": "appointment_letter_template",
    "fieldtype": "Link",
    "label": "Appointment Letter Template",
    "options": "Appointment Letter Template"
-  },
-  {
-   "fetch_from": "appointment_letter_template.introduction",
-   "fieldname": "introduction",
-   "fieldtype": "Long Text",
-   "label": "Introduction"
-  },
-  {
-   "fieldname": "terms",
-   "fieldtype": "Table",
-   "label": "Terms",
-   "options": "Appointment Letter content"
   },
   {
    "fieldname": "printing_tab",
@@ -226,11 +206,24 @@
    "fieldname": "appointment_letter_preview",
    "fieldtype": "HTML",
    "label": "Preview"
+  },
+  {
+   "fetch_from": "job_offer.branch",
+   "fetch_if_empty": 1,
+   "fieldname": "place_of_posting",
+   "fieldtype": "Data",
+   "label": "Place of Posting"
+  },
+  {
+   "description": "Use placeholders such as {{ applicant_name }}, {{ designation }}, {{ company }}, {{ appointment_date }}, {{ place_of_posting }}, {{ probation }}, {{ notice_period }}, {{ working_days }}, {{ start_time }}, {{ end_time }}, {{ ctc }}, {{ leave_entitlement }} and {{ retirement_age }}. The preview on the Print & Email tab shows the real values.",
+   "fieldname": "letter_body",
+   "fieldtype": "Text Editor",
+   "label": "Letter Body"
   }
  ],
  "icon": "mail-check",
  "links": [],
- "modified": "2026-11-04 17:00:00.000000",
+ "modified": "2026-11-04 18:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appointment Letter",

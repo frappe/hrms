@@ -7,6 +7,7 @@ frappe.ui.form.on("Appointment Letter", {
 	},
 
 	onload: function (frm) {
+		set_default_letter_body(frm);
 		frm.set_query("appointment_letter_print_format", function () {
 			return { filters: { doc_type: "Appointment Letter", disabled: 0 } };
 		});
@@ -55,32 +56,24 @@ frappe.ui.form.on("Appointment Letter", {
 		if (frm.doc.employee) frm.call("set_shift_from_employee");
 	},
 
-	appointment_letter_template: function (frm) {
-		if (frm.doc.appointment_letter_template) {
-			frappe.call({
-				method: "hrms.hr.doctype.appointment_letter.appointment_letter.get_appointment_letter_details",
-				args: {
-					template: frm.doc.appointment_letter_template,
-				},
-				callback: function (r) {
-					if (r.message) {
-						let message_body = r.message;
-						frm.set_value("introduction", message_body[0].introduction);
-						frm.doc.terms = [];
-						for (var i in message_body[1].description) {
-							frm.add_child("terms");
-							frm.fields_dict.terms.get_value()[i].title =
-								message_body[1].description[i].title;
-							frm.fields_dict.terms.get_value()[i].description =
-								message_body[1].description[i].description;
-						}
-						frm.refresh();
-					}
-				},
-			});
-		}
+	appointment_letter_template: async function (frm) {
+		if (!frm.doc.appointment_letter_template) return;
+		const { message } = await frappe.db.get_value(
+			"Appointment Letter Template",
+			frm.doc.appointment_letter_template,
+			"letter_body",
+		);
+		frm.set_value("letter_body", message.letter_body);
 	},
 });
+
+async function set_default_letter_body(frm) {
+	if (!frm.is_new() || frm.doc.letter_body || frm.doc.appointment_letter_template) return;
+	const { message } = await frappe.call(
+		"hrms.hr.doctype.appointment_letter_template.appointment_letter_template.get_default_letter_body",
+	);
+	frm.set_value("letter_body", message);
+}
 
 async function email_appointment_letter(frm) {
 	const composer = new frappe.views.CommunicationComposer({

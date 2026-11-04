@@ -1,9 +1,11 @@
 # Copyright (c) 2019, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
+import os
 
-# import frappe
+import frappe
 from frappe.model.document import Document
+from frappe.utils.jinja import validate_template
 
 
 class AppointmentLetterTemplate(Document):
@@ -15,14 +17,17 @@ class AppointmentLetterTemplate(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		from hrms.hr.doctype.appointment_letter_content.appointment_letter_content import (
-			AppointmentLettercontent,
-		)
-
-		closing_notes: DF.Text | None
-		introduction: DF.LongText
+		letter_body: DF.TextEditor
 		template_name: DF.Data
-		terms: DF.Table[AppointmentLettercontent]
 	# end: auto-generated types
 
-	pass
+	def validate(self):
+		validate_template(self.letter_body)
+
+
+@frappe.whitelist()
+def get_default_letter_body() -> str:
+	path = os.path.join(os.path.dirname(__file__), "default_letter_body.html")
+	with open(path) as f:
+		body = "".join(line.strip() for line in f)
+	return f'<div class="ql-editor read-mode">{body}</div>'

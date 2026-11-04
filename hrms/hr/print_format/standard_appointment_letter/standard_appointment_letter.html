@@ -10,18 +10,7 @@
     </div>
 </div>
 <div style="margin-bottom: 5%;">
-    {{ doc.introduction }}
-</div>
-<div style="margin-bottom: 5%;">
-    <ul>
-    {% for content in doc.terms %}
-        <li style="padding-bottom: 3%;">
-            <span>
-                <span><b>{{ content.title }}: </b></span> {{ content.description }}
-            </span>
-        </li>
-    {% endfor %}
-    </ul>
+    {{ doc.get_letter_body_html() }}
 </div>
 <div style="margin-bottom: 5%;">
 <span>Your sincerely,</span><br>
