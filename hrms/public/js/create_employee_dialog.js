@@ -9,6 +9,8 @@ const JOB_FIELDS = [
 	"reports_to",
 ];
 const PHOTO_FIELD = "image";
+const NAME_FIELDS = ["first_name", "middle_name", "last_name"];
+const EMAIL_FIELDS = ["personal_email", "company_email"];
 const WHOLE_TABS = ["salary_information"];
 const WIDE_FIELDTYPES = ["Table", "Text Editor", "Long Text"];
 
@@ -23,67 +25,108 @@ export class CreateEmployeeDialog {
 
 	async show() {
 		await frappe.model.with_doctype("Employee");
-		this.items = this.make_items();
-		this.dialog = new frappe.ui.SettingsDialog({ tabs: [{ items: this.items }] });
-		this.dialog.$sidebar.prepend(this.make_profile());
-		this.build_panels();
+		this.groups = [];
+		this.tabs = new frappe.ui.Tabs({ vertical: true, tabs: this.make_tabs() });
+		this.tabs.$el.append(this.make_profile());
+		this.render_profile();
+		this.dialog = new frappe.ui.SettingsDialog({});
+		this.dialog.$wrapper.addClass("epc-create-employee");
+		this.dialog.$layout.empty().append(this.tabs.el);
 		this.dialog.show();
 	}
 
-	make_items() {
+	make_tabs() {
 		const shown = new Set([...JOB_FIELDS, ...this.details.fields].filter(is_reviewable));
-		const create = {
-			label: __("Create Employee"),
-			variant: "solid",
-			click: () => this.create(),
-		};
 		return [
-			...get_employee_tabs(shown).map((tab, index) => ({
-				id: `tab_${index}`,
+			...get_employee_tabs(shown).map((tab) => ({
 				label: tab.label,
-				title: tab.label,
-				actions: [create],
-				fields: get_layout(tab.sections, this.employee),
-				fieldnames: tab.sections.flatMap((section) => section.fields),
+				content: this.make_group(tab.sections),
 			})),
 			{
-				id: "documents",
 				label: __("Documents"),
-				title: __("Documents"),
-				actions: [create],
-				render: (panel) => panel.body.append(this.make_documents()),
+				content: make_panel_body().append(this.make_documents()),
 			},
 		];
 	}
 
-	build_panels() {
-		for (const item of this.items) {
-			this.dialog.activate(item.id);
-			if (item.fieldnames) {
-				this.dialog
-					.get_panel(item.id)
-					.set_values(pick_values(this.employee, item.fieldnames));
-			}
+	make_group(sections) {
+		const body = make_panel_body();
+		const group = new frappe.ui.FieldGroup({
+			body: body[0],
+			fields: get_layout(sections, this.employee),
+		});
+		group.make();
+		group.set_values(
+			pick_values(
+				this.employee,
+				sections.flatMap((section) => section.fields),
+			),
+		);
+		this.watch_profile_fields(group);
+		this.groups.push(group);
+		return body;
+	}
+
+	watch_profile_fields(group) {
+		for (const fieldname of [...NAME_FIELDS, ...EMAIL_FIELDS]) {
+			const field = group.get_field(fieldname);
+			if (field) field.df.onchange = () => this.render_profile();
 		}
-		this.dialog.activate(this.items[0].id);
 	}
 
 	make_profile() {
-		const { first_name, middle_name, last_name } = this.employee;
-		const name = [first_name, middle_name, last_name].filter(Boolean).join(" ");
-		const email = this.employee.personal_email || this.employee.company_email || "";
+		this.$avatar = $(
+			'<div class="profile-avatar-upload relative flex shrink-0 rounded-full overflow-hidden cursor-pointer">',
+		)
+			.attr("title", __("Upload Photo"))
+			.on("click", () => this.upload_photo());
+		this.$name = $('<div class="text-lg-semibold text-ink-gray-8 ellipsis">');
+		this.$email = $('<div class="text-sm text-ink-gray-6 ellipsis">');
 		return $('<div class="epc-profile">').append(
+			this.$avatar,
+			$('<div class="epc-profile__text">').append(this.$name, this.$email),
+			frappe.ui.button({
+				label: __("Create Employee"),
+				variant: "solid",
+				onclick: () => this.create(),
+			}),
+		);
+	}
+
+	render_profile() {
+		const name = NAME_FIELDS.map((fieldname) => this.get_value(fieldname))
+			.filter(Boolean)
+			.join(" ");
+		const email = EMAIL_FIELDS.map((fieldname) => this.get_value(fieldname)).find(Boolean);
+		this.$name.text(name);
+		this.$email.text(email || "");
+		this.$avatar.empty().append(
 			frappe.ui.avatar({
-				image: this.details.photo,
+				image: this.employee.image,
 				label: name,
-				size: "lg",
+				size: "3xl",
 				theme: "auto",
 			}),
-			$('<div class="epc-profile__text">').append(
-				$('<div class="text-base font-weight-bold text-ink-gray-8 ellipsis">').text(name),
-				$('<div class="text-p-sm text-ink-gray-5 ellipsis">').text(email),
-			),
+			$(
+				'<div class="profile-avatar-overlay absolute inset-0 flex items-center justify-center">',
+			).append(frappe.utils.icon("camera", "md")),
 		);
+	}
+
+	upload_photo() {
+		new frappe.ui.FileUploader({
+			allow_multiple: false,
+			restrictions: { allowed_file_types: ["image/*"] },
+			on_success: (file) => {
+				this.employee.image = file.file_url;
+				this.render_profile();
+			},
+		});
+	}
+
+	get_value(fieldname) {
+		const field = this.groups.map((group) => group.get_field(fieldname)).find(Boolean);
+		return field ? field.get_value() : this.employee[fieldname];
 	}
 
 	make_documents() {
@@ -107,13 +150,13 @@ export class CreateEmployeeDialog {
 
 	async create() {
 		const values = {};
-		for (const item of this.items.filter((item) => item.fieldnames)) {
-			const item_values = this.dialog.get_panel(item.id).get_values();
-			if (!item_values) {
-				this.dialog.activate(item.id);
+		for (const [index, group] of this.groups.entries()) {
+			const group_values = group.get_values();
+			if (!group_values) {
+				this.tabs.set_active(index);
 				return;
 			}
-			Object.assign(values, item_values);
+			Object.assign(values, group_values);
 		}
 		const doc = await frappe.db.insert({ ...without_internal_keys(this.employee), ...values });
 		this.dialog.hide();
@@ -178,6 +221,10 @@ function is_editable(df) {
 
 function is_reviewable(fieldname) {
 	return fieldname !== PHOTO_FIELD && frappe.meta.has_field("Employee", fieldname);
+}
+
+function make_panel_body() {
+	return $('<div class="settings-dialog-panel-body">');
 }
 
 function pick_values(doc, fieldnames) {
