@@ -25,6 +25,15 @@ frappe.ui.form.on("Employee Advance", {
 	},
 
 	refresh: function (frm) {
+		// exclude amount already scheduled for return via Additional Salary but not yet processed
+		const unclaimed_amount = flt(
+			flt(frm.doc.paid_amount) -
+				flt(frm.doc.claimed_amount) -
+				flt(frm.doc.return_amount) -
+				flt(frm.doc.__onload?.pending_scheduled_return),
+			precision("paid_amount"),
+		);
+
 		if (
 			frm.doc.docstatus === 1 &&
 			flt(frm.doc.paid_amount) < flt(frm.doc.advance_amount) &&
@@ -42,7 +51,7 @@ frappe.ui.form.on("Employee Advance", {
 
 		if (
 			frm.doc.docstatus === 1 &&
-			flt(frm.doc.claimed_amount) < flt(frm.doc.paid_amount) - flt(frm.doc.return_amount) &&
+			unclaimed_amount > 0 &&
 			frappe.model.can_create("Expense Claim")
 		) {
 			frm.add_custom_button(
@@ -55,10 +64,7 @@ frappe.ui.form.on("Employee Advance", {
 		}
 		frm.trigger("update_fields_label");
 
-		if (
-			frm.doc.docstatus === 1 &&
-			flt(frm.doc.claimed_amount) < flt(frm.doc.paid_amount) - flt(frm.doc.return_amount)
-		) {
+		if (frm.doc.docstatus === 1 && unclaimed_amount > 0) {
 			if (
 				frm.doc.repay_unclaimed_amount_from_salary == 0 &&
 				frappe.model.can_create("Journal Entry")

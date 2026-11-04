@@ -58,6 +58,10 @@ class EmployeeAdvance(Document):
 		]
 	# end: auto-generated types
 
+	def onload(self):
+		if self.docstatus == 1:
+			self.set_onload("pending_scheduled_return", get_pending_scheduled_return(self.name))
+
 	def validate(self):
 		validate_active_employee(self.employee)
 		self.validate_advance_amount()
@@ -311,7 +315,13 @@ def create_return_through_additional_salary(doc: str | dict | Document) -> Docum
 	additional_salary.employee = doc.employee
 	additional_salary.currency = doc.currency
 	additional_salary.overwrite_salary_structure_amount = 0
-	additional_salary.amount = doc.paid_amount - doc.claimed_amount
+	additional_salary.amount = max(
+		0,
+		flt(doc.paid_amount)
+		- flt(doc.claimed_amount)
+		- flt(doc.return_amount)
+		- get_pending_scheduled_return(doc.name),
+	)
 	additional_salary.company = doc.company
 	additional_salary.ref_doctype = doc.doctype
 	additional_salary.ref_docname = doc.name
@@ -438,6 +448,16 @@ def get_voucher_type(mode_of_payment=None):
 def get_employee_advance_return(employee_advance: str):
 	frappe.has_permission("Employee Advance", ptype="read", doc=employee_advance, throw=True)
 
+	pending_scheduled = get_pending_scheduled_return(employee_advance)
+
+	return {
+		"total_return_scheduled": pending_scheduled,
+		"has_return_scheduled": bool(pending_scheduled),
+	}
+
+
+def get_pending_scheduled_return(employee_advance: str) -> float:
+	"""Amount scheduled for return via submitted Additional Salary but not yet processed through payroll"""
 	AdditionalSalary = frappe.qb.DocType("Additional Salary")
 	return_entries = (
 		frappe.qb.from_(AdditionalSalary)
@@ -451,9 +471,5 @@ def get_employee_advance_return(employee_advance: str):
 
 	total_return_scheduled = flt(return_entries[0].total_return_scheduled)
 	already_returned = flt(frappe.db.get_value("Employee Advance", employee_advance, "return_amount"))
-	pending_scheduled = max(0, total_return_scheduled - already_returned)
 
-	return {
-		"total_return_scheduled": pending_scheduled,
-		"has_return_scheduled": bool(pending_scheduled),
-	}
+	return max(0, total_return_scheduled - already_returned)
