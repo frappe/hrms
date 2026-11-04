@@ -1028,34 +1028,45 @@ class TestShiftType(HRMSTestSuite):
 			"test_working_hours3@example.com", company="_Test Company", default_shift=shift.name
 		)
 
-		add_date_to_holiday_list(getdate(), "_Test Half Day", is_half_day=1)
+		from erpnext.setup.doctype.holiday_list.holiday_list import is_holiday
+
+		# anchor to a working day in the shift's holiday list so that adding "today" as a
+		# half day holiday is not skipped because today is already a weekly off (weekend),
+		# and widen the processing window to cover that day
+		date = getdate()
+		while is_holiday("_Test Half Day", date):
+			date = add_days(date, -1)
+		shift.process_attendance_after = add_days(date, -1)
+		shift.save()
+
+		add_date_to_holiday_list(date, "_Test Half Day", is_half_day=1)
 		# employee1 worked for 4 hours which is full threshold on half day
-		make_checkin(employee1, datetime.combine(getdate(), get_time("10:00:00")))
-		make_checkin(employee1, datetime.combine(getdate(), get_time("14:00:00")))
+		make_checkin(employee1, datetime.combine(date, get_time("10:00:00")))
+		make_checkin(employee1, datetime.combine(date, get_time("14:00:00")))
 
 		# employee2 worked for 2 hours less than half day's threshold on half day
-		make_checkin(employee2, datetime.combine(getdate(), get_time("10:00:00")))
-		make_checkin(employee2, datetime.combine(getdate(), get_time("12:00:00")))
+		make_checkin(employee2, datetime.combine(date, get_time("10:00:00")))
+		make_checkin(employee2, datetime.combine(date, get_time("12:00:00")))
 
 		# employee3 worked for 1 hour, less than the threshold for absent on half day
-		make_checkin(employee3, datetime.combine(getdate(), get_time("10:00:00")))
-		make_checkin(employee3, datetime.combine(getdate(), get_time("11:00:00")))
+		make_checkin(employee3, datetime.combine(date, get_time("10:00:00")))
+		make_checkin(employee3, datetime.combine(date, get_time("11:00:00")))
 
 		shift.process_auto_attendance()
 		attendance1 = frappe.get_doc(
-			"Attendance", {"employee": employee1, "shift": shift.name, "attendance_date": getdate()}
+			"Attendance", {"employee": employee1, "shift": shift.name, "attendance_date": date}
 		)
 		self.assertEqual(attendance1.working_hours, 4.00)
 		self.assertEqual(attendance1.status, "Present")
 
 		attendance2 = frappe.get_doc(
-			"Attendance", {"employee": employee2, "shift": shift.name, "attendance_date": getdate()}
+			"Attendance", {"employee": employee2, "shift": shift.name, "attendance_date": date}
 		)
 		self.assertEqual(attendance2.working_hours, 2)
 		self.assertEqual(attendance2.status, "Half Day")
 
 		attendance3 = frappe.get_doc(
-			"Attendance", {"employee": employee3, "shift": shift.name, "attendance_date": getdate()}
+			"Attendance", {"employee": employee3, "shift": shift.name, "attendance_date": date}
 		)
 		self.assertEqual(attendance3.working_hours, 1)
 		self.assertEqual(attendance3.status, "Absent")

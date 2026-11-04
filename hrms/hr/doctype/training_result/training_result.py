@@ -37,16 +37,15 @@ class TrainingResult(Document):
 		self.employee_emails = ", ".join(get_employee_emails([d.employee for d in self.employees]))
 
 	def validate_duplicate_result(self):
-		existing = frappe.db.exists(
+		if result := frappe.db.exists(
 			"Training Result",
-			{"training_event": self.training_event, "docstatus": ("<", 2), "name": ("!=", self.name)},
-		)
-		if existing:
+			{"training_event": self.training_event, "docstatus": ("!=", 2), "name": ("!=", self.name)},
+		):
 			frappe.throw(
 				_("Training Result {0} already exists for Training Event {1}").format(
-					get_link_to_form("Training Result", existing), frappe.bold(self.training_event)
+					get_link_to_form("Training Result", result), frappe.bold(self.training_event)
 				),
-				title=_("Duplicate Training Result"),
+				frappe.UniqueValidationError,
 			)
 
 	def validate_employees(self, training_event):

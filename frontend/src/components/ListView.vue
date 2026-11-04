@@ -5,7 +5,7 @@
 				class="flex flex-row bg-white shadow-sm py-4 px-3 items-center justify-between border-b"
 			>
 				<div class="flex flex-row items-center">
-					<Button variant="ghost" class="!px-1 mr-1 hover:bg-white" @click="router.back()">
+					<Button variant="ghost" class="!px-1 me-1 hover:bg-white" @click="router.back()">
 						<FeatherIcon name="chevron-left" class="h-5 w-5" />
 					</Button>
 					<h2 class="text-xl font-semibold text-gray-900">{{ pageTitle }}</h2>
@@ -27,7 +27,7 @@
 						:to="{ name: formViewRoute }"
 						v-slot="{ navigate }"
 					>
-						<Button variant="solid" class="mr-2" @click="navigate">
+						<Button variant="solid" class="me-2" @click="navigate">
 							<template #prefix>
 								<FeatherIcon name="plus" class="w-4" />
 							</template>
@@ -149,6 +149,7 @@ import AttendanceRequestItem from "@/components/AttendanceRequestItem.vue"
 import ShiftRequestItem from "@/components/ShiftRequestItem.vue"
 import ShiftAssignmentItem from "@/components/ShiftAssignmentItem.vue"
 import LeaveRequestItem from "@/components/LeaveRequestItem.vue"
+import CompensatoryLeaveRequestItem from "@/components/CompensatoryLeaveRequestItem.vue"
 import ExpenseClaimItem from "@/components/ExpenseClaimItem.vue"
 import EmployeeAdvanceItem from "@/components/EmployeeAdvanceItem.vue"
 import ListFiltersActionSheet from "@/components/ListFiltersActionSheet.vue"
@@ -195,6 +196,7 @@ const listItemComponent = {
 	"Shift Request": markRaw(ShiftRequestItem),
 	"Shift Assignment": markRaw(ShiftAssignmentItem),
 	"Leave Application": markRaw(LeaveRequestItem),
+	"Compensatory Leave Request": markRaw(CompensatoryLeaveRequestItem),
 	"Expense Claim": markRaw(ExpenseClaimItem),
 	"Employee Advance": markRaw(EmployeeAdvanceItem),
 }

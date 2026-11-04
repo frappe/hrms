@@ -10,7 +10,6 @@ from hrms.hr.doctype.interview.test_interview import create_interview_type
 from hrms.hr.doctype.job_applicant.job_applicant import create_interview
 from hrms.hr.doctype.job_applicant.job_applicant import make_employee as map_applicant_to_employee
 from hrms.hr.doctype.job_offer.test_job_offer import create_job_offer
-from hrms.hr.doctype.job_opening.job_opening import get_published_job_title
 from hrms.hr.doctype.job_opening.test_job_opening import get_job_opening
 from hrms.tests.test_utils import create_job_applicant
 from hrms.tests.utils import HRMSTestSuite, make_user
@@ -51,7 +50,6 @@ class TestJobApplicant(HRMSTestSuite):
 		frappe.flags.in_web_form = True
 		try:
 			self.assertRaises(frappe.ValidationError, apply, "web_form_unpublished@example.com")
-			self.assertIsNone(get_published_job_title(opening.name))
 
 			opening.reload()
 			opening.publish = 1
@@ -62,7 +60,6 @@ class TestJobApplicant(HRMSTestSuite):
 
 			opening.db_set("closes_on", None)
 			self.assertEqual(apply("web_form_published@example.com").job_title, opening.name)
-			self.assertEqual(get_published_job_title(opening.name), "Web Form Opening")
 		finally:
 			frappe.flags.in_web_form = False
 

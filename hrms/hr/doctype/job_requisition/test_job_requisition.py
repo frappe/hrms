@@ -94,6 +94,30 @@ class TestJobRequisition(HRMSTestSuite):
 		self.assertEqual(job_req.status, "Open & Approved")
 		self.assertFalse(job_req.completed_on)
 
+	def test_completion_date_after_editing_closed_job_opening(self):
+		today = getdate()
+		closed_on = add_days(today, -10)
+		job_req = make_job_requisition(requested_by=self.employee, posting_date=add_days(today, -30))
+		job_opening = make_job_opening(job_req.name)
+		job_opening.status = "Closed"
+		job_opening.posted_on = job_req.posting_date
+		job_opening.save()
+
+		for closing_date, completed_on, expected_date, expected_days in (
+			(closed_on, add_days(today, -5), closed_on, 20),
+			(None, closed_on, closed_on, 20),
+			(None, None, today, 30),
+		):
+			with self.subTest(closed_on=closing_date, completed_on=completed_on):
+				job_req.db_set("completed_on", completed_on)
+				job_opening.closed_on = closing_date
+				job_opening.description = "Updated description"
+				job_opening.save()
+				job_req.reload()
+
+				self.assertEqual(job_req.completed_on, expected_date)
+				self.assertEqual(job_req.time_to_fill, expected_days * 86400)
+
 	def test_time_to_fill(self):
 		job_req = make_job_requisition(requested_by=self.employee)
 		job_req.status = "Filled"

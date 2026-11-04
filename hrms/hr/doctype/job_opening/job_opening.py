@@ -197,7 +197,7 @@ class JobOpening(WebsiteGenerator):
 		):
 			job_requisition = frappe.get_doc("Job Requisition", self.job_requisition)
 			job_requisition.status = "Filled"
-			job_requisition.completed_on = self.closed_on or getdate()
+			job_requisition.completed_on = self.closed_on or job_requisition.completed_on or getdate()
 			job_requisition.flags.ignore_permissions = True
 			job_requisition.flags.ignore_mandatory = True
 			job_requisition.save()
@@ -206,13 +206,6 @@ class JobOpening(WebsiteGenerator):
 		context.no_of_applications = frappe.db.count("Job Applicant", {"job_title": self.name})
 		context.parents = [{"route": "jobs", "title": _("All Jobs")}]
 		context.posted_on = pretty_date(self.posted_on)
-
-
-@frappe.whitelist(allow_guest=True)
-def get_published_job_title(job_opening: str) -> str | None:
-	return frappe.db.get_value(
-		"Job Opening", {"name": job_opening, "publish": 1, "status": "Open"}, "job_title"
-	)
 
 
 def close_expired_job_openings():

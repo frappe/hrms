@@ -12,11 +12,17 @@ input:disabled {
 
 /* For Webkit-based browsers (Chrome, Safari and Opera) */
 input::-webkit-date-and-time-value {
-	text-align: left;
+	text-align: start;
 }
 
 body {
 	-webkit-tap-highlight-color: transparent;
+}
+
+/* mirror directional chevrons for right-to-left languages */
+[dir="rtl"] .feather-chevron-left,
+[dir="rtl"] .feather-chevron-right {
+	transform: scaleX(-1);
 }
 
 .hide-scrollbar::-webkit-scrollbar {

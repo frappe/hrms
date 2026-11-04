@@ -30,7 +30,7 @@
 					<span class="inline-flex items-baseline">
 						<FeatherIcon
 							name="x"
-							class="ml-auto h-4 w-4 text-gray-700"
+							class="ms-auto h-4 w-4 text-gray-700"
 							@click="iosInstallMessage = false"
 						/>
 					</span>

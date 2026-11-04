@@ -43,6 +43,11 @@ const quickLinks = [
 		route: "LeaveApplicationFormView",
 	},
 	{
+		icon: markRaw(LeaveIcon),
+		title: __("Request Compensatory Leave"),
+		route: "CompensatoryLeaveRequestFormView",
+	},
+	{
 		icon: markRaw(ExpenseIcon),
 		title: __("Claim an Expense"),
 		route: "ExpenseClaimFormView",

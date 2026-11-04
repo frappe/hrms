@@ -386,7 +386,11 @@ class FullandFinalStatement(Document):
 					"debit_in_account_currency": flt(data.amount, precision),
 					"user_remark": data.remark,
 				}
-				if data.reference_document_type in ["Expense Claim", "Gratuity", "Leave Encashment"]:
+				if data.reference_document_type in [
+					"Expense Claim",
+					"Gratuity",
+					"Leave Encashment",
+				] or is_party_account(data.account):
 					account_dict["party_type"] = "Employee"
 					account_dict["party"] = self.employee
 				if data.reference_document_type == "Expense Claim":
@@ -412,6 +416,9 @@ class FullandFinalStatement(Document):
 							"is_advance": "Yes",
 						}
 					)
+				elif is_party_account(data.account):
+					account_dict["party_type"] = "Employee"
+					account_dict["party"] = self.employee
 
 				jv.append("accounts", account_dict)
 
@@ -528,6 +535,10 @@ def get_amount_paid_via_full_and_final_statement(reference_doctype: str, referen
 		)
 	).run()[0][0]
 	return flt(amount)
+
+
+def is_party_account(account: str | None) -> bool:
+	return frappe.get_cached_value("Account", account, "account_type") in ["Receivable", "Payable"]
 
 
 def update_full_and_final_statement_status(doc, method=None):

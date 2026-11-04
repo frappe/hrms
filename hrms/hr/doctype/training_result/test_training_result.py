@@ -9,11 +9,12 @@ from hrms.hr.doctype.training_event.test_training_event import (
 )
 from hrms.hr.doctype.training_feedback.test_training_feedback import create_training_feedback
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_employee
-from hrms.tests.utils import HRMSTestSuite
+from hrms.tests.utils import HRMSTestSuite, make_user
 
 
 class TestTrainingResult(HRMSTestSuite):
 	def setUp(self):
+		self.user = make_user("training-manager@example.com")
 		create_training_program("Basic Training")
 		self.employee = make_employee("robert_loan@trainig.com", company="_Test Company")
 		self.employee2 = make_employee("suzie.tan@trainig.com", company="_Test Company")
@@ -22,6 +23,41 @@ class TestTrainingResult(HRMSTestSuite):
 			[{"employee": self.employee}, {"employee": self.employee2}]
 		)
 		self.training_event.submit()
+
+	def test_amend_cancelled_training_result(self):
+		result = create_training_result(self.training_event.name, [self.employee], grade="C").insert()
+		with self.set_user(self.user):
+			result.submit()
+			for grade in ("B", "A"):
+				result.cancel()
+				amended = frappe.copy_doc(result)
+				amended.docstatus = 0
+				amended.amended_from = result.name
+				amended.employees[0].grade = grade
+				amended.insert()
+				amended.submit()
+				amended.reload()
+
+				self.assertEqual(amended.docstatus, 1)
+				self.assertEqual(amended.training_event, result.training_event)
+				self.assertEqual(amended.employees[0].grade, grade)
+				self.assertEqual(result.reload().docstatus, 2)
+				result = amended
+
+	def test_duplicate_active_training_result(self):
+		result = create_training_result(self.training_event.name, [self.employee], grade="C").insert()
+		with self.set_user(self.user):
+			for docstatus in (0, 1):
+				with self.subTest(docstatus=docstatus):
+					if docstatus:
+						result.submit()
+					else:
+						result.employees[0].grade = "B"
+						result.save()
+
+					duplicate = frappe.copy_doc(result)
+					duplicate.docstatus = 0
+					self.assertRaises(frappe.UniqueValidationError, duplicate.insert)
 
 	def test_event_and_attendee_status_on_submit(self):
 		create_training_feedback(self.training_event.name, self.employee2).submit()
@@ -32,11 +68,6 @@ class TestTrainingResult(HRMSTestSuite):
 		statuses = {d.employee: d.status for d in self.training_event.employees}
 		self.assertEqual(statuses[self.employee], "Completed")
 		self.assertEqual(statuses[self.employee2], "Feedback Submitted")
-
-	def test_duplicate_result_for_event(self):
-		create_training_result(self.training_event.name, [self.employee]).submit()
-		result = create_training_result(self.training_event.name, [self.employee2])
-		self.assertRaises(frappe.ValidationError, result.insert)
 
 	def test_employee_validations(self):
 		result = create_training_result(self.training_event.name, [self.employee, self.employee3])
@@ -60,11 +91,11 @@ class TestTrainingResult(HRMSTestSuite):
 		self.assertEqual(statuses[self.employee2], "Feedback Submitted")
 
 
-def create_training_result(event, employees):
+def create_training_result(event, employees, grade="A"):
 	return frappe.get_doc(
 		{
 			"doctype": "Training Result",
 			"training_event": event,
-			"employees": [{"employee": employee, "hours": 2, "grade": "A"} for employee in employees],
+			"employees": [{"employee": employee, "hours": 2, "grade": grade} for employee in employees],
 		}
 	)

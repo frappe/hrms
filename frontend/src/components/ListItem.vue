@@ -8,7 +8,7 @@
 				<slot name="right" />
 			</div>
 		</div>
-		<div v-if="props.isTeamRequest" class="flex flex-row items-center gap-2 pl-8">
+		<div v-if="props.isTeamRequest" class="flex flex-row items-center gap-2 ps-8">
 			<EmployeeAvatar :employeeID="props.employee" />
 			<div class="text-sm text-gray-600 grow">
 				{{ props.employeeName }}

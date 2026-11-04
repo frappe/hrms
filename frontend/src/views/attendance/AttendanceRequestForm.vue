@@ -9,6 +9,7 @@
 				:fields="formFields.data"
 				:id="props.id"
 				@validateForm="validateForm"
+				@formReloaded="onFormReloaded"
 			/>
 		</ion-content>
 	</ion-page>
@@ -58,11 +59,17 @@ watch(
 	}
 )
 
+// the to date this form filled in, as opposed to one the user picked or the saved doc has
+let autoFilledToDate = null
+
 watch(
 	() => attendanceRequest.value.from_date,
 	(from_date) => {
-		if (!attendanceRequest.value.to_date) {
-			attendanceRequest.value.to_date = from_date
+		// a date input emits partial years while typing (0002, 0020, ...), so keep an
+		// auto filled to date in step with from date until the user sets it themselves
+		const to_date = attendanceRequest.value.to_date
+		if (!to_date || to_date === autoFilledToDate) {
+			attendanceRequest.value.to_date = autoFilledToDate = from_date
 		}
 	}
 )
@@ -94,6 +101,11 @@ function validateDates(from_date, to_date) {
 
 	const from_date_field = formFields.data.find((field) => field.fieldname === "from_date")
 	from_date_field.error_message = error_message
+}
+
+function onFormReloaded() {
+	// the reloaded to date is the saved one, so a later from date change leaves it alone
+	autoFilledToDate = null
 }
 
 function validateForm() {

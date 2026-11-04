@@ -133,6 +133,7 @@ class IncomeTaxComputationReport:
 					"currency": d.currency,
 					"income_tax_slab": d.income_tax_slab,
 					"allow_tax_exemption": tax_slab.allow_tax_exemption,
+					"total_exemption": 0.0,
 					"first_assignment_date": assignments[-1].from_date,
 					"taxable_earnings_till_date": self.get_opening_for(
 						"taxable_earnings_till_date", d, assignments
