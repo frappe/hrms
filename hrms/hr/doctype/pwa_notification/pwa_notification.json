@@ -51,7 +51,7 @@
    "default": "0",
    "fieldname": "read",
    "fieldtype": "Check",
-   "label": "Read"
+   "label": "Seen"
   },
   {
    "fieldname": "section_break_xdby",
@@ -84,7 +84,7 @@
  "icon": "bell",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-11-02 17:27:54.573166",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "PWA Notification",
