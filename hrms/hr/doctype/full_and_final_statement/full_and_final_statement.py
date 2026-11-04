@@ -207,6 +207,15 @@ class FullandFinalStatement(Document):
 
 		difference = self.total_payable_amount - self.total_receivable_amount
 
+		# payroll payable account has no account type in v15, payroll books it per employee only when this is enabled
+		payroll_payable_account = None
+		if frappe.db.get_single_value(
+			"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"
+		):
+			payroll_payable_account = frappe.get_cached_value(
+				"Company", self.company, "default_payroll_payable_account"
+			)
+
 		for data in self.payables:
 			if flt(data.amount) > 0 and not data.paid_via_salary_slip:
 				account_dict = {
@@ -214,7 +223,11 @@ class FullandFinalStatement(Document):
 					"debit_in_account_currency": flt(data.amount, precision),
 					"user_remark": data.remark,
 				}
-				if data.reference_document_type in ["Expense Claim", "Gratuity", "Leave Encashment"]:
+				if (
+					data.reference_document_type in ["Expense Claim", "Gratuity", "Leave Encashment"]
+					or is_party_account(data.account)
+					or (payroll_payable_account and data.account == payroll_payable_account)
+				):
 					account_dict["party_type"] = "Employee"
 					account_dict["party"] = self.employee
 
@@ -227,7 +240,7 @@ class FullandFinalStatement(Document):
 					"credit_in_account_currency": flt(data.amount, precision),
 					"user_remark": data.remark,
 				}
-				if data.reference_document_type == "Employee Advance":
+				if data.reference_document_type == "Employee Advance" or is_party_account(data.account):
 					account_dict["party_type"] = "Employee"
 					account_dict["party"] = self.employee
 
@@ -325,6 +338,10 @@ def get_account_and_amount(ref_doctype, ref_document, company):
 		amount = frappe.db.get_value("Leave Encashment", ref_document, "encashment_amount")
 		payable_account = frappe.get_cached_value("Company", company, "default_payroll_payable_account")
 		return [payable_account, amount]
+
+
+def is_party_account(account: str | None) -> bool:
+	return frappe.get_cached_value("Account", account, "account_type") in ["Receivable", "Payable"]
 
 
 def update_full_and_final_statement_status(doc, method=None):

@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests.utils import FrappeTestCase, change_settings
 from frappe.utils import add_days, now_datetime, today
 
 from erpnext.assets.doctype.asset.test_asset import create_asset_data
@@ -70,6 +70,28 @@ class TestFullandFinalStatement(FrappeTestCase):
 		self.assertEqual(debit_entry.debit_in_account_currency, 150000.0)
 		self.assertEqual(debit_entry.reference_type, "Full and Final Statement")
 		self.assertEqual(debit_entry.reference_name, self.fnf.name)
+
+	def test_journal_entry_party_for_receivable_and_payable_accounts(self):
+		self.fnf.append("payables", {"component": "Salary", "account": "Creditors - _TC", "amount": 1000})
+		self.fnf.append("receivables", {"component": "Recovery", "account": "Debtors - _TC", "amount": 500})
+
+		jv = self.fnf.create_journal_entry()
+
+		self.assertEqual((jv.accounts[0].party_type, jv.accounts[0].party), ("Employee", self.employee))
+		self.assertEqual((jv.accounts[1].party_type, jv.accounts[1].party), ("Employee", self.employee))
+
+	@change_settings("Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 1})
+	def test_journal_entry_party_for_employee_wise_payroll_payable_account(self):
+		payroll_payable_account = frappe.get_cached_value(
+			"Company", "_Test Company", "default_payroll_payable_account"
+		)
+		self.fnf.append(
+			"payables", {"component": "Salary", "account": payroll_payable_account, "amount": 1000}
+		)
+
+		jv = self.fnf.create_journal_entry()
+
+		self.assertEqual((jv.accounts[0].party_type, jv.accounts[0].party), ("Employee", self.employee))
 
 
 def create_full_and_final_statement(employee):
