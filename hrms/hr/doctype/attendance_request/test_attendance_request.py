@@ -219,6 +219,23 @@ class TestAttendanceRequest(HRMSTestSuite):
 		)
 		self.assertEqual(half_day_status, "Absent")
 
+	def test_half_day_request_requires_half_day_date(self):
+		attendance_request = frappe.get_doc(
+			{
+				"doctype": "Attendance Request",
+				"employee": self.employee.name,
+				"from_date": add_days(self.date, -1),
+				"to_date": add_days(self.date, 1),
+				"reason": "On Duty",
+				"half_day": 1,
+				"company": "_Test Company",
+			}
+		)
+		self.assertRaises(frappe.MandatoryError, attendance_request.insert)
+
+		attendance_request.half_day_date = self.date
+		attendance_request.insert()
+
 	def test_half_day_status_change_when_existing_attendance_is_updated(self):
 		# when existing attendance is updated via attendance request
 		frappe.get_doc(
