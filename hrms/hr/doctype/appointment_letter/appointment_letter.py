@@ -6,7 +6,16 @@ import calendar
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cint, flt, fmt_money, format_time, getdate, global_date_format, in_words
+from frappe.utils import (
+	cint,
+	flt,
+	fmt_money,
+	format_time,
+	getdate,
+	global_date_format,
+	in_words,
+	to_timedelta,
+)
 from frappe.utils.jinja import validate_template
 
 from hrms.hr.doctype.appointment_letter_template.appointment_letter_template import (
@@ -40,6 +49,7 @@ class AppointmentLetter(Document):
 		shift_type: DF.Link | None
 		signature: DF.AttachImage | None
 		start_time: DF.Time | None
+		working_hours: DF.Float
 	# end: auto-generated types
 
 	def before_insert(self):
@@ -51,6 +61,8 @@ class AppointmentLetter(Document):
 
 	def validate(self):
 		validate_template(self.letter_body)
+		if not self.working_hours:
+			self.working_hours = get_working_hours(self.start_time, self.end_time)
 
 	def get_template_body(self) -> str:
 		if self.appointment_letter_template:
@@ -69,6 +81,7 @@ class AppointmentLetter(Document):
 			self.start_time, self.end_time = frappe.get_cached_value(
 				"Shift Type", shift_type, ["start_time", "end_time"]
 			)
+			self.working_hours = get_working_hours(self.start_time, self.end_time)
 
 	def get_letter_body_html(self) -> str:
 		return frappe.render_template(self.letter_body or "", self.get_placeholders())
@@ -99,7 +112,7 @@ class AppointmentLetter(Document):
 			"weekly_off": join_and(split_days(offer.weekly_off_days)),
 			"start_time": format_time(self.start_time, "h:mm a") if self.start_time else "",
 			"end_time": format_time(self.end_time, "h:mm a") if self.end_time else "",
-			"working_hours": format_number(offer.working_hours),
+			"working_hours": format_number(self.working_hours or offer.working_hours),
 			"public_holidays": offer.total_public_holidays,
 			"leave_entitlement": join_and(
 				[
@@ -122,6 +135,13 @@ def get_shift_type_on(employee: str, date) -> str | None:
 		limit=1,
 	)
 	return assignment[0] if assignment else frappe.db.get_value("Employee", employee, "default_shift")
+
+
+def get_working_hours(start_time, end_time) -> float:
+	if not (start_time and end_time):
+		return 0
+	seconds = (to_timedelta(end_time) - to_timedelta(start_time)).total_seconds() % 86400
+	return flt(seconds / 3600, 2)
 
 
 def get_title(doctype: str, name: str | None, title_field: str) -> str | None:

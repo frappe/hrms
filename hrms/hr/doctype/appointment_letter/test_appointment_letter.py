@@ -10,6 +10,7 @@ from hrms.hr.doctype.appointment_letter.appointment_letter import (
 	format_days,
 	format_probation,
 	get_working_days,
+	get_working_hours,
 )
 from hrms.hr.doctype.appointment_letter_template.appointment_letter_template import (
 	create_default_template,
@@ -149,3 +150,10 @@ class TestAppointmentLetter(HRMSTestSuite):
 			get_working_days("Wednesday, Sunday"), "Monday, Tuesday, Thursday, Friday and Saturday"
 		)
 		self.assertEqual(get_working_days(""), "")
+
+	def test_working_hours_from_times(self):
+		self.assertEqual(get_working_hours("10:00:00", "18:30:00"), 8.5)
+		self.assertEqual(get_working_hours("22:00:00", "06:00:00"), 8)
+		self.assertEqual(get_working_hours(None, "18:00:00"), 0)
+		self.assertEqual(self.make_letter().working_hours, 8)
+		self.assertEqual(self.make_letter(working_hours=7.5).working_hours, 7.5)

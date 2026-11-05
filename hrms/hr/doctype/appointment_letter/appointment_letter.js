@@ -56,6 +56,14 @@ frappe.ui.form.on("Appointment Letter", {
 		if (frm.doc.employee) frm.call("set_shift_from_employee");
 	},
 
+	start_time: function (frm) {
+		set_working_hours(frm);
+	},
+
+	end_time: function (frm) {
+		set_working_hours(frm);
+	},
+
 	appointment_letter_template: async function (frm) {
 		if (!frm.doc.appointment_letter_template) return;
 		const { message } = await frappe.db.get_value(
@@ -66,6 +74,14 @@ frappe.ui.form.on("Appointment Letter", {
 		frm.set_value("letter_body", message.letter_body);
 	},
 });
+
+function set_working_hours(frm) {
+	if (!frm.doc.start_time || !frm.doc.end_time) return;
+	const seconds = (time) => moment.duration(time).asSeconds();
+	const day = 24 * 60 * 60;
+	const worked = (((seconds(frm.doc.end_time) - seconds(frm.doc.start_time)) % day) + day) % day;
+	frm.set_value("working_hours", flt(worked / 3600, 2));
+}
 
 async function set_default_template(frm) {
 	if (!frm.is_new() || frm.doc.letter_body || frm.doc.appointment_letter_template) return;

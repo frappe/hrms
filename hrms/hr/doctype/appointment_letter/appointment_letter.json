@@ -21,8 +21,9 @@
   "terms_of_appointment_tab",
   "working_hours_section",
   "shift_type",
-  "start_time",
+  "working_hours",
   "column_break_terms",
+  "start_time",
   "end_time",
   "body_section",
   "appointment_letter_template",
@@ -206,12 +207,19 @@
    "fieldname": "letter_body",
    "fieldtype": "Text Editor",
    "label": "Letter Body"
+  },
+  {
+   "description": "Calculated from the start and end time. You can change it.",
+   "fieldname": "working_hours",
+   "fieldtype": "Float",
+   "label": "Total Working Hours",
+   "non_negative": 1
   }
  ],
  "icon": "mail-check",
  "link_display_mode": "Search",
  "links": [],
- "modified": "2026-11-05 19:30:00.000000",
+ "modified": "2026-11-05 20:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appointment Letter",
