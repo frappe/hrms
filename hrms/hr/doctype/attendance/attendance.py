@@ -125,11 +125,6 @@ class Attendance(Document):
 				& (Attendance.docstatus < 2)
 				& (Attendance.attendance_date == self.attendance_date)
 				& (Attendance.name != self.name)
-				& (
-					Attendance.half_day_status.isnull()
-					| (Attendance.half_day_status == "")
-					| (Attendance.modify_half_day_status == 0)
-				)
 			)
 			.for_update()
 		)
@@ -445,12 +440,22 @@ def mark_bulk_attendance(data: str | dict):
 			).format(frappe.bold(data.employee), get_link_to_form("RQ Job", get_job(job_id).id, label="here"))
 		frappe.msgprint(message, allow_dangerous_html=True)
 	else:
-		process_bulk_attendance_in_batches(data)
-		frappe.msgprint(_("Attendance marked successfully."), alert=True)
+		failed = process_bulk_attendance_in_batches(data, notify=False)
+		if failed:
+			frappe.msgprint(get_bulk_attendance_failure_message(failed), indicator="red")
+		if len(failed) < len(data.unmarked_days):
+			frappe.msgprint(_("Attendance marked successfully."), alert=True)
 
 
-def process_bulk_attendance_in_batches(data, chunk_size=20):
+def get_bulk_attendance_failure_message(failed_dates):
+	return _("Attendance could not be marked for the following dates: {0}").format(
+		", ".join(frappe.bold(format_date(d)) for d in failed_dates)
+	)
+
+
+def process_bulk_attendance_in_batches(data, chunk_size=20, notify=True):
 	savepoint = "mark_bulk_attendance"
+	failed = []
 	for days in create_batch(data.unmarked_days, chunk_size):
 		for attendance_date in days:
 			try:
@@ -468,9 +473,19 @@ def process_bulk_attendance_in_batches(data, chunk_size=20):
 			except (DuplicateAttendanceError, OverlappingShiftAttendanceError, Exception):
 				if not frappe.flags.in_test:
 					frappe.db.rollback(save_point=savepoint)
+				failed.append(attendance_date)
 				continue
 		if not frappe.flags.in_test:
 			frappe.db.commit()  # nosemgrep
+
+	if failed and notify:
+		frappe.publish_realtime(
+			"msgprint",
+			{"message": get_bulk_attendance_failure_message(failed), "indicator": "red"},
+			user=frappe.session.user,
+		)
+
+	return failed
 
 
 @frappe.whitelist()
@@ -540,6 +555,7 @@ def get_employee_shift(employee: str, for_date: str | date | None = None) -> str
 			"status": "Active",
 			"start_date": ("<=", for_date),
 		},
+		or_filters=[["end_date", ">=", for_date], ["end_date", "is", "not set"]],
 		fields=["shift_type", "start_date"],
 		order_by="start_date desc",
 		limit=1,

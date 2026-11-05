@@ -2,6 +2,7 @@
 # See license.txt
 
 import frappe
+from frappe.utils import add_days, today
 
 from hrms.hr.doctype.training_event.test_training_event import (
 	create_training_event,
@@ -55,6 +56,47 @@ class TestTrainingFeedback(HRMSTestSuite):
 		)
 
 		self.assertEqual(status, "Feedback Submitted")
+
+	def test_duplicate_feedback(self):
+		training_event = create_training_event(self.attendees)
+		training_event.submit()
+
+		create_training_feedback(training_event.name, self.employee).submit()
+		feedback = create_training_feedback(training_event.name, self.employee)
+		self.assertRaises(frappe.ValidationError, feedback.insert)
+
+	def test_status_on_cancel_for_scheduled_event(self):
+		training_event = create_training_event(self.attendees)
+		training_event.submit()
+
+		feedback = create_training_feedback(training_event.name, self.employee)
+		feedback.submit()
+		feedback.cancel()
+
+		status = frappe.db.get_value(
+			"Training Event Employee", {"parent": training_event.name, "employee": self.employee}, "status"
+		)
+		self.assertEqual(status, "Open")
+
+	def test_feedback_for_cancelled_or_future_event(self):
+		training_event = create_training_event(self.attendees)
+		training_event.submit()
+		training_event.event_status = "Cancelled"
+		training_event.save()
+
+		feedback = create_training_feedback(training_event.name, self.employee)
+		self.assertRaises(frappe.ValidationError, feedback.insert)
+
+		training_event = create_training_event(
+			self.attendees,
+			event_name="Future Training Event",
+			start_time=add_days(today(), 5),
+			end_time=add_days(today(), 6),
+		)
+		training_event.submit()
+
+		feedback = create_training_feedback(training_event.name, self.employee)
+		self.assertRaises(frappe.ValidationError, feedback.insert)
 
 
 def create_training_feedback(event, employee):

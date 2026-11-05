@@ -55,7 +55,10 @@ frappe.ui.form.on("Payroll Correction", {
 			frm.set_value("working_days", selected_entry.working_days);
 			frm.set_value(
 				"lwp_days",
-				Math.max(0, selected_entry.working_days - selected_entry.payment_days),
+				Math.min(
+					flt(selected_entry.leave_without_pay) + flt(selected_entry.absent_days),
+					Math.max(0, selected_entry.working_days - selected_entry.payment_days),
+				),
 			);
 		}
 

@@ -17,7 +17,7 @@ from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import
 	create_holiday_list_assignment,
 )
 from hrms.hr.doctype.leave_type.test_leave_type import create_leave_type
-from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
+from hrms.hr.doctype.shift_type.test_shift_type import make_shift_assignment, setup_shift_type
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_leave_application
 from hrms.tests.utils import HRMSTestSuite, make_company_restricted_user
 
@@ -215,7 +215,7 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 				"start_date": frappe.utils.getdate("2023-02-28"),
 				"end_date": frappe.utils.getdate("2023-03-10"),
 			}
-		).insert()
+		).submit()
 		# Prepare the unmarked_attendance sample input
 		unmarked_attendance = [
 			{"employee": self.employee1.name},
@@ -291,15 +291,7 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 		while is_holiday(employee=self.employee1, date=date):
 			date = add_days(date, -1)
 
-		attendance = frappe.get_doc(
-			{
-				"doctype": "Attendance",
-				"employee": self.employee1,
-				"attendance_date": date,
-				"status": "Present",
-			}
-		).insert()
-		attendance.submit()
+		attendance = make_half_day_leave_attendance(self.employee1, date)
 
 		# employee1 sits outside the user's company scope; share the records read-only so
 		# they are visible to the user without being editable
@@ -323,7 +315,7 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 			frappe.set_user("Administrator")
 
 		attendance.reload()
-		self.assertIsNone(attendance.half_day_status)
+		self.assertEqual(attendance.half_day_status, "Present")
 
 		frappe.share.add("Attendance", attendance.name, hr_user, read=1, write=1)
 		frappe.set_user(hr_user)
@@ -346,15 +338,7 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 			date = add_days(date, -1)
 
 		# Create and submit an attendance record as Administrator
-		attendance = frappe.get_doc(
-			{
-				"doctype": "Attendance",
-				"employee": self.employee1,
-				"attendance_date": date,
-				"status": "Present",
-			}
-		).insert()
-		attendance.submit()
+		attendance = make_half_day_leave_attendance(self.employee1, date)
 
 		# Scenario 1 (Security): user without Attendance write permission
 		# Verify the unauthorized user cannot update half-day attendance
@@ -377,8 +361,8 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 
 		# Verify the record was NOT modified
 		attendance.reload()
-		self.assertIsNone(attendance.half_day_status)
-		self.assertEqual(attendance.status, "Present")
+		self.assertEqual(attendance.half_day_status, "Present")
+		self.assertEqual(attendance.status, "Half Day")
 
 		# Scenario 2 (Positive): Administrator can update half-day attendance
 		mark_employee_attendance(
@@ -392,7 +376,87 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 
 		attendance.reload()
 		self.assertEqual(attendance.half_day_status, "Absent")
-		self.assertEqual(attendance.status, "Present")
+		self.assertEqual(attendance.status, "Half Day")
+
+	def test_half_day_update_only_touches_half_day_leave_attendance(self):
+		shift = setup_shift_type(shift_type="Shift 1", start_time="08:00:00", end_time="10:00:00")
+		date = add_days(getdate(), -1)
+		present = mark_attendance(self.employee1, date, "Present", shift=shift.name)
+		half_day = make_half_day_leave_attendance(self.employee2, date, shift=shift.name)
+
+		self.assertRaises(
+			frappe.ValidationError,
+			mark_employee_attendance,
+			employee_list=[],
+			status="Present",
+			date=date,
+			mark_half_day=True,
+			half_day_status="Bogus",
+			half_day_employee_list=[self.employee2],
+		)
+
+		mark_employee_attendance(
+			employee_list=[],
+			status="Present",
+			date=date,
+			mark_half_day=True,
+			half_day_status="Absent",
+			half_day_employee_list=[self.employee1, self.employee2],
+		)
+
+		present = frappe.db.get_value(
+			"Attendance", present, ["status", "half_day_status", "shift"], as_dict=True
+		)
+		self.assertEqual(present.status, "Present")
+		self.assertIsNone(present.half_day_status)
+		self.assertEqual(present.shift, shift.name)
+
+		half_day.reload()
+		self.assertEqual(half_day.half_day_status, "Absent")
+		self.assertEqual(half_day.shift, shift.name)
+
+	def test_marked_attendance_respects_filters(self):
+		date = add_days(getdate(), -1)
+		mark_attendance(self.employee1, date, "Present")
+		mark_attendance(self.employee4, date, "Present")
+
+		marked = [d.employee for d in get_employees(date, company="_Test Company")["marked"]]
+		self.assertIn(self.employee1, marked)
+		self.assertNotIn(self.employee4, marked)
+
+	def test_shift_filter_ignores_invalid_assignments(self):
+		shift = setup_shift_type(shift_type="Shift 1", start_time="08:00:00", end_time="10:00:00")
+		other_shift = setup_shift_type(shift_type="Shift 2", start_time="11:00:00", end_time="13:00:00")
+		date = getdate()
+		frappe.db.set_value("Employee", self.employee3, "default_shift", shift.name)
+
+		make_shift_assignment(shift.name, self.employee1, add_days(date, -10), add_days(date, -1))
+		make_shift_assignment(shift.name, self.employee2, add_days(date, -10), do_not_submit=True)
+		make_shift_assignment(other_shift.name, self.employee3, add_days(date, -10))
+
+		unmarked = [{"employee": e} for e in (self.employee1, self.employee2, self.employee3)]
+		self.assertEqual(_get_unmarked_attendance_with_shift(unmarked, shift.name, date), [])
+
+
+def make_half_day_leave_attendance(employee, date, shift=None):
+	leave_type = create_leave_type(leave_type="_Test Employee Attendance Tool", include_holidays=0)
+	attendance = frappe.get_doc(
+		{
+			"doctype": "Attendance",
+			"employee": employee,
+			"attendance_date": date,
+			"status": "Half Day",
+			"leave_type": leave_type.name,
+			"half_day_status": "Present",
+			"modify_half_day_status": 1,
+			"shift": shift,
+			"company": frappe.db.get_value("Employee", employee, "company"),
+		}
+	)
+	attendance.flags.ignore_validate = True
+	attendance.insert()
+	attendance.submit()
+	return attendance
 
 
 def create_leave_allocation(employee, leave_type, date=None):

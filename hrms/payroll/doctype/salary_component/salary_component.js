@@ -114,6 +114,9 @@ frappe.ui.form.on("Salary Component", {
 			frm.add_custom_button(
 				__("Sync {0}", [__(df)]),
 				function () {
+					if (frm.is_dirty()) {
+						frappe.throw(__("Please save the Salary Component before syncing"));
+					}
 					frappe
 						.call({
 							method: "get_structures_to_be_updated",
@@ -157,7 +160,6 @@ frappe.ui.form.on("Salary Component", {
 					args: {
 						structures: structures,
 						field: df.toLowerCase(),
-						value: frm.get_field(df.toLowerCase()).value || "",
 					},
 				})
 				.then((r) => {

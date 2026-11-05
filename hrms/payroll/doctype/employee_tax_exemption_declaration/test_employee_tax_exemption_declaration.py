@@ -335,12 +335,12 @@ class TestEmployeeTaxExemptionDeclaration(HRMSTestSuite):
 			}
 		).insert()
 
-		# Bimonthly HRA received = 3000
+		# Bimonthly HRA received = 3000 per slip, 24 slips a year
 		# should set HRA exemption as per actual annual HRA because that's the minimum
-		self.assertEqual(declaration.monthly_hra_exemption, 1500)
-		self.assertEqual(declaration.annual_hra_exemption, 18000)
-		# 100000 Standard Exemption + 18000 HRA exemption
-		self.assertEqual(declaration.total_exemption_amount, 118000)
+		self.assertEqual(declaration.monthly_hra_exemption, 6000)
+		self.assertEqual(declaration.annual_hra_exemption, 72000)
+		# 100000 Standard Exemption + 72000 HRA exemption
+		self.assertEqual(declaration.total_exemption_amount, 172000)
 
 		# reset
 		frappe.flags.country = current_country
@@ -443,6 +443,131 @@ class TestEmployeeTaxExemptionDeclaration(HRMSTestSuite):
 
 		# reset
 		frappe.flags.country = current_country
+
+	def test_india_hra_exemption_for_mid_year_joiner(self):
+		current_country = frappe.flags.country
+		frappe.flags.country = "India"
+
+		# Basic 50000 and HRA 3000 a month, joined at the start of July: 6 months in the period
+		employee = make_employee(
+			"employee@taxexemption3.com", company="_Test Company", date_of_joining="2022-07-01"
+		)
+		setup_hra_exemption_prerequisites("Monthly", employee, from_date="2022-07-01")
+
+		declaration = make_hra_declaration(employee, monthly_house_rent=6000)
+		self.assertEqual(declaration.salary_structure_hra, 18000)
+		# rent is annualised over the 6 months employed: 6 x 6000 - 10% of 300000
+		self.assertEqual(declaration.annual_hra_exemption, 6000)
+		self.assertEqual(declaration.monthly_hra_exemption, 1000)
+
+		# joined mid-month: 16 of 31 days in July count
+		employee = make_employee(
+			"employee@taxexemption4.com", company="_Test Company", date_of_joining="2022-07-16"
+		)
+		setup_hra_exemption_prerequisites("Monthly", employee, from_date="2022-07-16")
+
+		declaration = make_hra_declaration(employee, monthly_house_rent=6000)
+		months = 5 + 16 / 31
+		self.assertAlmostEqual(declaration.salary_structure_hra, 3000 * months, places=1)
+		self.assertAlmostEqual(declaration.annual_hra_exemption, 6000 * months - 5000 * months, places=1)
+
+		frappe.flags.country = current_country
+
+	def test_india_hra_exemption_with_mid_month_revision(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+			create_salary_structure_assignment,
+		)
+
+		current_country = frappe.flags.country
+		frappe.flags.country = "India"
+
+		employee = frappe.get_value("Employee", {"user_id": "employee@taxexemption.com"}, "name")
+		setup_hra_exemption_prerequisites("Monthly", employee, from_date=add_months(PAYROLL_PERIOD_START, -1))
+		create_salary_structure_assignment(
+			employee,
+			"Monthly Structure for HRA Exemption",
+			from_date="2022-07-15",
+			company="_Test Company",
+			currency="INR",
+			base=70000,
+			allow_duplicate=True,
+		)
+
+		declaration = make_hra_declaration(employee, monthly_house_rent=50000)
+		# HRA of 3000 for 12 months, the split month counted once
+		self.assertEqual(declaration.salary_structure_hra, 36000)
+
+		frappe.flags.country = current_country
+
+	def test_inactive_sub_category_and_other_company_payroll_period(self):
+		employee = frappe.get_value("Employee", {"user_id": "employee@taxexemption.com"}, "name")
+		sub_category = frappe.get_doc(
+			{
+				"doctype": "Employee Tax Exemption Sub Category",
+				"name": "_Test Inactive Sub Category",
+				"exemption_category": "_Test Category",
+				"max_amount": 1000,
+				"is_active": 0,
+			}
+		).insert()
+
+		declaration = frappe.get_doc(
+			{
+				"doctype": "Employee Tax Exemption Declaration",
+				"employee": employee,
+				"company": "_Test Company",
+				"payroll_period": PAYROLL_PERIOD_NAME,
+				"currency": "INR",
+				"declarations": [dict(exemption_sub_category=sub_category.name, amount=1000)],
+			}
+		)
+		self.assertRaises(frappe.ValidationError, declaration.insert)
+
+		other_period = create_payroll_period(
+			company="_Test Company 1",
+			name="_Test Exemption Period Other Company",
+			start_date=PAYROLL_PERIOD_START,
+			end_date=PAYROLL_PERIOD_END,
+		)
+		declaration.declarations[0].exemption_sub_category = "_Test Sub Category"
+		declaration.payroll_period = other_period.name
+		self.assertRaises(frappe.ValidationError, declaration.insert)
+
+	def test_inactive_category_rejected_on_new_declarations_only(self):
+		employee = frappe.get_value("Employee", {"user_id": "employee@taxexemption.com"}, "name")
+		declaration = frappe.get_doc(
+			{
+				"doctype": "Employee Tax Exemption Declaration",
+				"employee": employee,
+				"company": "_Test Company",
+				"payroll_period": PAYROLL_PERIOD_NAME,
+				"currency": "INR",
+				"declarations": [dict(exemption_sub_category="_Test Sub Category", amount=1000)],
+			}
+		).insert()
+
+		frappe.db.set_value("Employee Tax Exemption Category", "_Test Category", "is_active", 0)
+		declaration.declarations[0].amount = 2000
+		declaration.save()
+		self.assertEqual(declaration.total_exemption_amount, 2000)
+
+		declaration.delete()
+		new_declaration = frappe.copy_doc(declaration)
+		self.assertRaises(frappe.ValidationError, new_declaration.insert)
+
+
+def make_hra_declaration(employee, monthly_house_rent):
+	return frappe.get_doc(
+		{
+			"doctype": "Employee Tax Exemption Declaration",
+			"employee": employee,
+			"company": "_Test Company",
+			"payroll_period": PAYROLL_PERIOD_NAME,
+			"currency": "INR",
+			"monthly_house_rent": monthly_house_rent,
+			"rented_in_metro_city": 1,
+		}
+	).insert()
 
 
 def create_payroll_period(**args):

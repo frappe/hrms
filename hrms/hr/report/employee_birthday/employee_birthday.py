@@ -13,8 +13,10 @@ from erpnext.accounts.utils import build_qb_match_conditions
 def execute(filters=None):
 	if not filters:
 		filters = {}
-	if not filters["company"]:
+	if not filters.get("company"):
 		frappe.throw(_("{0} is mandatory").format(_("Company")))
+	if not filters.get("month"):
+		frappe.throw(_("{0} is mandatory").format(_("Month")))
 	columns = get_columns()
 	data = get_employees(filters)
 
@@ -54,6 +56,8 @@ def get_employees(filters):
 		.where(employee.status == "Active")
 		.where(Extract("month", employee.date_of_birth) == month)
 		.where(Criterion.all(build_qb_match_conditions("Employee")))
+		.orderby(Extract("day", employee.date_of_birth))
+		.orderby(employee.employee_name)
 	).run()
 
 	return employees

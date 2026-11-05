@@ -2,9 +2,10 @@
 # License: GNU General Public License v3. See license.txt
 
 from datetime import timedelta
+from unittest.mock import patch
 
 import frappe
-from frappe.utils import add_months, getdate
+from frappe.utils import add_days, add_months, get_last_day, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
@@ -12,7 +13,6 @@ from hrms.controllers.employee_reminders import send_holidays_reminder_in_advanc
 from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
 	create_holiday_list_assignment,
 )
-from hrms.hr.doctype.hr_settings.hr_settings import set_proceed_with_frequency_change
 from hrms.hr.utils import get_holidays_for_employee
 from hrms.tests.utils import HRMSTestSuite
 
@@ -122,6 +122,40 @@ class TestEmployeeReminders(HRMSTestSuite):
 		email_queue = frappe.qb.from_("Email Queue").select("*").run(as_dict=True)
 		self.assertTrue("Subject: Birthday Reminder" in email_queue[0].message)
 
+	def test_birthday_person_without_user_is_not_a_recipient(self):
+		from hrms.controllers.employee_reminders import send_birthday_reminders
+
+		employee = frappe.get_doc(
+			"Employee", make_employee("test_birthday_no_user@example.com", company="_Test Company")
+		)
+		employee.user_id = None
+		employee.company_email = "test_birthday_work@example.com"
+		employee.personal_email = "test_birthday_home@example.com"
+		employee.date_of_birth = "1992" + frappe.utils.nowdate()[4:]
+		employee.save()
+
+		frappe.db.set_single_value("HR Settings", "send_birthday_reminders", 1)
+		with patch("hrms.controllers.employee_reminders.send_birthday_reminder") as send_birthday_reminder:
+			send_birthday_reminders()
+
+		recipients = send_birthday_reminder.call_args_list[0].args[0]
+		self.assertTrue(recipients)
+		self.assertNotIn("test_birthday_work@example.com", recipients)
+		self.assertNotIn("test_birthday_home@example.com", recipients)
+
+	def test_advance_holiday_reminder_windows_do_not_overlap(self):
+		from hrms.controllers.employee_reminders import send_advance_holiday_reminders
+
+		today = getdate()
+		with patch(
+			"hrms.controllers.employee_reminders.get_holidays_for_employee", return_value=[]
+		) as get_holidays:
+			send_advance_holiday_reminders("Weekly")
+			self.assertEqual(get_holidays.call_args.args[1:3], (today, add_days(today, 6)))
+
+			send_advance_holiday_reminders("Monthly")
+			self.assertEqual(get_holidays.call_args.args[1:3], (today, get_last_day(today)))
+
 	def test_work_anniversary_reminders(self):
 		from hrms.controllers.employee_reminders import (
 			get_employees_having_an_event_today,
@@ -167,6 +201,25 @@ class TestEmployeeReminders(HRMSTestSuite):
 			user_ids.append(entry.user_id)
 
 		self.assertTrue("test_work_anniversary_2@gmail.com" not in user_ids)
+
+	def test_29_february_events_fall_on_28_february_in_non_leap_years(self):
+		from hrms.controllers.employee_reminders import get_employees_having_an_event_today
+
+		make_employee(
+			"test_leap_day@example.com",
+			company="_Test Company",
+			date_of_birth="1992-02-29",
+			date_of_joining="2020-02-29",
+		)
+
+		for today, expected in (("2027-02-28", True), ("2027-03-01", False), ("2028-02-28", False)):
+			with patch("hrms.controllers.employee_reminders.getdate", return_value=getdate(today)):
+				for event in ("birthday", "work_anniversary"):
+					user_ids = [
+						d.user_id
+						for d in get_employees_having_an_event_today(event).get("_Test Company") or []
+					]
+					self.assertEqual("test_leap_day@example.com" in user_ids, expected, (today, event))
 
 	def test_send_holidays_reminder_in_advance(self):
 		setup_hr_settings("Weekly")
@@ -259,6 +312,6 @@ def setup_hr_settings(frequency=None):
 	# Get HR settings and enable advance holiday reminders
 	hr_settings = frappe.get_doc("HR Settings", "HR Settings")
 	hr_settings.send_holiday_reminders = 1
-	set_proceed_with_frequency_change()
+	hr_settings.set("__proceed_with_frequency_change", 1)
 	hr_settings.frequency = frequency or "Weekly"
 	hr_settings.save()

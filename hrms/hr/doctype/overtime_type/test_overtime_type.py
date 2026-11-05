@@ -14,7 +14,23 @@ class TestOvertimeType(UnitTestCase):
 	Use this class for testing individual functions and methods.
 	"""
 
-	pass
+	def test_zero_rates_rejected(self):
+		for values in (
+			{"standard_multiplier": 0},
+			{"applicable_for_weekend": 1, "weekend_multiplier": 0},
+			{"applicable_for_public_holiday": 1, "public_holiday_multiplier": 0},
+			{"hourly_rate": 0},
+		):
+			overtime_type = frappe.new_doc("Overtime Type")
+			overtime_type.update(
+				{
+					"overtime_calculation_method": "Fixed Hourly Rate",
+					"hourly_rate": 500,
+					"standard_multiplier": 1.5,
+					**values,
+				}
+			)
+			self.assertRaises(frappe.ValidationError, overtime_type.validate)
 
 
 def create_overtime_type(**args):
@@ -36,7 +52,7 @@ def create_overtime_type(**args):
 
 	if args.applicable_for_weekend:
 		overtime_type.weekend_multiplier = 1.5
-	if args.applicable_for_public_holidays:
+	if args.applicable_for_public_holiday:
 		overtime_type.public_holiday_multiplier = 2
 
 	overtime_type.save()

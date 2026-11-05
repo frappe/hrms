@@ -6,7 +6,7 @@ from pypika import functions as fn
 import frappe
 from frappe import _
 from frappe.query_builder import Order
-from frappe.utils import getdate
+from frappe.utils import cint, getdate
 
 
 def execute(filters=None):
@@ -93,9 +93,17 @@ def get_data(filters):
 	query = (
 		frappe.qb.from_(employee)
 		.left_join(interview)
-		.on(interview.employee == employee.name)
+		.on(
+			(interview.employee == employee.name)
+			& (interview.docstatus != 2)
+			& interview.name.isin(get_permitted_names("Exit Interview"))
+		)
 		.left_join(fnf)
-		.on(fnf.employee == employee.name)
+		.on(
+			(fnf.employee == employee.name)
+			& (fnf.docstatus != 2)
+			& fnf.name.isin(get_permitted_names("Full and Final Statement"))
+		)
 		.select(
 			employee.name.as_("employee"),
 			employee.employee_name.as_("employee_name"),
@@ -109,12 +117,13 @@ def get_data(filters):
 			interview.employee_status.as_("employee_status"),
 			interview.reference_document_name.as_("questionnaire"),
 			fnf.name.as_("full_and_final_statement"),
+			fnf.docstatus.as_("fnf_docstatus"),
+			fnf.creation.as_("fnf_creation"),
 		)
 		.distinct()
 		.where(
 			(fn.Coalesce(fn.Cast(employee.relieving_date, "char"), "") != "")
-			& ((interview.name.isnull()) | ((interview.name.isnotnull()) & (interview.docstatus != 2)))
-			& ((fnf.name.isnull()) | ((fnf.name.isnotnull()) & (fnf.docstatus != 2)))
+			& employee.name.isin(get_permitted_names("Employee"))
 		)
 		.orderby(employee.relieving_date, order=Order.asc)
 	)
@@ -122,7 +131,29 @@ def get_data(filters):
 	query = get_conditions(filters, query, employee, interview, fnf)
 	result = query.run(as_dict=True)
 
-	return result
+	return get_one_row_per_employee(result)
+
+
+def get_permitted_names(doctype):
+	return frappe.qb.get_query(doctype, fields=["name"], ignore_permissions=False)
+
+
+def get_one_row_per_employee(result):
+	def fnf_priority(row):
+		return (cint(row.fnf_docstatus), str(row.fnf_creation or ""))
+
+	selected = {}
+	for row in result:
+		if row.employee not in selected or fnf_priority(row) > fnf_priority(selected[row.employee]):
+			selected[row.employee] = row
+
+	data = []
+	for row in result:
+		if selected[row.employee] is row:
+			row.pop("fnf_docstatus")
+			row.pop("fnf_creation")
+			data.append(row)
+	return data
 
 
 def get_conditions(filters, query, employee, interview, fnf):
@@ -204,7 +235,7 @@ def get_report_summary(data):
 	if not data:
 		return None
 
-	total_resignations = len(data)
+	total_resignations = len({entry.employee for entry in data})
 	interviews_pending = len([entry.name for entry in data if not entry.exit_interview])
 	fnf_pending = len([entry.name for entry in data if not entry.full_and_final_statement])
 	questionnaires_pending = len([entry.name for entry in data if not entry.questionnaire])

@@ -9,7 +9,7 @@ from frappe import _, qb
 from frappe.model.document import Document
 from frappe.query_builder import Criterion
 from frappe.query_builder.custom import ConstantColumn
-from frappe.query_builder.functions import Count, Sum
+from frappe.query_builder.functions import Count, IfNull, Sum
 from frappe.utils import (
 	add_days,
 	add_months,
@@ -55,6 +55,9 @@ def set_employee_name(doc):
 		doc.employee_name = frappe.db.get_value("Employee", doc.employee, "employee_name")
 
 
+WORK_HISTORY_FIELDS = ("branch", "department", "designation")
+
+
 def update_employee_work_history(employee, details, date=None, cancel=False):
 	if not details:
 		return employee
@@ -70,22 +73,31 @@ def update_employee_work_history(employee, details, date=None, cancel=False):
 			},
 		)
 
+	property_changes = get_employee_property_changes(employee.name, date)
+	changed_later = {d.fieldname for d in property_changes if getdate(d.date) > getdate(date)}
+	effective_before = {}
+	for d in property_changes:
+		if getdate(d.date) < getdate(date):
+			effective_before[d.fieldname] = d.new
+
 	internal_work_history = {}
 	for item in details:
 		field = frappe.get_meta("Employee").get_field(item.fieldname)
 		if not field:
 			continue
 
-		new_value = item.new if not cancel else item.current
-		new_value = get_formatted_value(new_value, field.fieldtype)
-		setattr(employee, item.fieldname, new_value)
+		if item.fieldname not in changed_later:
+			if cancel:
+				new_value = effective_before.get(item.fieldname, item.current)
+			else:
+				new_value = item.new
+			setattr(employee, item.fieldname, get_formatted_value(new_value, field.fieldtype))
 
-		if item.fieldname in ["department", "designation", "branch"]:
+		if item.fieldname in WORK_HISTORY_FIELDS:
 			internal_work_history[item.fieldname] = item.new
 
 	if internal_work_history and not cancel:
-		internal_work_history["from_date"] = date
-		employee.append("internal_work_history", internal_work_history)
+		add_employee_work_history(employee, internal_work_history, date)
 
 	if cancel:
 		delete_employee_work_history(details, employee, date)
@@ -93,6 +105,67 @@ def update_employee_work_history(employee, details, date=None, cancel=False):
 	update_to_date_in_work_history(employee, cancel)
 
 	return employee
+
+
+def get_employee_property_changes(employee, date):
+	if not (employee and date):
+		return []
+
+	changes = []
+	for doctype, date_field, table_field in (
+		("Employee Promotion", "promotion_date", "promotion_details"),
+		("Employee Transfer", "transfer_date", "transfer_details"),
+	):
+		parent = frappe.qb.DocType(doctype)
+		child = frappe.qb.DocType("Employee Property History")
+		query = (
+			frappe.qb.from_(parent)
+			.join(child)
+			.on((child.parent == parent.name) & (child.parenttype == doctype))
+			.select(child.fieldname, child.new, parent[date_field].as_("date"))
+			.where(
+				(parent.employee == employee)
+				& (parent.docstatus == 1)
+				& (child.parentfield == table_field)
+				& (parent[date_field] != date)
+			)
+		)
+		if doctype == "Employee Transfer":
+			query = query.where(parent.create_new_employee_id == 0)
+		changes.extend(query.run(as_dict=True))
+
+	return sorted(changes, key=lambda d: getdate(d.date))
+
+
+def add_employee_work_history(employee, changes, date):
+	rows = employee.internal_work_history
+	position = next(
+		(
+			idx
+			for idx, row in enumerate(rows)
+			if idx and row.from_date and getdate(row.from_date) > getdate(date)
+		),
+		None,
+	)
+
+	if position is None:
+		values = {fieldname: employee.get(fieldname) for fieldname in WORK_HISTORY_FIELDS}
+	else:
+		values = {fieldname: rows[position - 1].get(fieldname) for fieldname in WORK_HISTORY_FIELDS}
+
+	values.update(changes)
+	values["from_date"] = date
+	new_row = employee.append("internal_work_history", values)
+
+	if position is None:
+		return
+
+	rows.insert(position, rows.pop())
+	for idx, row in enumerate(rows, 1):
+		row.idx = idx
+
+	rows[position - 1].to_date = add_days(date, -1)
+	new_row.to_date = add_days(rows[position + 1].from_date, -1)
 
 
 def get_formatted_value(value, fieldtype):
@@ -124,23 +197,25 @@ def get_formatted_value(value, fieldtype):
 
 
 def delete_employee_work_history(details, employee, date):
-	filters = {}
-	for d in details:
-		for history in employee.internal_work_history:
-			if d.property == "Department" and history.department == d.new:
-				department = d.new
-				filters["department"] = department
-			if d.property == "Designation" and history.designation == d.new:
-				designation = d.new
-				filters["designation"] = designation
-			if d.property == "Branch" and history.branch == d.new:
-				branch = d.new
-				filters["branch"] = branch
-			if date and date == history.from_date:
-				filters["from_date"] = date
-	if filters:
-		frappe.db.delete("Employee Internal Work History", filters)
-		employee.save()
+	changes = {d.fieldname: d.new for d in details if d.fieldname in WORK_HISTORY_FIELDS}
+	if not changes:
+		return
+
+	rows = employee.internal_work_history
+	for idx in range(len(rows) - 1, -1, -1):
+		row = rows[idx]
+		if date and (not row.from_date or getdate(row.from_date) != getdate(date)):
+			continue
+		if any(cstr(row.get(fieldname)) != cstr(value) for fieldname, value in changes.items()):
+			continue
+
+		if idx:
+			next_row = rows[idx + 1] if idx + 1 < len(rows) else None
+			rows[idx - 1].to_date = (
+				add_days(next_row.from_date, -1) if next_row and next_row.from_date else None
+			)
+		employee.remove(row)
+		break
 
 
 def update_to_date_in_work_history(employee, cancel):
@@ -267,12 +342,54 @@ def validate_duplicate_exemption_for_payroll_period(doctype, docname, payroll_pe
 		)
 
 
-def validate_tax_declaration(declarations):
+def validate_tax_declaration(declarations, is_new=False):
 	subcategories = []
 	for d in declarations:
 		if d.exemption_sub_category in subcategories:
 			frappe.throw(_("More than one selection for {0} not allowed").format(d.exemption_sub_category))
+		sub_category = frappe.db.get_value(
+			"Employee Tax Exemption Sub Category",
+			d.exemption_sub_category,
+			["exemption_category", "max_amount", "is_active"],
+			as_dict=True,
+		)
+		if not sub_category:
+			frappe.throw(
+				_("Row {0}: Tax Exemption Sub Category {1} not found").format(d.idx, d.exemption_sub_category)
+			)
+		d.exemption_category = sub_category.exemption_category
+		d.max_amount = sub_category.max_amount
+		if is_new:
+			validate_exemption_is_active(d, sub_category)
 		subcategories.append(d.exemption_sub_category)
+
+
+def validate_exemption_is_active(row, sub_category):
+	if not sub_category.is_active:
+		frappe.throw(
+			_("Row {0}: Tax Exemption Sub Category {1} is not active").format(
+				row.idx, frappe.bold(row.exemption_sub_category)
+			)
+		)
+	if (
+		frappe.db.get_value("Employee Tax Exemption Category", sub_category.exemption_category, "is_active")
+		== 0
+	):
+		frappe.throw(
+			_("Row {0}: Tax Exemption Category {1} is not active").format(
+				row.idx, frappe.bold(sub_category.exemption_category)
+			)
+		)
+
+
+def validate_payroll_period_company(doc):
+	company = frappe.db.get_value("Employee", doc.employee, "company")
+	if frappe.db.get_value("Payroll Period", doc.payroll_period, "company") != company:
+		frappe.throw(
+			_("Payroll Period {0} does not belong to company {1} of employee {2}").format(
+				frappe.bold(doc.payroll_period), frappe.bold(company), frappe.bold(doc.employee)
+			)
+		)
 
 
 def get_total_exemption_amount(declarations):
@@ -336,8 +453,10 @@ def generate_leave_encashment():
 			filters=[
 				["to_date", "=", add_days(getdate(), -1)],
 				["leave_type", "in", leave_type],
+				["docstatus", "=", 1],
 			],
 			fields=[
+				"name",
 				"employee",
 				"leave_period",
 				"leave_type",
@@ -823,6 +942,20 @@ def validate_active_employee(employee, method=None):
 		)
 
 
+def validate_employee_active_on(employee, date):
+	status, relieving_date = frappe.db.get_value("Employee", employee, ["status", "relieving_date"]) or (
+		None,
+		None,
+	)
+	if status != "Active" or (relieving_date and date and getdate(relieving_date) < getdate(date)):
+		frappe.throw(
+			_("Employee {0} is not active on {1}.").format(
+				get_link_to_form("Employee", employee), formatdate(date)
+			),
+			InactiveEmployeeStatusError,
+		)
+
+
 def validate_loan_repay_from_salary(doc, method=None):
 	if doc.applicant_type == "Employee" and doc.repay_from_salary:
 		from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
@@ -881,19 +1014,24 @@ def get_ec_matching_query(
 	filters = []
 	ec = qb.DocType("Expense Claim")
 
-	mode_of_payments = [
-		x["parent"]
-		for x in frappe.db.get_all(
-			"Mode of Payment Account", filters={"default_account": bank_account}, fields=["parent"]
-		)
-	]
+	mode_of_payments = frappe.db.get_all(
+		"Mode of Payment Account",
+		filters={"default_account": bank_account, "company": company},
+		pluck="parent",
+	)
 	company_currency = get_company_currency(company)
 
 	filters.append(ec.docstatus == 1)
 	filters.append(ec.is_paid == 1)
+	filters.append(ec.company == company)
 	filters.append(ec.clearance_date.isnull())
+
+	account_filter = ec.bank_or_cash_account == bank_account
 	if mode_of_payments:
-		filters.append(ec.mode_of_payment.isin(mode_of_payments))
+		account_filter |= (IfNull(ec.bank_or_cash_account, "") == "") & ec.mode_of_payment.isin(
+			mode_of_payments
+		)
+	filters.append(account_filter)
 
 	if common_filters:
 		ref_rank = frappe.qb.terms.Case().when(ec.employee == common_filters.party, 1).else_(0) + 1
@@ -901,7 +1039,7 @@ def get_ec_matching_query(
 		if exact_match:
 			filters.append(ec.total_amount_reimbursed == common_filters.amount)
 		else:
-			filters.append(ec.total_amount_reimbursed.gt(common_filters.amount))
+			filters.append(ec.total_amount_reimbursed.gt(0))
 	else:
 		ref_rank = ConstantColumn(1)
 
@@ -914,7 +1052,7 @@ def get_ec_matching_query(
 			ref_rank.as_("rank"),
 			ConstantColumn("Expense Claim").as_("doctype"),
 			ec.name,
-			ec.total_sanctioned_amount.as_("paid_amount"),
+			ec.total_amount_reimbursed.as_("paid_amount"),
 			ConstantColumn("").as_("reference_no"),
 			ConstantColumn("").as_("reference_date"),
 			ec.employee.as_("party"),

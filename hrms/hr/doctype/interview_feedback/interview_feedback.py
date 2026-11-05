@@ -44,6 +44,14 @@ class InterviewFeedback(Document):
 		self.update_interview_average_rating()
 
 	def validate_interviewer(self):
+		if self.interviewer != frappe.session.user and not {"HR Manager", "HR User"}.intersection(
+			frappe.get_roles()
+		):
+			frappe.throw(
+				_("You can only submit Interview Feedback as yourself."),
+				frappe.PermissionError,
+			)
+
 		applicable_interviewers = get_applicable_interviewers(self.interview)
 		if self.interviewer not in applicable_interviewers:
 			frappe.throw(

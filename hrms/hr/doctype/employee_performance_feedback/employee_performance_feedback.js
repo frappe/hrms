@@ -8,6 +8,11 @@ frappe.ui.form.on("Employee Performance Feedback", {
 
 	refresh(frm) {
 		frm.trigger("set_filters");
+		frm.fields_dict.feedback_ratings.grid.update_docfield_property(
+			"per_weightage",
+			"read_only",
+			1,
+		);
 	},
 
 	employee(frm) {

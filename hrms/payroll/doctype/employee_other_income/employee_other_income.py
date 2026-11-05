@@ -2,7 +2,8 @@
 # For license information, please see license.txt
 
 
-# import frappe
+import frappe
+from frappe import _
 from frappe.model.document import Document
 
 
@@ -24,4 +25,13 @@ class EmployeeOtherIncome(Document):
 		source: DF.Data | None
 	# end: auto-generated types
 
-	pass
+	def validate(self):
+		for doctype, name in (("Employee", self.employee), ("Payroll Period", self.payroll_period)):
+			company = frappe.db.get_value(doctype, name, "company")
+			if company != self.company:
+				frappe.throw(
+					_("{0} {1} belongs to company {2}, not {3}").format(
+						_(doctype), frappe.bold(name), frappe.bold(company), frappe.bold(self.company)
+					),
+					title=_("Company Mismatch"),
+				)

@@ -14,7 +14,7 @@ def execute(filters=None):
 	if not filters:
 		filters = {}
 
-	if not filters["company"]:
+	if not filters.get("company"):
 		frappe.throw(_("{0} is mandatory").format(_("Company")))
 
 	columns = get_columns()
@@ -91,7 +91,11 @@ def get_chart_data(parameters, filters):
 
 	values = [value for value in datasets if value != 0]
 
-	total_employee = frappe.db.count("Employee", {"status": "Active", "company": filters.get("company")})
+	total_employee = frappe.get_list(
+		"Employee",
+		filters={"status": "Active", "company": filters.get("company")},
+		fields=[{"COUNT": "*", "as": "count"}],
+	)[0].count
 	others = total_employee - sum(values)
 
 	label.append("Not Set")

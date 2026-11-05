@@ -5,6 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.utils import get_datetime, get_link_to_form, now_datetime
 
 
 class TrainingFeedback(Document):
@@ -32,6 +33,12 @@ class TrainingFeedback(Document):
 		if training_event.docstatus != 1:
 			frappe.throw(_("{0} must be submitted").format(_("Training Event")))
 
+		if training_event.event_status == "Cancelled":
+			frappe.throw(_("Feedback cannot be recorded for a cancelled Training Event."))
+
+		if get_datetime(training_event.start_time) > now_datetime():
+			frappe.throw(_("Feedback cannot be recorded before the Training Event starts."))
+
 		emp_event_details = frappe.db.get_value(
 			"Training Event Employee",
 			{"parent": self.training_event, "employee": self.employee},
@@ -49,6 +56,23 @@ class TrainingFeedback(Document):
 		if emp_event_details.attendance == "Absent":
 			frappe.throw(_("Feedback cannot be recorded for an absent Employee."))
 
+		existing = frappe.db.exists(
+			"Training Feedback",
+			{
+				"training_event": self.training_event,
+				"employee": self.employee,
+				"docstatus": ("<", 2),
+				"name": ("!=", self.name),
+			},
+		)
+		if existing:
+			frappe.throw(
+				_("Training Feedback {0} already exists for Employee {1}").format(
+					get_link_to_form("Training Feedback", existing), frappe.bold(self.employee)
+				),
+				title=_("Duplicate Training Feedback"),
+			)
+
 	def on_submit(self):
 		employee = frappe.db.get_value(
 			"Training Event Employee", {"parent": self.training_event, "employee": self.employee}
@@ -59,8 +83,15 @@ class TrainingFeedback(Document):
 
 	def on_cancel(self):
 		employee = frappe.db.get_value(
-			"Training Event Employee", {"parent": self.training_event, "employee": self.employee}
+			"Training Event Employee",
+			{"parent": self.training_event, "employee": self.employee},
+			["name", "attendance"],
+			as_dict=True,
 		)
 
 		if employee:
-			frappe.db.set_value("Training Event Employee", employee, "status", "Completed")
+			event_status = frappe.db.get_value("Training Event", self.training_event, "event_status")
+			status = (
+				"Completed" if event_status == "Completed" and employee.attendance == "Present" else "Open"
+			)
+			frappe.db.set_value("Training Event Employee", employee.name, "status", status)

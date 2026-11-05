@@ -53,6 +53,7 @@ class OvertimeSlip(Document):
 
 		self.validate_overlap()
 		self.validate_overtime_date_and_duration()
+		self.total_overtime_duration = sum(flt(detail.overtime_duration) for detail in self.overtime_details)
 
 	def on_submit(self):
 		self.process_overtime_slip()
@@ -78,14 +79,27 @@ class OvertimeSlip(Document):
 	def validate_overtime_date_and_duration(self):
 		dates = set()
 		overtime_type_cache = {}
+		attendance_map = self.get_referenced_attendance()
 		for detail in self.overtime_details:
 			# check for duplicate dates
 			if detail.date in dates:
 				frappe.throw(_("Date {0} is repeated in Overtime Details").format(detail.date))
 			dates.add(detail.date)
-			# validate duration only for overtime details not linked to attendance
+
+			if not (getdate(self.start_date) <= getdate(detail.date) <= getdate(self.end_date)):
+				frappe.throw(
+					_("Row #{0}: Date {1} must be between {2} and {3}").format(
+						detail.idx, bold(detail.date), bold(self.start_date), bold(self.end_date)
+					)
+				)
+
+			if flt(detail.standard_working_hours) <= 0:
+				frappe.throw(
+					_("Row #{0}: Standard Working Hours must be greater than zero").format(detail.idx)
+				)
+
 			if detail.reference_document:
-				continue
+				self.validate_referenced_attendance(detail, attendance_map.get(detail.reference_document))
 
 			if detail.overtime_type not in overtime_type_cache:
 				overtime_type_cache[detail.overtime_type] = frappe.db.get_value(
@@ -99,6 +113,44 @@ class OvertimeSlip(Document):
 							detail.date
 						)
 					)
+
+	def get_referenced_attendance(self):
+		references = [
+			detail.reference_document for detail in self.overtime_details if detail.reference_document
+		]
+		if not references:
+			return {}
+
+		return {
+			d.name: d
+			for d in frappe.get_all(
+				"Attendance",
+				filters={"name": ["in", references]},
+				fields=["name", "employee", "attendance_date", "docstatus", "actual_overtime_duration"],
+			)
+		}
+
+	def validate_referenced_attendance(self, detail, attendance):
+		if (
+			not attendance
+			or attendance.employee != self.employee
+			or attendance.docstatus != 1
+			or getdate(attendance.attendance_date) != getdate(detail.date)
+		):
+			frappe.throw(
+				_("Row #{0}: Attendance {1} is not a submitted attendance of employee {2} for {3}").format(
+					detail.idx, bold(detail.reference_document), bold(self.employee), bold(detail.date)
+				)
+			)
+
+		if flt(detail.overtime_duration) > flt(attendance.actual_overtime_duration):
+			frappe.throw(
+				_(
+					"Row #{0}: Overtime Duration cannot be greater than the overtime of {1} in Attendance {2}"
+				).format(
+					detail.idx, flt(attendance.actual_overtime_duration), bold(detail.reference_document)
+				)
+			)
 
 	@frappe.whitelist()
 	def get_frequency_and_dates(self):
@@ -124,12 +176,6 @@ class OvertimeSlip(Document):
 		records = self.get_attendance_records()
 		if len(records):
 			self.create_overtime_details_row_for_attendance(records)
-		if len(self.overtime_details):
-			total_overtime_duration = 0.0
-			for detail in self.overtime_details:
-				if detail.overtime_duration is not None:
-					total_overtime_duration += detail.overtime_duration
-			self.total_overtime_duration = total_overtime_duration
 		self.save()
 
 	def create_overtime_details_row_for_attendance(self, records):

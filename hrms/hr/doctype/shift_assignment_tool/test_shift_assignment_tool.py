@@ -298,6 +298,48 @@ class TestShiftAssignmentTool(HRMSTestSuite):
 		shift_assignment = frappe.db.exists("Shift Assignment", {"shift_request": request3.name})
 		self.assertTrue(shift_assignment)
 
+	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": 0})
+	def test_failed_shift_request_approval_is_rolled_back(self):
+		employee = frappe.get_doc("Employee", self.emp1)
+		employee.shift_request_approver = "employee1@test.com"
+		employee.save()
+
+		setup_shift_type(shift_type="Day Shift")
+		make_shift_assignment(self.shift1.name, self.emp1, getdate())
+		request = make_shift_request(
+			employee=self.emp1, employee_name="employee1@test.com", status="Draft", do_not_submit=1
+		)
+
+		args = {
+			"doctype": "Shift Assignment Tool",
+			"action": "Process Shift Requests",
+			"company": "_Test Company",
+		}
+		ShiftAssignmentTool(args).bulk_process_shift_requests(
+			[{"employee": self.emp1, "shift_request": request.name}], "Approved"
+		)
+
+		status, docstatus = frappe.db.get_value("Shift Request", request.name, ["status", "docstatus"])
+		self.assertEqual((status, docstatus), ("Draft", 0))
+		self.assertFalse(frappe.db.exists("Shift Assignment", {"shift_request": request.name}))
+
+	@HRMSTestSuite.change_settings("HR Settings", {"allow_multiple_shift_assignments": 1})
+	def test_get_employees_with_touching_shift_timings(self):
+		today = getdate()
+		touching_shift = setup_shift_type(shift_type="Shift 4", start_time="12:00:00", end_time="16:00:00")
+		make_shift_assignment(self.shift1.name, self.emp1, today)
+
+		args = {
+			"doctype": "Shift Assignment Tool",
+			"action": "Assign Shift",
+			"company": "_Test Company",
+			"shift_type": touching_shift.name,
+			"status": "Active",
+			"start_date": today,
+		}
+		employees = [d.employee for d in ShiftAssignmentTool(args).get_employees()]
+		self.assertIn(self.emp1, employees)
+
 
 def make_shift_schedule_assignment(schedule, employee, create_shifts_after=None, enabled=1):
 	assignment = frappe.new_doc("Shift Schedule Assignment")

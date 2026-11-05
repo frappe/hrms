@@ -452,3 +452,67 @@ class TestEmployeeLeaveBalance(HRMSTestSuite):
 		employee_rows = report[1][1:]
 		self.assertEqual({row.employee for row in employee_rows}, {self.employee_id, other_employee})
 		self.assertTrue(all(row.closing_balance == 5 for row in employee_rows))
+
+	@assign_holiday_list("_Test Emp Balance Holiday List", "_Test Company")
+	def test_expired_leaves_exclude_reversal_of_backdated_leave(self):
+		leave_type = create_leave_type(leave_type_name="_Test Backdated Report Leave").name
+		from_date = get_first_day(add_months(self.date, -1))
+		to_date = get_last_day(from_date)
+		allocation = make_allocation_record(
+			employee=self.employee_id, leave_type=leave_type, from_date=from_date, to_date=to_date, leaves=10
+		)
+		expire_allocation(allocation)
+
+		first_sunday = get_first_sunday(self.holiday_list, for_date=from_date)
+		leave_application = frappe.new_doc(
+			"Leave Application",
+			employee=self.employee_id,
+			leave_type=leave_type,
+			from_date=add_days(first_sunday, 1),
+			to_date=add_days(first_sunday, 2),
+			posting_date=to_date,
+			status="Approved",
+		)
+		leave_application.submit()
+
+		filters = frappe._dict({"from_date": from_date, "to_date": to_date, "employee": self.employee_id})
+		row = next(row for row in execute(filters)[1] if row.leave_type == leave_type)
+
+		self.assertEqual(row.leaves_allocated, 10)
+		self.assertEqual(row.leaves_taken, leave_application.total_leave_days)
+		self.assertEqual(row.leaves_expired, 10 - leave_application.total_leave_days)
+		self.assertEqual(row.closing_balance, 0)
+
+	def test_opening_balance_only_includes_carry_forward_on_from_date(self):
+		leave_type = create_leave_type(leave_type_name="_Test CF Opening Leave", is_carry_forward=1).name
+		periods = [
+			(add_months(self.year_start, months), add_days(add_months(self.year_start, months + 4), -1))
+			for months in (0, 4, 8)
+		]
+		make_allocation_record(
+			employee=self.employee_id,
+			leave_type=leave_type,
+			from_date=periods[0][0],
+			to_date=periods[0][1],
+			leaves=5,
+		)
+		second, third = (
+			make_allocation_record(
+				employee=self.employee_id,
+				leave_type=leave_type,
+				from_date=from_date,
+				to_date=to_date,
+				leaves=10,
+				carry_forward=True,
+			)
+			for from_date, to_date in periods[1:]
+		)
+
+		filters = frappe._dict(
+			{"from_date": periods[1][0], "to_date": periods[2][1], "employee": self.employee_id}
+		)
+		row = next(row for row in execute(filters)[1] if row.leave_type == leave_type)
+
+		self.assertEqual(row.opening_balance, second.unused_leaves)
+		self.assertEqual(row.leaves_allocated, 20 + third.unused_leaves)
+		self.assertEqual(row.closing_balance, 10 + third.unused_leaves)

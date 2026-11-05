@@ -80,3 +80,67 @@ class TestShiftScheduleAssignment(HRMSTestSuite):
 				("2026-12-14", "2026-12-20"),
 			],
 		)
+
+	def test_multi_week_schedule_keeps_its_cycle_when_continued(self):
+		days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+		shift_schedule = get_or_insert_shift_schedule(self.shift_type.name, "Every 2 Weeks", days)
+		shift_schedule_assignment = frappe.get_doc(
+			{
+				"doctype": "Shift Schedule Assignment",
+				"employee": self.employee,
+				"company": "_Test Company",
+				"shift_schedule": shift_schedule,
+				"shift_status": "Active",
+			}
+		).insert()
+
+		shift_schedule_assignment.create_shifts("2026-06-01", "2026-06-19")
+		shift_schedule_assignment.reload()
+		self.assertEqual(str(shift_schedule_assignment.create_shifts_after), "2026-06-19")
+
+		# continuation as done by the scheduler
+		shift_schedule_assignment.create_shifts(
+			add_days(shift_schedule_assignment.create_shifts_after, 1), "2026-07-17"
+		)
+		shift_assignments = frappe.get_all(
+			"Shift Assignment",
+			filters={"shift_schedule_assignment": shift_schedule_assignment.name},
+			fields=["start_date", "end_date"],
+			order_by="start_date",
+		)
+		self.assertEqual(
+			[(str(d.start_date), str(d.end_date)) for d in shift_assignments],
+			[
+				("2026-06-01", "2026-06-05"),
+				("2026-06-15", "2026-06-19"),
+				("2026-06-29", "2026-07-03"),
+				("2026-07-13", "2026-07-17"),
+			],
+		)
+
+	def test_no_shifts_from_cancelled_schedule(self):
+		from hrms.hr.doctype.shift_schedule_assignment.shift_schedule_assignment import (
+			process_auto_shift_creation,
+		)
+
+		shift_schedule = get_or_insert_shift_schedule(self.shift_type.name, "Every Week", ["Friday"])
+		shift_schedule_assignment = frappe.get_doc(
+			{
+				"doctype": "Shift Schedule Assignment",
+				"employee": self.employee,
+				"company": "_Test Company",
+				"shift_schedule": shift_schedule,
+				"shift_status": "Active",
+				"enabled": 1,
+				"create_shifts_after": add_days(getdate(), -1),
+			}
+		).insert()
+		frappe.get_doc("Shift Schedule", shift_schedule).cancel()
+
+		process_auto_shift_creation()
+		self.assertFalse(
+			frappe.db.exists(
+				"Shift Assignment", {"shift_schedule_assignment": shift_schedule_assignment.name}
+			)
+		)
+		self.assertRaises(frappe.ValidationError, shift_schedule_assignment.create_shifts, getdate())

@@ -190,3 +190,20 @@ class TestLeaveLedger(HRMSTestSuite):
 		self.assertEqual(f"Total Leaves ({self.casual_leave})", total_row.employee)
 		# 15 leave allocated, 2 leave taken
 		self.assertEqual(total_row.leaves, 13)
+
+	def test_entries_overlapping_the_range_are_listed(self):
+		boundary = add_days(add_months(self.year_start, 4), -1)
+		leave_application = make_leave_application(
+			self.employee_2.name, add_days(boundary, -1), add_days(boundary, 1), self.casual_leave
+		)
+
+		for from_date, to_date in (
+			(add_months(self.year_start, 1), boundary),
+			(add_days(boundary, 1), add_months(self.year_start, 6)),
+		):
+			filters = frappe._dict(
+				{"from_date": from_date, "to_date": to_date, "employee": self.employee_2.name}
+			)
+			transactions = {row.transaction_name for row in execute(filters)[1]}
+			self.assertIn(self.casual_leave_allocation.name, transactions)
+			self.assertIn(leave_application.name, transactions)

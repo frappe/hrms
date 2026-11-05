@@ -4,13 +4,15 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import get_link_to_form, getdate
+from frappe.utils import formatdate, get_link_to_form, getdate
 
 from hrms.payroll.doctype.payroll_period.payroll_period import get_payroll_period
 from hrms.payroll.doctype.salary_slip.salary_slip import get_benefits_details_parent
 from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
 	get_assigned_salary_structure,
 )
+
+CLAIMABLE_PAYOUT_METHODS = ("Accrue per cycle, pay only on claim", "Allow claim for full benefit amount")
 
 
 class EmployeeBenefitClaim(Document):
@@ -37,8 +39,18 @@ class EmployeeBenefitClaim(Document):
 	# end: auto-generated types
 
 	def validate(self):
+		self.validate_benefit_component()
 		self.validate_date_and_benefit_claim_amount()
 		self.validate_duplicate_claim()
+
+	def validate_benefit_component(self):
+		component_details = self.set_benefit_details()
+		if not component_details or component_details.payout_method not in CLAIMABLE_PAYOUT_METHODS:
+			frappe.throw(
+				_("{0} is not a claimable benefit for employee {1} on {2}").format(
+					frappe.bold(self.earning_component), self.employee, formatdate(self.payroll_date)
+				)
+			)
 
 	def validate_date_and_benefit_claim_amount(self):
 		if getdate(self.payroll_date) < getdate():
@@ -81,6 +93,14 @@ class EmployeeBenefitClaim(Document):
 	def on_submit(self):
 		self.create_additional_salary()
 
+	def on_cancel(self):
+		for additional_salary in frappe.get_all(
+			"Additional Salary",
+			filters={"ref_doctype": self.doctype, "ref_docname": self.name, "docstatus": 1},
+			pluck="name",
+		):
+			frappe.get_doc("Additional Salary", additional_salary).cancel()
+
 	def get_existing_claim_for_month(self):
 		month_start_date = frappe.utils.get_first_day(self.payroll_date)
 		month_end_date = frappe.utils.get_last_day(self.payroll_date)
@@ -115,12 +135,22 @@ class EmployeeBenefitClaim(Document):
 
 	@frappe.whitelist()
 	def get_benefit_details(self) -> None:
+		self.set_benefit_details()
+
+	def set_benefit_details(self):
 		# Fetch max benefit amount and claimable amount for the employee based on the earning component chosen
 		from hrms.payroll.doctype.employee_benefit_ledger.employee_benefit_ledger import (
 			get_max_claim_eligible,
 		)
 
-		payroll_period = get_payroll_period(self.payroll_date, self.payroll_date, self.company).get("name")
+		payroll_period = get_payroll_period(self.payroll_date, self.payroll_date, self.company)
+		if not payroll_period:
+			frappe.throw(
+				_("No Payroll Period found for company {0} on {1}").format(
+					self.company, formatdate(self.payroll_date)
+				)
+			)
+		payroll_period = payroll_period.get("name")
 		salary_structure_assignment = get_salary_structure_assignment(self.employee, self.payroll_date)
 		component_details = self.get_component_details(payroll_period, salary_structure_assignment)
 
@@ -131,11 +161,16 @@ class EmployeeBenefitClaim(Document):
 			current_month_amount = self._get_current_month_benefit_amount(component_details)
 			yearly_benefit = component_details.get("amount", 0)
 			claimable_benefit = get_max_claim_eligible(
-				self.employee, payroll_period, component_details, current_month_amount
+				self.employee,
+				payroll_period,
+				component_details,
+				current_month_amount,
+				exclude_claim=self.name,
 			)
 
 		self.yearly_benefit = yearly_benefit
 		self.max_amount_eligible = claimable_benefit
+		return component_details
 
 	def get_component_details(self, payroll_period, salary_structure_assignment):
 		# Get component details from benefit parent document
@@ -219,11 +254,7 @@ def get_benefit_components(
 			.on(SalaryComponent.name == EmployeeBenefitDetail.salary_component)
 			.select(EmployeeBenefitDetail.salary_component)
 			.where(EmployeeBenefitDetail.parent == benefit_details_parent)
-			.where(
-				SalaryComponent.payout_method.isin(
-					["Accrue per cycle, pay only on claim", "Allow claim for full benefit amount"]
-				)
-			)
+			.where(SalaryComponent.payout_method.isin(CLAIMABLE_PAYOUT_METHODS))
 		).run()
 
 	except Exception as e:

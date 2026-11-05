@@ -442,6 +442,77 @@ class TestLeaveEncashment(HRMSTestSuite):
 		self.assertTrue(leave_encashment.encashment_days, 5)
 		self.assertEqual(leave_encashment.encashment_amount, 250)
 
+	@assign_holiday_list("_Test Leave Encashment", "_Test Company")
+	def test_leave_balance_considers_leave_adjustment(self):
+		from hrms.hr.doctype.leave_adjustment.test_leave_adjustment import create_leave_adjustment
+
+		allocation = frappe.get_doc(
+			"Leave Allocation", {"employee": self.employee, "leave_type": self.leave_type, "docstatus": 1}
+		)
+		create_leave_adjustment(
+			allocation, adjustment_type="Reduce", leaves_to_adjust=4, posting_date=allocation.from_date
+		).submit()
+
+		leave_encashment = self.create_test_leave_encashment()
+		self.assertEqual(leave_encashment.leave_balance, 6)
+
+	@assign_holiday_list("_Test Leave Encashment", "_Test Company")
+	def test_backdated_encashment_considers_later_encashment(self):
+		self.create_test_leave_encashment(encashment_days=3).submit()
+
+		leave_encashment = self.create_test_leave_encashment(encashment_date=getdate())
+		self.assertEqual(leave_encashment.leave_balance, 7)
+
+	@assign_holiday_list("_Test Leave Encashment", "_Test Company")
+	def test_payment_entry_encashment_requires_company_currency(self):
+		from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
+			get_assigned_salary_structure,
+		)
+
+		salary_structure = get_assigned_salary_structure(self.employee, self.leave_period.to_date)
+		frappe.db.set_value("Salary Structure", salary_structure, "currency", "USD")
+		payable_account = get_payable_account("_Test Company")
+
+		self.assertRaises(
+			frappe.ValidationError,
+			self.create_test_leave_encashment,
+			pay_via_payment_entry=1,
+			payable_account=payable_account,
+			currency="INR",
+		)
+
+		self.assertTrue(self.create_test_leave_encashment(currency="USD").name)
+
+	def test_auto_encashment_continues_after_failure(self):
+		from hrms.hr.doctype.leave_encashment.leave_encashment import (
+			create_leave_encashment as create_auto_encashment,
+		)
+
+		allocations = [
+			frappe._dict(
+				name=None,
+				employee=self.employee,
+				leave_type="_Test Leave Type",
+				leave_period=self.leave_period.name,
+				to_date=self.leave_period.to_date,
+			),
+			frappe._dict(
+				name=None,
+				employee=self.employee,
+				leave_type=self.leave_type,
+				leave_period="",
+				to_date=self.leave_period.to_date,
+			),
+		]
+		create_auto_encashment(allocations)
+
+		encashments = frappe.get_all(
+			"Leave Encashment", {"employee": self.employee}, ["leave_type", "leave_period"]
+		)
+		self.assertEqual(len(encashments), 1)
+		self.assertEqual(encashments[0].leave_type, self.leave_type)
+		self.assertEqual(encashments[0].leave_period, self.leave_period.name)
+
 
 def create_leave_encashment(**args):
 	if args:

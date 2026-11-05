@@ -6,6 +6,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
+from frappe.utils import get_link_to_form
 
 from hrms.controllers.employee_boarding_controller import EmployeeBoardingController
 
@@ -49,11 +50,24 @@ class EmployeeOnboarding(EmployeeBoardingController):
 	def validate(self):
 		super().validate()
 		self.set_employee()
+		self.validate_job_offer()
 		self.validate_duplicate_employee_onboarding()
 
 	def set_employee(self):
 		if not self.employee:
 			self.employee = frappe.db.get_value("Employee", {"job_offer": self.job_offer}, "name")
+
+	def validate_job_offer(self):
+		docstatus, status = frappe.db.get_value("Job Offer", self.job_offer, ["docstatus", "status"]) or (
+			None,
+			None,
+		)
+		if docstatus != 1 or status != "Accepted":
+			frappe.throw(
+				_("Job Offer {0} must be submitted and Accepted to start onboarding").format(
+					frappe.bold(self.job_offer)
+				)
+			)
 
 	def validate_duplicate_employee_onboarding(self):
 		emp_onboarding = frappe.db.exists(
@@ -96,14 +110,19 @@ class EmployeeOnboarding(EmployeeBoardingController):
 		for activity in self.activities:
 			frappe.db.set_value("Task", activity.task, "status", "Completed")
 		frappe.db.set_value("Project", self.project, "status", "Completed")
-		self.boarding_status = "Completed"
-		self.save()
+		self.db_set("boarding_status", "Completed")
 
 
 @frappe.whitelist()
 def make_employee(source_name: str, target_doc: str | Document | None = None) -> Document:
 	doc = frappe.get_doc("Employee Onboarding", source_name)
 	doc.validate_employee_creation()
+	if employee := frappe.db.exists("Employee", {"job_offer": doc.job_offer}):
+		frappe.throw(
+			_("Employee {0} already exists for Job Offer {1}").format(
+				get_link_to_form("Employee", employee), frappe.bold(doc.job_offer)
+			)
+		)
 
 	def set_missing_values(source, target):
 		target.personal_email = frappe.db.get_value("Job Offer", source.job_offer, "applicant_email")
@@ -117,7 +136,7 @@ def make_employee(source_name: str, target_doc: str | Document | None = None) ->
 			"Employee Onboarding": {
 				"doctype": "Employee",
 				"field_map": {
-					"first_name": "employee_name",
+					"employee_name": "first_name",
 					"employee_grade": "grade",
 				},
 			}

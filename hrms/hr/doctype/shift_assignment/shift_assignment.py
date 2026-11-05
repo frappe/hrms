@@ -68,7 +68,7 @@ class ShiftAssignment(Document):
 			filters={
 				"employee": self.employee,
 				"shift": self.shift_type,
-				"time": ["between", [self.start_date, self.end_date]],
+				"shift_start": self.get_date_range_filter(),
 			},
 			pluck="name",
 		)
@@ -85,7 +85,8 @@ class ShiftAssignment(Document):
 			filters={
 				"employee": self.employee,
 				"shift": self.shift_type,
-				"attendance_date": ["between", [self.start_date, self.end_date]],
+				"attendance_date": self.get_date_range_filter(),
+				"docstatus": 1,
 			},
 			pluck="name",
 		)
@@ -96,17 +97,28 @@ class ShiftAssignment(Document):
 				)
 			)
 
+	def get_date_range_filter(self):
+		if self.end_date:
+			return ["between", [self.start_date, self.end_date]]
+		return [">=", self.start_date]
+
 	def validate_overlapping_shifts(self):
 		if self.status == "Inactive":
 			return
 
 		overlapping_dates = self.get_overlapping_dates()
-		if len(overlapping_dates):
-			self.validate_same_date_multiple_shifts(overlapping_dates)
-			# if dates are overlapping, check if timings are overlapping, else allow
-			for d in overlapping_dates:
-				if has_overlapping_timings(self.shift_type, d.shift_type):
-					self.throw_overlap_error(d)
+		for d in overlapping_dates:
+			d.day_offsets = get_overlapping_day_offsets(
+				self.start_date, self.end_date, d.start_date, d.end_date
+			)
+
+		if same_dates := [d for d in overlapping_dates if 0 in d.day_offsets]:
+			self.validate_same_date_multiple_shifts(same_dates)
+
+		# if dates are overlapping or adjacent, check if timings are overlapping, else allow
+		for d in overlapping_dates:
+			if has_overlapping_timings(self.shift_type, d.shift_type, d.day_offsets):
+				self.throw_overlap_error(d)
 
 	def validate_same_date_multiple_shifts(self, overlapping_dates):
 		if cint(frappe.db.get_single_value("HR Settings", "allow_multiple_shift_assignments")):
@@ -143,18 +155,20 @@ class ShiftAssignment(Document):
 		shift = frappe.qb.DocType("Shift Assignment")
 		query = (
 			frappe.qb.from_(shift)
-			.select(shift.name, shift.shift_type, shift.docstatus, shift.status)
+			.select(
+				shift.name, shift.shift_type, shift.docstatus, shift.status, shift.start_date, shift.end_date
+			)
 			.where(
 				(shift.employee == self.employee)
 				& (shift.docstatus == 1)
 				& (shift.name != self.name)
 				& (shift.status == "Active")
-				& ((shift.end_date >= self.start_date) | (shift.end_date.isnull()))
+				& ((shift.end_date >= add_days(self.start_date, -1)) | (shift.end_date.isnull()))
 			)
 		)
 
 		if self.end_date:
-			query = query.where(shift.start_date <= self.end_date)
+			query = query.where(shift.start_date <= add_days(self.end_date, 1))
 
 		return query.run(as_dict=True)
 
@@ -171,9 +185,10 @@ class ShiftAssignment(Document):
 			frappe.throw(msg, title=_("Overlapping Shifts"), exc=OverlappingShiftError)
 
 
-def has_overlapping_timings(shift_1: str, shift_2: str) -> bool:
+def has_overlapping_timings(shift_1: str, shift_2: str, day_offsets: tuple | list = (0,)) -> bool:
 	"""
-	Accepts two shift types and checks whether their timings are overlapping
+	Accepts two shift types and checks whether their timings are overlapping.
+	day_offsets: day differences between the occurrences of shift_1 and shift_2 to compare
 	"""
 
 	s1 = frappe.db.get_value("Shift Type", shift_1, ["start_time", "end_time"], as_dict=True)
@@ -183,7 +198,23 @@ def has_overlapping_timings(shift_1: str, shift_2: str) -> bool:
 		if d.end_time <= d.start_time:
 			d.end_time += timedelta(days=1)
 
-	return s1.end_time > s2.start_time and s1.start_time < s2.end_time
+	for offset in day_offsets:
+		delta = timedelta(days=offset)
+		if s1.end_time + delta > s2.start_time and s1.start_time + delta < s2.end_time:
+			return True
+
+	return False
+
+
+def get_overlapping_day_offsets(start_1, end_1, start_2, end_2) -> list[int]:
+	"""Returns day offsets (-1, 0, 1) for which a date in period 1 and a date in period 2 differ by that offset"""
+	offsets = []
+	for offset in (-1, 0, 1):
+		if (not end_2 or getdate(start_1) <= add_days(end_2, offset)) and (
+			not end_1 or add_days(start_2, offset) <= getdate(end_1)
+		):
+			offsets.append(offset)
+	return offsets
 
 
 @frappe.whitelist()
@@ -197,26 +228,7 @@ def get_events(start: str | date, end: str | date, filters: list | None = None):
 		employee = ""
 
 	assignments = get_shift_assignments(start, end, filters)
-	return get_shift_events(assignments)
-
-
-def mark_expired_shift_assignments_as_inactive():
-	yesterday = add_days(getdate(), -1)
-	shift_assignment = frappe.qb.DocType("Shift Assignment")
-
-	expired_assignments = (
-		frappe.qb.from_(shift_assignment)
-		.select(shift_assignment.name)
-		.where(
-			(shift_assignment.docstatus == 1)
-			& (shift_assignment.status == "Active")
-			& (shift_assignment.end_date.isnotnull())
-			& (shift_assignment.end_date < yesterday)
-		)
-	).run(pluck=True)
-
-	for assignment in expired_assignments:
-		frappe.db.set_value("Shift Assignment", assignment, "status", "Inactive")
+	return get_shift_events(assignments, start, end)
 
 
 def get_shift_assignments(start: str, end: str, filters: str | list | None = None) -> list[dict]:
@@ -247,13 +259,17 @@ def get_shift_assignments(start: str, end: str, filters: str | list | None = Non
 	)
 
 
-def get_shift_events(assignments: list[dict]) -> list[dict]:
+def get_shift_events(
+	assignments: list[dict], start: str | date | None = None, end: str | date | None = None
+) -> list[dict]:
 	events = []
 	shift_timing_map = get_shift_type_timing([d.shift_type for d in assignments])
 
 	for d in assignments:
-		daily_event_start = d.start_date
-		daily_event_end = d.end_date or getdate()
+		daily_event_start = max(d.start_date, getdate(start)) if start else d.start_date
+		daily_event_end = d.end_date or (getdate(end) if end else getdate())
+		if end:
+			daily_event_end = min(daily_event_end, getdate(end))
 		shift_start = shift_timing_map[d.shift_type]["start_time"]
 		shift_end = shift_timing_map[d.shift_type]["end_time"]
 
@@ -277,8 +293,7 @@ def get_shift_events(assignments: list[dict]) -> list[dict]:
 				"allDay": 0,
 				"convertToUserTz": 0,
 			}
-			if event not in events:
-				events.append(event)
+			events.append(event)
 
 			daily_event_start += delta
 
@@ -724,7 +739,7 @@ def get_shift_timings(shift_type: dict, for_timestamp: datetime) -> tuple:
 		start_datetime = datetime.combine(for_timestamp, datetime.min.time()) + start_time
 	elif (
 		shift_actual_start > shift_actual_end
-		and for_time > shift_actual_end
+		and for_time >= shift_actual_start
 		and get_time(start_time) < shift_actual_start
 	):
 		# for_timestamp falls within the margin period in the first day (before midnight)

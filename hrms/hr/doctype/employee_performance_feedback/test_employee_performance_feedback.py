@@ -125,6 +125,54 @@ class TestEmployeePerformanceFeedback(HRMSTestSuite):
 		avg_feedback_score = frappe.db.get_value("Appraisal", self.appraisal, "avg_feedback_score")
 		self.assertEqual(avg_feedback_score, 0.0)
 
+	def test_reviewer_must_be_session_user(self):
+		frappe.set_user("employee@example.com")
+		try:
+			feedback = frappe.get_doc(
+				{
+					"doctype": "Employee Performance Feedback",
+					"employee": self.employee,
+					"reviewer": self.reviewer1,
+					"appraisal": self.appraisal,
+					"feedback": "Test Feedback",
+				}
+			)
+			feedback.set_feedback_criteria()
+			self.assertRaises(frappe.PermissionError, feedback.insert)
+		finally:
+			frappe.set_user("Administrator")
+
+	def test_appraisee_cannot_cancel_feedback(self):
+		feedback = create_performance_feedback(self.employee, self.reviewer1, self.appraisal)
+		feedback.submit()
+
+		frappe.set_user("employee@example.com")
+		try:
+			feedback = frappe.get_doc("Employee Performance Feedback", feedback.name)
+			self.assertRaises(frappe.PermissionError, feedback.cancel)
+		finally:
+			frappe.set_user("Administrator")
+
+	def test_rating_is_bounded(self):
+		feedback = create_performance_feedback(self.employee, self.reviewer1, self.appraisal)
+		for row in feedback.feedback_ratings:
+			row.rating = 5
+		feedback.save()
+
+		self.assertEqual(feedback.total_score, 5.0)
+
+	def test_weightage_reset_from_template(self):
+		feedback = create_performance_feedback(self.employee, self.reviewer1, self.appraisal)
+		feedback.feedback_ratings[0].per_weightage = 0
+		feedback.feedback_ratings[1].per_weightage = 100
+		feedback.feedback_ratings[0].rating = 0.2
+		feedback.feedback_ratings[1].rating = 1
+		feedback.save()
+
+		self.assertEqual(feedback.feedback_ratings[0].per_weightage, 70.0)
+		self.assertEqual(feedback.feedback_ratings[1].per_weightage, 30.0)
+		self.assertEqual(feedback.total_score, 2.2)
+
 
 def create_performance_feedback(employee, reviewer, appraisal):
 	feedback = frappe.get_doc(

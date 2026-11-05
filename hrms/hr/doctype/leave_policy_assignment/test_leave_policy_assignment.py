@@ -567,3 +567,158 @@ class TestLeavePolicyAssignment(HRMSTestSuite):
 		current_assignment.submit()
 
 		self.assertEqual(get_allocated_leaves(current_assignment.name), 12)
+
+	def test_allocation_linked_to_leave_period(self):
+		leave_period = get_leave_period(current=True)
+		leave_policy = create_leave_policy(annual_allocation=10)
+		leave_policy.submit()
+
+		data = frappe._dict(
+			{
+				"assignment_based_on": "Leave Period",
+				"leave_policy": leave_policy.name,
+				"leave_period": leave_period.name,
+			}
+		)
+		assignments = create_assignment_for_multiple_employees([self.employee.name], data)
+
+		self.assertEqual(
+			frappe.db.get_value(
+				"Leave Allocation", {"leave_policy_assignment": assignments[0]}, "leave_period"
+			),
+			leave_period.name,
+		)
+
+	def test_joining_date_assignment_runs_for_one_year(self):
+		leave_policy = create_leave_policy(annual_allocation=12)
+		leave_policy.submit()
+
+		self.employee.date_of_joining = getdate("2025-03-10")
+		self.employee.save()
+
+		assignment = frappe.get_doc(
+			{
+				"doctype": "Leave Policy Assignment",
+				"employee": self.employee.name,
+				"assignment_based_on": "Joining Date",
+				"leave_policy": leave_policy.name,
+			}
+		).insert()
+		self.assertEqual(getdate(assignment.effective_to), getdate("2026-03-09"))
+
+	def test_assignment_period_before_joining_date(self):
+		leave_period = get_leave_period(current=True)
+		leave_policy = create_leave_policy(annual_allocation=12)
+		leave_policy.submit()
+
+		self.employee.date_of_joining = add_days(leave_period.to_date, 30)
+		self.employee.save()
+
+		data = frappe._dict(
+			{
+				"assignment_based_on": "Leave Period",
+				"leave_policy": leave_policy.name,
+				"leave_period": leave_period.name,
+			}
+		)
+		self.assertRaises(frappe.ValidationError, create_assignment, self.employee.name, data)
+
+	def test_leave_period_validation(self):
+		leave_policy = create_leave_policy(annual_allocation=12)
+		leave_policy.submit()
+
+		data = frappe._dict({"assignment_based_on": "Leave Period", "leave_policy": leave_policy.name})
+		self.assertRaises(frappe.MandatoryError, create_assignment, self.employee.name, data)
+
+		other_company_period = create_leave_period(
+			getdate("2026-01-01"), getdate("2026-12-31"), "_Test Company 1"
+		)
+		data.leave_period = other_company_period.name
+		self.assertRaises(frappe.ValidationError, create_assignment, self.employee.name, data)
+
+	def _get_schedule_for_assignment_on(self, submission_date, allocate_on_day, date_of_joining):
+		leave_type = create_leave_type(
+			leave_type_name=f"_Test Earned Leave {allocate_on_day}",
+			is_earned_leave=True,
+			earned_leave_frequency="Monthly",
+			allocate_on_day=allocate_on_day,
+		)
+		leave_type.db_set("rounding", "")
+		leave_policy = create_leave_policy(leave_type=leave_type.name, annual_allocation=12)
+		leave_policy.submit()
+
+		self.employee.date_of_joining = getdate(date_of_joining)
+		self.employee.save()
+
+		frappe.flags.current_date = getdate(submission_date)
+		assignment = create_assignment(
+			self.employee.name,
+			frappe._dict(
+				{
+					"leave_policy": leave_policy.name,
+					"effective_from": "2026-01-01",
+					"effective_to": "2026-12-31",
+				}
+			),
+		)
+		assignment.submit()
+		frappe.flags.current_date = None
+
+		allocation = frappe.get_doc("Leave Allocation", {"leave_policy_assignment": assignment.name})
+		pending = [row for row in allocation.earned_leave_schedule if not row.is_allocated]
+		return allocation, sorted(pending, key=lambda row: getdate(row.allocation_date))
+
+	def test_earned_leave_schedule_submitted_on_last_day_of_period(self):
+		allocation, pending = self._get_schedule_for_assignment_on("2026-06-30", "Last Day", "2024-01-01")
+
+		self.assertEqual(allocation.new_leaves_allocated, 6)
+		self.assertEqual(getdate(pending[0].allocation_date), getdate("2026-07-31"))
+		self.assertEqual(getdate(pending[-1].allocation_date), getdate("2026-12-31"))
+		self.assertEqual(sum(row.number_of_leaves for row in pending), 6)
+
+	def test_earned_leave_schedule_submitted_before_date_of_joining_day(self):
+		allocation, pending = self._get_schedule_for_assignment_on(
+			"2026-06-10", "Date of Joining", "2024-01-20"
+		)
+
+		self.assertEqual(allocation.new_leaves_allocated, 5)
+		self.assertEqual(getdate(pending[0].allocation_date), getdate("2026-06-20"))
+		self.assertEqual(sum(row.number_of_leaves for row in pending), 7)
+
+	def test_earned_leave_schedule_for_mid_period_joiner(self):
+		leave_type = create_leave_type(
+			leave_type_name="_Test Earned Leave Mid Period Joiner",
+			is_earned_leave=True,
+			earned_leave_frequency="Monthly",
+			allocate_on_day="First Day",
+		)
+		leave_type.db_set("rounding", "")
+		leave_policy = create_leave_policy(leave_type=leave_type.name, annual_allocation=12)
+		leave_policy.submit()
+
+		self.employee.date_of_joining = getdate("2026-06-15")
+		self.employee.save()
+
+		frappe.flags.current_date = getdate("2026-03-10")
+		assignment = create_assignment(
+			self.employee.name,
+			frappe._dict(
+				{
+					"leave_policy": leave_policy.name,
+					"effective_from": "2026-01-01",
+					"effective_to": "2026-12-31",
+				}
+			),
+		)
+		assignment.submit()
+		frappe.flags.current_date = None
+
+		allocation = frappe.get_doc("Leave Allocation", {"leave_policy_assignment": assignment.name})
+		schedule = sorted(allocation.earned_leave_schedule, key=lambda row: getdate(row.allocation_date))
+
+		self.assertEqual(allocation.new_leaves_allocated, 0)
+		self.assertEqual(getdate(schedule[0].allocation_date), getdate("2026-06-15"))
+		self.assertAlmostEqual(schedule[0].number_of_leaves, 16 / 30, places=2)
+		self.assertEqual(len(schedule), 7)
+		self.assertFalse(any(row.is_allocated for row in schedule))
+		self.assertAlmostEqual(sum(row.number_of_leaves for row in schedule), 6 + 16 / 30, places=2)

@@ -11,7 +11,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe.model.naming import append_number_if_name_exists
-from frappe.utils import flt, validate_email_address
+from frappe.utils import flt, getdate, validate_email_address
 
 from hrms.hr.doctype.interview.interview import get_interviewers
 
@@ -78,7 +78,10 @@ class JobApplicant(Document):
 	def before_insert(self):
 		if self.job_title:
 			job_opening = frappe.db.get_value(
-				"Job Opening", self.job_title, ["status", "prevent_duplicate_applicant"], as_dict=True
+				"Job Opening",
+				self.job_title,
+				["status", "prevent_duplicate_applicant", "publish", "closes_on"],
+				as_dict=True,
 			)
 			if not job_opening:
 				return
@@ -87,6 +90,11 @@ class JobApplicant(Document):
 				frappe.throw(
 					_("Cannot create a Job Applicant against a closed Job Opening"), title=_("Not Allowed")
 				)
+			if (frappe.flags.in_web_form or frappe.session.user == "Guest") and (
+				not job_opening.publish
+				or (job_opening.closes_on and getdate(job_opening.closes_on) < getdate())
+			):
+				frappe.throw(_("This Job Opening is not accepting applications"), title=_("Not Allowed"))
 			if job_opening.prevent_duplicate_applicant and self.email_id:
 				if frappe.db.exists(
 					"Job Applicant", {"email_id": self.email_id, "job_title": self.job_title}

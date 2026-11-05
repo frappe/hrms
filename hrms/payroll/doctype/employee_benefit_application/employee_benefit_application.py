@@ -5,7 +5,7 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cstr, flt, rounded
+from frappe.utils import cstr, flt, formatdate, getdate, rounded
 
 from hrms.hr.utils import (
 	validate_active_employee,
@@ -42,11 +42,52 @@ class EmployeeBenefitApplication(Document):
 
 	def validate(self):
 		validate_active_employee(self.employee)
+		self.validate_payroll_period()
 		self.validate_duplicate_on_payroll_period()
 		if self.employee_benefits:
+			self.set_benefit_limits()
 			self.validate_max_benefit()
+			self.set_totals()
 		else:
 			frappe.throw(_("As per your assigned Salary Structure you cannot apply for benefits"))
+
+	def validate_payroll_period(self):
+		start_date, end_date = frappe.db.get_value(
+			"Payroll Period", self.payroll_period, ["start_date", "end_date"]
+		)
+		if not (getdate(start_date) <= getdate(self.date) <= getdate(end_date)):
+			frappe.throw(
+				_("Date {0} is not within Payroll Period {1}").format(
+					formatdate(self.date), self.payroll_period
+				)
+			)
+
+	def set_benefit_limits(self):
+		salary_structure_assignment = get_salary_structure_assignment(self.employee, self.date)
+		max_benefit_amounts = dict(
+			frappe.get_all(
+				"Employee Benefit Detail",
+				filters={"parent": salary_structure_assignment, "parenttype": "Salary Structure Assignment"},
+				fields=["salary_component", "amount"],
+				as_list=True,
+			)
+		)
+		self.max_benefits, self.currency = frappe.db.get_value(
+			"Salary Structure Assignment", salary_structure_assignment, ["max_benefits", "currency"]
+		)
+
+		for benefit in self.employee_benefits:
+			if benefit.salary_component not in max_benefit_amounts:
+				frappe.throw(
+					_("Row {0}: {1} is not a benefit in Salary Structure Assignment {2}").format(
+						benefit.idx, benefit.salary_component, salary_structure_assignment
+					)
+				)
+			benefit.max_benefit_amount = max_benefit_amounts[benefit.salary_component]
+
+	def set_totals(self):
+		self.total_amount = sum(flt(benefit.amount) for benefit in self.employee_benefits)
+		self.remaining_benefit = flt(self.max_benefits) - self.total_amount
 
 	def validate_max_benefit(self):
 		total_benefit_amount = 0

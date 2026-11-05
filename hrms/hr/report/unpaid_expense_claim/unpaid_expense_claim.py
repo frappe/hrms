@@ -75,19 +75,29 @@ def get_columns():
 			"label": _("Sanctioned Amount"),
 			"fieldname": "total_sanctioned_amount",
 			"fieldtype": "Currency",
+			"options": "currency",
 			"width": 120,
 		},
 		{
 			"label": _("Paid Amount"),
 			"fieldname": "total_amount_reimbursed",
 			"fieldtype": "Currency",
+			"options": "currency",
 			"width": 120,
 		},
 		{
 			"label": _("Outstanding Amount"),
 			"fieldname": "outstanding_amt",
 			"fieldtype": "Currency",
+			"options": "currency",
 			"width": 150,
+		},
+		{
+			"label": _("Currency"),
+			"fieldname": "currency",
+			"fieldtype": "Link",
+			"options": "Currency",
+			"hidden": 1,
 		},
 	]
 
@@ -114,6 +124,7 @@ def build_grouped_result(data, filters):
 				group_labels[group_key] = group_key
 
 			group_totals[group_key] = frappe._dict(
+				currency=row.currency,
 				total_sanctioned_amount=0,
 				total_amount_reimbursed=0,
 				outstanding_amt=0,
@@ -136,6 +147,7 @@ def build_grouped_result(data, filters):
 		result.append(
 			frappe._dict(
 				employee=group_labels.get(key) or _("Not Set"),
+				currency=totals.currency,
 				total_sanctioned_amount=totals.total_sanctioned_amount,
 				total_amount_reimbursed=totals.total_amount_reimbursed,
 				outstanding_amt=totals.outstanding_amt,
@@ -150,6 +162,7 @@ def build_grouped_result(data, filters):
 	result.append(
 		frappe._dict(
 			employee=_("Total"),
+			currency=data[0].currency,
 			total_sanctioned_amount=grand_total.total_sanctioned_amount,
 			total_amount_reimbursed=grand_total.total_amount_reimbursed,
 			outstanding_amt=grand_total.outstanding_amt,
@@ -165,6 +178,7 @@ def get_unclaimed_expese_claims(filters):
 	ec = frappe.qb.DocType("Expense Claim")
 	emp = frappe.qb.DocType("Employee")
 	ple = frappe.qb.DocType("Payment Ledger Entry")
+	company = frappe.qb.DocType("Company")
 
 	query = (
 		frappe.qb.from_(ec)
@@ -172,6 +186,8 @@ def get_unclaimed_expese_claims(filters):
 		.on((ec.name == ple.against_voucher_no) & (ple.against_voucher_type == "Expense Claim"))
 		.left_join(emp)
 		.on(ec.employee == emp.name)
+		.join(company)
+		.on(ec.company == company.name)
 		.select(
 			ec.employee,
 			ec.employee_name,
@@ -180,9 +196,10 @@ def get_unclaimed_expese_claims(filters):
 			ec.company,
 			ec.department,
 			emp.branch,
-			ec.total_sanctioned_amount,
-			ec.total_amount_reimbursed,
+			ec.base_total_sanctioned_amount.as_("total_sanctioned_amount"),
+			(ec.total_amount_reimbursed * ec.exchange_rate).as_("total_amount_reimbursed"),
 			Sum(ple.amount).as_("outstanding_amt"),
+			company.default_currency.as_("currency"),
 		)
 		.where((ec.docstatus == 1) & (ec.is_paid == 0) & (ple.delinked == 0))
 		.groupby(ec.name, emp.branch)

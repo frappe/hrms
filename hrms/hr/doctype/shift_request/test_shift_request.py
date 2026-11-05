@@ -125,6 +125,24 @@ class TestShiftRequest(HRMSTestSuite):
 
 		self.assertRaises(OverlappingShiftRequestError, shift_request.save)
 
+	def test_rejected_request_does_not_block_new_request(self):
+		user = "test_shift_request@example.com"
+		employee = make_employee(user, company="_Test Company", shift_request_approver=user)
+		setup_shift_type(shift_type="Day Shift")
+
+		request = {
+			"doctype": "Shift Request",
+			"shift_type": "Day Shift",
+			"company": "_Test Company",
+			"employee": employee,
+			"from_date": nowdate(),
+			"to_date": add_days(nowdate(), 2),
+			"approver": user,
+		}
+		frappe.get_doc({**request, "status": "Rejected"}).submit()
+		shift_request = frappe.get_doc({**request, "status": "Draft"}).insert()
+		self.assertTrue(shift_request.name)
+
 	def test_overlap_for_request_with_from_and_to_dates(self):
 		user = "test_shift_request@example.com"
 		employee = make_employee(user, company="_Test Company", shift_request_approver=user)
@@ -157,15 +175,6 @@ class TestShiftRequest(HRMSTestSuite):
 		)
 
 		self.assertRaises(OverlappingShiftRequestError, shift_request.save)
-
-	def test_rejected_request_does_not_block_new_request(self):
-		user = "test_shift_request@example.com"
-		employee = make_employee(user, company="_Test Company", shift_request_approver=user)
-		setup_shift_type(shift_type="Day Shift")
-
-		make_shift_request(approver=user, employee=employee, status="Rejected")
-		shift_request = make_shift_request(approver=user, employee=employee)
-		self.assertEqual(shift_request.docstatus, 1)
 
 	def test_overlapping_for_a_fixed_period_shift_and_ongoing_shift(self):
 		user = "test_shift_request@example.com"

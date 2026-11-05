@@ -52,7 +52,7 @@
 						@input="(v) => (advance.selected = v)"
 						@click.stop
 						:disabled="isReadOnly"
-						:max="advance.unclaimed_amount"
+						:max="advance.unclaimed_amount - (advance.return_amount || 0)"
 						min="0"
 					/>
 				</div>

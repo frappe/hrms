@@ -35,11 +35,9 @@ class AppointmentLetter(Document):
 @frappe.whitelist()
 def get_appointment_letter_details(template: str) -> list:
 	body = []
-	intro = frappe.get_list(
-		"Appointment Letter Template",
-		fields=["introduction", "closing_notes"],
-		filters={"name": template},
-	)[0]
+	doc = frappe.get_doc("Appointment Letter Template", template)
+	doc.check_permission("read")
+	intro = frappe._dict(introduction=doc.introduction, closing_notes=doc.closing_notes)
 	content = frappe.get_all(
 		"Appointment Letter content",
 		fields=["title", "description"],

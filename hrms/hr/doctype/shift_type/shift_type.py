@@ -156,9 +156,24 @@ class ShiftType(Document):
 		return not self.is_new() and self.has_value_changed(fieldname)
 
 	def unlinked_checkins_exist(self):
-		return frappe.db.exists(
-			"Employee Checkin",
-			{"shift": self.name, "attendance": ["is", "not set"], "skip_auto_attendance": 0, "offshift": 0},
+		filters = {
+			"shift": self.name,
+			"attendance": ["is", "not set"],
+			"skip_auto_attendance": 0,
+			"offshift": 0,
+		}
+		if self.process_attendance_after:
+			filters["time"] = (">=", self.process_attendance_after)
+
+		if self.mark_auto_attendance_on_holidays:
+			return frappe.db.exists("Employee Checkin", filters)
+
+		logs = frappe.get_all(
+			"Employee Checkin", filters=filters, fields=["employee", "shift_start"], distinct=True
+		)
+		return any(
+			not log.shift_start or self.should_mark_attendance(log.employee, getdate(log.shift_start))
+			for log in logs
 		)
 
 	@frappe.whitelist(methods=["POST"])
@@ -473,12 +488,16 @@ class ShiftType(Document):
 				"status": "Half Day",
 				"modify_half_day_status": 1,
 				"attendance_date": ["<=", getdate(self.last_sync_of_checkin)],
+				"docstatus": 1,
 			},
 			fields=["name", "attendance_date"],
 		)
 		start_time = get_time(self.start_time)
 		last_sync_of_checkin = get_datetime(self.last_sync_of_checkin)
+		process_attendance_after = getdate(self.process_attendance_after)
 		for attendance in half_day_attendances:
+			if attendance.attendance_date < process_attendance_after:
+				continue
 			timestamp = datetime.combine(attendance.attendance_date, start_time)
 			shift_details = get_employee_shift(employee, timestamp, True)
 			if (
@@ -532,7 +551,9 @@ def get_actual_shift_end(shift, current_datetime):
 	actual_shift_start = shift_details["actual_start"]
 	actual_shift_end = shift_details["actual_end"]
 
-	if (actual_shift_start.date() < actual_shift_end.date()) or (current_datetime < actual_shift_start):
+	if (shift_details["start_datetime"].date() < shift_details["end_datetime"].date()) or (
+		current_datetime < actual_shift_start
+	):
 		# shift start and end are on different days
 		actual_shift_end = add_days(actual_shift_end, -1)
 	return actual_shift_end

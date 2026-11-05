@@ -17,7 +17,7 @@ def execute(filters=None):
 		},
 		{
 			"label": _("Debit A/C Number"),
-			"fieldtype": "Int",
+			"fieldtype": "Data",
 			"fieldname": "debit_account",
 			"hidden": 1,
 			"width": 200,
@@ -29,16 +29,22 @@ def execute(filters=None):
 			"width": 100,
 		},
 		{
-			"label": _("Employee Name"),
+			"label": _("Employee"),
 			"fieldtype": "Link",
-			"fieldname": "employee_name",
+			"fieldname": "employee",
 			"options": "Employee",
+			"width": 150,
+		},
+		{
+			"label": _("Employee Name"),
+			"fieldtype": "Data",
+			"fieldname": "employee_name",
 			"width": 200,
 		},
 		{"label": _("Bank Name"), "fieldtype": "Data", "fieldname": "bank_name", "width": 50},
 		{
 			"label": _("Employee A/C Number"),
-			"fieldtype": "Int",
+			"fieldtype": "Data",
 			"fieldname": "employee_account_no",
 			"width": 50,
 		},
@@ -77,13 +83,14 @@ def execute(filters=None):
 			row = {
 				"payroll_no": salary.payroll_entry,
 				"debit_account": salary.debit_acc_no,
-				"payment_date": frappe.utils.formatdate(salary.modified.strftime("%Y-%m-%d")),
+				"payment_date": frappe.utils.formatdate(salary.posting_date),
 				"bank_name": salary.bank_name,
 				"employee_account_no": salary.bank_account_no,
 				"bank_code": salary.ifsc_code,
-				"employee_name": salary.employee + ": " + salary.employee_name,
+				"employee": salary.employee,
+				"employee_name": salary.employee_name,
 				"currency": frappe.get_cached_value("Company", filters.company, "default_currency"),
-				"amount": salary.net_pay,
+				"amount": salary.base_net_pay,
 			}
 			data.append(row)
 
@@ -102,12 +109,12 @@ def get_payroll_entries(accounts, filters):
 		("Company", "=", filters.company),
 	]
 	if filters.to_date:
-		payroll_filter.append(("posting_date", "<", filters.to_date))
+		payroll_filter.append(("posting_date", "<=", filters.to_date))
 
 	if filters.from_date:
-		payroll_filter.append(("posting_date", ">", filters.from_date))
+		payroll_filter.append(("posting_date", ">=", filters.from_date))
 
-	entries = get_all("Payroll Entry", payroll_filter, ["name", "payment_account"])
+	entries = get_all("Payroll Entry", payroll_filter, ["name", "payment_account", "posting_date"])
 
 	payment_accounts = [d.payment_account for d in entries]
 	entries = set_company_account(payment_accounts, entries)
@@ -120,8 +127,7 @@ def get_salary_slips(payroll_entries):
 		"Salary Slip",
 		filters=[("payroll_entry", "IN", payroll)],
 		fields=[
-			"modified",
-			"net_pay",
+			"base_net_pay",
 			"bank_name",
 			"bank_account_no",
 			"payroll_entry",
@@ -139,8 +145,10 @@ def get_salary_slips(payroll_entries):
 	for slip in salary_slips:
 		if slip.payroll_entry:
 			slip["debit_acc_no"] = payroll_entry_map[slip.payroll_entry]["company_account"]
+			slip["posting_date"] = payroll_entry_map[slip.payroll_entry]["posting_date"]
 		else:
 			slip["debit_acc_no"] = None
+			slip["posting_date"] = None
 
 	return salary_slips
 

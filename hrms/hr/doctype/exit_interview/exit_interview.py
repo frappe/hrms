@@ -86,7 +86,8 @@ class ExitInterview(Document):
 
 	def update_interview_date_in_employee(self):
 		if self.docstatus == 1:
-			frappe.db.set_value("Employee", self.employee, "held_on", self.date)
+			if self.date:
+				frappe.db.set_value("Employee", self.employee, "held_on", self.date)
 		elif self.docstatus == 2:
 			frappe.db.set_value("Employee", self.employee, "held_on", None)
 
@@ -170,7 +171,7 @@ def show_email_summary(email_success, email_failure):
 	if message and email_failure:
 		message += "<br><br>"
 	if email_failure:
-		message += _("Sending Failed due to missing email information for employee(s): {1}").format(
+		message += _("Sending Failed due to missing email information for employee(s): {0}").format(
 			", ".join(email_failure)
 		)
 

@@ -196,10 +196,19 @@ class ShiftAssignmentTool(Document):
 			.else_(ShiftType.end_time)
 		)
 
+		day = timedelta(hours=24)
+		overlap_conditions = [
+			(end_time_case > shift_start) & (ShiftType.start_time < shift_end),
+			# overnight tails running into the next day's shift
+			(end_time_case > shift_start + day) & (ShiftType.start_time < shift_end + day),
+		]
+		if shift_end > day:
+			overlap_conditions.append(ShiftType.start_time < shift_end - day)
+
 		return (
 			query.left_join(ShiftType)
 			.on(doctype.shift_type == ShiftType.name)
-			.where((end_time_case >= shift_start) & (ShiftType.start_time <= shift_end))
+			.where(Criterion.any(overlap_conditions))
 		)
 
 	@frappe.whitelist(methods=["POST"])
@@ -303,15 +312,18 @@ class ShiftAssignmentTool(Document):
 	def _bulk_process_shift_requests(self, shift_requests: list, status: str):
 		success, failure = [], []
 		count = 0
+		savepoint = "before_shift_request_processing"
 
 		for d in shift_requests:
 			try:
+				frappe.db.savepoint(savepoint)
 				shift_request = frappe.get_doc("Shift Request", d["shift_request"])
 				shift_request.status = status
 				shift_request.save()
 				shift_request.submit()
 
 			except Exception:
+				frappe.db.rollback(save_point=savepoint)
 				frappe.log_error(
 					f"Bulk Processing - Processing failed for Shift Request {d['shift_request']}.",
 					reference_doctype="Shift Request",

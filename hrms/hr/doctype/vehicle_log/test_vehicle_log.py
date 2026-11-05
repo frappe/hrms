@@ -29,6 +29,7 @@ class TestVehicleLog(HRMSTestSuite):
 			self.employee_id = make_employee("testdriver@example.com", company="_Test Company")
 
 		self.license_plate = get_vehicle(self.employee_id)
+		frappe.db.set_single_value("HR Settings", "expense_approver_mandatory_in_expense_claim", 0)
 
 	def test_make_vehicle_log_and_syncing_of_odometer_value(self):
 		vehicle_log = make_vehicle_log(self.license_plate, self.employee_id)
@@ -262,6 +263,53 @@ class TestVehicleLog(HRMSTestSuite):
 		vehicle_log.cancel()
 		self.assertEqual(vehicle_log.docstatus, 2)
 
+	def test_log_below_current_odometer_rejected_and_cancel_does_not_rewind(self):
+		first = make_vehicle_log(self.license_plate, self.employee_id, do_not_submit=True)
+		first.odometer = 5500
+		first.insert()
+		second = make_vehicle_log(self.license_plate, self.employee_id, do_not_submit=True)
+		second.odometer = 5200
+		second.insert()
+
+		first.submit()
+		self.assertRaises(frappe.ValidationError, second.submit)
+		self.assertEqual(frappe.db.get_value("Vehicle", self.license_plate, "last_odometer"), 5500)
+
+		latest = make_vehicle_log(self.license_plate, self.employee_id, do_not_submit=True)
+		latest.odometer = 5700
+		latest.insert()
+		latest.submit()
+		first.cancel()
+		self.assertEqual(frappe.db.get_value("Vehicle", self.license_plate, "last_odometer"), 5700)
+
+		latest.cancel()
+		self.assertEqual(frappe.db.get_value("Vehicle", self.license_plate, "last_odometer"), 5500)
+
+	def test_expense_claim_allowed_after_previous_claim_cancelled(self):
+		vehicle_log = make_vehicle_log(self.license_plate, self.employee_id)
+		currency, cost_center = frappe.db.get_value(
+			"Company", "_Test Company", ["default_currency", "cost_center"]
+		)
+		expense_claim = frappe.get_doc(make_expense_claim(vehicle_log.name))
+		expense_claim.update(
+			{
+				"company": "_Test Company",
+				"currency": currency,
+				"exchange_rate": 1,
+				"approval_status": "Approved",
+				"payable_account": frappe.db.get_value("Company", "_Test Company", "default_payable_account"),
+			}
+		)
+		expense_claim.expenses[0].update(
+			{"expense_type": "Travel", "sanctioned_amount": 100, "amount": 100, "cost_center": cost_center}
+		)
+		expense_claim.insert()
+		self.assertRaises(frappe.ValidationError, make_expense_claim, vehicle_log.name)
+
+		expense_claim.submit()
+		expense_claim.cancel()
+		self.assertEqual(make_expense_claim(vehicle_log.name)["vehicle_log"], vehicle_log.name)
+
 
 def get_vehicle(employee_id):
 	license_plate = random_string(10).upper()
@@ -287,7 +335,7 @@ def get_vehicle(employee_id):
 	return license_plate
 
 
-def make_vehicle_log(license_plate, employee_id, with_services=False):
+def make_vehicle_log(license_plate, employee_id, with_services=False, do_not_submit=False):
 	vehicle_log = frappe.get_doc(
 		{
 			"doctype": "Vehicle Log",
@@ -319,6 +367,9 @@ def make_vehicle_log(license_plate, employee_id, with_services=False):
 				"expense_amount": flt(1500),
 			},
 		)
+
+	if do_not_submit:
+		return vehicle_log
 
 	vehicle_log.save()
 	vehicle_log.submit()

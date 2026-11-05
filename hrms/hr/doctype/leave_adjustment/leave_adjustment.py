@@ -5,7 +5,7 @@ import datetime
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import cint, flt, get_link_to_form
+from frappe.utils import cint, flt, formatdate, get_link_to_form, getdate
 
 from hrms.hr.doctype.leave_application.leave_application import get_leave_balance_on
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import create_leave_ledger_entry
@@ -52,10 +52,39 @@ class LeaveAdjustment(Document):
 			self.leaves_after_adjustment = flt(self.allocated_leaves) - flt(self.leaves_to_adjust)
 
 	def validate(self):
+		self.validate_leave_allocation()
 		self.validate_duplicate_leave_adjustment()
 		self.validate_non_zero_adjustment()
 		self.validate_over_allocation()
 		self.validate_leave_balance()
+
+	def validate_leave_allocation(self):
+		allocation = frappe.db.get_value(
+			"Leave Allocation",
+			self.leave_allocation,
+			["employee", "leave_type", "docstatus", "from_date", "to_date"],
+			as_dict=True,
+		)
+		if not allocation or allocation.docstatus != 1:
+			frappe.throw(
+				_("Leave Allocation {0} is not submitted").format(
+					get_link_to_form("Leave Allocation", self.leave_allocation)
+				)
+			)
+		if allocation.employee != self.employee or allocation.leave_type != self.leave_type:
+			frappe.throw(
+				_("Leave Allocation {0} does not belong to employee {1} and leave type {2}").format(
+					get_link_to_form("Leave Allocation", self.leave_allocation),
+					frappe.bold(self.employee),
+					frappe.bold(self.leave_type),
+				)
+			)
+		if not (allocation.from_date <= getdate(self.posting_date) <= allocation.to_date):
+			frappe.throw(
+				_("Posting Date must be within the Leave Allocation period {0} to {1}").format(
+					frappe.bold(formatdate(allocation.from_date)), frappe.bold(formatdate(allocation.to_date))
+				)
+			)
 
 	def validate_duplicate_leave_adjustment(self):
 		duplicate_adjustment = frappe.db.exists(
@@ -94,7 +123,10 @@ class LeaveAdjustment(Document):
 			return
 
 		leave_balance = get_leave_balance_on(
-			employee=self.employee, leave_type=self.leave_type, date=self.posting_date
+			employee=self.employee,
+			leave_type=self.leave_type,
+			date=self.posting_date,
+			consider_all_leaves_in_the_allocation_period=True,
 		)
 
 		if leave_balance < self.leaves_to_adjust:

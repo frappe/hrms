@@ -2,8 +2,12 @@
 # For license information, please see license.txt
 
 
+import frappe
+from frappe import _
 from frappe.model.document import Document
+from frappe.utils import flt, get_datetime, getdate
 
+from hrms.hr.doctype.expense_claim.expense_claim import SELF_SERVICE_ROLES
 from hrms.hr.utils import validate_active_employee
 
 
@@ -47,3 +51,53 @@ class TravelRequest(Document):
 
 	def validate(self):
 		validate_active_employee(self.employee)
+		self.validate_itinerary_dates()
+		self.set_costing_totals()
+
+	def validate_itinerary_dates(self):
+		for row in self.itinerary:
+			if (
+				row.departure_date
+				and row.arrival_date
+				and get_datetime(row.arrival_date) < get_datetime(row.departure_date)
+			):
+				frappe.throw(
+					_("Row {0}: Arrival Datetime cannot be before Departure Datetime").format(row.idx)
+				)
+
+			if (
+				row.check_in_date
+				and row.check_out_date
+				and getdate(row.check_out_date) < getdate(row.check_in_date)
+			):
+				frappe.throw(_("Row {0}: Check-out Date cannot be before Check-in Date").format(row.idx))
+
+	def set_costing_totals(self):
+		for row in self.costings:
+			if row.sponsored_amount or row.funded_amount:
+				row.total_amount = flt(row.sponsored_amount) + flt(row.funded_amount)
+
+
+def is_limited_to_own_employee(user: str) -> bool:
+	roles = {
+		perm.role
+		for perm in frappe.permissions.get_valid_perms("Travel Request", user)
+		if perm.read and not perm.permlevel
+	}
+	return not roles - SELF_SERVICE_ROLES
+
+
+def get_permission_query_conditions(user: str | None = None) -> str:
+	user = user or frappe.session.user
+	if not is_limited_to_own_employee(user):
+		return ""
+
+	return f"`tabTravel Request`.`employee` in (select `name` from `tabEmployee` where `user_id` = {frappe.db.escape(user)})"
+
+
+def has_permission(doc, ptype: str | None = None, user: str | None = None) -> bool:
+	user = user or frappe.session.user
+	if not doc.employee or not is_limited_to_own_employee(user):
+		return True
+
+	return frappe.db.get_value("Employee", doc.employee, "user_id") == user

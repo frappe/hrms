@@ -81,47 +81,52 @@ class ShiftScheduleAssignment(Document):
 
 	def create_shifts(self, start_date: str, end_date: str | None = None) -> None:
 		shift_schedule = frappe.get_doc("Shift Schedule", self.shift_schedule)
-		gap = {
-			"Every Week": 0,
-			"Every 2 Weeks": 1,
-			"Every 3 Weeks": 2,
-			"Every 4 Weeks": 3,
+		if shift_schedule.docstatus != 1:
+			frappe.throw(
+				_("Shift Schedule {0} is not submitted").format(
+					get_link_to_form("Shift Schedule", self.shift_schedule)
+				)
+			)
+
+		weeks_in_cycle = {
+			"Every Week": 1,
+			"Every 2 Weeks": 2,
+			"Every 3 Weeks": 3,
+			"Every 4 Weeks": 4,
 		}[shift_schedule.frequency]
 
-		date = start_date
+		date = getdate(start_date)
+		end_date = getdate(end_date) if end_date else add_days(date, 90)
+		cycle_start = self.get_first_shift_date() or date
 		individual_assignment_start = None
-		week_end_day = get_weekday(getdate(add_days(start_date, -1)))
 		repeat_on_days = [day.day for day in shift_schedule.repeat_on_days]
 
-		if not end_date:
-			end_date = add_days(start_date, 90)
-
 		while date <= end_date:
-			weekday = get_weekday(getdate(date))
-			if weekday in repeat_on_days:
+			is_on_week = ((date - cycle_start).days // 7) % weeks_in_cycle == 0
+			if is_on_week and get_weekday(date) in repeat_on_days:
 				if not individual_assignment_start:
 					individual_assignment_start = date
-				if date == end_date:
-					self.create_individual_assignment(
-						shift_schedule.shift_type, individual_assignment_start, date
-					)
-					individual_assignment_start = None
-
 			elif individual_assignment_start:
 				self.create_individual_assignment(
 					shift_schedule.shift_type, individual_assignment_start, add_days(date, -1)
 				)
 				individual_assignment_start = None
 
-			if weekday == week_end_day and gap:
-				if individual_assignment_start:
-					self.create_individual_assignment(
-						shift_schedule.shift_type, individual_assignment_start, date
-					)
-					individual_assignment_start = None
-				date = add_days(date, 7 * gap)
-
 			date = add_days(date, 1)
+
+		if individual_assignment_start:
+			self.create_individual_assignment(
+				shift_schedule.shift_type, individual_assignment_start, end_date
+			)
+
+	def get_first_shift_date(self):
+		first_shift_date = frappe.db.get_value(
+			"Shift Assignment",
+			{"shift_schedule_assignment": self.name, "docstatus": 1},
+			"start_date",
+			order_by="start_date asc",
+		)
+		return getdate(first_shift_date) if first_shift_date else None
 
 	def create_individual_assignment(self, shift_type, start_date, end_date):
 		create_shift_assignment(
@@ -140,7 +145,11 @@ class ShiftScheduleAssignment(Document):
 def process_auto_shift_creation():
 	shift_schedule_assignments = frappe.get_all(
 		"Shift Schedule Assignment",
-		filters={"enabled": 1, "create_shifts_after": ["<=", nowdate()]},
+		filters={
+			"enabled": 1,
+			"create_shifts_after": ["<=", nowdate()],
+			"shift_schedule": ["in", frappe.get_all("Shift Schedule", {"docstatus": 1}, pluck="name")],
+		},
 		pluck="name",
 	)
 	for d in shift_schedule_assignments:

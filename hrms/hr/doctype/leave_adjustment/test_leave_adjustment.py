@@ -223,6 +223,61 @@ class TestLeaveAdjustment(HRMSTestSuite):
 		# 15 carried forward + 5 new
 		self.assertEqual(leave_balance, 20.0)
 
+	def test_allocation_must_match_adjustment(self):
+		other_employee = frappe.get_doc("Employee", {"first_name": "_Test Employee 1"})
+		other_allocation = create_leave_allocation(
+			employee=other_employee.name,
+			employee_name=other_employee.employee_name,
+			leave_type="_Test Leave Type",
+			new_leaves_allocated=10,
+			from_date=get_first_day(getdate()),
+			to_date=get_last_day(getdate()),
+		)
+		other_allocation.submit()
+
+		adjustment = create_leave_adjustment(other_allocation, adjustment_type="Allocate", leaves_to_adjust=5)
+		adjustment.employee = self.employee.name
+		self.assertRaises(frappe.ValidationError, adjustment.save)
+
+		adjustment = create_leave_adjustment(
+			self.leave_allocation,
+			adjustment_type="Allocate",
+			leaves_to_adjust=5,
+			posting_date=add_days(get_last_day(getdate()), 1),
+		)
+		self.assertRaises(frappe.ValidationError, adjustment.save)
+
+		draft_allocation = create_leave_allocation(
+			employee=self.employee.name,
+			employee_name=self.employee.employee_name,
+			leave_type="_Test Leave Type",
+			new_leaves_allocated=3,
+			from_date=add_days(get_last_day(getdate()), 1),
+			to_date=add_to_date(get_last_day(getdate()), months=1),
+		)
+		draft_allocation.save()
+		adjustment = create_leave_adjustment(
+			draft_allocation,
+			adjustment_type="Allocate",
+			leaves_to_adjust=7,
+			posting_date=add_days(get_last_day(getdate()), 1),
+		)
+		self.assertRaises(frappe.ValidationError, adjustment.save)
+
+	def test_reduction_considers_leaves_later_in_allocation(self):
+		first_day = get_first_day(getdate())
+		make_leave_application(
+			employee=self.employee.name,
+			from_date=add_days(first_day, 19),
+			to_date=add_days(first_day, 25),
+			leave_type="_Test Leave Type",
+		)
+
+		leave_adjustment = create_leave_adjustment(
+			self.leave_allocation, adjustment_type="Reduce", leaves_to_adjust=5, posting_date=first_day
+		)
+		self.assertRaises(frappe.ValidationError, leave_adjustment.save)
+
 
 def create_leave_adjustment(leave_allocation, adjustment_type, leaves_to_adjust=None, posting_date=None):
 	leave_adjustment = frappe.new_doc(

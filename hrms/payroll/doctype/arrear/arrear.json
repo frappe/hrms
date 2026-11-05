@@ -21,6 +21,8 @@
   "earning_arrears",
   "deduction_arrears",
   "accrual_arrears",
+  "salary_slip_arrears_section",
+  "salary_slip_arrears",
   "section_break_ubws",
   "amended_from"
  ],
@@ -138,6 +140,21 @@
    "fieldname": "arrears_tab",
    "fieldtype": "Tab Break",
    "label": "Arrears"
+  },
+  {
+   "collapsible": 1,
+   "depends_on": "salary_slip_arrears",
+   "fieldname": "salary_slip_arrears_section",
+   "fieldtype": "Section Break",
+   "label": "Salary Slip Breakup"
+  },
+  {
+   "fieldname": "salary_slip_arrears",
+   "fieldtype": "Table",
+   "label": "Salary Slip Arrears",
+   "no_copy": 1,
+   "options": "Arrear Salary Slip Detail",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
@@ -150,7 +167,7 @@
    "link_fieldname": "ref_docname"
   }
  ],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-10-21 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Arrear",

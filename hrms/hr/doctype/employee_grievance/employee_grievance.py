@@ -4,6 +4,17 @@
 import frappe
 from frappe import _, bold
 from frappe.model.document import Document
+from frappe.utils import cstr, getdate
+
+RESOLUTION_FIELDS = (
+	"status",
+	"cause_of_grievance",
+	"resolved_by",
+	"resolution_date",
+	"resolution_detail",
+	"employee_responsible",
+)
+HR_ROLES = {"HR User", "HR Manager", "System Manager"}
 
 
 class EmployeeGrievance(Document):
@@ -36,6 +47,35 @@ class EmployeeGrievance(Document):
 		subject: DF.Data
 	# end: auto-generated types
 
+	def validate(self):
+		self.validate_grievance_against()
+		self.validate_resolution_date()
+		self.validate_resolution_changes()
+
+	def validate_grievance_against(self):
+		if self.grievance_against_party == "Employee" and self.grievance_against == self.raised_by:
+			frappe.throw(_("An employee cannot raise a grievance against themselves"))
+
+	def validate_resolution_date(self):
+		if self.resolution_date and getdate(self.resolution_date) < getdate(self.date):
+			frappe.throw(_("Resolution Date cannot be before the grievance Date"))
+
+	def validate_resolution_changes(self):
+		if HR_ROLES.intersection(frappe.get_roles()):
+			return
+
+		before = self.get_doc_before_save() or frappe.new_doc(self.doctype)
+		changed = [
+			self.meta.get_label(fieldname)
+			for fieldname in RESOLUTION_FIELDS
+			if cstr(self.get(fieldname)) != cstr(before.get(fieldname))
+		]
+		if changed:
+			frappe.throw(
+				_("Only HR can update {0}").format(", ".join(_(label) for label in changed)),
+				frappe.PermissionError,
+			)
+
 	def on_submit(self):
 		if self.status not in ["Invalid", "Resolved"]:
 			frappe.throw(
@@ -43,6 +83,9 @@ class EmployeeGrievance(Document):
 					bold(_("Invalid")), bold(_("Resolved"))
 				)
 			)
+
+	def on_cancel(self):
+		self.db_set("status", "Cancelled")
 
 	def on_discard(self):
 		self.db_set("status", "Cancelled")

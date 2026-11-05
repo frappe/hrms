@@ -6,6 +6,7 @@ import datetime
 import json
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 from frappe.utils import getdate
 
@@ -73,45 +74,42 @@ def get_employees(
 	shift: str | None = None,
 	filter_by_shift: bool | None = None,
 ) -> dict[str, list]:
-	filters = {"status": "Active", "date_of_joining": ["<=", date]}
-
-	for field, value in {
-		"department": department,
-		"branch": branch,
-		"company": company,
-		"employment_type": employment_type,
-		"designation": designation,
-		"grade": employee_grade,
-	}.items():
-		if value:
-			filters[field] = value
+	employee_filters = {
+		field: value
+		for field, value in {
+			"department": department,
+			"branch": branch,
+			"company": company,
+			"employment_type": employment_type,
+			"designation": designation,
+			"grade": employee_grade,
+		}.items()
+		if value
+	}
 	# list of all employees
 	employee_list = frappe.get_list(
 		"Employee",
 		fields=["employee", "employee_name"],
-		filters=filters,
+		filters={"status": "Active", "date_of_joining": ["<=", date], **employee_filters},
 		order_by="employee_name",
 	)
+	attendance_filters = {"attendance_date": date, "docstatus": 1}
+	if employee_filters:
+		attendance_filters["employee"] = [
+			"in",
+			frappe.get_list("Employee", filters=employee_filters, pluck="name", limit=0),
+		]
 	# marked attendance
 	attendance_list = frappe.get_list(
 		"Attendance",
 		fields=["employee", "employee_name", "status", "shift", "leave_type"],
-		filters={
-			"attendance_date": date,
-			"docstatus": 1,
-			"modify_half_day_status": 0,
-		},
+		filters={**attendance_filters, "modify_half_day_status": 0},
 		order_by="employee_name",
 	)
 	half_day_attendance_list = frappe.get_list(
 		"Attendance",
 		fields=["employee", "employee_name"],
-		filters={
-			"attendance_date": date,
-			"docstatus": 1,
-			"modify_half_day_status": 1,
-			"leave_type": ("is", "set"),
-		},
+		filters={**attendance_filters, "modify_half_day_status": 1, "leave_type": ("is", "set")},
 		order_by="employee_name",
 	)
 	unmarked_attendance = _get_unmarked_attendance(
@@ -138,26 +136,34 @@ def _get_unmarked_attendance(employee_list: list[dict], attendance_list: list[di
 
 
 def _get_unmarked_attendance_with_shift(unmarked_attendance, shift, date):
-	# Fetch employees based on Shift Assignment
-	shift_assigned_employees = frappe.get_list(
+	date = getdate(date)
+	employees = [emp["employee"] for emp in unmarked_attendance]
+	if not employees:
+		return []
+
+	assignments = frappe.get_list(
 		"Shift Assignment",
 		filters={
-			"shift_type": shift,
-			"start_date": ["<=", frappe.utils.getdate(date)],
+			"employee": ["in", employees],
+			"start_date": ["<=", date],
+			"docstatus": 1,
+			"status": "Active",
 		},
-		fields=["employee"],
+		or_filters=[["end_date", ">=", date], ["end_date", "is", "not set"]],
+		fields=["employee", "shift_type"],
+		limit=0,
 	)
-	# Fetch employees based on default shifts
+	assigned_to_shift = {a.employee for a in assignments if a.shift_type == shift}
+	assigned_elsewhere = {a.employee for a in assignments if a.shift_type != shift}
+
 	default_shift_employees = frappe.get_list(
 		"Employee",
-		filters={
-			"default_shift": shift,
-		},
-		fields=["employee"],
+		filters={"name": ["in", employees], "default_shift": shift},
+		pluck="name",
+		limit=0,
 	)
 
-	all_employees_with_shift = shift_assigned_employees + default_shift_employees
-	distinct_employees_with_shift = {emp["employee"] for emp in all_employees_with_shift}
+	distinct_employees_with_shift = assigned_to_shift | (set(default_shift_employees) - assigned_elsewhere)
 
 	# Filter unmarked attendance based on assigned employees
 	shiftwise_unmarked_attendance = []
@@ -218,6 +224,8 @@ def mark_employee_attendance(
 		attendance.submit()
 	if mark_half_day:
 		frappe.has_permission("Attendance", "write", throw=True)
+		if half_day_status not in ("Present", "Absent"):
+			frappe.throw(_("Status for Other Half must be Present or Absent"))
 		if isinstance(half_day_employee_list, str):
 			half_day_employee_list = json.loads(half_day_employee_list)
 
@@ -229,6 +237,9 @@ def mark_employee_attendance(
 				"employee": ["in", half_day_employee_list],
 				"attendance_date": date,
 				"docstatus": 1,
+				"status": "Half Day",
+				"modify_half_day_status": 1,
+				"leave_type": ("is", "set"),
 			},
 			fields=get_permission_check_fields("Attendance"),
 			limit=0,
@@ -242,8 +253,14 @@ def mark_employee_attendance(
 			frappe.has_permission("Attendance", "write", doc=attendance, throw=True)
 
 		Attendance = frappe.qb.DocType("Attendance")
-		frappe.qb.update(Attendance).where(
-			Attendance.name.isin([row.name for row in eligible_attendance])
-		).set(Attendance.half_day_status, half_day_status).set(Attendance.shift, shift).set(
-			Attendance.late_entry, late_entry or 0
-		).set(Attendance.early_exit, early_exit or 0).set(Attendance.modify_half_day_status, 0).run()
+		query = (
+			frappe.qb.update(Attendance)
+			.where(Attendance.name.isin([row.name for row in eligible_attendance]))
+			.set(Attendance.half_day_status, half_day_status)
+			.set(Attendance.late_entry, late_entry or 0)
+			.set(Attendance.early_exit, early_exit or 0)
+			.set(Attendance.modify_half_day_status, 0)
+		)
+		if shift:
+			query = query.set(Attendance.shift, shift)
+		query.run()

@@ -167,6 +167,8 @@ def get_holiday_list_ranges_for_employees(
 		ranges = fill_uncovered_dates_with_assigned_holiday_list(
 			ranges, assignments.get(employee, []), assignments.get(company, []), start_date, end_date
 		)
+		if not ranges and (default_holiday_list := get_company_default_holiday_list(company)):
+			ranges = [frappe._dict(holiday_list=default_holiday_list, from_date=start_date, to_date=end_date)]
 
 		if ranges:
 			employee_holiday_list_ranges[employee] = ranges
@@ -268,6 +270,12 @@ def get_holiday_list_for_employee(
 	)
 
 	if not assignment:
+		if default_holiday_list := get_company_default_holiday_list(company):
+			return (
+				frappe._dict(holiday_list=default_holiday_list, from_date=None)
+				if as_dict
+				else default_holiday_list
+			)
 		if raise_exception:
 			throw_no_holiday_list_assigned(employee, company, as_on)
 		return None
@@ -276,6 +284,10 @@ def get_holiday_list_for_employee(
 		return frappe._dict(holiday_list=assignment.holiday_list, from_date=assignment.from_date)
 
 	return assignment.holiday_list
+
+
+def get_company_default_holiday_list(company: str | None) -> str | None:
+	return frappe.get_cached_value("Company", company, "default_holiday_list") if company else None
 
 
 def throw_no_holiday_list_assigned(employee: str, company: str, as_on: date):

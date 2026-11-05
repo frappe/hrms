@@ -51,6 +51,19 @@ class TestAppraisalCycle(HRMSTestSuite):
 				appraisal.self_ratings[i].per_weightage, self.template.rating_criteria[i].per_weightage
 			)
 
+	def test_final_score_formula_mandatory(self):
+		cycle = create_appraisal_cycle(designation="Engineer")
+		cycle.calculate_final_score_based_on_formula = 1
+		self.assertRaises(frappe.MandatoryError, cycle.save)
+
+	def test_appraisee_company_must_match(self):
+		other_company_employee = make_employee("employee3@example.com", company="_Test Company")
+		cycle = create_appraisal_cycle(designation="Engineer")
+		cycle.append(
+			"appraisees", {"employee": other_company_employee, "appraisal_template": self.template.name}
+		)
+		self.assertRaises(frappe.ValidationError, cycle.save)
+
 
 def create_appraisal_cycle(**args):
 	args = frappe._dict(args)

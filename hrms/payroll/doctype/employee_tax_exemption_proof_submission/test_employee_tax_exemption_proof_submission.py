@@ -140,3 +140,58 @@ class TestEmployeeTaxExemptionProofSubmission(HRMSTestSuite):
 
 		# reset
 		frappe.flags.country = current_country
+
+	def test_house_rent_dates_outside_payroll_period(self):
+		current_country = frappe.flags.country
+		frappe.flags.country = "India"
+
+		employee = frappe.get_value("Employee", {"user_id": "employee@proofsubmission.com"}, "name")
+		setup_hra_exemption_prerequisites("Monthly", employee)
+
+		proof = frappe.get_doc(
+			{
+				"doctype": "Employee Tax Exemption Proof Submission",
+				"employee": employee,
+				"company": "_Test Company",
+				"payroll_period": PAYROLL_PERIOD_NAME,
+				"currency": "INR",
+				"house_rent_payment_amount": 120000,
+				"rented_in_metro_city": 1,
+				"rented_from_date": "2021-01-01",
+				"rented_to_date": "2021-12-31",
+			}
+		)
+		self.assertRaises(frappe.ValidationError, proof.insert)
+
+		frappe.flags.country = current_country
+
+	def test_amounts_recomputed_on_submit(self):
+		proof = frappe.get_doc(
+			{
+				"doctype": "Employee Tax Exemption Proof Submission",
+				"employee": frappe.get_value("Employee", {"user_id": "employee@proofsubmission.com"}, "name"),
+				"company": "_Test Company",
+				"payroll_period": PAYROLL_PERIOD_NAME,
+				"currency": "INR",
+				"tax_exemption_proofs": [
+					dict(
+						exemption_sub_category="_Test1 Sub Category", type_of_proof="Test Proof", amount=90000
+					)
+				],
+			}
+		).insert()
+		self.assertEqual(proof.exemption_amount, 50000)
+
+		proof.tax_exemption_proofs[0].max_amount = 1000000
+		proof.tax_exemption_proofs[0].exemption_category = "_Test Other Category"
+		proof.exemption_amount = 999999
+		proof.total_actual_amount = 999999
+		proof.submit()
+
+		self.assertEqual(proof.tax_exemption_proofs[0].max_amount, 50000)
+		self.assertEqual(proof.tax_exemption_proofs[0].exemption_category, "_Test Category")
+		self.assertEqual(proof.total_actual_amount, 90000)
+		self.assertEqual(
+			frappe.db.get_value("Employee Tax Exemption Proof Submission", proof.name, "exemption_amount"),
+			50000,
+		)

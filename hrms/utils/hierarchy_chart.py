@@ -4,15 +4,21 @@
 
 import frappe
 from frappe import _
+from frappe.handler import is_valid_http_method
+
+HIERARCHY_CHART_METHODS = ("hrms.hr.page.organizational_chart.organizational_chart.get_children",)
 
 
 @frappe.whitelist()
 def get_all_nodes(method: str, company: str):
 	"""Recursively gets all data from nodes"""
-	method = frappe.get_attr(method)
-
-	if method not in frappe.whitelisted:
+	if method not in HIERARCHY_CHART_METHODS:
 		frappe.throw(_("Not Permitted"), frappe.PermissionError)
+
+	method = frappe.get_attr(frappe.override_whitelisted_method(method))
+	frappe.is_whitelisted(method)
+	if getattr(frappe.local, "request", None):
+		is_valid_http_method(method)
 
 	root_nodes = method(company=company)
 	result = []

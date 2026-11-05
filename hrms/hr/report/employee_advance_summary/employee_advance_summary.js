@@ -47,7 +47,8 @@ frappe.query_reports["Employee Advance Summary"] = {
 			fieldname: "status",
 			label: __("Status"),
 			fieldtype: "Select",
-			options: "\nDraft\nPaid\nPartially Paid\nUnpaid\nClaimed\nCancelled",
+			options:
+				"\nDraft\nPaid\nPartially Paid\nUnpaid\nClaimed\nReturned\nPartly Claimed and Returned\nCancelled",
 		},
 		{
 			fieldname: "department",

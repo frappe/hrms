@@ -8,7 +8,7 @@
  "documentation_url": "https://docs.frappe.io/hr/reports/salary-payments-based-on-payment-mode",
  "idx": 0,
  "is_standard": "Yes",
- "modified": "2026-10-06 12:00:00.000000",
+ "modified": "2026-10-21 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Payments Based On Payment Mode",
@@ -23,9 +23,6 @@
   },
   {
    "role": "HR Manager"
-  },
-  {
-   "role": "Employee"
   }
  ]
 }

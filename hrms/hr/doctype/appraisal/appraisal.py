@@ -56,7 +56,9 @@ class Appraisal(Document, AppraisalMixin):
 
 		validate_active_employee(self.employee)
 		validate_active_appraisal_cycle(self.appraisal_cycle)
+		self.set_dates_from_cycle()
 		self.validate_duplicate()
+		self.validate_scoring_inputs_unchanged_by_appraisee()
 		self.validate_total_weightage("appraisal_kra", "KRAs")
 		self.validate_total_weightage("self_ratings", "Self Ratings")
 
@@ -64,6 +66,46 @@ class Appraisal(Document, AppraisalMixin):
 		self.calculate_self_appraisal_score()
 		self.calculate_avg_feedback_score()
 		self.calculate_final_score()
+
+	def validate_scoring_inputs_unchanged_by_appraisee(self):
+		if (
+			self.is_hr_user()
+			or frappe.db.get_value("Employee", self.employee, "user_id") != frappe.session.user
+		):
+			return
+
+		baseline = self.get_doc_before_save() or self.get_scoring_baseline_from_template()
+		if baseline.appraisal_template != self.appraisal_template or get_scoring_inputs(
+			baseline
+		) != get_scoring_inputs(self):
+			frappe.throw(
+				_(
+					"You cannot change the Appraisal Template, KRA weightage or goal scores of your own appraisal"
+				),
+				frappe.PermissionError,
+				title=_("Not Allowed"),
+			)
+
+	def get_scoring_baseline_from_template(self):
+		baseline = frappe.new_doc("Appraisal")
+		baseline.update(
+			{
+				"employee": self.employee,
+				"appraisal_cycle": self.appraisal_cycle,
+				"rate_goals_manually": self.rate_goals_manually,
+			}
+		)
+		baseline.set_appraisal_template()
+		if not baseline.appraisal_template:
+			baseline.appraisal_template = self.appraisal_template
+			baseline.set_kras_and_rating_criteria()
+
+		return baseline
+
+	def set_dates_from_cycle(self):
+		self.start_date, self.end_date = frappe.db.get_value(
+			"Appraisal Cycle", self.appraisal_cycle, ["start_date", "end_date"]
+		) or (None, None)
 
 	def validate_duplicate(self):
 		Appraisal = frappe.qb.DocType("Appraisal")
@@ -203,7 +245,8 @@ class Appraisal(Document, AppraisalMixin):
 		meta = frappe.get_meta("Employee Feedback Rating")
 		number_of_stars = meta.get_options("rating") or 5
 		for entry in self.self_ratings:
-			score = flt(entry.rating) * flt(number_of_stars) * flt(entry.per_weightage / 100)
+			entry.rating = self.get_bounded_rating(entry.rating)
+			score = entry.rating * flt(number_of_stars) * flt(entry.per_weightage) / 100
 			total += flt(score)
 
 		self.self_score = flt(total, self.precision("self_score"))
@@ -228,7 +271,7 @@ class Appraisal(Document, AppraisalMixin):
 		formula = appraisal_cycle_doc.final_score_formula
 		based_on_formula = appraisal_cycle_doc.calculate_final_score_based_on_formula
 
-		if based_on_formula:
+		if based_on_formula and formula:
 			employee_doc = frappe.get_cached_doc("Employee", self.employee)
 			data = {
 				"goal_score": flt(self.total_score),
@@ -305,6 +348,13 @@ class Appraisal(Document, AppraisalMixin):
 		return self
 
 
+def get_scoring_inputs(appraisal: Appraisal) -> tuple:
+	return (
+		[(row.kra, flt(row.per_weightage, 2)) for row in appraisal.appraisal_kra],
+		[(row.kra, flt(row.per_weightage, 2), flt(row.score, 2)) for row in appraisal.goals],
+	)
+
+
 @frappe.whitelist()
 def get_feedback_history(employee: str, appraisal: str) -> dict:
 	frappe.has_permission("Appraisal", "read", appraisal, throw=True)
@@ -328,32 +378,18 @@ def get_feedback_history(employee: str, appraisal: str) -> dict:
 	)
 
 	# get percentage of reviews per rating
-	reviews_per_rating = []
-
-	feedback_count = frappe.db.count(
+	scores = frappe.get_all(
 		"Employee Performance Feedback",
-		filters={
-			"appraisal": appraisal,
-			"employee": employee,
-			"docstatus": 1,
-		},
+		filters={"appraisal": appraisal, "employee": employee, "docstatus": 1},
+		pluck="total_score",
 	)
+	counts_per_rating = [0] * 5
+	for score in scores:
+		counts_per_rating[min(max(int(flt(score)), 1), 5) - 1] += 1
 
-	for i in range(1, 6):
-		count = frappe.db.count(
-			"Employee Performance Feedback",
-			filters={
-				"appraisal": appraisal,
-				"employee": employee,
-				"total_score": ("between", [i, i + 0.99]),
-				"docstatus": 1,
-			},
-		)
-
-		percent = flt((count / feedback_count) * 100, 0) if feedback_count else 0
-		reviews_per_rating.append(percent)
-
-	data.reviews_per_rating = reviews_per_rating
+	data.reviews_per_rating = [
+		flt((count / len(scores)) * 100, 0) if scores else 0 for count in counts_per_rating
+	]
 	data.avg_feedback_score = frappe.db.get_value("Appraisal", appraisal, "avg_feedback_score")
 
 	return data

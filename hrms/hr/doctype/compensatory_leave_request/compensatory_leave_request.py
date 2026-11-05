@@ -53,6 +53,10 @@ class CompensatoryLeaveRequest(Document):
 		self.validate_attendance()
 		if not self.leave_type:
 			frappe.throw(_("Leave Type is mandatory"))
+		if not frappe.db.get_value("Leave Type", self.leave_type, "is_compensatory"):
+			frappe.throw(
+				_("Leave Type {0} is not a compensatory leave type").format(frappe.bold(self.leave_type))
+			)
 
 	def validate_attendance(self):
 		attendance_records = frappe.get_all(
@@ -104,7 +108,7 @@ class CompensatoryLeaveRequest(Document):
 			if leave_allocation:
 				leave_allocation.new_leaves_allocated += date_difference
 				leave_allocation.validate()
-				leave_allocation.db_set("new_leaves_allocated", leave_allocation.total_leaves_allocated)
+				leave_allocation.db_set("new_leaves_allocated", leave_allocation.new_leaves_allocated)
 				leave_allocation.db_set("total_leaves_allocated", leave_allocation.total_leaves_allocated)
 
 				# generate additional ledger entry for the new compensatory leaves off
@@ -136,7 +140,7 @@ class CompensatoryLeaveRequest(Document):
 				if leave_allocation.new_leaves_allocated < 0:
 					leave_allocation.new_leaves_allocated = 0
 				leave_allocation.validate()
-				leave_allocation.db_set("new_leaves_allocated", leave_allocation.total_leaves_allocated)
+				leave_allocation.db_set("new_leaves_allocated", leave_allocation.new_leaves_allocated)
 				leave_allocation.db_set("total_leaves_allocated", leave_allocation.total_leaves_allocated)
 
 				# create reverse entry on cancelation

@@ -11,7 +11,7 @@ from frappe.utils import getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
-from hrms.hr.doctype.exit_interview.exit_interview import send_exit_questionnaire
+from hrms.hr.doctype.exit_interview.exit_interview import send_exit_questionnaire, show_email_summary
 from hrms.tests.utils import HRMSTestSuite, make_user
 
 
@@ -53,6 +53,22 @@ class TestExitInterview(HRMSTestSuite):
 		interview.reload()
 		interview.cancel()
 		self.assertEqual(frappe.db.get_value("Employee", employee, "held_on"), None)
+
+	def test_held_on_kept_when_completed_without_date(self):
+		employee = make_employee("employeeexit5@example.com", company="_Test Company")
+		frappe.db.set_value("Employee", employee, {"relieving_date": getdate(), "held_on": "2026-01-01"})
+
+		interview = create_exit_interview(employee, save=False)
+		interview.date = None
+		interview.status = "Completed"
+		interview.employee_status = "Exit Confirmed"
+		interview.insert()
+		interview.submit()
+		self.assertEqual(frappe.db.get_value("Employee", employee, "held_on"), getdate("2026-01-01"))
+
+	def test_email_summary_lists_employees_without_email(self):
+		show_email_summary(["HR-EMP-1"], ["HR-EMP-2"])
+		self.assertIn("HR-EMP-2", frappe.message_log[-1]["message"])
 
 	def test_send_exit_questionnaire(self):
 		set_exit_questionnaire_settings()

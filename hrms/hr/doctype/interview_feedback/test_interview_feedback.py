@@ -69,6 +69,29 @@ class TestInterviewFeedback(HRMSTestSuite):
 
 		frappe.set_user("Administrator")
 
+	def test_feedback_only_in_own_name(self):
+		job_applicant = create_job_applicant()
+		interview = create_interview_and_dependencies(
+			job_applicant.name, scheduled_on=add_days(getdate(), -1)
+		)
+		skill_ratings = get_skills_rating(interview.interview_type)
+
+		frappe.set_user("test_interviewer2@example.com")
+		try:
+			self.assertRaises(
+				frappe.PermissionError,
+				create_interview_feedback,
+				interview.name,
+				"test_interviewer1@example.com",
+				skill_ratings,
+			)
+			feedback = create_interview_feedback(
+				interview.name, "test_interviewer2@example.com", skill_ratings
+			)
+			self.assertEqual(feedback.docstatus, 1)
+		finally:
+			frappe.set_user("Administrator")
+
 
 def create_interview_feedback(interview, interviewer, skills_ratings):
 	interview_feedback = frappe.new_doc("Interview Feedback")

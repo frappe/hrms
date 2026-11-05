@@ -125,6 +125,11 @@ def delete_ledger_entry(ledger):
 
 def get_previous_expiry_ledger_entry(ledger):
 	"""Returns the expiry ledger entry having same creation date as the ledger entry to be cancelled"""
+	from hrms.hr.doctype.leave_allocation.leave_allocation import get_previous_allocation
+
+	if ledger.transaction_type != "Leave Allocation":
+		return None
+
 	creation_date = frappe.db.get_value(
 		"Leave Ledger Entry",
 		filters={
@@ -135,12 +140,18 @@ def get_previous_expiry_ledger_entry(ledger):
 		fieldname=["creation"],
 	)
 
-	creation_date = creation_date.strftime(DATE_FORMAT) if creation_date else ""
+	if not creation_date:
+		return None
+
+	previous_allocation = get_previous_allocation(ledger.from_date, ledger.leave_type, ledger.employee)
+	if not previous_allocation:
+		return None
 
 	return frappe.db.get_value(
 		"Leave Ledger Entry",
 		filters={
-			"creation": ("like", creation_date + "%"),
+			"transaction_name": previous_allocation.name,
+			"creation": ("like", creation_date.strftime(DATE_FORMAT) + "%"),
 			"employee": ledger.employee,
 			"leave_type": ledger.leave_type,
 			"is_expired": 1,
@@ -179,8 +190,12 @@ def process_expired_allocation():
 			& (InnerLedger.name != Ledger.name)
 			& (InnerLedger.docstatus == 1)
 			& (
-				(InnerLedger.is_carry_forward == Ledger.is_carry_forward)
-				| ((InnerLedger.is_carry_forward == 0) & (InnerLedger.leave_type.notin(leave_type)))
+				((InnerLedger.is_expired == 1) & (InnerLedger.is_carry_forward == Ledger.is_carry_forward))
+				| (
+					(Ledger.is_carry_forward == 1)
+					& (InnerLedger.is_carry_forward == 0)
+					& (InnerLedger.leave_type.notin(leave_type))
+				)
 			)
 		)
 	)
@@ -200,8 +215,11 @@ def process_expired_allocation():
 		.where(
 			ExistsCriterion(inner_query).negate()
 			& (Ledger.transaction_type == "Leave Allocation")
+			& (Ledger.is_expired == 0)
+			& (Ledger.docstatus == 1)
 			& (Ledger.to_date < today())
 		)
+		.orderby(Ledger.to_date)
 	).run(as_dict=1)
 
 	if expire_allocation:
@@ -210,7 +228,12 @@ def process_expired_allocation():
 
 def create_expiry_ledger_entry(allocations):
 	"""Create ledger entry for expired allocation"""
+	expired = set()
 	for allocation in allocations:
+		if (allocation.name, allocation.is_carry_forward) in expired:
+			continue
+		expired.add((allocation.name, allocation.is_carry_forward))
+
 		if allocation.is_carry_forward:
 			expire_carried_forward_allocation(allocation)
 		else:
@@ -249,7 +272,7 @@ def expire_allocation(allocation: str | Document | frappe._dict, expiry_date: da
 	expiry_date = expiry_date if expiry_date else allocation.to_date
 
 	# allows expired leaves entry to be created/reverted
-	if leaves:
+	if leaves and not has_later_expiry(allocation):
 		args = dict(
 			leaves=flt(leaves) * -1,
 			transaction_name=allocation.name,
@@ -262,6 +285,22 @@ def expire_allocation(allocation: str | Document | frappe._dict, expiry_date: da
 		create_leave_ledger_entry(allocation, args)
 
 	frappe.db.set_value("Leave Allocation", allocation.name, "expired", 1)
+
+
+def has_later_expiry(allocation):
+	"""A later expiry already expired every remaining leave up to its date"""
+	return frappe.db.exists(
+		"Leave Ledger Entry",
+		{
+			"employee": allocation.employee,
+			"leave_type": allocation.leave_type,
+			"transaction_type": "Leave Allocation",
+			"is_expired": 1,
+			"is_carry_forward": 0,
+			"docstatus": 1,
+			"to_date": (">", allocation.to_date),
+		},
+	)
 
 
 def expire_carried_forward_allocation(allocation):

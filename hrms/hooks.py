@@ -148,13 +148,21 @@ before_app_uninstall = "hrms.setup.before_app_uninstall"
 # -----------
 # Permissions evaluated in scripted ways
 
-# permission_query_conditions = {
-# 	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
-# }
-#
-# has_permission = {
-# 	"Event": "frappe.desk.doctype.event.event.has_permission",
-# }
+permission_query_conditions = {
+	"Interview": "hrms.hr.doctype.interview.interview.get_permission_query_conditions",
+	"Interview Feedback": "hrms.hr.doctype.interview.interview.get_feedback_permission_query_conditions",
+	"Training Event": "hrms.hr.doctype.training_event.training_event.get_permission_query_conditions",
+	"Travel Request": "hrms.hr.doctype.travel_request.travel_request.get_permission_query_conditions",
+	"PWA Notification": "hrms.hr.doctype.pwa_notification.pwa_notification.get_permission_query_conditions",
+}
+
+has_permission = {
+	"Interview": "hrms.hr.doctype.interview.interview.has_permission",
+	"Interview Feedback": "hrms.hr.doctype.interview.interview.has_feedback_permission",
+	"Training Event": "hrms.hr.doctype.training_event.training_event.has_permission",
+	"Travel Request": "hrms.hr.doctype.travel_request.travel_request.has_permission",
+	"PWA Notification": "hrms.hr.doctype.pwa_notification.pwa_notification.has_permission",
+}
 
 has_upload_permission = {"Employee": "erpnext.setup.doctype.employee.employee.has_upload_permission"}
 
@@ -273,7 +281,6 @@ scheduler_events = {
 		"hrms.controllers.employee_reminders.send_birthday_reminders",
 		"hrms.controllers.employee_reminders.send_work_anniversary_reminders",
 		"hrms.hr.doctype.interview.interview.send_daily_feedback_reminder",
-		"hrms.hr.doctype.shift_assignment.shift_assignment.mark_expired_shift_assignments_as_inactive",
 		"hrms.hr.doctype.job_opening.job_opening.close_expired_job_openings",
 		"hrms.telemetry.capture_daily_attendance_pulse",
 	],

@@ -18,10 +18,8 @@ def execute(filters=None):
 	if not filters:
 		filters = {}
 
-	currency = None
-	if filters.get("currency"):
-		currency = filters.get("currency")
 	company_currency = erpnext.get_company_currency(filters.get("company"))
+	currency = filters.get("currency") or company_currency
 
 	salary_slips = get_salary_slips(filters, company_currency)
 	if not salary_slips:
@@ -55,7 +53,7 @@ def execute(filters=None):
 			"leave_without_pay": ss.leave_without_pay,
 			"absent_days": ss.absent_days,
 			"payment_days": ss.payment_days,
-			"currency": currency or company_currency,
+			"currency": currency,
 			"total_loan_repayment": ss.total_loan_repayment,
 		}
 
@@ -147,14 +145,10 @@ def get_components_by_parentfield(salary_slips, parentfields):
 
 
 def update_column_width(ss, columns):
-	if ss.branch is not None:
-		columns[3].update({"width": 120})
-	if ss.department is not None:
-		columns[4].update({"width": 120})
-	if ss.designation is not None:
-		columns[5].update({"width": 120})
-	if ss.leave_without_pay is not None:
-		columns[9].update({"width": 120})
+	for fieldname in ("branch", "department", "designation", "leave_without_pay"):
+		if ss.get(fieldname) is not None:
+			column = next(c for c in columns if c["fieldname"] == fieldname)
+			column.update({"width": 120})
 
 
 def get_columns(components, fieldnames):

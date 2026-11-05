@@ -37,10 +37,8 @@ def get_employee_holiday_details():
 			employee.holiday_list,
 			holiday_list.from_date,
 			holiday_list.to_date,
-			employee.company,
 			applicable_for,
 		)
-		.where(employee.status == "Active")
 	).run(as_dict=True)
 
 	return employee_holiday_details

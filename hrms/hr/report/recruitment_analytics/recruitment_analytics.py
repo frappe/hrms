@@ -117,37 +117,24 @@ def get_child_row(jo, jo_ja_map, ja_joff_map):
 
 
 def get_staffing_plan(filters):
-	# nosemgrep: frappe-semgrep-rules.rules.frappe-using-db-sql
-	StaffingPlan = frappe.qb.DocType("Staffing Plan")
-	StaffingPlanDetail = frappe.qb.DocType("Staffing Plan Detail")
-
-	query = (
-		frappe.qb.from_(StaffingPlanDetail)
-		.join(StaffingPlan)
-		.on(StaffingPlanDetail.parent == StaffingPlan.name)
-		.where(StaffingPlan.to_date > filters.on_date)
-		.where(StaffingPlan.company == filters.company)
-		.select(
-			StaffingPlan.name,
-			StaffingPlan.department,
-			StaffingPlanDetail.designation,
-			StaffingPlanDetail.vacancies,
-			StaffingPlanDetail.current_count,
-			StaffingPlanDetail.parent,
-			StaffingPlan.to_date,
-		)
+	return frappe.get_list(
+		"Staffing Plan",
+		filters={
+			"company": filters.company,
+			"docstatus": 1,
+			"from_date": ("<=", filters.on_date),
+			"to_date": (">=", filters.on_date),
+		},
+		fields=["name"],
+		limit=0,
 	)
-
-	staffing_plan = query.run(as_dict=True)
-
-	return staffing_plan
 
 
 def get_job_opening(sp_list, filters):
 	job_opening_filters = [["staffing_plan", "IN", sp_list], ["company", "=", filters.company]]
 
-	job_openings = frappe.get_all(
-		"Job Opening", filters=job_opening_filters, fields=["name", "staffing_plan"]
+	job_openings = frappe.get_list(
+		"Job Opening", filters=job_opening_filters, fields=["name", "staffing_plan"], limit=0
 	)
 
 	sp_jo_map = {}
@@ -168,10 +155,11 @@ def get_job_applicant(jo_list):
 	jo_ja_map = {}
 	ja_list = []
 
-	applicants = frappe.get_all(
+	applicants = frappe.get_list(
 		"Job Applicant",
 		filters=[["job_title", "IN", jo_list]],
 		fields=["name", "job_title", "applicant_name", "status"],
+		limit=0,
 	)
 
 	for applicant in applicants:
@@ -187,12 +175,18 @@ def get_job_applicant(jo_list):
 
 def get_job_offer(ja_list, filters=None):
 	ja_joff_map = {}
-	job_offer_filters = [["job_applicant", "IN", ja_list], ["company", "=", filters.company]]
+	job_offer_filters = [
+		["job_applicant", "IN", ja_list],
+		["company", "=", filters.company],
+		["docstatus", "<", 2],
+	]
 
-	offers = frappe.get_all(
+	offers = frappe.get_list(
 		"Job Offer",
 		filters=job_offer_filters,
 		fields=["name", "job_applicant", "status", "offer_date", "designation"],
+		order_by="offer_date desc, creation desc",
+		limit=0,
 	)
 
 	for offer in offers:

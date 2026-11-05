@@ -7,7 +7,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import getdate
 
-from hrms.hr.utils import update_employee_work_history, validate_active_employee
+from hrms.hr.utils import update_employee_work_history, validate_employee_active_on
 
 
 class EmployeePromotion(Document):
@@ -36,7 +36,7 @@ class EmployeePromotion(Document):
 	# end: auto-generated types
 
 	def validate(self):
-		validate_active_employee(self.employee)
+		validate_employee_active_on(self.employee, self.promotion_date)
 
 	def before_submit(self):
 		if getdate(self.promotion_date) > getdate():
@@ -49,16 +49,34 @@ class EmployeePromotion(Document):
 		employee = frappe.get_doc("Employee", self.employee)
 		employee = update_employee_work_history(employee, self.promotion_details, date=self.promotion_date)
 
-		if self.revised_ctc:
+		if self.revised_ctc and not self.get_other_ctc_revision(">"):
 			employee.ctc = self.revised_ctc
 
 		employee.save()
 
 	def on_cancel(self):
 		employee = frappe.get_doc("Employee", self.employee)
-		employee = update_employee_work_history(employee, self.promotion_details, cancel=True)
+		employee = update_employee_work_history(
+			employee, self.promotion_details, date=self.promotion_date, cancel=True
+		)
 
-		if self.revised_ctc:
-			employee.ctc = self.current_ctc
+		if self.revised_ctc and not self.get_other_ctc_revision(">"):
+			employee.ctc = self.get_other_ctc_revision("<") or self.current_ctc
 
 		employee.save()
+
+	def get_other_ctc_revision(self, operator):
+		revision = frappe.get_all(
+			"Employee Promotion",
+			filters={
+				"employee": self.employee,
+				"docstatus": 1,
+				"revised_ctc": (">", 0),
+				"promotion_date": (operator, self.promotion_date),
+				"name": ("!=", self.name),
+			},
+			pluck="revised_ctc",
+			order_by="promotion_date desc",
+			limit=1,
+		)
+		return revision[0] if revision else None

@@ -7,10 +7,9 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import add_days, comma_or, date_diff, format_date, get_link_to_form, getdate
 
-from erpnext.setup.doctype.employee.employee import is_holiday
-
 import hrms
 from hrms.hr.utils import validate_active_employee, validate_dates
+from hrms.utils.holiday_list import get_holiday_dates_between_range
 
 
 class OverlappingAttendanceRequestError(frappe.ValidationError):
@@ -119,9 +118,7 @@ class AttendanceRequest(Document):
 
 	def get_shifts_by_date(self) -> tuple[dict, set]:
 		"""Returns the shift to fill in for each requested date, and all shifts the employee has in this period"""
-		# Attendance requests are typically posted after the shift period for corrections.
-		# Expired shift assignments are auto-marked Inactive, but should still be considered
-		# here so that the shift is auto-fetched for backdated requests.
+		# status is not filtered: assignments set Inactive by the old expiry job still apply to backdated requests
 		assignments = frappe.get_all(
 			"Shift Assignment",
 			filters={
@@ -141,7 +138,7 @@ class AttendanceRequest(Document):
 		for day in range(date_diff(self.to_date, self.from_date) + 1):
 			date = getdate(add_days(self.from_date, day))
 			# attendance is not marked on these dates, so their shift does not matter
-			if (not self.include_holidays and is_holiday(self.employee, date)) or self.has_leave_record(date):
+			if (not self.include_holidays and self.is_holiday(date)) or self.has_leave_record(date):
 				continue
 
 			assigned = [
@@ -217,13 +214,19 @@ class AttendanceRequest(Document):
 		self.create_attendance_records()
 
 	def on_cancel(self):
+		submitted_on = self.get_doc_before_save().modified
 		attendance_list = frappe.get_all(
-			"Attendance", {"employee": self.employee, "attendance_request": self.name, "docstatus": 1}
+			"Attendance",
+			{"employee": self.employee, "attendance_request": self.name, "docstatus": 1},
+			["name", "creation"],
 		)
-		if attendance_list:
-			for attendance in attendance_list:
-				attendance_obj = frappe.get_doc("Attendance", attendance["name"])
-				attendance_obj.cancel()
+		for attendance in attendance_list:
+			if attendance.creation >= submitted_on:
+				frappe.get_doc("Attendance", attendance.name).cancel()
+			else:
+				frappe.db.set_value(
+					"Attendance", attendance.name, "attendance_request", None, update_modified=False
+				)
 
 	def create_attendance_records(self):
 		request_days = date_diff(self.to_date, self.from_date) + 1
@@ -298,7 +301,7 @@ class AttendanceRequest(Document):
 
 	def should_mark_attendance(self, attendance_date: str) -> bool:
 		# Check if attendance_date is a holiday
-		if not self.include_holidays and is_holiday(self.employee, attendance_date):
+		if not self.include_holidays and self.is_holiday(attendance_date):
 			frappe.msgprint(
 				_("Attendance not submitted for {0} as it is a Holiday.").format(
 					frappe.bold(format_date(attendance_date))
@@ -343,6 +346,9 @@ class AttendanceRequest(Document):
 				leaves.remove(half_day_leaves[0])
 
 		return leaves[0].name if leaves else None
+
+	def is_holiday(self, attendance_date: str) -> bool:
+		return bool(get_holiday_dates_between_range(self.employee, attendance_date, attendance_date))
 
 	def get_attendance_doc(self, attendance_date: str) -> str | None:
 		# attendance without a shift counts as a duplicate for any shift, so it must be updated instead
@@ -398,7 +404,7 @@ class AttendanceRequest(Document):
 
 		for day in range(request_days):
 			attendance_date = add_days(self.from_date, day)
-			if not self.include_holidays and is_holiday(self.employee, attendance_date):
+			if not self.include_holidays and self.is_holiday(attendance_date):
 				attendance_warnings.append({"date": attendance_date, "reason": "Holiday", "action": "Skip"})
 			elif self.has_leave_record(attendance_date):
 				attendance_warnings.append({"date": attendance_date, "reason": "On Leave", "action": "Skip"})

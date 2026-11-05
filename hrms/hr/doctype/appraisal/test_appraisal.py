@@ -6,6 +6,7 @@ import frappe
 from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
+from hrms.hr.doctype.appraisal.appraisal import get_feedback_history
 from hrms.hr.doctype.appraisal_cycle.appraisal_cycle import get_appraisal_cycle_summary
 from hrms.hr.doctype.appraisal_cycle.test_appraisal_cycle import create_appraisal_cycle
 from hrms.hr.doctype.appraisal_template.test_appraisal_template import create_appraisal_template
@@ -47,6 +48,27 @@ class TestAppraisal(HRMSTestSuite):
 		appraisal.set_appraisal_template()
 
 		self.assertRaises(frappe.DuplicateEntryError, appraisal.insert)
+
+	def test_overlapping_appraisal_in_other_cycle(self):
+		cycle = create_appraisal_cycle(designation="Engineer")
+		cycle.create_appraisals()
+		appraisal = frappe.db.get_value(
+			"Appraisal",
+			{"appraisal_cycle": cycle.name, "employee": self.employee1},
+			["start_date", "end_date"],
+			as_dict=True,
+		)
+		self.assertEqual(str(appraisal.start_date), "2022-01-01")
+		self.assertEqual(str(appraisal.end_date), "2022-03-31")
+
+		overlapping_cycle = create_appraisal_cycle(
+			name="Q1 Overlap", designation="Engineer", start_date="2022-03-01", end_date="2022-05-31"
+		)
+		overlapping = frappe.get_doc(
+			{"doctype": "Appraisal", "employee": self.employee1, "appraisal_cycle": overlapping_cycle.name}
+		)
+		overlapping.set_appraisal_template()
+		self.assertRaises(frappe.DuplicateEntryError, overlapping.insert)
 
 	def test_manual_kra_rating(self):
 		cycle = create_appraisal_cycle(designation="Engineer", kra_evaluation_method="Manual Rating")
@@ -327,3 +349,92 @@ class TestAppraisal(HRMSTestSuite):
 			"feedback_missing": 1,
 		}
 		self.assertEqual(summary, expected_data)
+
+	def test_appraisee_cannot_change_scoring_inputs(self):
+		manual_cycle = create_appraisal_cycle(designation="Engineer", kra_evaluation_method="Manual Rating")
+		manual_cycle.create_appraisals()
+		auto_cycle = create_appraisal_cycle(
+			name="Q2", designation="Engineer", start_date="2022-04-01", end_date="2022-06-30"
+		)
+		auto_cycle.create_appraisals()
+
+		manual = frappe.db.exists(
+			"Appraisal", {"appraisal_cycle": manual_cycle.name, "employee": self.employee1}
+		)
+		auto = frappe.db.exists("Appraisal", {"appraisal_cycle": auto_cycle.name, "employee": self.employee1})
+
+		frappe.set_user("test_appraisal1@example.com")
+		try:
+			appraisal = frappe.get_doc("Appraisal", manual)
+			appraisal.goals[0].score = 5
+			self.assertRaises(frappe.PermissionError, appraisal.save)
+
+			appraisal = frappe.get_doc("Appraisal", auto)
+			appraisal.appraisal_kra[0].per_weightage, appraisal.appraisal_kra[1].per_weightage = 100, 0
+			self.assertRaises(frappe.PermissionError, appraisal.save)
+
+			appraisal = frappe.get_doc("Appraisal", auto)
+			appraisal.self_ratings[0].rating = 0.8
+			appraisal.reflections = "Self review"
+			appraisal.save()
+		finally:
+			frappe.set_user("Administrator")
+
+	def test_self_rating_is_bounded(self):
+		cycle = create_appraisal_cycle(designation="Engineer")
+		cycle.create_appraisals()
+
+		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1})
+		appraisal = frappe.get_doc("Appraisal", appraisal)
+		for row in appraisal.self_ratings:
+			row.rating = 5
+		appraisal.save()
+
+		self.assertEqual(appraisal.self_score, 5.0)
+
+	def test_final_score_falls_back_to_average_without_formula(self):
+		cycle = create_appraisal_cycle(designation="Engineer", kra_evaluation_method="Manual Rating")
+		cycle.create_appraisals()
+		cycle.db_set("calculate_final_score_based_on_formula", 1)
+
+		appraisal = self.setup_appraisal(cycle)
+		self.assertEqual(appraisal.final_score, 3.77)
+
+	def test_feedback_rating_distribution_covers_all_scores(self):
+		cycle = create_appraisal_cycle(designation="Engineer")
+		cycle.create_appraisals()
+		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1})
+		reviewer = make_employee("reviewer1@example.com", designation="Engineer", company=self.company)
+
+		for rating in (0.1, 0.9):
+			feedback = create_performance_feedback(self.employee1, reviewer, appraisal)
+			for row in feedback.feedback_ratings:
+				row.rating = rating
+			feedback.submit()
+
+		data = get_feedback_history(self.employee1, appraisal)
+		self.assertEqual(data.reviews_per_rating, [50.0, 0, 0, 50.0, 0])
+
+	def test_goal_update_does_not_change_submitted_appraisal(self):
+		cycle = create_appraisal_cycle(designation="Engineer")
+		cycle.create_appraisals()
+		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1})
+		appraisal = frappe.get_doc("Appraisal", appraisal)
+		goal = create_goal(self.employee1, "Quality", appraisal_cycle=cycle.name)
+		appraisal.reload()
+		appraisal.submit()
+
+		goal.progress = 100
+		goal.save()
+		appraisal.reload()
+		self.assertEqual(appraisal.total_score, 0)
+
+	def test_goal_deletion_blocked_in_completed_cycle(self):
+		cycle = create_appraisal_cycle(designation="Engineer")
+		cycle.create_appraisals()
+		appraisal = frappe.db.exists("Appraisal", {"appraisal_cycle": cycle.name, "employee": self.employee1})
+		goal = create_goal(self.employee1, "Quality", appraisal_cycle=cycle.name)
+		frappe.get_doc("Appraisal", appraisal).submit()
+		cycle.db_set("status", "Completed")
+
+		self.assertRaises(frappe.ValidationError, goal.delete)

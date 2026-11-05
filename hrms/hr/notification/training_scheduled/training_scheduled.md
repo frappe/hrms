@@ -35,7 +35,7 @@
                         <li>{{_("End Time")}}: <b>{{ end.strftime("%A, %d %b %Y at %I:%M %p") }}</b></li>
                     {% endif %}
                     <li>{{ _("Event Link") }}: {{ frappe.utils.get_link_to_form(doc.doctype, doc.name) }}</li>
-                    {% if doc.is_mandatory %}
+                    {% if doc.employees and not (doc.employees | rejectattr("is_mandatory") | list) %}
                         <li>{{ _("Note: This Training Event is mandatory") }}</li>
                     {% endif %}
                 </ul>

@@ -436,8 +436,12 @@ function allocateAdvanceAmount() {
 	let total_advance_amount = 0
 
 	expenseClaim?.value?.advances?.forEach((advance) => {
-		if (amount_to_be_allocated >= parseFloat(advance.unclaimed_amount)) {
-			advance.allocated_amount = parseFloat(advance.unclaimed_amount)
+		const allocable_amount = Math.max(
+			0,
+			parseFloat(advance.unclaimed_amount || 0) - parseFloat(advance.return_amount || 0)
+		)
+		if (amount_to_be_allocated >= allocable_amount) {
+			advance.allocated_amount = allocable_amount
 			amount_to_be_allocated -= parseFloat(advance.allocated_amount)
 		} else {
 			advance.allocated_amount = amount_to_be_allocated

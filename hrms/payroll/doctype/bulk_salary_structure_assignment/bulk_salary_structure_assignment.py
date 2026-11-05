@@ -39,6 +39,11 @@ class BulkSalaryStructureAssignment(Document):
 
 	@frappe.whitelist()
 	def get_employees(self, advanced_filters: list) -> list:
+		if not self.company:
+			frappe.throw(
+				_("{0} is required").format(_(self.meta.get_label("company"))), title=_("Missing Field")
+			)
+
 		quick_filter_fields = [
 			"company",
 			"employment_type",
@@ -60,6 +65,10 @@ class BulkSalaryStructureAssignment(Document):
 
 		Employee = frappe.qb.DocType("Employee")
 		Grade = frappe.qb.DocType("Employee Grade")
+		grade_join = Employee.grade == Grade.name
+		if self.salary_structure:
+			currency = frappe.db.get_value("Salary Structure", self.salary_structure, "currency")
+			grade_join &= (Grade.currency == currency) | Grade.currency.isnull() | (Grade.currency == "")
 		query = (
 			frappe.qb.get_query(
 				Employee,
@@ -74,7 +83,7 @@ class BulkSalaryStructureAssignment(Document):
 				& (Employee.employee.notin(employees_with_assignments))
 			)
 			.left_join(Grade)
-			.on(Employee.grade == Grade.name)
+			.on(grade_join)
 			.select(
 				Coalesce(Grade.default_base_pay, 0).as_("base"),
 				ConstantColumn(0).as_("variable"),
@@ -86,6 +95,8 @@ class BulkSalaryStructureAssignment(Document):
 	def bulk_assign_structure(self, employees: list) -> None:
 		mandatory_fields = ["salary_structure", "from_date", "company"]
 		validate_bulk_tool_fields(self, mandatory_fields, employees)
+		self.validate_salary_structure()
+		self.validate_employees(employees)
 
 		if len(employees) <= 30:
 			return self._bulk_assign_structure(employees)
@@ -96,6 +107,38 @@ class BulkSalaryStructureAssignment(Document):
 			alert=True,
 			indicator="blue",
 		)
+
+	def validate_salary_structure(self):
+		frappe.has_permission("Salary Structure Assignment", "submit", throw=True)
+		frappe.has_permission("Salary Structure", "read", self.salary_structure, throw=True)
+
+		structure = frappe.db.get_value(
+			"Salary Structure", self.salary_structure, ["company", "docstatus", "is_active"], as_dict=True
+		)
+		if structure.company != self.company or structure.docstatus != 1 or structure.is_active != "Yes":
+			frappe.throw(
+				_("Salary Structure {0} must be a submitted, active structure of company {1}").format(
+					frappe.bold(self.salary_structure), frappe.bold(self.company)
+				)
+			)
+
+	def validate_employees(self, employees: list) -> None:
+		selected = {d["employee"] for d in employees}
+		in_company = set(
+			frappe.get_all(
+				"Employee",
+				filters={"name": ("in", list(selected)), "company": self.company},
+				pluck="name",
+				limit=0,
+			)
+		)
+		if invalid := selected - in_company:
+			frappe.throw(
+				_("Employees {0} do not belong to company {1}").format(
+					", ".join(sorted(invalid)), frappe.bold(self.company)
+				),
+				frappe.PermissionError,
+			)
 
 	def _bulk_assign_structure(self, employees: list) -> None:
 		success, failure = [], []

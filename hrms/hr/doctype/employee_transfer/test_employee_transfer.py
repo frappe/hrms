@@ -4,6 +4,7 @@
 import frappe
 from frappe.utils import add_days, getdate
 
+from erpnext.setup.doctype.employee.employee import InactiveEmployeeStatusError
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.tests.utils import HRMSTestSuite
@@ -95,6 +96,93 @@ class TestEmployeeTransfer(HRMSTestSuite):
 			self.assertEqual(data.department, department[0])
 			self.assertEqual(data.from_date, dt[0])
 			self.assertEqual(data.to_date, None)
+
+	def test_cancel_cross_company_transfer_restores_date_of_joining(self):
+		employee = make_employee(
+			"employee5@transfers.com",
+			company="Test Company",
+			date_of_joining=getdate("01-10-2021"),
+			designation="Accountant",
+		)
+		transfer = frappe.get_doc(
+			{
+				"doctype": "Employee Transfer",
+				"employee": employee,
+				"transfer_date": getdate(),
+				"new_company": "_Test Company",
+				"transfer_details": [
+					{
+						"property": "Designation",
+						"current": "Accountant",
+						"new": "Manager",
+						"fieldname": "designation",
+					}
+				],
+			}
+		).insert()
+		transfer.submit()
+		self.assertEqual(
+			frappe.db.get_value("Employee", employee, ["company", "date_of_joining"]),
+			("_Test Company", getdate()),
+		)
+
+		transfer.cancel()
+		self.assertEqual(
+			frappe.db.get_value("Employee", employee, ["company", "date_of_joining", "designation"]),
+			("Test Company", getdate("01-10-2021"), "Accountant"),
+		)
+
+	def test_cancel_new_employee_transfer_restores_user(self):
+		user = "employee6@transfers.com"
+		employee = make_employee(user, company="Test Company")
+		transfer = frappe.get_doc(
+			{
+				"doctype": "Employee Transfer",
+				"employee": employee,
+				"create_new_employee_id": 1,
+				"transfer_date": getdate(),
+				"transfer_details": [
+					{
+						"property": "Designation",
+						"current": "Software Developer",
+						"new": "Project Manager",
+						"fieldname": "designation",
+					}
+				],
+			}
+		).insert()
+		transfer.submit()
+		self.assertEqual(frappe.db.get_value("Employee", transfer.new_employee_id, "user_id"), user)
+		self.assertFalse(frappe.db.get_value("Employee", employee, "user_id"))
+
+		frappe.db.delete("User Permission", {"allow": "Employee", "for_value": transfer.new_employee_id})
+		frappe.delete_doc("Employee", transfer.new_employee_id)
+		transfer.reload()
+		transfer.cancel()
+		self.assertEqual(frappe.db.get_value("Employee", employee, ["status", "user_id"]), ("Active", user))
+
+	def test_transfer_for_left_employee(self):
+		employee = make_employee("employee7@transfers.com", company="Test Company")
+		frappe.db.set_value(
+			"Employee", employee, {"status": "Left", "relieving_date": add_days(getdate(), -30)}
+		)
+
+		transfer = frappe.get_doc(
+			{
+				"doctype": "Employee Transfer",
+				"employee": employee,
+				"transfer_date": getdate(),
+				"transfer_details": [
+					{
+						"property": "Designation",
+						"current": "Software Developer",
+						"new": "Project Manager",
+						"fieldname": "designation",
+					}
+				],
+			}
+		)
+		self.assertRaises(InactiveEmployeeStatusError, transfer.insert)
 
 	@HRMSTestSuite.change_settings("System Settings", {"number_format": "#.###,##"})
 	def test_data_formatting_in_history(self):

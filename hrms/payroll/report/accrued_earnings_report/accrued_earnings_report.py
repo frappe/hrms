@@ -126,7 +126,7 @@ def get_data(filters):
 	elif flexible_benefit == "No":
 		query = query.where((EBL.flexible_benefit == 0) | (EBL.flexible_benefit.isnull()))
 
-	query = query.orderby(EBL.employee, EBL.salary_component, EBL.flexible_benefit)
+	query = query.orderby(EBL.employee, EBL.salary_component, EBL.flexible_benefit, EBL.posting_date)
 	ledger_entries = query.run(as_dict=True)
 
 	# group data by employee, salary_component, and flexible_benefit
@@ -148,12 +148,12 @@ def get_data(filters):
 				"payroll_period": entry.payroll_period,
 				"salary_component": entry.salary_component,
 				"flexible_benefit": entry.flexible_benefit or 0,
-				"yearly_benefit": entry.yearly_benefit or 0,
 				"total_accrued": 0,
 				"total_payout": 0,
 				"unpaid_accrual": 0,
 			}
 
+		grouped_data[key]["yearly_benefit"] = entry.yearly_benefit or 0
 		if entry.transaction_type == "Accrual":
 			grouped_data[key]["total_accrued"] += entry.amount or 0
 		elif entry.transaction_type == "Payout":
@@ -166,14 +166,7 @@ def get_data(filters):
 
 		# Add create additional salary button only for non-flexible benefits with unpaid accrual
 		if not row_data["flexible_benefit"] and row_data["unpaid_accrual"] > 0:
-			row_data["create_additional_salary"] = f"""
-				<a
-						onclick="create_additional_salary('{row_data['employee']}',
-													   '{row_data['salary_component']}',
-													   {row_data['unpaid_accrual']})">
-					Create Additional Salary
-				</a>
-			"""
+			row_data["create_additional_salary"] = _("Create Additional Salary")
 		else:
 			row_data["create_additional_salary"] = ""
 

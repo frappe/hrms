@@ -21,6 +21,14 @@ class TestLeavePolicy(HRMSTestSuite):
 
 		self.assertRaises(frappe.ValidationError, leave_policy.insert)
 
+	def test_duplicate_leave_type(self):
+		leave_policy = create_leave_policy(leave_type="_Test Leave Type", annual_allocation=5)
+		leave_policy.append(
+			"leave_policy_details", {"leave_type": "_Test Leave Type", "annual_allocation": 5}
+		)
+
+		self.assertRaises(frappe.ValidationError, leave_policy.insert)
+
 
 def create_leave_policy(**args):
 	"""Returns an object of leave policy"""

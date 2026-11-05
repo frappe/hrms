@@ -2,7 +2,7 @@
 # See license.txt
 
 import frappe
-from frappe.utils import getdate
+from frappe.utils import add_days, add_months, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
@@ -110,6 +110,61 @@ class TestSalaryWithholding(HRMSTestSuite):
 		self.assertEqual(salary_slip.status, "Withheld")
 		payroll_employee = self._get_payroll_employee_row(payroll_entry)
 		self.assertEqual(payroll_employee.is_salary_withheld, 1)
+
+	def test_bimonthly_withholding_cycles(self):
+		withholding = frappe.new_doc("Salary Withholding")
+		withholding.update(
+			{
+				"employee": self.employee1,
+				"from_date": MONTH_1_START,
+				"payroll_frequency": "Bimonthly",
+				"number_of_withholding_cycles": 2,
+			}
+		)
+		withholding.set_withholding_cycles_and_to_date()
+
+		self.assertEqual(
+			[(cycle.from_date, cycle.to_date) for cycle in withholding.cycles],
+			[(MONTH_1_START, getdate("2024-01-15")), (getdate("2024-01-16"), MONTH_1_END)],
+		)
+		self.assertEqual(withholding.to_date, MONTH_1_END)
+
+	def test_release_withheld_salaries_once_per_payroll(self):
+		withholding = create_salary_withholding(self.employee1, MONTH_1_START, 2)
+		withholding.submit()
+		payroll_entries = [self._make_payroll_entry(cycle.from_date) for cycle in withholding.cycles]
+		for payroll_entry in payroll_entries:
+			self.assertEqual(self._get_payroll_employee_row(payroll_entry).is_salary_withheld, 1)
+
+		release_entry = payroll_entries[0].make_bank_entry(for_withheld_salaries=1)
+		self.assertRaises(frappe.ValidationError, payroll_entries[0].make_bank_entry, for_withheld_salaries=1)
+
+		self._submit_bank_entry(release_entry)
+		self.assertEqual(self._get_payroll_employee_row(payroll_entries[0]).is_salary_withheld, 0)
+		self.assertEqual(self._get_payroll_employee_row(payroll_entries[1]).is_salary_withheld, 1)
+
+		release_entry.cancel()
+		self.assertEqual(self._get_payroll_employee_row(payroll_entries[0]).is_salary_withheld, 1)
+		self.assertEqual(self._get_payroll_employee_row(payroll_entries[1]).is_salary_withheld, 1)
+
+		release_entry = payroll_entries[0].make_bank_entry(for_withheld_salaries=1)
+		self.assertTrue(release_entry)
+
+	def test_withholding_cycles_not_aligned_to_payroll_period(self):
+		withholding = create_salary_withholding(self.employee1, add_days(MONTH_1_START, 9), 2)
+		withholding.submit()
+
+		slips = [
+			get_salary_slip_details(self._make_payroll_entry(date).name, self.employee1)
+			for date in (MONTH_1_START, MONTH_2_START, add_months(MONTH_2_START, 1))
+		]
+
+		self.assertEqual(slips[0].salary_withholding_cycle, withholding.cycles[0].name)
+		self.assertEqual(slips[1].salary_withholding_cycle, withholding.cycles[1].name)
+		self.assertEqual(slips[0].status, "Withheld")
+		self.assertEqual(slips[1].status, "Withheld")
+		self.assertFalse(slips[2].salary_withholding_cycle)
+		self.assertNotEqual(slips[2].status, "Withheld")
 
 	def _make_payroll_entry(self, date: str | None = None):
 		dates = get_start_end_dates("Monthly", date or MONTH_1_START)

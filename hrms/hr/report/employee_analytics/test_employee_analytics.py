@@ -47,6 +47,22 @@ class TestEmployeeAnalytics(HRMSTestSuite):
 		chart_data = report[3]["data"]
 		test_data(self, values_to_assert, chart_data)
 
+	def test_not_set_counts_only_permitted_employees(self):
+		make_employee("test_analytics1@example.com", company=self.company, branch="Test Branch 1")
+		make_employee("test_analytics2@example.com", company=self.company)
+		make_employee("test_analytics3@example.com", company=self.company_2)
+
+		frappe.set_user("test_analytics1@example.com")
+		report = execute(filters=frappe._dict({"company": self.company, "parameter": "Branch"}))
+		test_data(self, {"Test Branch 1": 1, "Not Set": 0}, report[3]["data"])
+
+		report = execute(filters=frappe._dict({"company": self.company_2, "parameter": "Branch"}))
+		test_data(self, {"Not Set": 0}, report[3]["data"])
+		frappe.set_user("Administrator")
+
+	def test_company_is_mandatory(self):
+		self.assertRaises(frappe.ValidationError, execute, frappe._dict({"parameter": "Branch"}))
+
 
 def test_data(self, values_to_assert, chart_data):
 	values = list(zip(chart_data["labels"], chart_data["datasets"][0]["values"], strict=False))

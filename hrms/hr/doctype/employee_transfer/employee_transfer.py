@@ -5,9 +5,9 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import getdate
+from frappe.utils import cstr, getdate
 
-from hrms.hr.utils import update_employee_work_history
+from hrms.hr.utils import update_employee_work_history, validate_employee_active_on
 
 
 class EmployeeTransfer(Document):
@@ -36,12 +36,43 @@ class EmployeeTransfer(Document):
 		transfer_details: DF.Table[EmployeePropertyHistory]
 	# end: auto-generated types
 
+	def validate(self):
+		validate_employee_active_on(self.employee, self.transfer_date)
+
 	def before_submit(self):
 		if getdate(self.transfer_date) > getdate():
 			frappe.throw(
 				_("Employee Transfer cannot be submitted before Transfer Date"),
 				frappe.DocstatusTransitionError,
 			)
+		self.add_implicit_property_changes()
+
+	def add_implicit_property_changes(self):
+		self.transfer_details = [
+			d
+			for d in self.transfer_details
+			if d.fieldname != "date_of_joining" and not (d.fieldname == "user_id" and d.current == d.new)
+		]
+		employee = frappe.db.get_value(
+			"Employee", self.employee, ["date_of_joining", "user_id"], as_dict=True
+		)
+
+		if self.create_new_employee_id:
+			if employee.user_id and not self.validate_user_in_details():
+				self.append_property_change(_("User ID"), "user_id", employee.user_id, employee.user_id)
+		elif self.new_company and self.company != self.new_company:
+			self.append_property_change(
+				_("Date of Joining"), "date_of_joining", employee.date_of_joining, self.transfer_date
+			)
+
+		for idx, d in enumerate(self.transfer_details, 1):
+			d.idx = idx
+
+	def append_property_change(self, label, fieldname, current, new):
+		self.append(
+			"transfer_details",
+			{"property": label, "fieldname": fieldname, "current": cstr(current), "new": cstr(new)},
+		)
 
 	def on_submit(self):
 		employee = frappe.get_doc("Employee", self.employee)
@@ -84,6 +115,7 @@ class EmployeeTransfer(Document):
 			# mark the employee as active
 			employee.status = "Active"
 			employee.relieving_date = ""
+			self.restore_user_id(employee)
 		else:
 			employee = update_employee_work_history(
 				employee, self.transfer_details, date=self.transfer_date, cancel=True
@@ -91,6 +123,14 @@ class EmployeeTransfer(Document):
 		if self.new_company != self.company:
 			employee.company = self.company
 		employee.save()
+
+	def restore_user_id(self, employee):
+		if employee.user_id or self.validate_user_in_details():
+			return
+
+		user_id = next((d.current for d in self.transfer_details if d.fieldname == "user_id"), None)
+		if user_id and not frappe.db.exists("Employee", {"user_id": user_id}):
+			employee.user_id = user_id
 
 	def validate_user_in_details(self):
 		for item in self.transfer_details:

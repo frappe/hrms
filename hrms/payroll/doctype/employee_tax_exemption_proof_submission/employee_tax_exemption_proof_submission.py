@@ -10,6 +10,7 @@ from hrms.hr.utils import (
 	get_total_exemption_amount,
 	validate_active_employee,
 	validate_duplicate_exemption_for_payroll_period,
+	validate_payroll_period_company,
 	validate_tax_declaration,
 )
 
@@ -43,7 +44,8 @@ class EmployeeTaxExemptionProofSubmission(Document):
 
 	def validate(self):
 		validate_active_employee(self.employee)
-		validate_tax_declaration(self.tax_exemption_proofs)
+		validate_tax_declaration(self.tax_exemption_proofs, self.is_new())
+		validate_payroll_period_company(self)
 		self.set_total_actual_amount()
 		self.set_total_exemption_amount()
 		self.calculate_hra_exemption()

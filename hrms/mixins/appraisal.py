@@ -19,3 +19,10 @@ class AppraisalMixin:
 				),
 				title=_("Incorrect Weightage Allocation"),
 			)
+
+	@staticmethod
+	def get_bounded_rating(rating) -> float:
+		return max(0.0, min(flt(rating), 1.0))
+
+	def is_hr_user(self) -> bool:
+		return bool({"HR User", "HR Manager"} & set(frappe.get_roles()))

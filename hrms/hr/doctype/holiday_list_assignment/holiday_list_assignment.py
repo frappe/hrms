@@ -37,8 +37,17 @@ class HolidayListAssignment(Document):
 		return frappe.get_value("Holiday List", self.holiday_list, "to_date") if self.holiday_list else None
 
 	def validate(self):
+		self.set_employee_details()
 		self.validate_assignment_start_date()
 		self.validate_existing_assignment()
+
+	def set_employee_details(self):
+		if self.applicable_for == "Employee":
+			self.employee_name, self.employee_company = frappe.db.get_value(
+				"Employee", self.assigned_to, ["employee_name", "company"]
+			) or (None, None)
+		else:
+			self.employee_name = self.employee_company = None
 
 	def validate_existing_assignment(self):
 		holiday_list = frappe.db.exists(

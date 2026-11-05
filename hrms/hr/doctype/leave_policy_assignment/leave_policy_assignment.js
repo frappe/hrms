@@ -63,7 +63,10 @@ frappe.ui.form.on("Leave Policy Assignment", {
 				frm.set_value("effective_from", from_date);
 				frm.set_value(
 					"effective_to",
-					frappe.datetime.add_months(frm.doc.effective_from, 12),
+					frappe.datetime.add_days(
+						frappe.datetime.add_months(frm.doc.effective_from, 12),
+						-1,
+					),
 				);
 			});
 		}

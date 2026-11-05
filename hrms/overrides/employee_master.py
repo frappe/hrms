@@ -33,7 +33,7 @@ def validate_onboarding_process(doc, method=None):
 	job_applicant = doc.get("job_applicant")
 	job_offer = doc.get("job_offer")
 
-	filters = {"docstatus": 1, "boarding_status": ("!=", "Completed")}
+	filters = {"docstatus": 1}
 	if job_offer:
 		filters["job_offer"] = job_offer
 	elif job_applicant:
@@ -41,8 +41,8 @@ def validate_onboarding_process(doc, method=None):
 	else:
 		return
 
-	employee_onboarding = frappe.get_all("Employee Onboarding", filters=filters)
-	if employee_onboarding:
+	employee_onboarding = frappe.get_all("Employee Onboarding", filters=filters, fields=["name", "employee"])
+	if employee_onboarding and not employee_onboarding[0].employee:
 		onboarding = frappe.get_doc("Employee Onboarding", employee_onboarding[0].name)
 		onboarding.validate_employee_creation()
 		onboarding.db_set("employee", doc.name)

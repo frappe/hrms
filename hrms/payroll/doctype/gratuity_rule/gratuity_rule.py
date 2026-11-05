@@ -55,8 +55,8 @@ def get_gratuity_rule(name, slabs, **args):
 	rule = frappe.new_doc("Gratuity Rule")
 	rule.name = name
 	rule.calculate_gratuity_amount_based_on = args.calculate_gratuity_amount_based_on or "Current Slab"
-	rule.work_experience_calculation_method = (
-		args.work_experience_calculation_method or "Take Exact Completed Years"
+	rule.work_experience_calculation_function = (
+		args.work_experience_calculation_function or "Take Exact Completed Years"
 	)
 	rule.minimum_year_for_gratuity = 1
 

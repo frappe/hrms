@@ -31,7 +31,7 @@ frappe.ui.form.on("Gratuity Rule Slab", {
 
 	to_year(frm, cdt, cdn) {
 		let row = locals[cdt][cdn];
-		if (row.to_year <= row.from_year && row.to_year === 0) {
+		if (flt(row.to_year) && flt(row.to_year) < flt(row.from_year)) {
 			frappe.throw(__("To(Year) year can not be less than From(year)"));
 		}
 	},

@@ -3,12 +3,12 @@
 
 import frappe
 
-from erpnext.setup.doctype.employee.test_employee import make_employee
-
 from hrms.hr.doctype.training_event.test_training_event import (
 	create_training_event,
 	create_training_program,
 )
+from hrms.hr.doctype.training_feedback.test_training_feedback import create_training_feedback
+from hrms.payroll.doctype.salary_structure.test_salary_structure import make_employee
 from hrms.tests.utils import HRMSTestSuite, make_user
 
 
@@ -16,46 +16,86 @@ class TestTrainingResult(HRMSTestSuite):
 	def setUp(self):
 		self.user = make_user("training-manager@example.com")
 		create_training_program("Basic Training")
-		employee = make_employee("training-result-amendment@example.com", company="_Test Company")
-		event = create_training_event([{"employee": employee}])
-		event.submit()
-		self.result = frappe.get_doc(
-			{
-				"doctype": "Training Result",
-				"training_event": event.name,
-				"employees": [{"employee": employee, "grade": "C"}],
-			}
-		).insert()
+		self.employee = make_employee("robert_loan@trainig.com", company="_Test Company")
+		self.employee2 = make_employee("suzie.tan@trainig.com", company="_Test Company")
+		self.employee3 = make_employee("training_late@trainig.com", company="_Test Company")
+		self.training_event = create_training_event(
+			[{"employee": self.employee}, {"employee": self.employee2}]
+		)
+		self.training_event.submit()
 
 	def test_amend_cancelled_training_result(self):
+		result = create_training_result(self.training_event.name, [self.employee], grade="C").insert()
 		with self.set_user(self.user):
-			self.result.submit()
+			result.submit()
 			for grade in ("B", "A"):
-				self.result.cancel()
-				amended = frappe.copy_doc(self.result)
+				result.cancel()
+				amended = frappe.copy_doc(result)
 				amended.docstatus = 0
-				amended.amended_from = self.result.name
+				amended.amended_from = result.name
 				amended.employees[0].grade = grade
 				amended.insert()
 				amended.submit()
 				amended.reload()
 
 				self.assertEqual(amended.docstatus, 1)
-				self.assertEqual(amended.training_event, self.result.training_event)
+				self.assertEqual(amended.training_event, result.training_event)
 				self.assertEqual(amended.employees[0].grade, grade)
-				self.assertEqual(self.result.reload().docstatus, 2)
-				self.result = amended
+				self.assertEqual(result.reload().docstatus, 2)
+				result = amended
 
 	def test_duplicate_active_training_result(self):
+		result = create_training_result(self.training_event.name, [self.employee], grade="C").insert()
 		with self.set_user(self.user):
 			for docstatus in (0, 1):
 				with self.subTest(docstatus=docstatus):
 					if docstatus:
-						self.result.submit()
+						result.submit()
 					else:
-						self.result.employees[0].grade = "B"
-						self.result.save()
+						result.employees[0].grade = "B"
+						result.save()
 
-					duplicate = frappe.copy_doc(self.result)
+					duplicate = frappe.copy_doc(result)
 					duplicate.docstatus = 0
 					self.assertRaises(frappe.UniqueValidationError, duplicate.insert)
+
+	def test_event_and_attendee_status_on_submit(self):
+		create_training_feedback(self.training_event.name, self.employee2).submit()
+		create_training_result(self.training_event.name, [self.employee, self.employee2]).submit()
+
+		self.training_event.reload()
+		self.assertEqual(self.training_event.event_status, "Completed")
+		statuses = {d.employee: d.status for d in self.training_event.employees}
+		self.assertEqual(statuses[self.employee], "Completed")
+		self.assertEqual(statuses[self.employee2], "Feedback Submitted")
+
+	def test_employee_validations(self):
+		result = create_training_result(self.training_event.name, [self.employee, self.employee3])
+		self.assertRaises(frappe.ValidationError, result.insert)
+
+		result = create_training_result(self.training_event.name, [self.employee, self.employee])
+		self.assertRaises(frappe.ValidationError, result.insert)
+
+	def test_cancel_restores_event_and_attendee_status(self):
+		create_training_feedback(self.training_event.name, self.employee2).submit()
+		result = create_training_result(self.training_event.name, [self.employee, self.employee2])
+		result.submit()
+
+		frappe.db.set_value("Employee", self.employee, "status", "Left")
+		result.cancel()
+
+		self.training_event.reload()
+		self.assertEqual(self.training_event.event_status, "Scheduled")
+		statuses = {d.employee: d.status for d in self.training_event.employees}
+		self.assertEqual(statuses[self.employee], "Open")
+		self.assertEqual(statuses[self.employee2], "Feedback Submitted")
+
+
+def create_training_result(event, employees, grade="A"):
+	return frappe.get_doc(
+		{
+			"doctype": "Training Result",
+			"training_event": event,
+			"employees": [{"employee": employee, "hours": 2, "grade": grade} for employee in employees],
+		}
+	)

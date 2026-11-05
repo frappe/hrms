@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 from datetime import date
+from itertools import pairwise
 
 import frappe
 from frappe import _
@@ -40,8 +41,26 @@ class IncomeTaxSlab(Document):
 	# end: auto-generated types
 
 	def validate(self):
-		if self.company:
+		if self.company and not self.currency:
 			self.currency = erpnext.get_company_currency(self.company)
+		self.validate_slabs()
+
+	def validate_slabs(self):
+		for slab in self.slabs:
+			if flt(slab.percent_deduction) < 0:
+				frappe.throw(_("Row #{0}: Percent Deduction cannot be negative").format(slab.idx))
+			if flt(slab.to_amount) and flt(slab.to_amount) <= flt(slab.from_amount):
+				frappe.throw(_("Row #{0}: To Amount must be greater than From Amount").format(slab.idx))
+
+		unconditional = sorted(
+			(d for d in self.slabs if not cstr(d.condition).strip()), key=lambda d: flt(d.from_amount)
+		)
+		for prev, slab in pairwise(unconditional):
+			if not flt(prev.to_amount) or flt(slab.from_amount) < flt(prev.to_amount):
+				frappe.throw(
+					_("Row #{0}: Slab overlaps with row #{1}").format(slab.idx, prev.idx),
+					title=_("Overlapping Slabs"),
+				)
 
 
 def calculate_tax_by_tax_slab(annual_taxable_earning, tax_slab, eval_globals=None, eval_locals=None):
@@ -72,17 +91,19 @@ def calculate_base_tax_from_tax_slabs(annual_taxable_earning, tax_slab, eval_glo
 	tax_amount = 0
 	eval_locals.update({"annual_taxable_earning": annual_taxable_earning})
 
+	boundaries = {flt(d.to_amount) for d in tax_slab.slabs if flt(d.to_amount)}
 	for slab in tax_slab.slabs:
 		cond = cstr(slab.condition).strip()
 		if cond and not eval_tax_slab_condition(cond, eval_globals, eval_locals):
 			continue
-		if not slab.to_amount and annual_taxable_earning >= slab.from_amount:
-			tax_amount += (annual_taxable_earning - slab.from_amount + 1) * slab.percent_deduction * 0.01
+
+		from_amount = flt(slab.from_amount)
+		lower_limit = from_amount if (not from_amount or from_amount in boundaries) else from_amount - 1
+		if annual_taxable_earning <= lower_limit:
 			continue
-		if annual_taxable_earning >= slab.from_amount and annual_taxable_earning < slab.to_amount:
-			tax_amount += (annual_taxable_earning - slab.from_amount + 1) * slab.percent_deduction * 0.01
-		elif annual_taxable_earning >= slab.from_amount and annual_taxable_earning >= slab.to_amount:
-			tax_amount += (slab.to_amount - slab.from_amount + 1) * slab.percent_deduction * 0.01
+
+		upper_limit = flt(slab.to_amount) or annual_taxable_earning
+		tax_amount += (min(annual_taxable_earning, upper_limit) - lower_limit) * slab.percent_deduction * 0.01
 	return tax_amount
 
 

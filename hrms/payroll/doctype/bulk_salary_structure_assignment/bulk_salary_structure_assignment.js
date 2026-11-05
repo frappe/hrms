@@ -49,6 +49,10 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 		frm.trigger("get_employees");
 	},
 
+	salary_structure(frm) {
+		frm.trigger("get_employees");
+	},
+
 	set_primary_action(frm) {
 		frm.page.set_primary_action(__("Assign Structure"), () => {
 			frm.trigger("assign_structure");
@@ -68,7 +72,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 		frm.set_query("income_tax_slab", function () {
 			return {
 				filters: {
-					company: frm.doc.company,
+					company: ["in", [frm.doc.company, ""]],
 					disabled: 0,
 					docstatus: 1,
 					currency: frm.doc.currency,
