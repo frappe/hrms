@@ -90,14 +90,7 @@ async function set_default_template(frm) {
 		{ is_default: 1 },
 		"name",
 	);
-	if (template?.name) {
-		frm.set_value("appointment_letter_template", template.name);
-		return;
-	}
-	const { message: body } = await frappe.call(
-		"hrms.hr.doctype.appointment_letter_template.appointment_letter_template.get_default_letter_body",
-	);
-	frm.set_value("letter_body", body);
+	if (template?.name) frm.set_value("appointment_letter_template", template.name);
 }
 
 async function email_appointment_letter(frm) {

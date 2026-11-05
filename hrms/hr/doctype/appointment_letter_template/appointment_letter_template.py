@@ -51,7 +51,6 @@ def validate_letter_body(letter_body: str | None) -> None:
 		)
 
 
-@frappe.whitelist()
 def get_default_letter_body() -> str:
 	path = os.path.join(os.path.dirname(__file__), "default_letter_body.html")
 	with open(path) as f:

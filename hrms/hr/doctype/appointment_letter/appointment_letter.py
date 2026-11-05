@@ -18,7 +18,6 @@ from frappe.utils import (
 )
 
 from hrms.hr.doctype.appointment_letter_template.appointment_letter_template import (
-	get_default_letter_body,
 	get_default_template,
 	validate_letter_body,
 )
@@ -64,12 +63,11 @@ class AppointmentLetter(Document):
 		if not self.working_hours:
 			self.working_hours = get_working_hours(self.start_time, self.end_time)
 
-	def get_template_body(self) -> str:
+	def get_template_body(self) -> str | None:
 		if self.appointment_letter_template:
 			return frappe.db.get_value(
 				"Appointment Letter Template", self.appointment_letter_template, "letter_body"
 			)
-		return get_default_letter_body()
 
 	@frappe.whitelist()
 	def set_shift_from_employee(self):
