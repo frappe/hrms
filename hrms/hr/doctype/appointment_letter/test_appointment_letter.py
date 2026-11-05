@@ -107,6 +107,12 @@ class TestAppointmentLetter(HRMSTestSuite):
 			self.assertIn(text, html)
 		self.assertNotIn("{{", html)
 
+	def test_empty_placeholder_renders_blank(self):
+		self.job_offer.db_set("branch", None)
+		frappe.clear_document_cache("Job Offer", self.job_offer.name)
+		html = self.make_letter(letter_body="<p>from {{ place_of_posting }}.</p>").get_letter_body_html()
+		self.assertEqual(html, "<p>from .</p>")
+
 	def test_template_body_on_insert(self):
 		template = frappe.get_doc(
 			{

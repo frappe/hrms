@@ -78,7 +78,7 @@ class AppointmentLetter(Document):
 
 	def get_placeholders(self) -> dict:
 		offer = frappe.get_cached_doc("Job Offer", self.job_offer) if self.job_offer else frappe._dict()
-		return {
+		placeholders = {
 			"doc": self,
 			"offer": offer,
 			"applicant_name": self.applicant_name,
@@ -112,6 +112,7 @@ class AppointmentLetter(Document):
 			),
 			"retirement_age": self.retirement_age or "",
 		}
+		return {key: "" if value is None else value for key, value in placeholders.items()}
 
 
 def get_shift_type_on(employee: str, date) -> str | None:
