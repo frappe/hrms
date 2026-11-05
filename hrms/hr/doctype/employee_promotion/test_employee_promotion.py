@@ -151,6 +151,7 @@ class TestEmployeePromotion(HRMSTestSuite):
 
 	def test_submit_creates_assignment_and_cancel_cancels_it(self):
 		employee, old_assignment = setup_employee_with_assignment("promotion_submit@example.com")
+		frappe.db.set_value("Employee", employee, "ctc", 500000)
 
 		promotion = make_promotion(employee, revised_base=60000)
 		promotion.submit()
@@ -175,6 +176,17 @@ class TestEmployeePromotion(HRMSTestSuite):
 		)
 		self.assertEqual(get_salary_on(employee, promotion.promotion_date).name, old_assignment.name)
 		self.assertEqual(frappe.db.get_value("Employee", employee, "ctc"), 1032000)
+
+	def test_promotion_assignment_cannot_be_cancelled_on_its_own(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_link@example.com")
+		promotion = make_promotion(employee, revised_base=60000)
+		promotion.submit()
+
+		new_assignment = frappe.get_doc(
+			"Salary Structure Assignment", promotion.new_salary_structure_assignment
+		)
+
+		self.assertRaises(frappe.LinkExistsError, new_assignment.cancel)
 
 	def test_no_assignment_without_revised_base(self):
 		employee, _assignment = setup_employee_with_assignment("promotion_no_base@example.com")
