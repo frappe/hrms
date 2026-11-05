@@ -30,6 +30,25 @@ frappe.ui.form.on("Employee Promotion", {
 			});
 	},
 
+	employee_property_added: function (frm) {
+		const row = (frm.doc.promotion_details || []).at(-1);
+		if (!row || row.fieldname !== "grade" || !row.new) return;
+
+		frappe.db
+			.get_value("Employee Grade", row.new, ["default_salary_structure", "default_base_pay"])
+			.then((r) => {
+				const grade = r.message || {};
+				const values = {};
+				if (grade.default_salary_structure && grade.default_salary_structure !== frm.doc.salary_structure) {
+					values.salary_structure = grade.default_salary_structure;
+				}
+				if (grade.default_base_pay && !frm.doc.revised_base) {
+					values.revised_base = grade.default_base_pay;
+				}
+				frm.set_value(values);
+			});
+	},
+
 	salary_structure: function (frm) {
 		frm.trigger("set_revised_ctc");
 	},

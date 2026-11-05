@@ -200,6 +200,7 @@ var add_to_details = function (frm, d, table) {
 			new: data.new,
 		});
 		frm.refresh_field(table);
+		frm.trigger("employee_property_added");
 
 		frm.fields_dict[table].grid.wrapper.find(".grid-add-row").hide();
 
