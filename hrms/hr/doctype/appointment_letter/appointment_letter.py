@@ -16,11 +16,11 @@ from frappe.utils import (
 	in_words,
 	to_timedelta,
 )
-from frappe.utils.jinja import validate_template
 
 from hrms.hr.doctype.appointment_letter_template.appointment_letter_template import (
 	get_default_letter_body,
 	get_default_template,
+	validate_letter_body,
 )
 
 
@@ -60,7 +60,7 @@ class AppointmentLetter(Document):
 			self.letter_body = self.get_template_body()
 
 	def validate(self):
-		validate_template(self.letter_body)
+		validate_letter_body(self.letter_body)
 		if not self.working_hours:
 			self.working_hours = get_working_hours(self.start_time, self.end_time)
 
