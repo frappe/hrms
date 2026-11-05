@@ -138,9 +138,16 @@ class TestAppointmentLetter(HRMSTestSuite):
 		self.assertIn("<strong>Probation:</strong> Six months.<br>Extendable.</li>", body)
 		self.assertIn("A &lt; B</li></ol><p>Regards</p>", body)
 		self.assertEqual(get_letter_body(None, [], None), "")
-		body_with_braces = get_letter_body("Use {{ role }}", [], None)
-		self.assertIn("Use &#123;&#123; role }}", body_with_braces)
-		self.assertEqual(frappe.render_template(body_with_braces, {}), body_with_braces)
+		template = frappe.get_doc(
+			{
+				"doctype": "Appointment Letter Template",
+				"template_name": "_Test Old Braces",
+				"letter_body": get_letter_body("Use {{ role }} and {% x", [], None),
+			}
+		).insert()
+		template.save()
+		template.reload()
+		self.assertIn("Use {{ role }} and {% x", frappe.render_template(template.letter_body, {}))
 
 	def test_period_and_working_days_text(self):
 		self.assertEqual(format_probation(90), "three (3) months")
