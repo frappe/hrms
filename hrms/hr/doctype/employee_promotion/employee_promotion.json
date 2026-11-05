@@ -22,6 +22,7 @@
   "current_ctc",
   "column_break_12",
   "salary_structure",
+  "revised_base",
   "revised_ctc",
   "amended_from"
  ],
@@ -118,7 +119,8 @@
    "fieldtype": "Currency",
    "label": "Revised CTC",
    "non_negative": 1,
-   "options": "salary_currency"
+   "options": "salary_currency",
+   "read_only_depends_on": "salary_structure"
   },
   {
    "fieldname": "current_salary_structure_assignment",
@@ -141,12 +143,20 @@
    "fieldtype": "Link",
    "label": "Salary Structure",
    "options": "Salary Structure"
+  },
+  {
+   "depends_on": "salary_structure",
+   "fieldname": "revised_base",
+   "fieldtype": "Currency",
+   "label": "Revised Base",
+   "non_negative": 1,
+   "options": "salary_currency"
   }
  ],
  "icon": "trending-up",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-11-05 11:44:25.779188",
+ "modified": "2026-11-05 12:10:00.994291",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Promotion",
