@@ -394,6 +394,15 @@ class TestEmployeeAttendanceTool(HRMSTestSuite):
 		self.assertEqual(attendance.half_day_status, "Absent")
 		self.assertEqual(attendance.status, "Present")
 
+	def test_leave_type_is_kept_for_on_leave_status(self):
+		employee = make_employee("test_tool_leave_type@example.com", company="_Test Company")
+		mark_employee_attendance(
+			[employee], "On Leave", getdate(), leave_type="_Test Leave Type", company="_Test Company"
+		)
+		self.assertEqual(
+			frappe.db.get_value("Attendance", {"employee": employee}, "leave_type"), "_Test Leave Type"
+		)
+
 
 def create_leave_allocation(employee, leave_type, date=None):
 	from_date = add_days(date or getdate(), -2)

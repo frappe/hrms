@@ -207,6 +207,27 @@ class TestGoal(HRMSTestSuite):
 		self.assertEqual(goal2.status, "Completed")
 		self.assertEqual(goal2.progress, 100)
 
+	def test_progress_cannot_be_negative(self):
+		goal = create_goal(self.employee1, "Development")
+		goal.progress = -5
+		self.assertRaises(frappe.ValidationError, goal.save)
+
+	def test_progress_of_closed_goal_cannot_change(self):
+		goal = create_goal(self.employee1, "Development", progress=10)
+		goal.status = "Closed"
+		goal.save()
+
+		goal.progress = 50
+		self.assertRaises(frappe.ValidationError, goal.save)
+
+	def test_group_goal_progress_comes_from_children(self):
+		parent = create_goal(self.employee1, "Development", 1)
+		parent.progress = 50
+		self.assertRaises(frappe.ValidationError, parent.save)
+
+		create_goal(self.employee1, "Development", parent_goal=parent.name, progress=40)
+		self.assertEqual(frappe.db.get_value("Goal", parent.name, "progress"), 40)
+
 
 def create_goal(
 	employee,

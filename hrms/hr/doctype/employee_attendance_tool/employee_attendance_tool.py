@@ -198,21 +198,15 @@ def mark_employee_attendance(
 		validate_employee_access(employee_list, company)
 
 	for employee in employee_list:
-		leave_type = None
-		if status == "On Leave" and leave_type:
-			leave_type = leave_type
-
 		attendance = frappe.get_doc(
-			dict(
-				doctype="Attendance",
-				employee=employee,
-				attendance_date=getdate(date),
-				status=status,
-				leave_type=leave_type,
-				late_entry=late_entry,
-				early_exit=early_exit,
-				shift=shift,
-			)
+			doctype="Attendance",
+			employee=employee,
+			attendance_date=getdate(date),
+			status=status,
+			leave_type=leave_type if status == "On Leave" else None,
+			late_entry=late_entry,
+			early_exit=early_exit,
+			shift=shift,
 		)
 		attendance.insert()
 		attendance.submit()

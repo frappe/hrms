@@ -44,7 +44,7 @@ from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	make_leave_application,
 )
 from hrms.tests.test_utils import add_date_to_holiday_list, get_first_sunday
-from hrms.tests.utils import HRMSTestSuite
+from hrms.tests.utils import HRMSTestSuite, make_user
 
 
 class TestLeaveApplication(HRMSTestSuite):
@@ -1566,6 +1566,8 @@ class TestLeaveApplication(HRMSTestSuite):
 		target_employee_user = "employee_reviewed_by_workflow@example.com"
 		target_employee = make_employee(target_employee_user, "_Test Company")
 		make_allocation_record(target_employee, from_date="2026-04-01", to_date="2027-03-31")
+		for employee in (reviewer_employee, target_employee):
+			frappe.db.set_value("Employee", employee, "leave_approver", "test@example.com")
 
 		frappe.set_user(target_employee_user)
 		leave_application = make_leave_application(
@@ -1616,6 +1618,47 @@ class TestLeaveApplication(HRMSTestSuite):
 			leave_application.from_date,
 			leave_application=own_leave_application.name,
 		)
+
+	def _lwp_application(self, employee, **values):
+		leave_type = create_leave_type(
+			leave_type_name="Approver Test Leave", is_lwp=1, include_holiday=1
+		).name
+		date = add_days(nowdate(), 10)
+		return frappe.get_doc(
+			{
+				"doctype": "Leave Application",
+				"employee": employee,
+				"company": "_Test Company",
+				"leave_type": leave_type,
+				"from_date": date,
+				"to_date": date,
+				"posting_date": nowdate(),
+				**values,
+			}
+		)
+
+	def test_leave_approver_must_belong_to_employee(self):
+		approver = make_user("test_leave_approver_ok@example.com", "Leave Approver")
+		stranger = make_user("test_leave_approver_no@example.com", "Leave Approver")
+		user = make_user("test_leave_approver_emp@example.com", "Employee")
+		employee = make_employee(user, company="_Test Company", leave_approver=approver)
+		application = self._lwp_application(employee, leave_approver=stranger)
+		default_application = self._lwp_application(employee)
+
+		self.addCleanup(frappe.set_user, "Administrator")
+		frappe.set_user(user)
+		self.assertRaisesRegex(frappe.ValidationError, "not an approver", application.insert)
+
+		default_application.insert()
+		self.assertEqual(default_application.leave_approver, approver)
+
+		frappe.db.set_value("Employee", employee, "leave_approver", stranger)
+		default_application.description = "unchanged approver stays valid"
+		default_application.save()
+
+		frappe.set_user("Administrator")
+		default_application.leave_approver = "test@example.com"
+		default_application.save()
 
 
 def create_carry_forwarded_allocation(employee, leave_type, date=None):
