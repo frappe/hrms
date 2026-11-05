@@ -209,7 +209,6 @@
    "label": "Letter Body"
   },
   {
-   "description": "Calculated from the start and end time. You can change it.",
    "fieldname": "working_hours",
    "fieldtype": "Float",
    "label": "Total Working Hours",
@@ -219,7 +218,7 @@
  "icon": "mail-check",
  "link_display_mode": "Search",
  "links": [],
- "modified": "2026-11-05 20:00:00.000000",
+ "modified": "2026-11-05 21:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appointment Letter",
