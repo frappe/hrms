@@ -8,6 +8,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import (
 	cint,
+	comma_and,
 	flt,
 	fmt_money,
 	format_time,
@@ -109,16 +110,17 @@ class AppointmentLetter(Document):
 			"ctc": fmt_money(offer.ctc, currency=offer.currency) if offer.ctc else "",
 			"variable": fmt_money(offer.variable, currency=offer.currency) if offer.variable else "",
 			"working_days": get_working_days(offer.weekly_off_days),
-			"weekly_off": join_and(split_days(offer.weekly_off_days)),
+			"weekly_off": comma_and(split_days(offer.weekly_off_days), add_quotes=False),
 			"start_time": format_time(self.start_time, "h:mm a") if self.start_time else "",
 			"end_time": format_time(self.end_time, "h:mm a") if self.end_time else "",
 			"working_hours": format_number(self.working_hours or offer.working_hours),
 			"public_holidays": offer.total_public_holidays,
-			"leave_entitlement": join_and(
+			"leave_entitlement": comma_and(
 				[
 					_("{0} days of {1}").format(format_number(row.annual_allocation), row.leave_type)
 					for row in offer.get("leave_allocations") or []
-				]
+				],
+				add_quotes=False,
 			),
 			"retirement_age": cint(frappe.db.get_single_value("HR Settings", "retirement_age")) or "",
 		}
@@ -182,10 +184,4 @@ def get_working_days(weekly_off_days: str | None) -> str:
 	positions = [week.index(day) for day in working_days]
 	if len(working_days) > 2 and positions == list(range(positions[0], positions[-1] + 1)):
 		return _("{0} to {1}").format(_(working_days[0]), _(working_days[-1]))
-	return join_and([_(day) for day in working_days])
-
-
-def join_and(items: list[str]) -> str:
-	if len(items) < 2:
-		return "".join(items)
-	return _("{0} and {1}").format(", ".join(items[:-1]), items[-1])
+	return comma_and([_(day) for day in working_days], add_quotes=False)

@@ -157,7 +157,7 @@ class TestAppointmentLetter(HRMSTestSuite):
 		self.assertEqual(format_days(0), "")
 		self.assertEqual(get_working_days("Sunday"), "Monday to Saturday")
 		self.assertEqual(
-			get_working_days("Wednesday, Sunday"), "Monday, Tuesday, Thursday, Friday and Saturday"
+			get_working_days("Wednesday, Sunday"), "Monday, Tuesday, Thursday, Friday, and Saturday"
 		)
 		self.assertEqual(get_working_days(""), "")
 
