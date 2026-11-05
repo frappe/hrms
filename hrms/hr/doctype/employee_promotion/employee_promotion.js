@@ -4,6 +4,18 @@
 {% include 'hrms/hr/employee_property_update.js' %}
 
 frappe.ui.form.on("Employee Promotion", {
+	setup: function (frm) {
+		frm.set_query("salary_structure", function () {
+			return {
+				filters: {
+					company: frm.doc.company,
+					docstatus: 1,
+					is_active: "Yes",
+				},
+			};
+		});
+	},
+
 	employee: function (frm) {
 		frm.trigger("set_current_salary");
 	},
