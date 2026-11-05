@@ -179,13 +179,15 @@ class TestEmployeePromotion(HRMSTestSuite):
 	def test_no_assignment_without_revised_base(self):
 		employee, _assignment = setup_employee_with_assignment("promotion_no_base@example.com")
 
-		promotion = make_promotion(employee)
+		promotion = make_promotion(employee, revised_ctc=1500000)
+		self.assertEqual(promotion.revised_ctc, 1500000)
 		promotion.submit()
 
 		self.assertFalse(promotion.new_salary_structure_assignment)
 		self.assertEqual(
 			frappe.db.count("Salary Structure Assignment", {"employee": employee, "docstatus": 1}), 1
 		)
+		self.assertEqual(frappe.db.get_value("Employee", employee, "ctc"), 1500000)
 
 	def test_assignment_on_promotion_date_blocks_submit(self):
 		employee, assignment = setup_employee_with_assignment("promotion_same_date@example.com")
