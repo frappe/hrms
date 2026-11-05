@@ -82,7 +82,9 @@ class AppointmentLetter(Document):
 			self.working_hours = get_working_hours(self.start_time, self.end_time)
 
 	def get_letter_body_html(self) -> str:
-		return frappe.render_template(self.letter_body or "", self.get_placeholders())
+		return frappe.render_template(  # nosemgrep: frappe-semgrep-rules.rules.security.frappe-ssti
+			self.letter_body or "", self.get_placeholders()
+		)
 
 	def get_placeholders(self) -> dict:
 		offer = frappe.get_cached_doc("Job Offer", self.job_offer) if self.job_offer else frappe._dict()

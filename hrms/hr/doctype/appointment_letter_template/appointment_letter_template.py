@@ -1,8 +1,6 @@
 # Copyright (c) 2019, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
-import os
-
 from jinja2 import TemplateSyntaxError
 
 import frappe
@@ -52,9 +50,10 @@ def validate_letter_body(letter_body: str | None) -> None:
 
 
 def get_default_letter_body() -> str:
-	path = os.path.join(os.path.dirname(__file__), "default_letter_body.html")
-	with open(path) as f:
-		body = "".join(line.strip() for line in f)
+	path = frappe.get_app_path(
+		"hrms", "hr", "doctype", "appointment_letter_template", "default_letter_body.html"
+	)
+	body = "".join(line.strip() for line in frappe.read_file(path).splitlines())
 	return f'<div class="ql-editor read-mode">{body}</div>'
 
 
