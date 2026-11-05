@@ -25,7 +25,9 @@ class EmployeePromotion(Document):
 
 		amended_from: DF.Link | None
 		company: DF.Link | None
+		current_base: DF.Currency
 		current_ctc: DF.Currency
+		current_salary_structure_assignment: DF.Link | None
 		department: DF.Link | None
 		employee: DF.Link
 		employee_name: DF.Data | None
@@ -33,10 +35,20 @@ class EmployeePromotion(Document):
 		promotion_details: DF.Table[EmployeePropertyHistory]
 		revised_ctc: DF.Currency
 		salary_currency: DF.Link | None
+		salary_structure: DF.Link | None
 	# end: auto-generated types
 
 	def validate(self):
 		validate_active_employee(self.employee)
+		self.set_current_salary()
+
+	def set_current_salary(self):
+		salary = get_salary_on(self.employee, self.promotion_date)
+		self.current_salary_structure_assignment = salary.name
+		self.current_base = salary.base
+		self.current_ctc = salary.ctc
+		if not self.salary_structure:
+			self.salary_structure = salary.salary_structure
 
 	def before_submit(self):
 		if getdate(self.promotion_date) > getdate():
@@ -62,3 +74,28 @@ class EmployeePromotion(Document):
 			employee.ctc = self.current_ctc
 
 		employee.save()
+
+
+@frappe.whitelist()
+def get_current_salary(employee: str, on_date: str) -> frappe._dict:
+	frappe.has_permission("Employee", "read", doc=employee, throw=True)
+
+	salary = get_salary_on(employee, on_date)
+	if salary.name:
+		frappe.has_permission("Salary Structure Assignment", "read", doc=salary.name, throw=True)
+
+	return salary
+
+
+def get_salary_on(employee: str, on_date: str | None) -> frappe._dict:
+	assignment = on_date and frappe.db.get_value(
+		"Salary Structure Assignment",
+		{"employee": employee, "docstatus": 1, "from_date": ("<=", on_date)},
+		["name", "salary_structure", "base", "ctc", "currency"],
+		as_dict=True,
+		order_by="from_date desc",
+	)
+	if assignment:
+		return assignment
+
+	return frappe._dict(ctc=frappe.db.get_value("Employee", employee, "ctc"))
