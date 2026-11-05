@@ -105,16 +105,20 @@ async function email_appointment_letter(frm) {
 
 function appointment_letter_message(doc) {
 	const escape = frappe.utils.escape_html;
-	const lines = [
+	const blank_line = "<p><br></p>";
+	const paragraphs = [
 		__("Dear {0},", [escape(doc.applicant_name)]),
 		__(
 			"Please find attached your letter of appointment with {0}, which sets out the terms and conditions of your employment.",
 			[escape(doc.company)],
 		),
 		__("Please sign and return a copy of the letter as a token of your acceptance."),
-		__("Regards,"),
 	];
-	return lines.map((line) => `<p>${line}</p>`).join("");
+	return (
+		paragraphs.map((line) => `<p>${line}</p>`).join(blank_line) +
+		blank_line.repeat(2) +
+		`<p>${__("Regards,")}</p>`
+	);
 }
 
 let appointment_letter_preview_request = 0;
