@@ -180,17 +180,22 @@ def get_current_salary(employee: str, on_date: str) -> frappe._dict:
 
 @frappe.whitelist()
 def calculate_revised_ctc(promotion: str | dict) -> float:
-	frappe.has_permission("Employee Promotion", throw=True)
+	frappe.has_permission("Employee Promotion", "write", throw=True)
 
 	promotion = frappe.parse_json(promotion)
 	promotion["doctype"] = "Employee Promotion"
 	doc = frappe.get_doc(promotion)
 
 	frappe.has_permission("Employee", "read", doc=doc.employee, throw=True)
-	if doc.salary_structure:
-		frappe.has_permission("Salary Structure", "read", doc=doc.salary_structure, throw=True)
 
 	doc.set_current_salary()
+	if doc.salary_structure:
+		frappe.has_permission("Salary Structure", "read", doc=doc.salary_structure, throw=True)
+	if doc.current_salary_structure_assignment:
+		frappe.has_permission(
+			"Salary Structure Assignment", "read", doc=doc.current_salary_structure_assignment, throw=True
+		)
+
 	return doc.get_revised_ctc()
 
 
@@ -198,7 +203,7 @@ def get_salary_on(employee: str, on_date: str | None) -> frappe._dict:
 	assignment = on_date and frappe.db.get_value(
 		"Salary Structure Assignment",
 		{"employee": employee, "docstatus": 1, "from_date": ("<=", on_date)},
-		["name", "salary_structure", "base", "ctc", "currency"],
+		["name", "salary_structure", "base", "ctc"],
 		as_dict=True,
 		order_by="from_date desc",
 	)
