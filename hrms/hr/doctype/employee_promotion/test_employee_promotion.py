@@ -196,6 +196,21 @@ class TestEmployeePromotion(HRMSTestSuite):
 
 		self.assertRaisesRegex(frappe.ValidationError, "change the Promotion Date", promotion.submit)
 
+	def test_later_assignment_blocks_submit(self):
+		employee, assignment = setup_employee_with_assignment("promotion_later@example.com")
+		create_salary_structure_assignment(
+			employee,
+			assignment.salary_structure,
+			from_date=get_first_day(add_months(getdate(), 1)),
+			company="_Test Company",
+			base=55000,
+			allow_duplicate=True,
+		)
+
+		promotion = make_promotion(employee, revised_base=60000)
+
+		self.assertRaisesRegex(frappe.ValidationError, "change the Promotion Date", promotion.submit)
+
 
 def setup_employee_with_assignment(user):
 	employee = make_employee(user, company="_Test Company")

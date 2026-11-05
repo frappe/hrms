@@ -90,22 +90,26 @@ class EmployeePromotion(Document):
 				frappe.DocstatusTransitionError,
 			)
 
-		self.validate_no_assignment_on_promotion_date()
+		self.validate_no_assignment_from_promotion_date()
 
-	def validate_no_assignment_on_promotion_date(self):
+	def validate_no_assignment_from_promotion_date(self):
 		if not (self.salary_structure and self.revised_base):
 			return
 
-		existing = frappe.db.exists(
+		existing = frappe.db.get_value(
 			"Salary Structure Assignment",
-			{"employee": self.employee, "from_date": self.promotion_date, "docstatus": 1},
+			{"employee": self.employee, "from_date": (">=", self.promotion_date), "docstatus": 1},
+			["name", "from_date"],
+			as_dict=True,
+			order_by="from_date asc",
 		)
 		if existing:
 			frappe.throw(
 				_(
-					"Salary Structure Assignment {0} already starts on {1}. Cancel it or change the Promotion Date."
+					"Salary Structure Assignment {0} starts on {1}, on or after the Promotion Date. Cancel it or change the Promotion Date."
 				).format(
-					get_link_to_form("Salary Structure Assignment", existing), formatdate(self.promotion_date)
+					get_link_to_form("Salary Structure Assignment", existing.name),
+					formatdate(existing.from_date),
 				),
 				title=_("Salary Structure Assignment Exists"),
 			)
