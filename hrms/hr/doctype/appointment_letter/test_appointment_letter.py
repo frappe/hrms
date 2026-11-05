@@ -4,6 +4,8 @@
 import frappe
 from frappe.utils import fmt_money
 
+from erpnext.setup.doctype.employee.test_employee import make_employee
+
 from hrms.hr.doctype.appointment_letter.appointment_letter import (
 	format_days,
 	format_probation,
@@ -53,6 +55,14 @@ class TestAppointmentLetter(HRMSTestSuite):
 		self.assertEqual(letter.applicant_email, "gaurang@example.com")
 		self.assertEqual(letter.company, self.job_offer.company)
 		self.assertEqual(str(letter.appointment_date), "2026-12-01")
+
+	def test_fetch_employee_address(self):
+		employee = make_employee("gaurang@example.com", company=self.job_offer.company)
+		frappe.db.set_value("Employee", employee, "current_address", "T17, Paras Tierea, Noida")
+		self.assertEqual(self.make_letter(employee=employee).address, "T17, Paras Tierea, Noida")
+		self.assertEqual(
+			self.make_letter(employee=employee, address="Typed address").address, "Typed address"
+		)
 
 	def test_default_template_selected(self):
 		frappe.db.set_value("Appointment Letter Template", {"is_default": 1}, "is_default", 0)
