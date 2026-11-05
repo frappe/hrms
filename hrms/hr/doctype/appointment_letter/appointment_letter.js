@@ -93,23 +93,17 @@ async function set_default_template(frm) {
 	if (template?.name) frm.set_value("appointment_letter_template", template.name);
 }
 
-async function email_appointment_letter(frm) {
+function email_appointment_letter(frm) {
 	const composer = new frappe.views.CommunicationComposer({
 		doc: frm.doc,
 		frm: frm,
 		subject: __("Letter of Appointment - {0}", [frm.doc.applicant_name]),
 		recipients: frm.doc.applicant_email,
 		attach_document_print: true,
+		print_format: frm.doc.appointment_letter_print_format,
 		message: appointment_letter_message(frm.doc),
 	});
 	composer.dialog.no_focus = true;
-
-	await composer.dialog.set_value(
-		"select_print_format",
-		frm.doc.appointment_letter_print_format || "Appointment Letter Classic",
-	);
-	composer.render_print_card_meta();
-	composer.sync_print_menu?.();
 }
 
 function appointment_letter_message(doc) {
