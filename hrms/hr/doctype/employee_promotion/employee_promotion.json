@@ -24,6 +24,7 @@
   "salary_structure",
   "revised_base",
   "revised_ctc",
+  "new_salary_structure_assignment",
   "amended_from"
  ],
  "fields": [
@@ -151,12 +152,20 @@
    "label": "Revised Base",
    "non_negative": 1,
    "options": "salary_currency"
+  },
+  {
+   "fieldname": "new_salary_structure_assignment",
+   "fieldtype": "Link",
+   "label": "New Salary Structure Assignment",
+   "no_copy": 1,
+   "options": "Salary Structure Assignment",
+   "read_only": 1
   }
  ],
  "icon": "trending-up",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-11-05 12:10:00.994291",
+ "modified": "2026-11-05 13:00:38.866202",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Promotion",
