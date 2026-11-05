@@ -712,7 +712,7 @@ class TestLeaveAllocation(HRMSTestSuite):
 		allocation.submit()
 		self.assertEqual(allocation.total_leaves_allocated, 8)
 
-		allocation.allocate_leaves_manually(4)
+		allocation.allocate_leaves_manually(4, from_date=nowdate())
 		allocation.reload()
 		self.assertEqual(allocation.total_leaves_allocated, 10)
 		self.assertEqual(get_leave_balance_on(self.employee.name, leave_type, nowdate()), 10)

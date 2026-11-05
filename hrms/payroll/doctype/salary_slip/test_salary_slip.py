@@ -2671,7 +2671,12 @@ class TestSalarySlip(HRMSTestSuite):
 				{"salary_component": "Slip Ctx Basic", "abbr": "SCB", "type": "Earning"},
 				{"salary_component": "Slip Ctx No LWP Bonus", "abbr": "SCNB", "type": "Earning"},
 				{"salary_component": "Slip Ctx Cond Bonus", "abbr": "SCCB", "type": "Earning"},
-				{"salary_component": "Slip Ctx Bonus Share", "abbr": "SCBS", "type": "Earning"},
+				{
+					"salary_component": "Slip Ctx Bonus Share",
+					"abbr": "SCBS",
+					"type": "Earning",
+					"depends_on_payment_days": 0,
+				},
 			],
 			test_tax=False,
 			company_list=["_Test Company"],

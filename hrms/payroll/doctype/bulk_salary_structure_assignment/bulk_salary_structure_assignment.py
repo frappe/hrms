@@ -124,17 +124,19 @@ class BulkSalaryStructureAssignment(Document):
 
 	def validate_employees(self, employees: list) -> None:
 		selected = {d["employee"] for d in employees}
-		allowed = set(
-			frappe.get_list(
+		in_company = set(
+			frappe.get_all(
 				"Employee",
 				filters={"name": ("in", list(selected)), "company": self.company},
 				pluck="name",
 				limit=0,
 			)
 		)
-		if invalid := selected - allowed:
+		if invalid := selected - in_company:
 			frappe.throw(
-				_("You cannot assign a salary structure to {0}").format(", ".join(sorted(invalid))),
+				_("Employees {0} do not belong to company {1}").format(
+					", ".join(sorted(invalid)), frappe.bold(self.company)
+				),
 				frappe.PermissionError,
 			)
 

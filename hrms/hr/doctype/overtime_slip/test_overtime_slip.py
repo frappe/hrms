@@ -243,6 +243,7 @@ class TestOvertimeSlip(HRMSTestSuite):
 		)
 
 	def test_overtime_rows_validated_against_slip(self):
+		make_earning_salary_component(setup=True, company_list=["_Test Company"])
 		employee = make_employee("test_overtime_slip_rows@example.com", company="_Test Company")
 		other_employee = make_employee("test_overtime_slip_rows2@example.com", company="_Test Company")
 		overtime_type = create_overtime_type(

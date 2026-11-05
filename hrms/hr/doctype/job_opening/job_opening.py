@@ -189,13 +189,11 @@ class JobOpening(WebsiteGenerator):
 		return frappe.db.get_value(self.doctype, self.name, "status") == "Open"
 
 	def update_job_requisition_status(self):
-		if (
-			self.status == "Closed"
-			and self.job_requisition
-			and self.has_value_changed("status")
-			and not self.flags.closed_by_scheduler
-		):
-			job_requisition = frappe.get_doc("Job Requisition", self.job_requisition)
+		if self.status != "Closed" or not self.job_requisition or self.flags.closed_by_scheduler:
+			return
+
+		job_requisition = frappe.get_doc("Job Requisition", self.job_requisition)
+		if self.has_value_changed("status") or job_requisition.status == "Filled":
 			job_requisition.status = "Filled"
 			job_requisition.completed_on = self.closed_on or job_requisition.completed_on or getdate()
 			job_requisition.flags.ignore_permissions = True

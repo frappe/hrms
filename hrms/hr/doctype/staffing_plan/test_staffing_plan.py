@@ -77,8 +77,7 @@ class TestStaffingPlan(HRMSTestSuite):
 			"staffing_details",
 			{"designation": "Designer", "vacancies": 7, "estimated_cost_per_position": 60000},
 		)
-		staffing_plan.insert()
-		self.assertRaises(ParentCompanyError, staffing_plan.submit)
+		self.assertRaises(ParentCompanyError, staffing_plan.insert)
 
 	def test_staffing_details_from_job_requisition(self):
 		from hrms.hr.doctype.job_requisition.test_job_requisition import make_job_requisition
