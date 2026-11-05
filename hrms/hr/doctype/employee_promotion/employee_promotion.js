@@ -29,7 +29,39 @@ frappe.ui.form.on("Employee Promotion", {
 				set_salary_fields(frm, r.message || {});
 			});
 	},
+
+	salary_structure: function (frm) {
+		frm.trigger("set_revised_ctc");
+	},
+
+	revised_base: function (frm) {
+		frm.trigger("set_revised_ctc");
+	},
+
+	set_revised_ctc: function (frm) {
+		if (!frm.doc.salary_structure) return;
+		if (!frm.doc.revised_base) {
+			frm.set_value("revised_ctc", 0);
+			return;
+		}
+
+		const sent = revised_ctc_inputs(frm);
+		frappe
+			.call({
+				method: "hrms.hr.doctype.employee_promotion.employee_promotion.calculate_revised_ctc",
+				args: { promotion: frm.doc },
+			})
+			.then((r) => {
+				if (revised_ctc_inputs(frm) !== sent) return;
+				frm.set_value("revised_ctc", r.message || 0);
+			});
+	},
 });
+
+function revised_ctc_inputs(frm) {
+	const { employee, promotion_date, salary_structure, revised_base } = frm.doc;
+	return JSON.stringify([employee, promotion_date, salary_structure, revised_base]);
+}
 
 function set_salary_fields(frm, assignment) {
 	frm.set_value({

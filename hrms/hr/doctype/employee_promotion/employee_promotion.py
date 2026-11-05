@@ -7,7 +7,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import getdate
 
-from hrms.hr.utils import update_employee_work_history, validate_active_employee
+from hrms.hr.utils import get_formatted_value, update_employee_work_history, validate_active_employee
 
 
 class EmployeePromotion(Document):
@@ -33,6 +33,7 @@ class EmployeePromotion(Document):
 		employee_name: DF.Data | None
 		promotion_date: DF.Date
 		promotion_details: DF.Table[EmployeePropertyHistory]
+		revised_base: DF.Currency
 		revised_ctc: DF.Currency
 		salary_currency: DF.Link | None
 		salary_structure: DF.Link | None
@@ -41,6 +42,8 @@ class EmployeePromotion(Document):
 	def validate(self):
 		validate_active_employee(self.employee)
 		self.set_current_salary()
+		if self.salary_structure:
+			self.revised_ctc = self.get_revised_ctc()
 
 	def set_current_salary(self):
 		salary = get_salary_on(self.employee, self.promotion_date)
@@ -49,6 +52,34 @@ class EmployeePromotion(Document):
 		self.current_ctc = salary.ctc
 		if not self.salary_structure:
 			self.salary_structure = salary.salary_structure
+
+	def get_revised_ctc(self) -> float:
+		if not (self.salary_structure and self.revised_base):
+			return 0.0
+
+		assignment = frappe.new_doc("Salary Structure Assignment")
+		assignment.employee = self.get_promoted_employee()
+		assignment.salary_structure = self.salary_structure
+		assignment.company = self.company
+		assignment.currency = frappe.get_cached_value("Salary Structure", self.salary_structure, "currency")
+		assignment.from_date = self.promotion_date
+		assignment.base = self.revised_base
+		if self.current_salary_structure_assignment:
+			assignment.variable = frappe.db.get_value(
+				"Salary Structure Assignment", self.current_salary_structure_assignment, "variable"
+			)
+
+		assignment.calculate_ctc_and_gross()
+		return assignment.ctc
+
+	def get_promoted_employee(self) -> Document:
+		employee = frappe.get_doc("Employee", self.employee)
+		meta = frappe.get_meta("Employee")
+		for row in self.promotion_details:
+			if field := meta.get_field(row.fieldname):
+				employee.set(row.fieldname, get_formatted_value(row.new, field.fieldtype))
+
+		return employee
 
 	def before_submit(self):
 		if getdate(self.promotion_date) > getdate():
@@ -85,6 +116,22 @@ def get_current_salary(employee: str, on_date: str) -> frappe._dict:
 		frappe.has_permission("Salary Structure Assignment", "read", doc=salary.name, throw=True)
 
 	return salary
+
+
+@frappe.whitelist()
+def calculate_revised_ctc(promotion: str | dict) -> float:
+	frappe.has_permission("Employee Promotion", throw=True)
+
+	promotion = frappe.parse_json(promotion)
+	promotion["doctype"] = "Employee Promotion"
+	doc = frappe.get_doc(promotion)
+
+	frappe.has_permission("Employee", "read", doc=doc.employee, throw=True)
+	if doc.salary_structure:
+		frappe.has_permission("Salary Structure", "read", doc=doc.salary_structure, throw=True)
+
+	doc.set_current_salary()
+	return doc.get_revised_ctc()
 
 
 def get_salary_on(employee: str, on_date: str | None) -> frappe._dict:
