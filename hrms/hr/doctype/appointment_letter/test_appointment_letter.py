@@ -29,14 +29,17 @@ class TestAppointmentLetter(HRMSTestSuite):
 			probation_period_days=90,
 			notice_number_of_days=30,
 		).insert()
-		self.job_offer.db_set({"weekly_off_days": "Saturday, Sunday", "ctc": 1600000, "currency": "INR"})
+		if not frappe.db.exists("Branch", "Mumbai"):
+			frappe.get_doc({"doctype": "Branch", "branch": "Mumbai"}).insert()
+		self.job_offer.db_set(
+			{"weekly_off_days": "Saturday, Sunday", "ctc": 1600000, "currency": "INR", "branch": "Mumbai"}
+		)
 
 	def make_letter(self, **args):
 		return frappe.get_doc(
 			{
 				"doctype": "Appointment Letter",
 				"job_offer": self.job_offer.name,
-				"place_of_posting": "Mumbai",
 				"start_time": "10:00:00",
 				"end_time": "18:00:00",
 				"retirement_age": 60,

@@ -28,7 +28,6 @@ class AppointmentLetter(Document):
 		applicant_email: DF.Data | None
 		applicant_name: DF.Data
 		appointment_date: DF.Date
-		appointment_letter_preview: DF.HTML | None
 		appointment_letter_print_format: DF.Link | None
 		appointment_letter_template: DF.Link | None
 		company: DF.Link
@@ -38,7 +37,6 @@ class AppointmentLetter(Document):
 		letter_body: DF.TextEditor | None
 		letter_date: DF.Date | None
 		letter_head: DF.Link | None
-		place_of_posting: DF.Data | None
 		retirement_age: DF.Int
 		shift_type: DF.Link | None
 		signature: DF.AttachImage | None
@@ -94,7 +92,7 @@ class AppointmentLetter(Document):
 			"appointment_date": format_date(self.appointment_date),
 			"letter_date": format_date(self.letter_date),
 			"offer_date": format_date(offer.offer_date),
-			"place_of_posting": self.place_of_posting,
+			"place_of_posting": offer.branch,
 			"probation": format_probation(offer.probation_period_days),
 			"notice_period": format_days(offer.notice_number_of_days),
 			"notice_period_during_probation": format_days(offer.notice_period_during_probation),
