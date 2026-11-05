@@ -121,7 +121,7 @@
    "label": "Revised CTC",
    "non_negative": 1,
    "options": "salary_currency",
-   "read_only_depends_on": "salary_structure"
+   "read_only_depends_on": "revised_base"
   },
   {
    "fieldname": "current_salary_structure_assignment",
@@ -165,7 +165,7 @@
  "icon": "trending-up",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-11-05 13:00:38.866202",
+ "modified": "2026-11-05 14:22:39.221794",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Promotion",

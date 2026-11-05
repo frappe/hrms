@@ -44,7 +44,7 @@ class EmployeePromotion(Document):
 	def validate(self):
 		validate_active_employee(self.employee)
 		self.set_current_salary()
-		if self.salary_structure:
+		if self.salary_structure and self.revised_base:
 			self.revised_ctc = self.get_revised_ctc()
 
 	def set_current_salary(self):
