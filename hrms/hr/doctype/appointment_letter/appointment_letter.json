@@ -15,16 +15,15 @@
   "employee",
   "column_break_3",
   "company",
-  "letter_date",
   "appointment_date",
+  "letter_date",
   "address",
   "terms_of_appointment_tab",
-  "appointment_terms_section",
+  "working_hours_section",
   "shift_type",
   "start_time",
-  "end_time",
   "column_break_terms",
-  "retirement_age",
+  "end_time",
   "body_section",
   "appointment_letter_template",
   "letter_body",
@@ -114,11 +113,11 @@
    "label": "Terms of Appointment"
   },
   {
-   "fieldname": "appointment_terms_section",
-   "fieldtype": "Section Break"
+   "fieldname": "working_hours_section",
+   "fieldtype": "Section Break",
+   "label": "Working Hours"
   },
   {
-   "description": "Start and end time come from this shift. Leave it empty to set them yourself.",
    "fieldname": "shift_type",
    "fieldtype": "Link",
    "label": "Shift",
@@ -141,11 +140,6 @@
   {
    "fieldname": "column_break_terms",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "retirement_age",
-   "fieldtype": "Int",
-   "label": "Retirement Age (Years)"
   },
   {
    "fieldname": "body_section",
@@ -217,7 +211,7 @@
  "icon": "mail-check",
  "link_display_mode": "Search",
  "links": [],
- "modified": "2026-11-05 15:00:00.000000",
+ "modified": "2026-11-05 19:30:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appointment Letter",

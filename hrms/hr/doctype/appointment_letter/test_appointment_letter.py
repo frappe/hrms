@@ -31,6 +31,7 @@ class TestAppointmentLetter(HRMSTestSuite):
 			probation_period_days=90,
 			notice_number_of_days=30,
 		).insert()
+		frappe.db.set_single_value("HR Settings", "retirement_age", "60")
 		if not frappe.db.exists("Branch", "Mumbai"):
 			frappe.get_doc({"doctype": "Branch", "branch": "Mumbai"}).insert()
 		self.job_offer.db_set(
@@ -44,7 +45,6 @@ class TestAppointmentLetter(HRMSTestSuite):
 				"job_offer": self.job_offer.name,
 				"start_time": "10:00:00",
 				"end_time": "18:00:00",
-				"retirement_age": 60,
 				**args,
 			}
 		).insert()

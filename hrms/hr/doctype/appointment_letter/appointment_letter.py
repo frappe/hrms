@@ -37,15 +37,12 @@ class AppointmentLetter(Document):
 		letter_body: DF.TextEditor | None
 		letter_date: DF.Date | None
 		letter_head: DF.Link | None
-		retirement_age: DF.Int
 		shift_type: DF.Link | None
 		signature: DF.AttachImage | None
 		start_time: DF.Time | None
 	# end: auto-generated types
 
 	def before_insert(self):
-		if not self.retirement_age:
-			self.retirement_age = cint(frappe.db.get_single_value("HR Settings", "retirement_age"))
 		if not self.shift_type:
 			self.set_shift_from_employee()
 		if not self.letter_body:
@@ -110,7 +107,7 @@ class AppointmentLetter(Document):
 					for row in offer.get("leave_allocations") or []
 				]
 			),
-			"retirement_age": self.retirement_age or "",
+			"retirement_age": cint(frappe.db.get_single_value("HR Settings", "retirement_age")) or "",
 		}
 		return {key: "" if value is None else value for key, value in placeholders.items()}
 
