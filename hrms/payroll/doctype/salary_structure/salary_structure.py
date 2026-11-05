@@ -12,7 +12,7 @@ from frappe.utils import cint, cstr, flt, get_link_to_form
 
 import erpnext
 
-from hrms.payroll.utils import COMPONENT_PARENTFIELDS, sanitize_expression
+from hrms.payroll.utils import COMPONENT_PARENTFIELDS, COMPONENT_TYPE_TO_PARENTFIELD, sanitize_expression
 
 
 class SalaryStructure(Document):
@@ -58,6 +58,7 @@ class SalaryStructure(Document):
 
 	def validate(self):
 		self.set_missing_values()
+		self.validate_component_types()
 		self.validate_amount()
 		self.validate_component_based_on_tax_slab()
 		self.validate_payment_days_based_dependent_component()
@@ -95,7 +96,7 @@ class SalaryStructure(Document):
 			"is_tax_applicable",
 			"is_flexible_benefit",
 		]
-		overwritten_fields_if_missing = ["amount_based_on_formula", "formula", "amount"]
+		overwritten_fields_if_missing = ["amount_based_on_formula", "formula", "amount", "condition"]
 		for table in COMPONENT_PARENTFIELDS:
 			for d in self.get(table):
 				component_default_value = frappe.db.get_value(
@@ -113,6 +114,9 @@ class SalaryStructure(Document):
 					if not (d.get("amount") or d.get("formula")):
 						for fieldname in overwritten_fields_if_missing:
 							d.set(fieldname, component_default_value.get(fieldname))
+
+						d._condition, d.condition = d.condition, sanitize_expression(d.condition)
+						d._formula, d.formula = d.formula, sanitize_expression(d.formula)
 
 	def validate_component_based_on_tax_slab(self):
 		for row in self.deductions:
@@ -155,9 +159,29 @@ class SalaryStructure(Document):
 
 		return abbr
 
+	def validate_component_types(self):
+		for component_type, table in COMPONENT_TYPE_TO_PARENTFIELD.items():
+			for row in self.get(table):
+				if (
+					row.salary_component
+					and frappe.get_cached_value("Salary Component", row.salary_component, "type")
+					!= component_type
+				):
+					frappe.throw(
+						_("Row #{0}: Salary Component {1} in {2} must be of type {3}").format(
+							row.idx,
+							frappe.bold(row.salary_component),
+							frappe.bold(_(self.meta.get_label(table))),
+							frappe.bold(_(component_type)),
+						)
+					)
+
 	def validate_timesheet_component(self):
 		if not self.salary_slip_based_on_timesheet:
 			return
+
+		if not (self.salary_component and flt(self.hour_rate) > 0):
+			frappe.throw(_("Salary Component and Hour Rate are required for timesheet based salary"))
 
 		for component in self.earnings:
 			if component.salary_component == self.salary_component:

@@ -31,6 +31,7 @@ from erpnext.accounts.utils import get_fiscal_year
 
 from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import if_lending_app_installed
 from hrms.payroll.doctype.salary_withholding.salary_withholding import link_bank_entry_in_salary_withholdings
+from hrms.payroll.utils import set_exchange_rate
 from hrms.utils.holiday_list import (
 	clip_holiday_list_ranges,
 	get_holiday_list_ranges_for_employees,
@@ -100,6 +101,8 @@ class PayrollEntry(Document):
 	def validate(self):
 		self.number_of_employees = len(self.employees)
 		self.set_status()
+		set_exchange_rate(self)
+		self.validate_payroll_frequency()
 
 	def set_status(self, status=None, update=False):
 		if not status:
@@ -110,15 +113,59 @@ class PayrollEntry(Document):
 		else:
 			self.status = status
 
+	def validate_payroll_frequency(self):
+		if not self.salary_slip_based_on_timesheet and not self.payroll_frequency:
+			frappe.throw(_("Payroll Frequency is required"))
+
 	def before_submit(self):
 		self.validate_existing_salary_slips()
 		self.validate_payroll_payable_account()
+		self.validate_employee_company()
+		self.validate_overtime_slips()
 		if self.get_employees_with_unmarked_attendance():
 			frappe.throw(_("Cannot submit. Attendance is not marked for some employees."))
 
 	def on_submit(self):
 		self.set_status(update=True, status="Submitted")
 		self.create_salary_slips()
+
+	def validate_employee_company(self):
+		employees = [row.employee for row in self.employees]
+		if not employees:
+			return
+
+		other_company_employees = frappe.get_all(
+			"Employee",
+			filters={"name": ("in", employees), "company": ("!=", self.company)},
+			pluck="name",
+		)
+		if other_company_employees:
+			frappe.throw(
+				_("Employees {0} do not belong to company {1}").format(
+					", ".join(frappe.bold(employee) for employee in other_company_employees),
+					frappe.bold(self.company),
+				)
+			)
+
+	def validate_overtime_slips(self):
+		employees_eligible_for_overtime, unsubmitted_overtime_slips = self.get_overtime_slip_details()
+		if employees_eligible_for_overtime or unsubmitted_overtime_slips:
+			frappe.throw(_("Create and submit Overtime Slips before creating Salary Slips"))
+
+	def validate_can_process_salary_slips(self):
+		if self.docstatus != 1:
+			frappe.throw(_("Payroll Entry {0} must be submitted first").format(self.name))
+
+		if frappe.db.get_value(self.doctype, self.name, "status") == "Queued":
+			frappe.throw(_("Payroll Entry {0} is still being processed").format(self.name))
+
+	def validate_salary_slips_submitted(self):
+		self.validate_can_process_salary_slips()
+
+		if not self.salary_slips_submitted and frappe.db.count(
+			"Salary Slip", {"payroll_entry": self.name, "docstatus": 1}
+		) != len(self.employees):
+			frappe.throw(_("Submit the Salary Slips of Payroll Entry {0} first").format(self.name))
 
 	def validate_existing_salary_slips(self):
 		if not self.employees:
@@ -311,6 +358,7 @@ class PayrollEntry(Document):
 		Creates salary slip for selected employees if already not created
 		"""
 		self.check_permission("write")
+		self.validate_can_process_salary_slips()
 		employees = [emp.employee for emp in self.employees]
 
 		if employees:
@@ -371,6 +419,7 @@ class PayrollEntry(Document):
 	@frappe.whitelist(methods=["POST"])
 	def submit_salary_slips(self) -> None:
 		self.check_permission("write")
+		self.validate_can_process_salary_slips()
 		salary_slips = self.get_sal_slip_list(ss_status=0)
 
 		if len(salary_slips) > 30 or frappe.flags.enqueue_payroll_entry:
@@ -1092,6 +1141,7 @@ class PayrollEntry(Document):
 	@frappe.whitelist(methods=["POST"])
 	def make_bank_entry(self, for_withheld_salaries: bool = False) -> Document | None:
 		self.check_permission("write")
+		self.validate_salary_slips_submitted()
 		self.employee_based_payroll_payable_entries = {}
 		employee_wise_accounting_enabled = frappe.db.get_single_value(
 			"Payroll Settings", "process_payroll_accounting_entry_based_on_employee"

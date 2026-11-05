@@ -255,6 +255,24 @@ class TestGratuity(HRMSTestSuite):
 		gratuity.reload()
 		self.assertEqual(gratuity.status, "Cancelled")
 
+	def test_overlapping_gratuity_slabs_not_allowed(self):
+		def rule(slabs):
+			return frappe.get_doc(
+				{
+					"doctype": "Gratuity Rule",
+					"name": "Slab Order Test",
+					"gratuity_rule_slabs": [
+						{"from_year": from_year, "to_year": to_year, "fraction_of_applicable_earnings": 1}
+						for from_year, to_year in slabs
+					],
+				}
+			)
+
+		for slabs in ([(0, 4), (0, 10)], [(0, 0), (5, 10)], [(0, 5), (3, 0)]):
+			self.assertRaises(frappe.ValidationError, rule(slabs).validate)
+
+		rule([(0, 5), (5, 0)]).validate()
+
 
 def setup_gratuity_rule(name: str) -> dict:
 	from hrms.regional.united_arab_emirates.setup import setup
