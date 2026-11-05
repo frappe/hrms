@@ -17,8 +17,11 @@
   "details_section",
   "promotion_details",
   "salary_details_section",
+  "current_salary_structure_assignment",
+  "current_base",
   "current_ctc",
   "column_break_12",
+  "salary_structure",
   "revised_ctc",
   "amended_from"
  ],
@@ -101,14 +104,13 @@
    "read_only": 1
   },
   {
-   "fetch_from": "employee.ctc",
-   "fetch_if_empty": 1,
    "fieldname": "current_ctc",
    "fieldtype": "Currency",
    "label": "Current CTC",
    "mandatory_depends_on": "revised_ctc",
    "non_negative": 1,
-   "options": "salary_currency"
+   "options": "salary_currency",
+   "read_only": 1
   },
   {
    "depends_on": "current_ctc",
@@ -117,12 +119,34 @@
    "label": "Revised CTC",
    "non_negative": 1,
    "options": "salary_currency"
+  },
+  {
+   "fieldname": "current_salary_structure_assignment",
+   "fieldtype": "Link",
+   "label": "Current Salary Structure Assignment",
+   "options": "Salary Structure Assignment",
+   "read_only": 1
+  },
+  {
+   "depends_on": "current_salary_structure_assignment",
+   "fieldname": "current_base",
+   "fieldtype": "Currency",
+   "label": "Current Base",
+   "non_negative": 1,
+   "options": "salary_currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "salary_structure",
+   "fieldtype": "Link",
+   "label": "Salary Structure",
+   "options": "Salary Structure"
   }
  ],
  "icon": "trending-up",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-11-05 11:44:25.779188",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Promotion",
