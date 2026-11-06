@@ -4,6 +4,7 @@
 import os
 
 import frappe
+from frappe.tests.classes.context_managers import set_user
 from frappe.utils import add_days, getdate
 from frappe.utils.file_manager import save_file
 
@@ -24,10 +25,6 @@ CANDIDATE_EMAIL = "asha.candidate@example.com"
 
 
 class TestEmployeeRequest(HRMSTestSuite):
-	def tearDown(self):
-		frappe.set_user("Administrator")
-		super().tearDown()
-
 	def test_create_user_login_starts_the_request(self):
 		preboarding = start_preboarding()
 		request = get_request(preboarding)
@@ -53,40 +50,39 @@ class TestEmployeeRequest(HRMSTestSuite):
 		self.assertFalse(has_permission(frappe._dict(user="someone.else@example.com"), user=CANDIDATE_EMAIL))
 		self.assertTrue(has_permission(request, user=CANDIDATE_EMAIL))
 
-		frappe.set_user(CANDIDATE_EMAIL)
-		request.employee_preboarding = "HR-EMP-PRB-NOT-MINE"
-		request.save()
-		request.reload()
-		self.assertNotEqual(request.employee_preboarding, "HR-EMP-PRB-NOT-MINE")
+		with self.set_user(CANDIDATE_EMAIL):
+			request.employee_preboarding = "HR-EMP-PRB-NOT-MINE"
+			request.save()
+			request.reload()
+			self.assertNotEqual(request.employee_preboarding, "HR-EMP-PRB-NOT-MINE")
 
-		request.documents = request.documents[:1]
-		self.assertRaises(frappe.PermissionError, request.save)
+			request.documents = request.documents[:1]
+			self.assertRaises(frappe.PermissionError, request.save)
 
 	def test_details_are_checked_only_on_submit(self):
 		request = get_request(start_preboarding())
-		frappe.set_user(CANDIDATE_EMAIL)
+		with self.set_user(CANDIDATE_EMAIL):
+			request.cell_number = "+91-9876543210"
+			request.documents[0].attachment = upload_file("pan.txt").file_url
+			request.save()
+			self.assertRaises(frappe.MandatoryError, request.submit_details)
 
-		request.cell_number = "+91-9876543210"
-		request.documents[0].attachment = upload_file("pan.txt").file_url
-		request.save()
-		self.assertRaises(frappe.MandatoryError, request.submit_details)
-
-		request.reload()
-		fill_mandatory_details(request)
-		request.save()
-		request.submit_details()
-		request.reload()
+			request.reload()
+			fill_mandatory_details(request)
+			request.save()
+			request.submit_details()
+			request.reload()
 
 		self.assertTrue(request.submitted_on)
 		self.assertTrue(request.documents[0].attachment.startswith("/private/"))
 
 	def test_required_documents_block_submit(self):
 		request = get_request(start_preboarding())
-		frappe.set_user(CANDIDATE_EMAIL)
-		fill_mandatory_details(request)
-		request.save()
+		with self.set_user(CANDIDATE_EMAIL):
+			fill_mandatory_details(request)
+			request.save()
 
-		self.assertRaises(frappe.ValidationError, request.submit_details)
+			self.assertRaises(frappe.ValidationError, request.submit_details)
 
 	def test_create_employee_dialog_gets_the_request(self):
 		preboarding = start_preboarding()
@@ -148,8 +144,8 @@ class TestEmployeeRequest(HRMSTestSuite):
 
 		fill_mandatory_details(request)
 		request.save()
-		frappe.set_user(hr_manager)
-		make_employee(preboarding.name).insert()
+		with self.set_user(hr_manager):
+			make_employee(preboarding.name).insert()
 
 		self.assertFalse(frappe.db.exists("Employee Request", request.name))
 		self.assertNotIn(PREBOARDING_CANDIDATE_ROLE, frappe.get_roles(CANDIDATE_EMAIL))
@@ -162,18 +158,20 @@ class TestEmployeeRequest(HRMSTestSuite):
 		)
 		unattached = save_file("banner.txt", b"company banner", None, None, is_private=0)
 
-		frappe.set_user(CANDIDATE_EMAIL)
-		for file in (elsewhere, unattached):
-			request.reload()
-			request.documents[0].attachment = file.file_url
-			self.assertRaises(frappe.ValidationError, request.save)
-			file.reload()
-			self.assertFalse(file.is_private)
-			self.assertTrue(os.path.exists(file.get_full_path()))
+		with self.set_user(CANDIDATE_EMAIL):
+			for file in (elsewhere, unattached):
+				request.reload()
+				request.documents[0].attachment = file.file_url
+				self.assertRaises(frappe.ValidationError, request.save)
+				file.reload()
+				self.assertFalse(file.is_private)
+				self.assertTrue(os.path.exists(file.get_full_path()))
 
-		request.reload()
-		request.documents[0].attachment = save_file("pan.txt", b"pan card", None, None, is_private=0).file_url
-		request.save()
+			request.reload()
+			request.documents[0].attachment = save_file(
+				"pan.txt", b"pan card", None, None, is_private=0
+			).file_url
+			request.save()
 
 		self.assertTrue(request.documents[0].attachment.startswith("/private/"))
 		self.assertTrue(
@@ -195,25 +193,25 @@ class TestEmployeeRequest(HRMSTestSuite):
 		)
 		someone_elses = save_file("salary.txt", b"salary slip", None, None, is_private=1)
 
-		frappe.set_user(CANDIDATE_EMAIL)
-		for file in (elsewhere, someone_elses):
-			request.reload()
-			request.documents[0].attachment = file.file_url
-			self.assertRaises(frappe.ValidationError, request.save)
-			self.assertFalse(
-				frappe.db.exists(
-					"File",
-					{
-						"file_url": file.file_url,
-						"attached_to_doctype": request.doctype,
-						"attached_to_name": request.name,
-					},
+		with self.set_user(CANDIDATE_EMAIL):
+			for file in (elsewhere, someone_elses):
+				request.reload()
+				request.documents[0].attachment = file.file_url
+				self.assertRaises(frappe.ValidationError, request.save)
+				self.assertFalse(
+					frappe.db.exists(
+						"File",
+						{
+							"file_url": file.file_url,
+							"attached_to_doctype": request.doctype,
+							"attached_to_name": request.name,
+						},
+					)
 				)
-			)
 
-		request.reload()
-		request.documents[0].attachment = upload_file("pan.txt").file_url
-		request.save()
+			request.reload()
+			request.documents[0].attachment = upload_file("pan.txt").file_url
+			request.save()
 
 		self.assertTrue(
 			frappe.db.exists(
@@ -230,12 +228,12 @@ class TestEmployeeRequest(HRMSTestSuite):
 		preboarding = start_preboarding()
 		request = get_request(preboarding)
 
-		frappe.set_user(CANDIDATE_EMAIL)
-		for url in ("/private/files/does-not-exist/x.pdf", "https://example.com/x.pdf"):
-			request.reload()
-			request.documents[0].attachment = url
-			self.assertRaises(frappe.ValidationError, request.save)
-			self.assertFalse(frappe.db.exists("File", {"file_url": url}))
+		with self.set_user(CANDIDATE_EMAIL):
+			for url in ("/private/files/does-not-exist/x.pdf", "https://example.com/x.pdf"):
+				request.reload()
+				request.documents[0].attachment = url
+				self.assertRaises(frappe.ValidationError, request.save)
+				self.assertFalse(frappe.db.exists("File", {"file_url": url}))
 
 
 def start_preboarding(as_user=None):
@@ -251,10 +249,8 @@ def start_preboarding(as_user=None):
 
 	preboarding = create_employee_preboarding(submit=True)
 	preboarding.date_of_joining = add_days(getdate(), 7)
-	if as_user:
-		frappe.set_user(as_user)
-	preboarding.create_user("Personal Email", personal_email=CANDIDATE_EMAIL)
-	frappe.set_user("Administrator")
+	with set_user(as_user or frappe.session.user):
+		preboarding.create_user("Personal Email", personal_email=CANDIDATE_EMAIL)
 	preboarding.reload()
 	return preboarding
 
