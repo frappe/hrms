@@ -1,11 +1,4 @@
-.epc-letter-preview {
-	width: 100%;
-	height: 480px;
-	border: 1px solid var(--outline-gray-2);
-	border-radius: var(--radius-md);
-}
-
-.epc-create-employee {
+.epc-record-dialog {
 	.es-tabs[data-orientation="vertical"] {
 		display: grid;
 		flex: 1;
@@ -38,6 +31,12 @@
 		flex-direction: column;
 		gap: calc(var(--spacing) * 0.5);
 		min-width: 0;
+	}
+
+	.epc-profile__actions {
+		display: flex;
+		flex-shrink: 0;
+		gap: calc(var(--spacing) * 2);
 	}
 
 	.es-tabs[data-orientation="vertical"] > .es-tabs__panel[data-state="active"] {
