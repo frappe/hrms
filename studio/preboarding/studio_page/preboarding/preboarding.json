@@ -894,7 +894,7 @@
          "componentProps": {},
          "componentSlots": {},
          "originalElement": "div",
-         "visibilityCondition": "{{ isReviewStep }}"
+         "visibilityCondition": "{{ isLastStep }}"
         },
         {
          "baseStyles": {
@@ -944,7 +944,7 @@
            "componentId": "button-42",
            "componentName": "Button",
            "componentProps": {
-            "disabled": "{{ isReviewStep && missing.length > 0 }}",
+            "disabled": "{{ isLastStep && missing.length > 0 }}",
             "label": "{{ primaryLabel }}",
             "loading": "{{ saving }}",
             "variant": "solid"
