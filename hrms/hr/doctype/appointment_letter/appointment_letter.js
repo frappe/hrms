@@ -94,16 +94,12 @@ async function set_default_template(frm) {
 }
 
 function email_appointment_letter(frm) {
-	const composer = new frappe.views.CommunicationComposer({
-		doc: frm.doc,
-		frm: frm,
+	hrms.print_utils.email_with_print(frm, {
+		print_format: frm.doc.appointment_letter_print_format,
 		subject: __("Letter of Appointment - {0}", [frm.doc.applicant_name]),
 		recipients: frm.doc.applicant_email,
-		attach_document_print: true,
-		print_format: frm.doc.appointment_letter_print_format,
 		message: appointment_letter_message(frm.doc),
 	});
-	composer.dialog.no_focus = true;
 }
 
 function appointment_letter_message(doc) {
@@ -124,40 +120,10 @@ function appointment_letter_message(doc) {
 	);
 }
 
-let appointment_letter_preview_request = 0;
-
-async function render_appointment_letter_preview(frm) {
-	const field = frm.get_field("appointment_letter_preview");
-	const $wrapper = field.$wrapper;
-	const request = ++appointment_letter_preview_request;
-	if (!frm.doc.appointment_letter_print_format) {
-		$wrapper.empty();
-		return;
-	}
-
-	const { message } = await frappe.call({
-		method: "frappe.www.printview.get_html_and_style",
-		args: {
-			doc: frm.doc,
-			print_format: frm.doc.appointment_letter_print_format,
-			letterhead: frm.doc.letter_head,
-			no_letterhead: frm.doc.letter_head ? 0 : 1,
-		},
-	});
-	if (request !== appointment_letter_preview_request || !message) return;
-
-	const $iframe = $(
-		`<iframe sandbox="allow-same-origin" frameborder="0" style="width: 100%; height: 900px; border: 1px solid var(--border-color); border-radius: var(--border-radius-md);"></iframe>`,
+function render_appointment_letter_preview(frm) {
+	hrms.print_utils.render_print_preview(
+		frm,
+		"appointment_letter_preview",
+		frm.doc.appointment_letter_print_format,
 	);
-	$iframe[0].srcdoc = /^\s*<(!doctype|html)\b/i.test(message.html || "")
-		? message.html
-		: `<!DOCTYPE html><html><head>
-			<link href="${frappe.urllib.get_base_url()}${frappe.assets.bundled_asset(
-				"print.bundle.css",
-			)}" rel="stylesheet">
-			<style>${(message.style || "").replace(/<\//g, "<\\/")}</style>
-		</head><body><div class="print-format">${message.html || ""}</div></body></html>`;
-
-	const $head = $(`<div class="text-base-medium mb-3">${__(field.df.label)}</div>`);
-	$wrapper.empty().append($head, $iframe);
 }
