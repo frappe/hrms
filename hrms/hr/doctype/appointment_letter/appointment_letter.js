@@ -8,10 +8,6 @@ frappe.ui.form.on("Appointment Letter", {
 
 	onload: function (frm) {
 		set_default_template(frm);
-		frm.set_query("appointment_letter_print_format", function () {
-			return { filters: { doc_type: "Appointment Letter", disabled: 0 } };
-		});
-
 		frm.set_query("job_offer", function () {
 			return { filters: { company: frm.doc.company, docstatus: 1 } };
 		});
