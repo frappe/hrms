@@ -110,10 +110,29 @@ class EmployeeRequest(Document):
 
 	def make_attachments_private(self):
 		if self.image and not is_private_url(self.image):
-			self.image = make_private(self.image)
+			self.image = self.make_private(self.image)
 		for row in self.documents:
 			if row.attachment and not is_private_url(row.attachment):
-				row.attachment = make_private(row.attachment)
+				row.attachment = self.make_private(row.attachment)
+
+	def make_private(self, url: str) -> str:
+		attached = {"attached_to_doctype": self.doctype, "attached_to_name": self.name}
+		unattached = {
+			"attached_to_doctype": ["is", "not set"],
+			"attached_to_name": ["is", "not set"],
+			"owner": frappe.session.user,
+		}
+		name = frappe.db.get_value("File", {"file_url": url, **attached}, "name") or frappe.db.get_value(
+			"File", {"file_url": url, **unattached}, "name"
+		)
+		if not name:
+			if frappe.db.exists("File", {"file_url": url}):
+				frappe.throw(_("Upload {0} again to attach it to this request").format(frappe.bold(url)))
+			return url
+		file = frappe.get_doc("File", name)
+		file.is_private = 1
+		file.save(ignore_permissions=True)
+		return file.file_url
 
 	def get_employee_values(self) -> dict:
 		employee_meta = frappe.get_meta("Employee")
@@ -274,16 +293,6 @@ def get_reviewer(preboarding: str) -> str:
 
 def is_private_url(url: str) -> bool:
 	return url.startswith("/private/")
-
-
-def make_private(url: str) -> str:
-	name = frappe.db.get_value("File", {"file_url": url}, "name")
-	if not name:
-		return url
-	file = frappe.get_doc("File", name)
-	file.is_private = 1
-	file.save(ignore_permissions=True)
-	return file.file_url
 
 
 def is_reviewer(user: str | None = None) -> bool:
