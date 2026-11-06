@@ -1,13 +1,10 @@
 hrms.print_utils = {
-	email_with_print(frm, { print_format, subject, recipients, message }) {
+	email_with_print(frm, options) {
 		const composer = new frappe.views.CommunicationComposer({
 			doc: frm.doc,
-			frm: frm,
-			subject: subject,
-			recipients: recipients,
+			frm,
 			attach_document_print: true,
-			print_format: print_format,
-			message: message,
+			...options,
 		});
 		composer.dialog.no_focus = true;
 	},
