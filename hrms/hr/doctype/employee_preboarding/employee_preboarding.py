@@ -8,6 +8,7 @@ from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe.utils import formatdate, get_link_to_form, get_url, now_datetime, validate_email_address
 
+from hrms.hr.doctype.appointment_letter_template.appointment_letter_template import get_default_template
 from hrms.hr.doctype.employee_preboarding.preboarding_activities import PreboardingActivities
 from hrms.hr.doctype.employee_request.employee_request import (
 	PREBOARDING_CANDIDATE_ROLE,
@@ -119,9 +120,6 @@ class EmployeePreboarding(PreboardingActivities, Document):
 		)
 		return assigned or frappe.db.get_value("Company", self.company, "default_holiday_list")
 
-	def get_employee_email(self) -> str | None:
-		return self.company_email or self.personal_email
-
 	@frappe.whitelist(methods=["POST"])
 	def create_user(
 		self,
@@ -232,34 +230,10 @@ class EmployeePreboarding(PreboardingActivities, Document):
 	def get_appointment_letter(self) -> str | None:
 		return frappe.db.get_value("Appointment Letter", {"employee_preboarding": self.name}, "name")
 
-	@frappe.whitelist(methods=["POST"])
-	def send_appointment_letter(self) -> None:
-		self.check_permission("write")
-		self.validate_started()
-
-		letter = self.get_appointment_letter()
-		if not letter:
-			frappe.throw(_("Create the Appointment Letter first"))
-
-		recipient = self.get_employee_email()
-		if not recipient:
-			frappe.throw(_("Set a Company Email or Personal Email to send the letter"))
-
-		frappe.sendmail(
-			recipients=[recipient],
-			subject=_("Your appointment letter"),
-			message=_("Hello {0}, please find your appointment letter attached.").format(
-				frappe.utils.escape_html(self.employee_name)
-			),
-			attachments=[frappe.attach_print("Appointment Letter", letter)],
-			reference_doctype=self.doctype,
-			reference_name=self.name,
-		)
-		self.db_set("appointment_letter_sent_on", now_datetime())
-		self.save_activity_states()
-
 	def attach_employee(self, employee: str) -> None:
 		self.db_set("employee", employee)
+		if letter := self.get_appointment_letter():
+			frappe.db.set_value("Appointment Letter", letter, "employee", employee)
 		self.grant_employee_self_service()
 		if request := self.get_employee_request():
 			request.apply_to(employee)
@@ -322,6 +296,33 @@ def make_employee(source_name: str, target_doc: str | Document | None = None) ->
 	)
 
 
+@frappe.whitelist()
+def make_appointment_letter(source_name: str, target_doc: str | Document | None = None) -> Document:
+	def set_missing_values(source, target):
+		target.appointment_date = source.date_of_joining
+		target.applicant_email = source.company_email or source.personal_email
+		target.letter_head = frappe.db.get_value("Job Offer", source.job_offer, "letter_head")
+		if source.employee:
+			target.address = frappe.db.get_value("Employee", source.employee, "current_address")
+			target.set_shift_from_employee()
+		target.appointment_letter_template = get_default_template()
+		target.letter_body = target.get_template_body()
+
+	return get_mapped_doc(
+		"Employee Preboarding",
+		source_name,
+		{
+			"Employee Preboarding": {
+				"doctype": "Appointment Letter",
+				"field_map": {"name": "employee_preboarding", "employee_name": "applicant_name"},
+				"field_no_map": ["naming_series", "amended_from"],
+			}
+		},
+		target_doc,
+		set_missing_values,
+	)
+
+
 def unlink_deleted_user(user: Document, method: str | None = None) -> None:
 	"""Clear a deleted user from its preboarding and open the Create User row again.
 
@@ -333,6 +334,12 @@ def unlink_deleted_user(user: Document, method: str | None = None) -> None:
 		preboarding.db_set("user", None)
 		preboarding.save_activity_states()
 	frappe.db.set_value("Employee Request", {"user": user.name}, "user", None)
+
+
+def mark_appointment_letter_sent(preboarding: str) -> None:
+	doc = frappe.get_doc("Employee Preboarding", preboarding)
+	doc.db_set("appointment_letter_sent_on", now_datetime())
+	doc.save_activity_states()
 
 
 def reopen_appointment_letter(preboarding: str) -> None:

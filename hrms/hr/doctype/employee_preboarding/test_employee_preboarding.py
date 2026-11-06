@@ -5,10 +5,15 @@ import frappe
 from frappe.desk.form.linked_with import get_linked_docs_to_delete
 from frappe.utils import add_days, getdate
 
+from hrms.hr.doctype.appointment_letter_template.appointment_letter_template import get_default_template
 from hrms.hr.doctype.employee_boarding_template.employee_boarding_template import (
 	get_standard_activities,
 )
-from hrms.hr.doctype.employee_preboarding.employee_preboarding import make_employee, split_full_name
+from hrms.hr.doctype.employee_preboarding.employee_preboarding import (
+	make_appointment_letter,
+	make_employee,
+	split_full_name,
+)
 from hrms.hr.doctype.employee_preboarding.preboarding_activities import (
 	STANDARD_ACTIVITIES,
 	get_template_activities,
@@ -404,7 +409,7 @@ class TestEmployeePreboarding(HRMSTestSuite):
 
 	def test_deleting_a_sent_appointment_letter_reopens_its_row(self):
 		preboarding = create_employee_preboarding(submit=False)
-		letter = make_appointment_letter(preboarding)
+		letter = create_appointment_letter(preboarding)
 		preboarding.db_set("appointment_letter_sent_on", frappe.utils.now_datetime())
 		preboarding.save_activity_states()
 		self.assertTrue(get_row(preboarding, "Send Appointment Letter").completed)
@@ -418,10 +423,80 @@ class TestEmployeePreboarding(HRMSTestSuite):
 
 	def test_deleting_a_preboarding_offers_its_appointment_letter(self):
 		preboarding = create_employee_preboarding(submit=False)
-		letter = make_appointment_letter(preboarding)
+		letter = create_appointment_letter(preboarding)
 
 		linked = get_linked_docs_to_delete("Employee Preboarding", preboarding.name)["docs"]
 		self.assertIn(letter.name, [doc["name"] for doc in linked])
+
+	def test_appointment_letter_is_built_from_the_preboarding(self):
+		preboarding = create_employee_preboarding(submit=False)
+		preboarding.db_set("personal_email", "asha@example.com")
+		preboarding.reload()
+
+		letter = create_appointment_letter(preboarding)
+
+		self.assertEqual(letter.employee_preboarding, preboarding.name)
+		self.assertEqual(letter.job_offer, preboarding.job_offer)
+		self.assertEqual(letter.applicant_name, preboarding.employee_name)
+		self.assertEqual(letter.applicant_email, "asha@example.com")
+		self.assertEqual(getdate(letter.appointment_date), getdate(preboarding.date_of_joining))
+		self.assertEqual(
+			letter.letter_head, frappe.db.get_value("Job Offer", preboarding.job_offer, "letter_head")
+		)
+		self.assertIsNone(letter.address)
+		self.assertEqual(letter.appointment_letter_template, get_default_template())
+		self.assertEqual(
+			letter.letter_body,
+			frappe.db.get_value("Appointment Letter Template", get_default_template(), "letter_body"),
+		)
+		self.assertEqual(preboarding.get_appointment_letter(), letter.name)
+
+	def test_linking_the_employee_puts_the_employee_on_the_letter(self):
+		preboarding = create_employee_preboarding(submit=True)
+		letter = create_appointment_letter(preboarding)
+
+		employee = create_preboarding_employee(preboarding)
+
+		self.assertEqual(frappe.db.get_value("Appointment Letter", letter.name, "employee"), employee)
+
+	def test_emailing_the_letter_from_its_form_marks_the_row_sent(self):
+		preboarding = create_employee_preboarding(submit=False)
+		preboarding.db_set("personal_email", "asha@example.com")
+		preboarding.reload()
+		letter = create_appointment_letter(preboarding)
+
+		send_letter_email(letter, "Asha <asha@example.com>")
+
+		preboarding.reload()
+		self.assertTrue(preboarding.appointment_letter_sent_on)
+		self.assertTrue(get_row(preboarding, "Send Appointment Letter").completed)
+
+	def test_undoing_the_applicant_email_reopens_the_row(self):
+		preboarding = create_employee_preboarding(submit=False)
+		preboarding.db_set("personal_email", "asha@example.com")
+		preboarding.reload()
+		letter = create_appointment_letter(preboarding)
+		communication = send_letter_email(letter, "Asha <asha@example.com>")
+
+		communication.delete(ignore_permissions=True)
+
+		preboarding.reload()
+		self.assertIsNone(preboarding.appointment_letter_sent_on)
+		self.assertFalse(get_row(preboarding, "Send Appointment Letter").completed)
+
+	def test_undoing_one_of_two_applicant_emails_keeps_the_row_sent(self):
+		preboarding = create_employee_preboarding(submit=False)
+		preboarding.db_set("personal_email", "asha@example.com")
+		preboarding.reload()
+		letter = create_appointment_letter(preboarding)
+		send_letter_email(letter, "asha@example.com")
+		second = send_letter_email(letter, "Asha <asha@example.com>")
+
+		second.delete(ignore_permissions=True)
+
+		preboarding.reload()
+		self.assertTrue(preboarding.appointment_letter_sent_on)
+		self.assertTrue(get_row(preboarding, "Send Appointment Letter").completed)
 
 	def test_an_employee_saved_outside_the_checklist_completes_its_row(self):
 		preboarding = create_employee_preboarding(submit=True)
@@ -708,17 +783,25 @@ def create_preboarding_employee(preboarding):
 	return map_employee(preboarding).insert().name
 
 
-def make_appointment_letter(preboarding):
-	return frappe.get_doc(
+def create_appointment_letter(preboarding):
+	return make_appointment_letter(preboarding.name).insert()
+
+
+def send_letter_email(letter, recipients):
+	communication = frappe.get_doc(
 		{
-			"doctype": "Appointment Letter",
-			"job_applicant": preboarding.job_applicant,
-			"applicant_name": preboarding.employee_name,
-			"company": preboarding.company,
-			"appointment_date": preboarding.date_of_joining,
-			"employee_preboarding": preboarding.name,
+			"doctype": "Communication",
+			"communication_type": "Communication",
+			"communication_medium": "Email",
+			"sent_or_received": "Sent",
+			"subject": "Letter of Appointment",
+			"recipients": recipients,
+			"reference_doctype": "Appointment Letter",
+			"reference_name": letter.name,
 		}
-	).insert(ignore_mandatory=True)
+	).insert(ignore_permissions=True)
+	letter.on_communication_update(communication)
+	return communication
 
 
 def get_row(preboarding, activity_name):
