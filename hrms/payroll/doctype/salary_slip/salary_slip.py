@@ -1934,12 +1934,28 @@ class SalarySlip(TransactionBase):
 			eval_locals,
 		)
 
+		# the tax row is prorated by payment days, so the current period counts only as that share
+		payment_days_share = 1
+		if not has_additional_salary_tax_component:
+			tax_row = next(
+				(
+					d
+					for d in self.get("deductions")
+					if d.salary_component == tax_component and not d.additional_salary
+				),
+				None,
+			) or get_salary_component_data(tax_component)
+			if cint(tax_row.depends_on_payment_days) and cint(self.total_working_days):
+				payment_days_share = flt(self.payment_days) / cint(self.total_working_days)
+
+		remaining_sub_periods = self.remaining_sub_periods - 1 + payment_days_share
+
 		if has_additional_salary_tax_component:
 			self.current_structured_tax_amount = self.additional_salary_amount
-		elif self.remaining_sub_periods > 0:
+		elif remaining_sub_periods > 0:
 			self.current_structured_tax_amount = (
 				self.total_structured_tax_amount - self.previous_total_paid_taxes
-			) / self.remaining_sub_periods
+			) / remaining_sub_periods
 		else:
 			self.current_structured_tax_amount = 0.0
 
