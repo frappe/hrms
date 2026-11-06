@@ -355,3 +355,19 @@ class TestAttendance(HRMSTestSuite):
 
 	def tearDown(self):
 		frappe.db.rollback()
+
+	def test_on_leave_attendance_needs_leave_type(self):
+		employee = make_employee("test_on_leave_type@example.com", company="_Test Company")
+		attendance = frappe.get_doc(
+			{
+				"doctype": "Attendance",
+				"employee": employee,
+				"attendance_date": nowdate(),
+				"status": "On Leave",
+				"company": "_Test Company",
+			}
+		)
+		self.assertRaisesRegex(frappe.ValidationError, "Leave Type is required", attendance.insert)
+
+		attendance.leave_type = "_Test Leave Type"
+		attendance.insert()

@@ -33,6 +33,7 @@ class GratuityRule(Document):
 	# end: auto-generated types
 
 	def validate(self):
+		self.validate_slab_order()
 		for current_slab in self.gratuity_rule_slabs:
 			if (current_slab.from_year > current_slab.to_year) and current_slab.to_year != 0:
 				frappe.throw(
@@ -46,6 +47,15 @@ class GratuityRule(Document):
 			):
 				frappe.throw(
 					_("You can not define multiple slabs if you have a slab with no lower and upper limits.")
+				)
+
+	def validate_slab_order(self):
+		for previous_slab, slab in zip(self.gratuity_rule_slabs, self.gratuity_rule_slabs[1:], strict=False):
+			if not previous_slab.to_year or slab.from_year < previous_slab.to_year:
+				frappe.throw(
+					_("Row {0}: From (Year) cannot be less than To (Year) of the previous slab").format(
+						slab.idx
+					)
 				)
 
 

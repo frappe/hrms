@@ -35,6 +35,7 @@ from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 	create_salary_structure_assignment,
 	make_salary_structure,
 )
+from hrms.payroll.utils import set_exchange_rate
 from hrms.tests.test_utils import create_department
 from hrms.tests.utils import HRMSTestSuite
 from hrms.utils import get_date_range
@@ -1477,6 +1478,113 @@ class TestPayrollEntry(HRMSTestSuite):
 		self.assertIn("'A'", query_sql)
 		self.assertNotIn("Employee Grade", query_sql)
 		self.assertNotIn("Unknown Doctype", query_sql)
+
+	def _draft_payroll_entry(self, **values):
+		dates = get_start_end_dates("Monthly", nowdate())
+		return frappe.get_doc(
+			{
+				"doctype": "Payroll Entry",
+				"company": "_Test Company",
+				"currency": "INR",
+				"exchange_rate": 1,
+				"posting_date": nowdate(),
+				"payroll_frequency": "Monthly",
+				"start_date": dates.start_date,
+				"end_date": dates.end_date,
+				"payroll_payable_account": frappe.db.get_value(
+					"Company", "_Test Company", "default_payroll_payable_account"
+				),
+				"cost_center": "Main - _TC",
+				"payment_account": get_payment_account(),
+				**values,
+			}
+		)
+
+	def test_exchange_rate_is_one_for_company_currency(self):
+		for rate in (83, 0):
+			payroll_entry = self._draft_payroll_entry(exchange_rate=rate).insert()
+			self.assertEqual(payroll_entry.exchange_rate, 1)
+
+	def test_missing_exchange_rate_for_foreign_currency(self):
+		with patch("erpnext.setup.utils.get_exchange_rate", return_value=70):
+			payroll_entry = self._draft_payroll_entry(currency="USD", exchange_rate=0).insert()
+		self.assertEqual(payroll_entry.exchange_rate, 70)
+
+		with patch("erpnext.setup.utils.get_exchange_rate", return_value=0):
+			self.assertRaises(
+				frappe.ValidationError, self._draft_payroll_entry(currency="USD", exchange_rate=0).insert
+			)
+
+		with patch("erpnext.setup.utils.get_exchange_rate", return_value=70) as lookup:
+			payroll_entry = self._draft_payroll_entry(currency="USD", exchange_rate=65).insert()
+		self.assertEqual(payroll_entry.exchange_rate, 65)
+		lookup.assert_not_called()
+
+	def test_default_exchange_rate_of_standalone_document_is_resolved(self):
+		doc = frappe._dict(currency="USD", company="_Test Company", exchange_rate=1, posting_date=nowdate())
+		with patch("erpnext.setup.utils.get_exchange_rate", return_value=70):
+			set_exchange_rate(doc)
+			self.assertEqual(doc.exchange_rate, 1)
+
+			set_exchange_rate(doc, default_rate_is_unset=True)
+			self.assertEqual(doc.exchange_rate, 70)
+
+	def test_payroll_frequency_is_required(self):
+		self.assertRaises(frappe.ValidationError, self._draft_payroll_entry(payroll_frequency="").insert)
+		self._draft_payroll_entry(payroll_frequency="", salary_slip_based_on_timesheet=1).insert()
+
+	def test_salary_slip_steps_need_submitted_entry(self):
+		payroll_entry = self._draft_payroll_entry().insert()
+		for step in (
+			payroll_entry.create_salary_slips,
+			payroll_entry.submit_salary_slips,
+			payroll_entry.make_bank_entry,
+		):
+			self.assertRaises(frappe.ValidationError, step)
+
+		payroll_entry.reload()
+		self.assertEqual(payroll_entry.status, "Draft")
+
+	def test_salary_slip_steps_blocked_while_queued(self):
+		payroll_entry = self._draft_payroll_entry().insert()
+		payroll_entry.db_set({"docstatus": 1, "status": "Queued"})
+		payroll_entry.reload()
+		for step in (
+			payroll_entry.create_salary_slips,
+			payroll_entry.submit_salary_slips,
+			payroll_entry.make_bank_entry,
+		):
+			self.assertRaises(frappe.ValidationError, step)
+
+	def test_bank_entry_needs_submitted_salary_slips(self):
+		employee = make_employee("test_bank_entry_guard@payroll.com", company="_Test Company")
+		company_doc = frappe.get_cached_doc("Company", "_Test Company")
+		setup_salary_structure(employee, company_doc)
+
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = get_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company_doc.default_payroll_payable_account,
+			currency=company_doc.default_currency,
+			company=company_doc.name,
+			cost_center="Main - _TC",
+			payment_account=get_payment_account(),
+		)
+		payroll_entry.submit()
+		payroll_entry.reload()
+
+		self.assertRaises(frappe.ValidationError, payroll_entry.make_bank_entry)
+
+	def test_employees_of_other_company_blocked_on_submit(self):
+		employee = make_employee("test_other_company@payroll.com", company="_Test Company 1")
+		payroll_entry = self._draft_payroll_entry(employees=[{"employee": employee}]).insert()
+		self.assertRaisesRegex(frappe.ValidationError, "do not belong to company", payroll_entry.submit)
+
+	def test_pending_overtime_blocks_submit(self):
+		payroll_entry = self._draft_payroll_entry().insert()
+		with patch.object(PayrollEntry, "get_overtime_slip_details", return_value=[True, False]):
+			self.assertRaisesRegex(frappe.ValidationError, "Overtime Slips", payroll_entry.submit)
 
 
 def get_payroll_entry(**args):

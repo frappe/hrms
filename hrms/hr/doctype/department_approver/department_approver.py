@@ -146,3 +146,61 @@ def validate_approver_access(employee_id: str, employee: dict, approvers: list) 
 		return
 
 	frappe.throw(_("Not permitted"), frappe.PermissionError)
+
+
+def validate_approver(doc: Document, approver_field: str) -> None:
+	approver = doc.get(approver_field)
+	if (
+		not (approver and doc.employee)
+		or doc.docstatus != 0
+		or not doc.has_value_changed(approver_field)
+		or doc.flags.ignore_permissions
+		or frappe.flags.in_import
+		or {"HR Manager", "HR User"}.intersection(frappe.get_roles())
+	):
+		return
+
+	if approver not in get_valid_approvers(doc.employee, doc.doctype, doc.get("department")):
+		frappe.throw(
+			_("{0} is not an approver of Employee {1} for {2}").format(
+				frappe.bold(approver), frappe.bold(doc.employee), _(doc.doctype)
+			),
+			title=_("Invalid Approver"),
+		)
+
+
+def get_valid_approvers(employee: str, doctype: str, department: str | None = None) -> set[str]:
+	employee_field, parentfield = {
+		"Leave Application": ("leave_approver", "leave_approvers"),
+		"Expense Claim": ("expense_approver", "expense_approvers"),
+	}[doctype]
+	employee_approver, employee_department = frappe.db.get_value(
+		"Employee", employee, [employee_field, "department"]
+	)
+	approvers = {employee_approver} if employee_approver else set()
+
+	department = department or employee_department
+	department_details = (
+		frappe.db.get_value("Department", department, ["lft", "rgt"], as_dict=True) if department else None
+	)
+	if department_details:
+		Department = frappe.qb.DocType("Department")
+		DepartmentApproverTable = frappe.qb.DocType("Department Approver")
+		approvers.update(
+			frappe.qb.from_(DepartmentApproverTable)
+			.join(Department)
+			.on(DepartmentApproverTable.parent == Department.name)
+			.select(DepartmentApproverTable.approver)
+			.where(
+				(Department.lft <= department_details.lft)
+				& (Department.rgt >= department_details.rgt)
+				& (Department.disabled == 0)
+				& (DepartmentApproverTable.parentfield == parentfield)
+			)
+			.run(pluck=True)
+		)
+
+	if not approvers:
+		return approvers
+
+	return set(frappe.get_all("User", filters={"name": ("in", list(approvers)), "enabled": 1}, pluck="name"))
