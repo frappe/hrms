@@ -34,12 +34,11 @@ export default function setup(context) {
 	const documents = computed(() => request?.doc?.documents ?? []);
 	const steps = computed(() => [
 		...formTabs.map((tab) => tab.label),
-		...(documents.value.length ? [DOCUMENTS_STEP] : []),
-		REVIEW_STEP,
+		documents.value.length ? DOCUMENTS_STEP : REVIEW_STEP,
 	]);
 	const stepTitle = computed(() => steps.value[step.value]);
 	const isFormStep = computed(() => step.value < formTabs.length);
-	const isReviewStep = computed(() => stepTitle.value === REVIEW_STEP);
+	const isLastStep = computed(() => step.value === steps.value.length - 1);
 	const missing = computed(() => [...getMissingFields(), ...getMissingDocuments()]);
 
 	function getMissingFields() {
@@ -104,7 +103,7 @@ export default function setup(context) {
 		steps,
 		stepTitle,
 		isFormStep,
-		isReviewStep,
+		isLastStep,
 		missing,
 		dialogOpen,
 		dialogRow,
@@ -122,7 +121,7 @@ export default function setup(context) {
 		),
 		stepCaption: computed(() => `Step ${step.value + 1} of ${steps.value.length}`),
 		progressValue: computed(() => ((step.value + 1) / steps.value.length) * 100),
-		primaryLabel: computed(() => (isReviewStep.value ? "Submit" : "Next")),
+		primaryLabel: computed(() => (isLastStep.value ? "Submit" : "Next")),
 		missingSummary: computed(() => missing.value.join(", ")),
 		dialogTitle: computed(() => {
 			const label = ENTRY_TABLES[dialogTable.value]?.label;
@@ -132,7 +131,7 @@ export default function setup(context) {
 		dialogActions: computed(() => [
 			{ label: "Save", variant: "solid", loading: saving.value, onClick: () => saveRow() },
 		]),
-		primaryAction: () => (isReviewStep.value ? submitDetails() : next()),
+		primaryAction: () => (isLastStep.value ? submitDetails() : next()),
 		back: () => (step.value -= 1),
 		rowTitle: (fieldname, row) => ENTRY_TABLES[fieldname].title(row) || "Untitled",
 		rowSubtitle: (fieldname, row) =>
