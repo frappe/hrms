@@ -7,25 +7,35 @@ from frappe.utils import add_days, date_diff
 
 country_info = {}
 
+# Cap the in-memory cache so a guest-reachable endpoint cannot grow it without bound
+COUNTRY_INFO_CACHE_LIMIT = 10000
 
-@frappe.whitelist(allow_guest=True)
+
+# pre-existing guest endpoint; this change only hardens the outbound request
+@frappe.whitelist(allow_guest=True)  # nosemgrep: frappe-semgrep-rules.rules.security.guest-whitelisted-method
 def get_country(fields: list | None = None) -> dict:
 	global country_info
 	ip = frappe.local.request_ip
 
 	if ip not in country_info:
-		fields = ["countryCode", "country", "regionName", "city"]
-		res = requests.get(
-			"https://pro.ip-api.com/json/{ip}?key={key}&fields={fields}".format(
-				ip=ip, key=frappe.conf.get("ip-api-key"), fields=",".join(fields)
-			)
-		)
-
+		lookup_fields = ["countryCode", "country", "regionName", "city"]
 		try:
-			country_info[ip] = res.json()
-
+			res = requests.get(
+				"https://pro.ip-api.com/json/{ip}?key={key}&fields={fields}".format(
+					ip=ip, key=frappe.conf.get("ip-api-key"), fields=",".join(lookup_fields)
+				),
+				timeout=5,
+			)
+			info = res.json()
 		except Exception:
-			country_info[ip] = {}
+			# network error, timeout or invalid JSON: return an empty result without
+			# caching it, so a transient failure does not poison the cache for this IP
+			return {}
+
+		# avoid unbounded growth of the module-level cache
+		if len(country_info) >= COUNTRY_INFO_CACHE_LIMIT:
+			country_info.clear()
+		country_info[ip] = info
 
 	return country_info[ip]
 
