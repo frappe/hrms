@@ -126,9 +126,7 @@ class EmployeeRequest(Document):
 			"File", {"file_url": url, **unattached}, "name"
 		)
 		if not name:
-			if frappe.db.exists("File", {"file_url": url}):
-				frappe.throw(_("Upload {0} again to attach it to this request").format(frappe.bold(url)))
-			return url
+			frappe.throw(_("Upload {0} again to attach it to this request").format(frappe.bold(url)))
 		file = frappe.get_doc("File", name)
 		if not file.is_private:
 			file.is_private = 1
