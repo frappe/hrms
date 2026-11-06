@@ -9,7 +9,7 @@ from frappe.desk.doctype.notification_log.notification_log import enqueue_create
 from frappe.model import display_fieldtypes, table_fields
 from frappe.model.document import Document
 from frappe.permissions import add_permission
-from frappe.utils import get_url, now_datetime
+from frappe.utils import comma_and, get_url, now_datetime
 
 PREBOARDING_CANDIDATE_ROLE = "Preboarding Candidate"
 PREBOARDING_INVITE_TEMPLATE = "Preboarding Invite"
@@ -278,7 +278,7 @@ def get_apply_summary(filled: int, moved: int) -> str:
 		)
 	if moved:
 		parts.append(_("attached 1 document") if moved == 1 else _("attached {0} documents").format(moved))
-	return _(" and ").join(parts).capitalize() if parts else ""
+	return comma_and(parts, add_quotes=False).capitalize()
 
 
 def get_reviewer(preboarding: str) -> str:
