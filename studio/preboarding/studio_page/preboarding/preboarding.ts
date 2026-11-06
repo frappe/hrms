@@ -145,6 +145,7 @@ export default function setup(context) {
 			row.attachment = file.file_url;
 			save();
 		},
+		fileName: (url) => url.split("/").pop(),
 	};
 }
 

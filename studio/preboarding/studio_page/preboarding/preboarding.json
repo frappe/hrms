@@ -751,6 +751,23 @@
                 },
                 {
                  "baseStyles": {
+                  "color": "var(--ink-gray-5)",
+                  "minWidth": "0px",
+                  "overflow": "hidden",
+                  "textOverflow": "ellipsis",
+                  "whiteSpace": "nowrap"
+                 },
+                 "componentId": "textblock-70",
+                 "componentName": "TextBlock",
+                 "componentProps": {
+                  "fontSize": "text-sm",
+                  "text": "{{ fileName(dataItem.attachment) }}"
+                 },
+                 "componentSlots": {},
+                 "visibilityCondition": "{{ dataItem.attachment }}"
+                },
+                {
+                 "baseStyles": {
                   "color": "var(--ink-gray-5)"
                  },
                  "componentId": "textblock-29",
