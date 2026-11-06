@@ -109,10 +109,10 @@ class EmployeeRequest(Document):
 			frappe.throw(_("Only HR can change the requested documents"), frappe.PermissionError)
 
 	def make_attachments_private(self):
-		if self.image and not is_private_url(self.image):
+		if self.image:
 			self.image = self.make_private(self.image)
 		for row in self.documents:
-			if row.attachment and not is_private_url(row.attachment):
+			if row.attachment:
 				row.attachment = self.make_private(row.attachment)
 
 	def make_private(self, url: str) -> str:
@@ -130,8 +130,9 @@ class EmployeeRequest(Document):
 				frappe.throw(_("Upload {0} again to attach it to this request").format(frappe.bold(url)))
 			return url
 		file = frappe.get_doc("File", name)
-		file.is_private = 1
-		file.save(ignore_permissions=True)
+		if not file.is_private:
+			file.is_private = 1
+			file.save(ignore_permissions=True)
 		return file.file_url
 
 	def get_employee_values(self) -> dict:
@@ -289,10 +290,6 @@ def get_reviewer(preboarding: str) -> str:
 		"user",
 	)
 	return assignee or frappe.db.get_value("Employee Preboarding", preboarding, "owner")
-
-
-def is_private_url(url: str) -> bool:
-	return url.startswith("/private/")
 
 
 def is_reviewer(user: str | None = None) -> bool:

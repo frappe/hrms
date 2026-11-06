@@ -187,6 +187,45 @@ class TestEmployeeRequest(HRMSTestSuite):
 			)
 		)
 
+	def test_saving_accepts_only_the_requests_own_private_files(self):
+		preboarding = start_preboarding()
+		request = get_request(preboarding)
+		elsewhere = save_file(
+			"offer.txt", b"offer letter", preboarding.doctype, preboarding.name, is_private=1
+		)
+		someone_elses = save_file("salary.txt", b"salary slip", None, None, is_private=1)
+
+		frappe.set_user(CANDIDATE_EMAIL)
+		for file in (elsewhere, someone_elses):
+			request.reload()
+			request.documents[0].attachment = file.file_url
+			self.assertRaises(frappe.ValidationError, request.save)
+			self.assertFalse(
+				frappe.db.exists(
+					"File",
+					{
+						"file_url": file.file_url,
+						"attached_to_doctype": request.doctype,
+						"attached_to_name": request.name,
+					},
+				)
+			)
+
+		request.reload()
+		request.documents[0].attachment = upload_file("pan.txt").file_url
+		request.save()
+
+		self.assertTrue(
+			frappe.db.exists(
+				"File",
+				{
+					"file_url": request.documents[0].attachment,
+					"attached_to_doctype": request.doctype,
+					"attached_to_name": request.name,
+				},
+			)
+		)
+
 
 def start_preboarding(as_user=None):
 	template = get_test_template()
