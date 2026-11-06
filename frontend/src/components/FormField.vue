@@ -103,6 +103,30 @@
 			:disabled="isReadOnly"
 		/>
 
+		<!-- Attach -->
+		<div v-else-if="props.fieldtype === 'Attach'" class="flex flex-col gap-2">
+			<a
+				v-if="modelValue"
+				:href="modelValue"
+				target="_blank"
+				class="text-sm text-blue-600 underline break-all"
+			>
+				{{ modelValue.split("/").pop() }}
+			</a>
+			<div v-if="!isReadOnly" class="flex flex-row items-center gap-2">
+				<input
+					type="file"
+					class="w-full text-sm text-gray-700"
+					:disabled="isUploading"
+					@change="uploadFile"
+				/>
+				<Button v-if="modelValue" variant="subtle" @click="emit('update:modelValue', '')">
+					{{ __("Clear") }}
+				</Button>
+			</div>
+			<span v-if="isUploading" class="text-xs text-gray-500">{{ __("Uploading...") }}</span>
+		</div>
+
 		<!-- Section Break -->
 		<div
 			v-else-if="props.fieldtype === 'Section Break'"
@@ -150,10 +174,11 @@
 </template>
 
 <script setup>
-import { Autocomplete, DateTimePicker, ErrorMessage, Input, TextEditor } from "frappe-ui"
-import { computed, onMounted, inject } from "vue"
+import { Autocomplete, Button, DateTimePicker, ErrorMessage, Input, TextEditor } from "frappe-ui"
+import { computed, onMounted, inject, ref } from "vue"
 
 import Link from "@/components/Link.vue"
+import { FileAttachment } from "@/composables"
 
 const __ = inject("$translate")
 
@@ -173,6 +198,8 @@ const props = defineProps({
 		default: false,
 	},
 	errorMessage: String,
+	// doctype the uploaded file is permission-checked against (Attach fields)
+	uploadDoctype: String,
 	minDate: String,
 	maxDate: String,
 	addSectionPadding: {
@@ -215,6 +242,23 @@ const selectionList = computed(() => {
 
 	return []
 })
+
+const isUploading = ref(false)
+
+async function uploadFile(event) {
+	const file = event.target.files?.[0]
+	if (!file) return
+
+	isUploading.value = true
+	try {
+		const fileDoc = await new FileAttachment(file).upload(props.uploadDoctype, "", props.fieldname)
+		emit("update:modelValue", fileDoc.file_url)
+	} catch (e) {
+		event.target.value = ""
+	} finally {
+		isUploading.value = false
+	}
+}
 
 function setDefaultValue() {
 	// set default values
