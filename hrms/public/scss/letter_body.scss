@@ -1,3 +1,3 @@
-.frappe-control[data-fieldname="letter_body"] .ql-editor {
+.frappe-control[data-fieldname="letter_body"] .ql-editor:not(.read-mode) {
 	height: 60vh;
 }
