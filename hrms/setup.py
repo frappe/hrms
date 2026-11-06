@@ -8,6 +8,7 @@ from frappe.desk.page.setup_wizard.install_fixtures import (
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.permissions import add_permission, update_permission_property
 
+from hrms.hr.doctype.appointment_letter_template.appointment_letter_template import create_default_template
 from hrms.overrides.company import delete_company_fixtures
 from hrms.subscription_utils import is_new_hr_site, set_hrms_as_default_app
 
@@ -16,6 +17,7 @@ def after_install():
 	create_custom_fields(get_custom_fields(), ignore_validate=True)
 	create_salary_slip_loan_fields()
 	make_fixtures()
+	create_default_template()
 	setup_notifications()
 	update_hr_defaults()
 	add_non_standard_user_types()

@@ -156,61 +156,21 @@ function add_email_button(frm) {
 	if (!resend) frm.change_custom_button_type(label, null, "primary");
 }
 
-async function email_offer_letter(frm) {
-	const composer = new frappe.views.CommunicationComposer({
-		doc: frm.doc,
-		frm: frm,
+function email_offer_letter(frm) {
+	hrms.print_utils.email_with_print(frm, {
+		print_format: frm.doc.offer_letter_print_format || "Job Offer Classic",
 		subject: __("Offer of Employment - {0}", [frm.doc.designation]),
 		recipients: frm.doc.applicant_email,
-		attach_document_print: true,
 		message: offer_letter_message(frm.doc),
 	});
-	composer.dialog.no_focus = true;
-
-	await composer.dialog.set_value(
-		"select_print_format",
-		frm.doc.offer_letter_print_format || "Job Offer Classic",
-	);
-	composer.render_print_card_meta();
-	composer.sync_print_menu?.();
 }
 
-let offer_letter_preview_request = 0;
-
-async function render_offer_letter_preview(frm) {
-	const field = frm.get_field("offer_letter_preview");
-	const $wrapper = field.$wrapper;
-	const request = ++offer_letter_preview_request;
-	if (!frm.doc.offer_letter_print_format || frm.doc.docstatus === 2) {
-		$wrapper.empty();
-		return;
-	}
-
-	const { message } = await frappe.call({
-		method: "frappe.www.printview.get_html_and_style",
-		args: {
-			doc: frm.doc,
-			print_format: frm.doc.offer_letter_print_format,
-			letterhead: frm.doc.letter_head,
-			no_letterhead: frm.doc.letter_head ? 0 : 1,
-		},
-	});
-	if (request !== offer_letter_preview_request || !message) return;
-
-	const $iframe = $(
-		`<iframe sandbox="allow-same-origin" frameborder="0" style="width: 100%; height: 900px; border: 1px solid var(--border-color); border-radius: var(--border-radius-md);"></iframe>`,
+function render_offer_letter_preview(frm) {
+	hrms.print_utils.render_print_preview(
+		frm,
+		"offer_letter_preview",
+		frm.doc.docstatus === 2 ? null : frm.doc.offer_letter_print_format,
 	);
-	$iframe[0].srcdoc = /^\s*<(!doctype|html)\b/i.test(message.html || "")
-		? message.html
-		: `<!DOCTYPE html><html><head>
-			<link href="${frappe.urllib.get_base_url()}${frappe.assets.bundled_asset(
-				"print.bundle.css",
-			)}" rel="stylesheet">
-			<style>${(message.style || "").replace(/<\//g, "<\\/")}</style>
-		</head><body><div class="print-format">${message.html || ""}</div></body></html>`;
-
-	const $head = $(`<div class="text-base-medium mb-3">${__(field.df.label)}</div>`);
-	$wrapper.empty().append($head, $iframe);
 }
 
 function offer_letter_message(doc) {

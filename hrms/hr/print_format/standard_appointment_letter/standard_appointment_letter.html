@@ -10,26 +10,11 @@
     </div>
 </div>
 <div style="margin-bottom: 5%;">
-    {{ doc.introduction }}
-</div>
-<div style="margin-bottom: 5%;">
-    <ul>
-    {% for content in doc.terms %}
-        <li style="padding-bottom: 3%;">
-            <span>
-                <span><b>{{ content.title }}: </b></span> {{ content.description }}
-            </span>
-        </li>
-    {% endfor %}
-    </ul>
+    {{ doc.letter_body }}
 </div>
 <div style="margin-bottom: 5%;">
 <span>Your sincerely,</span><br>
 <span><b>For {{ doc.company }}</b></span>
-</div>
-
-<div style="margin-bottom: 5%;">
-    <span>{{ doc.closing_notes }}</span>
 </div>
 
 <div>
