@@ -154,7 +154,9 @@ class EmployeeRequest(Document):
 		filled = self.fill_blank_fields(frappe.get_doc("Employee", employee))
 		moved = self.move_attachments(employee)
 		if self.user:
-			frappe.get_doc("User", self.user).remove_roles(PREBOARDING_CANDIDATE_ROLE)
+			user = frappe.get_doc("User", self.user)
+			user.flags.ignore_permissions = True
+			user.remove_roles(PREBOARDING_CANDIDATE_ROLE)
 		frappe.delete_doc(self.doctype, self.name, ignore_permissions=True)
 		if summary := get_apply_summary(filled, moved):
 			frappe.msgprint(

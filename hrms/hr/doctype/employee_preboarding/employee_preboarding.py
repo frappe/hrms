@@ -161,7 +161,9 @@ class EmployeePreboarding(PreboardingActivities, Document):
 		return user.name
 
 	def start_employee_request(self) -> None:
-		frappe.get_doc("User", self.user).add_roles(PREBOARDING_CANDIDATE_ROLE)
+		user = frappe.get_doc("User", self.user)
+		user.append_roles(PREBOARDING_CANDIDATE_ROLE)
+		user.save(ignore_permissions=True)
 		if request := frappe.db.get_value("Employee Request", {"employee_preboarding": self.name}):
 			frappe.db.set_value("Employee Request", request, "user", self.user)
 		else:
