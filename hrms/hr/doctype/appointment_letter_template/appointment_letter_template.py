@@ -1,12 +1,9 @@
 # Copyright (c) 2019, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
-from jinja2 import TemplateSyntaxError
-
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils.jinja import get_jenv
 
 
 class AppointmentLetterTemplate(Document):
@@ -23,9 +20,6 @@ class AppointmentLetterTemplate(Document):
 		template_name: DF.Data
 	# end: auto-generated types
 
-	def validate(self):
-		validate_letter_body(self.letter_body)
-
 	def on_update(self):
 		if self.is_default:
 			frappe.db.set_value(
@@ -35,18 +29,6 @@ class AppointmentLetterTemplate(Document):
 				0,
 				update_modified=False,
 			)
-
-
-def validate_letter_body(letter_body: str | None) -> None:
-	try:
-		get_jenv().from_string(letter_body or "")
-	except TemplateSyntaxError:
-		frappe.throw(
-			_("A placeholder in the letter body is incomplete. Write each one as {0}.").format(
-				"<code>{{ ctc }}</code>"
-			),
-			title=_("Check the Letter Body"),
-		)
 
 
 def get_default_letter_body() -> str:

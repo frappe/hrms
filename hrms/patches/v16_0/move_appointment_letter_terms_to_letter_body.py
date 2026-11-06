@@ -62,4 +62,4 @@ def get_paragraph(text: str | None) -> str:
 
 
 def to_html(text: str | None) -> str:
-	return escape_html(text or "").replace("{", "{{ '{' }}").replace("\n", "<br>")
+	return escape_html(text or "").replace("\n", "<br>")

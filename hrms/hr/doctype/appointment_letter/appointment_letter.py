@@ -5,10 +5,13 @@ import calendar
 
 import frappe
 from frappe import _
+from frappe.model import no_value_fields
 from frappe.model.document import Document
 from frappe.utils import (
 	cint,
 	comma_and,
+	cstr,
+	escape_html,
 	flt,
 	fmt_money,
 	format_time,
@@ -20,7 +23,6 @@ from frappe.utils import (
 
 from hrms.hr.doctype.appointment_letter_template.appointment_letter_template import (
 	get_default_template,
-	validate_letter_body,
 )
 
 
@@ -60,7 +62,6 @@ class AppointmentLetter(Document):
 			self.letter_body = self.get_template_body()
 
 	def validate(self):
-		validate_letter_body(self.letter_body)
 		if not self.working_hours:
 			self.working_hours = get_working_hours(self.start_time, self.end_time)
 
@@ -86,15 +87,16 @@ class AppointmentLetter(Document):
 		self.letter_body = self.get_letter_body_html()
 
 	def get_letter_body_html(self) -> str:
-		return frappe.render_template(  # nosemgrep: frappe-semgrep-rules.rules.security.frappe-ssti
-			self.letter_body or "", self.get_placeholders()
-		)
+		body = self.letter_body or ""
+		for key, value in self.get_placeholders().items():
+			text = escape_html(cstr(value))
+			body = body.replace("{{ " + key + " }}", text).replace("{{" + key + "}}", text)
+		return body
 
 	def get_placeholders(self) -> dict:
 		offer = frappe.get_cached_doc("Job Offer", self.job_offer) if self.job_offer else frappe._dict()
 		placeholders = {
-			"doc": self,
-			"offer": offer,
+			**self.get_field_placeholders(),
 			"applicant_name": self.applicant_name,
 			"company": self.company,
 			"employee": self.employee,
@@ -128,6 +130,13 @@ class AppointmentLetter(Document):
 			"retirement_age": cint(frappe.db.get_single_value("HR Settings", "retirement_age")) or "",
 		}
 		return {key: "" if value is None else value for key, value in placeholders.items()}
+
+	def get_field_placeholders(self) -> dict:
+		return {
+			f"doc.{df.fieldname}": self.get_formatted(df.fieldname)
+			for df in self.meta.fields
+			if df.fieldtype not in (*no_value_fields, "Password") and df.fieldname != "letter_body"
+		}
 
 
 def get_shift_type_on(employee: str, date) -> str | None:

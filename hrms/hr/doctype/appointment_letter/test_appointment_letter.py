@@ -135,8 +135,21 @@ class TestAppointmentLetter(HRMSTestSuite):
 			"<p>Your CTC is {{ ctc }}.</p>",
 		)
 
-	def test_invalid_placeholder_syntax(self):
-		self.assertRaises(frappe.ValidationError, self.make_letter, letter_body="<p>{{ ctc </p>")
+	def test_letter_field_placeholder(self):
+		letter = self.make_letter(letter_body="<p>Write to {{ doc.applicant_email }}.</p>")
+		self.assertEqual(letter.get_letter_body_html(), "<p>Write to gaurang@example.com.</p>")
+
+	def test_code_in_letter_body_prints_as_text(self):
+		body = (
+			"<p>{{ frappe.db.sql('select name from tabUser') }}"
+			"{% for row in frappe.get_all('User') %}{{ row }}{% endfor %}"
+			"{{ doc.db_set('applicant_name', 'Changed') }}</p>"
+		)
+		letter = self.make_letter(letter_body=body)
+		self.assertEqual(letter.get_letter_body_html(), body)
+		self.assertEqual(
+			frappe.db.get_value("Appointment Letter", letter.name, "applicant_name"), "Gaurang Jha"
+		)
 
 	def test_old_terms_become_letter_body(self):
 		terms = [
@@ -157,7 +170,7 @@ class TestAppointmentLetter(HRMSTestSuite):
 		).insert()
 		template.save()
 		template.reload()
-		self.assertIn("Use {{ role }} and {% x", frappe.render_template(template.letter_body, {}))
+		self.assertIn("Use {{ role }} and {% x", template.letter_body)
 
 	def test_period_and_working_days_text(self):
 		self.assertEqual(format_probation(90), "three (3) months")
