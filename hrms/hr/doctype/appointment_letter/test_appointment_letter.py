@@ -125,6 +125,16 @@ class TestAppointmentLetter(HRMSTestSuite):
 		letter = self.make_letter(appointment_letter_template=template.name)
 		self.assertEqual(letter.get_letter_body_html(), "<p>Welcome, Gaurang Jha.</p>")
 
+	def test_any_print_format_renders_placeholders(self):
+		letter = self.make_letter(letter_body="<p>Your CTC is {{ ctc }}.</p>")
+		html = frappe.get_print("Appointment Letter", letter.name, print_format="Standard")
+		self.assertIn(f"Your CTC is {fmt_money(1600000, currency='INR')}.", html)
+		self.assertNotIn("{{", html)
+		self.assertEqual(
+			frappe.db.get_value("Appointment Letter", letter.name, "letter_body"),
+			"<p>Your CTC is {{ ctc }}.</p>",
+		)
+
 	def test_invalid_placeholder_syntax(self):
 		self.assertRaises(frappe.ValidationError, self.make_letter, letter_body="<p>{{ ctc </p>")
 

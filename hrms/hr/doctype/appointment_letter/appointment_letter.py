@@ -82,6 +82,9 @@ class AppointmentLetter(Document):
 			)
 			self.working_hours = get_working_hours(self.start_time, self.end_time)
 
+	def before_print(self, settings=None):
+		self.letter_body = self.get_letter_body_html()
+
 	def get_letter_body_html(self) -> str:
 		return frappe.render_template(  # nosemgrep: frappe-semgrep-rules.rules.security.frappe-ssti
 			self.letter_body or "", self.get_placeholders()
