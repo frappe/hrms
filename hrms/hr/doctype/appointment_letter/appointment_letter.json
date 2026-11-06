@@ -18,14 +18,13 @@
   "appointment_date",
   "letter_date",
   "address",
-  "terms_of_appointment_tab",
   "working_hours_section",
   "shift_type",
   "working_hours",
   "column_break_terms",
   "start_time",
   "end_time",
-  "body_section",
+  "terms_of_appointment_tab",
   "appointment_letter_template",
   "letter_body",
   "printing_tab",
@@ -41,7 +40,7 @@
   {
    "fieldname": "appointment_tab",
    "fieldtype": "Tab Break",
-   "label": "Employee Details"
+   "label": "Details"
   },
   {
    "description": "Role, pay, leave, probation and notice print from this offer.",
@@ -143,11 +142,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "body_section",
-   "fieldtype": "Section Break",
-   "label": "Letter Body"
-  },
-  {
    "description": "Picking a template replaces the letter body with the template's text.",
    "fieldname": "appointment_letter_template",
    "fieldtype": "Link",
@@ -183,6 +177,7 @@
    "fieldname": "appointment_letter_print_format",
    "fieldtype": "Link",
    "label": "Print Format",
+   "link_filters": "[[\"Print Format\",\"doc_type\",\"=\",\"Appointment Letter\"],[\"Print Format\",\"disabled\",\"=\",0]]",
    "options": "Print Format",
    "print_hide": 1
   },
@@ -218,7 +213,7 @@
  "icon": "mail-check",
  "link_display_mode": "Search",
  "links": [],
- "modified": "2026-11-05 21:00:00.000000",
+ "modified": "2026-11-06 14:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appointment Letter",
