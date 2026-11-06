@@ -9,6 +9,7 @@ from hrms.hr.doctype.employee_preboarding.employee_preboarding import make_emplo
 from hrms.hr.doctype.employee_preboarding.test_employee_preboarding import (
 	create_employee_preboarding,
 	get_test_template,
+	get_test_user,
 )
 from hrms.hr.doctype.employee_request.employee_request import (
 	PREBOARDING_CANDIDATE_ROLE,
@@ -136,8 +137,23 @@ class TestEmployeeRequest(HRMSTestSuite):
 			["PAN Card.txt"],
 		)
 
+	def test_hr_manager_starts_and_retires_the_request(self):
+		hr_manager = get_test_user("asha.hr.manager@example.com")
+		frappe.get_doc("User", hr_manager).add_roles("HR Manager")
+		preboarding = start_preboarding(as_user=hr_manager)
+		request = get_request(preboarding)
+		self.assertIn(PREBOARDING_CANDIDATE_ROLE, frappe.get_roles(CANDIDATE_EMAIL))
 
-def start_preboarding():
+		fill_mandatory_details(request)
+		request.save()
+		frappe.set_user(hr_manager)
+		make_employee(preboarding.name).insert()
+
+		self.assertFalse(frappe.db.exists("Employee Request", request.name))
+		self.assertNotIn(PREBOARDING_CANDIDATE_ROLE, frappe.get_roles(CANDIDATE_EMAIL))
+
+
+def start_preboarding(as_user=None):
 	template = get_test_template()
 	template.set(
 		"required_documents",
@@ -150,7 +166,10 @@ def start_preboarding():
 
 	preboarding = create_employee_preboarding(submit=True)
 	preboarding.date_of_joining = add_days(getdate(), 7)
+	if as_user:
+		frappe.set_user(as_user)
 	preboarding.create_user("Personal Email", personal_email=CANDIDATE_EMAIL)
+	frappe.set_user("Administrator")
 	preboarding.reload()
 	return preboarding
 
