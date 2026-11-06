@@ -1,0 +1,67 @@
+.epc-record-dialog {
+	.es-tabs[data-orientation="vertical"] {
+		display: grid;
+		flex: 1;
+		grid-template-columns: 14rem minmax(0, 1fr);
+		grid-template-rows: auto minmax(0, 1fr);
+		min-height: 0;
+	}
+
+	.es-tabs[data-orientation="vertical"] > .es-tabs__list {
+		grid-column: 1;
+		grid-row: 1 / span 2;
+		padding: 2rem 1rem;
+		border-top-left-radius: var(--radius-lg);
+		border-bottom-left-radius: var(--radius-lg);
+		background-color: var(--surface-sidebar);
+	}
+
+	.epc-profile {
+		grid-column: 2;
+		grid-row: 1;
+		display: flex;
+		align-items: flex-start;
+		gap: calc(var(--spacing) * 3);
+		padding: 2rem 2rem 0;
+	}
+
+	.epc-profile__text {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		gap: calc(var(--spacing) * 0.5);
+		min-width: 0;
+	}
+
+	.epc-profile__actions {
+		display: flex;
+		flex-shrink: 0;
+		gap: calc(var(--spacing) * 2);
+	}
+
+	.es-tabs[data-orientation="vertical"] > .es-tabs__panel[data-state="active"] {
+		grid-column: 2;
+		grid-row: 2;
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
+		padding: 1.25rem 1.5rem 2rem;
+	}
+
+	.settings-dialog-panel-body {
+		padding: 0 0.5rem;
+	}
+}
+
+.epc-document {
+	display: flex;
+	align-items: center;
+	gap: var(--padding-sm);
+	padding: var(--padding-sm) 0;
+	border-bottom: 1px solid var(--outline-gray-1);
+	color: var(--ink-gray-8);
+}
+
+.epc-document .icon {
+	margin: 0;
+}

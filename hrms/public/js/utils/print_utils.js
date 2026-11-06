@@ -9,10 +9,14 @@ hrms.print_utils = {
 		composer.dialog.no_focus = true;
 	},
 
-	async render_print_preview(frm, preview_fieldname, print_format) {
+	render_print_preview(frm, preview_fieldname, print_format) {
 		const field = frm.get_field(preview_fieldname);
-		const $wrapper = field.$wrapper;
-		const request = (field.preview_request = (field.preview_request || 0) + 1);
+		return this.render_print_html(field.$wrapper, frm.doc, print_format, field.df.label);
+	},
+
+	async render_print_html($wrapper, doc, print_format, label) {
+		const request = ($wrapper.data("preview_request") || 0) + 1;
+		$wrapper.data("preview_request", request);
 		if (!print_format) {
 			$wrapper.empty();
 			return;
@@ -21,13 +25,13 @@ hrms.print_utils = {
 		const { message } = await frappe.call({
 			method: "frappe.www.printview.get_html_and_style",
 			args: {
-				doc: frm.doc,
+				doc: doc,
 				print_format: print_format,
-				letterhead: frm.doc.letter_head,
-				no_letterhead: frm.doc.letter_head ? 0 : 1,
+				letterhead: doc.letter_head,
+				no_letterhead: doc.letter_head ? 0 : 1,
 			},
 		});
-		if (request !== field.preview_request || !message) return;
+		if (request !== $wrapper.data("preview_request") || !message) return;
 
 		const $iframe = $(
 			`<iframe sandbox="allow-same-origin" frameborder="0" style="width: 100%; height: 900px; border: 1px solid var(--border-color); border-radius: var(--border-radius-md);"></iframe>`,
@@ -41,7 +45,8 @@ hrms.print_utils = {
 				<style>${(message.style || "").replace(/<\//g, "<\\/")}</style>
 			</head><body><div class="print-format">${message.html || ""}</div></body></html>`;
 
-		const $head = $(`<div class="text-base-medium mb-3">${__(field.df.label)}</div>`);
-		$wrapper.empty().append($head, $iframe);
+		$wrapper.empty();
+		if (label) $wrapper.append($('<div class="text-base-medium mb-3">').text(__(label)));
+		$wrapper.append($iframe);
 	},
 };

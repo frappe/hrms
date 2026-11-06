@@ -5,6 +5,7 @@ import calendar
 
 import frappe
 from frappe import _
+from frappe.core.doctype.communication.communication import update_parent_document_on_communication
 from frappe.model import no_value_fields
 from frappe.model.document import Document
 from frappe.utils import (
@@ -18,11 +19,17 @@ from frappe.utils import (
 	getdate,
 	global_date_format,
 	in_words,
+	parse_addr,
+	split_emails,
 	to_timedelta,
 )
 
 from hrms.hr.doctype.appointment_letter_template.appointment_letter_template import (
 	get_default_template,
+)
+from hrms.hr.doctype.employee_preboarding.employee_preboarding import (
+	mark_appointment_letter_sent,
+	reopen_appointment_letter,
 )
 
 
@@ -43,6 +50,7 @@ class AppointmentLetter(Document):
 		appointment_letter_template: DF.Link | None
 		company: DF.Link
 		employee: DF.Link | None
+		employee_preboarding: DF.Link | None
 		end_time: DF.Time | None
 		job_offer: DF.Link
 		letter_body: DF.TextEditor | None
@@ -60,6 +68,39 @@ class AppointmentLetter(Document):
 		if not self.letter_body:
 			self.appointment_letter_template = self.appointment_letter_template or get_default_template()
 			self.letter_body = self.get_template_body()
+
+	def on_communication_update(self, communication):
+		if self.employee_preboarding and self.is_sent_to_applicant(communication):
+			mark_appointment_letter_sent(self.employee_preboarding)
+
+		update_parent_document_on_communication(communication)
+
+	def is_addressed_to_applicant(self, communication) -> bool:
+		recipients = {parse_addr(email)[1].lower() for email in split_emails(communication.recipients or "")}
+		return (self.applicant_email or "").lower() in recipients
+
+	def is_sent_to_applicant(self, communication) -> bool:
+		return (
+			communication.communication_type == "Communication"
+			and communication.sent_or_received == "Sent"
+			and self.is_addressed_to_applicant(communication)
+		)
+
+	def has_email_to_applicant(self, exclude: str) -> bool:
+		emails = frappe.get_all(
+			"Communication",
+			filters={
+				"reference_doctype": self.doctype,
+				"reference_name": self.name,
+				"name": ["!=", exclude],
+			},
+			fields=["communication_type", "sent_or_received", "recipients"],
+		)
+		return any(self.is_sent_to_applicant(email) for email in emails)
+
+	def on_trash(self):
+		if self.employee_preboarding:
+			reopen_appointment_letter(self.employee_preboarding)
 
 	def validate(self):
 		if not self.working_hours:
@@ -137,6 +178,20 @@ class AppointmentLetter(Document):
 			for df in self.meta.fields
 			if df.fieldtype not in (*no_value_fields, "Password") and df.fieldname != "letter_body"
 		}
+
+
+def reopen_preboarding_on_unsent(communication: Document, method: str | None = None) -> None:
+	if communication.reference_doctype != "Appointment Letter":
+		return
+	if not frappe.db.exists("Appointment Letter", communication.reference_name):
+		return
+	letter = frappe.get_doc("Appointment Letter", communication.reference_name)
+	if (
+		letter.employee_preboarding
+		and letter.is_sent_to_applicant(communication)
+		and not letter.has_email_to_applicant(exclude=communication.name)
+	):
+		reopen_appointment_letter(letter.employee_preboarding)
 
 
 def get_shift_type_on(employee: str, date) -> str | None:
