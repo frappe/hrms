@@ -1,6 +1,8 @@
 # Copyright (c) 2026, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
+import os
+
 import frappe
 from frappe.utils import add_days, getdate
 from frappe.utils.file_manager import save_file
@@ -151,6 +153,39 @@ class TestEmployeeRequest(HRMSTestSuite):
 
 		self.assertFalse(frappe.db.exists("Employee Request", request.name))
 		self.assertNotIn(PREBOARDING_CANDIDATE_ROLE, frappe.get_roles(CANDIDATE_EMAIL))
+
+	def test_saving_makes_only_the_requests_own_files_private(self):
+		preboarding = start_preboarding()
+		request = get_request(preboarding)
+		elsewhere = save_file(
+			"logo.txt", b"company logo", preboarding.doctype, preboarding.name, is_private=0
+		)
+		unattached = save_file("banner.txt", b"company banner", None, None, is_private=0)
+
+		frappe.set_user(CANDIDATE_EMAIL)
+		for file in (elsewhere, unattached):
+			request.reload()
+			request.documents[0].attachment = file.file_url
+			self.assertRaises(frappe.ValidationError, request.save)
+			file.reload()
+			self.assertFalse(file.is_private)
+			self.assertTrue(os.path.exists(file.get_full_path()))
+
+		request.reload()
+		request.documents[0].attachment = save_file("pan.txt", b"pan card", None, None, is_private=0).file_url
+		request.save()
+
+		self.assertTrue(request.documents[0].attachment.startswith("/private/"))
+		self.assertTrue(
+			frappe.db.exists(
+				"File",
+				{
+					"file_url": request.documents[0].attachment,
+					"attached_to_doctype": request.doctype,
+					"attached_to_name": request.name,
+				},
+			)
+		)
 
 
 def start_preboarding(as_user=None):
