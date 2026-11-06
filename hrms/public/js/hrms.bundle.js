@@ -7,6 +7,7 @@ import "./utils/employee_assignments";
 import "./utils/payroll_utils";
 import "./utils/leave_utils";
 import "./utils/print_utils";
+import "./utils/appointment_letter_email";
 import "./utils/employee_quick_entry";
 import "./utils/telemetry.js";
 import "./salary_slip_deductions_report_filters.js";

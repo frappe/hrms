@@ -178,6 +178,9 @@ override_doctype_class = {
 # Hook on document methods and events
 
 doc_events = {
+	"Communication": {
+		"on_trash": "hrms.hr.doctype.appointment_letter.appointment_letter.reopen_preboarding_on_unsent",
+	},
 	"User": {
 		"validate": [
 			"erpnext.setup.doctype.employee.employee.validate_employee_role",
