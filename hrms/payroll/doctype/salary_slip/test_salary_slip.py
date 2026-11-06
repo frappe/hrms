@@ -2245,6 +2245,9 @@ class TestSalarySlip(HRMSTestSuite):
 			tax,
 			rounded(salary_slip.total_structured_tax_amount / (11 + payment_days_share) * payment_days_share),
 		)
+		# income tax breakup shows the tax deducted in this slip
+		self.assertEqual(rounded(salary_slip.current_month_income_tax), tax)
+		self.assertEqual(rounded(salary_slip.income_tax_deducted_till_date), tax)
 
 	@HRMSTestSuite.change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
 	def test_lwp_calculation_based_on_relieving_date(self):
