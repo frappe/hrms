@@ -59,6 +59,7 @@ class SalaryStructure(Document):
 	def validate(self):
 		self.set_missing_values()
 		self.validate_amount()
+		self.validate_repeated_components()
 		self.validate_component_based_on_tax_slab()
 		self.validate_payment_days_based_dependent_component()
 		self.validate_timesheet_component()
@@ -113,6 +114,27 @@ class SalaryStructure(Document):
 					if not (d.get("amount") or d.get("formula")):
 						for fieldname in overwritten_fields_if_missing:
 							d.set(fieldname, component_default_value.get(fieldname))
+
+	def validate_repeated_components(self):
+		# the salary slip keeps one row per component, so a repeated component is only
+		# safe when every row has a condition and at most one of them can apply
+		for table in COMPONENT_PARENTFIELDS:
+			rows_by_component = {}
+			for row in self.get(table):
+				rows_by_component.setdefault(row.salary_component, []).append(row)
+
+			for component, rows in rows_by_component.items():
+				if len(rows) > 1 and any(not row.condition for row in rows):
+					frappe.throw(
+						_(
+							"{0} Rows {1}: Salary Component {2} is added more than once. Set a condition on each row, or combine them into one row."
+						).format(
+							_(self.meta.get_label(table)),
+							", ".join(str(row.idx) for row in rows),
+							frappe.bold(component),
+						),
+						title=_("Repeated Salary Component"),
+					)
 
 	def validate_component_based_on_tax_slab(self):
 		for row in self.deductions:
