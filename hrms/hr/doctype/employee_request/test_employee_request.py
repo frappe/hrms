@@ -226,6 +226,17 @@ class TestEmployeeRequest(HRMSTestSuite):
 			)
 		)
 
+	def test_saving_rejects_attachment_links_without_an_uploaded_file(self):
+		preboarding = start_preboarding()
+		request = get_request(preboarding)
+
+		frappe.set_user(CANDIDATE_EMAIL)
+		for url in ("/private/files/does-not-exist/x.pdf", "https://example.com/x.pdf"):
+			request.reload()
+			request.documents[0].attachment = url
+			self.assertRaises(frappe.ValidationError, request.save)
+			self.assertFalse(frappe.db.exists("File", {"file_url": url}))
+
 
 def start_preboarding(as_user=None):
 	template = get_test_template()
