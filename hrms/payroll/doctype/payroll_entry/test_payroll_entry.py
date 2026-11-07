@@ -36,7 +36,7 @@ from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 	make_salary_structure,
 )
 from hrms.tests.test_utils import create_department
-from hrms.tests.utils import HRMSTestSuite
+from hrms.tests.utils import HRMSTestSuite, make_user
 from hrms.utils import get_date_range
 
 
@@ -457,6 +457,33 @@ class TestPayrollEntry(HRMSTestSuite):
 		)
 		self.assertEqual(docstatus_by_employee[failing_employee], 0)
 		self.assertEqual(docstatus_by_employee[employee], 1)
+
+	def test_status_is_failed_when_no_salary_slip_submits(self):
+		company = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee("test_unsubmitted_slip@example.com", company=company.name)
+		setup_salary_structure(employee, company)
+
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = get_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company.default_payroll_payable_account,
+			currency=company.default_currency,
+			company=company.name,
+			cost_center="Main - _TC",
+		)
+		payroll_entry.submit()
+		self.addCleanup(frappe.set_user, "Administrator")
+		frappe.set_user(make_user("test_payroll_manager@example.com"))
+
+		with patch(
+			"hrms.payroll.doctype.salary_slip.salary_slip.make_loan_repayment_entry",
+			side_effect=frappe.ValidationError,
+		):
+			payroll_entry.submit_salary_slips()
+
+		payroll_entry.reload()
+		self.assertEqual(payroll_entry.status, "Failed")
 
 	def test_payroll_entry_cancellation(self):
 		company_doc = frappe.get_doc("Company", "_Test Company")
