@@ -8,7 +8,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.query_builder.functions import Avg
-from frappe.utils import cint, cstr, get_datetime, get_link_to_form, getdate, nowtime
+from frappe.utils import cint, cstr, get_datetime, get_link_to_form, get_time, getdate, nowtime
 
 
 class DuplicateInterviewRoundError(frappe.ValidationError):
@@ -111,7 +111,11 @@ class Interview(Document):
 	def reschedule_interview(
 		self, scheduled_on: datetime.date, from_time: datetime.time, to_time: datetime.time
 	) -> None:
-		if scheduled_on == self.scheduled_on and from_time == self.from_time and to_time == self.to_time:
+		if (
+			getdate(scheduled_on) == getdate(self.scheduled_on)
+			and get_time(from_time) == get_time(self.from_time)
+			and get_time(to_time) == get_time(self.to_time)
+		):
 			frappe.msgprint(
 				_("No changes found in timings."), indicator="orange", title=_("Interview Not Rescheduled")
 			)
