@@ -38,6 +38,7 @@ frappe.ui.form.on("Interview", {
 			);
 		}
 
+		if (!frappe.model.can_read("Interview Feedback")) return;
 		const has_submitted_feedback = await frappe.db.get_value(
 			"Interview Feedback",
 			{
@@ -243,6 +244,7 @@ frappe.ui.form.on("Interview", {
 	},
 
 	load_feedback(frm) {
+		if (!frappe.model.can_read("Interview Feedback")) return;
 		frappe
 			.call({
 				method: "hrms.hr.doctype.interview.interview.get_feedback",
