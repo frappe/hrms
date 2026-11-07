@@ -15,6 +15,16 @@ def execute(filters: Filters = None) -> tuple:
 	return columns, data
 
 
+def formatter(value, column, data, default_formatter):
+	value = default_formatter(value, column, data)
+	if column.fieldname == "leaves":
+		if data.leaves < 0:
+			value = f"<span style='color:red!important'>{value}</span>"
+		else:
+			value = f"<span style='color:green!important'>{value}</span>"
+	return value
+
+
 def get_columns() -> list[dict]:
 	return [
 		{
