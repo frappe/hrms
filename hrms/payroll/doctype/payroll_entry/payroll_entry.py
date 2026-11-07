@@ -1853,6 +1853,11 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 					submitted.append(salary_slip)
 				except frappe.ValidationError:
 					frappe.db.rollback(save_point=savepoint)
+					salary_slip.log_error(
+						_("Salary Slip {0} failed for Payroll Entry {1}").format(
+							"submission", payroll_entry.name
+						)
+					)
 					unsubmitted.append(entry[0])
 
 			count += 1
