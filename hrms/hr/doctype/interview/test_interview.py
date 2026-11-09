@@ -66,6 +66,7 @@ class TestInterview(HRMSTestSuite):
 			from_time="10:00:00",
 			to_time="11:00:00",
 		)
+		interview.reload()
 		self.addCleanup(frappe.set_user, "Administrator")
 		frappe.set_user("test_interviewer1@example.com")
 
