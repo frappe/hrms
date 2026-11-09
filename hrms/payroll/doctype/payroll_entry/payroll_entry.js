@@ -62,7 +62,7 @@ frappe.ui.form.on("Payroll Entry", {
 	},
 
 	refresh: (frm) => {
-		if (frm.doc.status === "Queued") frm.page.btn_secondary.hide();
+		frm.page.btn_secondary.prop("hidden", frm.doc.status === "Queued");
 
 		if (frm.doc.docstatus === 0 && !frm.is_new()) {
 			frm.page.clear_primary_action();
