@@ -255,11 +255,49 @@ def get_custom_fields():
 			},
 		],
 		"Employee": [
+			# no insert_after, so the profile is the first tab
+			{
+				"fieldname": "profile",
+				"fieldtype": "Tab Break",
+				"label": _("Profile"),
+			},
+			{
+				"fieldname": "employee_profile",
+				"fieldtype": "Vue Component",
+				"options": "hrms.page.employee-profile",
+				"label": _("Profile"),
+				"insert_after": "profile",
+				"depends_on": "eval:!doc.__islocal",
+			},
+			# what the employee writes about themselves, shown and edited in the profile above
+			{
+				"fieldname": "profile_sections",
+				"fieldtype": "Table",
+				"options": "Employee Profile Section",
+				"label": _("Profile Sections"),
+				"insert_after": "employee_profile",
+				"hidden": 1,
+			},
 			{
 				"fieldname": "overview_tab",
 				"fieldtype": "Tab Break",
 				"label": _("Overview"),
-				"insert_after": "basic_details_tab",
+				"insert_after": "profile",
+			},
+			# The employee uploads these from their profile, and HR verifies them here. Before Passport
+			# Details: after a tab's last field, a custom section would land in the next tab.
+			{
+				"fieldname": "documents_section",
+				"fieldtype": "Section Break",
+				"label": _("Documents"),
+				"insert_after": "health_insurance_no",
+			},
+			{
+				"fieldname": "documents",
+				"fieldtype": "Table",
+				"options": "Employee Document",
+				"label": _("Documents"),
+				"insert_after": "documents_section",
 			},
 			{
 				"fieldname": "overview_html",

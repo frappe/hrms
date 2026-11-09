@@ -140,8 +140,8 @@ class TestEmployeeOverview(HRMSTestSuite):
 	def test_overview_tab_comes_second(self):
 		meta = frappe.get_meta("Employee")
 		tabs = [f.fieldname for f in meta.fields if f.fieldtype == "Tab Break"]
-		self.assertEqual(tabs[:2], ["basic_details_tab", "overview_tab"])
+		self.assertEqual(tabs[:3], ["profile", "overview_tab", "basic_details_tab"])
 		fieldnames = [f.fieldname for f in meta.fields]
 		self.assertEqual(fieldnames.index("overview_html"), fieldnames.index("overview_tab") + 1)
-		self.assertLess(fieldnames.index("first_name"), fieldnames.index("overview_tab"))
+		self.assertGreater(fieldnames.index("first_name"), fieldnames.index("overview_tab"))
 		self.assertEqual(meta.get_field("basic_details_tab").label, "Details")

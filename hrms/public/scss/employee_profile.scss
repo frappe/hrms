@@ -1,0 +1,16 @@
+// The profile has the tab to itself and keeps its own margins, as on its page. Desk caps a form
+// section at the page width unless the user turns on full width, and pads the section and its
+// column, so the profile's section drops all three.
+body:not(.full-width) .std-form-layout .section-body:has([data-fieldname="employee_profile"]) {
+	max-width: none;
+}
+
+.form-section:has([data-fieldname="employee_profile"]) {
+	padding-left: 0;
+	padding-right: 0;
+
+	.form-column {
+		padding-left: 0;
+		padding-right: 0;
+	}
+}

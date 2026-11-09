@@ -1,0 +1,31 @@
+{
+ "content": null,
+ "creation": "2026-10-30 15:59:53.229140",
+ "docstatus": 0,
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2026-10-30 15:59:53.229140",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "employee-profile",
+ "owner": "Administrator",
+ "page_name": "employee-profile",
+ "roles": [
+  {
+   "role": "HR User"
+  },
+  {
+   "role": "HR Manager"
+  },
+  {
+   "role": "Employee"
+  }
+ ],
+ "script": null,
+ "shared_page": 0,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 0,
+ "title": "Employee Profile",
+ "type": "Frappe UI"
+}
