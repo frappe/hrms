@@ -5,7 +5,7 @@
 from frappe.model.document import Document
 
 
-class IdentificationDocumentType(Document):
+class EmployeeDocumentType(Document):
 	# begin: auto-generated types
 	# This code is auto-generated. Do not modify anything in this block.
 
@@ -14,7 +14,11 @@ class IdentificationDocumentType(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		identification_document_type: DF.Data | None
+		description: DF.SmallText | None
+		document_type: DF.Data
+		has_expiry: DF.Check
+		has_number: DF.Check
+		is_required: DF.Check
 	# end: auto-generated types
 
 	pass
