@@ -15,6 +15,7 @@
   "column_break_status",
   "company",
   "status",
+  "rejection_reason",
   "details_section",
   "asset_category",
   "required_by",
@@ -135,13 +136,20 @@
    "options": "Asset Request",
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.status=='Rejected'",
+   "fieldname": "rejection_reason",
+   "fieldtype": "Small Text",
+   "label": "Rejection Reason",
+   "mandatory_depends_on": "eval:doc.status=='Rejected'"
   }
  ],
  "grid_page_length": 50,
  "is_submittable": 1,
  "link_display_mode": "Search",
  "links": [],
- "modified": "2026-11-04 17:37:17.663623",
+ "modified": "2026-11-10 20:24:41.836359",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Asset Request",

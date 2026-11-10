@@ -29,6 +29,7 @@ class BankDetailsChangeRequest(Document):
 		ifsc_code: DF.Data | None
 		proof: DF.Attach
 		reason: DF.SmallText | None
+		rejection_reason: DF.SmallText | None
 		status: DF.Literal["Open", "Approved", "Rejected", "Cancelled"]
 	# end: auto-generated types
 
@@ -38,9 +39,16 @@ class BankDetailsChangeRequest(Document):
 		self.validate_open_request()
 
 	def validate_status_change(self):
-		before = self.get_doc_before_save()
-		if before and before.status == "Cancelled" and self.status != "Cancelled":
-			frappe.throw(_("A cancelled request cannot be opened again. Raise a new one instead."))
+		# a request is cancelled by discarding it, which keeps it, as Cancelled
+		if self.status == "Cancelled":
+			frappe.throw(_("Set the status to Open, or discard the request to cancel it"))
+		if self.status == "Rejected" and not (self.rejection_reason or "").strip():
+			frappe.throw(
+				_("Give a rejection reason, so {0} knows what to do next").format(
+					frappe.bold(self.employee_name or self.employee)
+				),
+				title=_("Rejection Reason Missing"),
+			)
 		if self.status in ("Approved", "Rejected") and not frappe.has_permission(
 			self.doctype, "submit", self
 		):
@@ -54,7 +62,6 @@ class BankDetailsChangeRequest(Document):
 			{
 				"employee": self.employee,
 				"docstatus": 0,
-				"status": ["!=", "Cancelled"],
 				"name": ["!=", self.name or ""],
 			},
 		)
@@ -66,6 +73,9 @@ class BankDetailsChangeRequest(Document):
 				),
 				title=_("Open Request Exists"),
 			)
+
+	def on_discard(self):
+		self.db_set("status", "Cancelled")
 
 	def on_submit(self):
 		if self.status not in ("Approved", "Rejected"):

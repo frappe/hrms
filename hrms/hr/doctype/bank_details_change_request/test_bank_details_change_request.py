@@ -44,6 +44,11 @@ class TestBankDetailsChangeRequest(HRMSTestSuite):
 	def test_rejection_leaves_the_employee(self):
 		request = self.make_request()
 		request.status = "Rejected"
+		# a rejection says why
+		self.assertRaises(frappe.ValidationError, request.submit)
+		request.reload()
+		request.status = "Rejected"
+		request.rejection_reason = "The cheque is not readable"
 		request.submit()
 
 		self.assertIsNone(frappe.db.get_value("Employee", self.employee, "bank_ac_no"))
@@ -56,17 +61,18 @@ class TestBankDetailsChangeRequest(HRMSTestSuite):
 		self.make_request()
 		self.assertRaises(frappe.ValidationError, self.make_request, bank_ac_no="99887766")
 
-	def test_cancelled_request_is_closed(self):
+	def test_discarded_request_is_closed(self):
 		request = self.make_request()
+		# a draft is cancelled by discarding it, not by its status
 		request.status = "Cancelled"
-		request.save()
-
-		# it no longer stops a new request, and is not taken up again
-		self.make_request(bank_ac_no="99887766")
-		self.assertRaises(frappe.ValidationError, request.submit)
-		request.reload()
-		request.status = "Open"
 		self.assertRaises(frappe.ValidationError, request.save)
+
+		request.reload()
+		request.discard()
+		request.reload()
+		self.assertEqual((request.docstatus, request.status), (2, "Cancelled"))
+		# it no longer stops a new request
+		self.make_request(bank_ac_no="99887766")
 
 	def test_employee_cannot_approve_their_own_request(self):
 		frappe.set_user(USER)

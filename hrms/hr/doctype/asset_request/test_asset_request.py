@@ -58,6 +58,7 @@ class TestAssetRequest(HRMSTestSuite):
 		self.assertRaises(frappe.ValidationError, make_asset_movement, request.name)
 
 		request.status = "Rejected"
+		request.rejection_reason = "Still needed for the project"
 		request.submit()
 		self.assertRaises(frappe.ValidationError, make_asset_movement, request.name)
 
