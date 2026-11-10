@@ -13,6 +13,7 @@
   "expiry_date",
   "column_break_status",
   "status",
+  "verified_on",
   "due_date",
   "remarks"
  ],
@@ -64,13 +65,20 @@
    "fieldname": "remarks",
    "fieldtype": "Small Text",
    "label": "Remarks"
+  },
+  {
+   "description": "When HR last accepted this document",
+   "fieldname": "verified_on",
+   "fieldtype": "Date",
+   "label": "Verified On",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "istable": 1,
  "link_display_mode": "Search",
  "links": [],
- "modified": "2026-11-09 23:54:25.277702",
+ "modified": "2026-11-10 20:46:05.271228",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Document",

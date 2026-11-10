@@ -24,6 +24,7 @@ class EmployeeDocument(Document):
 		parenttype: DF.Data
 		remarks: DF.SmallText | None
 		status: DF.Literal["Pending", "Submitted", "Verified", "Rejected"]
+		verified_on: DF.Date | None
 	# end: auto-generated types
 
 	_DOCTYPE_NAME = "Employee Document"
