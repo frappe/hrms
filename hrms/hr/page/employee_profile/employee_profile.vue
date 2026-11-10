@@ -38,12 +38,13 @@ let last_load = 0;
 // The open section is kept in the URL, as the form keeps its tab, so a reload opens it again
 const url_section = () => new URL(window.location.href).searchParams.get("section");
 
-watch(active, (section) => {
+function keep_section(section) {
 	const url = new URL(window.location.href);
 	if (section === "public") url.searchParams.delete("section");
 	else url.searchParams.set("section", section);
 	if (url.href !== window.location.href) history.replaceState(history.state, "", url);
-});
+}
+watch(active, keep_section);
 
 async function load() {
 	const this_load = ++last_load;
@@ -55,10 +56,14 @@ async function load() {
 	personal_edit.value = { card: null, values: null };
 	let data;
 	try {
-		data = await frappe.xcall(`${API}.get_profile`, { employee: employee.value });
+		// a refusal shows on the page, so not in a dialog as well
+		data = await frappe.xcall(`${API}.get_profile`, { employee: employee.value }, "POST", {
+			silent: true,
+		});
 	} catch (e) {
 		if (this_load === last_load) {
 			error.value = e?.messages?.[0] || __("You do not have access to this profile");
+			keep_section("public");
 		}
 		return;
 	}
@@ -66,6 +71,9 @@ async function load() {
 	profile.value = data;
 	if (data.private && SECTIONS.value.some((item) => item.value === section)) {
 		active.value = section;
+	} else {
+		// a section this viewer cannot see, such as one left in a link from their own profile
+		keep_section("public");
 	}
 	if (!in_form.value) {
 		emit("title", profile.value.card.name);
@@ -113,19 +121,27 @@ const SECTIONS = computed(() => {
 });
 
 // On a phone the sections are a picker, not a second row of tabs under the Employee form's own
+// every option has a line under its name, so the phone's picker rows are all one height
 const SECTION_OPTIONS = computed(() => [
-	{ value: "public", label: __("Public profile"), icon: "lucide-user-round" },
+	{
+		value: "public",
+		label: __("Public profile"),
+		icon: "lucide-user-round",
+		description: __("Everyone at {0}", [profile.value.card.company]),
+	},
 	...SECTIONS.value.map(({ value, label, icon, count }) => ({
 		value,
 		label,
 		icon,
-		description: count ? COUNT_TEXT[value](count) : undefined,
+		description: DESCRIPTION[value](count),
 	})),
 ]);
-const COUNT_TEXT = {
-	bank: () => __("1 open request"),
-	documents: (count) => __("{0} due", [count]),
-	assets: (count) => __("{0} assigned", [count]),
+const DESCRIPTION = {
+	personal: () => __("Contact and emergency"),
+	bank: (count) => (count ? __("1 open request") : __("Salary account")),
+	documents: (count) => (count ? __("{0} due", [count]) : __("Nothing due")),
+	assets: (count) => (count ? __("{0} assigned", [count]) : __("None assigned")),
+	employment: () => __("Job details"),
 };
 
 const format_date = (value) => (value ? frappe.datetime.str_to_user(value) : null);
@@ -322,7 +338,6 @@ const EMPLOYMENT_EDITS = computed(() => {
 		link("employment_type", __("Type"), "lucide-badge-check"),
 		link("grade", __("Grade"), "lucide-layers"),
 		link("default_shift", __("Shift"), "lucide-clock"),
-		link("holiday_list", __("Holiday list"), "lucide-calendar-days"),
 		{
 			fieldname: "notice_number_of_days",
 			label: __("Notice period"),
@@ -702,6 +717,7 @@ function open_profile(id) {
 							:employee="profile.card.id"
 							:bank="profile.private.bank"
 							:request="profile.private.bank_request"
+							:decided="profile.private.bank_decided"
 							:can_edit="profile.is_self"
 							:can_manage="Boolean(target)"
 							:can_review="profile.can_review['Bank Details Change Request']"
@@ -726,6 +742,9 @@ function open_profile(id) {
 							:asset_categories="profile.options?.asset_categories || []"
 							:can_edit="profile.is_self"
 							:can_review="profile.can_review['Asset Request']"
+							:can_assign="profile.can_assign_assets"
+							:employee="profile.card.id"
+							:company="profile.card.company"
 							@saved="apply"
 						/>
 

@@ -1,8 +1,8 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, nextTick, ref } from "vue";
 import { Badge, Button, Dialog, Dropdown, FileUploader, Textarea } from "frappe-ui";
 import CardEditor from "./CardEditor.vue";
-import ListRow from "./ListRow.vue";
+import ListRow, { LIST_CLASS } from "./ListRow.vue";
 import PropertyRow from "./PropertyRow.vue";
 import { API, short_date } from "../utils.js";
 
@@ -35,21 +35,32 @@ const STATUS = {
 const DUE = ["Missing", "Pending", "Rejected"];
 const due = computed(() => props.documents.filter((doc) => DUE.includes(doc.status)).length);
 
+// one line of facts under the name, as the badge already says where the document stands; HR's
+// reason for sending it back gets a line of its own
 function details(doc) {
+	const facts = [
+		doc.document_number,
+		doc.expiry_date && __("Expires {0}", [short_date(doc.expiry_date)]),
+	].filter(Boolean);
 	const lines = [];
 	if (doc.due_date && DUE.includes(doc.status)) {
-		lines.push({ text: __("Due {0}", [short_date(doc.due_date)]), tone: "text-ink-amber-3" });
+		lines.push({ text: __("Due {0}", [short_date(doc.due_date)]), tone: "text-ink-amber-7" });
 	}
-	if (doc.status === "Submitted") {
-		lines.push({
-			text: props.can_manage ? __("Waiting for your check") : __("With HR for checking"),
-		});
-	}
-	if (doc.document_number) lines.push({ text: doc.document_number });
-	if (doc.expiry_date) lines.push({ text: __("Expires {0}", [short_date(doc.expiry_date)]) });
-	if (doc.remarks) lines.push({ text: doc.remarks });
+	// not on a phone, where the row has no room for it; the record has it
+	if (facts.length) lines.push({ text: facts.join(" · "), wide_only: true });
+	if (doc.remarks) lines.push({ text: doc.remarks, tone: "text-ink-red-7" });
 	return lines;
 }
+
+// the employee takes back their own upload until HR has verified the document once; HR removes any
+const can_remove = (doc) =>
+	props.can_manage
+		? doc.status !== "Missing"
+		: props.can_edit &&
+		  doc.attachment &&
+		  !doc.verified_on &&
+		  ["Submitted", "Rejected"].includes(doc.status);
+const removing = ref({ open: false, doc: null, saving: false });
 
 const type_of = (name) => props.document_types.find((type) => type.name === name) || {};
 const not_listed = computed(() =>
@@ -81,7 +92,13 @@ function row_options(doc) {
 			onClick: () =>
 				(asking.value = { open: true, document_type: doc.document_type, saving: false }),
 		},
-	];
+		can_remove(doc) && {
+			label: __("Remove"),
+			icon: "lucide-trash-2",
+			theme: "red",
+			onClick: () => (removing.value = { open: true, doc, saving: false }),
+		},
+	].filter(Boolean);
 }
 
 // An upload opens a dialog when the document has a number or an expiry date, and always for HR,
@@ -154,7 +171,23 @@ const ASK_FIELDS = [
 ];
 
 // HR checks an upload: on file, or back to the employee with what is wrong
-const reviewing = ref({ open: false, doc: null, remarks: "", error: null, saving: false });
+// Reject first asks what is wrong, so a note is never typed for a verified document and lost
+const reviewing = ref({
+	open: false,
+	doc: null,
+	rejecting: false,
+	remarks: "",
+	error: null,
+	saving: false,
+});
+
+const remarks_input = ref(null);
+
+async function ask_remarks() {
+	reviewing.value.rejecting = true;
+	await nextTick();
+	remarks_input.value?.focus();
+}
 
 function review(status) {
 	const state = reviewing.value;
@@ -191,10 +224,7 @@ function review(status) {
 			</div>
 		</div>
 
-		<div
-			v-if="documents.length"
-			class="flex flex-col gap-px rounded-6 border border-outline-gray-1 p-1"
-		>
+		<div v-if="documents.length" :class="LIST_CLASS">
 			<ListRow v-for="doc in documents" :key="doc.document_type" icon="lucide-file-text">
 				<a
 					v-if="doc.attachment"
@@ -211,8 +241,11 @@ function review(status) {
 					<div
 						v-for="line in details(doc)"
 						:key="line.text"
-						class="mt-0.5 truncate text-sm"
-						:class="line.tone || 'text-ink-gray-5'"
+						class="mt-0.5 break-words text-sm"
+						:class="[
+							line.tone || 'text-ink-gray-5',
+							line.wide_only && 'hidden sm:block',
+						]"
 					>
 						{{ line.text }}
 					</div>
@@ -230,6 +263,7 @@ function review(status) {
 							reviewing = {
 								open: true,
 								doc,
+								rejecting: false,
 								remarks: '',
 								error: null,
 								saving: false,
@@ -274,6 +308,14 @@ function review(status) {
 							/>
 						</template>
 					</FileUploader>
+					<Button
+						v-if="can_remove(doc)"
+						variant="ghost"
+						icon="lucide-trash-2"
+						:aria-label="__('Remove {0}', [doc.document_type])"
+						:tooltip="__('Remove')"
+						@click="removing = { open: true, doc, saving: false }"
+					/>
 				</template>
 			</ListRow>
 		</div>
@@ -287,9 +329,12 @@ function review(status) {
 			}}
 		</p>
 
+		<!-- not closed by a click outside: inside the page's shadow root, reka-ui takes a click on
+		the date picker's calendar for one -->
 		<Dialog
 			v-if="can_edit || can_manage"
 			v-model="dialog.open"
+			:dismissible="false"
 			:title="dialog.doc ? __('Upload {0}', [dialog.doc.document_type]) : ''"
 		>
 			<CardEditor
@@ -303,9 +348,45 @@ function review(status) {
 			/>
 		</Dialog>
 
+		<Dialog
+			v-if="can_edit || can_manage"
+			v-model="removing.open"
+			:title="removing.doc ? __('Remove {0}?', [removing.doc.document_type]) : ''"
+		>
+			<p v-if="removing.doc" class="text-p-base text-ink-gray-7">
+				{{
+					can_manage
+						? __("It comes off their record, with the file they gave.")
+						: __("Your upload is taken back before HR checks it.")
+				}}
+			</p>
+			<template #actions>
+				<div v-if="removing.doc" class="flex justify-end gap-2">
+					<Button :label="__('Keep')" @click="removing.open = false" />
+					<Button
+						variant="solid"
+						theme="red"
+						:label="__('Remove')"
+						:loading="removing.saving"
+						@click="
+							call(
+								'remove_document',
+								{
+									document_type: removing.doc.document_type,
+									employee: can_manage ? employee : null,
+								},
+								removing,
+							)
+						"
+					/>
+				</div>
+			</template>
+		</Dialog>
+
 		<template v-if="can_manage">
 			<Dialog
 				v-model="asking.open"
+				:dismissible="false"
 				:title="asking.document_type ? __('Ask for {0}', [asking.document_type]) : ''"
 			>
 				<CardEditor
@@ -348,21 +429,33 @@ function review(status) {
 						icon="lucide-calendar"
 						:value="short_date(reviewing.doc.expiry_date)"
 					/>
-					<div class="mt-3">
+					<div v-if="reviewing.rejecting" class="mt-3">
 						<Textarea
+							ref="remarks_input"
 							v-model="reviewing.remarks"
-							:rows="2"
-							:placeholder="__('If you reject it, say what is wrong')"
+							:label="__('What is wrong with it?')"
+							:rows="3"
+							:placeholder="__('The employee sees this')"
 							:error="reviewing.error"
 						/>
 					</div>
 				</div>
 				<template #actions>
-					<div class="flex justify-end gap-2">
+					<div v-if="reviewing.rejecting" class="flex justify-end gap-2">
+						<Button :label="__('Back')" @click="reviewing.rejecting = false" />
+						<Button
+							variant="solid"
+							theme="red"
+							:label="__('Reject')"
+							:loading="reviewing.saving"
+							@click="review('Rejected')"
+						/>
+					</div>
+					<div v-else class="flex justify-end gap-2">
 						<Button
 							:label="__('Reject')"
 							:disabled="reviewing.saving"
-							@click="review('Rejected')"
+							@click="ask_remarks"
 						/>
 						<Button
 							variant="solid"

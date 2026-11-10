@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
-import { Badge, Button, Dialog } from "frappe-ui";
+import { Badge, Button, Dialog, Textarea } from "frappe-ui";
 import CardEditor from "./CardEditor.vue";
 import DetailCard from "./DetailCard.vue";
 import PropertyRow from "./PropertyRow.vue";
@@ -14,6 +14,8 @@ const props = defineProps({
 	bank: { type: Object, required: true },
 	// the open Bank Details Change Request, if any
 	request: { type: Object, default: null },
+	// else the one HR approved or rejected lately, so how it went still shows
+	decided: { type: Object, default: null },
 	// the employee's own: they request a change
 	can_edit: { type: Boolean, default: false },
 	// HR's, on someone else's: they change the account directly
@@ -26,12 +28,27 @@ const emit = defineEmits(["saved"]);
 const __ = window.__;
 const frappe = window.frappe;
 
-const account_rows = (account) => [
+// The numbers show only their end. The eye fetches the whole of one, of the account or of a
+// request, so HR can check it against the proof.
+const reveal = (field, request) => async () =>
+	(await frappe.xcall(`${API}.get_bank_number`, { employee: props.employee, request }))[field];
+
+const account_rows = (account, request = null) => [
 	{ label: __("Bank"), icon: "lucide-landmark", value: account.bank_name },
-	{ label: __("Account number"), icon: "lucide-hash", value: account.bank_ac_no },
+	{
+		label: __("Account number"),
+		icon: "lucide-hash",
+		value: account.bank_ac_no,
+		reveal: reveal("bank_ac_no", request),
+	},
 	props.has_ifsc
 		? { label: __("IFSC"), icon: "lucide-git-branch", value: account.ifsc_code }
-		: { label: __("IBAN"), icon: "lucide-globe", value: account.iban },
+		: {
+				label: __("IBAN"),
+				icon: "lucide-globe",
+				value: account.iban,
+				reveal: reveal("iban", request),
+		  },
 ];
 const has_account = computed(() => Boolean(props.bank.bank_ac_no));
 
@@ -78,7 +95,28 @@ const direct_values = computed(() => ({
 	ifsc_code: props.bank.ifsc_code,
 }));
 
+// The employee's open request, changed before HR decides it. Its numbers show only their end, so
+// an empty one keeps what was asked for.
+const REQUEST_FIELDS = computed(() =>
+	FIELDS.value.map((field) =>
+		["bank_ac_no", "iban"].includes(field.fieldname) && props.request?.[field.fieldname]
+			? {
+					...field,
+					reqd: false,
+					placeholder: __("Leave empty to keep {0}", [props.request[field.fieldname]]),
+			  }
+			: field,
+	),
+);
+const request_values = computed(() => ({
+	bank_name: props.request?.bank_name,
+	ifsc_code: props.request?.ifsc_code,
+	proof: props.request?.proof,
+	reason: props.request?.reason,
+}));
+
 const editing = ref(false);
+const editing_request = ref(false);
 const saving = ref(false);
 
 // HR has to accept the request, so it waits for the server, unlike the personal details
@@ -89,9 +127,13 @@ async function send(values) {
 			"saved",
 			props.can_manage
 				? await frappe.xcall(`${API}.save_details`, { values, employee: props.employee })
-				: await frappe.xcall(`${API}.request_bank_details_change`, { values }),
+				: await frappe.xcall(`${API}.request_bank_details_change`, {
+						values,
+						name: editing_request.value ? props.request.name : null,
+				  }),
 		);
 		editing.value = false;
+		editing_request.value = false;
 	} catch {
 		// the server's message is already on screen
 	} finally {
@@ -100,18 +142,19 @@ async function send(values) {
 }
 
 // what was asked for and why, with the proof HR checks
-const request_rows = computed(() => [
-	...account_rows(props.request).map((row, index) =>
+const rows_of = (request) => [
+	...account_rows(request, request.name).map((row, index) =>
 		index === 0 ? { ...row, label: __("New bank") } : row,
 	),
-	{ label: __("Reason"), icon: "lucide-message-square", value: props.request.reason },
+	{ label: __("Reason"), icon: "lucide-message-square", value: request.reason },
 	{
 		label: __("Proof"),
 		icon: "lucide-file-check",
-		value: props.request.proof_name || props.request.proof,
-		href: props.request.proof,
+		value: request.proof_name || request.proof,
+		href: request.proof,
 	},
-]);
+];
+const request_rows = computed(() => rows_of(props.request));
 
 const account_line = (account) => `${account.bank_name} ${account.bank_ac_no}`;
 
@@ -143,9 +186,53 @@ const request_steps = computed(() => [
 	},
 ]);
 
+// How a decided change went, the open request's steps walked to the end
+const decided_steps = computed(() => {
+	const request = props.decided;
+	const steps = [
+		{
+			label: __("Change requested"),
+			sub: account_line(request),
+			when: short_date(request.creation),
+			state: "done",
+		},
+		{
+			label: __("Proof added"),
+			sub: request.proof_name,
+			when: short_date(request.creation),
+			state: "done",
+		},
+	];
+	if (request.status === "Approved") {
+		steps.push(
+			{
+				label: __("HR verified the new account"),
+				sub: __("Approved by {0}", [request.decided_by]),
+				when: short_date(request.modified),
+				state: "done",
+			},
+			{
+				label: __("Salary moves to the new account"),
+				sub: __("From the first payroll after {0}", [short_date(request.modified)]),
+				state: "done",
+			},
+		);
+	} else {
+		steps.push({
+			label: __("HR rejected the change"),
+			sub: __("Rejected by {0}: {1}", [request.decided_by, request.rejection_reason]),
+			when: short_date(request.modified),
+			state: "current",
+		});
+	}
+	return steps;
+});
+
 // what the open request's dialog confirms: the employee cancelling it, or HR deciding it
 const confirming = ref(null);
 const deciding = ref(false);
+// a rejection says why, so the employee knows what to do next
+const rejection = ref({ reason: "", error: null });
 const CONFIRM = computed(() => ({
 	cancel: {
 		title: __("Cancel this change?"),
@@ -178,10 +265,15 @@ const CONFIRM = computed(() => ({
 	},
 }));
 
-// a cancelled request stays, as Cancelled, and a new one can be raised
+// a cancelled request is discarded, so it stays, as Cancelled, and a new one can be raised
 async function decide() {
 	const name = props.request.name;
 	const doctype = "Bank Details Change Request";
+	const reason = rejection.value.reason.trim();
+	if (confirming.value === "Rejected" && !reason) {
+		rejection.value.error = __("Say why, so they know what to do next");
+		return;
+	}
 	deciding.value = true;
 	try {
 		emit(
@@ -192,6 +284,7 @@ async function decide() {
 						doctype,
 						name,
 						status: confirming.value,
+						reason: confirming.value === "Rejected" ? reason : null,
 				  }),
 		);
 	} catch {
@@ -199,6 +292,7 @@ async function decide() {
 	} finally {
 		deciding.value = false;
 		confirming.value = null;
+		rejection.value = { reason: "", error: null };
 	}
 }
 </script>
@@ -248,7 +342,7 @@ async function decide() {
 				{{
 					can_edit
 						? __(
-								"Your salary is paid into this account. A new account is used once HR approves it.",
+								"Your salary is paid into this account. A change needs HR's approval.",
 						  )
 						: __("Salary is paid into this account.")
 				}}
@@ -265,7 +359,43 @@ async function decide() {
 			/>
 		</DetailCard>
 
-		<section v-if="request">
+		<DetailCard v-if="editing_request" :title="__('Change request')">
+			<CardEditor
+				:fields="REQUEST_FIELDS"
+				:values="request_values"
+				:save_label="__('Send to HR')"
+				:saving="saving"
+				@save="send"
+				@cancel="editing_request = false"
+			/>
+		</DetailCard>
+
+		<section v-else-if="!request && decided">
+			<div class="mb-2 flex min-h-8 items-center gap-2">
+				<h2 class="text-base-semibold text-ink-gray-9">{{ __("Account change") }}</h2>
+				<Badge
+					class="ml-auto"
+					:theme="decided.status === 'Approved' ? 'green' : 'red'"
+					:label="decided.status === 'Approved' ? __('Approved') : __('Rejected')"
+				/>
+			</div>
+			<div class="rounded-5 border border-outline-gray-1">
+				<div class="border-b border-outline-gray-1 px-4 py-2">
+					<PropertyRow v-for="row in rows_of(decided)" :key="row.label" v-bind="row" />
+				</div>
+				<div class="p-4">
+					<Steps :steps="decided_steps" />
+				</div>
+			</div>
+			<p
+				v-if="can_edit && decided.status === 'Rejected'"
+				class="mt-3 text-sm text-ink-gray-5"
+			>
+				{{ __("Fix what HR asked for and request the change again.") }}
+			</p>
+		</section>
+
+		<section v-else-if="request">
 			<div class="mb-2 flex min-h-8 items-center gap-2">
 				<h2 class="text-base-semibold text-ink-gray-9">{{ __("Account change") }}</h2>
 				<Badge class="ml-auto" theme="blue" :label="__('In review')" />
@@ -281,13 +411,19 @@ async function decide() {
 					v-if="can_edit || can_review"
 					class="flex flex-wrap items-center justify-end gap-2 border-t border-outline-gray-1 px-4 py-3"
 				>
-					<Button
-						v-if="can_edit"
-						variant="ghost"
-						theme="red"
-						:label="__('Cancel change')"
-						@click="confirming = 'cancel'"
-					/>
+					<template v-if="can_edit">
+						<Button
+							variant="ghost"
+							theme="red"
+							:label="__('Cancel change')"
+							@click="confirming = 'cancel'"
+						/>
+						<Button
+							icon-left="lucide-pencil"
+							:label="__('Edit')"
+							@click="editing_request = true"
+						/>
+					</template>
 					<template v-if="can_review">
 						<Button :label="__('Reject')" @click="confirming = 'Rejected'" />
 						<Button
@@ -310,6 +446,14 @@ async function decide() {
 			<p v-if="confirming" class="text-p-base text-ink-gray-7">
 				{{ CONFIRM[confirming].text }}
 			</p>
+			<div v-if="confirming === 'Rejected'" class="mt-3">
+				<Textarea
+					v-model="rejection.reason"
+					:rows="2"
+					:placeholder="__('Why is it rejected?')"
+					:error="rejection.error"
+				/>
+			</div>
 			<template #actions>
 				<div v-if="confirming" class="flex justify-end gap-2">
 					<Button :label="CONFIRM[confirming].keep" @click="confirming = null" />

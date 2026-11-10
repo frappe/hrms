@@ -35,7 +35,14 @@ const draft = ref(
 	),
 );
 const errors = ref({});
-const file_names = ref({});
+// a file already given shows by the name at the end of its URL
+const file_names = ref(
+	Object.fromEntries(
+		props.fields
+			.filter((field) => field.type === "file" && props.values[field.fieldname])
+			.map((field) => [field.fieldname, props.values[field.fieldname].split("/").pop()]),
+	),
+);
 
 // the site's date format, as dayjs writes it: dd-mm-yyyy is DD-MM-YYYY
 const date_format = (frappe.boot.sysdefaults.date_format || "dd-mm-yyyy").toUpperCase();
@@ -178,7 +185,7 @@ function link_options(field) {
 						<p v-if="field.description" class="text-sm text-ink-gray-5">
 							{{ field.description }}
 						</p>
-						<p v-if="errors[field.fieldname]" class="text-sm text-ink-red-4">
+						<p v-if="errors[field.fieldname]" class="text-sm text-ink-red-7">
 							{{ errors[field.fieldname] }}
 						</p>
 					</div>

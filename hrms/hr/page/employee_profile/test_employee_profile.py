@@ -1,14 +1,18 @@
 # Copyright (c) 2026, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
+from unittest.mock import patch
+
 import frappe
-from frappe.utils import getdate
+from frappe.utils import get_fullname, getdate
 
 from erpnext.assets.doctype.asset.test_asset import create_asset_category
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.page.employee_profile.employee_profile import (
+	get_bank_number,
 	get_profile,
+	remove_document,
 	request_asset,
 	request_bank_details_change,
 	request_document,
@@ -21,6 +25,7 @@ from hrms.hr.page.employee_profile.employee_profile import (
 )
 from hrms.tests.test_utils import create_company
 from hrms.tests.utils import HRMSTestSuite
+from hrms.utils.holiday_list import get_holiday_list_for_employee
 
 SELF = "profile_self@example.com"
 COLLEAGUE = "profile_colleague@example.com"
@@ -164,9 +169,77 @@ class TestEmployeeProfile(HRMSTestSuite):
 
 		frappe.set_user(SELF)
 		self.assertIsNone(withdraw_request("Bank Details Change Request", request["name"])["bank_request"])
+		# discarded, as a draft is: kept, but no longer a draft
 		self.assertEqual(
-			frappe.db.get_value("Bank Details Change Request", request["name"], "status"), "Cancelled"
+			frappe.db.get_value("Bank Details Change Request", request["name"], ["docstatus", "status"]),
+			(2, "Cancelled"),
 		)
+
+	def test_open_requests_are_changed_until_hr_decides(self):
+		frappe.set_user(SELF)
+		request = request_bank_details_change(
+			{"bank_name": "Test Bank", "bank_ac_no": "001122334455", "proof": upload("cheque.png")}
+		)["bank_request"]
+		proof = frappe.db.get_value("Bank Details Change Request", request["name"], "proof")
+
+		# the number shows only its end, so leaving it empty keeps it, and so does the proof
+		changed = request_bank_details_change(
+			{"bank_name": "Other Bank", "bank_ac_no": "", "proof": proof, "reason": "New branch"},
+			request["name"],
+		)["bank_request"]
+		self.assertEqual(changed["name"], request["name"])
+		self.assertEqual(
+			frappe.db.get_value(
+				"Bank Details Change Request", request["name"], ["bank_name", "bank_ac_no", "reason"]
+			),
+			("Other Bank", "001122334455", "New branch"),
+		)
+
+		asset = request_asset({"request_type": "Issue", "asset_category": self.category})
+		asset = asset["asset_requests"][0]["name"]
+		request_asset({"asset_category": self.category, "reason": "For travel"}, asset)
+		self.assertEqual(frappe.db.get_value("Asset Request", asset, "reason"), "For travel")
+
+		frappe.set_user(COLLEAGUE)
+		self.assertRaises(frappe.PermissionError, request_asset, {"asset_category": self.category}, asset)
+
+		frappe.set_user(HR)
+		review_request("Asset Request", asset, "Rejected", "Not in this quarter's budget")
+		frappe.set_user(SELF)
+		self.assertRaises(frappe.PermissionError, request_asset, {"asset_category": self.category}, asset)
+
+	def test_own_upload_is_removed_until_hr_verifies_it(self):
+		self.make_document_type("Test Passport", has_number=1)
+		self.make_document_type("Test Aadhaar", is_required=1)
+
+		def statuses():
+			return {doc["document_type"]: doc["status"] for doc in get_profile()["private"]["documents"]}
+
+		frappe.set_user(SELF)
+		upload_document("Test Passport", upload("passport.png"), document_number="P123")
+		upload_document("Test Aadhaar", upload("aadhaar.png"))
+		# one added by mistake goes, and a required one is asked for again
+		remove_document("Test Passport")
+		remove_document("Test Aadhaar")
+		self.assertNotIn("Test Passport", statuses())
+		self.assertEqual(statuses()["Test Aadhaar"], "Missing")
+
+		upload_document("Test Passport", upload("passport.png"), document_number="P123")
+		frappe.set_user(COLLEAGUE)
+		self.assertRaises(frappe.PermissionError, remove_document, "Test Passport", self.employee)
+
+		frappe.set_user(HR)
+		review_document(self.employee, "Test Passport", "Verified")
+		frappe.set_user(SELF)
+		self.assertRaises(frappe.PermissionError, remove_document, "Test Passport")
+		# a newer upload of a verified document is not taken back either, as that would lose both
+		upload_document("Test Passport", upload("passport-new.png"), document_number="P456")
+		self.assertEqual(statuses()["Test Passport"], "Submitted")
+		self.assertRaises(frappe.PermissionError, remove_document, "Test Passport")
+		frappe.set_user(HR)
+		remove_document("Test Passport", self.employee)
+		frappe.set_user(SELF)
+		self.assertNotIn("Test Passport", statuses())
 
 	def test_employee_cannot_change_document_types(self):
 		frappe.set_user(SELF)
@@ -192,6 +265,13 @@ class TestEmployeeProfile(HRMSTestSuite):
 		self.assertRaises(
 			frappe.ValidationError, save_details, {"notice_number_of_days": "a month"}, self.employee
 		)
+
+		# the holiday list in use comes from Holiday List Assignment, so it is not set here
+		self.assertEqual(
+			card["employment"]["holiday_list"],
+			get_holiday_list_for_employee(self.employee, raise_exception=False),
+		)
+		self.assertRaises(frappe.ValidationError, save_details, {"holiday_list": "Any List"}, self.employee)
 
 	def test_colleague_cannot_edit_another_employee(self):
 		frappe.set_user(COLLEAGUE)
@@ -224,6 +304,69 @@ class TestEmployeeProfile(HRMSTestSuite):
 		own = own["asset_requests"][0]["name"]
 		self.assertFalse(get_profile()["can_review"]["Asset Request"])
 		self.assertRaises(frappe.PermissionError, review_request, "Asset Request", own, "Approved")
+
+	def test_rejected_requests_show_with_the_reason(self):
+		frappe.set_user(SELF)
+		bank = request_bank_details_change(
+			{"bank_name": "Test Bank", "bank_ac_no": "001122334455", "proof": upload("cheque.png")}
+		)["bank_request"]["name"]
+		asset = request_asset({"request_type": "Issue", "asset_category": self.category})
+		asset = asset["asset_requests"][0]["name"]
+
+		frappe.set_user(HR)
+		# a rejection says why
+		self.assertRaises(frappe.ValidationError, review_request, "Asset Request", asset, "Rejected")
+		self.assertRaises(frappe.ValidationError, review_request, "Asset Request", asset, "Rejected", " ")
+		review_request("Asset Request", asset, "Rejected", "Not in this quarter's budget")
+		review_request("Bank Details Change Request", bank, "Rejected", "The cheque is not readable")
+
+		frappe.set_user(SELF)
+		private = get_profile()["private"]
+		row = next(row for row in private["asset_requests"] if row["name"] == asset)
+		self.assertEqual(
+			(row["status"], row["rejection_reason"]), ("Rejected", "Not in this quarter's budget")
+		)
+		self.assertEqual(
+			(private["bank_decided"]["status"], private["bank_decided"]["rejection_reason"]),
+			("Rejected", "The cheque is not readable"),
+		)
+		self.assertEqual(private["bank_decided"]["bank_ac_no"], "••••4455")
+
+		# a new request takes its place
+		bank = request_bank_details_change(
+			{"bank_name": "Test Bank", "bank_ac_no": "001122334466", "proof": upload("cheque2.png")}
+		)["bank_request"]["name"]
+		self.assertIsNone(get_profile()["private"]["bank_decided"])
+
+		# an approved change keeps showing, with who approved it
+		frappe.set_user(HR)
+		review_request("Bank Details Change Request", bank, "Approved")
+		frappe.set_user(SELF)
+		decided = get_profile()["private"]["bank_decided"]
+		self.assertEqual((decided["name"], decided["status"]), (bank, "Approved"))
+		# the approver's name, not the viewer's
+		self.assertEqual(decided["decided_by"], get_fullname(HR))
+
+	def test_whole_bank_number_for_the_employee_and_hr_only(self):
+		frappe.set_user(SELF)
+		request = request_bank_details_change(
+			{"bank_name": "Test Bank", "bank_ac_no": "001122334455", "proof": upload("cheque.png")}
+		)["bank_request"]["name"]
+		self.assertEqual(get_bank_number(self.employee, request)["bank_ac_no"], "001122334455")
+
+		frappe.set_user(HR)
+		# each look is kept in the Access Log, which Frappe writes after the request
+		with patch("hrms.hr.page.employee_profile.employee_profile.make_access_log") as access_log:
+			self.assertEqual(get_bank_number(self.employee, request)["bank_ac_no"], "001122334455")
+		access_log.assert_called_once_with(
+			doctype="Bank Details Change Request", document=request, method="get_bank_number"
+		)
+
+		frappe.set_user(COLLEAGUE)
+		self.assertRaises(frappe.PermissionError, get_bank_number, self.employee)
+		self.assertRaises(frappe.PermissionError, get_bank_number, self.employee, request)
+		# a request is read only through its own employee
+		self.assertRaises(frappe.PermissionError, get_bank_number, self.colleague, request)
 
 	def test_approved_asset_request_waits_for_its_movement(self):
 		frappe.set_user(SELF)

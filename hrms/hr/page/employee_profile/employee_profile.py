@@ -16,18 +16,25 @@ from urllib.parse import urlparse
 
 import frappe
 from frappe import _
+from frappe.core.doctype.access_log.access_log import make_access_log
+from frappe.model.document import Document
 from frappe.query_builder.functions import Max
 from frappe.utils import (
+	add_days,
 	cint,
 	date_diff,
+	get_fullname,
 	getdate,
 	month_diff,
+	now_datetime,
+	today,
 	validate_email_address,
 	validate_phone_number,
 )
 
 from hrms.hr.page.organizational_chart.organizational_chart import get_allowed_companies, get_leave_status
 from hrms.overrides.employee_master import get_retirement_date
+from hrms.utils.holiday_list import get_holiday_list_for_employee
 
 PAGE = "employee-profile"
 SECTION_TYPES = ("Cover", "Headline", "Text", "Tags", "Photos", "Links")
@@ -60,7 +67,6 @@ EMPLOYMENT_FIELDS = [
 	"employment_type",
 	"grade",
 	"default_shift",
-	"holiday_list",
 	"notice_number_of_days",
 ]
 BANK_FIELDS = ["bank_name", "bank_ac_no", "iban"]
@@ -76,6 +82,9 @@ HR_EDITABLE = ["department", "branch", *EMPLOYMENT_FIELDS, *BANK_FIELDS, "ifsc_c
 REQUESTS = ("Bank Details Change Request", "Asset Request")
 # options for the Link fields HR picks from; masters, so a few hundred at most
 MAX_OPTIONS = 500
+# how long a decided request stays on the profile: an approved one with its steps, a rejected one
+# with HR's reason
+DECIDED_DAYS = 30
 
 
 @frappe.whitelist()
@@ -110,6 +119,8 @@ def get_profile(employee: str | None = None) -> dict:
 		profile["can_review"] = {
 			doctype: not is_self and bool(frappe.has_permission(doctype, "submit")) for doctype in REQUESTS
 		}
+		# HR gives an asset with an Asset Movement, as for an approved request
+		profile["can_assign_assets"] = not is_self and bool(frappe.has_permission("Asset Movement", "create"))
 	if is_self or can_manage:
 		profile["options"] = get_options(person.company, can_manage)
 	return profile
@@ -133,7 +144,7 @@ def get_options(company: str, can_manage: bool) -> dict:
 		"Employee Document Type", fields=["name", "has_number", "has_expiry"], order_by="name"
 	)
 	if can_manage:
-		for field in ("branch", "employment_type", "grade", "default_shift", "holiday_list"):
+		for field in ("branch", "employment_type", "grade", "default_shift"):
 			options[field] = frappe.get_all(
 				meta.get_field(field).options, pluck="name", order_by="name", limit=MAX_OPTIONS
 			)
@@ -255,9 +266,14 @@ def get_private(employee: str) -> dict:
 		"personal": pick(PERSONAL_FIELDS),
 		"contact": pick(CONTACT_FIELDS),
 		"emergency": pick(EMERGENCY_FIELDS),
-		"employment": pick([*EMPLOYMENT_FIELDS, "department", "branch"]),
+		"employment": {
+			**pick([*EMPLOYMENT_FIELDS, "department", "branch"]),
+			# HR sets it through Holiday List Assignment, for the employee or their company
+			"holiday_list": get_holiday_list_for_employee(employee, raise_exception=False),
+		},
 		"bank": bank,
 		"bank_request": get_open_bank_request(employee),
+		"bank_decided": get_decided_bank_request(employee),
 		"assets": get_assets(employee),
 		"asset_requests": get_asset_requests(employee),
 		"documents": get_documents(employee),
@@ -265,8 +281,8 @@ def get_private(employee: str) -> dict:
 
 
 def get_asset_requests(employee: str) -> list[dict]:
-	"""The employee's open asset requests, and the approved ones whose Asset Movement, which HR
-	makes from the request, is not submitted yet"""
+	"""The employee's open asset requests, the approved ones whose Asset Movement, which HR makes
+	from the request, is not submitted yet, and the ones rejected lately, with the reason"""
 	fields = [
 		"name",
 		"request_type",
@@ -275,11 +291,14 @@ def get_asset_requests(employee: str) -> list[dict]:
 		"asset",
 		"asset_name",
 		"required_by",
+		"reason",
+		"rejection_reason",
 		"creation",
+		"modified",
 	]
 	requests = frappe.get_all(
 		"Asset Request",
-		filters={"employee": employee, "docstatus": 0, "status": ["!=", "Cancelled"]},
+		filters={"employee": employee, "docstatus": 0},
 		fields=fields,
 		order_by="creation desc",
 	)
@@ -290,8 +309,9 @@ def get_asset_requests(employee: str) -> list[dict]:
 		order_by="creation desc",
 		limit=20,
 	)
+	rejected = get_rejected("Asset Request", employee, fields)
 	if not approved:
-		return requests
+		return requests + rejected
 	movements = {}
 	for movement in frappe.get_all(
 		"Asset Movement",
@@ -309,7 +329,23 @@ def get_asset_requests(employee: str) -> list[dict]:
 			continue
 		request.asset_movement = movement.name if movement else None
 		requests.append(request)
-	return requests
+	return requests + rejected
+
+
+def get_rejected(doctype: str, employee: str, fields: list[str], limit: int = 20) -> list[dict]:
+	"""The employee's requests HR rejected lately; `modified` is when HR decided"""
+	return frappe.get_all(
+		doctype,
+		filters={
+			"employee": employee,
+			"docstatus": 1,
+			"status": "Rejected",
+			"modified": [">=", add_days(now_datetime(), -DECIDED_DAYS)],
+		},
+		fields=fields,
+		order_by="modified desc",
+		limit=limit,
+	)
 
 
 def get_bank_fields() -> list[str]:
@@ -317,26 +353,91 @@ def get_bank_fields() -> list[str]:
 	return [*BANK_FIELDS, "ifsc_code"] if frappe.get_meta("Employee").has_field("ifsc_code") else BANK_FIELDS
 
 
+BANK_REQUEST_FIELDS = [
+	"name",
+	"status",
+	"bank_name",
+	"bank_ac_no",
+	"ifsc_code",
+	"iban",
+	"reason",
+	"proof",
+	"rejection_reason",
+	"creation",
+	"modified",
+	"modified_by",
+]
+
+
 def get_open_bank_request(employee: str) -> dict | None:
 	request = frappe.db.get_value(
 		"Bank Details Change Request",
-		{"employee": employee, "docstatus": 0, "status": ["!=", "Cancelled"]},
-		["name", "bank_name", "bank_ac_no", "ifsc_code", "iban", "reason", "proof", "creation"],
+		{"employee": employee, "docstatus": 0},
+		BANK_REQUEST_FIELDS,
 		as_dict=True,
 	)
-	if request:
-		request.bank_ac_no = mask(request.bank_ac_no)
-		request.iban = mask(request.iban)
-		request.proof_name = frappe.db.get_value(
-			"File",
-			{
-				"file_url": request.proof,
-				"attached_to_doctype": "Bank Details Change Request",
-				"attached_to_name": request.name,
-			},
-			"file_name",
-		)
+	return prepare_bank_request(request) if request else None
+
+
+def get_decided_bank_request(employee: str) -> dict | None:
+	"""The last change HR approved or rejected lately, while no new one is open, so the employee
+	and HR still see how it went"""
+	if frappe.db.exists("Bank Details Change Request", {"employee": employee, "docstatus": 0}):
+		return None
+	decided = frappe.get_all(
+		"Bank Details Change Request",
+		filters={
+			"employee": employee,
+			"docstatus": 1,
+			"modified": [">=", add_days(now_datetime(), -DECIDED_DAYS)],
+		},
+		fields=BANK_REQUEST_FIELDS,
+		order_by="modified desc",
+		limit=1,
+	)
+	if not decided:
+		return None
+	# `modified` is when HR decided, as the request is not changed after that
+	decided_by = get_fullname(decided[0].modified_by)
+	request = prepare_bank_request(decided[0])
+	request.decided_by = decided_by
 	return request
+
+
+def prepare_bank_request(request: frappe._dict) -> frappe._dict:
+	request.bank_ac_no = mask(request.bank_ac_no)
+	request.iban = mask(request.iban)
+	request.proof_name = frappe.db.get_value(
+		"File",
+		{
+			"file_url": request.proof,
+			"attached_to_doctype": "Bank Details Change Request",
+			"attached_to_name": request.name,
+		},
+		"file_name",
+	)
+	request.pop("modified_by", None)
+	return request
+
+
+@frappe.whitelist()
+def get_bank_number(employee: str, request: str | None = None) -> dict:
+	"""The whole account number and IBAN, which the profile shows only the end of: of the
+	employee's account, or of a change they asked for, so HR can check it against the proof. For
+	the employee and for HR, and each look is kept in the Access Log."""
+	if request:
+		doc = frappe.get_doc("Bank Details Change Request", request)
+		doc.check_permission("read")
+		if doc.employee != employee:
+			frappe.throw(_("{0} is not a request of {1}").format(request, employee), frappe.PermissionError)
+		values = {"bank_ac_no": doc.bank_ac_no, "iban": doc.iban}
+		make_access_log(doctype=doc.doctype, document=doc.name, method="get_bank_number")
+	else:
+		if not frappe.has_permission("Employee", "read", doc=employee):
+			frappe.throw(_("Not permitted to see this bank account"), frappe.PermissionError)
+		values = frappe.db.get_value("Employee", employee, ["bank_ac_no", "iban"], as_dict=True)
+		make_access_log(doctype="Employee", document=employee, method="get_bank_number")
+	return values
 
 
 def get_assets(employee: str) -> list[dict]:
@@ -386,6 +487,7 @@ def get_documents(employee: str) -> list[dict]:
 			"document_number",
 			"expiry_date",
 			"status",
+			"verified_on",
 			"due_date",
 			"remarks",
 		],
@@ -579,70 +681,93 @@ def attach_file(file: str, doctype: str, name: str, field: str | None = None):
 
 
 @frappe.whitelist(methods=["POST"])
-def request_bank_details_change(values: dict | str) -> dict:
-	"""Ask HR to change the user's own salary account. HR approves it in the request."""
+def request_bank_details_change(values: dict | str, name: str | None = None) -> dict:
+	"""Ask HR to change the user's own salary account, or change the open request named. HR
+	approves it in the request. The profile shows only the end of the numbers asked for, so a
+	change that leaves one empty keeps it."""
 	employee = get_own_employee()
 	values = frappe.parse_json(values)
 	if not isinstance(values, dict):
 		frappe.throw(_("Bank details must be a set of fields"))
-	proof = get_own_upload(values.get("proof"))
-	request = frappe.get_doc(
-		{
-			"doctype": "Bank Details Change Request",
-			"employee": employee,
-			"proof": values.get("proof"),
-			"reason": str(values.get("reason") or "").strip()[:MAX_TEXT] or None,
-			**{
-				field: str(values.get(field) or "").strip()[:MAX_TITLE] or None
-				for field in ("bank_name", "bank_ac_no", "ifsc_code", "iban")
-			},
-		}
-	)
-	request.insert()
-	attach_file(proof, request.doctype, request.name, "proof")
+	if name:
+		request = get_own_open_request("Bank Details Change Request", name, employee)
+	else:
+		request = frappe.get_doc({"doctype": "Bank Details Change Request", "employee": employee})
+
+	for field in ("bank_name", "bank_ac_no", "ifsc_code", "iban"):
+		value = str(values.get(field) or "").strip()[:MAX_TITLE] or None
+		if value or not name or field not in ("bank_ac_no", "iban"):
+			request.set(field, value)
+	request.reason = str(values.get("reason") or "").strip()[:MAX_TEXT] or None
+
+	# a new proof is the user's own upload; the one already on the request stays
+	proof = None
+	if not name or values.get("proof") != request.proof:
+		proof = get_own_upload(values.get("proof"))
+		request.proof = values.get("proof")
+
+	request.save()
+	if proof:
+		attach_file(proof, request.doctype, request.name, "proof")
 	return get_private(employee)
 
 
 @frappe.whitelist(methods=["POST"])
-def request_asset(values: dict | str) -> dict:
-	"""Ask for an asset, or to return one the user holds. HR approves it in the request."""
+def request_asset(values: dict | str, name: str | None = None) -> dict:
+	"""Ask for an asset, or to return one the user holds, or change the open request named. HR
+	approves it in the request. A change keeps what is asked for: the kind of request, and the
+	asset to return."""
 	employee = get_own_employee()
 	values = frappe.parse_json(values)
-	if not isinstance(values, dict) or values.get("request_type") not in ("Issue", "Return"):
+	if not isinstance(values, dict):
+		frappe.throw(_("Asset request must be a set of fields"))
+	if name:
+		request = get_own_open_request("Asset Request", name, employee)
+	elif values.get("request_type") in ("Issue", "Return"):
+		is_issue = values["request_type"] == "Issue"
+		request = frappe.get_doc(
+			{
+				"doctype": "Asset Request",
+				"employee": employee,
+				"request_type": values["request_type"],
+				"asset": None if is_issue else str(values.get("asset") or "") or None,
+			}
+		)
+	else:
 		frappe.throw(_("Choose whether to request or return an asset"))
-	is_issue = values["request_type"] == "Issue"
-	frappe.get_doc(
-		{
-			"doctype": "Asset Request",
-			"employee": employee,
-			"request_type": values["request_type"],
-			"asset_category": str(values.get("asset_category") or "") or None if is_issue else None,
-			"required_by": getdate(values["required_by"]) if is_issue and values.get("required_by") else None,
-			"asset": None if is_issue else str(values.get("asset") or "") or None,
-			"reason": str(values.get("reason") or "").strip()[:MAX_TEXT] or None,
-		}
-	).insert()
-	return get_private(employee)
 
-
-@frappe.whitelist(methods=["POST"])
-def withdraw_request(doctype: str, name: str) -> dict:
-	"""Take back the user's own open request. It stays, as Cancelled, so HR sees it was made."""
-	if doctype not in REQUESTS:
-		frappe.throw(_("Only bank details and asset requests can be withdrawn here"))
-	employee = get_own_employee()
-	request = frappe.get_doc(doctype, name)
-	if request.employee != employee or request.docstatus != 0 or request.status == "Cancelled":
-		frappe.throw(_("Only your own open requests can be withdrawn"), frappe.PermissionError)
-	request.status = "Cancelled"
+	if request.request_type == "Issue":
+		request.asset_category = str(values.get("asset_category") or "") or None
+		request.required_by = getdate(values["required_by"]) if values.get("required_by") else None
+	request.reason = str(values.get("reason") or "").strip()[:MAX_TEXT] or None
 	request.save()
 	return get_private(employee)
 
 
 @frappe.whitelist(methods=["POST"])
-def review_request(doctype: str, name: str, status: str) -> dict:
+def withdraw_request(doctype: str, name: str) -> dict:
+	"""Take back the user's own open request. It is discarded, as a draft is, so it stays, as
+	Cancelled, and HR sees it was made."""
+	if doctype not in REQUESTS:
+		frappe.throw(_("Only bank details and asset requests can be withdrawn here"))
+	employee = get_own_employee()
+	get_own_open_request(doctype, name, employee).discard()
+	return get_private(employee)
+
+
+def get_own_open_request(doctype: str, name: str, employee: str) -> Document:
+	"""The user's own request that HR has not decided yet: only that one can be changed or taken back"""
+	request = frappe.get_doc(doctype, name)
+	if request.employee != employee or not request.docstatus.is_draft() or request.status != "Open":
+		frappe.throw(_("Only your own open requests can be changed"), frappe.PermissionError)
+	return request
+
+
+@frappe.whitelist(methods=["POST"])
+def review_request(doctype: str, name: str, status: str, reason: str | None = None) -> dict:
 	"""Approve or reject an open request and submit it. Approving a bank details change updates the
-	employee's account; an approved asset request waits for its Asset Movement."""
+	employee's account; an approved asset request waits for its Asset Movement. A rejection says
+	why, and the employee sees it."""
 	if doctype not in REQUESTS or status not in ("Approved", "Rejected"):
 		frappe.throw(_("Only bank details and asset requests can be approved or rejected here"))
 	request = frappe.get_doc(doctype, name)
@@ -652,6 +777,10 @@ def review_request(doctype: str, name: str, status: str) -> dict:
 	if request.employee == get_user_employee():
 		frappe.throw(_("You cannot approve or reject your own request"), frappe.PermissionError)
 	request.status = status
+	if status == "Rejected":
+		request.rejection_reason = str(reason or "").strip()[:MAX_TEXT] or None
+		if not request.rejection_reason:
+			frappe.throw(_("Say why the request is rejected, so {0} knows").format(request.employee_name))
 	request.submit()
 	return get_private(request.employee)
 
@@ -679,6 +808,8 @@ def upload_document(
 	)
 	row.expiry_date = getdate(expiry_date) if expiry_date and document.has_expiry else None
 	row.status = "Verified" if can_manage and employee != get_user_employee() else "Submitted"
+	if row.status == "Verified":
+		row.verified_on = today()
 	row.remarks = None
 	if can_manage:
 		doc.save()
@@ -706,6 +837,8 @@ def review_document(employee: str, document_type: str, status: str, remarks: str
 			_("{0} has not uploaded {1}").format(frappe.bold(doc.employee_name), frappe.bold(document_type))
 		)
 	row.status = status
+	if status == "Verified":
+		row.verified_on = today()
 	row.remarks = str(remarks or "").strip()[:MAX_TEXT] or None
 	doc.save()
 	return get_private(employee)
@@ -722,6 +855,47 @@ def request_document(employee: str, document_type: str, due_date: str | None = N
 	row.due_date = getdate(due_date) if due_date else None
 	row.remarks = None
 	doc.save()
+	return get_private(employee)
+
+
+@frappe.whitelist(methods=["POST"])
+def remove_document(document_type: str, employee: str | None = None) -> dict:
+	"""Take a document off an employee's record. The employee takes back their own upload until HR
+	verifies it: one HR asked for by a date goes back to asked for, and a required one shows as
+	required again. HR removes any."""
+	own = get_user_employee()
+	employee = employee or get_own_employee()
+	doc = frappe.get_doc("Employee", employee)
+	row = get_document_row(doc, document_type)
+	if not row:
+		frappe.throw(_("{0} is not on the record").format(frappe.bold(document_type)))
+
+	if employee != own:
+		doc.check_permission("write")
+		doc.remove(row)
+		doc.save()
+		return get_private(employee)
+
+	# once HR has verified it, a newer upload replaces it, so taking that back would lose both
+	if row.status not in ("Submitted", "Rejected") or row.verified_on:
+		frappe.throw(
+			_("HR has verified {0}. Ask HR to remove it.").format(frappe.bold(document_type)),
+			frappe.PermissionError,
+		)
+	if row.due_date:
+		row.update(
+			{
+				"attachment": None,
+				"document_number": None,
+				"expiry_date": None,
+				"status": "Pending",
+				"remarks": None,
+			}
+		)
+	else:
+		doc.remove(row)
+	# as with an upload: only this row of the user's own record changes, and Employee tracks changes
+	doc.save(ignore_permissions=True)
 	return get_private(employee)
 
 

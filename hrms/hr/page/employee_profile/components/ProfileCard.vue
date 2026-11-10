@@ -69,7 +69,8 @@ const rows = computed(() =>
 	].filter(Boolean),
 );
 const expanded = ref(false);
-const folded = computed(() => (expanded.value ? 0 : Math.max(rows.value.length - PHONE_ROWS, 0)));
+const extra = computed(() => Math.max(rows.value.length - PHONE_ROWS, 0));
+const folded = computed(() => (expanded.value ? 0 : extra.value));
 const fold = (row) => folded.value && rows.value.indexOf(row) >= PHONE_ROWS && "max-md:hidden";
 
 function copy_email() {
@@ -206,12 +207,13 @@ function copy_email() {
 				</div>
 			</dl>
 			<button
-				v-if="folded"
+				v-if="extra"
 				type="button"
 				class="flex h-8 items-center text-base text-ink-gray-8 hover:underline md:hidden"
-				@click="expanded = true"
+				:aria-expanded="expanded"
+				@click="expanded = !expanded"
 			>
-				{{ __("Show {0} more", [folded]) }}
+				{{ expanded ? __("Show less") : __("Show {0} more", [extra]) }}
 			</button>
 		</div>
 
