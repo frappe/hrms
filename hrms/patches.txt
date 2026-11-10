@@ -62,4 +62,6 @@ hrms.patches.v16_0.set_draft_status_in_job_offer
 hrms.patches.v16_0.add_employee_overview_tab
 hrms.patches.v16_0.hide_org_chart_from_employees_on_existing_sites
 hrms.patches.v16_0.reset_salary_slip_print_format_renderer
+hrms.patches.v16_0.move_appointment_letter_terms_to_letter_body
+hrms.patches.v16_0.create_default_appointment_letter_template
 hrms.patches.v16_0.ignore_user_permissions_for_default_employee_advance_account
