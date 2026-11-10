@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from "vue";
-import { Avatar, Badge, Button, Tooltip } from "frappe-ui";
+import { Avatar, Button, Tooltip } from "frappe-ui";
 
 const props = defineProps({
 	card: { type: Object, required: true },
@@ -116,19 +116,27 @@ function copy_email() {
 					:class="fold('manager')"
 					class="flex h-8 items-center gap-3"
 				>
-					<dt class="sr-only">{{ __("Manager") }}</dt>
-					<span class="flex size-4 shrink-0 items-center justify-center">
-						<Avatar :image="card.manager.image" :label="card.manager.name" size="xs" />
-					</span>
+					<!-- as the organizational chart's popover shows it -->
+					<dt class="sr-only">{{ __("Reports to") }}</dt>
+					<span class="lucide-arrow-up-right size-4 shrink-0 text-ink-gray-5" />
 					<dd class="min-w-0 truncate text-base">
 						<button
 							type="button"
-							class="text-ink-gray-8 hover:underline"
+							class="inline-flex min-w-0 max-w-full items-center gap-2 align-middle"
 							@click="emit('open_profile', card.manager.id)"
 						>
-							{{ card.manager.name }}
+							<Avatar
+								:image="card.manager.image"
+								:label="card.manager.name"
+								size="xs"
+								class="shrink-0"
+							/>
+							<span
+								class="truncate text-ink-gray-8 decoration-outline-gray-3 underline-offset-2 hover:underline"
+							>
+								{{ card.manager.name }}
+							</span>
 						</button>
-						<span class="ml-1.5 text-ink-gray-5">{{ __("Manager") }}</span>
 					</dd>
 				</div>
 				<div
