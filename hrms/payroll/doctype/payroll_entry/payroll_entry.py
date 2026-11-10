@@ -348,13 +348,13 @@ class PayrollEntry(Document):
 				# since this method is called via frm.call this doc needs to be updated manually
 				self.reload()
 
-	def get_sal_slip_list(self, ss_status, as_dict=False):
+	def get_sal_slip_list(self, ss_status, as_dict=False, for_update=False):
 		"""
 		Returns list of salary slips based on selected criteria
 		"""
 
 		ss = frappe.qb.DocType("Salary Slip")
-		ss_list = (
+		query = (
 			frappe.qb.from_(ss)
 			.select(ss.name, ss.salary_structure)
 			.where(
@@ -365,9 +365,11 @@ class PayrollEntry(Document):
 				& ((ss.journal_entry.isnull()) | (ss.journal_entry == ""))
 				& (Coalesce(ss.salary_slip_based_on_timesheet, 0) == self.salary_slip_based_on_timesheet)
 			)
-		).run(as_dict=as_dict)
+		)
+		if for_update:
+			query = query.for_update()
 
-		return ss_list
+		return query.run(as_dict=as_dict)
 
 	@frappe.whitelist(methods=["POST"])
 	def submit_salary_slips(self) -> None:
@@ -1840,7 +1842,8 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 		submitted = []
 		unsubmitted = []
 		# slips submitted outside the payroll entry have no accrual entry yet
-		manually_submitted = payroll_entry.get_sal_slip_list(ss_status=1, as_dict=True)
+		# lock them so a parallel submission waits and skips the slips accrued here
+		manually_submitted = payroll_entry.get_sal_slip_list(ss_status=1, as_dict=True, for_update=True)
 		frappe.flags.via_payroll_entry = True
 		count = 0
 
