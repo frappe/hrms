@@ -244,7 +244,18 @@ frappe.ui.form.on("Interview", {
 	},
 
 	load_feedback(frm) {
-		if (!frappe.model.can_read("Interview Feedback")) return;
+		if (!frappe.model.can_read("Interview Feedback")) {
+			$(frm.fields_dict.feedback_html.wrapper).html(`
+				<div class="feedback-section col-xs-12">
+					<div class="feedback-history mb-3">
+						<div class="no-feedback d-flex flex-col justify-content-center align-items-center text-muted">
+							<span>${__("You don't have permission to view feedback for this interview")}</span>
+						</div>
+					</div>
+				</div>
+			`);
+			return;
+		}
 		frappe
 			.call({
 				method: "hrms.hr.doctype.interview.interview.get_feedback",
