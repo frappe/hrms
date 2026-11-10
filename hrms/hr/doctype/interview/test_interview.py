@@ -59,6 +59,21 @@ class TestInterview(HRMSTestSuite):
 		)
 		self.assertIsNotNone(notification)
 
+	def test_rescheduling_to_same_timings_sends_no_notification(self):
+		interview = create_interview_and_dependencies(
+			create_job_applicant().name,
+			scheduled_on=add_days(getdate(), 2),
+			from_time="10:00:00",
+			to_time="11:00:00",
+		)
+		interview.reload()
+		self.addCleanup(frappe.set_user, "Administrator")
+		frappe.set_user("test_interviewer1@example.com")
+
+		interview.reschedule_interview(interview.scheduled_on, from_time="10:00:00", to_time="11:00:00")
+
+		self.assertFalse(frappe.db.exists("Email Queue", {"reference_name": interview.name}))
+
 	def test_notification_for_scheduling(self):
 		from hrms.hr.doctype.interview.interview import send_interview_reminder
 
