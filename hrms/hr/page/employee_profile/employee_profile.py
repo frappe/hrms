@@ -866,12 +866,13 @@ def remove_document(document_type: str, employee: str | None = None) -> dict:
 	own = get_user_employee()
 	employee = employee or get_own_employee()
 	doc = frappe.get_doc("Employee", employee)
+	if employee != own:
+		doc.check_permission("write")
 	row = get_document_row(doc, document_type)
 	if not row:
 		frappe.throw(_("{0} is not on the record").format(frappe.bold(document_type)))
 
 	if employee != own:
-		doc.check_permission("write")
 		doc.remove(row)
 		doc.save()
 		return get_private(employee)

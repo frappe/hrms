@@ -227,6 +227,8 @@ class TestEmployeeProfile(HRMSTestSuite):
 		upload_document("Test Passport", upload("passport.png"), document_number="P123")
 		frappe.set_user(COLLEAGUE)
 		self.assertRaises(frappe.PermissionError, remove_document, "Test Passport", self.employee)
+		# the same refusal for a document the employee does not have, so it tells nothing
+		self.assertRaises(frappe.PermissionError, remove_document, "Test Aadhaar", self.employee)
 
 		frappe.set_user(HR)
 		review_document(self.employee, "Test Passport", "Verified")
