@@ -38,7 +38,21 @@ frappe.ui.form.on("Interview", {
 			);
 		}
 
-		if (!frappe.model.can_read("Interview Feedback")) return;
+		const allow_feedback_submission = frm.doc.interview_details.some(
+			(interviewer) => interviewer.interviewer === frappe.session.user,
+		);
+
+		if (!allow_feedback_submission) {
+			const button = frm.add_custom_button(__("Submit Feedback"), () => {
+				frm.trigger("submit_feedback");
+			});
+			button
+				.prop("disabled", true)
+				.attr("title", __("Only interviewers can submit feedback"))
+				.tooltip({ delay: { show: 600, hide: 100 }, trigger: "hover" });
+			return;
+		}
+
 		const has_submitted_feedback = await frappe.db.get_value(
 			"Interview Feedback",
 			{
@@ -51,23 +65,9 @@ frappe.ui.form.on("Interview", {
 
 		if (has_submitted_feedback?.message?.name) return;
 
-		const allow_feedback_submission = frm.doc.interview_details.some(
-			(interviewer) => interviewer.interviewer === frappe.session.user,
-		);
-
-		if (allow_feedback_submission) {
-			frm.page.set_primary_action(__("Submit Feedback"), () => {
-				frm.trigger("submit_feedback");
-			});
-		} else {
-			const button = frm.add_custom_button(__("Submit Feedback"), () => {
-				frm.trigger("submit_feedback");
-			});
-			button
-				.prop("disabled", true)
-				.attr("title", __("Only interviewers can submit feedback"))
-				.tooltip({ delay: { show: 600, hide: 100 }, trigger: "hover" });
-		}
+		frm.page.set_primary_action(__("Submit Feedback"), () => {
+			frm.trigger("submit_feedback");
+		});
 	},
 
 	submit_feedback: function (frm) {
