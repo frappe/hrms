@@ -17,7 +17,7 @@ erpnextbranch=${ERPNEXT_BRANCH:-$githubbranch}
 paymentsbranch=${PAYMENTS_BRANCH:-${githubbranch%"-hotfix"}}
 lendingbranch="develop"
 
-git clone "https://github.com/${frappeuser}/frappe" --branch "${frappebranch}" --depth 1
+git clone "https://github.com/${FRAPPE_OWNER:-$frappeuser}/frappe" --branch "${frappebranch}" --depth 1
 bench init --skip-assets --frappe-path ~/frappe --python "$(which python)" frappe-bench
 
 mkdir ~/frappe-bench/sites/test_site
