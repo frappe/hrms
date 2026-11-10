@@ -28,7 +28,7 @@ env:
     HR_BRANCH: ${{ github.base_ref || github.ref_name }}
 
 concurrency:
-  group: develop-${{ github.event.number }}
+  group: develop-${{ github.event.number || github.run_id }}
   cancel-in-progress: true
 
 jobs:
