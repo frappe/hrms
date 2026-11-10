@@ -83,3 +83,23 @@ class TestAssetRequest(HRMSTestSuite):
 		request = self.make_request(request_type="Return", asset=asset)
 		request.status = "Approved"
 		self.assertRaises(frappe.PermissionError, request.save)
+
+	def test_employee_is_told_why_their_request_was_rejected(self):
+		asset = self.issue_asset()
+		frappe.set_user(USER)
+		request = self.make_request(request_type="Return", asset=asset)
+
+		frappe.set_user("Administrator")
+		request.reload()
+		request.status = "Rejected"
+		request.rejection_reason = "Still needed for the project"
+		request.submit()
+
+		notification = frappe.get_all(
+			"Notification Log",
+			filters={"for_user": USER, "document_name": request.name},
+			fields=["subject", "email_content"],
+		)
+		self.assertEqual(len(notification), 1)
+		self.assertEqual(notification[0].subject, f"Your asset request {request.name} is rejected")
+		self.assertEqual(notification[0].email_content, "<p>Reason: Still needed for the project</p>")
