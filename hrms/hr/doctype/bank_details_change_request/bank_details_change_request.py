@@ -4,9 +4,9 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import get_link_to_form
+from frappe.utils import escape_html, get_link_to_form
 
-from hrms.hr.utils import validate_active_employee
+from hrms.hr.utils import notify_hr, validate_active_employee
 
 
 class BankDetailsChangeRequest(Document):
@@ -73,6 +73,14 @@ class BankDetailsChangeRequest(Document):
 				),
 				title=_("Open Request Exists"),
 			)
+
+	def after_insert(self):
+		notify_hr(
+			self,
+			_("{0} asked to change their salary account").format(escape_html(self.employee_name)),
+			f"<p>{_('New bank')}: {escape_html(self.bank_name or '-')}</p>"
+			f"<p>{_('Reason')}: {escape_html(self.reason or '-')}</p>",
+		)
 
 	def on_discard(self):
 		self.db_set("status", "Cancelled")

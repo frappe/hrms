@@ -28,6 +28,23 @@ class TestBankDetailsChangeRequest(HRMSTestSuite):
 			}
 		).insert()
 
+	def test_hr_hears_only_of_requests_they_may_see(self):
+		# HR A and HR B split the employees between them by user permissions
+		hr_a = make_hr_user("bank_change_hr_a@example.com")
+		hr_b = make_hr_user("bank_change_hr_b@example.com")
+		elsewhere = make_employee("bank_change_elsewhere@example.com", company="_Test Company")
+		frappe.permissions.add_user_permission("Employee", elsewhere, hr_b)
+
+		request = self.make_request()
+		notified = frappe.get_all(
+			"Notification Log",
+			filters={"document_type": request.doctype, "document_name": request.name},
+			fields=["for_user", "subject"],
+		)
+		subjects = {log.for_user: log.subject for log in notified}
+		self.assertEqual(subjects.get(hr_a), f"{request.employee_name} asked to change their salary account")
+		self.assertNotIn(hr_b, subjects)
+
 	def test_approval_updates_the_employee(self):
 		request = self.make_request()
 		request.status = "Approved"
@@ -79,3 +96,12 @@ class TestBankDetailsChangeRequest(HRMSTestSuite):
 		request = self.make_request()
 		request.status = "Approved"
 		self.assertRaises(frappe.PermissionError, request.save)
+
+
+def make_hr_user(email: str) -> str:
+	if not frappe.db.exists("User", email):
+		frappe.get_doc(
+			{"doctype": "User", "email": email, "first_name": email.split("@")[0], "send_welcome_email": 0}
+		).insert()
+	frappe.get_doc("User", email).add_roles("HR User")
+	return email

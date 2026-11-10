@@ -1,0 +1,32 @@
+{
+ "attach_files": "",
+ "attach_print": 0,
+ "channel": "System Notification",
+ "condition_type": "Python",
+ "creation": "2026-11-06 16:44:51.037688",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Bank Details Change Request",
+ "enabled": 1,
+ "event": "Submit",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "{% if doc.status == 'Rejected' and doc.rejection_reason %}<p>{{ _('Reason') }}: {{ doc.rejection_reason | e }}</p>{% endif %}",
+ "message_type": "Markdown",
+ "minutes_offset": 0,
+ "modified": "2026-11-11 02:24:38.497786",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Bank Details Change Request Decided",
+ "notification_type": "Alert",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_document_field": "owner"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "subject": "{{ _('Your bank details change request is approved') if doc.status == 'Approved' else _('Your bank details change request is rejected') }}"
+}

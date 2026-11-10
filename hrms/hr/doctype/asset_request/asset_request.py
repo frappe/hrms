@@ -5,9 +5,9 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
-from frappe.utils import get_link_to_form, now_datetime
+from frappe.utils import escape_html, get_link_to_form, now_datetime
 
-from hrms.hr.utils import validate_active_employee
+from hrms.hr.utils import notify_hr, validate_active_employee
 
 
 class AssetRequest(Document):
@@ -83,6 +83,17 @@ class AssetRequest(Document):
 				),
 				title=_("Open Request Exists"),
 			)
+
+	def after_insert(self):
+		if self.request_type == "Issue":
+			asks = _("Asks for {0}").format(escape_html(self.asset_category or ""))
+		else:
+			asks = _("Returns {0}").format(escape_html(self.asset_name or self.asset or ""))
+		notify_hr(
+			self,
+			_("{0} raised an asset request").format(escape_html(self.employee_name)),
+			f"<p>{asks}</p><p>{_('Reason')}: {escape_html(self.reason or '-')}</p>",
+		)
 
 	def on_discard(self):
 		self.db_set("status", "Cancelled")
