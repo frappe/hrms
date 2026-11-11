@@ -5,14 +5,16 @@
 import frappe
 from frappe import _
 
+ALLOWED_METHODS = ("hrms.hr.page.organizational_chart.organizational_chart.get_children",)
+
 
 @frappe.whitelist()
 def get_all_nodes(method: str, company: str):
 	"""Recursively gets all data from nodes"""
-	method = frappe.get_attr(method)
-
-	if method not in frappe.whitelisted:
+	if method not in ALLOWED_METHODS:
 		frappe.throw(_("Not Permitted"), frappe.PermissionError)
+
+	method = frappe.get_attr(method)
 
 	root_nodes = method(company=company)
 	result = []
