@@ -245,15 +245,11 @@ frappe.ui.form.on("Interview", {
 
 	load_feedback(frm) {
 		if (!frappe.model.can_read("Interview Feedback")) {
-			$(frm.fields_dict.feedback_html.wrapper).html(`
-				<div class="feedback-section col-xs-12">
-					<div class="feedback-history mb-3">
-						<div class="no-feedback d-flex flex-col justify-content-center align-items-center text-muted">
-							<span>${__("You don't have permission to view feedback for this interview")}</span>
-						</div>
-					</div>
-				</div>
-			`);
+			frm.feedback = [];
+			frm.events.render_feedback(
+				frm,
+				__("You don't have permission to view feedback for this interview"),
+			);
 			return;
 		}
 		frappe
@@ -268,7 +264,7 @@ frappe.ui.form.on("Interview", {
 			});
 	},
 
-	render_feedback(frm) {
+	render_feedback(frm, empty_message) {
 		frappe.require("interview.bundle.js", () => {
 			const wrapper = $(frm.fields_dict.feedback_html.wrapper);
 			const feedback_html = frappe.render_template("interview_feedback", {
@@ -276,6 +272,7 @@ frappe.ui.form.on("Interview", {
 				average_rating: flt(frm.doc.average_rating * 5, 2),
 				reviews_per_rating: frm.reviews_per_rating,
 				skills_average_rating: frm.skills_average_rating,
+				empty_message: empty_message,
 			});
 			$(wrapper).empty();
 			$(feedback_html).appendTo(wrapper);
