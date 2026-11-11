@@ -399,6 +399,7 @@ ignore_links_on_delete = ["PWA Notification"]
 
 company_data_to_be_ignored = [
 	"Salary Component Account",
+	"Expense Claim Account",
 	"Salary Structure",
 	"Salary Structure Assignment",
 	"Payroll Period",
