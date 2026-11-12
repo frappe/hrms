@@ -5,7 +5,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.query_builder.functions import Avg
-from frappe.utils import flt, get_link_to_form, now
+from frappe.utils import cint, flt, get_link_to_form, now
 
 from hrms.hr.doctype.appraisal_cycle.appraisal_cycle import validate_active_appraisal_cycle
 from hrms.hr.utils import validate_active_employee
@@ -100,15 +100,14 @@ class Appraisal(Document, AppraisalMixin):
 			)
 
 	def set_kra_evaluation_method(self):
-		if (
-			self.is_new()
-			and self.appraisal_cycle
-			and (
-				frappe.db.get_value("Appraisal Cycle", self.appraisal_cycle, "kra_evaluation_method")
-				== "Manual Rating"
-			)
-		):
-			self.rate_goals_manually = 1
+		if self.is_new() or self.has_value_changed("appraisal_cycle"):
+			if self.appraisal_cycle:
+				self.rate_goals_manually = cint(
+					frappe.db.get_value("Appraisal Cycle", self.appraisal_cycle, "kra_evaluation_method")
+					== "Manual Rating"
+				)
+		else:
+			self.rate_goals_manually = self.get_doc_before_save().rate_goals_manually
 
 	@frappe.whitelist()
 	def set_appraisal_template(self):

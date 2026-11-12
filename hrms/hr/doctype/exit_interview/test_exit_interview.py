@@ -93,6 +93,26 @@ class TestExitInterview(HRMSTestSuite):
 		interview.reload()
 		self.assertEqual(interview.status, "Cancelled")
 
+	def test_status_dependent_fields(self):
+		employee = make_employee("employeeexitint_status@example.com", company="_Test Company")
+		frappe.db.set_value("Employee", employee, "relieving_date", getdate())
+
+		interview = create_exit_interview(employee, save=False)
+		interview.status = "Scheduled"
+		interview.date = None
+		self.assertRaises(frappe.ValidationError, interview.insert)
+
+		interview.date = getdate()
+		interview.set("interviewers", [])
+		self.assertRaises(frappe.ValidationError, interview.insert)
+
+		interview = create_exit_interview(employee, save=False)
+		interview.status = "Completed"
+		self.assertRaises(frappe.ValidationError, interview.insert)
+
+		interview.employee_status = "Exit Confirmed"
+		interview.insert()
+
 
 def create_exit_interview(employee, save=True):
 	interviewer = create_user("test_exit_interviewer@example.com")

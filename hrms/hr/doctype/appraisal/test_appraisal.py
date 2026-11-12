@@ -327,3 +327,23 @@ class TestAppraisal(HRMSTestSuite):
 			"feedback_missing": 1,
 		}
 		self.assertEqual(summary, expected_data)
+
+	def test_kra_evaluation_method_follows_appraisal_cycle(self):
+		cycle = create_appraisal_cycle(
+			designation="Engineer", kra_evaluation_method="Automated Based on Goal Progress"
+		)
+		appraisal = frappe.get_doc(
+			{
+				"doctype": "Appraisal",
+				"employee": self.employee1,
+				"appraisal_cycle": cycle.name,
+				"rate_goals_manually": 1,
+			}
+		)
+		appraisal.set_appraisal_template()
+		appraisal.insert()
+		self.assertEqual(appraisal.rate_goals_manually, 0)
+
+		appraisal.rate_goals_manually = 1
+		appraisal.save()
+		self.assertEqual(appraisal.rate_goals_manually, 0)

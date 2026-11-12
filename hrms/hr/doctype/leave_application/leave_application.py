@@ -26,6 +26,7 @@ from erpnext.setup.doctype.employee.employee import get_holiday_list_for_employe
 
 import hrms
 from hrms.api import get_current_employee_info
+from hrms.hr.doctype.department_approver.department_approver import validate_approver
 from hrms.hr.doctype.leave_block_list.leave_block_list import get_applicable_block_dates
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import create_leave_ledger_entry
 from hrms.hr.utils import (
@@ -857,12 +858,17 @@ class LeaveApplication(Document, PWANotificationsMixin):
 				create_leave_ledger_entry(self, args, submit)
 
 	def validate_leave_approver(self):
+		if self.docstatus != 2 and self.employee and not self.leave_approver:
+			self.leave_approver = get_employee_leave_approver(self.employee)
+
 		if (
 			self.docstatus != 2
 			and not self.leave_approver
 			and frappe.db.get_single_value("HR Settings", "leave_approver_mandatory_in_leave_application")
 		):
 			frappe.throw(_("Leave Approver is mandatory"))
+
+		validate_approver(self, "leave_approver")
 
 	def set_leave_approver_name(self):
 		if not self.leave_approver:

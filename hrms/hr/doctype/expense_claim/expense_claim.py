@@ -23,6 +23,7 @@ from erpnext.accounts.utils import (
 from erpnext.controllers.accounts_controller import AccountsController
 
 import hrms
+from hrms.hr.doctype.department_approver.department_approver import validate_approver
 from hrms.hr.utils import set_employee_name, share_doc_with_approver, validate_active_employee
 from hrms.mixins.pwa_notifications import PWANotificationsMixin
 
@@ -110,6 +111,9 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		self.validate_employee_scope()
 		set_employee_name(self)
 		self.set_company_currency_if_multi_currency_disabled()
+		self.validate_exchange_rate()
+		self.validate_expense_approver()
+		self.set_default_sanctioned_amount()
 		self.validate_sanctioned_amount()
 		self.calculate_total_amount()
 		self.validate_advances()
@@ -657,6 +661,32 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 		if flt(self.total_advance_amount, precision) > amount_with_taxes:
 			frappe.throw(_("Total advance amount cannot be greater than total sanctioned amount"))
 
+	def validate_exchange_rate(self):
+		if not self.company:
+			return
+
+		if self.currency == erpnext.get_company_currency(self.company):
+			self.exchange_rate = 1.0
+		elif self.currency and flt(self.exchange_rate) <= 0:
+			frappe.throw(_("Exchange Rate must be greater than 0"))
+
+	def validate_expense_approver(self):
+		if not self.employee:
+			return
+
+		if not self.expense_approver:
+			self.expense_approver = get_default_expense_approver(self.employee)
+
+		validate_approver(self, "expense_approver")
+
+	def set_default_sanctioned_amount(self):
+		if self.approval_status == "Rejected":
+			return
+
+		for d in self.get("expenses"):
+			if d.sanctioned_amount is None:
+				d.sanctioned_amount = d.amount
+
 	def validate_sanctioned_amount(self):
 		for d in self.get("expenses"):
 			if flt(d.sanctioned_amount) > flt(d.amount):
@@ -670,6 +700,20 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 				expense.default_account = get_expense_claim_account(expense.expense_type, self.company)[
 					"account"
 				]
+
+
+def get_default_expense_approver(employee: str) -> str | None:
+	expense_approver, department = frappe.db.get_value(
+		"Employee", employee, ["expense_approver", "department"]
+	)
+	if not expense_approver and department:
+		expense_approver = frappe.db.get_value(
+			"Department Approver",
+			{"parent": department, "parentfield": "expense_approvers", "idx": 1},
+			"approver",
+		)
+
+	return expense_approver
 
 
 def update_reimbursed_amount(doc):

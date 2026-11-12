@@ -493,3 +493,28 @@ class TestSalaryStructureAssignment(HRMSTestSuite):
 
 				slip = make_salary_slip(structure.name, employee=emp)
 				self.assertIn("SSA Test Cycle Days", [r.salary_component for r in slip.earnings])
+
+	def test_employee_benefits_copied_from_structure(self):
+		employee = make_employee("test_ssa_benefits@example.com", company="_Test Company")
+		structure = make_salary_structure(
+			"SSA Benefits Structure", "Monthly", company="_Test Company", include_flexi_benefits=True
+		)
+		self.assertTrue(structure.employee_benefits)
+
+		assignment = frappe.get_doc(
+			{
+				"doctype": "Salary Structure Assignment",
+				"employee": employee,
+				"salary_structure": structure.name,
+				"company": "_Test Company",
+				"currency": structure.currency,
+				"from_date": nowdate(),
+				"base": 50000,
+			}
+		).insert()
+
+		self.assertEqual(
+			[(row.salary_component, row.amount) for row in assignment.employee_benefits],
+			[(row.salary_component, row.amount) for row in structure.employee_benefits],
+		)
+		self.assertEqual(assignment.max_benefits, sum(row.amount for row in structure.employee_benefits))
