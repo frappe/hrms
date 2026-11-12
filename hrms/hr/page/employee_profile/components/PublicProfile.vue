@@ -174,10 +174,10 @@ function add(section) {
 				<Button :label="__('Cancel')" @click="headline_draft = null" />
 			</div>
 		</div>
-		<div v-else-if="headline?.content || can_edit" class="group relative">
+		<div v-else-if="headline?.content || can_edit" class="group flex items-start gap-2">
 			<p
 				v-if="headline?.content"
-				class="max-w-[40ch] text-3xl font-medium leading-snug text-ink-gray-9"
+				class="min-w-0 max-w-[40ch] flex-1 text-3xl font-medium leading-snug text-ink-gray-9"
 			>
 				{{ headline.content }}
 			</p>
@@ -189,7 +189,7 @@ function add(section) {
 			/>
 			<Tooltip v-if="can_edit && headline?.content" :text="__('Edit')">
 				<Button
-					class="absolute right-0 top-0 md:opacity-0 md:focus-visible:opacity-100 md:group-hover:opacity-100"
+					class="ml-auto shrink-0 md:opacity-0 md:focus-visible:opacity-100 md:group-hover:opacity-100"
 					variant="ghost"
 					icon="lucide-pencil"
 					:aria-label="__('Edit bio')"
