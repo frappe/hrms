@@ -15,6 +15,7 @@ from hrms.subscription_utils import is_new_hr_site, set_hrms_as_default_app
 def after_install():
 	create_custom_fields(get_custom_fields(), ignore_validate=True)
 	rename_employee_details_tab()
+	set_employee_form_layout()
 	create_salary_slip_loan_fields()
 	make_fixtures()
 	create_default_template()
@@ -35,6 +36,8 @@ def before_uninstall():
 	delete_custom_fields(get_custom_fields())
 	delete_custom_fields(get_salary_slip_loan_fields())
 	frappe.db.delete("Property Setter", EMPLOYEE_DETAILS_TAB_LABEL)
+	for setter in get_employee_layout_setters():
+		frappe.db.delete("Property Setter", setter)
 	delete_company_fixtures()
 
 
@@ -62,6 +65,94 @@ def rename_employee_details_tab():
 	make_property_setter(
 		"Employee", "basic_details_tab", "label", "Details", "Data", validate_fields_for_doctype=False
 	)
+
+
+# The Employee form, grouped as the profile shows it. Only the layout changes: these ERPNext tabs
+# become sections, each moved with its fields to the end of the tab it is grouped under.
+EMPLOYEE_TABS_TO_SECTIONS = {
+	"personal_details": "contact_details",
+	"employment_details": "attendance_and_leave_details",
+	"profile_tab": "attendance_and_leave_details",
+}
+EMPLOYEE_TAB_LABELS = {
+	"contact_details": "Personal",
+	"attendance_and_leave_details": "Employment",
+	"salary_information": "Payroll",
+	# ERPNext labels it Profile, the same as the profile tab this app adds
+	"profile_tab": "Background",
+}
+
+
+def set_employee_form_layout():
+	"""Group the Employee form into Personal, Employment and Payroll.
+
+	A site that arranged the form itself in Customize Form keeps its order. Those property setters
+	are not system generated, and the ones made here are, so disabling the app leaves the site's own.
+	"""
+	from frappe.custom.doctype.property_setter.property_setter import make_property_setter
+
+	def make(fieldname, property, value, property_type="Data"):
+		make_property_setter(
+			"Employee", fieldname, property, value, property_type, validate_fields_for_doctype=False
+		)
+
+	make("profile_tab", "label", EMPLOYEE_TAB_LABELS["profile_tab"])
+	if frappe.db.exists(
+		"Property Setter", {"doc_type": "Employee", "property": "field_order", "is_system_generated": 0}
+	):
+		return
+
+	make_property_setter(
+		"Employee", None, "field_order", frappe.as_json(get_employee_field_order()), "Data", for_doctype=True
+	)
+	for fieldname in EMPLOYEE_TABS_TO_SECTIONS:
+		make(fieldname, "fieldtype", "Section Break")
+		make(fieldname, "collapsible", "0", "Check")
+	for fieldname, label in EMPLOYEE_TAB_LABELS.items():
+		make(fieldname, "label", label)
+
+
+def get_employee_field_order() -> list[str]:
+	"""ERPNext's own fields in the grouped order. The custom fields follow their insert_after, and
+	a field ERPNext adds later follows the field before it."""
+	fields = frappe.get_doc("DocType", "Employee").fields
+	order = [field.fieldname for field in fields]
+	tab_breaks = {field.fieldname for field in fields if field.fieldtype == "Tab Break"}
+	kept_tabs = tab_breaks - set(EMPLOYEE_TABS_TO_SECTIONS)
+
+	def up_to_next(start: str, tabs: set[str]) -> list[str]:
+		end = order.index(start) + 1
+		while end < len(order) and order[end] not in tabs:
+			end += 1
+		return order[order.index(start) : end]
+
+	for section, tab in EMPLOYEE_TABS_TO_SECTIONS.items():
+		moved = up_to_next(section, tab_breaks)
+		for fieldname in moved:
+			order.remove(fieldname)
+		position = order.index(up_to_next(tab, kept_tabs)[-1]) + 1
+		order[position:position] = moved
+
+	return order
+
+
+def get_employee_layout_setters() -> list[dict]:
+	setters = [{"doc_type": "Employee", "property": "field_order", "is_system_generated": 1}]
+	for fieldname in EMPLOYEE_TABS_TO_SECTIONS:
+		for property in ("fieldtype", "collapsible"):
+			setters.append(
+				{
+					"doc_type": "Employee",
+					"field_name": fieldname,
+					"property": property,
+					"is_system_generated": 1,
+				}
+			)
+	for fieldname in EMPLOYEE_TAB_LABELS:
+		setters.append(
+			{"doc_type": "Employee", "field_name": fieldname, "property": "label", "is_system_generated": 1}
+		)
+	return setters
 
 
 def get_regional_custom_fields():
@@ -98,6 +189,7 @@ def get_customizations():
 			{"doc_type": "Salary Slip", "field_name": "rounded_total", "property": "hidden"},
 			{"doc_type": "Salary Slip", "field_name": "rounded_total", "property": "print_hide"},
 			EMPLOYEE_DETAILS_TAB_LABEL,
+			*get_employee_layout_setters(),
 		],
 		"Custom DocPerm": [
 			{"parent": doctype, "role": role}
