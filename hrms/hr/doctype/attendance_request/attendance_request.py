@@ -51,6 +51,13 @@ class AttendanceRequest(Document):
 
 	def validate_half_day(self):
 		if self.half_day:
+			if not self.half_day_date:
+				frappe.throw(
+					_("{0} is required for a half day request").format(
+						frappe.bold(_(self.meta.get_label("half_day_date")))
+					),
+					frappe.MandatoryError,
+				)
 			if not getdate(self.from_date) <= getdate(self.half_day_date) <= getdate(self.to_date):
 				frappe.throw(_("Half day date should be in between from date and to date"))
 
