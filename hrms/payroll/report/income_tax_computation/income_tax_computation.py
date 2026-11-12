@@ -4,7 +4,7 @@
 import frappe
 from frappe import _, scrub
 from frappe.query_builder.functions import Sum
-from frappe.utils import add_days, flt, getdate, rounded
+from frappe.utils import add_days, flt, formatdate, get_link_to_form, getdate, rounded
 
 from hrms.payroll.doctype.income_tax_slab.income_tax_slab import calculate_tax_by_tax_slab
 from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
@@ -20,6 +20,7 @@ class IncomeTaxComputationReport:
 		self.columns = []
 		self.data = []
 		self.employees = frappe._dict()
+		self.skipped_employees = {}
 		self.payroll_period_start_date = None
 		self.payroll_period_end_date = None
 		if self.filters.payroll_period:
@@ -34,6 +35,10 @@ class IncomeTaxComputationReport:
 
 	def get_data(self):
 		self.get_employee_details()
+		if not self.employees:
+			self.notify_skipped_employees()
+			return
+
 		self.get_future_salary_slips()
 		self.get_gross_earnings()
 		self.get_income_from_other_sources()
@@ -43,16 +48,23 @@ class IncomeTaxComputationReport:
 		self.get_standard_tax_exemption()
 		self.get_total_taxable_amount()
 		self.get_applicable_tax()
+		self.exclude_skipped_employees()
+		if not self.employees:
+			self.notify_skipped_employees()
+			return
+
 		self.get_total_deducted_tax()
 		self.get_payable_tax()
 
 		self.data = list(self.employees.values())
+		self.notify_skipped_employees()
 
 	def get_employee_details(self):
 		filters = self.get_employee_filters()
 		fields = [
 			"name as employee",
 			"employee_name",
+			"company",
 			"department",
 			"designation",
 			"date_of_joining",
@@ -72,9 +84,21 @@ class IncomeTaxComputationReport:
 					continue
 
 				d.update(ss_assignments[d.employee])
+
+				if getdate(d.slab_effective_from) > getdate(self.payroll_period_start_date):
+					self.skipped_employees[d.employee] = _(
+						"Assigned Income Tax Slab {0} is effective from {1}, after the payroll period start date {2}"
+					).format(
+						d.income_tax_slab,
+						formatdate(d.slab_effective_from),
+						formatdate(self.payroll_period_start_date),
+					)
+					continue
+
+				d.pop("slab_effective_from", None)
 				self.employees.setdefault(d.employee, d)
 
-		if not self.employees:
+		if not self.employees and not self.skipped_employees:
 			frappe.throw(_("No employees found with selected filters and active salary structure"))
 
 	def get_employee_filters(self):
@@ -112,7 +136,10 @@ class IncomeTaxComputationReport:
 		for d in ss_assignments:
 			if d.employee not in list(employee_ss_assignments.keys()):
 				tax_slab = frappe.get_cached_value(
-					"Income Tax Slab", d.income_tax_slab, ["allow_tax_exemption", "disabled"], as_dict=1
+					"Income Tax Slab",
+					d.income_tax_slab,
+					["allow_tax_exemption", "disabled", "effective_from"],
+					as_dict=1,
 				)
 
 				if tax_slab and not tax_slab.disabled:
@@ -125,6 +152,7 @@ class IncomeTaxComputationReport:
 						{
 							"salary_structure": d.salary_structure,
 							"income_tax_slab": d.income_tax_slab,
+							"slab_effective_from": tax_slab.effective_from,
 							"allow_tax_exemption": tax_slab.allow_tax_exemption,
 							"total_exemption": 0.0,
 							"taxable_earnings_till_date": flt(d.taxable_earnings_till_date)
@@ -507,8 +535,11 @@ class IncomeTaxComputationReport:
 		for emp, emp_details in self.employees.items():
 			tax_slab = emp_details.get("income_tax_slab")
 			if tax_slab:
+				eval_data = self.get_data_for_eval(emp, emp_details)
+				if eval_data is None:
+					continue
 				tax_slab = frappe.get_cached_doc("Income Tax Slab", tax_slab)
-				eval_globals, eval_locals = self.get_data_for_eval(emp, emp_details)
+				eval_globals, eval_locals = eval_data
 				tax_amount, other_taxes_and_charges = calculate_tax_by_tax_slab(
 					emp_details["total_taxable_amount"],
 					tax_slab,
@@ -527,7 +558,7 @@ class IncomeTaxComputationReport:
 			emp_details["other_taxes_and_charges"] = other_taxes_and_charges
 			emp_details["applicable_tax"] = tax_amount
 
-	def get_data_for_eval(self, emp: str, emp_details: dict) -> tuple:
+	def get_data_for_eval(self, emp: str, emp_details: dict) -> tuple | None:
 		last_ss = self.get_last_salary_slip(emp)
 
 		if last_ss:
@@ -535,6 +566,7 @@ class IncomeTaxComputationReport:
 		else:
 			salary_slip = frappe.new_doc("Salary Slip")
 			salary_slip.employee = emp
+			salary_slip.company = emp_details.company
 			salary_slip.salary_structure = emp_details.salary_structure
 			salary_slip.start_date = max(self.payroll_period_start_date, emp_details.date_of_joining)
 			salary_slip.payroll_frequency = frappe.db.get_value(
@@ -543,11 +575,45 @@ class IncomeTaxComputationReport:
 			salary_slip.end_date = get_start_end_dates(
 				salary_slip.payroll_frequency, salary_slip.start_date
 			).end_date
-			salary_slip.process_salary_structure()
+			try:
+				salary_slip.process_salary_structure()
+			except Exception:
+				self.skipped_employees.setdefault(
+					emp,
+					_("A salary slip could not be evaluated for this payroll period"),
+				)
+				return None
 
 		eval_locals, __ = salary_slip.get_data_for_eval()
 
 		return salary_slip.whitelisted_globals, eval_locals
+
+	def exclude_skipped_employees(self):
+		for employee in self.skipped_employees:
+			self.employees.pop(employee, None)
+
+	def notify_skipped_employees(self):
+		if not self.skipped_employees:
+			return
+
+		employee_names = dict(
+			frappe.get_all(
+				"Employee",
+				filters={"name": ("in", list(self.skipped_employees))},
+				fields=["name", "employee_name"],
+				as_list=1,
+			)
+		)
+
+		rows = "".join(
+			f"<li>{get_link_to_form('Employee', employee)} ({employee_names.get(employee, employee)}): {reason}</li>"
+			for employee, reason in self.skipped_employees.items()
+		)
+		frappe.msgprint(
+			_("The following employees were left out of the report:") + f"<ul>{rows}</ul>",
+			title=_("Employees skipped"),
+			indicator="orange",
+		)
 
 	def get_total_deducted_tax(self):
 		SalaryComponent = frappe.qb.DocType("Salary Component")
