@@ -1853,6 +1853,11 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 					submitted.append(salary_slip)
 				except frappe.ValidationError:
 					frappe.db.rollback(save_point=savepoint)
+					salary_slip.log_error(
+						_("Salary Slip {0} failed for Payroll Entry {1}").format(
+							"submission", payroll_entry.name
+						)
+					)
 					unsubmitted.append(entry[0])
 
 			count += 1
@@ -1865,6 +1870,15 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 			payroll_entry.make_accrual_jv_entry(submitted)
 			payroll_entry.email_salary_slip(submitted)
 			payroll_entry.db_set({"salary_slips_submitted": 1, "status": "Submitted", "error_message": ""})
+		elif unsubmitted:
+			payroll_entry.db_set(
+				{
+					"status": "Failed",
+					"error_message": _("Could not submit some Salary Slips: {}").format(
+						", ".join(get_link_to_form("Salary Slip", entry) for entry in unsubmitted)
+					),
+				}
+			)
 
 		show_payroll_submission_status(submitted, unsubmitted, payroll_entry)
 
