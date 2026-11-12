@@ -1,0 +1,284 @@
+{
+ "actions": [],
+ "autoname": "HR-EMP-PRB-.YYYY.-.#####",
+ "creation": "2018-05-09 04:57:20.016220",
+ "doctype": "DocType",
+ "documentation": "https://docs.frappe.io/hr/employee-onboarding",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_kyxh",
+  "job_offer",
+  "job_applicant",
+  "employee_name",
+  "company",
+  "column_break_7",
+  "date_of_joining",
+  "boarding_begins_on",
+  "employee_boarding_template",
+  "boarding_status",
+  "checklist_section",
+  "preboarding_checklist",
+  "details_section",
+  "employee",
+  "department",
+  "designation",
+  "employee_grade",
+  "column_break_13",
+  "user_section",
+  "personal_email",
+  "company_email",
+  "column_break_user",
+  "user",
+  "appointment_letter_section",
+  "appointment_letter_sent_on",
+  "table_for_activity",
+  "activities",
+  "notify_users_by_email",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "job_offer",
+   "fieldtype": "Link",
+   "label": "Job Offer",
+   "options": "Job Offer",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.job_applicant",
+   "fetch_from": "job_offer.job_applicant",
+   "fieldname": "job_applicant",
+   "fieldtype": "Link",
+   "label": "Job Applicant",
+   "options": "Job Applicant"
+  },
+  {
+   "fetch_from": "job_offer.applicant_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Employee Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee",
+   "read_only": 1
+  },
+  {
+   "fieldname": "date_of_joining",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date of Joining",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Pending",
+   "fieldname": "boarding_status",
+   "fieldtype": "Select",
+   "label": "Boarding Status",
+   "options": "Pending\nIn Process\nCompleted",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "notify_users_by_email",
+   "fieldtype": "Check",
+   "label": "Notify users by email"
+  },
+  {
+   "fieldname": "column_break_7",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Edit the template to add your own tasks, owners and due dates.",
+   "fieldname": "employee_boarding_template",
+   "fieldtype": "Link",
+   "label": "Employee Boarding Template",
+   "options": "Employee Boarding Template",
+   "show_description_on_click": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "fieldname": "employee_grade",
+   "fieldtype": "Link",
+   "label": "Employee Grade",
+   "options": "Employee Grade"
+  },
+  {
+   "fieldname": "table_for_activity",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "hide_border": 1,
+   "label": "Preboarding Activities"
+  },
+  {
+   "fieldname": "activities",
+   "fieldtype": "Table",
+   "label": "Activities",
+   "options": "Employee Boarding Activity"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Employee Preboarding",
+   "print_hide": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "details_section",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "hide_border": 1,
+   "label": "Employee Details"
+  },
+  {
+   "fieldname": "column_break_13",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "boarding_begins_on",
+   "fieldtype": "Date",
+   "label": "Preboarding Begins On",
+   "reqd": 1
+  },
+  {
+   "fieldname": "user_section",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "hide_border": 1,
+   "label": "User Account"
+  },
+  {
+   "fetch_from": "job_offer.applicant_email",
+   "fetch_if_empty": 1,
+   "fieldname": "personal_email",
+   "fieldtype": "Data",
+   "label": "Personal Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "company_email",
+   "fieldtype": "Data",
+   "label": "Company Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "column_break_user",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Data",
+   "label": "User",
+   "options": "Email",
+   "read_only": 1
+  },
+  {
+   "fieldname": "appointment_letter_section",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "hide_border": 1,
+   "label": "Appointment Letter"
+  },
+  {
+   "fieldname": "appointment_letter_sent_on",
+   "fieldtype": "Datetime",
+   "label": "Appointment Letter Sent On",
+   "read_only": 1
+  },
+  {
+   "fieldname": "checklist_section",
+   "fieldtype": "Section Break",
+   "hide_border": 1
+  },
+  {
+   "fieldname": "preboarding_checklist",
+   "fieldtype": "HTML"
+  },
+  {
+   "fieldname": "section_break_kyxh",
+   "fieldtype": "Section Break",
+   "hide_border": 1
+  }
+ ],
+ "hide_toolbar": 1,
+ "icon": "user-plus",
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-10-27 13:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Employee Preboarding",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "amend": 1,
+   "cancel": 1,
+   "create": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR User",
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "employee_name",
+ "track_changes": 1
+}

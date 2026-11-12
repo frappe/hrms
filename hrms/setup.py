@@ -24,6 +24,8 @@ def after_install():
 	set_single_defaults()
 	setup_repost_defaults()
 	create_default_role_profiles()
+	create_default_boarding_template()
+	setup_preboarding_candidate()
 	run_post_install_patches()
 	add_default_hr_permissions()
 
@@ -764,6 +766,20 @@ def get_lending_docperms_for_ess():
 	}
 
 
+def create_default_boarding_template():
+	from hrms.hr.doctype.employee_boarding_template.employee_boarding_template import (
+		create_default_template,
+	)
+
+	create_default_template()
+
+
+def setup_preboarding_candidate():
+	from hrms.hr.doctype.employee_request.employee_request import setup_preboarding_candidate
+
+	setup_preboarding_candidate()
+
+
 def create_custom_role(data):
 	if data.get("role") and not frappe.db.exists("Role", data.get("role")):
 		frappe.get_doc(
@@ -947,7 +963,7 @@ def get_salary_slip_loan_fields():
 	}
 
 
-# Project and Task perms are needed for the Employee Onboarding / Separation flow, which
+# Project and Task perms are needed for the Employee Preboarding / Separation flow, which
 # creates a Project and Tasks and assigns them to users. assign_to.add() does a read check
 # on Task, and on_cancel deletes the Project and its Tasks.
 _PROJECT_TASK_PERMS = {

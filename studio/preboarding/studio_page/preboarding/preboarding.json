@@ -1,0 +1,1052 @@
+{
+ "allow_guest": 0,
+ "blocks": [
+  {
+   "baseStyles": {
+    "background": "var(--surface-base)",
+    "display": "flex",
+    "flexDirection": "column",
+    "minHeight": "100vh",
+    "width": "100%"
+   },
+   "blockName": "body",
+   "children": [
+    {
+     "baseStyles": {
+      "alignItems": "center",
+      "background": "var(--surface-base)",
+      "borderColor": "var(--outline-gray-1)",
+      "borderStyle": "solid",
+      "borderWidth": "0px 0px 1px 0px",
+      "display": "flex",
+      "flexDirection": "row",
+      "gap": "8px",
+      "minHeight": "48px",
+      "padding": "0px 20px"
+     },
+     "blockName": "App bar",
+     "children": [
+      {
+       "baseStyles": {
+        "color": "var(--ink-gray-8)",
+        "fontWeight": "600"
+       },
+       "componentId": "textblock-1",
+       "componentName": "TextBlock",
+       "componentProps": {
+        "fontSize": "text-lg",
+        "text": "Preboarding"
+       },
+       "componentSlots": {}
+      },
+      {
+       "baseStyles": {
+        "flex": "1"
+       },
+       "componentId": "div-2",
+       "componentName": "div",
+       "componentProps": {},
+       "componentSlots": {},
+       "originalElement": "div"
+      },
+      {
+       "componentEvents": {
+        "click": {
+         "action": "Run Script",
+         "event": "click",
+         "script": "call('logout').then(() => window.location.assign('/login?redirect-to=/preboarding'))"
+        }
+       },
+       "componentId": "button-3",
+       "componentName": "Button",
+       "componentProps": {
+        "iconLeft": "lucide-log-out",
+        "label": "Log out",
+        "variant": "ghost"
+       },
+       "componentSlots": {}
+      }
+     ],
+     "componentId": "div-4",
+     "componentName": "div",
+     "componentProps": {},
+     "componentSlots": {},
+     "originalElement": "div"
+    },
+    {
+     "baseStyles": {
+      "display": "flex",
+      "flexDirection": "column",
+      "gap": "24px",
+      "margin": "0px auto",
+      "maxWidth": "720px",
+      "padding": "20px 20px 40px 20px",
+      "width": "100%"
+     },
+     "blockName": "Main",
+     "children": [
+      {
+       "baseStyles": {
+        "display": "flex",
+        "flexDirection": "column",
+        "gap": "24px"
+       },
+       "blockName": "Preboarding form",
+       "children": [
+        {
+         "baseStyles": {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "4px"
+         },
+         "blockName": "Step header",
+         "children": [
+          {
+           "baseStyles": {
+            "color": "var(--ink-gray-5)"
+           },
+           "componentId": "textblock-10",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "fontSize": "text-sm",
+            "text": "{{ stepCaption }}"
+           },
+           "componentSlots": {}
+          },
+          {
+           "baseStyles": {
+            "color": "var(--ink-gray-8)",
+            "fontWeight": "600"
+           },
+           "componentId": "textblock-11",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "fontSize": "text-2xl",
+            "text": "{{ stepTitle }}"
+           },
+           "componentSlots": {}
+          },
+          {
+           "baseStyles": {
+            "marginTop": "8px"
+           },
+           "componentId": "progress-12",
+           "componentName": "Progress",
+           "componentProps": {
+            "intervals": "{{ steps.length }}",
+            "size": "md",
+            "value": "{{ progressValue }}"
+           },
+           "componentSlots": {}
+          }
+         ],
+         "componentId": "div-13",
+         "componentName": "div",
+         "componentProps": {},
+         "componentSlots": {},
+         "originalElement": "div"
+        },
+        {
+         "componentId": "alert-14",
+         "componentName": "Alert",
+         "componentProps": {
+          "theme": "green",
+          "title": "Your details have been submitted"
+         },
+         "componentSlots": {},
+         "visibilityCondition": "{{ isSubmitted }}"
+        },
+        {
+         "baseStyles": {
+          "alignItems": "center",
+          "display": "flex",
+          "flexDirection": "row",
+          "gap": "16px"
+         },
+         "blockName": "Photo",
+         "children": [
+          {
+           "baseStyles": {
+            "fontSize": "28px",
+            "height": "72px",
+            "width": "72px"
+           },
+           "componentId": "avatar-15",
+           "componentName": "Avatar",
+           "componentProps": {
+            "image": "{{ request.doc.image }}",
+            "label": "{{ request.doc.first_name }}",
+            "size": "3xl"
+           },
+           "componentSlots": {}
+          },
+          {
+           "baseStyles": {
+            "display": "flex",
+            "flexDirection": "column",
+            "gap": "2px"
+           },
+           "children": [
+            {
+             "baseStyles": {
+              "color": "var(--ink-gray-8)",
+              "fontWeight": "500"
+             },
+             "componentId": "textblock-16",
+             "componentName": "TextBlock",
+             "componentProps": {
+              "fontSize": "text-base",
+              "text": "Photo"
+             },
+             "componentSlots": {}
+            },
+            {
+             "baseStyles": {
+              "color": "var(--ink-gray-5)"
+             },
+             "componentId": "textblock-17",
+             "componentName": "TextBlock",
+             "componentProps": {
+              "fontSize": "text-sm",
+              "text": "A clear photo of your face for your employee profile."
+             },
+             "componentSlots": {}
+            },
+            {
+             "baseStyles": {
+              "marginTop": "4px"
+             },
+             "componentEvents": {
+              "success": {
+               "action": "Run Script",
+               "event": "success",
+               "script": "function handleEvent(file) { setPhoto(file) }"
+              }
+             },
+             "componentId": "fileuploader-19",
+             "componentName": "FileUploader",
+             "componentProps": {
+              "docname": "{{ request.doc.name }}",
+              "doctype": "Employee Request",
+              "fieldname": "image",
+              "fileTypes": [
+               "image/*"
+              ],
+              "private": true
+             },
+             "componentSlots": {
+              "default": {
+               "slotContent": [
+                {
+                 "componentEvents": {
+                  "click": {
+                   "action": "Run Script",
+                   "event": "click",
+                   "script": "openFileSelector()"
+                  }
+                 },
+                 "componentId": "button-18",
+                 "componentName": "Button",
+                 "componentProps": {
+                  "iconLeft": "lucide-camera",
+                  "label": "{{ request.doc.image ? 'Change photo' : 'Upload photo' }}",
+                  "loading": "{{ uploading }}",
+                  "variant": "subtle"
+                 },
+                 "componentSlots": {}
+                }
+               ],
+               "slotName": "default"
+              }
+             }
+            }
+           ],
+           "componentId": "div-20",
+           "componentName": "div",
+           "componentProps": {},
+           "componentSlots": {},
+           "originalElement": "div"
+          }
+         ],
+         "componentId": "div-21",
+         "componentName": "div",
+         "componentProps": {},
+         "componentSlots": {},
+         "originalElement": "div",
+         "visibilityCondition": "{{ step === 0 }}"
+        },
+        {
+         "blockName": "Form step",
+         "componentId": "formlayout-24",
+         "componentName": "FormLayout",
+         "componentProps": {
+          "doc": "{{ request.doc }}",
+          "layout": "{{ currentLayout }}"
+         },
+         "componentSlots": {},
+         "visibilityCondition": "{{ isFormStep }}"
+        },
+        {
+         "baseStyles": {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "8px"
+         },
+         "blockName": "Education",
+         "children": [
+          {
+           "baseStyles": {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": "8px"
+           },
+           "children": [
+            {
+             "baseStyles": {
+              "color": "var(--ink-gray-8)",
+              "fontWeight": "600"
+             },
+             "componentId": "textblock-50",
+             "componentName": "TextBlock",
+             "componentProps": {
+              "fontSize": "text-lg",
+              "text": "Education"
+             },
+             "componentSlots": {}
+            },
+            {
+             "baseStyles": {
+              "flex": "1"
+             },
+             "componentId": "div-51",
+             "componentName": "div",
+             "componentProps": {},
+             "componentSlots": {},
+             "originalElement": "div"
+            },
+            {
+             "componentEvents": {
+              "click": {
+               "action": "Run Script",
+               "event": "click",
+               "script": "openRow('education')"
+              }
+             },
+             "componentId": "button-52",
+             "componentName": "Button",
+             "componentProps": {
+              "iconLeft": "lucide-plus",
+              "label": "Add education",
+              "variant": "subtle"
+             },
+             "componentSlots": {}
+            }
+           ],
+           "componentId": "div-53",
+           "componentName": "div",
+           "componentProps": {},
+           "componentSlots": {},
+           "originalElement": "div"
+          },
+          {
+           "baseStyles": {
+            "display": "flex",
+            "flexDirection": "column",
+            "width": "100%"
+           },
+           "children": [
+            {
+             "baseStyles": {
+              "alignItems": "center",
+              "borderColor": "var(--outline-gray-1)",
+              "borderStyle": "solid",
+              "borderWidth": "0px 0px 1px 0px",
+              "display": "flex",
+              "flexDirection": "row",
+              "gap": "8px",
+              "padding": "12px 0px",
+              "width": "100%"
+             },
+             "blockName": "Education entry",
+             "children": [
+              {
+               "baseStyles": {
+                "display": "flex",
+                "flex": "1",
+                "flexDirection": "column",
+                "gap": "2px",
+                "minWidth": "0px"
+               },
+               "children": [
+                {
+                 "baseStyles": {
+                  "color": "var(--ink-gray-8)"
+                 },
+                 "componentId": "textblock-44",
+                 "componentName": "TextBlock",
+                 "componentProps": {
+                  "fontSize": "text-base",
+                  "text": "{{ rowTitle('education', dataItem) }}"
+                 },
+                 "componentSlots": {}
+                },
+                {
+                 "baseStyles": {
+                  "color": "var(--ink-gray-5)"
+                 },
+                 "componentId": "textblock-45",
+                 "componentName": "TextBlock",
+                 "componentProps": {
+                  "fontSize": "text-sm",
+                  "text": "{{ rowSubtitle('education', dataItem) }}"
+                 },
+                 "componentSlots": {},
+                 "visibilityCondition": "{{ rowSubtitle('education', dataItem) }}"
+                }
+               ],
+               "componentId": "div-46",
+               "componentName": "div",
+               "componentProps": {},
+               "componentSlots": {},
+               "originalElement": "div"
+              },
+              {
+               "componentEvents": {
+                "click": {
+                 "action": "Run Script",
+                 "event": "click",
+                 "script": "openRow('education', dataIndex)"
+                }
+               },
+               "componentId": "button-47",
+               "componentName": "Button",
+               "componentProps": {
+                "label": "Edit",
+                "variant": "ghost"
+               },
+               "componentSlots": {}
+              },
+              {
+               "componentEvents": {
+                "click": {
+                 "action": "Run Script",
+                 "event": "click",
+                 "script": "removeRow('education', dataIndex)"
+                }
+               },
+               "componentId": "button-48",
+               "componentName": "Button",
+               "componentProps": {
+                "label": "Remove",
+                "variant": "ghost"
+               },
+               "componentSlots": {}
+              }
+             ],
+             "componentId": "div-49",
+             "componentName": "div",
+             "componentProps": {},
+             "componentSlots": {},
+             "originalElement": "div"
+            }
+           ],
+           "componentId": "repeater-54",
+           "componentName": "Repeater",
+           "componentProps": {
+            "data": "{{ request.doc.education }}",
+            "dataKey": "idx",
+            "emptyStateMessage": "No education added yet."
+           },
+           "componentSlots": {}
+          }
+         ],
+         "componentId": "div-55",
+         "componentName": "div",
+         "componentProps": {},
+         "componentSlots": {},
+         "originalElement": "div",
+         "visibilityCondition": "{{ currentTables.includes('education') }}"
+        },
+        {
+         "baseStyles": {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "8px"
+         },
+         "blockName": "Work experience",
+         "children": [
+          {
+           "baseStyles": {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": "8px"
+           },
+           "children": [
+            {
+             "baseStyles": {
+              "color": "var(--ink-gray-8)",
+              "fontWeight": "600"
+             },
+             "componentId": "textblock-62",
+             "componentName": "TextBlock",
+             "componentProps": {
+              "fontSize": "text-lg",
+              "text": "Work experience"
+             },
+             "componentSlots": {}
+            },
+            {
+             "baseStyles": {
+              "flex": "1"
+             },
+             "componentId": "div-63",
+             "componentName": "div",
+             "componentProps": {},
+             "componentSlots": {},
+             "originalElement": "div"
+            },
+            {
+             "componentEvents": {
+              "click": {
+               "action": "Run Script",
+               "event": "click",
+               "script": "openRow('external_work_history')"
+              }
+             },
+             "componentId": "button-64",
+             "componentName": "Button",
+             "componentProps": {
+              "iconLeft": "lucide-plus",
+              "label": "Add work experience",
+              "variant": "subtle"
+             },
+             "componentSlots": {}
+            }
+           ],
+           "componentId": "div-65",
+           "componentName": "div",
+           "componentProps": {},
+           "componentSlots": {},
+           "originalElement": "div"
+          },
+          {
+           "baseStyles": {
+            "display": "flex",
+            "flexDirection": "column",
+            "width": "100%"
+           },
+           "children": [
+            {
+             "baseStyles": {
+              "alignItems": "center",
+              "borderColor": "var(--outline-gray-1)",
+              "borderStyle": "solid",
+              "borderWidth": "0px 0px 1px 0px",
+              "display": "flex",
+              "flexDirection": "row",
+              "gap": "8px",
+              "padding": "12px 0px",
+              "width": "100%"
+             },
+             "blockName": "Work experience entry",
+             "children": [
+              {
+               "baseStyles": {
+                "display": "flex",
+                "flex": "1",
+                "flexDirection": "column",
+                "gap": "2px",
+                "minWidth": "0px"
+               },
+               "children": [
+                {
+                 "baseStyles": {
+                  "color": "var(--ink-gray-8)"
+                 },
+                 "componentId": "textblock-56",
+                 "componentName": "TextBlock",
+                 "componentProps": {
+                  "fontSize": "text-base",
+                  "text": "{{ rowTitle('external_work_history', dataItem) }}"
+                 },
+                 "componentSlots": {}
+                },
+                {
+                 "baseStyles": {
+                  "color": "var(--ink-gray-5)"
+                 },
+                 "componentId": "textblock-57",
+                 "componentName": "TextBlock",
+                 "componentProps": {
+                  "fontSize": "text-sm",
+                  "text": "{{ rowSubtitle('external_work_history', dataItem) }}"
+                 },
+                 "componentSlots": {},
+                 "visibilityCondition": "{{ rowSubtitle('external_work_history', dataItem) }}"
+                }
+               ],
+               "componentId": "div-58",
+               "componentName": "div",
+               "componentProps": {},
+               "componentSlots": {},
+               "originalElement": "div"
+              },
+              {
+               "componentEvents": {
+                "click": {
+                 "action": "Run Script",
+                 "event": "click",
+                 "script": "openRow('external_work_history', dataIndex)"
+                }
+               },
+               "componentId": "button-59",
+               "componentName": "Button",
+               "componentProps": {
+                "label": "Edit",
+                "variant": "ghost"
+               },
+               "componentSlots": {}
+              },
+              {
+               "componentEvents": {
+                "click": {
+                 "action": "Run Script",
+                 "event": "click",
+                 "script": "removeRow('external_work_history', dataIndex)"
+                }
+               },
+               "componentId": "button-60",
+               "componentName": "Button",
+               "componentProps": {
+                "label": "Remove",
+                "variant": "ghost"
+               },
+               "componentSlots": {}
+              }
+             ],
+             "componentId": "div-61",
+             "componentName": "div",
+             "componentProps": {},
+             "componentSlots": {},
+             "originalElement": "div"
+            }
+           ],
+           "componentId": "repeater-66",
+           "componentName": "Repeater",
+           "componentProps": {
+            "data": "{{ request.doc.external_work_history }}",
+            "dataKey": "idx",
+            "emptyStateMessage": "No work experience added yet."
+           },
+           "componentSlots": {}
+          }
+         ],
+         "componentId": "div-67",
+         "componentName": "div",
+         "componentProps": {},
+         "componentSlots": {},
+         "originalElement": "div",
+         "visibilityCondition": "{{ currentTables.includes('external_work_history') }}"
+        },
+        {
+         "baseStyles": {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "16px"
+         },
+         "blockName": "Documents step",
+         "children": [
+          {
+           "baseStyles": {
+            "color": "var(--ink-gray-6)"
+           },
+           "componentId": "textblock-34",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "fontSize": "text-sm",
+            "text": "Upload a clear photo or PDF of each document."
+           },
+           "componentSlots": {}
+          },
+          {
+           "baseStyles": {
+            "display": "flex",
+            "flexDirection": "column",
+            "width": "100%"
+           },
+           "children": [
+            {
+             "baseStyles": {
+              "alignItems": "center",
+              "borderColor": "var(--outline-gray-1)",
+              "borderStyle": "solid",
+              "borderWidth": "0px 0px 1px 0px",
+              "display": "flex",
+              "flexDirection": "row",
+              "gap": "16px",
+              "padding": "12px 0px",
+              "width": "100%"
+             },
+             "blockName": "Document row",
+             "children": [
+              {
+               "baseStyles": {
+                "display": "flex",
+                "flex": "1",
+                "flexDirection": "column",
+                "gap": "4px",
+                "minWidth": "0px"
+               },
+               "children": [
+                {
+                 "baseStyles": {
+                  "alignItems": "center",
+                  "display": "flex",
+                  "flexDirection": "row",
+                  "gap": "8px"
+                 },
+                 "children": [
+                  {
+                   "baseStyles": {
+                    "color": "var(--ink-gray-8)"
+                   },
+                   "componentId": "textblock-25",
+                   "componentName": "TextBlock",
+                   "componentProps": {
+                    "fontSize": "text-base",
+                    "text": "{{ dataItem.document_name }}"
+                   },
+                   "componentSlots": {}
+                  },
+                  {
+                   "componentId": "badge-26",
+                   "componentName": "Badge",
+                   "componentProps": {
+                    "label": "Required",
+                    "theme": "gray",
+                    "variant": "subtle"
+                   },
+                   "componentSlots": {},
+                   "visibilityCondition": "{{ dataItem.required && !dataItem.attachment }}"
+                  },
+                  {
+                   "componentId": "badge-27",
+                   "componentName": "Badge",
+                   "componentProps": {
+                    "label": "Uploaded",
+                    "theme": "green",
+                    "variant": "subtle"
+                   },
+                   "componentSlots": {},
+                   "visibilityCondition": "{{ dataItem.attachment }}"
+                  }
+                 ],
+                 "componentId": "div-28",
+                 "componentName": "div",
+                 "componentProps": {},
+                 "componentSlots": {},
+                 "originalElement": "div"
+                },
+                {
+                 "baseStyles": {
+                  "color": "var(--ink-gray-5)",
+                  "minWidth": "0px",
+                  "overflow": "hidden",
+                  "textOverflow": "ellipsis",
+                  "whiteSpace": "nowrap"
+                 },
+                 "componentId": "textblock-70",
+                 "componentName": "TextBlock",
+                 "componentProps": {
+                  "fontSize": "text-sm",
+                  "text": "{{ fileName(dataItem.attachment) }}"
+                 },
+                 "componentSlots": {},
+                 "visibilityCondition": "{{ dataItem.attachment }}"
+                },
+                {
+                 "baseStyles": {
+                  "color": "var(--ink-gray-5)"
+                 },
+                 "componentId": "textblock-29",
+                 "componentName": "TextBlock",
+                 "componentProps": {
+                  "fontSize": "text-sm",
+                  "text": "{{ dataItem.description }}"
+                 },
+                 "componentSlots": {},
+                 "visibilityCondition": "{{ dataItem.description }}"
+                }
+               ],
+               "componentId": "div-30",
+               "componentName": "div",
+               "componentProps": {},
+               "componentSlots": {},
+               "originalElement": "div"
+              },
+              {
+               "componentEvents": {
+                "success": {
+                 "action": "Run Script",
+                 "event": "success",
+                 "script": "function handleEvent(file) { attachDocument(dataItem, file) }"
+                }
+               },
+               "componentId": "fileuploader-32",
+               "componentName": "FileUploader",
+               "componentProps": {
+                "docname": "{{ request.doc.name }}",
+                "doctype": "Employee Request",
+                "fieldname": "attachment",
+                "fileTypes": [
+                 "image/*",
+                 "application/pdf"
+                ],
+                "private": true
+               },
+               "componentSlots": {
+                "default": {
+                 "slotContent": [
+                  {
+                   "componentEvents": {
+                    "click": {
+                     "action": "Run Script",
+                     "event": "click",
+                     "script": "openFileSelector()"
+                    }
+                   },
+                   "componentId": "button-31",
+                   "componentName": "Button",
+                   "componentProps": {
+                    "iconLeft": "lucide-upload",
+                    "label": "{{ dataItem.attachment ? 'Replace' : 'Upload' }}",
+                    "loading": "{{ uploading }}",
+                    "variant": "subtle"
+                   },
+                   "componentSlots": {}
+                  }
+                 ],
+                 "slotName": "default"
+                }
+               }
+              }
+             ],
+             "componentId": "div-33",
+             "componentName": "div",
+             "componentProps": {},
+             "componentSlots": {},
+             "originalElement": "div"
+            }
+           ],
+           "componentId": "repeater-35",
+           "componentName": "Repeater",
+           "componentProps": {
+            "data": "{{ request.doc.documents }}",
+            "dataKey": "name"
+           },
+           "componentSlots": {}
+          }
+         ],
+         "componentId": "div-36",
+         "componentName": "div",
+         "componentProps": {},
+         "componentSlots": {},
+         "originalElement": "div",
+         "visibilityCondition": "{{ isDocumentsStep }}"
+        },
+        {
+         "baseStyles": {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "16px"
+         },
+         "blockName": "Review step",
+         "children": [
+          {
+           "componentId": "alert-37",
+           "componentName": "Alert",
+           "componentProps": {
+            "description": "{{ missingSummary }}",
+            "theme": "amber",
+            "title": "Fill these in before you submit"
+           },
+           "componentSlots": {},
+           "visibilityCondition": "{{ missing.length }}"
+          },
+          {
+           "baseStyles": {
+            "color": "var(--ink-gray-7)"
+           },
+           "componentId": "textblock-38",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "fontSize": "text-base",
+            "text": "Everything is filled in. Submit to let HR know your details are ready."
+           },
+           "componentSlots": {},
+           "visibilityCondition": "{{ !missing.length && !isSubmitted }}"
+          }
+         ],
+         "componentId": "div-39",
+         "componentName": "div",
+         "componentProps": {},
+         "componentSlots": {},
+         "originalElement": "div",
+         "visibilityCondition": "{{ isLastStep }}"
+        },
+        {
+         "baseStyles": {
+          "alignItems": "center",
+          "display": "flex",
+          "flexDirection": "row",
+          "gap": "8px",
+          "paddingTop": "8px"
+         },
+         "blockName": "Footer",
+         "children": [
+          {
+           "componentEvents": {
+            "click": {
+             "action": "Run Script",
+             "event": "click",
+             "script": "back()"
+            }
+           },
+           "componentId": "button-40",
+           "componentName": "Button",
+           "componentProps": {
+            "label": "Back",
+            "variant": "subtle"
+           },
+           "componentSlots": {},
+           "visibilityCondition": "{{ step > 0 }}"
+          },
+          {
+           "baseStyles": {
+            "flex": "1"
+           },
+           "componentId": "div-41",
+           "componentName": "div",
+           "componentProps": {},
+           "componentSlots": {},
+           "originalElement": "div"
+          },
+          {
+           "componentEvents": {
+            "click": {
+             "action": "Run Script",
+             "event": "click",
+             "script": "primaryAction()"
+            }
+           },
+           "componentId": "button-42",
+           "componentName": "Button",
+           "componentProps": {
+            "disabled": "{{ isLastStep && missing.length > 0 }}",
+            "label": "{{ primaryLabel }}",
+            "loading": "{{ saving }}",
+            "variant": "solid"
+           },
+           "componentSlots": {}
+          }
+         ],
+         "componentId": "div-43",
+         "componentName": "div",
+         "componentProps": {},
+         "componentSlots": {},
+         "originalElement": "div"
+        },
+        {
+         "blockName": "Entry dialog",
+         "componentId": "dialog-23",
+         "componentName": "Dialog",
+         "componentProps": {
+          "actions": "{{ dialogActions }}",
+          "open": {
+           "$type": "variable",
+           "name": "dialogOpen"
+          },
+          "title": "{{ dialogTitle }}"
+         },
+         "componentSlots": {
+          "default": {
+           "slotContent": [
+            {
+             "componentId": "formlayout-22",
+             "componentName": "FormLayout",
+             "componentProps": {
+              "doc": "{{ dialogRow }}",
+              "layout": "{{ dialogLayout }}"
+             },
+             "componentSlots": {}
+            }
+           ],
+           "slotName": "default"
+          }
+         }
+        }
+       ],
+       "componentId": "div-68",
+       "componentName": "div",
+       "componentProps": {},
+       "componentSlots": {},
+       "originalElement": "div",
+       "visibilityCondition": "{{ request?.doc }}"
+      }
+     ],
+     "componentId": "div-69",
+     "componentName": "div",
+     "componentProps": {},
+     "componentSlots": {},
+     "mobileStyles": {
+      "padding": "12px 12px 40px 12px"
+     },
+     "originalElement": "div"
+    }
+   ],
+   "componentId": "root",
+   "componentName": "div",
+   "componentProps": {},
+   "componentSlots": {},
+   "originalElement": "body"
+  }
+ ],
+ "creation": "2026-11-03 13:34:24.310380",
+ "docstatus": 0,
+ "doctype": "Studio Page",
+ "frappe_app": "hrms",
+ "idx": 0,
+ "is_standard": 1,
+ "modified": "2026-11-03 14:16:23.336478",
+ "modified_by": "Administrator",
+ "name": "preboarding",
+ "owner": "Administrator",
+ "page_name": "page-b838549e",
+ "page_title": "Preboarding",
+ "published": 1,
+ "resources": [
+  {
+   "auto": 1,
+   "document_type": "Employee Request",
+   "fetch_document_using_filters": 1,
+   "filters": "{\"name\": \"{{ boot.request }}\"}",
+   "limit": 0,
+   "method": "GET",
+   "resource_name": "request",
+   "resource_type": "Document",
+   "whitelisted_methods": "[\"submit_details\"]"
+  }
+ ],
+ "route": "/",
+ "studio_app": "preboarding",
+ "tab_title": "Preboarding",
+ "variables": [
+  {
+   "initial_value": "0",
+   "variable_name": "step",
+   "variable_type": "Number"
+  }
+ ]
+}

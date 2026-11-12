@@ -12,7 +12,7 @@
  "doctype": "Module Onboarding",
  "idx": 0,
  "is_complete": 0,
- "modified": "2026-10-05 12:00:00.000000",
+ "modified": "2026-10-22 19:30:00.000000",
  "modified_by": "Administrator",
  "module": "Tenure",
  "name": "Tenure Onboarding",
@@ -20,11 +20,11 @@
  "steps": [
   {
    "is_optional": 1,
-   "step": "Create Employee Onboarding Template"
+   "step": "Create Employee Boarding Template"
   },
   {
    "is_optional": 0,
-   "step": "Create Employee Onboarding"
+   "step": "Create Employee Preboarding"
   },
   {
    "is_optional": 0,
