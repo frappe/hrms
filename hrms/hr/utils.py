@@ -55,7 +55,7 @@ def set_employee_name(doc):
 		doc.employee_name = frappe.db.get_value("Employee", doc.employee, "employee_name")
 
 
-def update_employee_work_history(employee, details, date=None, cancel=False):
+def update_employee_work_history(employee, details, date=None, cancel=False, previous_doc=None):
 	if not details:
 		return employee
 
@@ -70,6 +70,11 @@ def update_employee_work_history(employee, details, date=None, cancel=False):
 			},
 		)
 
+	previous_details = (
+		previous_doc.get(details[0].parentfield) or []
+		if previous_doc and previous_doc.employee == employee.name
+		else []
+	)
 	internal_work_history = {}
 	for item in details:
 		field = frappe.get_meta("Employee").get_field(item.fieldname)
@@ -79,6 +84,16 @@ def update_employee_work_history(employee, details, date=None, cancel=False):
 		new_value = item.new if not cancel else item.current
 		new_value = get_formatted_value(new_value, field.fieldtype)
 		setattr(employee, item.fieldname, new_value)
+		if (
+			cancel
+			and item.fieldname == "department"
+			and any(
+				row.name == item.name and row.fieldname == "department" and row.current == new_value
+				for row in previous_details
+			)
+			and any(row.department == new_value for row in employee.internal_work_history)
+		):
+			employee.flags.department_to_restore = new_value
 
 		if item.fieldname in ["department", "designation", "branch"]:
 			internal_work_history[item.fieldname] = item.new

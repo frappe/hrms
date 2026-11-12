@@ -32,6 +32,33 @@ class TestEmployeePromotion(HRMSTestSuite):
 		promotion.submit()
 		self.assertEqual(promotion.docstatus, 1)
 
+	def test_cancel_restores_disabled_department(self):
+		employee = make_employee(
+			"disabled-department-employee_promotion@example.com",
+			company="_Test Company",
+			department="_Test Department - _TC",
+		)
+		doc = frappe.get_doc(
+			doctype="Employee Promotion",
+			employee=employee,
+			promotion_date=getdate(),
+			promotion_details=[
+				{
+					"property": "Department",
+					"fieldname": "department",
+					"current": "_Test Department - _TC",
+					"new": "_Test Department 1 - _TC",
+				}
+			],
+		).insert()
+		doc.submit()
+		self.assertEqual(frappe.get_doc("Employee", employee).department, "_Test Department 1 - _TC")
+		department = frappe.get_doc("Department", "_Test Department - _TC")
+		department.disabled = 1
+		department.save()
+		doc.cancel()
+		self.assertEqual(frappe.get_doc("Employee", employee).department, "_Test Department - _TC")
+
 	def test_employee_history(self):
 		for grade in ["L1", "L2"]:
 			frappe.get_doc({"doctype": "Employee Grade", "__newname": grade}).insert()
