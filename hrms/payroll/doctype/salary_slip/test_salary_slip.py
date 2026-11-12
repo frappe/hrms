@@ -2219,6 +2219,64 @@ class TestSalarySlip(HRMSTestSuite):
 
 		frappe.db.rollback()
 
+	def test_tax_in_joining_month_when_tax_depends_on_payment_days(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		payroll_period = create_payroll_period(company="_Test Company")
+		joining_date = add_days(payroll_period.start_date, 16)
+		employee = make_employee(
+			"test_tax_joining_month@salary.slip", company="_Test Company", date_of_joining=joining_date
+		)
+
+		salary_structure = make_salary_structure(
+			"Structure to test tax in joining month",
+			"Monthly",
+			test_tax=True,
+			from_date=joining_date,
+			employee=employee,
+			company="_Test Company",
+		)
+		frappe.db.set_value("Salary Component", "TDS", "depends_on_payment_days", 1)
+
+		salary_slip = make_salary_slip(salary_structure.name, employee=employee, posting_date=joining_date)
+
+		# the joining month counts as a fraction of a period: 11 full months + payment days share
+		payment_days_share = salary_slip.payment_days / salary_slip.total_working_days
+		tax = next(d.amount for d in salary_slip.deductions if d.salary_component == "TDS")
+		self.assertEqual(
+			tax,
+			rounded(salary_slip.total_structured_tax_amount / (11 + payment_days_share) * payment_days_share),
+		)
+		# income tax breakup shows the tax deducted in this slip
+		self.assertEqual(rounded(salary_slip.current_month_income_tax), tax)
+		self.assertEqual(rounded(salary_slip.income_tax_deducted_till_date), tax)
+
+	def test_tax_in_relieving_month_when_tax_depends_on_payment_days(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+
+		payroll_period = create_payroll_period(company="_Test Company")
+		relieving_date = add_days(payroll_period.start_date, 14)
+		employee = make_employee("test_tax_relieving_month@salary.slip", company="_Test Company")
+		frappe.db.set_value("Employee", employee, "relieving_date", relieving_date)
+
+		salary_structure = make_salary_structure(
+			"Structure to test tax in relieving month",
+			"Monthly",
+			test_tax=True,
+			from_date=payroll_period.start_date,
+			employee=employee,
+			company="_Test Company",
+			base=1000000,
+		)
+		frappe.db.set_value("Salary Component", "TDS", "depends_on_payment_days", 1)
+
+		salary_slip = make_salary_slip(salary_structure.name, employee=employee, posting_date=relieving_date)
+
+		# the relieving month is the last period, so the slip deducts all the tax for the year
+		self.assertTrue(salary_slip.total_structured_tax_amount)
+		tax = next(d.amount for d in salary_slip.deductions if d.salary_component == "TDS")
+		self.assertEqual(tax, rounded(salary_slip.total_structured_tax_amount))
+
 	@HRMSTestSuite.change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
 	def test_lwp_calculation_based_on_relieving_date(self):
 		emp_id = make_employee("test_lwp_based_on_relieving_date@salary.com", company="_Test Company")
