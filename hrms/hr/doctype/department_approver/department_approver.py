@@ -39,9 +39,18 @@ def get_approvers(doctype: str, txt: str, searchfield: str, start: int, page_len
 	employee = frappe.get_value(
 		"Employee",
 		filters.get("employee"),
-		["employee_name", "department", "leave_approver", "expense_approver", "shift_request_approver"],
+		[
+			"employee_name",
+			"department",
+			"user_id",
+			"leave_approver",
+			"expense_approver",
+			"shift_request_approver",
+		],
 		as_dict=True,
 	)
+	if not employee:
+		frappe.throw(_("Employee {0} not found").format(filters.get("employee")), frappe.DoesNotExistError)
 
 	employee_department = filters.get("department") or employee.department
 	if employee_department:
@@ -111,6 +120,8 @@ def get_approvers(doctype: str, txt: str, searchfield: str, start: int, page_len
 				)
 			).run(as_list=True)
 
+	validate_approver_access(filters.get("employee"), employee, approvers)
+
 	if len(approvers) == 0:
 		error_msg = _("Please set {0} for the Employee: {1}").format(
 			frappe.bold(_(field_name)),
@@ -123,3 +134,15 @@ def get_approvers(doctype: str, txt: str, searchfield: str, start: int, page_len
 		frappe.throw(error_msg, title=_("{0} Missing").format(_(field_name)))
 
 	return set(tuple(approver) for approver in approvers)
+
+
+def validate_approver_access(employee_id: str, employee: dict, approvers: list) -> None:
+	user = frappe.session.user
+	if user == employee.user_id or frappe.has_permission("Employee", "read", employee_id):
+		return
+
+	employee_approvers = {employee.leave_approver, employee.expense_approver, employee.shift_request_approver}
+	if user in employee_approvers or user in {approver[0] for approver in approvers}:
+		return
+
+	frappe.throw(_("Not permitted"), frappe.PermissionError)
