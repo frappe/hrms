@@ -156,6 +156,7 @@ def get_custom_fields():
 			{
 				"fieldname": "default_employee_advance_account",
 				"fieldtype": "Link",
+				"ignore_user_permissions": 1,
 				"label": _("Default Employee Advance Account"),
 				"no_copy": 1,
 				"options": "Account",
