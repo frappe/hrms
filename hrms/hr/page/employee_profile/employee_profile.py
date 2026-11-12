@@ -103,7 +103,9 @@ def get_profile(employee: str | None = None) -> dict:
 		check_access(person)
 
 	is_self = bool(person.user_id) and person.user_id == frappe.session.user
-	can_manage = private and frappe.has_permission("Employee", "write", doc=employee)
+	can_manage = False
+	if private:
+		can_manage = frappe.has_permission("Employee", "write", doc=employee)
 	profile = {
 		"card": get_card(person, private),
 		"sections": get_sections(employee),
@@ -116,11 +118,13 @@ def get_profile(employee: str | None = None) -> dict:
 	}
 	if private:
 		profile["private"] = get_private(employee)
-		profile["can_review"] = {
-			doctype: not is_self and bool(frappe.has_permission(doctype, "submit")) for doctype in REQUESTS
-		}
-		# HR gives an asset with an Asset Movement, as for an approved request
-		profile["can_assign_assets"] = not is_self and bool(frappe.has_permission("Asset Movement", "create"))
+		profile["can_review"] = dict.fromkeys(REQUESTS, False)
+		profile["can_assign_assets"] = False
+		if not is_self:
+			for doctype in REQUESTS:
+				profile["can_review"][doctype] = frappe.has_permission(doctype, "submit")
+			# HR gives an asset with an Asset Movement, as for an approved request
+			profile["can_assign_assets"] = frappe.has_permission("Asset Movement", "create")
 	if is_self or can_manage:
 		profile["options"] = get_options(person.company, can_manage)
 	return profile
