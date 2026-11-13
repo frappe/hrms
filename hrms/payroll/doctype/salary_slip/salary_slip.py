@@ -993,7 +993,7 @@ class SalarySlip(TransactionBase):
 				- self.income_tax_deducted_till_date
 			)
 
-			self.current_month_income_tax = self.get("current_tax_amount", 0)
+			self.current_month_income_tax = self.get("current_tax_amount_for_payment_days", 0)
 
 			# non included current_month_income_tax separately as its already considered
 			# while calculating income_tax_deducted_till_date
@@ -1139,7 +1139,7 @@ class SalarySlip(TransactionBase):
 		for tax_component in self.get("_component_based_variable_tax") or {}:
 			tax_deducted += (
 				self._component_based_variable_tax[tax_component]["previous_total_paid_taxes"]
-				+ self._component_based_variable_tax[tax_component]["current_tax_amount"]
+				+ self._component_based_variable_tax[tax_component]["current_tax_amount_for_payment_days"]
 			)
 		return tax_deducted
 
@@ -1596,12 +1596,28 @@ class SalarySlip(TransactionBase):
 			eval_locals,
 		)
 
+		# the tax row is prorated by payment days, so the current period counts only as that share
+		payment_days_share = 1
+		if not has_additional_salary_tax_component:
+			tax_row = next(
+				(
+					d
+					for d in self.get("deductions")
+					if d.salary_component == tax_component and not d.additional_salary
+				),
+				None,
+			) or get_salary_component_data(tax_component)
+			if cint(tax_row.depends_on_payment_days) and cint(self.total_working_days):
+				payment_days_share = flt(self.payment_days) / cint(self.total_working_days)
+
+		remaining_sub_periods = self.remaining_sub_periods - 1 + payment_days_share
+
 		if has_additional_salary_tax_component:
 			self.current_structured_tax_amount = self.additional_salary_amount
-		elif self.remaining_sub_periods > 0:
+		elif remaining_sub_periods > 0:
 			self.current_structured_tax_amount = (
 				self.total_structured_tax_amount - self.previous_total_paid_taxes
-			) / self.remaining_sub_periods
+			) / remaining_sub_periods
 		else:
 			self.current_structured_tax_amount = 0.0
 
@@ -1621,6 +1637,7 @@ class SalarySlip(TransactionBase):
 				else (self.current_structured_tax_amount + self.full_tax_on_additional_earnings)
 			),
 		)
+		self.current_tax_amount_for_payment_days = flt(self.current_tax_amount * payment_days_share)
 
 		self._component_based_variable_tax[tax_component].update(
 			{
@@ -1629,6 +1646,7 @@ class SalarySlip(TransactionBase):
 				"current_structured_tax_amount": self.current_structured_tax_amount,
 				"full_tax_on_additional_earnings": self.full_tax_on_additional_earnings,
 				"current_tax_amount": self.current_tax_amount,
+				"current_tax_amount_for_payment_days": self.current_tax_amount_for_payment_days,
 			}
 		)
 
