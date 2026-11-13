@@ -14,6 +14,7 @@ from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
 	update_ctc_of_assignments_starting_today,
 )
+from hrms.setup import CTC_ROLE_PERMISSIONS, restrict_employee_ctc
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -536,3 +537,18 @@ class TestEmployeeCTC(HRMSTestSuite):
 
 		update_ctc_of_assignments_starting_today(future.from_date)
 		self.assertEqual(self.employee_ctc(), future.ctc)
+
+	def test_ctc_is_on_permission_level_1(self):
+		restrict_employee_ctc()
+		frappe.clear_cache(doctype="Employee")
+
+		self.assertEqual(frappe.get_meta("Employee").get_field("ctc").permlevel, 1)
+		for role, ptypes in CTC_ROLE_PERMISSIONS.items():
+			perm = frappe.db.get_value(
+				"Custom DocPerm",
+				{"parent": "Employee", "role": role, "permlevel": 1},
+				["read", "write"],
+				as_dict=True,
+			)
+			self.assertEqual(perm.read, 1)
+			self.assertEqual(perm.write, ptypes.get("write", 0))
