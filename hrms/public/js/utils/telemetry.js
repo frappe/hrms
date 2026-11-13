@@ -40,7 +40,7 @@ const HR_DOCTYPES = new Set([
 	"Appraisal",
 	"Appraisal Cycle",
 	"Appraisal Template",
-	"Employee Preboarding",
+	"Employee Onboarding",
 	"Employee Separation",
 ]);
 

@@ -8,9 +8,9 @@ from frappe.tests.classes.context_managers import set_user
 from frappe.utils import add_days, getdate
 from frappe.utils.file_manager import save_file
 
-from hrms.hr.doctype.employee_preboarding.employee_preboarding import make_employee
-from hrms.hr.doctype.employee_preboarding.test_employee_preboarding import (
-	create_employee_preboarding,
+from hrms.hr.doctype.employee_onboarding.employee_onboarding import make_employee
+from hrms.hr.doctype.employee_onboarding.test_employee_onboarding import (
+	create_employee_onboarding,
 	get_test_template,
 	get_test_user,
 )
@@ -26,8 +26,8 @@ CANDIDATE_EMAIL = "asha.candidate@example.com"
 
 class TestEmployeeRequest(HRMSTestSuite):
 	def test_create_user_login_starts_the_request(self):
-		preboarding = start_preboarding()
-		request = get_request(preboarding)
+		onboarding = start_onboarding()
+		request = get_request(onboarding)
 
 		self.assertIn(PREBOARDING_CANDIDATE_ROLE, frappe.get_roles(CANDIDATE_EMAIL))
 		self.assertEqual(request.user, CANDIDATE_EMAIL)
@@ -39,28 +39,28 @@ class TestEmployeeRequest(HRMSTestSuite):
 		self.assertTrue(
 			frappe.db.exists(
 				"Email Queue",
-				{"reference_doctype": "Employee Preboarding", "reference_name": preboarding.name},
+				{"reference_doctype": "Employee Onboarding", "reference_name": onboarding.name},
 			)
 		)
 
 	def test_the_new_hire_sees_only_their_own_request(self):
-		request = get_request(start_preboarding())
+		request = get_request(start_onboarding())
 
 		self.assertIn(frappe.db.escape(CANDIDATE_EMAIL), get_permission_query_conditions(CANDIDATE_EMAIL))
 		self.assertFalse(has_permission(frappe._dict(user="someone.else@example.com"), user=CANDIDATE_EMAIL))
 		self.assertTrue(has_permission(request, user=CANDIDATE_EMAIL))
 
 		with self.set_user(CANDIDATE_EMAIL):
-			request.employee_preboarding = "HR-EMP-PRB-NOT-MINE"
+			request.employee_onboarding = "HR-EMP-ONB-NOT-MINE"
 			request.save()
 			request.reload()
-			self.assertNotEqual(request.employee_preboarding, "HR-EMP-PRB-NOT-MINE")
+			self.assertNotEqual(request.employee_onboarding, "HR-EMP-ONB-NOT-MINE")
 
 			request.documents = request.documents[:1]
 			self.assertRaises(frappe.PermissionError, request.save)
 
 	def test_details_are_checked_only_on_submit(self):
-		request = get_request(start_preboarding())
+		request = get_request(start_onboarding())
 		with self.set_user(CANDIDATE_EMAIL):
 			request.cell_number = "+91-9876543210"
 			request.documents[0].attachment = upload_file("pan.txt").file_url
@@ -77,7 +77,7 @@ class TestEmployeeRequest(HRMSTestSuite):
 		self.assertTrue(request.documents[0].attachment.startswith("/private/"))
 
 	def test_required_documents_block_submit(self):
-		request = get_request(start_preboarding())
+		request = get_request(start_onboarding())
 		with self.set_user(CANDIDATE_EMAIL):
 			fill_mandatory_details(request)
 			request.save()
@@ -85,13 +85,13 @@ class TestEmployeeRequest(HRMSTestSuite):
 			self.assertRaises(frappe.ValidationError, request.submit_details)
 
 	def test_create_employee_dialog_gets_the_request(self):
-		preboarding = start_preboarding()
-		request = get_request(preboarding)
+		onboarding = start_onboarding()
+		request = get_request(onboarding)
 		fill_mandatory_details(request)
 		request.bank_name = "HDFC Bank"
 		request.save()
 
-		employee = make_employee(preboarding.name)
+		employee = make_employee(onboarding.name)
 		details = employee.get_onload().employee_details
 
 		self.assertEqual((employee.gender, employee.bank_name), ("Female", "HDFC Bank"))
@@ -99,8 +99,8 @@ class TestEmployeeRequest(HRMSTestSuite):
 		self.assertIn("bank_name", details["fields"])
 
 	def test_employee_from_the_list_fills_only_blank_fields_and_retires_the_request(self):
-		preboarding = start_preboarding()
-		request = get_request(preboarding)
+		onboarding = start_onboarding()
+		request = get_request(onboarding)
 		fill_mandatory_details(request)
 		request.update({"bank_name": "HDFC Bank", "cell_number": "+91-9876543210"})
 		request.documents[0].attachment = upload_file("old_pan.txt").file_url
@@ -115,8 +115,8 @@ class TestEmployeeRequest(HRMSTestSuite):
 				"gender": "Female",
 				"date_of_birth": "1995-02-01",
 				"date_of_joining": getdate(),
-				"company": preboarding.company,
-				"job_offer": preboarding.job_offer,
+				"company": onboarding.company,
+				"job_offer": onboarding.job_offer,
 				"bank_name": "State Bank of India",
 			}
 		).insert()
@@ -138,24 +138,22 @@ class TestEmployeeRequest(HRMSTestSuite):
 	def test_hr_manager_starts_and_retires_the_request(self):
 		hr_manager = get_test_user("asha.hr.manager@example.com")
 		frappe.get_doc("User", hr_manager).add_roles("HR Manager")
-		preboarding = start_preboarding(as_user=hr_manager)
-		request = get_request(preboarding)
+		onboarding = start_onboarding(as_user=hr_manager)
+		request = get_request(onboarding)
 		self.assertIn(PREBOARDING_CANDIDATE_ROLE, frappe.get_roles(CANDIDATE_EMAIL))
 
 		fill_mandatory_details(request)
 		request.save()
 		with self.set_user(hr_manager):
-			make_employee(preboarding.name).insert()
+			make_employee(onboarding.name).insert()
 
 		self.assertFalse(frappe.db.exists("Employee Request", request.name))
 		self.assertNotIn(PREBOARDING_CANDIDATE_ROLE, frappe.get_roles(CANDIDATE_EMAIL))
 
 	def test_saving_makes_only_the_requests_own_files_private(self):
-		preboarding = start_preboarding()
-		request = get_request(preboarding)
-		elsewhere = save_file(
-			"logo.txt", b"company logo", preboarding.doctype, preboarding.name, is_private=0
-		)
+		onboarding = start_onboarding()
+		request = get_request(onboarding)
+		elsewhere = save_file("logo.txt", b"company logo", onboarding.doctype, onboarding.name, is_private=0)
 		unattached = save_file("banner.txt", b"company banner", None, None, is_private=0)
 
 		with self.set_user(CANDIDATE_EMAIL):
@@ -186,11 +184,9 @@ class TestEmployeeRequest(HRMSTestSuite):
 		)
 
 	def test_saving_accepts_only_the_requests_own_private_files(self):
-		preboarding = start_preboarding()
-		request = get_request(preboarding)
-		elsewhere = save_file(
-			"offer.txt", b"offer letter", preboarding.doctype, preboarding.name, is_private=1
-		)
+		onboarding = start_onboarding()
+		request = get_request(onboarding)
+		elsewhere = save_file("offer.txt", b"offer letter", onboarding.doctype, onboarding.name, is_private=1)
 		someone_elses = save_file("salary.txt", b"salary slip", None, None, is_private=1)
 
 		with self.set_user(CANDIDATE_EMAIL):
@@ -225,8 +221,8 @@ class TestEmployeeRequest(HRMSTestSuite):
 		)
 
 	def test_saving_rejects_attachment_links_without_an_uploaded_file(self):
-		preboarding = start_preboarding()
-		request = get_request(preboarding)
+		onboarding = start_onboarding()
+		request = get_request(onboarding)
 
 		with self.set_user(CANDIDATE_EMAIL):
 			for url in ("/private/files/does-not-exist/x.pdf", "https://example.com/x.pdf"):
@@ -236,7 +232,7 @@ class TestEmployeeRequest(HRMSTestSuite):
 				self.assertFalse(frappe.db.exists("File", {"file_url": url}))
 
 
-def start_preboarding(as_user=None):
+def start_onboarding(as_user=None):
 	template = get_test_template()
 	template.set(
 		"required_documents",
@@ -247,16 +243,16 @@ def start_preboarding(as_user=None):
 	)
 	template.save()
 
-	preboarding = create_employee_preboarding(submit=True)
-	preboarding.date_of_joining = add_days(getdate(), 7)
+	onboarding = create_employee_onboarding(submit=True)
+	onboarding.date_of_joining = add_days(getdate(), 7)
 	with set_user(as_user or frappe.session.user):
-		preboarding.create_user("Personal Email", personal_email=CANDIDATE_EMAIL)
-	preboarding.reload()
-	return preboarding
+		onboarding.create_user("Personal Email", personal_email=CANDIDATE_EMAIL)
+	onboarding.reload()
+	return onboarding
 
 
-def get_request(preboarding):
-	return frappe.get_doc("Employee Request", {"employee_preboarding": preboarding.name})
+def get_request(onboarding):
+	return frappe.get_doc("Employee Request", {"employee_onboarding": onboarding.name})
 
 
 def fill_mandatory_details(request):

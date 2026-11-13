@@ -1,6 +1,6 @@
 {
  "actions": [],
- "autoname": "HR-EMP-PRB-.YYYY.-.#####",
+ "autoname": "HR-EMP-ONB-.YYYY.-.#####",
  "creation": "2018-05-09 04:57:20.016220",
  "doctype": "DocType",
  "documentation": "https://docs.frappe.io/hr/employee-onboarding",
@@ -18,7 +18,7 @@
   "employee_boarding_template",
   "boarding_status",
   "checklist_section",
-  "preboarding_checklist",
+  "onboarding_checklist",
   "details_section",
   "employee",
   "department",
@@ -135,7 +135,7 @@
    "fieldtype": "Section Break",
    "hidden": 1,
    "hide_border": 1,
-   "label": "Preboarding Activities"
+   "label": "Onboarding Activities"
   },
   {
    "fieldname": "activities",
@@ -148,7 +148,7 @@
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Employee Preboarding",
+   "options": "Employee Onboarding",
    "print_hide": 1,
    "read_only": 1
   },
@@ -166,7 +166,7 @@
   {
    "fieldname": "boarding_begins_on",
    "fieldtype": "Date",
-   "label": "Preboarding Begins On",
+   "label": "Onboarding Begins On",
    "reqd": 1
   },
   {
@@ -220,7 +220,7 @@
    "hide_border": 1
   },
   {
-   "fieldname": "preboarding_checklist",
+   "fieldname": "onboarding_checklist",
    "fieldtype": "HTML"
   },
   {
@@ -233,10 +233,10 @@
  "icon": "user-plus",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-27 13:00:00.000000",
+ "modified": "2026-11-13 18:25:26.785224",
  "modified_by": "Administrator",
  "module": "HR",
- "name": "Employee Preboarding",
+ "name": "Employee Onboarding",
  "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [

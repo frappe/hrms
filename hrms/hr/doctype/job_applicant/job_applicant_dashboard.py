@@ -2,7 +2,7 @@ def get_data():
 	return {
 		"fieldname": "job_applicant",
 		"transactions": [
-			{"items": ["Employee", "Employee Preboarding"]},
+			{"items": ["Employee", "Employee Onboarding"]},
 			{"items": ["Job Offer"]},
 			{"items": ["Interview"]},
 		],

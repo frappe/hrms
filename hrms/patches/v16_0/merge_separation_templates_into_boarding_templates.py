@@ -10,10 +10,10 @@ def execute():
 		"Employee Boarding Activity",
 		{"parenttype": "Employee Boarding Template", "parentfield": "activities"},
 		"parentfield",
-		"preboarding_activities",
+		"onboarding_activities",
 		update_modified=False,
 	)
-	rename_field("Employee Preboarding", "employee_onboarding_template", "employee_boarding_template")
+	rename_field("Employee Onboarding", "employee_onboarding_template", "employee_boarding_template")
 
 	if not frappe.db.exists("DocType", SEPARATION_TEMPLATE):
 		return

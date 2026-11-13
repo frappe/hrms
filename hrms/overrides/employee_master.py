@@ -28,8 +28,8 @@ class EmployeeMaster(Employee):
 		self.employee = self.name
 
 
-def link_preboarding(doc, method=None):
-	"""Link a saved Employee to the open Employee Preboarding of its job offer, however it was created."""
+def link_onboarding(doc, method=None):
+	"""Link a saved Employee to the open Employee Onboarding of its job offer, however it was created."""
 	filters = {"docstatus": ("!=", 2), "employee": ("is", "not set")}
 	if doc.get("job_offer"):
 		filters["job_offer"] = doc.job_offer
@@ -38,8 +38,8 @@ def link_preboarding(doc, method=None):
 	else:
 		return
 
-	if preboarding := frappe.db.get_value("Employee Preboarding", filters):
-		frappe.get_doc("Employee Preboarding", preboarding).attach_employee(doc.name)
+	if onboarding := frappe.db.get_value("Employee Onboarding", filters):
+		frappe.get_doc("Employee Onboarding", onboarding).attach_employee(doc.name)
 
 
 def publish_update(doc, method=None):

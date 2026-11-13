@@ -1,6 +1,6 @@
 import { RecordTabsDialog, is_editable, make_panel_body } from "./record_tabs_dialog.js";
 
-const FIXED_FIELDS = ["job_offer", "employee_preboarding", "employee", "company"];
+const FIXED_FIELDS = ["job_offer", "employee_onboarding", "employee", "company"];
 
 export class AppointmentLetterDialog extends RecordTabsDialog {
 	constructor({ letter, on_save, on_sent }) {

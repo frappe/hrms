@@ -6,7 +6,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 
-from hrms.hr.doctype.employee_preboarding.preboarding_activities import (
+from hrms.hr.doctype.employee_onboarding.onboarding_activities import (
 	STANDARD_ACTIVITIES,
 	add_standard_activities,
 	set_action_defaults,
@@ -36,7 +36,6 @@ class EmployeeBoardingTemplate(Document):
 		employee_grade: DF.Link | None
 		offboarding_activities: DF.Table[EmployeeBoardingActivity]
 		onboarding_activities: DF.Table[EmployeeBoardingActivity]
-		preboarding_activities: DF.Table[EmployeeBoardingActivity]
 		required_documents: DF.Table[EmployeeBoardingDocument]
 		title: DF.Data
 	# end: auto-generated types
@@ -46,10 +45,10 @@ class EmployeeBoardingTemplate(Document):
 			add_standard_activities(self)
 
 	def validate(self):
-		for row in self.preboarding_activities:
+		for row in self.onboarding_activities:
 			set_action_defaults(row)
-		validate_unique_actions(self.preboarding_activities, _("this template"))
-		for row in self.onboarding_activities + self.offboarding_activities:
+		validate_unique_actions(self.onboarding_activities, _("this template"))
+		for row in self.offboarding_activities:
 			row.update({"action": "Manual", "reference_doctype": None, "depends_on_action": None})
 
 

@@ -1093,7 +1093,7 @@ def get_salary_slip_loan_fields():
 	}
 
 
-# Project and Task perms are needed for the Employee Preboarding / Separation flow, which
+# Project and Task perms are needed for the Employee Onboarding / Separation flow, which
 # creates a Project and Tasks and assigns them to users. assign_to.add() does a read check
 # on Task, and on_cancel deletes the Project and its Tasks.
 _PROJECT_TASK_PERMS = {

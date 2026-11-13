@@ -177,15 +177,15 @@ override_doctype_class = {
 
 doc_events = {
 	"Communication": {
-		"on_trash": "hrms.hr.doctype.appointment_letter.appointment_letter.reopen_preboarding_on_unsent",
+		"on_trash": "hrms.hr.doctype.appointment_letter.appointment_letter.reopen_onboarding_on_unsent",
 	},
 	"User": {
 		"validate": [
 			"erpnext.setup.doctype.employee.employee.validate_employee_role",
 			"hrms.overrides.employee_master.update_approver_user_roles",
 		],
-		"on_trash": "hrms.hr.doctype.employee_preboarding.employee_preboarding.unlink_deleted_user",
-		"after_rename": "hrms.hr.doctype.employee_preboarding.employee_preboarding.rename_preboarding_user",
+		"on_trash": "hrms.hr.doctype.employee_onboarding.employee_onboarding.unlink_deleted_user",
+		"after_rename": "hrms.hr.doctype.employee_onboarding.employee_onboarding.rename_onboarding_user",
 	},
 	"Company": {
 		"validate": "hrms.overrides.company.validate_default_accounts",
@@ -227,7 +227,7 @@ doc_events = {
 	"Loan": {"validate": "hrms.hr.utils.validate_loan_repay_from_salary"},
 	"Employee": {
 		"on_update": [
-			"hrms.overrides.employee_master.link_preboarding",
+			"hrms.overrides.employee_master.link_onboarding",
 			"hrms.overrides.employee_master.update_approver_role",
 			"hrms.overrides.employee_master.publish_update",
 		],
@@ -260,7 +260,7 @@ doc_events = {
 	"Salary Structure": {"after_insert": "hrms.telemetry.on_milestone_insert"},
 	"Job Opening": {"after_insert": "hrms.telemetry.on_milestone_insert"},
 	"Appraisal Cycle": {"after_insert": "hrms.telemetry.on_milestone_insert"},
-	"Employee Preboarding": {"after_insert": "hrms.telemetry.on_milestone_insert"},
+	"Employee Onboarding": {"after_insert": "hrms.telemetry.on_milestone_insert"},
 	"Salary Slip": {"on_submit": "hrms.telemetry.on_milestone_submit"},
 }
 

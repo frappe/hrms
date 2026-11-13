@@ -79,14 +79,14 @@ STANDARD_ACTIVITIES = [
 ]
 
 
-class PreboardingActivities:
-	"""The checklist rows of an Employee Preboarding.
+class OnboardingActivities:
+	"""The checklist rows of an Employee Onboarding.
 
-	The rows come from the preboarding's template only, so HR decides there which standard
-	activities a preboarding gets and who each one is assigned to.
+	The rows come from the onboarding's template only, so HR decides there which standard
+	activities a onboarding gets and who each one is assigned to.
 	A row with an action is completed by the record it creates, not by whoever ticks it; only
 	Manual rows are completed by hand. An unfinished row may carry a status, In Progress or Stuck.
-	Row changes are written per row, so several people can work the same preboarding at once
+	Row changes are written per row, so several people can work the same onboarding at once
 	without one save overwriting another.
 	"""
 
@@ -109,7 +109,7 @@ class PreboardingActivities:
 			row.due_date = add_days(self.boarding_begins_on, row.begin_on or 0)
 
 	def validate_unique_activities(self):
-		validate_unique_actions(self.activities, _("this preboarding"))
+		validate_unique_actions(self.activities, _("this onboarding"))
 
 	def reconcile_activities(self) -> list:
 		"""Complete each row whose record exists, and return the changed rows."""
@@ -168,7 +168,7 @@ class PreboardingActivities:
 		}
 
 	def save_activity_states(self):
-		"""Persist reconciled rows and the status without saving the whole preboarding."""
+		"""Persist reconciled rows and the status without saving the whole onboarding."""
 		for row in self.reconcile_activities():
 			row.db_update()
 		self.set_boarding_status()
@@ -260,7 +260,7 @@ class PreboardingActivities:
 		self.check_permission("write")
 		self.validate_draft()
 		activity_name = self.validate_new_activity_name(activity_name)
-		activity = self.append("activities", {"activity_name": activity_name, "added_on_preboarding": 1})
+		activity = self.append("activities", {"activity_name": activity_name, "added_on_onboarding": 1})
 		self.set_activity_defaults(activity)
 		activity.db_insert()
 		self.save_activity_states()
@@ -270,8 +270,8 @@ class PreboardingActivities:
 		self.check_permission("write")
 		self.validate_draft()
 		activity = self.get_activity(row)
-		if not activity.added_on_preboarding:
-			frappe.throw(_("Only activities added on this preboarding can be removed; skip the others"))
+		if not activity.added_on_onboarding:
+			frappe.throw(_("Only activities added on this onboarding can be removed; skip the others"))
 
 		self.remove(activity)
 		frappe.db.delete(activity.doctype, activity.name)
@@ -285,7 +285,7 @@ class PreboardingActivities:
 		self.validate_draft()
 		rows = frappe.parse_json(rows)
 		if sorted(rows) != sorted(row.name for row in self.activities):
-			frappe.throw(_("Pass every activity of this preboarding once to reorder them"))
+			frappe.throw(_("Pass every activity of this onboarding once to reorder them"))
 
 		position = {name: idx for idx, name in enumerate(rows, start=1)}
 		for row in self.activities:
@@ -307,18 +307,18 @@ class PreboardingActivities:
 
 	def validate_draft(self):
 		if self.docstatus != 0:
-			frappe.throw(_("Activities can only be planned while the preboarding is a draft"))
+			frappe.throw(_("Activities can only be planned while the onboarding is a draft"))
 
 	def validate_started(self):
 		if self.docstatus != 1:
 			frappe.throw(
-				_("Submit the preboarding to start its activities"),
+				_("Submit the onboarding to start its activities"),
 				title=_("Document submission required"),
 			)
 
 	def validate_not_cancelled(self):
 		if self.docstatus == 2:
-			frappe.throw(_("The preboarding is cancelled"))
+			frappe.throw(_("The onboarding is cancelled"))
 
 	@frappe.whitelist(methods=["POST"])
 	def complete_activity(self, row: str) -> None:
@@ -401,14 +401,14 @@ def close_todo(name: str, status: str) -> None:
 
 def get_matching_template(doc) -> str | None:
 	"""The newest template with pre-boarding activities whose company, department, designation
-	and grade each match the preboarding's or are left blank, so a blank template applies to everyone."""
+	and grade each match the onboarding's or are left blank, so a blank template applies to everyone."""
 	Template = frappe.qb.DocType("Employee Boarding Template")
 	Activity = frappe.qb.DocType("Employee Boarding Activity")
 	has_activities = (
 		frappe.qb.from_(Activity)
 		.select(Activity.name)
 		.where(Activity.parenttype == "Employee Boarding Template")
-		.where(Activity.parentfield == "preboarding_activities")
+		.where(Activity.parentfield == "onboarding_activities")
 		.where(Activity.parent == Template.name)
 	)
 	query = (
@@ -434,7 +434,7 @@ def get_template_activities(template: str | None) -> list[dict]:
 		filters={
 			"parent": template,
 			"parenttype": "Employee Boarding Template",
-			"parentfield": "preboarding_activities",
+			"parentfield": "onboarding_activities",
 		},
 		order_by="idx",
 	)
@@ -465,13 +465,13 @@ def action_key(action: str | None, reference_doctype: str | None) -> tuple:
 
 def add_standard_activities(template) -> None:
 	"""Put the standard activities at the top of a new template; it may drop them later."""
-	present = {action_key(row.action, row.reference_doctype) for row in template.preboarding_activities}
-	own_rows = list(template.preboarding_activities)
-	template.preboarding_activities = []
+	present = {action_key(row.action, row.reference_doctype) for row in template.onboarding_activities}
+	own_rows = list(template.onboarding_activities)
+	template.onboarding_activities = []
 	for activity in STANDARD_ACTIVITIES:
 		if action_key(activity["action"], activity.get("reference_doctype")) not in present:
-			template.append("preboarding_activities", activity)
+			template.append("onboarding_activities", activity)
 	for row in own_rows:
-		template.append("preboarding_activities", row)
-	for idx, row in enumerate(template.preboarding_activities, start=1):
+		template.append("onboarding_activities", row)
+	for idx, row in enumerate(template.onboarding_activities, start=1):
 		row.idx = idx

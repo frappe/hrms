@@ -1,4 +1,4 @@
-import { get_action_handler } from "./preboarding_actions.js";
+import { get_action_handler } from "./onboarding_actions.js";
 
 frappe.provide("hrms.ui");
 
@@ -6,7 +6,7 @@ const STATUS = { "In Progress": "in_progress", Stuck: "stuck" };
 
 const ROW_STATUS = { in_progress: "In Progress", stuck: "Stuck" };
 
-hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
+hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 	constructor({ frm }) {
 		this.frm = frm;
 		this.pending = Promise.resolve();
@@ -14,7 +14,7 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 	}
 
 	render() {
-		const wrapper = this.frm.fields_dict.preboarding_checklist.wrapper;
+		const wrapper = this.frm.fields_dict.onboarding_checklist.wrapper;
 		const props = this.get_props();
 		if (this.island && this.wrapper === wrapper && this.is_same_doc()) {
 			this.island.update(props);
@@ -43,7 +43,7 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 		const planning = this.is_planning();
 		const started = this.is_started();
 		return {
-			title: __("Preboarding Checklist"),
+			title: __("Onboarding Checklist"),
 			addLabel: __("Add activity"),
 			items: (this.frm.doc.activities || []).map((row) => this.get_item(row)),
 			searchUsers: (txt) => this.search_users(txt),
@@ -93,7 +93,7 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 			),
 			locked: this.get_lock_reason(row) || handler.get_lock_reason?.(this, row),
 			skippable: saved && this.frm.doc.docstatus < 2 && this.frm.has_perm("write"),
-			removable: saved && Boolean(row.added_on_preboarding) && this.is_planning(),
+			removable: saved && Boolean(row.added_on_onboarding) && this.is_planning(),
 			actions: this.get_actions(handler, row, state).map(({ onclick, ...action }) => ({
 				...action,
 				onClick: () => this.run_once(onclick),
@@ -148,7 +148,7 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 			onclick: () =>
 				frappe.throw({
 					title: __("Document submission required"),
-					message: __("Submit the preboarding to start its activities"),
+					message: __("Submit the onboarding to start its activities"),
 				}),
 		}));
 	}
@@ -191,7 +191,7 @@ hrms.ui.EmployeePreboardingChecklist = class EmployeePreboardingChecklist {
 	}
 
 	// Activity methods write their row straight to the database, so the form reloads rather
-	// than saves; another user may be working on the same preboarding.
+	// than saves; another user may be working on the same onboarding.
 	call(method, args = {}, freeze_message) {
 		return this.enqueue(async () => {
 			await this.save_if_dirty();

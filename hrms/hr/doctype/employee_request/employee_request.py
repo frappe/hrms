@@ -52,7 +52,7 @@ class EmployeeRequest(Document):
 		education: DF.Table[EmployeeEducation]
 		emergency_phone_number: DF.Data | None
 		employee_name: DF.Data | None
-		employee_preboarding: DF.Link
+		employee_onboarding: DF.Link
 		external_work_history: DF.Table[EmployeeExternalWorkHistory]
 		first_name: DF.Data
 		gender: DF.Link
@@ -222,7 +222,7 @@ class EmployeeRequest(Document):
 		return len(document_names)
 
 	def notify_reviewer(self):
-		reviewer = get_reviewer(self.employee_preboarding)
+		reviewer = get_reviewer(self.employee_onboarding)
 		enqueue_create_notification(
 			frappe.db.get_value("User", reviewer, "email"),
 			{
@@ -286,13 +286,13 @@ def get_apply_summary(filled: int, moved: int) -> str:
 	return comma_and(parts, add_quotes=False).capitalize()
 
 
-def get_reviewer(preboarding: str) -> str:
+def get_reviewer(onboarding: str) -> str:
 	assignee = frappe.db.get_value(
 		"Employee Boarding Activity",
-		{"parent": preboarding, "parenttype": "Employee Preboarding", "action": "Create Employee"},
+		{"parent": onboarding, "parenttype": "Employee Onboarding", "action": "Create Employee"},
 		"user",
 	)
-	return assignee or frappe.db.get_value("Employee Preboarding", preboarding, "owner")
+	return assignee or frappe.db.get_value("Employee Onboarding", onboarding, "owner")
 
 
 def is_reviewer(user: str | None = None) -> bool:

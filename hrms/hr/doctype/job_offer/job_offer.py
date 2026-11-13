@@ -78,13 +78,13 @@ class JobOffer(Document):
 		employee = frappe.db.get_value("Employee", {"job_offer": self.name}, "name") or ""
 		self.set_onload("employee", employee)
 
-		preboarding = (
+		onboarding = (
 			frappe.db.get_value(
-				"Employee Preboarding", {"job_offer": self.name, "docstatus": ("!=", 2)}, "name"
+				"Employee Onboarding", {"job_offer": self.name, "docstatus": ("!=", 2)}, "name"
 			)
 			or ""
 		)
-		self.set_onload("employee_preboarding", preboarding)
+		self.set_onload("employee_onboarding", onboarding)
 
 	def validate(self):
 		self.set_status()
@@ -516,7 +516,7 @@ def get_holiday_summary(holiday_list: str | None = None) -> dict:
 
 
 @frappe.whitelist()
-def make_employee_preboarding(source_name: str, target_doc: str | Document | None = None):
+def make_employee_onboarding(source_name: str, target_doc: str | Document | None = None):
 	def set_missing_values(source, target):
 		target.personal_email = source.applicant_email
 		target.boarding_begins_on = source.date_of_joining
@@ -526,7 +526,7 @@ def make_employee_preboarding(source_name: str, target_doc: str | Document | Non
 		source_name,
 		{
 			"Job Offer": {
-				"doctype": "Employee Preboarding",
+				"doctype": "Employee Onboarding",
 				"field_map": {
 					"name": "job_offer",
 					"applicant_name": "employee_name",
@@ -540,11 +540,11 @@ def make_employee_preboarding(source_name: str, target_doc: str | Document | Non
 
 
 @frappe.whitelist(methods=["POST"])
-def create_employee_preboarding(
+def create_employee_onboarding(
 	job_offer: str, boarding_begins_on: str, date_of_joining: str | None = None
 ) -> str:
-	preboarding = make_employee_preboarding(job_offer)
-	preboarding.date_of_joining = preboarding.date_of_joining or date_of_joining
-	preboarding.boarding_begins_on = boarding_begins_on
-	preboarding.insert()
-	return preboarding.name
+	onboarding = make_employee_onboarding(job_offer)
+	onboarding.date_of_joining = onboarding.date_of_joining or date_of_joining
+	onboarding.boarding_begins_on = boarding_begins_on
+	onboarding.insert()
+	return onboarding.name

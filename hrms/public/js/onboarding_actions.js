@@ -1,7 +1,7 @@
 import { AppointmentLetterDialog } from "./appointment_letter_dialog.js";
 import { CreateEmployeeDialog } from "./create_employee_dialog.js";
 
-// What each preboarding activity action shows and does. A template row names its action;
+// What each onboarding activity action shows and does. A template row names its action;
 // the row's value, lock and buttons come from the handler for that action.
 
 const ACTION_HANDLERS = {
@@ -141,7 +141,7 @@ async function open_letter_dialog(list) {
 	const letter = name
 		? await frappe.db.get_doc("Appointment Letter", name)
 		: await frappe.xcall(
-				"hrms.hr.doctype.employee_preboarding.employee_preboarding.make_appointment_letter",
+				"hrms.hr.doctype.employee_onboarding.employee_onboarding.make_appointment_letter",
 				{ source_name: list.frm.doc.name },
 		  );
 	new AppointmentLetterDialog({
@@ -154,7 +154,7 @@ async function open_letter_dialog(list) {
 async function create_employee(list) {
 	await list.save_if_dirty();
 	const doc = await frappe.xcall(
-		"hrms.hr.doctype.employee_preboarding.employee_preboarding.make_employee",
+		"hrms.hr.doctype.employee_onboarding.employee_onboarding.make_employee",
 		{ source_name: list.frm.doc.name },
 	);
 	new CreateEmployeeDialog({
