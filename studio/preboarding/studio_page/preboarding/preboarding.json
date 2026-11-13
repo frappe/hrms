@@ -90,7 +90,7 @@
        "baseStyles": {
         "display": "flex",
         "flexDirection": "column",
-        "gap": "24px"
+        "gap": "32px"
        },
        "blockName": "Preboarding form",
        "children": [
@@ -278,6 +278,15 @@
         },
         {
          "blockName": "Form step",
+         "classes": [
+          "[&_.column]:gap-6",
+          "[&_.section-body]:gap-6",
+          "[&_.section.pt-4]:pt-6",
+          "[&_.section.border-t]:mt-8",
+          "[&_.section.border-t]:pt-8",
+          "[&_.column.mt-6]:mt-4",
+          "max-sm:[&_.column.mt-6+.column]:mt-0"
+         ],
          "componentId": "formlayout-24",
          "componentName": "FormLayout",
          "componentProps": {
@@ -291,7 +300,7 @@
          "baseStyles": {
           "display": "flex",
           "flexDirection": "column",
-          "gap": "8px"
+          "gap": "0px"
          },
          "blockName": "Education",
          "children": [
@@ -305,13 +314,13 @@
            "children": [
             {
              "baseStyles": {
-              "color": "var(--ink-gray-8)",
-              "fontWeight": "600"
+              "color": "var(--ink-gray-9)",
+              "fontWeight": "500"
              },
              "componentId": "textblock-50",
              "componentName": "TextBlock",
              "componentProps": {
-              "fontSize": "text-lg",
+              "fontSize": "text-base",
               "text": "Education"
              },
              "componentSlots": {}
@@ -360,13 +369,10 @@
             {
              "baseStyles": {
               "alignItems": "center",
-              "borderColor": "var(--outline-gray-1)",
-              "borderStyle": "solid",
-              "borderWidth": "0px 0px 1px 0px",
               "display": "flex",
               "flexDirection": "row",
               "gap": "8px",
-              "padding": "12px 0px",
+              "padding": "16px 0px",
               "width": "100%"
              },
              "blockName": "Education entry",
@@ -449,12 +455,20 @@
                "componentSlots": {}
               }
              ],
+             "classes": [
+              "border-b",
+              "border-outline-gray-1",
+              "last:border-b-0"
+             ],
              "componentId": "div-49",
              "componentName": "div",
              "componentProps": {},
              "componentSlots": {},
              "originalElement": "div"
             }
+           ],
+           "classes": [
+            "!gap-0"
            ],
            "componentId": "repeater-54",
            "componentName": "Repeater",
@@ -465,6 +479,11 @@
            },
            "componentSlots": {}
           }
+         ],
+         "classes": [
+          "border-t",
+          "border-outline-elevation-2",
+          "pt-8"
          ],
          "componentId": "div-55",
          "componentName": "div",
@@ -477,7 +496,7 @@
          "baseStyles": {
           "display": "flex",
           "flexDirection": "column",
-          "gap": "8px"
+          "gap": "0px"
          },
          "blockName": "Work experience",
          "children": [
@@ -491,13 +510,13 @@
            "children": [
             {
              "baseStyles": {
-              "color": "var(--ink-gray-8)",
-              "fontWeight": "600"
+              "color": "var(--ink-gray-9)",
+              "fontWeight": "500"
              },
              "componentId": "textblock-62",
              "componentName": "TextBlock",
              "componentProps": {
-              "fontSize": "text-lg",
+              "fontSize": "text-base",
               "text": "Work experience"
              },
              "componentSlots": {}
@@ -546,13 +565,10 @@
             {
              "baseStyles": {
               "alignItems": "center",
-              "borderColor": "var(--outline-gray-1)",
-              "borderStyle": "solid",
-              "borderWidth": "0px 0px 1px 0px",
               "display": "flex",
               "flexDirection": "row",
               "gap": "8px",
-              "padding": "12px 0px",
+              "padding": "16px 0px",
               "width": "100%"
              },
              "blockName": "Work experience entry",
@@ -635,12 +651,20 @@
                "componentSlots": {}
               }
              ],
+             "classes": [
+              "border-b",
+              "border-outline-gray-1",
+              "last:border-b-0"
+             ],
              "componentId": "div-61",
              "componentName": "div",
              "componentProps": {},
              "componentSlots": {},
              "originalElement": "div"
             }
+           ],
+           "classes": [
+            "!gap-0"
            ],
            "componentId": "repeater-66",
            "componentName": "Repeater",
@@ -651,6 +675,11 @@
            },
            "componentSlots": {}
           }
+         ],
+         "classes": [
+          "border-t",
+          "border-outline-elevation-2",
+          "pt-8"
          ],
          "componentId": "div-67",
          "componentName": "div",
@@ -663,7 +692,7 @@
          "baseStyles": {
           "display": "flex",
           "flexDirection": "column",
-          "gap": "16px"
+          "gap": "0px"
          },
          "blockName": "Documents step",
          "children": [
@@ -689,13 +718,10 @@
             {
              "baseStyles": {
               "alignItems": "center",
-              "borderColor": "var(--outline-gray-1)",
-              "borderStyle": "solid",
-              "borderWidth": "0px 0px 1px 0px",
               "display": "flex",
               "flexDirection": "row",
               "gap": "16px",
-              "padding": "12px 0px",
+              "padding": "16px 0px",
               "width": "100%"
              },
              "blockName": "Document row",
@@ -842,12 +868,20 @@
                }
               }
              ],
+             "classes": [
+              "border-b",
+              "border-outline-gray-1",
+              "last:border-b-0"
+             ],
              "componentId": "div-33",
              "componentName": "div",
              "componentProps": {},
              "componentSlots": {},
              "originalElement": "div"
             }
+           ],
+           "classes": [
+            "!gap-0"
            ],
            "componentId": "repeater-35",
            "componentName": "Repeater",
