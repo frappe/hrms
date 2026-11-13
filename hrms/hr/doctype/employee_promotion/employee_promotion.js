@@ -16,6 +16,28 @@ frappe.ui.form.on("Employee Promotion", {
 		});
 	},
 
+	refresh: function (frm) {
+		const { docstatus, salary_structure, revised_base, new_salary_structure_assignment } = frm.doc;
+		if (
+			docstatus !== 1 ||
+			!salary_structure ||
+			!revised_base ||
+			new_salary_structure_assignment ||
+			!frappe.model.can_create("Salary Structure Assignment")
+		)
+			return;
+
+		frm.add_custom_button(
+			__("Salary Structure Assignment"),
+			() => {
+				frm.call("make_salary_structure_assignment").then((r) => {
+					frappe.set_route("Form", "Salary Structure Assignment", r.message);
+				});
+			},
+			__("Create"),
+		);
+	},
+
 	employee: function (frm) {
 		frm.trigger("set_current_salary");
 	},

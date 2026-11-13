@@ -149,17 +149,30 @@ class TestEmployeePromotion(HRMSTestSuite):
 		self.assertEqual(promotion.revised_ctc, 1346400)
 		self.assertEqual(frappe.db.get_value("Employee", employee, "grade"), "EP Test G1")
 
-	def test_submit_creates_assignment_and_cancel_cancels_it(self):
-		employee, old_assignment = setup_employee_with_assignment("promotion_submit@example.com")
-		frappe.db.set_value("Employee", employee, "ctc", 500000)
+	def test_submit_does_not_create_assignment(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_no_auto@example.com")
 
 		promotion = make_promotion(employee, revised_base=60000)
 		promotion.submit()
 
+		self.assertFalse(promotion.new_salary_structure_assignment)
+		self.assertEqual(frappe.db.count("Salary Structure Assignment", {"employee": employee}), 1)
+
+	def test_created_assignment_is_a_draft_and_cancel_cancels_it(self):
+		employee, old_assignment = setup_employee_with_assignment("promotion_submit@example.com")
+		frappe.db.set_value("Employee", employee, "ctc", 500000)
+
+		promotion = make_promotion(employee, revised_base=60000)
+		self.assertRaises(frappe.ValidationError, promotion.make_salary_structure_assignment)
+		promotion.submit()
+
 		new_assignment = frappe.get_doc(
-			"Salary Structure Assignment", promotion.new_salary_structure_assignment
+			"Salary Structure Assignment", promotion.make_salary_structure_assignment()
 		)
-		self.assertEqual(new_assignment.docstatus, 1)
+		self.assertEqual(promotion.new_salary_structure_assignment, new_assignment.name)
+		self.assertEqual(new_assignment.docstatus, 0)
+		new_assignment.submit()
+
 		self.assertEqual(new_assignment.from_date, getdate(promotion.promotion_date))
 		self.assertEqual(new_assignment.base, 60000)
 		self.assertEqual(new_assignment.ctc, 1226400)
@@ -183,10 +196,32 @@ class TestEmployeePromotion(HRMSTestSuite):
 		promotion.submit()
 
 		new_assignment = frappe.get_doc(
-			"Salary Structure Assignment", promotion.new_salary_structure_assignment
+			"Salary Structure Assignment", promotion.make_salary_structure_assignment()
 		)
+		new_assignment.submit()
 
 		self.assertRaises(frappe.LinkExistsError, new_assignment.cancel)
+
+	def test_assignment_is_created_once(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_once@example.com")
+		promotion = make_promotion(employee, revised_base=60000)
+		promotion.submit()
+		promotion.make_salary_structure_assignment()
+
+		self.assertRaisesRegex(
+			frappe.ValidationError, "already created", promotion.make_salary_structure_assignment
+		)
+
+	def test_cancel_deletes_draft_assignment(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_draft@example.com")
+		promotion = make_promotion(employee, revised_base=60000)
+		promotion.submit()
+		draft = promotion.make_salary_structure_assignment()
+
+		promotion.cancel()
+
+		self.assertFalse(frappe.db.exists("Salary Structure Assignment", draft))
+		self.assertFalse(promotion.new_salary_structure_assignment)
 
 	def test_no_assignment_without_revised_base(self):
 		employee, _assignment = setup_employee_with_assignment("promotion_no_base@example.com")
@@ -195,20 +230,22 @@ class TestEmployeePromotion(HRMSTestSuite):
 		self.assertEqual(promotion.revised_ctc, 1500000)
 		promotion.submit()
 
-		self.assertFalse(promotion.new_salary_structure_assignment)
-		self.assertEqual(
-			frappe.db.count("Salary Structure Assignment", {"employee": employee, "docstatus": 1}), 1
+		self.assertRaisesRegex(
+			frappe.ValidationError, "Revised Base first", promotion.make_salary_structure_assignment
 		)
 		self.assertEqual(frappe.db.get_value("Employee", employee, "ctc"), 1500000)
 
-	def test_assignment_on_promotion_date_blocks_submit(self):
+	def test_assignment_on_promotion_date_blocks_creation(self):
 		employee, assignment = setup_employee_with_assignment("promotion_same_date@example.com")
 
 		promotion = make_promotion(employee, promotion_date=assignment.from_date, revised_base=60000)
+		promotion.submit()
 
-		self.assertRaisesRegex(frappe.ValidationError, "change the Promotion Date", promotion.submit)
+		self.assertRaisesRegex(
+			frappe.ValidationError, "change the Promotion Date", promotion.make_salary_structure_assignment
+		)
 
-	def test_later_assignment_blocks_submit(self):
+	def test_later_assignment_blocks_creation(self):
 		employee, assignment = setup_employee_with_assignment("promotion_later@example.com")
 		create_salary_structure_assignment(
 			employee,
@@ -220,8 +257,11 @@ class TestEmployeePromotion(HRMSTestSuite):
 		)
 
 		promotion = make_promotion(employee, revised_base=60000)
+		promotion.submit()
 
-		self.assertRaisesRegex(frappe.ValidationError, "change the Promotion Date", promotion.submit)
+		self.assertRaisesRegex(
+			frappe.ValidationError, "change the Promotion Date", promotion.make_salary_structure_assignment
+		)
 
 
 def setup_employee_with_assignment(user):
