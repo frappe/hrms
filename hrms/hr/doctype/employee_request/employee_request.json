@@ -19,10 +19,8 @@
   "image",
   "more_section",
   "marital_status",
-  "blood_group",
   "more_cb",
-  "family_background",
-  "health_details",
+  "blood_group",
   "contact_tab",
   "cell_number",
   "contact_cb",
@@ -125,26 +123,14 @@
    "options": "\nSingle\nMarried\nDivorced\nWidowed"
   },
   {
-   "fieldname": "blood_group",
-   "fieldtype": "Select",
-   "label": "Blood Group",
-   "options": "\nA+\nA-\nB+\nB-\nAB+\nAB-\nO+\nO-"
-  },
-  {
    "fieldname": "more_cb",
    "fieldtype": "Column Break"
   },
   {
-   "description": "Here you can maintain family details like name and occupation of parent, spouse and children",
-   "fieldname": "family_background",
-   "fieldtype": "Small Text",
-   "label": "Family Background"
-  },
-  {
-   "description": "Here you can maintain height, weight, allergies, medical concerns etc",
-   "fieldname": "health_details",
-   "fieldtype": "Small Text",
-   "label": "Health Details"
+   "fieldname": "blood_group",
+   "fieldtype": "Select",
+   "label": "Blood Group",
+   "options": "\nA+\nA-\nB+\nB-\nAB+\nAB-\nO+\nO-"
   },
   {
    "fieldname": "contact_tab",
@@ -363,7 +349,7 @@
  "grid_page_length": 50,
  "link_display_mode": "Search",
  "links": [],
- "modified": "2026-11-03 13:48:46.352081",
+ "modified": "2026-11-13 16:47:40.922587",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Request",

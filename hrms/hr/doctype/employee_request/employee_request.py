@@ -53,10 +53,8 @@ class EmployeeRequest(Document):
 		employee_name: DF.Data | None
 		employee_preboarding: DF.Link
 		external_work_history: DF.Table[EmployeeExternalWorkHistory]
-		family_background: DF.SmallText | None
 		first_name: DF.Data
 		gender: DF.Link
-		health_details: DF.SmallText | None
 		iban: DF.Data | None
 		image: DF.AttachImage | None
 		last_name: DF.Data | None
