@@ -71,9 +71,8 @@ class TestOrganizationalChart(HRMSTestSuite):
 		# the chart is the company directory, so their manager is there too
 		self.assertEqual([root.id for root in roots], [manager])
 		self.assertEqual([member.id for member in team], [employee])
-		# but only their own profile opens for them, and desk's composer sends only there
-		self.assertEqual((roots[0].can_open, roots[0].can_email), (False, False))
-		self.assertEqual((team[0].can_open, team[0].can_email), (True, True))
+		# but desk's composer emails only those whose record they may read
+		self.assertEqual((roots[0].can_email, team[0].can_email), (False, True))
 
 	@HRMSTestSuite.change_settings("HR Settings", {"show_org_chart_to_all_employees": 1})
 	def test_manager_in_unseen_company_shows_only_who(self):
@@ -237,7 +236,7 @@ class TestOrganizationalChart(HRMSTestSuite):
 			{name: person.new_joiner for name, person in people.items()}, {manager: False, joiner: True}
 		)
 		self.assertNotIn("date_of_joining", people[joiner])
-		self.assertEqual((people[manager].can_open, people[joiner].can_open), (False, True))
+		self.assertEqual((people[manager].can_email, people[joiner].can_email), (False, True))
 
 	@HRMSTestSuite.change_settings(
 		"HR Settings",

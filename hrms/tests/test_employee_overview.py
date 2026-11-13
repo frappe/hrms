@@ -140,8 +140,37 @@ class TestEmployeeOverview(HRMSTestSuite):
 	def test_overview_tab_comes_second(self):
 		meta = frappe.get_meta("Employee")
 		tabs = [f.fieldname for f in meta.fields if f.fieldtype == "Tab Break"]
-		self.assertEqual(tabs[:2], ["basic_details_tab", "overview_tab"])
+		self.assertEqual(tabs[:3], ["profile", "overview_tab", "basic_details_tab"])
 		fieldnames = [f.fieldname for f in meta.fields]
 		self.assertEqual(fieldnames.index("overview_html"), fieldnames.index("overview_tab") + 1)
-		self.assertLess(fieldnames.index("first_name"), fieldnames.index("overview_tab"))
+		self.assertGreater(fieldnames.index("first_name"), fieldnames.index("overview_tab"))
 		self.assertEqual(meta.get_field("basic_details_tab").label, "Details")
+
+	def test_employee_form_is_grouped_as_the_profile(self):
+		meta = frappe.get_meta("Employee")
+		tab = None
+		tab_of = {}
+		for field in meta.fields:
+			if field.fieldtype == "Tab Break":
+				tab = field.label
+			tab_of[field.fieldname] = tab
+
+		labels = [field.label for field in meta.fields if field.fieldtype == "Tab Break"]
+		self.assertEqual(
+			labels,
+			["Profile", "Overview", "Details", "Personal", "Employment", "Payroll", "Exit", "Connections"],
+		)
+		self.assertEqual(meta.get_field("profile_tab").label, "Background")
+		expected = {
+			"cell_number": "Personal",
+			"marital_status": "Personal",
+			"documents": "Personal",
+			"passport_number": "Personal",
+			"holiday_list": "Employment",
+			"leave_approver": "Employment",
+			"notice_number_of_days": "Employment",
+			"education": "Employment",
+			"bank_ac_no": "Payroll",
+			"relieving_date": "Exit",
+		}
+		self.assertEqual({fieldname: tab_of[fieldname] for fieldname in expected}, expected)

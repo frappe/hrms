@@ -216,10 +216,9 @@ async function show_employee(employee) {
 	selected.value = employee;
 }
 
-// a manager outside the chart has no card, so open their profile if the user may
+// a manager outside the chart, in another company or no longer active, has no card to show
 function show_manager(manager) {
 	if (canvas.value.find_card(manager.id)) show_employee(manager.id);
-	else if (manager.can_open) frappe.set_route("Form", "Employee", manager.id);
 }
 
 const to_options = (list) =>

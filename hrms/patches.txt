@@ -2,6 +2,7 @@
 hrms.patches.v15_0.check_version_compatibility_with_frappe #2023-06-27
 hrms.patches.v16_0.merge_interview_round_with_interview_type
 hrms.patches.v16_0.make_people_workspace_sidebar_standard
+hrms.patches.v16_0.rename_identification_document_type
 
 [post_model_sync]
 hrms.patches.post_install.set_payroll_entry_status
@@ -64,3 +65,4 @@ hrms.patches.v16_0.hide_org_chart_from_employees_on_existing_sites
 hrms.patches.v16_0.reset_salary_slip_print_format_renderer
 hrms.patches.v16_0.move_appointment_letter_terms_to_letter_body
 hrms.patches.v16_0.create_default_appointment_letter_template
+hrms.patches.v16_0.add_employee_profile_fields

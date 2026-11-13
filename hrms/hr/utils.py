@@ -1083,3 +1083,30 @@ def get_half_year_periods(date, effective_from):
 	half_year_end = add_days(add_months(half_year_start, 6), -1)
 
 	return half_year_start, half_year_end
+
+
+def notify_hr(doc: Document, subject: str, message: str | None = None):
+	"""Tell the HR users who may read `doc` about it, in their notifications.
+
+	A Notification for a role reaches every user with the role, including HR users whose user
+	permissions keep them away from this employee, so the recipients are picked here.
+	"""
+	from frappe.desk.doctype.notification_log.notification_log import enqueue_create_notification
+	from frappe.utils.user import get_users_with_role
+
+	users = set(get_users_with_role("HR User")) | set(get_users_with_role("HR Manager"))
+	users = [user for user in users if frappe.has_permission(doc=doc, ptype="read", user=user)]
+	if not users:
+		return
+
+	enqueue_create_notification(
+		frappe.get_all("User", filters={"name": ["in", users]}, pluck="email"),
+		{
+			"type": "Alert",
+			"document_type": doc.doctype,
+			"document_name": doc.name,
+			"subject": subject,
+			"email_content": message,
+			"from_user": doc.owner,
+		},
+	)
