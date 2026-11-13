@@ -10,11 +10,15 @@
  "field_order": [
   "personal_tab",
   "salutation",
-  "first_name",
-  "middle_name",
-  "last_name",
   "personal_cb",
+  "first_name",
+  "middle_name_section",
+  "middle_name",
+  "middle_name_cb",
+  "last_name",
+  "gender_section",
   "gender",
+  "gender_cb",
   "date_of_birth",
   "image",
   "more_section",
@@ -76,10 +80,19 @@
    "options": "Salutation"
   },
   {
+   "fieldname": "personal_cb",
+   "fieldtype": "Column Break"
+  },
+  {
    "fieldname": "first_name",
    "fieldtype": "Data",
    "label": "First Name",
    "reqd": 1
+  },
+  {
+   "fieldname": "middle_name_section",
+   "fieldtype": "Section Break",
+   "hide_border": 1
   },
   {
    "fieldname": "middle_name",
@@ -87,13 +100,18 @@
    "label": "Middle Name"
   },
   {
+   "fieldname": "middle_name_cb",
+   "fieldtype": "Column Break"
+  },
+  {
    "fieldname": "last_name",
    "fieldtype": "Data",
    "label": "Last Name"
   },
   {
-   "fieldname": "personal_cb",
-   "fieldtype": "Column Break"
+   "fieldname": "gender_section",
+   "fieldtype": "Section Break",
+   "hide_border": 1
   },
   {
    "fieldname": "gender",
@@ -101,6 +119,10 @@
    "label": "Gender",
    "options": "Gender",
    "reqd": 1
+  },
+  {
+   "fieldname": "gender_cb",
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "date_of_birth",
