@@ -112,7 +112,8 @@ class EmployeePromotion(Document):
 		employee = frappe.get_doc("Employee", self.employee)
 		employee = update_employee_work_history(employee, self.promotion_details, date=self.promotion_date)
 
-		if self.revised_ctc:
+		# with a revised base, the CTC changes when HR submits the new Salary Structure Assignment
+		if self.revised_ctc and not self.revised_base:
 			employee.ctc = self.revised_ctc
 
 		employee.save()
@@ -166,7 +167,7 @@ class EmployeePromotion(Document):
 		employee = frappe.get_doc("Employee", self.employee)
 		employee = update_employee_work_history(employee, self.promotion_details, cancel=True)
 
-		if self.revised_ctc:
+		if self.revised_ctc and not self.revised_base:
 			employee.ctc = self.current_ctc
 
 		employee.save()

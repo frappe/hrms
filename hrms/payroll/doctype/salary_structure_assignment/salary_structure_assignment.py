@@ -99,6 +99,12 @@ class SalaryStructureAssignment(Document):
 		self.warn_about_missing_opening_entries()
 		self.calculate_ctc_and_gross()
 
+	def on_submit(self):
+		update_employee_ctc(self.employee)
+
+	def on_cancel(self):
+		update_employee_ctc(self.employee)
+
 	def on_update_after_submit(self):
 		self.validate_cost_centers()
 
@@ -531,6 +537,27 @@ def get_assigned_salary_structure(employee, on_date):
 
 	result = query.run()
 	return result[0][0] if result else None
+
+
+def update_employee_ctc(employee: str, on_date=None) -> None:
+	ctc = frappe.db.get_value(
+		"Salary Structure Assignment",
+		{"employee": employee, "docstatus": 1, "from_date": ("<=", getdate(on_date))},
+		"ctc",
+		order_by="from_date desc",
+	)
+	if ctc is not None:
+		frappe.db.set_value("Employee", employee, "ctc", ctc)
+
+
+def update_ctc_of_assignments_starting_today(on_date=None) -> None:
+	for employee in frappe.get_all(
+		"Salary Structure Assignment",
+		filters={"docstatus": 1, "from_date": getdate(on_date)},
+		pluck="employee",
+		distinct=True,
+	):
+		update_employee_ctc(employee, on_date)
 
 
 @frappe.whitelist()

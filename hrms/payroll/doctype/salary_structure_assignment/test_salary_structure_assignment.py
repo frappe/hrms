@@ -2,12 +2,18 @@
 # See license.txt
 
 import frappe
-from frappe.utils import get_first_day, get_last_day, nowdate
+from frappe.utils import add_months, get_first_day, get_last_day, getdate, nowdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
-from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+	create_salary_structure_assignment,
+	make_salary_structure,
+)
+from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
+	update_ctc_of_assignments_starting_today,
+)
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -493,3 +499,40 @@ class TestSalaryStructureAssignment(HRMSTestSuite):
 
 				slip = make_salary_slip(structure.name, employee=emp)
 				self.assertIn("SSA Test Cycle Days", [r.salary_component for r in slip.earnings])
+
+
+class TestEmployeeCTC(HRMSTestSuite):
+	def setUp(self):
+		self.employee = make_employee("ctc_sync@example.com", company="_Test Company")
+		self.structure = make_salary_structure("Test CTC Sync", "Monthly", company="_Test Company")
+		self.first = self.make_assignment(add_months(getdate(), -2), 50000)
+
+	def make_assignment(self, from_date, base):
+		return create_salary_structure_assignment(
+			self.employee,
+			self.structure.name,
+			from_date=get_first_day(from_date),
+			company="_Test Company",
+			base=base,
+			allow_duplicate=True,
+		)
+
+	def employee_ctc(self):
+		return frappe.db.get_value("Employee", self.employee, "ctc")
+
+	def test_ctc_follows_assignment_on_submit_and_cancel(self):
+		self.assertEqual(self.employee_ctc(), self.first.ctc)
+
+		second = self.make_assignment(getdate(), 60000)
+		self.assertNotEqual(second.ctc, self.first.ctc)
+		self.assertEqual(self.employee_ctc(), second.ctc)
+
+		second.cancel()
+		self.assertEqual(self.employee_ctc(), self.first.ctc)
+
+	def test_future_assignment_changes_ctc_on_its_start_date(self):
+		future = self.make_assignment(add_months(getdate(), 1), 70000)
+		self.assertEqual(self.employee_ctc(), self.first.ctc)
+
+		update_ctc_of_assignments_starting_today(future.from_date)
+		self.assertEqual(self.employee_ctc(), future.ctc)

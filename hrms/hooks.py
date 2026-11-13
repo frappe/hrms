@@ -275,6 +275,7 @@ scheduler_events = {
 		"hrms.hr.doctype.interview.interview.send_daily_feedback_reminder",
 		"hrms.hr.doctype.shift_assignment.shift_assignment.mark_expired_shift_assignments_as_inactive",
 		"hrms.hr.doctype.job_opening.job_opening.close_expired_job_openings",
+		"hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment.update_ctc_of_assignments_starting_today",
 		"hrms.telemetry.capture_daily_attendance_pulse",
 	],
 	"daily_long": [
