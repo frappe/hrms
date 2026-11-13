@@ -143,7 +143,7 @@ def get_directory(company: str) -> list[dict]:
 	)
 	names = [employee.name for employee in employees]
 	leave_status = get_leave_status({name: company for name in names})
-	access = get_profile_access(names)
+	can_email = get_email_access(names)
 	today = getdate()
 	# only whether someone joined recently, not the date
 	joined_after = add_days(today, -NEW_JOINER_DAYS)
@@ -155,7 +155,7 @@ def get_directory(company: str) -> list[dict]:
 
 	return [
 		frappe._dict(
-			get_person(employee, leave_status, access),
+			get_person(employee, leave_status, can_email),
 			manager=employee.reports_to,
 			new_joiner=bool(employee.date_of_joining and getdate(employee.date_of_joining) > joined_after),
 			celebrating=get_celebration(employee, today, reminders),
@@ -247,29 +247,29 @@ def get_nodes(company: str, companies: set[str], employees: list[frappe._dict]) 
 		{name: company for name in names}
 		| {manager.name: manager.company for manager in visible_managers.values()}
 	)
-	access = get_profile_access(names + list(visible_managers))
+	can_email = get_email_access(names + list(visible_managers))
 
 	return [
 		frappe._dict(
-			get_person(employee, leave_status, access),
+			get_person(employee, leave_status, can_email),
 			reports=len(teams.get(employee.name, [])),
 			team=[
 				{"id": member.name, "name": member.employee_name, "image": member.image}
 				for member in teams.get(employee.name, [])[:TEAM_PREVIEW_SIZE]
 			],
-			manager=get_manager_card(managers.get(employee.reports_to), companies, leave_status, access),
+			manager=get_manager_card(managers.get(employee.reports_to), companies, leave_status, can_email),
 		)
 		for employee in employees
 	]
 
 
 def get_manager_card(
-	manager: frappe._dict | None, companies: set[str], leave_status: dict[str, dict], access: frappe._dict
+	manager: frappe._dict | None, companies: set[str], leave_status: dict[str, dict], can_email: set[str]
 ) -> frappe._dict | None:
 	if not manager:
 		return None
 	if is_visible(manager, companies):
-		return frappe._dict(get_person(manager, leave_status, access), company=manager.company)
+		return frappe._dict(get_person(manager, leave_status, can_email), company=manager.company)
 	return frappe._dict(
 		id=manager.name, name=manager.employee_name, image=manager.image, company=manager.company
 	)
@@ -279,20 +279,16 @@ def is_visible(manager: frappe._dict, companies: set[str]) -> bool:
 	return manager.status == "Active" and manager.company in companies
 
 
-def get_profile_access(names: list[str]) -> frappe._dict:
-	"""Whose profile the user may open, and whom desk's composer may email for them.
-
-	Both need permission on the person's Employee record, which a user permission limits.
-	"""
-	return frappe._dict(
-		readable=set(frappe.get_list("Employee", filters={"name": ["in", names]}, pluck="name", limit=0)),
-		email=frappe.has_permission("Employee", ptype="email"),
-	)
+def get_email_access(names: list[str]) -> set[str]:
+	"""Whom desk's composer may email for the user. It needs permission on the person's Employee
+	record, which a user permission limits."""
+	if not frappe.has_permission("Employee", ptype="email"):
+		return set()
+	return set(frappe.get_list("Employee", filters={"name": ["in", names]}, pluck="name", limit=0))
 
 
-def get_person(employee: frappe._dict, leave_status: dict[str, dict], access: frappe._dict) -> frappe._dict:
+def get_person(employee: frappe._dict, leave_status: dict[str, dict], can_email: set[str]) -> frappe._dict:
 	"""One person's card, with their manager's hover card"""
-	can_open = employee.name in access.readable
 	return frappe._dict(
 		id=employee.name,
 		name=employee.employee_name,
@@ -302,8 +298,7 @@ def get_person(employee: frappe._dict, leave_status: dict[str, dict], access: fr
 		branch=employee.branch,
 		email=employee.company_email,
 		leave=leave_status.get(employee.name),
-		can_open=can_open,
-		can_email=can_open and access.email,
+		can_email=employee.name in can_email,
 	)
 
 
