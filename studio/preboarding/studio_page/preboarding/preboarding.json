@@ -422,7 +422,9 @@
                "componentId": "button-47",
                "componentName": "Button",
                "componentProps": {
+                "icon": "lucide-pencil",
                 "label": "Edit",
+                "tooltip": "Edit",
                 "variant": "ghost"
                },
                "componentSlots": {}
@@ -438,7 +440,9 @@
                "componentId": "button-48",
                "componentName": "Button",
                "componentProps": {
+                "icon": "lucide-trash-2",
                 "label": "Remove",
+                "tooltip": "Remove",
                 "variant": "ghost"
                },
                "componentSlots": {}
@@ -604,7 +608,9 @@
                "componentId": "button-59",
                "componentName": "Button",
                "componentProps": {
+                "icon": "lucide-pencil",
                 "label": "Edit",
+                "tooltip": "Edit",
                 "variant": "ghost"
                },
                "componentSlots": {}
@@ -620,7 +626,9 @@
                "componentId": "button-60",
                "componentName": "Button",
                "componentProps": {
+                "icon": "lucide-trash-2",
                 "label": "Remove",
+                "tooltip": "Remove",
                 "variant": "ghost"
                },
                "componentSlots": {}
