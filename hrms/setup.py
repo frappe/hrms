@@ -27,6 +27,7 @@ def after_install():
 	create_default_role_profiles()
 	run_post_install_patches()
 	add_default_hr_permissions()
+	restrict_employee_ctc()
 
 	if is_new_hr_site():
 		set_hrms_as_default_app()
@@ -38,6 +39,7 @@ def before_uninstall():
 	frappe.db.delete("Property Setter", EMPLOYEE_DETAILS_TAB_LABEL)
 	for setter in get_employee_layout_setters():
 		frappe.db.delete("Property Setter", setter)
+	frappe.db.delete("Property Setter", EMPLOYEE_CTC_PERMLEVEL)
 	delete_company_fixtures()
 
 
@@ -155,6 +157,30 @@ def get_employee_layout_setters() -> list[dict]:
 	return setters
 
 
+EMPLOYEE_CTC_PERMLEVEL = {"doc_type": "Employee", "field_name": "ctc", "property": "permlevel"}
+
+# at permission level 1, CTC is hidden from other roles that can open an Employee, like a custom manager role;
+# the Employee role sees only their own record
+CTC_ROLE_PERMISSIONS = {
+	"HR Manager": {"write": 1},
+	"HR User": {"write": 1},
+	"Employee": {},
+}
+
+
+def restrict_employee_ctc():
+	from frappe.custom.doctype.property_setter.property_setter import make_property_setter
+
+	make_property_setter("Employee", "ctc", "permlevel", 1, "Int", validate_fields_for_doctype=False)
+
+	for role, ptypes in CTC_ROLE_PERMISSIONS.items():
+		if not frappe.db.exists("Custom DocPerm", {"parent": "Employee", "role": role, "permlevel": 1}):
+			add_permission("Employee", role, permlevel=1)
+
+		for ptype, value in ptypes.items():
+			update_permission_property("Employee", role, permlevel=1, ptype=ptype, value=value)
+
+
 def get_regional_custom_fields():
 	"""Return the custom fields that the country of each company adds.
 
@@ -190,6 +216,7 @@ def get_customizations():
 			{"doc_type": "Salary Slip", "field_name": "rounded_total", "property": "print_hide"},
 			EMPLOYEE_DETAILS_TAB_LABEL,
 			*get_employee_layout_setters(),
+			EMPLOYEE_CTC_PERMLEVEL,
 		],
 		"Custom DocPerm": [
 			{"parent": doctype, "role": role}
