@@ -290,6 +290,9 @@ class TestEmployeePreboarding(HRMSTestSuite):
 
 	def test_employee_is_created_from_the_preboarding(self):
 		preboarding = create_employee_preboarding(submit=True)
+		frappe.get_doc({"doctype": "Employment Type", "employee_type_name": "_Test Employment Type"}).insert(
+			ignore_if_duplicate=True
+		)
 		frappe.db.set_value("Job Offer", preboarding.job_offer, "employment_type", "_Test Employment Type")
 
 		employee = map_employee(preboarding)
