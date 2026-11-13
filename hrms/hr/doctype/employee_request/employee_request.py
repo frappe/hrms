@@ -18,6 +18,7 @@ REVIEWER_ROLES = ("HR Manager", "HR User", "System Manager")
 CANDIDATE_LINK_DOCTYPES = ("Gender", "Salutation")
 REVIEW_SKIPPED_TABS = ("documents_tab", "request_tab")
 NOT_COPIED_FIELDS = ("employee_name",)
+PASSPORT_FIELDS = ("passport_number", "place_of_issue", "date_of_issue", "valid_upto")
 
 
 class EmployeeRequest(Document):
@@ -55,6 +56,7 @@ class EmployeeRequest(Document):
 		external_work_history: DF.Table[EmployeeExternalWorkHistory]
 		first_name: DF.Data
 		gender: DF.Link
+		has_passport: DF.Check
 		iban: DF.Data | None
 		image: DF.AttachImage | None
 		last_name: DF.Data | None
@@ -79,6 +81,7 @@ class EmployeeRequest(Document):
 		self.flags.ignore_mandatory = not self.flags.submitting_details
 		self.validate_document_list()
 		self.make_attachments_private()
+		self.clear_passport_details()
 
 	@frappe.whitelist(methods=["POST"])
 	def submit_details(self) -> None:
@@ -88,6 +91,10 @@ class EmployeeRequest(Document):
 		self.save()
 		self.db_set("submitted_on", now_datetime(), notify=True)
 		self.notify_reviewer()
+
+	def clear_passport_details(self):
+		if not self.has_passport:
+			self.update(dict.fromkeys(PASSPORT_FIELDS))
 
 	def validate_required_documents(self):
 		missing = [row.document_name for row in self.documents if row.required and not row.attachment]

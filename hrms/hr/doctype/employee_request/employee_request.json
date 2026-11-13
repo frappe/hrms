@@ -43,6 +43,8 @@
   "bank_cb",
   "iban",
   "passport_section",
+  "has_passport",
+  "passport_details_section",
   "passport_number",
   "place_of_issue",
   "passport_cb",
@@ -243,6 +245,18 @@
    "fieldname": "passport_section",
    "fieldtype": "Section Break",
    "label": "Passport"
+  },
+  {
+   "default": "0",
+   "fieldname": "has_passport",
+   "fieldtype": "Check",
+   "label": "Do you have a passport?"
+  },
+  {
+   "depends_on": "has_passport",
+   "fieldname": "passport_details_section",
+   "fieldtype": "Section Break",
+   "hide_border": 1
   },
   {
    "fieldname": "passport_number",
