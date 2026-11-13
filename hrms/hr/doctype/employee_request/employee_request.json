@@ -36,6 +36,10 @@
   "emergency_cb",
   "emergency_phone_number",
   "relation",
+  "experience_tab",
+  "bio",
+  "education",
+  "external_work_history",
   "bank_tab",
   "bank_section",
   "bank_name",
@@ -50,10 +54,6 @@
   "passport_cb",
   "date_of_issue",
   "valid_upto",
-  "experience_tab",
-  "bio",
-  "education",
-  "external_work_history",
   "documents_tab",
   "documents",
   "request_tab",
@@ -212,6 +212,29 @@
    "label": "Relation"
   },
   {
+   "fieldname": "experience_tab",
+   "fieldtype": "Tab Break",
+   "label": "Education and Experience"
+  },
+  {
+   "description": "Short biography for website and other publications.",
+   "fieldname": "bio",
+   "fieldtype": "Text Editor",
+   "label": "Bio / Cover Letter"
+  },
+  {
+   "fieldname": "education",
+   "fieldtype": "Table",
+   "label": "Education",
+   "options": "Employee Education"
+  },
+  {
+   "fieldname": "external_work_history",
+   "fieldtype": "Table",
+   "label": "External Work History",
+   "options": "Employee External Work History"
+  },
+  {
    "fieldname": "bank_tab",
    "fieldtype": "Tab Break",
    "label": "Bank and ID"
@@ -281,29 +304,6 @@
    "fieldname": "valid_upto",
    "fieldtype": "Date",
    "label": "Valid Up To"
-  },
-  {
-   "fieldname": "experience_tab",
-   "fieldtype": "Tab Break",
-   "label": "Education and Experience"
-  },
-  {
-   "description": "Short biography for website and other publications.",
-   "fieldname": "bio",
-   "fieldtype": "Text Editor",
-   "label": "Bio / Cover Letter"
-  },
-  {
-   "fieldname": "education",
-   "fieldtype": "Table",
-   "label": "Education",
-   "options": "Employee Education"
-  },
-  {
-   "fieldname": "external_work_history",
-   "fieldtype": "Table",
-   "label": "External Work History",
-   "options": "Employee External Work History"
   },
   {
    "fieldname": "documents_tab",
