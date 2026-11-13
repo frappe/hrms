@@ -1756,9 +1756,6 @@ class TestSalarySlip(FrappeTestCase):
 
 		frappe.db.rollback()
 
-<<<<<<< HEAD
-	@change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
-=======
 	def test_tax_in_joining_month_when_tax_depends_on_payment_days(self):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
@@ -1791,6 +1788,8 @@ class TestSalarySlip(FrappeTestCase):
 		self.assertEqual(rounded(salary_slip.current_month_income_tax), tax)
 		self.assertEqual(rounded(salary_slip.income_tax_deducted_till_date), tax)
 
+		frappe.db.rollback()
+
 	def test_tax_in_relieving_month_when_tax_depends_on_payment_days(self):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 
@@ -1817,8 +1816,9 @@ class TestSalarySlip(FrappeTestCase):
 		tax = next(d.amount for d in salary_slip.deductions if d.salary_component == "TDS")
 		self.assertEqual(tax, rounded(salary_slip.total_structured_tax_amount))
 
-	@HRMSTestSuite.change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
->>>>>>> 5e39fae (fix(salary_slip): count a partial month by its payment days when splitting income tax)
+		frappe.db.rollback()
+
+	@change_settings("Payroll Settings", {"payroll_based_on": "Leave"})
 	def test_lwp_calculation_based_on_relieving_date(self):
 		emp_id = make_employee("test_lwp_based_on_relieving_date@salary.com")
 		frappe.db.set_value("Employee", emp_id, {"relieving_date": None, "status": "Active"})
