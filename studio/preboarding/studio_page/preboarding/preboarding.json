@@ -874,19 +874,6 @@
            },
            "componentSlots": {},
            "visibilityCondition": "{{ missing.length }}"
-          },
-          {
-           "baseStyles": {
-            "color": "var(--ink-gray-7)"
-           },
-           "componentId": "textblock-38",
-           "componentName": "TextBlock",
-           "componentProps": {
-            "fontSize": "text-base",
-            "text": "Everything is filled in. Submit to let HR know your details are ready."
-           },
-           "componentSlots": {},
-           "visibilityCondition": "{{ !missing.length && !isSubmitted }}"
           }
          ],
          "componentId": "div-39",
@@ -986,6 +973,38 @@
            "slotName": "default"
           }
          }
+        },
+        {
+         "blockName": "Submit dialog",
+         "componentId": "dialog-70",
+         "componentName": "Dialog",
+         "componentProps": {
+          "actions": "{{ submitActions }}",
+          "open": {
+           "$type": "variable",
+           "name": "submitOpen"
+          },
+          "title": "Submit your details?"
+         },
+         "componentSlots": {
+          "default": {
+           "slotContent": [
+            {
+             "baseStyles": {
+              "color": "var(--ink-gray-7)"
+             },
+             "componentId": "textblock-71",
+             "componentName": "TextBlock",
+             "componentProps": {
+              "fontSize": "text-base",
+              "text": "HR will be told that your details are ready for review."
+             },
+             "componentSlots": {}
+            }
+           ],
+           "slotName": "default"
+          }
+         }
         }
        ],
        "componentId": "div-68",
@@ -1019,7 +1038,7 @@
  "frappe_app": "hrms",
  "idx": 0,
  "is_standard": 1,
- "modified": "2026-11-03 14:16:23.336478",
+ "modified": "2026-11-13 17:03:36.434749",
  "modified_by": "Administrator",
  "name": "preboarding",
  "owner": "Administrator",

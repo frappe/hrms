@@ -27,6 +27,7 @@ export default function setup(context) {
 	const formTabs = getFormTabs(boot);
 	const saving = ref(false);
 	const dialogOpen = ref(false);
+	const submitOpen = ref(false);
 	const dialogTable = ref(null);
 	const dialogIndex = ref(null);
 	const dialogRow = ref({});
@@ -74,6 +75,7 @@ export default function setup(context) {
 	}
 
 	async function submitDetails() {
+		submitOpen.value = false;
 		if (!(await save())) return;
 		try {
 			await request.submit_details.submit();
@@ -106,6 +108,7 @@ export default function setup(context) {
 		isLastStep,
 		missing,
 		dialogOpen,
+		submitOpen,
 		dialogRow,
 		isDocumentsStep: computed(() => stepTitle.value === DOCUMENTS_STEP),
 		isSubmitted: computed(() => Boolean(request?.doc?.submitted_on)),
@@ -131,7 +134,11 @@ export default function setup(context) {
 		dialogActions: computed(() => [
 			{ label: "Save", variant: "solid", loading: saving.value, onClick: () => saveRow() },
 		]),
-		primaryAction: () => (isLastStep.value ? submitDetails() : next()),
+		submitActions: [
+			{ label: "Submit", variant: "solid", onClick: () => submitDetails() },
+			{ label: "Cancel", onClick: () => (submitOpen.value = false) },
+		],
+		primaryAction: () => (isLastStep.value ? (submitOpen.value = true) : next()),
 		back: () => (step.value -= 1),
 		rowTitle: (fieldname, row) => ENTRY_TABLES[fieldname].title(row) || "Untitled",
 		rowSubtitle: (fieldname, row) =>
