@@ -76,12 +76,28 @@ frappe.ui.form.on(cur_frm.doctype, {
 				"Table",
 			];
 
+			const promotion_fields = [
+				"grade",
+				"designation",
+				"department",
+				"branch",
+				"reports_to",
+				"employment_type",
+				"payroll_cost_center",
+				"leave_approver",
+				"expense_approver",
+				"shift_request_approver",
+				"notice_number_of_days",
+			];
+			const is_promotion = frm.doctype === "Employee Promotion";
+
 			frappe.model.with_doctype("Employee", () => {
 				const field_label_map = {};
 				frappe.get_meta("Employee").fields.forEach((d) => {
 					field_label_map[d.fieldname] =
 						__(d.label, null, d.parent) + ` (${d.fieldname})`;
 					if (
+						(!is_promotion || promotion_fields.includes(d.fieldname)) &&
 						!exclude_field_types.includes(d.fieldtype) &&
 						!exclude_fields.includes(d.fieldname) &&
 						!d.hidden &&
@@ -184,6 +200,7 @@ var add_to_details = function (frm, d, table) {
 			new: data.new,
 		});
 		frm.refresh_field(table);
+		frm.trigger("employee_property_added");
 
 		frm.fields_dict[table].grid.wrapper.find(".grid-add-row").hide();
 
