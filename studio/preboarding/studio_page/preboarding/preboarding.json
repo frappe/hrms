@@ -474,10 +474,28 @@
            "componentName": "Repeater",
            "componentProps": {
             "data": "{{ request.doc.education }}",
-            "dataKey": "idx",
-            "emptyStateMessage": "No education added yet."
+            "dataKey": "idx"
            },
-           "componentSlots": {}
+           "componentSlots": {},
+           "visibilityCondition": "{{ request.doc.education?.length }}"
+          },
+          {
+           "baseStyles": {
+            "background": "var(--surface-gray-1)",
+            "borderRadius": "8px",
+            "color": "var(--ink-gray-5)",
+            "marginTop": "16px",
+            "padding": "24px 16px",
+            "textAlign": "center"
+           },
+           "componentId": "textblock-73",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "fontSize": "text-base",
+            "text": "No education added yet."
+           },
+           "componentSlots": {},
+           "visibilityCondition": "{{ !request.doc.education?.length }}"
           }
          ],
          "classes": [
@@ -670,10 +688,28 @@
            "componentName": "Repeater",
            "componentProps": {
             "data": "{{ request.doc.external_work_history }}",
-            "dataKey": "idx",
-            "emptyStateMessage": "No work experience added yet."
+            "dataKey": "idx"
            },
-           "componentSlots": {}
+           "componentSlots": {},
+           "visibilityCondition": "{{ request.doc.external_work_history?.length }}"
+          },
+          {
+           "baseStyles": {
+            "background": "var(--surface-gray-1)",
+            "borderRadius": "8px",
+            "color": "var(--ink-gray-5)",
+            "marginTop": "16px",
+            "padding": "24px 16px",
+            "textAlign": "center"
+           },
+           "componentId": "textblock-74",
+           "componentName": "TextBlock",
+           "componentProps": {
+            "fontSize": "text-base",
+            "text": "No work experience added yet."
+           },
+           "componentSlots": {},
+           "visibilityCondition": "{{ !request.doc.external_work_history?.length }}"
           }
          ],
          "classes": [
