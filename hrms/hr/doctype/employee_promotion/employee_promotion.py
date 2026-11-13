@@ -123,10 +123,14 @@ class EmployeePromotion(Document):
 			frappe.throw(_("Submit the Employee Promotion before creating a Salary Structure Assignment"))
 		if not (self.salary_structure and self.revised_base):
 			frappe.throw(_("Set the Salary Structure and Revised Base first"))
-		if self.new_salary_structure_assignment:
+		# the row lock makes a second click wait for the first, then see its assignment
+		existing = frappe.db.get_value(
+			"Employee Promotion", self.name, "new_salary_structure_assignment", for_update=True
+		)
+		if existing:
 			frappe.throw(
 				_("Salary Structure Assignment {0} is already created for this promotion").format(
-					get_link_to_form("Salary Structure Assignment", self.new_salary_structure_assignment)
+					get_link_to_form("Salary Structure Assignment", existing)
 				)
 			)
 

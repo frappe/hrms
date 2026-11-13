@@ -30,7 +30,12 @@ frappe.ui.form.on("Employee Promotion", {
 		frm.add_custom_button(
 			__("Salary Structure Assignment"),
 			() => {
-				frm.call("make_salary_structure_assignment").then((r) => {
+				frm.call({
+					method: "make_salary_structure_assignment",
+					doc: frm.doc,
+					freeze: true,
+					freeze_message: __("Creating Salary Structure Assignment..."),
+				}).then((r) => {
 					frappe.set_route("Form", "Salary Structure Assignment", r.message);
 				});
 			},
