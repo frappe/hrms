@@ -76,6 +76,7 @@
     {
      "baseStyles": {
       "display": "flex",
+      "flex": "1",
       "flexDirection": "column",
       "gap": "24px",
       "margin": "0px auto",
@@ -892,68 +893,6 @@
          "visibilityCondition": "{{ isLastStep }}"
         },
         {
-         "baseStyles": {
-          "alignItems": "center",
-          "display": "flex",
-          "flexDirection": "row",
-          "gap": "8px",
-          "paddingTop": "8px"
-         },
-         "blockName": "Footer",
-         "children": [
-          {
-           "componentEvents": {
-            "click": {
-             "action": "Run Script",
-             "event": "click",
-             "script": "back()"
-            }
-           },
-           "componentId": "button-40",
-           "componentName": "Button",
-           "componentProps": {
-            "label": "Back",
-            "variant": "subtle"
-           },
-           "componentSlots": {},
-           "visibilityCondition": "{{ step > 0 }}"
-          },
-          {
-           "baseStyles": {
-            "flex": "1"
-           },
-           "componentId": "div-41",
-           "componentName": "div",
-           "componentProps": {},
-           "componentSlots": {},
-           "originalElement": "div"
-          },
-          {
-           "componentEvents": {
-            "click": {
-             "action": "Run Script",
-             "event": "click",
-             "script": "primaryAction()"
-            }
-           },
-           "componentId": "button-42",
-           "componentName": "Button",
-           "componentProps": {
-            "disabled": "{{ isLastStep && missing.length > 0 }}",
-            "label": "{{ primaryLabel }}",
-            "loading": "{{ saving }}",
-            "variant": "solid"
-           },
-           "componentSlots": {}
-          }
-         ],
-         "componentId": "div-43",
-         "componentName": "div",
-         "componentProps": {},
-         "componentSlots": {},
-         "originalElement": "div"
-        },
-        {
          "blockName": "Entry dialog",
          "componentId": "dialog-23",
          "componentName": "Dialog",
@@ -1031,6 +970,95 @@
       "padding": "12px 12px 40px 12px"
      },
      "originalElement": "div"
+    },
+    {
+     "baseStyles": {
+      "background": "var(--surface-base)",
+      "borderColor": "var(--outline-gray-1)",
+      "borderStyle": "solid",
+      "borderWidth": "1px 0px 0px 0px",
+      "bottom": "0px",
+      "padding": "12px 0px",
+      "position": "sticky",
+      "zIndex": "10"
+     },
+     "blockName": "Footer bar",
+     "children": [
+      {
+       "baseStyles": {
+        "alignItems": "center",
+        "display": "flex",
+        "flexDirection": "row",
+        "gap": "8px",
+        "margin": "0px auto",
+        "maxWidth": "720px",
+        "padding": "0px 20px",
+        "width": "100%"
+       },
+       "blockName": "Footer",
+       "children": [
+        {
+         "componentEvents": {
+          "click": {
+           "action": "Run Script",
+           "event": "click",
+           "script": "back()"
+          }
+         },
+         "componentId": "button-40",
+         "componentName": "Button",
+         "componentProps": {
+          "label": "Back",
+          "variant": "subtle"
+         },
+         "componentSlots": {},
+         "visibilityCondition": "{{ step > 0 }}"
+        },
+        {
+         "baseStyles": {
+          "flex": "1"
+         },
+         "componentId": "div-41",
+         "componentName": "div",
+         "componentProps": {},
+         "componentSlots": {},
+         "originalElement": "div"
+        },
+        {
+         "componentEvents": {
+          "click": {
+           "action": "Run Script",
+           "event": "click",
+           "script": "primaryAction()"
+          }
+         },
+         "componentId": "button-42",
+         "componentName": "Button",
+         "componentProps": {
+          "disabled": "{{ isLastStep && missing.length > 0 }}",
+          "label": "{{ primaryLabel }}",
+          "loading": "{{ saving }}",
+          "variant": "solid"
+         },
+         "componentSlots": {}
+        }
+       ],
+       "componentId": "div-43",
+       "componentName": "div",
+       "componentProps": {},
+       "componentSlots": {},
+       "mobileStyles": {
+        "padding": "0px 12px"
+       },
+       "originalElement": "div"
+      }
+     ],
+     "componentId": "div-72",
+     "componentName": "div",
+     "componentProps": {},
+     "componentSlots": {},
+     "originalElement": "div",
+     "visibilityCondition": "{{ request?.doc }}"
     }
    ],
    "componentId": "root",
