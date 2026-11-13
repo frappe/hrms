@@ -1,0 +1,31 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "condition": "doc.status==\"Open\" and doc.docstatus<1 and frappe.utils.cint(doc.follow_via_email)",
+ "condition_type": "Python",
+ "creation": "2026-08-28 17:07:05.540345",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Leave Application",
+ "email_template": "Leave Application Notification",
+ "enabled": 1,
+ "event": "Save",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "",
+ "minutes_offset": 0,
+ "modified": "2026-09-22 16:26:12.881132",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Leave Application Pending Approval",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_document_field": "leave_approver"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "subject": ""
+}

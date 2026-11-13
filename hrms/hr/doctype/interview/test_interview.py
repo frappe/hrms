@@ -6,6 +6,7 @@ import os
 
 import frappe
 from frappe import _
+from frappe.permissions import add_user_permission
 from frappe.utils import add_days, get_datetime, get_time, getdate, nowtime
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -55,6 +56,21 @@ class TestInterview(HRMSTestSuite):
 			"Email Queue", filters={"message": ("like", "%Your Interview session is rescheduled from%")}
 		)
 		self.assertIsNotNone(notification)
+
+	def test_rescheduling_to_same_timings_sends_no_notification(self):
+		interview = create_interview_and_dependencies(
+			create_job_applicant().name,
+			scheduled_on=add_days(getdate(), 2),
+			from_time="10:00:00",
+			to_time="11:00:00",
+		)
+		interview.reload()
+		self.addCleanup(frappe.set_user, "Administrator")
+		frappe.set_user("test_interviewer1@example.com")
+
+		interview.reschedule_interview(interview.scheduled_on, from_time="10:00:00", to_time="11:00:00")
+
+		self.assertFalse(frappe.db.exists("Email Queue", {"reference_name": interview.name}))
 
 	def test_notification_for_scheduling(self):
 		from hrms.hr.doctype.interview.interview import send_interview_reminder
@@ -185,6 +201,19 @@ class TestInterview(HRMSTestSuite):
 		]
 
 		self.assertEqual(feedback, expected_data)
+
+	def test_get_feedback_requires_interview_access(self):
+		interview = create_interview_and_dependencies(create_job_applicant().name)
+		other_applicant = create_job_applicant(
+			applicant_name="_Test Other Applicant", email_id="test_other_applicant@example.com"
+		)
+		interviewer = "test_restricted_interviewer@example.com"
+		create_user(interviewer, "Interviewer")
+		add_user_permission("Job Applicant", other_applicant.name, interviewer)
+
+		frappe.set_user(interviewer)
+		self.assertRaises(frappe.PermissionError, get_feedback, interview.name)
+		frappe.set_user("Administrator")
 
 	def test_job_applicant_status_update_on_interview_submit(self):
 		job_applicant = create_job_applicant()

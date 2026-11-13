@@ -16,7 +16,10 @@ class TestProjectProfitability(HRMSTestSuite):
 		emp = make_employee("test_employee_9@salary.com", company="_Test Company")
 
 		frappe.db.set_single_value("HR Settings", "standard_working_hours", 8)
-		frappe.db.set_single_value("Payroll Settings", "include_holidays_in_total_working_days", 0)
+		# the timesheet (and the slip built from it) is dated today; counting holidays
+		# keeps that single-day slip at one working day so the test does not fail when
+		# it happens to run on a weekend
+		frappe.db.set_single_value("Payroll Settings", "include_holidays_in_total_working_days", 1)
 
 		if not frappe.db.exists("Salary Component", "Timesheet Component"):
 			frappe.get_doc(

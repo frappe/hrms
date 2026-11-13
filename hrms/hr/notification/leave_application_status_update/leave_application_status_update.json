@@ -1,0 +1,30 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "condition": "frappe.utils.cint(doc.follow_via_email)",
+ "condition_type": "Python",
+ "creation": "2026-08-28 17:10:18.434569",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "Leave Application",
+ "email_template": "Leave Application Notification",
+ "enabled": 1,
+ "event": "Submit",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "",
+ "minutes_offset": 0,
+ "modified": "2026-09-22 16:27:40.489215",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Leave Application Status Update",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_document_field": "employee_email"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0
+}

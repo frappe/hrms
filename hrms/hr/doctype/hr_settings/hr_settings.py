@@ -35,9 +35,7 @@ class HRSettings(Document):
 		hiring_sender: DF.Link | None
 		hiring_sender_email: DF.Data | None
 		interview_reminder_template: DF.Link | None
-		leave_approval_notification_template: DF.Link | None
 		leave_approver_mandatory_in_leave_application: DF.Check
-		leave_status_notification_template: DF.Link | None
 		prevent_self_expense_approval: DF.Check
 		prevent_self_leave_approval: DF.Check
 		remind_before: DF.Time | None
@@ -48,11 +46,11 @@ class HRSettings(Document):
 		send_holiday_reminders: DF.Check
 		send_interview_feedback_reminder: DF.Check
 		send_interview_reminder: DF.Check
-		send_leave_notification: DF.Check
 		send_work_anniversary_reminders: DF.Check
 		sender: DF.Link | None
 		sender_email: DF.Data | None
 		show_leaves_of_all_department_members_in_calendar: DF.Check
+		show_org_chart_to_all_employees: DF.Check
 		standard_working_hours: DF.Float
 		unlink_payment_on_cancellation_of_employee_advance: DF.Check
 	# end: auto-generated types

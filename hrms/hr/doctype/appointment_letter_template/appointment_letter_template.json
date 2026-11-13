@@ -9,41 +9,35 @@
  "engine": "InnoDB",
  "field_order": [
   "template_name",
-  "introduction",
-  "terms",
-  "closing_notes"
+  "is_default",
+  "letter_body"
  ],
  "fields": [
-  {
-   "fieldname": "introduction",
-   "fieldtype": "Long Text",
-   "in_list_view": 1,
-   "label": "Introduction",
-   "reqd": 1
-  },
-  {
-   "fieldname": "closing_notes",
-   "fieldtype": "Text",
-   "label": "Closing Notes"
-  },
-  {
-   "fieldname": "terms",
-   "fieldtype": "Table",
-   "label": "Terms",
-   "options": "Appointment Letter content",
-   "reqd": 1
-  },
   {
    "fieldname": "template_name",
    "fieldtype": "Data",
    "label": "Template Name",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "description": "Use placeholders like {{ ctc }} or {{ appointment_date }}.",
+   "fieldname": "letter_body",
+   "fieldtype": "Text Editor",
+   "label": "Letter Body",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_default",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Default"
   }
  ],
  "icon": "file-text",
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-11-06 10:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appointment Letter Template",

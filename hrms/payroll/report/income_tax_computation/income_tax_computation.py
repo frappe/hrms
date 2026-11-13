@@ -126,6 +126,7 @@ class IncomeTaxComputationReport:
 							"salary_structure": d.salary_structure,
 							"income_tax_slab": d.income_tax_slab,
 							"allow_tax_exemption": tax_slab.allow_tax_exemption,
+							"total_exemption": 0.0,
 							"taxable_earnings_till_date": flt(d.taxable_earnings_till_date)
 							if opening_entries_applicable
 							else 0.0,

@@ -4,12 +4,12 @@
  "docstatus": 0,
  "doctype": "Page",
  "idx": 0,
- "modified": "2026-01-24 18:44:07.197592",
+ "modified": "2026-10-26 18:27:27.859717",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "organizational-chart",
  "owner": "Administrator",
- "page_name": "Organizational Chart",
+ "page_name": "organizational-chart",
  "roles": [
   {
    "role": "HR User"
@@ -22,8 +22,10 @@
   }
  ],
  "script": null,
+ "shared_page": 0,
  "standard": "Yes",
  "style": null,
  "system_page": 0,
- "title": "Organizational Chart"
+ "title": "Organizational Chart",
+ "type": "Frappe UI"
 }

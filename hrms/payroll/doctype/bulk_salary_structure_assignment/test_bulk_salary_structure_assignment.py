@@ -2,6 +2,7 @@
 # See license.txt
 
 import frappe
+from frappe.permissions import add_user_permission
 from frappe.utils import getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -11,7 +12,7 @@ from hrms.payroll.doctype.bulk_salary_structure_assignment.bulk_salary_structure
 )
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 from hrms.tests.test_utils import create_company, create_department, create_employee_grade
-from hrms.tests.utils import HRMSTestSuite
+from hrms.tests.utils import HRMSTestSuite, make_user
 
 
 class TestBulkSalaryStructureAssignment(HRMSTestSuite):
@@ -98,3 +99,31 @@ class TestBulkSalaryStructureAssignment(HRMSTestSuite):
 		)
 		self.assertEqual(ssa2.base, 40000)
 		self.assertEqual(ssa2.variable, 0)
+
+	def test_bulk_assign_structure_respects_employee_user_permissions(self):
+		today = getdate()
+		salary_structure = make_salary_structure("Salary Structure 1", "Monthly", company="_Test Company")
+		hr_user = make_user("hr_user@bssa.com", "HR User")
+		add_user_permission("Employee", self.emp1, hr_user)
+
+		args = {
+			"doctype": "Bulk Salary Structure Assignment",
+			"salary_structure": salary_structure.name,
+			"from_date": today,
+			"company": "_Test Company",
+		}
+		bulk_assignment = BulkSalaryStructureAssignment(args)
+
+		frappe.set_user(hr_user)
+		employees = bulk_assignment.get_employees([])
+		bulk_assignment.bulk_assign_structure(
+			[
+				{"employee": self.emp1, "base": 50000, "variable": 0},
+				{"employee": self.emp2, "base": 40000, "variable": 0},
+			]
+		)
+		frappe.set_user("Administrator")
+
+		self.assertEqual([d.employee for d in employees], [self.emp1])
+		self.assertTrue(frappe.db.exists("Salary Structure Assignment", {"employee": self.emp1}))
+		self.assertFalse(frappe.db.exists("Salary Structure Assignment", {"employee": self.emp2}))

@@ -7,6 +7,7 @@ from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.permissions import add_permission, update_permission_property
 
+from hrms.hr.doctype.appointment_letter_template.appointment_letter_template import create_default_template
 from hrms.overrides.company import delete_company_fixtures
 from hrms.subscription_utils import is_new_hr_site, set_hrms_as_default_app
 
@@ -16,6 +17,7 @@ def after_install():
 	rename_employee_details_tab()
 	create_salary_slip_loan_fields()
 	make_fixtures()
+	create_default_template()
 	setup_notifications()
 	update_hr_defaults()
 	add_non_standard_user_types()
@@ -533,18 +535,12 @@ def setup_notifications():
 	records = [
 		{
 			"doctype": "Email Template",
-			"name": _("Leave Approval Notification"),
+			"name": _("Leave Application Notification"),
 			"response": response,
-			"subject": _("Leave Approval Notification"),
-			"owner": frappe.session.user,
-		}
-	]
-	records += [
-		{
-			"doctype": "Email Template",
-			"name": _("Leave Status Notification"),
-			"response": response,
-			"subject": _("Leave Status Notification"),
+			"subject": (
+				'Leave Application {% if status == "Open" %}Pending Approval'
+				"{% else %}{{ status }}{% endif %}: {{ name }}"
+			),
 			"owner": frappe.session.user,
 		}
 	]
@@ -595,8 +591,6 @@ def setup_notifications():
 def update_hr_defaults():
 	hr_settings = frappe.get_doc("HR Settings")
 	hr_settings.emp_created_by = "Naming Series"
-	hr_settings.leave_approval_notification_template = _("Leave Approval Notification")
-	hr_settings.leave_status_notification_template = _("Leave Status Notification")
 
 	hr_settings.send_interview_reminder = 1
 	hr_settings.interview_reminder_template = _("Interview Reminder")
