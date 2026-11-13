@@ -206,10 +206,14 @@ class TestEmployeePromotion(HRMSTestSuite):
 		employee, _assignment = setup_employee_with_assignment("promotion_once@example.com")
 		promotion = make_promotion(employee, revised_base=60000)
 		promotion.submit()
+		stale_copy = frappe.get_doc("Employee Promotion", promotion.name)
 		promotion.make_salary_structure_assignment()
 
 		self.assertRaisesRegex(
 			frappe.ValidationError, "already created", promotion.make_salary_structure_assignment
+		)
+		self.assertRaisesRegex(
+			frappe.ValidationError, "already created", stale_copy.make_salary_structure_assignment
 		)
 
 	def test_cancel_deletes_draft_assignment(self):
