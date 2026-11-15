@@ -44,7 +44,9 @@ class RecruitmentDashboard:
 		names = [applicant.name for applicant in self.applicants]
 		self.interviews = get_linked("Interview", names, ["job_applicant", "status"])
 		self.offers = get_linked("Job Offer", names, ["job_applicant", "status", "offer_date", "docstatus"])
-		self.interviewed = {interview.job_applicant for interview in self.interviews}
+		self.interviewed = {
+			interview.job_applicant for interview in self.interviews if interview.status != "Cancelled"
+		}
 		# Draft and Ready to Send offers haven't reached the candidate yet
 		self.offers = [offer for offer in self.offers if offer.status in OFFER_LABELS]
 		self.offered = {offer.job_applicant for offer in self.offers}
