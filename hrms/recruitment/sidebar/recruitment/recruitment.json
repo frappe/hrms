@@ -32,8 +32,8 @@
    "is_default_module": 0,
    "keep_closed": 0,
    "label": "Dashboard",
-   "link_to": "Recruitment",
-   "link_type": "Dashboard",
+   "link_to": "recruitment-dashboard",
+   "link_type": "Page",
    "open_in_new_tab": 0,
    "show_arrow": 0,
    "type": "Link"
@@ -367,7 +367,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-10-02 12:00:00.000000",
+ "modified": "2026-11-14 11:00:00.000000",
  "modified_by": "Administrator",
  "module": "Recruitment",
  "name": "Recruitment",
