@@ -1,5 +1,5 @@
 {% extends "templates/web.html" %}
-{% from "hrms/templates/includes/job_opening_macros.html" import salary, count with context %}
+{% from "hrms/templates/includes/job_opening_macros.html" import salary, count, deadline_date with context %}
 
 {% block style %}
 <style>
@@ -14,7 +14,6 @@
 {% set apply_route = "/" ~ (job_application_route if job_application_route else "job_application") ~ "/new?job_title=" ~ name | urlencode %}
 {% set pay = salary(doc)|trim %}
 {% set deadline = closes_on if is_open else closed_on %}
-{% set deadline_format = "d MMM" if deadline and frappe.utils.getdate(deadline).year == frappe.utils.getdate().year else "d MMM yyyy" %}
 
 <div class="careers-page careers-role text-base">
 	<header class="careers-header">
@@ -37,7 +36,7 @@
 				(_("Location"), location),
 				(_("Type"), employment_type),
 				(_("Salary"), pay),
-				(_("Apply by") if is_open else _("Closed on"), frappe.utils.format_date(deadline, deadline_format) if deadline else ""),
+				(_("Apply by") if is_open else _("Closed on"), deadline_date(deadline)|trim if deadline else ""),
 			] -%}
 			{%- if facts|selectattr(1)|list -%}
 			<dl class="careers-facts">

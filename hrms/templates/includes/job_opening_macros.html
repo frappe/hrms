@@ -20,8 +20,13 @@
 	{%- endif -%}
 {%- endmacro -%}
 
+{#- "12 Mar", or "12 Mar 2027" outside this year. -#}
+{%- macro deadline_date(date) -%}
+	{{ frappe.utils.format_date(date, "d MMM" if frappe.utils.getdate(date).year == frappe.utils.getdate().year else "d MMM yyyy") }}
+{%- endmacro -%}
+
 {%- macro closes_label(date) -%}
-	{{ _("Closes {0}").format(frappe.utils.format_date(date, "d MMM")) }}
+	{{ _("Closes {0}").format(deadline_date(date)) }}
 {%- endmacro -%}
 
 {%- macro icon(name) -%}
