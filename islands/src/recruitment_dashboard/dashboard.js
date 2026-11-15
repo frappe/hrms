@@ -11,7 +11,19 @@ export const PERIODS = [
 
 export const STAGES = ["Applied", "Shortlisted", "Interviewing", "Offered", "Hired"];
 export const OUTCOMES = ["Applied only", "Interviewed", "Hired"];
-const OPENINGS_SHOWN = 10;
+// the API sends statuses; these are their names on the donuts
+const OFFER_LABELS = {
+	Accepted: __("Accepted"),
+	Rejected: __("Declined"),
+	"Awaiting Response": __("Awaiting reply"),
+};
+const INTERVIEW_LABELS = {
+	Cleared: __("Cleared"),
+	Rejected: __("Rejected"),
+	Pending: __("Pending"),
+	"Under Review": __("Under review"),
+	Cancelled: __("Cancelled"),
+};
 
 /** The API's numbers in the shape Dashboard.vue draws, with its copy. Empty while loading. */
 export function getView(data) {
@@ -21,9 +33,9 @@ export function getView(data) {
 		empty,
 		targets: empty ? null : getTargets(data),
 		...getCards(data, empty),
-		chartTitle: getChartTitle(data.openings.total),
+		chartTitle: getChartTitle(data.openings),
 		attention: empty ? undefined : getAttentionLine(data.openings.attention),
-		chartRows: empty ? [] : data.openings.rows.map((row) => translateKeys(row, STAGES)),
+		chartRows: empty ? [] : data.openings.rows,
 		funnel: empty
 			? []
 			: data.funnel.map((row) => ({
@@ -36,10 +48,10 @@ export function getView(data) {
 		weeklySources: empty
 			? []
 			: data.weekly.rows.map((row) => ({ ...row, week: formatWeek(row.week) })),
-		sources: empty ? [] : data.sources.map((row) => translateKeys(row, OUTCOMES)),
-		offers: empty ? [] : translateNames(data.offers),
+		sources: empty ? [] : data.sources,
+		offers: empty ? [] : getSlices(data.offers, OFFER_LABELS),
 		offersSubtitle: empty ? undefined : getOffersSubtitle(data.offers),
-		interviews: empty ? [] : translateNames(data.interviews),
+		interviews: empty ? [] : getSlices(data.interviews, INTERVIEW_LABELS),
 		interviewsSubtitle: empty ? undefined : getInterviewsSubtitle(data.interviews),
 	};
 }
@@ -81,8 +93,8 @@ function getEmptyView() {
 	};
 }
 
-function getChartTitle(total) {
-	if (total > OPENINGS_SHOWN) return __("Openings · top {0} of {1}", [OPENINGS_SHOWN, total]);
+function getChartTitle({ rows, total }) {
+	if (total > rows.length) return __("Openings · top {0} of {1}", [rows.length, total]);
 	return __("Openings");
 }
 
@@ -105,14 +117,14 @@ function getFunnelCaption(funnel) {
 }
 
 function getOffersSubtitle(offers) {
-	const count = (name) => offers.find((row) => row.name === name)?.count || 0;
-	const answered = count("Accepted") + count("Declined");
+	const count = (status) => offers.find((row) => row.status === status)?.count || 0;
+	const answered = count("Accepted") + count("Rejected");
 	if (!answered) return undefined;
 	return __("{0} of {1} answered offers accepted", [count("Accepted"), answered]);
 }
 
 function getInterviewsSubtitle(interviews) {
-	const count = (name) => interviews.find((row) => row.name === name)?.count || 0;
+	const count = (status) => interviews.find((row) => row.status === status)?.count || 0;
 	const decided = count("Cleared") + count("Rejected");
 	if (!decided) return undefined;
 	return __("{0} of {1} decided interviews cleared", [count("Cleared"), decided]);
@@ -128,19 +140,10 @@ function getOldestCaption(days) {
 	return days === 1 ? __("oldest 1 day") : __("oldest {0} days", [days]);
 }
 
-function translateKeys(row, keys) {
-	const translated = { ...row };
-	for (const key of keys) {
-		delete translated[key];
-		translated[__(key)] = row[key];
-	}
-	return translated;
-}
-
-/** Rows of a donut, or none when every count is 0, so the chart shows its empty state. */
-function translateNames(rows) {
+/** Slices of a donut, or none when every count is 0, so the chart shows its empty state. */
+function getSlices(rows, labels) {
 	if (!rows.some((row) => row.count > 0)) return [];
-	return rows.map((row) => ({ name: __(row.name), status: row.status, count: row.count }));
+	return rows.map((row) => ({ name: labels[row.status], status: row.status, count: row.count }));
 }
 
 function formatWeek(week) {

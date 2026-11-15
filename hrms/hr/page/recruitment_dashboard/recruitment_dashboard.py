@@ -4,7 +4,12 @@ import frappe
 from frappe import _
 from frappe.utils import add_days, date_diff, get_quarter_start, get_year_start, getdate, nowdate
 
-PERIODS = ("last_30_days", "last_90_days", "this_quarter", "this_year")
+PERIOD_STARTS = {
+	"last_30_days": lambda today: add_days(today, -29),
+	"last_90_days": lambda today: add_days(today, -89),
+	"this_quarter": get_quarter_start,
+	"this_year": get_year_start,
+}
 STAGES = ("Applied", "Shortlisted", "Interviewing", "Offered", "Hired")
 OPENINGS_SHOWN = 10
 # fewer records than this before the period make a percent change noise
@@ -13,20 +18,15 @@ COMPARISON_FLOOR = 10
 SOURCES_SHOWN = 10
 # an applicant without a source was entered by hand in desk
 NO_SOURCE = "Added by HR"
-OFFER_LABELS = {"Accepted": "Accepted", "Rejected": "Declined", "Awaiting Response": "Awaiting reply"}
-INTERVIEW_LABELS = {
-	"Cleared": "Cleared",
-	"Rejected": "Rejected",
-	"Pending": "Pending",
-	"Under Review": "Under review",
-	"Cancelled": "Cancelled",
-}
+# in chart order; the client names them
+OFFER_STATUSES = ("Accepted", "Rejected", "Awaiting Response")
+INTERVIEW_STATUSES = ("Cleared", "Rejected", "Pending", "Under Review", "Cancelled")
 
 
 @frappe.whitelist(methods=["GET"])
 def get_recruitment_dashboard(period: str = "last_90_days") -> dict:
 	frappe.has_permission("Job Applicant", "read", throw=True)
-	if period not in PERIODS:
+	if period not in PERIOD_STARTS:
 		frappe.throw(_("Unknown period: {0}").format(period))
 	return RecruitmentDashboard(period).get_data()
 
@@ -36,7 +36,7 @@ class RecruitmentDashboard:
 
 	def __init__(self, period: str, to_date=None):
 		self.to_date = getdate(to_date or nowdate())
-		self.from_date = get_period_start(period, self.to_date)
+		self.from_date = PERIOD_STARTS[period](self.to_date)
 		self.days = date_diff(self.to_date, self.from_date) + 1
 		self.openings = get_open_openings()
 		self.labels = get_opening_labels(self.openings)
@@ -48,7 +48,7 @@ class RecruitmentDashboard:
 			interview.job_applicant for interview in self.interviews if interview.status != "Cancelled"
 		}
 		# Draft and Ready to Send offers haven't reached the candidate yet
-		self.offers = [offer for offer in self.offers if offer.status in OFFER_LABELS]
+		self.offers = [offer for offer in self.offers if offer.status in OFFER_STATUSES]
 		self.offered = {offer.job_applicant for offer in self.offers}
 
 	def get_data(self) -> dict:
@@ -226,12 +226,12 @@ class RecruitmentDashboard:
 			"Job Offer",
 			filters={
 				"docstatus": 1,
-				"status": ["in", list(OFFER_LABELS)],
+				"status": ["in", OFFER_STATUSES],
 				"offer_date": ["between", [self.from_date, self.to_date]],
 			},
 			pluck="status",
 		)
-		return count_labels(statuses, OFFER_LABELS)
+		return count_statuses(statuses, OFFER_STATUSES)
 
 	def get_interviews_held(self) -> list[dict]:
 		"""Interviews scheduled in the period, whenever their applicant applied."""
@@ -240,17 +240,7 @@ class RecruitmentDashboard:
 			filters={"docstatus": ["!=", 2], "scheduled_on": ["between", [self.from_date, self.to_date]]},
 			pluck="status",
 		)
-		return count_labels(statuses, INTERVIEW_LABELS)
-
-
-def get_period_start(period: str, to_date):
-	if period == "last_30_days":
-		return add_days(to_date, -29)
-	if period == "last_90_days":
-		return add_days(to_date, -89)
-	if period == "this_quarter":
-		return get_quarter_start(to_date)
-	return get_year_start(to_date)
+		return count_statuses(statuses, INTERVIEW_STATUSES)
 
 
 def get_open_openings() -> list[dict]:
@@ -309,9 +299,9 @@ def get_attention_order(row: dict) -> tuple:
 	return (1, close_days is None, close_days or 0)
 
 
-def count_labels(statuses: list[str], labels: dict[str, str]) -> list[dict]:
+def count_statuses(statuses: list[str], order: tuple[str, ...]) -> list[dict]:
 	counts = Counter(statuses)
-	return [{"name": label, "status": status, "count": counts[status]} for status, label in labels.items()]
+	return [{"status": status, "count": counts[status]} for status in order]
 
 
 def get_source(applicant: dict) -> str:

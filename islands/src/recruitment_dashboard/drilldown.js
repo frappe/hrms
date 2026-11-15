@@ -12,6 +12,7 @@ export function getTargets(data) {
 	const between = [data.period.from, data.period.to];
 
 	return {
+		hasSource: (name) => Boolean(source(name)),
 		openRoles: { doctype: "Job Opening", filters: { status: "Open" } },
 		hired: applicants({ stage: "Hired" }),
 		applications: applicants({}),

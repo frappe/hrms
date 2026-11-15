@@ -1,10 +1,10 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
-import { BarChart, ChartCard, DonutChart, NumberCard } from "frappe-ui/charts";
+import { BarChart, ChartCard, NumberCard } from "frappe-ui/charts";
 import { useHost } from "@framework/ui/island";
 
 import ChartHeading from "./ChartHeading.vue";
-import DonutCentre from "./DonutCentre.vue";
+import DonutCard from "./DonutCard.vue";
 import FunnelCard from "./FunnelCard.vue";
 import StackTooltip from "./StackTooltip.vue";
 import { OUTCOMES, STAGES } from "./dashboard.js";
@@ -84,9 +84,15 @@ const weekLabels = computed(() => {
 	};
 });
 
-const stageNames = STAGES.map((stage) => __(stage));
+// series keep their untranslated names, so a selected mark names its stage or outcome
+const labelled = (keys, extra = () => ({})) =>
+	Object.fromEntries(keys.map((key) => [key, { label: __(key), ...extra(key) }]));
+const stageSeries = labelled(STAGES);
 const stageColors = [1, 2, 3, 4, 5].map(stage);
-const outcomeNames = OUTCOMES.map((outcome) => __(outcome));
+// outcomes that open no list keep the default cursor
+const outcomeSeries = labelled(OUTCOMES, (outcome) =>
+	outcome === "Hired" ? {} : { echartOptions: { cursor: "default" } },
+);
 const sourceStageColors = [stage(1), "var(--recruitment-interviewed)", stage(5)];
 const applicationsChange = computed(() => {
 	const delta = props.view.applicationsDelta;
@@ -98,7 +104,6 @@ const applicationsChange = computed(() => {
 		icon: delta > 0 ? "lucide-arrow-up-right" : "lucide-arrow-down-left",
 	};
 });
-const still = { animation: false };
 
 const targets = computed(() => props.view.targets);
 const openList = (target) => target && host.navigate(getListRoute(target));
@@ -114,18 +119,15 @@ const linkCard = (name) =>
 		  }
 		: {};
 const open = (pick) => targets.value && openList(pick(targets.value));
-const stageOf = (label) => STAGES[stageNames.indexOf(label)];
-const outcomeKey = (label) => OUTCOMES[outcomeNames.indexOf(label)];
 const funnelTarget = (stage) => targets.value?.funnel(stage) ?? null;
-// series whose marks open nothing keep the default cursor
-const stillCursor = (names) =>
-	Object.fromEntries(names.map((name) => [name, { echartOptions: { cursor: "default" } }]));
+// sources no list filter can find keep the default cursor
 const weekSeries = computed(() =>
-	stillCursor(
-		props.view.sourceNames.filter((name) => !targets.value?.week({ from: "", to: "" }, name)),
+	Object.fromEntries(
+		props.view.sourceNames
+			.filter((name) => !targets.value?.hasSource(name))
+			.map((name) => [name, { echartOptions: { cursor: "default" } }]),
 	),
 );
-const outcomeSeries = stillCursor(outcomeNames.filter((label) => outcomeKey(label) !== "Hired"));
 </script>
 
 <template>
@@ -218,16 +220,17 @@ const outcomeSeries = stillCursor(outcomeNames.filter((label) => outcomeKey(labe
 					<BarChart
 						:data="view.chartRows"
 						x="role"
-						:y="stageNames"
+						:y="STAGES"
 						horizontal
 						stacked
 						:palette="stageColors"
+						:series-config="stageSeries"
 						:echart-options="openingLabels"
 						:loading="loading"
-						@select="open((t) => t.opening($event.row, stageOf($event.name)))"
+						@select="open((t) => t.opening($event.row, $event.name))"
 					>
 						<template #tooltip="tooltip">
-							<StackTooltip v-bind="tooltip" :order="stageNames" />
+							<StackTooltip v-bind="tooltip" :order="STAGES" />
 						</template>
 					</BarChart>
 				</div>
@@ -279,76 +282,40 @@ const outcomeSeries = stillCursor(outcomeNames.filter((label) => outcomeKey(labe
 						<BarChart
 							:data="view.sources"
 							x="source"
-							:y="outcomeNames"
+							:y="OUTCOMES"
 							horizontal
 							stacked
 							:palette="sourceStageColors"
 							:echart-options="rowLabels"
 							:series-config="outcomeSeries"
 							:loading="loading"
-							@select="
-								open((t) => t.hiresBySource($event.row, outcomeKey($event.name)))
-							"
+							@select="open((t) => t.hiresBySource($event.row, $event.name))"
 						>
 							<template #tooltip="tooltip">
-								<StackTooltip v-bind="tooltip" :order="outcomeNames" />
+								<StackTooltip v-bind="tooltip" :order="OUTCOMES" />
 							</template>
 						</BarChart>
 					</div>
 				</div>
 			</ChartCard>
-			<!-- side by side only from 1024; at 1280 the row is taller, as each ring sits over its legend and its centre label must fit. Both reserve two subtitle lines, so their rings match -->
+			<!-- side by side only from 1024; at 1280 the row is taller, as each ring sits over its legend and its centre label must fit -->
 			<div class="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:col-span-6">
-				<ChartCard class="h-[320px] xl:h-[360px]">
-					<div class="flex h-full flex-col gap-1.5">
-						<ChartHeading
-							class="min-h-[60px]"
-							:title="__('Offers made')"
-							:subtitle="view.offersSubtitle"
-						/>
-						<div class="min-h-0 flex-1 tracking-normal">
-							<DonutChart
-								:data="view.offers"
-								category="name"
-								value="count"
-								order="rows"
-								:center-label="__('offers')"
-								:echart-options="still"
-								:loading="loading"
-								@select="open((t) => t.offer($event.rows[0].status))"
-							>
-								<template #center="center">
-									<DonutCentre v-bind="center" />
-								</template>
-							</DonutChart>
-						</div>
-					</div>
-				</ChartCard>
-				<ChartCard class="h-[320px] xl:h-[360px]">
-					<div class="flex h-full flex-col gap-1.5">
-						<ChartHeading
-							class="min-h-[60px]"
-							:title="__('Interviews held')"
-							:subtitle="view.interviewsSubtitle"
-						/>
-						<div class="min-h-0 flex-1 tracking-normal">
-							<DonutChart
-								:data="view.interviews"
-								category="name"
-								value="count"
-								order="rows"
-								:center-label="__('interviews')"
-								:echart-options="still"
-								:loading="loading"
-								@select="open((t) => t.interview($event.rows[0].status))"
-							>
-								<template #center="center">
-									<DonutCentre v-bind="center" />
-								</template>
-							</DonutChart>
-						</div>
-					</div>
-				</ChartCard>
+				<DonutCard
+					:title="__('Offers made')"
+					:subtitle="view.offersSubtitle"
+					:slices="view.offers"
+					:center-label="__('offers')"
+					:loading="loading"
+					@open="open((t) => t.offer($event))"
+				/>
+				<DonutCard
+					:title="__('Interviews held')"
+					:subtitle="view.interviewsSubtitle"
+					:slices="view.interviews"
+					:center-label="__('interviews')"
+					:loading="loading"
+					@open="open((t) => t.interview($event))"
+				/>
 			</div>
 		</div>
 	</div>

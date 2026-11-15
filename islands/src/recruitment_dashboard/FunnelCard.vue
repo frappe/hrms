@@ -24,11 +24,11 @@ const onWidth = (event) => (isWide.value = event.matches);
 wide.addEventListener("change", onWidth);
 onBeforeUnmount(() => wide.removeEventListener("change", onWidth));
 
-const stageOf = (label) => props.funnel.find((row) => row.stage === label);
-const open = (label) => {
-	const target = props.target(stageOf(label)?.key);
+const open = (key) => {
+	const target = props.target(key);
 	if (target) emit("open", target);
 };
+const keyOf = (label) => props.funnel.find((row) => row.stage === label)?.key;
 
 // as FunnelChart prints a share of the first stage
 const share = (value) => {
@@ -39,14 +39,15 @@ const share = (value) => {
 };
 // one series per stage, each row holding only its own, so every bar takes its stage colour
 const bars = computed(() =>
-	props.funnel.map((row) => ({ stage: row.stage, [row.stage]: row.count })),
+	props.funnel.map((row) => ({ stage: row.stage, [row.key]: row.count })),
 );
-const stageNames = computed(() => props.funnel.map((row) => row.stage));
+const stageKeys = computed(() => props.funnel.map((row) => row.key));
 const barSeries = computed(() =>
 	Object.fromEntries(
 		props.funnel.map((row, index) => [
-			row.stage,
+			row.key,
 			{
+				label: row.stage,
 				format: (value) => (index ? `${value} · ${share(value)}` : String(value)),
 				showDataLabels: true,
 				// the bars share one slot instead of sitting side by side
@@ -77,7 +78,7 @@ const barOptions = {
 					value="count"
 					:palette="colors"
 					:loading="loading"
-					@select="open($event.label)"
+					@select="open(keyOf($event.label))"
 				/>
 				<div v-else class="flex h-full flex-col gap-1.5">
 					<ChartHeading :title="__('Funnel')" />
@@ -85,13 +86,13 @@ const barOptions = {
 						<BarChart
 							:data="bars"
 							x="stage"
-							:y="stageNames"
+							:y="stageKeys"
 							horizontal
 							:palette="colors"
 							:series-config="barSeries"
 							:echart-options="barOptions"
 							:loading="loading"
-							@select="open($event.row.stage)"
+							@select="open($event.name)"
 						/>
 					</div>
 				</div>
