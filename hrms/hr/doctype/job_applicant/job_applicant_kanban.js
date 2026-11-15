@@ -5,7 +5,7 @@ frappe.kanban_v2.settings["Job Applicant"] = {
 	hide_empty_fields: true,
 	boards: {
 		// a drop onto a stage that needs a record opens the step that creates it
-		"Hiring Pipeline": { before_move: before_hiring_move },
+		"Hiring Pipeline": { callbacks: { onBeforeCardMove: before_hiring_move } },
 	},
 
 	setup_page(board) {
@@ -48,7 +48,17 @@ function show_opening_header(board, opening) {
 	);
 }
 
-function before_hiring_move({ name, title, to, doc }) {
-	const applicant = { name, applicant_name: title || name, designation: doc?.designation };
-	return hrms.hiring.move_to_stage(applicant, to, { on_undo: () => cur_list?.refresh?.() });
+// a step that did the move itself (scheduled, offered, rejected) reloads the board instead of saving
+async function before_hiring_move(move, page) {
+	if (move.cardIds.length > 1) return;
+	const applicant = {
+		name: move.cardId,
+		applicant_name: move.title || move.cardId,
+		designation: move.doc?.designation,
+	};
+	const outcome = await hrms.hiring
+		.move_to_stage(applicant, move.toColumn, { on_undo: () => page.board?.refresh() })
+		.catch(() => "cancel");
+	if (outcome === "done") page.board?.refresh();
+	return outcome === "move";
 }
