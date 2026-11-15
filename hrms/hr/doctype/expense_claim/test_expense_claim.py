@@ -1384,6 +1384,79 @@ class TestExpenseClaim(HRMSTestSuite):
 		self.assertEqual(advance.status, "Paid")
 		self.assertEqual(advance.claimed_amount, 0)
 
+	def _claim_doc(self, employee, **values):
+		row = values.pop("row", {})
+		return frappe.get_doc(
+			{
+				"doctype": "Expense Claim",
+				"employee": employee,
+				"company": "_Test Company",
+				"currency": "INR",
+				"exchange_rate": 1,
+				"payable_account": get_payable_account("_Test Company"),
+				"expenses": [{"expense_type": "Travel", "amount": 100, **row}],
+				**values,
+			}
+		)
+
+	def test_exchange_rate_is_one_for_company_currency(self):
+		employee = make_employee("test_claim_rate@example.com", company="_Test Company")
+		frappe.db.set_single_value("HR Settings", "enable_multi_currency_expense_claim", 1)
+		claim = self._claim_doc(employee, exchange_rate=83).insert()
+		self.assertEqual(claim.exchange_rate, 1)
+		self.assertRaises(
+			frappe.ValidationError, self._claim_doc(employee, currency="USD", exchange_rate=0).insert
+		)
+
+	def test_sanctioned_amount_defaults_to_claimed_amount(self):
+		employee = make_employee("test_claim_sanction@example.com", company="_Test Company")
+		self.assertEqual(self._claim_doc(employee).insert().expenses[0].sanctioned_amount, 100)
+		self.assertEqual(
+			self._claim_doc(employee, row={"sanctioned_amount": 0}).insert().expenses[0].sanctioned_amount, 0
+		)
+
+	def _approval_employee(self, user, **values):
+		make_user(user, "Employee")
+		employee = make_employee(user, company="_Test Company", **values)
+		self.addCleanup(frappe.set_user, "Administrator")
+		frappe.set_user(user)
+		return employee
+
+	def test_expense_approver_must_belong_to_employee(self):
+		approver = make_user("test_claim_approver@example.com", "Expense Approver")
+		stranger = make_user("test_claim_stranger@example.com", "Expense Approver")
+		employee = self._approval_employee("test_claim_approval@example.com", expense_approver=approver)
+
+		self.assertEqual(self._claim_doc(employee).insert().expense_approver, approver)
+		self._claim_doc(employee, expense_approver=approver).insert()
+		self.assertRaisesRegex(
+			frappe.ValidationError,
+			"not an approver",
+			self._claim_doc(employee, expense_approver=stranger).insert,
+		)
+
+		claim = self._claim_doc(employee, expense_approver=stranger)
+		claim.flags.ignore_permissions = True
+		claim.insert()
+
+		frappe.set_user("Administrator")
+		self._claim_doc(employee, expense_approver=stranger).insert()
+
+	def test_department_expense_approver_is_valid(self):
+		approver = make_user("test_claim_dept_approver@example.com", "Expense Approver")
+		department = frappe.get_doc(
+			{
+				"doctype": "Department",
+				"department_name": "Claim Approver Department",
+				"company": "_Test Company",
+				"expense_approvers": [{"approver": approver}],
+			}
+		).insert()
+		employee = self._approval_employee("test_claim_dept@example.com", department=department.name)
+
+		self.assertEqual(self._claim_doc(employee).insert().expense_approver, approver)
+		self._claim_doc(employee, expense_approver=approver).insert()
+
 
 def get_payable_account(company):
 	return frappe.get_cached_value("Company", company, "default_payable_account")

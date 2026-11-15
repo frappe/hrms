@@ -20,6 +20,29 @@ from frappe.utils import (
 )
 
 
+def set_exchange_rate(doc: Document, default_rate_is_unset: bool = False) -> None:
+	"""Resolve exchange_rate from the document's currency and company."""
+	if not (doc.currency and doc.company):
+		return
+
+	from erpnext import get_company_currency
+	from erpnext.setup.utils import get_exchange_rate
+
+	company_currency = get_company_currency(doc.company)
+	if doc.currency == company_currency:
+		doc.exchange_rate = 1.0
+		return
+
+	if flt(doc.exchange_rate) <= 0 or (default_rate_is_unset and flt(doc.exchange_rate) == 1):
+		doc.exchange_rate = flt(get_exchange_rate(doc.currency, company_currency, doc.get("posting_date")))
+
+	if flt(doc.exchange_rate) <= 0:
+		frappe.throw(
+			_("Exchange Rate from {0} to {1} is required").format(doc.currency, company_currency),
+			title=_("Missing Exchange Rate"),
+		)
+
+
 def sanitize_expression(string: str | None = None) -> str | None:
 	"""
 	Removes leading and trailing whitespace and merges multiline strings into a single line.

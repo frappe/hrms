@@ -107,6 +107,18 @@ class Goal(NestedSet):
 		if flt(self.progress) > 100:
 			frappe.throw(_("Goal progress percentage cannot be more than 100."))
 
+		if flt(self.progress) < 0:
+			frappe.throw(_("Goal progress percentage cannot be negative."))
+
+		doc_before_save = self.get_doc_before_save()
+		if (
+			doc_before_save
+			and not self.flags.progress_from_child_goals
+			and flt(doc_before_save.progress) != flt(self.progress)
+			and (self.is_group or (doc_before_save.status == "Closed" and self.status == "Closed"))
+		):
+			frappe.throw(_("Progress cannot be updated for a Closed or group Goal."))
+
 	def set_status(self, status=None):
 		if self.status in ["Archived", "Closed"]:
 			return
@@ -147,6 +159,7 @@ class Goal(NestedSet):
 		parent_goal_doc.progress = flt(avg_goal_completion, parent_goal_doc.precision("progress"))
 		parent_goal_doc.ignore_permissions = True
 		parent_goal_doc.ignore_mandatory = True
+		parent_goal_doc.flags.progress_from_child_goals = True
 		parent_goal_doc.save()
 
 	def update_goal_progress_in_appraisal(self):

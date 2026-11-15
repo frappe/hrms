@@ -44,7 +44,15 @@ class ExitInterview(Document):
 	def validate(self):
 		self.validate_relieving_date()
 		self.validate_duplicate_interview()
+		self.validate_status_fields()
 		self.set_employee_email()
+
+	def validate_status_fields(self):
+		if self.status == "Scheduled" and not (self.date and self.interviewers):
+			frappe.throw(_("Date and Interviewers are required for a Scheduled Exit Interview"))
+
+		if self.status == "Completed" and not self.employee_status:
+			frappe.throw(_("Final Decision is required for a Completed Exit Interview"))
 
 	def validate_relieving_date(self):
 		if not frappe.db.get_value("Employee", self.employee, "relieving_date"):

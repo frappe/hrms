@@ -58,6 +58,7 @@ from hrms.payroll.utils import (
 	SALARY_COMPONENT_VALUES,
 	_safe_eval,
 	get_component_eval_context,
+	set_exchange_rate,
 	throw_error_message,
 )
 from hrms.utils.holiday_list import (
@@ -216,6 +217,7 @@ class SalarySlip(TransactionBase):
 		return self.end_date
 
 	def validate(self):
+		set_exchange_rate(self, default_rate_is_unset=not self.payroll_entry)
 		self.check_salary_withholding()
 		self.status = self.get_status()
 		validate_active_employee(self.employee)

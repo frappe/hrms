@@ -180,6 +180,73 @@ class TestSalaryStructure(HRMSTestSuite):
 		self.assertEqual(row.depends_on_payment_days, 0)
 		self.assertEqual(row.amount, 6000)
 
+	def _structure_doc(self, **values):
+		return frappe.get_doc(
+			{
+				"doctype": "Salary Structure",
+				"name": "Structure Validation Test",
+				"company": "_Test Company",
+				"currency": "INR",
+				"payroll_frequency": "Monthly",
+				"is_active": "Yes",
+				**values,
+			}
+		)
+
+	def _component(self, name, abbr, component_type="Earning", **values):
+		if not frappe.db.exists("Salary Component", name):
+			frappe.get_doc(
+				{
+					"doctype": "Salary Component",
+					"salary_component": name,
+					"salary_component_abbr": abbr,
+					"type": component_type,
+					**values,
+				}
+			).insert()
+		return name
+
+	def test_component_condition_is_copied_when_row_has_no_values(self):
+		component = self._component("Conditional Pay", "CP", condition="base > 100", amount=500)
+		structure = self._structure_doc(earnings=[{"salary_component": component}]).insert()
+		self.assertEqual(structure.earnings[0].condition, "base > 100")
+		self.assertEqual(structure.earnings[0].amount, 500)
+
+		structure = self._structure_doc(
+			name="Structure Validation Test 2", earnings=[{"salary_component": component, "amount": 10}]
+		).insert()
+		self.assertFalse(structure.earnings[0].condition)
+
+	def test_component_type_must_match_table(self):
+		earning = self._component("Type Check Earning", "TCE")
+		deduction = self._component("Type Check Deduction", "TCD", "Deduction")
+
+		self.assertRaises(
+			frappe.ValidationError,
+			self._structure_doc(deductions=[{"salary_component": earning, "amount": 1}]).insert,
+		)
+		self.assertRaises(
+			frappe.ValidationError,
+			self._structure_doc(earnings=[{"salary_component": deduction, "amount": 1}]).insert,
+		)
+		self._structure_doc(
+			earnings=[{"salary_component": earning, "amount": 1}],
+			deductions=[{"salary_component": deduction, "amount": 1}],
+		).insert()
+
+	def test_timesheet_structure_needs_component_and_hour_rate(self):
+		component = self._component("Timesheet Pay", "TSP")
+		self.assertRaises(
+			frappe.ValidationError,
+			self._structure_doc(salary_slip_based_on_timesheet=1, salary_component=component).insert,
+		)
+		self.assertRaises(
+			frappe.ValidationError, self._structure_doc(salary_slip_based_on_timesheet=1, hour_rate=10).insert
+		)
+		self._structure_doc(
+			salary_slip_based_on_timesheet=1, salary_component=component, hour_rate=10
+		).insert()
+
 
 def make_salary_structure(
 	salary_structure,

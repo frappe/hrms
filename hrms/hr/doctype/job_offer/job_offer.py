@@ -140,6 +140,9 @@ class JobOffer(Document):
 			)
 
 	def set_compensation(self):
+		if self.salary_structure and not self.calculate_component_amount_from:
+			self.calculate_component_amount_from = "Base and Variable"
+
 		if not self.salary_structure or not self.calculate_component_amount_from:
 			self.ctc = 0
 			self.gross = 0

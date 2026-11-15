@@ -90,6 +90,7 @@ class SalaryStructureAssignment(Document):
 		self.validate_company()
 		self.validate_income_tax_slab()
 		self.set_payroll_payable_account()
+		self.set_employee_benefits()
 		validate_max_benefit_for_flexible_benefit(self.employee_benefits, self.max_benefits)
 
 		if not self.get("payroll_cost_centers"):
@@ -101,6 +102,26 @@ class SalaryStructureAssignment(Document):
 
 	def on_update_after_submit(self):
 		self.validate_cost_centers()
+
+	def set_employee_benefits(self):
+		if not self.is_new() or self.employee_benefits or not self.salary_structure:
+			return
+
+		benefits = frappe.get_all(
+			"Employee Benefit Detail",
+			filters={
+				"parent": self.salary_structure,
+				"parenttype": "Salary Structure",
+				"parentfield": "employee_benefits",
+			},
+			fields=["salary_component", "amount"],
+			order_by="idx",
+		)
+		if not benefits:
+			return
+
+		self.set("employee_benefits", benefits)
+		self.max_benefits = sum(flt(benefit.amount) for benefit in benefits)
 
 	def validate_dates(self):
 		joining_date, relieving_date = frappe.db.get_value(

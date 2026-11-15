@@ -226,6 +226,9 @@ class Attendance(Document):
 						)
 					)
 
+		if self.status == "On Leave" and not self.leave_type:
+			frappe.throw(_("Leave Type is required for attendance with status On Leave"))
+
 		if self.status in ("On Leave", "Half Day"):
 			if not leave_record:
 				self.modify_half_day_status = 0

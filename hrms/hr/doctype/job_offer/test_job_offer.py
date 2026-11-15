@@ -801,6 +801,15 @@ class TestJobOffer(HRMSTestSuite):
 		self.assertEqual(get_leave_allocations(None), [])
 		self.assertEqual(get_holiday_summary(None), {"weekly_off_days": "", "total_public_holidays": 0})
 
+	def test_calculation_basis_defaults_when_structure_is_set(self):
+		structure = make_salary_structure(
+			"Offer Basis Structure", "Monthly", company="_Test Company", currency="INR"
+		)
+		offer = make_offer_doc(structure.name, base=50000)
+		offer.set_compensation()
+		self.assertEqual(offer.calculate_component_amount_from, "Base and Variable")
+		self.assertGreater(offer.ctc, 0)
+
 
 def component_rows(details):
 	return [row for row in details["components"] if not row["is_summary"]]
