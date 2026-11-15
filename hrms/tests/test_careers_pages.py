@@ -1,5 +1,6 @@
 import frappe
 from frappe.utils import getdate, set_request
+from frappe.website.serve import get_response_content
 
 from hrms.hr.doctype.job_opening.test_job_opening import get_job_opening
 from hrms.hr.doctype.staffing_plan.test_staffing_plan import make_company
@@ -14,12 +15,19 @@ from hrms.www.jobs.index import (
 )
 
 MACROS = "hrms/templates/includes/job_opening_macros.html"
+XSS = "<img src=x onerror=alert(1)//"
 
 
 def render_salary(**opening):
 	opening = {"publish_salary_range": 1, "currency": "INR", "salary_per": "Year", **opening}
 	template = "{% from '" + MACROS + "' import salary with context %}{{ salary(opening) }}"
 	return frappe.render_template(template, {"opening": frappe._dict(opening), "frappe": frappe})
+
+
+def render_body(path, query_string=""):
+	"""The page after </head>; Frappe's base template puts the title, tag-stripped, in <title>."""
+	set_request(method="GET", path=path, query_string=query_string)
+	return get_response_content(path).split("</head>", 1)[1]
 
 
 def get_options(controls, name):
@@ -106,3 +114,19 @@ class TestCareersPages(HRMSTestSuite):
 		self.assertIn("Careers Open", options)
 		self.assertNotIn("Careers Draft", options)
 		self.assertNotIn("Careers Closed", options)
+
+	def test_opening_fields_are_escaped(self):
+		self.addCleanup(setattr, frappe.local, "request", getattr(frappe.local, "request", None))
+		make_company("_Test Opening Company", "_TOC")
+		opening = get_job_opening(
+			job_title="Careers Escape", route="jobs/careers-escape", publish=1, description="<p>Hello</p>"
+		).insert()
+		# Set directly: a Branch name cannot hold "<"
+		frappe.db.set_value("Job Opening", opening.name, {"job_title": XSS, "location": XSS})
+
+		jobs = render_body("/jobs", "query=onerror")
+		role = render_body("/jobs/careers-escape")
+		for body in (jobs, role):
+			self.assertIn("&lt;img src=x", body)
+			self.assertNotIn("<img src=x", body)
+		self.assertIn("<p>Hello</p>", role)
