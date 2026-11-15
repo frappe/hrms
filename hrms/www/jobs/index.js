@@ -1,138 +1,82 @@
 $(() => {
-	const query_params = frappe.utils.get_query_params();
-	update_ui_with_filters();
+	const form = document.getElementById("careers-filters");
+	if (!form) return;
 
-	$(".desktop-filters").change(function () {
-		update_params(get_new_params(".desktop-filters"));
-	});
-
-	$("#apply-filters").on("click", function () {
-		update_params(get_new_params(".mobile-filters"));
-	});
-
-	$("[name=clear-filters]").on("click", function () {
-		update_params();
-	});
-
-	$("#filter").click(function () {
-		scroll_up_and_execute(() => {
-			$("#filters-drawer").css("bottom", 0);
-			$("#overlay").show();
-			$("html, body").css({
-				overflow: "hidden",
-				height: "100%",
-			});
-		});
-	});
-
-	$("[name=close-filters-drawer").click(function () {
-		$("#filters-drawer").css("bottom", "-80vh");
-		$("#overlay").hide();
-		$("html, body").css({
-			overflow: "auto",
-			height: "auto",
-		});
-	});
-
-	$("#search-box").bind("search", function () {
-		update_params(get_new_params(".desktop-filters"));
-	});
-
-	$("#search-box").keyup(function (e) {
-		if (e.keyCode == 13) {
-			$(this).trigger("search");
+	form.addEventListener("submit", () => {
+		for (const field of form.querySelectorAll("input[name], select[name]")) {
+			if (field.name !== "sort" && !field.value) field.disabled = true;
 		}
 	});
 
-	$("#sort").on("click", function () {
-		const filters = $(".desktop-filters").serialize();
-		query_params.sort === "asc"
-			? update_params(filters)
-			: update_params(filters + "&sort=asc");
+	form.querySelectorAll("select").forEach((select) =>
+		select.addEventListener("change", () => form.requestSubmit()),
+	);
+
+	form.querySelector("#search-box").addEventListener("search", () => form.requestSubmit());
+
+	// phones keep the native picker
+	if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+		form.querySelectorAll("select").forEach(show_as_dropdown);
+	}
+
+	form.querySelector("#sort").addEventListener("click", () => {
+		const sort = form.querySelector("input[name=sort]");
+		sort.disabled = !sort.disabled;
+		form.requestSubmit();
 	});
 
-	$("[name=card]").on("click", function () {
-		window.location.href = this.id;
-	});
+	set_view(document.documentElement.dataset.careersView || "cards");
+	form.querySelectorAll("[data-view]").forEach((button) =>
+		button.addEventListener("click", () => {
+			set_view(button.dataset.view);
+			try {
+				localStorage.setItem("careers-view", button.dataset.view);
+			} catch (e) {}
+		}),
+	);
 
-	$("[name=pagination]").on("click", function () {
-		const filters = $(".desktop-filters").serialize();
-		update_params(filters + "&page=" + this.id);
-	});
-
-	$("#previous").on("click", function () {
-		const new_page = (Number(query_params?.page) || 1) - 1;
-		const filters = $(".desktop-filters").serialize();
-		update_params(filters + "&page=" + new_page);
-	});
-
-	$("#next").on("click", function () {
-		const new_page = (Number(query_params?.page) || 1) + 1;
-		const filters = $(".desktop-filters").serialize();
-		update_params(filters + "&page=" + new_page);
-	});
-
-	function update_ui_with_filters() {
-		const allowed_filters = Object.keys(
-			JSON.parse($("#data").data("filters").replace(/'/g, '"')),
+	document
+		.querySelectorAll("[name=pagination]")
+		.forEach((button) =>
+			button.addEventListener("click", () => go_to_page(Number(button.id))),
 		);
+	const current_page = Number(new URLSearchParams(location.search).get("page")) || 1;
+	$("#previous").on("click", () => go_to_page(current_page - 1));
+	$("#next").on("click", () => go_to_page(current_page + 1));
 
-		for (const filter in query_params) {
-			if (filter === "query") $("#search-box").val(query_params["query"]);
-			else if (filter === "page") disable_inapplicable_pagination_buttons();
-			else if (allowed_filters.includes(filter)) {
-				if (typeof query_params[filter] === "string") {
-					$("#desktop-" + $.escapeSelector(query_params[filter])).prop("checked", true);
-					$("#mobile-" + $.escapeSelector(query_params[filter])).prop("checked", true);
-				} else
-					for (const d of query_params[filter]) {
-						$("#desktop-" + $.escapeSelector(d)).prop("checked", true);
-						$("#mobile-" + $.escapeSelector(d)).prop("checked", true);
-					}
-			} else continue;
-		}
+	function show_as_dropdown(select) {
+		const button = document.createElement("button");
+		button.type = "button";
+		button.className = "careers-control";
+		button.textContent = select.selectedOptions[0].label;
+		select.hidden = true;
+		select.after(button);
+
+		new frappe.ui.Dropdown({
+			trigger: button,
+			options: [...select.options].map((option) => ({
+				label: option.label,
+				selected: option.selected,
+				onclick: () => {
+					select.value = option.value;
+					form.requestSubmit();
+				},
+			})),
+		});
 	}
 
-	function disable_inapplicable_pagination_buttons() {
-		const no_of_pages = JSON.parse($("#data").data("no-of-pages"));
-		const page_no = Number(query_params["page"]);
-		if (page_no === no_of_pages) {
-			$("#next").prop("disabled", true);
-		} else if (page_no > no_of_pages || page_no <= 1) {
-			$("#previous").prop("disabled", true);
-		}
+	function set_view(view) {
+		document.documentElement.dataset.careersView = view;
+		form.querySelectorAll("[data-view]").forEach((button) => {
+			const active = button.dataset.view === view;
+			button.dataset.state = active ? "active" : "inactive";
+			button.setAttribute("aria-checked", active);
+		});
 	}
 
-	function get_new_params(filter_group) {
-		return "sort" in query_params
-			? $(filter_group).serialize() + "&" + $.param({ sort: query_params["sort"] })
-			: $(filter_group).serialize();
+	function go_to_page(page) {
+		const params = new URLSearchParams(location.search);
+		params.set("page", page);
+		location.href = "/jobs?" + params.toString();
 	}
 });
-
-function update_params(params = "") {
-	if ($("#filters-drawer").css("bottom") != "0px")
-		return scroll_up_and_execute(() => (window.location.href = "/jobs?" + params));
-
-	$("#filters-drawer").css("bottom", "-80vh");
-	$("#filters-drawer").on("transitionend webkitTransitionEnd oTransitionEnd", () =>
-		scroll_up_and_execute(() => (window.location.href = "/jobs?" + params)),
-	);
-}
-
-function scroll_up_and_execute(callback) {
-	if (window.scrollY === 0) return callback();
-
-	function execute_after_scrolling_up() {
-		if (window.scrollY === 0) {
-			callback();
-			window.removeEventListener("scroll", execute_after_scrolling_up);
-		}
-	}
-
-	window.scroll({
-		top: 0,
-		behavior: "smooth",
-	});
-	window.addEventListener("scroll", execute_after_scrolling_up);
-}

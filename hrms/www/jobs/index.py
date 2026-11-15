@@ -16,9 +16,15 @@ def get_context(context):
 	context.body_class = "jobs-page"
 	page_len = 20
 	filters, txt, sort, offset = get_filters_txt_sort_offset(page_len)
+	published = get_published_openings()
 	context.job_openings = get_job_openings(filters, txt, sort, page_len, offset)
 	context.no_of_pages = get_no_of_pages(filters, txt, page_len)
-	context.all_filters = get_all_filters(filters)
+	context.current_page = get_current_page(offset, page_len, context.no_of_pages)
+	context.filter_controls = get_filter_controls(filters, published)
+	context.hiring_company = get_hiring_company(published)
+	context.has_openings = bool(published)
+	context.has_filters = bool(filters or txt)
+	context.query = txt
 	context.sort = sort
 
 
@@ -66,9 +72,29 @@ def get_job_openings(filters=None, txt=None, sort=None, limit=20, offset=0):
 	query = query.orderby("posted_on", order=Order.asc if sort == "asc" else Order.desc)
 	results = query.run(as_dict=True)
 
+	team_names = get_team_names([d.department for d in results])
 	for d in results:
 		d.posted_on = pretty_date(d.posted_on)
+		d.team = team_names.get(d.department, d.department)
 	return results
+
+
+def get_team_names(departments):
+	departments = [d for d in set(departments) if d]
+	if not departments:
+		return {}
+	return dict(
+		frappe.get_all(
+			"Department",
+			filters={"name": ("in", departments)},
+			fields=["name", "department_name"],
+			as_list=True,
+		)
+	)
+
+
+def get_current_page(offset, page_len, no_of_pages):
+	return min(offset // page_len + 1, max(no_of_pages, 1))
 
 
 def get_no_of_pages(filters=None, txt=None, page_length=20):
@@ -91,22 +117,67 @@ def get_no_of_pages(filters=None, txt=None, page_length=20):
 	return math.ceil(result[0].no_of_openings / page_length)
 
 
-def get_all_filters(filters=None):
-	job_openings = frappe.get_all(
+FILTER_ORDER = ["location", "employment_type", "department", "company"]
+
+
+def get_filter_label(name):
+	return {
+		"location": _("All locations"),
+		"employment_type": _("All types"),
+		"department": _("All teams"),
+		"company": _("All companies"),
+	}[name]
+
+
+def get_published_openings():
+	return frappe.get_all(
 		"Job Opening",
 		filters={"publish": 1, "status": "Open"},
 		fields=["company", "department", "employment_type", "location"],
 	)
 
+
+def get_all_filters(filters, openings):
 	companies = filters.get("company", [])
 
 	all_filters = {}
-	for opening in job_openings:
+	for opening in openings:
 		for key, value in opening.items():
 			if value and (key == "company" or not companies or opening.company in companies):
 				all_filters.setdefault(key, set()).add(value)
 
 	return {key: sorted(value) for key, value in all_filters.items()}
+
+
+def get_filter_controls(filters, openings):
+	"""Selects for the toolbar; a select with nothing to choose stays hidden unless it is in use."""
+	team_names = get_team_names([d.department for d in openings])
+	controls = []
+	for key, values in get_all_filters(filters, openings).items():
+		selected = filters.get(key, [])
+		if len(values) < 2 and not selected:
+			continue
+		controls.append(
+			{
+				"name": key,
+				"all_label": get_filter_label(key),
+				"options": [
+					{
+						"value": value,
+						"label": team_names.get(value, value) if key == "department" else value,
+						"selected": value in selected,
+					}
+					for value in values
+				],
+			}
+		)
+	return sorted(controls, key=lambda control: FILTER_ORDER.index(control["name"]))
+
+
+def get_hiring_company(openings):
+	"""The company the page intro names, when every opening is at the same one."""
+	companies = {d.company for d in openings if d.company}
+	return companies.pop() if len(companies) == 1 else ""
 
 
 def get_filters_txt_sort_offset(page_len=20):
@@ -119,7 +190,9 @@ def get_filters_txt_sort_offset(page_len=20):
 
 	for d in args:
 		if d in allowed_filters:
-			filters[d] = args[d]
+			values = [value for value in args[d] if value]
+			if values:
+				filters[d] = values
 		elif d == "query":
 			txt = args["query"][0]
 		elif d == "sort":
