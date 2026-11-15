@@ -2,6 +2,7 @@ import frappe
 from frappe.tests import IntegrationTestCase
 
 from hrms.patches.v16_0.add_rejection_reasons_and_scope_email_templates import execute
+from hrms.patches.v16_0.replace_status_hiring_pipeline_board import execute as replace_status_board
 from hrms.setup import HIRING_EMAIL_TEMPLATES, OFFER_EMAIL_TEMPLATES
 
 
@@ -31,3 +32,23 @@ class TestHiringDefaults(IntegrationTestCase):
 		execute()
 		self.assertEqual(self.reference("Interview Reminder"), "Interview")
 		self.assertEqual(self.reference("Leave Status Notification"), "Employee")
+
+	def test_status_hiring_pipeline_is_replaced_by_the_standard_board(self):
+		frappe.flags.in_migrate = True
+		self.addCleanup(setattr, frappe.flags, "in_migrate", False)
+		frappe.delete_doc("Kanban Board", "Hiring Pipeline", force=True, ignore_permissions=True)
+		frappe.get_doc(
+			{
+				"doctype": "Kanban Board",
+				"kanban_board_name": "Hiring Pipeline",
+				"reference_doctype": "Job Applicant",
+				"field_name": "status",
+			}
+		).insert(ignore_permissions=True)
+
+		replace_status_board()
+		replace_status_board()
+		board = frappe.db.get_value(
+			"Kanban Board", "Hiring Pipeline", ["field_name", "is_standard"], as_dict=True
+		)
+		self.assertEqual((board.field_name, board.is_standard), ("stage", "Yes"))
