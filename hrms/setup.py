@@ -4,10 +4,13 @@ from collections import defaultdict
 import frappe
 from frappe import N_ as _
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
+from frappe.custom.doctype.property_setter.property_setter import make_property_setter
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.permissions import add_permission, update_permission_property
 
 from hrms.hr.doctype.appointment_letter_template.appointment_letter_template import create_default_template
+from hrms.hr.doctype.interview_type.interview_type import create_default_types
+from hrms.hr.doctype.rejection_reason.rejection_reason import create_default_reasons
 from hrms.overrides.company import delete_company_fixtures
 from hrms.subscription_utils import is_new_hr_site, set_hrms_as_default_app
 
@@ -25,8 +28,13 @@ def after_install():
 	set_single_defaults()
 	setup_repost_defaults()
 	create_default_role_profiles()
+	create_default_reasons()
+	create_default_types()
+	setup_email_template_scopes()
+	create_hiring_email_templates()
 	run_post_install_patches()
 	add_default_hr_permissions()
+	show_employee_name_in_links()
 
 	if is_new_hr_site():
 		set_hrms_as_default_app()
@@ -190,6 +198,7 @@ def get_customizations():
 			{"doc_type": "Salary Slip", "field_name": "rounded_total", "property": "print_hide"},
 			EMPLOYEE_DETAILS_TAB_LABEL,
 			*get_employee_layout_setters(),
+			{"doc_type": "Employee", "property": "show_title_field_in_link"},
 		],
 		"Custom DocPerm": [
 			{"parent": doctype, "role": role}
@@ -718,6 +727,139 @@ def setup_notifications():
 	make_records(records)
 
 
+# the templates HRMS ships, and the DocType each one is written for
+EMAIL_TEMPLATE_SCOPES = {
+	"Leave Approval Notification": "Leave Application",
+	"Leave Status Notification": "Leave Application",
+	"Exit Questionnaire Notification": "Employee Separation",
+	"Interview Reminder": "Interview",
+	"Interview Feedback Reminder": "Interview",
+	# ERPNext's DocType; skipped where it isn't installed
+	"Dispatch Notification": "Delivery Trip",
+}
+
+GREETING = 'Hi {{ applicant_name.split(" ")[0] }},'
+HIRING_ROLE = '{{ frappe.db.get_value("Job Opening", job_title, "job_title") or "the role" }}'
+# the upcoming interview of the applicant: its type, date, time and who they will meet
+INTERVIEW_DETAILS = (
+	'{% set interview = (frappe.get_all("Interview", filters={"job_applicant": name, "docstatus": 0, "status": "Pending"}, '
+	'fields=["name", "interview_type", "scheduled_on", "from_time"], order_by="scheduled_on asc", limit=1) or [None])[0] %}'
+	"{% if interview %}"
+	'{% set people = frappe.get_all("Interview Detail", filters={"parent": interview.name}, pluck="interviewer") %}'
+	"Your {{ interview.interview_type }} interview is confirmed for "
+	'{{ frappe.utils.formatdate(interview.scheduled_on, "d MMMM") }} at '
+	'{{ frappe.utils.format_time(interview.from_time, "h:mm a") }}.'
+	"{% if people %} You will meet "
+	"{% for user in people %}{{ frappe.get_fullname(user) }}{% if not loop.last %}, {% endif %}{% endfor %}.{% endif %}"
+	"{% else %}Your interview is confirmed.{% endif %}"
+)
+
+HIRING_EMAIL_TEMPLATES = {
+	"Application received": (
+		"We received your application",
+		[
+			GREETING,
+			f"Thank you for applying for {HIRING_ROLE}. We have received your application and our team is reviewing it. We will be in touch soon.",
+			"Regards,",
+		],
+	),
+	"Interview invitation": (
+		f"Interview invitation for {HIRING_ROLE}",
+		[
+			GREETING,
+			f"Thank you for your interest in {HIRING_ROLE}. We would like to invite you to interview. We will share a few times with you shortly.",
+			"Regards,",
+		],
+	),
+	"Interview confirmation": (
+		f"Your interview for {HIRING_ROLE} is confirmed",
+		[
+			GREETING,
+			INTERVIEW_DETAILS,
+			"If you need to change the time, just reply to this email and we will find another slot.",
+			"Regards,",
+		],
+	),
+	"Rejection after interview": (
+		f"Your interview for {HIRING_ROLE}",
+		[
+			GREETING,
+			f"Thank you for taking the time to interview with us for {HIRING_ROLE}. We enjoyed learning more about you. After careful consideration, we have decided not to move forward with your application.",
+			"We appreciate the effort you put in and wish you all the best.",
+			"Regards,",
+		],
+	),
+	"Applicant rejection": (
+		f"Your application for {HIRING_ROLE}",
+		[
+			GREETING,
+			f"Thank you for your interest in {HIRING_ROLE} and for the time you put into applying. After careful consideration, we have decided not to move forward with your application.",
+			"We appreciate you considering us and wish you all the best.",
+			"Regards,",
+		],
+	),
+}
+
+
+# Job Offer fields: applicant_name, designation, job_applicant. The role is the opening's title.
+OFFER_ROLE = (
+	'{{ (job_applicant and frappe.db.get_value("Job Opening", '
+	'frappe.db.get_value("Job Applicant", job_applicant, "job_title"), "job_title")) or designation or "the role" }}'
+)
+OFFER_EMAIL_TEMPLATES = {
+	"Offer letter": (
+		"Your job offer from {{ company }}",
+		[
+			GREETING,
+			f"We are delighted to offer you the {OFFER_ROLE} role. Your offer letter is attached.",
+			"Please review it and reply to this email to accept. We are happy to answer any questions.",
+			"Regards,",
+		],
+	),
+	"Offer follow-up": (
+		"Following up on your job offer",
+		[
+			GREETING,
+			f"I wanted to check in on the offer we sent for the {OFFER_ROLE} role. Have you had a chance to review it?",
+			"If you have any questions, reply to this email and we will be glad to help.",
+			"Regards,",
+		],
+	),
+}
+
+
+def setup_email_template_scopes():
+	"""Ties the shipped templates to their DocType so the composer lists them only there.
+	Only templates with no DocType yet are set."""
+	for template, doctype in EMAIL_TEMPLATE_SCOPES.items():
+		if not frappe.db.exists("DocType", doctype):
+			continue
+		if frappe.db.exists("Email Template", template) and not frappe.db.get_value(
+			"Email Template", template, "reference_doctype"
+		):
+			frappe.db.set_value("Email Template", template, "reference_doctype", doctype)
+
+
+def create_hiring_email_templates():
+	"""Adds the hiring templates that are missing; ones a site already has are left as they are."""
+	for templates, doctype in (
+		(HIRING_EMAIL_TEMPLATES, "Job Applicant"),
+		(OFFER_EMAIL_TEMPLATES, "Job Offer"),
+	):
+		for name, (subject, paragraphs) in templates.items():
+			if frappe.db.exists("Email Template", name):
+				continue
+			frappe.get_doc(
+				{
+					"doctype": "Email Template",
+					"name": name,
+					"subject": subject,
+					"reference_doctype": doctype,
+					"response": "".join(f"<p>{paragraph}</p>" for paragraph in paragraphs),
+				}
+			).insert(ignore_permissions=True)
+
+
 def update_hr_defaults():
 	hr_settings = frappe.get_doc("HR Settings")
 	hr_settings.emp_created_by = "Naming Series"
@@ -1108,6 +1250,18 @@ def add_default_hr_permissions():
 
 			for ptype, value in ptypes.items():
 				update_permission_property(doctype, role, permlevel=0, ptype=ptype, value=value)
+
+
+def show_employee_name_in_links():
+	"""Show the employee's name instead of the ID wherever an Employee is linked."""
+	make_property_setter(
+		"Employee",
+		None,
+		"show_title_field_in_link",
+		1,
+		"Check",
+		for_doctype=True,
+	)
 
 
 def setup_repost_defaults():
