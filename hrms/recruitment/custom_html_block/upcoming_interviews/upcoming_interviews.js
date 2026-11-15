@@ -1,4 +1,4 @@
-const API = "hrms.hr.page.hiring.hiring.get_upcoming_interviews";
+const API = "hrms.hr.page.hiring.overview.get_upcoming_interviews";
 const DAYS = 7;
 const SKELETON_ROWS = 3;
 const el = hrms.hiring.make_element;

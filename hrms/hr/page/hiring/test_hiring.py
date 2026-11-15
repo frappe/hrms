@@ -880,7 +880,7 @@ class TestHiring(IntegrationTestCase):
 			)
 			interviews[label] = interview
 
-		result = hiring.get_upcoming_interviews()
+		result = overview.get_upcoming_interviews()
 		ours = [row for row in result["interviews"] if row["name"] in interviews.values()]
 		self.assertEqual(
 			[row["name"] for row in ours],
@@ -896,12 +896,12 @@ class TestHiring(IntegrationTestCase):
 			[{"user": INTERVIEWER, "full_name": frappe.db.get_value("User", INTERVIEWER, "full_name")}],
 		)
 
-		limited = hiring.get_upcoming_interviews(limit=1)
+		limited = overview.get_upcoming_interviews(limit=1)
 		self.assertEqual(len(limited["interviews"]), 1)
 		self.assertEqual(limited["count"], result["count"])
 		self.assertGreaterEqual(result["count"], 3)
 
-		wider = hiring.get_upcoming_interviews(days=8, limit=100)
+		wider = overview.get_upcoming_interviews(days=8, limit=100)
 		self.assertIn(interviews["outside"], [row["name"] for row in wider["interviews"]])
 		self.assertNotIn(interviews["cancelled"], [row["name"] for row in wider["interviews"]])
 		self.assertNotIn(interviews["past"], [row["name"] for row in wider["interviews"]])
@@ -909,4 +909,4 @@ class TestHiring(IntegrationTestCase):
 
 	def test_upcoming_interviews_needs_applicant_access(self):
 		frappe.set_user(NO_ROLE_USER)
-		self.assertRaises(frappe.PermissionError, hiring.get_upcoming_interviews)
+		self.assertRaises(frappe.PermissionError, overview.get_upcoming_interviews)
