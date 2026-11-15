@@ -73,10 +73,12 @@ class RecruitmentDashboard:
 	def get_applications_delta(self) -> int | None:
 		"""Percent change against the period of equal length just before, when that had enough to compare."""
 		previous_start = add_days(self.from_date, -self.days)
-		previous = frappe.db.count(
+		previous = frappe.get_list(
 			"Job Applicant",
-			[["creation", ">=", previous_start], ["creation", "<", self.from_date]],
-		)
+			filters=[["creation", ">=", previous_start], ["creation", "<", self.from_date]],
+			fields=[{"COUNT": "*"}],
+			as_list=True,
+		)[0][0]
 		if previous < COMPARISON_FLOOR:
 			return None
 		return round((len(self.applicants) - previous) * 100 / previous)
@@ -131,7 +133,7 @@ class RecruitmentDashboard:
 		"""Open openings past their closing date, then those nobody has applied to yet."""
 		names = [opening.name for opening in self.openings]
 		applied = set(
-			frappe.get_all("Job Applicant", {"job_title": ["in", names]}, pluck="job_title", distinct=True)
+			frappe.get_list("Job Applicant", {"job_title": ["in", names]}, pluck="job_title", distinct=True)
 		)
 		rows = []
 		for opening in self.openings:
@@ -218,7 +220,7 @@ class RecruitmentDashboard:
 
 	def get_offers_made(self) -> list[dict]:
 		"""Sent offers dated in the period, whenever their applicant applied."""
-		statuses = frappe.get_all(
+		statuses = frappe.get_list(
 			"Job Offer",
 			filters={
 				"docstatus": 1,
@@ -231,7 +233,7 @@ class RecruitmentDashboard:
 
 	def get_interviews_held(self) -> list[dict]:
 		"""Interviews scheduled in the period, whenever their applicant applied."""
-		statuses = frappe.get_all(
+		statuses = frappe.get_list(
 			"Interview",
 			filters={"docstatus": ["!=", 2], "scheduled_on": ["between", [self.from_date, self.to_date]]},
 			pluck="status",
@@ -250,7 +252,7 @@ def get_period_start(period: str, to_date):
 
 
 def get_open_openings() -> list[dict]:
-	return frappe.get_all(
+	return frappe.get_list(
 		"Job Opening",
 		filters={"status": "Open"},
 		fields=["name", "job_title", "location", "vacancies", "closes_on"],
@@ -259,7 +261,7 @@ def get_open_openings() -> list[dict]:
 
 
 def get_applicants(from_date, to_date) -> list[dict]:
-	return frappe.get_all(
+	return frappe.get_list(
 		"Job Applicant",
 		filters=[["creation", ">=", from_date], ["creation", "<", add_days(to_date, 1)]],
 		fields=["name", "job_title", "stage", "status", "source", "creation"],
@@ -271,7 +273,7 @@ def get_linked(doctype: str, applicants: list[str], fields: list[str]) -> list[d
 	"""Live (not cancelled) records of a doctype that point at the given applicants."""
 	if not applicants:
 		return []
-	return frappe.get_all(
+	return frappe.get_list(
 		doctype,
 		filters={"job_applicant": ["in", applicants], "docstatus": ["<", 2]},
 		fields=fields,
