@@ -46,9 +46,14 @@ export function getTargets(data) {
 	};
 }
 
-/** Opens the plain list view with the target's filters as its only filters. */
-export function openList(target) {
-	if (!target) return;
-	window.frappe.route_options = target.filters;
-	window.frappe.set_route("List", target.doctype, "List");
+/** The plain list view's route, with the target's filters as its only filters. */
+export function getListRoute({ doctype, filters }) {
+	const slug = doctype.toLowerCase().replaceAll(" ", "-");
+	const query = new URLSearchParams(
+		Object.entries(filters).map(([field, value]) => [
+			field,
+			typeof value === "object" ? JSON.stringify(value) : String(value),
+		]),
+	);
+	return `/desk/${slug}/view/list?${query}`;
 }

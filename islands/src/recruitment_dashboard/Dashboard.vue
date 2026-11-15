@@ -1,6 +1,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { BarChart, ChartCard, DonutChart, NumberCard } from "frappe-ui/charts";
+import { useHost } from "@framework/ui/island";
 
 import ChartHeading from "./ChartHeading.vue";
 import ChartKey from "./ChartKey.vue";
@@ -8,7 +9,7 @@ import DonutCentre from "./DonutCentre.vue";
 import FunnelCard from "./FunnelCard.vue";
 import StackTooltip from "./StackTooltip.vue";
 import { OUTCOMES, STAGES } from "./dashboard.js";
-import { openList } from "./drilldown.js";
+import { getListRoute } from "./drilldown.js";
 
 const props = defineProps({
 	view: { type: Object, required: true },
@@ -16,6 +17,7 @@ const props = defineProps({
 });
 
 const __ = window.__;
+const host = useHost();
 const showKey = computed(() => !props.loading && !props.view.empty);
 
 const categorical = (count) =>
@@ -136,6 +138,7 @@ const interviewsKey = computed(() => keyFor(props.view.interviews));
 const still = { animation: false };
 
 const targets = computed(() => props.view.targets);
+const openList = (target) => target && host.navigate(getListRoute(target));
 // a card that opens its list: a link for the keyboard too
 const linkCard = (name) =>
 	targets.value
