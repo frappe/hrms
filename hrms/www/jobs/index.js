@@ -2,9 +2,9 @@ $(() => {
 	const form = document.getElementById("careers-filters");
 	if (!form) return;
 
-	form.addEventListener("submit", () => {
-		for (const field of form.querySelectorAll("input[name], select[name]")) {
-			if (field.name !== "sort" && !field.value) field.disabled = true;
+	form.addEventListener("formdata", (e) => {
+		for (const [key, value] of [...e.formData]) {
+			if (!value) e.formData.delete(key);
 		}
 	});
 
