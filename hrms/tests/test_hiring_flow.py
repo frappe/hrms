@@ -655,6 +655,51 @@ class TestHiringFlow(IntegrationTestCase):
 		set_applicant_status(interviewing, "Open")
 		self.assertEqual(frappe.db.get_value("Job Applicant", interviewing, "stage"), "Interviewing")
 
+	def test_unreject_by_a_plain_save_reopens_the_interviews_the_reject_closed(self):
+		applicant = self.make_applicant("moves-back-reopens", status="Shortlisted")
+		with_feedback = self.make_saveable_interview(
+			applicant,
+			status="Under Review",
+			days_ago=1,
+			panel=["Administrator"],
+			feedback_from=["Administrator"],
+		)
+		without_feedback = self.make_saveable_interview(applicant, status="Pending", panel=())
+		future = self.make_saveable_interview(
+			applicant,
+			interview_type="Hiring Test Round 2",
+			status="Under Review",
+			days_ago=-3,
+			panel=["Administrator"],
+			feedback_from=["Administrator"],
+		)
+		cleared = self.make_saveable_interview(
+			applicant, interview_type="Hiring Test Round 3", status="Cleared"
+		)
+		submitted = self.make_saveable_interview(
+			applicant, interview_type="Hiring Test Round 4", status="Cancelled", docstatus=1
+		)
+
+		reject_applicant(applicant)
+
+		def status(name):
+			return frappe.db.get_value("Interview", name, "status")
+
+		self.assertEqual(status(with_feedback), "Rejected")
+		self.assertEqual(status(without_feedback), "Cancelled")
+
+		# a plain save, as the form or a Kanban drag does
+		doc = frappe.get_doc("Job Applicant", applicant)
+		doc.status = "Shortlisted"
+		doc.save()
+
+		self.assertEqual(status(with_feedback), "Under Review")
+		self.assertEqual(status(without_feedback), "Pending")
+		self.assertEqual(status(future), "Pending")
+		self.assertEqual(status(cleared), "Cleared")
+		self.assertEqual(status(submitted), "Cancelled")
+		self.assertEqual(frappe.db.get_value("Job Applicant", applicant, "stage"), "Interviewing")
+
 	def test_declined_offer_closes_open_interviews(self):
 		applicant = self.make_applicant("declines-closes", status="Shortlisted")
 		with_feedback = self.make_saveable_interview(

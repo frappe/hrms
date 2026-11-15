@@ -20,6 +20,7 @@ from hrms.hr.doctype.interview.interview import (
 	has_cleared_interview,
 	has_interviews,
 	is_not_cleared,
+	reopen_closed_interviews,
 	restore_interviews,
 	stars_from_rating,
 )
@@ -100,7 +101,14 @@ class JobApplicant(Document):
 
 	def set_stage(self):
 		self.apply_manual_stage_move()
+		self.reopen_interviews_when_moved_back()
 		self.stage = self.get_stage_by_rules()
+
+	def reopen_interviews_when_moved_back(self):
+		"""Leaving Rejected, by any path, reopens the drafts a rejection closed."""
+		previous = self.get_doc_before_save()
+		if previous and previous.status == "Rejected" and self.status != "Rejected":
+			reopen_closed_interviews(self.name)
 
 	def get_stage_by_rules(self) -> str:
 		"""The stage the rules give; on hold, the stage stored before this save is the one kept."""
@@ -534,7 +542,7 @@ def undo_reject_applicant(
 
 
 def set_applicant_status(job_applicant: str, status: str, reason: str | None = None, note: str | None = None):
-	"""Saves the status. Leaving Rejected clears the reason and note (Job Applicant validate)."""
+	"""Saves the status. Leaving Rejected clears the reason and note, and reopens closed interviews."""
 	doc = frappe.get_doc("Job Applicant", job_applicant)
 	doc.status = status
 	if status == "Rejected":
