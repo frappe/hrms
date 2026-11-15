@@ -63,14 +63,9 @@ frappe.ui.form.on("Job Applicant", {
 		)
 			return;
 
-		const applicant = {
-			name: frm.doc.name,
-			applicant_name: frm.doc.applicant_name,
-			designation: frm.doc.designation,
-		};
 		// a failed step has already shown its error; the stage stays where it was
 		const result = await hrms.hiring
-			.move_to_stage(applicant, to, { on_undo: () => frm.reload_doc() })
+			.move_to_stage(frm.events.get_applicant(frm), to, { on_undo: () => frm.reload_doc() })
 			.catch(() => "cancel");
 		if (result === "done") return frm.reload_doc();
 		if (result === "move") frm.set_value("stage", to).then(() => (frm.stage_previous = to));
@@ -158,27 +153,14 @@ frappe.ui.form.on("Job Applicant", {
 		window.open(frm.doc.resume_link, "_blank", "noopener");
 	},
 	create_custom_buttons: function (frm) {
-		if (!frm.doc.__islocal) {
-			if (frm.doc.status == "Open") {
-				frm.add_custom_button(__("Shortlist"), () => {
-					frm.set_value("status", "Shortlisted");
-					frm.save();
-					frm.refresh();
-				});
-				frm.add_custom_button(__("Reject"), () => {
-					frm.set_value("status", "Rejected");
-					frm.save();
-					frm.refresh();
-				});
-			}
-			if (frm.doc.status !== "Rejected" && frm.doc.status !== "Accepted") {
-				frm.add_custom_button(__("Schedule Interview"), () => {
-					frm.events.show_schedule_interview_dialog(frm);
-				});
-			}
-		}
-
 		if (frm.doc.__islocal) return;
+
+		const stage = frm.doc.stage;
+		if (stage === "Applied") frm.events.add_stage_button(frm, __("Shortlist"), "Shortlisted");
+		if (!["Rejected", "Hired"].includes(stage)) {
+			frm.events.add_stage_button(frm, __("Reject"), "Rejected");
+			frm.events.add_stage_button(frm, __("Schedule Interview"), "Interviewing");
+		}
 
 		const onload = frm.doc.__onload || {};
 		if (onload.employee) {
@@ -187,26 +169,48 @@ frappe.ui.form.on("Job Applicant", {
 			});
 		}
 
-		if (!["Shortlisted", "Accepted"].includes(frm.doc.status)) return;
-
 		if (onload.job_offer) {
 			$('[data-doctype="Employee Onboarding"]').find("button").show();
 			$('[data-doctype="Job Offer"]').find("button").hide();
 			frm.add_custom_button(__("View Job Offer"), function () {
 				frappe.set_route("Form", "Job Offer", onload.job_offer);
 			});
-		} else {
+		} else if (["Shortlisted", "Interviewing"].includes(stage)) {
 			$('[data-doctype="Employee Onboarding"]').find("button").hide();
 			$('[data-doctype="Job Offer"]').find("button").show();
-			frm.add_custom_button(__("Create Job Offer"), function () {
-				frappe.route_options = {
-					job_applicant: frm.doc.name,
-					applicant_name: frm.doc.applicant_name,
-					designation: frm.doc.designation,
-				};
-				frappe.new_doc("Job Offer");
-			});
+			frm.events.add_stage_button(frm, __("Create Job Offer"), "Offered");
 		}
+	},
+
+	// the buttons move the applicant the same way the Stage field and the Hiring Pipeline board do
+	add_stage_button: function (frm, label, stage) {
+		frm.add_custom_button(label, () => frm.events.move_to_stage(frm, stage));
+	},
+
+	move_to_stage: async function (frm, to) {
+		if (
+			frm.is_dirty() &&
+			!(await frm.save().then(
+				() => true,
+				() => false,
+			))
+		)
+			return;
+		const result = await hrms.hiring
+			.move_to_stage(frm.events.get_applicant(frm), to, { on_undo: () => frm.reload_doc() })
+			.catch(() => "cancel");
+		if (result === "done") return frm.reload_doc();
+		if (result !== "move") return;
+		await frm.set_value("stage", to);
+		return frm.save();
+	},
+
+	get_applicant: function (frm) {
+		return {
+			name: frm.doc.name,
+			applicant_name: frm.doc.applicant_name,
+			designation: frm.doc.designation,
+		};
 	},
 
 	show_stage_headline: function (frm) {
@@ -271,19 +275,5 @@ frappe.ui.form.on("Job Applicant", {
 			.empty()
 			.append(new frappe.ui.ItemList({ items }).$el);
 		frm.toggle_display("interview_summary_section", true);
-	},
-
-	show_schedule_interview_dialog: function (frm) {
-		hrms.schedule_interview({
-			job_applicant: frm.doc.name,
-			designation: frm.doc.designation,
-			on_scheduled: () => {
-				frappe.show_alert({
-					message: __("Interview scheduled successfully"),
-					indicator: "green",
-				});
-				frm.events.get_interview_for_dashboard(frm);
-			},
-		});
 	},
 });
