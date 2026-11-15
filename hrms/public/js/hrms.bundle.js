@@ -8,4 +8,5 @@ import "./utils/leave_utils";
 import "./utils/print_utils";
 import "./utils/employee_quick_entry";
 import "./utils/telemetry.js";
+import "./utils/schedule_interview";
 import "./salary_slip_deductions_report_filters.js";
