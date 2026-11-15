@@ -4,7 +4,7 @@ const SKELETON_CARDS = 3;
 const el = hrms.hiring.make_element;
 
 function skeleton(width, height) {
-	return el("span", { class: "skeleton", style: `width: ${width}; height: ${height}` });
+	return frappe.ui.skeleton({ width, height })[0];
 }
 
 function closing_meta(opening) {
