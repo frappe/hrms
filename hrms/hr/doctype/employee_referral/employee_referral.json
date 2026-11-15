@@ -165,7 +165,6 @@
   {
    "fieldname": "referrer",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Referrer",
    "options": "Employee",
    "reqd": 1
@@ -174,7 +173,7 @@
    "fetch_from": "referrer.employee_name",
    "fieldname": "referrer_name",
    "fieldtype": "Data",
-   "hidden": 1,
+   "in_list_view": 1,
    "label": "Referrer Name",
    "read_only": 1
   },

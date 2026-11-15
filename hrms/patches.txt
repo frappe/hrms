@@ -70,5 +70,4 @@ hrms.patches.v16_0.set_job_applicant_stage
 hrms.patches.v16_0.replace_status_hiring_pipeline_board
 hrms.patches.v16_0.set_interview_applicant_name
 hrms.patches.v16_0.add_default_interview_types
-hrms.patches.v16_0.show_employee_name_in_links
 hrms.patches.v16_0.add_rejection_reasons_and_scope_email_templates
