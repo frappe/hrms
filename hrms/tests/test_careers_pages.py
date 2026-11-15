@@ -1,7 +1,16 @@
 import frappe
-from frappe.tests import IntegrationTestCase
+from frappe.utils import getdate, set_request
 
-from hrms.www.jobs.index import get_hiring_company
+from hrms.hr.doctype.job_opening.test_job_opening import get_job_opening
+from hrms.hr.doctype.staffing_plan.test_staffing_plan import make_company
+from hrms.tests.utils import HRMSTestSuite
+from hrms.www.jobs.index import (
+	get_filter_controls,
+	get_filters_txt_sort_offset,
+	get_hiring_company,
+	get_job_openings,
+	get_published_openings,
+)
 
 MACROS = "hrms/templates/includes/job_opening_macros.html"
 
@@ -12,7 +21,12 @@ def render_salary(**opening):
 	return frappe.render_template(template, {"opening": frappe._dict(opening), "frappe": frappe})
 
 
-class TestCareersPages(IntegrationTestCase):
+def get_options(controls, name):
+	control = next((control for control in controls if control["name"] == name), None)
+	return control and {option["value"]: option for option in control["options"]}
+
+
+class TestCareersPages(HRMSTestSuite):
 	def test_salary_uses_short_form_for_rupees(self):
 		self.assertEqual(render_salary(lower_range=1800000, upper_range=2800000), "₹18L – ₹28L a year")
 		self.assertEqual(render_salary(lower_range=1850000, upper_range=0), "₹18.5L a year")
@@ -31,3 +45,55 @@ class TestCareersPages(IntegrationTestCase):
 		self.assertEqual(get_hiring_company(openings), "Frappe")
 		openings.append(frappe._dict(company="Other"))
 		self.assertEqual(get_hiring_company(openings), "")
+
+	def test_filter_with_one_value_hidden_unless_in_use(self):
+		openings = [frappe._dict(location="Pune"), frappe._dict(location="Pune")]
+		self.assertIsNone(get_options(get_filter_controls({}, openings, {}), "location"))
+
+		options = get_options(get_filter_controls({"location": ["Pune"]}, openings, {}), "location")
+		self.assertTrue(options["Pune"]["selected"])
+
+	def test_filter_keeps_selected_value(self):
+		openings = [frappe._dict(location="Pune"), frappe._dict(location="Mumbai")]
+		options = get_options(get_filter_controls({"location": ["Mumbai"]}, openings, {}), "location")
+		self.assertTrue(options["Mumbai"]["selected"])
+		self.assertFalse(options["Pune"]["selected"])
+
+	def test_team_label_falls_back_to_department_when_names_repeat(self):
+		openings = [
+			frappe._dict(department="Design - A"),
+			frappe._dict(department="Design - B"),
+			frappe._dict(department="Sales - A"),
+		]
+		team_names = {"Design - A": "Design", "Design - B": "Design", "Sales - A": "Sales"}
+		options = get_options(get_filter_controls({}, openings, team_names), "department")
+		self.assertEqual(
+			{value: option["label"] for value, option in options.items()},
+			{"Design - A": "Design - A", "Design - B": "Design - B", "Sales - A": "Sales"},
+		)
+
+	def test_request_args_drop_empty_values(self):
+		self.addCleanup(setattr, frappe.local, "request", getattr(frappe.local, "request", None))
+		set_request(method="GET", path="/jobs", query_string="location=&location=Pune&company=&query=dev")
+		filters, txt, sort, offset = get_filters_txt_sort_offset()
+		self.assertEqual(filters, {"location": ["Pune"]})
+		self.assertEqual((txt, sort, offset), ("dev", None, 0))
+
+	def test_unpublished_and_closed_openings_stay_hidden(self):
+		make_company("_Test Opening Company", "_TOC")
+		cases = {"Careers Open": (1, "Open"), "Careers Draft": (0, "Open"), "Careers Closed": (1, "Closed")}
+		for title, (publish, status) in cases.items():
+			frappe.get_doc({"doctype": "Branch", "branch": title}).insert(ignore_if_duplicate=True)
+			opening = get_job_opening(job_title=title, publish=publish, status=status, location=title)
+			if status == "Closed":
+				opening.closed_on = getdate()
+			opening.insert()
+
+		results = get_job_openings({}, "Careers", team_names={})
+		self.assertEqual({d.job_title for d in results} & cases.keys(), {"Careers Open"})
+
+		in_use = {"location": ["Careers Open"]}
+		options = get_options(get_filter_controls(in_use, get_published_openings(), {}), "location")
+		self.assertIn("Careers Open", options)
+		self.assertNotIn("Careers Draft", options)
+		self.assertNotIn("Careers Closed", options)
