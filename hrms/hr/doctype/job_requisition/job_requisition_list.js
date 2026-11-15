@@ -1,4 +1,6 @@
 frappe.listview_settings["Job Requisition"] = {
+	// a requisition is known by its role and who asked
+	hide_name_column: true,
 	get_indicator: function (doc) {
 		const status_color = {
 			Pending: "yellow",
