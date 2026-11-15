@@ -4,7 +4,6 @@ import { BarChart, ChartCard, DonutChart, NumberCard } from "frappe-ui/charts";
 import { useHost } from "@framework/ui/island";
 
 import ChartHeading from "./ChartHeading.vue";
-import ChartKey from "./ChartKey.vue";
 import DonutCentre from "./DonutCentre.vue";
 import FunnelCard from "./FunnelCard.vue";
 import StackTooltip from "./StackTooltip.vue";
@@ -18,10 +17,6 @@ const props = defineProps({
 
 const __ = window.__;
 const host = useHost();
-const showKey = computed(() => !props.loading && !props.view.empty);
-
-const categorical = (count) =>
-	Array.from({ length: count }, (_, index) => `var(--chart-categorical-${index + 1})`);
 // stage colours are set per theme in the style block: the dark ramp's deep end is too faint
 const stage = (step) => `var(--recruitment-stage-${step})`;
 // frappe-ui sizes the label column but shortens in the middle; keep the start, cut the end
@@ -32,24 +27,11 @@ const rowLabels = {
 
 const openingsPlot = ref(null);
 const openingsWidth = ref(0);
-// both donut keys take the taller one's height, so the two rings get the same room
-const donutKeyHeights = ref(new Map());
-const donutKeyHeight = computed(() => Math.max(0, ...donutKeyHeights.value.values()));
-const resizeObserver = new ResizeObserver((entries) => {
-	const heights = new Map(donutKeyHeights.value);
-	for (const { target, contentRect } of entries) {
-		if (target === openingsPlot.value) openingsWidth.value = contentRect.width;
-		else if (target.isConnected) heights.set(target, target.offsetHeight);
-		else {
-			heights.delete(target);
-			resizeObserver.unobserve(target);
-		}
-	}
-	donutKeyHeights.value = heights;
-});
+const resizeObserver = new ResizeObserver(
+	([entry]) => (openingsWidth.value = entry.contentRect.width),
+);
 onMounted(() => resizeObserver.observe(openingsPlot.value));
 onBeforeUnmount(() => resizeObserver.disconnect());
-const observeDonutKey = (component) => component && resizeObserver.observe(component.$el);
 
 // openings sharing a title end in "(location)": shorten the title so that part stays
 const openingLabels = computed(() => {
@@ -104,13 +86,8 @@ const weekLabels = computed(() => {
 
 const stageNames = STAGES.map((stage) => __(stage));
 const stageColors = [1, 2, 3, 4, 5].map(stage);
-const stageKey = stageNames.map((label, index) => ({ label, color: stageColors[index] }));
 const outcomeNames = OUTCOMES.map((outcome) => __(outcome));
 const sourceStageColors = [stage(1), "var(--recruitment-interviewed)", stage(5)];
-const sourceStageKey = outcomeNames.map((label, index) => ({
-	label,
-	color: sourceStageColors[index],
-}));
 const applicationsChange = computed(() => {
 	const delta = props.view.applicationsDelta;
 	if (delta == null) return null;
@@ -121,20 +98,6 @@ const applicationsChange = computed(() => {
 		icon: delta > 0 ? "lucide-arrow-up-right" : "lucide-arrow-down-left",
 	};
 });
-const sourceColors = computed(() => categorical(props.view.sourceNames.length));
-const sourceKey = computed(() =>
-	props.view.sourceNames.map((label, index) => ({ label, color: sourceColors.value[index] })),
-);
-
-const keyFor = (rows) =>
-	rows.map((row, index) => ({
-		label: row.name,
-		color: `var(--chart-categorical-${index + 1})`,
-		count: row.count,
-	}));
-const colorsFor = (key) => Object.fromEntries(key.map((item) => [item.label, item.color]));
-const offersKey = computed(() => keyFor(props.view.offers));
-const interviewsKey = computed(() => keyFor(props.view.interviews));
 const still = { animation: false };
 
 const targets = computed(() => props.view.targets);
@@ -166,10 +129,8 @@ const outcomeSeries = stillCursor(outcomeNames.filter((label) => outcomeKey(labe
 </script>
 
 <template>
-	<!-- svg labels must not inherit desk's letter-spacing: echarts measures them without it -->
-	<div
-		class="space-y-4 pb-10 stage-colors [&_[data-slot=chart-legend]]:hidden [&_[data-slot=chart-plot]_svg]:tracking-normal"
-	>
+	<!-- plots take tracking-normal: echarts measures its svg labels without desk's letter-spacing -->
+	<div class="space-y-4 pb-10 stage-colors">
 		<!-- five across from 1280, three and two from 1024, two a row below, so no caption is cut -->
 		<div class="grid grid-cols-2 gap-4 lg:grid-cols-6 xl:grid-cols-5">
 			<NumberCard
@@ -253,7 +214,7 @@ const outcomeSeries = stillCursor(outcomeNames.filter((label) => outcomeKey(labe
 		<ChartCard class="h-[320px]">
 			<div class="flex h-full flex-col gap-1.5">
 				<ChartHeading :title="view.chartTitle" :subtitle="view.attention" />
-				<div ref="openingsPlot" class="min-h-0 flex-1">
+				<div ref="openingsPlot" class="min-h-0 flex-1 tracking-normal">
 					<BarChart
 						:data="view.chartRows"
 						x="role"
@@ -270,7 +231,6 @@ const outcomeSeries = stillCursor(outcomeNames.filter((label) => outcomeKey(labe
 						</template>
 					</BarChart>
 				</div>
-				<ChartKey v-if="showKey" :items="stageKey" />
 			</div>
 		</ChartCard>
 
@@ -279,13 +239,13 @@ const outcomeSeries = stillCursor(outcomeNames.filter((label) => outcomeKey(labe
 			<ChartCard class="h-[320px] xl:col-span-5">
 				<div class="flex h-full flex-col gap-1.5">
 					<ChartHeading :title="__('Applications per week')" />
-					<div class="min-h-0 flex-1">
+					<div class="min-h-0 flex-1 tracking-normal">
 						<BarChart
 							:data="view.weeklySources"
 							x="week"
 							:y="view.sourceNames"
 							stacked
-							:palette="sourceColors"
+							palette="categorical"
 							:echart-options="weekLabels"
 							:series-config="weekSeries"
 							:y-axis="{ integer: true }"
@@ -297,7 +257,6 @@ const outcomeSeries = stillCursor(outcomeNames.filter((label) => outcomeKey(labe
 							</template>
 						</BarChart>
 					</div>
-					<ChartKey v-if="showKey" :items="sourceKey" />
 				</div>
 			</ChartCard>
 			<FunnelCard
@@ -305,7 +264,7 @@ const outcomeSeries = stillCursor(outcomeNames.filter((label) => outcomeKey(labe
 				:funnel="view.funnel"
 				:caption="view.funnelCaption"
 				:colors="stageColors"
-				:show-caption="showKey"
+				:show-caption="!loading && !view.empty"
 				:loading="loading"
 				:target="funnelTarget"
 				@open="openList"
@@ -316,7 +275,7 @@ const outcomeSeries = stillCursor(outcomeNames.filter((label) => outcomeKey(labe
 			<ChartCard class="h-[320px] xl:col-span-6 xl:h-[360px]">
 				<div class="flex h-full flex-col gap-1.5">
 					<ChartHeading :title="__('Hires by source')" />
-					<div class="min-h-0 flex-1">
+					<div class="min-h-0 flex-1 tracking-normal">
 						<BarChart
 							:data="view.sources"
 							x="source"
@@ -336,10 +295,9 @@ const outcomeSeries = stillCursor(outcomeNames.filter((label) => outcomeKey(labe
 							</template>
 						</BarChart>
 					</div>
-					<ChartKey v-if="showKey" :items="sourceStageKey" />
 				</div>
 			</ChartCard>
-			<!-- side by side only from 1024; at 1280 the row is taller, as each ring sits over three key rows and its centre label must fit. Both reserve two subtitle lines and the taller key, so their rings match -->
+			<!-- side by side only from 1024; at 1280 the row is taller, as each ring sits over its legend and its centre label must fit. Both reserve two subtitle lines, so their rings match -->
 			<div class="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:col-span-6">
 				<ChartCard class="h-[320px] xl:h-[360px]">
 					<div class="flex h-full flex-col gap-1.5">
@@ -348,14 +306,13 @@ const outcomeSeries = stillCursor(outcomeNames.filter((label) => outcomeKey(labe
 							:title="__('Offers made')"
 							:subtitle="view.offersSubtitle"
 						/>
-						<div class="min-h-0 flex-1">
+						<div class="min-h-0 flex-1 tracking-normal">
 							<DonutChart
 								:data="view.offers"
 								category="name"
 								value="count"
 								order="rows"
 								:center-label="__('offers')"
-								:colors="colorsFor(offersKey)"
 								:echart-options="still"
 								:loading="loading"
 								@select="open((t) => t.offer($event.rows[0].status))"
@@ -364,13 +321,6 @@ const outcomeSeries = stillCursor(outcomeNames.filter((label) => outcomeKey(labe
 									<DonutCentre v-bind="center" />
 								</template>
 							</DonutChart>
-						</div>
-						<div :style="{ minHeight: `${donutKeyHeight}px` }">
-							<ChartKey
-								v-if="showKey && view.offers.length"
-								:ref="observeDonutKey"
-								:items="offersKey"
-							/>
 						</div>
 					</div>
 				</ChartCard>
@@ -381,14 +331,13 @@ const outcomeSeries = stillCursor(outcomeNames.filter((label) => outcomeKey(labe
 							:title="__('Interviews held')"
 							:subtitle="view.interviewsSubtitle"
 						/>
-						<div class="min-h-0 flex-1">
+						<div class="min-h-0 flex-1 tracking-normal">
 							<DonutChart
 								:data="view.interviews"
 								category="name"
 								value="count"
 								order="rows"
 								:center-label="__('interviews')"
-								:colors="colorsFor(interviewsKey)"
 								:echart-options="still"
 								:loading="loading"
 								@select="open((t) => t.interview($event.rows[0].status))"
@@ -397,13 +346,6 @@ const outcomeSeries = stillCursor(outcomeNames.filter((label) => outcomeKey(labe
 									<DonutCentre v-bind="center" />
 								</template>
 							</DonutChart>
-						</div>
-						<div :style="{ minHeight: `${donutKeyHeight}px` }">
-							<ChartKey
-								v-if="showKey && view.interviews.length"
-								:ref="observeDonutKey"
-								:items="interviewsKey"
-							/>
 						</div>
 					</div>
 				</ChartCard>

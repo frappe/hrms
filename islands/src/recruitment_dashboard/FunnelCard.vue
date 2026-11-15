@@ -30,11 +30,6 @@ const open = (label) => {
 	if (target) emit("open", target);
 };
 
-// stages that open nothing keep the default cursor (style block: FunnelChart's hit buttons)
-const stillStages = computed(() =>
-	props.funnel.flatMap((row, index) => (props.target(row.key) ? [] : [`still-${index + 1}`])),
-);
-
 // as FunnelChart prints a share of the first stage
 const share = (value) => {
 	const first = props.funnel[0]?.count;
@@ -73,7 +68,7 @@ const barOptions = {
 <template>
 	<ChartCard class="h-[320px]">
 		<div class="flex h-full flex-col">
-			<div class="min-h-0 flex-1" :class="stillStages">
+			<div class="min-h-0 flex-1 tracking-normal">
 				<FunnelChart
 					v-if="isWide"
 					:title="__('Funnel')"
@@ -107,13 +102,3 @@ const barOptions = {
 		</div>
 	</ChartCard>
 </template>
-
-<style scoped>
-.still-1 :deep(.grid > button:nth-child(1)),
-.still-2 :deep(.grid > button:nth-child(2)),
-.still-3 :deep(.grid > button:nth-child(3)),
-.still-4 :deep(.grid > button:nth-child(4)),
-.still-5 :deep(.grid > button:nth-child(5)) {
-	cursor: default;
-}
-</style>
