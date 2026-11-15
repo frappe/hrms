@@ -5,6 +5,7 @@ from hrms.hr.doctype.job_opening.test_job_opening import get_job_opening
 from hrms.hr.doctype.staffing_plan.test_staffing_plan import make_company
 from hrms.tests.utils import HRMSTestSuite
 from hrms.www.jobs.index import (
+	FILTERS,
 	get_filter_controls,
 	get_filters_txt_sort_offset,
 	get_hiring_company,
@@ -58,6 +59,14 @@ class TestCareersPages(HRMSTestSuite):
 		options = get_options(get_filter_controls({"location": ["Mumbai"]}, openings, {}), "location")
 		self.assertTrue(options["Mumbai"]["selected"])
 		self.assertFalse(options["Pune"]["selected"])
+
+	def test_filters_follow_toolbar_order(self):
+		openings = [
+			frappe._dict(company="B", department="D1", employment_type="Full-time", location="Pune"),
+			frappe._dict(company="A", department="D2", employment_type="Intern", location="Mumbai"),
+		]
+		controls = get_filter_controls({}, openings, {})
+		self.assertEqual([control["name"] for control in controls], list(FILTERS))
 
 	def test_team_label_falls_back_to_department_when_names_repeat(self):
 		openings = [

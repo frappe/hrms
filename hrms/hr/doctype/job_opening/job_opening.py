@@ -14,7 +14,6 @@ from hrms.hr.doctype.staffing_plan.staffing_plan import (
 	get_active_staffing_plan_details,
 	get_designation_counts,
 )
-from hrms.www.jobs.index import get_team_names
 
 
 class JobOpening(WebsiteGenerator):
@@ -167,6 +166,20 @@ class JobOpening(WebsiteGenerator):
 		context.days_left = (
 			date_diff(self.closes_on, nowdate()) if self.status == "Open" and self.closes_on else None
 		)
+
+
+def get_team_names(departments):
+	departments = [d for d in set(departments) if d]
+	if not departments:
+		return {}
+	return dict(
+		frappe.get_all(
+			"Department",
+			filters={"name": ("in", departments)},
+			fields=["name", "department_name"],
+			as_list=True,
+		)
+	)
 
 
 def close_expired_job_openings():

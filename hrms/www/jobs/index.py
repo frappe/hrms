@@ -2,10 +2,19 @@ import math
 from collections import Counter
 
 import frappe
-from frappe import _
+from frappe import _, _lt
 from frappe.query_builder import Order
 from frappe.query_builder.functions import Count
 from frappe.utils import pretty_date
+
+from hrms.hr.doctype.job_opening.job_opening import get_team_names
+
+FILTERS = {
+	"location": (_lt("Location"), _lt("All locations")),
+	"employment_type": (_lt("Type"), _lt("All types")),
+	"department": (_lt("Team"), _lt("All teams")),
+	"company": (_lt("Company"), _lt("All companies")),
+}
 
 
 def get_context(context):
@@ -80,20 +89,6 @@ def get_job_openings(filters=None, txt=None, sort=None, limit=20, offset=0, *, t
 	return results
 
 
-def get_team_names(departments):
-	departments = [d for d in set(departments) if d]
-	if not departments:
-		return {}
-	return dict(
-		frappe.get_all(
-			"Department",
-			filters={"name": ("in", departments)},
-			fields=["name", "department_name"],
-			as_list=True,
-		)
-	)
-
-
 def get_current_page(offset, page_len, no_of_pages):
 	return min(offset // page_len + 1, max(no_of_pages, 1))
 
@@ -118,32 +113,11 @@ def get_no_of_pages(filters=None, txt=None, page_length=20):
 	return math.ceil(result[0].no_of_openings / page_length)
 
 
-FILTER_ORDER = ["location", "employment_type", "department", "company"]
-
-
-def get_filter_label(name):
-	return {
-		"location": _("All locations"),
-		"employment_type": _("All types"),
-		"department": _("All teams"),
-		"company": _("All companies"),
-	}[name]
-
-
-def get_field_label(name):
-	return {
-		"location": _("Location"),
-		"employment_type": _("Type"),
-		"department": _("Team"),
-		"company": _("Company"),
-	}[name]
-
-
 def get_published_openings():
 	return frappe.get_all(
 		"Job Opening",
 		filters={"publish": 1, "status": "Open"},
-		fields=["company", "department", "employment_type", "location"],
+		fields=list(FILTERS),
 	)
 
 
@@ -163,6 +137,7 @@ def get_filter_controls(filters, openings, team_names):
 	"""Selects for the toolbar; a select with nothing to choose stays hidden unless it is in use."""
 	controls = []
 	for key, values in get_all_filters(filters, openings).items():
+		label, all_label = FILTERS[key]
 		selected = filters.get(key, [])
 		if len(values) < 2 and not selected:
 			continue
@@ -170,15 +145,15 @@ def get_filter_controls(filters, openings, team_names):
 		controls.append(
 			{
 				"name": key,
-				"label": get_field_label(key),
-				"all_label": get_filter_label(key),
+				"label": label,
+				"all_label": all_label,
 				"options": [
 					{"value": value, "label": labels[value], "selected": value in selected}
 					for value in values
 				],
 			}
 		)
-	return sorted(controls, key=lambda control: FILTER_ORDER.index(control["name"]))
+	return sorted(controls, key=lambda control: list(FILTERS).index(control["name"]))
 
 
 def get_option_labels(key, values, team_names):
@@ -202,10 +177,9 @@ def get_filters_txt_sort_offset(page_len=20):
 	txt = ""
 	sort = None
 	offset = 0
-	allowed_filters = ["company", "department", "employment_type", "location"]
 
 	for d in args:
-		if d in allowed_filters:
+		if d in FILTERS:
 			values = [value for value in args[d] if value]
 			if values:
 				filters[d] = values
