@@ -1,4 +1,5 @@
 import math
+from collections import Counter
 
 import frappe
 from frappe import _
@@ -157,21 +158,27 @@ def get_filter_controls(filters, openings):
 		selected = filters.get(key, [])
 		if len(values) < 2 and not selected:
 			continue
+		labels = get_option_labels(key, values, team_names)
 		controls.append(
 			{
 				"name": key,
 				"all_label": get_filter_label(key),
 				"options": [
-					{
-						"value": value,
-						"label": team_names.get(value, value) if key == "department" else value,
-						"selected": value in selected,
-					}
+					{"value": value, "label": labels[value], "selected": value in selected}
 					for value in values
 				],
 			}
 		)
 	return sorted(controls, key=lambda control: FILTER_ORDER.index(control["name"]))
+
+
+def get_option_labels(key, values, team_names):
+	"""Teams show their short name, or the full Department name when two short names match."""
+	if key != "department":
+		return {value: value for value in values}
+	labels = {value: team_names.get(value, value) for value in values}
+	label_counts = Counter(labels.values())
+	return {value: label if label_counts[label] == 1 else value for value, label in labels.items()}
 
 
 def get_hiring_company(openings):
