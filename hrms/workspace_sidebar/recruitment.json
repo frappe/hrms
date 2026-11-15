@@ -21,18 +21,6 @@
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "layout-dashboard",
-   "indent": 0,
-   "keep_closed": 0,
-   "label": "Dashboard",
-   "link_to": "Recruitment",
-   "link_type": "Dashboard",
-   "show_arrow": 0,
-   "type": "Link"
-  },
-  {
-   "child": 0,
-   "collapsible": 1,
    "icon": "square-kanban",
    "indent": 0,
    "keep_closed": 0,
@@ -93,11 +81,11 @@
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "file-text",
+   "icon": "user-round-search",
    "indent": 0,
    "keep_closed": 0,
-   "label": "Appointment Letter",
-   "link_to": "Appointment Letter",
+   "label": "Employee Referral",
+   "link_to": "Employee Referral",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
@@ -138,17 +126,6 @@
    "type": "Link"
   },
   {
-   "child": 1,
-   "collapsible": 1,
-   "indent": 0,
-   "keep_closed": 0,
-   "label": "Employee Referral",
-   "link_to": "Employee Referral",
-   "link_type": "DocType",
-   "show_arrow": 0,
-   "type": "Link"
-  },
-  {
    "child": 0,
    "collapsible": 1,
    "icon": "notepad-text",
@@ -158,6 +135,18 @@
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Section Break"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
+   "icon": "",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Dashboard",
+   "link_to": "Recruitment",
+   "link_type": "Dashboard",
+   "show_arrow": 0,
+   "type": "Link"
   },
   {
    "child": 1,
@@ -208,6 +197,17 @@
   {
    "child": 1,
    "collapsible": 1,
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Job Offer Term Template",
+   "link_to": "Job Offer Term Template",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 1,
+   "collapsible": 1,
    "icon": "",
    "indent": 0,
    "keep_closed": 0,
@@ -220,10 +220,11 @@
   {
    "child": 1,
    "collapsible": 1,
+   "icon": "",
    "indent": 0,
    "keep_closed": 0,
-   "label": "Job Offer Term Template",
-   "link_to": "Job Offer Term Template",
+   "label": "Appointment Letter",
+   "link_to": "Appointment Letter",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
@@ -253,7 +254,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-11-16 09:00:00.000000",
+ "modified": "2026-11-16 09:30:00.000000",
  "modified_by": "Administrator",
  "module": "Recruitment",
  "name": "Recruitment",
