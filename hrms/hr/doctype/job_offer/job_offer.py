@@ -22,6 +22,9 @@ from frappe.utils import (
 
 import hrms
 from hrms.hr.doctype.appointment_letter.appointment_letter import get_working_hours
+from hrms.hr.doctype.interview.interview import close_open_interviews
+from hrms.hr.doctype.job_applicant.job_applicant import update_stage
+from hrms.hr.doctype.rejection_reason.rejection_reason import DECLINED_OFFER
 
 
 class JobOffer(Document):
@@ -84,6 +87,20 @@ class JobOffer(Document):
 	def onload(self):
 		employee = frappe.db.get_value("Employee", {"job_offer": self.name}, "name") or ""
 		self.set_onload("employee", employee)
+
+		self.set_onload(
+			"offer_letter_sent",
+			bool(
+				frappe.db.exists(
+					"Communication",
+					{
+						"reference_doctype": "Job Offer",
+						"reference_name": self.name,
+						"sent_or_received": "Sent",
+					},
+				)
+			),
+		)
 
 	def validate(self):
 		self.set_status()
@@ -217,7 +234,28 @@ class JobOffer(Document):
 				frappe.throw(_("There are no vacancies under staffing plan {0}").format(error_variable))
 
 	def on_change(self):
-		update_job_applicant(self.status, self.job_applicant)
+		if self.docstatus == 1:
+			update_job_applicant(self.status, self.job_applicant)
+			# an answered offer ends the interviews; the closed ones are kept for an Undo
+			reviewed_status = {"Accepted": "Cleared", "Rejected": "Rejected"}.get(self.status)
+			if reviewed_status and self.job_applicant:
+				self.flags.closed_interviews = close_open_interviews(self.job_applicant, reviewed_status)
+
+		update_stage(self.job_applicant)
+
+	def after_delete(self):
+		update_stage(self.job_applicant)
+
+	def on_cancel(self):
+		if not self.job_applicant or self.status not in ("Accepted", "Rejected"):
+			return
+
+		if frappe.db.get_value("Job Applicant", self.job_applicant, "status") == self.status:
+			frappe.set_value(
+				"Job Applicant",
+				self.job_applicant,
+				{"status": "Shortlisted", "rejection_reason": None, "rejection_note": None},
+			)
 
 	def get_job_offer(self, from_date, to_date):
 		"""Returns job offer created during a time period"""
@@ -239,6 +277,11 @@ class JobOffer(Document):
 def update_job_applicant(status, job_applicant):
 	if job_applicant and status in ("Accepted", "Rejected"):
 		frappe.set_value("Job Applicant", job_applicant, "status", status)
+	if job_applicant and status == "Rejected":
+		# the candidate said no; keep a reason someone gave before
+		has_reason = frappe.db.get_value("Job Applicant", job_applicant, "rejection_reason")
+		if not has_reason and frappe.db.exists("Rejection Reason", DECLINED_OFFER):
+			frappe.set_value("Job Applicant", job_applicant, "rejection_reason", DECLINED_OFFER)
 
 
 def get_staffing_plan_detail(designation, company, offer_date):

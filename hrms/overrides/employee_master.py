@@ -10,6 +10,8 @@ from frappe.utils import add_years, cint, get_link_to_form, getdate
 
 from erpnext.setup.doctype.employee.employee import Employee
 
+from hrms.hr.doctype.job_applicant.job_applicant import update_stage
+
 
 class EmployeeMaster(Employee):
 	def autoname(self):
@@ -112,6 +114,13 @@ def get_linked_job_offer(doc, job_applicant: str | None):
 
 	job_offer = frappe.get_doc("Job Offer", offer_name)
 	return None if job_offer.docstatus == 2 else job_offer
+
+
+def update_job_applicant_stage(doc, method=None):
+	"""An employee created from (or unlinked from) a job applicant moves them to or from Hired"""
+	before = doc.get_doc_before_save()
+	for job_applicant in {doc.get("job_applicant"), before and before.get("job_applicant")}:
+		update_stage(job_applicant)
 
 
 def update_approver_role(doc, method=None):

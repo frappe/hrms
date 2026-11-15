@@ -5,6 +5,7 @@
 
 
 import json
+from collections import defaultdict
 
 import frappe
 from frappe import _
@@ -13,7 +14,8 @@ from frappe.model.mapper import get_mapped_doc
 from frappe.model.naming import append_number_if_name_exists
 from frappe.utils import flt, validate_email_address
 
-from hrms.hr.doctype.interview.interview import get_interviewers
+from hrms.hr.doctype.interview.interview import get_interviewers, has_interviews, stars_from_rating
+from hrms.hr.page.hiring.hiring import is_not_cleared
 
 
 class DuplicationError(frappe.ValidationError):
@@ -41,10 +43,13 @@ class JobApplicant(Document):
 		lower_range: DF.Currency
 		notes: DF.Data | None
 		phone_number: DF.Data | None
+		rejection_note: DF.SmallText | None
+		rejection_reason: DF.Link | None
 		resume_attachment: DF.Attach | None
 		resume_link: DF.Data | None
 		source: DF.Link | None
 		source_name: DF.Link | None
+		stage: DF.Literal["Applied", "Shortlisted", "Interviewing", "Offered", "Hired", "Rejected"]
 		status: DF.Literal["Open", "Replied", "Shortlisted", "Rejected", "Hold", "Accepted"]
 		upper_range: DF.Currency
 	# end: auto-generated types
@@ -68,12 +73,73 @@ class JobApplicant(Document):
 		if self.email_id:
 			validate_email_address(self.email_id, True)
 
+		self.set_stage()
+		self.set_status_for_stage()
+		self.clear_rejection()
+
 		if self.employee_referral:
 			self.set_status_for_employee_referral()
 
 		if not self.applicant_name and self.email_id:
 			guess = self.email_id.split("@")[0]
 			self.applicant_name = " ".join([p.capitalize() for p in guess.split(".")])
+
+	def clear_rejection(self):
+		"""The reason and note belong to a rejection; they go when the applicant is no longer rejected."""
+		if self.status != "Rejected":
+			self.rejection_reason = None
+			self.rejection_note = None
+
+	def set_stage(self):
+		self.apply_manual_stage_move()
+		self.stage = get_stage(self)
+
+	def set_status_for_stage(self):
+		self.status = get_status_for_stage(self.stage, self.status)
+
+	@frappe.whitelist()
+	def put_on_hold(self):
+		self.check_permission("write")
+		self.check_can_hold()
+		self.status = "Hold"
+		self.save()
+
+	@frappe.whitelist()
+	def resume(self):
+		self.check_permission("write")
+		if self.status != "Hold":
+			return
+		self.status = "Open" if self.stage == "Applied" else "Shortlisted"
+		self.save()
+
+	def check_can_hold(self):
+		if self.stage in ("Rejected", "Hired"):
+			frappe.throw(
+				_("{0} is {1}, so they can't be put on hold.").format(
+					self.applicant_name or self.name, self.stage
+				),
+				title=_("Not Allowed"),
+			)
+
+	def apply_manual_stage_move(self):
+		"""Only Applied, Shortlisted and Rejected can be picked by hand (Kanban drag, list edit);
+		Interviewing, Offered and Hired follow the interviews and offers."""
+		previous = self.get_doc_before_save()
+		previous_stage = previous.stage if previous else "Applied"
+
+		if self.stage == previous_stage or self.stage == get_stage(self):
+			return
+
+		name = self.applicant_name or self.name
+
+		if self.stage in FOLLOWS_RECORDS_STAGES:
+			frappe.throw(get_follows_records_messages()[self.stage].format(name), title=_("Not Allowed"))
+
+		self.status = STATUS_FOR_MANUAL_STAGE[self.stage]
+		computed_stage = get_stage(self)
+
+		if computed_stage != self.stage and previous_stage != "Rejected":
+			frappe.throw(get_stay_in_stage_messages()[computed_stage].format(name), title=_("Not Allowed"))
 
 	def before_insert(self):
 		if self.job_title:
@@ -84,9 +150,7 @@ class JobApplicant(Document):
 				return
 
 			if job_opening.status == "Closed":
-				frappe.throw(
-					_("Cannot create a Job Applicant against a closed Job Opening"), title=_("Not Allowed")
-				)
+				frappe.throw(_("This opening is closed to new applicants."), title=_("Not Allowed"))
 			if job_opening.prevent_duplicate_applicant and self.email_id:
 				if frappe.db.exists(
 					"Job Applicant", {"email_id": self.email_id, "job_title": self.job_title}
@@ -102,18 +166,106 @@ class JobApplicant(Document):
 
 	def set_status_for_employee_referral(self):
 		emp_ref = frappe.get_doc("Employee Referral", self.employee_referral)
-		if self.status in ["Open", "Replied", "Hold"]:
+		if self.status in ["Open", "Replied", "Shortlisted", "Hold"]:
 			emp_ref.db_set("status", "In Process")
 		elif self.status in ["Accepted", "Rejected"]:
 			emp_ref.db_set("status", self.status)
 
 
-KANBAN_COLUMNS = [
-	{"column_name": "Open"},
-	{"column_name": "Replied", "indicator": "Orange"},
-	{"column_name": "Shortlisted", "indicator": "Blue"},
-	{"column_name": "Accepted", "indicator": "Green"},
-]
+STATUS_FOR_MANUAL_STAGE = {"Applied": "Open", "Shortlisted": "Shortlisted", "Rejected": "Rejected"}
+
+# Interviewing and Offered keep the status they had: Open or Shortlisted, both still true
+STATUS_FOR_STAGE = {**STATUS_FOR_MANUAL_STAGE, "Hired": "Accepted"}
+
+FOLLOWS_RECORDS_STAGES = ("Interviewing", "Offered", "Hired")
+
+
+def get_follows_records_messages() -> dict[str, str]:
+	return {
+		"Interviewing": _("Schedule an interview to move {0} to Interviewing."),
+		"Offered": _("Create a job offer to move {0} to Offered."),
+		"Hired": _("Mark the job offer as accepted to move {0} to Hired."),
+	}
+
+
+def get_stay_in_stage_messages() -> dict[str, str]:
+	return {
+		"Interviewing": _(
+			"{0} has an interview, so they stay in Interviewing. Cancel the interview to move them back."
+		),
+		"Offered": _("{0} has a job offer, so they stay in Offered. Cancel the offer to move them back."),
+		"Hired": _("{0} is already hired, so they stay in Hired."),
+	}
+
+
+def get_status_for_stage(stage: str, status: str) -> str:
+	"""The status that goes with a stage. Hold stays until resumed; Interviewing and Offered keep theirs."""
+	if stage in ("Rejected", "Hired"):
+		return STATUS_FOR_STAGE[stage]
+	if status == "Hold" and stage in ("Applied", "Shortlisted", "Interviewing", "Offered"):
+		return "Hold"
+	return status
+
+
+def get_stage(applicant: str | Document) -> str:
+	"""The hiring stage an applicant is in; the first matching rule wins."""
+	if isinstance(applicant, str):
+		applicant = frappe.get_doc("Job Applicant", applicant)
+
+	if applicant.status == "Rejected":
+		return "Rejected"
+
+	if has_accepted_offer(applicant.name) or frappe.db.exists("Employee", {"job_applicant": applicant.name}):
+		return "Hired"
+
+	# a draft offer counts: the candidate is at the offer stage while it is being prepared
+	if frappe.db.exists(
+		"Job Offer",
+		{
+			"job_applicant": applicant.name,
+			"docstatus": ["<", 2],
+			"status": ["not in", ["Rejected", "Cancelled", "Accepted"]],
+		},
+	):
+		return "Offered"
+
+	if has_interviews(applicant.name):
+		return "Interviewing"
+
+	if applicant.status in ("Shortlisted", "Accepted"):
+		return "Shortlisted"
+
+	# Hold keeps the stage it was put on hold in
+	if (
+		applicant.status == "Hold"
+		and frappe.db.get_value("Job Applicant", applicant.name, "stage") == "Shortlisted"
+	):
+		return "Shortlisted"
+
+	return "Applied"
+
+
+def has_accepted_offer(applicant: str) -> bool:
+	return bool(
+		frappe.db.exists("Job Offer", {"job_applicant": applicant, "docstatus": 1, "status": "Accepted"})
+	)
+
+
+def update_stage(applicant: str | None):
+	"""Store the stage after an interview, offer or employee changed, and refresh open lists."""
+	if not applicant:
+		return
+
+	current = frappe.db.get_value("Job Applicant", applicant, ["status", "stage"], as_dict=True)
+	if not current:
+		return
+
+	stage = get_stage(frappe._dict(name=applicant, status=current.status))
+	status = get_status_for_stage(stage, current.status)
+	if status != current.status:
+		frappe.db.set_value("Job Applicant", applicant, "status", status, update_modified=False)
+	if stage != current.stage:
+		frappe.get_doc("Job Applicant", applicant).db_set("stage", stage, notify=True)
 
 
 @frappe.whitelist()
@@ -158,31 +310,6 @@ def make_employee(source_name: str, target_doc: str | Document | None = None) ->
 		target_doc,
 		set_missing_values,
 	)
-
-
-@frappe.whitelist(methods=["POST"])
-def create_kanban_board(board_name: str) -> dict:
-	frappe.has_permission("Job Applicant", throw=True)
-
-	if frappe.db.exists("Kanban Board", board_name):
-		return frappe.get_doc("Kanban Board", board_name).as_dict()
-
-	board = frappe.new_doc("Kanban Board")
-	board.kanban_board_name = board_name
-	board.reference_doctype = "Job Applicant"
-	board.field_name = "status"
-	board.private = 0
-	board.fields = json.dumps(["designation", "applicant_rating"])
-	board.show_labels = 1
-
-	for col in KANBAN_COLUMNS:
-		board.append(
-			"columns",
-			{"column_name": col["column_name"], "indicator": col.get("indicator", ""), "status": "Active"},
-		)
-
-	board.insert(ignore_permissions=True)
-	return board.as_dict()
 
 
 @frappe.whitelist(methods=["POST"])
@@ -260,26 +387,32 @@ def schedule_interview(
 
 
 @frappe.whitelist()
-def get_interview_details(job_applicant: str) -> dict:
+def get_interview_details(job_applicant: str) -> list[dict] | None:
+	"""The applicant's interviews, newest first, for the form's Interview Summary."""
 	frappe.has_permission("Job Applicant", "read", job_applicant, throw=True)
-	interview_details = frappe.db.get_all(
+	interviews = frappe.get_all(
 		"Interview",
 		filters={"job_applicant": job_applicant, "docstatus": ["!=", 2]},
-		fields=["name", "interview_type", "scheduled_on", "average_rating", "status"],
+		fields=["name", "interview_type", "scheduled_on", "from_time", "average_rating", "status"],
+		order_by="scheduled_on desc, creation desc",
 	)
-	if not interview_details:
+	if not interviews:
 		return None
 
-	interview_detail_map = {}
-	meta = frappe.get_meta("Interview")
-	number_of_stars = meta.get_options("average_rating") or 5
+	results = defaultdict(list)
+	for row in frappe.get_all(
+		"Interview Feedback",
+		filters={"interview": ["in", [interview.name for interview in interviews]], "docstatus": 1},
+		fields=["interview", "result"],
+	):
+		results[row.interview].append(row.result)
 
-	for detail in interview_details:
-		detail.average_rating = detail.average_rating * number_of_stars if detail.average_rating else 0
-
-		interview_detail_map[detail.name] = detail
-
-	return {"interviews": interview_detail_map, "stars": number_of_stars}
+	for interview in interviews:
+		interview.feedback_results = results[interview.name]
+		interview.is_not_cleared = is_not_cleared(interview)
+		interview.from_time = str(interview.from_time or "")
+		interview.average_rating = stars_from_rating(interview.average_rating)
+	return interviews
 
 
 @frappe.whitelist()

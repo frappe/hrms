@@ -3,12 +3,13 @@
 
 
 import datetime
+from decimal import ROUND_HALF_UP, Decimal
 
 import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.query_builder.functions import Avg
-from frappe.utils import cint, cstr, get_datetime, get_link_to_form, get_time, getdate, nowtime
+from frappe.utils import cint, cstr, flt, get_datetime, get_link_to_form, get_time, getdate, nowtime
 
 
 class DuplicateInterviewRoundError(frappe.ValidationError):
@@ -27,6 +28,7 @@ class Interview(Document):
 		from hrms.hr.doctype.interview_detail.interview_detail import InterviewDetail
 
 		amended_from: DF.Link | None
+		applicant_name: DF.Data | None
 		average_rating: DF.Rating
 		designation: DF.Link | None
 		expected_average_rating: DF.Rating
@@ -44,6 +46,8 @@ class Interview(Document):
 	# end: auto-generated types
 
 	def validate(self):
+		validate_end_after_start(self.from_time, self.to_time)
+		self.validate_interviewers()
 		self.validate_duplicate_interview()
 		self.validate_designation()
 
@@ -55,10 +59,43 @@ class Interview(Document):
 			)
 		self.show_job_applicant_update_dialog()
 
+	def before_update_after_submit(self):
+		# a submitted interview has a result; it can switch between the two, never go back to undecided
+		if self.status not in ["Cleared", "Rejected"]:
+			frappe.throw(
+				_("A submitted interview can only be Cleared or Rejected."),
+				title=_("Not Allowed"),
+			)
+
+	def on_change(self):
+		self.update_job_applicant_stage()
+
+	def after_delete(self):
+		self.update_job_applicant_stage()
+
+	def update_job_applicant_stage(self):
+		# imported here: job applicant imports this module
+		from hrms.hr.doctype.job_applicant.job_applicant import update_stage
+
+		update_stage(self.job_applicant)
+
+	def validate_interviewers(self):
+		if not any(d.interviewer for d in self.interview_details):
+			frappe.throw(_("Add at least one interviewer"))
+
 	def validate_duplicate_interview(self):
+		if self.status == "Cancelled":
+			return
+
 		duplicate_interview = frappe.db.exists(
 			"Interview",
-			{"job_applicant": self.job_applicant, "interview_type": self.interview_type, "docstatus": 1},
+			{
+				"job_applicant": self.job_applicant,
+				"interview_type": self.interview_type,
+				"docstatus": ["<", 2],
+				"status": ["!=", "Cancelled"],
+				"name": ["!=", self.name],
+			},
 		)
 
 		if duplicate_interview:
@@ -85,41 +122,37 @@ class Interview(Document):
 			self.designation = applicant_designation
 
 	def show_job_applicant_update_dialog(self):
-		job_applicant_status = self.get_job_applicant_status()
-		if not job_applicant_status:
+		if self.status != "Rejected":
 			return
 
 		job_application_name = frappe.db.get_value("Job Applicant", self.job_applicant, "applicant_name")
 
 		frappe.msgprint(
-			_("Do you want to update the Job Applicant {0} as {1} based on this interview result?").format(
-				frappe.bold(job_application_name), frappe.bold(job_applicant_status)
-			),
-			title=_("Update Job Applicant"),
+			_("Mark {0} as rejected based on this interview?").format(frappe.bold(job_application_name)),
+			title=_("Reject Applicant"),
 			primary_action={
-				"label": _("Mark as {0}").format(job_applicant_status),
+				"label": _("Reject Applicant"),
 				"server_action": "hrms.hr.doctype.interview.interview.update_job_applicant_status",
-				"args": {"job_applicant": self.job_applicant, "status": job_applicant_status},
+				"args": {"job_applicant": self.job_applicant, "status": "Rejected"},
 			},
 		)
-
-	def get_job_applicant_status(self) -> str | None:
-		status_map = {"Cleared": "Accepted", "Rejected": "Rejected"}
-		return status_map.get(self.status, None)
 
 	@frappe.whitelist(methods=["POST"])
 	def reschedule_interview(
 		self, scheduled_on: datetime.date, from_time: datetime.time, to_time: datetime.time
-	) -> None:
+	) -> dict:
+		"""Moves the interview. Returns {"rescheduled", "email_sent"}: the email is skipped
+		(not an error) when no outgoing email account is set up."""
+		validate_end_after_start(from_time, to_time)
 		if (
 			getdate(scheduled_on) == getdate(self.scheduled_on)
 			and get_time(from_time) == get_time(self.from_time)
 			and get_time(to_time) == get_time(self.to_time)
 		):
 			frappe.msgprint(
-				_("No changes found in timings."), indicator="orange", title=_("Interview Not Rescheduled")
+				_("Date and time haven't changed."), indicator="orange", title=_("Interview Not Rescheduled")
 			)
-			return
+			return {"rescheduled": False, "email_sent": False}
 
 		original_date = self.scheduled_on
 		original_from_time = self.from_time
@@ -128,34 +161,114 @@ class Interview(Document):
 		self.db_set({"scheduled_on": scheduled_on, "from_time": from_time, "to_time": to_time})
 		self.notify_update()
 
-		recipients = get_recipients(self.name)
-
-		try:
-			frappe.sendmail(
-				recipients=recipients,
-				subject=_("Interview: {0} Rescheduled").format(self.name),
-				message=_("Your Interview session is rescheduled from {0} {1} - {2} to {3} {4} - {5}").format(
-					original_date,
-					original_from_time,
-					original_to_time,
-					self.scheduled_on,
-					self.from_time,
-					self.to_time,
-				),
-				reference_doctype=self.doctype,
-				reference_name=self.name,
-			)
-		except Exception:
-			frappe.msgprint(
-				_(
-					"Failed to send the Interview Reschedule notification. Please configure your email account."
+		email_sent = False
+		if can_send_email():
+			try:
+				frappe.sendmail(
+					recipients=get_recipients(self.name),
+					subject=_("Interview: {0} Rescheduled").format(self.name),
+					message=_(
+						"Your Interview session is rescheduled from {0} {1} - {2} to {3} {4} - {5}"
+					).format(
+						original_date,
+						original_from_time,
+						original_to_time,
+						self.scheduled_on,
+						self.from_time,
+						self.to_time,
+					),
+					reference_doctype=self.doctype,
+					reference_name=self.name,
 				)
-			)
+				email_sent = True
+			except frappe.OutgoingEmailError:
+				pass
 
-		frappe.msgprint(_("Interview Rescheduled successfully"), indicator="green")
+		return {"rescheduled": True, "email_sent": email_sent}
 
 	def on_discard(self):
 		self.db_set("status", "Cancelled")
+
+
+INTERVIEW_ACTIVE = ("Pending", "Under Review")
+
+
+def has_interviews(job_applicant: str) -> bool:
+	"""The applicant has an interview that isn't cancelled."""
+	return bool(
+		frappe.db.exists(
+			"Interview",
+			{"job_applicant": job_applicant, "docstatus": ["<", 2], "status": ["!=", "Cancelled"]},
+		)
+	)
+
+
+def close_open_interviews(job_applicant: str, reviewed_status: str) -> list[dict]:
+	"""Closes the applicant's drafts that still await a result: `reviewed_status` when someone already
+	gave feedback, Cancelled otherwise. Not submitted. Returns the changed ones with their previous
+	status, for an Undo."""
+	drafts = frappe.get_all(
+		"Interview",
+		filters={"job_applicant": job_applicant, "docstatus": 0, "status": ["in", INTERVIEW_ACTIVE]},
+		fields=["name", "status"],
+	)
+	has_feedback = get_interviews_with_feedback([draft.name for draft in drafts])
+	for draft in drafts:
+		save_interview_status(draft.name, reviewed_status if draft.name in has_feedback else "Cancelled")
+	return [{"name": draft.name, "status": draft.status} for draft in drafts]
+
+
+def restore_interviews(job_applicant: str, closed_interviews: list[dict]):
+	"""The Undo of `close_open_interviews`: drafts of this applicant go back to their previous status."""
+	for row in closed_interviews:
+		current = frappe.db.get_value("Interview", row["name"], ["job_applicant", "docstatus"], as_dict=True)
+		if not current or current.job_applicant != job_applicant or current.docstatus != 0:
+			continue
+		if row["status"] in INTERVIEW_ACTIVE:
+			save_interview_status(row["name"], row["status"])
+
+
+def reopen_closed_interviews(job_applicant: str):
+	"""Drafts closed as Cancelled or Rejected wait for a result again: Pending when they are still
+	ahead or nobody gave feedback, Under Review when feedback is in."""
+	drafts = frappe.get_all(
+		"Interview",
+		filters={"job_applicant": job_applicant, "docstatus": 0, "status": ["in", ["Cancelled", "Rejected"]]},
+		fields=["name", "scheduled_on"],
+	)
+	has_feedback = get_interviews_with_feedback([draft.name for draft in drafts])
+	for draft in drafts:
+		is_ahead = getdate(draft.scheduled_on) > getdate()
+		is_reviewed = draft.name in has_feedback and not is_ahead
+		save_interview_status(draft.name, "Under Review" if is_reviewed else "Pending")
+
+
+def get_interviews_with_feedback(interviews: list[str]) -> set[str]:
+	if not interviews:
+		return set()
+	return set(
+		frappe.get_all(
+			"Interview Feedback", filters={"interview": ["in", interviews], "docstatus": 1}, pluck="interview"
+		)
+	)
+
+
+def save_interview_status(name: str, status: str):
+	doc = frappe.get_doc("Interview", name)
+	doc.status = status
+	doc.flags.ignore_validate = True  # closing a draft must not depend on its panel being complete
+	doc.flags.ignore_links = True  # link checks re-run fetch_from, which would overwrite e.g. designation
+	doc.save()
+
+
+def stars_from_rating(rating) -> float:
+	"""A stored 0-1 rating as stars out of 5, rounded half up to 1 decimal (0.77 -> 3.9)."""
+	stars = Decimal(str(flt(rating))) * 5
+	return float(stars.quantize(Decimal("0.1"), rounding=ROUND_HALF_UP))
+
+
+def can_send_email() -> bool:
+	return bool(frappe.db.exists("Email Account", {"default_outgoing": 1, "enable_outgoing": 1}))
 
 
 @frappe.whitelist()
@@ -188,14 +301,15 @@ def get_feedback(interview: str) -> list[dict]:
 	interview_feedback = frappe.qb.DocType("Interview Feedback")
 	employee = frappe.qb.DocType("Employee")
 
-	return (
+	feedback = (
 		frappe.qb.from_(interview_feedback)
 		.select(
 			interview_feedback.name,
 			interview_feedback.modified.as_("added_on"),
 			interview_feedback.interviewer.as_("user"),
 			interview_feedback.feedback,
-			(interview_feedback.average_rating * 5).as_("total_score"),
+			interview_feedback.result,
+			interview_feedback.average_rating.as_("total_score"),
 			employee.employee_name.as_("reviewer_name"),
 			employee.designation.as_("reviewer_designation"),
 		)
@@ -204,6 +318,10 @@ def get_feedback(interview: str) -> list[dict]:
 		.where((interview_feedback.interview == interview) & (interview_feedback.docstatus == 1))
 		.orderby(interview_feedback.creation)
 	).run(as_dict=True)
+
+	for row in feedback:
+		row["total_score"] = stars_from_rating(row["total_score"])
+	return feedback
 
 
 @frappe.whitelist()
@@ -257,7 +375,7 @@ def send_interview_reminder():
 		as_dict=True,
 	)
 
-	if not cint(reminder_settings.send_interview_reminder):
+	if not cint(reminder_settings.send_interview_reminder) or not can_send_email():
 		return
 
 	remind_before = cstr(frappe.db.get_single_value("HR Settings", "remind_before")) or "01:00:00"
@@ -308,7 +426,7 @@ def send_daily_feedback_reminder():
 		as_dict=True,
 	)
 
-	if not cint(reminder_settings.send_interview_feedback_reminder):
+	if not cint(reminder_settings.send_interview_feedback_reminder) or not can_send_email():
 		return
 
 	interview_feedback_template = frappe.get_doc(
@@ -361,7 +479,7 @@ def create_interview_feedback(data: str | dict, interview_name: str, interviewer
 		data = frappe._dict(json.loads(data))
 
 	if frappe.session.user != interviewer:
-		frappe.throw(_("Only Interviewer Are allowed to submit Interview Feedback"))
+		frappe.throw(_("Only the interview panel can submit feedback."))
 
 	interview_feedback = frappe.new_doc("Interview Feedback")
 	interview_feedback.interview = interview_name
@@ -377,12 +495,6 @@ def create_interview_feedback(data: str | dict, interview_name: str, interviewer
 
 	interview_feedback.save()
 	interview_feedback.submit()
-
-	frappe.msgprint(
-		_("Interview Feedback {0} submitted successfully").format(
-			get_link_to_form("Interview Feedback", interview_feedback.name)
-		)
-	)
 
 
 @frappe.whitelist()
@@ -476,3 +588,8 @@ def get_events(start: str, end: str, filters: str | None = None):
 		events.append(interview_data)
 
 	return events
+
+
+def validate_end_after_start(from_time, to_time):
+	if from_time and to_time and get_time(to_time) <= get_time(from_time):
+		frappe.throw(_("End time must be after start time"))

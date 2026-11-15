@@ -3,12 +3,13 @@
 
 import datetime
 import os
+from unittest.mock import patch
 
 import frappe
 from frappe import _
 from frappe.core.doctype.user_permission.test_user_permission import create_user
 from frappe.permissions import add_user_permission
-from frappe.utils import add_days, get_datetime, get_time, getdate, nowtime
+from frappe.utils import add_days, flt, get_datetime, get_time, getdate, nowtime
 
 from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.doctype.employee.test_employee import make_employee
@@ -17,6 +18,7 @@ from hrms.hr.doctype.interview.interview import (
 	DuplicateInterviewRoundError,
 	get_feedback,
 	get_skill_wise_average_rating,
+	stars_from_rating,
 	update_job_applicant_status,
 )
 from hrms.hr.doctype.job_applicant.job_applicant import get_interview_details
@@ -74,6 +76,64 @@ class TestInterview(HRMSTestSuite):
 
 		self.assertFalse(frappe.db.exists("Email Queue", {"reference_name": interview.name}))
 
+	def test_reschedule_without_outgoing_email_account(self):
+		job_applicant = create_job_applicant()
+		interview = create_interview_and_dependencies(
+			job_applicant.name,
+			scheduled_on=add_days(getdate(), -4),
+			from_time="10:00:00",
+			to_time="11:00:00",
+		)
+
+		with patch("hrms.hr.doctype.interview.interview.can_send_email", return_value=False):
+			result = interview.reschedule_interview(
+				add_days(getdate(interview.scheduled_on), 2), from_time="11:00:00", to_time="12:00:00"
+			)
+
+		self.assertEqual(result, {"rescheduled": True, "email_sent": False})
+		interview.reload()
+		self.assertEqual(get_time(interview.from_time), get_time("11:00:00"))
+
+	def test_end_time_must_be_after_start_time(self):
+		job_applicant = create_job_applicant()
+		interview = create_interview_and_dependencies(
+			job_applicant.name,
+			scheduled_on=add_days(getdate(), 2),
+			from_time="10:00:00",
+			to_time="11:00:00",
+		)
+
+		for from_time, to_time in (("15:00:00", "14:45:00"), ("15:00:00", "15:00:00")):
+			with self.assertRaises(frappe.ValidationError):
+				interview.reschedule_interview(interview.scheduled_on, from_time, to_time)
+
+			interview.reload()
+			interview.from_time, interview.to_time = from_time, to_time
+			with self.assertRaises(frappe.ValidationError):
+				interview.save()
+			interview.reload()
+
+		self.assertEqual(get_time(interview.from_time), get_time("10:00:00"))
+
+	def test_interviewers_are_required(self):
+		job_applicant = create_job_applicant()
+		interview = create_interview_and_dependencies(job_applicant.name, save=False)
+		interview.interview_details = []
+		self.assertRaises(frappe.ValidationError, interview.save)
+
+	def test_feedback_total_score_is_rounded(self):
+		from hrms.hr.doctype.interview_feedback.test_interview_feedback import create_interview_feedback
+
+		job_applicant = create_job_applicant()
+		interview = create_interview_and_dependencies(job_applicant.name)
+		create_interview_feedback(
+			interview.name,
+			"test_interviewer1@example.com",
+			[{"skill": "Python", "rating": 0.77}, {"skill": "JS", "rating": 0.77}],
+		)
+		self.assertEqual(get_feedback(interview.name)[0].total_score, 3.9)
+		self.assertIn(get_feedback(interview.name)[0].result, ("Cleared", "Rejected"))
+
 	def test_notification_for_scheduling(self):
 		from hrms.hr.doctype.interview.interview import send_interview_reminder
 
@@ -123,17 +183,14 @@ class TestInterview(HRMSTestSuite):
 		interview = create_interview_and_dependencies(job_applicant.name)
 
 		details = get_interview_details(job_applicant.name)
-		self.assertEqual(details.get("stars"), 5)
-		self.assertEqual(
-			details.get("interviews").get(interview.name),
-			{
-				"name": interview.name,
-				"interview_type": interview.interview_type,
-				"scheduled_on": interview.scheduled_on,
-				"average_rating": interview.average_rating * 5,
-				"status": "Pending",
-			},
-		)
+		self.assertEqual(len(details), 1)
+		detail = details[0]
+		self.assertEqual(detail.name, interview.name)
+		self.assertEqual(detail.interview_type, interview.interview_type)
+		self.assertEqual(detail.scheduled_on, interview.scheduled_on)
+		self.assertEqual(detail.status, "Pending")
+		self.assertEqual(detail.average_rating, 0)
+		self.assertFalse(detail.is_not_cleared)
 
 	def test_skill_wise_average_rating(self):
 		from hrms.hr.doctype.interview_feedback.test_interview_feedback import create_interview_feedback
@@ -187,7 +244,8 @@ class TestInterview(HRMSTestSuite):
 				"added_on": get_datetime(feedback_1.modified),
 				"user": feedback_1.interviewer,
 				"feedback": feedback_1.feedback,
-				"total_score": feedback_1.average_rating * 5,
+				"result": feedback_1.result,
+				"total_score": stars_from_rating(feedback_1.average_rating),
 				"reviewer_name": None,
 				"reviewer_designation": None,
 			},
@@ -196,7 +254,8 @@ class TestInterview(HRMSTestSuite):
 				"added_on": get_datetime(feedback_2.modified),
 				"user": feedback_2.interviewer,
 				"feedback": feedback_2.feedback,
-				"total_score": feedback_2.average_rating * 5,
+				"result": feedback_2.result,
+				"total_score": stars_from_rating(feedback_2.average_rating),
 				"reviewer_name": "Test",
 				"reviewer_designation": "Engineer",
 			},
@@ -225,6 +284,66 @@ class TestInterview(HRMSTestSuite):
 		job_applicant.reload()
 
 		self.assertEqual(job_applicant.status, "Accepted")
+
+	def test_cleared_interview_does_not_accept_applicant(self):
+		job_applicant = create_job_applicant()
+		interview = create_interview_and_dependencies(job_applicant.name, status="Cleared")
+		frappe.clear_messages()
+		interview.show_job_applicant_update_dialog()
+		self.assertFalse(frappe.local.message_log)
+
+		interview.status = "Rejected"
+		interview.show_job_applicant_update_dialog()
+		self.assertEqual(frappe.local.message_log[-1]["primary_action"]["args"]["status"], "Rejected")
+
+	def test_duplicate_interview_check_includes_drafts(self):
+		job_applicant = create_job_applicant()
+		# fixed times: before 10am frappe reads a saved Time back as "1:23" and sees "01:23" as a change
+		first = create_interview_and_dependencies(
+			job_applicant.name, from_time="10:00:00", to_time="11:00:00"
+		)
+		self.assertEqual(first.docstatus, 0)
+
+		first.save()
+
+		second = frappe.new_doc("Interview")
+		second.update(
+			{
+				"interview_type": first.interview_type,
+				"job_applicant": job_applicant.name,
+				"scheduled_on": first.scheduled_on,
+				"from_time": first.from_time,
+				"to_time": first.to_time,
+			}
+		)
+		for row in first.interview_details:
+			second.append("interview_details", {"interviewer": row.interviewer})
+		self.assertRaises(frappe.ValidationError, second.save)
+
+		first.db_set("status", "Cancelled")
+		second.save()
+		self.assertTrue(second.name)
+
+	def test_cancelling_a_duplicate_unblocks_both(self):
+		job_applicant = create_job_applicant()
+		# fixed times: before 10am frappe reads a saved Time back as "1:23" and sees "01:23" as a change
+		first = create_interview_and_dependencies(
+			job_applicant.name, from_time="10:00:00", to_time="11:00:00"
+		)
+		first.save()
+
+		# a double click can book the same round twice
+		duplicate = frappe.copy_doc(first)
+		duplicate.flags.ignore_validate = True
+		duplicate.insert()
+		self.assertRaises(frappe.ValidationError, first.save)
+
+		duplicate.reload()
+		duplicate.status = "Cancelled"
+		duplicate.save()
+
+		first.reload()
+		first.save()
 
 	def test_status_on_discard(self):
 		job_applicant = create_job_applicant()
