@@ -64,13 +64,13 @@
 			<div class="careers-description text-p-base">{{ description }}</div>
 		{%- endif -%}
 		{%- if is_open -%}
-			<a class="es-button careers-apply-desktop careers-body-apply" data-variant="solid" href="{{ apply_route }}">{{ _("Apply for this role") }}</a>
+			<a class="es-button careers-apply-desktop careers-body-apply" data-variant="solid" href="{{ apply_route | e }}">{{ _("Apply for this role") }}</a>
 		{%- endif -%}
 	</div>
 
 	{%- if is_open -%}
 		<div class="careers-sticky-apply">
-			<a class="es-button" data-variant="solid" href="{{ apply_route }}">{{ _("Apply for this role") }}</a>
+			<a class="es-button" data-variant="solid" href="{{ apply_route | e }}">{{ _("Apply for this role") }}</a>
 		</div>
 	{%- endif -%}
 </div>

@@ -34,15 +34,15 @@
 				name="query"
 				id="search-box"
 				class="careers-control"
-				placeholder="{{ _('Search roles') }}"
-				aria-label="{{ _('Search roles') }}"
+				placeholder="{{ _('Search roles') | e }}"
+				aria-label="{{ _('Search roles') | e }}"
 				value="{{ query | e }}"
 			/>
 		</label>
 
 		{% for control in filter_controls %}
-		<span class="careers-select careers-select-{{ control.name }}">
-			<select name="{{ control.name }}" class="careers-control" aria-label="{{ control.all_label }}">
+		<span class="careers-select careers-select-{{ control.name | e }}">
+			<select name="{{ control.name | e }}" class="careers-control" aria-label="{{ control.all_label | e }}">
 				<option value="">{{ control.all_label }}</option>
 				{% for option in control.options %}
 				<option value="{{ option.value | e }}" {{ "selected" if option.selected }}>{{ option.label }}</option>
@@ -53,20 +53,20 @@
 		{% endfor %}
 
 		<input type="hidden" name="sort" value="asc" {{ "" if sort_ascending else "disabled" }} />
-		<button id="sort" type="button" class="es-button careers-sort" aria-label="{{ _('Posting Date') }}">
+		<button id="sort" type="button" class="es-button careers-sort" aria-label="{{ _('Posting Date') | e }}">
 			{{ icon("arrow-up-narrow-wide" if sort_ascending else "arrow-down-wide-narrow") }}
 			<span class="careers-sort-label">{{ _("Posting Date") }}</span>
 		</button>
 
 		{% if has_filters %}
-		<a href="/jobs{{ '?sort=asc' if sort_ascending }}" class="es-button" data-variant="ghost" data-icon-button="true" name="clear-filters" aria-label="{{ _('Clear All') }}" title="{{ _('Clear All') }}">{{ icon("x") }}</a>
+		<a href="/jobs{{ '?sort=asc' if sort_ascending }}" class="es-button" data-variant="ghost" data-icon-button="true" name="clear-filters" aria-label="{{ _('Clear All') | e }}" title="{{ _('Clear All') | e }}">{{ icon("x") }}</a>
 		{% endif %}
 
-		<div class="es-tab-buttons careers-views" role="radiogroup" aria-label="{{ _('View') }}">
-			<button type="button" class="es-pill" role="radio" aria-checked="true" data-state="active" data-view="cards" aria-label="{{ _('Cards') }}" title="{{ _('Cards') }}">
+		<div class="es-tab-buttons careers-views" role="radiogroup" aria-label="{{ _('View') | e }}">
+			<button type="button" class="es-pill" role="radio" aria-checked="true" data-state="active" data-view="cards" aria-label="{{ _('Cards') | e }}" title="{{ _('Cards') | e }}">
 				{{ icon("layout-grid") }}
 			</button>
-			<button type="button" class="es-pill" role="radio" aria-checked="false" data-state="inactive" data-view="list" aria-label="{{ _('List') }}" title="{{ _('List') }}">
+			<button type="button" class="es-pill" role="radio" aria-checked="false" data-state="inactive" data-view="list" aria-label="{{ _('List') | e }}" title="{{ _('List') | e }}">
 				{{ icon("list") }}
 			</button>
 		</div>
@@ -81,10 +81,10 @@
 	{% if job_openings %}
 	<div class="careers-cards-view careers-grid">
 		{% for jo in job_openings %}
-		<a class="careers-card" href="/{{ jo.route }}">
+		<a class="careers-card" href="/{{ jo.route | e }}">
 			<div class="careers-card-top">
 				<div class="careers-card-main">
-					<p class="careers-card-title text-base-medium" title="{{ jo.job_title }}">{{ jo.job_title }}</p>
+					<p class="careers-card-title text-base-medium" title="{{ jo.job_title | e }}">{{ jo.job_title }}</p>
 					<p class="careers-card-meta text-p-base">{{ [jo.team, jo.location]|select|join(" · ") }}</p>
 				</div>
 				{% if jo.employment_type %}
@@ -104,7 +104,7 @@
 
 	<div class="careers-list-view es-item-list text-p-sm">
 		{% for jo in job_openings %}
-		<a class="es-item-list__row" href="/{{ jo.route }}">
+		<a class="es-item-list__row" href="/{{ jo.route | e }}">
 			<span class="es-item-list__text">
 				<span class="es-item-list__title">{{ jo.job_title }}</span>
 				{% set pay = salary(jo)|trim %}
@@ -127,8 +127,8 @@
 	{% endif %}
 
 	{%- if no_of_pages > 1 -%}
-	<nav class="careers-pagination" aria-label="{{ _('Pagination') }}">
-		<button id="previous" class="es-button" data-variant="ghost" data-icon-button="true" aria-label="{{ _('Previous') }}" {{ "disabled" if current_page <= 1 }}>
+	<nav class="careers-pagination" aria-label="{{ _('Pagination') | e }}">
+		<button id="previous" class="es-button" data-variant="ghost" data-icon-button="true" aria-label="{{ _('Previous') | e }}" {{ "disabled" if current_page <= 1 }}>
 			{{ icon("chevron-left") }}
 		</button>
 		{% set initial_page = 1 if current_page == 1 else ((current_page / 3 + 0.5) | round(method='floor')|int * 3 - 2) %}
@@ -145,7 +145,7 @@
 				{% if (loop.first and pg != 1) or (loop.last and pg != no_of_pages) %}...{% else %}{{ pg }}{% endif %}
 			</button>
 		{% endfor %}
-		<button id="next" class="es-button" data-variant="ghost" data-icon-button="true" aria-label="{{ _('Next') }}" {{ "disabled" if current_page >= no_of_pages }}>
+		<button id="next" class="es-button" data-variant="ghost" data-icon-button="true" aria-label="{{ _('Next') | e }}" {{ "disabled" if current_page >= no_of_pages }}>
 			{{ icon("chevron-right") }}
 		</button>
 	</nav>
