@@ -191,6 +191,7 @@ class Interview(Document):
 
 
 INTERVIEW_ACTIVE = ("Pending", "Under Review")
+INTERVIEW_RESULTS = ("Cleared", "Rejected")
 
 
 def has_interviews(job_applicant: str) -> bool:
@@ -201,6 +202,58 @@ def has_interviews(job_applicant: str) -> bool:
 			{"job_applicant": job_applicant, "docstatus": ["<", 2], "status": ["!=", "Cancelled"]},
 		)
 	)
+
+
+def has_cleared_interview(job_applicant: str) -> bool:
+	"""One rule for "ready for an offer": an interview is cleared when its status says so,
+	whether it is still a draft or already submitted."""
+	return bool(
+		frappe.db.exists(
+			"Interview", {"job_applicant": job_applicant, "docstatus": ["<", 2], "status": "Cleared"}
+		)
+	)
+
+
+def is_not_cleared(interview) -> bool:
+	"""The interview failed: it is marked rejected, or it has feedback and every feedback rejects."""
+	results = getattr(interview, "feedback_results", None) or []
+	return interview.status == "Rejected" or (
+		interview.status in INTERVIEW_ACTIVE and bool(results) and all(r == "Rejected" for r in results)
+	)
+
+
+@frappe.whitelist(methods=["POST"])
+def submit_interview_results(job_applicant: str) -> dict:
+	"""Submits the applicant's draft interviews that already have a result (Cleared or Rejected).
+
+	Drafts still Pending or Under Review are left alone. Permission is checked for every interview
+	before the first one is submitted, so a refusal names the interview and nothing is submitted."""
+	frappe.has_permission("Job Applicant", "read", doc=job_applicant, throw=True)
+	drafts = frappe.get_all(
+		"Interview",
+		filters={"job_applicant": job_applicant, "docstatus": 0, "status": ["in", INTERVIEW_RESULTS]},
+		fields=["name", "interview_type", "status"],
+		order_by="scheduled_on asc, creation asc",
+	)
+	for draft in drafts:
+		if not frappe.has_permission("Interview", "submit", doc=draft.name):
+			frappe.throw(
+				_("You can't submit {0} ({1}).").format(draft.interview_type or draft.name, draft.name),
+				frappe.PermissionError,
+			)
+	for draft in drafts:
+		submit_quietly(frappe.get_doc("Interview", draft.name))
+	return {
+		"submitted": [draft.name for draft in drafts],
+		"rejected": any(draft.status == "Rejected" for draft in drafts),
+	}
+
+
+def submit_quietly(doc):
+	"""Submits without the form's on_submit message; the caller asks about rejecting in its own dialog."""
+	logged = len(frappe.local.message_log)
+	doc.submit()
+	del frappe.local.message_log[logged:]
 
 
 def close_open_interviews(job_applicant: str, reviewed_status: str) -> list[dict]:

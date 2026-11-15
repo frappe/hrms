@@ -12,10 +12,18 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe.model.naming import append_number_if_name_exists
-from frappe.utils import flt, validate_email_address
+from frappe.utils import add_to_date, cint, escape_html, flt, now_datetime, validate_email_address
 
-from hrms.hr.doctype.interview.interview import get_interviewers, has_interviews, stars_from_rating
-from hrms.hr.page.hiring.hiring import is_not_cleared
+from hrms.hr.doctype.interview.interview import (
+	close_open_interviews,
+	get_interviewers,
+	has_cleared_interview,
+	has_interviews,
+	is_not_cleared,
+	restore_interviews,
+	stars_from_rating,
+)
+from hrms.hr.doctype.job_applicant.stage_info import APPLICANT_FIELDS, ApplicantRecords
 
 
 class DuplicationError(frappe.ValidationError):
@@ -92,7 +100,14 @@ class JobApplicant(Document):
 
 	def set_stage(self):
 		self.apply_manual_stage_move()
-		self.stage = get_stage(self)
+		self.stage = self.get_stage_by_rules()
+
+	def get_stage_by_rules(self) -> str:
+		"""The stage the rules give; on hold, the stage stored before this save is the one kept."""
+		previous = self.get_doc_before_save()
+		return get_stage(
+			frappe._dict(name=self.name, status=self.status, stage=previous.stage if previous else None)
+		)
 
 	def set_status_for_stage(self):
 		self.status = get_status_for_stage(self.stage, self.status)
@@ -127,7 +142,7 @@ class JobApplicant(Document):
 		previous = self.get_doc_before_save()
 		previous_stage = previous.stage if previous else "Applied"
 
-		if self.stage == previous_stage or self.stage == get_stage(self):
+		if self.stage == previous_stage or self.stage == self.get_stage_by_rules():
 			return
 
 		name = self.applicant_name or self.name
@@ -136,7 +151,7 @@ class JobApplicant(Document):
 			frappe.throw(get_follows_records_messages()[self.stage].format(name), title=_("Not Allowed"))
 
 		self.status = STATUS_FOR_MANUAL_STAGE[self.stage]
-		computed_stage = get_stage(self)
+		computed_stage = self.get_stage_by_rules()
 
 		if computed_stage != self.stage and previous_stage != "Rejected":
 			frappe.throw(get_stay_in_stage_messages()[computed_stage].format(name), title=_("Not Allowed"))
@@ -174,8 +189,8 @@ class JobApplicant(Document):
 
 STATUS_FOR_MANUAL_STAGE = {"Applied": "Open", "Shortlisted": "Shortlisted", "Rejected": "Rejected"}
 
-# Interviewing and Offered keep the status they had: Open or Shortlisted, both still true
-STATUS_FOR_STAGE = {**STATUS_FOR_MANUAL_STAGE, "Hired": "Accepted"}
+# the other stages keep the status they have: Open, Shortlisted or Hold, all still true
+STATUS_FOR_FINAL_STAGE = {"Rejected": "Rejected", "Hired": "Accepted"}
 
 FOLLOWS_RECORDS_STAGES = ("Interviewing", "Offered", "Hired")
 
@@ -199,19 +214,12 @@ def get_stay_in_stage_messages() -> dict[str, str]:
 
 
 def get_status_for_stage(stage: str, status: str) -> str:
-	"""The status that goes with a stage. Hold stays until resumed; Interviewing and Offered keep theirs."""
-	if stage in ("Rejected", "Hired"):
-		return STATUS_FOR_STAGE[stage]
-	if status == "Hold" and stage in ("Applied", "Shortlisted", "Interviewing", "Offered"):
-		return "Hold"
-	return status
+	"""The status that goes with a stage: Rejected and Hired set theirs, the others keep it."""
+	return STATUS_FOR_FINAL_STAGE.get(stage, status)
 
 
-def get_stage(applicant: str | Document) -> str:
-	"""The hiring stage an applicant is in; the first matching rule wins."""
-	if isinstance(applicant, str):
-		applicant = frappe.get_doc("Job Applicant", applicant)
-
+def get_stage(applicant) -> str:
+	"""The hiring stage of an applicant (`name`, `status` and the stored `stage`); the first matching rule wins."""
 	if applicant.status == "Rejected":
 		return "Rejected"
 
@@ -236,10 +244,7 @@ def get_stage(applicant: str | Document) -> str:
 		return "Shortlisted"
 
 	# Hold keeps the stage it was put on hold in
-	if (
-		applicant.status == "Hold"
-		and frappe.db.get_value("Job Applicant", applicant.name, "stage") == "Shortlisted"
-	):
+	if applicant.status == "Hold" and applicant.stage == "Shortlisted":
 		return "Shortlisted"
 
 	return "Applied"
@@ -256,11 +261,11 @@ def update_stage(applicant: str | None):
 	if not applicant:
 		return
 
-	current = frappe.db.get_value("Job Applicant", applicant, ["status", "stage"], as_dict=True)
+	current = frappe.db.get_value("Job Applicant", applicant, ["name", "status", "stage"], as_dict=True)
 	if not current:
 		return
 
-	stage = get_stage(frappe._dict(name=applicant, status=current.status))
+	stage = get_stage(current)
 	status = get_status_for_stage(stage, current.status)
 	if status != current.status:
 		frappe.db.set_value("Job Applicant", applicant, "status", status, update_modified=False)
@@ -425,4 +430,157 @@ def get_applicant_to_hire_percentage() -> dict:
 	return {
 		"value": flt(total_hired) / flt(total_applicants) * 100 if total_applicants else 0,
 		"fieldtype": "Percent",
+	}
+
+
+@frappe.whitelist(methods=["GET"])
+def get_applicant_stage(job_applicant: str) -> dict:
+	"""The stage and the fact about it, for the form's headline."""
+	frappe.has_permission("Job Applicant", "read", doc=job_applicant, throw=True)
+	applicant = frappe.get_list("Job Applicant", filters={"name": job_applicant}, fields=APPLICANT_FIELDS)[0]
+	info = ApplicantRecords([applicant]).get_stage_info(applicant)
+	return {"stage": info["stage"], "fact": info["fact"]}
+
+
+@frappe.whitelist(methods=["GET"])
+def get_offer_readiness(job_applicant: str) -> dict:
+	"""Whether making an offer needs a confirmation: they were interviewed but none cleared."""
+	frappe.has_permission("Job Applicant", "read", doc=job_applicant, throw=True)
+	return {
+		"has_cleared_interview": has_cleared_interview(job_applicant),
+		"needs_confirmation": has_interviews(job_applicant) and not has_cleared_interview(job_applicant),
+		"has_live_offer": bool(
+			frappe.db.exists(
+				"Job Offer",
+				{
+					"job_applicant": job_applicant,
+					"docstatus": ["<", 2],
+					"status": ["not in", ["Cancelled", "Rejected"]],
+				},
+			)
+		),
+		"has_accepted_offer": has_accepted_offer(job_applicant),
+	}
+
+
+@frappe.whitelist(methods=["GET"])
+def get_reject_details(job_applicant: str) -> dict:
+	"""What the reject dialog needs about an applicant."""
+	frappe.has_permission("Job Applicant", "read", doc=job_applicant, throw=True)
+	name, applicant_name, email_id, opening = frappe.db.get_value(
+		"Job Applicant", job_applicant, ["name", "applicant_name", "email_id", "job_title"]
+	)
+	details = frappe.db.get_value("Job Opening", opening, ["job_title", "company"], as_dict=True) or {}
+	return {
+		"name": name,
+		"applicant_name": applicant_name,
+		"email_id": email_id,
+		**details,
+		**get_email_setup(),
+	}
+
+
+@frappe.whitelist(methods=["POST"])
+def reject_applicant(
+	job_applicant: str,
+	send_email: int = 0,
+	subject: str | None = None,
+	message: str | None = None,
+	reason: str | None = None,
+	note: str | None = None,
+) -> dict:
+	"""Rejects an applicant with a reason and an optional note, optionally emailing them.
+	The mail waits 30 seconds in the queue so Undo can cancel it."""
+	frappe.has_permission("Job Applicant", "write", doc=job_applicant, throw=True)
+	previous_status = frappe.db.get_value("Job Applicant", job_applicant, "status")
+	set_applicant_status(job_applicant, "Rejected", reason, note)
+	closed_interviews = close_open_interviews(job_applicant, "Rejected")
+
+	communication = None
+	if cint(send_email):
+		from frappe.core.doctype.communication.email import make
+
+		result = make(
+			doctype="Job Applicant",
+			name=job_applicant,
+			subject=subject,
+			content=escape_html(message or "").replace("\n", "<br>"),
+			recipients=frappe.db.get_value("Job Applicant", job_applicant, "email_id"),
+			sender=get_email_setup()["email_sender"],
+			send_email=1,
+			send_after=add_to_date(now_datetime(), seconds=30),
+		)
+		communication = result.get("name")
+	return {
+		"previous_status": previous_status,
+		"communication": communication,
+		"closed_interviews": closed_interviews,
+	}
+
+
+@frappe.whitelist(methods=["POST"])
+def undo_reject_applicant(
+	job_applicant: str,
+	previous_status: str,
+	communication: str | None = None,
+	closed_interviews: str | list | None = None,
+) -> dict:
+	"""Restores the status and the interviews the reject closed, and cancels the rejection email
+	if it hasn't gone out yet."""
+	frappe.has_permission("Job Applicant", "write", doc=job_applicant, throw=True)
+	set_applicant_status(job_applicant, previous_status)
+	restore_interviews(job_applicant, frappe.parse_json(closed_interviews) or [])
+	return {"email_cancelled": cancel_queued_email(job_applicant, communication)}
+
+
+def set_applicant_status(job_applicant: str, status: str, reason: str | None = None, note: str | None = None):
+	"""Saves the status. Leaving Rejected clears the reason and note (Job Applicant validate)."""
+	doc = frappe.get_doc("Job Applicant", job_applicant)
+	doc.status = status
+	if status == "Rejected":
+		doc.rejection_reason = reason or doc.rejection_reason
+		doc.rejection_note = (note or "").strip() or doc.rejection_note
+	doc.save()
+
+
+def cancel_queued_email(job_applicant: str, communication: str | None) -> bool:
+	"""Drops the applicant's email if it is still waiting in the queue."""
+	if not communication:
+		return False
+	reference = frappe.db.get_value(
+		"Communication", communication, ["reference_doctype", "reference_name"], as_dict=True
+	)
+	if not reference or (reference.reference_doctype, reference.reference_name) != (
+		"Job Applicant",
+		job_applicant,
+	):
+		return False
+
+	queued = frappe.get_all(
+		"Email Queue", filters={"communication": communication}, fields=["name", "status"]
+	)
+	if not queued or any(row.status != "Not Sent" for row in queued):
+		return False
+	# Email Queue can only be deleted by Administrator; the row belongs to this applicant, so drop it directly
+	names = [row.name for row in queued]
+	frappe.db.delete("Email Queue Recipient", {"parent": ["in", names]})
+	frappe.db.delete("Email Queue", {"name": ["in", names]})
+	frappe.delete_doc("Communication", communication, ignore_permissions=True, force=True)
+	return True
+
+
+def get_email_setup() -> dict:
+	"""The outgoing account hiring mail goes from, if any."""
+	sender = frappe.db.get_value(
+		"Email Account",
+		{"enable_outgoing": 1},
+		"email_id",
+		order_by="default_outgoing desc",
+	)
+	if sender:
+		sender = frappe.db.get_single_value("HR Settings", "hiring_sender_email") or sender
+	return {
+		"can_send_email": bool(sender),
+		"email_sender": sender,
+		"can_set_up_email": bool(frappe.has_permission("Email Account", "create")),
 	}

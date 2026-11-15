@@ -21,7 +21,7 @@ frappe.kanban_v2.settings["Job Applicant"] = {
 		}
 		frappe
 			.call({
-				method: "hrms.hr.page.hiring.hiring.get_opening_header",
+				method: "hrms.hr.doctype.job_opening.job_opening.get_opening_header",
 				type: "GET",
 				args: { job_opening: filter[3] },
 			})

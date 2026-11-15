@@ -6,7 +6,7 @@ frappe.provide("hrms.hiring");
  * resolves true once the step is done and false when it is cancelled.
  */
 
-const APPLICANT_API = "hrms.hr.page.hiring.applicant";
+const APPLICANT_API = "hrms.hr.doctype.job_applicant.job_applicant";
 
 /** Resolves true once an interview is booked (and says so in a toast), false when cancelled. */
 hrms.hiring.schedule_interview = async (applicant) => {
@@ -156,7 +156,10 @@ hrms.hiring.create_offer = async (applicant) => {
 		open_submit_results_dialog({
 			drafts,
 			on_confirm: async () => {
-				await frappe.xcall(`${APPLICANT_API}.submit_interview_results`, { job_applicant });
+				await frappe.xcall(
+					"hrms.hr.doctype.interview.interview.submit_interview_results",
+					{ job_applicant },
+				);
 				is_confirmed = true;
 				resolve(await open_offer());
 			},

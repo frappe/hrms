@@ -145,6 +145,9 @@ class TestJobApplicantStage(HRMSTestSuite):
 	def stored_stage(self, applicant) -> str:
 		return frappe.db.get_value("Job Applicant", applicant.name, "stage")
 
+	def rules_stage(self, applicant) -> str:
+		return get_stage(frappe.get_doc("Job Applicant", applicant.name))
+
 	def move_to(self, applicant, stage: str):
 		applicant.reload()
 		applicant.stage = stage
@@ -166,7 +169,7 @@ class TestJobApplicantStage(HRMSTestSuite):
 			applicant.status = status
 			applicant.save()
 			self.assertEqual(applicant.stage, stage, status)
-			self.assertEqual(get_stage(applicant.name), stage, status)
+			self.assertEqual(self.rules_stage(applicant), stage, status)
 
 	def test_rejected_wins_over_everything(self):
 		applicant = self.make_applicant("rejected_wins")
@@ -183,45 +186,45 @@ class TestJobApplicantStage(HRMSTestSuite):
 		self.assertEqual(applicant.stage, "Shortlisted")
 
 		interview = create_interview_and_dependencies(applicant.name)
-		self.assertEqual(get_stage(applicant.name), "Interviewing")
+		self.assertEqual(self.rules_stage(applicant), "Interviewing")
 
 		interview.db_set("status", "Cancelled")
-		self.assertEqual(get_stage(applicant.name), "Shortlisted")
+		self.assertEqual(self.rules_stage(applicant), "Shortlisted")
 
 	def test_draft_offer_makes_offered(self):
 		applicant = self.make_applicant("draft_offer")
 		self.make_offer(applicant)
-		self.assertEqual(get_stage(applicant.name), "Offered")
+		self.assertEqual(self.rules_stage(applicant), "Offered")
 
 	def test_rejected_or_cancelled_offer_is_not_offered(self):
 		applicant = self.make_applicant("rejected_offer")
 		offer = self.make_offer(applicant, status="Rejected")
-		self.assertEqual(get_stage(applicant.name), "Applied")
+		self.assertEqual(self.rules_stage(applicant), "Applied")
 
 		offer.status = "Cancelled"
 		offer.save()
-		self.assertEqual(get_stage(applicant.name), "Applied")
+		self.assertEqual(self.rules_stage(applicant), "Applied")
 
 	def test_offer_wins_over_interview(self):
 		applicant = self.make_applicant("offer_over_interview")
 		create_interview_and_dependencies(applicant.name)
 		self.make_offer(applicant)
-		self.assertEqual(get_stage(applicant.name), "Offered")
+		self.assertEqual(self.rules_stage(applicant), "Offered")
 
 	def test_accepted_offer_makes_hired(self):
 		applicant = self.make_applicant("accepted_offer")
 		self.make_offer(applicant, status="Accepted", submit=True)
-		self.assertEqual(get_stage(applicant.name), "Hired")
+		self.assertEqual(self.rules_stage(applicant), "Hired")
 
 	def test_draft_accepted_offer_is_not_hired(self):
 		applicant = self.make_applicant("draft_accepted_offer")
 		self.make_offer(applicant, status="Accepted")
-		self.assertEqual(get_stage(applicant.name), "Applied")
+		self.assertEqual(self.rules_stage(applicant), "Applied")
 
 	def test_employee_makes_hired(self):
 		applicant = self.make_applicant("employee")
 		make_employee(user=applicant.name, job_applicant=applicant.name, company="_Test Company")
-		self.assertEqual(get_stage(applicant.name), "Hired")
+		self.assertEqual(self.rules_stage(applicant), "Hired")
 		self.assertEqual(self.stored_stage(applicant), "Hired")
 
 	def test_hired_sets_status_accepted(self):
@@ -355,7 +358,7 @@ class TestJobApplicantStage(HRMSTestSuite):
 		frappe.db.set_value("Employee", employee, "job_applicant", None)
 		frappe.get_doc("Employee", employee).save()
 		frappe.db.set_value("Job Applicant", applicant.name, "status", "Open")
-		self.assertEqual(get_stage(applicant.name), "Applied")
+		self.assertEqual(self.rules_stage(applicant), "Applied")
 
 	def test_manual_move_between_applied_shortlisted_and_rejected(self):
 		applicant = self.make_applicant("manual")

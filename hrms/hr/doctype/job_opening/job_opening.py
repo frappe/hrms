@@ -219,3 +219,29 @@ def close_expired_job_openings():
 		doc.flags.ignore_permissions = True
 		doc.flags.ignore_mandatory = True
 		doc.save()
+
+
+@frappe.whitelist(methods=["GET"])
+def get_opening_header(job_opening: str) -> dict:
+	"""The title and status a board filtered to this opening shows in its header."""
+	frappe.has_permission("Job Opening", "read", doc=job_opening, throw=True)
+	opening = frappe.db.get_value(
+		"Job Opening", job_opening, ["name", "job_title", "status", "location", "designation"], as_dict=True
+	)
+	return {
+		"name": opening.name,
+		"display_title": get_display_title(opening),
+		"status": opening.status,
+		"designation": opening.designation,
+	}
+
+
+def get_display_title(opening) -> str:
+	"""The role name, with its location when another open role has the same name."""
+	shares_name = frappe.db.exists(
+		"Job Opening",
+		{"job_title": opening.job_title, "status": "Open", "name": ["!=", opening.name]},
+	)
+	if shares_name and opening.location:
+		return f"{opening.job_title} · {opening.location}"
+	return opening.job_title

@@ -213,7 +213,7 @@ frappe.ui.form.on("Job Applicant", {
 		if (frm.doc.__islocal || !frm.doc.job_title) return;
 
 		frappe.call({
-			method: "hrms.hr.page.hiring.hiring.get_applicant_stage",
+			method: "hrms.hr.doctype.job_applicant.job_applicant.get_applicant_stage",
 			type: "GET",
 			args: { job_applicant: frm.doc.name },
 			silent: true,

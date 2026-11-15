@@ -171,7 +171,7 @@ function add_email_button(frm) {
 		frm.change_custom_button_type(label, null, "primary");
 }
 
-const OFFER_ANSWER_API = "hrms.hr.page.hiring.applicant.set_offer_answer";
+const OFFER_ANSWER_API = "hrms.hr.doctype.job_offer.job_offer.set_offer_answer";
 
 function add_mark_as_buttons(frm) {
 	if (!is_awaiting_answer(frm)) return;
@@ -231,7 +231,7 @@ async function get_job_opening(job_applicant, fields) {
 
 async function email_offer_letter(frm) {
 	const { email_sender: sender } = await frappe.xcall(
-		"hrms.hr.page.hiring.applicant.get_sender_account",
+		"hrms.hr.doctype.job_offer.job_offer.get_sender_account",
 		{},
 		"GET",
 	);
