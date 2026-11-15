@@ -18,10 +18,11 @@ def get_context(context):
 	page_len = 20
 	filters, txt, sort, offset = get_filters_txt_sort_offset(page_len)
 	published = get_published_openings()
-	context.job_openings = get_job_openings(filters, txt, sort, page_len, offset)
+	team_names = get_team_names([d.department for d in published])
+	context.job_openings = get_job_openings(filters, txt, sort, page_len, offset, team_names=team_names)
 	context.no_of_pages = get_no_of_pages(filters, txt, page_len)
 	context.current_page = get_current_page(offset, page_len, context.no_of_pages)
-	context.filter_controls = get_filter_controls(filters, published)
+	context.filter_controls = get_filter_controls(filters, published, team_names)
 	context.hiring_company = get_hiring_company(published)
 	context.has_openings = bool(published)
 	context.has_filters = bool(filters or txt)
@@ -29,7 +30,7 @@ def get_context(context):
 	context.sort = sort
 
 
-def get_job_openings(filters=None, txt=None, sort=None, limit=20, offset=0):
+def get_job_openings(filters=None, txt=None, sort=None, limit=20, offset=0, *, team_names):
 	jo = frappe.qb.DocType("Job Opening")
 	ja = frappe.qb.DocType("Job Applicant")
 
@@ -73,7 +74,6 @@ def get_job_openings(filters=None, txt=None, sort=None, limit=20, offset=0):
 	query = query.orderby("posted_on", order=Order.asc if sort == "asc" else Order.desc)
 	results = query.run(as_dict=True)
 
-	team_names = get_team_names([d.department for d in results])
 	for d in results:
 		d.posted_on = pretty_date(d.posted_on)
 		d.team = team_names.get(d.department, d.department)
@@ -150,9 +150,8 @@ def get_all_filters(filters, openings):
 	return {key: sorted(value) for key, value in all_filters.items()}
 
 
-def get_filter_controls(filters, openings):
+def get_filter_controls(filters, openings, team_names):
 	"""Selects for the toolbar; a select with nothing to choose stays hidden unless it is in use."""
-	team_names = get_team_names([d.department for d in openings])
 	controls = []
 	for key, values in get_all_filters(filters, openings).items():
 		selected = filters.get(key, [])
