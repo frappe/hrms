@@ -14,6 +14,11 @@ frappe.ui.form.on("Job Opening", {
 	refresh: function (frm) {
 		frm.previous_designation = frm.doc.designation;
 		frm.trigger("add_status_toggle_button");
+		if (!frm.is_new()) {
+			frm.add_custom_button(__("View in hiring pipeline"), () =>
+				frappe.set_route(hrms.hiring.get_pipeline_route(frm.doc.name)),
+			);
+		}
 	},
 	add_status_toggle_button: function (frm) {
 		if (frm.is_new()) return;

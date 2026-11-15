@@ -1,6 +1,6 @@
 frappe.provide("frappe.kanban_v2.settings");
 
-// opened from an opening, the board shows that opening's title and status
+// opened from an opening, the board keeps the header of the Hiring split view
 frappe.kanban_v2.settings["Job Applicant"] = {
 	hide_empty_fields: true,
 	boards: {
@@ -33,6 +33,7 @@ function show_opening_header(board, opening) {
 	const page = board.page;
 	const is_open = opening.status === "Open";
 	page.clear_primary_action();
+	page.set_breadcrumbs([{ label: __("Hiring pipeline"), href: "/desk/hiring" }, { label: "" }]);
 	page.set_title(opening.display_title);
 	page.set_indicator(is_open ? __("Open") : __("Closed"), is_open ? "green" : "gray");
 	board.views_list?.set_trigger_content(frappe.views.get_view_label_map().Kanban);

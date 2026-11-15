@@ -227,6 +227,13 @@ frappe.ui.form.on("Job Applicant", {
 
 				const parts = [];
 				if (data.fact) parts.push(frappe.utils.escape_html(data.fact));
+				const route = hrms.hiring.get_pipeline_route(
+					frm.doc.job_title,
+					data.stage,
+					frm.doc.name,
+				);
+				const href = frappe.router.make_url(route);
+				parts.push(`<a href="${href}">${__("View in hiring pipeline")}</a>`);
 				// the form can refresh twice before either call returns; keep one headline
 				frm.stage_headline?.remove();
 				frm.stage_headline = parts.length
