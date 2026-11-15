@@ -156,9 +156,6 @@
 	color: var(--ink-amber-8);
 }
 
-.overdue {
-}
-
 /* empty and error */
 .empty {
 	display: flex;
