@@ -94,6 +94,9 @@ const outcomeSeries = labelled(OUTCOMES, (outcome) =>
 	outcome === "Hired" ? {} : { echartOptions: { cursor: "default" } },
 );
 const sourceStageColors = [stage(1), "var(--recruitment-interviewed)", stage(5)];
+const sourceColors = computed(() =>
+	props.view.sourceNames.map((_, index) => `var(--chart-categorical-${index + 1})`),
+);
 const applicationsChange = computed(() => {
 	const delta = props.view.applicationsDelta;
 	if (delta == null) return null;
@@ -248,7 +251,7 @@ const weekSeries = computed(() =>
 							x="week"
 							:y="view.sourceNames"
 							stacked
-							palette="categorical"
+							:palette="sourceColors"
 							:echart-options="weekLabels"
 							:series-config="weekSeries"
 							:y-axis="{ integer: true }"

@@ -1,10 +1,11 @@
 <script setup>
+import { computed } from "vue";
 import { ChartCard, DonutChart } from "frappe-ui/charts";
 
 import ChartHeading from "./ChartHeading.vue";
 import DonutCentre from "./DonutCentre.vue";
 
-defineProps({
+const props = defineProps({
 	title: { type: String, required: true },
 	subtitle: { type: String, default: undefined },
 	// rows of { name, status, count }, name translated
@@ -14,6 +15,12 @@ defineProps({
 });
 const emit = defineEmits(["open"]);
 const still = { animation: false };
+// each slice keeps the categorical colour of its row, so a status always has the same colour
+const colors = computed(() =>
+	Object.fromEntries(
+		props.slices.map((slice, index) => [slice.name, `var(--chart-categorical-${index + 1})`]),
+	),
+);
 </script>
 
 <!-- the heading reserves two subtitle lines, so side by side both rings get the same room -->
@@ -28,6 +35,7 @@ const still = { animation: false };
 					value="count"
 					order="rows"
 					:center-label="centerLabel"
+					:colors="colors"
 					:echart-options="still"
 					:loading="loading"
 					@select="emit('open', $event.rows[0].status)"
