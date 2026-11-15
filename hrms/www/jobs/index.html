@@ -42,7 +42,7 @@
 
 		{% for control in filter_controls %}
 		<span class="careers-select careers-select-{{ control.name | e }}">
-			<select name="{{ control.name | e }}" class="careers-control" aria-label="{{ control.all_label | e }}">
+			<select name="{{ control.name | e }}" class="careers-control" aria-label="{{ control.label | e }}">
 				<option value="">{{ control.all_label }}</option>
 				{% for option in control.options %}
 				<option value="{{ option.value | e }}" {{ "selected" if option.selected }}>{{ option.label }}</option>

@@ -130,6 +130,15 @@ def get_filter_label(name):
 	}[name]
 
 
+def get_field_label(name):
+	return {
+		"location": _("Location"),
+		"employment_type": _("Type"),
+		"department": _("Team"),
+		"company": _("Company"),
+	}[name]
+
+
 def get_published_openings():
 	return frappe.get_all(
 		"Job Opening",
@@ -161,6 +170,7 @@ def get_filter_controls(filters, openings, team_names):
 		controls.append(
 			{
 				"name": key,
+				"label": get_field_label(key),
 				"all_label": get_filter_label(key),
 				"options": [
 					{"value": value, "label": labels[value], "selected": value in selected}
