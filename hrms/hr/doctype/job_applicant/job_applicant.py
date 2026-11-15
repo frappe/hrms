@@ -202,6 +202,9 @@ STATUS_FOR_FINAL_STAGE = {"Rejected": "Rejected", "Hired": "Accepted"}
 
 FOLLOWS_RECORDS_STAGES = ("Interviewing", "Offered", "Hired")
 
+# on hold past Applied: when the interviews or the offer go, Shortlisted is what's left
+HELD_PAST_APPLIED_STAGES = ("Shortlisted", "Interviewing", "Offered")
+
 
 def get_follows_records_messages() -> dict[str, str]:
 	return {
@@ -251,8 +254,7 @@ def get_stage(applicant) -> str:
 	if applicant.status in ("Shortlisted", "Accepted"):
 		return "Shortlisted"
 
-	# Hold keeps the stage it was put on hold in
-	if applicant.status == "Hold" and applicant.stage == "Shortlisted":
+	if applicant.status == "Hold" and applicant.stage in HELD_PAST_APPLIED_STAGES:
 		return "Shortlisted"
 
 	return "Applied"

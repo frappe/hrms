@@ -371,6 +371,25 @@ class TestJobApplicantStage(HRMSTestSuite):
 		offer.save()
 		self.assertEqual((self.stored_stage(first), self.stored_stage(second)), ("Applied", "Offered"))
 
+	def test_held_applicant_falls_back_to_shortlisted_when_the_interview_or_offer_goes(self):
+		interviewed = self.make_applicant("hold_interview_gone")
+		interview = create_interview_and_dependencies(interviewed.name)
+		interviewed.reload()
+		interviewed.put_on_hold()
+		interview.reload()
+		interview.status = "Cancelled"
+		interview.save()
+		interviewed.reload()
+		self.assertEqual((interviewed.status, interviewed.stage), ("Hold", "Shortlisted"))
+
+		offered = self.make_applicant("hold_offer_gone")
+		offer = self.make_offer(offered)
+		offered.reload()
+		offered.put_on_hold()
+		frappe.delete_doc("Job Offer", offer.name, force=True)
+		offered.reload()
+		self.assertEqual((offered.status, offered.stage), ("Hold", "Shortlisted"))
+
 	def test_stage_syncs_with_employee(self):
 		applicant = self.make_applicant("sync_employee")
 		employee = make_employee(user=applicant.name, job_applicant=applicant.name, company="_Test Company")
