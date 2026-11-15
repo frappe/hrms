@@ -161,3 +161,9 @@ hrms.hiring.route_block_links = (root_element, handle_link) => {
 		if (!handle_link?.(link)) frappe.set_route(link.getAttribute("href"));
 	});
 };
+
+/** Hides a block on the workspace; it stays while the workspace is edited so it can still be moved. */
+hrms.hiring.hide_block = (root_element) => {
+	if (!root_element.host.closest(".edit-mode"))
+		root_element.host.closest(".ce-block")?.setAttribute("hidden", "");
+};

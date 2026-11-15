@@ -128,30 +128,38 @@ function show(content) {
 	grid.replaceChildren(...content);
 }
 
-show(Array.from({ length: SKELETON_CARDS }, make_skeleton_card));
-
 hrms.hiring.route_block_links(root_element);
 
-frappe
-	.call({ method: API, type: "GET", silent: true })
-	.then((response) => {
-		const open = response.message.openings.filter((opening) => opening.status === "Open");
-		count_label.textContent = open.length || "";
-		if (!open.length) {
+function load() {
+	show(Array.from({ length: SKELETON_CARDS }, make_skeleton_card));
+	frappe
+		.call({ method: API, type: "GET", silent: true })
+		.then((response) => {
+			const open = response.message.openings.filter((opening) => opening.status === "Open");
+			count_label.textContent = open.length || "";
+			if (!open.length) {
+				grid.removeAttribute("class");
+				return show([make_empty()]);
+			}
+			const shown = open.slice(0, MAX_CARDS);
+			const titles = shown.map((opening) => opening.job_title);
+			show(
+				shown.map((opening) =>
+					make_card(opening, titles.filter((t) => t === opening.job_title).length > 1),
+				),
+			);
+		})
+		.catch(() => {
 			grid.removeAttribute("class");
-			return show([make_empty()]);
-		}
-		const shown = open.slice(0, MAX_CARDS);
-		const titles = shown.map((opening) => opening.job_title);
-		show(
-			shown.map((opening) =>
-				make_card(opening, titles.filter((t) => t === opening.job_title).length > 1),
-			),
-		);
-	})
-	.catch(() => {
-		grid.removeAttribute("class");
-		show([
-			el("div", { class: "empty text-base", text: __("Open roles could not be loaded") }),
-		]);
-	});
+			show([
+				el("div", {
+					class: "empty text-base",
+					text: __("Open roles could not be loaded"),
+				}),
+			]);
+		});
+}
+
+// people without access to applicants (interviewers) have nothing here
+if (frappe.model.can_read("Job Applicant")) load();
+else hrms.hiring.hide_block(root_element);

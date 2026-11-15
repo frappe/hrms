@@ -86,48 +86,51 @@ function show(nodes) {
 	content.replaceChildren(...nodes);
 }
 
-show([make_skeleton()]);
-
 hrms.hiring.route_block_links(root_element, (link) => {
 	if (!link.hasAttribute("data-view-all")) return false;
 	view_all();
 	return true;
 });
 
-frappe
-	.call({ method: API, type: "GET", args: { days: DAYS }, silent: true })
-	.then((response) => {
-		const { count, interviews } = response.message;
-		count_label.textContent = count || "";
-		if (!interviews.length) {
-			// nothing to show, so the whole block goes; kept while editing the workspace so it can be moved
-			if (!root_element.host.closest(".edit-mode"))
-				root_element.host.closest(".ce-block")?.setAttribute("hidden", "");
-			return show([
+function load() {
+	show([make_skeleton()]);
+	frappe
+		.call({ method: API, type: "GET", args: { days: DAYS }, silent: true })
+		.then((response) => {
+			const { count, interviews } = response.message;
+			count_label.textContent = count || "";
+			if (!interviews.length) {
+				hrms.hiring.hide_block(root_element);
+				return show([
+					el("div", {
+						class: "empty text-base",
+						text: __("No interviews in the next {0} days", [DAYS]),
+					}),
+				]);
+			}
+			const nodes = [make_list(interviews)];
+			if (count > interviews.length) {
+				nodes.push(
+					el("a", {
+						class: "more-link text-p-sm",
+						href: "/desk/interview",
+						"data-view-all": true,
+						text: __("+{0} more", [count - interviews.length]),
+					}),
+				);
+			}
+			show(nodes);
+		})
+		.catch(() =>
+			show([
 				el("div", {
 					class: "empty text-base",
-					text: __("No interviews in the next {0} days", [DAYS]),
+					text: __("Upcoming interviews could not be loaded"),
 				}),
-			]);
-		}
-		const nodes = [make_list(interviews)];
-		if (count > interviews.length) {
-			nodes.push(
-				el("a", {
-					class: "more-link text-p-sm",
-					href: "/desk/interview",
-					"data-view-all": true,
-					text: __("+{0} more", [count - interviews.length]),
-				}),
-			);
-		}
-		show(nodes);
-	})
-	.catch(() =>
-		show([
-			el("div", {
-				class: "empty text-base",
-				text: __("Upcoming interviews could not be loaded"),
-			}),
-		]),
-	);
+			]),
+		);
+}
+
+// people without access to applicants (interviewers) have nothing here
+if (frappe.model.can_read("Job Applicant")) load();
+else hrms.hiring.hide_block(root_element);
