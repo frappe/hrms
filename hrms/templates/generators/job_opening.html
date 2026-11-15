@@ -11,7 +11,7 @@
 
 {% block page_content %}
 {% set is_open = status == "Open" %}
-{% set apply_route = "/" ~ (job_application_route if job_application_route else "job_application") ~ "/new?job_title=" ~ name %}
+{% set apply_route = "/" ~ (job_application_route if job_application_route else "job_application") ~ "/new?job_title=" ~ name | urlencode %}
 {% set pay = salary(doc)|trim %}
 {% set deadline = closes_on if is_open else closed_on %}
 {% set deadline_format = "d MMM" if deadline and frappe.utils.getdate(deadline).year == frappe.utils.getdate().year else "d MMM yyyy" %}
@@ -21,7 +21,7 @@
 		<div class="careers-header-panel">
 			<div class="careers-header-top">
 				<div class="careers-header-title">
-					<h1 class="careers-role-title text-xl-semibold">{{ job_title }}</h1>
+					<h1 class="careers-role-title text-xl-semibold">{{ job_title | e }}</h1>
 					{%- if not is_open -%}
 						<span class="es-badge">{{ _("Opening closed.") }}</span>
 					{%- elif days_left is not none and 0 <= days_left <= 14 -%}
@@ -44,7 +44,7 @@
 				{%- for label, value in facts if value -%}
 					<div>
 						<dt class="text-sm">{{ label }}</dt>
-						<dd class="text-base">{{ value }}</dd>
+						<dd class="text-base">{{ value | e }}</dd>
 					</div>
 				{%- endfor -%}
 			</dl>

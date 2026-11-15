@@ -16,7 +16,7 @@
 
 <div class="careers-page text-base">
 	<h1 class="careers-title text-2xl-semibold">
-		{{ _("Open roles at {0}").format(hiring_company) if hiring_company else _("Open roles") }}
+		{{ _("Open roles at {0}").format(hiring_company | e) if hiring_company else _("Open roles") }}
 	</h1>
 
 	{% if not has_openings %}
@@ -43,9 +43,9 @@
 		{% for control in filter_controls %}
 		<span class="careers-select careers-select-{{ control.name | e }}">
 			<select name="{{ control.name | e }}" class="careers-control" aria-label="{{ control.label | e }}">
-				<option value="">{{ control.all_label }}</option>
+				<option value="">{{ control.all_label | e }}</option>
 				{% for option in control.options %}
-				<option value="{{ option.value | e }}" {{ "selected" if option.selected }}>{{ option.label }}</option>
+				<option value="{{ option.value | e }}" {{ "selected" if option.selected }}>{{ option.label | e }}</option>
 				{% endfor %}
 			</select>
 			{{ icon("chevron-down") }}
@@ -84,11 +84,11 @@
 		<a class="careers-card" href="/{{ jo.route | e }}">
 			<div class="careers-card-top">
 				<div class="careers-card-main">
-					<p class="careers-card-title text-base-medium" title="{{ jo.job_title | e }}">{{ jo.job_title }}</p>
-					<p class="careers-card-meta text-p-base">{{ [jo.team, jo.location]|select|join(" · ") }}</p>
+					<p class="careers-card-title text-base-medium" title="{{ jo.job_title | e }}">{{ jo.job_title | e }}</p>
+					<p class="careers-card-meta text-p-base">{{ [jo.team, jo.location]|select|join(" · ") | e }}</p>
 				</div>
 				{% if jo.employment_type %}
-				<span class="es-badge">{{ jo.employment_type }}</span>
+				<span class="es-badge">{{ jo.employment_type | e }}</span>
 				{% endif %}
 			</div>
 			{% set pay = salary(jo)|trim %}
@@ -106,10 +106,10 @@
 		{% for jo in job_openings %}
 		<a class="es-item-list__row" href="/{{ jo.route | e }}">
 			<span class="es-item-list__text">
-				<span class="es-item-list__title">{{ jo.job_title }}</span>
+				<span class="es-item-list__title">{{ jo.job_title | e }}</span>
 				{% set pay = salary(jo)|trim %}
 				{% set details = [jo.team, jo.location, jo.employment_type, pay]|select|join(" · ") %}
-				{% if details %}<span class="es-item-list__subtitle">{{ details }}</span>{% endif %}
+				{% if details %}<span class="es-item-list__subtitle">{{ details | e }}</span>{% endif %}
 			</span>
 			{% if jo.closes_on %}<span class="es-item-list__meta">{{ closes_label(jo.closes_on) }}</span>{% endif %}
 		</a>
