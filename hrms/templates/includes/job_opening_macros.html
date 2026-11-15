@@ -24,10 +24,6 @@
 	{{ _("Closes {0}").format(frappe.utils.format_date(date, "d MMM")) }}
 {%- endmacro -%}
 
-{%- macro days_left(date) -%}
-	{{ frappe.utils.date_diff(date, frappe.utils.nowdate()) }}
-{%- endmacro -%}
-
 {%- macro icon(name) -%}
 	<svg class="icon careers-icon" aria-hidden="true"><use href="#icon-{{ name }}"></use></svg>
 {%- endmacro -%}

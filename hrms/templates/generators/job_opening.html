@@ -1,5 +1,5 @@
 {% extends "templates/web.html" %}
-{% from "hrms/templates/includes/job_opening_macros.html" import salary, closes_label, days_left, count, icon with context %}
+{% from "hrms/templates/includes/job_opening_macros.html" import salary, count with context %}
 
 {% block style %}
 <style>
@@ -12,10 +12,8 @@
 {% block page_content %}
 {% set is_open = status == "Open" %}
 {% set apply_route = "/" ~ (job_application_route if job_application_route else "job_application") ~ "/new?job_title=" ~ name %}
-{% set team = frappe.db.get_value("Department", department, "department_name") or department if department else "" %}
 {% set pay = salary(doc)|trim %}
 {% set deadline = closes_on if is_open else closed_on %}
-{% set remaining = days_left(closes_on)|int if is_open and closes_on else none %}
 
 <div class="careers-page careers-role text-base">
 	<header class="careers-header">
@@ -25,9 +23,9 @@
 					<h1 class="careers-role-title text-xl-semibold">{{ job_title }}</h1>
 					{%- if not is_open -%}
 						<span class="es-badge">{{ _("Opening closed.") }}</span>
-					{%- elif remaining is not none and 0 <= remaining <= 14 -%}
+					{%- elif days_left is not none and 0 <= days_left <= 14 -%}
 						<span class="es-badge" data-theme="amber">
-							{{ _("Last day") if remaining == 0 else count(remaining, _("{0} day left"), _("{0} days left")) }}
+							{{ _("Last day") if days_left == 0 else count(days_left, _("{0} day left"), _("{0} days left")) }}
 						</span>
 					{%- endif -%}
 				</div>
