@@ -41,8 +41,10 @@ $(() => {
 			button.addEventListener("click", () => go_to_page(Number(button.id))),
 		);
 	const current_page = Number(new URLSearchParams(location.search).get("page")) || 1;
-	$("#previous").on("click", () => go_to_page(current_page - 1));
-	$("#next").on("click", () => go_to_page(current_page + 1));
+	document
+		.getElementById("previous")
+		?.addEventListener("click", () => go_to_page(current_page - 1));
+	document.getElementById("next")?.addEventListener("click", () => go_to_page(current_page + 1));
 
 	function show_as_dropdown(select) {
 		const button = document.createElement("button");
