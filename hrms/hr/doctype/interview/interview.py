@@ -57,7 +57,6 @@ class Interview(Document):
 				_("Only Interviews with Cleared or Rejected status can be submitted."),
 				title=_("Not Allowed"),
 			)
-		self.show_job_applicant_update_dialog()
 
 	def before_update_after_submit(self):
 		# a submitted interview has a result; it can switch between the two, never go back to undecided
@@ -120,22 +119,6 @@ class Interview(Document):
 				)
 		else:
 			self.designation = applicant_designation
-
-	def show_job_applicant_update_dialog(self):
-		if self.status != "Rejected":
-			return
-
-		job_application_name = frappe.db.get_value("Job Applicant", self.job_applicant, "applicant_name")
-
-		frappe.msgprint(
-			_("Mark {0} as rejected based on this interview?").format(frappe.bold(job_application_name)),
-			title=_("Reject Applicant"),
-			primary_action={
-				"label": _("Reject Applicant"),
-				"server_action": "hrms.hr.doctype.interview.interview.update_job_applicant_status",
-				"args": {"job_applicant": self.job_applicant, "status": "Rejected"},
-			},
-		)
 
 	@frappe.whitelist(methods=["POST"])
 	def reschedule_interview(
@@ -242,18 +225,11 @@ def submit_interview_results(job_applicant: str) -> dict:
 				frappe.PermissionError,
 			)
 	for draft in drafts:
-		submit_quietly(frappe.get_doc("Interview", draft.name))
+		frappe.get_doc("Interview", draft.name).submit()
 	return {
 		"submitted": [draft.name for draft in drafts],
 		"rejected": any(draft.status == "Rejected" for draft in drafts),
 	}
-
-
-def submit_quietly(doc):
-	"""Submits without the form's on_submit message; the caller asks about rejecting in its own dialog."""
-	logged = len(frappe.local.message_log)
-	doc.submit()
-	del frappe.local.message_log[logged:]
 
 
 def close_open_interviews(job_applicant: str, reviewed_status: str) -> list[dict]:

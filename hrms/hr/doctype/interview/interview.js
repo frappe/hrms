@@ -32,6 +32,24 @@ frappe.ui.form.on("Interview", {
 		]);
 	},
 
+	// a rejected round offers to reject the applicant the one way every path does: reason dialog, Undo toast
+	on_submit: async function (frm) {
+		if (frm.doc.status !== "Rejected" || !frappe.model.can_write("Job Applicant")) return;
+		const { message: applicant } = await frappe.db.get_value(
+			"Job Applicant",
+			frm.doc.job_applicant,
+			["applicant_name", "status"],
+		);
+		if (!applicant || applicant.status === "Rejected") return;
+		// not awaited: the submit is done, the dialog shouldn't hold it open
+		hrms.hiring
+			.move_to_stage(
+				{ name: frm.doc.job_applicant, applicant_name: applicant.applicant_name },
+				"Rejected",
+			)
+			.catch(() => "cancel");
+	},
+
 	add_custom_buttons: async function (frm) {
 		frm.owes_feedback = false;
 		if (frm.doc.docstatus === 2 || frm.doc.__islocal) return;

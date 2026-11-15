@@ -285,16 +285,21 @@ class TestInterview(HRMSTestSuite):
 
 		self.assertEqual(job_applicant.status, "Accepted")
 
-	def test_cleared_interview_does_not_accept_applicant(self):
-		job_applicant = create_job_applicant()
-		interview = create_interview_and_dependencies(job_applicant.name, status="Cleared")
-		frappe.clear_messages()
-		interview.show_job_applicant_update_dialog()
-		self.assertFalse(frappe.local.message_log)
+	def test_submitting_a_cleared_result_leaves_the_applicant_alone(self):
+		self.assert_submit_leaves_the_applicant_alone("Cleared")
 
-		interview.status = "Rejected"
-		interview.show_job_applicant_update_dialog()
-		self.assertEqual(frappe.local.message_log[-1]["primary_action"]["args"]["status"], "Rejected")
+	def test_submitting_a_rejected_result_leaves_the_applicant_alone(self):
+		# the form asks for the reject reason; a submit from elsewhere must not offer a reasonless reject
+		self.assert_submit_leaves_the_applicant_alone("Rejected")
+
+	def assert_submit_leaves_the_applicant_alone(self, status):
+		job_applicant = create_job_applicant(email_id=f"submit_{status.lower()}@example.com")
+		interview = create_interview_and_dependencies(job_applicant.name, status=status)
+		interview.reload()
+		frappe.clear_messages()
+		interview.submit()
+		self.assertFalse(frappe.local.message_log)
+		self.assertEqual(frappe.db.get_value("Job Applicant", job_applicant.name, "status"), "Open")
 
 	def test_duplicate_interview_check_includes_drafts(self):
 		job_applicant = create_job_applicant()
