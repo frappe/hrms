@@ -128,3 +128,36 @@ hrms.hiring.get_closing_label = (days) => {
 /** The Hiring page route of an opening, at a stage and an applicant when given; the URL spells the stage lowercase. */
 hrms.hiring.get_pipeline_route = (opening, stage, applicant) =>
 	["hiring", opening, stage?.toLowerCase(), applicant].filter(Boolean);
+
+/** A DOM element for the Custom HTML Blocks: `text` sets its text, other attributes are set as given. */
+hrms.hiring.make_element = (tag, attrs = {}, ...children) => {
+	const node = document.createElement(tag);
+	for (const [key, value] of Object.entries(attrs)) {
+		if (value === undefined || value === null || value === false) continue;
+		if (key === "text") node.textContent = value;
+		else node.setAttribute(key, value === true ? "" : value);
+	}
+	node.append(...children.filter(Boolean));
+	return node;
+};
+
+/**
+ * The desk router only sees clicks in the light DOM, so a block routes the /desk/ links inside its
+ * shadow root. `handle_link(link)` may take a link over by returning true.
+ */
+hrms.hiring.route_block_links = (root_element, handle_link) => {
+	root_element.addEventListener("click", (event) => {
+		const link = event.target.closest?.("a[href^='/desk/']");
+		if (
+			!link ||
+			event.button !== 0 ||
+			event.ctrlKey ||
+			event.metaKey ||
+			event.shiftKey ||
+			event.altKey
+		)
+			return;
+		event.preventDefault();
+		if (!handle_link?.(link)) frappe.set_route(link.getAttribute("href"));
+	});
+};

@@ -1,0 +1,213 @@
+:host {
+	display: block;
+	/* the workspace pads custom blocks 7px a side; number cards sit flush, so cancel it to share their edge */
+	margin-inline: -7px;
+}
+
+.roles {
+	container-type: inline-size;
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--spacing) * 3);
+	color: var(--ink-gray-8);
+}
+
+.head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: calc(var(--spacing) * 3);
+}
+
+.title {
+	margin: 0;
+	color: var(--ink-gray-8);
+}
+
+.count {
+	margin-inline-start: calc(var(--spacing) * 1.5);
+	color: var(--ink-gray-5);
+}
+
+.view-all {
+	color: var(--ink-gray-5);
+	text-decoration: none;
+	border-radius: var(--radius-sm);
+}
+
+.view-all:hover {
+	color: var(--ink-gray-8);
+	text-decoration: none;
+}
+
+.view-all:focus-visible,
+.create:focus-visible {
+	outline: 2px solid var(--outline-gray-5);
+	outline-offset: 2px;
+}
+
+.grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: calc(var(--spacing) * 3);
+}
+
+@container (min-width: 720px) {
+	.grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@container (min-width: 1200px) {
+	.grid {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+.role {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--spacing) * 1);
+	min-width: 0;
+	padding: calc(var(--spacing) * 3) calc(var(--spacing) * 4);
+	border: 1px solid var(--outline-gray-1);
+	border-radius: var(--radius-lg);
+	background: var(--surface-base);
+	transition: border-color 150ms ease-out;
+}
+
+.role:hover {
+	border-color: var(--outline-gray-3);
+}
+
+.role:has(.name:focus-visible) {
+	outline: 2px solid var(--outline-gray-5);
+	outline-offset: 2px;
+}
+
+.top,
+.sub {
+	display: flex;
+	align-items: center;
+	gap: calc(var(--spacing) * 3);
+	min-width: 0;
+	height: calc(var(--spacing) * 5);
+}
+
+.name {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--ink-gray-8);
+	text-decoration: none;
+}
+
+.name:hover,
+.name:focus-visible {
+	color: var(--ink-gray-8);
+	text-decoration: none;
+	outline: none;
+}
+
+/* the whole card is the click target of the title link */
+.name::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+}
+
+.sub {
+	display: block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	line-height: calc(var(--spacing) * 5);
+	color: var(--ink-gray-5);
+}
+
+.faint {
+	color: var(--ink-gray-4);
+}
+
+.item {
+	position: relative;
+	z-index: 1;
+	color: var(--ink-gray-8);
+	text-decoration: none;
+}
+
+.item:hover {
+	color: var(--ink-gray-8);
+	text-decoration: underline;
+}
+
+.item:focus-visible {
+	outline: 2px solid var(--outline-gray-5);
+	outline-offset: 2px;
+	border-radius: var(--radius-sm);
+}
+
+.overdue,
+.item.overdue:hover {
+	color: var(--ink-amber-8);
+}
+
+.overdue {
+}
+
+/* loading */
+.skeleton {
+	display: block;
+	border-radius: var(--radius-sm);
+	background: var(--surface-gray-3);
+	animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+	50% {
+		opacity: 0.5;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.skeleton {
+		animation: none;
+	}
+}
+
+/* empty and error */
+.empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: calc(var(--spacing) * 3);
+	padding: calc(var(--spacing) * 8) calc(var(--spacing) * 4);
+	border: 1px dashed var(--outline-gray-2);
+	border-radius: var(--radius-lg);
+	color: var(--ink-gray-5);
+}
+
+.empty-title {
+	color: var(--ink-gray-8);
+}
+
+.create {
+	display: inline-flex;
+	align-items: center;
+	height: calc(var(--spacing) * 7);
+	padding-inline: calc(var(--spacing) * 3);
+	border-radius: var(--radius);
+	background: var(--surface-gray-10);
+	color: var(--ink-base);
+	text-decoration: none;
+}
+
+.create:hover {
+	background: var(--surface-gray-9);
+	color: var(--ink-base);
+	text-decoration: none;
+}

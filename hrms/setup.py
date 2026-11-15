@@ -11,6 +11,7 @@ from hrms.hr.doctype.appointment_letter_template.appointment_letter_template imp
 from hrms.hr.doctype.interview_type.interview_type import create_default_types
 from hrms.hr.doctype.rejection_reason.rejection_reason import create_default_reasons
 from hrms.overrides.company import delete_company_fixtures
+from hrms.recruitment.custom_html_block import sync_blocks
 from hrms.subscription_utils import is_new_hr_site, set_hrms_as_default_app
 
 
@@ -31,6 +32,7 @@ def after_install():
 	create_default_types()
 	setup_email_template_scopes()
 	create_hiring_email_templates()
+	sync_blocks()
 	run_post_install_patches()
 	add_default_hr_permissions()
 

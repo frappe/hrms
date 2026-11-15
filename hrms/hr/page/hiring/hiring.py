@@ -1,13 +1,16 @@
 from collections import Counter
+from datetime import datetime, timedelta
 
 import frappe
 from frappe import _
+from frappe.utils import add_days, getdate, now_datetime
 
 from hrms.hr.doctype.interview.interview import INTERVIEW_ACTIVE, is_not_cleared
 from hrms.hr.doctype.job_applicant.stage_info import (
 	APPLICANT_FIELDS,
 	ApplicantRecords,
 	get_rows,
+	group_by,
 	is_feedback_due,
 	short_date,
 )
@@ -269,3 +272,75 @@ def get_opening_summary(job_opening):
 def get_applicant_onboarding(job_applicant):
 	rows = get_rows("Employee Onboarding", {"job_applicant": job_applicant, "docstatus": ["<", 2]}, ["name"])
 	return rows[0].name if rows else None
+
+
+@frappe.whitelist(methods=["GET"])
+def get_upcoming_interviews(days: int = 7, limit: int = 8) -> dict:
+	"""Live interviews scheduled from today for `days` days, soonest first, for the Recruitment home."""
+	frappe.has_permission("Job Applicant", throw=True)
+
+	today = getdate()
+	filters = {
+		"docstatus": ["<", 2],
+		"status": ["!=", "Cancelled"],
+		"scheduled_on": ["between", [today, add_days(today, int(days) - 1)]],
+	}
+	rows = get_rows(
+		"Interview",
+		filters,
+		["name", "interview_type", "scheduled_on", "from_time", "to_time", "job_applicant"],
+		"scheduled_on asc, from_time asc, creation asc",
+	)
+	now = now_datetime()
+	upcoming = [row for row in rows if get_interview_end(row) > now]
+	return {"count": len(upcoming), "interviews": describe_upcoming(upcoming[: int(limit)])}
+
+
+def get_interview_end(interview):
+	"""When the interview ends; one without a time lasts until the end of its day."""
+	end = interview.to_time or interview.from_time or timedelta(hours=23, minutes=59, seconds=59)
+	return datetime.combine(getdate(interview.scheduled_on), (datetime.min + end).time())
+
+
+def describe_upcoming(interviews):
+	if not interviews:
+		return []
+	applicants = get_rows(
+		"Job Applicant", {"name": ["in", [row.job_applicant for row in interviews]]}, APPLICANT_FIELDS
+	)
+	by_applicant = {applicant.name: applicant for applicant in applicants}
+	opening_names = list({applicant.job_title for applicant in applicants if applicant.job_title})
+	openings = dict(
+		get_rows("Job Opening", {"name": ["in", opening_names]}, ["name", "job_title"], as_list=True)
+	)
+	panel_rows = get_rows(
+		"Interview Detail",
+		{"parent": ["in", [row.name for row in interviews]]},
+		["parent", "interviewer"],
+		parent_doctype="Interview",
+	)
+	panels = group_by(panel_rows, "parent")
+	names = get_user_names({row.interviewer for row in panel_rows})
+	return [
+		get_upcoming_row(interview, by_applicant[interview.job_applicant], openings, panels, names)
+		for interview in interviews
+		if interview.job_applicant in by_applicant
+	]
+
+
+def get_upcoming_row(interview, applicant, openings, panels, names):
+	return {
+		"name": interview.name,
+		"interview_type": interview.interview_type,
+		"scheduled_on": interview.scheduled_on,
+		"from_time": str(interview.from_time or ""),
+		"job_applicant": applicant.name,
+		"applicant_name": applicant.applicant_name,
+		"job_opening": applicant.job_title,
+		"opening_title": openings.get(applicant.job_title) or applicant.job_title,
+		"stage": applicant.stage.lower(),
+		"panel": [
+			{"user": row.interviewer, "full_name": names.get(row.interviewer) or row.interviewer}
+			for row in panels.get(interview.name, [])
+		],
+	}

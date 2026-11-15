@@ -852,3 +852,61 @@ class TestHiring(IntegrationTestCase):
 		last = hiring.get_pipeline(self.opening.name, stage="Interviewing")["rows"][-1]["name"]
 		self.assertEqual(len(rows(None)), 1)
 		self.assertEqual(len(rows(last)), 3)
+
+	def test_upcoming_interviews_window_ordering_limit_and_cancelled(self):
+		interviews = {}
+		for label, offset, time in (
+			("later", 3, "09:00:00"),
+			("late-today", 0, "15:00:00"),
+			("early-today", 0, "09:30:00"),
+			("outside", 7, "09:00:00"),
+			("past", -1, "09:00:00"),
+			("cancelled", 1, "09:00:00"),
+			("finished-today", 0, "00:00:00"),
+		):
+			applicant = self.make_applicant(f"upcoming-{label}", status="Shortlisted")
+			interview = self.make_saveable_interview(
+				applicant, panel=[INTERVIEWER] if label == "later" else ()
+			)
+			frappe.db.set_value(
+				"Interview",
+				interview,
+				{
+					"scheduled_on": add_days(nowdate(), offset),
+					"from_time": time,
+					"to_time": "00:01:00" if label == "finished-today" else "23:59:00",
+					"status": "Cancelled" if label == "cancelled" else "Pending",
+				},
+			)
+			interviews[label] = interview
+
+		result = hiring.get_upcoming_interviews()
+		ours = [row for row in result["interviews"] if row["name"] in interviews.values()]
+		self.assertEqual(
+			[row["name"] for row in ours],
+			[interviews["early-today"], interviews["late-today"], interviews["later"]],
+		)
+		first = ours[0]
+		self.assertEqual(first["opening_title"], "Hiring Test Opening")
+		self.assertEqual(first["job_opening"], self.opening.name)
+		self.assertEqual(first["stage"], "interviewing")
+		self.assertEqual(first["panel"], [])
+		self.assertEqual(
+			ours[2]["panel"],
+			[{"user": INTERVIEWER, "full_name": frappe.db.get_value("User", INTERVIEWER, "full_name")}],
+		)
+
+		limited = hiring.get_upcoming_interviews(limit=1)
+		self.assertEqual(len(limited["interviews"]), 1)
+		self.assertEqual(limited["count"], result["count"])
+		self.assertGreaterEqual(result["count"], 3)
+
+		wider = hiring.get_upcoming_interviews(days=8, limit=100)
+		self.assertIn(interviews["outside"], [row["name"] for row in wider["interviews"]])
+		self.assertNotIn(interviews["cancelled"], [row["name"] for row in wider["interviews"]])
+		self.assertNotIn(interviews["past"], [row["name"] for row in wider["interviews"]])
+		self.assertNotIn(interviews["finished-today"], [row["name"] for row in wider["interviews"]])
+
+	def test_upcoming_interviews_needs_applicant_access(self):
+		frappe.set_user(NO_ROLE_USER)
+		self.assertRaises(frappe.PermissionError, hiring.get_upcoming_interviews)
