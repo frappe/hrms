@@ -281,6 +281,13 @@ def update_stage(applicant: str | None):
 		frappe.get_doc("Job Applicant", applicant).db_set("stage", stage, notify=True)
 
 
+def update_linked_stages(doc: Document):
+	"""Store the stage of the applicant a record links to, and of the one it linked to before."""
+	before = doc.get_doc_before_save()
+	for applicant in dict.fromkeys((doc.get("job_applicant"), before and before.get("job_applicant"))):
+		update_stage(applicant)
+
+
 @frappe.whitelist()
 def make_employee(source_name: str, target_doc: str | Document | None = None) -> Document:
 	def set_missing_values(source, target):

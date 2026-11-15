@@ -26,7 +26,7 @@ from hrms.hr.doctype.interview.interview import close_open_interviews, restore_i
 from hrms.hr.doctype.job_applicant.job_applicant import (
 	get_email_setup,
 	set_applicant_status,
-	update_stage,
+	update_linked_stages,
 )
 from hrms.hr.doctype.rejection_reason.rejection_reason import DECLINED_OFFER
 
@@ -245,10 +245,10 @@ class JobOffer(Document):
 			if reviewed_status and self.job_applicant:
 				self.flags.closed_interviews = close_open_interviews(self.job_applicant, reviewed_status)
 
-		update_stage(self.job_applicant)
+		update_linked_stages(self)
 
 	def after_delete(self):
-		update_stage(self.job_applicant)
+		update_linked_stages(self)
 
 	def on_cancel(self):
 		if not self.job_applicant or self.status not in ("Accepted", "Rejected"):

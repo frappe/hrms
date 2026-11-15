@@ -350,6 +350,27 @@ class TestJobApplicantStage(HRMSTestSuite):
 		frappe.delete_doc("Job Offer", offer.name, force=True)
 		self.assertEqual(self.stored_stage(applicant), "Applied")
 
+	def test_repointed_interview_moves_both_applicants(self):
+		first = self.make_applicant("repoint_interview_first")
+		second = self.make_applicant("repoint_interview_second")
+		interview = create_interview_and_dependencies(first.name)
+		self.assertEqual(self.stored_stage(first), "Interviewing")
+
+		interview.reload()
+		interview.job_applicant = second.name
+		interview.save()
+		self.assertEqual((self.stored_stage(first), self.stored_stage(second)), ("Applied", "Interviewing"))
+
+	def test_repointed_offer_moves_both_applicants(self):
+		first = self.make_applicant("repoint_offer_first")
+		second = self.make_applicant("repoint_offer_second")
+		offer = self.make_offer(first)
+		self.assertEqual(self.stored_stage(first), "Offered")
+
+		offer.job_applicant = second.name
+		offer.save()
+		self.assertEqual((self.stored_stage(first), self.stored_stage(second)), ("Applied", "Offered"))
+
 	def test_stage_syncs_with_employee(self):
 		applicant = self.make_applicant("sync_employee")
 		employee = make_employee(user=applicant.name, job_applicant=applicant.name, company="_Test Company")

@@ -74,9 +74,9 @@ class Interview(Document):
 
 	def update_job_applicant_stage(self):
 		# imported here: job applicant imports this module
-		from hrms.hr.doctype.job_applicant.job_applicant import update_stage
+		from hrms.hr.doctype.job_applicant.job_applicant import update_linked_stages
 
-		update_stage(self.job_applicant)
+		update_linked_stages(self)
 
 	def validate_interviewers(self):
 		if not any(d.interviewer for d in self.interview_details):
