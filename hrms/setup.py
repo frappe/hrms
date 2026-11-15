@@ -4,6 +4,7 @@ from collections import defaultdict
 import frappe
 from frappe import N_ as _
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
+from frappe.custom.doctype.property_setter.property_setter import make_property_setter
 from frappe.desk.page.setup_wizard.setup_wizard import make_records
 from frappe.permissions import add_permission, update_permission_property
 
@@ -27,6 +28,7 @@ def after_install():
 	create_default_role_profiles()
 	run_post_install_patches()
 	add_default_hr_permissions()
+	show_employee_name_in_links()
 
 	if is_new_hr_site():
 		set_hrms_as_default_app()
@@ -190,6 +192,7 @@ def get_customizations():
 			{"doc_type": "Salary Slip", "field_name": "rounded_total", "property": "print_hide"},
 			EMPLOYEE_DETAILS_TAB_LABEL,
 			*get_employee_layout_setters(),
+			EMPLOYEE_NAME_IN_LINKS,
 		],
 		"Custom DocPerm": [
 			{"parent": doctype, "role": role}
@@ -1099,6 +1102,25 @@ HR_ROLE_PERMISSIONS = {
 		**_PROJECT_TASK_PERMS,
 	},
 }
+
+
+EMPLOYEE_NAME_IN_LINKS = {"doc_type": "Employee", "property": "show_title_field_in_link"}
+
+
+def show_employee_name_in_links():
+	"""Show the employee's name instead of the ID wherever an Employee is linked.
+	A site that already set this either way keeps its choice."""
+	if frappe.db.exists("Property Setter", EMPLOYEE_NAME_IN_LINKS):
+		return
+
+	make_property_setter(
+		"Employee",
+		None,
+		"show_title_field_in_link",
+		1,
+		"Check",
+		for_doctype=True,
+	)
 
 
 def add_default_hr_permissions():
