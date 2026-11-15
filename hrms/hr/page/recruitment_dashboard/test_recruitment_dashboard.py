@@ -1,5 +1,6 @@
 import frappe
 from frappe.core.doctype.user_permission.test_user_permission import create_user
+from frappe.permissions import add_user_permission
 from frappe.tests import IntegrationTestCase
 from frappe.utils import add_days, nowdate
 
@@ -8,6 +9,7 @@ from hrms.hr.page.recruitment_dashboard.recruitment_dashboard import (
 	RecruitmentDashboard,
 	get_recruitment_dashboard,
 )
+from hrms.tests.test_utils import create_company
 
 HR_USER = "recruitment.dashboard.hr@example.com"
 NO_ROLE_USER = "recruitment.dashboard.norole@example.com"
@@ -21,7 +23,7 @@ class TestRecruitmentDashboard(IntegrationTestCase):
 		frappe.flags.mute_emails = True
 		for doctype in RECRUITMENT_DOCTYPES:
 			frappe.db.delete(doctype)
-		self.company = frappe.get_all("Company", pluck="name", limit=1)[0]
+		self.company = frappe.get_all("Company", pluck="name", order_by="creation asc", limit=1)[0]
 		if not frappe.db.exists("Designation", "Researcher"):
 			frappe.get_doc({"doctype": "Designation", "designation_name": "Researcher"}).insert()
 
@@ -104,6 +106,18 @@ class TestRecruitmentDashboard(IntegrationTestCase):
 		self.assertEqual(funnel["Interviewing"], 2)
 		self.assertEqual(funnel["Offered"], 1)
 
+	def test_cancelled_interviews_are_not_interviewed(self):
+		opening = self.make_opening("Dashboard Opening")
+		cancelled = self.make_applicant("cancelled", opening)
+		interview = self.make_interview(cancelled)
+		frappe.db.set_value("Interview", interview, "status", "Cancelled")
+
+		data = RecruitmentDashboard("last_90_days").get_data()
+
+		funnel = {row["stage"]: row["count"] for row in data["funnel"]}
+		self.assertEqual(funnel["Interviewing"], 0)
+		self.assertEqual(data["sources"][0]["Interviewed"], 0)
+
 	def test_offers_made_count_by_offer_date(self):
 		opening = self.make_opening("Dashboard Opening")
 		# applied long before the period, offered in it
@@ -169,6 +183,22 @@ class TestRecruitmentDashboard(IntegrationTestCase):
 
 		frappe.set_user(HR_USER)
 		self.assertTrue(get_recruitment_dashboard()["first_use"])
+
+	def test_counts_respect_company_user_permission(self):
+		other_company = create_company("Test Recruitment Dashboard Other").name
+		create_user(HR_USER, "HR User")
+		add_user_permission("Company", self.company, HR_USER)
+		own = self.make_opening("Own Opening")
+		other = self.make_opening("Other Opening", company=other_company)
+		self.make_offer(self.make_applicant("own", own), "Accepted", docstatus=1)
+		self.make_offer(self.make_applicant("other", other), "Accepted", docstatus=1, company=other_company)
+
+		frappe.set_user(HR_USER)
+		data = get_recruitment_dashboard()
+
+		self.assertEqual(data["open_roles"], 1)
+		self.assertEqual([row["role"] for row in data["openings"]["rows"]], ["Own Opening"])
+		self.assertEqual({row["status"]: row["count"] for row in data["offers"]}["Accepted"], 1)
 
 	def make_opening(self, title, **kwargs):
 		return frappe.get_doc(
