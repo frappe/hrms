@@ -135,11 +135,12 @@ def get_all_filters(filters, openings):
 
 def get_filter_controls(filters, openings, team_names):
 	"""Selects for the toolbar; a select with nothing to choose stays hidden unless it is in use."""
+	all_filters = get_all_filters(filters, openings)
 	controls = []
-	for key, values in get_all_filters(filters, openings).items():
-		label, all_label = FILTERS[key]
+	for key, (label, all_label) in FILTERS.items():
+		values = all_filters.get(key)
 		selected = filters.get(key, [])
-		if len(values) < 2 and not selected:
+		if not values or (len(values) < 2 and not selected):
 			continue
 		labels = get_option_labels(key, values, team_names)
 		controls.append(
@@ -153,7 +154,7 @@ def get_filter_controls(filters, openings, team_names):
 				],
 			}
 		)
-	return sorted(controls, key=lambda control: list(FILTERS).index(control["name"]))
+	return controls
 
 
 def get_option_labels(key, values, team_names):
