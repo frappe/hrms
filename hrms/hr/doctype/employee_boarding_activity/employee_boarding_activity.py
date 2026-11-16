@@ -14,7 +14,9 @@ class EmployeeBoardingActivity(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
-		action: DF.Literal["Manual", "Create User", "Appointment Letter", "Create Employee", "Assign"]
+		action: DF.Literal[
+			"Manual", "Create User", "Appointment Letter", "Create Employee", "Set Roles", "Assign"
+		]
 		activity_name: DF.Data
 		added_on_onboarding: DF.Check
 		begin_on: DF.Int

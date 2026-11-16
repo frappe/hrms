@@ -64,6 +64,7 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		job_offer: DF.Link
 		notify_users_by_email: DF.Check
 		personal_email: DF.Data | None
+		roles_set_on: DF.Datetime | None
 		user: DF.Data | None
 	# end: auto-generated types
 
@@ -144,6 +145,31 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		self.start_employee_request()
 		self.save_activity_states()
 		return user
+
+	@frappe.whitelist(methods=["POST"])
+	def set_user_roles(self, role_profiles: list[str] | str, module_profile: str | None = None) -> None:
+		self.check_permission("write")
+		self.validate_started()
+		role_profiles = frappe.parse_json(role_profiles)
+		if not (self.user and self.employee):
+			frappe.throw(_("Create the user and the employee before setting roles"))
+		if not role_profiles:
+			frappe.throw(_("Select at least one role profile"))
+
+		user = frappe.get_doc("User", self.user)
+		user.set("role_profiles", [{"role_profile": profile} for profile in role_profiles])
+		user.module_profile = module_profile
+		user.save()
+		self.db_set("roles_set_on", now_datetime())
+		self.save_activity_states()
+		if EMPLOYEE_SELF_SERVICE_ROLE not in frappe.get_roles(user.name):
+			frappe.msgprint(
+				_(
+					"The selected role profiles do not include the {0} role, so {1} cannot use the employee app"
+				).format(frappe.bold(_(EMPLOYEE_SELF_SERVICE_ROLE)), self.employee_name),
+				title=_("Employee app access removed"),
+				indicator="orange",
+			)
 
 	def insert_user(self, email: str) -> str:
 		first_name, middle_name, last_name = split_full_name(self.employee_name)

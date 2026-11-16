@@ -30,6 +30,7 @@
   "company_email",
   "column_break_user",
   "user",
+  "roles_set_on",
   "appointment_letter_section",
   "appointment_letter_sent_on",
   "table_for_activity",
@@ -202,6 +203,12 @@
    "read_only": 1
   },
   {
+   "fieldname": "roles_set_on",
+   "fieldtype": "Datetime",
+   "label": "Roles Set On",
+   "read_only": 1
+  },
+  {
    "fieldname": "appointment_letter_section",
    "fieldtype": "Section Break",
    "hidden": 1,
@@ -233,7 +240,7 @@
  "icon": "user-plus",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-11-13 18:25:26.785224",
+ "modified": "2026-11-16 09:29:22.014196",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Onboarding",

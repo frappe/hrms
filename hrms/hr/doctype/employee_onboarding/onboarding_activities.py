@@ -35,6 +35,7 @@ ACTION_DOCTYPES = {
 	"Create User": "User",
 	"Appointment Letter": "Appointment Letter",
 	"Create Employee": "Employee",
+	"Set Roles": "User",
 }
 
 PROGRESS_STATUSES = ("In Progress", "Stuck")
@@ -67,6 +68,11 @@ def make_assign_activity(title, doctype):
 STANDARD_ACTIVITIES = [
 	{"activity_name": "Create User Login", "action": "Create User"},
 	{"activity_name": "Create Employee", "action": "Create Employee"},
+	{
+		"activity_name": "Set Roles and Permissions",
+		"action": "Set Roles",
+		"depends_on_action": "Create Employee",
+	},
 	make_assign_activity("Assign Holiday List", "Holiday List Assignment"),
 	make_assign_activity("Assign Leave Policy", "Leave Policy Assignment"),
 	make_assign_activity("Assign Salary Structure", "Salary Structure Assignment"),
@@ -136,6 +142,8 @@ class OnboardingActivities:
 			case "Create Employee":
 				reference_name = self.employee
 				done = bool(self.employee)
+			case "Set Roles":
+				done = bool(self.roles_set_on)
 			case "Assign":
 				reference_name = self.get_assignment(row.reference_doctype)
 				done = bool(reference_name)

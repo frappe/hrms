@@ -264,6 +264,47 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		frappe.clear_cache(user=user)
 		self.assertIn("Employee Self Service", frappe.get_roles(user))
 
+	def test_setting_roles_applies_the_profiles_and_completes_the_step(self):
+		onboarding = create_employee_onboarding(submit=True)
+		onboarding.db_set("company_email", "asha.roles@example.com")
+		user = onboarding.create_user("Company Email")
+		create_onboarding_employee(onboarding)
+		profile = make_role_profile("_Test Onboarding Profile", ["Employee Self Service", "Projects User"])
+
+		onboarding.reload()
+		onboarding.set_user_roles([profile])
+
+		onboarding.reload()
+		self.assertTrue(get_row(onboarding, "Set Roles and Permissions").completed)
+		self.assertEqual([row.role_profile for row in frappe.get_doc("User", user).role_profiles], [profile])
+		frappe.clear_cache(user=user)
+		self.assertIn("Projects User", frappe.get_roles(user))
+		self.assertIn("Employee Self Service", frappe.get_roles(user))
+
+	def test_roles_wait_for_the_employee(self):
+		onboarding = create_employee_onboarding(submit=True)
+		onboarding.db_set("company_email", "asha.noemp@example.com")
+		onboarding.create_user("Company Email")
+		profile = make_role_profile("_Test Onboarding Profile", ["Employee Self Service"])
+
+		onboarding.reload()
+		self.assertRaises(frappe.ValidationError, onboarding.set_user_roles, [profile])
+
+	def test_only_a_user_manager_can_set_roles(self):
+		onboarding = create_employee_onboarding(submit=True)
+		onboarding.db_set("company_email", "asha.perm@example.com")
+		onboarding.create_user("Company Email")
+		create_onboarding_employee(onboarding)
+		profile = make_role_profile("_Test Onboarding Profile", ["System Manager"])
+		hr_manager = get_test_user("hr.manager.roles@example.com")
+		frappe.get_doc("User", hr_manager).add_roles("HR Manager")
+
+		frappe.set_user(hr_manager)
+		self.addCleanup(frappe.set_user, "Administrator")
+		onboarding.reload()
+		self.assertTrue(onboarding.has_permission("write"))
+		self.assertRaises(frappe.PermissionError, onboarding.set_user_roles, [profile])
+
 	def test_submitting_starts_the_activities_without_finishing_them(self):
 		onboarding = create_employee_onboarding(submit=False)
 
@@ -812,6 +853,14 @@ def get_test_user(email):
 			ignore_permissions=True
 		)
 	return email
+
+
+def make_role_profile(name, roles):
+	if not frappe.db.exists("Role Profile", name):
+		frappe.get_doc(
+			{"doctype": "Role Profile", "role_profile": name, "roles": [{"role": role} for role in roles]}
+		).insert()
+	return name
 
 
 def get_test_template():

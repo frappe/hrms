@@ -33,6 +33,17 @@ const ACTION_HANDLERS = {
 				? [open_action("Employee", row.reference_name)]
 				: [{ label: __("Create"), onclick: () => create_employee(list) }],
 	},
+	"Set Roles": {
+		get_value: (list) => {
+			const set_on = list.frm.doc.roles_set_on;
+			return set_on && __("Set on {0}", [frappe.datetime.str_to_user(set_on, false, true)]);
+		},
+		get_actions: (list, row, state) => {
+			if (state === "done") return [open_action("User", list.frm.doc.user)];
+			if (!is_open(state)) return [];
+			return [{ label: __("Set"), onclick: () => open_roles_dialog(list) }];
+		},
+	},
 	Assign: {
 		get_value: (list, row) => {
 			if (row.reference_name) return row.reference_name;
@@ -129,6 +140,39 @@ function open_user_dialog(list) {
 		primary_action_label: __("Create User Login"),
 		primary_action: async (values) => {
 			await list.call("create_user", values, __("Creating the user"));
+			dialog.hide();
+		},
+	});
+	dialog.show();
+}
+
+async function open_roles_dialog(list) {
+	await frappe.model.with_doctype("User Role Profile");
+	const dialog = new frappe.ui.Dialog({
+		title: __("Set Roles and Permissions"),
+		fields: [
+			{
+				fieldname: "role_profiles",
+				label: __("Role Profiles"),
+				fieldtype: "Table MultiSelect",
+				options: "User Role Profile",
+				reqd: 1,
+			},
+			{
+				fieldname: "module_profile",
+				label: __("Module Profile"),
+				fieldtype: "Link",
+				options: "Module Profile",
+			},
+		],
+		primary_action_label: __("Apply to User"),
+		primary_action: async ({ role_profiles, module_profile }) => {
+			const profiles = role_profiles.map((row) => row.role_profile);
+			await list.call(
+				"set_user_roles",
+				{ role_profiles: profiles, module_profile },
+				__("Setting roles"),
+			);
 			dialog.hide();
 		},
 	});
