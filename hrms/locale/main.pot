@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Frappe HR VERSION\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-11-08 09:33+0000\n"
-"PO-Revision-Date: 2026-11-08 09:33+0000\n"
+"POT-Creation-Date: 2026-11-15 09:34+0000\n"
+"PO-Revision-Date: 2026-11-15 09:34+0000\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: contact@frappe.io\n"
 "MIME-Version: 1.0\n"
@@ -1940,6 +1940,47 @@ msgstr ""
 msgid "Bookkeeping for once-per-site activation telemetry. The document name is the event name, so the primary key makes claiming a milestone atomic across concurrent transactions."
 msgstr ""
 
+#. Label of the branch (Link) field in DocType 'Appraisal Cycle'
+#. Label of the branch (Link) field in DocType 'Appraisee'
+#. Label of the branch (Link) field in DocType 'Employee Attendance Tool'
+#. Label of the branch (Link) field in DocType 'Job Offer'
+#. Label of the branch (Link) field in DocType 'Leave Control Panel'
+#. Label of the branch (Link) field in DocType 'Shift Assignment Tool'
+#. Label of a Sidebar Item
+#. Label of the branch (Link) field in DocType 'Bulk Salary Structure
+#. Assignment'
+#. Label of the branch (Link) field in DocType 'Payroll Entry'
+#. Label of the branch (Link) field in DocType 'Salary Slip'
+#. Label of a Workspace Sidebar Item
+#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json:86
+#: hrms/hr/doctype/appraisee/appraisee.json:59
+#: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json:51
+#: hrms/hr/doctype/job_offer/job_offer.json:188
+#: hrms/hr/doctype/leave_control_panel/leave_control_panel.json:53
+#: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:194
+#: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json:103
+#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:84
+#: hrms/hr/report/employee_advance_summary/employee_advance_summary.js:63
+#: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:168
+#: hrms/hr/report/employee_analytics/employee_analytics.py:33
+#: hrms/hr/report/employee_birthday/employee_birthday.py:29
+#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:123
+#: hrms/hr/report/unpaid_expense_claim/unpaid_expense_claim.js:32
+#: hrms/hr/report/unpaid_expense_claim/unpaid_expense_claim.py:68
+#: hrms/hr_setup/sidebar/hr_setup/hr_setup.json:85
+#: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json:71
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.json:85
+#: hrms/payroll/doctype/salary_slip/salary_slip.json:170
+#: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.js:56
+#: hrms/payroll/report/salary_payments_based_on_payment_mode/salary_payments_based_on_payment_mode.py:30
+#: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:23
+#: hrms/payroll/report/salary_register/salary_register.js:88
+#: hrms/payroll/report/salary_register/salary_register.py:189
+#: hrms/public/js/salary_slip_deductions_report_filters.js:48
+#: hrms/workspace_sidebar/hr_setup.json:85
+msgid "Branch"
+msgstr ""
+
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:284
 #, python-brace-format
 msgid "Branch: {0}"
@@ -2112,7 +2153,7 @@ msgstr ""
 msgid "Cannot create Salary Slip for Employee who has left before Payroll Period"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2762
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2780
 #, python-brace-format
 msgid "Cannot create Salary Slip: no active Salary Structure is assigned to employee {0}."
 msgstr ""
@@ -4821,7 +4862,7 @@ msgstr ""
 msgid "Failed to send reset link"
 msgstr ""
 
-#: hrms/hr/doctype/interview/interview.py:147
+#: hrms/hr/doctype/interview/interview.py:151
 msgid "Failed to send the Interview Reschedule notification. Please configure your email account."
 msgstr ""
 
@@ -4834,7 +4875,7 @@ msgstr ""
 msgid "Failed to update password"
 msgstr ""
 
-#: hrms/hr/doctype/interview/interview.py:242
+#: hrms/hr/doctype/interview/interview.py:246
 msgid "Failed to update the Job Applicant status"
 msgstr ""
 
@@ -6089,12 +6130,12 @@ msgstr ""
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2073
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2091
 #, python-brace-format
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2061
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2079
 #, python-brace-format
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
 msgstr ""
@@ -6103,7 +6144,7 @@ msgstr ""
 msgid "Income Tax Slab: "
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2069
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2087
 #, python-brace-format
 msgid "Income Tax Slab: {0} is disabled"
 msgstr ""
@@ -6201,27 +6242,27 @@ msgstr ""
 msgid "Interview Feedback"
 msgstr ""
 
-#: hrms/hr/doctype/interview/test_interview.py:323
-#: hrms/hr/doctype/interview/test_interview.py:332
-#: hrms/hr/doctype/interview/test_interview.py:334
-#: hrms/hr/doctype/interview/test_interview.py:341 hrms/setup.py:567
+#: hrms/hr/doctype/interview/test_interview.py:338
+#: hrms/hr/doctype/interview/test_interview.py:347
+#: hrms/hr/doctype/interview/test_interview.py:349
+#: hrms/hr/doctype/interview/test_interview.py:356 hrms/setup.py:567
 #: hrms/setup.py:569 hrms/setup.py:600
 msgid "Interview Feedback Reminder"
 msgstr ""
 
-#: hrms/hr/doctype/interview/interview.py:378
+#: hrms/hr/doctype/interview/interview.py:382
 #, python-brace-format
 msgid "Interview Feedback {0} submitted successfully"
 msgstr ""
 
-#: hrms/hr/doctype/interview/interview.py:116
+#: hrms/hr/doctype/interview/interview.py:120
 msgid "Interview Not Rescheduled"
 msgstr ""
 
-#: hrms/hr/doctype/interview/test_interview.py:307
-#: hrms/hr/doctype/interview/test_interview.py:316
-#: hrms/hr/doctype/interview/test_interview.py:318
-#: hrms/hr/doctype/interview/test_interview.py:340 hrms/setup.py:555
+#: hrms/hr/doctype/interview/test_interview.py:322
+#: hrms/hr/doctype/interview/test_interview.py:331
+#: hrms/hr/doctype/interview/test_interview.py:333
+#: hrms/hr/doctype/interview/test_interview.py:355 hrms/setup.py:555
 #: hrms/setup.py:557 hrms/setup.py:596
 msgid "Interview Reminder"
 msgstr ""
@@ -6232,7 +6273,7 @@ msgstr ""
 msgid "Interview Reminder Notification Template"
 msgstr ""
 
-#: hrms/hr/doctype/interview/interview.py:151
+#: hrms/hr/doctype/interview/interview.py:155
 msgid "Interview Rescheduled successfully"
 msgstr ""
 
@@ -6293,7 +6334,7 @@ msgstr ""
 msgid "Interview scheduled successfully"
 msgstr ""
 
-#: hrms/hr/doctype/interview/interview.py:132
+#: hrms/hr/doctype/interview/interview.py:136
 #, python-brace-format
 msgid "Interview: {0} Rescheduled"
 msgstr ""
@@ -6350,7 +6391,7 @@ msgstr ""
 msgid "Invalid Dates"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2827
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2845
 msgid "Invalid LWP Days Reversed"
 msgstr ""
 
@@ -6770,7 +6811,7 @@ msgstr ""
 msgid "Key Result Area"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2825
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2843
 #, python-brace-format
 msgid "LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
 msgstr ""
@@ -7858,7 +7899,7 @@ msgstr ""
 msgid "Missing Relieving Date"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2064
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2082
 msgid "Missing Tax Slab"
 msgstr ""
 
@@ -8197,7 +8238,7 @@ msgstr ""
 msgid "No attendance records to create due to following reasons"
 msgstr ""
 
-#: hrms/hr/doctype/interview/interview.py:116
+#: hrms/hr/doctype/interview/interview.py:120
 msgid "No changes found in timings."
 msgstr ""
 
@@ -8351,7 +8392,7 @@ msgstr ""
 msgid "Note: Total allocated leaves {0} shouldn't be less than already approved leaves {1} for the period"
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2378
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2396
 #, python-brace-format
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr ""
@@ -8581,7 +8622,7 @@ msgstr ""
 msgid "Only Employee Grievance with status {0} or {1} can be submitted"
 msgstr ""
 
-#: hrms/hr/doctype/interview/interview.py:360
+#: hrms/hr/doctype/interview/interview.py:364
 msgid "Only Interviewer Are allowed to submit Interview Feedback"
 msgstr ""
 
@@ -9419,7 +9460,7 @@ msgstr ""
 msgid "Please review the letter and confirm your acceptance at the earliest."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2366
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2384
 msgid "Please see attachment"
 msgstr ""
 
@@ -9654,7 +9695,7 @@ msgstr ""
 msgid "Please sign and return a copy of the letter as a token of your acceptance."
 msgstr ""
 
-#: hrms/hr/doctype/interview/interview.py:228
+#: hrms/hr/doctype/interview/interview.py:232
 msgid "Please specify the job applicant to be updated."
 msgstr ""
 
@@ -10868,7 +10909,7 @@ msgstr ""
 msgid "Salary components should be part of the Salary Structure."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2850
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2868
 #, python-brace-format
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr ""
@@ -12091,12 +12132,12 @@ msgstr ""
 msgid "Thank you for applying."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2782
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2800
 #, python-brace-format
 msgid "The Assigned Salary Structure {0} for the employee {1} does not have a Salary Component configured for Salary Slip based on Timesheet."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2776
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2794
 #, python-brace-format
 msgid "The Assigned Salary Structure {0} for the employee {1} is not configured for Salary Slip based on Timesheet."
 msgstr ""
@@ -13063,10 +13104,6 @@ msgstr ""
 msgid "Travel Type"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:230
-msgid "Try again"
-msgstr ""
-
 #: hrms/hr/page/organizational_chart/organizational_chart.vue:430
 msgid "Type a name"
 msgstr ""
@@ -13240,7 +13277,7 @@ msgstr ""
 msgid "Updated status from {0} to {1} for date {2} in the attendance record {3}"
 msgstr ""
 
-#: hrms/hr/doctype/interview/interview.py:235
+#: hrms/hr/doctype/interview/interview.py:239
 #, python-brace-format
 msgid "Updated the Job Applicant status to {0}"
 msgstr ""
@@ -13790,7 +13827,7 @@ msgstr ""
 msgid "Your HR team has not shared the Organizational Chart with employees"
 msgstr ""
 
-#: hrms/hr/doctype/interview/interview.py:133
+#: hrms/hr/doctype/interview/interview.py:137
 #, python-brace-format
 msgid "Your Interview session is rescheduled from {0} {1} - {2} to {3} {4} - {5}"
 msgstr ""
@@ -14241,7 +14278,7 @@ msgstr ""
 msgid "{0}. Check error log for more details."
 msgstr ""
 
-#: hrms/payroll/doctype/salary_slip/salary_slip.py:2400
+#: hrms/payroll/doctype/salary_slip/salary_slip.py:2418
 #, python-brace-format
 msgid "{0}: Employee email not found, hence email not sent"
 msgstr ""
