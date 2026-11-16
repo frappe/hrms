@@ -28,7 +28,7 @@ class EmployeeMaster(Employee):
 		self.employee = self.name
 
 
-def validate_onboarding_activities(doc, method=None):
+def validate_onboarding_allows_creation(doc, method=None):
 	if not (doc.is_new() and doc.get("job_offer")):
 		return
 
