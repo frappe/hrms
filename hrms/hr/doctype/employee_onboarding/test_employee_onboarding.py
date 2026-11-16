@@ -947,6 +947,10 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		self.assertFalse(get_row(onboarding, "Assign Shift Type").completed)
 		self.assertTrue(get_row(onboarding, "Assign ID Card").completed)
 		self.assertEqual(get_row(onboarding, "Assign a laptop").todo, todo.name)
+		self.assertEqual(
+			frappe.db.get_value("ToDo", todo.name, ["reference_type", "reference_name"]),
+			("Employee Onboarding", onboarding.name),
+		)
 		self.assertIsNone(get_row(onboarding, "Assign ID Card").todo)
 		self.assertEqual(onboarding.boarding_status, "Completed")
 
