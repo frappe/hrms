@@ -250,6 +250,25 @@ def get_opening_details(opening):
 
 
 @frappe.whitelist(methods=["POST"])
+def shortlist_applicant(job_applicant: str) -> dict:
+	"""Shortlists an applicant; `undo_shortlist_applicant` takes the returned status back."""
+	frappe.has_permission("Job Applicant", "write", doc=job_applicant, throw=True)
+	previous_status = frappe.db.get_value("Job Applicant", job_applicant, "status")
+	set_applicant_status(job_applicant, "Shortlisted")
+	return {"previous_status": previous_status}
+
+
+@frappe.whitelist(methods=["POST"])
+def undo_shortlist_applicant(job_applicant: str, previous_status: str):
+	"""Restores the status from before the shortlist. A hold keeps the stage it is saved in, so an
+	applicant held in Applied goes back to Applied first."""
+	frappe.has_permission("Job Applicant", "write", doc=job_applicant, throw=True)
+	if previous_status == "Hold":
+		set_applicant_status(job_applicant, "Open")
+	set_applicant_status(job_applicant, previous_status)
+
+
+@frappe.whitelist(methods=["POST"])
 def move_back_applicant(job_applicant: str) -> dict:
 	"""Takes a rejected applicant back into the pipeline; the stage follows their interviews and offers."""
 	frappe.has_permission("Job Applicant", "write", doc=job_applicant, throw=True)

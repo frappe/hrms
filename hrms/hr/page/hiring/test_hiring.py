@@ -796,6 +796,33 @@ class TestHiring(IntegrationTestCase):
 		reject_applicant(interviewing)
 		self.assertEqual(applicant_api.move_back_applicant(interviewing)["stage"], "Interviewing")
 
+	def get_status_and_stage(self, applicant):
+		return frappe.db.get_value("Job Applicant", applicant, ["status", "stage"])
+
+	def test_shortlist_and_undo_restore_the_status_and_stage(self):
+		applicant = self.make_applicant("to-shortlist")
+		self.assertEqual(applicant_api.shortlist_applicant(applicant), {"previous_status": "Open"})
+		self.assertEqual(self.get_status_and_stage(applicant), ("Shortlisted", "Shortlisted"))
+
+		applicant_api.undo_shortlist_applicant(applicant, "Open")
+		self.assertEqual(self.get_status_and_stage(applicant), ("Open", "Applied"))
+
+	def test_undo_shortlist_keeps_an_applicant_held_in_applied_in_applied(self):
+		applicant = self.make_applicant("held-shortlist", status="Hold")
+		previous_status = applicant_api.shortlist_applicant(applicant)["previous_status"]
+		self.assertEqual(self.get_status_and_stage(applicant), ("Shortlisted", "Shortlisted"))
+
+		applicant_api.undo_shortlist_applicant(applicant, previous_status)
+		self.assertEqual(self.get_status_and_stage(applicant), ("Hold", "Applied"))
+
+	def test_shortlist_and_undo_require_write_access(self):
+		applicant = self.make_applicant("guarded-shortlist")
+		frappe.set_user(NO_ROLE_USER)
+		self.assertRaises(frappe.PermissionError, applicant_api.shortlist_applicant, applicant)
+		self.assertRaises(frappe.PermissionError, applicant_api.undo_shortlist_applicant, applicant, "Open")
+		frappe.set_user("Administrator")
+		self.assertEqual(self.get_status_and_stage(applicant), ("Open", "Applied"))
+
 	def test_pipeline_page_grows_to_take_in_the_linked_applicant(self):
 		names = [self.make_applicant(f"linked-{index}") for index in range(5)]
 		for index, name in enumerate(names):

@@ -603,12 +603,7 @@ hrms.hiring.OpeningView = class OpeningView {
 			return [
 				{
 					label: __("Shortlist"),
-					onclick: (item) =>
-						this.change_status(
-							item,
-							"Shortlisted",
-							__("{0} shortlisted", [item.title]),
-						),
+					onclick: (item) => this.shortlist(item),
 				},
 				{
 					label: __("Reject"),
@@ -678,19 +673,26 @@ hrms.hiring.OpeningView = class OpeningView {
 		return this.pane?.step(delta);
 	}
 
-	async set_status(name, status) {
-		await frappe.call({
-			method: "frappe.client.set_value",
-			args: { doctype: "Job Applicant", name, fieldname: "status", value: status },
-		});
-	}
-
-	async change_status(item, status, message) {
+	async shortlist(item) {
 		const index = this.get_index(item.id);
-		const { message: current } = await frappe.db.get_value("Job Applicant", item.id, "status");
-		await this.set_status(item.id, status);
-		this.remove_row(item.id, status === "Rejected" ? "Rejected" : "Shortlisted", index);
-		this.show_undo_toast(item.id, message, current.status);
+		const { previous_status } = await frappe.xcall(`${APPLICANT_API}.shortlist_applicant`, {
+			job_applicant: item.id,
+		});
+		this.remove_row(item.id, "Shortlisted", index);
+		const toast = frappe.ui.toast({
+			message: __("{0} shortlisted", [item.title]),
+			action: {
+				label: __("Undo"),
+				onclick: async () => {
+					toast.dismiss();
+					await frappe.xcall(`${APPLICANT_API}.undo_shortlist_applicant`, {
+						job_applicant: item.id,
+						previous_status,
+					});
+					this.refresh(item.id);
+				},
+			},
+		});
 	}
 
 	/** Rejects with a dialog asking for the reason and offering to email the applicant. */
@@ -720,20 +722,6 @@ hrms.hiring.OpeningView = class OpeningView {
 		this.counts[to_stage]++;
 		if (was_selected) this.selected = null;
 		this.rerender(index);
-	}
-
-	show_undo_toast(id, message, previous_status) {
-		const toast = frappe.ui.toast({
-			message,
-			action: {
-				label: __("Undo"),
-				onclick: async () => {
-					toast.dismiss();
-					await this.set_status(id, previous_status);
-					this.refresh(id);
-				},
-			},
-		});
 	}
 
 	after_scheduled({ name }) {

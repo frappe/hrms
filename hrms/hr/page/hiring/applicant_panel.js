@@ -331,8 +331,7 @@ hrms.hiring.ApplicantPanel = class ApplicantPanel {
 			id: "shortlist",
 			label: __("Shortlist"),
 			variant: "solid",
-			onclick: () =>
-				this.view.change_status(item, "Shortlisted", __("{0} shortlisted", [item.title])),
+			onclick: () => this.view.shortlist(item),
 		};
 		const reject = {
 			id: "reject",
