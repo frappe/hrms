@@ -27,9 +27,22 @@ class TestHiringDefaults(IntegrationTestCase):
 		for template in OFFER_EMAIL_TEMPLATES:
 			self.assertEqual(self.reference(template), "Job Offer")
 
+	def make_template(self, name, reference_doctype=None):
+		frappe.delete_doc_if_exists("Email Template", name)
+		frappe.get_doc(
+			{
+				"doctype": "Email Template",
+				"name": name,
+				"subject": name,
+				"response": name,
+				"reference_doctype": reference_doctype,
+			}
+		).insert(ignore_permissions=True)
+
 	def test_patch_scopes_only_blank_templates(self):
-		frappe.db.set_value("Email Template", "Interview Reminder", "reference_doctype", None)
-		frappe.db.set_value("Email Template", "Leave Status Notification", "reference_doctype", "Employee")
+		# a fresh site may not have these shipped templates
+		self.make_template("Interview Reminder")
+		self.make_template("Leave Status Notification", "Employee")
 		execute()
 		self.assertEqual(self.reference("Interview Reminder"), "Interview")
 		self.assertEqual(self.reference("Leave Status Notification"), "Employee")
