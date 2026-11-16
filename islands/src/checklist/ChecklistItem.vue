@@ -370,7 +370,7 @@ function dragEnd() {
 	color: var(--ink-gray-8);
 }
 .item[data-status="done"] .marker {
-	color: var(--ink-green-7);
+	color: var(--ink-gray-7);
 }
 .item[data-status="stuck"] .marker {
 	color: var(--ink-red-7);
