@@ -155,6 +155,41 @@ class TestEmployeePromotion(HRMSTestSuite):
 		self.assertEqual(promotion.revised_ctc, 1346400)
 		self.assertEqual(frappe.db.get_value("Employee", employee, "grade"), "EP Test G1")
 
+	def test_ctc_breakup_is_filled_from_revised_base(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_breakup@example.com")
+
+		promotion = make_promotion(employee, revised_base=60000)
+
+		rows = [(r.fixed_components, r.per_cycle, r.yearly, r.is_summary) for r in promotion.ctc_breakup]
+		self.assertEqual(
+			rows,
+			[
+				("EP Test Basic", 60000, 720000, 0),
+				("EP Test HRA", 30000, 360000, 0),
+				("EP Test Special", 5000, 60000, 0),
+				("Gross Pay", 95000, 1140000, 1),
+				("EP Test Employer PF", 7200, 86400, 0),
+				("Total Cost to Company (CTC)", 102200, 1226400, 1),
+				("Take Home* (Income Tax applicable as per IT Act)", 95000, 1140000, 1),
+			],
+		)
+		self.assertEqual(promotion.ctc_breakup[-2].yearly, promotion.revised_ctc)
+		self.assertEqual({r.currency for r in promotion.ctc_breakup}, {"INR"})
+
+	def test_ctc_breakup_is_empty_without_revised_base(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_no_breakup@example.com")
+
+		promotion = make_promotion(employee, revised_ctc=1500000)
+		self.assertEqual(promotion.ctc_breakup, [])
+
+		promotion.revised_base = 60000
+		promotion.save()
+		self.assertTrue(promotion.ctc_breakup)
+
+		promotion.revised_base = 0
+		promotion.save()
+		self.assertEqual(promotion.ctc_breakup, [])
+
 	def test_submit_does_not_create_assignment(self):
 		employee, _assignment = setup_employee_with_assignment("promotion_no_auto@example.com")
 

@@ -28,6 +28,8 @@
   "column_break_revised_salary",
   "revised_base",
   "revised_ctc",
+  "ctc_breakup_section",
+  "ctc_breakup",
   "amended_from"
  ],
  "fields": [
@@ -127,6 +129,18 @@
    "read_only_depends_on": "eval:doc.salary_structure && doc.revised_base"
   },
   {
+   "depends_on": "eval:(doc.ctc_breakup || []).length",
+   "fieldname": "ctc_breakup_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "ctc_breakup",
+   "fieldtype": "Table",
+   "label": "Revised CTC Break-up",
+   "options": "Job Offer Component",
+   "read_only": 1
+  },
+  {
    "fieldname": "current_salary_structure_assignment",
    "fieldtype": "Link",
    "label": "Current Salary Structure Assignment",
@@ -183,7 +197,7 @@
  "icon": "trending-up",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-11-17 12:00:00.000000",
+ "modified": "2026-11-17 13:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Promotion",

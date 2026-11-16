@@ -9,8 +9,10 @@ from frappe.utils import formatdate, get_link_to_form, getdate
 
 from hrms.hr.utils import get_formatted_value, update_employee_work_history, validate_active_employee
 from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
+	PERIODS_PER_YEAR,
 	get_promotion_assignments,
 )
+from hrms.payroll.utils import get_breakup_rows
 
 
 class EmployeePromotion(Document):
@@ -25,9 +27,11 @@ class EmployeePromotion(Document):
 		from hrms.hr.doctype.employee_property_history.employee_property_history import (
 			EmployeePropertyHistory,
 		)
+		from hrms.hr.doctype.job_offer_component.job_offer_component import JobOfferComponent
 
 		amended_from: DF.Link | None
 		company: DF.Link | None
+		ctc_breakup: DF.Table[JobOfferComponent]
 		current_base: DF.Currency
 		current_ctc: DF.Currency
 		current_salary_structure: DF.Link | None
@@ -46,8 +50,7 @@ class EmployeePromotion(Document):
 	def validate(self):
 		validate_active_employee(self.employee)
 		self.set_current_salary()
-		if self.salary_structure and self.revised_base:
-			self.revised_ctc = self.get_revised_ctc()
+		self.set_revised_salary()
 
 	def set_current_salary(self):
 		salary = get_salary_on(self.employee, self.promotion_date)
@@ -58,9 +61,24 @@ class EmployeePromotion(Document):
 		if not self.salary_structure:
 			self.salary_structure = salary.salary_structure
 
+	def set_revised_salary(self):
+		self.set("ctc_breakup", [])
+		assignment = self.get_revised_assignment()
+		if not assignment:
+			return
+
+		self.revised_ctc = assignment.ctc
+		frequency = frappe.get_cached_value("Salary Structure", self.salary_structure, "payroll_frequency")
+		periods = PERIODS_PER_YEAR.get(frequency, 12)
+		self.set("ctc_breakup", get_breakup_rows(assignment, periods, assignment.ctc))
+
 	def get_revised_ctc(self) -> float:
+		assignment = self.get_revised_assignment()
+		return assignment.ctc if assignment else 0.0
+
+	def get_revised_assignment(self) -> Document | None:
 		if not (self.salary_structure and self.revised_base):
-			return 0.0
+			return None
 
 		assignment = frappe.new_doc("Salary Structure Assignment")
 		assignment.employee = self.get_promoted_employee()
@@ -75,7 +93,7 @@ class EmployeePromotion(Document):
 			)
 
 		assignment.calculate_ctc_and_gross()
-		return assignment.ctc
+		return assignment
 
 	def get_promoted_employee(self) -> Document:
 		employee = frappe.get_doc("Employee", self.employee)

@@ -118,6 +118,7 @@ frappe.ui.form.on("Employee Promotion", {
 	},
 
 	set_revised_ctc: function (frm) {
+		clear_ctc_breakup(frm);
 		if (!frm.doc.salary_structure || !frm.doc.revised_base) {
 			// clear only a calculated CTC; one typed by hand stays
 			if (frm.revised_ctc_is_calculated) {
@@ -166,6 +167,14 @@ function render_revised_assignment(frm) {
 			</div>
 		</div>
 	`);
+}
+
+// the break-up is rebuilt on save, so drop one that no longer matches the inputs
+function clear_ctc_breakup(frm) {
+	if (!(frm.doc.ctc_breakup || []).length) return;
+
+	frm.clear_table("ctc_breakup");
+	frm.refresh_fields();
 }
 
 function revised_ctc_inputs(frm) {
