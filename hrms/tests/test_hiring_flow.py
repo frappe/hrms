@@ -554,6 +554,45 @@ class TestHiringFlow(IntegrationTestCase):
 		self.assertEqual(status(cleared), "Cleared")
 		self.assertEqual(frappe.db.get_value("Job Applicant", applicant, "status"), "Shortlisted")
 
+	def test_reject_by_a_plain_save_closes_open_interviews(self):
+		applicant = self.make_applicant("plain-reject-closes", status="Shortlisted")
+		interviews = self.make_open_interviews(applicant)
+		cleared = self.make_saveable_interview(
+			applicant, interview_type="Hiring Test Round 2", status="Cleared"
+		)
+
+		# a plain save, as a list bulk edit of Stage or a multi-card Kanban drop does
+		doc = frappe.get_doc("Job Applicant", applicant)
+		doc.stage = "Rejected"
+		doc.save()
+
+		self.assertEqual((doc.status, doc.stage), ("Rejected", "Rejected"))
+		self.assert_interview_statuses(dict(zip(interviews, ("Rejected", "Cancelled"), strict=True)))
+		self.assertEqual(frappe.db.get_value("Interview", cleared, "status"), "Cleared")
+		self.assertCountEqual(
+			doc.flags.closed_interviews,
+			[{"name": name, "status": status} for name, status in interviews.items()],
+		)
+
+	def test_reject_applicant_undo_restores_only_what_the_save_closed(self):
+		applicant = self.make_applicant("reject-undo-exact", status="Shortlisted")
+		interviews = self.make_open_interviews(applicant)
+		submitted = self.make_saveable_interview(
+			applicant, interview_type="Hiring Test Round 2", status="Cleared", docstatus=1
+		)
+
+		result = reject_applicant(applicant, reason="Withdrew")
+		self.assertCountEqual(
+			result["closed_interviews"],
+			[{"name": name, "status": status} for name, status in interviews.items()],
+		)
+
+		undo_reject_applicant(
+			applicant, result["previous_status"], None, frappe.as_json(result["closed_interviews"])
+		)
+		self.assert_interview_statuses({**interviews, submitted: "Cleared"})
+		self.assertEqual(frappe.db.get_value("Job Applicant", applicant, "status"), "Shortlisted")
+
 	def make_interviews_with_own_designation(self, applicant):
 		"""Open drafts whose designation their Interview Type doesn't carry, which a re-fetch would blank."""
 		interviews = self.make_open_interviews(applicant)

@@ -48,9 +48,16 @@ function show_opening_header(board, opening) {
 	);
 }
 
+// only these stages are a plain save, so only these take several cards at once
+const BULK_MOVE_STAGES = ["Applied", "Shortlisted"];
+
 // a step that did the move itself (scheduled, offered, rejected) reloads the board instead of saving
 async function before_hiring_move(move, page) {
-	if (move.cardIds.length > 1) return;
+	if (move.cardIds.length > 1) {
+		if (BULK_MOVE_STAGES.includes(move.toColumn)) return true;
+		frappe.msgprint(__("Move one applicant at a time to {0}", [__(move.toColumn)]));
+		return false;
+	}
 	const applicant = {
 		name: move.cardId,
 		applicant_name: move.title || move.cardId,

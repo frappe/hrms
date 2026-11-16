@@ -239,11 +239,12 @@ class JobOffer(Document):
 
 	def on_change(self):
 		if self.docstatus == 1:
-			update_job_applicant(self.status, self.job_applicant)
-			# an answered offer ends the interviews; the closed ones are kept for an Undo
+			# an answered offer ends the interviews; the closed ones are kept for an Undo. Closed before
+			# a decline rejects the applicant, which would otherwise close them without this list
 			reviewed_status = {"Accepted": "Cleared", "Rejected": "Rejected"}.get(self.status)
 			if reviewed_status and self.job_applicant:
 				self.flags.closed_interviews = close_open_interviews(self.job_applicant, reviewed_status)
+			update_job_applicant(self.status, self.job_applicant)
 
 		update_linked_stages(self)
 

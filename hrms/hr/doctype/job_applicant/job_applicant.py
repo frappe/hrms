@@ -102,6 +102,7 @@ class JobApplicant(Document):
 	def set_stage(self):
 		self.apply_manual_stage_move()
 		self.reopen_interviews_when_moved_back()
+		self.close_interviews_when_rejected()
 		self.stage = self.get_stage_by_rules()
 
 	def reopen_interviews_when_moved_back(self):
@@ -109,6 +110,13 @@ class JobApplicant(Document):
 		previous = self.get_doc_before_save()
 		if previous and previous.status == "Rejected" and self.status != "Rejected":
 			reopen_closed_interviews(self.name)
+
+	def close_interviews_when_rejected(self):
+		"""Turning Rejected, by any path, closes the drafts still awaiting a result; the closed ones
+		stay in `flags.closed_interviews` for an Undo."""
+		previous = self.get_doc_before_save()
+		if previous and previous.status != "Rejected" and self.status == "Rejected":
+			self.flags.closed_interviews = close_open_interviews(self.name, "Rejected")
 
 	def get_stage_by_rules(self) -> str:
 		"""The stage the rules give; on hold, the stage stored before this save is the one kept."""
@@ -510,8 +518,7 @@ def reject_applicant(
 	The mail waits 30 seconds in the queue so Undo can cancel it."""
 	frappe.has_permission("Job Applicant", "write", doc=job_applicant, throw=True)
 	previous_status = frappe.db.get_value("Job Applicant", job_applicant, "status")
-	set_applicant_status(job_applicant, "Rejected", reason, note)
-	closed_interviews = close_open_interviews(job_applicant, "Rejected")
+	applicant = set_applicant_status(job_applicant, "Rejected", reason, note)
 
 	communication = None
 	if cint(send_email):
@@ -531,7 +538,7 @@ def reject_applicant(
 	return {
 		"previous_status": previous_status,
 		"communication": communication,
-		"closed_interviews": closed_interviews,
+		"closed_interviews": applicant.flags.closed_interviews or [],
 	}
 
 
@@ -550,14 +557,18 @@ def undo_reject_applicant(
 	return {"email_cancelled": cancel_queued_email(job_applicant, communication)}
 
 
-def set_applicant_status(job_applicant: str, status: str, reason: str | None = None, note: str | None = None):
-	"""Saves the status. Leaving Rejected clears the reason and note, and reopens closed interviews."""
+def set_applicant_status(
+	job_applicant: str, status: str, reason: str | None = None, note: str | None = None
+) -> Document:
+	"""Saves the status. Turning Rejected closes open interviews; leaving it clears the reason and
+	note, and reopens closed interviews."""
 	doc = frappe.get_doc("Job Applicant", job_applicant)
 	doc.status = status
 	if status == "Rejected":
 		doc.rejection_reason = reason or doc.rejection_reason
 		doc.rejection_note = (note or "").strip() or doc.rejection_note
 	doc.save()
+	return doc
 
 
 def cancel_queued_email(job_applicant: str, communication: str | None) -> bool:
