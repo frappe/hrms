@@ -29,8 +29,6 @@ OPENING_FIELDS = [
 	"closes_on",
 	"closed_on",
 	"vacancies",
-	"designation",
-	"company",
 	"creation",
 ]
 # applicants with interviews or offers; a rejected one can still hold an offer that needs attention
@@ -158,8 +156,6 @@ def sorted_openings(openings):
 		(o for o in openings if o.status != "Open"),
 		key=lambda o: (not o.active, newest_first(o.closed_on)),
 	)
-	for opening in open_ones + closed_ones:
-		del opening["closed_on"], opening["designation"], opening["company"]
 	return open_ones + closed_ones
 
 
