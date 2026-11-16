@@ -866,31 +866,28 @@ def get_expense_claim_advances(expense_claim, employee_advance):
 	advance_payments.sort(key=lambda x: x.get("creation"))
 	advance_payment_voucher_nos = [payment["voucher_no"] for payment in advance_payments]
 
-	claimed_payments = frappe.get_all(
-		"Advance Payment Ledger Entry",
-		filters={
-			"company": expense_claim.company,
-			"event": "Adjustment",
-			"against_voucher_no": ["in", advance_payment_voucher_nos],
-			"delinked": False,
-		},
-		fields=[
-			"against_voucher_type",
-			"against_voucher_no",
-			"amount",
-		],
-	)
-
-	adjustment_map = {}
-	for adjustment_entry in claimed_payments:
-		payment_reference = (adjustment_entry["against_voucher_type"], adjustment_entry["against_voucher_no"])
-		adjustment_map[payment_reference] = adjustment_map.get(payment_reference, 0) + abs(
-			adjustment_entry["amount"]
+	# one payment voucher can pay several advances, so count only claims against this advance
+	ec = frappe.qb.DocType("Expense Claim")
+	eca = frappe.qb.DocType("Expense Claim Advance")
+	claimed_payments = (
+		frappe.qb.from_(ec)
+		.join(eca)
+		.on(ec.name == eca.parent)
+		.select(eca.reference_type, eca.reference_name, Sum(eca.allocated_amount).as_("claimed_amount"))
+		.where(
+			(eca.employee_advance == employee_advance.name)
+			& (eca.reference_name.isin(advance_payment_voucher_nos))
+			& (ec.approval_status == "Approved")
+			& (ec.docstatus == 1)
 		)
+		.groupby(eca.reference_type, eca.reference_name)
+	).run(as_dict=True)
+
+	claimed_map = {(d.reference_type, d.reference_name): flt(d.claimed_amount) for d in claimed_payments}
 
 	for advance in advance_payments:
 		paid_amount = flt(advance["amount"])
-		claimed_amount = adjustment_map.get((advance["voucher_type"], advance["voucher_no"]), 0)
+		claimed_amount = claimed_map.get((advance["voucher_type"], advance["voucher_no"]), 0)
 		unclaimed_amount = paid_amount - claimed_amount
 		return_amount = flt(employee_advance.return_amount)
 		allocated_amount = get_allocation_amount(

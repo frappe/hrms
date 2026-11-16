@@ -1376,6 +1376,51 @@ class TestExpenseClaim(HRMSTestSuite):
 		self.assertEqual(advance.status, "Paid")
 		self.assertEqual(advance.claimed_amount, 0)
 
+	def test_unclaimed_amount_of_advances_paid_in_one_journal_entry(self):
+		from hrms.hr.doctype.employee_advance.test_employee_advance import (
+			get_advances_for_claim,
+			make_employee_advance,
+			manual_journal_entry_for_advance,
+		)
+
+		payable_account = get_payable_account("_Test Company")
+		claim = make_expense_claim(
+			payable_account, 1000, 1000, "_Test Company", "Travel Expenses - _TC", do_not_submit=True
+		)
+		advance = make_employee_advance(claim.employee)
+
+		other_employee = make_employee("test_employee@shared.advance", "_Test Company")
+		other_advance = make_employee_advance(other_employee)
+
+		je = manual_journal_entry_for_advance(advance)
+		je.accounts[1].credit_in_account_currency = 2000
+		je.append(
+			"accounts",
+			{
+				"account": other_advance.advance_account,
+				"debit_in_account_currency": 1000,
+				"reference_type": "Employee Advance",
+				"reference_name": other_advance.name,
+				"party_type": "Employee",
+				"party": other_employee,
+			},
+		)
+		je.submit()
+
+		other_claim = make_expense_claim(
+			payable_account,
+			1000,
+			1000,
+			"_Test Company",
+			"Travel Expenses - _TC",
+			do_not_submit=True,
+			employee=other_employee,
+		)
+		get_advances_for_claim(other_claim, other_advance.name).submit()
+
+		claim = get_advances_for_claim(claim, advance.name)
+		self.assertEqual(claim.advances[0].unclaimed_amount, 1000)
+
 
 def get_payable_account(company):
 	return frappe.get_cached_value("Company", company, "default_payable_account")
