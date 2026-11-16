@@ -10,11 +10,6 @@ frappe.ui.form.on("Employee Boarding Template", {
 				},
 			};
 		});
-		frm.fields_dict.required_documents.grid.update_docfield_property(
-			"attachment",
-			"hidden",
-			1,
-		);
 	},
 
 	onload: function (frm) {
