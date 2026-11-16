@@ -35,6 +35,7 @@ class EmployeeBoardingTemplate(Document):
 		department: DF.Link | None
 		designation: DF.Link | None
 		employee_grade: DF.Link | None
+		notify_users_by_email: DF.Check
 		offboarding_activities: DF.Table[EmployeeBoardingActivity]
 		onboarding_activities: DF.Table[EmployeeBoardingActivity]
 		required_documents: DF.Table[EmployeeBoardingDocument]

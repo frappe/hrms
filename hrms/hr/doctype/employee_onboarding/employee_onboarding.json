@@ -90,6 +90,7 @@
    "default": "0",
    "fieldname": "notify_users_by_email",
    "fieldtype": "Check",
+   "hidden": 1,
    "label": "Notify users by email"
   },
   {
@@ -240,7 +241,7 @@
  "icon": "user-plus",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-11-16 09:29:22.014196",
+ "modified": "2026-11-16 12:20:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Onboarding",

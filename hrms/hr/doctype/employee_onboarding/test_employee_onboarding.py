@@ -1,6 +1,8 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 # See license.txt
 
+from unittest.mock import patch
+
 import frappe
 from frappe.desk.form.linked_with import get_linked_docs_to_delete
 from frappe.utils import add_days, getdate
@@ -806,6 +808,17 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		self.assertEqual(getdate(frappe.db.get_value("ToDo", todo, "date")), due_date)
 		self.assertEqual(frappe.db.count("ToDo", {"reference_name": onboarding.name}), 1)
 
+	def test_a_new_onboarding_takes_email_assignees_from_its_template(self):
+		onboarding = create_employee_onboarding(submit=False)
+
+		self.assertTrue(onboarding.notify_users_by_email)
+
+	def test_assignees_are_emailed_when_the_template_says_so(self):
+		self.assertTrue(submit_with_assignee(email_assignees=1).called)
+
+	def test_assignees_are_not_emailed_when_the_template_says_not_to(self):
+		self.assertFalse(submit_with_assignee(email_assignees=0).called)
+
 	def test_finishing_an_activity_closes_its_todo(self):
 		onboarding = create_employee_onboarding(submit=False)
 		row = get_row(onboarding, "Assign ID Card")
@@ -981,6 +994,23 @@ def send_letter_email(letter, recipients):
 
 def get_row(doc, activity_name, table="activities"):
 	return next(row for row in doc.get(table) if row.activity_name == activity_name)
+
+
+def submit_with_assignee(email_assignees):
+	template = get_test_template()
+	template.notify_users_by_email = email_assignees
+	template.save()
+	onboarding = create_employee_onboarding(submit=False)
+	row = get_row(onboarding, "Assign ID Card")
+	onboarding.assign_activity(row.name, get_test_user("onboarding_email@example.com"))
+	onboarding.reload()
+
+	with patch("hrms.hr.doctype.employee_onboarding.onboarding_activities.notify_assignment") as notify:
+		onboarding.submit()
+
+	onboarding.reload()
+	assert get_row(onboarding, "Assign ID Card").todo
+	return notify
 
 
 def get_test_user(email):

@@ -16,6 +16,7 @@
   "designation",
   "employee_grade",
   "onboarding_tab",
+  "notify_users_by_email",
   "onboarding_activities",
   "required_documents_tab",
   "required_documents",
@@ -73,6 +74,12 @@
    "label": "On-boarding"
   },
   {
+   "default": "1",
+   "fieldname": "notify_users_by_email",
+   "fieldtype": "Check",
+   "label": "Email Assignees"
+  },
+  {
    "fieldname": "onboarding_activities",
    "fieldtype": "Table",
    "label": "Activities",
@@ -104,7 +111,7 @@
  "icon": "clipboard-list",
  "link_display_mode": "Search",
  "links": [],
- "modified": "2026-11-13 18:25:26.785224",
+ "modified": "2026-11-16 12:20:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Boarding Template",

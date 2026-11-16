@@ -105,6 +105,10 @@ class OnboardingActivities:
 	def set_template(self):
 		if not self.employee_boarding_template:
 			self.employee_boarding_template = get_matching_template(self)
+		if self.employee_boarding_template:
+			self.notify_users_by_email = frappe.db.get_value(
+				"Employee Boarding Template", self.employee_boarding_template, "notify_users_by_email"
+			)
 
 	def set_activities(self):
 		if not self.activities:
@@ -244,9 +248,10 @@ class OnboardingActivities:
 				"date": row.due_date,
 			}
 		).insert(ignore_permissions=True)
-		notify_assignment(
-			todo.assigned_by, todo.allocated_to, self.doctype, self.name, "ASSIGN", todo.description
-		)
+		if self.notify_users_by_email:
+			notify_assignment(
+				todo.assigned_by, todo.allocated_to, self.doctype, self.name, "ASSIGN", todo.description
+			)
 		return todo.name
 
 	def get_activity(self, row: str):
