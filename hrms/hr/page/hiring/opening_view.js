@@ -13,6 +13,8 @@ hrms.hiring.OpeningView = class OpeningView {
 		this.rows = [];
 		this.selected = null;
 		this.target = applicant || null;
+		// a target from the route shows even when it isn't among the rows; one from an action doesn't
+		this.is_link_target = Boolean(applicant);
 		this.url_key = get_route_key(name, stage, applicant);
 		this.echoes = new Set();
 		this.request_id = 0;
@@ -72,7 +74,7 @@ hrms.hiring.OpeningView = class OpeningView {
 		} else if (applicant && applicant !== this.selected && this.has_row(applicant)) {
 			this.select(applicant);
 		} else {
-			this.refresh(applicant);
+			this.refresh(applicant, { is_link: true });
 		}
 		return false;
 	}
@@ -81,6 +83,7 @@ hrms.hiring.OpeningView = class OpeningView {
 		this.stage = stage;
 		this.selected = null;
 		this.target = applicant || null;
+		this.is_link_target = Boolean(applicant);
 		this.rows = [];
 		this.tabs?.set_value(stage, { silent: true });
 		this.panel?.reset();
@@ -92,11 +95,12 @@ hrms.hiring.OpeningView = class OpeningView {
 		if (stage) frappe.set_route(hrms.hiring.get_pipeline_route(this.name, stage));
 	}
 
-	/** `applicant`: the one that changed, so it is fetched fresh. */
-	refresh(applicant) {
+	/** `applicant`: the one that changed, so it is fetched fresh; `is_link`: the route names them. */
+	refresh(applicant, { is_link = false } = {}) {
 		if (applicant) this.panel.forget(applicant);
 		if (!this.desk.is_active(this)) return Promise.resolve();
 		this.target = applicant || null;
+		this.is_link_target = is_link && Boolean(applicant);
 		return this.load_first_page({ silent: true });
 	}
 
@@ -642,15 +646,18 @@ hrms.hiring.OpeningView = class OpeningView {
 	}
 
 	/**
-	 * Picks the applicant to show after rows change; no-op below the split breakpoint. A target
-	 * shows even when they are not among the rows: the URL never moves to someone else.
+	 * Picks the applicant to show after rows change; no-op below the split breakpoint. A target from
+	 * the route shows even when they are not among the rows, so the URL never moves to someone else;
+	 * one that an action moved out of the stage gives way to the row that took their place.
 	 */
 	settle_selection(previous_index = 0) {
-		const target = this.target;
+		const { target, is_link_target } = this;
 		this.target = null;
+		this.is_link_target = false;
 		if (!this.media.matches) return;
-		if (target && this.rows.length) return this.select(target);
 		const ids = this.rows.map((row) => row.name);
+		const is_shown = ids.includes(target) || (is_link_target && ids.length);
+		if (target && is_shown) return this.select(target);
 		const wanted = ids.includes(this.selected) ? this.selected : null;
 		const id = wanted ?? ids[Math.min(previous_index, ids.length - 1)];
 		if (id) return this.select(id);
