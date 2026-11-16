@@ -442,5 +442,6 @@ def reopen_appointment_letter(onboarding: str) -> None:
 def rename_onboarding_user(
 	user: Document, method: str | None, old_name: str, new_name: str, merge: bool = False
 ) -> None:
-	"""Keep the onboarding's user, a plain value, pointing at a renamed user."""
-	frappe.db.set_value("Employee Onboarding", {"user": old_name}, "user", new_name, update_modified=False)
+	"""Keep the onboarding's and the employee request's user, a plain value, pointing at a renamed user."""
+	for doctype in ("Employee Onboarding", "Employee Request"):
+		frappe.db.set_value(doctype, {"user": old_name}, "user", new_name, update_modified=False)

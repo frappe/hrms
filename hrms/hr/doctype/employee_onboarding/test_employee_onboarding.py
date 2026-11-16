@@ -225,6 +225,17 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		self.assertEqual(onboarding.user, "asha.renamed@example.com")
 		self.assertTrue(get_row(onboarding, "Create User Login").completed)
 
+	def test_renaming_the_user_keeps_the_employee_request_on_it(self):
+		onboarding = create_employee_onboarding(submit=True)
+		user = onboarding.create_user("Personal Email", personal_email="asha.request@example.com")
+
+		frappe.rename_doc("User", user, "asha.request.renamed@example.com", force=True)
+
+		self.assertEqual(
+			frappe.db.get_value("Employee Request", {"employee_onboarding": onboarding.name}, "user"),
+			"asha.request.renamed@example.com",
+		)
+
 	def test_create_user_uses_the_selected_email(self):
 		onboarding = create_employee_onboarding(submit=True)
 		onboarding.db_set("company_email", "asha.company@example.com")
