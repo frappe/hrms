@@ -123,6 +123,26 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 
 		self.assertTrue(get_row(template, "Send Appointment Letter", "onboarding_activities").disabled)
 
+	def test_upgrade_adds_the_standard_activities_to_old_templates(self):
+		from hrms.patches.v16_0.add_standard_activities_to_boarding_templates import execute
+
+		old = make_template("_Test Upgraded Template", [{"activity_name": "Order a desk"}])
+		frappe.db.delete("Employee Boarding Activity", {"parent": old.name, "action": ("!=", "Manual")})
+		trimmed = make_template("_Test Trimmed Upgrade Template")
+		get_row(trimmed, "Send Appointment Letter", "onboarding_activities").disabled = 1
+		trimmed.save()
+
+		execute()
+		old.reload()
+		trimmed.reload()
+
+		standard = [activity["activity_name"] for activity in STANDARD_ACTIVITIES]
+		self.assertEqual(
+			[row.activity_name for row in old.onboarding_activities], [*standard, "Order a desk"]
+		)
+		self.assertFalse([row for row in old.onboarding_activities if row.disabled])
+		self.assertTrue(get_row(trimmed, "Send Appointment Letter", "onboarding_activities").disabled)
+
 	def test_a_disabled_template_activity_is_not_copied_to_a_new_onboarding(self):
 		template = get_test_template()
 		get_row(template, "Send Appointment Letter", "onboarding_activities").disabled = 1

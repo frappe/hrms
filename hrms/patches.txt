@@ -70,4 +70,5 @@ hrms.patches.v16_0.add_employee_profile_fields
 hrms.patches.v16_0.create_default_onboarding_template
 hrms.patches.v16_0.merge_separation_templates_into_boarding_templates
 hrms.patches.v16_0.carry_task_progress_into_onboarding_activities
+hrms.patches.v16_0.add_standard_activities_to_boarding_templates
 hrms.patches.v16_0.setup_preboarding_candidate
