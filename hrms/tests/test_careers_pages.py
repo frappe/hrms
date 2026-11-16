@@ -4,6 +4,8 @@ from frappe.website.serve import get_response_content
 
 from hrms.hr.doctype.job_opening.test_job_opening import get_job_opening
 from hrms.hr.doctype.staffing_plan.test_staffing_plan import make_company
+from hrms.hr.report.monthly_attendance_sheet.test_monthly_attendance_sheet import create_branch
+from hrms.tests.test_utils import create_department
 from hrms.tests.utils import HRMSTestSuite
 from hrms.www.jobs.index import (
 	FILTERS,
@@ -28,6 +30,18 @@ def render_body(path, query_string=""):
 	"""The page after </head>; Frappe's base template puts the title, tag-stripped, in <title>."""
 	set_request(method="GET", path=path, query_string=query_string)
 	return get_response_content(path).split("</head>", 1)[1]
+
+
+def get_listed_opening(**args):
+	"""An opening with every detail a careers page shows, so publishing it is allowed."""
+	make_company("_Test Opening Company", "_TOC")
+	details = {
+		"department": create_department("Careers"),
+		"location": create_branch("Careers Pune"),
+		"employment_type": "Full-time",
+		"description": "<p>Build things.</p>",
+	}
+	return get_job_opening(**{**details, **args})
 
 
 def get_options(controls, name):
@@ -97,11 +111,10 @@ class TestCareersPages(HRMSTestSuite):
 		self.assertEqual((txt, sort, offset), ("dev", None, 0))
 
 	def test_unpublished_and_closed_openings_stay_hidden(self):
-		make_company("_Test Opening Company", "_TOC")
 		cases = {"Careers Open": (1, "Open"), "Careers Draft": (0, "Open"), "Careers Closed": (1, "Closed")}
 		for title, (publish, status) in cases.items():
 			frappe.get_doc({"doctype": "Branch", "branch": title}).insert(ignore_if_duplicate=True)
-			opening = get_job_opening(job_title=title, publish=publish, status=status, location=title)
+			opening = get_listed_opening(job_title=title, publish=publish, status=status, location=title)
 			if status == "Closed":
 				opening.closed_on = getdate()
 			opening.insert()
@@ -117,8 +130,7 @@ class TestCareersPages(HRMSTestSuite):
 
 	def test_opening_fields_are_escaped(self):
 		self.addCleanup(setattr, frappe.local, "request", getattr(frappe.local, "request", None))
-		make_company("_Test Opening Company", "_TOC")
-		opening = get_job_opening(
+		opening = get_listed_opening(
 			job_title="Careers Escape", route="jobs/careers-escape", publish=1, description="<p>Hello</p>"
 		).insert()
 		# Set directly: a Branch name cannot hold "<"
