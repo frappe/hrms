@@ -246,7 +246,7 @@ class OnboardingActivities:
 
 		for row in self.activities:
 			if row.todo and (is_finished(row) or not row.user):
-				close_todo(row.todo, "Closed" if is_finished(row) else "Cancelled")
+				self.close_todo(row.todo, "Closed" if is_finished(row) else "Cancelled")
 				row.db_set("todo", None)
 			elif row.user and not row.todo and not is_finished(row):
 				row.db_set("todo", self.make_todo(row))
@@ -411,8 +411,17 @@ class OnboardingActivities:
 	def close_todos(self):
 		for row in self.activities:
 			if row.todo:
-				close_todo(row.todo, "Cancelled")
+				self.close_todo(row.todo, "Cancelled")
 				row.db_set("todo", None)
+
+	def close_todo(self, name: str, status: str) -> None:
+		todo = frappe.get_doc("ToDo", name)
+		if todo.status != "Open":
+			return
+		todo.status = status
+		todo.save(ignore_permissions=True)
+		if status == "Cancelled" and self.notify_users_by_email:
+			notify_assignment(todo.assigned_by, todo.allocated_to, todo.reference_type, todo.reference_name)
 
 	def clear_todos(self):
 		for row in self.activities:
@@ -439,16 +448,6 @@ def get_role_profiles(user: str) -> list[str]:
 
 def is_finished(row) -> bool:
 	return bool(row.completed or row.skipped)
-
-
-def close_todo(name: str, status: str) -> None:
-	todo = frappe.get_doc("ToDo", name)
-	if todo.status != "Open":
-		return
-	todo.status = status
-	todo.save(ignore_permissions=True)
-	if status == "Cancelled":
-		notify_assignment(todo.assigned_by, todo.allocated_to, todo.reference_type, todo.reference_name)
 
 
 def get_matching_template(doc) -> str | None:

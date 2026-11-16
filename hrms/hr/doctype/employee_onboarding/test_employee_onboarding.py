@@ -843,6 +843,24 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 	def test_assignees_are_not_emailed_when_the_template_says_not_to(self):
 		self.assertFalse(submit_with_assignee(email_assignees=0).called)
 
+	def test_cancelling_sends_no_notification_when_the_template_says_not_to(self):
+		template = get_test_template()
+		template.notify_users_by_email = 0
+		template.save()
+		onboarding = create_employee_onboarding(submit=False)
+		row = get_row(onboarding, "Assign ID Card")
+		onboarding.assign_activity(row.name, get_test_user("onboarding_quiet@example.com"))
+		onboarding.reload()
+		onboarding.submit()
+		onboarding.reload()
+		todo = get_row(onboarding, "Assign ID Card").todo
+
+		with patch("hrms.hr.doctype.employee_onboarding.onboarding_activities.notify_assignment") as notify:
+			onboarding.cancel()
+
+		self.assertFalse(notify.called)
+		self.assertEqual(frappe.db.get_value("ToDo", todo, "status"), "Cancelled")
+
 	def test_finishing_an_activity_closes_its_todo(self):
 		onboarding = create_employee_onboarding(submit=False)
 		row = get_row(onboarding, "Assign ID Card")
