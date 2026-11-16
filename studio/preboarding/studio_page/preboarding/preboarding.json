@@ -936,33 +936,6 @@
          "visibilityCondition": "{{ isDocumentsStep }}"
         },
         {
-         "baseStyles": {
-          "display": "flex",
-          "flexDirection": "column",
-          "gap": "16px"
-         },
-         "blockName": "Review step",
-         "children": [
-          {
-           "componentId": "alert-37",
-           "componentName": "Alert",
-           "componentProps": {
-            "description": "{{ missingSummary }}",
-            "theme": "amber",
-            "title": "Fill these in before you submit"
-           },
-           "componentSlots": {},
-           "visibilityCondition": "{{ missing.length }}"
-          }
-         ],
-         "componentId": "div-39",
-         "componentName": "div",
-         "componentProps": {},
-         "componentSlots": {},
-         "originalElement": "div",
-         "visibilityCondition": "{{ isLastStep }}"
-        },
-        {
          "blockName": "Entry dialog",
          "componentId": "dialog-23",
          "componentName": "Dialog",
@@ -1105,7 +1078,6 @@
          "componentId": "button-42",
          "componentName": "Button",
          "componentProps": {
-          "disabled": "{{ isLastStep && missing.length > 0 }}",
           "label": "{{ primaryLabel }}",
           "loading": "{{ saving }}",
           "variant": "solid"
@@ -1144,7 +1116,7 @@
  "frappe_app": "hrms",
  "idx": 0,
  "is_standard": 1,
- "modified": "2026-11-13 17:03:36.434749",
+ "modified": "2026-11-16 09:45:15.390973",
  "modified_by": "Administrator",
  "name": "preboarding",
  "owner": "Administrator",

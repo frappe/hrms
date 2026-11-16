@@ -40,13 +40,12 @@ export default function setup(context) {
 	const stepTitle = computed(() => steps.value[step.value]);
 	const isFormStep = computed(() => step.value < formTabs.length);
 	const isLastStep = computed(() => step.value === steps.value.length - 1);
-	const missing = computed(() => [...getMissingFields(), ...getMissingDocuments()]);
 
-	function getMissingFields() {
+	function getMissingFields(index) {
 		const doc = request?.doc || {};
-		return getFields(formTabs)
-			.filter((field) => field.reqd && isEmpty(doc[field.fieldname]))
-			.map((field) => field.label);
+		return getFields([formTabs[index]]).filter(
+			(field) => field.reqd && isEmpty(doc[field.fieldname]),
+		);
 	}
 
 	function getMissingDocuments() {
@@ -69,9 +68,29 @@ export default function setup(context) {
 	}
 
 	async function next() {
+		if (!checkStep(step.value)) return;
 		if (!(await save())) return;
 		step.value += 1;
 		window.scrollTo({ top: 0 });
+	}
+
+	function checkStep(index) {
+		const fields = getMissingFields(index);
+		if (!fields.length) return true;
+		step.value = index;
+		toast.error(`Fill in ${fields.map((field) => field.label).join(", ")}`);
+		focusField(fields[0].fieldname);
+		return false;
+	}
+
+	function confirmSubmit() {
+		if (!formTabs.every((tab, index) => checkStep(index))) return;
+		const documents = getMissingDocuments();
+		if (documents.length) {
+			toast.error(`Upload ${documents.join(", ")}`);
+			return;
+		}
+		submitOpen.value = true;
 	}
 
 	async function submitDetails() {
@@ -106,7 +125,6 @@ export default function setup(context) {
 		stepTitle,
 		isFormStep,
 		isLastStep,
-		missing,
 		dialogOpen,
 		submitOpen,
 		dialogRow,
@@ -125,7 +143,6 @@ export default function setup(context) {
 		stepCaption: computed(() => `Step ${step.value + 1} of ${steps.value.length}`),
 		progressValue: computed(() => ((step.value + 1) / steps.value.length) * 100),
 		primaryLabel: computed(() => (isLastStep.value ? "Submit" : "Next")),
-		missingSummary: computed(() => missing.value.join(", ")),
 		dialogTitle: computed(() => {
 			const label = ENTRY_TABLES[dialogTable.value]?.label;
 			return dialogIndex.value === null ? `Add ${label}` : `Edit ${label}`;
@@ -138,7 +155,7 @@ export default function setup(context) {
 			{ label: "Submit", variant: "solid", onClick: () => submitDetails() },
 			{ label: "Cancel", onClick: () => (submitOpen.value = false) },
 		],
-		primaryAction: () => (isLastStep.value ? (submitOpen.value = true) : next()),
+		primaryAction: () => (isLastStep.value ? confirmSubmit() : next()),
 		back: () => (step.value -= 1),
 		rowTitle: (fieldname, row) => ENTRY_TABLES[fieldname].title(row) || "Untitled",
 		rowSubtitle: (fieldname, row) =>
@@ -187,6 +204,14 @@ function getFields(tabs) {
 	return tabs.flatMap((tab) =>
 		tab.sections.flatMap((section) => section.columns.flatMap((col) => col.fields)),
 	);
+}
+
+function focusField(fieldname) {
+	setTimeout(() => {
+		const field = document.querySelector(`[data-fieldname="${fieldname}"]`);
+		field?.scrollIntoView({ block: "center" });
+		field?.querySelector("input, textarea, button")?.focus();
+	});
 }
 
 function isEmpty(value) {
