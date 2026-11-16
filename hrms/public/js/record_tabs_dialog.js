@@ -152,13 +152,9 @@ export function call_quietly(method, args) {
 
 function get_error_text(r) {
 	const messages = JSON.parse(r?._server_messages || "[]").map((message) =>
-		to_text(JSON.parse(message).message),
+		frappe.utils.html2text(JSON.parse(message).message).trim(),
 	);
 	return messages.join(" ") || __("Could not save the document");
-}
-
-function to_text(html) {
-	return new DOMParser().parseFromString(String(html), "text/html").body.textContent.trim();
 }
 
 export function is_editable(df) {
