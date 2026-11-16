@@ -1,4 +1,4 @@
-.epc-record-dialog {
+.eo-record-dialog {
 	.es-tabs[data-orientation="vertical"] {
 		display: grid;
 		flex: 1;
@@ -16,7 +16,7 @@
 		background-color: var(--surface-sidebar);
 	}
 
-	.epc-profile {
+	.eo-profile {
 		grid-column: 2;
 		grid-row: 1;
 		display: flex;
@@ -25,7 +25,7 @@
 		padding: 2rem 2rem 0;
 	}
 
-	.epc-profile__text {
+	.eo-profile__text {
 		display: flex;
 		flex: 1;
 		flex-direction: column;
@@ -33,7 +33,7 @@
 		min-width: 0;
 	}
 
-	.epc-profile__actions {
+	.eo-profile__actions {
 		display: flex;
 		flex-shrink: 0;
 		gap: calc(var(--spacing) * 2);
@@ -53,7 +53,7 @@
 	}
 }
 
-.epc-record-dialog--single {
+.eo-record-dialog--single {
 	.es-tabs[data-orientation="vertical"] {
 		grid-template-columns: minmax(0, 1fr);
 	}
@@ -62,13 +62,13 @@
 		display: none;
 	}
 
-	.epc-profile,
+	.eo-profile,
 	.es-tabs[data-orientation="vertical"] > .es-tabs__panel[data-state="active"] {
 		grid-column: 1;
 	}
 }
 
-.epc-document {
+.eo-document {
 	display: flex;
 	align-items: center;
 	gap: var(--padding-sm);
@@ -78,26 +78,26 @@
 	color: var(--ink-gray-8);
 }
 
-.epc-document .icon {
+.eo-document .icon {
 	margin: 0;
 }
 
-.epc-document-name {
+.eo-document-name {
 	flex: 1;
 	min-width: 0;
 }
 
-.epc-document-status {
+.eo-document-status {
 	flex-shrink: 0;
 	width: 7rem;
 	text-align: right;
 }
 
-.epc-document-action {
+.eo-document-action {
 	flex-shrink: 0;
 	width: 5rem;
 }
 
-.epc-roles-dialog .frappe-control[data-fieldtype="MultiCheck"] {
+.eo-roles-dialog .frappe-control[data-fieldtype="MultiCheck"] {
 	margin-bottom: 1rem;
 }

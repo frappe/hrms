@@ -233,7 +233,7 @@ async function open_roles_dialog(list) {
 			dialog.hide();
 		},
 	});
-	dialog.$wrapper.addClass("epc-roles-dialog");
+	dialog.$wrapper.addClass("eo-roles-dialog");
 	dialog.show();
 }
 

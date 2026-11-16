@@ -113,11 +113,11 @@ export class CreateEmployeeDialog extends RecordTabsDialog {
 	}
 
 	make_document(document) {
-		const $row = $('<div class="epc-document">').append(
+		const $row = $('<div class="eo-document">').append(
 			frappe.utils.icon("file", "sm"),
-			$('<span class="epc-document-name">').text(document.label),
+			$('<span class="eo-document-name">').text(document.label),
 		);
-		const $status = $('<span class="epc-document-status">').appendTo($row);
+		const $status = $('<span class="eo-document-status">').appendTo($row);
 		if (document.url) {
 			$status.append(
 				$('<a target="_blank" rel="noopener">')
@@ -136,7 +136,7 @@ export class CreateEmployeeDialog extends RecordTabsDialog {
 			frappe.ui.button({
 				label: document.url ? __("Replace") : __("Upload"),
 				size: "sm",
-				css_class: "epc-document-action",
+				css_class: "eo-document-action",
 				onclick: () => this.upload_document(document, $row),
 			}),
 		);

@@ -19,8 +19,8 @@ export class RecordTabsDialog {
 		this.render_profile();
 		this.dialog = new frappe.ui.SettingsDialog({});
 		this.dialog.$wrapper
-			.addClass("epc-record-dialog")
-			.toggleClass("epc-record-dialog--single", tabs.length === 1);
+			.addClass("eo-record-dialog")
+			.toggleClass("eo-record-dialog--single", tabs.length === 1);
 		this.dialog.$layout.empty().append(this.tabs.el);
 		this.dialog.show();
 	}
@@ -69,11 +69,11 @@ export class RecordTabsDialog {
 		this.$avatar = this.make_avatar();
 		this.$name = $('<div class="text-lg-semibold text-ink-gray-8 ellipsis">');
 		this.$email = $('<div class="text-sm text-ink-gray-6 ellipsis">');
-		this.$actions = $('<div class="epc-profile__actions">');
+		this.$actions = $('<div class="eo-profile__actions">');
 		this.render_actions();
-		return $('<div class="epc-profile">').append(
+		return $('<div class="eo-profile">').append(
 			this.$avatar,
-			$('<div class="epc-profile__text">').append(this.$name, this.$email),
+			$('<div class="eo-profile__text">').append(this.$name, this.$email),
 			this.$actions,
 		);
 	}
