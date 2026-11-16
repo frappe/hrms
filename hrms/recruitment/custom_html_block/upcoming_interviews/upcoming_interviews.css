@@ -28,21 +28,18 @@
 	color: var(--ink-gray-5);
 }
 
-.view-all,
-.more-link {
+.view-all {
 	color: var(--ink-gray-5);
 	text-decoration: none;
 	border-radius: var(--radius-sm);
 }
 
-.view-all:hover,
-.more-link:hover {
+.view-all:hover {
 	color: var(--ink-gray-8);
 	text-decoration: none;
 }
 
-.view-all:focus-visible,
-.more-link:focus-visible {
+.view-all:focus-visible {
 	outline: 2px solid var(--outline-gray-5);
 	outline-offset: 2px;
 }
@@ -51,10 +48,6 @@
 	display: flex;
 	flex-direction: column;
 	gap: calc(var(--spacing) * 2);
-}
-
-.more-link {
-	align-self: flex-start;
 }
 
 /* the skeleton avatar is round like the real one */

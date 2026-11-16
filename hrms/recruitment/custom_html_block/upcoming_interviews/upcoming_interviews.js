@@ -112,18 +112,7 @@ function load() {
 					}),
 				]);
 			}
-			const nodes = [make_list(interviews)];
-			if (count > interviews.length) {
-				nodes.push(
-					el("a", {
-						class: "more-link text-p-sm",
-						href: "/desk/interview",
-						"data-view-all": true,
-						text: __("+{0} more", [count - interviews.length]),
-					}),
-				);
-			}
-			show(nodes);
+			show([make_list(interviews)]);
 		})
 		.catch(() =>
 			show([
