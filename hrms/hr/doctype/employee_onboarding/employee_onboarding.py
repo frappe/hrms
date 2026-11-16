@@ -87,6 +87,10 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		if self.amended_from:
 			self.clear_todos()
 
+	def after_insert(self):
+		if self.amended_from:
+			self.relink_amended_records()
+
 	def validate(self):
 		self.set_employee()
 		self.validate_duplicate_employee_onboarding()
@@ -295,6 +299,12 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		if request := self.get_employee_request():
 			request.apply_to(employee)
 		self.save_activity_states()
+
+	def relink_amended_records(self) -> None:
+		for doctype in ("Employee Request", "Appointment Letter"):
+			frappe.db.set_value(
+				doctype, {"employee_onboarding": self.amended_from}, "employee_onboarding", self.name
+			)
 
 	def get_employee_request(self) -> Document | None:
 		name = frappe.db.get_value("Employee Request", {"employee_onboarding": self.name})

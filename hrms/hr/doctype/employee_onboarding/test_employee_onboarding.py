@@ -794,6 +794,22 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		self.assertTrue(get_row(amended, "Assign Shift Type").skipped)
 		self.assertEqual(amended.boarding_status, "Pending")
 
+	def test_the_amendment_keeps_the_employee_request_and_appointment_letter(self):
+		onboarding = create_employee_onboarding(submit=True)
+		onboarding.create_user("Personal Email", personal_email="asha.amend@example.com")
+		onboarding.reload()
+		letter = create_appointment_letter(onboarding)
+		request = onboarding.get_employee_request()
+
+		onboarding.cancel()
+		amended = frappe.copy_doc(onboarding)
+		amended.amended_from = onboarding.name
+		amended.docstatus = 0
+		amended.insert()
+
+		self.assertEqual(amended.get_employee_request().name, request.name)
+		self.assertEqual(amended.get_appointment_letter(), letter.name)
+
 
 def get_job_applicant():
 	if frappe.db.exists("Job Applicant", "test@engineer.com"):
