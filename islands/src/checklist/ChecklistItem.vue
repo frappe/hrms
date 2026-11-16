@@ -23,7 +23,7 @@
 		>
 			<LucideGripVertical class="size-3" />
 		</button>
-		<div class="row" @click="clickRow">
+		<div class="row" :data-compact="!showOwner || null" @click="clickRow">
 			<span class="marker flex text-ink-gray-4" data-control>
 				<Tooltip v-if="lockReason" :text="lockReason">
 					<span
@@ -61,9 +61,12 @@
 				}}</span>
 			</button>
 			<div class="status">
-				<span v-if="item.skipped && !item.done" class="text-p-sm text-ink-gray-4">
-					{{ __("Skipped") }}
-				</span>
+				<Badge
+					v-if="item.skipped && !item.done"
+					:label="__('Skipped')"
+					theme="gray"
+					size="sm"
+				/>
 				<Badge
 					v-else-if="!finished && item.status"
 					:label="STATUS_LABELS[item.status]"
@@ -71,7 +74,7 @@
 					size="sm"
 				/>
 			</div>
-			<div class="owner flex min-w-0 text-ink-gray-4" data-control>
+			<div v-if="showOwner" class="owner flex min-w-0 text-ink-gray-4" data-control>
 				<Combobox
 					v-if="canAssign"
 					class="w-full min-w-0"
@@ -188,6 +191,7 @@ const props = defineProps({
 	dragging: Boolean,
 	canSetStatus: Boolean,
 	canAssign: Boolean,
+	showOwner: Boolean,
 	canSetDueDate: Boolean,
 	canRemove: Boolean,
 	searchUsers: { type: Function, default: null },
@@ -339,6 +343,13 @@ function dragEnd() {
 	column-gap: 0.75rem;
 	min-height: 28px;
 }
+.row[data-compact] {
+	grid-template-columns: auto minmax(0, 1fr) auto 104px;
+	grid-template-areas: "marker text status due";
+}
+.row[data-compact] .status {
+	justify-self: end;
+}
 .marker {
 	grid-area: marker;
 }
@@ -392,6 +403,9 @@ function dragEnd() {
 	.row {
 		grid-template-columns: auto minmax(0, 1fr) auto 72px 132px;
 		column-gap: 0.5rem;
+	}
+	.row[data-compact] {
+		grid-template-columns: auto minmax(0, 1fr) auto 96px;
 	}
 	.content {
 		padding-inline-start: calc(16px + 0.5rem);

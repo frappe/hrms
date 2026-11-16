@@ -35,6 +35,7 @@
 						:dragging="item.id === draggingId"
 						:can-set-status="Boolean(onStatusChange)"
 						:can-assign="Boolean(onAssign)"
+						:show-owner="showOwner"
 						:can-set-due-date="Boolean(onDueDateChange)"
 						:can-remove="Boolean(onRemove)"
 						:search-users="searchUsers"
@@ -122,6 +123,10 @@ const progress = computed(() => {
 		skipped: counted.filter((item) => !item.done && item.skipped).length,
 	};
 });
+
+const showOwner = computed(
+	() => Boolean(props.onAssign) || props.items.some((item) => item.assignee),
+);
 
 const percent = computed(() => {
 	const { total, done, skipped } = progress.value;
