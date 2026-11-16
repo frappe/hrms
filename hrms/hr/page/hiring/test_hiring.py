@@ -795,3 +795,32 @@ class TestHiring(IntegrationTestCase):
 		self.make_saveable_interview(interviewing, status="Cleared")
 		reject_applicant(interviewing)
 		self.assertEqual(applicant_api.move_back_applicant(interviewing)["stage"], "Interviewing")
+
+	def test_pipeline_page_grows_to_take_in_the_linked_applicant(self):
+		names = [self.make_applicant(f"linked-{index}") for index in range(5)]
+		for index, name in enumerate(names):
+			frappe.db.set_value("Job Applicant", name, "creation", add_days(nowdate(), -index))
+
+		def rows(applicant):
+			result = hiring.get_pipeline(self.opening.name, page_length=2, applicant=applicant)
+			return [row["name"] for row in result["rows"]]
+
+		# newest first, the oldest is on the third page of two
+		self.assertEqual(rows(names[4]), names)
+		self.assertEqual(rows(names[1]), names[:2])
+		self.assertEqual(rows(self.make_applicant("elsewhere", status="Shortlisted")), names[:2])
+
+	def test_interviewing_page_grows_to_take_in_the_linked_applicant(self):
+		names = [self.make_applicant(f"linked-round-{index}") for index in range(3)]
+		for name in names:
+			self.make_interview(name, days_ago=-1, panel=[INTERVIEWER])
+
+		def rows(applicant):
+			result = hiring.get_pipeline(
+				self.opening.name, stage="Interviewing", page_length=1, applicant=applicant
+			)
+			return [row["name"] for row in result["rows"]]
+
+		last = hiring.get_pipeline(self.opening.name, stage="Interviewing")["rows"][-1]["name"]
+		self.assertEqual(len(rows(None)), 1)
+		self.assertEqual(len(rows(last)), 3)

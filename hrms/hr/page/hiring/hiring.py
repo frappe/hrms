@@ -123,7 +123,9 @@ def get_pipeline(
 	sort: str = "newest",
 	start: int = 0,
 	page_length: int = 50,
+	applicant: str | None = None,
 ) -> dict:
+	"""One page of a stage's applicants; with `applicant`, the page grows to whole pages up to them."""
 	frappe.has_permission("Job Applicant", throw=True)
 	frappe.has_permission("Job Opening", "read", doc=job_opening, throw=True)
 	if stage not in get_stages():
@@ -138,7 +140,7 @@ def get_pipeline(
 	if source:
 		filters["source"] = source
 	page = PipelinePage(stage, filters, search_filters, PIPELINE_SORTS[sort])
-	page.load(int(start), int(page_length))
+	page.load(int(start), int(page_length), applicant)
 
 	return {
 		"opening": get_opening_summary(job_opening),
@@ -165,10 +167,12 @@ class PipelinePage:
 		self.fields = [*APPLICANT_FIELDS, "applicant_rating"]
 		self.groups = []
 
-	def load(self, start, page_length):
+	def load(self, start, page_length, applicant=None):
 		if self.stage == "Interviewing":
-			self.load_grouped(start, page_length)
+			self.load_grouped(start, page_length, applicant)
 			return
+		if applicant:
+			page_length = get_length_to(self.get_names()[start:], applicant, page_length)
 		self.rows = frappe.get_list(
 			"Job Applicant",
 			filters=self.filters,
@@ -181,7 +185,17 @@ class PipelinePage:
 		self.total = sum(count_by("stage", self.filters, self.search_filters).values())
 		self.stages = get_applicant_stages(self.rows)
 
-	def load_grouped(self, start, page_length):
+	def get_names(self):
+		return frappe.get_list(
+			"Job Applicant",
+			filters=self.filters,
+			or_filters=self.search_filters,
+			order_by=self.order_by,
+			pluck="name",
+			limit=0,
+		)
+
+	def load_grouped(self, start, page_length, applicant=None):
 		applicants = get_rows(
 			"Job Applicant", self.filters, self.fields, self.order_by, or_filters=self.search_filters
 		)
@@ -189,9 +203,18 @@ class PipelinePage:
 		groups = {a.name: get_row_group(self.stages[a.name]) for a in applicants}
 		order = list(get_interview_group_labels())
 		applicants.sort(key=lambda a: order.index(groups[a.name]))
+		if applicant:
+			page_length = get_length_to([a.name for a in applicants[start:]], applicant, page_length)
 		self.rows = applicants[start : start + page_length]
 		self.total = len(applicants)
 		self.groups = get_group_counts(groups)
+
+
+def get_length_to(names, applicant, page_length):
+	"""Whole pages up to and including `applicant`; one page when they aren't listed."""
+	if applicant not in names:
+		return page_length
+	return (names.index(applicant) // page_length + 1) * page_length
 
 
 def get_pipeline_row(applicant, info):

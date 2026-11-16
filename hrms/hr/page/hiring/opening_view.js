@@ -103,7 +103,6 @@ hrms.hiring.OpeningView = class OpeningView {
 	/** Something changed elsewhere: reload the list and the open applicant, keeping the selection and any text being typed. */
 	refresh_from_update() {
 		if (!this.is_ready || !this.desk.is_active(this)) return;
-		this.target = this.selected;
 		return this.load_first_page({ silent: true });
 	}
 
@@ -113,6 +112,7 @@ hrms.hiring.OpeningView = class OpeningView {
 		else if (REALTIME_DOCTYPES.includes(doctype)) this.panel.forget_all();
 	}
 
+	/** The first page grows to take in `this.target`, so a linked applicant is in the list. */
 	fetch(start, page_length = PAGE_LENGTH) {
 		return frappe.call({
 			method: `${API}.get_pipeline`,
@@ -125,6 +125,7 @@ hrms.hiring.OpeningView = class OpeningView {
 				sort: this.sort,
 				start,
 				page_length,
+				applicant: start === 0 ? this.target || undefined : undefined,
 			},
 		});
 	}
@@ -645,13 +646,17 @@ hrms.hiring.OpeningView = class OpeningView {
 		this.sync_route();
 	}
 
-	/** Picks the applicant to show after rows change; no-op below the split breakpoint. */
+	/**
+	 * Picks the applicant to show after rows change; no-op below the split breakpoint. A target
+	 * shows even when they are not among the rows: the URL never moves to someone else.
+	 */
 	settle_selection(previous_index = 0) {
 		const target = this.target;
 		this.target = null;
 		if (!this.media.matches) return;
+		if (target && this.rows.length) return this.select(target);
 		const ids = this.rows.map((row) => row.name);
-		const wanted = [target, this.selected].find((id) => id && ids.includes(id));
+		const wanted = ids.includes(this.selected) ? this.selected : null;
 		const id = wanted ?? ids[Math.min(previous_index, ids.length - 1)];
 		if (id) return this.select(id);
 		this.selected = null;
