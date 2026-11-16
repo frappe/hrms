@@ -4,6 +4,12 @@ const COMMENT_GROUP_MINUTES = 10;
 // Unsent comments, kept per applicant like reply drafts.
 const comment_drafts = new Map();
 
+/** Only paragraphs and line breaks: the panel's plain-text editor can't keep anything richer. */
+function is_plain_comment(html) {
+	const tags = html.match(/<\/?[a-z][a-z\d]*/gi) || [];
+	return tags.every((tag) => /^<\/?(p|br|div)$/i.test(tag));
+}
+
 /** The Comments tab of the applicant panel: what only the team reads. `reload` refreshes the whole panel. */
 hrms.hiring.ApplicantComments = class ApplicantComments {
 	constructor({ data, reload }) {
@@ -98,7 +104,11 @@ hrms.hiring.ApplicantComments = class ApplicantComments {
 					{
 						label: __("Edit"),
 						icon: "pencil",
-						onclick: () => this.edit_comment(comment, $text),
+						// formatting, links, mentions and images only survive an edit in the form
+						onclick: () =>
+							is_plain_comment(comment.content)
+								? this.edit_comment(comment, $text)
+								: frappe.set_route("Form", "Job Applicant", this.data.name),
 					},
 					{
 						label: __("Delete"),
