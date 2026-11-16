@@ -22,6 +22,7 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 		}
 		this.island?.unmount();
 		this.wrapper = wrapper;
+		$(wrapper).addClass("eo-checklist-field");
 		this.docname = this.frm.doc.name;
 		$(wrapper).empty();
 		this.island = frappe.ui.mount_island("hrms.checklist", wrapper, props);
