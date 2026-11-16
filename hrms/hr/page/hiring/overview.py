@@ -256,7 +256,7 @@ def get_onboarded_offers(offers):
 
 
 @frappe.whitelist(methods=["GET"])
-def get_upcoming_interviews(days: int = 7, limit: int = 8) -> dict:
+def get_upcoming_interviews(days: int = 7, limit: int = 6) -> dict:
 	"""Live interviews scheduled from today for `days` days, soonest first, for the Recruitment home."""
 	frappe.has_permission("Job Applicant", throw=True)
 

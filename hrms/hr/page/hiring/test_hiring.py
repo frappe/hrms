@@ -880,7 +880,7 @@ class TestHiring(IntegrationTestCase):
 			)
 			interviews[label] = interview
 
-		result = overview.get_upcoming_interviews()
+		result = overview.get_upcoming_interviews(limit=100)
 		ours = [row for row in result["interviews"] if row["name"] in interviews.values()]
 		self.assertEqual(
 			[row["name"] for row in ours],
@@ -896,6 +896,7 @@ class TestHiring(IntegrationTestCase):
 			[{"user": INTERVIEWER, "full_name": frappe.db.get_value("User", INTERVIEWER, "full_name")}],
 		)
 
+		self.assertLessEqual(len(overview.get_upcoming_interviews()["interviews"]), 6)
 		limited = overview.get_upcoming_interviews(limit=1)
 		self.assertEqual(len(limited["interviews"]), 1)
 		self.assertEqual(limited["count"], result["count"])
