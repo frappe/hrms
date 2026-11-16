@@ -19,10 +19,19 @@ function format_short_date(date) {
 	return moment(date).format("D MMM");
 }
 
-function get_web_url(value) {
+/** An http(s) URL, or null. A file path resolves on this site; a link without a scheme gets https. */
+function get_web_url(value, { is_file = false } = {}) {
 	if (!value) return null;
-	const url = new URL(value, window.location.origin);
-	return ["http:", "https:"].includes(url.protocol) ? url : null;
+	// "site.com:8080/x" is a host and port, not a scheme
+	const has_scheme = /^[a-z][a-z\d+.-]*:(?!\d)/i.test(value);
+	try {
+		const url = is_file
+			? new URL(value, window.location.origin)
+			: new URL(has_scheme ? value : `https://${value}`);
+		return ["http:", "https:"].includes(url.protocol) ? url : null;
+	} catch {
+		return null;
+	}
 }
 
 function open_in_new_tab(url) {
@@ -633,7 +642,7 @@ hrms.hiring.ApplicantPanel = class ApplicantPanel {
 	}
 
 	make_resume(data) {
-		const attachment = get_web_url(data.resume_attachment);
+		const attachment = get_web_url(data.resume_attachment, { is_file: true });
 		const link = get_web_url(data.resume_link);
 		const url = attachment || link;
 		if (!url) {
