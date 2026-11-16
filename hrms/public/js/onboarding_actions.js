@@ -42,7 +42,8 @@ const ACTION_HANDLERS = {
 			return list.frm.doc.roles_set_on ? __("Default roles") : null;
 		},
 		get_actions: (list, row, state) => {
-			if (state === "done") return [open_action("User", list.frm.doc.user)];
+			if (state === "done")
+				return [open_action("User", list.frm.doc.user, "roles_permissions_tab")];
 			if (!is_open(state)) return [];
 			return [{ label: __("Set"), onclick: () => open_roles_dialog(list) }];
 		},
@@ -103,11 +104,14 @@ export function get_action_handler(action) {
 	return ACTION_HANDLERS[action] || ACTION_HANDLERS.Manual;
 }
 
-function open_action(doctype, name) {
+function open_action(doctype, name, tab) {
 	return {
 		label: __("Open"),
 		variant: "subtle",
-		onclick: () => frappe.set_route("Form", doctype, name),
+		onclick: () => {
+			if (tab) frappe.route_hooks.after_load = (frm) => frm.layout.select_tab(tab);
+			frappe.set_route("Form", doctype, name);
+		},
 	};
 }
 
