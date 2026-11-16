@@ -64,6 +64,6 @@ def create_default_template() -> None:
 		return
 
 	template = frappe.new_doc("Employee Boarding Template")
-	template.title = _("Default Boarding")
+	template.title = _("Default Onboarding")
 	template.company = None
 	template.insert(ignore_permissions=True)
