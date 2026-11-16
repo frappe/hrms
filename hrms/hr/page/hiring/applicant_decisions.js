@@ -98,8 +98,7 @@ hrms.hiring.ApplicantDecisions = class ApplicantDecisions {
 
 	/** What the ItemList `controls` slot holds at the right end of the offer row: an answer dropdown while the offer is unanswered, else a plain badge. */
 	make_offer_controls(offer, data) {
-		const label = get_offer_status_label(offer);
-		const theme = OFFER_BADGE_THEMES[offer.status];
+		const { label, theme } = hrms.hiring.get_offer_badge(offer.status);
 		const answers = {
 			"Ready to Send": ["Ready to Send", "Awaiting Response", "Accepted", "Rejected"],
 			"Awaiting Response": ["Awaiting Response", "Accepted", "Rejected"],
@@ -111,7 +110,7 @@ hrms.hiring.ApplicantDecisions = class ApplicantDecisions {
 			label,
 			aria_label: __("Offer status: {0}", [label]),
 			options: answers.map((status) => ({
-				label: get_offer_status_label({ ...offer, status }),
+				label: hrms.hiring.get_offer_badge(status).label,
 				selected: status === offer.status,
 				run: () => this.set_offer_answer(offer, data, status),
 			})),

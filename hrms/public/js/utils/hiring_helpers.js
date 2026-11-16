@@ -99,6 +99,23 @@ hrms.hiring.get_interview_badge = ({ status, is_not_cleared }) => {
 	};
 };
 
+hrms.hiring.OFFER_BADGE_THEMES = {
+	"Ready to Send": "blue",
+	"Awaiting Response": "amber",
+	Accepted: "green",
+	Rejected: "red",
+};
+
+/** The badge `{label, theme}` of a job offer status; a stored "Rejected" reads "Declined", as the candidate declined. */
+hrms.hiring.get_offer_badge = (status) => {
+	const labels = {
+		"Ready to Send": __("Ready to send"),
+		"Awaiting Response": __("Sent"),
+		Rejected: __("Declined"),
+	};
+	return { label: labels[status] || __(status), theme: hrms.hiring.OFFER_BADGE_THEMES[status] };
+};
+
 hrms.hiring.CLOSING_SOON_DAYS = 7;
 
 /** "Closes today", "Closes tomorrow" or "Closes in 3 days", for an opening closing `days` from today. */

@@ -1,20 +1,3 @@
-const OFFER_BADGE_THEMES = {
-	"Ready to Send": "blue",
-	"Awaiting Response": "amber",
-	Accepted: "green",
-	Rejected: "red",
-};
-
-function get_offer_status_label({ status }) {
-	// the stored status stays "Rejected"; the candidate declined
-	const labels = {
-		"Ready to Send": __("Ready to send"),
-		"Awaiting Response": __("Sent"),
-		Rejected: __("Declined"),
-	};
-	return labels[status] || __(status);
-}
-
 function format_short_date(date) {
 	return moment(date).format("D MMM");
 }
