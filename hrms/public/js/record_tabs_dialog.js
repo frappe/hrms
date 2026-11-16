@@ -117,6 +117,18 @@ export class RecordTabsDialog {
 		}
 		return { ...without_internal_keys(this.doc), ...values };
 	}
+
+	async persist() {
+		const doc = this.get_doc();
+		if (!doc) return null;
+		const is_new = !!this.doc.__islocal;
+		if (is_new) delete doc.name;
+		const saved = await call_quietly(is_new ? "frappe.client.insert" : "frappe.client.save", {
+			doc,
+		});
+		if (saved) this.doc = saved;
+		return saved;
+	}
 }
 
 export function insert_quietly(doc) {

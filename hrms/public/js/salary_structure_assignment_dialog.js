@@ -42,15 +42,8 @@ export class SalaryStructureAssignmentDialog extends RecordTabsDialog {
 	}
 
 	async save() {
-		const values = this.get_doc();
-		if (!values) return;
-		const is_new = !!this.doc.__islocal;
-		if (is_new) delete values.name;
-		const doc = await call_quietly(is_new ? "frappe.client.insert" : "frappe.client.save", {
-			doc: values,
-		});
+		const doc = await this.persist();
 		if (!doc) return;
-		this.doc = doc;
 		this.dirty = false;
 		this.render_actions();
 		this.on_saved(doc);

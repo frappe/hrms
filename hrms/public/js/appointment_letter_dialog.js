@@ -98,15 +98,6 @@ export class AppointmentLetterDialog extends RecordTabsDialog {
 		);
 	}
 
-	async persist() {
-		const doc = this.get_doc();
-		if (!doc) return null;
-		const method = this.doc.__islocal ? "frappe.client.insert" : "frappe.client.save";
-		if (this.doc.__islocal) delete doc.name;
-		this.doc = await frappe.xcall(method, { doc });
-		return this.doc;
-	}
-
 	async save() {
 		if (!(await this.persist())) return;
 		this.dialog.hide();
