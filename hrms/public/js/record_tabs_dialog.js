@@ -25,8 +25,8 @@ export class RecordTabsDialog {
 		this.dialog.show();
 	}
 
-	make_field_tabs(include) {
-		return get_tabs(this.doctype, include).map((tab) => ({
+	make_field_tabs(include, { lead = [] } = {}) {
+		return with_lead_fields(get_tabs(this.doctype, include), lead).map((tab) => ({
 			label: tab.label,
 			content: this.make_group(tab.sections),
 		}));
@@ -44,7 +44,7 @@ export class RecordTabsDialog {
 		group.set_values(
 			pick_values(
 				this.doc,
-				sections.flatMap((section) => section.fields),
+				sections.flatMap((section) => [...(section.lead || []), ...section.fields]),
 			),
 		);
 		this.setup_group(group);
@@ -150,7 +150,10 @@ function to_text(html) {
 }
 
 export function is_editable(df) {
-	return !df.hidden && !df.read_only && !frappe.model.no_value_type.includes(df.fieldtype);
+	const holds_value =
+		frappe.model.table_fields.includes(df.fieldtype) ||
+		!frappe.model.no_value_type.includes(df.fieldtype);
+	return !df.hidden && !df.read_only && holds_value;
 }
 
 export function make_panel_body() {
@@ -176,28 +179,57 @@ function get_tabs(doctype, include) {
 	return tabs.filter((tab) => tab.sections.length);
 }
 
+function with_lead_fields(tabs, lead) {
+	const fields = tabs.flatMap((tab) => tab.sections.flatMap((section) => section.fields));
+	const present = lead.filter((fieldname) => fields.includes(fieldname));
+	if (!present.length) return tabs;
+	for (const tab of tabs) {
+		for (const section of tab.sections) {
+			section.fields = section.fields.filter((fieldname) => !present.includes(fieldname));
+		}
+	}
+	const first = tabs[0].sections[0];
+	first.lead = present;
+	return tabs.map((tab) => ({
+		...tab,
+		sections: tab.sections.filter((section) => section === first || section.fields.length),
+	}));
+}
+
 function get_layout(doctype, sections, doc) {
 	return sections.flatMap((section, index) => {
 		const fields = without_repeated_table_label(
 			section,
 			section.fields.map((fieldname) => get_docfield(doctype, fieldname, doc)),
 		);
+		const lead = (section.lead || []).map((fieldname) =>
+			get_docfield(doctype, fieldname, doc),
+		);
 		const wide = fields.filter((df) => WIDE_FIELDTYPES.includes(df.fieldtype));
 		const narrow = fields.filter((df) => !wide.includes(df));
-		const half = Math.ceil(narrow.length / 2);
+		const [left, right] = lead.length
+			? split_by_row([...lead, ...narrow])
+			: split_in_half(narrow);
 		return [
 			{ fieldtype: "Section Break", fieldname: `section_${index}`, label: section.label },
-			...narrow.slice(0, half),
-			...(narrow.length
-				? [{ fieldtype: "Column Break", fieldname: `column_${index}` }]
-				: []),
-			...narrow.slice(half),
-			...(narrow.length && wide.length
+			...left,
+			...(right.length ? [{ fieldtype: "Column Break", fieldname: `column_${index}` }] : []),
+			...right,
+			...((left.length || right.length) && wide.length
 				? [{ fieldtype: "Section Break", fieldname: `wide_${index}` }]
 				: []),
 			...wide,
 		];
 	});
+}
+
+function split_by_row(fields) {
+	return [fields.filter((df, i) => i % 2 === 0), fields.filter((df, i) => i % 2 === 1)];
+}
+
+function split_in_half(fields) {
+	const half = Math.ceil(fields.length / 2);
+	return [fields.slice(0, half), fields.slice(half)];
 }
 
 function without_repeated_table_label(section, fields) {

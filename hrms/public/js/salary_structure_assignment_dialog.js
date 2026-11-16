@@ -12,6 +12,7 @@ export class SalaryStructureAssignmentDialog extends RecordTabsDialog {
 	make_tabs() {
 		return this.make_field_tabs(
 			(df) => is_editable(df) && !FIXED_FIELDS.includes(df.fieldname),
+			{ lead: ["salary_structure", "from_date"] },
 		);
 	}
 
