@@ -18,9 +18,14 @@ frappe.ui.form.on("Employee Referral", {
 				);
 			});
 
-			frm.add_custom_button(__("Create Job Applicant"), function () {
-				frm.events.create_job_applicant(frm);
-			}).addClass("btn-primary");
+			frm.add_custom_button(
+				__("Create Job Applicant"),
+				function () {
+					frm.events.create_job_applicant(frm);
+				},
+				null,
+				"primary",
+			);
 		}
 
 		// To check whether Payment is done or not
@@ -37,9 +42,14 @@ frappe.ui.form.on("Employee Referral", {
 					let additional_salary_count = data[0].additional_salary_count;
 
 					if (frm.doc.is_applicable_for_referral_bonus && !additional_salary_count) {
-						frm.add_custom_button(__("Create Additional Salary"), function () {
-							frm.events.create_additional_salary(frm);
-						}).addClass("btn-primary");
+						frm.add_custom_button(
+							__("Create Additional Salary"),
+							function () {
+								frm.events.create_additional_salary(frm);
+							},
+							null,
+							"primary",
+						);
 					}
 				});
 		}
