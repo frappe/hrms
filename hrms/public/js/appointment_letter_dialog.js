@@ -48,10 +48,19 @@ export class AppointmentLetterDialog extends RecordTabsDialog {
 		];
 	}
 
+	async show() {
+		if (this.doc.employee) {
+			const { message } = await frappe.db.get_value("Employee", this.doc.employee, "image");
+			this.image = message?.image;
+		}
+		await super.show();
+	}
+
 	get_profile() {
 		return {
 			name: this.get_value("applicant_name"),
 			email: this.get_value("applicant_email"),
+			image: this.image,
 		};
 	}
 
