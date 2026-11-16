@@ -21,6 +21,18 @@
   {
    "child": 0,
    "collapsible": 1,
+   "icon": "layout-dashboard",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Dashboard",
+   "link_to": "Recruitment",
+   "link_type": "Dashboard",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
    "icon": "square-kanban",
    "indent": 0,
    "keep_closed": 0,
@@ -154,18 +166,6 @@
    "icon": "",
    "indent": 0,
    "keep_closed": 0,
-   "label": "Dashboard",
-   "link_to": "Recruitment",
-   "link_type": "Dashboard",
-   "show_arrow": 0,
-   "type": "Link"
-  },
-  {
-   "child": 1,
-   "collapsible": 1,
-   "icon": "",
-   "indent": 0,
-   "keep_closed": 0,
    "label": "Recruitment Analytics",
    "link_to": "Recruitment Analytics",
    "link_type": "Report",
@@ -254,7 +254,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-11-16 10:00:00.000000",
+ "modified": "2026-11-16 19:30:00.000000",
  "modified_by": "Administrator",
  "module": "Recruitment",
  "name": "Recruitment",
