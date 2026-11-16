@@ -17,10 +17,8 @@ function closing_meta(opening) {
 	};
 }
 
-function opening_href(opening) {
-	return ["/desk/hiring", encodeURIComponent(opening.name), opening.attention_stage]
-		.filter(Boolean)
-		.join("/");
+function pipeline_href(opening, stage) {
+	return frappe.router.make_url(hrms.hiring.get_pipeline_route(opening.name, stage));
 }
 
 function is_filled(opening) {
@@ -50,10 +48,9 @@ function make_item(opening) {
 	if (stuck && stuck.kind === "offers_out")
 		return el("span", { class: "overdue text-p-sm-medium", text: stuck.label });
 	if (stuck) {
-		const href = ["/desk/hiring", encodeURIComponent(opening.name), stuck.stage].join("/");
 		return el("a", {
 			class: stuck.is_late ? "item overdue text-p-sm-medium" : "item text-p-sm-medium",
-			href,
+			href: pipeline_href(opening, stuck.stage),
 			text: stuck.label,
 		});
 	}
@@ -79,7 +76,7 @@ function make_card(opening, show_location) {
 			{ class: "top" },
 			el("a", {
 				class: "name text-p-base-medium",
-				href: opening_href(opening),
+				href: pipeline_href(opening, opening.attention_stage),
 				text: title,
 				title,
 			}),

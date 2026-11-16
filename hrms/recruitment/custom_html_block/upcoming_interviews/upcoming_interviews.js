@@ -18,9 +18,13 @@ function interview_href(interview) {
 	// an applicant with no opening has no Hiring page to land on
 	if (!interview.job_opening)
 		return `/desk/job-applicant/${encodeURIComponent(interview.job_applicant)}`;
-	return ["/desk/hiring", interview.job_opening, interview.stage, interview.job_applicant]
-		.map((part, index) => (index ? encodeURIComponent(part) : part))
-		.join("/");
+	return frappe.router.make_url(
+		hrms.hiring.get_pipeline_route(
+			interview.job_opening,
+			interview.stage,
+			interview.job_applicant,
+		),
+	);
 }
 
 // the same row list as the hiring openings list; a missing panel is the one thing to flag

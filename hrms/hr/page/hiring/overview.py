@@ -319,7 +319,7 @@ def get_upcoming_row(interview, applicant, openings, panels, names):
 		"applicant_name": applicant.applicant_name,
 		"job_opening": applicant.job_title,
 		"opening_title": openings.get(applicant.job_title) or applicant.job_title,
-		"stage": applicant.stage.lower(),
+		"stage": applicant.stage,
 		"panel": [
 			{"user": row.interviewer, "full_name": names.get(row.interviewer) or row.interviewer}
 			for row in panels.get(interview.name, [])

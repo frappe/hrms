@@ -889,7 +889,7 @@ class TestHiring(IntegrationTestCase):
 		first = ours[0]
 		self.assertEqual(first["opening_title"], "Hiring Test Opening")
 		self.assertEqual(first["job_opening"], self.opening.name)
-		self.assertEqual(first["stage"], "interviewing")
+		self.assertEqual(first["stage"], "Interviewing")
 		self.assertEqual(first["panel"], [])
 		self.assertEqual(
 			ours[2]["panel"],
