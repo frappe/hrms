@@ -168,10 +168,6 @@ class TestHiringFlow(IntegrationTestCase):
 		self.assertEqual(self.get_stage(replied)["stage"], "Applied")
 		self.assertEqual(self.get_stage(hold)["stage"], "Applied")
 
-		stages = self.get_stages(open_, hold)
-		self.assertFalse(stages[open_]["on_hold"])
-		self.assertTrue(stages[hold]["on_hold"])
-
 	def get_stages(self, *names):
 		applicants = frappe.get_list(
 			"Job Applicant", filters={"name": ["in", names]}, fields=APPLICANT_FIELDS
@@ -185,7 +181,6 @@ class TestHiringFlow(IntegrationTestCase):
 
 		self.write("Job Applicant", shortlisted, {"status": "Hold"})
 		self.assertEqual(self.get_stage(shortlisted)["stage"], "Shortlisted")
-		self.assertTrue(self.get_stages(shortlisted)[shortlisted]["on_hold"])
 
 	def test_legacy_accepted_without_offer_is_shortlisted(self):
 		applicant = self.make_applicant("legacy", status="Accepted")
@@ -215,18 +210,16 @@ class TestHiringFlow(IntegrationTestCase):
 		self.make_interview(applicant, days_ago=-3, panel=[INTERVIEWER])
 		self.assertNotIn("Feedback", self.get_stage(applicant)["fact"])
 
-	def test_cleared_interview_can_make_offer_until_offer_exists(self):
+	def test_cleared_interview_stays_interviewing_until_an_offer(self):
 		applicant = self.make_applicant("cleared", status="Shortlisted")
 		self.make_interview(applicant, status="Cleared", days_ago=1, docstatus=1, panel=[INTERVIEWER])
 
 		result = self.get_stage(applicant)
 		self.assertEqual(result["stage"], "Interviewing")
 		self.assertTrue(result["fact"].endswith("Cleared"))
-		self.assertTrue(self.get_stages(applicant)[applicant]["can_make_offer"])
 
 		self.make_offer(applicant)
 		self.assertEqual(self.get_stage(applicant)["stage"], "Offered")
-		self.assertFalse(self.get_stages(applicant)[applicant]["can_make_offer"])
 
 	def test_cancelled_interview_drops_applicant_back(self):
 		applicant = self.make_applicant("dropback", status="Shortlisted")
@@ -246,7 +239,6 @@ class TestHiringFlow(IntegrationTestCase):
 		self.make_interview(applicant, status="Cleared", days_ago=5, docstatus=1)
 		self.make_interview(applicant, status="Pending", days_ago=-2)
 		self.assertNotIn("Cleared", self.get_stage(applicant)["fact"])
-		self.assertFalse(self.get_stages(applicant)[applicant]["can_make_offer"])
 
 	def test_offered_draft_and_sent(self):
 		applicant = self.make_applicant("offered")
@@ -321,11 +313,6 @@ class TestHiringFlow(IntegrationTestCase):
 		for user in (NO_ROLE_USER, INTERVIEWER):
 			frappe.set_user(user)
 			self.assertRaises(frappe.PermissionError, get_applicant_stage, applicant)
-
-	def test_draft_cleared_interview_can_make_offer(self):
-		applicant = self.make_applicant("cleared-draft", status="Shortlisted")
-		self.make_interview(applicant, status="Cleared", days_ago=1, docstatus=0, panel=[INTERVIEWER])
-		self.assertTrue(self.get_stages(applicant)[applicant]["can_make_offer"])
 
 	def test_submit_interview_results_submits_only_decided_drafts(self):
 		applicant = self.make_applicant("submit-results", status="Shortlisted")

@@ -463,8 +463,7 @@ def get_applicant_stage(job_applicant: str) -> dict:
 	"""The stage and the fact about it, for the form's headline."""
 	frappe.has_permission("Job Applicant", "read", doc=job_applicant, throw=True)
 	applicant = frappe.get_list("Job Applicant", filters={"name": job_applicant}, fields=APPLICANT_FIELDS)[0]
-	info = ApplicantRecords([applicant]).get_stage_info(applicant)
-	return {"stage": info["stage"], "fact": info["fact"]}
+	return ApplicantRecords([applicant]).get_stage_info(applicant)
 
 
 @frappe.whitelist(methods=["GET"])

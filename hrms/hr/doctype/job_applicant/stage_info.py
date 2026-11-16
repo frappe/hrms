@@ -97,25 +97,13 @@ class ApplicantRecords:
 		return applicant.source or applicant.email_id or ""
 
 	def get_stage_info(self, applicant):
-		"""The applicant's stored stage with the fact about it, and the hold and offer flags."""
+		"""The applicant's stored stage with the fact about it."""
 		stage = applicant.stage
 		offers = self.offers.get(applicant.name, [])
 		interviews = self.interviews.get(applicant.name, [])
-		latest = interviews[-1] if interviews else None
 		# missing when the user can't read the applicant's interviews
-		interview = latest if stage == "Interviewing" else None
-		can_make_offer = (
-			bool(interview)
-			and interview.status == "Cleared"
-			and not any(offer.status != "Cancelled" for offer in offers)
-		)
-		return {
-			"stage": stage,
-			"fact": self.get_fact(stage, applicant, offers, interview),
-			"on_hold": applicant.status == "Hold",
-			"can_make_offer": can_make_offer,
-			"interview": latest,
-		}
+		interview = interviews[-1] if interviews and stage == "Interviewing" else None
+		return {"stage": stage, "fact": self.get_fact(stage, applicant, offers, interview)}
 
 	def get_fact(self, stage, applicant, offers, interview):
 		if stage == "Rejected":
