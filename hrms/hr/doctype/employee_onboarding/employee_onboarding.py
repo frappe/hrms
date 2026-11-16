@@ -120,18 +120,6 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 				)
 			)
 
-	@frappe.whitelist()
-	def get_company_holiday_list(self) -> str | None:
-		self.check_permission("read")
-
-		assigned = frappe.db.get_value(
-			"Holiday List Assignment",
-			{"applicable_for": "Company", "assigned_to": self.company, "docstatus": 1},
-			"holiday_list",
-			order_by="from_date desc",
-		)
-		return assigned or frappe.db.get_value("Company", self.company, "default_holiday_list")
-
 	@frappe.whitelist(methods=["POST"])
 	def create_user(
 		self,

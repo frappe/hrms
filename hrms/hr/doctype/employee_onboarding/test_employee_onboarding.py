@@ -647,26 +647,6 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		self.assertEqual(onboarding.get_onload().draft_assignments, {})
 		self.assertTrue(onboarding.get_onload().needs_sync)
 
-	def test_company_holiday_list_prefers_the_company_assignment(self):
-		onboarding = create_employee_onboarding(submit=False)
-
-		company_list = frappe.copy_doc(frappe.get_doc("Holiday List", get_boarding_holiday_list()))
-		company_list.holiday_list_name = "_Test Company Wide Holidays"
-		company_list.insert()
-
-		assignment = frappe.get_doc(
-			{
-				"doctype": "Holiday List Assignment",
-				"applicable_for": "Company",
-				"assigned_to": onboarding.company,
-				"holiday_list": company_list.name,
-				"from_date": add_days(getdate(), 1),
-			}
-		).insert()
-		assignment.submit()
-
-		self.assertEqual(onboarding.get_company_holiday_list(), company_list.name)
-
 	def test_skipping_an_activity_marks_it_skipped(self):
 		onboarding = create_employee_onboarding(submit=False)
 
