@@ -801,6 +801,43 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		self.assertEqual(amended.get_employee_request().name, request.name)
 		self.assertEqual(amended.get_appointment_letter(), letter.name)
 
+	def test_upgrade_carries_task_progress_into_the_activities(self):
+		from hrms.patches.v16_0.carry_task_progress_into_onboarding_activities import execute
+
+		onboarding = create_employee_onboarding(submit=True)
+		user = get_test_user("task.assignee@example.com")
+		project = frappe.get_doc(
+			{"doctype": "Project", "project_name": "_Test Onboarding Tasks", "company": onboarding.company}
+		).insert()
+		cancelled_row = get_row(onboarding, "Assign Shift Type")
+		for row in onboarding.activities:
+			task = frappe.get_doc({"doctype": "Task", "subject": row.activity_name, "project": project.name})
+			task.insert()
+			status = "Cancelled" if row.name == cancelled_row.name else "Completed"
+			frappe.db.set_value("Task", task.name, "status", status)
+			row.db_set({"task": task.name, "user": user, "todo": None})
+		laptop_task = get_row(onboarding, "Assign a laptop").task
+		todo = frappe.get_doc(
+			{
+				"doctype": "ToDo",
+				"allocated_to": user,
+				"reference_type": "Task",
+				"reference_name": laptop_task,
+				"description": "Assign a laptop",
+			}
+		).insert(ignore_permissions=True)
+
+		execute()
+		execute()
+		onboarding.reload()
+
+		self.assertTrue(get_row(onboarding, "Assign Shift Type").skipped)
+		self.assertFalse(get_row(onboarding, "Assign Shift Type").completed)
+		self.assertTrue(get_row(onboarding, "Assign ID Card").completed)
+		self.assertEqual(get_row(onboarding, "Assign a laptop").todo, todo.name)
+		self.assertIsNone(get_row(onboarding, "Assign ID Card").todo)
+		self.assertEqual(onboarding.boarding_status, "Completed")
+
 
 def get_job_applicant():
 	if frappe.db.exists("Job Applicant", "test@engineer.com"):
