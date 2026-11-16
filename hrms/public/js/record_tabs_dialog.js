@@ -9,15 +9,18 @@ export class RecordTabsDialog {
 
 	async show() {
 		await frappe.model.with_doctype(this.doctype);
+		const tabs = this.make_tabs();
 		this.tabs = new frappe.ui.Tabs({
 			vertical: true,
-			tabs: this.make_tabs(),
+			tabs,
 			on_change: (index, tab) => tab.on_activate?.(),
 		});
 		this.tabs.$el.append(this.make_profile());
 		this.render_profile();
 		this.dialog = new frappe.ui.SettingsDialog({});
-		this.dialog.$wrapper.addClass("epc-record-dialog");
+		this.dialog.$wrapper
+			.addClass("epc-record-dialog")
+			.toggleClass("epc-record-dialog--single", tabs.length === 1);
 		this.dialog.$layout.empty().append(this.tabs.el);
 		this.dialog.show();
 	}
@@ -112,6 +115,32 @@ export class RecordTabsDialog {
 	}
 }
 
+export function insert_quietly(doc) {
+	return new Promise((resolve) => {
+		frappe.call({
+			method: "frappe.client.insert",
+			args: { doc },
+			silent: true,
+			callback: (r) => resolve(r.message),
+			error: (r) => {
+				frappe.ui.toast({ type: "error", message: get_error_text(r) });
+				resolve(null);
+			},
+		});
+	});
+}
+
+function get_error_text(r) {
+	const messages = JSON.parse(r?._server_messages || "[]").map((message) =>
+		to_text(JSON.parse(message).message),
+	);
+	return messages.join(" ") || __("Could not save the document");
+}
+
+function to_text(html) {
+	return new DOMParser().parseFromString(String(html), "text/html").body.textContent.trim();
+}
+
 export function is_editable(df) {
 	return !df.hidden && !df.read_only && !frappe.model.no_value_type.includes(df.fieldtype);
 }
@@ -121,9 +150,9 @@ export function make_panel_body() {
 }
 
 function get_tabs(doctype, include) {
-	const tabs = [];
-	let tab = null;
-	let section = null;
+	let tab = { fieldname: "details", label: __("Details"), sections: [] };
+	const tabs = [tab];
+	let section = { label: "", fields: [] };
 	for (const df of frappe.get_meta(doctype).fields) {
 		if (df.fieldtype === "Tab Break") {
 			tab = { fieldname: df.fieldname, label: __(df.label), sections: [] };
@@ -131,7 +160,7 @@ function get_tabs(doctype, include) {
 			section = { label: "", fields: [] };
 		} else if (df.fieldtype === "Section Break") {
 			section = { label: df.label ? __(df.label) : "", fields: [] };
-		} else if (tab && include(df, tab.fieldname)) {
+		} else if (include(df, tab.fieldname)) {
 			if (!tab.sections.includes(section)) tab.sections.push(section);
 			section.fields.push(df.fieldname);
 		}

@@ -1,5 +1,6 @@
 import { AppointmentLetterDialog } from "./appointment_letter_dialog.js";
 import { CreateEmployeeDialog } from "./create_employee_dialog.js";
+import { SalaryStructureAssignmentDialog } from "./salary_structure_assignment_dialog.js";
 
 // What each onboarding activity action shows and does. A template row names its action;
 // the row's value, lock and buttons come from the handler for that action.
@@ -315,6 +316,8 @@ async function create_employee(list) {
 // field hints and its queries. The row is ticked by reconciliation against the real
 // assignment document, not by this callback.
 function assign(list, row) {
+	if (row.reference_doctype === "Salary Structure Assignment")
+		return assign_salary_structure(list);
 	const doc = list.frm.doc;
 	const action = hrms.assignments
 		.get_assignment_actions()
@@ -340,4 +343,25 @@ function assign(list, row) {
 		redirect: false,
 		on_hide: () => frappe.after_ajax(() => list.call("sync_activities")),
 	});
+}
+
+async function assign_salary_structure(list) {
+	await list.save_if_dirty();
+	await frappe.model.with_doctype("Salary Structure Assignment");
+	const doc = list.frm.doc;
+	const offer_default = list.get_offer_default("Salary Structure Assignment");
+	const assignment = Object.assign(
+		frappe.model.get_new_doc("Salary Structure Assignment", null, null, true),
+		{
+			employee: doc.employee,
+			employee_name: doc.employee_name,
+			company: doc.company,
+			from_date: doc.date_of_joining,
+		},
+		offer_default ? { [offer_default.fieldname]: offer_default.value } : {},
+	);
+	new SalaryStructureAssignmentDialog({
+		assignment,
+		on_saved: () => list.call("sync_activities"),
+	}).show();
 }

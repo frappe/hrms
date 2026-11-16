@@ -1,4 +1,9 @@
-import { RecordTabsDialog, is_editable, make_panel_body } from "./record_tabs_dialog.js";
+import {
+	RecordTabsDialog,
+	insert_quietly,
+	is_editable,
+	make_panel_body,
+} from "./record_tabs_dialog.js";
 
 const JOB_FIELDS = [
 	"company",
@@ -160,32 +165,6 @@ export class CreateEmployeeDialog extends RecordTabsDialog {
 		this.dialog.hide();
 		this.on_created(doc);
 	}
-}
-
-function insert_quietly(doc) {
-	return new Promise((resolve) => {
-		frappe.call({
-			method: "frappe.client.insert",
-			args: { doc },
-			silent: true,
-			callback: (r) => resolve(r.message),
-			error: (r) => {
-				frappe.ui.toast({ type: "error", message: get_error_text(r) });
-				resolve(null);
-			},
-		});
-	});
-}
-
-function get_error_text(r) {
-	const messages = JSON.parse(r?._server_messages || "[]").map((message) =>
-		to_text(JSON.parse(message).message),
-	);
-	return messages.join(" ") || __("Could not create the employee");
-}
-
-function to_text(html) {
-	return new DOMParser().parseFromString(String(html), "text/html").body.textContent.trim();
 }
 
 function is_reviewable(fieldname) {

@@ -53,6 +53,21 @@
 	}
 }
 
+.epc-record-dialog--single {
+	.es-tabs[data-orientation="vertical"] {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.es-tabs[data-orientation="vertical"] > .es-tabs__list {
+		display: none;
+	}
+
+	.epc-profile,
+	.es-tabs[data-orientation="vertical"] > .es-tabs__panel[data-state="active"] {
+		grid-column: 1;
+	}
+}
+
 .epc-document {
 	display: flex;
 	align-items: center;
