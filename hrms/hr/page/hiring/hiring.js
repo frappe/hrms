@@ -110,19 +110,24 @@ function make_heading(label, count, actions) {
 	return $heading;
 }
 
-frappe.pages["hiring"].on_page_load = function (wrapper) {
+frappe.pages["hiring"].on_page_load = async function (wrapper) {
 	const page = frappe.ui.make_app_page({
 		parent: wrapper,
 		title: __("Hiring pipeline"),
 		single_column: true,
 	});
+	// SplitPane and DetailLoader come from frappe's lazy split view bundle
+	await frappe.require("split_view.bundle.js");
 	wrapper.hiring = new hrms.hiring.Hiring(page);
-	$(wrapper).on("show", () => {
+	const show = () => {
 		wrapper.hiring.listen();
 		// selecting an applicant rewrites the URL; the desk must not scroll to top for it
 		wrapper.disable_scroll_to_top = wrapper.hiring.show();
-	});
+	};
+	$(wrapper).on("show", show);
 	$(wrapper).on("hide", () => wrapper.hiring.unlisten());
+	// the page's first show fired while the bundle loaded
+	if (frappe.container.page === wrapper) show();
 };
 
 hrms.hiring.Hiring = class Hiring {
