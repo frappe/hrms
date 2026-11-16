@@ -4,12 +4,19 @@
 
 import frappe
 from frappe import _
+from frappe.core.doctype.user.user import get_all_roles
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
 from frappe.utils import formatdate, get_link_to_form, get_url, now_datetime, validate_email_address
+from frappe.utils.modules import get_blockable_module_names
 
 from hrms.hr.doctype.appointment_letter_template.appointment_letter_template import get_default_template
-from hrms.hr.doctype.employee_onboarding.onboarding_activities import OnboardingActivities
+from hrms.hr.doctype.employee_onboarding.onboarding_activities import (
+	EMPLOYEE_SELF_SERVICE_ROLE,
+	OnboardingActivities,
+	get_extra_roles,
+	get_role_profiles,
+)
 from hrms.hr.doctype.employee_request.employee_request import (
 	PREBOARDING_CANDIDATE_ROLE,
 	PREBOARDING_INVITE_TEMPLATE,
@@ -17,7 +24,6 @@ from hrms.hr.doctype.employee_request.employee_request import (
 	get_review_fields,
 )
 
-EMPLOYEE_SELF_SERVICE_ROLE = "Employee Self Service"
 OFFER_EMPLOYEE_FIELDS = ("branch", "employment_type", "reports_to")
 USER_EMAIL_FIELDS = {"Company Email": "company_email", "Personal Email": "personal_email"}
 
@@ -73,6 +79,7 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		self.set_onload("appointment_letter", self.get_appointment_letter())
 		self.set_onload("draft_assignments", self.get_draft_assignments())
 		self.set_onload("user_info", self.get_assignee_info())
+		self.set_onload("user_access", self.get_user_access())
 		self.set_onload("needs_sync", self.docstatus == 1 and bool(self.reconcile_activities()))
 
 	def before_insert(self):
@@ -147,29 +154,51 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		return user
 
 	@frappe.whitelist(methods=["POST"])
-	def set_user_roles(self, role_profiles: list[str] | str, module_profile: str | None = None) -> None:
+	def set_user_roles(
+		self,
+		assign_by: str | None = None,
+		roles: list[str] | str | None = None,
+		role_profiles: list[str] | str | None = None,
+		module_profile: str | None = None,
+		modules: list[str] | str | None = None,
+	) -> None:
 		self.check_permission("write")
 		self.validate_started()
-		role_profiles = frappe.parse_json(role_profiles)
 		if not (self.user and self.employee):
 			frappe.throw(_("Create the user and the employee before setting roles"))
-		if not role_profiles:
-			frappe.throw(_("Select at least one role profile"))
 
-		user = frappe.get_doc("User", self.user)
-		user.set("role_profiles", [{"role_profile": profile} for profile in role_profiles])
-		user.module_profile = module_profile
-		user.save()
+		if assign_by or module_profile or modules is not None:
+			user = frappe.get_doc("User", self.user)
+			if assign_by == "Roles":
+				set_roles(user, frappe.parse_json(roles) or [])
+			elif assign_by == "Role Profiles":
+				set_role_profiles(user, frappe.parse_json(role_profiles) or [])
+			if module_profile:
+				user.module_profile = module_profile
+			elif modules is not None:
+				set_allowed_modules(user, frappe.parse_json(modules) or [])
+			user.save()
 		self.db_set("roles_set_on", now_datetime())
 		self.save_activity_states()
-		if EMPLOYEE_SELF_SERVICE_ROLE not in frappe.get_roles(user.name):
-			frappe.msgprint(
-				_(
-					"The selected role profiles do not include the {0} role, so {1} cannot use the employee app"
-				).format(frappe.bold(_(EMPLOYEE_SELF_SERVICE_ROLE)), self.employee_name),
-				title=_("Employee app access removed"),
-				indicator="orange",
+
+	def get_user_access(self) -> dict:
+		if not self.user:
+			return {}
+		access = {
+			"roles": frappe.get_all(
+				"Has Role", {"parent": self.user, "parenttype": "User"}, pluck="role", order_by="role"
+			),
+			"extra_roles": get_extra_roles(self.user),
+			"role_profiles": get_role_profiles(self.user),
+		}
+		if frappe.has_permission("User", "write"):
+			blocked = frappe.get_all(
+				"Block Module", {"parent": self.user, "parenttype": "User"}, pluck="module"
 			)
+			access["modules"] = get_blockable_module_names(blocked)
+			access["blocked_modules"] = blocked
+			access["module_profile"] = frappe.db.get_value("User", self.user, "module_profile")
+		return access
 
 	def insert_user(self, email: str) -> str:
 		first_name, middle_name, last_name = split_full_name(self.employee_name)
@@ -270,6 +299,29 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 	def get_employee_request(self) -> Document | None:
 		name = frappe.db.get_value("Employee Request", {"employee_onboarding": self.name})
 		return name and frappe.get_doc("Employee Request", name)
+
+
+def set_roles(user: Document, roles: list[str]) -> None:
+	listed = set(get_all_roles())
+	user.role_profile_name = None
+	user.set("role_profiles", [])
+	user.set("roles", [row for row in user.roles if row.role not in listed])
+	user.append_roles(*(role for role in roles if role in listed))
+
+
+def set_allowed_modules(user: Document, allowed: list[str]) -> None:
+	blocked = [module.module for module in user.block_modules]
+	user.module_profile = None
+	user.set(
+		"block_modules",
+		[{"module": module} for module in get_blockable_module_names(blocked) if module not in allowed],
+	)
+
+
+def set_role_profiles(user: Document, role_profiles: list[str]) -> None:
+	if not role_profiles:
+		frappe.throw(_("Select at least one role profile"))
+	user.set("role_profiles", [{"role_profile": profile} for profile in role_profiles])
 
 
 def get_required_documents(template: str | None) -> list[dict]:

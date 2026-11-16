@@ -264,38 +264,71 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		frappe.clear_cache(user=user)
 		self.assertIn("Employee Self Service", frappe.get_roles(user))
 
-	def test_setting_roles_applies_the_profiles_and_completes_the_step(self):
-		onboarding = create_employee_onboarding(submit=True)
-		onboarding.db_set("company_email", "asha.roles@example.com")
-		user = onboarding.create_user("Company Email")
-		create_onboarding_employee(onboarding)
+	def test_role_profiles_replace_the_roles_and_complete_the_step(self):
+		onboarding, user = start_onboarding_with_employee("asha.profiles@example.com")
 		profile = make_role_profile("_Test Onboarding Profile", ["Employee Self Service", "Projects User"])
 
-		onboarding.reload()
-		onboarding.set_user_roles([profile])
+		onboarding.set_user_roles("Role Profiles", role_profiles=[profile])
 
 		onboarding.reload()
 		self.assertTrue(get_row(onboarding, "Set Roles and Permissions").completed)
 		self.assertEqual([row.role_profile for row in frappe.get_doc("User", user).role_profiles], [profile])
-		frappe.clear_cache(user=user)
-		self.assertIn("Projects User", frappe.get_roles(user))
-		self.assertIn("Employee Self Service", frappe.get_roles(user))
+		self.assertNotIn("Employee", get_user_roles(user))
+		self.assertIn("Projects User", get_user_roles(user))
+
+	def test_the_role_grid_sets_the_checked_roles(self):
+		onboarding, user = start_onboarding_with_employee("asha.roles@example.com")
+		frappe.get_doc("User", user).add_roles("Projects Manager")
+
+		onboarding.set_user_roles("Roles", roles=["Employee", "Employee Self Service", "Projects User"])
+
+		onboarding.reload()
+		self.assertTrue(get_row(onboarding, "Set Roles and Permissions").completed)
+		roles = set(get_user_roles(user))
+		self.assertTrue({"Projects User", "Employee", "Employee Self Service"} <= roles)
+		self.assertNotIn("Projects Manager", roles)
+
+	def test_allowed_modules_block_every_other_module(self):
+		onboarding, user = start_onboarding_with_employee("asha.modules@example.com")
+
+		onboarding.set_user_roles(modules=["HR", "Setup"])
+
+		blocked = [row.module for row in frappe.get_doc("User", user).block_modules]
+		self.assertNotIn("HR", blocked)
+		self.assertNotIn("Setup", blocked)
+		self.assertIn("Accounts", blocked)
+
+	def test_keeping_the_current_roles_completes_the_step(self):
+		onboarding, user = start_onboarding_with_employee("asha.keep@example.com")
+		roles = get_user_roles(user)
+
+		onboarding.set_user_roles()
+
+		onboarding.reload()
+		self.assertTrue(get_row(onboarding, "Set Roles and Permissions").completed)
+		self.assertEqual(get_user_roles(user), roles)
+
+	def test_a_role_given_on_the_user_completes_the_step(self):
+		onboarding, user = start_onboarding_with_employee("asha.direct@example.com")
+		self.assertFalse(get_row(onboarding, "Set Roles and Permissions").completed)
+
+		frappe.get_doc("User", user).add_roles("Projects User")
+		onboarding.reload()
+		onboarding.sync_activities()
+
+		onboarding.reload()
+		self.assertTrue(get_row(onboarding, "Set Roles and Permissions").completed)
 
 	def test_roles_wait_for_the_employee(self):
 		onboarding = create_employee_onboarding(submit=True)
 		onboarding.db_set("company_email", "asha.noemp@example.com")
 		onboarding.create_user("Company Email")
-		profile = make_role_profile("_Test Onboarding Profile", ["Employee Self Service"])
 
 		onboarding.reload()
-		self.assertRaises(frappe.ValidationError, onboarding.set_user_roles, [profile])
+		self.assertRaises(frappe.ValidationError, onboarding.set_user_roles, "Roles", roles=["Projects User"])
 
 	def test_only_a_user_manager_can_set_roles(self):
-		onboarding = create_employee_onboarding(submit=True)
-		onboarding.db_set("company_email", "asha.perm@example.com")
-		onboarding.create_user("Company Email")
-		create_onboarding_employee(onboarding)
-		profile = make_role_profile("_Test Onboarding Profile", ["System Manager"])
+		onboarding, _user = start_onboarding_with_employee("asha.perm@example.com")
 		hr_manager = get_test_user("hr.manager.roles@example.com")
 		frappe.get_doc("User", hr_manager).add_roles("HR Manager")
 
@@ -303,7 +336,9 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		self.addCleanup(frappe.set_user, "Administrator")
 		onboarding.reload()
 		self.assertTrue(onboarding.has_permission("write"))
-		self.assertRaises(frappe.PermissionError, onboarding.set_user_roles, [profile])
+		self.assertRaises(
+			frappe.PermissionError, onboarding.set_user_roles, "Roles", roles=["System Manager"]
+		)
 
 	def test_submitting_starts_the_activities_without_finishing_them(self):
 		onboarding = create_employee_onboarding(submit=False)
@@ -853,6 +888,19 @@ def get_test_user(email):
 			ignore_permissions=True
 		)
 	return email
+
+
+def start_onboarding_with_employee(email):
+	onboarding = create_employee_onboarding(submit=True)
+	onboarding.db_set("company_email", email)
+	user = onboarding.create_user("Company Email")
+	create_onboarding_employee(onboarding)
+	onboarding.reload()
+	return onboarding, user
+
+
+def get_user_roles(user):
+	return sorted(frappe.get_all("Has Role", {"parent": user, "parenttype": "User"}, pluck="role"))
 
 
 def make_role_profile(name, roles):

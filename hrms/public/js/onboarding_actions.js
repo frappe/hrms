@@ -35,8 +35,10 @@ const ACTION_HANDLERS = {
 	},
 	"Set Roles": {
 		get_value: (list) => {
-			const set_on = list.frm.doc.roles_set_on;
-			return set_on && __("Set on {0}", [frappe.datetime.str_to_user(set_on, false, true)]);
+			const access = get_user_access(list);
+			const assigned = [...(access.role_profiles || []), ...(access.extra_roles || [])];
+			if (assigned.length) return assigned.join(", ");
+			return list.frm.doc.roles_set_on ? __("Default roles") : null;
 		},
 		get_actions: (list, row, state) => {
 			if (state === "done") return [open_action("User", list.frm.doc.user)];
@@ -148,35 +150,137 @@ function open_user_dialog(list) {
 
 async function open_roles_dialog(list) {
 	await frappe.model.with_doctype("User Role Profile");
+	const access = get_user_access(list);
+	const roles = await get_assignable_roles();
+	const get_dialog = () => dialog;
 	const dialog = new frappe.ui.Dialog({
 		title: __("Set Roles and Permissions"),
+		size: "large",
 		fields: [
+			{
+				fieldname: "profile_warning",
+				fieldtype: "HTML",
+				depends_on: "eval:doc.assign_by == 'Role Profiles'",
+				options: `<div class="form-group">${frappe.ui.alert.html({
+					title: __("Role profiles replace all of the user's roles"),
+					theme: "yellow",
+				})}</div>`,
+			},
+			{
+				fieldname: "assign_by",
+				label: __("Assign By"),
+				fieldtype: "Select",
+				options: [
+					{ label: __("Roles"), value: "Roles" },
+					{ label: __("Role Profiles"), value: "Role Profiles" },
+				],
+				default: "Roles",
+			},
+			roles
+				? make_checklist("roles", get_dialog, {
+						depends_on: "eval:doc.assign_by == 'Roles'",
+						values: roles,
+						checked: (role) => (access.roles || []).includes(role),
+				  })
+				: {
+						fieldname: "roles_note",
+						fieldtype: "HTML",
+						depends_on: "eval:doc.assign_by == 'Roles'",
+						options: `<div class="form-group">${frappe.ui.alert.html({
+							title: __("Only users who can edit users can change roles"),
+							theme: "yellow",
+						})}</div>`,
+				  },
 			{
 				fieldname: "role_profiles",
 				label: __("Role Profiles"),
 				fieldtype: "Table MultiSelect",
 				options: "User Role Profile",
-				reqd: 1,
+				depends_on: "eval:doc.assign_by == 'Role Profiles'",
 			},
 			{
 				fieldname: "module_profile",
 				label: __("Module Profile"),
 				fieldtype: "Link",
 				options: "Module Profile",
+				default: access.module_profile,
 			},
+			...(access.modules
+				? [
+						make_checklist("modules", get_dialog, {
+							label: __("Allow Modules"),
+							depends_on: "eval:!doc.module_profile",
+							values: access.modules,
+							checked: (module) => !(access.blocked_modules || []).includes(module),
+						}),
+				  ]
+				: []),
 		],
-		primary_action_label: __("Apply to User"),
-		primary_action: async ({ role_profiles, module_profile }) => {
-			const profiles = role_profiles.map((row) => row.role_profile);
-			await list.call(
-				"set_user_roles",
-				{ role_profiles: profiles, module_profile },
-				__("Setting roles"),
-			);
+		primary_action_label: __("Apply"),
+		primary_action: async (values) => {
+			const args = get_access_args(values, {
+				roles: Boolean(roles),
+				modules: Boolean(access.modules),
+			});
+			if (!args) return;
+			await list.call("set_user_roles", args, __("Setting roles"));
+			dialog.hide();
+		},
+		secondary_action_label: __("Keep Current Roles"),
+		secondary_action: async () => {
+			await list.call("set_user_roles", {}, __("Setting roles"));
 			dialog.hide();
 		},
 	});
+	dialog.$wrapper.addClass("epc-roles-dialog");
 	dialog.show();
+}
+
+function make_checklist(fieldname, get_dialog, { label, depends_on, values, checked }) {
+	const options = values.map((value) => ({ label: __(value), value, checked: checked(value) }));
+	return {
+		fieldname,
+		label,
+		fieldtype: "MultiCheck",
+		columns: "12rem 3",
+		select_all: true,
+		depends_on,
+		options,
+		on_change: () => {
+			const selected = get_dialog().fields_dict[fieldname].selected_options;
+			for (const option of options) option.checked = selected.includes(option.value);
+		},
+	};
+}
+
+function get_assignable_roles() {
+	if (!frappe.model.can_read("Role")) return null;
+	return frappe.xcall("frappe.core.doctype.user.user.get_all_roles");
+}
+
+function get_access_args(values, can_edit) {
+	const { assign_by, roles, role_profiles, module_profile, modules } = values;
+	const args = { module_profile };
+	if (can_edit.modules && !module_profile) args.modules = modules || [];
+	if (assign_by === "Role Profiles") {
+		args.role_profiles = (role_profiles || []).map((row) => row.role_profile);
+		if (!args.role_profiles.length) {
+			frappe.ui.toast({
+				type: "error",
+				message: __("Pick a role profile, or keep the current roles"),
+			});
+			return null;
+		}
+		args.assign_by = assign_by;
+	} else if (can_edit.roles) {
+		args.assign_by = assign_by;
+		args.roles = roles || [];
+	}
+	return args;
+}
+
+function get_user_access(list) {
+	return list.frm.doc.__onload?.user_access || {};
 }
 
 async function open_letter_dialog(list) {

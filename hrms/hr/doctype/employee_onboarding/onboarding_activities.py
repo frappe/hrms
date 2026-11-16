@@ -6,9 +6,12 @@ from pypika.terms import ExistsCriterion
 import frappe
 from frappe import _
 from frappe.desk.form.assign_to import notify_assignment
+from frappe.permissions import AUTOMATIC_ROLES
 from frappe.query_builder import Order
 from frappe.query_builder.functions import IfNull
 from frappe.utils import add_days
+
+from hrms.hr.doctype.employee_request.employee_request import PREBOARDING_CANDIDATE_ROLE
 
 ASSIGNMENTS = {
 	"Holiday List Assignment": {
@@ -39,6 +42,9 @@ ACTION_DOCTYPES = {
 }
 
 PROGRESS_STATUSES = ("In Progress", "Stuck")
+
+EMPLOYEE_SELF_SERVICE_ROLE = "Employee Self Service"
+ONBOARDING_ROLES = ("Employee", EMPLOYEE_SELF_SERVICE_ROLE, PREBOARDING_CANDIDATE_ROLE)
 
 TEMPLATE_MATCH_FIELDS = ("company", "department", "designation", "employee_grade")
 
@@ -143,7 +149,7 @@ class OnboardingActivities:
 				reference_name = self.employee
 				done = bool(self.employee)
 			case "Set Roles":
-				done = bool(self.roles_set_on)
+				done = bool(self.roles_set_on or has_assigned_access(self.user))
 			case "Assign":
 				reference_name = self.get_assignment(row.reference_doctype)
 				done = bool(reference_name)
@@ -391,6 +397,24 @@ class OnboardingActivities:
 	def clear_todos(self):
 		for row in self.activities:
 			row.todo = None
+
+
+def has_assigned_access(user: str | None) -> bool:
+	if not user:
+		return False
+	return bool(get_extra_roles(user) or get_role_profiles(user))
+
+
+def get_extra_roles(user: str) -> list[str]:
+	return frappe.get_all(
+		"Has Role",
+		{"parent": user, "parenttype": "User", "role": ["not in", [*AUTOMATIC_ROLES, *ONBOARDING_ROLES]]},
+		pluck="role",
+	)
+
+
+def get_role_profiles(user: str) -> list[str]:
+	return frappe.get_all("User Role Profile", {"parent": user, "parenttype": "User"}, pluck="role_profile")
 
 
 def is_finished(row) -> bool:

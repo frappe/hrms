@@ -82,3 +82,7 @@
 	flex-shrink: 0;
 	width: 5rem;
 }
+
+.epc-roles-dialog .frappe-control[data-fieldtype="MultiCheck"] {
+	margin-bottom: 1rem;
+}
