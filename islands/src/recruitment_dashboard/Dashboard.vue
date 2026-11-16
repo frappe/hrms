@@ -85,13 +85,16 @@ const weekLabels = computed(() => {
 });
 
 // series keep their untranslated names, so a selected mark names its stage or outcome
-const labelled = (keys, extra = () => ({})) =>
-	Object.fromEntries(keys.map((key) => [key, { label: __(key), ...extra(key) }]));
+const labelled = (keys) => Object.fromEntries(keys.map((key) => [key, { label: __(key) }]));
+// a series that opens no list keeps the default cursor
+const still = { echartOptions: { cursor: "default" } };
 const stageSeries = labelled(STAGES);
 const stageColors = [1, 2, 3, 4, 5].map(stage);
-// outcomes that open no list keep the default cursor
-const outcomeSeries = labelled(OUTCOMES, (outcome) =>
-	outcome === "Hired" ? {} : { echartOptions: { cursor: "default" } },
+const outcomeSeries = Object.fromEntries(
+	OUTCOMES.map((outcome) => [
+		outcome,
+		{ label: __(outcome), ...(outcome === "Hired" ? {} : still) },
+	]),
 );
 const sourceStageColors = [stage(1), "var(--recruitment-interviewed)", stage(5)];
 const sourceColors = computed(() =>
@@ -123,12 +126,11 @@ const linkCard = (name) =>
 		: {};
 const open = (pick) => targets.value && openList(pick(targets.value));
 const funnelTarget = (stage) => targets.value?.funnel(stage) ?? null;
-// sources no list filter can find keep the default cursor
 const weekSeries = computed(() =>
 	Object.fromEntries(
 		props.view.sourceNames
 			.filter((name) => !targets.value?.hasSource(name))
-			.map((name) => [name, { echartOptions: { cursor: "default" } }]),
+			.map((name) => [name, still]),
 	),
 );
 </script>
