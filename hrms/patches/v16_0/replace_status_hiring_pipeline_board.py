@@ -5,7 +5,7 @@ BOARD = "Hiring Pipeline"
 
 
 def execute():
-	"""Sites that opened the old status-based board keep it as their own; the standard stage board replaces it."""
+	"""Replace the site-owned, status-based Hiring Pipeline board with the standard stage board."""
 	board = frappe.db.get_value(
 		"Kanban Board", BOARD, ["reference_doctype", "field_name", "is_standard"], as_dict=True
 	)
