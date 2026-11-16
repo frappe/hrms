@@ -657,7 +657,7 @@ hrms.hiring.ApplicantPanel = class ApplicantPanel {
 			.append($paper);
 	}
 
-	/** Draws page 1 with pdf.js, loaded only when a resume shows; on failure only the file row stays. */
+	/** Draws the resume's pages, up to 10, with pdf.js, loaded only when a resume shows; on failure only the file row stays. */
 	async render_preview($box, $preview, file, url) {
 		const $paper = $preview.find(".hiring__resume-paper");
 		try {
