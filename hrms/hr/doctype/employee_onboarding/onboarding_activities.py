@@ -95,7 +95,7 @@ class OnboardingActivities:
 	"""The checklist rows of an Employee Onboarding.
 
 	The rows come from the onboarding's template only, so HR decides there which standard
-	activities a onboarding gets and who each one is assigned to.
+	activities an onboarding gets and who each one is assigned to.
 	A row with an action is completed by the record it creates, not by whoever ticks it; only
 	Manual rows are completed by hand. An unfinished row may carry a status, In Progress or Stuck.
 	Row changes are written per row, so several people can work the same onboarding at once
@@ -432,7 +432,7 @@ def close_todo(name: str, status: str) -> None:
 
 
 def get_matching_template(doc) -> str | None:
-	"""The newest template with pre-boarding activities whose company, department, designation
+	"""The newest template with onboarding activities whose company, department, designation
 	and grade each match the onboarding's or are left blank, so a blank template applies to everyone."""
 	Template = frappe.qb.DocType("Employee Boarding Template")
 	Activity = frappe.qb.DocType("Employee Boarding Activity")

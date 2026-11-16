@@ -98,7 +98,7 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		standard = [activity["activity_name"] for activity in STANDARD_ACTIVITIES]
 		self.assertEqual([row.activity_name for row in template.onboarding_activities], standard)
 
-	def test_a_onboarding_without_a_template_gets_no_activities(self):
+	def test_an_onboarding_without_a_template_gets_no_activities(self):
 		self.assertEqual(get_template_activities(None), [])
 
 	def test_template_rejects_a_duplicate_action(self):
@@ -506,7 +506,7 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		self.assertIsNone(onboarding.appointment_letter_sent_on)
 		self.assertFalse(get_row(onboarding, "Send Appointment Letter").completed)
 
-	def test_deleting_a_onboarding_offers_its_appointment_letter(self):
+	def test_deleting_an_onboarding_offers_its_appointment_letter(self):
 		onboarding = create_employee_onboarding(submit=False)
 		letter = create_appointment_letter(onboarding)
 
