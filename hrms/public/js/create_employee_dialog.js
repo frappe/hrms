@@ -126,15 +126,19 @@ export class CreateEmployeeDialog extends RecordTabsDialog {
 			);
 		} else {
 			$status.append(
-				$('<span class="indicator-pill">')
-					.addClass(document.required ? "red" : "gray")
-					.text(document.required ? __("Required") : __("Not uploaded")),
+				frappe.ui.badge({
+					label: document.required ? __("Required") : __("Not uploaded"),
+					theme: document.required ? "red" : "gray",
+				}),
 			);
 		}
 		return $row.append(
-			$('<button class="btn btn-default btn-xs epc-document-action">')
-				.text(document.url ? __("Replace") : __("Upload"))
-				.on("click", () => this.upload_document(document, $row)),
+			frappe.ui.button({
+				label: document.url ? __("Replace") : __("Upload"),
+				size: "sm",
+				css_class: "epc-document-action",
+				onclick: () => this.upload_document(document, $row),
+			}),
 		);
 	}
 
