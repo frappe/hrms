@@ -65,3 +65,19 @@
 .epc-document .icon {
 	margin: 0;
 }
+
+.epc-document-name {
+	flex: 1;
+	min-width: 0;
+}
+
+.epc-document-status {
+	flex-shrink: 0;
+	width: 7rem;
+	text-align: right;
+}
+
+.epc-document-action {
+	flex-shrink: 0;
+	width: 5rem;
+}

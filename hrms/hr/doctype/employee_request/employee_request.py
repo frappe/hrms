@@ -167,9 +167,14 @@ class EmployeeRequest(Document):
 			"name": self.name,
 			"photo": self.image,
 			"documents": [
-				{"label": row.document_name, "url": row.attachment}
+				{
+					"row": row.name,
+					"label": row.document_name,
+					"url": row.attachment,
+					"required": row.required,
+					"description": row.description,
+				}
 				for row in self.documents
-				if row.attachment
 			],
 		}
 

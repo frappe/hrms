@@ -97,6 +97,10 @@ class TestEmployeeRequest(HRMSTestSuite):
 		self.assertEqual((employee.gender, employee.bank_name), ("Female", "HDFC Bank"))
 		self.assertEqual(details["name"], request.name)
 		self.assertIn("bank_name", details["fields"])
+		self.assertEqual(
+			[(document["label"], document["url"]) for document in details["documents"]],
+			[(row.document_name, None) for row in request.documents],
+		)
 
 	def test_employee_from_the_list_fills_only_blank_fields_and_retires_the_request(self):
 		onboarding = start_onboarding()

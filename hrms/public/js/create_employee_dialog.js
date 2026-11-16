@@ -88,22 +88,68 @@ export class CreateEmployeeDialog extends RecordTabsDialog {
 	}
 
 	make_documents() {
-		if (!this.details.documents.length) {
+		if (!this.details.name) {
 			return frappe.ui.empty_state({
 				icon: "file",
 				title: __("No documents yet"),
-				description: __("Documents the new hire uploads appear here."),
+				description: __("Documents are collected after Create User Login."),
 			});
 		}
-		const list = $("<div>");
-		for (const document of this.details.documents) {
-			list.append(
-				$('<a class="epc-document" target="_blank" rel="noopener">')
+		if (!this.details.documents.length) {
+			return frappe.ui.empty_state({
+				icon: "file",
+				title: __("No documents requested"),
+				description: __("The onboarding template asks for no documents."),
+			});
+		}
+		return $("<div>").append(
+			this.details.documents.map((document) => this.make_document(document)),
+		)[0];
+	}
+
+	make_document(document) {
+		const $row = $('<div class="epc-document">').append(
+			frappe.utils.icon("file", "sm"),
+			$('<span class="epc-document-name">').text(document.label),
+		);
+		const $status = $('<span class="epc-document-status">').appendTo($row);
+		if (document.url) {
+			$status.append(
+				$('<a target="_blank" rel="noopener">')
 					.attr("href", document.url)
-					.append(frappe.utils.icon("file", "sm"), $("<span>").text(document.label)),
+					.text(__("View")),
+			);
+		} else {
+			$status.append(
+				$('<span class="indicator-pill">')
+					.addClass(document.required ? "red" : "gray")
+					.text(document.required ? __("Required") : __("Not uploaded")),
 			);
 		}
-		return list[0];
+		return $row.append(
+			$('<button class="btn btn-default btn-xs epc-document-action">')
+				.text(document.url ? __("Replace") : __("Upload"))
+				.on("click", () => this.upload_document(document, $row)),
+		);
+	}
+
+	upload_document(document, $row) {
+		new frappe.ui.FileUploader({
+			doctype: "Employee Request",
+			docname: this.details.name,
+			fieldname: "attachment",
+			allow_multiple: false,
+			on_success: async (file) => {
+				await frappe.xcall("frappe.client.set_value", {
+					doctype: "Employee Boarding Document",
+					name: document.row,
+					fieldname: "attachment",
+					value: file.file_url,
+				});
+				document.url = file.file_url;
+				$row.replaceWith(this.make_document(document));
+			},
+		});
 	}
 
 	async create() {
