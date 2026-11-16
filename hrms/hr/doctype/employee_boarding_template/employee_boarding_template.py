@@ -11,6 +11,7 @@ from hrms.hr.doctype.employee_onboarding.onboarding_activities import (
 	add_standard_activities,
 	has_standard_activities,
 	set_action_defaults,
+	validate_required_for_employee_creation,
 	validate_unique_actions,
 )
 
@@ -52,6 +53,7 @@ class EmployeeBoardingTemplate(Document):
 		for row in self.onboarding_activities:
 			set_action_defaults(row)
 		validate_unique_actions(self.onboarding_activities, _("this template"))
+		validate_required_for_employee_creation(self.onboarding_activities)
 		for row in self.offboarding_activities:
 			row.update({"action": "Manual", "reference_doctype": None, "depends_on_action": None})
 

@@ -167,13 +167,18 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 	}
 
 	get_lock_reason(row) {
-		if (!row.depends_on_action) return null;
-
-		const needed = (this.frm.doc.activities || []).find(
-			(other) => other.action === row.depends_on_action,
+		const needed = (this.frm.doc.activities || []).filter(
+			(other) =>
+				(row.depends_on_action &&
+					other.action === row.depends_on_action &&
+					!other.completed) ||
+				(row.action === "Create Employee" &&
+					other.required_for_employee_creation &&
+					!other.completed &&
+					!other.skipped),
 		);
-		if (!needed || needed.completed) return null;
-		return __("Needs: {0}", [__(needed.activity_name)]);
+		if (!needed.length) return null;
+		return __("Needs: {0}", [needed.map((other) => __(other.activity_name)).join(", ")]);
 	}
 
 	get_offer_default(doctype) {

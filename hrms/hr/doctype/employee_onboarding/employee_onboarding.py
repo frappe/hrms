@@ -16,6 +16,7 @@ from hrms.hr.doctype.employee_onboarding.onboarding_activities import (
 	OnboardingActivities,
 	get_extra_roles,
 	get_role_profiles,
+	validate_required_for_employee_creation,
 )
 from hrms.hr.doctype.employee_request.employee_request import (
 	PREBOARDING_CANDIDATE_ROLE,
@@ -96,6 +97,7 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		self.validate_duplicate_employee_onboarding()
 		self.set_activities()
 		self.validate_unique_activities()
+		validate_required_for_employee_creation(self.activities)
 		self.reconcile_activities()
 		self.set_boarding_status()
 

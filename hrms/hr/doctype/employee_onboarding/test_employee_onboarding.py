@@ -445,6 +445,30 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		self.assertEqual(employee.last_name, "Engineer")
 		self.assertEqual(employee.job_offer, onboarding.job_offer)
 
+	def test_employee_waits_for_the_activities_required_before_it(self):
+		onboarding = create_onboarding_requiring("Assign ID Card")
+
+		self.assertRaises(frappe.ValidationError, map_employee(onboarding).insert)
+
+		onboarding.complete_activity(get_row(onboarding, "Assign ID Card").name)
+		self.assertTrue(map_employee(onboarding).insert().name)
+
+	def test_a_skipped_required_activity_lets_the_employee_be_created(self):
+		onboarding = create_onboarding_requiring("Assign ID Card")
+
+		onboarding.skip_activity(get_row(onboarding, "Assign ID Card").name)
+		self.assertTrue(map_employee(onboarding).insert().name)
+
+	def test_an_activity_needing_the_employee_cannot_be_required_for_it(self):
+		for activity in ("Create Employee", "Assign Leave Policy"):
+			template = get_test_template()
+			get_row(template, activity, "onboarding_activities").required_for_employee_creation = 1
+			self.assertRaises(frappe.ValidationError, template.save)
+
+		onboarding = create_employee_onboarding(submit=False)
+		get_row(onboarding, "Send Appointment Letter").required_for_employee_creation = 1
+		self.assertRaises(frappe.ValidationError, onboarding.save)
+
 	def test_an_employee_from_another_job_offer_is_not_linked(self):
 		onboarding = create_employee_onboarding(submit=True)
 		employee = map_employee(onboarding)
@@ -959,6 +983,13 @@ def create_employee_onboarding(submit=False, with_activities=True):
 		onboarding.submit()
 
 	return onboarding
+
+
+def create_onboarding_requiring(activity_name):
+	template = get_test_template()
+	get_row(template, activity_name, "onboarding_activities").required_for_employee_creation = 1
+	template.save()
+	return create_employee_onboarding(submit=True)
 
 
 def map_employee(onboarding):

@@ -226,6 +226,7 @@ doc_events = {
 	},
 	"Loan": {"validate": "hrms.hr.utils.validate_loan_repay_from_salary"},
 	"Employee": {
+		"validate": "hrms.overrides.employee_master.validate_onboarding_activities",
 		"on_update": [
 			"hrms.overrides.employee_master.link_onboarding",
 			"hrms.overrides.employee_master.update_approver_role",

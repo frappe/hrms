@@ -28,6 +28,16 @@ class EmployeeMaster(Employee):
 		self.employee = self.name
 
 
+def validate_onboarding_activities(doc, method=None):
+	if not (doc.is_new() and doc.get("job_offer")):
+		return
+
+	if onboarding := frappe.db.get_value(
+		"Employee Onboarding", {"job_offer": doc.job_offer, "docstatus": ("!=", 2)}
+	):
+		frappe.get_doc("Employee Onboarding", onboarding).validate_employee_creation()
+
+
 def link_onboarding(doc, method=None):
 	"""Link a saved Employee to the open Employee Onboarding of its job offer, however it was created."""
 	filters = {"docstatus": ("!=", 2), "employee": ("is", "not set")}

@@ -9,7 +9,7 @@ from frappe.desk.form.assign_to import notify_assignment
 from frappe.permissions import AUTOMATIC_ROLES
 from frappe.query_builder import Order
 from frappe.query_builder.functions import IfNull
-from frappe.utils import add_days
+from frappe.utils import add_days, get_link_to_form
 
 from hrms.hr.doctype.employee_request.employee_request import PREBOARDING_CANDIDATE_ROLE
 
@@ -53,6 +53,7 @@ TEMPLATE_ROW_FIELDS = [
 	"action",
 	"reference_doctype",
 	"depends_on_action",
+	"required_for_employee_creation",
 	"user",
 	"role",
 	"description",
@@ -126,6 +127,20 @@ class OnboardingActivities:
 
 	def validate_unique_activities(self):
 		validate_unique_actions(self.activities, _("this onboarding"))
+
+	def validate_employee_creation(self):
+		pending = [
+			frappe.bold(_(row.activity_name))
+			for row in self.activities
+			if row.required_for_employee_creation and not is_finished(row)
+		]
+		if pending:
+			frappe.throw(
+				_("Complete or skip {0} on onboarding {1} before creating the employee").format(
+					", ".join(pending), get_link_to_form(self.doctype, self.name)
+				),
+				title=_("Onboarding Activities Pending"),
+			)
 
 	def reconcile_activities(self) -> list:
 		"""Complete each row whose record exists, and return the changed rows."""
@@ -496,6 +511,24 @@ def validate_unique_actions(rows, where: str) -> None:
 		if key in seen:
 			frappe.throw(_("Row #{0}: {1} is already on {2}").format(row.idx, _(row.activity_name), where))
 		seen.add(key)
+
+
+def validate_required_for_employee_creation(rows) -> None:
+	for row in rows:
+		if not row.required_for_employee_creation:
+			continue
+		if row.action == "Create Employee":
+			frappe.throw(
+				_("Row #{0}: {1} cannot be required for creating the employee").format(
+					row.idx, _(row.activity_name)
+				)
+			)
+		if row.depends_on_action == "Create Employee":
+			frappe.throw(
+				_(
+					"Row #{0}: {1} needs the employee, so it cannot be required for creating the employee"
+				).format(row.idx, _(row.activity_name))
+			)
 
 
 def action_key(action: str | None, reference_doctype: str | None) -> tuple:
