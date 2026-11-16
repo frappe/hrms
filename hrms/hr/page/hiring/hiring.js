@@ -131,6 +131,7 @@ hrms.hiring.Hiring = class Hiring {
 		this.$body = $(`<div class="hiring"></div>`).appendTo(page.main);
 		this.opening_view = null;
 		this.request_id = 0;
+		this.is_listening = false;
 		this.overview_filter = { search: "", department: null, location: null, sort: "attention" };
 		this.bind_shortcuts();
 	}
@@ -141,18 +142,22 @@ hrms.hiring.Hiring = class Hiring {
 	 * handler is removed on hide, so list views keep theirs.
 	 */
 	listen() {
+		// "show" fires on every route change inside the page; subscribe once per show and hide
+		if (this.is_listening) return;
+		this.is_listening = true;
 		this.refresh_soon ||= frappe.utils.debounce((data) => this.refresh_from_update(data), 800);
 		// every change drops its applicant from the panel's memory; the debounced refresh sees only the last
 		this.handle_update ||= (data) => {
 			this.opening_view?.forget_changed(data);
 			this.refresh_soon(data);
 		};
-		frappe.realtime.off("list_update", this.handle_update);
 		frappe.realtime.on("list_update", this.handle_update);
 		for (const doctype of REALTIME_DOCTYPES) frappe.realtime.doctype_subscribe(doctype);
 	}
 
 	unlisten() {
+		if (!this.is_listening) return;
+		this.is_listening = false;
 		frappe.realtime.off("list_update", this.handle_update);
 		for (const doctype of REALTIME_DOCTYPES) frappe.realtime.doctype_unsubscribe(doctype);
 	}
