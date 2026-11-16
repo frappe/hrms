@@ -8,6 +8,9 @@ from frappe.model.document import Document
 from frappe.utils import formatdate, get_link_to_form, getdate
 
 from hrms.hr.utils import get_formatted_value, update_employee_work_history, validate_active_employee
+from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
+	get_promotion_assignments,
+)
 
 
 class EmployeePromotion(Document):
@@ -27,15 +30,16 @@ class EmployeePromotion(Document):
 		company: DF.Link | None
 		current_base: DF.Currency
 		current_ctc: DF.Currency
+		current_salary_structure: DF.Link | None
 		current_salary_structure_assignment: DF.Link | None
 		department: DF.Link | None
 		employee: DF.Link
 		employee_name: DF.Data | None
-		new_salary_structure_assignment: DF.Link | None
 		promotion_date: DF.Date
 		promotion_details: DF.Table[EmployeePropertyHistory]
 		revised_base: DF.Currency
 		revised_ctc: DF.Currency
+		revised_salary_structure_assignment: DF.Link | None
 		salary_currency: DF.Link | None
 		salary_structure: DF.Link | None
 	# end: auto-generated types
@@ -49,6 +53,7 @@ class EmployeePromotion(Document):
 	def set_current_salary(self):
 		salary = get_salary_on(self.employee, self.promotion_date)
 		self.current_salary_structure_assignment = salary.name
+		self.current_salary_structure = salary.salary_structure
 		self.current_base = salary.base
 		self.current_ctc = salary.ctc
 		if not self.salary_structure:
@@ -117,50 +122,35 @@ class EmployeePromotion(Document):
 
 		employee.save()
 
-	@frappe.whitelist()
-	def make_salary_structure_assignment(self) -> str:
+	def onload(self):
+		if assignment := self.get_salary_structure_assignment():
+			self.set_onload("assignment_is_draft", assignment.docstatus == 0)
+
+	@property
+	def revised_salary_structure_assignment(self) -> str | None:
+		if assignment := self.get_salary_structure_assignment():
+			return assignment.name
+
+	def get_salary_structure_assignment(self) -> frappe._dict | None:
+		if self.is_new():
+			return None
+		assignments = get_promotion_assignments(self.name)
+		return assignments[0] if assignments else None
+
+	def validate_can_create_salary_structure_assignment(self):
 		if self.docstatus != 1:
 			frappe.throw(_("Submit the Employee Promotion before creating a Salary Structure Assignment"))
 		if not (self.salary_structure and self.revised_base):
 			frappe.throw(_("Set the Salary Structure and Revised Base first"))
-		# the row lock makes a second click wait for the first, then see its assignment
-		existing = frappe.db.get_value(
-			"Employee Promotion", self.name, "new_salary_structure_assignment", for_update=True
-		)
-		if existing:
+		if existing := self.get_salary_structure_assignment():
 			frappe.throw(
 				_("Salary Structure Assignment {0} is already created for this promotion").format(
-					get_link_to_form("Salary Structure Assignment", existing)
-				)
+					get_link_to_form("Salary Structure Assignment", existing.name)
+				),
+				title=_("Salary Structure Assignment Exists"),
 			)
 
 		self.validate_no_assignment_from_promotion_date()
-
-		current = frappe._dict()
-		if self.current_salary_structure_assignment:
-			current = frappe.db.get_value(
-				"Salary Structure Assignment",
-				self.current_salary_structure_assignment,
-				["payroll_payable_account", "income_tax_slab", "variable"],
-				as_dict=True,
-			)
-
-		assignment = frappe.get_doc(
-			{
-				"doctype": "Salary Structure Assignment",
-				"employee": self.employee,
-				"salary_structure": self.salary_structure,
-				"company": self.company,
-				"currency": frappe.get_cached_value("Salary Structure", self.salary_structure, "currency"),
-				"from_date": self.promotion_date,
-				"payroll_payable_account": current.payroll_payable_account,
-				"base": self.revised_base,
-				"variable": current.variable,
-				"income_tax_slab": current.income_tax_slab,
-			}
-		).insert()
-		self.db_set("new_salary_structure_assignment", assignment.name)
-		return assignment.name
 
 	def on_cancel(self):
 		employee = frappe.get_doc("Employee", self.employee)
@@ -170,18 +160,54 @@ class EmployeePromotion(Document):
 			employee.ctc = self.current_ctc
 
 		employee.save()
-		self.cancel_new_salary_structure_assignment()
+		self.cancel_salary_structure_assignments()
 
-	def cancel_new_salary_structure_assignment(self):
-		if not self.new_salary_structure_assignment:
-			return
+	def cancel_salary_structure_assignments(self):
+		for assignment in get_promotion_assignments(self.name):
+			if assignment.docstatus == 1:
+				frappe.get_doc("Salary Structure Assignment", assignment.name).cancel()
+			else:
+				frappe.delete_doc("Salary Structure Assignment", assignment.name)
 
-		assignment = frappe.get_doc("Salary Structure Assignment", self.new_salary_structure_assignment)
-		if assignment.docstatus == 1:
-			assignment.cancel()
-		elif assignment.docstatus == 0:
-			self.db_set("new_salary_structure_assignment", None)
-			assignment.delete()
+
+@frappe.whitelist()
+def make_salary_structure_assignment(source_name: str) -> Document:
+	frappe.has_permission("Salary Structure Assignment", "create", throw=True)
+	promotion = frappe.get_doc("Employee Promotion", source_name)
+	promotion.check_permission("read")
+	promotion.validate_can_create_salary_structure_assignment()
+
+	# the form shows these before the first save, when fetch_from has not run yet
+	employee = frappe.db.get_value(
+		"Employee", promotion.employee, ["employee_name", "department", "designation", "grade"], as_dict=True
+	)
+
+	current = frappe._dict()
+	if promotion.current_salary_structure_assignment:
+		current = frappe.db.get_value(
+			"Salary Structure Assignment",
+			promotion.current_salary_structure_assignment,
+			["payroll_payable_account", "income_tax_slab", "variable"],
+			as_dict=True,
+		)
+
+	assignment = frappe.new_doc("Salary Structure Assignment")
+	assignment.update(
+		{
+			"employee": promotion.employee,
+			**employee,
+			"employee_promotion": promotion.name,
+			"salary_structure": promotion.salary_structure,
+			"company": promotion.company,
+			"currency": frappe.get_cached_value("Salary Structure", promotion.salary_structure, "currency"),
+			"from_date": promotion.promotion_date,
+			"payroll_payable_account": current.payroll_payable_account,
+			"base": promotion.revised_base,
+			"variable": current.variable,
+			"income_tax_slab": current.income_tax_slab,
+		}
+	)
+	return assignment
 
 
 @frappe.whitelist()

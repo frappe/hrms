@@ -72,6 +72,7 @@ class SalaryStructureAssignment(Document):
 		employee: DF.Link
 		employee_benefits: DF.Table[EmployeeBenefitDetail]
 		employee_name: DF.Data | None
+		employee_promotion: DF.Link | None
 		from_date: DF.Date
 		grade: DF.Link | None
 		income_tax_slab: DF.Link | None
@@ -87,6 +88,7 @@ class SalaryStructureAssignment(Document):
 
 	def validate(self):
 		self.validate_dates()
+		self.validate_employee_promotion()
 		self.validate_company()
 		self.validate_income_tax_slab()
 		self.set_payroll_payable_account()
@@ -130,6 +132,42 @@ class SalaryStructureAssignment(Document):
 						self.from_date, relieving_date
 					)
 				)
+
+	def validate_employee_promotion(self):
+		if not self.employee_promotion:
+			return
+
+		# a re-save of the same link cannot add a second assignment, so only a new link takes the locks
+		new_link = self.is_new() or self.has_value_changed("employee_promotion")
+
+		# the row lock stops two assignments being saved for one promotion at the same time
+		promotion = frappe.db.get_value(
+			"Employee Promotion",
+			self.employee_promotion,
+			["employee", "docstatus"],
+			as_dict=True,
+			for_update=new_link,
+		)
+		if not promotion or promotion.docstatus != 1 or promotion.employee != self.employee:
+			frappe.throw(
+				_("Employee Promotion {0} must be submitted and for employee {1}").format(
+					get_link_to_form("Employee Promotion", self.employee_promotion), self.employee
+				),
+				title=_("Invalid Employee Promotion"),
+			)
+
+		if not new_link:
+			return
+
+		# a locking read sees rows committed after this transaction's snapshot
+		if existing := get_promotion_assignments(self.employee_promotion, exclude=self.name, for_update=True):
+			frappe.throw(
+				_("Employee Promotion {0} already has Salary Structure Assignment {1}").format(
+					get_link_to_form("Employee Promotion", self.employee_promotion),
+					get_link_to_form("Salary Structure Assignment", existing[0].name),
+				),
+				title=_("Salary Structure Assignment Exists"),
+			)
 
 	def validate_company(self):
 		salary_structure_company = frappe.db.get_value(
@@ -531,6 +569,22 @@ def get_assigned_salary_structure(employee, on_date):
 
 	result = query.run()
 	return result[0][0] if result else None
+
+
+def get_promotion_assignments(
+	promotion: str, exclude: str | None = None, for_update: bool = False
+) -> list[frappe._dict]:
+	filters = {"employee_promotion": promotion, "docstatus": ("<", 2)}
+	if exclude:
+		filters["name"] = ("!=", exclude)
+
+	return frappe.db.get_values(
+		"Salary Structure Assignment",
+		filters,
+		["name", "docstatus"],
+		as_dict=True,
+		for_update=for_update,
+	)
 
 
 @frappe.whitelist()

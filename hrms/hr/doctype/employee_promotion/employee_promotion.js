@@ -17,30 +17,52 @@ frappe.ui.form.on("Employee Promotion", {
 	},
 
 	refresh: function (frm) {
-		const { docstatus, salary_structure, revised_base, new_salary_structure_assignment } = frm.doc;
+		frm.revised_ctc_is_calculated = Boolean(frm.doc.salary_structure && frm.doc.revised_base);
+		frm.trigger("show_assignment_hint");
+
+		const { docstatus, salary_structure, revised_base } = frm.doc;
 		if (
 			docstatus !== 1 ||
 			!salary_structure ||
 			!revised_base ||
-			new_salary_structure_assignment ||
+			frm.doc.revised_salary_structure_assignment ||
 			!frappe.model.can_create("Salary Structure Assignment")
 		)
 			return;
 
-		frm.add_custom_button(
-			__("Salary Structure Assignment"),
-			() => {
-				frm.call({
-					method: "make_salary_structure_assignment",
-					doc: frm.doc,
-					freeze: true,
-					freeze_message: __("Creating Salary Structure Assignment..."),
-				}).then((r) => {
-					frappe.set_route("Form", "Salary Structure Assignment", r.message);
-				});
-			},
-			__("Create"),
-		);
+		frm.add_custom_button(__("Create Salary Structure Assignment"), () => {
+			frappe.model.open_mapped_doc({
+				method: "hrms.hr.doctype.employee_promotion.employee_promotion.make_salary_structure_assignment",
+				frm: frm,
+			});
+		});
+	},
+
+	show_assignment_hint: function (frm) {
+		frm.set_intro("");
+		const {
+			docstatus,
+			salary_structure,
+			revised_base,
+			revised_salary_structure_assignment: assignment,
+		} = frm.doc;
+
+		// a saved draft already gets Frappe's "Submit this document to confirm"
+		if (
+			frm.is_new() &&
+			salary_structure &&
+			revised_base &&
+			frappe.model.can_create("Salary Structure Assignment")
+		) {
+			frm.set_intro(__("Submit this promotion to create its Salary Structure Assignment."), "blue");
+		} else if (docstatus === 1 && assignment && frm.doc.__onload?.assignment_is_draft) {
+			frm.set_intro(
+				__("Salary Structure Assignment {0} is a draft. Submit it so payroll uses the revised salary.", [
+					frappe.utils.get_form_link("Salary Structure Assignment", assignment, true),
+				]),
+				"yellow",
+			);
+		}
 	},
 
 	employee: function (frm) {
@@ -90,16 +112,21 @@ frappe.ui.form.on("Employee Promotion", {
 
 	salary_structure: function (frm) {
 		frm.trigger("set_revised_ctc");
+		frm.trigger("show_assignment_hint");
 	},
 
 	revised_base: function (frm) {
 		frm.trigger("set_revised_ctc");
+		frm.trigger("show_assignment_hint");
 	},
 
 	set_revised_ctc: function (frm) {
-		if (!frm.doc.salary_structure) return;
-		if (!frm.doc.revised_base) {
-			frm.set_value("revised_ctc", 0);
+		if (!frm.doc.salary_structure || !frm.doc.revised_base) {
+			// clear only a calculated CTC; one typed by hand stays
+			if (frm.revised_ctc_is_calculated) {
+				frm.revised_ctc_is_calculated = false;
+				frm.set_value("revised_ctc", null);
+			}
 			return;
 		}
 
@@ -111,6 +138,7 @@ frappe.ui.form.on("Employee Promotion", {
 			})
 			.then((r) => {
 				if (revised_ctc_inputs(frm) !== sent) return;
+				frm.revised_ctc_is_calculated = true;
 				frm.set_value("revised_ctc", r.message || 0);
 			});
 	},
@@ -124,6 +152,7 @@ function revised_ctc_inputs(frm) {
 function set_salary_fields(frm, assignment) {
 	frm.set_value({
 		current_salary_structure_assignment: assignment.name || "",
+		current_salary_structure: assignment.salary_structure || "",
 		salary_structure: assignment.salary_structure || "",
 		current_base: assignment.base || 0,
 		current_ctc: assignment.ctc || 0,

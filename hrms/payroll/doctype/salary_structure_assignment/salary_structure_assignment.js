@@ -2,6 +2,10 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Salary Structure Assignment", {
+	after_save: refresh_employee_promotion,
+	on_submit: refresh_employee_promotion,
+	after_cancel: refresh_employee_promotion,
+
 	setup: function (frm) {
 		frm.set_query("employee", function () {
 			return {
@@ -196,3 +200,10 @@ let calculate_max_benefit_amount = (doc) => {
 	doc.max_benefits = max_benefits;
 	refresh_field("max_benefits");
 };
+
+// the promotion shows this assignment, so drop its cached copy and reload it on the next visit
+function refresh_employee_promotion(frm) {
+	if (frm.doc.employee_promotion) {
+		frappe.model.remove_from_locals("Employee Promotion", frm.doc.employee_promotion);
+	}
+}
