@@ -69,13 +69,17 @@ export class RecordTabsDialog {
 		this.$avatar = this.make_avatar();
 		this.$name = $('<div class="text-lg-semibold text-ink-gray-8 ellipsis">');
 		this.$email = $('<div class="text-sm text-ink-gray-6 ellipsis">');
+		this.$actions = $('<div class="epc-profile__actions">');
+		this.render_actions();
 		return $('<div class="epc-profile">').append(
 			this.$avatar,
 			$('<div class="epc-profile__text">').append(this.$name, this.$email),
-			$('<div class="epc-profile__actions">').append(
-				this.get_actions().map((action) => frappe.ui.button(action)),
-			),
+			this.$actions,
 		);
+	}
+
+	render_actions() {
+		this.$actions.empty().append(this.get_actions().map((action) => frappe.ui.button(action)));
 	}
 
 	make_avatar() {
@@ -116,10 +120,14 @@ export class RecordTabsDialog {
 }
 
 export function insert_quietly(doc) {
+	return call_quietly("frappe.client.insert", { doc });
+}
+
+export function call_quietly(method, args) {
 	return new Promise((resolve) => {
 		frappe.call({
-			method: "frappe.client.insert",
-			args: { doc },
+			method,
+			args,
 			silent: true,
 			callback: (r) => resolve(r.message),
 			error: (r) => {
