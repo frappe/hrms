@@ -132,7 +132,7 @@ class OnboardingActivities:
 		pending = [
 			frappe.bold(_(row.activity_name))
 			for row in self.activities
-			if row.required_for_employee_creation and not is_finished(row)
+			if is_pending_for_employee_creation(row)
 		]
 		if pending:
 			frappe.throw(
@@ -141,6 +141,14 @@ class OnboardingActivities:
 				),
 				title=_("Onboarding Activities Pending"),
 			)
+
+	def get_lock_reasons(self) -> dict[str, list[str]]:
+		"""The names of the unfinished activities each row waits for, by row."""
+		return {
+			row.name: needed
+			for row in self.activities
+			if (needed := [other.activity_name for other in self.activities if is_needed_by(row, other)])
+		}
 
 	def reconcile_activities(self) -> list:
 		"""Complete each row whose record exists, and return the changed rows."""
@@ -207,6 +215,7 @@ class OnboardingActivities:
 		self.set_boarding_status()
 		self.db_set("boarding_status", self.boarding_status, notify=True)
 		self.sync_todos()
+		self.set_onload("lock_reasons", self.get_lock_reasons())
 
 	def publish_change(self):
 		self.update_modified()
@@ -448,6 +457,16 @@ def get_role_profiles(user: str) -> list[str]:
 
 def is_finished(row) -> bool:
 	return bool(row.completed or row.skipped)
+
+
+def is_pending_for_employee_creation(row) -> bool:
+	return bool(row.required_for_employee_creation and not is_finished(row))
+
+
+def is_needed_by(row, other) -> bool:
+	if row.depends_on_action and other.action == row.depends_on_action and not other.completed:
+		return True
+	return row.action == "Create Employee" and is_pending_for_employee_creation(other)
 
 
 def get_matching_template(doc) -> str | None:

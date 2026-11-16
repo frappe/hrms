@@ -167,18 +167,9 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 	}
 
 	get_lock_reason(row) {
-		const needed = (this.frm.doc.activities || []).filter(
-			(other) =>
-				(row.depends_on_action &&
-					other.action === row.depends_on_action &&
-					!other.completed) ||
-				(row.action === "Create Employee" &&
-					other.required_for_employee_creation &&
-					!other.completed &&
-					!other.skipped),
-		);
-		if (!needed.length) return null;
-		return __("Needs: {0}", [needed.map((other) => __(other.activity_name)).join(", ")]);
+		const needed = this.frm.doc.__onload?.lock_reasons?.[row.name];
+		if (!needed?.length) return null;
+		return __("Needs: {0}", [needed.map((name) => __(name)).join(", ")]);
 	}
 
 	get_offer_default(doctype) {
@@ -227,7 +218,7 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 			args: { dt: doctype, dn: name, method, args },
 			...opts,
 		});
-		this.frm.doc.__onload ??= __onload;
+		this.frm.doc.__onload = { ...__onload, ...this.frm.doc.__onload };
 	}
 
 	async save_if_dirty() {

@@ -459,6 +459,19 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		onboarding.skip_activity(get_row(onboarding, "Assign ID Card").name)
 		self.assertTrue(map_employee(onboarding).insert().name)
 
+	def test_rows_are_locked_until_the_activities_they_need_are_done(self):
+		onboarding = create_onboarding_requiring("Assign ID Card")
+		onboarding.onload()
+		reasons = onboarding.get_onload("lock_reasons")
+
+		self.assertEqual(reasons[get_row(onboarding, "Create Employee").name], ["Assign ID Card"])
+		self.assertEqual(reasons[get_row(onboarding, "Assign Leave Policy").name], ["Create Employee"])
+		self.assertNotIn(get_row(onboarding, "Assign ID Card").name, reasons)
+
+		onboarding.skip_activity(get_row(onboarding, "Assign ID Card").name)
+
+		self.assertNotIn(get_row(onboarding, "Create Employee").name, onboarding.get_onload("lock_reasons"))
+
 	def test_an_activity_needing_the_employee_cannot_be_required_for_it(self):
 		for activity in ("Create Employee", "Assign Leave Policy"):
 			template = get_test_template()
