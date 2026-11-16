@@ -426,6 +426,7 @@ class TestHiring(IntegrationTestCase):
 		self.assertEqual(result["fact"], "LinkedIn")
 		self.assertTrue(result["on_hold"])
 		self.assertEqual(result["job_opening"], self.opening.name)
+		self.assertEqual((result["job_title"], result["company"]), (self.opening.job_title, self.company))
 		self.assertEqual((result["designation"], result["phone_number"]), ("Researcher", "9876543210"))
 		self.assertEqual(result["cover_letter"], "Hello")
 		self.assertIsNone(result["referred_by"])
