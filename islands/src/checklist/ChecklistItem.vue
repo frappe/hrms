@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="item relative rounded-5 p-2"
+		class="item relative rounded-5 px-4 py-2"
 		:class="{ 'opacity-40': dragging }"
 		:data-status="state"
 		:data-open="open || null"

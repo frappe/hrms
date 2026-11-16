@@ -6,7 +6,7 @@
 	>
 		<button
 			type="button"
-			class="flex w-full items-center gap-2 px-2 text-left focus-visible:rounded-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
+			class="flex w-full items-center gap-2 px-4 text-left focus-visible:rounded-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
 			:aria-expanded="!collapsed"
 			@click="collapsed = !collapsed"
 		>
@@ -17,7 +17,7 @@
 				:class="collapsed ? '' : 'rotate-180'"
 			/>
 		</button>
-		<div v-if="progress.total" class="mt-4 px-2">
+		<div v-if="progress.total" class="mt-4 px-4">
 			<Progress :value="percent" :intervals="progress.total" size="md" />
 		</div>
 		<div class="fold" :inert="collapsed || null">
@@ -53,7 +53,7 @@
 					/>
 					<label
 						v-if="onAdd"
-						class="m-0 flex cursor-text items-center gap-3 rounded-5 p-2 hover:bg-surface-gray-3 focus-within:bg-surface-base"
+						class="m-0 flex cursor-text items-center gap-3 rounded-5 px-4 py-2 hover:bg-surface-gray-3 focus-within:bg-surface-base"
 					>
 						<LucidePlus class="size-4 shrink-0 text-ink-gray-4" />
 						<input
