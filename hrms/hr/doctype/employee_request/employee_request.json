@@ -295,7 +295,7 @@
    "default": "0",
    "fieldname": "has_passport",
    "fieldtype": "Check",
-   "label": "Do you have a passport?"
+   "label": "I have a passport"
   },
   {
    "depends_on": "has_passport",
@@ -385,7 +385,7 @@
  "grid_page_length": 50,
  "link_display_mode": "Search",
  "links": [],
- "modified": "2026-11-13 18:35:10.199311",
+ "modified": "2026-11-16 09:50:26.538857",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Request",
