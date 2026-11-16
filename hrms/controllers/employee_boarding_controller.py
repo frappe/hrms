@@ -164,7 +164,12 @@ def get_onboarding_details(parent: str, parentfield: str):
 			"begin_on",
 			"duration",
 		],
-		filters={"parent": parent, "parenttype": "Employee Boarding Template", "parentfield": parentfield},
+		filters={
+			"parent": parent,
+			"parenttype": "Employee Boarding Template",
+			"parentfield": parentfield,
+			"disabled": 0,
+		},
 		order_by="idx",
 	)
 

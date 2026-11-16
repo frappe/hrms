@@ -19,6 +19,7 @@
   "duration",
   "column_break_3",
   "completed",
+  "disabled",
   "skipped",
   "added_on_onboarding",
   "task",
@@ -181,11 +182,20 @@
    "hidden": 1,
    "label": "Added on Onboarding",
    "read_only": 1
+  },
+  {
+   "columns": 1,
+   "default": "0",
+   "depends_on": "eval:doc.parenttype=='Employee Boarding Template' && doc.parentfield=='onboarding_activities'",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Disabled"
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2026-11-16 09:29:22.014196",
+ "modified": "2026-11-16 12:15:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Boarding Activity",

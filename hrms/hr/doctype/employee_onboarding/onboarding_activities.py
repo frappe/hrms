@@ -441,6 +441,7 @@ def get_matching_template(doc) -> str | None:
 		.select(Activity.name)
 		.where(Activity.parenttype == "Employee Boarding Template")
 		.where(Activity.parentfield == "onboarding_activities")
+		.where(Activity.disabled == 0)
 		.where(Activity.parent == Template.name)
 	)
 	query = (
@@ -467,6 +468,7 @@ def get_template_activities(template: str | None) -> list[dict]:
 			"parent": template,
 			"parenttype": "Employee Boarding Template",
 			"parentfield": "onboarding_activities",
+			"disabled": 0,
 		},
 		order_by="idx",
 	)
@@ -495,15 +497,31 @@ def action_key(action: str | None, reference_doctype: str | None) -> tuple:
 	return action, ACTION_DOCTYPES.get(action) or reference_doctype
 
 
-def add_standard_activities(template) -> None:
-	"""Put the standard activities at the top of a new template; it may drop them later."""
-	present = {action_key(row.action, row.reference_doctype) for row in template.onboarding_activities}
-	own_rows = list(template.onboarding_activities)
-	template.onboarding_activities = []
+def has_standard_activities(template) -> bool:
+	standard = {action_key(row["action"], row.get("reference_doctype")) for row in STANDARD_ACTIVITIES}
+	return any(
+		action_key(row.action, row.reference_doctype) in standard for row in template.onboarding_activities
+	)
+
+
+def add_standard_activities(template, disabled: int = 0) -> None:
+	"""Add each missing standard activity after the standard one before it, or at the top."""
+	rows = list(template.onboarding_activities)
+	keys = [action_key(row.action, row.reference_doctype) for row in rows]
+	position = 0
 	for activity in STANDARD_ACTIVITIES:
-		if action_key(activity["action"], activity.get("reference_doctype")) not in present:
-			template.append("onboarding_activities", activity)
-	for row in own_rows:
+		key = action_key(activity["action"], activity.get("reference_doctype"))
+		if key in keys:
+			position = keys.index(key) + 1
+			continue
+		rows.insert(position, {**activity, "disabled": disabled})
+		keys.insert(position, key)
+		position += 1
+
+	if len(rows) == len(template.onboarding_activities):
+		return
+	template.onboarding_activities = []
+	for row in rows:
 		template.append("onboarding_activities", row)
 	for idx, row in enumerate(template.onboarding_activities, start=1):
 		row.idx = idx

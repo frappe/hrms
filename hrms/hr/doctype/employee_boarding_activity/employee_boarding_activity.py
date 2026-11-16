@@ -23,6 +23,7 @@ class EmployeeBoardingActivity(Document):
 		completed: DF.Check
 		depends_on_action: DF.Literal["", "Create User", "Create Employee", "Appointment Letter"]
 		description: DF.TextEditor | None
+		disabled: DF.Check
 		due_date: DF.Date | None
 		duration: DF.Int
 		parent: DF.Data

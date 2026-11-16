@@ -5,6 +5,7 @@ import frappe
 from frappe.desk.form.linked_with import get_linked_docs_to_delete
 from frappe.utils import add_days, getdate
 
+from hrms.controllers.employee_boarding_controller import get_onboarding_details
 from hrms.hr.doctype.appointment_letter_template.appointment_letter_template import get_default_template
 from hrms.hr.doctype.employee_boarding_template.employee_boarding_template import (
 	get_standard_activities,
@@ -84,19 +85,55 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 			[row.activity_name for row in template.onboarding_activities], [*standard, "Order a desk"]
 		)
 
+		self.assertFalse([row for row in template.onboarding_activities if row.disabled])
+
+	def test_deleting_a_standard_activity_brings_it_back_disabled_in_place(self):
+		template = make_template("_Test Trimmed Template", [{"activity_name": "Order a desk"}])
+		names = [row.activity_name for row in template.onboarding_activities]
+
 		template.onboarding_activities = [
-			row for row in template.onboarding_activities if row.action != "Appointment Letter"
+			row for row in template.onboarding_activities if row.action != "Create Employee"
 		]
 		template.save()
-		self.assertNotIn(
-			"Send Appointment Letter", [row.activity_name for row in template.onboarding_activities]
+
+		self.assertEqual([row.activity_name for row in template.onboarding_activities], names)
+		self.assertEqual(
+			[row.activity_name for row in template.onboarding_activities if row.disabled], ["Create Employee"]
 		)
+
+	def test_a_manual_template_activity_can_be_deleted(self):
+		template = make_template("_Test Manual Delete Template", [{"activity_name": "Order a desk"}])
+
+		template.onboarding_activities = [
+			row for row in template.onboarding_activities if row.activity_name != "Order a desk"
+		]
+		template.save()
+
+		self.assertNotIn("Order a desk", [row.activity_name for row in template.onboarding_activities])
 
 	def test_template_prefilled_by_the_form_keeps_one_of_each_standard_activity(self):
 		template = make_template("_Test Prefilled Template", get_standard_activities())
 
 		standard = [activity["activity_name"] for activity in STANDARD_ACTIVITIES]
 		self.assertEqual([row.activity_name for row in template.onboarding_activities], standard)
+
+	def test_a_standard_activity_removed_before_the_first_save_comes_back_disabled(self):
+		activities = [row for row in get_standard_activities() if row["action"] != "Appointment Letter"]
+		template = make_template("_Test Prefilled Trimmed Template", activities)
+
+		self.assertTrue(get_row(template, "Send Appointment Letter", "onboarding_activities").disabled)
+
+	def test_a_disabled_template_activity_is_not_copied_to_a_new_onboarding(self):
+		template = get_test_template()
+		get_row(template, "Send Appointment Letter", "onboarding_activities").disabled = 1
+		template.save()
+
+		onboarding = create_employee_onboarding(submit=False)
+		details = get_onboarding_details(template.name, "onboarding_activities")
+
+		self.assertNotIn("Send Appointment Letter", [row.activity_name for row in onboarding.activities])
+		self.assertNotIn("Send Appointment Letter", [row.activity_name for row in details])
+		self.assertIn("Create Employee", [row.activity_name for row in details])
 
 	def test_an_onboarding_without_a_template_gets_no_activities(self):
 		self.assertEqual(get_template_activities(None), [])
@@ -922,8 +959,8 @@ def send_letter_email(letter, recipients):
 	return communication
 
 
-def get_row(onboarding, activity_name):
-	return next(row for row in onboarding.activities if row.activity_name == activity_name)
+def get_row(doc, activity_name, table="activities"):
+	return next(row for row in doc.get(table) if row.activity_name == activity_name)
 
 
 def get_test_user(email):

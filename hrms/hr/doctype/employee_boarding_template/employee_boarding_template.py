@@ -9,6 +9,7 @@ from frappe.model.document import Document
 from hrms.hr.doctype.employee_onboarding.onboarding_activities import (
 	STANDARD_ACTIVITIES,
 	add_standard_activities,
+	has_standard_activities,
 	set_action_defaults,
 	validate_unique_actions,
 )
@@ -41,10 +42,12 @@ class EmployeeBoardingTemplate(Document):
 	# end: auto-generated types
 
 	def before_insert(self):
-		if not self.flags.skip_standard_activities:
+		if not (self.flags.skip_standard_activities or has_standard_activities(self)):
 			add_standard_activities(self)
 
 	def validate(self):
+		if self.onboarding_activities:
+			add_standard_activities(self, disabled=1)
 		for row in self.onboarding_activities:
 			set_action_defaults(row)
 		validate_unique_actions(self.onboarding_activities, _("this template"))
