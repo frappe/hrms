@@ -155,10 +155,37 @@ export class CreateEmployeeDialog extends RecordTabsDialog {
 	async create() {
 		const values = this.get_doc();
 		if (!values) return;
-		const doc = await frappe.db.insert(values);
+		const doc = await insert_quietly(values);
+		if (!doc) return;
 		this.dialog.hide();
 		this.on_created(doc);
 	}
+}
+
+function insert_quietly(doc) {
+	return new Promise((resolve) => {
+		frappe.call({
+			method: "frappe.client.insert",
+			args: { doc },
+			silent: true,
+			callback: (r) => resolve(r.message),
+			error: (r) => {
+				frappe.ui.toast({ type: "error", message: get_error_text(r) });
+				resolve(null);
+			},
+		});
+	});
+}
+
+function get_error_text(r) {
+	const messages = JSON.parse(r?._server_messages || "[]").map((message) =>
+		to_text(JSON.parse(message).message),
+	);
+	return messages.join(" ") || __("Could not create the employee");
+}
+
+function to_text(html) {
+	return new DOMParser().parseFromString(String(html), "text/html").body.textContent.trim();
 }
 
 function is_reviewable(fieldname) {
