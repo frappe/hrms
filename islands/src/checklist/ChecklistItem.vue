@@ -10,6 +10,7 @@
 		@dragstart="dragStart"
 		@dragover.prevent="emit('drag-over')"
 		@dragend="dragEnd"
+		@click="clickRow"
 	>
 		<button
 			v-if="sortable"
@@ -23,7 +24,7 @@
 		>
 			<LucideGripVertical class="size-3" />
 		</button>
-		<div class="row" :data-compact="!showOwner || null" @click="clickRow">
+		<div class="row" :data-compact="!showOwner || null">
 			<span class="marker flex text-ink-gray-4" data-control>
 				<Tooltip v-if="lockReason" :text="lockReason">
 					<span
@@ -273,7 +274,7 @@ function call(handler, ...args) {
 }
 
 function clickRow(event) {
-	if (event.target.closest("[data-control]") || !body.value) return;
+	if (event.target.closest("[data-control], .drawer, .grip") || !body.value) return;
 	emit("toggle");
 }
 
@@ -322,7 +323,7 @@ function dragEnd() {
 .item:hover .grip {
 	opacity: 1;
 }
-.item:not([data-open], [data-empty]) .row {
+.item:not([data-open], [data-empty]) {
 	cursor: pointer;
 }
 .item:not([data-open], [data-empty]):hover {
