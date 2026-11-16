@@ -141,7 +141,10 @@ function get_tabs(doctype, include) {
 
 function get_layout(doctype, sections, doc) {
 	return sections.flatMap((section, index) => {
-		const fields = section.fields.map((fieldname) => get_docfield(doctype, fieldname, doc));
+		const fields = without_repeated_table_label(
+			section,
+			section.fields.map((fieldname) => get_docfield(doctype, fieldname, doc)),
+		);
 		const wide = fields.filter((df) => WIDE_FIELDTYPES.includes(df.fieldtype));
 		const narrow = fields.filter((df) => !wide.includes(df));
 		const half = Math.ceil(narrow.length / 2);
@@ -158,6 +161,12 @@ function get_layout(doctype, sections, doc) {
 			...wide,
 		];
 	});
+}
+
+function without_repeated_table_label(section, fields) {
+	const tables = fields.filter((df) => frappe.model.table_fields.includes(df.fieldtype));
+	if (!section.label || tables.length !== 1) return fields;
+	return fields.map((df) => (df === tables[0] ? { ...df, label: "" } : df));
 }
 
 function get_docfield(doctype, fieldname, doc) {
