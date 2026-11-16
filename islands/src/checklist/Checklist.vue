@@ -22,10 +22,7 @@
 		</div>
 		<div class="fold" :inert="collapsed || null">
 			<div>
-				<div
-					class="items flex flex-col gap-0.5"
-					:data-sortable="Boolean(onReorder) || null"
-				>
+				<div class="items flex flex-col gap-1" :data-sortable="Boolean(onReorder) || null">
 					<ChecklistItem
 						v-for="item in ordered"
 						:key="item.id"
