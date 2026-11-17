@@ -5,6 +5,11 @@ import { SalaryStructureAssignmentDialog } from "./salary_structure_assignment_d
 // What each onboarding activity action shows and does. A template row names its action;
 // the row's value, lock and buttons come from the handler for that action.
 
+const PREBOARDING_BADGES = {
+	"Awaiting Employee Details": () => ({ label: __("Awaiting employee details"), theme: "blue" }),
+	"Details Submitted": () => ({ label: __("Details submitted"), theme: "amber" }),
+};
+
 const ACTION_HANDLERS = {
 	"Create User": {
 		get_value: (list) => list.frm.doc.user,
@@ -30,11 +35,8 @@ const ACTION_HANDLERS = {
 	"Create Employee": {
 		get_value: (list, row) => row.reference_name,
 		get_badge: (list, row, state) => {
-			const request = list.frm.doc.__onload?.employee_request;
-			if (state === "done" || !request || !list.frm.doc.user) return null;
-			return request.submitted_on
-				? { label: __("Details submitted"), theme: "amber" }
-				: { label: __("Awaiting employee details"), theme: "blue" };
+			if (state === "done") return null;
+			return PREBOARDING_BADGES[list.frm.doc.boarding_status]?.() || null;
 		},
 		get_actions: (list, row, state) =>
 			state === "done"

@@ -83,15 +83,6 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		self.set_onload("user_access", self.get_user_access())
 		self.set_onload("needs_sync", self.docstatus == 1 and bool(self.reconcile_activities()))
 		self.set_onload("lock_reasons", self.get_lock_reasons())
-		self.set_onload(
-			"employee_request",
-			frappe.db.get_value(
-				"Employee Request",
-				{"employee_onboarding": self.name},
-				["name", "submitted_on"],
-				as_dict=True,
-			),
-		)
 
 	def before_insert(self):
 		self.set_template()
