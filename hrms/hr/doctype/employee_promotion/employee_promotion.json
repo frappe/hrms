@@ -176,17 +176,14 @@
   {
    "depends_on": "eval:doc.docstatus==1",
    "fieldname": "revised_salary_structure_assignment",
-   "fieldtype": "Link",
-   "is_virtual": 1,
-   "label": "Revised Salary Structure Assignment",
-   "options": "Salary Structure Assignment",
-   "read_only": 1
+   "fieldtype": "HTML",
+   "label": "Revised Salary Structure Assignment"
   }
  ],
  "icon": "trending-up",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-11-16 21:00:00.000000",
+ "modified": "2026-11-17 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Promotion",

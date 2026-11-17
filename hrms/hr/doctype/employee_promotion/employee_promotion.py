@@ -39,7 +39,6 @@ class EmployeePromotion(Document):
 		promotion_details: DF.Table[EmployeePropertyHistory]
 		revised_base: DF.Currency
 		revised_ctc: DF.Currency
-		revised_salary_structure_assignment: DF.Link | None
 		salary_currency: DF.Link | None
 		salary_structure: DF.Link | None
 	# end: auto-generated types
@@ -123,13 +122,7 @@ class EmployeePromotion(Document):
 		employee.save()
 
 	def onload(self):
-		if assignment := self.get_salary_structure_assignment():
-			self.set_onload("assignment_is_draft", assignment.docstatus == 0)
-
-	@property
-	def revised_salary_structure_assignment(self) -> str | None:
-		if assignment := self.get_salary_structure_assignment():
-			return assignment.name
+		self.set_onload("salary_structure_assignment", self.get_salary_structure_assignment())
 
 	def get_salary_structure_assignment(self) -> frappe._dict | None:
 		if self.is_new():

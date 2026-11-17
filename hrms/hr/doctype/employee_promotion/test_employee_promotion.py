@@ -2,6 +2,7 @@
 # See license.txt
 
 import frappe
+from frappe.desk.form.linked_with import get_submitted_linked_docs
 from frappe.utils import add_days, add_months, get_first_day, getdate
 
 from hrms.hr.doctype.employee_promotion.employee_promotion import (
@@ -207,10 +208,12 @@ class TestEmployeePromotion(HRMSTestSuite):
 
 		first = make_salary_structure_assignment(promotion.name).insert()
 		first.submit()
-		self.assertEqual(promotion.revised_salary_structure_assignment, first.name)
+		self.assertEqual(promotion.get_salary_structure_assignment().name, first.name)
 
+		# Desk runs this check before it cancels a document
+		get_submitted_linked_docs("Salary Structure Assignment", first.name)
 		first.cancel()
-		self.assertIsNone(promotion.revised_salary_structure_assignment)
+		self.assertIsNone(promotion.get_salary_structure_assignment())
 
 		second = make_salary_structure_assignment(promotion.name).insert()
 		self.assertEqual(second.employee_promotion, promotion.name)
@@ -266,11 +269,11 @@ class TestEmployeePromotion(HRMSTestSuite):
 		draft = make_salary_structure_assignment(promotion.name).insert()
 
 		promotion.run_method("onload")
-		self.assertTrue(promotion.get_onload().assignment_is_draft)
+		self.assertEqual(promotion.get_onload().salary_structure_assignment.docstatus, 0)
 
 		draft.submit()
 		promotion.run_method("onload")
-		self.assertFalse(promotion.get_onload().assignment_is_draft)
+		self.assertEqual(promotion.get_onload().salary_structure_assignment.docstatus, 1)
 
 	def test_cancel_deletes_draft_assignment(self):
 		employee, _assignment = setup_employee_with_assignment("promotion_draft@example.com")

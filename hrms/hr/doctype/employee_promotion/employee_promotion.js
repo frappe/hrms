@@ -19,13 +19,14 @@ frappe.ui.form.on("Employee Promotion", {
 	refresh: function (frm) {
 		frm.revised_ctc_is_calculated = Boolean(frm.doc.salary_structure && frm.doc.revised_base);
 		frm.trigger("show_assignment_hint");
+		render_revised_assignment(frm);
 
 		const { docstatus, salary_structure, revised_base } = frm.doc;
 		if (
 			docstatus !== 1 ||
 			!salary_structure ||
 			!revised_base ||
-			frm.doc.revised_salary_structure_assignment ||
+			get_revised_assignment(frm) ||
 			!frappe.model.can_create("Salary Structure Assignment")
 		)
 			return;
@@ -40,12 +41,8 @@ frappe.ui.form.on("Employee Promotion", {
 
 	show_assignment_hint: function (frm) {
 		frm.set_intro("");
-		const {
-			docstatus,
-			salary_structure,
-			revised_base,
-			revised_salary_structure_assignment: assignment,
-		} = frm.doc;
+		const { docstatus, salary_structure, revised_base } = frm.doc;
+		const assignment = get_revised_assignment(frm);
 
 		// a saved draft already gets Frappe's "Submit this document to confirm"
 		if (
@@ -55,10 +52,10 @@ frappe.ui.form.on("Employee Promotion", {
 			frappe.model.can_create("Salary Structure Assignment")
 		) {
 			frm.set_intro(__("Submit this promotion to create its Salary Structure Assignment."), "blue");
-		} else if (docstatus === 1 && assignment && frm.doc.__onload?.assignment_is_draft) {
+		} else if (docstatus === 1 && assignment?.docstatus === 0) {
 			frm.set_intro(
 				__("Salary Structure Assignment {0} is a draft. Submit it so payroll uses the revised salary.", [
-					frappe.utils.get_form_link("Salary Structure Assignment", assignment, true),
+					frappe.utils.get_form_link("Salary Structure Assignment", assignment.name, true),
 				]),
 				"yellow",
 			);
@@ -143,6 +140,33 @@ frappe.ui.form.on("Employee Promotion", {
 			});
 	},
 });
+
+function get_revised_assignment(frm) {
+	return frm.doc.__onload?.salary_structure_assignment;
+}
+
+// an HTML field, because Frappe's linked-document checks query every Link field, virtual ones included
+function render_revised_assignment(frm) {
+	const field = frm.get_field("revised_salary_structure_assignment");
+	const assignment = get_revised_assignment(frm);
+	if (!assignment) {
+		field.$wrapper.empty();
+		return;
+	}
+
+	const [status, color] = assignment.docstatus === 0 ? [__("Draft"), "red"] : [__("Submitted"), "blue"];
+	field.$wrapper.html(`
+		<div class="form-group">
+			<div class="clearfix">
+				<label class="control-label">${__("Revised Salary Structure Assignment")}</label>
+			</div>
+			<div class="control-value like-disabled-input">
+				${frappe.utils.get_form_link("Salary Structure Assignment", assignment.name, true)}
+				<span class="indicator-pill ${color} ml-2">${status}</span>
+			</div>
+		</div>
+	`);
+}
 
 function revised_ctc_inputs(frm) {
 	const { employee, promotion_date, salary_structure, revised_base } = frm.doc;
