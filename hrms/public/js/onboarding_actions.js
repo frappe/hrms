@@ -148,9 +148,31 @@ function open_user_dialog(list) {
 		primary_action: async (values) => {
 			await list.call("create_user", values, __("Creating the user"));
 			dialog.hide();
+			show_invite_sent(
+				values.create_user_for === "Personal Email"
+					? values.personal_email
+					: values.company_email,
+			);
 		},
 	});
 	dialog.show();
+}
+
+function show_invite_sent(email) {
+	frappe.msgprint({
+		title: __("Welcome email sent"),
+		indicator: "green",
+		message: [
+			__("We sent a welcome email to {0} with a link to the preboarding page.", [
+				`<b>${frappe.utils.escape_html(email)}</b>`,
+			]),
+			__(
+				"You can wait until they submit their details, or start creating the employee now. Whoever is assigned to Create Employee is notified when they submit.",
+			),
+		]
+			.map((line) => `<p>${line}</p>`)
+			.join(""),
+	});
 }
 
 async function open_roles_dialog(list) {
