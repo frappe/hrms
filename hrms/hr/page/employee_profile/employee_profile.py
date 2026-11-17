@@ -92,11 +92,11 @@ def get_profile(employee: str | None = None) -> dict:
 	"""The profile of `employee`, or of the user's own employee when none is given"""
 	employee = employee or get_user_employee()
 	if not employee:
-		frappe.throw(_("You do not have an employee record"), frappe.DoesNotExistError)
+		frappe.throw(_("You do not have an employee record"), frappe.PermissionError)
 
 	person = get_person(employee)
 	if not person:
-		frappe.throw(_("Employee {0} not found").format(frappe.bold(employee)), frappe.DoesNotExistError)
+		frappe.throw(_("Employee {0} not found").format(frappe.bold(employee)))
 	# those who may read the record, the person and HR, see all of it, also after the person left
 	private = frappe.has_permission("Employee", "read", doc=employee)
 	if not private:
