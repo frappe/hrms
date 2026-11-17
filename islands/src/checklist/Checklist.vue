@@ -267,12 +267,12 @@ function cancelAdd(input) {
 }
 .items {
 	display: grid;
-	grid-template-columns: auto minmax(0, 1fr) auto auto max-content;
+	grid-template-columns: auto minmax(0, 1fr) auto max-content;
 	column-gap: 0.75rem;
 	row-gap: 0.25rem;
 }
 .items[data-compact] {
-	grid-template-columns: auto minmax(0, 1fr) auto max-content;
+	grid-template-columns: auto minmax(0, 1fr) max-content;
 }
 .items > * {
 	grid-column: 1 / -1;

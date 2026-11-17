@@ -212,8 +212,7 @@ class OnboardingActivities:
 		"""Persist reconciled rows and the status without saving the whole onboarding."""
 		for row in self.reconcile_activities():
 			row.db_update()
-		self.set_boarding_status()
-		self.db_set("boarding_status", self.boarding_status, notify=True)
+		self.update_boarding_status()
 		self.sync_todos()
 		self.set_onload("lock_reasons", self.get_lock_reasons())
 
@@ -246,7 +245,21 @@ class OnboardingActivities:
 		elif all(is_finished(row) for row in self.activities):
 			self.boarding_status = "Completed"
 		else:
-			self.boarding_status = "In Process"
+			self.boarding_status = self.get_preboarding_status() or "In Process"
+
+	def get_preboarding_status(self) -> str | None:
+		if not self.user or self.employee:
+			return None
+		request = frappe.db.get_value(
+			"Employee Request", {"employee_onboarding": self.name}, ["name", "submitted_on"], as_dict=True
+		)
+		if not request:
+			return None
+		return "Details Submitted" if request.submitted_on else "Awaiting Employee Details"
+
+	def update_boarding_status(self):
+		self.set_boarding_status()
+		self.db_set("boarding_status", self.boarding_status, notify=True)
 
 	def sync_todos(self):
 		"""Give every open, assigned row a ToDo of its own, and close those of finished rows."""

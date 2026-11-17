@@ -90,6 +90,7 @@ class EmployeeRequest(Document):
 		self.flags.submitting_details = True
 		self.save()
 		self.db_set("submitted_on", now_datetime(), notify=True)
+		frappe.get_doc("Employee Onboarding", self.employee_onboarding).update_boarding_status()
 		self.notify_reviewer()
 
 	def clear_passport_details(self):

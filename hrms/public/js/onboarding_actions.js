@@ -29,6 +29,13 @@ const ACTION_HANDLERS = {
 	},
 	"Create Employee": {
 		get_value: (list, row) => row.reference_name,
+		get_badge: (list, row, state) => {
+			const request = list.frm.doc.__onload?.employee_request;
+			if (state === "done" || !request || !list.frm.doc.user) return null;
+			return request.submitted_on
+				? { label: __("Details submitted"), theme: "amber" }
+				: { label: __("Awaiting employee details"), theme: "blue" };
+		},
 		get_actions: (list, row, state) =>
 			state === "done"
 				? [open_action("Employee", row.reference_name)]

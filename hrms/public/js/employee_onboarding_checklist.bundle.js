@@ -82,6 +82,7 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 			done: Boolean(row.completed),
 			skipped: Boolean(row.skipped),
 			status: STATUS[row.status],
+			badge: handler.get_badge?.(this, row, state),
 			description: row.description && frappe.utils.html2text(row.description),
 			value: handler.get_value(this, row),
 			assignee: row.user ? this.get_assignee(row.user) : null,

@@ -82,7 +82,7 @@
    "fieldname": "boarding_status",
    "fieldtype": "Select",
    "label": "Boarding Status",
-   "options": "Pending\nIn Process\nCompleted",
+   "options": "Pending\nAwaiting Employee Details\nDetails Submitted\nIn Process\nCompleted",
    "read_only": 1
   },
   {
@@ -241,7 +241,7 @@
  "icon": "user-plus",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-11-16 12:20:00.000000",
+ "modified": "2026-11-17 15:35:40.294957",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Onboarding",

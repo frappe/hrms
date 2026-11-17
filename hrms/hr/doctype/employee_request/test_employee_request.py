@@ -76,6 +76,20 @@ class TestEmployeeRequest(HRMSTestSuite):
 		self.assertTrue(request.submitted_on)
 		self.assertTrue(request.documents[0].attachment.startswith("/private/"))
 
+	def test_onboarding_awaits_details_until_the_request_is_submitted(self):
+		onboarding = start_onboarding()
+		self.assertEqual(get_boarding_status(onboarding), "Awaiting Employee Details")
+
+		request = get_request(onboarding)
+		with self.set_user(CANDIDATE_EMAIL):
+			fill_mandatory_details(request)
+			request.cell_number = "+91-9876543210"
+			request.documents[0].attachment = upload_file("pan.txt").file_url
+			request.save()
+			request.submit_details()
+
+		self.assertEqual(get_boarding_status(onboarding), "Details Submitted")
+
 	def test_required_documents_block_submit(self):
 		request = get_request(start_onboarding())
 		with self.set_user(CANDIDATE_EMAIL):
@@ -253,6 +267,10 @@ def start_onboarding(as_user=None):
 		onboarding.create_user("Personal Email", personal_email=CANDIDATE_EMAIL)
 	onboarding.reload()
 	return onboarding
+
+
+def get_boarding_status(onboarding):
+	return frappe.db.get_value("Employee Onboarding", onboarding.name, "boarding_status")
 
 
 def get_request(onboarding):

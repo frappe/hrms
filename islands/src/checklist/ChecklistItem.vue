@@ -56,25 +56,29 @@
 				<span class="flex min-w-0 items-center gap-2">
 					<span class="label truncate text-base text-ink-gray-8">{{ item.label }}</span>
 					<Badge v-if="item.optional" :label="__('Optional')" size="sm" />
+					<Badge
+						v-if="item.skipped && !item.done"
+						:label="__('Skipped')"
+						theme="gray"
+						size="sm"
+					/>
+					<Badge
+						v-else-if="!finished && item.status"
+						:label="STATUS_LABELS[item.status]"
+						:theme="item.status === 'stuck' ? 'red' : 'gray'"
+						size="sm"
+					/>
+					<Badge
+						v-else-if="!finished && item.badge"
+						:label="item.badge.label"
+						:theme="item.badge.theme"
+						size="sm"
+					/>
 				</span>
 				<span v-if="item.value" class="truncate text-p-sm text-ink-gray-5">{{
 					item.value
 				}}</span>
 			</button>
-			<div class="status">
-				<Badge
-					v-if="item.skipped && !item.done"
-					:label="__('Skipped')"
-					theme="gray"
-					size="sm"
-				/>
-				<Badge
-					v-else-if="!finished && item.status"
-					:label="STATUS_LABELS[item.status]"
-					:theme="item.status === 'stuck' ? 'red' : 'gray'"
-					size="sm"
-				/>
-			</div>
 			<div v-if="showOwner" class="owner flex pr-2" data-control>
 				<Combobox
 					v-if="canAssign"
@@ -362,7 +366,6 @@ function dragEnd() {
 	align-items: start;
 }
 .marker,
-.status,
 .owner,
 .due,
 .toggle > :first-child {
@@ -383,9 +386,6 @@ function dragEnd() {
 	border: 1px dashed var(--outline-gray-4);
 	border-radius: 9999px;
 	color: var(--ink-gray-5);
-}
-.row[data-compact] .status {
-	justify-self: end;
 }
 .marker {
 	color: var(--ink-gray-9);
