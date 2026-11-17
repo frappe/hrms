@@ -19,6 +19,8 @@ from frappe.utils import (
 	split_emails,
 )
 
+import hrms
+
 
 class JobOffer(Document):
 	def onload(self):
@@ -280,6 +282,11 @@ def copy_regional_config(offer, assignment) -> None:
 		assignment.set(fieldname, offer.get(fieldname))
 
 
+@hrms.allow_regional
+def get_components_left_out_of_offer() -> tuple[str, ...]:
+	return ()
+
+
 def get_breakup_rows(assignment, periods: int, total_ctc: float) -> list[dict]:
 	rows_by_type = assignment.get_evaluated_components()
 
@@ -298,7 +305,9 @@ def get_breakup_rows(assignment, periods: int, total_ctc: float) -> list[dict]:
 		]
 
 	earnings = payable("earnings")
+	left_out = set(get_components_left_out_of_offer())
 	employer_contributions = payable("employer_contributions")
+	shown_contributions = [r for r in employer_contributions if r.salary_component not in left_out]
 
 	if not earnings and not employer_contributions:
 		return []
@@ -308,8 +317,13 @@ def get_breakup_rows(assignment, periods: int, total_ctc: float) -> list[dict]:
 
 	breakup = [row(r.salary_component, flt(r.default_amount), 0) for r in earnings]
 	breakup.append(row(_("Gross Pay"), gross, 1))
-	breakup += [row(r.salary_component, flt(r.default_amount), 0) for r in employer_contributions]
-	breakup.append(row(_("Total Cost to Company (CTC)"), flt(total_ctc) / periods, 1))
+	breakup += [row(r.salary_component, flt(r.default_amount), 0) for r in shown_contributions]
+	ctc_label = (
+		_("Total Cost to Company (CTC)* (Includes Statutory Contributions)")
+		if len(shown_contributions) < len(employer_contributions)
+		else _("Total Cost to Company (CTC)")
+	)
+	breakup.append(row(ctc_label, flt(total_ctc) / periods, 1))
 	breakup.append(row(_("Take Home* (Income Tax applicable as per IT Act)"), gross - deductions, 1))
 
 	return breakup
