@@ -195,10 +195,12 @@ async function open_roles_dialog(list) {
 				fieldname: "profile_warning",
 				fieldtype: "HTML",
 				depends_on: "eval:doc.assign_by == 'Role Profiles'",
-				options: `<div class="form-group">${frappe.ui.alert.html({
-					title: __("Role profiles replace all of the user's roles"),
-					theme: "yellow",
-				})}</div>`,
+				options: `<div class="form-group" style="margin-top: -12px">${frappe.ui.alert.html(
+					{
+						title: __("Role profiles replace all of the user's roles"),
+						theme: "yellow",
+					},
+				)}</div>`,
 			},
 			{
 				fieldname: "assign_by",
