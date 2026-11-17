@@ -54,6 +54,7 @@ async function load() {
 	active.value = "public";
 	editing_employment.value = false;
 	personal_edit.value = { card: null, values: null };
+	if (in_form.value && !employee.value) return;
 	let data;
 	try {
 		// a refusal shows on the page, so not in a dialog as well
