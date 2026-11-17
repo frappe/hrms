@@ -209,6 +209,37 @@ class TestEmployeePromotion(HRMSTestSuite):
 		promotion.save()
 		self.assertEqual(promotion.ctc_breakup, [])
 
+	def test_promotion_letters_render(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_letter@example.com")
+		promotion = make_promotion(employee, revised_base=60000)
+
+		def render(print_format):
+			return frappe.get_print("Employee Promotion", promotion.name, print_format, doc=promotion)
+
+		with_breakup = render("Promotion Letter with Salary Break-up")
+		self.assertIn("PROMOTION LETTER", with_breakup)
+		self.assertIn("from <b>Software Developer</b> to <b>Project Manager</b>", with_breakup)
+		self.assertIn("12,26,400", with_breakup)
+		self.assertIn("EP Test HRA", with_breakup)
+		self.assertIn("ACCEPTANCE", with_breakup)
+
+		plain = render("Promotion Letter")
+		self.assertIn("from <b>Software Developer</b> to <b>Project Manager</b>", plain)
+		self.assertIn("12,26,400", plain)
+		self.assertIn("monthly take-home", plain)
+		self.assertIn("DECLARATION OF ACCEPTANCE", plain)
+		self.assertNotIn("EP Test HRA", plain)
+		self.assertNotIn("Led the analytics revamp", plain)
+
+		promotion.terms = '<div class="ql-editor read-mode"><p><br></p></div>'
+		self.assertNotIn("ADDITIONAL TERMS", render("Promotion Letter with Salary Break-up"))
+
+		promotion.terms = "<p>Led the analytics revamp.</p><script>alert(1)</script>"
+		for print_format in ("Promotion Letter", "Promotion Letter with Salary Break-up"):
+			letter = render(print_format)
+			self.assertIn("Led the analytics revamp", letter)
+			self.assertNotIn("<script>alert(1)</script>", letter)
+
 	def test_submit_does_not_create_assignment(self):
 		employee, _assignment = setup_employee_with_assignment("promotion_no_auto@example.com")
 
