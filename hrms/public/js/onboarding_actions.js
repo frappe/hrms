@@ -152,14 +152,13 @@ function open_user_dialog(list) {
 		],
 		primary_action_label: __("Create User Login"),
 		primary_action: async (values) => {
-			const had_employee = Boolean(frm.doc.employee);
 			await list.call("create_user", values, __("Creating the user"));
 			dialog.hide();
 			show_invite_sent(
 				values.create_user_for === "Personal Email"
 					? values.personal_email
 					: values.company_email,
-				had_employee,
+				Boolean(list.frm.doc.employee),
 			);
 		},
 	});
