@@ -366,8 +366,10 @@ def setup_preboarding_candidate() -> None:
 
 PREBOARDING_INVITE_MESSAGE = """<p>Hi {{ employee_name }},</p>
 <p>We are glad you are joining {{ company }} on {{ date_of_joining }}.</p>
-<p>Before your first day, please share your personal details and documents here:</p>
-<p><a href="{{ preboarding_url }}">{{ preboarding_url }}</a></p>
-<p>Set your password from the welcome email we sent you, then log in with this email address.
-If that link has expired, use <b>Forgot password</b> on the login page.</p>
+{% if set_password_url %}<p>First, set your password here:</p>
+<p><a href="{{ set_password_url }}">{{ set_password_url }}</a></p>
+<p>Then log in with this email address and share your personal details and documents before your first day:</p>
+{% else %}<p>Log in with this email address and share your personal details and documents before your first day:</p>
+{% endif %}<p><a href="{{ preboarding_url }}">{{ preboarding_url }}</a></p>
+<p>If you cannot log in, use <b>Forgot password</b> on the login page.</p>
 """

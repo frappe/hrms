@@ -2,6 +2,7 @@
 # See license.txt
 
 import os
+from email import message_from_string
 
 import frappe
 from frappe.tests.classes.context_managers import set_user
@@ -16,6 +17,8 @@ from hrms.hr.doctype.employee_onboarding.test_employee_onboarding import (
 )
 from hrms.hr.doctype.employee_request.employee_request import (
 	PREBOARDING_CANDIDATE_ROLE,
+	PREBOARDING_INVITE_MESSAGE,
+	PREBOARDING_INVITE_TEMPLATE,
 	get_permission_query_conditions,
 	has_permission,
 )
@@ -36,12 +39,29 @@ class TestEmployeeRequest(HRMSTestSuite):
 			[(row.document_name, row.required) for row in request.documents],
 			[("PAN Card", 1), ("Degree Certificate", 0)],
 		)
-		self.assertTrue(
-			frappe.db.exists(
-				"Email Queue",
-				{"reference_doctype": "Employee Onboarding", "reference_name": onboarding.name},
-			)
-		)
+
+	def test_a_new_user_gets_one_email_with_the_password_and_preboarding_links(self):
+		email = "asha.new.candidate@example.com"
+		frappe.delete_doc("User", email, force=True, ignore_missing=True)
+		frappe.db.delete("Email Queue")
+
+		start_onboarding(email=email)
+
+		messages = get_sent_messages(email)
+		self.assertEqual(len(messages), 1)
+		self.assertIn("/update-password?key=", messages[0])
+		self.assertIn("/preboarding", messages[0])
+
+	def test_an_existing_user_is_invited_without_a_password_link(self):
+		get_test_user(CANDIDATE_EMAIL)
+		frappe.db.delete("Email Queue")
+
+		start_onboarding()
+
+		messages = get_sent_messages(CANDIDATE_EMAIL)
+		self.assertEqual(len(messages), 1)
+		self.assertNotIn("/update-password", messages[0])
+		self.assertIn("/preboarding", messages[0])
 
 	def test_the_new_hire_sees_only_their_own_request(self):
 		request = get_request(start_onboarding())
@@ -250,7 +270,10 @@ class TestEmployeeRequest(HRMSTestSuite):
 				self.assertFalse(frappe.db.exists("File", {"file_url": url}))
 
 
-def start_onboarding(as_user=None):
+def start_onboarding(as_user=None, email=CANDIDATE_EMAIL):
+	frappe.db.set_value(
+		"Email Template", PREBOARDING_INVITE_TEMPLATE, "response_html", PREBOARDING_INVITE_MESSAGE
+	)
 	template = get_test_template()
 	template.set(
 		"required_documents",
@@ -264,13 +287,32 @@ def start_onboarding(as_user=None):
 	onboarding = create_employee_onboarding(submit=True)
 	onboarding.date_of_joining = add_days(getdate(), 7)
 	with set_user(as_user or frappe.session.user):
-		onboarding.create_user("Personal Email", personal_email=CANDIDATE_EMAIL)
+		onboarding.create_user("Personal Email", personal_email=email)
 	onboarding.reload()
 	return onboarding
 
 
 def get_boarding_status(onboarding):
 	return frappe.db.get_value("Employee Onboarding", onboarding.name, "boarding_status")
+
+
+def get_sent_messages(recipient):
+	EmailQueue = frappe.qb.DocType("Email Queue")
+	Recipient = frappe.qb.DocType("Email Queue Recipient")
+	raw_messages = (
+		frappe.qb.from_(EmailQueue)
+		.join(Recipient)
+		.on(Recipient.parent == EmailQueue.name)
+		.select(EmailQueue.message)
+		.where(Recipient.recipient == recipient)
+		.run(pluck=True)
+	)
+	return [get_html_body(raw) for raw in raw_messages]
+
+
+def get_html_body(raw):
+	part = next(part for part in message_from_string(raw).walk() if part.get_content_type() == "text/html")
+	return part.get_payload(decode=True).decode()
 
 
 def get_request(onboarding):

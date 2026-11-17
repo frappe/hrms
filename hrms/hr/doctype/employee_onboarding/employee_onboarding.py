@@ -144,9 +144,12 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		if not email:
 			frappe.throw(_("Set the {0} to create a user").format(frappe.bold(_(create_user_for))))
 
-		user = email if frappe.db.exists("User", email) else self.insert_user(email)
+		existing = frappe.db.exists("User", email)
+		user = email if existing else self.insert_user(email)
 		self.db_set("user", user)
-		self.start_employee_request()
+		self.start_employee_request(
+			set_password_url=None if existing else frappe.get_doc("User", user)._reset_password()
+		)
 		self.save_activity_states()
 		return user
 
@@ -212,10 +215,9 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		)
 		user.flags.no_welcome_mail = True
 		user.insert(ignore_permissions=True)
-		user.send_welcome_mail_to_user()
 		return user.name
 
-	def start_employee_request(self) -> None:
+	def start_employee_request(self, set_password_url: str | None = None) -> None:
 		user = frappe.get_doc("User", self.user)
 		user.append_roles(PREBOARDING_CANDIDATE_ROLE)
 		user.save(ignore_permissions=True)
@@ -223,7 +225,7 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 			frappe.db.set_value("Employee Request", request, "user", self.user)
 		else:
 			self.make_employee_request().insert()
-		self.send_preboarding_invite()
+		self.send_preboarding_invite(set_password_url)
 
 	def make_employee_request(self) -> Document:
 		first_name, middle_name, last_name = split_full_name(self.employee_name)
@@ -242,7 +244,7 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 			request.append("documents", row)
 		return request
 
-	def send_preboarding_invite(self) -> None:
+	def send_preboarding_invite(self, set_password_url: str | None = None) -> None:
 		template = frappe.get_doc("Email Template", PREBOARDING_INVITE_TEMPLATE)
 		email = template.get_formatted_email(
 			{
@@ -250,6 +252,7 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 				"company": self.company,
 				"date_of_joining": formatdate(self.date_of_joining),
 				"preboarding_url": get_url(PREBOARDING_ROUTE),
+				"set_password_url": set_password_url,
 			}
 		)
 		frappe.sendmail(
