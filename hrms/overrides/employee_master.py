@@ -39,7 +39,6 @@ def validate_onboarding_allows_creation(doc, method=None):
 
 
 def link_onboarding(doc, method=None):
-	"""Link a saved Employee to the open Employee Onboarding of its job offer, however it was created."""
 	filters = {"docstatus": ("!=", 2), "employee": ("is", "not set")}
 	if doc.get("job_offer"):
 		filters["job_offer"] = doc.job_offer

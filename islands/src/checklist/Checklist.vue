@@ -226,7 +226,6 @@ function add(input) {
 		});
 }
 
-// In a shadow root, reka-ui's combobox closes when focus moves into its list.
 function keepFocusInComboboxSearch(event) {
 	if (event.target.closest?.('[role="listbox"]') && !event.target.closest("input")) {
 		event.preventDefault();

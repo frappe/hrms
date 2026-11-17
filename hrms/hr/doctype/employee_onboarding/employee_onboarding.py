@@ -270,11 +270,6 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 			self.db_set(changed)
 
 	def grant_employee_self_service(self) -> None:
-		"""Add the self-service role once an Employee is mapped.
-
-		erpnext's validate_employee_role strips this role from a User that no Employee
-		points at, so it cannot be granted when the user is created.
-		"""
 		if not self.user:
 			return
 
@@ -408,11 +403,6 @@ def make_appointment_letter(source_name: str, target_doc: str | Document | None 
 
 
 def unlink_deleted_user(user: Document, method: str | None = None) -> None:
-	"""Clear a deleted user from its onboarding and open the Create User row again.
-
-	The onboarding keeps the user as a plain value, not a Link, so deleting the user is not
-	blocked by the onboarding.
-	"""
 	for name in frappe.get_all("Employee Onboarding", filters={"user": user.name}, pluck="name"):
 		onboarding = frappe.get_doc("Employee Onboarding", name)
 		onboarding.db_set("user", None)
@@ -427,7 +417,6 @@ def mark_appointment_letter_sent(onboarding: str) -> None:
 
 
 def reopen_appointment_letter(onboarding: str) -> None:
-	"""Open the Send Appointment Letter row again once its letter is deleted."""
 	doc = frappe.get_doc("Employee Onboarding", onboarding)
 	doc.db_set("appointment_letter_sent_on", None)
 	doc.save_activity_states()
@@ -436,6 +425,5 @@ def reopen_appointment_letter(onboarding: str) -> None:
 def rename_onboarding_user(
 	user: Document, method: str | None, old_name: str, new_name: str, merge: bool = False
 ) -> None:
-	"""Keep the onboarding's and the employee request's user, a plain value, pointing at a renamed user."""
 	for doctype in ("Employee Onboarding", "Employee Request"):
 		frappe.db.set_value(doctype, {"user": old_name}, "user", new_name, update_modified=False)

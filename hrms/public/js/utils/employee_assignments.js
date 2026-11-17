@@ -1,10 +1,6 @@
 // Copyright (c) 2016, Frappe Technologies Pvt. Ltd. and contributors
 // For license information, please see license.txt
 
-// The assignment engine shared by the Employee form and Employee Onboarding.
-// Callers pass a context of { employee, employee_name, company,
-// date_of_joining } rather than a form, so any surface can drive it.
-
 frappe.provide("hrms.assignments");
 
 const assignable_masters = {};

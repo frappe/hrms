@@ -42,7 +42,6 @@ frappe.ui.form.on("Employee Onboarding", {
 	},
 
 	employee_boarding_template: function (frm) {
-		// Finished rows stay; the new template's rows replace the rest.
 		const finished = (frm.doc.activities || []).filter((row) => row.completed || row.skipped);
 		const is_finished = (d) =>
 			d.action !== "Manual" &&

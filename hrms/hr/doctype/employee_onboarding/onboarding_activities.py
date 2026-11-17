@@ -59,7 +59,6 @@ def make_assign_activity(title, doctype):
 	}
 
 
-# The tasks the checklist can do itself. Each new template starts with them.
 STANDARD_ACTIVITIES = [
 	{"activity_name": "Create User Login", "action": "Create User"},
 	{"activity_name": "Create Employee", "action": "Create Employee"},
@@ -81,16 +80,6 @@ STANDARD_ACTIVITIES = [
 
 
 class OnboardingActivities:
-	"""The checklist rows of an Employee Onboarding.
-
-	The rows come from the onboarding's template only, so HR decides there which standard
-	activities an onboarding gets and who each one is assigned to.
-	A row with an action is completed by the record it creates, not by whoever ticks it; only
-	Manual rows are completed by hand. An unfinished row may carry a status, In Progress or Stuck.
-	Row changes are written per row, so several people can work the same onboarding at once
-	without one save overwriting another.
-	"""
-
 	def set_template(self):
 		if not self.employee_boarding_template:
 			self.employee_boarding_template = get_matching_template(self)
@@ -131,7 +120,6 @@ class OnboardingActivities:
 			)
 
 	def get_lock_reasons(self) -> dict[str, list[str]]:
-		"""The names of the unfinished activities each row waits for, by row."""
 		return {
 			row.name: needed
 			for row in self.activities
@@ -139,7 +127,6 @@ class OnboardingActivities:
 		}
 
 	def reconcile_activities(self) -> list:
-		"""Complete each row whose record exists, and return the changed rows."""
 		changed = []
 		for row in self.activities:
 			completed, reference_name = self.get_activity_state(row)
@@ -197,7 +184,6 @@ class OnboardingActivities:
 		}
 
 	def save_activity_states(self):
-		"""Persist reconciled rows and the status without saving the whole onboarding."""
 		for row in self.reconcile_activities():
 			row.db_update()
 		self.update_boarding_status()
@@ -250,7 +236,6 @@ class OnboardingActivities:
 		self.db_set("boarding_status", self.boarding_status, notify=True)
 
 	def sync_todos(self):
-		"""Give every open, assigned row a ToDo of its own, and close those of finished rows."""
 		if self.docstatus != 1:
 			return
 
@@ -398,7 +383,6 @@ class OnboardingActivities:
 
 	@frappe.whitelist(methods=["POST"])
 	def set_activity_progress(self, row: str, status: str | None = None) -> None:
-		"""Mark an unfinished activity In Progress or Stuck, or clear that; finishing is by record."""
 		self.check_permission("write")
 		self.validate_started()
 		activity = self.get_activity(row)
@@ -471,8 +455,6 @@ def is_needed_by(row, other) -> bool:
 
 
 def get_matching_template(doc) -> str | None:
-	"""The newest template with onboarding activities whose company, department, designation
-	and grade each match the onboarding's or are left blank, so a blank template applies to everyone."""
 	Template = frappe.qb.DocType("Employee Boarding Template")
 	Activity = frappe.qb.DocType("Employee Boarding Activity")
 	has_activities = (
@@ -546,7 +528,6 @@ def has_standard_activities(template) -> bool:
 
 
 def add_standard_activities(template, disabled: int = 0) -> None:
-	"""Add each missing standard activity after the standard one before it, or at the top."""
 	rows = list(template.onboarding_activities)
 	keys = [action_key(row.action, row.reference_doctype) for row in rows]
 	position = 0

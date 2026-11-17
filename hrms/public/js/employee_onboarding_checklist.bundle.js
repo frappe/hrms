@@ -185,8 +185,6 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 		}
 	}
 
-	// Activity methods write their row straight to the database, so the form reloads rather
-	// than saves; another user may be working on the same onboarding.
 	call(method, args = {}, freeze_message) {
 		return this.enqueue(async () => {
 			await this.save_if_dirty();

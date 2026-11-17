@@ -2,9 +2,6 @@ import { AppointmentLetterDialog } from "./appointment_letter_dialog.js";
 import { CreateEmployeeDialog } from "./create_employee_dialog.js";
 import { SalaryStructureAssignmentDialog } from "./salary_structure_assignment_dialog.js";
 
-// What each onboarding activity action shows and does. A template row names its action;
-// the row's value, lock and buttons come from the handler for that action.
-
 const PREBOARDING_BADGES = {
 	"Awaiting Employee Details": () => ({ label: __("Awaiting employee details"), theme: "blue" }),
 	"Details Submitted": () => ({ label: __("Details submitted"), theme: "amber" }),
@@ -349,9 +346,6 @@ async function create_employee(list) {
 	}).show();
 }
 
-// Reuses the Employee form's assignment engine, so the dialog keeps its Submit step, its
-// field hints and its queries. The row is ticked by reconciliation against the real
-// assignment document, not by this callback.
 function assign(list, row) {
 	if (row.reference_doctype === "Salary Structure Assignment")
 		return assign_salary_structure(list);
