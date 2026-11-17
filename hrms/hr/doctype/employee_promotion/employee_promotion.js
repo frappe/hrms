@@ -74,6 +74,7 @@ frappe.ui.form.on("Employee Promotion", {
 		const { employee, promotion_date } = frm.doc;
 		if (!employee || !promotion_date) {
 			set_salary_fields(frm, {});
+			frm.trigger("set_revised_salary");
 			return;
 		}
 
@@ -85,10 +86,19 @@ frappe.ui.form.on("Employee Promotion", {
 			.then((r) => {
 				if (frm.doc.employee !== employee || frm.doc.promotion_date !== promotion_date) return;
 				set_salary_fields(frm, r.message || {});
+				// the revised salary depends on the employee, the date and the current assignment
+				frm.trigger("set_revised_salary");
 			});
 	},
 
+	promotion_details_remove: function (frm) {
+		frm.trigger("set_revised_salary");
+	},
+
 	employee_property_added: function (frm) {
+		// a changed grade, department or designation can change what the formulas pay
+		frm.trigger("set_revised_salary");
+
 		const row = (frm.doc.promotion_details || []).at(-1);
 		if (!row || row.fieldname !== "grade" || !row.new) return;
 
@@ -108,18 +118,20 @@ frappe.ui.form.on("Employee Promotion", {
 	},
 
 	salary_structure: function (frm) {
-		frm.trigger("set_revised_ctc");
+		frm.trigger("set_revised_salary");
 		frm.trigger("show_assignment_hint");
 	},
 
 	revised_base: function (frm) {
-		frm.trigger("set_revised_ctc");
+		frm.trigger("set_revised_salary");
 		frm.trigger("show_assignment_hint");
 	},
 
-	set_revised_ctc: function (frm) {
-		clear_ctc_breakup(frm);
+	set_revised_salary: function (frm) {
+		if (frm.doc.docstatus !== 0) return;
+
 		if (!frm.doc.salary_structure || !frm.doc.revised_base) {
+			set_ctc_breakup(frm, []);
 			// clear only a calculated CTC; one typed by hand stays
 			if (frm.revised_ctc_is_calculated) {
 				frm.revised_ctc_is_calculated = false;
@@ -128,16 +140,19 @@ frappe.ui.form.on("Employee Promotion", {
 			return;
 		}
 
-		const sent = revised_ctc_inputs(frm);
+		const sent = revised_salary_inputs(frm);
 		frappe
 			.call({
-				method: "hrms.hr.doctype.employee_promotion.employee_promotion.calculate_revised_ctc",
+				method: "hrms.hr.doctype.employee_promotion.employee_promotion.get_revised_salary_details",
 				args: { promotion: frm.doc },
 			})
 			.then((r) => {
-				if (revised_ctc_inputs(frm) !== sent) return;
+				if (!r.message || revised_salary_inputs(frm) !== sent) return;
+
 				frm.revised_ctc_is_calculated = true;
-				frm.set_value("revised_ctc", r.message || 0);
+				frm.set_value("revised_ctc", r.message.ctc || 0).then(() => {
+					set_ctc_breakup(frm, r.message.components || []);
+				});
 			});
 	},
 });
@@ -169,17 +184,19 @@ function render_revised_assignment(frm) {
 	`);
 }
 
-// the break-up is rebuilt on save, so drop one that no longer matches the inputs
-function clear_ctc_breakup(frm) {
-	if (!(frm.doc.ctc_breakup || []).length) return;
+function set_ctc_breakup(frm, rows) {
+	if (!rows.length && !(frm.doc.ctc_breakup || []).length) return;
 
 	frm.clear_table("ctc_breakup");
-	frm.refresh_fields();
+	rows.forEach((row) => frm.add_child("ctc_breakup", row));
+	frm.refresh_field("ctc_breakup");
+	frm.layout.refresh_dependency();
 }
 
-function revised_ctc_inputs(frm) {
+function revised_salary_inputs(frm) {
 	const { employee, promotion_date, salary_structure, revised_base } = frm.doc;
-	return JSON.stringify([employee, promotion_date, salary_structure, revised_base]);
+	const details = (frm.doc.promotion_details || []).map((row) => [row.fieldname, row.new]);
+	return JSON.stringify([employee, promotion_date, salary_structure, revised_base, details]);
 }
 
 function set_salary_fields(frm, assignment) {

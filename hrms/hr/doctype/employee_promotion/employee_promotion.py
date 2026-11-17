@@ -7,6 +7,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import formatdate, get_link_to_form, getdate
 
+from hrms.hr.doctype.job_offer.job_offer import get_components_left_out_of_offer
 from hrms.hr.utils import get_formatted_value, update_employee_work_history, validate_active_employee
 from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
 	get_promotion_assignments,
@@ -61,18 +62,25 @@ class EmployeePromotion(Document):
 			self.salary_structure = salary.salary_structure
 
 	def set_revised_salary(self):
-		self.set("ctc_breakup", [])
+		salary = self.get_revised_salary()
+		self.set("ctc_breakup", salary.components)
+		# a CTC typed by hand, without a revised base, is kept
+		if salary.calculated:
+			self.revised_ctc = salary.ctc
+
+	def get_revised_salary(self) -> frappe._dict:
 		assignment = self.get_revised_assignment()
 		if not assignment:
-			return
+			return frappe._dict(calculated=False, ctc=0.0, components=[])
 
-		self.revised_ctc = assignment.ctc
 		periods = get_periods_per_year(self.salary_structure)
-		self.set("ctc_breakup", get_breakup_rows(assignment, periods, assignment.ctc))
-
-	def get_revised_ctc(self) -> float:
-		assignment = self.get_revised_assignment()
-		return assignment.ctc if assignment else 0.0
+		return frappe._dict(
+			calculated=True,
+			ctc=assignment.ctc,
+			components=get_breakup_rows(
+				assignment, periods, assignment.ctc, left_out=get_components_left_out_of_offer()
+			),
+		)
 
 	def get_revised_assignment(self) -> Document | None:
 		if not (self.salary_structure and self.revised_base):
@@ -231,7 +239,7 @@ def get_current_salary(employee: str, on_date: str) -> frappe._dict:
 
 
 @frappe.whitelist()
-def calculate_revised_ctc(promotion: str | dict) -> float:
+def get_revised_salary_details(promotion: str | dict) -> dict:
 	frappe.has_permission("Employee Promotion", "write", throw=True)
 
 	promotion = frappe.parse_json(promotion)
@@ -248,7 +256,7 @@ def calculate_revised_ctc(promotion: str | dict) -> float:
 			"Salary Structure Assignment", "read", doc=doc.current_salary_structure_assignment, throw=True
 		)
 
-	return doc.get_revised_ctc()
+	return doc.get_revised_salary()
 
 
 def get_salary_on(employee: str, on_date: str | None) -> frappe._dict:

@@ -6,7 +6,7 @@ from frappe.desk.form.linked_with import get_submitted_linked_docs
 from frappe.utils import add_days, add_months, get_first_day, getdate
 
 from hrms.hr.doctype.employee_promotion.employee_promotion import (
-	calculate_revised_ctc,
+	get_revised_salary_details,
 	get_salary_on,
 	make_salary_structure_assignment,
 )
@@ -122,7 +122,26 @@ class TestEmployeePromotion(HRMSTestSuite):
 		promotion = make_promotion(employee, revised_base=60000, revised_ctc=1)
 
 		self.assertEqual(promotion.revised_ctc, 1226400)
-		self.assertEqual(calculate_revised_ctc(promotion.as_dict()), 1226400)
+
+		details = get_revised_salary_details(promotion.as_dict())
+		self.assertEqual(details.ctc, 1226400)
+		self.assertEqual(
+			[row["fixed_components"] for row in details.components],
+			[row.fixed_components for row in promotion.ctc_breakup],
+		)
+
+	def test_revised_salary_details_follow_unsaved_inputs(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_live@example.com")
+		promotion = make_promotion(employee, revised_base=60000)
+
+		unsaved = promotion.as_dict()
+		unsaved["revised_base"] = 70000
+		details = get_revised_salary_details(unsaved)
+
+		# Basic 70,000 + HRA 35,000 + Special 5,000 + Employer PF 8,400 = 1,18,400 a month
+		self.assertEqual(details.ctc, 1420800)
+		self.assertEqual(details.components[0]["per_cycle"], 70000)
+		self.assertEqual(frappe.db.get_value("Employee Promotion", promotion.name, "revised_base"), 60000)
 
 	def test_revised_ctc_uses_promoted_grade(self):
 		for grade in ["EP Test G1", "EP Test G2"]:
