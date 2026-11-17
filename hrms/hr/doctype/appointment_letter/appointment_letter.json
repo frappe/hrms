@@ -10,6 +10,7 @@
  "field_order": [
   "appointment_tab",
   "job_offer",
+  "employee_onboarding",
   "applicant_name",
   "applicant_email",
   "employee",
@@ -49,6 +50,13 @@
    "label": "Job Offer",
    "options": "Job Offer",
    "reqd": 1
+  },
+  {
+   "fieldname": "employee_onboarding",
+   "fieldtype": "Link",
+   "label": "Employee Onboarding",
+   "options": "Employee Onboarding",
+   "read_only": 1
   },
   {
    "fetch_from": "job_offer.applicant_name",
@@ -213,7 +221,7 @@
  "icon": "mail-check",
  "link_display_mode": "Search",
  "links": [],
- "modified": "2026-11-06 14:00:00.000000",
+ "modified": "2026-11-13 18:35:10.199311",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appointment Letter",

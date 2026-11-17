@@ -50,6 +50,7 @@ sed -i 's/redis_socketio:/# redis_socketio:/g' Procfile
 bench get-app "https://github.com/${frappeuser}/payments" --branch "$paymentsbranch"
 bench get-app "https://github.com/${frappeuser}/erpnext" --branch "$erpnextbranch" --resolve-deps
 bench get-app "https://github.com/${frappeuser}/lending" --branch "$lendingbranch"
+(cd apps/frappe/studio/frontend && CYPRESS_INSTALL_BINARY=0 yarn install --frozen-lockfile --production=false)
 bench get-app hrms "${GITHUB_WORKSPACE}"
 bench setup requirements --dev
 

@@ -28,24 +28,27 @@ class EmployeeMaster(Employee):
 		self.employee = self.name
 
 
-def validate_onboarding_process(doc, method=None):
-	"""Validates Employee Creation for linked Employee Onboarding"""
-	job_applicant = doc.get("job_applicant")
-	job_offer = doc.get("job_offer")
+def validate_onboarding_allows_creation(doc, method=None):
+	if not (doc.is_new() and doc.get("job_offer")):
+		return
 
-	filters = {"docstatus": 1, "boarding_status": ("!=", "Completed")}
-	if job_offer:
-		filters["job_offer"] = job_offer
-	elif job_applicant:
-		filters["job_applicant"] = job_applicant
+	if onboarding := frappe.db.get_value(
+		"Employee Onboarding", {"job_offer": doc.job_offer, "docstatus": ("!=", 2)}
+	):
+		frappe.get_doc("Employee Onboarding", onboarding).validate_employee_creation()
+
+
+def link_onboarding(doc, method=None):
+	filters = {"docstatus": ("!=", 2), "employee": ("is", "not set")}
+	if doc.get("job_offer"):
+		filters["job_offer"] = doc.job_offer
+	elif doc.get("job_applicant"):
+		filters["job_applicant"] = doc.job_applicant
 	else:
 		return
 
-	employee_onboarding = frappe.get_all("Employee Onboarding", filters=filters)
-	if employee_onboarding:
-		onboarding = frappe.get_doc("Employee Onboarding", employee_onboarding[0].name)
-		onboarding.validate_employee_creation()
-		onboarding.db_set("employee", doc.name)
+	if onboarding := frappe.db.get_value("Employee Onboarding", filters):
+		frappe.get_doc("Employee Onboarding", onboarding).attach_employee(doc)
 
 
 def publish_update(doc, method=None):

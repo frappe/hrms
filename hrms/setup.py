@@ -25,6 +25,8 @@ def after_install():
 	set_single_defaults()
 	setup_repost_defaults()
 	create_default_role_profiles()
+	create_default_boarding_template()
+	setup_preboarding_candidate()
 	run_post_install_patches()
 	add_default_hr_permissions()
 
@@ -892,6 +894,20 @@ def get_lending_docperms_for_ess():
 		"Loan Application": ["read", "write", "create", "delete", "submit"],
 		"Loan Product": ["read"],
 	}
+
+
+def create_default_boarding_template():
+	from hrms.hr.doctype.employee_boarding_template.employee_boarding_template import (
+		create_default_template,
+	)
+
+	create_default_template()
+
+
+def setup_preboarding_candidate():
+	from hrms.hr.doctype.employee_request.employee_request import setup_preboarding_candidate
+
+	setup_preboarding_candidate()
 
 
 def create_custom_role(data):

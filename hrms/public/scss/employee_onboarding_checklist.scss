@@ -1,0 +1,112 @@
+.eo-record-dialog {
+	.form-grid-container:has(.awesomplete > ul:not([hidden])),
+	.form-grid:has(.awesomplete > ul:not([hidden])) {
+		overflow: visible;
+	}
+
+	.es-tabs[data-orientation="vertical"] {
+		display: grid;
+		flex: 1;
+		grid-template-columns: 14rem minmax(0, 1fr);
+		grid-template-rows: auto minmax(0, 1fr);
+		min-height: 0;
+	}
+
+	.es-tabs[data-orientation="vertical"] > .es-tabs__list {
+		grid-column: 1;
+		grid-row: 1 / span 2;
+		padding: 2rem 1rem;
+		border-top-left-radius: var(--radius-lg);
+		border-bottom-left-radius: var(--radius-lg);
+		background-color: var(--surface-sidebar);
+	}
+
+	.eo-profile {
+		grid-column: 2;
+		grid-row: 1;
+		display: flex;
+		align-items: flex-start;
+		gap: calc(var(--spacing) * 3);
+		padding: 2rem 2rem 0;
+	}
+
+	.eo-profile__text {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		gap: calc(var(--spacing) * 0.5);
+		min-width: 0;
+	}
+
+	.eo-profile__actions {
+		display: flex;
+		flex-shrink: 0;
+		gap: calc(var(--spacing) * 2);
+	}
+
+	.es-tabs[data-orientation="vertical"] > .es-tabs__panel[data-state="active"] {
+		grid-column: 2;
+		grid-row: 2;
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
+		padding: 1.25rem 1.5rem 2rem;
+	}
+
+	.settings-dialog-panel-body {
+		padding: 0 0.5rem;
+	}
+}
+
+.eo-record-dialog--single {
+	.es-tabs[data-orientation="vertical"] {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.es-tabs[data-orientation="vertical"] > .es-tabs__list {
+		display: none;
+	}
+
+	.eo-profile,
+	.es-tabs[data-orientation="vertical"] > .es-tabs__panel[data-state="active"] {
+		grid-column: 1;
+	}
+}
+
+.eo-document {
+	display: flex;
+	align-items: center;
+	gap: var(--padding-sm);
+	box-sizing: border-box;
+	height: 44px;
+	border-bottom: 1px solid var(--outline-gray-1);
+	color: var(--ink-gray-8);
+}
+
+.eo-document .icon {
+	margin: 0;
+}
+
+.eo-document-name {
+	flex: 1;
+	min-width: 0;
+}
+
+.eo-document-status {
+	flex-shrink: 0;
+	width: 7rem;
+	text-align: right;
+}
+
+.eo-document-action {
+	flex-shrink: 0;
+	width: 5rem;
+}
+
+.eo-roles-dialog .frappe-control[data-fieldtype="MultiCheck"] {
+	margin-bottom: 1rem;
+}
+
+.eo-checklist-field {
+	padding-bottom: var(--padding-xl);
+}

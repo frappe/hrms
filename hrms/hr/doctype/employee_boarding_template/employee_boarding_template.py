@@ -1,0 +1,74 @@
+# Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and contributors
+# For license information, please see license.txt
+
+
+import frappe
+from frappe import _
+from frappe.model.document import Document
+
+from hrms.hr.doctype.employee_onboarding.onboarding_activities import (
+	STANDARD_ACTIVITIES,
+	add_standard_activities,
+	has_standard_activities,
+	set_action_defaults,
+	validate_required_for_employee_creation,
+	validate_unique_actions,
+)
+
+
+class EmployeeBoardingTemplate(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		from hrms.hr.doctype.employee_boarding_activity.employee_boarding_activity import (
+			EmployeeBoardingActivity,
+		)
+		from hrms.hr.doctype.employee_boarding_document.employee_boarding_document import (
+			EmployeeBoardingDocument,
+		)
+
+		company: DF.Link | None
+		department: DF.Link | None
+		designation: DF.Link | None
+		employee_grade: DF.Link | None
+		notify_users_by_email: DF.Check
+		offboarding_activities: DF.Table[EmployeeBoardingActivity]
+		onboarding_activities: DF.Table[EmployeeBoardingActivity]
+		required_documents: DF.Table[EmployeeBoardingDocument]
+		title: DF.Data
+	# end: auto-generated types
+
+	def before_insert(self):
+		if not (self.flags.skip_standard_activities or has_standard_activities(self)):
+			add_standard_activities(self)
+
+	def validate(self):
+		if self.onboarding_activities:
+			add_standard_activities(self, disabled=1)
+		for row in self.onboarding_activities:
+			set_action_defaults(row)
+		validate_unique_actions(self.onboarding_activities, _("this template"))
+		validate_required_for_employee_creation(self.onboarding_activities)
+		for row in self.offboarding_activities:
+			row.update({"action": "Manual", "reference_doctype": None, "depends_on_action": None})
+
+
+@frappe.whitelist()
+def get_standard_activities() -> list[dict]:
+	frappe.has_permission("Employee Boarding Template", "create", throw=True)
+	return [dict(activity) for activity in STANDARD_ACTIVITIES]
+
+
+def create_default_template() -> None:
+	if frappe.db.count("Employee Boarding Template"):
+		return
+
+	template = frappe.new_doc("Employee Boarding Template")
+	template.title = _("Default Onboarding")
+	template.company = None
+	template.insert(ignore_permissions=True)

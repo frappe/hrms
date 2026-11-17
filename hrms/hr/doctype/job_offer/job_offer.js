@@ -94,21 +94,49 @@ frappe.ui.form.on("Job Offer", {
 		add_email_button(frm);
 		render_offer_letter_preview(frm);
 
-		if (
-			!frm.doc.__islocal &&
-			frm.doc.status == "Accepted" &&
-			frm.doc.docstatus === 1 &&
-			(!frm.doc.__onload || !frm.doc.__onload.employee)
-		) {
-			frm.add_custom_button(__("Create Employee"), function () {
-				erpnext.job_offer.make_employee(frm);
-			});
+		const onload = frm.doc.__onload || {};
+		const accepted =
+			!frm.doc.__islocal && frm.doc.status == "Accepted" && frm.doc.docstatus === 1;
+
+		if (accepted && !onload.employee_onboarding) {
+			frm.add_custom_button(
+				__("Employee Onboarding"),
+				function () {
+					erpnext.job_offer.make_employee_onboarding(frm);
+				},
+				__("Create"),
+			);
+			frm.page.set_inner_btn_group_as_primary(__("Create"));
 		}
 
-		if (frm.doc.__onload && frm.doc.__onload.employee) {
-			frm.add_custom_button(__("Show Employee"), function () {
-				frappe.set_route("Form", "Employee", frm.doc.__onload.employee);
-			});
+		if (accepted && !onload.employee) {
+			frm.add_custom_button(
+				__("Employee"),
+				function () {
+					erpnext.job_offer.make_employee(frm);
+				},
+				__("Create"),
+			);
+		}
+
+		if (onload.employee_onboarding) {
+			frm.add_custom_button(
+				__("Employee Onboarding"),
+				function () {
+					frappe.set_route("Form", "Employee Onboarding", onload.employee_onboarding);
+				},
+				__("View"),
+			);
+		}
+
+		if (onload.employee) {
+			frm.add_custom_button(
+				__("Employee"),
+				function () {
+					frappe.set_route("Form", "Employee", onload.employee);
+				},
+				__("View"),
+			);
 		}
 	},
 
@@ -203,6 +231,43 @@ erpnext.job_offer.make_employee = function (frm) {
 		method: "hrms.hr.doctype.job_offer.job_offer.make_employee",
 		frm: frm,
 	});
+};
+
+erpnext.job_offer.make_employee_onboarding = function (frm) {
+	const dialog = new frappe.ui.Dialog({
+		title: __("Create Employee Onboarding"),
+		fields: [
+			{
+				fieldname: "boarding_begins_on",
+				fieldtype: "Date",
+				label: __("Onboarding Begins On"),
+				default: frappe.datetime.get_today(),
+				reqd: 1,
+			},
+			{
+				fieldname: "date_of_joining",
+				fieldtype: "Date",
+				label: __("Date of Joining"),
+				default: frm.doc.date_of_joining,
+				read_only: frm.doc.date_of_joining ? 1 : 0,
+				reqd: 1,
+			},
+		],
+		primary_action_label: __("Create"),
+		primary_action: (values) =>
+			frappe
+				.call({
+					method: "hrms.hr.doctype.job_offer.job_offer.create_employee_onboarding",
+					args: { job_offer: frm.doc.name, ...values },
+					freeze: true,
+					freeze_message: __("Creating the onboarding"),
+				})
+				.then((r) => {
+					dialog.hide();
+					frappe.set_route("Form", "Employee Onboarding", r.message);
+				}),
+	});
+	dialog.show();
 };
 
 function set_calculation_basis(frm) {

@@ -1,10 +1,15 @@
+const STATUS_COLORS = {
+	"Awaiting Employee Details": "blue",
+	"Details Submitted": "orange",
+};
+
 frappe.listview_settings["Employee Onboarding"] = {
 	add_fields: ["boarding_status", "employee_name", "date_of_joining", "department"],
-	filters: [["boarding_status", "=", "Pending"]],
+	filters: [["boarding_status", "!=", "Completed"]],
 	get_indicator: function (doc) {
 		return [
 			__(doc.boarding_status),
-			frappe.utils.guess_colour(doc.boarding_status),
+			STATUS_COLORS[doc.boarding_status] || frappe.utils.guess_colour(doc.boarding_status),
 			"boarding_status,=," + doc.boarding_status,
 		];
 	},
