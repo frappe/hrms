@@ -48,7 +48,7 @@ def link_onboarding(doc, method=None):
 		return
 
 	if onboarding := frappe.db.get_value("Employee Onboarding", filters):
-		frappe.get_doc("Employee Onboarding", onboarding).attach_employee(doc.name)
+		frappe.get_doc("Employee Onboarding", onboarding).attach_employee(doc)
 
 
 def publish_update(doc, method=None):

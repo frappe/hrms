@@ -139,6 +139,12 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		if self.user:
 			frappe.throw(_("User {0} is already linked").format(get_link_to_form("User", self.user)))
 
+		if employee_user := self.employee and frappe.db.get_value("Employee", self.employee, "user_id"):
+			self.db_set("user", employee_user)
+			self.grant_employee_self_service()
+			self.save_activity_states()
+			return employee_user
+
 		fieldname = USER_EMAIL_FIELDS.get(create_user_for)
 		email = fieldname and self.get(fieldname)
 		if not email:
@@ -295,14 +301,23 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 	def get_appointment_letter(self) -> str | None:
 		return frappe.db.get_value("Appointment Letter", {"employee_onboarding": self.name}, "name")
 
-	def attach_employee(self, employee: str) -> None:
-		self.db_set("employee", employee)
+	def attach_employee(self, employee: Document) -> None:
+		self.db_set("employee", employee.name)
 		if letter := self.get_appointment_letter():
-			frappe.db.set_value("Appointment Letter", letter, "employee", employee)
+			frappe.db.set_value("Appointment Letter", letter, "employee", employee.name)
+		self.link_employee_to_user(employee)
 		self.grant_employee_self_service()
 		if request := self.get_employee_request():
-			request.apply_to(employee)
+			request.apply_to(employee.name)
 		self.save_activity_states()
+
+	def link_employee_to_user(self, employee: Document) -> None:
+		if not self.user or employee.user_id:
+			return
+
+		employee.db_set("user_id", self.user)
+		employee.update_user()
+		employee.update_user_permissions()
 
 	def relink_amended_records(self) -> None:
 		for doctype in ("Employee Request", "Appointment Letter"):

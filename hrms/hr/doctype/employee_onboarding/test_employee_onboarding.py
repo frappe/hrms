@@ -18,6 +18,7 @@ from hrms.hr.doctype.employee_onboarding.employee_onboarding import (
 	split_full_name,
 )
 from hrms.hr.doctype.employee_onboarding.onboarding_activities import STANDARD_ACTIVITIES
+from hrms.hr.doctype.job_offer.job_offer import make_employee as make_employee_from_job_offer
 from hrms.hr.doctype.job_offer.job_offer import make_employee_onboarding
 from hrms.hr.doctype.job_offer.test_job_offer import create_job_offer
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
@@ -328,6 +329,40 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 			)
 		)
 		self.assertEqual(frappe.db.count("Email Queue"), 1)
+
+	def test_an_employee_made_from_the_job_offer_after_the_user_is_linked_to_it(self):
+		onboarding = create_employee_onboarding(submit=True)
+		user = onboarding.create_user("Personal Email", personal_email="asha.offer@example.com")
+
+		employee = make_employee_from_job_offer(onboarding.job_offer)
+		employee.update({"gender": "Female", "date_of_birth": "1990-05-08", "date_of_joining": getdate()})
+		employee.insert()
+
+		frappe.clear_cache(user=user)
+		self.assertEqual(frappe.db.get_value("Employee", employee.name, "user_id"), user)
+		self.assertEqual(
+			frappe.db.get_value("Employee Onboarding", onboarding.name, "employee"), employee.name
+		)
+		self.assertIn("Employee", frappe.get_roles(user))
+		self.assertIn("Employee Self Service", frappe.get_roles(user))
+		self.assertNotIn("Preboarding Candidate", frappe.get_roles(user))
+
+	def test_create_user_adopts_the_user_already_on_the_employee(self):
+		onboarding = create_employee_onboarding(submit=True)
+		employee = frappe.get_doc("Employee", create_onboarding_employee(onboarding))
+		employee.user_id = get_test_user("asha.existing@example.com")
+		employee.save()
+		onboarding.reload()
+		frappe.db.delete("Email Queue")
+
+		user = onboarding.create_user("Personal Email", personal_email="asha.another@example.com")
+
+		frappe.clear_cache(user=user)
+		self.assertEqual(user, "asha.existing@example.com")
+		self.assertEqual(frappe.db.get_value("Employee Onboarding", onboarding.name, "user"), user)
+		self.assertFalse(frappe.db.exists("User", "asha.another@example.com"))
+		self.assertIn("Employee Self Service", frappe.get_roles(user))
+		self.assertEqual(frappe.db.count("Email Queue"), 0)
 
 	def test_self_service_role_is_granted_with_the_employee(self):
 		onboarding = create_employee_onboarding(submit=True)
