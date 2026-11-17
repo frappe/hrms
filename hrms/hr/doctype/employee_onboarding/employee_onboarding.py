@@ -156,9 +156,7 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		if self.employee:
 			self.link_user_to_employee()
 		else:
-			self.start_employee_request(
-				set_password_url=None if existing else frappe.get_doc("User", user)._reset_password()
-			)
+			self.start_employee_request(new_user=not existing)
 		self.save_activity_states()
 		return user
 
@@ -233,7 +231,7 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		self.grant_employee_self_service()
 		frappe.get_doc("User", self.user).send_welcome_mail_to_user()
 
-	def start_employee_request(self, set_password_url: str | None = None) -> None:
+	def start_employee_request(self, new_user: bool) -> None:
 		user = frappe.get_doc("User", self.user)
 		user.append_roles(PREBOARDING_CANDIDATE_ROLE)
 		user.save(ignore_permissions=True)
@@ -241,7 +239,7 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 			frappe.db.set_value("Employee Request", request, "user", self.user)
 		else:
 			self.make_employee_request().insert()
-		self.send_preboarding_invite(set_password_url)
+		self.send_preboarding_invite(user._reset_password() if new_user else None)
 
 	def make_employee_request(self) -> Document:
 		first_name, middle_name, last_name = split_full_name(self.employee_name)
@@ -260,7 +258,7 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 			request.append("documents", row)
 		return request
 
-	def send_preboarding_invite(self, set_password_url: str | None = None) -> None:
+	def send_preboarding_invite(self, set_password_url: str | None) -> None:
 		template = frappe.get_doc("Email Template", PREBOARDING_INVITE_TEMPLATE)
 		email = template.get_formatted_email(
 			{
