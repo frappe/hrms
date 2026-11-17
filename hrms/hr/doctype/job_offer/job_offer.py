@@ -88,7 +88,8 @@ class JobOffer(Document):
 
 	def set_compensation(self):
 		if not self.salary_structure or not self.calculate_component_amount_from:
-			self.ctc = 0
+			if self.salary_structure:
+				self.ctc = 0
 			self.gross = 0
 			self.set("ctc_breakup", [])
 			return
