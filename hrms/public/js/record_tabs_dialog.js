@@ -50,6 +50,7 @@ export class RecordTabsDialog {
 		);
 		this.setup_group(group);
 		this.groups.push(group);
+		body.on("awesomplete-open", "input", (event) => reveal_dropdown(event.target));
 		return body;
 	}
 
@@ -164,6 +165,20 @@ export function is_editable(df) {
 		frappe.model.table_fields.includes(df.fieldtype) ||
 		!frappe.model.no_value_type.includes(df.fieldtype);
 	return !df.hidden && !df.read_only && holds_value;
+}
+
+function reveal_dropdown(input) {
+	const list = input.closest(".awesomplete")?.querySelector("ul");
+	const panel = input.closest(".settings-dialog-panel-body");
+	if (!list || !panel) return;
+	const observer = new ResizeObserver(() => {
+		if (list.hidden) return;
+		const overflow =
+			list.getBoundingClientRect().bottom - panel.getBoundingClientRect().bottom;
+		if (overflow > 0) panel.scrollTop += overflow;
+	});
+	observer.observe(list);
+	input.addEventListener("awesomplete-close", () => observer.disconnect(), { once: true });
 }
 
 export function make_panel_body() {

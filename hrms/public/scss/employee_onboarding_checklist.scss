@@ -1,4 +1,9 @@
 .eo-record-dialog {
+	.form-grid-container:has(.awesomplete > ul:not([hidden])),
+	.form-grid:has(.awesomplete > ul:not([hidden])) {
+		overflow: visible;
+	}
+
 	.es-tabs[data-orientation="vertical"] {
 		display: grid;
 		flex: 1;
