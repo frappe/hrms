@@ -260,7 +260,8 @@ function cancelAdd(input) {
 }
 .fold > * {
 	min-height: 0;
-	overflow: hidden;
+	overflow-x: visible;
+	overflow-y: clip;
 }
 .checklist[data-collapsed] .fold {
 	grid-template-rows: 0fr;
