@@ -25,10 +25,10 @@ export class RecordTabsDialog {
 		this.dialog.show();
 	}
 
-	make_field_tabs(include, { lead = [] } = {}) {
+	make_field_tabs(include, { lead = [], arrange = (sections) => sections } = {}) {
 		return with_lead_fields(get_tabs(this.doctype, include), lead).map((tab) => ({
 			label: tab.label,
-			content: this.make_group(tab.sections),
+			content: this.make_group(arrange(tab.sections)),
 		}));
 	}
 

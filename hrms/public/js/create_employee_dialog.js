@@ -15,7 +15,9 @@ const JOB_FIELDS = [
 	"branch",
 	"reports_to",
 ];
+const APPROVER_FIELDS = ["leave_approver", "expense_approver", "shift_request_approver"];
 const PHOTO_FIELD = "image";
+const LAST_FIELDS = ["bio"];
 const NAME_FIELDS = ["first_name", "middle_name", "last_name"];
 const EMAIL_FIELDS = ["personal_email", "company_email"];
 const WHOLE_TABS = ["salary_information"];
@@ -29,11 +31,14 @@ export class CreateEmployeeDialog extends RecordTabsDialog {
 	}
 
 	make_tabs() {
-		const shown = new Set([...JOB_FIELDS, ...this.details.fields].filter(is_reviewable));
+		const shown = new Set(
+			[...JOB_FIELDS, ...APPROVER_FIELDS, ...this.details.fields].filter(is_reviewable),
+		);
 		return [
 			...this.make_field_tabs(
 				(df, tab) =>
 					shown.has(df.fieldname) || (WHOLE_TABS.includes(tab) && is_editable(df)),
+				{ arrange: move_last_fields_down },
 			),
 			{
 				label: __("Documents"),
@@ -169,6 +174,11 @@ export class CreateEmployeeDialog extends RecordTabsDialog {
 		this.dialog.hide();
 		this.on_created(doc);
 	}
+}
+
+function move_last_fields_down(sections) {
+	const is_last = (section) => section.fields.some((field) => LAST_FIELDS.includes(field));
+	return [...sections.filter((section) => !is_last(section)), ...sections.filter(is_last)];
 }
 
 function is_reviewable(fieldname) {
