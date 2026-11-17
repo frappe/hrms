@@ -35,6 +35,11 @@ const draft = ref(
 	),
 );
 const errors = ref({});
+const open_date = ref(null);
+const set_date_open = (fieldname, open) => {
+	if (open) open_date.value = fieldname;
+	else if (open_date.value === fieldname) open_date.value = null;
+};
 // a file already given shows by the name at the end of its URL
 const file_names = ref(
 	Object.fromEntries(
@@ -140,7 +145,9 @@ function link_options(field) {
 							:min="field.min || '1900-01-01'"
 							:max="field.max === undefined ? today : field.max"
 							:error="errors[field.fieldname]"
+							:open="open_date === field.fieldname"
 							typeable
+							@update:open="(open) => set_date_open(field.fieldname, open)"
 						/>
 					</div>
 
@@ -198,6 +205,7 @@ function link_options(field) {
 						:options="field.options.map((value) => ({ label: value, value }))"
 						:placeholder="__('Select')"
 						:error="errors[field.fieldname]"
+						@update:open="(open) => open && (open_date = null)"
 					/>
 
 					<Select
@@ -209,6 +217,7 @@ function link_options(field) {
 						:placeholder="field.placeholder || __('Select')"
 						:error="errors[field.fieldname]"
 						@update:model-value="(value) => (draft[field.fieldname] = value || '')"
+						@update:open="(open) => open && (open_date = null)"
 					/>
 
 					<div
