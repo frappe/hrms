@@ -4,7 +4,7 @@ frappe.provide("hrms.ui");
 
 const STATUS = { "In Progress": "in_progress", Stuck: "stuck" };
 
-const ROW_STATUS = { in_progress: "In Progress", stuck: "Stuck" };
+const ROW_STATUS = Object.fromEntries(Object.entries(STATUS).map(([row, item]) => [item, row]));
 
 hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 	constructor({ frm }) {
