@@ -226,12 +226,17 @@ function add_assignment_button(frm) {
 	)
 		return;
 
-	frm.add_custom_button(__("Create Salary Structure Assignment"), () => {
-		frappe.model.open_mapped_doc({
-			method: "hrms.hr.doctype.employee_promotion.employee_promotion.make_salary_structure_assignment",
-			frm: frm,
-		});
-	});
+	frm.add_custom_button(
+		__("Salary Structure Assignment"),
+		() => {
+			frappe.model.open_mapped_doc({
+				method: "hrms.hr.doctype.employee_promotion.employee_promotion.make_salary_structure_assignment",
+				frm: frm,
+			});
+		},
+		__("Create"),
+	);
+	frm.page.set_inner_btn_group_as_primary(__("Create"));
 }
 
 function add_email_letter_button(frm) {
