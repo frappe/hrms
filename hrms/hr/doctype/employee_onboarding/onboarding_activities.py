@@ -451,6 +451,8 @@ def is_pending_for_employee_creation(row) -> bool:
 def is_needed_by(row, other) -> bool:
 	if row.depends_on_action and other.action == row.depends_on_action and not other.completed:
 		return True
+	if row.action == "Set Roles" and other.action == "Create User" and not other.completed:
+		return True
 	return row.action == "Create Employee" and is_pending_for_employee_creation(other)
 
 

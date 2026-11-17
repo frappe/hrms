@@ -480,6 +480,20 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 
 		self.assertNotIn(get_row(onboarding, "Create Employee").name, onboarding.get_onload("lock_reasons"))
 
+	def test_set_roles_is_locked_until_the_user_and_the_employee_exist(self):
+		onboarding = create_employee_onboarding(submit=True)
+		row = get_row(onboarding, "Set Roles and Permissions").name
+
+		self.assertEqual(onboarding.get_lock_reasons()[row], ["Create User Login", "Create Employee"])
+
+		create_onboarding_employee(onboarding)
+		onboarding.reload()
+		self.assertEqual(onboarding.get_lock_reasons()[row], ["Create User Login"])
+
+		onboarding.create_user("Personal Email", personal_email="asha.locked@example.com")
+		onboarding.reload()
+		self.assertNotIn(row, onboarding.get_lock_reasons())
+
 	def test_an_activity_needing_the_employee_cannot_be_required_for_it(self):
 		for activity in ("Create Employee", "Assign Leave Policy"):
 			template = get_test_template()
