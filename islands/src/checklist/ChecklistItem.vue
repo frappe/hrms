@@ -55,7 +55,6 @@
 			>
 				<span class="flex min-w-0 items-center gap-2">
 					<span class="label truncate text-base text-ink-gray-8">{{ item.label }}</span>
-					<Badge v-if="item.optional" :label="__('Optional')" size="sm" />
 					<Badge
 						v-if="item.skipped && !item.done"
 						:label="__('Skipped')"

@@ -116,12 +116,10 @@ const ordered = computed(() => {
 });
 
 const progress = computed(() => {
-	const required = props.items.filter((item) => !item.optional);
-	const counted = required.length ? required : props.items;
 	return {
-		total: counted.length,
-		done: counted.filter((item) => item.done).length,
-		skipped: counted.filter((item) => !item.done && item.skipped).length,
+		total: props.items.length,
+		done: props.items.filter((item) => item.done).length,
+		skipped: props.items.filter((item) => !item.done && item.skipped).length,
 	};
 });
 
