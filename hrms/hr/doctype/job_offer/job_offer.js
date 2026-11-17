@@ -109,6 +109,16 @@ frappe.ui.form.on("Job Offer", {
 			frm.page.set_inner_btn_group_as_primary(__("Create"));
 		}
 
+		if (accepted && !onload.employee) {
+			frm.add_custom_button(
+				__("Employee"),
+				function () {
+					erpnext.job_offer.make_employee(frm);
+				},
+				__("Create"),
+			);
+		}
+
 		if (onload.employee_onboarding) {
 			frm.add_custom_button(
 				__("Employee Onboarding"),
@@ -215,6 +225,13 @@ function offer_letter_message(doc) {
 
 	return lines.map((line) => `<p>${line}</p>`).join("");
 }
+
+erpnext.job_offer.make_employee = function (frm) {
+	frappe.model.open_mapped_doc({
+		method: "hrms.hr.doctype.job_offer.job_offer.make_employee",
+		frm: frm,
+	});
+};
 
 erpnext.job_offer.make_employee_onboarding = function (frm) {
 	const dialog = new frappe.ui.Dialog({
