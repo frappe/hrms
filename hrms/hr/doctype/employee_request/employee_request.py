@@ -147,7 +147,7 @@ class EmployeeRequest(Document):
 		for df in self.meta.fields:
 			if df.fieldtype in display_fieldtypes or df.fieldname in NOT_COPIED_FIELDS:
 				continue
-			if not employee_meta.has_field(df.fieldname):
+			if not maps_to_employee(df, employee_meta):
 				continue
 			value = self.get(df.fieldname)
 			if df.fieldtype in table_fields:
@@ -297,9 +297,16 @@ def get_review_fields() -> list[str]:
 		if df.fieldtype == "Tab Break":
 			tab = df.fieldname
 		elif tab not in REVIEW_SKIPPED_TABS and df.fieldtype not in display_fieldtypes:
-			if employee_meta.has_field(df.fieldname):
+			if maps_to_employee(df, employee_meta):
 				fields.append(df.fieldname)
 	return fields
+
+
+def maps_to_employee(df, employee_meta) -> bool:
+	employee_df = employee_meta.get_field(df.fieldname)
+	if not employee_df or employee_df.fieldtype != df.fieldtype:
+		return False
+	return df.fieldtype not in table_fields or employee_df.options == df.options
 
 
 def get_apply_summary(filled: int, moved: int) -> str:

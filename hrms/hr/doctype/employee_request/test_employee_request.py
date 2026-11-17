@@ -162,6 +162,7 @@ class TestEmployeeRequest(HRMSTestSuite):
 
 		self.assertEqual(employee.bank_name, "State Bank of India")
 		self.assertEqual(employee.cell_number, "+91-9876543210")
+		self.assertEqual(employee.documents, [])
 		self.assertFalse(frappe.db.exists("Employee Request", request.name))
 		self.assertNotIn(PREBOARDING_CANDIDATE_ROLE, frappe.get_roles(CANDIDATE_EMAIL))
 		self.assertEqual(
