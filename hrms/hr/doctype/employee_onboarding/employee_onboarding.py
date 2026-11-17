@@ -147,9 +147,12 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		existing = frappe.db.exists("User", email)
 		user = email if existing else self.insert_user(email)
 		self.db_set("user", user)
-		self.start_employee_request(
-			set_password_url=None if existing else frappe.get_doc("User", user)._reset_password()
-		)
+		if self.employee:
+			self.link_user_to_employee()
+		else:
+			self.start_employee_request(
+				set_password_url=None if existing else frappe.get_doc("User", user)._reset_password()
+			)
 		self.save_activity_states()
 		return user
 
@@ -216,6 +219,13 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		user.flags.no_welcome_mail = True
 		user.insert(ignore_permissions=True)
 		return user.name
+
+	def link_user_to_employee(self) -> None:
+		employee = frappe.get_doc("Employee", self.employee)
+		employee.user_id = self.user
+		employee.save(ignore_permissions=True)
+		self.grant_employee_self_service()
+		frappe.get_doc("User", self.user).send_welcome_mail_to_user()
 
 	def start_employee_request(self, set_password_url: str | None = None) -> None:
 		user = frappe.get_doc("User", self.user)

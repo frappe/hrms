@@ -309,6 +309,26 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		self.assertEqual(user, "asha.typed@example.com")
 		self.assertEqual(frappe.db.get_value("Employee Onboarding", onboarding.name, "personal_email"), user)
 
+	def test_a_user_created_after_the_employee_is_linked_to_it_without_preboarding(self):
+		onboarding = create_employee_onboarding(submit=True)
+		employee = create_onboarding_employee(onboarding)
+		onboarding.reload()
+		frappe.db.delete("Email Queue")
+
+		user = onboarding.create_user("Personal Email", personal_email="asha.late@example.com")
+
+		frappe.clear_cache(user=user)
+		self.assertEqual(frappe.db.get_value("Employee", employee, "user_id"), user)
+		self.assertIn("Employee Self Service", frappe.get_roles(user))
+		self.assertNotIn("Preboarding Candidate", frappe.get_roles(user))
+		self.assertFalse(frappe.db.exists("Employee Request", {"employee_onboarding": onboarding.name}))
+		self.assertFalse(
+			frappe.db.exists(
+				"Email Queue", {"reference_doctype": onboarding.doctype, "reference_name": onboarding.name}
+			)
+		)
+		self.assertEqual(frappe.db.count("Email Queue"), 1)
+
 	def test_self_service_role_is_granted_with_the_employee(self):
 		onboarding = create_employee_onboarding(submit=True)
 		onboarding.db_set("company_email", "asha.ess@example.com")

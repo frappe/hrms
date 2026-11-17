@@ -152,26 +152,31 @@ function open_user_dialog(list) {
 		],
 		primary_action_label: __("Create User Login"),
 		primary_action: async (values) => {
+			const had_employee = Boolean(frm.doc.employee);
 			await list.call("create_user", values, __("Creating the user"));
 			dialog.hide();
 			show_invite_sent(
 				values.create_user_for === "Personal Email"
 					? values.personal_email
 					: values.company_email,
+				had_employee,
 			);
 		},
 	});
 	dialog.show();
 }
 
-function show_invite_sent(email) {
+function show_invite_sent(email, had_employee) {
+	const recipient = [`<b>${frappe.utils.escape_html(email)}</b>`];
 	frappe.msgprint({
 		title: __("Welcome email sent"),
 		indicator: "green",
-		message: __(
-			"We sent a welcome email to {0} with a link to the preboarding page where they submit their details and upload required documents.",
-			[`<b>${frappe.utils.escape_html(email)}</b>`],
-		),
+		message: had_employee
+			? __("We sent a welcome email to {0} to set their password.", recipient)
+			: __(
+					"We sent a welcome email to {0} with a link to the preboarding page where they submit their details and upload required documents.",
+					recipient,
+			  ),
 	});
 }
 
