@@ -245,11 +245,11 @@ function set_base_from_grade(frm, grade) {
 }
 
 function clear_compensation(frm) {
-	if (!(frm.doc.ctc_breakup || []).length && !frm.doc.ctc && !frm.doc.gross) return;
+	if (!(frm.doc.ctc_breakup || []).length && !frm.doc.gross) return;
 
 	frm.clear_table("ctc_breakup");
 	frm.refresh_field("ctc_breakup");
-	frm.set_value({ ctc: 0, gross: 0 });
+	frm.set_value("gross", 0);
 }
 
 function update_compensation(frm) {
