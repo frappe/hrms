@@ -161,10 +161,7 @@ hrms.ui.EmployeeOnboardingChecklist = class EmployeeOnboardingChecklist {
 		if (days === -1) return __("Yesterday");
 
 		const due = moment(date);
-		const weeks = due.clone().startOf("week").diff(moment().startOf("week"), "weeks");
-		if (days > 0 && weeks === 0) return due.format("dddd");
-		if (weeks === 1) return __("Next {0}", [due.format("dddd")]);
-		return due.format("D MMM YYYY");
+		return due.format(due.isSame(moment(), "year") ? "D MMM" : "D MMM YYYY");
 	}
 
 	get_lock_reason(row) {
