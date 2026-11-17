@@ -25,7 +25,7 @@
 			<LucideGripVertical class="size-3" />
 		</button>
 		<div class="row" :data-compact="!showOwner || null">
-			<span class="marker flex text-ink-gray-4" data-control>
+			<span class="marker flex" data-control>
 				<Tooltip v-if="lockReason" :text="lockReason">
 					<span
 						class="flex rounded-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
@@ -75,28 +75,36 @@
 					size="sm"
 				/>
 			</div>
-			<div v-if="showOwner" class="owner flex min-w-0 text-ink-gray-4" data-control>
+			<div v-if="showOwner" class="owner flex pr-2" data-control>
 				<Combobox
 					v-if="canAssign"
-					class="w-full min-w-0"
 					trigger="button"
-					variant="ghost"
 					:model-value="item.assignee?.value ?? null"
 					:options="userOptions"
 					:filterable="false"
 					:loading="searching"
-					:placeholder="__('Select assignee')"
+					:placeholder="__('Set assignee')"
 					@update:model-value="assign"
 					@update:query="search"
 					@update:open="(isOpen) => isOpen && search('')"
 				>
-					<template #prefix="{ selectedOption }">
-						<Avatar
-							v-if="selectedOption"
-							:label="selectedOption.label"
-							:image="selectedOption.image"
-							size="sm"
-						/>
+					<template #trigger>
+						<button
+							type="button"
+							class="flex rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
+							:title="assigneeTitle"
+							:aria-label="assigneeTitle"
+						>
+							<Avatar
+								v-if="item.assignee"
+								:label="item.assignee.label"
+								:image="item.assignee.image"
+								size="md"
+							/>
+							<span v-else class="unassigned">
+								<LucideUserPlus class="size-3" />
+							</span>
+						</button>
 					</template>
 					<template #item-prefix="{ item: option }">
 						<Avatar :label="option.label" :image="option.image" size="sm" />
@@ -110,20 +118,17 @@
 						/>
 					</template>
 				</Combobox>
-				<span
-					v-else-if="item.assignee"
-					class="flex min-w-0 items-center gap-2 px-2 text-p-sm text-ink-gray-7"
-					:title="item.assignee.description || item.assignee.label"
-				>
-					<Avatar :label="item.assignee.label" :image="item.assignee.image" size="sm" />
-					<span class="truncate">{{ item.assignee.label }}</span>
+				<span v-else class="flex" :title="assigneeTitle">
+					<Avatar
+						v-if="item.assignee"
+						:label="item.assignee.label"
+						:image="item.assignee.image"
+						size="md"
+					/>
+					<span v-else class="unassigned" />
 				</span>
 			</div>
-			<div
-				class="due justify-self-end whitespace-nowrap text-p-sm"
-				:class="item.overdue && !finished ? 'text-ink-red-7' : 'text-ink-gray-6'"
-				data-control
-			>
+			<div class="due whitespace-nowrap text-p-sm" data-control>
 				<DatePicker
 					v-if="canSetDueDate"
 					:model-value="item.due_date || ''"
@@ -131,21 +136,23 @@
 					@update:model-value="setDueDate"
 				>
 					<template #trigger="{ setOpen, open: pickerOpen }">
-						<Button
-							variant="ghost"
+						<button
+							type="button"
+							class="rounded px-1 hover:bg-surface-gray-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline-gray-3"
 							:class="dueClass"
-							:label="item.due_date_label || __('Add due date')"
-							:tooltip="item.due_date_title || __('Due date')"
+							:title="item.due_date_title || __('Due date')"
 							@click="setOpen(!pickerOpen)"
 						>
-							<template #prefix><LucideCalendar class="size-4" /></template>
-						</Button>
+							{{ item.due_date_label || __("Set due date") }}
+						</button>
 					</template>
 					<template v-if="item.due_date" #actions="{ clear }">
 						<Button variant="ghost" :label="__('Clear')" @click="clear" />
 					</template>
 				</DatePicker>
-				<span v-else :title="item.due_date_title">{{ item.due_date_label }}</span>
+				<span v-else class="px-1" :class="dueClass" :title="item.due_date_title">{{
+					item.due_date_label || __("No date")
+				}}</span>
 			</div>
 		</div>
 		<div class="drawer" :inert="!open || null">
@@ -173,9 +180,9 @@
 <script setup>
 import { Avatar, Badge, Button, Combobox, DatePicker, Dropdown, Tooltip } from "frappe-ui";
 import { computed, h, ref } from "vue";
-import LucideCalendar from "~icons/lucide/calendar";
 import LucideGripVertical from "~icons/lucide/grip-vertical";
 import LucideLock from "~icons/lucide/lock";
+import LucideUserPlus from "~icons/lucide/user-plus";
 
 import { __ } from "../translate.js";
 import { getState, hasBody, isFinished } from "./item.js";
@@ -215,9 +222,16 @@ const finished = computed(() => isFinished(props.item));
 const lockReason = computed(() => (finished.value ? null : props.item.locked));
 const body = computed(() => hasBody(props.item, props.canRemove));
 
+const assigneeTitle = computed(() => {
+	const assignee = props.item.assignee;
+	if (assignee) return assignee.description || assignee.label;
+	return props.canAssign ? __("Set assignee") : __("Unassigned");
+});
+
 const dueClass = computed(() => {
+	if (!props.item.due_date || lockReason.value) return "!text-ink-gray-5";
 	if (props.item.overdue && !finished.value) return "!text-ink-red-7";
-	return props.item.due_date ? "!text-ink-gray-6" : "!text-ink-gray-5";
+	return "!text-ink-gray-7";
 });
 
 const statusOptions = computed(() => {
@@ -316,6 +330,8 @@ function dragEnd() {
 
 <style scoped>
 .item {
+	display: grid;
+	grid-template-columns: subgrid;
 	transition:
 		padding-block 200ms ease-out,
 		background-color 200ms ease-out;
@@ -336,41 +352,46 @@ function dragEnd() {
 .item[data-empty] .toggle {
 	cursor: default;
 }
+.row,
+.drawer {
+	grid-column: 1 / -1;
+}
 .row {
 	display: grid;
-	grid-template-columns: auto minmax(0, 1fr) 88px 164px 132px;
-	grid-template-areas: "marker text status owner due";
+	grid-template-columns: subgrid;
+	align-items: start;
+}
+.marker,
+.status,
+.owner,
+.due,
+.toggle > :first-child {
+	display: flex;
 	align-items: center;
-	column-gap: 0.75rem;
 	min-height: 28px;
 }
-.row[data-compact] {
-	grid-template-columns: auto minmax(0, 1fr) auto 104px;
-	grid-template-areas: "marker text status due";
+.toggle > :nth-child(2) {
+	margin-top: -4px;
+}
+.unassigned {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 24px;
+	flex: none;
+	border: 1px dashed var(--outline-gray-4);
+	border-radius: 9999px;
+	color: var(--ink-gray-5);
 }
 .row[data-compact] .status {
 	justify-self: end;
 }
 .marker {
-	grid-area: marker;
+	color: var(--ink-gray-9);
 }
-.toggle {
-	grid-area: text;
-}
-.status {
-	grid-area: status;
-}
-.owner {
-	grid-area: owner;
-}
-.due {
-	grid-area: due;
-}
-.item[data-open][data-status="pending"] .marker {
-	color: var(--ink-gray-8);
-}
-.item[data-status="done"] .marker {
-	color: var(--ink-gray-7);
+.item[data-locked] .marker {
+	color: var(--ink-gray-4);
 }
 .item[data-status="stuck"] .marker {
 	color: var(--ink-red-7);
@@ -401,13 +422,6 @@ function dragEnd() {
 	padding-inline-start: calc(16px + 0.75rem);
 }
 @container (max-width: 560px) {
-	.row {
-		grid-template-columns: auto minmax(0, 1fr) auto 72px 132px;
-		column-gap: 0.5rem;
-	}
-	.row[data-compact] {
-		grid-template-columns: auto minmax(0, 1fr) auto 96px;
-	}
 	.content {
 		padding-inline-start: calc(16px + 0.5rem);
 	}

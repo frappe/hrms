@@ -22,7 +22,11 @@
 		</div>
 		<div class="fold" :inert="collapsed || null">
 			<div>
-				<div class="items flex flex-col gap-1" :data-sortable="Boolean(onReorder) || null">
+				<div
+					class="items"
+					:data-sortable="Boolean(onReorder) || null"
+					:data-compact="!showOwner || null"
+				>
 					<ChecklistItem
 						v-for="item in ordered"
 						:key="item.id"
@@ -261,12 +265,29 @@ function cancelAdd(input) {
 .checklist[data-collapsed] .fold {
 	grid-template-rows: 0fr;
 }
+.items {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr) auto auto max-content;
+	column-gap: 0.75rem;
+	row-gap: 0.25rem;
+}
+.items[data-compact] {
+	grid-template-columns: auto minmax(0, 1fr) auto max-content;
+}
+.items > * {
+	grid-column: 1 / -1;
+}
 .items > :first-child {
 	margin-top: 1rem;
 }
 .items[data-sortable] {
 	margin-inline-start: -0.75rem;
 	padding-inline-start: 0.75rem;
+}
+@container (max-width: 560px) {
+	.items {
+		column-gap: 0.5rem;
+	}
 }
 @media (prefers-reduced-motion: reduce) {
 	.fold {
