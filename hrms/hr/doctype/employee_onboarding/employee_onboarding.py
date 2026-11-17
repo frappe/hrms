@@ -205,9 +205,12 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 				"middle_name": middle_name,
 				"last_name": last_name,
 				"enabled": 1,
+				"user_type": "Website User",
 			}
 		)
+		user.flags.no_welcome_mail = True
 		user.insert(ignore_permissions=True)
+		user.send_welcome_mail_to_user()
 		return user.name
 
 	def start_employee_request(self) -> None:
