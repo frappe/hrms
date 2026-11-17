@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class IdentificationDocumentType(Document):
+class EmployeeDocumentType(Document):
 	pass

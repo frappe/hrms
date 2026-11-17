@@ -26,7 +26,7 @@ const manager_company = computed(() =>
 );
 
 function open_profile() {
-	frappe.set_route("Form", "Employee", props.node.id);
+	frappe.set_route("employee-profile", props.node.id);
 }
 
 // desk's composer keeps the email on the employee's timeline. Without permission, the mail app opens.
@@ -125,18 +125,7 @@ function compose_email() {
 		</dl>
 
 		<div class="mt-4 flex items-center gap-2">
-			<Button
-				v-if="node.can_open"
-				class="flex-1"
-				:label="__('Open profile')"
-				@click="open_profile"
-			/>
-			<!-- a disabled button takes no pointer events, so the span carries the tooltip -->
-			<Tooltip v-else :text="__('You do not have access to this profile')">
-				<span class="flex flex-1">
-					<Button class="w-full" :label="__('Open profile')" disabled />
-				</span>
-			</Tooltip>
+			<Button class="flex-1" :label="__('Open profile')" @click="open_profile" />
 			<Tooltip v-if="node.email" :text="__('Email')">
 				<Button
 					v-if="node.can_email"

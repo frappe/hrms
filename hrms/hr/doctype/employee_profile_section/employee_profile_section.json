@@ -1,0 +1,52 @@
+{
+ "actions": [],
+ "allow_bulk_edit": 1,
+ "allow_rename": 1,
+ "creation": "2026-10-30 17:10:00.650897",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "section_type",
+  "title",
+  "content"
+ ],
+ "fields": [
+  {
+   "default": "Text",
+   "fieldname": "section_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Section Type",
+   "options": "Cover\nHeadline\nText\nTags\nPhotos\nLinks",
+   "reqd": 1
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Title"
+  },
+  {
+   "fieldname": "content",
+   "fieldtype": "Long Text",
+   "in_list_view": 1,
+   "label": "Content"
+  }
+ ],
+ "grid_page_length": 50,
+ "istable": 1,
+ "link_display_mode": "Search",
+ "links": [],
+ "modified": "2026-11-09 23:55:16.357628",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "Employee Profile Section",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
