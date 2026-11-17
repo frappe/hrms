@@ -149,6 +149,12 @@ class EmployeeBoardingController(Document):
 @frappe.whitelist()
 def get_onboarding_details(parent: str, parentfield: str):
 	frappe.has_permission("Employee Boarding Template", "read", parent, throw=True)
+	return get_template_activities(parent, parentfield)
+
+
+def get_template_activities(template: str | None, parentfield: str = "onboarding_activities") -> list[dict]:
+	if not template:
+		return []
 	return frappe.get_all(
 		"Employee Boarding Activity",
 		fields=[
@@ -165,7 +171,7 @@ def get_onboarding_details(parent: str, parentfield: str):
 			"duration",
 		],
 		filters={
-			"parent": parent,
+			"parent": template,
 			"parenttype": "Employee Boarding Template",
 			"parentfield": parentfield,
 			"disabled": 0,

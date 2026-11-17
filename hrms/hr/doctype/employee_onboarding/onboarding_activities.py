@@ -11,6 +11,7 @@ from frappe.query_builder import Order
 from frappe.query_builder.functions import IfNull
 from frappe.utils import add_days, get_link_to_form
 
+from hrms.controllers.employee_boarding_controller import get_template_activities
 from hrms.hr.doctype.employee_request.employee_request import PREBOARDING_CANDIDATE_ROLE
 
 ASSIGNMENTS = {
@@ -47,19 +48,6 @@ EMPLOYEE_SELF_SERVICE_ROLE = "Employee Self Service"
 ONBOARDING_ROLES = ("Employee", EMPLOYEE_SELF_SERVICE_ROLE, PREBOARDING_CANDIDATE_ROLE)
 
 TEMPLATE_MATCH_FIELDS = ("company", "department", "designation", "employee_grade")
-
-TEMPLATE_ROW_FIELDS = [
-	"activity_name",
-	"action",
-	"reference_doctype",
-	"depends_on_action",
-	"required_for_employee_creation",
-	"user",
-	"role",
-	"description",
-	"begin_on",
-	"duration",
-]
 
 
 def make_assign_activity(title, doctype):
@@ -507,22 +495,6 @@ def get_matching_template(doc) -> str | None:
 		query = query.where(is_blank | (Template[field] == value) if value else is_blank)
 	templates = query.limit(1).run(pluck=True)
 	return templates[0] if templates else None
-
-
-def get_template_activities(template: str | None) -> list[dict]:
-	if not template:
-		return []
-	return frappe.get_all(
-		"Employee Boarding Activity",
-		fields=TEMPLATE_ROW_FIELDS,
-		filters={
-			"parent": template,
-			"parenttype": "Employee Boarding Template",
-			"parentfield": "onboarding_activities",
-			"disabled": 0,
-		},
-		order_by="idx",
-	)
 
 
 def set_action_defaults(row) -> None:
