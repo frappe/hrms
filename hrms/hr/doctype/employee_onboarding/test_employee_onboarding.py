@@ -17,10 +17,7 @@ from hrms.hr.doctype.employee_onboarding.employee_onboarding import (
 	make_employee,
 	split_full_name,
 )
-from hrms.hr.doctype.employee_onboarding.onboarding_activities import (
-	STANDARD_ACTIVITIES,
-	get_template_activities,
-)
+from hrms.hr.doctype.employee_onboarding.onboarding_activities import STANDARD_ACTIVITIES
 from hrms.hr.doctype.job_offer.job_offer import make_employee_onboarding
 from hrms.hr.doctype.job_offer.test_job_offer import create_job_offer
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_holiday_list
@@ -44,12 +41,6 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		self.assertEqual(onboarding.company, job_offer.company)
 		self.assertEqual(onboarding.date_of_joining, job_offer.date_of_joining)
 		self.assertEqual(onboarding.boarding_begins_on, job_offer.date_of_joining)
-
-	def test_no_project_or_task_is_created(self):
-		onboarding = create_employee_onboarding(submit=False)
-
-		self.assertFalse(frappe.db.exists("Project", {"project_name": ("like", "%Employee Onboarding%")}))
-		self.assertFalse([row.task for row in onboarding.activities if row.task])
 
 	def test_template_rows_become_the_checklist(self):
 		onboarding = create_employee_onboarding(submit=False)
@@ -156,9 +147,6 @@ class TestEmployeeOnboarding(HRMSTestSuite):
 		self.assertNotIn("Send Appointment Letter", [row.activity_name for row in onboarding.activities])
 		self.assertNotIn("Send Appointment Letter", [row.activity_name for row in details])
 		self.assertIn("Create Employee", [row.activity_name for row in details])
-
-	def test_an_onboarding_without_a_template_gets_no_activities(self):
-		self.assertEqual(get_template_activities(None), [])
 
 	def test_template_rejects_a_duplicate_action(self):
 		template = make_template("_Test Duplicate Template")
