@@ -342,10 +342,7 @@ def get_components_left_out_of_offer() -> tuple[str, ...]:
 
 
 def compute_compensation(offer) -> dict:
-	from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
-		PERIODS_PER_YEAR,
-	)
-	from hrms.payroll.utils import CTC_SOLVER_TOLERANCE
+	from hrms.payroll.utils import CTC_SOLVER_TOLERANCE, get_periods_per_year
 
 	empty = {
 		"base": flt(offer.base),
@@ -378,8 +375,7 @@ def compute_compensation(offer) -> dict:
 		total_ctc = flt(assignment.ctc)
 
 	assignment.base = base
-	frequency = frappe.get_cached_value("Salary Structure", offer.salary_structure, "payroll_frequency")
-	periods = PERIODS_PER_YEAR.get(frequency, 12)
+	periods = get_periods_per_year(offer.salary_structure)
 
 	return {
 		"base": base,

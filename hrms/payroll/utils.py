@@ -257,7 +257,18 @@ def _bisect_base_for_ctc(ctc_at, target_ctc: float, scale: float, tolerance: flo
 	return base, ctc_at(base)
 
 
-def get_breakup_rows(assignment, periods: int, total_ctc: float, left_out: tuple[str, ...] = ()) -> list[dict]:
+def get_periods_per_year(salary_structure: str) -> int:
+	from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
+		PERIODS_PER_YEAR,
+	)
+
+	frequency = frappe.get_cached_value("Salary Structure", salary_structure, "payroll_frequency")
+	return PERIODS_PER_YEAR.get(frequency, 12)
+
+
+def get_breakup_rows(
+	assignment, periods: int, total_ctc: float, left_out: tuple[str, ...] = ()
+) -> list[dict]:
 	rows_by_type = assignment.get_evaluated_components()
 
 	def row(label, per_cycle: float, is_summary: int) -> dict:

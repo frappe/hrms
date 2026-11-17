@@ -9,10 +9,9 @@ from frappe.utils import formatdate, get_link_to_form, getdate
 
 from hrms.hr.utils import get_formatted_value, update_employee_work_history, validate_active_employee
 from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
-	PERIODS_PER_YEAR,
 	get_promotion_assignments,
 )
-from hrms.payroll.utils import get_breakup_rows
+from hrms.payroll.utils import get_breakup_rows, get_periods_per_year
 
 
 class EmployeePromotion(Document):
@@ -68,8 +67,7 @@ class EmployeePromotion(Document):
 			return
 
 		self.revised_ctc = assignment.ctc
-		frequency = frappe.get_cached_value("Salary Structure", self.salary_structure, "payroll_frequency")
-		periods = PERIODS_PER_YEAR.get(frequency, 12)
+		periods = get_periods_per_year(self.salary_structure)
 		self.set("ctc_breakup", get_breakup_rows(assignment, periods, assignment.ctc))
 
 	def get_revised_ctc(self) -> float:
