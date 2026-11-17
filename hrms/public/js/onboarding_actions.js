@@ -152,17 +152,35 @@ function open_user_dialog(list) {
 		],
 		primary_action_label: __("Create User Login"),
 		primary_action: async (values) => {
+			const employee = list.frm.doc.employee;
+			const employee_user =
+				employee &&
+				(await frappe.db.get_value("Employee", employee, "user_id")).message?.user_id;
 			await list.call("create_user", values, __("Creating the user"));
 			dialog.hide();
+			if (employee_user) {
+				show_user_adopted(list.frm.doc.user);
+				return;
+			}
 			show_invite_sent(
 				values.create_user_for === "Personal Email"
 					? values.personal_email
 					: values.company_email,
-				Boolean(list.frm.doc.employee),
+				Boolean(employee),
 			);
 		},
 	});
 	dialog.show();
+}
+
+function show_user_adopted(user) {
+	frappe.msgprint({
+		title: __("User linked"),
+		indicator: "green",
+		message: __("{0} is already this employee's login, so no email was sent.", [
+			`<b>${frappe.utils.escape_html(user)}</b>`,
+		]),
+	});
 }
 
 function show_invite_sent(email, had_employee) {
