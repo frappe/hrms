@@ -319,7 +319,7 @@ def get_custom_fields():
 				"fieldname": "overview_tab",
 				"fieldtype": "Tab Break",
 				"label": _("Overview"),
-				"insert_after": "profile",
+				"insert_after": "profile_sections",
 			},
 			# The employee uploads these from their profile, and HR verifies them here. Before Passport
 			# Details: after a tab's last field, a custom section would land in the next tab.
