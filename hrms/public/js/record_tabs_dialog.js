@@ -36,6 +36,7 @@ export class RecordTabsDialog {
 		const body = make_panel_body();
 		const group = new frappe.ui.FieldGroup({
 			body: body[0],
+			is_dialog: true,
 			fields: get_layout(this.doctype, sections, this.doc).map((df) =>
 				without_fetch(this.prepare_field(df)),
 			),
@@ -108,6 +109,7 @@ export class RecordTabsDialog {
 	get_doc({ validate = true } = {}) {
 		const values = {};
 		for (const [index, group] of this.groups.entries()) {
+			if (validate) group.primary_action_fulfilled = true;
 			const group_values = group.get_values(!validate);
 			if (!group_values) {
 				this.tabs.set_active(index);
