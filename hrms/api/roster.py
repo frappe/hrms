@@ -43,9 +43,25 @@ def _validate_shift_filters(shift_filters: dict[str, str]) -> None:
 			)
 
 
+FILTER_DOCTYPES = (
+	"Company",
+	"Department",
+	"Branch",
+	"Designation",
+	"Shift Type",
+	"Shift Location",
+)
+
+
 @frappe.whitelist()
 def get_default_company() -> str:
 	return frappe.defaults.get_user_default("Company")
+
+
+@frappe.whitelist()
+def get_permitted_filter_doctypes() -> list[str]:
+	"""Return the filter doctypes the user can list, so the roster only loads those filters."""
+	return [doctype for doctype in FILTER_DOCTYPES if frappe.has_permission(doctype, "select")]
 
 
 @frappe.whitelist()

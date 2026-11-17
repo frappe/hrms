@@ -11,7 +11,7 @@
 
 		<!-- Filters -->
 		<div class="ml-auto space-x-2.5 flex">
-			<div v-for="[key, value] of Object.entries(filters)" :key="key" class="w-40">
+			<div v-for="[key, value] of visibleFilters" :key="key" class="w-40">
 				<FormControl
 					type="autocomplete"
 					:placeholder="toTitleCase(key)"
@@ -26,7 +26,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, watch } from "vue";
+import { computed, reactive, watch } from "vue";
 import { FormControl, createResource, createListResource } from "frappe-ui";
 import { Dayjs } from "dayjs";
 
@@ -63,10 +63,17 @@ const filters: {
 	shift_location: { options: [], model: null },
 });
 
+const visibleFilters = computed(() =>
+	Object.entries(filters).filter(([key]) =>
+		(permittedFilterDoctypes.data || []).includes(toTitleCase(key)),
+	),
+);
+
 watch(
 	() => filters.company.model,
 	(val) => {
-		if (val?.value) getFilterOptions("department", { company: val.value });
+		if (val?.value && isPermitted("department"))
+			getFilterOptions("department", { company: val.value });
 		else {
 			filters.department.model = null;
 			filters.department.options = [];
@@ -97,12 +104,21 @@ const toTitleCase = (str: string) =>
 const defaultCompany = createResource({
 	url: "hrms.api.roster.get_default_company",
 	auto: true,
+	onSuccess: () => permittedFilterDoctypes.fetch(),
+});
+
+// skip filters whose doctype the user cannot list, instead of raising permission errors
+const permittedFilterDoctypes = createResource({
+	url: "hrms.api.roster.get_permitted_filter_doctypes",
 	onSuccess: () => {
-		["company", "branch", "designation", "shift_type", "shift_location"].forEach((field) =>
-			getFilterOptions(field as FilterField),
-		);
+		(["company", "branch", "designation", "shift_type", "shift_location"] as FilterField[])
+			.filter(isPermitted)
+			.forEach((field) => getFilterOptions(field));
 	},
 });
+
+const isPermitted = (field: FilterField) =>
+	(permittedFilterDoctypes.data || []).includes(toTitleCase(field));
 
 const getFilterOptions = (field: FilterField, listFilters: { company?: string } = {}) => {
 	createListResource({
