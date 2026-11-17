@@ -255,8 +255,27 @@ def get_preboarding_boot() -> dict:
 	meta = frappe.get_meta("Employee Request")
 	return {
 		"request": request,
+		"job": get_job_details(request),
 		"fields": get_translated_fields(meta.name),
 		"child_metas": {df.options: get_translated_fields(df.options) for df in meta.get_table_fields()},
+	}
+
+
+def get_job_details(request: str) -> dict:
+	onboarding = frappe.db.get_value("Employee Request", request, "employee_onboarding")
+	if not onboarding:
+		return {}
+	job = frappe.db.get_value(
+		"Employee Onboarding",
+		onboarding,
+		["designation", "department", "date_of_joining", "job_offer"],
+		as_dict=True,
+	)
+	return {
+		"designation": job.designation,
+		"department": job.department and frappe.db.get_value("Department", job.department, "department_name"),
+		"branch": job.job_offer and frappe.db.get_value("Job Offer", job.job_offer, "branch"),
+		"date_of_joining": job.date_of_joining and str(job.date_of_joining),
 	}
 
 
