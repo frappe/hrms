@@ -77,7 +77,7 @@ class TestIncomeTaxComputation(HRMSTestSuite):
 		expected_data = {
 			"employee": self.employee,
 			"employee_name": "employee_tax_computation@example.com",
-			"department": "All Departments",
+			"department": frappe.db.get_value("Employee", self.employee, "department"),
 			"income_tax_slab": self.income_tax_slab,
 			"gross_earnings": 936000.0,
 			"professional_tax": 2400.0,

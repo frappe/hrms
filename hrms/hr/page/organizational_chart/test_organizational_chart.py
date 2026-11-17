@@ -188,14 +188,15 @@ class TestOrganizationalChart(HRMSTestSuite):
 		other_company = create_company("Test Org Chart Other").name
 		other_company_manager = make_employee("orgchart_other_manager@mail.com", company=other_company)
 		left_manager = make_employee("orgchart_left_manager@mail.com", company=self.company)
-		frappe.db.set_value("Employee", left_manager, "status", "Left")
 
 		reports_to_other_company = make_employee(
 			"orgchart_other_report@mail.com", company=self.company, reports_to=other_company_manager
 		)
+		# an active employee can only be assigned to an active manager, so the manager leaves afterwards
 		reports_to_left_manager = make_employee(
 			"orgchart_left_report@mail.com", company=self.company, reports_to=left_manager
 		)
+		frappe.db.set_value("Employee", left_manager, "status", "Left")
 
 		roots = {root.id: root for root in get_children(self.company)}
 		self.assertEqual(set(roots), {reports_to_other_company, reports_to_left_manager})
