@@ -3,71 +3,83 @@
  "allow_import": 1,
  "autoname": "HR-APP-LETTER-.#####",
  "creation": "2019-12-26 12:35:49.574828",
- "default_print_format": "Standard Appointment Letter",
  "doctype": "DocType",
  "documentation": "https://docs.frappe.io/hr/appointment-letter",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "job_applicant",
+  "appointment_tab",
+  "job_offer",
   "applicant_name",
+  "applicant_email",
+  "employee",
   "column_break_3",
   "company",
   "appointment_date",
+  "letter_date",
+  "address",
+  "working_hours_section",
+  "shift_type",
+  "working_hours",
+  "column_break_terms",
+  "start_time",
+  "end_time",
+  "terms_of_appointment_tab",
   "appointment_letter_template",
-  "body_section",
-  "introduction",
-  "terms",
-  "closing_notes"
+  "letter_body",
+  "printing_tab",
+  "printing_details",
+  "letter_head",
+  "column_break_print",
+  "appointment_letter_print_format",
+  "signature",
+  "appointment_letter_preview_section",
+  "appointment_letter_preview"
  ],
  "fields": [
   {
-   "fetch_from": "job_applicant.applicant_name",
+   "fieldname": "appointment_tab",
+   "fieldtype": "Tab Break",
+   "label": "Details"
+  },
+  {
+   "description": "Role, pay, leave, probation and notice print from this offer.",
+   "fieldname": "job_offer",
+   "fieldtype": "Link",
+   "label": "Job Offer",
+   "options": "Job Offer",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "job_offer.applicant_name",
    "fieldname": "applicant_name",
    "fieldtype": "Data",
    "in_global_search": 1,
    "in_list_view": 1,
    "label": "Applicant Name",
-   "read_only": 1,
    "reqd": 1
   },
   {
-   "fieldname": "appointment_date",
-   "fieldtype": "Date",
-   "label": "Appointment Date",
-   "reqd": 1
+   "fetch_from": "job_offer.applicant_email",
+   "fetch_if_empty": 1,
+   "fieldname": "applicant_email",
+   "fieldtype": "Data",
+   "label": "Applicant Email Address",
+   "options": "Email"
   },
   {
-   "fieldname": "appointment_letter_template",
+   "fieldname": "employee",
    "fieldtype": "Link",
-   "label": "Appointment Letter Template",
-   "options": "Appointment Letter Template",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "appointment_letter_template.introduction",
-   "fieldname": "introduction",
-   "fieldtype": "Long Text",
-   "label": "Introduction",
-   "reqd": 1
-  },
-  {
-   "fieldname": "body_section",
-   "fieldtype": "Section Break",
-   "label": "Body"
+   "label": "Employee",
+   "options": "Employee"
   },
   {
    "fieldname": "column_break_3",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "job_applicant",
-   "fieldtype": "Link",
-   "label": "Job Applicant",
-   "options": "Job Applicant",
-   "reqd": 1
-  },
-  {
+   "fetch_from": "job_offer.company",
+   "fetch_if_empty": 1,
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
@@ -75,25 +87,137 @@
    "reqd": 1
   },
   {
-   "fieldname": "closing_notes",
-   "fieldtype": "Text",
-   "label": "Closing Notes"
+   "default": "Today",
+   "fieldname": "letter_date",
+   "fieldtype": "Date",
+   "label": "Letter Date"
   },
   {
-   "fieldname": "terms",
-   "fieldtype": "Table",
-   "label": "Terms",
-   "options": "Appointment Letter content",
+   "fetch_from": "job_offer.date_of_joining",
+   "fetch_if_empty": 1,
+   "fieldname": "appointment_date",
+   "fieldtype": "Date",
+   "label": "Date of Joining",
    "reqd": 1
+  },
+  {
+   "fetch_from": "employee.current_address",
+   "fetch_if_empty": 1,
+   "fieldname": "address",
+   "fieldtype": "Small Text",
+   "label": "Address"
+  },
+  {
+   "fieldname": "terms_of_appointment_tab",
+   "fieldtype": "Tab Break",
+   "label": "Terms of Appointment"
+  },
+  {
+   "fieldname": "working_hours_section",
+   "fieldtype": "Section Break",
+   "label": "Working Hours"
+  },
+  {
+   "fieldname": "shift_type",
+   "fieldtype": "Link",
+   "label": "Shift",
+   "options": "Shift Type"
+  },
+  {
+   "fetch_from": "shift_type.start_time",
+   "fieldname": "start_time",
+   "fieldtype": "Time",
+   "label": "Start Time",
+   "read_only_depends_on": "eval:doc.shift_type"
+  },
+  {
+   "fetch_from": "shift_type.end_time",
+   "fieldname": "end_time",
+   "fieldtype": "Time",
+   "label": "End Time",
+   "read_only_depends_on": "eval:doc.shift_type"
+  },
+  {
+   "fieldname": "column_break_terms",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Picking a template replaces the letter body with the template's text.",
+   "fieldname": "appointment_letter_template",
+   "fieldtype": "Link",
+   "label": "Appointment Letter Template",
+   "options": "Appointment Letter Template"
+  },
+  {
+   "fieldname": "printing_tab",
+   "fieldtype": "Tab Break",
+   "label": "Print & Email"
+  },
+  {
+   "fieldname": "printing_details",
+   "fieldtype": "Section Break",
+   "label": "Printing Details"
+  },
+  {
+   "fetch_from": "company.default_letter_head",
+   "fetch_if_empty": 1,
+   "fieldname": "letter_head",
+   "fieldtype": "Link",
+   "label": "Letter Head",
+   "options": "Letter Head",
+   "print_hide": 1
+  },
+  {
+   "fieldname": "column_break_print",
+   "fieldtype": "Column Break",
+   "print_hide": 1
+  },
+  {
+   "default": "Appointment Letter Classic",
+   "fieldname": "appointment_letter_print_format",
+   "fieldtype": "Link",
+   "label": "Print Format",
+   "link_filters": "[[\"Print Format\",\"doc_type\",\"=\",\"Appointment Letter\"],[\"Print Format\",\"disabled\",\"=\",0]]",
+   "options": "Print Format",
+   "print_hide": 1
+  },
+  {
+   "fieldname": "signature",
+   "fieldtype": "Attach Image",
+   "label": "Sign to show on appointment letter",
+   "print_hide": 1
+  },
+  {
+   "depends_on": "appointment_letter_print_format",
+   "fieldname": "appointment_letter_preview_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "appointment_letter_preview",
+   "fieldtype": "HTML",
+   "label": "Preview"
+  },
+  {
+   "description": "Use placeholders like {{ ctc }} or {{ appointment_date }}. The Print & Email preview shows the real values.",
+   "fieldname": "letter_body",
+   "fieldtype": "Text Editor",
+   "label": "Letter Body"
+  },
+  {
+   "fieldname": "working_hours",
+   "fieldtype": "Float",
+   "label": "Total Working Hours",
+   "non_negative": 1
   }
  ],
  "icon": "mail-check",
+ "link_display_mode": "Search",
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-11-06 14:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appointment Letter",
- "naming_rule": "Expression (old style)",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
@@ -121,6 +245,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "applicant_name, company",
  "sort_field": "creation",
  "sort_order": "DESC",

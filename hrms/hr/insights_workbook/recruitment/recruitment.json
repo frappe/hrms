@@ -1,0 +1,1498 @@
+{
+ "charts": {
+  "recruitment-accepted-applicants": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "decimals": 0,
+      "shorten": false
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Integer",
+      "expression": {
+       "expression": "count_if(status == 'Accepted')",
+       "type": "expression"
+      },
+      "id": "Accepted Applicants",
+      "measure_name": "Accepted Applicants"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "recruitment-accepted-applicants",
+   "query": "recruitment-applicants",
+   "sort_order": 4,
+   "title": "Accepted Applicants",
+   "workbook": "recruitment"
+  },
+  "recruitment-applicant-status": {
+   "chart_type": "Donut",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "label_column": {
+     "column_name": "status",
+     "data_type": "String",
+     "dimension_name": "Status"
+    },
+    "legend_position": "right",
+    "limit": 100,
+    "max_slices": 6,
+    "number_format": {
+     "decimals": 0,
+     "shorten": false
+    },
+    "order_by": [],
+    "show_inline_labels": true,
+    "value_column": {
+     "aggregation": "count",
+     "column_name": "name",
+     "data_type": "Integer",
+     "measure_name": "Applicants"
+    }
+   },
+   "folder": null,
+   "name": "recruitment-applicant-status",
+   "query": "recruitment-applicants",
+   "sort_order": 13,
+   "title": "Applicant Status",
+   "workbook": "recruitment"
+  },
+  "recruitment-applicant-to-hire": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "decimals": 1,
+      "shorten": false,
+      "suffix": "%"
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Decimal",
+      "expression": {
+       "expression": "count_if(status == 'Accepted') * 100.0 / count()",
+       "type": "expression"
+      },
+      "id": "Applicant-to-Hire",
+      "measure_name": "Applicant-to-Hire"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "recruitment-applicant-to-hire",
+   "query": "recruitment-applicants",
+   "sort_order": 6,
+   "title": "Applicant-to-Hire",
+   "workbook": "recruitment"
+  },
+  "recruitment-applicants-by-country": {
+   "chart_type": "Row",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_format": {
+     "decimals": 0,
+     "shorten": false
+    },
+    "order_by": [
+     {
+      "column": {
+       "column_name": "Applicants",
+       "type": "column"
+      },
+      "direction": "desc"
+     }
+    ],
+    "x_axis": {
+     "dimension": {
+      "column_name": "country",
+      "data_type": "String",
+      "dimension_name": "Country"
+     }
+    },
+    "y_axis": {
+     "axis_label": "Applicants",
+     "series": [
+      {
+       "measure": {
+        "aggregation": "count",
+        "column_name": "name",
+        "data_type": "Integer",
+        "measure_name": "Applicants"
+       },
+       "type": "bar"
+      }
+     ],
+     "show_axis_label": true
+    }
+   },
+   "folder": null,
+   "name": "recruitment-applicants-by-country",
+   "query": "recruitment-applicants",
+   "sort_order": 12,
+   "title": "Applicants by Country",
+   "workbook": "recruitment"
+  },
+  "recruitment-applicants-by-job-opening": {
+   "chart_type": "Row",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_format": {
+     "decimals": 0,
+     "shorten": false
+    },
+    "order_by": [
+     {
+      "column": {
+       "column_name": "Applicants",
+       "type": "column"
+      },
+      "direction": "desc"
+     }
+    ],
+    "x_axis": {
+     "dimension": {
+      "column_name": "opening",
+      "data_type": "String",
+      "dimension_name": "Job Opening"
+     }
+    },
+    "y_axis": {
+     "axis_label": "Applicants",
+     "series": [
+      {
+       "measure": {
+        "aggregation": "count",
+        "column_name": "name",
+        "data_type": "Integer",
+        "measure_name": "Applicants"
+       },
+       "type": "bar"
+      }
+     ],
+     "show_axis_label": true
+    }
+   },
+   "folder": null,
+   "name": "recruitment-applicants-by-job-opening",
+   "query": "recruitment-applicants",
+   "sort_order": 10,
+   "title": "Applicants by Job Opening",
+   "workbook": "recruitment"
+  },
+  "recruitment-applicants-by-source": {
+   "chart_type": "Row",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_format": {
+     "decimals": 0,
+     "shorten": false
+    },
+    "order_by": [
+     {
+      "column": {
+       "column_name": "Applicants",
+       "type": "column"
+      },
+      "direction": "desc"
+     }
+    ],
+    "x_axis": {
+     "dimension": {
+      "column_name": "source",
+      "data_type": "String",
+      "dimension_name": "Source"
+     }
+    },
+    "y_axis": {
+     "axis_label": "Applicants",
+     "series": [
+      {
+       "measure": {
+        "aggregation": "count",
+        "column_name": "name",
+        "data_type": "Integer",
+        "measure_name": "Applicants"
+       },
+       "type": "bar"
+      }
+     ],
+     "show_axis_label": true
+    }
+   },
+   "folder": null,
+   "name": "recruitment-applicants-by-source",
+   "query": "recruitment-applicants",
+   "sort_order": 11,
+   "title": "Applicants by Source",
+   "workbook": "recruitment"
+  },
+  "recruitment-applicants-this-month": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "comparison": {
+       "label": "vs last month",
+       "measure": {
+        "data_type": "Integer",
+        "expression": {
+         "expression": "count_if(applied_on.between(date_sub(month_start(today()), 1, 'month'), date_sub(today(), 1, 'month')))",
+         "type": "expression"
+        },
+        "measure_name": "vs last month"
+       },
+       "show": "delta",
+       "source": "measure"
+      },
+      "decimals": 0,
+      "shorten": false
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Integer",
+      "expression": {
+       "expression": "count_if(applied_on.between(month_start(today()), today()))",
+       "type": "expression"
+      },
+      "id": "Applicants",
+      "measure_name": "Applicants"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "recruitment-applicants-this-month",
+   "query": "recruitment-applicants",
+   "sort_order": 2,
+   "title": "Applicants (This Month)",
+   "workbook": "recruitment"
+  },
+  "recruitment-applications-by-month": {
+   "chart_type": "Bar",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_format": {
+     "decimals": 0,
+     "shorten": false
+    },
+    "order_by": [
+     {
+      "column": {
+       "column_name": "Month",
+       "type": "column"
+      },
+      "direction": "asc"
+     }
+    ],
+    "x_axis": {
+     "dimension": {
+      "column_name": "applied_on",
+      "data_type": "Date",
+      "dimension_name": "Month",
+      "granularity": "month"
+     }
+    },
+    "y_axis": {
+     "min": 0,
+     "series": [
+      {
+       "measure": {
+        "aggregation": "count",
+        "column_name": "name",
+        "data_type": "Integer",
+        "measure_name": "Applications"
+       },
+       "type": "bar"
+      }
+     ]
+    }
+   },
+   "folder": null,
+   "name": "recruitment-applications-by-month",
+   "query": "recruitment-applicants",
+   "sort_order": 9,
+   "title": "Applications by Month",
+   "workbook": "recruitment"
+  },
+  "recruitment-interview-status": {
+   "chart_type": "Donut",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "label_column": {
+     "column_name": "status",
+     "data_type": "String",
+     "dimension_name": "Status"
+    },
+    "legend_position": "right",
+    "limit": 100,
+    "max_slices": 6,
+    "number_format": {
+     "decimals": 0,
+     "shorten": false
+    },
+    "order_by": [],
+    "show_inline_labels": true,
+    "value_column": {
+     "aggregation": "count",
+     "column_name": "name",
+     "data_type": "Integer",
+     "measure_name": "Interviews"
+    }
+   },
+   "folder": null,
+   "name": "recruitment-interview-status",
+   "query": "recruitment-interviews",
+   "sort_order": 15,
+   "title": "Interview Status",
+   "workbook": "recruitment"
+  },
+  "recruitment-job-offer-status": {
+   "chart_type": "Donut",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "label_column": {
+     "column_name": "status",
+     "data_type": "String",
+     "dimension_name": "Status"
+    },
+    "legend_position": "right",
+    "limit": 100,
+    "max_slices": 6,
+    "number_format": {
+     "decimals": 0,
+     "shorten": false
+    },
+    "order_by": [],
+    "show_inline_labels": true,
+    "value_column": {
+     "aggregation": "count",
+     "column_name": "name",
+     "data_type": "Integer",
+     "measure_name": "Job Offers"
+    }
+   },
+   "folder": null,
+   "name": "recruitment-job-offer-status",
+   "query": "recruitment-offers",
+   "sort_order": 14,
+   "title": "Job Offer Status",
+   "workbook": "recruitment"
+  },
+  "recruitment-offer-acceptance-rate": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "decimals": 1,
+      "shorten": false,
+      "suffix": "%"
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Decimal",
+      "expression": {
+       "expression": "count_if((docstatus == 1) & (status == 'Accepted')) * 100.0 / count_if(docstatus == 1)",
+       "type": "expression"
+      },
+      "id": "Offer Acceptance Rate",
+      "measure_name": "Offer Acceptance Rate"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "recruitment-offer-acceptance-rate",
+   "query": "recruitment-offers",
+   "sort_order": 7,
+   "title": "Offer Acceptance Rate",
+   "workbook": "recruitment"
+  },
+  "recruitment-offers-this-month": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "comparison": {
+       "label": "vs last month",
+       "measure": {
+        "data_type": "Integer",
+        "expression": {
+         "expression": "count_if(offer_date.between(date_sub(month_start(today()), 1, 'month'), date_sub(today(), 1, 'month')))",
+         "type": "expression"
+        },
+        "measure_name": "vs last month"
+       },
+       "show": "delta",
+       "source": "measure"
+      },
+      "decimals": 0,
+      "shorten": false
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Integer",
+      "expression": {
+       "expression": "count_if(offer_date.between(month_start(today()), today()))",
+       "type": "expression"
+      },
+      "id": "Job Offers",
+      "measure_name": "Job Offers"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "recruitment-offers-this-month",
+   "query": "recruitment-offers",
+   "sort_order": 3,
+   "title": "Job Offers (This Month)",
+   "workbook": "recruitment"
+  },
+  "recruitment-open-job-openings": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "decimals": 0,
+      "shorten": false
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Integer",
+      "expression": {
+       "expression": "count()",
+       "type": "expression"
+      },
+      "id": "Open Job Openings",
+      "measure_name": "Open Job Openings"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "recruitment-open-job-openings",
+   "query": "recruitment-open-openings",
+   "sort_order": 1,
+   "title": "Open Job Openings",
+   "workbook": "recruitment"
+  },
+  "recruitment-openings-by-department": {
+   "chart_type": "Row",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_format": {
+     "decimals": 0,
+     "shorten": false
+    },
+    "order_by": [
+     {
+      "column": {
+       "column_name": "Positions",
+       "type": "column"
+      },
+      "direction": "desc"
+     }
+    ],
+    "x_axis": {
+     "dimension": {
+      "column_name": "department_name",
+      "data_type": "String",
+      "dimension_name": "Department"
+     }
+    },
+    "y_axis": {
+     "axis_label": "Positions",
+     "series": [
+      {
+       "measure": {
+        "aggregation": "sum",
+        "column_name": "planned_vacancies",
+        "data_type": "Integer",
+        "measure_name": "Positions"
+       },
+       "type": "bar"
+      }
+     ],
+     "show_axis_label": true
+    }
+   },
+   "folder": null,
+   "name": "recruitment-openings-by-department",
+   "query": "recruitment-open-openings",
+   "sort_order": 16,
+   "title": "Open Positions by Department",
+   "workbook": "recruitment"
+  },
+  "recruitment-openings-by-designation": {
+   "chart_type": "Row",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_format": {
+     "decimals": 0,
+     "shorten": false
+    },
+    "order_by": [
+     {
+      "column": {
+       "column_name": "Positions",
+       "type": "column"
+      },
+      "direction": "desc"
+     }
+    ],
+    "x_axis": {
+     "dimension": {
+      "column_name": "designation",
+      "data_type": "String",
+      "dimension_name": "Designation"
+     }
+    },
+    "y_axis": {
+     "axis_label": "Positions",
+     "series": [
+      {
+       "measure": {
+        "aggregation": "sum",
+        "column_name": "planned_vacancies",
+        "data_type": "Integer",
+        "measure_name": "Positions"
+       },
+       "type": "bar"
+      }
+     ],
+     "show_axis_label": true
+    }
+   },
+   "folder": null,
+   "name": "recruitment-openings-by-designation",
+   "query": "recruitment-open-openings",
+   "sort_order": 17,
+   "title": "Open Positions by Designation",
+   "workbook": "recruitment"
+  },
+  "recruitment-rejected-applicants": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "decimals": 0,
+      "shorten": false
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Integer",
+      "expression": {
+       "expression": "count_if(status == 'Rejected')",
+       "type": "expression"
+      },
+      "id": "Rejected Applicants",
+      "measure_name": "Rejected Applicants"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "recruitment-rejected-applicants",
+   "query": "recruitment-applicants",
+   "sort_order": 5,
+   "title": "Rejected Applicants",
+   "workbook": "recruitment"
+  },
+  "recruitment-time-to-fill": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "decimals": 1,
+      "shorten": false,
+      "suffix": " days"
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Decimal",
+      "expression": {
+       "expression": "avg(days_to_fill)",
+       "type": "expression"
+      },
+      "id": "Average Time to Fill",
+      "measure_name": "Average Time to Fill"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "recruitment-time-to-fill",
+   "query": "recruitment-filled-requisitions",
+   "sort_order": 8,
+   "title": "Average Time to Fill",
+   "workbook": "recruitment"
+  }
+ },
+ "creation": "2026-11-18 12:00:00.000000",
+ "dashboards": {
+  "recruitment": {
+   "items": [
+    {
+     "default_operator": "=",
+     "default_user_key": "Company",
+     "filter_name": "Company",
+     "filter_type": "String",
+     "layout": {
+      "h": 2,
+      "i": "filter-company",
+      "w": 4,
+      "x": 0,
+      "y": 0
+     },
+     "layouts": {
+      "sm": {
+       "h": 2,
+       "w": 20,
+       "x": 0,
+       "y": 0
+      }
+     },
+     "links": {
+      "recruitment-accepted-applicants": "`recruitment-applicants`.`company`",
+      "recruitment-applicant-status": "`recruitment-applicants`.`company`",
+      "recruitment-applicant-to-hire": "`recruitment-applicants`.`company`",
+      "recruitment-applicants-by-country": "`recruitment-applicants`.`company`",
+      "recruitment-applicants-by-job-opening": "`recruitment-applicants`.`company`",
+      "recruitment-applicants-by-source": "`recruitment-applicants`.`company`",
+      "recruitment-applicants-this-month": "`recruitment-applicants`.`company`",
+      "recruitment-applications-by-month": "`recruitment-applicants`.`company`",
+      "recruitment-interview-status": "`recruitment-interviews`.`company`",
+      "recruitment-job-offer-status": "`recruitment-offers`.`company`",
+      "recruitment-offer-acceptance-rate": "`recruitment-offers`.`company`",
+      "recruitment-offers-this-month": "`recruitment-offers`.`company`",
+      "recruitment-open-job-openings": "`recruitment-open-openings`.`company`",
+      "recruitment-openings-by-department": "`recruitment-open-openings`.`company`",
+      "recruitment-openings-by-designation": "`recruitment-open-openings`.`company`",
+      "recruitment-rejected-applicants": "`recruitment-applicants`.`company`",
+      "recruitment-time-to-fill": "`recruitment-filled-requisitions`.`company`"
+     },
+     "type": "filter"
+    },
+    {
+     "chart": "recruitment-open-job-openings",
+     "layout": {
+      "h": 5,
+      "i": "chart-recruitment-open-job-openings",
+      "w": 5,
+      "x": 0,
+      "y": 3
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 10,
+       "x": 0,
+       "y": 3
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "recruitment-applicants-this-month",
+     "layout": {
+      "h": 5,
+      "i": "chart-recruitment-applicants-this-month",
+      "w": 5,
+      "x": 5,
+      "y": 3
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 10,
+       "x": 10,
+       "y": 3
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "recruitment-offers-this-month",
+     "layout": {
+      "h": 5,
+      "i": "chart-recruitment-offers-this-month",
+      "w": 5,
+      "x": 10,
+      "y": 3
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 10,
+       "x": 0,
+       "y": 8
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "recruitment-accepted-applicants",
+     "layout": {
+      "h": 5,
+      "i": "chart-recruitment-accepted-applicants",
+      "w": 5,
+      "x": 15,
+      "y": 3
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 10,
+       "x": 10,
+       "y": 8
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "recruitment-rejected-applicants",
+     "layout": {
+      "h": 5,
+      "i": "chart-recruitment-rejected-applicants",
+      "w": 5,
+      "x": 0,
+      "y": 8
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 10,
+       "x": 0,
+       "y": 13
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "recruitment-applicant-to-hire",
+     "layout": {
+      "h": 5,
+      "i": "chart-recruitment-applicant-to-hire",
+      "w": 5,
+      "x": 5,
+      "y": 8
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 10,
+       "x": 10,
+       "y": 13
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "recruitment-offer-acceptance-rate",
+     "layout": {
+      "h": 5,
+      "i": "chart-recruitment-offer-acceptance-rate",
+      "w": 5,
+      "x": 10,
+      "y": 8
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 10,
+       "x": 0,
+       "y": 18
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "recruitment-time-to-fill",
+     "layout": {
+      "h": 5,
+      "i": "chart-recruitment-time-to-fill",
+      "w": 5,
+      "x": 15,
+      "y": 8
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 10,
+       "x": 10,
+       "y": 18
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "recruitment-applications-by-month",
+     "layout": {
+      "h": 15,
+      "i": "chart-recruitment-applications-by-month",
+      "w": 20,
+      "x": 0,
+      "y": 13
+     },
+     "layouts": {
+      "sm": {
+       "h": 15,
+       "w": 20,
+       "x": 0,
+       "y": 23
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "recruitment-applicant-status",
+     "layout": {
+      "h": 14,
+      "i": "chart-recruitment-applicant-status",
+      "w": 7,
+      "x": 0,
+      "y": 28
+     },
+     "layouts": {
+      "sm": {
+       "h": 14,
+       "w": 20,
+       "x": 0,
+       "y": 38
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "recruitment-job-offer-status",
+     "layout": {
+      "h": 14,
+      "i": "chart-recruitment-job-offer-status",
+      "w": 7,
+      "x": 7,
+      "y": 28
+     },
+     "layouts": {
+      "sm": {
+       "h": 14,
+       "w": 20,
+       "x": 0,
+       "y": 52
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "recruitment-interview-status",
+     "layout": {
+      "h": 14,
+      "i": "chart-recruitment-interview-status",
+      "w": 6,
+      "x": 14,
+      "y": 28
+     },
+     "layouts": {
+      "sm": {
+       "h": 14,
+       "w": 20,
+       "x": 0,
+       "y": 66
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "recruitment-applicants-by-job-opening",
+     "layout": {
+      "h": 15,
+      "i": "chart-recruitment-applicants-by-job-opening",
+      "w": 10,
+      "x": 0,
+      "y": 42
+     },
+     "layouts": {
+      "sm": {
+       "h": 15,
+       "w": 20,
+       "x": 0,
+       "y": 80
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "recruitment-applicants-by-source",
+     "layout": {
+      "h": 15,
+      "i": "chart-recruitment-applicants-by-source",
+      "w": 10,
+      "x": 10,
+      "y": 42
+     },
+     "layouts": {
+      "sm": {
+       "h": 15,
+       "w": 20,
+       "x": 0,
+       "y": 95
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "recruitment-applicants-by-country",
+     "layout": {
+      "h": 15,
+      "i": "chart-recruitment-applicants-by-country",
+      "w": 10,
+      "x": 0,
+      "y": 57
+     },
+     "layouts": {
+      "sm": {
+       "h": 15,
+       "w": 20,
+       "x": 0,
+       "y": 110
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "recruitment-openings-by-department",
+     "layout": {
+      "h": 15,
+      "i": "chart-recruitment-openings-by-department",
+      "w": 10,
+      "x": 10,
+      "y": 57
+     },
+     "layouts": {
+      "sm": {
+       "h": 15,
+       "w": 20,
+       "x": 0,
+       "y": 125
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "recruitment-openings-by-designation",
+     "layout": {
+      "h": 15,
+      "i": "chart-recruitment-openings-by-designation",
+      "w": 20,
+      "x": 0,
+      "y": 72
+     },
+     "layouts": {
+      "sm": {
+       "h": 15,
+       "w": 20,
+       "x": 0,
+       "y": 140
+      }
+     },
+     "type": "chart"
+    }
+   ],
+   "name": "recruitment",
+   "title": "Recruitment",
+   "vertical_compact_layout": 1,
+   "visible_to_roles": [
+    {
+     "role": "HR User"
+    },
+    {
+     "role": "HR Manager"
+    }
+   ],
+   "workbook": "recruitment"
+  }
+ },
+ "docstatus": 0,
+ "doctype": "Insights Workbook",
+ "folders": [],
+ "idx": 0,
+ "is_standard": 1,
+ "modified": "2026-11-18 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "recruitment",
+ "owner": "Administrator",
+ "queries": {
+  "recruitment-applicants": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "recruitment-applicants",
+   "operations": [
+    {
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabJob Applicant",
+      "type": "table"
+     },
+     "type": "source"
+    },
+    {
+     "data_type": "String",
+     "expression": {
+      "expression": "job_title",
+      "type": "expression"
+     },
+     "new_name": "job_opening",
+     "type": "mutate"
+    },
+    {
+     "column_names": [
+      "name",
+      "applicant_name",
+      "job_opening",
+      "source",
+      "country",
+      "status",
+      "creation"
+     ],
+     "type": "select"
+    },
+    {
+     "join_condition": {
+      "left_column": {
+       "column_name": "job_opening",
+       "type": "column"
+      },
+      "right_column": {
+       "column_name": "name",
+       "type": "column"
+      }
+     },
+     "join_type": "left",
+     "select_columns": [
+      {
+       "column_name": "company",
+       "type": "column"
+      },
+      {
+       "column_name": "job_title",
+       "type": "column"
+      }
+     ],
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabJob Opening",
+      "type": "table"
+     },
+     "type": "join"
+    },
+    {
+     "data_type": "String",
+     "expression": {
+      "expression": "if_null(job_title, 'No Job Opening')",
+      "type": "expression"
+     },
+     "new_name": "opening",
+     "type": "mutate"
+    },
+    {
+     "data_type": "String",
+     "expression": {
+      "expression": "if_null(source, 'Not Set')",
+      "type": "expression"
+     },
+     "new_name": "source",
+     "type": "mutate"
+    },
+    {
+     "data_type": "String",
+     "expression": {
+      "expression": "if_null(country, 'Not Set')",
+      "type": "expression"
+     },
+     "new_name": "country",
+     "type": "mutate"
+    },
+    {
+     "data_type": "Date",
+     "expression": {
+      "expression": "creation.cast('date')",
+      "type": "expression"
+     },
+     "new_name": "applied_on",
+     "type": "mutate"
+    },
+    {
+     "column_names": [
+      "name",
+      "applicant_name",
+      "opening",
+      "source",
+      "country",
+      "status",
+      "applied_on",
+      "company"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 1,
+   "title": "Job Applicants",
+   "use_live_connection": 1,
+   "workbook": "recruitment"
+  },
+  "recruitment-filled-requisitions": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "recruitment-filled-requisitions",
+   "operations": [
+    {
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabJob Requisition",
+      "type": "table"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "column": {
+        "column_name": "status",
+        "type": "column"
+       },
+       "operator": "=",
+       "value": "Filled"
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "data_type": "Decimal",
+     "expression": {
+      "expression": "time_to_fill / 86400",
+      "type": "expression"
+     },
+     "new_name": "days_to_fill",
+     "type": "mutate"
+    },
+    {
+     "column_names": [
+      "name",
+      "designation",
+      "company",
+      "days_to_fill"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 5,
+   "title": "Filled Job Requisitions",
+   "use_live_connection": 1,
+   "workbook": "recruitment"
+  },
+  "recruitment-interviews": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "recruitment-interviews",
+   "operations": [
+    {
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabInterview",
+      "type": "table"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "column": {
+        "column_name": "docstatus",
+        "type": "column"
+       },
+       "operator": "!=",
+       "value": 2
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "join_condition": {
+      "left_column": {
+       "column_name": "job_opening",
+       "type": "column"
+      },
+      "right_column": {
+       "column_name": "name",
+       "type": "column"
+      }
+     },
+     "join_type": "left",
+     "select_columns": [
+      {
+       "column_name": "company",
+       "type": "column"
+      }
+     ],
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabJob Opening",
+      "type": "table"
+     },
+     "type": "join"
+    },
+    {
+     "column_names": [
+      "name",
+      "job_applicant",
+      "status",
+      "scheduled_on",
+      "company"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 3,
+   "title": "Interviews",
+   "use_live_connection": 1,
+   "workbook": "recruitment"
+  },
+  "recruitment-offers": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "recruitment-offers",
+   "operations": [
+    {
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabJob Offer",
+      "type": "table"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "column": {
+        "column_name": "docstatus",
+        "type": "column"
+       },
+       "operator": "!=",
+       "value": 2
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "name",
+      "applicant_name",
+      "company",
+      "status",
+      "offer_date",
+      "docstatus"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 2,
+   "title": "Job Offers",
+   "use_live_connection": 1,
+   "workbook": "recruitment"
+  },
+  "recruitment-open-openings": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "recruitment-open-openings",
+   "operations": [
+    {
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabJob Opening",
+      "type": "table"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "column": {
+        "column_name": "status",
+        "type": "column"
+       },
+       "operator": "=",
+       "value": "Open"
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "join_condition": {
+      "left_column": {
+       "column_name": "department",
+       "type": "column"
+      },
+      "right_column": {
+       "column_name": "name",
+       "type": "column"
+      }
+     },
+     "join_type": "left",
+     "select_columns": [
+      {
+       "column_name": "department_name",
+       "type": "column"
+      }
+     ],
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabDepartment",
+      "type": "table"
+     },
+     "type": "join"
+    },
+    {
+     "data_type": "String",
+     "expression": {
+      "expression": "if_null(department_name, 'Not Set')",
+      "type": "expression"
+     },
+     "new_name": "department_name",
+     "type": "mutate"
+    },
+    {
+     "data_type": "String",
+     "expression": {
+      "expression": "if_null(designation, 'Not Set')",
+      "type": "expression"
+     },
+     "new_name": "designation",
+     "type": "mutate"
+    },
+    {
+     "column_names": [
+      "name",
+      "job_title",
+      "company",
+      "department_name",
+      "designation",
+      "planned_vacancies"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 4,
+   "title": "Open Job Openings",
+   "use_live_connection": 1,
+   "workbook": "recruitment"
+  }
+ },
+ "title": "Recruitment"
+}

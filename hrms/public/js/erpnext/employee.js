@@ -279,3 +279,17 @@ frappe.ui.form.on("Employee", {
 		});
 	},
 });
+
+// The profile is a page of its own, as on /employee-profile: its card replaces the side panel, and
+// with no comments below it, the card stays pinned to the end. Both show on the other tabs.
+frappe.ui.form.on("Employee", {
+	refresh: toggle_form_panels,
+	on_tab_change: toggle_form_panels,
+});
+
+function toggle_form_panels(frm) {
+	const tab = frm.get_active_tab() || frm.layout.tabs.find((tab) => !tab.is_hidden());
+	const on_profile = !frm.is_new() && tab?.df.fieldname === "profile";
+	frm.page.sidebar.toggleClass("hidden", on_profile);
+	frm.footer?.wrapper.toggleClass("hidden", on_profile);
+}

@@ -51,7 +51,7 @@ app_include_icons = ["/assets/hrms/icons/module-icons.svg"]
 
 # include js in doctype views
 doctype_js = {
-	"Employee": "public/js/erpnext/employee.js",
+	"Employee": ["public/js/erpnext/employee.js", "public/js/erpnext/employee_overview.js"],
 	"Company": "public/js/erpnext/company.js",
 	"Department": "public/js/erpnext/department.js",
 	"Timesheet": "public/js/erpnext/timesheet.js",
@@ -221,6 +221,7 @@ doc_events = {
 		"after_insert": [
 			"hrms.overrides.employee_master.update_job_applicant_and_offer",
 			"hrms.telemetry.on_milestone_insert",
+			"hrms.telemetry.on_employee_from_job_offer",
 		],
 		"on_trash": "hrms.overrides.employee_master.update_employee_transfer",
 		"after_delete": "hrms.overrides.employee_master.publish_update",
@@ -234,7 +235,10 @@ doc_events = {
 	"Shift Request": {"on_submit": "hrms.telemetry.on_shift_request_submit"},
 	"Employee Checkin": {"after_insert": "hrms.telemetry.on_employee_checkin"},
 	"Payroll Entry": {"on_submit": "hrms.telemetry.on_payroll_entry_submit"},
-	"Job Offer": {"on_submit": "hrms.telemetry.on_job_offer_submit"},
+	"Job Offer": {
+		"on_submit": "hrms.telemetry.on_job_offer_submit",
+		"on_change": "hrms.telemetry.on_job_offer_change",
+	},
 	"Appraisal": {"on_submit": "hrms.telemetry.on_appraisal_submit"},
 	"Interview": {"on_submit": "hrms.telemetry.on_interview_submit"},
 	# ---- Activation telemetry: post-install setup funnel (first-time milestones) ----
@@ -254,9 +258,6 @@ scheduler_events = {
 	"all": [
 		"hrms.hr.doctype.interview.interview.send_interview_reminder",
 	],
-	"hourly": [
-		"hrms.hr.doctype.daily_work_summary_group.daily_work_summary_group.trigger_emails",
-	],
 	"hourly_long": [
 		"hrms.hr.doctype.shift_type.shift_type.update_last_sync_of_checkin",
 		"hrms.hr.doctype.shift_type.shift_type.process_auto_attendance_for_all_shifts",
@@ -265,7 +266,6 @@ scheduler_events = {
 	"daily": [
 		"hrms.controllers.employee_reminders.send_birthday_reminders",
 		"hrms.controllers.employee_reminders.send_work_anniversary_reminders",
-		"hrms.hr.doctype.daily_work_summary_group.daily_work_summary_group.send_summary",
 		"hrms.hr.doctype.interview.interview.send_daily_feedback_reminder",
 		"hrms.hr.doctype.shift_assignment.shift_assignment.mark_expired_shift_assignments_as_inactive",
 		"hrms.hr.doctype.job_opening.job_opening.close_expired_job_openings",
