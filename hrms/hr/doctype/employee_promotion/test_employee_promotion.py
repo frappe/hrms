@@ -209,6 +209,15 @@ class TestEmployeePromotion(HRMSTestSuite):
 		promotion.save()
 		self.assertEqual(promotion.ctc_breakup, [])
 
+	def test_employee_email_is_fetched_for_the_letter(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_email@example.com")
+		frappe.db.set_value("Employee", employee, {"prefered_email": None, "user_id": None})
+		frappe.db.set_value("Employee", employee, "company_email", "priya@company.example.com")
+		self.assertEqual(make_promotion(employee).employee_email, "priya@company.example.com")
+
+		frappe.db.set_value("Employee", employee, "prefered_email", "priya@example.com")
+		self.assertEqual(make_promotion(employee).employee_email, "priya@example.com")
+
 	def test_promotion_letters_render(self):
 		employee, _assignment = setup_employee_with_assignment("promotion_letter@example.com")
 		promotion = make_promotion(employee, revised_base=60000)

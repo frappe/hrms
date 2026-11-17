@@ -5,6 +5,8 @@
 
 frappe.ui.form.on("Employee Promotion", {
 	setup: function (frm) {
+		frm.email_field = "employee_email";
+
 		frm.set_query("salary_structure", function () {
 			return {
 				filters: {
@@ -37,6 +39,7 @@ frappe.ui.form.on("Employee Promotion", {
 		frm.trigger("show_assignment_hint");
 		render_revised_assignment(frm);
 		add_assignment_button(frm);
+		add_email_letter_button(frm);
 		render_promotion_letter_preview(frm);
 	},
 
@@ -231,6 +234,23 @@ function add_assignment_button(frm) {
 	});
 }
 
+function add_email_letter_button(frm) {
+	if (frm.doc.docstatus !== 1 || !frm.perm[0]?.email) return;
+
+	frm.add_custom_button(__("Email Promotion Letter"), () => email_promotion_letter(frm));
+}
+
+function email_promotion_letter(frm) {
+	const designation = get_new_designation(frm.doc);
+
+	hrms.print_utils.email_with_print(frm, {
+		subject: designation ? __("Promotion to {0}", [designation]) : __("Promotion Letter"),
+		recipients: frm.doc.employee_email || "",
+		message: promotion_letter_message(frm.doc, designation),
+		print_format: frm.doc.letter_print_format || "Promotion Letter with Salary Break-up",
+	});
+}
+
 function render_promotion_letter_preview(frm) {
 	// rendering runs the print format on the server, so a hidden preview is emptied
 	// and the tab change renders it
@@ -243,6 +263,31 @@ function render_promotion_letter_preview(frm) {
 }
 
 const render_preview_after_typing = frappe.utils.debounce(render_promotion_letter_preview, 800);
+
+function get_new_designation(doc) {
+	return (doc.promotion_details || []).find((row) => row.fieldname === "designation")?.new;
+}
+
+function promotion_letter_message(doc, designation) {
+	const escape = frappe.utils.escape_html;
+	const date = frappe.datetime.global_date_format(doc.promotion_date);
+
+	const lines = [
+		__("Dear {0},", [escape(doc.employee_name)]),
+		designation
+			? __(
+					"Congratulations on your promotion to {0}, with effect from {1}. Please find your promotion letter attached.",
+					[escape(designation), date],
+			  )
+			: __(
+					"Congratulations on your promotion, with effect from {0}. Please find your promotion letter attached.",
+					[date],
+			  ),
+		__("Regards,"),
+	];
+
+	return lines.map((line) => `<p>${line}</p>`).join("");
+}
 
 function set_ctc_breakup(frm, rows) {
 	if (!rows.length && !(frm.doc.ctc_breakup || []).length) return;

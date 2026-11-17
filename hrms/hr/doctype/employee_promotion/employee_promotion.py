@@ -13,6 +13,7 @@ from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignmen
 	get_promotion_assignments,
 )
 from hrms.payroll.utils import get_breakup_rows, get_periods_per_year
+from hrms.utils import get_employee_email
 
 
 class EmployeePromotion(Document):
@@ -38,6 +39,7 @@ class EmployeePromotion(Document):
 		current_salary_structure_assignment: DF.Link | None
 		department: DF.Link | None
 		employee: DF.Link
+		employee_email: DF.Data | None
 		employee_name: DF.Data | None
 		letter_head: DF.Link | None
 		letter_print_format: DF.Link | None
@@ -54,6 +56,7 @@ class EmployeePromotion(Document):
 
 	def validate(self):
 		validate_active_employee(self.employee)
+		self.employee_email = get_employee_email(self.employee)
 		self.set_current_salary()
 		self.set_revised_salary()
 
