@@ -57,7 +57,9 @@ class EmployeeOnboarding(OnboardingActivities, Document):
 		amended_from: DF.Link | None
 		appointment_letter_sent_on: DF.Datetime | None
 		boarding_begins_on: DF.Date
-		boarding_status: DF.Literal["Pending", "In Process", "Completed"]
+		boarding_status: DF.Literal[
+			"Pending", "Awaiting Employee Details", "Details Submitted", "In Process", "Completed"
+		]
 		company: DF.Link
 		company_email: DF.Data | None
 		date_of_joining: DF.Date
