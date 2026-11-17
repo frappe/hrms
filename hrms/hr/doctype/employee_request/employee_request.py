@@ -86,6 +86,8 @@ class EmployeeRequest(Document):
 	@frappe.whitelist(methods=["POST"])
 	def submit_details(self) -> None:
 		self.check_permission("write")
+		if self.submitted_on:
+			return
 		self.validate_required_documents()
 		self.flags.submitting_details = True
 		self.save()
