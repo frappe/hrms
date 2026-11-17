@@ -66,7 +66,7 @@ def get_standard_activities() -> list[dict]:
 
 def create_default_template() -> None:
 	"""Ship one template with the standard activities, for sites that have none yet."""
-	if frappe.db.exists("Employee Boarding Template"):
+	if frappe.db.count("Employee Boarding Template"):
 		return
 
 	template = frappe.new_doc("Employee Boarding Template")
