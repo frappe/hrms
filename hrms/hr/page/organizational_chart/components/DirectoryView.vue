@@ -119,9 +119,9 @@ function clear_filters() {
 	chip.value = null;
 }
 
-// the Employee form, until the profile page replaces it
+// everyone in the chart has a profile the user may open, the public part at least
 function open_profile(person) {
-	if (person.can_open) frappe.set_route("Form", "Employee", person.id);
+	frappe.set_route("employee-profile", person.id);
 }
 
 function celebration_label({ birthday, years }) {
@@ -249,17 +249,11 @@ function toggle_chip(value) {
 						</span>
 					</div>
 					<div class="flex flex-col gap-px rounded-6 border border-outline-gray-1 p-1">
-						<!-- only a profile the user may open is a button -->
-						<component
-							:is="person.can_open ? 'button' : 'div'"
+						<button
 							v-for="person in group.members"
 							:key="person.id"
-							:type="person.can_open ? 'button' : undefined"
-							class="relative flex w-full items-center gap-3 rounded-4 px-3 py-2.5 text-left transition-colors before:pointer-events-none before:absolute before:inset-x-3 before:-top-px before:border-t before:border-outline-gray-1 first:before:hidden"
-							:class="
-								person.can_open &&
-								'cursor-pointer hover:bg-surface-gray-1 hover:before:opacity-0 [&:hover+*]:before:opacity-0'
-							"
+							type="button"
+							class="relative flex w-full cursor-pointer items-center gap-3 rounded-4 px-3 py-2.5 text-left transition-colors before:pointer-events-none before:absolute before:inset-x-3 before:-top-px before:border-t before:border-outline-gray-1 first:before:hidden hover:bg-surface-gray-1 hover:before:opacity-0 [&:hover+*]:before:opacity-0"
 							@click="open_profile(person)"
 						>
 							<Avatar :image="person.image" :label="person.name" size="xl" />
@@ -324,7 +318,7 @@ function toggle_chip(value) {
 									</template>
 								</Badge>
 							</span>
-						</component>
+						</button>
 					</div>
 				</section>
 			</div>
