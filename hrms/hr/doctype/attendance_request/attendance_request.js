@@ -9,6 +9,11 @@ frappe.ui.form.on("Attendance Request", {
 		if (!frm.is_new() && frm.doc.docstatus === 0) {
 			frm.dashboard.clear_headline();
 
+			const shift_warning = frm.doc.__onload?.shift_warning;
+			if (shift_warning) {
+				frm.dashboard.set_headline(shift_warning.message, shift_warning.indicator);
+			}
+
 			frm.call("get_attendance_warnings").then((r) => {
 				if (r.message?.length) {
 					frm.dashboard.reset();
