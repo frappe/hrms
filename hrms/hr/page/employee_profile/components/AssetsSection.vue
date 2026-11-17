@@ -357,8 +357,16 @@ function request_line(request) {
 			:dismissible="false"
 			@update:model-value="(open) => !open && (requesting = null)"
 		>
+			<div v-if="requesting && !requesting.name && !asset_categories.length">
+				<p class="text-base text-ink-gray-8">
+					{{ __("Your HR team has not set up any assets to request yet.") }}
+				</p>
+				<p class="mt-1 text-base text-ink-gray-6">
+					{{ __("Check back later, or ask HR directly.") }}
+				</p>
+			</div>
 			<CardEditor
-				v-if="requesting"
+				v-else-if="requesting"
 				:key="requesting.name || 'new'"
 				:fields="ISSUE_FIELDS"
 				:values="requesting"
