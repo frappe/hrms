@@ -559,7 +559,7 @@ hrms.hiring.ApplicantPanel = class ApplicantPanel {
 		return make_section(
 			__("Interviews"),
 			data.interviews.length,
-			new frappe.ui.ItemList({ items }).$el,
+			new frappe.ui.List({ items }).$el,
 			this.can_add_round(data) ? this.make_schedule_button(data) : null,
 		);
 	}
@@ -616,7 +616,7 @@ hrms.hiring.ApplicantPanel = class ApplicantPanel {
 		return make_section(
 			__("Offer"),
 			null,
-			new frappe.ui.ItemList({
+			new frappe.ui.List({
 				items: [
 					{ ...item, controls: () => this.decisions.make_offer_controls(offer, data) },
 				],

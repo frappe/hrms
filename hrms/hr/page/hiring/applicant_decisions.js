@@ -21,7 +21,7 @@ hrms.hiring.ApplicantDecisions = class ApplicantDecisions {
 		return this.panel.view;
 	}
 
-	/** What the ItemList `controls` slot holds at the right end of an interview row: a status dropdown while it's a draft, else a plain badge. */
+	/** What the List `controls` slot holds at the right end of an interview row: a status dropdown while it's a draft, else a plain badge. */
 	make_interview_controls(interview, data) {
 		const { label, theme } = hrms.hiring.get_interview_badge(interview);
 		const is_submitted_result =
@@ -96,7 +96,7 @@ hrms.hiring.ApplicantDecisions = class ApplicantDecisions {
 		});
 	}
 
-	/** What the ItemList `controls` slot holds at the right end of the offer row: an answer dropdown while the offer is unanswered, else a plain badge. */
+	/** What the List `controls` slot holds at the right end of the offer row: an answer dropdown while the offer is unanswered, else a plain badge. */
 	make_offer_controls(offer, data) {
 		const { label, theme } = hrms.hiring.get_offer_badge(offer.status);
 		const answers = {

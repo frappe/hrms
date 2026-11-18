@@ -50,26 +50,26 @@ function skeleton_bar(width, height) {
 
 function skeleton_row({ has_avatar = false, has_meta = false } = {}) {
 	const avatar = has_avatar
-		? `<span class="es-item-list__lead">${frappe.ui.skeleton.html({
+		? `<span class="es-list__lead">${frappe.ui.skeleton.html({
 				css_class: "hiring__skeleton-avatar",
 		  })}</span>`
 		: "";
-	const meta = has_meta ? `<span class="es-item-list__meta">${skeleton_bar("72px", "10px")}</span>` : "";
-	return `<div class="es-item-list__row" ${has_avatar ? "data-avatar" : ""}>
+	const meta = has_meta ? `<span class="es-list__meta">${skeleton_bar("72px", "10px")}</span>` : "";
+	return `<div class="es-list__row" ${has_avatar ? "data-avatar" : ""}>
 		${avatar}
-		<span class="es-item-list__text">
-			<span class="es-item-list__title">${skeleton_bar(has_avatar ? "50%" : "40%", "12px")}</span>
-			<span class="es-item-list__subtitle">${skeleton_bar(has_avatar ? "35%" : "25%", "10px")}</span>
+		<span class="es-list__text">
+			<span class="es-list__title">${skeleton_bar(has_avatar ? "50%" : "40%", "12px")}</span>
+			<span class="es-list__subtitle">${skeleton_bar(has_avatar ? "35%" : "25%", "10px")}</span>
 		</span>
 		${meta}
 	</div>`;
 }
 
-/** Placeholder rows in the shape of an ItemList: boxed on the overview, flat in the split pane. */
+/** Placeholder rows in the shape of a List: boxed on the overview, flat in the split pane. */
 function skeleton_list(count, { variant = "boxed", ...row_options } = {}) {
 	const rows = Array.from({ length: count }, () => skeleton_row(row_options)).join("");
 	const flat = variant === "flat" ? `data-variant="flat"` : "";
-	return $(`<div class="es-item-list" ${flat} aria-hidden="true">${rows}</div>`);
+	return $(`<div class="es-list" ${flat} aria-hidden="true">${rows}</div>`);
 }
 
 function skeleton_overview() {
@@ -351,16 +351,16 @@ hrms.hiring.Hiring = class Hiring {
 
 	/** An openings list; the faint placeholder subtitle and the late tint are marked on the rendered rows. */
 	make_openings_list(openings, opts = {}) {
-		const list = new frappe.ui.ItemList({
+		const list = new frappe.ui.List({
 			...opts,
 			items: openings.map((opening) => this.get_opening_item(opening)),
 		});
 		for (const opening of openings) {
 			const row = list.rows.get(opening.name);
 			if (!opening.department && !opening.location) {
-				row.querySelector(".es-item-list__subtitle")?.setAttribute("data-faint", "");
+				row.querySelector(".es-list__subtitle")?.setAttribute("data-faint", "");
 			}
-			const meta = row.querySelector(".es-item-list__meta");
+			const meta = row.querySelector(".es-list__meta");
 			meta?.toggleAttribute("data-late", Boolean(opening.needs_you.is_late));
 		}
 		return list;

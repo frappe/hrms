@@ -242,7 +242,7 @@
 	padding: 0 calc(var(--spacing) * 2) calc(var(--spacing) * 2);
 }
 
-.hiring__list .es-item-list__row {
+.hiring__list .es-list__row {
 	scroll-margin-block: calc(var(--spacing) * 2);
 }
 
@@ -1283,16 +1283,16 @@ input.hiring__composer-subject::placeholder {
 }
 
 /* the right-hand text is the one thing waiting on HR, so it stays on narrow lists too */
-.hiring[data-view="overview"] .es-item-list__meta {
+.hiring[data-view="overview"] .es-list__meta {
 	display: block;
 	font-weight: var(--font-weight-medium);
 	color: var(--ink-gray-8);
 }
 
-.hiring[data-view="overview"] .es-item-list__meta[data-late] {
+.hiring[data-view="overview"] .es-list__meta[data-late] {
 	color: var(--ink-amber-8);
 }
 
-.hiring[data-view="overview"] .es-item-list__subtitle[data-faint] {
+.hiring[data-view="overview"] .es-list__subtitle[data-faint] {
 	color: var(--ink-gray-4);
 }

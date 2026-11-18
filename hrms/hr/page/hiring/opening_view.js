@@ -454,7 +454,7 @@ hrms.hiring.OpeningView = class OpeningView {
 	}
 
 	make_list() {
-		return new frappe.ui.ItemList({
+		return new frappe.ui.List({
 			items: this.get_items(),
 			groups: this.get_groups(),
 			selected: this.selected,
