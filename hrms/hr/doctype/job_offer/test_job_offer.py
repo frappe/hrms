@@ -16,6 +16,7 @@ from hrms.hr.doctype.job_offer.job_offer import (
 	get_offer_acceptance_rate,
 )
 from hrms.hr.doctype.job_offer.job_offer import make_employee as make_employee_from_job_offer
+from hrms.hr.doctype.shift_type.test_shift_type import setup_shift_type
 from hrms.hr.doctype.staffing_plan.test_staffing_plan import make_company
 from hrms.overrides.employee_master import update_job_applicant_and_offer
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
@@ -256,6 +257,24 @@ class TestJobOffer(HRMSTestSuite):
 		rejected.reload()
 		self.assertEqual(live.status, "Accepted")
 		self.assertEqual(rejected.status, "Rejected")
+
+	def test_working_hours_follow_the_shift(self):
+		night = setup_shift_type(
+			shift_type="_Test Offer Night Shift", start_time="21:00:00", end_time="06:30:00"
+		)
+		day = setup_shift_type(shift_type="_Test Offer Day Shift", start_time="10:00:00", end_time="18:30:00")
+
+		job_offer = create_job_offer(shift_type=night.name)
+		job_offer.save()
+		self.assertEqual(job_offer.working_hours, 9.5)
+
+		job_offer.working_hours = 9
+		job_offer.save()
+		self.assertEqual(job_offer.working_hours, 9)
+
+		job_offer.update({"shift_type": day.name, "start_time": "10:00:00", "end_time": "18:30:00"})
+		job_offer.save()
+		self.assertEqual(job_offer.working_hours, 8.5)
 
 	def test_ctc_agrees_with_salary_structure_assignment(self):
 		base = 50000

@@ -17,9 +17,11 @@ from frappe.utils import (
 	nowdate,
 	parse_addr,
 	split_emails,
+	to_timedelta,
 )
 
 import hrms
+from hrms.hr.doctype.appointment_letter.appointment_letter import get_working_hours
 
 
 class JobOffer(Document):
@@ -49,6 +51,7 @@ class JobOffer(Document):
 		department: DF.Link | None
 		designation: DF.Link
 		employment_type: DF.Link | None
+		end_time: DF.Time | None
 		grade: DF.Link | None
 		gross: DF.Currency
 		holiday_list: DF.Link | None
@@ -67,7 +70,9 @@ class JobOffer(Document):
 		reports_to: DF.Link | None
 		salary_structure: DF.Link | None
 		select_terms: DF.Link | None
+		shift_type: DF.Link | None
 		signature: DF.AttachImage | None
+		start_time: DF.Time | None
 		status: DF.Literal["Draft", "Ready to Send", "Awaiting Response", "Accepted", "Rejected", "Cancelled"]
 		terms: DF.TextEditor | None
 		total_public_holidays: DF.Int
@@ -86,6 +91,7 @@ class JobOffer(Document):
 		self.validate_duplicate_job_offer()
 		self.set_compensation()
 		self.set_leave_details()
+		self.set_working_hours()
 
 	def set_status(self):
 		if self.docstatus == 0 and self.status in (None, "", "Ready to Send", "Awaiting Response"):
@@ -118,6 +124,20 @@ class JobOffer(Document):
 		summary = get_holiday_summary(self.holiday_list)
 		self.weekly_off_days = summary["weekly_off_days"]
 		self.total_public_holidays = summary["total_public_holidays"]
+
+	def set_working_hours(self):
+		if self.start_time and self.end_time and (not self.working_hours or self.shift_times_changed()):
+			self.working_hours = get_working_hours(self.start_time, self.end_time)
+
+	def shift_times_changed(self) -> bool:
+		previous = self.doc_before_save()
+		if not previous:
+			return True
+
+		return any(
+			to_timedelta(self.get(field)) != to_timedelta(previous.get(field))
+			for field in ("start_time", "end_time")
+		)
 
 	def holiday_list_changed(self) -> bool:
 		previous = self.doc_before_save()
