@@ -43,16 +43,16 @@
    "child": 0,
    "collapsible": 1,
    "hidden": 0,
-   "icon": "kanban",
+   "icon": "square-kanban",
    "indent": 0,
    "is_default_module": 0,
    "keep_closed": 0,
-   "label": "Hiring Pipeline",
-   "link_type": "URL",
-   "open_in_new_tab": 1,
+   "label": "Hiring pipeline",
+   "link_to": "hiring",
+   "link_type": "Page",
+   "open_in_new_tab": 0,
    "show_arrow": 0,
-   "type": "Link",
-   "url": "/desk/job-applicant/view/kanban"
+   "type": "Link"
   },
   {
    "added": 0,
@@ -367,7 +367,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-10-02 12:00:00.000000",
+ "modified": "2026-11-14 09:00:00.000000",
  "modified_by": "Administrator",
  "module": "Recruitment",
  "name": "Recruitment",

@@ -24,6 +24,7 @@
     "build-roster": "cd roster && yarn build"
   },
   "dependencies": {
-    "html2canvas": "^1.4.1"
+    "html2canvas": "^1.4.1",
+    "pdfjs-dist": "^6.4.299"
   }
 }

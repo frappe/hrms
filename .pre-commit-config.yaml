@@ -31,6 +31,7 @@ repos:
                 hrms/templates/includes/.*|
                 hrms/hr/doctype/employee_promotion/employee_promotion.js|
                 hrms/hr/doctype/employee_transfer/employee_transfer.js|
+                hrms/hr/page/hiring/hiring.js|
             )$
 
   - repo: https://github.com/astral-sh/ruff-pre-commit

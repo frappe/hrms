@@ -1,0 +1,1298 @@
+.hiring {
+	max-width: 880px;
+	margin-inline: auto;
+	padding-block: calc(var(--spacing) * 6);
+	padding-inline: calc(var(--spacing) * 4);
+}
+
+.hiring__section + .hiring__section {
+	margin-top: calc(var(--spacing) * 8);
+}
+
+.hiring__heading {
+	display: flex;
+	align-items: center;
+	gap: calc(var(--spacing) * 2);
+	margin: 0 0 calc(var(--spacing) * 3);
+	color: var(--ink-gray-8);
+	line-height: 1.2;
+}
+
+.hiring__heading:has(+ .hiring__hint) {
+	margin-bottom: calc(var(--spacing) * 0.5);
+}
+
+.hiring__hint {
+	margin: 0 0 calc(var(--spacing) * 3);
+	color: var(--ink-gray-6);
+}
+
+.hiring__heading-actions {
+	display: flex;
+	margin-inline-start: auto;
+}
+
+.hiring__toggle {
+	margin-top: calc(var(--spacing) * 2);
+}
+
+.hiring__closed {
+	margin-top: calc(var(--spacing) * 2);
+}
+
+.hiring__tabs {
+	margin-bottom: calc(var(--spacing) * 4);
+	overflow-x: auto;
+	scrollbar-width: none;
+}
+
+.hiring__toolbar {
+	display: flex;
+	align-items: center;
+	gap: calc(var(--spacing) * 2);
+	margin-bottom: calc(var(--spacing) * 3);
+}
+
+.hiring__search {
+	flex: 1;
+	max-width: calc(var(--spacing) * 72);
+}
+
+.hiring__toolbar[data-view="overview"] {
+	flex-wrap: wrap;
+}
+
+.hiring__toolbar[data-view="overview"] .hiring__search {
+	flex: 0 1 calc(var(--spacing) * 80);
+}
+
+.hiring__filters {
+	display: contents;
+}
+
+.hiring__select {
+	max-width: calc(var(--spacing) * 45);
+}
+
+.hiring__select .es-button__label {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+@media (max-width: 639px) {
+	.hiring__toolbar[data-view="overview"] .hiring__search {
+		flex: 1 1 100%;
+		max-width: none;
+	}
+}
+
+.hiring__chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: calc(var(--spacing) * 2);
+	margin-bottom: calc(var(--spacing) * 3);
+}
+
+.hiring__chips:empty {
+	display: none;
+}
+
+.hiring__list-end {
+	height: 1px;
+}
+
+.hiring__no-match {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: calc(var(--spacing) * 3);
+	padding: calc(var(--spacing) * 8) calc(var(--spacing) * 4);
+	color: var(--ink-gray-5);
+}
+
+.hiring__no-match p {
+	margin: 0;
+}
+
+.hiring__skeleton {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--spacing) * 6);
+}
+
+.hiring__skeleton-bar {
+	display: inline-block;
+	vertical-align: middle;
+	border-radius: var(--radius-sm);
+}
+
+.hiring__skeleton-avatar {
+	flex: none;
+	width: calc(var(--spacing) * 7);
+	height: calc(var(--spacing) * 7);
+	border-radius: var(--radius-full, 9999px);
+}
+
+.hiring__skeleton-text {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--spacing) * 2);
+}
+
+.hiring__tabs-skeleton {
+	flex: none;
+	height: 42px;
+	border-bottom: 1px solid var(--outline-gray-2);
+}
+
+/* A narrow panel drops the prev/next arrows (↑/↓ still work) so the actions fit. */
+.hiring__panel {
+	display: flex;
+	flex-direction: column;
+	container-type: inline-size;
+}
+
+/* Full-bleed split (frappe.ui.SplitPane), like a mail client: two panes that scroll on their own. */
+.hiring[data-view="opening"][data-layout="split"] {
+	display: flex;
+	flex-direction: column;
+	max-width: none;
+	padding: 0;
+}
+
+.hiring[data-view="opening"][data-layout="split"] .hiring__tabs {
+	gap: 30px;
+	margin: 0;
+	padding-inline: 15px;
+	border-bottom-color: var(--outline-gray-2);
+}
+
+.hiring[data-view="opening"][data-layout="split"] .hiring__tabs .es-pill {
+	padding: 10px 0 9px;
+	font-size: var(--text-base);
+	font-weight: var(--font-weight-regular);
+	line-height: 1.5;
+}
+
+.hiring[data-view="opening"][data-layout="split"] .hiring__tabs .es-pill[data-state="active"] {
+	color: var(--ink-gray-9);
+	font-weight: var(--font-weight-regular);
+}
+
+.hiring[data-view="opening"][data-layout="split"]
+	.hiring__tabs
+	.es-pill[data-state="active"]::after {
+	background: var(--ink-gray-9);
+}
+
+.hiring__content[data-empty] .hiring__toolbar,
+.hiring__content[data-empty] .hiring__chips {
+	display: none;
+}
+
+.hiring__content[data-empty],
+.hiring__content[data-empty] .hiring__list-column,
+.hiring__content[data-empty] .hiring__list {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	min-height: 0;
+}
+
+.hiring__content[data-empty] .hiring__empty {
+	flex: 1;
+}
+
+/* An empty stage spans the split's width */
+.hiring .split-view[data-empty] {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.hiring .split-view[data-empty] :is(.split-view-list-header, .split-view-detail) {
+	display: none;
+}
+
+.hiring .split-view[data-empty] .split-view-list {
+	border-inline-end: 0;
+}
+
+.hiring .split-view[data-empty] .split-view-rows {
+	display: flex;
+	flex-direction: column;
+	padding: 0;
+	overflow-y: visible;
+}
+
+.hiring .split-view[data-empty] .hiring__empty {
+	flex: 1;
+}
+
+.split-view .hiring__toolbar {
+	margin: 0;
+	padding: calc(var(--spacing) * 2);
+}
+
+.split-view .hiring__search {
+	max-width: none;
+}
+
+.split-view .hiring__chips {
+	margin: 0;
+	padding: 0 calc(var(--spacing) * 2) calc(var(--spacing) * 2);
+}
+
+.hiring__list .es-list__row {
+	scroll-margin-block: calc(var(--spacing) * 2);
+}
+
+.hiring__panel-scroll {
+	flex: 1;
+	min-height: 0;
+	overflow-y: auto;
+	container-type: inline-size;
+}
+
+.hiring__panel-body {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--spacing) * 6);
+	max-width: 768px;
+	margin-inline: auto;
+	padding: calc(var(--spacing) * 8);
+}
+
+.hiring__panel-bar {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: space-between;
+	gap: calc(var(--spacing) * 3);
+	height: 52px;
+	padding-inline: calc(var(--spacing) * 4);
+	border-top: 1px solid var(--outline-gray-2);
+	background-color: var(--surface-base);
+}
+
+.hiring__panel-nav,
+.hiring__panel-actions {
+	display: flex;
+	align-items: center;
+	gap: calc(var(--spacing) * 2);
+}
+
+.hiring__panel-nav {
+	gap: calc(var(--spacing) * 1);
+}
+
+@container (max-width: 420px) {
+	.hiring__panel-nav {
+		display: none !important;
+	}
+}
+
+.hiring__panel-position {
+	margin-inline-start: calc(var(--spacing) * 1);
+	color: var(--ink-gray-5);
+	white-space: nowrap;
+}
+
+.hiring__panel-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: calc(var(--spacing) * 3);
+}
+
+.hiring__panel-identity {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	gap: calc(var(--spacing) * 3);
+	min-width: 0;
+}
+
+.hiring__panel-text {
+	min-width: 0;
+}
+
+.hiring__panel-name {
+	display: flex;
+	align-items: center;
+	gap: calc(var(--spacing) * 2);
+	margin: 0;
+	color: var(--ink-gray-9);
+}
+
+.hiring__panel-name > span:first-child {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.hiring__panel-meta {
+	display: flex;
+	flex-wrap: wrap;
+	min-width: 0;
+	align-items: center;
+	gap: calc(var(--spacing) * 5);
+	margin: calc(var(--spacing) * 0.5) 0 0;
+	color: var(--ink-gray-5);
+}
+
+.hiring__panel-meta-item {
+	display: flex;
+	align-items: center;
+	gap: calc(var(--spacing) * 1.5);
+	min-width: 0;
+	white-space: nowrap;
+}
+
+.hiring__panel-meta-item > :last-child {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.hiring__fact-icon {
+	display: flex;
+	flex-shrink: 0;
+	color: var(--ink-gray-5);
+}
+
+.hiring__fact-icon .icon {
+	margin: 0;
+}
+
+.hiring__facts {
+	display: grid;
+	grid-template-columns:
+		calc(var(--spacing) * 36) minmax(0, 1fr)
+		calc(var(--spacing) * 24) minmax(0, 1fr);
+	column-gap: calc(var(--spacing) * 6);
+	row-gap: 0;
+	align-items: center;
+	margin: 0;
+}
+
+.hiring__facts dt,
+.hiring__facts dd {
+	grid-row: var(--row);
+	min-height: calc(var(--spacing) * 9);
+}
+
+.hiring__facts dt {
+	grid-column: 1;
+}
+
+.hiring__facts dd {
+	grid-column: 2;
+}
+
+.hiring__facts dt.hiring__fact--right {
+	grid-column: 3;
+}
+
+.hiring__facts dd.hiring__fact--right {
+	grid-column: 4;
+}
+
+/* Link and Reason have a row to themselves and use the whole width */
+.hiring__facts dd.hiring__fact--wide {
+	grid-column: 2 / -1;
+}
+
+.hiring__facts dt {
+	display: flex;
+	align-items: center;
+	gap: calc(var(--spacing) * 2);
+	color: var(--ink-gray-5);
+}
+
+.hiring__facts dd {
+	margin: 0;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	line-height: calc(var(--spacing) * 9);
+	color: var(--ink-gray-8);
+}
+
+/* the rejection reason carries the team's note under it */
+.hiring__facts dd:has(.hiring__fact-note) {
+	padding-block: calc(var(--spacing) * 1.5);
+	white-space: normal;
+	line-height: var(--leading-normal, 1.5);
+}
+
+.hiring__fact-note {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+	overflow: hidden;
+	margin-top: calc(var(--spacing) * 0.5);
+	color: var(--ink-gray-5);
+	white-space: pre-line;
+}
+
+.hiring__facts dd a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.hiring__facts dd a:hover {
+	text-decoration: underline;
+}
+
+@container (max-width: 520px) {
+	.hiring__facts {
+		grid-template-columns: calc(var(--spacing) * 36) minmax(0, 1fr);
+	}
+
+	.hiring__facts dt,
+	.hiring__facts dd,
+	.hiring__facts dt.hiring__fact--right,
+	.hiring__facts dd.hiring__fact--right,
+	.hiring__facts dd.hiring__fact--wide {
+		grid-row: auto;
+		grid-column: auto;
+	}
+}
+
+.hiring__resume {
+	overflow: hidden;
+	border: 1px solid var(--outline-gray-2);
+	border-radius: var(--radius-lg);
+}
+
+.hiring__resume-note {
+	margin: 0;
+	color: var(--ink-gray-5);
+}
+
+.hiring__file {
+	display: flex;
+	align-items: center;
+	gap: calc(var(--spacing) * 3);
+	padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 3);
+}
+
+.hiring__file-icon {
+	display: flex;
+	color: var(--ink-gray-5);
+}
+
+.hiring__file-icon .icon {
+	margin: 0;
+}
+
+.hiring__file-text {
+	display: flex;
+	flex: 1;
+	align-items: baseline;
+	gap: calc(var(--spacing) * 2);
+	min-width: 0;
+}
+
+.hiring__file-title {
+	overflow: hidden;
+	color: var(--ink-gray-8);
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.hiring__file-subtitle {
+	flex: none;
+	color: var(--ink-gray-5);
+	white-space: nowrap;
+}
+
+.hiring__resume-preview {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	align-items: flex-start;
+	height: 480px;
+	padding: 24px 32px;
+	overflow-y: auto;
+	border: 0;
+	background-color: var(--surface-gray-2);
+}
+
+.hiring__resume-paper {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--spacing) * 3);
+	width: 100%;
+	max-width: 544px;
+	height: fit-content;
+}
+
+.hiring__resume-paper canvas {
+	display: block;
+	width: 100%;
+	background-color: #fff;
+	border-radius: var(--radius-sm);
+	box-shadow: var(--shadow-sm);
+}
+
+.hiring__cover-letter {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 8;
+	line-clamp: 8;
+	margin: 0;
+	overflow: hidden;
+	color: var(--ink-gray-8);
+	white-space: pre-wrap;
+}
+
+.hiring__cover-letter[data-expanded] {
+	display: block;
+	-webkit-line-clamp: unset;
+	line-clamp: unset;
+}
+
+.hiring__cover-letter-toggle {
+	margin-top: calc(var(--spacing) * 1);
+}
+
+.hiring__skeleton .hiring__panel-head {
+	min-height: calc(var(--spacing) * 10);
+}
+
+/* Email and comments */
+
+.hiring__mail-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: calc(var(--spacing) * 3);
+	margin-bottom: calc(var(--spacing) * 3);
+}
+
+.hiring__mail-aside {
+	display: flex;
+	align-items: center;
+	min-width: 0;
+}
+
+.hiring__mail-aside:empty {
+	display: none;
+}
+
+.hiring__mail-tab-extra {
+	display: inline-flex;
+	align-items: center;
+	gap: calc(var(--spacing) * 1.5);
+}
+
+.hiring__mail-tab-extra:empty {
+	display: none;
+}
+
+.hiring__mail-count {
+	color: var(--ink-gray-5);
+}
+
+.hiring__mail-dot {
+	display: inline-block;
+	flex: none;
+	width: 6px;
+	height: 6px;
+	border-radius: var(--radius-full, 9999px);
+	background-color: var(--ink-blue-3);
+}
+
+.hiring__mail-team-only,
+.hiring__mail-hint {
+	display: flex;
+	align-items: center;
+	gap: calc(var(--spacing) * 1.5);
+	margin: 0;
+	color: var(--ink-gray-5);
+}
+
+.hiring__mail-hint {
+	margin-top: calc(var(--spacing) * 3);
+}
+
+.hiring__mail-icon {
+	display: inline-flex;
+	flex: none;
+	color: var(--ink-gray-5);
+}
+
+.hiring__mail-icon .icon {
+	margin: 0;
+}
+
+.hiring__mail-icon--open {
+	transform: rotate(180deg);
+}
+
+.hiring__mail-envelope {
+	transform-origin: top;
+}
+
+.hiring__mail .hiring__mail-empty {
+	min-height: 0;
+	margin-top: calc(var(--spacing) * 3);
+	padding-block: calc(var(--spacing) * 6);
+	padding-inline: calc(var(--spacing) * 4);
+	border: 1px dashed var(--outline-gray-3, var(--outline-gray-2));
+	border-radius: var(--radius-lg);
+}
+
+.hiring__mail .hiring__mail-empty:first-child {
+	margin-top: 0;
+}
+
+.hiring__mail-thread {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--spacing) * 1.5);
+}
+
+.hiring__mail-card {
+	border: 1px solid var(--outline-gray-2);
+	border-radius: var(--radius-lg);
+	background-color: var(--surface-base);
+}
+
+.hiring__mail-fold {
+	display: flex;
+	align-items: center;
+	gap: calc(var(--spacing) * 3);
+	width: 100%;
+	height: 44px;
+	padding-inline: calc(var(--spacing) * 3);
+	text-align: start;
+	font-family: inherit;
+	cursor: pointer;
+}
+
+.hiring__mail-fold {
+	transition: border-color 150ms ease-out;
+}
+
+.hiring__mail-fold:hover {
+	border-color: var(--outline-gray-3);
+}
+
+.hiring__mail-fold-name {
+	flex: 0 1 auto;
+	max-width: 40%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--ink-gray-8);
+}
+
+.hiring__mail-fold-snippet {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--ink-gray-5);
+}
+
+.hiring__mail-fold-subject {
+	color: var(--ink-gray-8);
+}
+
+.hiring__mail-time {
+	flex: none;
+	color: var(--ink-gray-5);
+	white-space: nowrap;
+}
+
+.hiring__mail-time[data-failed] {
+	color: var(--ink-red-3);
+}
+
+.hiring__mail-new {
+	display: inline-flex;
+	flex: none;
+	align-items: center;
+	gap: calc(var(--spacing) * 1);
+	color: var(--ink-blue-3);
+}
+
+.hiring__mail-card-head {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: calc(var(--spacing) * 3);
+	padding: calc(var(--spacing) * 3) calc(var(--spacing) * 3) 0;
+}
+
+.hiring__mail-card-head[data-foldable] {
+	cursor: pointer;
+}
+
+.hiring__mail-card-side {
+	display: flex;
+	flex: none;
+	align-items: center;
+	gap: calc(var(--spacing) * 1);
+}
+
+.hiring__mail-sender {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	gap: calc(var(--spacing) * 3);
+	min-width: 0;
+}
+
+.hiring__mail-sender-text {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+	align-items: flex-start;
+	min-width: 0;
+}
+
+.hiring__mail-sender-line {
+	display: flex;
+	align-items: baseline;
+	gap: calc(var(--spacing) * 2);
+	max-width: 100%;
+	min-width: 0;
+}
+
+.hiring__mail-sender-name {
+	flex: none;
+	white-space: nowrap;
+	color: var(--ink-gray-9);
+}
+
+.hiring__mail-sender-address {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--ink-gray-5);
+}
+
+.hiring__mail-to {
+	display: inline-flex;
+	align-items: center;
+	gap: calc(var(--spacing) * 1);
+	max-width: 100%;
+	white-space: nowrap;
+	padding: 0;
+	border: 0;
+	background: none;
+	color: var(--ink-gray-5);
+}
+
+.hiring__mail-to > :first-child {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.hiring__mail-to:hover {
+	color: var(--ink-gray-8);
+}
+
+.hiring__mail-envelope {
+	display: grid;
+	grid-template-columns: max-content minmax(0, 1fr);
+	gap: calc(var(--spacing) * 1) calc(var(--spacing) * 3);
+	margin: calc(var(--spacing) * 3) calc(var(--spacing) * 3) 0;
+	padding: calc(var(--spacing) * 3);
+	border-radius: var(--radius-md);
+	background-color: var(--surface-gray-2);
+}
+
+.hiring__mail-envelope dt {
+	color: var(--ink-gray-5);
+}
+
+.hiring__mail-envelope dd {
+	margin: 0;
+	color: var(--ink-gray-8);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.hiring__mail-body {
+	padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3) calc(var(--spacing) * 3);
+	color: var(--ink-gray-8);
+}
+
+.hiring__mail-subject {
+	margin: 0 0 calc(var(--spacing) * 2);
+	color: var(--ink-gray-9);
+}
+
+.hiring__mail-text {
+	overflow-wrap: anywhere;
+}
+
+.hiring__mail-text > :first-child {
+	margin-top: 0;
+}
+
+.hiring__mail-text > :last-child {
+	margin-bottom: 0;
+}
+
+.hiring__mail-text img {
+	max-width: 100%;
+	height: auto;
+}
+
+.hiring__mail-quote-toggle {
+	padding: 0 calc(var(--spacing) * 2);
+	border: 0;
+	border-radius: var(--radius-sm);
+	background-color: var(--surface-gray-2);
+	color: var(--ink-gray-5);
+	line-height: 1.4;
+}
+
+.hiring__mail-text blockquote {
+	margin: calc(var(--spacing) * 2) 0 0;
+	padding-inline-start: calc(var(--spacing) * 3);
+	border-inline-start: 2px solid var(--outline-gray-2);
+	color: var(--ink-gray-6, var(--ink-gray-5));
+}
+
+/* two card edges peek out under the first email, like a pile; the edges and the count open it */
+.hiring__mail-pile {
+	position: relative;
+	padding-bottom: calc(var(--spacing) * 2.5);
+}
+
+.hiring__mail-pile > .hiring__mail-card {
+	position: relative;
+	z-index: 2;
+}
+
+.hiring__mail-pile::before,
+.hiring__mail-pile::after {
+	content: "";
+	position: absolute;
+	height: calc(var(--spacing) * 4);
+	border: 1px solid var(--outline-gray-2);
+	border-top: 0;
+	border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+	background-color: var(--surface-base);
+	transition: border-color 150ms ease-out;
+}
+
+.hiring__mail-pile::before {
+	inset-inline: calc(var(--spacing) * 2);
+	bottom: calc(var(--spacing) * 1.25);
+	z-index: 1;
+}
+
+.hiring__mail-pile::after {
+	inset-inline: calc(var(--spacing) * 4);
+	bottom: 0;
+}
+
+.hiring__mail-pile-edges {
+	position: absolute;
+	inset: auto 0 0;
+	z-index: 3;
+	height: calc(var(--spacing) * 3.5);
+	padding: 0;
+	border: 0;
+	border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+	background: transparent;
+	cursor: pointer;
+}
+
+.hiring__mail-pile-edges:focus-visible {
+	outline: 2px solid var(--outline-gray-4);
+	outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.hiring__mail-pile:has(> .hiring__mail-pile-edges:hover)::before,
+	.hiring__mail-pile:has(> .hiring__mail-pile-edges:hover)::after {
+		border-color: var(--outline-gray-4);
+	}
+}
+
+.hiring__comments {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--spacing) * 5);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.hiring__comment-day {
+	display: flex;
+	align-items: center;
+	gap: calc(var(--spacing) * 3);
+	color: var(--ink-gray-5);
+}
+
+.hiring__comment-day::before,
+.hiring__comment-day::after {
+	content: "";
+	flex: 1;
+	border-top: 1px solid var(--outline-gray-1);
+}
+
+.hiring__comment {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--spacing) * 1);
+}
+
+/* a continued comment hugs the one above it */
+.hiring__comment[data-continued] {
+	margin-top: calc(var(--spacing) * -4);
+}
+
+.hiring__comment-head {
+	display: flex;
+	align-items: center;
+	gap: calc(var(--spacing) * 2.5);
+}
+
+.hiring__comment-name {
+	color: var(--ink-gray-8);
+}
+
+.hiring__comment-time {
+	color: var(--ink-gray-5);
+}
+
+/* the body lines up with the name, under the avatar column (sm avatar 24px + gap) */
+.hiring__comment-text,
+.hiring__comment-editor {
+	margin-inline-start: calc(var(--spacing) * 8.5);
+}
+
+.hiring__comment-text {
+	line-height: var(--leading-relaxed, 1.625);
+	color: var(--ink-gray-8);
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+}
+
+.hiring__comment-text > :last-child {
+	margin-bottom: 0;
+}
+
+.hiring__comment-menu {
+	position: absolute;
+	inset-block-start: 0;
+	inset-inline-end: 0;
+	opacity: 0;
+}
+
+.hiring__comment:is(:hover, :focus-within) .hiring__comment-menu,
+.hiring__comment-menu[aria-expanded="true"] {
+	opacity: 1;
+}
+
+.hiring__comment[data-editing] .hiring__comment-menu {
+	display: none;
+}
+
+@media (hover: none) {
+	.hiring__comment-menu {
+		opacity: 1;
+	}
+}
+
+/* The composer (comment, reply, comment edit): one bordered box that holds the text and its buttons */
+
+.hiring__composer {
+	display: flex;
+	flex-direction: column;
+	border: 1px solid var(--outline-gray-2);
+	border-radius: var(--radius-lg);
+	background: var(--surface-base);
+	transition: border-color 150ms ease-out;
+}
+
+.hiring__comments + .hiring__composer,
+.hiring__mail-hint + .hiring__composer,
+.hiring__mail-reply {
+	margin-top: calc(var(--spacing) * 4);
+}
+
+.hiring__comment-editor {
+	margin-top: calc(var(--spacing) * 1);
+}
+
+.hiring__composer:focus-within {
+	border-color: var(--outline-gray-4);
+}
+
+textarea.hiring__composer-input {
+	display: block;
+	width: 100%;
+	max-height: calc(var(--spacing) * 52);
+	padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 3) 0;
+	border: 0;
+	border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+	background: transparent;
+	box-shadow: none;
+	outline: none;
+	resize: none;
+	line-height: var(--leading-relaxed, 1.625);
+	color: var(--ink-gray-8);
+}
+
+textarea.hiring__composer-input::placeholder {
+	color: var(--ink-gray-4);
+}
+
+input.hiring__composer-subject {
+	display: block;
+	width: 100%;
+	padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 3);
+	border: 0;
+	border-bottom: 1px solid var(--outline-gray-1);
+	border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+	background: transparent;
+	box-shadow: none;
+	outline: none;
+	color: var(--ink-gray-8);
+}
+
+input.hiring__composer-subject::placeholder {
+	color: var(--ink-gray-4);
+}
+
+.hiring__composer-bar {
+	display: flex;
+	align-items: center;
+	gap: calc(var(--spacing) * 2);
+	padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 1.5) calc(var(--spacing) * 1.5)
+		calc(var(--spacing) * 3);
+}
+
+.hiring__composer-start {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	gap: calc(var(--spacing) * 2);
+	min-width: 0;
+}
+
+.hiring__composer-from {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--ink-gray-5);
+}
+
+.hiring__composer-hint {
+	flex: none;
+	color: var(--ink-gray-5);
+}
+
+/* The email letter: rests as one line, opens into To, subject, body and footer in the same outline */
+
+.hiring__letter-peek {
+	display: flex;
+	align-items: center;
+	gap: calc(var(--spacing) * 2);
+	width: 100%;
+	height: calc(var(--spacing) * 9);
+	padding-inline: calc(var(--spacing) * 3);
+	border: 0;
+	border-radius: var(--radius-lg);
+	background: transparent;
+	color: var(--ink-gray-8);
+	text-align: start;
+	cursor: text;
+}
+
+.hiring__letter-peek:focus-visible {
+	outline: none;
+}
+
+.hiring__letter-peek-text {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.hiring__letter-peek-text[data-placeholder] {
+	color: var(--ink-gray-4);
+}
+
+.hiring__letter-draft {
+	flex: none;
+}
+
+.hiring__letter[data-open="false"] > :not(.hiring__letter-peek),
+.hiring__letter[data-open="true"] > .hiring__letter-peek {
+	display: none;
+}
+
+.hiring__letter:focus-within {
+	border-color: var(--outline-gray-4);
+	box-shadow: var(--focus-default);
+}
+
+.hiring__letter-to {
+	display: flex;
+	align-items: center;
+	gap: calc(var(--spacing) * 2);
+	min-height: calc(var(--spacing) * 10);
+	padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 1.5) calc(var(--spacing) * 1.5)
+		calc(var(--spacing) * 3);
+}
+
+.hiring__letter-label {
+	flex: none;
+	color: var(--ink-gray-5);
+}
+
+.hiring__letter-name {
+	flex: none;
+	max-width: 50%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--ink-gray-8);
+}
+
+.hiring__letter-address {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: var(--ink-gray-5);
+}
+
+.hiring__letter-to .es-button {
+	flex: none;
+	margin-left: auto;
+}
+
+.hiring__letter-subject {
+	display: flex;
+	border-top: 1px solid var(--outline-gray-1);
+}
+
+.hiring__letter-subject-text {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 3);
+	color: var(--ink-gray-5);
+}
+
+.hiring__letter input.hiring__composer-subject {
+	border-bottom: 0;
+	border-radius: 0;
+	text-overflow: ellipsis;
+}
+
+.hiring__letter textarea.hiring__composer-input {
+	max-height: 40vh;
+	padding: calc(var(--spacing) * 2.5) calc(var(--spacing) * 3);
+	border-top: 1px solid var(--outline-gray-1);
+	border-radius: 0;
+}
+
+.hiring__letter .hiring__composer-bar {
+	padding-left: calc(var(--spacing) * 1.5);
+}
+
+.hiring__letter .hiring__composer-start {
+	flex: none;
+}
+
+.hiring__letter .hiring__composer-from {
+	flex: 1;
+	text-align: end;
+}
+
+@container (max-width: 480px) {
+	.hiring__letter-template .es-button__label,
+	.hiring__letter .hiring__composer-from {
+		display: none;
+	}
+
+	.hiring__letter-template {
+		width: var(--es-bt-h);
+		padding-inline: 0;
+	}
+
+	.hiring__letter .hiring__composer-bar {
+		justify-content: space-between;
+	}
+}
+
+@container (max-width: 520px) {
+	.hiring__mail-sender-address {
+		display: none;
+	}
+
+	/* Narrow: name and time on top, the first words below, so the preview stays readable. */
+	.hiring__mail-fold {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		grid-template-areas: "avatar name time" "avatar snippet snippet";
+		column-gap: calc(var(--spacing) * 3);
+		row-gap: calc(var(--spacing) * 0.5);
+		height: auto;
+		padding-block: calc(var(--spacing) * 2.5);
+	}
+
+	.hiring__mail-fold > :first-child {
+		grid-area: avatar;
+	}
+
+	.hiring__mail-fold-name {
+		grid-area: name;
+		max-width: none;
+	}
+
+	.hiring__mail-fold-snippet {
+		grid-area: snippet;
+	}
+
+	.hiring__mail-fold .hiring__mail-time {
+		grid-area: time;
+	}
+}
+
+.hiring__panel-head-actions {
+	display: flex;
+	flex: none;
+	align-items: center;
+	gap: calc(var(--spacing) * 1);
+}
+
+/* the right-hand text is the one thing waiting on HR, so it stays on narrow lists too */
+.hiring[data-view="overview"] .es-list__meta {
+	display: block;
+	font-weight: var(--font-weight-medium);
+	color: var(--ink-gray-8);
+}
+
+.hiring[data-view="overview"] .es-list__meta[data-late] {
+	color: var(--ink-amber-8);
+}
+
+.hiring[data-view="overview"] .es-list__subtitle[data-faint] {
+	color: var(--ink-gray-4);
+}

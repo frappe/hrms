@@ -98,3 +98,33 @@ hrms.hiring.get_interview_badge = ({ status, is_not_cleared }) => {
 		theme: hrms.hiring.INTERVIEW_BADGE_THEMES[status],
 	};
 };
+
+hrms.hiring.OFFER_BADGE_THEMES = {
+	"Ready to Send": "blue",
+	"Awaiting Response": "amber",
+	Accepted: "green",
+	Rejected: "red",
+};
+
+/** The badge `{label, theme}` of a job offer status; a stored "Rejected" reads "Declined", as the candidate declined. */
+hrms.hiring.get_offer_badge = (status) => {
+	const labels = {
+		"Ready to Send": __("Ready to send"),
+		"Awaiting Response": __("Sent"),
+		Rejected: __("Declined"),
+	};
+	return { label: labels[status] || __(status), theme: hrms.hiring.OFFER_BADGE_THEMES[status] };
+};
+
+hrms.hiring.CLOSING_SOON_DAYS = 7;
+
+/** "Closes today", "Closes tomorrow" or "Closes in 3 days", for an opening closing `days` from today. */
+hrms.hiring.get_closing_label = (days) => {
+	if (days === 0) return __("Closes today");
+	if (days === 1) return __("Closes tomorrow");
+	return __("Closes in {0} days", [days]);
+};
+
+/** The Hiring page route of an opening, at a stage and an applicant when given; the URL spells the stage lowercase. */
+hrms.hiring.get_pipeline_route = (opening, stage, applicant) =>
+	["hiring", opening, stage?.toLowerCase(), applicant].filter(Boolean);
