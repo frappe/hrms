@@ -272,7 +272,7 @@ class TestJobOffer(HRMSTestSuite):
 		job_offer.save()
 		self.assertEqual(job_offer.working_hours, 9)
 
-		job_offer.update({"shift_type": day.name, "start_time": "10:00:00", "end_time": "18:30:00"})
+		job_offer.shift_type = day.name
 		job_offer.save()
 		self.assertEqual(job_offer.working_hours, 8.5)
 
