@@ -118,7 +118,7 @@ class AppointmentLetter(Document):
 			"weekly_off": comma_and(split_days(offer.weekly_off_days), add_quotes=False),
 			"start_time": format_time(self.start_time, "h:mm a") if self.start_time else "",
 			"end_time": format_time(self.end_time, "h:mm a") if self.end_time else "",
-			"working_hours": format_number(self.working_hours or offer.working_hours),
+			"working_hours": format_number(self.working_hours or offer.working_hours or 8),
 			"public_holidays": offer.total_public_holidays,
 			"leave_entitlement": comma_and(
 				[
