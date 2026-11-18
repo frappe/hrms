@@ -11,7 +11,12 @@ const COUNT = {
 
 frappe.ui.form.on("Employee", {
 	refresh(frm) {
-		if (frm.is_new() || !frm.get_field("overview_html")) return;
+		if (!frm.get_field("overview_html")) return;
+		if (frm.is_new()) {
+			// the last record's overview has desk controls in it, which keep the tab showing
+			if (frm.employee_overview?.clear()) frm.layout.refresh_sections();
+			return;
+		}
 		if (!frm.employee_overview) frm.employee_overview = new hrms.EmployeeOverview(frm);
 		frm.employee_overview.refresh();
 	},
@@ -79,6 +84,15 @@ hrms.EmployeeOverview = class EmployeeOverview {
 		this.needs_refresh = false;
 		if (this.employee !== this.frm.doc.name) this.build();
 		this.check_activity();
+	}
+
+	clear() {
+		if (!this.employee) return false;
+		this.seq++;
+		this.destroy_trend();
+		this.employee = null;
+		this.wrapper.empty();
+		return true;
 	}
 
 	build() {

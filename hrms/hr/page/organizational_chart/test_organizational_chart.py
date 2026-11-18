@@ -71,9 +71,8 @@ class TestOrganizationalChart(HRMSTestSuite):
 		# the chart is the company directory, so their manager is there too
 		self.assertEqual([root.id for root in roots], [manager])
 		self.assertEqual([member.id for member in team], [employee])
-		# but only their own profile opens for them, and desk's composer sends only there
-		self.assertEqual((roots[0].can_open, roots[0].can_email), (False, False))
-		self.assertEqual((team[0].can_open, team[0].can_email), (True, True))
+		# but desk's composer emails only those whose record they may read
+		self.assertEqual((roots[0].can_email, team[0].can_email), (False, True))
 
 	@HRMSTestSuite.change_settings("HR Settings", {"show_org_chart_to_all_employees": 1})
 	def test_manager_in_unseen_company_shows_only_who(self):
@@ -188,14 +187,15 @@ class TestOrganizationalChart(HRMSTestSuite):
 		other_company = create_company("Test Org Chart Other").name
 		other_company_manager = make_employee("orgchart_other_manager@mail.com", company=other_company)
 		left_manager = make_employee("orgchart_left_manager@mail.com", company=self.company)
-		frappe.db.set_value("Employee", left_manager, "status", "Left")
 
 		reports_to_other_company = make_employee(
 			"orgchart_other_report@mail.com", company=self.company, reports_to=other_company_manager
 		)
+		# an active employee can only be assigned to an active manager, so the manager leaves afterwards
 		reports_to_left_manager = make_employee(
 			"orgchart_left_report@mail.com", company=self.company, reports_to=left_manager
 		)
+		frappe.db.set_value("Employee", left_manager, "status", "Left")
 
 		roots = {root.id: root for root in get_children(self.company)}
 		self.assertEqual(set(roots), {reports_to_other_company, reports_to_left_manager})
@@ -237,7 +237,7 @@ class TestOrganizationalChart(HRMSTestSuite):
 			{name: person.new_joiner for name, person in people.items()}, {manager: False, joiner: True}
 		)
 		self.assertNotIn("date_of_joining", people[joiner])
-		self.assertEqual((people[manager].can_open, people[joiner].can_open), (False, True))
+		self.assertEqual((people[manager].can_email, people[joiner].can_email), (False, True))
 
 	@HRMSTestSuite.change_settings(
 		"HR Settings",

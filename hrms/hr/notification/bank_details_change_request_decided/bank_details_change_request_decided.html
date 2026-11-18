@@ -1,0 +1,1 @@
+{% if doc.status == 'Rejected' and doc.rejection_reason %}<p>{{ _('Reason') }}: {{ doc.rejection_reason | e }}</p>{% endif %}

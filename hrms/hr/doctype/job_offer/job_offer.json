@@ -39,13 +39,13 @@
   "compensation_tab",
   "salary_details_section",
   "salary_structure",
-  "currency",
   "calculate_component_amount_from",
   "base",
+  "ctc",
   "column_break_compensation",
   "grade",
+  "currency",
   "variable",
-  "ctc",
   "gross",
   "ctc_breakup_section",
   "ctc_breakup",
@@ -53,8 +53,13 @@
   "probation_period_days",
   "notice_number_of_days",
   "column_break_employment_policy",
-  "working_hours",
   "notice_period_during_probation",
+  "working_hours_section",
+  "shift_type",
+  "working_hours",
+  "column_break_working_hours",
+  "start_time",
+  "end_time",
   "section_break_14",
   "select_terms",
   "terms",
@@ -262,13 +267,12 @@
   },
   {
    "default": "0",
-   "depends_on": "salary_structure",
    "fieldname": "ctc",
    "fieldtype": "Currency",
    "label": "Total Cost to Company (CTC)",
    "mandatory_depends_on": "eval:doc.salary_structure && doc.calculate_component_amount_from=='CTC'",
    "options": "currency",
-   "read_only_depends_on": "eval:doc.calculate_component_amount_from!='CTC'"
+   "read_only_depends_on": "eval:doc.salary_structure && doc.calculate_component_amount_from!='CTC'"
   },
   {
    "description": "Gross earnings for one payroll cycle, before deductions. Shown as a row in the break-up; kept as a field because statutory wage ceilings are drawn on it.",
@@ -376,11 +380,39 @@
    "fieldtype": "Column Break"
   },
   {
-   "default": "8",
+   "fieldname": "working_hours_section",
+   "fieldtype": "Section Break",
+   "label": "Working Hours"
+  },
+  {
+   "fieldname": "shift_type",
+   "fieldtype": "Link",
+   "label": "Shift",
+   "options": "Shift Type"
+  },
+  {
    "fieldname": "working_hours",
    "fieldtype": "Float",
-   "label": "Working Hours",
+   "label": "Total Working Hours",
    "non_negative": 1
+  },
+  {
+   "fieldname": "column_break_working_hours",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "shift_type.start_time",
+   "fieldname": "start_time",
+   "fieldtype": "Time",
+   "label": "Start Time",
+   "read_only_depends_on": "eval:doc.shift_type"
+  },
+  {
+   "fetch_from": "shift_type.end_time",
+   "fieldname": "end_time",
+   "fieldtype": "Time",
+   "label": "End Time",
+   "read_only_depends_on": "eval:doc.shift_type"
   },
   {
    "collapsible": 1,
@@ -481,7 +513,7 @@
  "icon": "handshake",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-15 19:00:00.000000",
+ "modified": "2026-11-18 17:30:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",

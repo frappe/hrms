@@ -1,0 +1,972 @@
+{
+ "charts": {
+  "employee-lifecycle-grievances-by-type": {
+   "chart_type": "Donut",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "label_column": {
+     "column_name": "grievance_type",
+     "data_type": "String",
+     "dimension_name": "Grievance Type"
+    },
+    "legend_position": "right",
+    "limit": 100,
+    "max_slices": 6,
+    "number_format": {
+     "decimals": 0,
+     "shorten": false
+    },
+    "order_by": [],
+    "show_inline_labels": true,
+    "value_column": {
+     "aggregation": "count",
+     "column_name": "name",
+     "data_type": "Integer",
+     "measure_name": "Grievances"
+    }
+   },
+   "folder": null,
+   "name": "employee-lifecycle-grievances-by-type",
+   "query": "employee-lifecycle-grievances",
+   "sort_order": 8,
+   "title": "Grievances by Type",
+   "workbook": "employee-lifecycle"
+  },
+  "employee-lifecycle-onboardings-this-month": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "comparison": {
+       "label": "vs last month",
+       "measure": {
+        "data_type": "Integer",
+        "expression": {
+         "expression": "count_if(boarding_begins_on.between(date_sub(month_start(today()), 1, 'month'), date_sub(today(), 1, 'month')))",
+         "type": "expression"
+        },
+        "measure_name": "vs last month"
+       },
+       "show": "delta",
+       "source": "measure"
+      },
+      "decimals": 0,
+      "shorten": false
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Integer",
+      "expression": {
+       "expression": "count_if(boarding_begins_on.between(month_start(today()), today()))",
+       "type": "expression"
+      },
+      "id": "Onboardings",
+      "measure_name": "Onboardings"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "employee-lifecycle-onboardings-this-month",
+   "query": "employee-lifecycle-onboardings",
+   "sort_order": 1,
+   "title": "Onboardings (This Month)",
+   "workbook": "employee-lifecycle"
+  },
+  "employee-lifecycle-promotions-by-year": {
+   "chart_type": "Bar",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_format": {
+     "decimals": 0,
+     "shorten": false
+    },
+    "order_by": [
+     {
+      "column": {
+       "column_name": "Year",
+       "type": "column"
+      },
+      "direction": "asc"
+     }
+    ],
+    "x_axis": {
+     "dimension": {
+      "column_name": "promotion_date",
+      "data_type": "Date",
+      "dimension_name": "Year",
+      "granularity": "year"
+     }
+    },
+    "y_axis": {
+     "min": 0,
+     "series": [
+      {
+       "measure": {
+        "aggregation": "count",
+        "column_name": "name",
+        "data_type": "Integer",
+        "measure_name": "Promotions"
+       },
+       "type": "bar"
+      }
+     ]
+    }
+   },
+   "folder": null,
+   "name": "employee-lifecycle-promotions-by-year",
+   "query": "employee-lifecycle-promotions",
+   "sort_order": 6,
+   "title": "Promotions by Year",
+   "workbook": "employee-lifecycle"
+  },
+  "employee-lifecycle-promotions-this-month": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "comparison": {
+       "label": "vs last month",
+       "measure": {
+        "data_type": "Integer",
+        "expression": {
+         "expression": "count_if(promotion_date.between(date_sub(month_start(today()), 1, 'month'), date_sub(today(), 1, 'month')))",
+         "type": "expression"
+        },
+        "measure_name": "vs last month"
+       },
+       "show": "delta",
+       "source": "measure"
+      },
+      "decimals": 0,
+      "shorten": false
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Integer",
+      "expression": {
+       "expression": "count_if(promotion_date.between(month_start(today()), today()))",
+       "type": "expression"
+      },
+      "id": "Promotions",
+      "measure_name": "Promotions"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "employee-lifecycle-promotions-this-month",
+   "query": "employee-lifecycle-promotions",
+   "sort_order": 3,
+   "title": "Promotions (This Month)",
+   "workbook": "employee-lifecycle"
+  },
+  "employee-lifecycle-separations-this-month": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "comparison": {
+       "label": "vs last month",
+       "measure": {
+        "data_type": "Integer",
+        "expression": {
+         "expression": "count_if(boarding_begins_on.between(date_sub(month_start(today()), 1, 'month'), date_sub(today(), 1, 'month')))",
+         "type": "expression"
+        },
+        "measure_name": "vs last month"
+       },
+       "show": "delta",
+       "source": "measure"
+      },
+      "decimals": 0,
+      "shorten": false
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Integer",
+      "expression": {
+       "expression": "count_if(boarding_begins_on.between(month_start(today()), today()))",
+       "type": "expression"
+      },
+      "id": "Separations",
+      "measure_name": "Separations"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "employee-lifecycle-separations-this-month",
+   "query": "employee-lifecycle-separations",
+   "sort_order": 2,
+   "title": "Separations (This Month)",
+   "workbook": "employee-lifecycle"
+  },
+  "employee-lifecycle-trainings-by-type": {
+   "chart_type": "Donut",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "label_column": {
+     "column_name": "type",
+     "data_type": "String",
+     "dimension_name": "Training Type"
+    },
+    "legend_position": "right",
+    "limit": 100,
+    "max_slices": 6,
+    "number_format": {
+     "decimals": 0,
+     "shorten": false
+    },
+    "order_by": [],
+    "show_inline_labels": true,
+    "value_column": {
+     "aggregation": "count",
+     "column_name": "name",
+     "data_type": "Integer",
+     "measure_name": "Trainings"
+    }
+   },
+   "folder": null,
+   "name": "employee-lifecycle-trainings-by-type",
+   "query": "employee-lifecycle-trainings",
+   "sort_order": 9,
+   "title": "Trainings by Type",
+   "workbook": "employee-lifecycle"
+  },
+  "employee-lifecycle-trainings-this-month": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "comparison": {
+       "label": "vs last month",
+       "measure": {
+        "data_type": "Integer",
+        "expression": {
+         "expression": "count_if(start_date.between(date_sub(month_start(today()), 1, 'month'), date_sub(today(), 1, 'month')))",
+         "type": "expression"
+        },
+        "measure_name": "vs last month"
+       },
+       "show": "delta",
+       "source": "measure"
+      },
+      "decimals": 0,
+      "shorten": false
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Integer",
+      "expression": {
+       "expression": "count_if(start_date.between(month_start(today()), today()))",
+       "type": "expression"
+      },
+      "id": "Trainings",
+      "measure_name": "Trainings"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "employee-lifecycle-trainings-this-month",
+   "query": "employee-lifecycle-trainings",
+   "sort_order": 5,
+   "title": "Trainings (This Month)",
+   "workbook": "employee-lifecycle"
+  },
+  "employee-lifecycle-transfers-by-year": {
+   "chart_type": "Bar",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_format": {
+     "decimals": 0,
+     "shorten": false
+    },
+    "order_by": [
+     {
+      "column": {
+       "column_name": "Year",
+       "type": "column"
+      },
+      "direction": "asc"
+     }
+    ],
+    "x_axis": {
+     "dimension": {
+      "column_name": "transfer_date",
+      "data_type": "Date",
+      "dimension_name": "Year",
+      "granularity": "year"
+     }
+    },
+    "y_axis": {
+     "min": 0,
+     "series": [
+      {
+       "measure": {
+        "aggregation": "count",
+        "column_name": "name",
+        "data_type": "Integer",
+        "measure_name": "Transfers"
+       },
+       "type": "bar"
+      }
+     ]
+    }
+   },
+   "folder": null,
+   "name": "employee-lifecycle-transfers-by-year",
+   "query": "employee-lifecycle-transfers",
+   "sort_order": 7,
+   "title": "Transfers by Year",
+   "workbook": "employee-lifecycle"
+  },
+  "employee-lifecycle-transfers-this-month": {
+   "chart_type": "Number",
+   "config": {
+    "filters": {
+     "filters": [],
+     "logical_operator": "And"
+    },
+    "limit": 100,
+    "number_column_options": [
+     {
+      "comparison": {
+       "label": "vs last month",
+       "measure": {
+        "data_type": "Integer",
+        "expression": {
+         "expression": "count_if(transfer_date.between(date_sub(month_start(today()), 1, 'month'), date_sub(today(), 1, 'month')))",
+         "type": "expression"
+        },
+        "measure_name": "vs last month"
+       },
+       "show": "delta",
+       "source": "measure"
+      },
+      "decimals": 0,
+      "shorten": false
+     }
+    ],
+    "number_columns": [
+     {
+      "data_type": "Integer",
+      "expression": {
+       "expression": "count_if(transfer_date.between(month_start(today()), today()))",
+       "type": "expression"
+      },
+      "id": "Transfers",
+      "measure_name": "Transfers"
+     }
+    ],
+    "order_by": [],
+    "sparkline": false
+   },
+   "folder": null,
+   "name": "employee-lifecycle-transfers-this-month",
+   "query": "employee-lifecycle-transfers",
+   "sort_order": 4,
+   "title": "Transfers (This Month)",
+   "workbook": "employee-lifecycle"
+  }
+ },
+ "creation": "2026-11-18 12:00:00.000000",
+ "dashboards": {
+  "employee-lifecycle": {
+   "items": [
+    {
+     "default_operator": "=",
+     "default_user_key": "Company",
+     "filter_name": "Company",
+     "filter_type": "String",
+     "layout": {
+      "h": 2,
+      "i": "filter-company",
+      "w": 4,
+      "x": 0,
+      "y": 0
+     },
+     "layouts": {
+      "sm": {
+       "h": 2,
+       "w": 20,
+       "x": 0,
+       "y": 0
+      }
+     },
+     "links": {
+      "employee-lifecycle-grievances-by-type": "`employee-lifecycle-grievances`.`company`",
+      "employee-lifecycle-onboardings-this-month": "`employee-lifecycle-onboardings`.`company`",
+      "employee-lifecycle-promotions-by-year": "`employee-lifecycle-promotions`.`company`",
+      "employee-lifecycle-promotions-this-month": "`employee-lifecycle-promotions`.`company`",
+      "employee-lifecycle-separations-this-month": "`employee-lifecycle-separations`.`company`",
+      "employee-lifecycle-trainings-by-type": "`employee-lifecycle-trainings`.`company`",
+      "employee-lifecycle-trainings-this-month": "`employee-lifecycle-trainings`.`company`",
+      "employee-lifecycle-transfers-by-year": "`employee-lifecycle-transfers`.`company`",
+      "employee-lifecycle-transfers-this-month": "`employee-lifecycle-transfers`.`company`"
+     },
+     "type": "filter"
+    },
+    {
+     "chart": "employee-lifecycle-onboardings-this-month",
+     "layout": {
+      "h": 5,
+      "i": "chart-employee-lifecycle-onboardings-this-month",
+      "w": 4,
+      "x": 0,
+      "y": 3
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 10,
+       "x": 0,
+       "y": 3
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "employee-lifecycle-separations-this-month",
+     "layout": {
+      "h": 5,
+      "i": "chart-employee-lifecycle-separations-this-month",
+      "w": 4,
+      "x": 4,
+      "y": 3
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 10,
+       "x": 10,
+       "y": 3
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "employee-lifecycle-promotions-this-month",
+     "layout": {
+      "h": 5,
+      "i": "chart-employee-lifecycle-promotions-this-month",
+      "w": 4,
+      "x": 8,
+      "y": 3
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 10,
+       "x": 0,
+       "y": 8
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "employee-lifecycle-transfers-this-month",
+     "layout": {
+      "h": 5,
+      "i": "chart-employee-lifecycle-transfers-this-month",
+      "w": 4,
+      "x": 12,
+      "y": 3
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 10,
+       "x": 10,
+       "y": 8
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "employee-lifecycle-trainings-this-month",
+     "layout": {
+      "h": 5,
+      "i": "chart-employee-lifecycle-trainings-this-month",
+      "w": 4,
+      "x": 16,
+      "y": 3
+     },
+     "layouts": {
+      "sm": {
+       "h": 5,
+       "w": 20,
+       "x": 0,
+       "y": 13
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "employee-lifecycle-promotions-by-year",
+     "layout": {
+      "h": 15,
+      "i": "chart-employee-lifecycle-promotions-by-year",
+      "w": 10,
+      "x": 0,
+      "y": 8
+     },
+     "layouts": {
+      "sm": {
+       "h": 15,
+       "w": 20,
+       "x": 0,
+       "y": 18
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "employee-lifecycle-transfers-by-year",
+     "layout": {
+      "h": 15,
+      "i": "chart-employee-lifecycle-transfers-by-year",
+      "w": 10,
+      "x": 10,
+      "y": 8
+     },
+     "layouts": {
+      "sm": {
+       "h": 15,
+       "w": 20,
+       "x": 0,
+       "y": 33
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "employee-lifecycle-grievances-by-type",
+     "layout": {
+      "h": 15,
+      "i": "chart-employee-lifecycle-grievances-by-type",
+      "w": 10,
+      "x": 0,
+      "y": 23
+     },
+     "layouts": {
+      "sm": {
+       "h": 15,
+       "w": 20,
+       "x": 0,
+       "y": 48
+      }
+     },
+     "type": "chart"
+    },
+    {
+     "chart": "employee-lifecycle-trainings-by-type",
+     "layout": {
+      "h": 15,
+      "i": "chart-employee-lifecycle-trainings-by-type",
+      "w": 10,
+      "x": 10,
+      "y": 23
+     },
+     "layouts": {
+      "sm": {
+       "h": 15,
+       "w": 20,
+       "x": 0,
+       "y": 63
+      }
+     },
+     "type": "chart"
+    }
+   ],
+   "name": "employee-lifecycle",
+   "title": "Employee Lifecycle",
+   "vertical_compact_layout": 1,
+   "visible_to_roles": [
+    {
+     "role": "HR User"
+    },
+    {
+     "role": "HR Manager"
+    }
+   ],
+   "workbook": "employee-lifecycle"
+  }
+ },
+ "docstatus": 0,
+ "doctype": "Insights Workbook",
+ "folders": [],
+ "idx": 0,
+ "is_standard": 1,
+ "modified": "2026-11-18 12:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "HR",
+ "name": "employee-lifecycle",
+ "owner": "Administrator",
+ "queries": {
+  "employee-lifecycle-grievances": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "employee-lifecycle-grievances",
+   "operations": [
+    {
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabEmployee Grievance",
+      "type": "table"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "column": {
+        "column_name": "docstatus",
+        "type": "column"
+       },
+       "operator": "=",
+       "value": 1
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "join_condition": {
+      "left_column": {
+       "column_name": "raised_by",
+       "type": "column"
+      },
+      "right_column": {
+       "column_name": "name",
+       "type": "column"
+      }
+     },
+     "join_type": "left",
+     "select_columns": [
+      {
+       "column_name": "company",
+       "type": "column"
+      }
+     ],
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabEmployee",
+      "type": "table"
+     },
+     "type": "join"
+    },
+    {
+     "data_type": "String",
+     "expression": {
+      "expression": "if_null(grievance_type, 'Not Set')",
+      "type": "expression"
+     },
+     "new_name": "grievance_type",
+     "type": "mutate"
+    },
+    {
+     "column_names": [
+      "name",
+      "grievance_type",
+      "date",
+      "status",
+      "company"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 6,
+   "title": "Grievances",
+   "use_live_connection": 1,
+   "workbook": "employee-lifecycle"
+  },
+  "employee-lifecycle-onboardings": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "employee-lifecycle-onboardings",
+   "operations": [
+    {
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabEmployee Onboarding",
+      "type": "table"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "column": {
+        "column_name": "docstatus",
+        "type": "column"
+       },
+       "operator": "!=",
+       "value": 2
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "name",
+      "employee_name",
+      "company",
+      "boarding_begins_on",
+      "boarding_status"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 1,
+   "title": "Onboardings",
+   "use_live_connection": 1,
+   "workbook": "employee-lifecycle"
+  },
+  "employee-lifecycle-promotions": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "employee-lifecycle-promotions",
+   "operations": [
+    {
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabEmployee Promotion",
+      "type": "table"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "column": {
+        "column_name": "docstatus",
+        "type": "column"
+       },
+       "operator": "=",
+       "value": 1
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "name",
+      "employee_name",
+      "company",
+      "promotion_date"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 3,
+   "title": "Promotions",
+   "use_live_connection": 1,
+   "workbook": "employee-lifecycle"
+  },
+  "employee-lifecycle-separations": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "employee-lifecycle-separations",
+   "operations": [
+    {
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabEmployee Separation",
+      "type": "table"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "column": {
+        "column_name": "docstatus",
+        "type": "column"
+       },
+       "operator": "!=",
+       "value": 2
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "name",
+      "employee_name",
+      "company",
+      "boarding_begins_on",
+      "boarding_status"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 2,
+   "title": "Separations",
+   "use_live_connection": 1,
+   "workbook": "employee-lifecycle"
+  },
+  "employee-lifecycle-trainings": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "employee-lifecycle-trainings",
+   "operations": [
+    {
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabTraining Event",
+      "type": "table"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "column": {
+        "column_name": "docstatus",
+        "type": "column"
+       },
+       "operator": "=",
+       "value": 1
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "data_type": "Date",
+     "expression": {
+      "expression": "start_time.cast('date')",
+      "type": "expression"
+     },
+     "new_name": "start_date",
+     "type": "mutate"
+    },
+    {
+     "data_type": "String",
+     "expression": {
+      "expression": "if_null(type, 'Not Set')",
+      "type": "expression"
+     },
+     "new_name": "type",
+     "type": "mutate"
+    },
+    {
+     "column_names": [
+      "name",
+      "event_name",
+      "company",
+      "type",
+      "start_date"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 5,
+   "title": "Trainings",
+   "use_live_connection": 1,
+   "workbook": "employee-lifecycle"
+  },
+  "employee-lifecycle-transfers": {
+   "folder": null,
+   "is_builder_query": 1,
+   "is_native_query": 0,
+   "is_script_query": 0,
+   "name": "employee-lifecycle-transfers",
+   "operations": [
+    {
+     "table": {
+      "data_source": "Site DB",
+      "table_name": "tabEmployee Transfer",
+      "type": "table"
+     },
+     "type": "source"
+    },
+    {
+     "filters": [
+      {
+       "column": {
+        "column_name": "docstatus",
+        "type": "column"
+       },
+       "operator": "=",
+       "value": 1
+      }
+     ],
+     "logical_operator": "And",
+     "type": "filter_group"
+    },
+    {
+     "column_names": [
+      "name",
+      "employee_name",
+      "company",
+      "transfer_date"
+     ],
+     "type": "select"
+    }
+   ],
+   "sort_order": 4,
+   "title": "Transfers",
+   "use_live_connection": 1,
+   "workbook": "employee-lifecycle"
+  }
+ },
+ "title": "Employee Lifecycle"
+}

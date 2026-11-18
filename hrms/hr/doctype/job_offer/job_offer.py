@@ -17,7 +17,11 @@ from frappe.utils import (
 	nowdate,
 	parse_addr,
 	split_emails,
+	to_timedelta,
 )
+
+import hrms
+from hrms.hr.doctype.appointment_letter.appointment_letter import get_working_hours
 
 
 class JobOffer(Document):
@@ -47,6 +51,7 @@ class JobOffer(Document):
 		department: DF.Link | None
 		designation: DF.Link
 		employment_type: DF.Link | None
+		end_time: DF.Time | None
 		grade: DF.Link | None
 		gross: DF.Currency
 		holiday_list: DF.Link | None
@@ -65,7 +70,9 @@ class JobOffer(Document):
 		reports_to: DF.Link | None
 		salary_structure: DF.Link | None
 		select_terms: DF.Link | None
+		shift_type: DF.Link | None
 		signature: DF.AttachImage | None
+		start_time: DF.Time | None
 		status: DF.Literal["Draft", "Ready to Send", "Awaiting Response", "Accepted", "Rejected", "Cancelled"]
 		terms: DF.TextEditor | None
 		total_public_holidays: DF.Int
@@ -84,6 +91,7 @@ class JobOffer(Document):
 		self.validate_duplicate_job_offer()
 		self.set_compensation()
 		self.set_leave_details()
+		self.set_working_hours()
 
 	def set_status(self):
 		if self.docstatus == 0 and self.status in (None, "", "Ready to Send", "Awaiting Response"):
@@ -117,6 +125,24 @@ class JobOffer(Document):
 		self.weekly_off_days = summary["weekly_off_days"]
 		self.total_public_holidays = summary["total_public_holidays"]
 
+	def set_working_hours(self):
+		if (
+			self.start_time not in (None, "")
+			and self.end_time not in (None, "")
+			and (not self.working_hours or self.shift_times_changed())
+		):
+			self.working_hours = get_working_hours(self.start_time, self.end_time)
+
+	def shift_times_changed(self) -> bool:
+		previous = self.doc_before_save()
+		if not previous:
+			return False
+
+		return any(
+			to_timedelta(self.get(field)) != to_timedelta(previous.get(field))
+			for field in ("start_time", "end_time")
+		)
+
 	def holiday_list_changed(self) -> bool:
 		previous = self.doc_before_save()
 
@@ -141,7 +167,8 @@ class JobOffer(Document):
 
 	def set_compensation(self):
 		if not self.salary_structure or not self.calculate_component_amount_from:
-			self.ctc = 0
+			if self.salary_structure:
+				self.ctc = 0
 			self.gross = 0
 			self.set("ctc_breakup", [])
 			return
@@ -332,6 +359,11 @@ def copy_regional_config(offer, assignment) -> None:
 		assignment.set(fieldname, offer.get(fieldname))
 
 
+@hrms.allow_regional
+def get_components_left_out_of_offer() -> tuple[str, ...]:
+	return ()
+
+
 def get_breakup_rows(assignment, periods: int, total_ctc: float) -> list[dict]:
 	rows_by_type = assignment.get_evaluated_components()
 
@@ -350,7 +382,9 @@ def get_breakup_rows(assignment, periods: int, total_ctc: float) -> list[dict]:
 		]
 
 	earnings = payable("earnings")
+	left_out = set(get_components_left_out_of_offer())
 	employer_contributions = payable("employer_contributions")
+	shown_contributions = [r for r in employer_contributions if r.salary_component not in left_out]
 
 	if not earnings and not employer_contributions:
 		return []
@@ -360,8 +394,13 @@ def get_breakup_rows(assignment, periods: int, total_ctc: float) -> list[dict]:
 
 	breakup = [row(r.salary_component, flt(r.default_amount), 0) for r in earnings]
 	breakup.append(row(_("Gross Pay"), gross, 1))
-	breakup += [row(r.salary_component, flt(r.default_amount), 0) for r in employer_contributions]
-	breakup.append(row(_("Total Cost to Company (CTC)"), flt(total_ctc) / periods, 1))
+	breakup += [row(r.salary_component, flt(r.default_amount), 0) for r in shown_contributions]
+	ctc_label = (
+		_("Total Cost to Company (CTC)* (Includes Statutory Contributions)")
+		if len(shown_contributions) < len(employer_contributions)
+		else _("Total Cost to Company (CTC)")
+	)
+	breakup.append(row(ctc_label, flt(total_ctc) / periods, 1))
 	breakup.append(row(_("Take Home* (Income Tax applicable as per IT Act)"), gross - deductions, 1))
 
 	return breakup
