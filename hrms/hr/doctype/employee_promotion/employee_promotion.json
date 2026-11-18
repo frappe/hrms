@@ -30,6 +30,17 @@
   "revised_ctc",
   "ctc_breakup_section",
   "ctc_breakup",
+  "promotion_letter_tab",
+  "letter_details_section",
+  "letter_print_format",
+  "signature",
+  "column_break_letter",
+  "letter_head",
+  "terms_section",
+  "select_terms",
+  "terms",
+  "letter_preview_section",
+  "letter_preview",
   "amended_from"
  ],
  "fields": [
@@ -141,6 +152,75 @@
    "read_only": 1
   },
   {
+   "fieldname": "promotion_letter_tab",
+   "fieldtype": "Tab Break",
+   "label": "Promotion Letter"
+  },
+  {
+   "fieldname": "letter_details_section",
+   "fieldtype": "Section Break",
+   "label": "Letter Details"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Promotion Letter with Salary Break-up",
+   "fieldname": "letter_print_format",
+   "fieldtype": "Link",
+   "label": "Print Format",
+   "options": "Print Format",
+   "print_hide": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "signature",
+   "fieldtype": "Attach Image",
+   "label": "Sign to show on promotion letter",
+   "print_hide": 1
+  },
+  {
+   "fieldname": "column_break_letter",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fetch_from": "company.default_letter_head",
+   "fetch_if_empty": 1,
+   "fieldname": "letter_head",
+   "fieldtype": "Link",
+   "label": "Letter Head",
+   "options": "Letter Head",
+   "print_hide": 1
+  },
+  {
+   "fieldname": "terms_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "select_terms",
+   "fieldtype": "Link",
+   "label": "Select Terms and Conditions",
+   "options": "Terms and Conditions",
+   "print_hide": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "terms",
+   "fieldtype": "Text Editor",
+   "label": "Terms and Conditions"
+  },
+  {
+   "depends_on": "letter_print_format",
+   "fieldname": "letter_preview_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "description": "You can email this letter to the employee once the promotion is submitted.",
+   "fieldname": "letter_preview",
+   "fieldtype": "HTML",
+   "label": "Preview"
+  },
+  {
    "fieldname": "current_salary_structure_assignment",
    "fieldtype": "Link",
    "label": "Current Salary Structure Assignment",
@@ -197,7 +277,7 @@
  "icon": "trending-up",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-11-17 13:00:00.000000",
+ "modified": "2026-11-17 13:30:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Promotion",

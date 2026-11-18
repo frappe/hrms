@@ -39,12 +39,17 @@ class EmployeePromotion(Document):
 		department: DF.Link | None
 		employee: DF.Link
 		employee_name: DF.Data | None
+		letter_head: DF.Link | None
+		letter_print_format: DF.Link | None
 		promotion_date: DF.Date
 		promotion_details: DF.Table[EmployeePropertyHistory]
 		revised_base: DF.Currency
 		revised_ctc: DF.Currency
 		salary_currency: DF.Link | None
 		salary_structure: DF.Link | None
+		select_terms: DF.Link | None
+		signature: DF.AttachImage | None
+		terms: DF.TextEditor | None
 	# end: auto-generated types
 
 	def validate(self):

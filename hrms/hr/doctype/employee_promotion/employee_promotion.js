@@ -14,29 +14,56 @@ frappe.ui.form.on("Employee Promotion", {
 				},
 			};
 		});
+
+		frm.set_query("letter_print_format", function () {
+			return { filters: { doc_type: "Employee Promotion", disabled: 0 } };
+		});
+
+		frm.set_query("select_terms", function () {
+			return { filters: { hr: 1 } };
+		});
+	},
+
+	select_terms: function (frm) {
+		erpnext.utils.get_terms(frm.doc.select_terms, frm.doc, function (r) {
+			if (!r.exc) {
+				frm.set_value("terms", r.message);
+			}
+		});
 	},
 
 	refresh: function (frm) {
 		frm.revised_ctc_is_calculated = Boolean(frm.doc.salary_structure && frm.doc.revised_base);
 		frm.trigger("show_assignment_hint");
 		render_revised_assignment(frm);
+		add_assignment_button(frm);
+		render_promotion_letter_preview(frm);
+	},
 
-		const { docstatus, salary_structure, revised_base } = frm.doc;
-		if (
-			docstatus !== 1 ||
-			!salary_structure ||
-			!revised_base ||
-			get_revised_assignment(frm) ||
-			!frappe.model.can_create("Salary Structure Assignment")
-		)
-			return;
+	letter_print_format: function (frm) {
+		render_promotion_letter_preview(frm);
+	},
 
-		frm.add_custom_button(__("Create Salary Structure Assignment"), () => {
-			frappe.model.open_mapped_doc({
-				method: "hrms.hr.doctype.employee_promotion.employee_promotion.make_salary_structure_assignment",
-				frm: frm,
-			});
-		});
+	letter_head: function (frm) {
+		render_promotion_letter_preview(frm);
+	},
+
+	signature: function (frm) {
+		render_promotion_letter_preview(frm);
+	},
+
+	terms: function (frm) {
+		render_preview_after_typing(frm);
+	},
+
+	revised_ctc: function (frm) {
+		render_promotion_letter_preview(frm);
+	},
+
+	on_tab_change: function (frm) {
+		if (frm.get_active_tab()?.df?.fieldname === "promotion_letter_tab") {
+			render_promotion_letter_preview(frm);
+		}
 	},
 
 	show_assignment_hint: function (frm) {
@@ -152,6 +179,7 @@ frappe.ui.form.on("Employee Promotion", {
 				frm.revised_ctc_is_calculated = true;
 				frm.set_value("revised_ctc", r.message.ctc || 0).then(() => {
 					set_ctc_breakup(frm, r.message.components || []);
+					render_promotion_letter_preview(frm);
 				});
 			});
 	},
@@ -183,6 +211,38 @@ function render_revised_assignment(frm) {
 		</div>
 	`);
 }
+
+function add_assignment_button(frm) {
+	const { docstatus, salary_structure, revised_base } = frm.doc;
+	if (
+		docstatus !== 1 ||
+		!salary_structure ||
+		!revised_base ||
+		get_revised_assignment(frm) ||
+		!frappe.model.can_create("Salary Structure Assignment")
+	)
+		return;
+
+	frm.add_custom_button(__("Create Salary Structure Assignment"), () => {
+		frappe.model.open_mapped_doc({
+			method: "hrms.hr.doctype.employee_promotion.employee_promotion.make_salary_structure_assignment",
+			frm: frm,
+		});
+	});
+}
+
+function render_promotion_letter_preview(frm) {
+	// rendering runs the print format on the server, so a hidden preview is emptied
+	// and the tab change renders it
+	const visible = frm.get_field("letter_preview").$wrapper.is(":visible");
+	hrms.print_utils.render_print_preview(
+		frm,
+		"letter_preview",
+		visible && frm.doc.docstatus !== 2 ? frm.doc.letter_print_format : null,
+	);
+}
+
+const render_preview_after_typing = frappe.utils.debounce(render_promotion_letter_preview, 800);
 
 function set_ctc_breakup(frm, rows) {
 	if (!rows.length && !(frm.doc.ctc_breakup || []).length) return;
