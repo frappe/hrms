@@ -197,7 +197,7 @@ async function get_decided_drafts(job_applicant) {
 const RESULT_BADGE_THEMES = { Cleared: "green", Rejected: "red" };
 
 function open_submit_results_dialog({ drafts, on_confirm, on_cancel }) {
-	const list = new frappe.ui.ItemList({
+	const list = new frappe.ui.List({
 		variant: "flat",
 		items: drafts.map(({ name, interview_type, status }) => ({
 			id: name,

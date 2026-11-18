@@ -273,7 +273,7 @@ frappe.ui.form.on("Job Applicant", {
 		frm.fields_dict.interview_summary_html.$wrapper
 			.addClass("mb-4")
 			.empty()
-			.append(new frappe.ui.ItemList({ items }).$el);
+			.append(new frappe.ui.List({ items }).$el);
 		frm.toggle_display("interview_summary_section", true);
 	},
 });
