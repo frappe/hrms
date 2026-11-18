@@ -126,7 +126,11 @@ class JobOffer(Document):
 		self.total_public_holidays = summary["total_public_holidays"]
 
 	def set_working_hours(self):
-		if self.start_time and self.end_time and (not self.working_hours or self.shift_times_changed()):
+		if (
+			self.start_time not in (None, "")
+			and self.end_time not in (None, "")
+			and (not self.working_hours or self.shift_times_changed())
+		):
 			self.working_hours = get_working_hours(self.start_time, self.end_time)
 
 	def shift_times_changed(self) -> bool:
