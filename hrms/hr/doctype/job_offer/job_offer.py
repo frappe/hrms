@@ -136,7 +136,7 @@ class JobOffer(Document):
 	def shift_times_changed(self) -> bool:
 		previous = self.doc_before_save()
 		if not previous:
-			return True
+			return False
 
 		return any(
 			to_timedelta(self.get(field)) != to_timedelta(previous.get(field))

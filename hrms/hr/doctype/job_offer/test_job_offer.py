@@ -264,6 +264,11 @@ class TestJobOffer(HRMSTestSuite):
 		)
 		day = setup_shift_type(shift_type="_Test Offer Day Shift", start_time="10:00:00", end_time="18:30:00")
 
+		applicant = create_job_applicant(email_id="test_offer_typed_hours@example.com")
+		typed = create_job_offer(job_applicant=applicant.name, shift_type=day.name, working_hours=8)
+		typed.save()
+		self.assertEqual(typed.working_hours, 8)
+
 		job_offer = create_job_offer(shift_type=night.name)
 		job_offer.save()
 		self.assertEqual(job_offer.working_hours, 9.5)

@@ -391,7 +391,6 @@
    "options": "Shift Type"
   },
   {
-   "default": "8",
    "fieldname": "working_hours",
    "fieldtype": "Float",
    "label": "Total Working Hours",
@@ -514,7 +513,7 @@
  "icon": "handshake",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-11-18 12:00:00.000000",
+ "modified": "2026-11-18 17:30:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",
