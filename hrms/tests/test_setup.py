@@ -28,7 +28,10 @@ class TestHiringDefaults(IntegrationTestCase):
 			self.assertEqual(self.reference(template), "Job Offer")
 
 	def make_template(self, name, reference_doctype=None):
-		frappe.delete_doc_if_exists("Email Template", name)
+		# a shipped template may be linked from Notifications, so it is reset rather than deleted
+		if frappe.db.exists("Email Template", name):
+			frappe.db.set_value("Email Template", name, "reference_doctype", reference_doctype)
+			return
 		frappe.get_doc(
 			{
 				"doctype": "Email Template",
@@ -42,9 +45,11 @@ class TestHiringDefaults(IntegrationTestCase):
 	def test_patch_scopes_only_blank_templates(self):
 		# a fresh site may not have these shipped templates
 		self.make_template("Interview Reminder")
+		self.make_template("Leave Application Notification")
 		self.make_template("Leave Status Notification", "Employee")
 		execute()
 		self.assertEqual(self.reference("Interview Reminder"), "Interview")
+		self.assertEqual(self.reference("Leave Application Notification"), "Leave Application")
 		self.assertEqual(self.reference("Leave Status Notification"), "Employee")
 
 	def test_status_hiring_pipeline_is_replaced_by_the_standard_board(self):

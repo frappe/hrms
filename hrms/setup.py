@@ -726,6 +726,7 @@ def setup_notifications():
 
 # the templates HRMS ships, and the DocType each one is written for
 EMAIL_TEMPLATE_SCOPES = {
+	"Leave Application Notification": "Leave Application",
 	"Leave Approval Notification": "Leave Application",
 	"Leave Status Notification": "Leave Application",
 	"Exit Questionnaire Notification": "Employee Separation",
