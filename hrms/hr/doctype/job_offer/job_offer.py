@@ -20,6 +20,7 @@ from frappe.utils import (
 )
 
 import hrms
+from hrms.payroll.utils import get_breakup_rows
 
 
 class JobOffer(Document):
@@ -340,48 +341,6 @@ def get_components_left_out_of_offer() -> tuple[str, ...]:
 	return ()
 
 
-def get_breakup_rows(assignment, periods: int, total_ctc: float) -> list[dict]:
-	rows_by_type = assignment.get_evaluated_components()
-
-	def row(label, per_cycle: float, is_summary: int) -> dict:
-		return {
-			"fixed_components": label,
-			"per_cycle": flt(per_cycle),
-			"yearly": flt(per_cycle * periods),
-			"currency": assignment.currency,
-			"is_summary": is_summary,
-		}
-
-	def payable(component_type) -> list:
-		return [
-			r for r in rows_by_type[component_type] if not r.statistical_component and flt(r.default_amount)
-		]
-
-	earnings = payable("earnings")
-	left_out = set(get_components_left_out_of_offer())
-	employer_contributions = payable("employer_contributions")
-	shown_contributions = [r for r in employer_contributions if r.salary_component not in left_out]
-
-	if not earnings and not employer_contributions:
-		return []
-
-	gross = flt(assignment.annual_gross_earning) / periods
-	deductions = sum(flt(r.default_amount) for r in payable("deductions") if not r.do_not_include_in_total)
-
-	breakup = [row(r.salary_component, flt(r.default_amount), 0) for r in earnings]
-	breakup.append(row(_("Gross Pay"), gross, 1))
-	breakup += [row(r.salary_component, flt(r.default_amount), 0) for r in shown_contributions]
-	ctc_label = (
-		_("Total Cost to Company (CTC)* (Includes Statutory Contributions)")
-		if len(shown_contributions) < len(employer_contributions)
-		else _("Total Cost to Company (CTC)")
-	)
-	breakup.append(row(ctc_label, flt(total_ctc) / periods, 1))
-	breakup.append(row(_("Take Home* (Income Tax applicable as per IT Act)"), gross - deductions, 1))
-
-	return breakup
-
-
 def compute_compensation(offer) -> dict:
 	from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
 		PERIODS_PER_YEAR,
@@ -426,7 +385,9 @@ def compute_compensation(offer) -> dict:
 		"base": base,
 		"ctc": total_ctc,
 		"gross": flt(assignment.annual_gross_earning) / periods,
-		"components": get_breakup_rows(assignment, periods, total_ctc),
+		"components": get_breakup_rows(
+			assignment, periods, total_ctc, left_out=get_components_left_out_of_offer()
+		),
 		"ctc_adjusted": ctc_adjusted,
 	}
 
