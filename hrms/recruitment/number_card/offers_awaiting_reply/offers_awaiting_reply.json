@@ -1,0 +1,21 @@
+{
+ "creation": "2026-10-19 10:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "document_type": "Job Offer",
+ "dynamic_filters_json": "",
+ "filters_json": "[[\"Job Offer\",\"status\",\"=\",\"Awaiting Response\"],[\"Job Offer\",\"docstatus\",\"=\",1]]",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "label": "Offers awaiting reply",
+ "modified": "2026-10-19 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Recruitment",
+ "name": "Offers awaiting reply",
+ "owner": "Administrator",
+ "show_percentage_stats": 0,
+ "stats_time_interval": "Weekly",
+ "type": "Document Type"
+}

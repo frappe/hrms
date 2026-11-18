@@ -1,0 +1,21 @@
+{
+ "creation": "2026-10-19 10:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "document_type": "Job Applicant",
+ "dynamic_filters_json": "",
+ "filters_json": "[[\"Job Applicant\",\"creation\",\"Timespan\",\"this week\"]]",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "label": "Applicants this week",
+ "modified": "2026-10-19 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Recruitment",
+ "name": "Applicants this week",
+ "owner": "Administrator",
+ "show_percentage_stats": 0,
+ "stats_time_interval": "Weekly",
+ "type": "Document Type"
+}

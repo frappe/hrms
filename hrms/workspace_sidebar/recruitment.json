@@ -93,11 +93,23 @@
   {
    "child": 0,
    "collapsible": 1,
-   "icon": "file-text",
+   "icon": "file-pen-line",
    "indent": 0,
    "keep_closed": 0,
    "label": "Appointment Letter",
    "link_to": "Appointment Letter",
+   "link_type": "DocType",
+   "show_arrow": 0,
+   "type": "Link"
+  },
+  {
+   "child": 0,
+   "collapsible": 1,
+   "icon": "user-round-search",
+   "indent": 0,
+   "keep_closed": 0,
+   "label": "Employee Referral",
+   "link_to": "Employee Referral",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
@@ -133,17 +145,6 @@
    "keep_closed": 0,
    "label": "Staffing Plan",
    "link_to": "Staffing Plan",
-   "link_type": "DocType",
-   "show_arrow": 0,
-   "type": "Link"
-  },
-  {
-   "child": 1,
-   "collapsible": 1,
-   "indent": 0,
-   "keep_closed": 0,
-   "label": "Employee Referral",
-   "link_to": "Employee Referral",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
@@ -185,11 +186,10 @@
   {
    "child": 1,
    "collapsible": 1,
-   "icon": "",
    "indent": 0,
    "keep_closed": 0,
-   "label": "Interview Type",
-   "link_to": "Interview Type",
+   "label": "Job Opening Template",
+   "link_to": "Job Opening Template",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
@@ -199,8 +199,8 @@
    "collapsible": 1,
    "indent": 0,
    "keep_closed": 0,
-   "label": "Job Opening Template",
-   "link_to": "Job Opening Template",
+   "label": "Job Offer Term Template",
+   "link_to": "Job Offer Term Template",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
@@ -220,10 +220,11 @@
   {
    "child": 1,
    "collapsible": 1,
+   "icon": "",
    "indent": 0,
    "keep_closed": 0,
-   "label": "Job Offer Term Template",
-   "link_to": "Job Offer Term Template",
+   "label": "Interview Type",
+   "link_to": "Interview Type",
    "link_type": "DocType",
    "show_arrow": 0,
    "type": "Link"
@@ -253,7 +254,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-11-16 09:00:00.000000",
+ "modified": "2026-11-16 19:30:00.000000",
  "modified_by": "Administrator",
  "module": "Recruitment",
  "name": "Recruitment",

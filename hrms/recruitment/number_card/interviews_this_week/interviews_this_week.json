@@ -1,0 +1,21 @@
+{
+ "creation": "2026-10-19 10:00:00.000000",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "document_type": "Interview",
+ "dynamic_filters_json": "",
+ "filters_json": "[[\"Interview\",\"scheduled_on\",\"Timespan\",\"this week\"],[\"Interview\",\"status\",\"!=\",\"Cancelled\"],[\"Interview\",\"docstatus\",\"!=\",2]]",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 1,
+ "is_standard": 1,
+ "label": "Interviews this week",
+ "modified": "2026-11-16 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Recruitment",
+ "name": "Interviews this week",
+ "owner": "Administrator",
+ "show_percentage_stats": 0,
+ "stats_time_interval": "Weekly",
+ "type": "Document Type"
+}

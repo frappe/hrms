@@ -1,14 +1,18 @@
 {
  "app": "hrms",
- "charts": [
+ "charts": [],
+ "content": "[{\"id\": \"a36377b0fe\", \"type\": \"onboarding\", \"data\": {\"onboarding_name\": \"Recruitment Onboarding\", \"col\": 12}}, {\"id\": \"c2e1b8a3f2\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Applicants this week\", \"col\": 4}}, {\"id\": \"c3d2c9b4a3\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Interviews this week\", \"col\": 4}}, {\"id\": \"c4c3dac5b4\", \"type\": \"number_card\", \"data\": {\"number_card_name\": \"Offers awaiting reply\", \"col\": 4}}, {\"id\": \"d5e4f3a2b1\", \"type\": \"custom_block\", \"data\": {\"custom_block_name\": \"Upcoming interviews\", \"col\": 12}}, {\"id\": \"b1a2e3f4d5\", \"type\": \"custom_block\", \"data\": {\"custom_block_name\": \"Open roles\", \"col\": 12}}]",
+ "creation": "2022-08-20 13:28:59.962164",
+ "custom_blocks": [
   {
-   "chart_name": "Job Applicant Pipeline",
-   "label": "Job Applicant Pipeline"
+   "custom_block_name": "Upcoming interviews",
+   "label": "Upcoming interviews"
+  },
+  {
+   "custom_block_name": "Open roles",
+   "label": "Open roles"
   }
  ],
- "content": "[{\"id\":\"a36377b0fe\",\"type\":\"onboarding\",\"data\":{\"onboarding_name\":\"Recruitment Onboarding\",\"col\":12}},{\"id\":\"10b8fc0d08\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Job Applicant Pipeline\",\"col\":12}},{\"id\":\"ad9a1fba90\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Job Openings\",\"col\":4}},{\"id\":\"d110de1a04\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Applicants (This month)\",\"col\":4}},{\"id\":\"8a92851747\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Job Offers (This Month)\",\"col\":4}},{\"id\":\"B0A1wqOP8R\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Interviews (This Week)\",\"col\":6}}]",
- "creation": "2022-08-20 13:28:59.962164",
- "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
@@ -18,35 +22,29 @@
  "is_hidden": 0,
  "label": "Recruitment",
  "links": [],
- "modified": "2026-10-05 12:00:00.000000",
+ "modified": "2026-11-14 10:00:00.000000",
  "modified_by": "Administrator",
  "module": "Recruitment",
  "module_onboarding": "Recruitment Onboarding",
  "name": "Recruitment",
  "number_cards": [
   {
-   "label": "Job Openings",
-   "number_card_name": "Job Openings"
+   "label": "Applicants this week",
+   "number_card_name": "Applicants this week"
   },
   {
-   "label": "Total Applicants (This month)",
-   "number_card_name": "Total Applicants (This month)"
+   "label": "Interviews this week",
+   "number_card_name": "Interviews this week"
   },
   {
-   "label": "Job Offers (This Month)",
-   "number_card_name": "Job Offers (This Month)"
+   "label": "Offers awaiting reply",
+   "number_card_name": "Offers awaiting reply"
   }
  ],
  "owner": "Administrator",
  "parent_page": "",
  "public": 1,
- "quick_lists": [
-  {
-   "document_type": "Interview",
-   "label": "Interviews (This Week)",
-   "quick_list_filter": "{\"scheduled_on\":[\"Timespan\",\"this week\"],\"docstatus\":[\"!=\",\"2\"]}"
-  }
- ],
+ "quick_lists": [],
  "roles": [],
  "sequence_id": 3.0,
  "shortcuts": [],

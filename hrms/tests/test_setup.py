@@ -4,6 +4,7 @@ from frappe.tests import IntegrationTestCase
 from hrms.patches.v16_0.add_rejection_reasons_and_scope_email_templates import execute
 from hrms.patches.v16_0.replace_status_hiring_pipeline_board import execute as replace_status_board
 from hrms.patches.v16_0.set_interview_applicant_name import execute as set_interview_applicant_name
+from hrms.recruitment.custom_html_block import BLOCKS, sync_blocks
 from hrms.setup import HIRING_EMAIL_TEMPLATES, OFFER_EMAIL_TEMPLATES
 
 
@@ -90,3 +91,9 @@ class TestHiringDefaults(IntegrationTestCase):
 		set_interview_applicant_name()
 		set_interview_applicant_name()
 		self.assertEqual(frappe.db.get_value("Interview", interview.name, "applicant_name"), "Named Later")
+
+	def test_recruitment_blocks_are_created(self):
+		frappe.db.delete("Custom HTML Block", {"name": ["in", list(BLOCKS)]})
+		sync_blocks()
+		for name in BLOCKS:
+			self.assertTrue(frappe.db.get_value("Custom HTML Block", name, "script"))
