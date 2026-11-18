@@ -41,24 +41,24 @@ function get_item(interview) {
 }
 
 function make_list(interviews) {
-	return new frappe.ui.ItemList({ items: interviews.map(get_item) }).el;
+	return new frappe.ui.List({ items: interviews.map(get_item) }).el;
 }
 
 function make_skeleton() {
 	const bar = (width, height) => frappe.ui.skeleton.html({ width, height });
-	const row = `<div class="es-item-list__row" data-avatar>
-		<span class="es-item-list__lead">${frappe.ui.skeleton.html({
+	const row = `<div class="es-list__row" data-avatar>
+		<span class="es-list__lead">${frappe.ui.skeleton.html({
 			width: "20px",
 			height: "20px",
 			css_class: "skeleton-avatar",
 		})}</span>
-		<span class="es-item-list__text">
-			<span class="es-item-list__title">${bar("40%", "12px")}</span>
-			<span class="es-item-list__subtitle">${bar("30%", "10px")}</span>
+		<span class="es-list__text">
+			<span class="es-list__title">${bar("40%", "12px")}</span>
+			<span class="es-list__subtitle">${bar("30%", "10px")}</span>
 		</span>
-		<span class="es-item-list__meta">${bar("96px", "10px")}</span>
+		<span class="es-list__meta">${bar("96px", "10px")}</span>
 	</div>`;
-	const box = el("div", { class: "es-item-list", "aria-hidden": "true" });
+	const box = el("div", { class: "es-list", "aria-hidden": "true" });
 	box.innerHTML = row.repeat(SKELETON_ROWS);
 	return box;
 }
