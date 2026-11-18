@@ -102,16 +102,16 @@
 		{% endfor %}
 	</div>
 
-	<div class="careers-list-view es-item-list text-p-sm">
+	<div class="careers-list-view es-list text-p-sm">
 		{% for jo in job_openings %}
-		<a class="es-item-list__row" href="/{{ jo.route | e }}">
-			<span class="es-item-list__text">
-				<span class="es-item-list__title">{{ jo.job_title | e }}</span>
+		<a class="es-list__row" href="/{{ jo.route | e }}">
+			<span class="es-list__text">
+				<span class="es-list__title">{{ jo.job_title | e }}</span>
 				{% set pay = salary(jo)|trim %}
 				{% set details = [jo.team, jo.location, jo.employment_type, pay]|select|join(" · ") %}
-				{% if details %}<span class="es-item-list__subtitle">{{ details | e }}</span>{% endif %}
+				{% if details %}<span class="es-list__subtitle">{{ details | e }}</span>{% endif %}
 			</span>
-			{% if jo.closes_on %}<span class="es-item-list__meta">{{ closes_label(jo.closes_on) }}</span>{% endif %}
+			{% if jo.closes_on %}<span class="es-list__meta">{{ closes_label(jo.closes_on) }}</span>{% endif %}
 		</a>
 		{% endfor %}
 	</div>
