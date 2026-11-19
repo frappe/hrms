@@ -535,6 +535,27 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		self.assertEqual(entry.company, "_Test Company")
 		self.assertEqual(entry.accounts[0].account, advance.advance_account)
 
+	def test_company_access_with_restricted_employee_advance_account(self):
+		"""Tests that account user permissions skip the company's default employee advance account"""
+		from frappe.core.doctype.user_permission.test_user_permission import create_user
+		from frappe.permissions import add_user_permission
+
+		user = create_user("test_advance_account_permission@example.com", "Accounts User").name
+		frappe.db.set_value(
+			"Company",
+			"_Test Company",
+			{
+				"default_employee_advance_account": "Employee Advances - _TC",
+				# erpnext account defaults that are also checked against account user permissions
+				"service_expense_account": None,
+				"default_inventory_account": None,
+			},
+		)
+		# the user is limited to an account other than the employee advance account
+		add_user_permission("Account", "Payroll Payable - _TC", user)
+
+		self.assertTrue(frappe.has_permission("Company", doc="_Test Company", user=user))
+
 
 def manual_journal_entry_for_advance(advance) -> dict:
 	doc = frappe.get_doc("Employee Advance", advance.name)
