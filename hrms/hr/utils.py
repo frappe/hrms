@@ -487,7 +487,7 @@ def send_email_for_failed_allocations(failed_allocations):
 		frappe.qb.from_(HasRole)
 		.left_join(User)
 		.on(HasRole.parent == User.name)
-		.select(HasRole.parent)
+		.select(User.email)
 		.distinct()
 		.where((HasRole.parenttype == "User") & (User.enabled == 1) & (HasRole.role == "HR Manager"))
 	)
