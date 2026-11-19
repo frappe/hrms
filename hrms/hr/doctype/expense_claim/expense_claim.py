@@ -14,7 +14,7 @@ import erpnext
 from erpnext.accounts.doctype.repost_accounting_ledger.repost_accounting_ledger import (
 	validate_docs_for_voucher_types,
 )
-from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
+from erpnext.accounts.doctype.sales_invoice.services.pos import get_bank_cash_account
 from erpnext.accounts.general_ledger import make_gl_entries
 from erpnext.accounts.utils import (
 	create_gain_loss_journal,
