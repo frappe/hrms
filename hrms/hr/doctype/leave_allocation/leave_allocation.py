@@ -5,7 +5,15 @@ import datetime
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import add_days, date_diff, flt, formatdate, get_link_to_form, getdate
+from frappe.utils import (
+	add_days,
+	date_diff,
+	flt,
+	formatdate,
+	get_link_to_form,
+	get_user_display_id,
+	getdate,
+)
 
 from hrms.hr.doctype.leave_application.leave_application import get_approved_leaves_for_period
 from hrms.hr.doctype.leave_ledger_entry.leave_ledger_entry import (
@@ -396,7 +404,7 @@ class LeaveAllocation(Document):
 			create_additional_leave_ledger_entry(self, new_leaves, date)
 
 			text = _("{0} leaves were manually allocated by {1} on {2}").format(
-				frappe.bold(new_leaves), frappe.session.user, frappe.bold(formatdate(date))
+				frappe.bold(new_leaves), get_user_display_id(), frappe.bold(formatdate(date))
 			)
 			self.add_comment(comment_type="Info", text=text)
 			frappe.msgprint(
