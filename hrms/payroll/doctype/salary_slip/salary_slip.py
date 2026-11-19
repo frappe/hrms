@@ -571,12 +571,8 @@ class SalarySlip(TransactionBase):
 
 		holidays = self.get_holidays_for_employee(self.start_date, self.end_date)
 		# holidays marked as half day are half a working day, so they are only excluded by half
-		# when holidays are included in total working days, they are counted in full like any other holiday
-		half_day_holidays = (
-			[]
-			if cint(payroll_settings.include_holidays_in_total_working_days)
-			else self.get_half_day_holidays_for_employee(self.start_date, self.end_date)
-		)
+		# when holidays are included in total working days, only absence and leave on them count by half
+		half_day_holidays = self.get_half_day_holidays_for_employee(self.start_date, self.end_date)
 		full_day_holidays = [date for date in holidays if date not in half_day_holidays]
 		working_days_list = [add_days(getdate(self.start_date), days=day) for day in range(0, working_days)]
 
@@ -662,8 +658,8 @@ class SalarySlip(TransactionBase):
 			- self._get_marked_attendance_days(holidays, half_day_holidays)
 		)
 
-		if include_holidays_in_total_working_days and holidays:
-			unmarked_days -= self._get_number_of_holidays(holidays)
+		if include_holidays_in_total_working_days and (holidays or half_day_holidays):
+			unmarked_days -= self._get_number_of_holidays(holidays, half_day_holidays)
 
 		return unmarked_days
 
@@ -719,13 +715,19 @@ class SalarySlip(TransactionBase):
 
 		return days
 
-	def _get_number_of_holidays(self, holidays: list | None = None) -> float:
+	def _get_number_of_holidays(
+		self, holidays: list | None = None, half_day_holidays: list | None = None
+	) -> float:
+		holidays = holidays or []
+		half_day_holidays = half_day_holidays or []
 		no_of_holidays = 0
 		actual_end_date = getdate(self.actual_end_date)
 
 		for days in range(date_diff(self.actual_end_date, self.actual_start_date) + 1):
 			date = add_days(actual_end_date, -days)
-			if date in holidays:
+			if date in half_day_holidays:
+				no_of_holidays += HALF_DAY_HOLIDAY_FRACTION
+			elif date in holidays:
 				no_of_holidays += 1
 
 		return no_of_holidays
