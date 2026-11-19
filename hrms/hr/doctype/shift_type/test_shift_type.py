@@ -123,6 +123,38 @@ class TestShiftType(FrappeTestCase):
 
 		self.assertEqual(shift_type.last_sync_of_checkin, datetime.combine(getdate(), get_time("23:31:00")))
 
+	def test_auto_update_last_sync_of_checkin_for_shift_ending_at_midnight(self):
+		shift_type = setup_shift_type(
+			shift_type="_Test Full Day Shift",
+			start_time="00:00:01",
+			end_time="23:59:00",
+			begin_check_in_before_shift_start_time=0,
+			allow_check_out_after_shift_end_time=0,
+		)
+		shift_type.last_sync_of_checkin = None
+		shift_type.auto_update_last_sync = 1
+		shift_type.save()
+
+		frappe.flags.current_datetime = datetime.combine(getdate(), get_time("14:00:00"))
+		update_last_sync_of_checkin()
+
+		shift_type.reload()
+		self.assertEqual(shift_type.last_sync_of_checkin, datetime.combine(getdate(), get_time("00:00:00")))
+
+	def test_auto_update_last_sync_of_checkin_for_shift_with_check_in_before_midnight(self):
+		shift_type = setup_shift_type(
+			shift_type="_Test Early Morning Shift", start_time="00:30:00", end_time="08:00:00"
+		)
+		shift_type.last_sync_of_checkin = None
+		shift_type.auto_update_last_sync = 1
+		shift_type.save()
+
+		frappe.flags.current_datetime = datetime.combine(getdate(), get_time("10:00:00"))
+		update_last_sync_of_checkin()
+
+		shift_type.reload()
+		self.assertEqual(shift_type.last_sync_of_checkin, datetime.combine(getdate(), get_time("09:01:00")))
+
 	def test_mark_attendance(self):
 		from hrms.hr.doctype.employee_checkin.test_employee_checkin import make_checkin
 
