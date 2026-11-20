@@ -95,20 +95,6 @@ class TestShiftAttendance(HRMSTestSuite):
 				"out_time": time(12, 30),
 			},
 			{
-				"shift": "Shift 1",
-				"attendance_date": date(2023, 1, 2),
-				"status": "Present",
-				"in_time": time(8, 30),
-				"out_time": time(12, 30),
-			},
-			{
-				"shift": "Shift 1",
-				"attendance_date": date(2023, 1, 3),
-				"status": "Present",
-				"in_time": time(7, 30),
-				"out_time": time(11, 30),
-			},
-			{
 				"shift": "Shift 2",
 				"attendance_date": date(2023, 1, 1),
 				"status": "Present",
@@ -116,11 +102,25 @@ class TestShiftAttendance(HRMSTestSuite):
 				"out_time": format_datetime(datetime(2023, 1, 2, 1, 30)),
 			},
 			{
+				"shift": "Shift 1",
+				"attendance_date": date(2023, 1, 2),
+				"status": "Present",
+				"in_time": time(8, 30),
+				"out_time": time(12, 30),
+			},
+			{
 				"shift": "Shift 2",
 				"attendance_date": date(2023, 1, 2),
 				"status": "Half Day",
 				"in_time": time(21, 30),
 				"out_time": time(23, 15),
+			},
+			{
+				"shift": "Shift 1",
+				"attendance_date": date(2023, 1, 3),
+				"status": "Present",
+				"in_time": time(7, 30),
+				"out_time": time(11, 30),
 			},
 			{
 				"shift": "Shift 2",
