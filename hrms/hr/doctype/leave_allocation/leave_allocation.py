@@ -78,6 +78,8 @@ class LeaveAllocation(Document):
 		self.validate_lwp()
 		set_employee_name(self)
 		self.set_total_leaves_allocated()
+		if self.carry_forward:
+			self.set_carry_forwarded_leaves_in_previous_allocation()
 		self.validate_leave_days_and_dates()
 
 	def validate_leave_days_and_dates(self):
@@ -281,9 +283,6 @@ class LeaveAllocation(Document):
 		)
 
 		self.limit_carry_forward_based_on_max_allowed_leaves()
-
-		if self.carry_forward:
-			self.set_carry_forwarded_leaves_in_previous_allocation()
 
 		if (
 			not self.total_leaves_allocated
