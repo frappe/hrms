@@ -6,7 +6,6 @@ from frappe import _dict
 from frappe.utils import flt, nowdate
 
 import erpnext
-from erpnext.accounts.doctype.account.test_account import create_account
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.employee_advance.employee_advance import (
@@ -24,6 +23,7 @@ from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
 from hrms.payroll.doctype.payroll_entry.test_payroll_entry import make_payroll_entry, setup_salary_structure
 from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.tests.test_utils import create_account
 from hrms.tests.utils import HRMSTestSuite
 
 

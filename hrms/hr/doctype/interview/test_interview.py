@@ -6,11 +6,9 @@ import os
 
 import frappe
 from frappe import _
-from frappe.core.doctype.user_permission.test_user_permission import create_user
 from frappe.permissions import add_user_permission
 from frappe.utils import add_days, get_datetime, get_time, getdate, nowtime
 
-from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.interview.interview import (
@@ -20,7 +18,7 @@ from hrms.hr.doctype.interview.interview import (
 	update_job_applicant_status,
 )
 from hrms.hr.doctype.job_applicant.job_applicant import get_interview_details
-from hrms.tests.test_utils import create_job_applicant, get_email_by_subject
+from hrms.tests.test_utils import create_designation, create_job_applicant, create_user, get_email_by_subject
 from hrms.tests.utils import HRMSTestSuite
 
 
