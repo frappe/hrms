@@ -529,11 +529,9 @@ def update_last_sync_of_checkin():
 def get_actual_shift_end(shift, current_datetime):
 	time_within_shift = datetime.combine(current_datetime.date(), get_time(shift.start_time))
 	shift_details = get_shift_details(shift.name, time_within_shift)
-	actual_shift_start = shift_details["actual_start"]
 	actual_shift_end = shift_details["actual_end"]
 
-	if (actual_shift_start.date() < actual_shift_end.date()) or (current_datetime < actual_shift_start):
-		# shift start and end are on different days
+	if current_datetime < actual_shift_end:
 		actual_shift_end = add_days(actual_shift_end, -1)
 	return actual_shift_end
 
