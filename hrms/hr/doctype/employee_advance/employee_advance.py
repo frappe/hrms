@@ -12,7 +12,7 @@ import erpnext
 from erpnext.accounts.doctype.journal_entry.journal_entry import get_default_bank_cash_account
 
 import hrms
-from hrms.hr.utils import validate_active_employee
+from hrms.hr.utils import get_mode_of_payment_account, validate_active_employee
 
 
 class EmployeeAdvanceOverPayment(frappe.ValidationError):
@@ -342,6 +342,17 @@ def make_return_entry(
 	mode_of_payment=None,
 	bank_account=None,
 ):
+	advance = frappe.get_doc("Employee Advance", employee_advance_name)
+	advance.check_permission("read")
+	frappe.has_permission("Journal Entry", "create", throw=True)
+
+	# the return is built from the advance itself, not from caller-supplied values
+	employee, company, currency = advance.employee, advance.company, advance.currency
+	advance_account, mode_of_payment = advance.advance_account, advance.mode_of_payment
+	exchange_rate = advance.exchange_rate
+	if bank_account:
+		validate_return_bank_account(bank_account, advance)
+
 	bank_cash_account = get_default_bank_cash_account(
 		company,
 		account_type="Cash",
@@ -410,6 +421,25 @@ def make_return_entry(
 	)
 
 	return je.as_dict()
+
+
+def validate_return_bank_account(account: str, advance: Document) -> None:
+	frappe.has_permission("Account", "select", account, throw=True)
+	details = frappe.db.get_value(
+		"Account", account, ["company", "account_currency", "account_type", "is_group"], as_dict=True
+	)
+	if (
+		not details
+		or details.company != advance.company
+		or details.account_currency != advance.currency
+		or details.account_type not in ("Bank", "Cash")
+		or details.is_group
+	):
+		frappe.throw(
+			_("Bank/Cash Account {0} must be a {1} Bank or Cash account of company {2}").format(
+				frappe.bold(account), frappe.bold(advance.currency), frappe.bold(advance.company)
+			)
+		)
 
 
 def get_voucher_type(mode_of_payment=None):

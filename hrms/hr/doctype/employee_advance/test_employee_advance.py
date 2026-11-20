@@ -371,6 +371,37 @@ class TestEmployeeAdvance(FrappeTestCase):
 				fiscal_year.append("companies", {"company": "_Test Company"})
 				fiscal_year.save()
 
+	def test_return_entry_is_built_from_the_advance(self):
+		employee_name = make_employee("_T@employee.advance", "_Test Company")
+		advance = make_employee_advance(employee_name)
+		make_payment_entry(advance)
+		args = {
+			"employee": advance.employee,
+			"company": "_Test Company 1",
+			"employee_advance_name": advance.name,
+			"return_amount": advance.advance_amount,
+			"advance_account": "Cash - _TC1",
+			"currency": advance.currency,
+			"exchange_rate": 1,
+		}
+
+		with self.set_user(self.make_user("advance-desk-user@example.com", "Desk User")):
+			self.assertRaises(frappe.PermissionError, make_return_entry, **args)
+
+		self.assertRaises(frappe.ValidationError, make_return_entry, **args, bank_account="Cash - _TC1")
+
+		entry = make_return_entry(**args)
+		self.assertEqual(entry.company, "_Test Company")
+		self.assertEqual(entry.accounts[0].account, advance.advance_account)
+
+	def make_user(self, email, role):
+		user = frappe.new_doc("User")
+		user.email = email
+		user.first_name = email.split("@")[0]
+		user.send_welcome_email = 0
+		user.append("roles", {"role": role})
+		return user.insert().name
+
 
 def make_journal_entry_for_advance(advance):
 	journal_entry = frappe.get_doc(make_bank_entry("Employee Advance", advance.name))
