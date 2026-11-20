@@ -14,7 +14,7 @@ import erpnext
 from erpnext.accounts.doctype.repost_accounting_ledger.repost_accounting_ledger import (
 	validate_docs_for_voucher_types,
 )
-from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_bank_cash_account
+from erpnext.accounts.doctype.sales_invoice.sales_invoice import get_mode_of_payment_account
 from erpnext.accounts.general_ledger import make_gl_entries
 from erpnext.accounts.utils import (
 	create_gain_loss_journal,
@@ -326,7 +326,7 @@ class ExpenseClaim(AccountsController, PWANotificationsMixin):
 
 		if self.is_paid and self.grand_total:
 			# payment entry
-			payment_account = get_bank_cash_account(self.mode_of_payment, self.company).get("account")
+			payment_account = get_mode_of_payment_account(self.mode_of_payment, self.company).get("account")
 			gl_entry.append(
 				self.get_gl_dict(
 					{
