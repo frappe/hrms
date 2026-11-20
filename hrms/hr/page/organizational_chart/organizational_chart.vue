@@ -55,10 +55,14 @@ const PAGE_VIEWS = [
 	{ value: "directory", label: __("Directory"), icon: "lucide-list" },
 	{ value: "chart", label: __("Org chart"), icon: "lucide-network" },
 ];
-// tree: teams across the page, columns: each team to the right of its manager
+// tree: teams across the page, columns: each team beside its manager
 const LAYOUTS = [
 	{ value: "tree", label: __("Top to bottom"), icon: "lucide-network" },
-	{ value: "columns", label: __("Left to right"), icon: "lucide-columns-3" },
+	{
+		value: "columns",
+		label: frappe.utils.is_rtl() ? __("Right to left") : __("Left to right"),
+		icon: "lucide-columns-3",
+	},
 ];
 const PAGE_VIEW_KEY = "hrms:organizational_chart:view";
 const LAYOUT_KEY = "hrms:organizational_chart:layout";
@@ -357,7 +361,7 @@ onMounted(async () => {
 		<!-- the directory has its switch in its own top row -->
 		<div
 			v-if="company && page_view === 'chart'"
-			class="absolute bottom-4 right-4 z-20 rounded-4 bg-surface-base sm:bottom-auto sm:top-4"
+			class="absolute bottom-4 end-4 z-20 rounded-4 bg-surface-base sm:bottom-auto sm:top-4"
 		>
 			<TabButtons
 				:model-value="page_view"

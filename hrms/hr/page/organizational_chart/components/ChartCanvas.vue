@@ -11,6 +11,7 @@ const props = defineProps({
 const emit = defineEmits(["deselect"]);
 
 const __ = window.__;
+const rtl = window.frappe.utils.is_rtl();
 
 // past the scale the whole chart fits at, zooming out only makes the cards harder to read
 const MAX_SCALE = 1.5;
@@ -139,7 +140,7 @@ function reveal(elements) {
 
 const find_card = (id) => content.value?.querySelector(`[data-node="${CSS.escape(id)}"]`);
 
-// beside the selected card: right if it fits, else left, else below
+// beside the selected card: after it in reading order if it fits, else before it, else below
 function place_popover() {
 	if (!props.selected || !popover.value) return;
 
@@ -153,16 +154,18 @@ function place_popover() {
 
 	const right_side = box.right - rect.left + POPOVER_GAP;
 	const left_side = box.left - rect.left - POPOVER_GAP - width;
-	let left = right_side;
+	const fits_right = right_side + width <= rect.width - EDGE_GAP;
+	const fits_left = left_side >= EDGE_GAP;
+	let left;
 	let top = box.top - rect.top;
-	if (right_side + width > rect.width - EDGE_GAP) {
-		if (left_side >= EDGE_GAP) {
-			left = left_side;
-		} else {
-			// no room on either side (phones): below the card and its team pill
-			left = box.left - rect.left;
-			top = box.bottom - rect.top + TEAM_PILL_DROP + POPOVER_GAP;
-		}
+	if (rtl ? fits_left : fits_right) {
+		left = rtl ? left_side : right_side;
+	} else if (rtl ? fits_right : fits_left) {
+		left = rtl ? right_side : left_side;
+	} else {
+		// no room on either side (phones): below the card and its team pill
+		left = rtl ? box.right - rect.left - width : box.left - rect.left;
+		top = box.bottom - rect.top + TEAM_PILL_DROP + POPOVER_GAP;
 	}
 
 	left = Math.max(EDGE_GAP, Math.min(left, rect.width - width - EDGE_GAP));
@@ -315,7 +318,7 @@ defineExpose({ fit, show_top, center, keep_in_place, reveal, find_card, save_ima
 			v-if="$slots.panel"
 			ref="panel"
 			data-panel
-			class="absolute left-4 right-4 top-4 rounded-4 bg-surface-base sm:right-auto"
+			class="absolute end-4 start-4 top-4 rounded-4 bg-surface-base sm:end-auto"
 		>
 			<slot name="panel" />
 		</div>
@@ -323,7 +326,7 @@ defineExpose({ fit, show_top, center, keep_in_place, reveal, find_card, save_ima
 		<div
 			ref="toolbar"
 			data-panel
-			class="absolute bottom-4 left-4 flex items-center gap-0.5 rounded-5 border border-outline-gray-2 bg-surface-base p-1"
+			class="absolute bottom-4 start-4 flex items-center gap-0.5 rounded-5 border border-outline-gray-2 bg-surface-base p-1"
 		>
 			<Tooltip :text="__('Zoom out')">
 				<Button

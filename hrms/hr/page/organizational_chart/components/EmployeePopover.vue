@@ -15,6 +15,8 @@ const emit = defineEmits(["close", "show_manager", "toggle_team"]);
 
 const frappe = window.frappe;
 const __ = window.__;
+// written out whole, so Tailwind's scan finds both
+const UP_ARROW = frappe.utils.is_rtl() ? "lucide-arrow-up-left" : "lucide-arrow-up-right";
 
 const on_leave = computed(() => leave_label(props.node.leave));
 const reports = computed(() =>
@@ -58,7 +60,7 @@ function compose_email() {
 			<Button
 				variant="ghost"
 				icon="lucide-x"
-				class="-mr-1.5 -mt-1.5"
+				class="-me-1.5 -mt-1.5"
 				:aria-label="__('Close')"
 				@click="emit('close')"
 			/>
@@ -94,7 +96,8 @@ function compose_email() {
 			</div>
 			<div v-if="node.manager" class="flex items-center gap-2">
 				<dt
-					class="lucide-arrow-up-right size-4 shrink-0 text-ink-gray-5"
+					:class="UP_ARROW"
+					class="size-4 shrink-0 text-ink-gray-5"
 					:aria-label="__('Reports to')"
 				/>
 				<dd class="min-w-0 truncate text-ink-gray-7">
