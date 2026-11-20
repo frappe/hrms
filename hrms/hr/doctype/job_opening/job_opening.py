@@ -7,7 +7,7 @@
 import frappe
 from frappe import _
 from frappe.model.naming import set_name_from_naming_options
-from frappe.utils import get_link_to_form, getdate, pretty_date
+from frappe.utils import date_diff, get_link_to_form, getdate, nowdate, pretty_date
 from frappe.website.website_generator import WebsiteGenerator
 
 from hrms.hr.doctype.staffing_plan.staffing_plan import (
@@ -162,6 +162,24 @@ class JobOpening(WebsiteGenerator):
 		context.no_of_applications = frappe.db.count("Job Applicant", {"job_title": self.name})
 		context.parents = [{"route": "jobs", "title": _("All Jobs")}]
 		context.posted_on = pretty_date(self.posted_on)
+		context.team = get_team_names([self.department]).get(self.department, self.department)
+		context.days_left = (
+			date_diff(self.closes_on, nowdate()) if self.status == "Open" and self.closes_on else None
+		)
+
+
+def get_team_names(departments):
+	departments = [d for d in set(departments) if d]
+	if not departments:
+		return {}
+	return dict(
+		frappe.get_all(
+			"Department",
+			filters={"name": ("in", departments)},
+			fields=["name", "department_name"],
+			as_list=True,
+		)
+	)
 
 
 def close_expired_job_openings():
