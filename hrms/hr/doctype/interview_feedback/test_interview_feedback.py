@@ -69,6 +69,21 @@ class TestInterviewFeedback(HRMSTestSuite):
 
 		frappe.set_user("Administrator")
 
+	def test_first_feedback_moves_interview_to_under_review(self):
+		job_applicant = create_job_applicant()
+		interview = create_interview_and_dependencies(
+			job_applicant.name, scheduled_on=add_days(getdate(), -1)
+		)
+		self.assertEqual(interview.status, "Pending")
+
+		skill_ratings = get_skills_rating(interview.interview_type)
+		interviewer = "test_interviewer1@example.com"
+		frappe.set_user(interviewer)
+		create_interview_feedback(interview.name, interviewer, skill_ratings)
+		frappe.set_user("Administrator")
+
+		self.assertEqual(frappe.db.get_value("Interview", interview.name, "status"), "Under Review")
+
 
 def create_interview_feedback(interview, interviewer, skills_ratings):
 	interview_feedback = frappe.new_doc("Interview Feedback")

@@ -2,6 +2,10 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Interview", {
+	setup: function (frm) {
+		frm.hide_submit_message = true;
+	},
+
 	refresh: function (frm) {
 		frm.set_query("job_applicant", function () {
 			let job_applicant_filters = {
@@ -15,6 +19,10 @@ frappe.ui.form.on("Interview", {
 			};
 		});
 
+		frm.set_query("interviewer", "interview_details", () => ({
+			filters: hrms.interviewer_filters(),
+		}));
+
 		frm.trigger("add_custom_buttons");
 		if (frm.doc.__islocal) return;
 
@@ -24,8 +32,31 @@ frappe.ui.form.on("Interview", {
 		]);
 	},
 
+	// a rejected round offers to reject the applicant the one way every path does: reason dialog, Undo toast
+	on_submit: async function (frm) {
+		if (frm.doc.status !== "Rejected" || !frappe.model.can_write("Job Applicant")) return;
+		const { message: applicant } = await frappe.db.get_value(
+			"Job Applicant",
+			frm.doc.job_applicant,
+			["applicant_name", "status"],
+		);
+		if (!applicant || applicant.status === "Rejected") return;
+		// not awaited: the submit is done, the dialog shouldn't hold it open
+		hrms.hiring
+			.move_to_stage(
+				{ name: frm.doc.job_applicant, applicant_name: applicant.applicant_name },
+				"Rejected",
+			)
+			.catch(() => "cancel");
+	},
+
 	add_custom_buttons: async function (frm) {
+		frm.owes_feedback = false;
 		if (frm.doc.docstatus === 2 || frm.doc.__islocal) return;
+
+		if (frm.doc.docstatus === 1 && frm.doc.status === "Cleared") {
+			frm.events.add_create_job_offer_button(frm);
+		}
 
 		if (frm.doc.status === "Pending") {
 			frm.add_custom_button(
@@ -36,6 +67,15 @@ frappe.ui.form.on("Interview", {
 				},
 				__("Actions"),
 			);
+		}
+
+		const is_awaiting_result = ["Pending", "Under Review"].includes(frm.doc.status);
+		let feedback_count = 0;
+		if (is_awaiting_result) {
+			feedback_count = await frappe.db.count("Interview Feedback", {
+				filters: { interview: frm.doc.name, docstatus: 1 },
+			});
+			if (frm.doc.docstatus === 0 && feedback_count) frm.events.add_decision_buttons(frm);
 		}
 
 		const has_submitted_feedback = await frappe.db.get_value(
@@ -56,20 +96,71 @@ frappe.ui.form.on("Interview", {
 
 		if (allow_feedback_submission) {
 			frm.page.set_primary_action(__("Submit Feedback"), () => {
-				frm.trigger("submit_feedback");
+				frm.events.submit_feedback(frm);
 			});
-		} else {
-			const button = frm.add_custom_button(__("Submit Feedback"), () => {
-				frm.trigger("submit_feedback");
-			});
-			button
-				.prop("disabled", true)
-				.attr("title", __("Only interviewers can submit feedback"))
-				.tooltip({ delay: { show: 600, hide: 100 }, trigger: "hover" });
+			frm.owes_feedback = true;
+			if (frm.feedback) frm.events.render_feedback(frm);
+		} else if (is_awaiting_result && !feedback_count) {
+			frm.set_intro(__("Only interviewers on the panel can add feedback."), "blue");
 		}
 	},
 
+	add_decision_buttons: function (frm) {
+		frm.set_intro(
+			__("Feedback is in. Mark the interview Cleared or Rejected, then submit it."),
+			"blue",
+		);
+		["Cleared", "Rejected"].forEach((status) =>
+			frm.add_custom_button(
+				__(status),
+				async () => {
+					await frm.set_value("status", status);
+					frm.save();
+				},
+				__("Mark as"),
+			),
+		);
+	},
+
+	add_create_job_offer_button: async function (frm) {
+		// interviewers without offer access shouldn't hit a permission popup
+		if (!frappe.model.can_create("Job Offer")) return;
+		const { message: offer } = await frappe.db.get_value(
+			"Job Offer",
+			{
+				job_applicant: frm.doc.job_applicant,
+				docstatus: ["<", 2],
+				status: ["!=", "Cancelled"],
+			},
+			"name",
+		);
+		if (offer?.name) return;
+
+		const { message: applicant } = await frappe.db.get_value(
+			"Job Applicant",
+			frm.doc.job_applicant,
+			["applicant_name", "designation"],
+		);
+		frm.add_custom_button(__("Create offer"), () =>
+			frappe.new_doc("Job Offer", {
+				job_applicant: frm.doc.job_applicant,
+				applicant_name: applicant?.applicant_name,
+				designation: applicant?.designation,
+			}),
+		);
+	},
+
 	submit_feedback: function (frm) {
+		if (frm.doc.scheduled_on && frm.doc.scheduled_on > frappe.datetime.get_today()) {
+			frappe.msgprint({
+				title: __("Too early for feedback"),
+				message: __("You can add feedback from {0}, the interview date.", [
+					frappe.datetime.str_to_user(frm.doc.scheduled_on),
+				]),
+				indicator: "orange",
+			});
+			return;
+		}
 		frappe.call({
 			method: "hrms.hr.doctype.interview.interview.get_expected_skill_set",
 			args: {
@@ -77,139 +168,32 @@ frappe.ui.form.on("Interview", {
 			},
 			callback: function (r) {
 				frm.events.show_feedback_dialog(frm, r.message);
-				frm.refresh();
 			},
 		});
 	},
 
 	show_reschedule_dialog: function (frm) {
-		let d = new frappe.ui.Dialog({
-			title: "Reschedule Interview",
-			fields: [
-				{
-					label: "Schedule On",
-					fieldname: "scheduled_on",
-					fieldtype: "Date",
-					reqd: 1,
-					default: frm.doc.scheduled_on,
-				},
-				{
-					label: "From Time",
-					fieldname: "from_time",
-					fieldtype: "Time",
-					reqd: 1,
-					default: frm.doc.from_time,
-				},
-				{
-					label: "To Time",
-					fieldname: "to_time",
-					fieldtype: "Time",
-					reqd: 1,
-					default: frm.doc.to_time,
-				},
-			],
-			primary_action_label: "Reschedule",
-			primary_action(values) {
-				frm.call({
-					method: "reschedule_interview",
-					doc: frm.doc,
-					args: {
-						scheduled_on: values.scheduled_on,
-						from_time: values.from_time,
-						to_time: values.to_time,
-					},
-				}).then(() => {
-					frm.refresh();
-					d.hide();
-				});
-			},
+		hrms.reschedule_interview({
+			interview: frm.doc,
+			on_rescheduled: () => frm.refresh(),
 		});
-		d.show();
 	},
 
-	show_feedback_dialog: async function (frm, data) {
-		let fields = await frm.events.get_fields_for_feedback();
-
-		let d = new frappe.ui.Dialog({
-			title: __("Submit Feedback"),
-			fields: [
-				{
-					fieldname: "skill_set",
-					fieldtype: "Table",
-					label: __("Skill Assessment"),
-					cannot_add_rows: false,
-					in_editable_grid: true,
-					reqd: 1,
-					fields: fields,
-					data: data,
-				},
-				{
-					fieldname: "result",
-					fieldtype: "Select",
-					options: ["", "Cleared", "Rejected"],
-					label: __("Result"),
-					reqd: 1,
-				},
-				{
-					fieldname: "feedback",
-					fieldtype: "Small Text",
-					label: __("Feedback"),
-				},
-			],
-			size: "large",
-			minimizable: true,
-			static: true,
-			primary_action: function (values) {
-				frappe
-					.call({
-						method: "hrms.hr.doctype.interview.interview.create_interview_feedback",
-						args: {
-							data: values,
-							interview_name: frm.doc.name,
-							interviewer: frappe.session.user,
-							job_applicant: frm.doc.job_applicant,
-						},
-					})
-					.then(() => {
-						frm.refresh();
-					});
-				d.hide();
-			},
-		});
-		d.show();
-		d.get_close_btn().show();
-	},
-
-	get_fields_for_feedback: async function () {
-		return new Promise((resolve, reject) => {
-			frappe.model.with_doctype("Skill Assessment", () => {
-				let meta = frappe.get_meta("Skill Assessment");
-				let fields = meta.fields.map((field) => {
-					return {
-						fieldtype: field.fieldtype,
-						fieldname: field.fieldname,
-						label: field.label,
-						in_list_view: field.in_list_view,
-						reqd: field.reqd,
-						options: field.options,
-					};
-				});
-				resolve(fields);
-			});
-		});
+	show_feedback_dialog: function (frm, skills) {
+		frappe.require("interview.bundle.js", () =>
+			hrms.open_interview_feedback({
+				interview: frm.doc,
+				skills,
+				on_submitted: () => frm.refresh(),
+			}),
+		);
 	},
 
 	interview_type: function (frm) {
-		frm.set_value("job_applicant", "");
 		frm.trigger("set_applicable_interviewers");
 	},
 
 	job_applicant: function (frm) {
-		if (!frm.doc.interview_type) {
-			frm.set_value("job_applicant", "");
-			frappe.throw(__("Select Interview Type First"));
-		}
-
 		if (frm.doc.job_applicant && !frm.doc.designation) {
 			frm.add_fetch("job_applicant", "designation", "designation");
 		}
@@ -232,50 +216,94 @@ frappe.ui.form.on("Interview", {
 	},
 
 	load_skills_average_rating(frm) {
-		frappe
+		return frappe
 			.call({
 				method: "hrms.hr.doctype.interview.interview.get_skill_wise_average_rating",
 				args: { interview: frm.doc.name },
+				silent: true,
 			})
 			.then((r) => {
-				frm.skills_average_rating = r.message;
+				frm.skills_average_rating = r.message || [];
+			})
+			.catch(() => {
+				frm.skills_average_rating = [];
 			});
 	},
 
 	load_feedback(frm) {
-		frappe
+		return frappe
 			.call({
 				method: "hrms.hr.doctype.interview.interview.get_feedback",
 				args: { interview: frm.doc.name },
+				silent: true,
 			})
 			.then((r) => {
-				frm.feedback = r.message;
-				frm.events.calculate_reviews_per_rating(frm);
+				frm.feedback = r.message || [];
+			})
+			.catch(() => {
+				frm.feedback = [];
+			})
+			.then(() => {
 				frm.events.render_feedback(frm);
 			});
+	},
+
+	get_panel(frm) {
+		const reviews = Object.fromEntries(frm.feedback.map((f) => [f.user, f]));
+		const users = new Set([
+			...frm.doc.interview_details.map((row) => row.interviewer),
+			...Object.keys(reviews),
+		]);
+		return [...users].map((user) => ({
+			user,
+			name: reviews[user]?.reviewer_name || frappe.user_info(user).fullname || user,
+			image: frappe.user_info(user).image,
+			result: reviews[user]?.result,
+			score: reviews[user]?.total_score,
+		}));
 	},
 
 	render_feedback(frm) {
 		frappe.require("interview.bundle.js", () => {
 			const wrapper = $(frm.fields_dict.feedback_html.wrapper);
+			const panel = frm.events.get_panel(frm);
 			const feedback_html = frappe.render_template("interview_feedback", {
 				feedbacks: frm.feedback,
-				average_rating: flt(frm.doc.average_rating * 5, 2),
-				reviews_per_rating: frm.reviews_per_rating,
-				skills_average_rating: frm.skills_average_rating,
+				average_rating: Math.round(frm.doc.average_rating * 50 + 1e-9) / 10,
+				skills_average_rating: frm.skills_average_rating || [],
+				panel,
+				submitted_count: frm.feedback.length,
+				owes_feedback: frm.owes_feedback,
 			});
-			$(wrapper).empty();
-			$(feedback_html).appendTo(wrapper);
+			wrapper.empty();
+			const $feedback = $(feedback_html).appendTo(wrapper);
+			$feedback
+				.find(".if-submit-feedback")
+				.on("click", () => frm.events.submit_feedback(frm));
+			if (frm.owes_feedback && frm.feedback.length) {
+				const on_panel = frm.doc.interview_details.map((row) => row.interviewer);
+				const given = new Set(
+					frm.feedback.map((f) => f.user).filter((u) => on_panel.includes(u)),
+				).size;
+				frappe.ui
+					.alert({
+						title: __("Your feedback is pending"),
+						description: __("{0} of {1} on the panel have added theirs", [
+							given,
+							on_panel.length,
+						]),
+						footer: frappe.ui.button({
+							label: __("Submit feedback"),
+							variant: "outline",
+							onclick: () => frm.events.submit_feedback(frm),
+						}),
+						css_class: "if-pending",
+					})
+					.prependTo($feedback);
+			}
+			$feedback.find("[data-open-feedback]").each(function () {
+				frappe.ui.tooltip($(this), { text: __("Open feedback") });
+			});
 		});
-	},
-
-	calculate_reviews_per_rating(frm) {
-		const reviews_per_rating = [0, 0, 0, 0, 0];
-		frm.feedback.forEach((x) => {
-			reviews_per_rating[Math.floor(x.total_score - 1)] += 1;
-		});
-		frm.reviews_per_rating = reviews_per_rating.map((x) =>
-			flt((x * 100) / frm.feedback.length, 1),
-		);
 	},
 });

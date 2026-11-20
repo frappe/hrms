@@ -36,6 +36,7 @@ frappe.ui.form.on("Job Offer", {
 
 	setup: function (frm) {
 		frm.email_field = "applicant_email";
+		frm.hide_submit_message = true;
 	},
 
 	salary_structure: function (frm) {
@@ -100,6 +101,9 @@ frappe.ui.form.on("Job Offer", {
 		bind_regional_inputs(frm);
 		bind_grade_reselect(frm);
 		add_email_button(frm);
+		add_mark_as_buttons(frm);
+		set_draft_intro(frm);
+		prefill_new_offer(frm);
 		render_offer_letter_preview(frm);
 
 		if (
@@ -147,29 +151,107 @@ function capture_tab_view(frm) {
 	});
 }
 
-function add_email_button(frm) {
-	if (
-		frm.doc.docstatus !== 1 ||
-		!["Ready to Send", "Awaiting Response"].includes(frm.doc.status)
-	) {
-		return;
-	}
+function is_awaiting_answer(frm) {
+	return (
+		frm.doc.docstatus === 1 && ["Ready to Send", "Awaiting Response"].includes(frm.doc.status)
+	);
+}
 
-	const resend = frm.doc.status === "Awaiting Response";
+function add_email_button(frm) {
+	if (!is_awaiting_answer(frm)) return;
+
+	// "Mark as Sent" also moves the status on, so only a letter that was actually emailed is a resend
+	const resend = Boolean((frm.doc.__onload || {}).offer_letter_sent);
 	const label = resend ? __("Resend Offer Letter") : __("Email Offer Letter");
 	frm.add_custom_button(label, () => {
 		capture_job_offer_event("offer_letter_email_opened", { resend });
 		email_offer_letter(frm);
 	});
-	if (!resend) frm.change_custom_button_type(label, null, "primary");
+	if (frm.doc.status !== "Awaiting Response")
+		frm.change_custom_button_type(label, null, "primary");
 }
 
-function email_offer_letter(frm) {
+const OFFER_ANSWER_API = "hrms.hr.doctype.job_offer.job_offer.set_offer_answer";
+
+function add_mark_as_buttons(frm) {
+	if (!is_awaiting_answer(frm)) return;
+
+	const group = __("Mark as");
+	const mark = (label, status) =>
+		frm.add_custom_button(
+			label,
+			async () => {
+				await frappe.xcall(OFFER_ANSWER_API, { job_offer: frm.doc.name, status });
+				frm.reload_doc();
+			},
+			group,
+		);
+	if (frm.doc.status === "Ready to Send") mark(__("Sent"), "Awaiting Response");
+	mark(__("Accepted"), "Accepted");
+	mark(__("Declined"), "Rejected");
+}
+
+function set_draft_intro(frm) {
+	if (frm.doc.docstatus !== 0 || frm.is_new()) return;
+	frm.set_intro(
+		__(
+			"Submit the offer to lock its terms. Then email the letter, or mark it as sent if you shared it another way.",
+		),
+		"blue",
+	);
+}
+
+/** A new offer starts today, in the department and branch of the job opening the applicant applied to. Blanks only. */
+async function prefill_new_offer(frm) {
+	if (!frm.is_new() || !frm.doc.job_applicant || frm.prefill_done === frm.doc.job_applicant)
+		return;
+	frm.prefill_done = frm.doc.job_applicant;
+
+	const opening = await get_job_opening(frm.doc.job_applicant, ["department", "location"]);
+	const values = {
+		offer_date: frm.doc.offer_date || frappe.datetime.get_today(),
+		department: frm.doc.department || opening.department,
+		branch: frm.doc.branch || opening.location,
+	};
+	for (const [field, value] of Object.entries(values)) {
+		if (value && !frm.doc[field]) await frm.set_value(field, value);
+	}
+}
+
+async function get_job_opening(job_applicant, fields) {
+	const { message: applicant } = await frappe.db.get_value(
+		"Job Applicant",
+		job_applicant,
+		"job_title",
+	);
+	if (!applicant?.job_title) return {};
+	const { message } = await frappe.db.get_value("Job Opening", applicant.job_title, fields);
+	return message || {};
+}
+
+async function email_offer_letter(frm) {
+	const { email_sender: sender } = await frappe.xcall(
+		"hrms.hr.doctype.job_offer.job_offer.get_sender_account",
+		{},
+		"GET",
+	);
+	if (!sender) {
+		frappe.msgprint(
+			__(
+				"Email isn't set up, so the letter can't be sent from here. Download it and send it yourself, then use Mark as → Sent.",
+			),
+		);
+		return;
+	}
+
+	const { job_title } = await get_job_opening(frm.doc.job_applicant, ["job_title"]);
+	const position = job_title || frm.doc.designation;
 	hrms.print_utils.email_with_print(frm, {
 		print_format: frm.doc.offer_letter_print_format || "Job Offer Classic",
-		subject: __("Offer of Employment - {0}", [frm.doc.designation]),
+		subject: __("Offer of Employment - {0}", [position]),
+		sender,
 		recipients: frm.doc.applicant_email,
-		message: offer_letter_message(frm.doc),
+		message: offer_letter_message(frm.doc, position),
 	});
 }
 
@@ -181,7 +263,7 @@ function render_offer_letter_preview(frm) {
 	);
 }
 
-function offer_letter_message(doc) {
+function offer_letter_message(doc, position) {
 	const escape = frappe.utils.escape_html;
 	const format_date = (date) => frappe.datetime.global_date_format(date);
 
@@ -189,7 +271,7 @@ function offer_letter_message(doc) {
 		__("Dear {0},", [escape(doc.applicant_name)]),
 		__(
 			"We are delighted to offer you the position of {0} at {1}. Please find attached your offer letter, which sets out the details of your role and compensation.",
-			[escape(doc.designation), escape(doc.company)],
+			[escape(position), escape(doc.company)],
 		),
 		doc.offer_valid_till
 			? __(
@@ -200,7 +282,7 @@ function offer_letter_message(doc) {
 		doc.date_of_joining
 			? __("We look forward to welcoming you on {0}.", [format_date(doc.date_of_joining)])
 			: __("We look forward to welcoming you to the team."),
-		__("Regards,"),
+		`${__("Regards,")}<br>${escape(frappe.session.user_fullname || "")}`,
 	];
 
 	return lines.map((line) => `<p>${line}</p>`).join("");

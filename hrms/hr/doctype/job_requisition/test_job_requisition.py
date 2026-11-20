@@ -7,7 +7,7 @@ from frappe.utils import add_days, getdate
 from erpnext.setup.doctype.designation.test_designation import create_designation
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
-from hrms.hr.doctype.job_opening.test_job_opening import get_job_opening
+from hrms.hr.doctype.job_opening.test_job_opening import get_job_opening, make_hire
 from hrms.hr.doctype.job_requisition.job_requisition import make_job_opening
 from hrms.tests.utils import HRMSTestSuite
 
@@ -20,12 +20,40 @@ class TestJobRequisition(HRMSTestSuite):
 		job_req = make_job_requisition(requested_by=self.employee)
 
 		job_opening = make_job_opening(job_req.name)
+		job_opening.insert()
+		make_hire(job_opening.name, "req_hire_1@example.com")
 		job_opening.status = "Closed"
 		job_opening.save()
 
 		job_req.reload()
 
 		self.assertEqual(job_opening.job_requisition, job_req.name)
+		self.assertEqual(job_req.status, "Filled")
+
+	def test_requisition_is_filled_only_when_hires_reach_vacancies(self):
+		job_req = make_job_requisition(requested_by=self.employee, no_of_positions=2)
+		job_opening = make_job_opening(job_req.name)
+		job_opening.insert()
+
+		job_opening.status = "Closed"
+		job_opening.save()
+		job_req.reload()
+		self.assertEqual(job_req.status, "Open & Approved")
+
+		job_opening.status = "Open"
+		job_opening.save()
+		make_hire(job_opening.name, "req_hire_1@example.com")
+		job_opening.status = "Closed"
+		job_opening.save()
+		job_req.reload()
+		self.assertEqual(job_req.status, "Open & Approved")
+
+		job_opening.status = "Open"
+		job_opening.save()
+		make_hire(job_opening.name, "req_hire_2@example.com")
+		job_opening.status = "Closed"
+		job_opening.save()
+		job_req.reload()
 		self.assertEqual(job_req.status, "Filled")
 
 	def test_associate_job_opening(self):
@@ -42,8 +70,10 @@ class TestJobRequisition(HRMSTestSuite):
 		closed_on = add_days(today, -10)
 		job_req = make_job_requisition(requested_by=self.employee, posting_date=add_days(today, -30))
 		job_opening = make_job_opening(job_req.name)
-		job_opening.status = "Closed"
 		job_opening.posted_on = job_req.posting_date
+		job_opening.insert()
+		make_hire(job_opening.name, "req_hire_1@example.com")
+		job_opening.status = "Closed"
 		job_opening.save()
 
 		for closing_date, completed_on, expected_date, expected_days in (

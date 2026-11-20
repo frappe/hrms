@@ -7,7 +7,8 @@
 import frappe
 from frappe import _
 from frappe.model.naming import set_name_from_naming_options
-from frappe.utils import get_link_to_form, getdate, pretty_date
+from frappe.query_builder.functions import Count
+from frappe.utils import cint, get_link_to_form, getdate, pretty_date, strip_html
 from frappe.website.website_generator import WebsiteGenerator
 
 from hrms.hr.doctype.staffing_plan.staffing_plan import (
@@ -68,6 +69,30 @@ class JobOpening(WebsiteGenerator):
 		self.update_closing_date()
 		self.validate_dates()
 		self.validate_current_vacancies()
+		self.validate_published_details()
+
+	def validate_published_details(self):
+		"""Publishing an opening needs the details the careers page shows. Checked when it goes live
+		(published, or reopened while published), so an older live opening still saves and closes."""
+		previous = self.get_doc_before_save()
+		was_live = previous and previous.publish and previous.status != "Closed"
+		if not self.publish or self.status == "Closed" or was_live:
+			return
+
+		has_value = {
+			"department": self.department,
+			"location": self.location,
+			"employment_type": self.employment_type,
+			"description": strip_html(self.description or "").strip(),
+		}
+		missing = [self.meta.get_label(field) for field, value in has_value.items() if not value]
+		if missing:
+			frappe.throw(
+				_("Add {0} before publishing this opening on the website.").format(
+					frappe.utils.comma_and([frappe.bold(_(label)) for label in missing])
+				),
+				title=_("Missing details"),
+			)
 
 	def on_update(self):
 		self.update_job_requisition_status()
@@ -140,7 +165,7 @@ class JobOpening(WebsiteGenerator):
 					).format(
 						frappe.bold(self.designation), get_link_to_form("Staffing Plan", self.staffing_plan)
 					),
-					title=_("Vacancies fulfilled"),
+					title=_("All vacancies filled"),
 				)
 
 	def is_opening_being_closed(self):
@@ -149,9 +174,23 @@ class JobOpening(WebsiteGenerator):
 
 		return frappe.db.get_value(self.doctype, self.name, "status") == "Open"
 
+	def get_hired_count(self) -> int:
+		Applicant = frappe.qb.DocType("Job Applicant")
+		Offer = frappe.qb.DocType("Job Offer")
+		return (
+			frappe.qb.from_(Applicant)
+			.join(Offer)
+			.on(Offer.job_applicant == Applicant.name)
+			.select(Count(Applicant.name).distinct())
+			.where((Applicant.job_title == self.name) & (Offer.docstatus == 1) & (Offer.status == "Accepted"))
+		).run()[0][0]
+
 	def update_job_requisition_status(self):
 		if self.status == "Closed" and self.job_requisition:
 			job_requisition = frappe.get_doc("Job Requisition", self.job_requisition)
+			if self.get_hired_count() < cint(job_requisition.no_of_positions):
+				return
+
 			job_requisition.status = "Filled"
 			job_requisition.completed_on = self.closed_on or job_requisition.completed_on or getdate()
 			job_requisition.flags.ignore_permissions = True
@@ -180,3 +219,29 @@ def close_expired_job_openings():
 		doc.flags.ignore_permissions = True
 		doc.flags.ignore_mandatory = True
 		doc.save()
+
+
+@frappe.whitelist(methods=["GET"])
+def get_opening_header(job_opening: str) -> dict:
+	"""The title and status a board filtered to this opening shows in its header."""
+	frappe.has_permission("Job Opening", "read", doc=job_opening, throw=True)
+	opening = frappe.db.get_value(
+		"Job Opening", job_opening, ["name", "job_title", "status", "location", "designation"], as_dict=True
+	)
+	return {
+		"name": opening.name,
+		"display_title": get_display_title(opening),
+		"status": opening.status,
+		"designation": opening.designation,
+	}
+
+
+def get_display_title(opening) -> str:
+	"""The role name, with its location when another open role has the same name."""
+	shares_name = frappe.db.exists(
+		"Job Opening",
+		{"job_title": opening.job_title, "status": "Open", "name": ["!=", opening.name]},
+	)
+	if shares_name and opening.location:
+		return f"{opening.job_title} · {opening.location}"
+	return opening.job_title

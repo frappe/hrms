@@ -71,6 +71,45 @@ class TestJobOffer(HRMSTestSuite):
 		self.assertEqual(job_applicant.status, "Rejected")
 		frappe.db.set_single_value("HR Settings", "check_vacancies", 1)
 
+	def test_draft_job_offer_does_not_move_job_applicant(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		job_applicant = create_job_applicant(email_id="draft_offer@example.com")
+		job_offer = create_job_offer(job_applicant=job_applicant.name, status="Accepted")
+		job_offer.save()
+
+		job_applicant.reload()
+		self.assertEqual(job_applicant.status, "Open")
+
+		job_offer.submit()
+		job_applicant.reload()
+		self.assertEqual(job_applicant.status, "Accepted")
+
+	def test_cancelled_job_offer_reverts_job_applicant(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		for status in ("Accepted", "Rejected"):
+			job_applicant = create_job_applicant(email_id=f"cancel_{status.lower()}@example.com")
+			job_offer = create_job_offer(job_applicant=job_applicant.name, status=status)
+			job_offer.submit()
+
+			job_applicant.reload()
+			self.assertEqual(job_applicant.status, status)
+
+			job_offer.cancel()
+			job_applicant.reload()
+			self.assertEqual(job_applicant.status, "Shortlisted")
+
+	def test_cancelled_job_offer_keeps_newer_applicant_status(self):
+		frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+		job_applicant = create_job_applicant(email_id="cancel_newer@example.com")
+		job_offer = create_job_offer(job_applicant=job_applicant.name, status="Accepted")
+		job_offer.submit()
+
+		frappe.db.set_value("Job Applicant", job_applicant.name, "status", "Hold")
+		job_offer.cancel()
+
+		job_applicant.reload()
+		self.assertEqual(job_applicant.status, "Hold")
+
 	def test_recruitment_metrics(self):
 		job_applicant1 = create_job_applicant(email_id="test_job_applicant1@example.com")
 		job_applicant2 = create_job_applicant(email_id="test_job_applicant2@example.com")

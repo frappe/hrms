@@ -2,27 +2,27 @@
 // MIT License. See license.txt
 
 frappe.listview_settings["Job Applicant"] = {
-	add_fields: ["status", "applicant_rating", "designation"],
+	add_fields: ["status", "stage", "applicant_rating", "designation"],
 
-	onload: function () {
-		patch_kanban_dialog_for_job_applicant();
-	},
-
-	get_indicator: function (doc) {
-		if (doc.status === "Accepted") {
-			return [__(doc.status), "green", "status,=," + doc.status];
-		} else if (doc.status === "Shortlisted") {
-			return [__(doc.status), "blue", "status,=," + doc.status];
-		} else if (["Open", "Replied"].includes(doc.status)) {
-			return [__(doc.status), "orange", "status,=," + doc.status];
-		} else if (["Hold", "Rejected"].includes(doc.status)) {
-			return [__(doc.status), "red", "status,=," + doc.status];
-		}
+	// no Status column: the Stage column carries the colour, and "On hold" for an applicant on hold
+	formatters: {
+		stage(value, df, doc) {
+			if (!value) return "";
+			const { label, theme } = hrms.hiring.get_stage_badge(doc);
+			const filter = doc.status === "Hold" ? "status,=,Hold" : `stage,=,${value}`;
+			return frappe.ui.badge.html({
+				label,
+				theme,
+				css_class: "filterable ellipsis",
+				attrs: { "data-filter": filter },
+			});
+		},
 	},
 };
 
 // Replaces the inline textarea UX with a direct frappe.new_doc() call so the
-// status of the column is pre-filled and the user lands straight on the form.
+// stage (or status, on a board grouped by status) of the column is pre-filled and the
+// user lands straight on the form.
 document.addEventListener(
 	"click",
 	function (e) {
@@ -36,7 +36,9 @@ document.addEventListener(
 		e.preventDefault();
 
 		const column_title = add_card_btn.closest(".kanban-column").dataset.columnValue;
-		frappe.new_doc("Job Applicant", { status: column_title });
+		const stages = frappe.meta.get_docfield("Job Applicant", "stage").options.split("\n");
+		const field = stages.includes(column_title) ? "stage" : "status";
+		frappe.new_doc("Job Applicant", { [field]: column_title });
 	},
 	true, // capture phase
 );
@@ -107,24 +109,4 @@ function kanban_apply_stars(rating_el, fraction, out_of) {
 			right.classList.remove("star-click");
 		}
 	});
-}
-
-function patch_kanban_dialog_for_job_applicant() {
-	if (frappe.views.KanbanView._job_applicant_kanban_patched) return;
-
-	const _original = frappe.views.KanbanView.show_kanban_dialog;
-	frappe.views.KanbanView.show_kanban_dialog = function (doctype) {
-		if (doctype !== "Job Applicant") {
-			return _original.call(this, doctype);
-		}
-		frappe
-			.xcall("hrms.hr.doctype.job_applicant.job_applicant.create_kanban_board", {
-				board_name: "Hiring Pipeline",
-			})
-			.then((board) => {
-				frappe.set_route("List", "Job Applicant", "Kanban", board.kanban_board_name);
-			});
-	};
-
-	frappe.views.KanbanView._job_applicant_kanban_patched = true;
 }

@@ -8,7 +8,9 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.hr.doctype.job_opening.job_opening import close_expired_job_openings
 from hrms.hr.doctype.staffing_plan.test_staffing_plan import make_company
+from hrms.hr.report.monthly_attendance_sheet.test_monthly_attendance_sheet import create_branch
 from hrms.hr.web_form.job_application.job_application import get_context as get_job_application_context
+from hrms.tests.test_utils import create_department
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -134,7 +136,13 @@ class TestJobOpening(HRMSTestSuite):
 		self.assertEqual(opening_2.status, "Open")
 
 	def test_job_application_form_shows_published_job_title(self):
-		published = get_job_opening(publish=1)
+		published = get_job_opening(
+			publish=1,
+			department=create_department("Design"),
+			location=create_branch("Pune"),
+			employment_type="Full-time",
+			description="Design the product.",
+		)
 		published.insert()
 		unpublished = get_job_opening(job_title="Designer Internal")
 		unpublished.insert()
@@ -150,6 +158,59 @@ class TestJobOpening(HRMSTestSuite):
 
 		self.assertEqual(get_title(published.name), "Designer")
 		self.assertIsNone(get_title(unpublished.name))
+
+	def test_publishing_needs_careers_page_details(self):
+		opening = get_job_opening(job_title="Unfinished Opening", publish=1)
+		self.assertRaises(frappe.ValidationError, opening.insert)
+
+		opening.publish = 0
+		opening.insert()
+		opening.publish = 1
+		self.assertRaises(frappe.ValidationError, opening.save)
+
+	def test_scheduler_closes_a_published_opening_missing_careers_details(self):
+		opening = get_job_opening(job_title="Legacy Opening")
+		opening.posted_on = add_days(getdate(), -2)
+		opening.closes_on = add_days(getdate(), -1)
+		opening.insert()
+		# published before the careers page needed these details
+		opening.db_set("publish", 1)
+
+		close_expired_job_openings()
+		self.assertEqual(frappe.db.get_value("Job Opening", opening.name, "status"), "Closed")
+
+	def test_reopening_a_published_opening_needs_careers_page_details(self):
+		opening = get_job_opening(job_title="Closed Unfinished Opening", status="Closed")
+		opening.insert()
+		opening.publish = 1
+		opening.save()
+
+		opening.status = "Open"
+		self.assertRaises(frappe.ValidationError, opening.save)
+
+	def test_legacy_published_opening_still_edits_and_closes(self):
+		opening = get_job_opening(job_title="Legacy Live Opening")
+		opening.insert()
+		opening.db_set("publish", 1)
+		opening.reload()
+
+		opening.vacancies = 3
+		opening.save()
+		opening.status = "Closed"
+		opening.save()
+		self.assertEqual(frappe.db.get_value("Job Opening", opening.name, "status"), "Closed")
+
+
+def make_hire(job_opening, email_id):
+	"""Applicant for the opening with a submitted, accepted Job Offer"""
+	from hrms.hr.doctype.job_offer.test_job_offer import create_job_offer
+	from hrms.tests.test_utils import create_job_applicant
+
+	frappe.db.set_single_value("HR Settings", "check_vacancies", 0)
+	applicant = create_job_applicant(email_id=email_id, applicant_name=email_id.split("@")[0])
+	applicant.db_set("job_title", job_opening)
+	create_job_offer(job_applicant=applicant.name, status="Accepted").submit()
+	return applicant
 
 
 def get_job_opening(**args):

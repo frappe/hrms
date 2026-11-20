@@ -22,6 +22,13 @@ from frappe.utils import (
 
 import hrms
 from hrms.hr.doctype.appointment_letter.appointment_letter import get_working_hours
+from hrms.hr.doctype.interview.interview import close_open_interviews, restore_interviews
+from hrms.hr.doctype.job_applicant.job_applicant import (
+	get_email_setup,
+	set_applicant_status,
+	update_linked_stages,
+)
+from hrms.hr.doctype.rejection_reason.rejection_reason import DECLINED_OFFER
 
 
 class JobOffer(Document):
@@ -84,6 +91,20 @@ class JobOffer(Document):
 	def onload(self):
 		employee = frappe.db.get_value("Employee", {"job_offer": self.name}, "name") or ""
 		self.set_onload("employee", employee)
+
+		self.set_onload(
+			"offer_letter_sent",
+			bool(
+				frappe.db.exists(
+					"Communication",
+					{
+						"reference_doctype": "Job Offer",
+						"reference_name": self.name,
+						"sent_or_received": "Sent",
+					},
+				)
+			),
+		)
 
 	def validate(self):
 		self.set_status()
@@ -217,7 +238,29 @@ class JobOffer(Document):
 				frappe.throw(_("There are no vacancies under staffing plan {0}").format(error_variable))
 
 	def on_change(self):
-		update_job_applicant(self.status, self.job_applicant)
+		if self.docstatus == 1:
+			# an answered offer ends the interviews; the closed ones are kept for an Undo. Closed before
+			# a decline rejects the applicant, which would otherwise close them without this list
+			reviewed_status = {"Accepted": "Cleared", "Rejected": "Rejected"}.get(self.status)
+			if reviewed_status and self.job_applicant:
+				self.flags.closed_interviews = close_open_interviews(self.job_applicant, reviewed_status)
+			update_job_applicant(self.status, self.job_applicant)
+
+		update_linked_stages(self)
+
+	def after_delete(self):
+		update_linked_stages(self)
+
+	def on_cancel(self):
+		if not self.job_applicant or self.status not in ("Accepted", "Rejected"):
+			return
+
+		if frappe.db.get_value("Job Applicant", self.job_applicant, "status") == self.status:
+			frappe.set_value(
+				"Job Applicant",
+				self.job_applicant,
+				{"status": "Shortlisted", "rejection_reason": None, "rejection_note": None},
+			)
 
 	def get_job_offer(self, from_date, to_date):
 		"""Returns job offer created during a time period"""
@@ -236,9 +279,80 @@ class JobOffer(Document):
 		self.db_set("status", "Cancelled")
 
 
+OFFER_ANSWERS = ("Accepted", "Rejected")
+OFFER_STATUSES = ("Ready to Send", "Awaiting Response", *OFFER_ANSWERS)
+# where each submitted offer status may go; the reverse moves are the Undo of a change
+OFFER_TRANSITIONS = {
+	"Ready to Send": ("Awaiting Response", *OFFER_ANSWERS),
+	"Awaiting Response": ("Ready to Send", *OFFER_ANSWERS),
+	"Accepted": ("Ready to Send", "Awaiting Response"),
+	"Rejected": ("Ready to Send", "Awaiting Response"),
+}
+
+
+@frappe.whitelist(methods=["POST"])
+def set_offer_answer(
+	job_offer: str,
+	status: str,
+	applicant_status: str | None = None,
+	closed_interviews: str | list | None = None,
+) -> dict:
+	"""Moves a submitted offer to Awaiting Response (sent), Accepted or Rejected (declined).
+
+	Saving runs the offer's own hooks, which also set the applicant's status and close their open
+	interviews. For an undo, pass the `previous_applicant_status` and `closed_interviews` the answer
+	returned so the applicant and the interviews go back as well."""
+	frappe.has_permission("Job Offer", "write", doc=job_offer, throw=True)
+	doc = frappe.get_doc("Job Offer", job_offer)
+	validate_offer_move(doc, status)
+
+	previous_status = doc.status
+	previous_applicant_status = (
+		frappe.db.get_value("Job Applicant", doc.job_applicant, "status") if doc.job_applicant else None
+	)
+	doc.status = status
+	doc.save()
+	if applicant_status and doc.job_applicant and previous_applicant_status != applicant_status:
+		set_applicant_status(doc.job_applicant, applicant_status)
+	if doc.job_applicant:
+		restore_interviews(doc.job_applicant, frappe.parse_json(closed_interviews) or [])
+	return {
+		"previous_status": previous_status,
+		"previous_applicant_status": previous_applicant_status,
+		"closed_interviews": doc.flags.closed_interviews or [],
+	}
+
+
+def validate_offer_move(offer, status):
+	if status not in OFFER_STATUSES:
+		frappe.throw(
+			_("Offer status must be Ready to Send, Awaiting Response, Accepted or Rejected."),
+			frappe.ValidationError,
+		)
+	if offer.docstatus != 1:
+		frappe.throw(_("Only a submitted offer can be answered."), frappe.ValidationError)
+	if status not in OFFER_TRANSITIONS.get(offer.status, ()):
+		frappe.throw(
+			_("The offer is {0}, so it can't be set to {1}.").format(offer.status, status),
+			frappe.ValidationError,
+		)
+
+
+@frappe.whitelist(methods=["GET"])
+def get_sender_account() -> dict:
+	"""The outgoing account hiring mail goes from (the one the reject email uses), if any."""
+	frappe.has_permission("Job Applicant", throw=True)
+	return get_email_setup()
+
+
 def update_job_applicant(status, job_applicant):
 	if job_applicant and status in ("Accepted", "Rejected"):
 		frappe.set_value("Job Applicant", job_applicant, "status", status)
+	if job_applicant and status == "Rejected":
+		# the candidate said no; keep a reason someone gave before
+		has_reason = frappe.db.get_value("Job Applicant", job_applicant, "rejection_reason")
+		if not has_reason and frappe.db.exists("Rejection Reason", DECLINED_OFFER):
+			frappe.set_value("Job Applicant", job_applicant, "rejection_reason", DECLINED_OFFER)
 
 
 def get_staffing_plan_detail(designation, company, offer_date):

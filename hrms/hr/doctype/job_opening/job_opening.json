@@ -59,7 +59,6 @@
    "fieldname": "company",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "in_standard_filter": 1,
    "label": "Company",
    "options": "Company",
    "reqd": 1
@@ -67,7 +66,6 @@
   {
    "fieldname": "status",
    "fieldtype": "Select",
-   "hidden": 1,
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
@@ -81,7 +79,6 @@
    "fieldname": "designation",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "in_standard_filter": 1,
    "label": "Designation",
    "options": "Designation",
    "reqd": 1
@@ -92,6 +89,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Department",
+   "mandatory_depends_on": "eval:doc.publish",
    "options": "Department"
   },
   {
@@ -117,7 +115,6 @@
    "fieldname": "publish",
    "fieldtype": "Check",
    "in_list_view": 1,
-   "in_standard_filter": 1,
    "label": "Publish on website"
   },
   {
@@ -131,8 +128,8 @@
    "description": "Job profile, qualifications required etc.",
    "fieldname": "description",
    "fieldtype": "Text Editor",
-   "in_list_view": 1,
-   "label": "Description"
+   "label": "Description",
+   "mandatory_depends_on": "eval:doc.publish"
   },
   {
    "fieldname": "column_break_12",
@@ -151,7 +148,7 @@
   {
    "fieldname": "lower_range",
    "fieldtype": "Currency",
-   "label": "Lower Range",
+   "label": "Salary From",
    "non_negative": 1,
    "options": "currency",
    "precision": "0"
@@ -159,7 +156,7 @@
   {
    "fieldname": "upper_range",
    "fieldtype": "Currency",
-   "label": "Upper Range",
+   "label": "Salary To",
    "non_negative": 1,
    "options": "currency",
    "precision": "0"
@@ -215,14 +212,15 @@
    "fieldname": "employment_type",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "in_standard_filter": 1,
    "label": "Employment Type",
+   "mandatory_depends_on": "eval:doc.publish",
    "options": "Employment Type"
   },
   {
    "fieldname": "location",
    "fieldtype": "Link",
    "label": "Location",
+   "mandatory_depends_on": "eval:doc.publish",
    "options": "Branch"
   },
   {
@@ -288,7 +286,7 @@
  "idx": 1,
  "is_published_field": "publish",
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-11-13 23:35:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Opening",
@@ -333,7 +331,7 @@
  "row_format": "Dynamic",
  "show_title_field_in_link": 1,
  "sort_field": "creation",
- "sort_order": "ASC",
+ "sort_order": "DESC",
  "states": [
   {
    "color": "Green",
