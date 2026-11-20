@@ -88,6 +88,7 @@
 							:reqd="field.reqd"
 							:default="field.default"
 							:readOnly="field.read_only || isReadOnly"
+							uploadDoctype="Expense Claim"
 							v-model="expenseItem[field.fieldname]"
 						/>
 					</div>
@@ -199,7 +200,7 @@ const expensesTableFields = createResource({
 	url: "hrms.api.get_doctype_fields",
 	params: { doctype: "Expense Claim Detail" },
 	transform(data) {
-		const excludeFields = ["description_sb", "amounts_sb", "base_amount", "base_sanctioned_amount"]
+		const excludeFields = ["description_sb", "amounts_sb", "base_amount", "base_sanctioned_amount", "receipt_section"]
 		return data.filter((field) => !excludeFields.includes(field.fieldname))
 	},
 })

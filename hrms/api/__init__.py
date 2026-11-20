@@ -24,6 +24,7 @@ SUPPORTED_FIELD_TYPES = [
 	"Time",
 	"Datetime",
 	"Currency",
+	"Attach",
 ]
 
 
