@@ -86,7 +86,11 @@ class EmployeeTransfer(Document):
 			employee.relieving_date = ""
 		else:
 			employee = update_employee_work_history(
-				employee, self.transfer_details, date=self.transfer_date, cancel=True
+				employee,
+				self.transfer_details,
+				date=self.transfer_date,
+				cancel=True,
+				previous_doc=self.get_doc_before_save(),
 			)
 		if self.new_company != self.company:
 			employee.company = self.company
