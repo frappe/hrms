@@ -118,6 +118,7 @@ frappe.ui.form.on("Job Applicant", {
 
 	get_interview_for_dashboard: function (frm) {
 		if (frm.doc.__islocal) return;
+		if (!frappe.model.can_read("Interview")) return;
 
 		$("div").remove(".form-dashboard-section.custom");
 		frappe.call({
