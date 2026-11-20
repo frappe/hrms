@@ -618,6 +618,113 @@ class TestPayrollEntry(HRMSTestSuite):
 					self.assertEqual(account.party_type, "Employee")
 					self.assertEqual(account.party, employee)
 
+	def test_payroll_component_grouping_without_employee_party(self):
+		payroll_entry = frappe.new_doc("Payroll Entry")
+		payroll_entry.payroll_payable_account = "Payroll Payable"
+		payroll_entry.employee_based_payroll_payable_entries = {}
+		components = [
+			frappe._dict(
+				employee=employee,
+				salary_component="Deduction",
+				salary_structure="Structure",
+				additional_salary=None,
+				amount=amount,
+			)
+			for employee, amount in (("Employee 1", 100), ("Employee 2", 200))
+		]
+		with (
+			patch.object(PayrollEntry, "get_salary_components", return_value=components),
+			patch.object(PayrollEntry, "get_advance_deductions", return_value={}),
+			patch.object(PayrollEntry, "get_payroll_cost_centers_for_employee", return_value={"Main": 100}),
+			patch.object(PayrollEntry, "get_salary_component_account") as get_account,
+		):
+			for account, enabled in (("Payroll Payable", False), ("Other Account", True)):
+				with self.subTest(account=account, employee_wise_accounting_enabled=enabled):
+					get_account.return_value = account
+					totals = payroll_entry.get_salary_component_total("deductions", enabled)
+					self.assertEqual(totals, {(account, "Main", None): 300})
+
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 1}
+	)
+	def test_additional_salary_deductions_on_payroll_payable_account(self):
+		company = frappe.get_doc("Company", "_Test Company")
+		department = create_department("Payroll Payable Deductions")
+		employees = [
+			make_employee(f"payable_deduction_{i}@payroll.com", company=company.name, department=department)
+			for i in (1, 2)
+		]
+		structure = "Payroll Payable Deduction Structure"
+		setup_salary_structure(employees[0], company, salary_structure=structure)
+		create_salary_structure_assignment(
+			employees[1], structure, company=company.name, currency=company.default_currency
+		)
+
+		component = create_salary_component("Payroll Payable Additional Deduction", type="Deduction")
+		component.append(
+			"accounts", {"company": company.name, "account": company.default_payroll_payable_account}
+		)
+		component.save()
+		dates = get_start_end_dates("Monthly", nowdate())
+		for employee, amount in zip(employees, (100, 200), strict=True):
+			additional_salary = frappe.get_doc(
+				{
+					"doctype": "Additional Salary",
+					"employee": employee,
+					"salary_component": component.name,
+					"amount": amount,
+					"type": "Deduction",
+					"payroll_date": dates.end_date,
+					"company": company.name,
+				}
+			).insert()
+			additional_salary.submit()
+
+		payroll_entry = get_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company.default_payroll_payable_account,
+			currency=company.default_currency,
+			company=company.name,
+			department=department,
+			cost_center="Main - _TC",
+		)
+		payroll_entry.submit()
+		payroll_entry.submit_salary_slips()
+
+		for employee, amount in zip(employees, (100, 200), strict=True):
+			slip = frappe.get_doc(
+				"Salary Slip", {"employee": employee, "payroll_entry": payroll_entry.name, "docstatus": 1}
+			)
+			self.assertEqual(
+				sum(row.amount for row in slip.deductions if row.salary_component == component.name), amount
+			)
+			journal_entry = frappe.get_doc("Journal Entry", slip.journal_entry)
+			rows = [
+				row
+				for row in journal_entry.accounts
+				if row.account == company.default_payroll_payable_account
+				and row.party == employee
+				and not row.reference_type
+			]
+			self.assertEqual(len(rows), 1)
+			self.assertEqual(rows[0].party_type, "Employee")
+			self.assertEqual(rows[0].credit_in_account_currency, amount)
+			self.assertTrue(
+				frappe.db.exists(
+					"GL Entry",
+					{
+						"voucher_type": "Journal Entry",
+						"voucher_no": journal_entry.name,
+						"account": company.default_payroll_payable_account,
+						"party_type": "Employee",
+						"party": employee,
+						"credit_in_account_currency": amount,
+						"is_cancelled": 0,
+					},
+				)
+			)
+
 	@HRMSTestSuite.change_settings(
 		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0}
 	)

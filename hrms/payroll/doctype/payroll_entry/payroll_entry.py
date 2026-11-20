@@ -457,6 +457,14 @@ class PayrollEntry(Document):
 					item.employee, item.salary_structure
 				)
 				employee_advance = advance_deductions.get(item.additional_salary)
+				party = None
+				if (
+					employee_wise_accounting_enabled
+					and not employee_advance
+					and self.get_salary_component_account(item.salary_component)
+					== self.payroll_payable_account
+				):
+					party = item.employee
 
 				for cost_center, percentage in employee_cost_centers.items():
 					amount_against_cost_center = flt(item.amount) * percentage / 100
@@ -466,7 +474,7 @@ class PayrollEntry(Document):
 							item, amount_against_cost_center, cost_center, employee_advance
 						)
 					else:
-						key = (item.salary_component, cost_center)
+						key = (item.salary_component, cost_center, party)
 						component_dict[key] = component_dict.get(key, 0) + amount_against_cost_center
 
 					if employee_wise_accounting_enabled:
@@ -607,10 +615,9 @@ class PayrollEntry(Document):
 
 	def get_account(self, component_dict=None):
 		account_dict = {}
-		for key, amount in component_dict.items():
-			component, cost_center = key
+		for (component, cost_center, party), amount in component_dict.items():
 			account = self.get_salary_component_account(component)
-			accounting_key = (account, cost_center)
+			accounting_key = (account, cost_center, party)
 
 			account_dict[accounting_key] = account_dict.get(accounting_key, 0) + amount
 
@@ -874,10 +881,10 @@ class PayrollEntry(Document):
 		employee_wise_accounting_enabled,
 	):
 		# Earnings
-		for acc_cc, amount in earnings.items():
+		for (account, cost_center, party), amount in earnings.items():
 			payable_amount = self.get_accounting_entries_and_payable_amount(
-				acc_cc[0],
-				acc_cc[1] or self.cost_center,
+				account,
+				cost_center or self.cost_center,
 				amount,
 				currencies,
 				company_currency,
@@ -885,14 +892,15 @@ class PayrollEntry(Document):
 				accounting_dimensions,
 				precision,
 				entry_type="debit",
+				party=party,
 				accounts=accounts,
 			)
 
 		# Deductions
-		for acc_cc, amount in deductions.items():
+		for (account, cost_center, party), amount in deductions.items():
 			payable_amount = self.get_accounting_entries_and_payable_amount(
-				acc_cc[0],
-				acc_cc[1] or self.cost_center,
+				account,
+				cost_center or self.cost_center,
 				amount,
 				currencies,
 				company_currency,
@@ -900,6 +908,7 @@ class PayrollEntry(Document):
 				accounting_dimensions,
 				precision,
 				entry_type="credit",
+				party=party,
 				accounts=accounts,
 			)
 
