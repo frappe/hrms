@@ -1110,3 +1110,17 @@ def notify_hr(doc: Document, subject: str, message: str | None = None):
 			"from_user": doc.owner,
 		},
 	)
+
+
+def get_mode_of_payment_account(mode_of_payment, company):
+	account = frappe.db.get_value(
+		"Mode of Payment Account", {"parent": mode_of_payment, "company": company}, "default_account"
+	)
+	if not account:
+		frappe.throw(
+			_("Please set default Cash or Bank account in Mode of Payment {0}").format(
+				get_link_to_form("Mode of Payment", mode_of_payment)
+			),
+			title=_("Missing Account"),
+		)
+	return account
