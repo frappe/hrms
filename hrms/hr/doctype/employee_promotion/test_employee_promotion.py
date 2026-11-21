@@ -2,9 +2,22 @@
 # See license.txt
 
 import frappe
-from frappe.utils import add_days, getdate
+from frappe.desk.form.linked_with import get_submitted_linked_docs
+from frappe.utils import add_days, add_months, fmt_money, get_first_day, getdate
 
-from hrms.payroll.doctype.salary_structure.test_salary_structure import make_employee
+from hrms.hr.doctype.employee_promotion.employee_promotion import (
+	get_revised_salary_details,
+	get_salary_on,
+	make_salary_structure_assignment,
+)
+from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+	create_salary_structure_assignment,
+	make_employee,
+	make_salary_structure,
+)
+from hrms.payroll.doctype.salary_structure_assignment.test_salary_structure_assignment import (
+	_make_component,
+)
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -90,3 +103,440 @@ class TestEmployeePromotion(HRMSTestSuite):
 		self.assertEqual(len(employee.internal_work_history), 1)
 		self.assertEqual(employee.internal_work_history[0].designation, "Software Developer")
 		self.assertEqual(employee.internal_work_history[0].from_date, getdate("01-10-2021"))
+
+	def test_current_salary_comes_from_assignment(self):
+		employee, assignment = setup_employee_with_assignment("promotion_current@example.com")
+		frappe.db.set_value("Employee", employee, "ctc", 500000)
+
+		promotion = make_promotion(employee)
+
+		self.assertEqual(promotion.current_salary_structure_assignment, assignment.name)
+		self.assertEqual(promotion.current_salary_structure, assignment.salary_structure)
+		self.assertEqual(promotion.salary_structure, assignment.salary_structure)
+		self.assertEqual(promotion.current_base, 50000)
+		self.assertEqual(promotion.current_ctc, 1032000)
+
+	def test_revised_ctc_is_calculated_from_revised_base(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_revised@example.com")
+
+		promotion = make_promotion(employee, revised_base=60000, revised_ctc=1)
+
+		self.assertEqual(promotion.revised_ctc, 1226400)
+
+		details = get_revised_salary_details(promotion.as_dict())
+		self.assertEqual(details.ctc, 1226400)
+		self.assertEqual(
+			[row["fixed_components"] for row in details.components],
+			[row.fixed_components for row in promotion.ctc_breakup],
+		)
+
+	def test_revised_salary_details_follow_unsaved_inputs(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_live@example.com")
+		promotion = make_promotion(employee, revised_base=60000)
+
+		unsaved = promotion.as_dict()
+		unsaved["revised_base"] = 70000
+		details = get_revised_salary_details(unsaved)
+
+		# Basic 70,000 + HRA 35,000 + Special 5,000 + Employer PF 8,400 = 1,18,400 a month
+		self.assertEqual(details.ctc, 1420800)
+		self.assertEqual(details.components[0]["per_cycle"], 70000)
+		self.assertEqual(frappe.db.get_value("Employee Promotion", promotion.name, "revised_base"), 60000)
+
+	def test_revised_ctc_uses_promoted_grade(self):
+		for grade in ["EP Test G1", "EP Test G2"]:
+			if not frappe.db.exists("Employee Grade", grade):
+				frappe.get_doc({"doctype": "Employee Grade", "__newname": grade}).insert()
+
+		employee, _assignment = setup_employee_with_assignment("promotion_grade@example.com")
+		frappe.db.set_value("Employee", employee, "grade", "EP Test G1")
+		structure = make_promotion_structure(
+			"EP Test Grade Structure",
+			extra_earnings=[
+				{
+					"salary_component": "EP Test Bonus",
+					"abbr": "EPTX",
+					"condition": 'grade == "EP Test G2"',
+					"amount": 10000,
+				}
+			],
+		)
+
+		promotion = make_promotion(
+			employee,
+			salary_structure=structure.name,
+			revised_base=60000,
+			promotion_details=[
+				{"property": "Grade", "fieldname": "grade", "current": "EP Test G1", "new": "EP Test G2"}
+			],
+		)
+
+		self.assertEqual(promotion.revised_ctc, 1346400)
+		self.assertEqual(frappe.db.get_value("Employee", employee, "grade"), "EP Test G1")
+
+	def test_ctc_breakup_is_filled_from_revised_base(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_breakup@example.com")
+
+		promotion = make_promotion(employee, revised_base=60000)
+
+		rows = [(r.fixed_components, r.per_cycle, r.yearly, r.is_summary) for r in promotion.ctc_breakup]
+		self.assertEqual(
+			rows,
+			[
+				("EP Test Basic", 60000, 720000, 0),
+				("EP Test HRA", 30000, 360000, 0),
+				("EP Test Special", 5000, 60000, 0),
+				("Gross Pay", 95000, 1140000, 1),
+				("EP Test Employer PF", 7200, 86400, 0),
+				("Total Cost to Company (CTC)", 102200, 1226400, 1),
+				("Take Home* (Income Tax applicable as per IT Act)", 95000, 1140000, 1),
+			],
+		)
+		self.assertEqual(promotion.ctc_breakup[-2].yearly, promotion.revised_ctc)
+		self.assertEqual({r.currency for r in promotion.ctc_breakup}, {"INR"})
+
+	def test_ctc_breakup_is_empty_without_revised_base(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_no_breakup@example.com")
+
+		promotion = make_promotion(employee, revised_ctc=1500000)
+		self.assertEqual(promotion.ctc_breakup, [])
+
+		promotion.revised_base = 60000
+		promotion.save()
+		self.assertTrue(promotion.ctc_breakup)
+
+		promotion.revised_base = 0
+		promotion.save()
+		self.assertEqual(promotion.ctc_breakup, [])
+
+	def test_employee_email_is_fetched_for_the_letter(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_email@example.com")
+		frappe.db.set_value("Employee", employee, {"prefered_email": None, "user_id": None})
+		frappe.db.set_value("Employee", employee, "company_email", "priya@company.example.com")
+		self.assertEqual(make_promotion(employee).employee_email, "priya@company.example.com")
+
+		frappe.db.set_value("Employee", employee, "prefered_email", "priya@example.com")
+		self.assertEqual(make_promotion(employee).employee_email, "priya@example.com")
+
+	def test_promotion_letters_render(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_letter@example.com")
+		promotion = make_promotion(employee, revised_base=60000)
+
+		def render(print_format):
+			return frappe.get_print("Employee Promotion", promotion.name, print_format, doc=promotion)
+
+		revised_ctc = fmt_money(1226400)
+		with_breakup = render("Promotion Letter with Salary Break-up")
+		self.assertIn("PROMOTION LETTER", with_breakup)
+		self.assertIn("from <b>Software Developer</b> to <b>Project Manager</b>", with_breakup)
+		self.assertIn(revised_ctc, with_breakup)
+		self.assertIn("EP Test HRA", with_breakup)
+		self.assertIn("ACCEPTANCE", with_breakup)
+
+		plain = render("Promotion Letter")
+		self.assertIn("from <b>Software Developer</b> to <b>Project Manager</b>", plain)
+		self.assertIn(revised_ctc, plain)
+		self.assertIn("monthly take-home", plain)
+		self.assertIn("DECLARATION OF ACCEPTANCE", plain)
+		self.assertNotIn("EP Test HRA", plain)
+		self.assertNotIn("Led the analytics revamp", plain)
+
+		promotion.terms = '<div class="ql-editor read-mode"><p><br></p></div>'
+		self.assertNotIn("ADDITIONAL TERMS", render("Promotion Letter with Salary Break-up"))
+
+		promotion.terms = "<p>Led the analytics revamp.</p><script>alert(1)</script>"
+		for print_format in ("Promotion Letter", "Promotion Letter with Salary Break-up"):
+			letter = render(print_format)
+			self.assertIn("Led the analytics revamp", letter)
+			self.assertNotIn("<script>alert(1)</script>", letter)
+
+	def test_promotion_letters_name_role_and_team(self):
+		analytics = make_department("EP Analytics")
+		platform = make_department("EP Platform")
+		employee, _assignment = setup_employee_with_assignment("promotion_team@example.com")
+		frappe.db.set_value(
+			"Employee", employee, {"department": analytics, "designation": "Software Developer"}
+		)
+		letters = ("Promotion Letter", "Promotion Letter with Salary Break-up")
+
+		def render(promotion, print_format):
+			return frappe.get_print("Employee Promotion", promotion.name, print_format, doc=promotion)
+
+		promoted = make_promotion(employee)
+		for print_format in letters:
+			letter = render(promoted, print_format)
+			self.assertIn("to <b>Project Manager</b>", letter)
+			self.assertIn("You will be part of the <b>EP Analytics</b> team.", letter)
+
+		moved = make_promotion(
+			employee,
+			promotion_details=[
+				{"property": "Department", "current": analytics, "new": platform, "fieldname": "department"}
+			],
+		)
+		for print_format in letters:
+			letter = render(moved, print_format)
+			self.assertIn(
+				"Your role will be <b>Software Developer</b> in the <b>EP Platform</b> team.", letter
+			)
+			self.assertNotIn("department will change", letter)
+
+	def test_submit_does_not_create_assignment(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_no_auto@example.com")
+
+		promotion = make_promotion(employee, revised_base=60000)
+		promotion.submit()
+
+		self.assertEqual(frappe.db.count("Salary Structure Assignment", {"employee": employee}), 1)
+
+	def test_button_opens_unsaved_assignment_and_cancel_cancels_it(self):
+		employee, old_assignment = setup_employee_with_assignment("promotion_submit@example.com")
+		frappe.db.set_value("Employee", employee, "ctc", 500000)
+
+		promotion = make_promotion(employee, revised_base=60000)
+		self.assertRaises(frappe.ValidationError, make_salary_structure_assignment, promotion.name)
+		promotion.submit()
+
+		new_assignment = make_salary_structure_assignment(promotion.name)
+		self.assertTrue(new_assignment.is_new())
+		self.assertEqual(new_assignment.employee_promotion, promotion.name)
+		self.assertEqual(
+			new_assignment.employee_name, frappe.db.get_value("Employee", employee, "employee_name")
+		)
+		self.assertEqual(new_assignment.designation, "Project Manager")
+		self.assertEqual(frappe.db.count("Salary Structure Assignment", {"employee": employee}), 1)
+		self.assertEqual(frappe.db.get_value("Employee", employee, "ctc"), 1226400)
+
+		new_assignment.insert()
+		new_assignment.submit()
+
+		self.assertEqual(new_assignment.from_date, getdate(promotion.promotion_date))
+		self.assertEqual(new_assignment.base, 60000)
+		self.assertEqual(new_assignment.ctc, 1226400)
+		self.assertEqual(new_assignment.payroll_payable_account, old_assignment.payroll_payable_account)
+		self.assertEqual(new_assignment.income_tax_slab, old_assignment.income_tax_slab)
+		self.assertEqual(new_assignment.variable, old_assignment.variable)
+		self.assertEqual(get_salary_on(employee, promotion.promotion_date).name, new_assignment.name)
+		self.assertEqual(frappe.db.get_value("Employee", employee, "ctc"), 1226400)
+
+		promotion.cancel()
+
+		self.assertEqual(
+			frappe.db.get_value("Salary Structure Assignment", new_assignment.name, "docstatus"), 2
+		)
+		self.assertEqual(get_salary_on(employee, promotion.promotion_date).name, old_assignment.name)
+		self.assertEqual(frappe.db.get_value("Employee", employee, "ctc"), 1032000)
+
+	def test_assignment_can_be_cancelled_on_its_own_and_created_again(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_link@example.com")
+		promotion = make_promotion(employee, revised_base=60000)
+		promotion.submit()
+
+		first = make_salary_structure_assignment(promotion.name).insert()
+		first.submit()
+		self.assertEqual(promotion.get_salary_structure_assignment().name, first.name)
+
+		# Desk runs this check before it cancels a document
+		get_submitted_linked_docs("Salary Structure Assignment", first.name)
+		first.cancel()
+		self.assertIsNone(promotion.get_salary_structure_assignment())
+
+		second = make_salary_structure_assignment(promotion.name).insert()
+		self.assertEqual(second.employee_promotion, promotion.name)
+
+	def test_assignment_is_created_once(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_once@example.com")
+		promotion = make_promotion(employee, revised_base=60000)
+		promotion.submit()
+		first = make_salary_structure_assignment(promotion.name)
+		second = make_salary_structure_assignment(promotion.name)
+		first.insert()
+
+		self.assertRaisesRegex(
+			frappe.ValidationError, "already created", make_salary_structure_assignment, promotion.name
+		)
+		self.assertRaisesRegex(frappe.ValidationError, "already has", second.insert)
+
+	def test_duplicate_of_assignment_drops_promotion_link(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_duplicate@example.com")
+		promotion = make_promotion(employee, revised_base=60000)
+		promotion.submit()
+		assignment = make_salary_structure_assignment(promotion.name).insert()
+
+		# Duplicate in Desk skips no_copy fields, like copy_doc with ignore_no_copy=False
+		duplicate = frappe.copy_doc(assignment, ignore_no_copy=False)
+
+		self.assertFalse(duplicate.employee_promotion)
+
+	def test_button_needs_permission_to_create_assignment(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_no_perm@example.com")
+		promotion = make_promotion(employee, revised_base=60000)
+		promotion.submit()
+
+		frappe.set_user("Guest")
+		self.addCleanup(frappe.set_user, "Administrator")
+		self.assertRaises(frappe.PermissionError, make_salary_structure_assignment, promotion.name)
+
+	def test_assignment_must_match_promotion_employee(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_match@example.com")
+		other, _other_assignment = setup_employee_with_assignment("promotion_other@example.com")
+		promotion = make_promotion(employee, revised_base=60000)
+		promotion.submit()
+
+		assignment = make_salary_structure_assignment(promotion.name)
+		assignment.employee = other
+
+		self.assertRaisesRegex(frappe.ValidationError, "must be submitted", assignment.insert)
+
+	def test_form_knows_when_assignment_is_a_draft(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_draft_flag@example.com")
+		promotion = make_promotion(employee, revised_base=60000)
+		promotion.submit()
+		draft = make_salary_structure_assignment(promotion.name).insert()
+
+		promotion.run_method("onload")
+		self.assertEqual(promotion.get_onload().salary_structure_assignment.docstatus, 0)
+
+		draft.submit()
+		promotion.run_method("onload")
+		self.assertEqual(promotion.get_onload().salary_structure_assignment.docstatus, 1)
+
+	def test_cancel_deletes_draft_assignment(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_draft@example.com")
+		promotion = make_promotion(employee, revised_base=60000)
+		promotion.submit()
+		draft = make_salary_structure_assignment(promotion.name).insert()
+
+		promotion.cancel()
+
+		self.assertFalse(frappe.db.exists("Salary Structure Assignment", draft.name))
+
+	def test_no_assignment_without_revised_base(self):
+		employee, _assignment = setup_employee_with_assignment("promotion_no_base@example.com")
+
+		promotion = make_promotion(employee, revised_ctc=1500000)
+		self.assertEqual(promotion.revised_ctc, 1500000)
+		promotion.submit()
+
+		self.assertRaisesRegex(
+			frappe.ValidationError, "Revised Base first", make_salary_structure_assignment, promotion.name
+		)
+		self.assertEqual(frappe.db.get_value("Employee", employee, "ctc"), 1500000)
+
+	def test_assignment_on_promotion_date_blocks_creation(self):
+		employee, assignment = setup_employee_with_assignment("promotion_same_date@example.com")
+
+		promotion = make_promotion(employee, promotion_date=assignment.from_date, revised_base=60000)
+		promotion.submit()
+
+		self.assertRaisesRegex(
+			frappe.ValidationError,
+			"change the Promotion Date",
+			make_salary_structure_assignment,
+			promotion.name,
+		)
+
+	def test_later_assignment_blocks_creation(self):
+		employee, assignment = setup_employee_with_assignment("promotion_later@example.com")
+		create_salary_structure_assignment(
+			employee,
+			assignment.salary_structure,
+			from_date=get_first_day(add_months(getdate(), 1)),
+			company="_Test Company",
+			base=55000,
+			allow_duplicate=True,
+		)
+
+		promotion = make_promotion(employee, revised_base=60000)
+		promotion.submit()
+
+		self.assertRaisesRegex(
+			frappe.ValidationError,
+			"change the Promotion Date",
+			make_salary_structure_assignment,
+			promotion.name,
+		)
+
+
+def setup_employee_with_assignment(user):
+	employee = make_employee(user, company="_Test Company")
+	structure = make_promotion_structure("EP Test Structure")
+	assignment = create_salary_structure_assignment(
+		employee,
+		structure.name,
+		from_date=get_first_day(add_months(getdate(), -2)),
+		company="_Test Company",
+		base=50000,
+	)
+	return employee, assignment
+
+
+def make_department(department_name):
+	name = frappe.db.get_value("Department", {"department_name": department_name, "company": "_Test Company"})
+	if name:
+		return name
+
+	return (
+		frappe.get_doc(
+			{"doctype": "Department", "department_name": department_name, "company": "_Test Company"}
+		)
+		.insert()
+		.name
+	)
+
+
+def make_promotion_structure(name, extra_earnings=None):
+	components = [
+		("EP Test Basic", "EPTB", "Earning"),
+		("EP Test HRA", "EPTH", "Earning"),
+		("EP Test Special", "EPTS", "Earning"),
+		("EP Test Bonus", "EPTX", "Earning"),
+		("EP Test Employer PF", "EPTE", "Employer Contribution"),
+	]
+	for component, abbr, component_type in components:
+		if not frappe.db.exists("Salary Component", component):
+			_make_component(component, abbr, component_type, depends_on_payment_days=0)
+
+	def row(component, abbr, formula=None, amount=0):
+		return {
+			"salary_component": component,
+			"abbr": abbr,
+			"amount_based_on_formula": 1 if formula else 0,
+			"formula": formula,
+			"amount": amount,
+			"depends_on_payment_days": 0,
+		}
+
+	return make_salary_structure(
+		name,
+		"Monthly",
+		currency="INR",
+		earnings=[
+			row("EP Test Basic", "EPTB", "base"),
+			row("EP Test HRA", "EPTH", "base * 0.5"),
+			row("EP Test Special", "EPTS", amount=5000),
+			*(extra_earnings or []),
+		],
+		deductions=[],
+		other_details={"employer_contributions": [row("EP Test Employer PF", "EPTE", "EPTB * 0.12")]},
+	)
+
+
+def make_promotion(employee, **values):
+	promotion = frappe.get_doc(
+		{
+			"doctype": "Employee Promotion",
+			"employee": employee,
+			"promotion_date": getdate(),
+			"promotion_details": [
+				{
+					"property": "Designation",
+					"current": "Software Developer",
+					"new": "Project Manager",
+					"fieldname": "designation",
+				}
+			],
+			**values,
+		}
+	)
+	return promotion.insert()
