@@ -277,7 +277,7 @@ function promotion_letter_message(doc, designation) {
 	const escape = frappe.utils.escape_html;
 	const date = frappe.datetime.global_date_format(doc.promotion_date);
 
-	const lines = [
+	const paragraphs = [
 		__("Dear {0},", [escape(doc.employee_name)]),
 		designation
 			? __(
@@ -288,10 +288,13 @@ function promotion_letter_message(doc, designation) {
 					"Congratulations on your promotion, with effect from {0}. Please find your promotion letter attached.",
 					[date],
 			  ),
-		__("Regards,"),
+		__("Please review the letter, sign the acceptance section and return a copy to us."),
+		__("We wish you continued success in your new role."),
+		`${__("Regards,")}<br>${escape(doc.company)}`,
 	];
 
-	return lines.map((line) => `<p>${line}</p>`).join("");
+	// the composer's editor gives paragraphs no margin, so an empty one is the blank line
+	return paragraphs.map((paragraph) => `<p>${paragraph}</p>`).join("<p><br></p>");
 }
 
 function set_ctc_breakup(frm, rows) {
