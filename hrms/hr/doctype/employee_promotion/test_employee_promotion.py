@@ -3,7 +3,7 @@
 
 import frappe
 from frappe.desk.form.linked_with import get_submitted_linked_docs
-from frappe.utils import add_days, add_months, get_first_day, getdate
+from frappe.utils import add_days, add_months, fmt_money, get_first_day, getdate
 
 from hrms.hr.doctype.employee_promotion.employee_promotion import (
 	get_revised_salary_details,
@@ -225,16 +225,17 @@ class TestEmployeePromotion(HRMSTestSuite):
 		def render(print_format):
 			return frappe.get_print("Employee Promotion", promotion.name, print_format, doc=promotion)
 
+		revised_ctc = fmt_money(1226400)
 		with_breakup = render("Promotion Letter with Salary Break-up")
 		self.assertIn("PROMOTION LETTER", with_breakup)
 		self.assertIn("from <b>Software Developer</b> to <b>Project Manager</b>", with_breakup)
-		self.assertIn("12,26,400", with_breakup)
+		self.assertIn(revised_ctc, with_breakup)
 		self.assertIn("EP Test HRA", with_breakup)
 		self.assertIn("ACCEPTANCE", with_breakup)
 
 		plain = render("Promotion Letter")
 		self.assertIn("from <b>Software Developer</b> to <b>Project Manager</b>", plain)
-		self.assertIn("12,26,400", plain)
+		self.assertIn(revised_ctc, plain)
 		self.assertIn("monthly take-home", plain)
 		self.assertIn("DECLARATION OF ACCEPTANCE", plain)
 		self.assertNotIn("EP Test HRA", plain)
