@@ -250,6 +250,37 @@ class TestEmployeePromotion(HRMSTestSuite):
 			self.assertIn("Led the analytics revamp", letter)
 			self.assertNotIn("<script>alert(1)</script>", letter)
 
+	def test_promotion_letters_name_role_and_team(self):
+		analytics = make_department("EP Analytics")
+		platform = make_department("EP Platform")
+		employee, _assignment = setup_employee_with_assignment("promotion_team@example.com")
+		frappe.db.set_value(
+			"Employee", employee, {"department": analytics, "designation": "Software Developer"}
+		)
+		letters = ("Promotion Letter", "Promotion Letter with Salary Break-up")
+
+		def render(promotion, print_format):
+			return frappe.get_print("Employee Promotion", promotion.name, print_format, doc=promotion)
+
+		promoted = make_promotion(employee)
+		for print_format in letters:
+			letter = render(promoted, print_format)
+			self.assertIn("to <b>Project Manager</b>", letter)
+			self.assertIn("You will be part of the <b>EP Analytics</b> team.", letter)
+
+		moved = make_promotion(
+			employee,
+			promotion_details=[
+				{"property": "Department", "current": analytics, "new": platform, "fieldname": "department"}
+			],
+		)
+		for print_format in letters:
+			letter = render(moved, print_format)
+			self.assertIn(
+				"Your role will be <b>Software Developer</b> in the <b>EP Platform</b> team.", letter
+			)
+			self.assertNotIn("department will change", letter)
+
 	def test_submit_does_not_create_assignment(self):
 		employee, _assignment = setup_employee_with_assignment("promotion_no_auto@example.com")
 
@@ -438,6 +469,20 @@ def setup_employee_with_assignment(user):
 		base=50000,
 	)
 	return employee, assignment
+
+
+def make_department(department_name):
+	name = frappe.db.get_value("Department", {"department_name": department_name, "company": "_Test Company"})
+	if name:
+		return name
+
+	return (
+		frappe.get_doc(
+			{"doctype": "Department", "department_name": department_name, "company": "_Test Company"}
+		)
+		.insert()
+		.name
+	)
 
 
 def make_promotion_structure(name, extra_earnings=None):
