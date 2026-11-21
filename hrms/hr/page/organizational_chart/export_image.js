@@ -117,6 +117,7 @@ async function embed_font_face(rule, base) {
 }
 
 const INHERITED_TEXT_STYLES = [
+	"direction",
 	"font-family",
 	"font-size",
 	"line-height",

@@ -24,7 +24,7 @@ from hrms.payroll.doctype.payroll_entry.payroll_entry import get_start_end_dates
 from hrms.payroll.doctype.payroll_entry.test_payroll_entry import make_payroll_entry, setup_salary_structure
 from hrms.payroll.doctype.salary_component.test_salary_component import create_salary_component
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
-from hrms.tests.utils import HRMSTestSuite
+from hrms.tests.utils import HRMSTestSuite, make_user
 
 
 class TestEmployeeAdvance(HRMSTestSuite):
@@ -512,6 +512,28 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		advance.discard()
 		advance.reload()
 		self.assertEqual(advance.status, "Cancelled")
+
+	def test_return_entry_is_built_from_the_advance(self):
+		employee_name = make_employee("_T@employee.advance", "_Test Company")
+		advance = make_employee_advance(employee_name)
+		make_payment_entry(advance)
+		args = {
+			"employee": advance.employee,
+			"company": "_Test Company 1",
+			"employee_advance_name": advance.name,
+			"return_amount": advance.advance_amount,
+			"advance_account": "Cash - _TC1",
+			"currency": advance.currency,
+		}
+
+		with self.set_user(make_user("advance-desk-user@example.com", "Desk User")):
+			self.assertRaises(frappe.PermissionError, make_return_entry, **args)
+
+		self.assertRaises(frappe.ValidationError, make_return_entry, **args, bank_account="Cash - _TC1")
+
+		entry = make_return_entry(**args)
+		self.assertEqual(entry.company, "_Test Company")
+		self.assertEqual(entry.accounts[0].account, advance.advance_account)
 
 
 def manual_journal_entry_for_advance(advance) -> dict:

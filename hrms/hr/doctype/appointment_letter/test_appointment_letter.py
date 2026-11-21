@@ -190,3 +190,10 @@ class TestAppointmentLetter(HRMSTestSuite):
 		self.assertEqual(get_working_hours(None, "18:00:00"), 0)
 		self.assertEqual(self.make_letter().working_hours, 8)
 		self.assertEqual(self.make_letter(working_hours=7.5).working_hours, 7.5)
+
+	def test_working_hours_placeholder_falls_back_to_8(self):
+		self.assertFalse(self.job_offer.working_hours)
+		letter = self.make_letter(
+			start_time=None, end_time=None, letter_body="<p>{{ working_hours }} hours a day.</p>"
+		)
+		self.assertEqual(letter.get_letter_body_html(), "<p>8 hours a day.</p>")

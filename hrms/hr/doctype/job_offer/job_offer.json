@@ -53,8 +53,13 @@
   "probation_period_days",
   "notice_number_of_days",
   "column_break_employment_policy",
-  "working_hours",
   "notice_period_during_probation",
+  "working_hours_section",
+  "shift_type",
+  "working_hours",
+  "column_break_working_hours",
+  "start_time",
+  "end_time",
   "section_break_14",
   "select_terms",
   "terms",
@@ -375,11 +380,39 @@
    "fieldtype": "Column Break"
   },
   {
-   "default": "8",
+   "fieldname": "working_hours_section",
+   "fieldtype": "Section Break",
+   "label": "Working Hours"
+  },
+  {
+   "fieldname": "shift_type",
+   "fieldtype": "Link",
+   "label": "Shift",
+   "options": "Shift Type"
+  },
+  {
    "fieldname": "working_hours",
    "fieldtype": "Float",
-   "label": "Working Hours",
+   "label": "Total Working Hours",
    "non_negative": 1
+  },
+  {
+   "fieldname": "column_break_working_hours",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "shift_type.start_time",
+   "fieldname": "start_time",
+   "fieldtype": "Time",
+   "label": "Start Time",
+   "read_only_depends_on": "eval:doc.shift_type"
+  },
+  {
+   "fetch_from": "shift_type.end_time",
+   "fieldname": "end_time",
+   "fieldtype": "Time",
+   "label": "End Time",
+   "read_only_depends_on": "eval:doc.shift_type"
   },
   {
    "collapsible": 1,
@@ -480,7 +513,7 @@
  "icon": "handshake",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-11-18 02:05:09.149053",
+ "modified": "2026-11-18 17:30:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",

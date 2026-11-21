@@ -87,6 +87,14 @@ frappe.ui.form.on("Job Offer", {
 		render_offer_letter_preview(frm);
 	},
 
+	start_time: function (frm) {
+		set_working_hours(frm);
+	},
+
+	end_time: function (frm) {
+		set_working_hours(frm);
+	},
+
 	refresh: function (frm) {
 		set_per_cycle_label(frm);
 		bind_regional_inputs(frm);
@@ -437,4 +445,12 @@ function set_latest(frm, fieldname, doctype) {
 		.then((names) => {
 			if (names.length && !frm.doc[fieldname]) frm.set_value(fieldname, names[0]);
 		});
+}
+
+function set_working_hours(frm) {
+	if (!frm.doc.start_time || !frm.doc.end_time) return;
+	const seconds = (time) => moment.duration(time).asSeconds();
+	const day = 24 * 60 * 60;
+	const worked = (((seconds(frm.doc.end_time) - seconds(frm.doc.start_time)) % day) + day) % day;
+	frm.set_value("working_hours", flt(worked / 3600, 2));
 }

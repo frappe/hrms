@@ -17,7 +17,7 @@ const selected = computed(() => chart.selected.value === props.node.id);
 	<button
 		type="button"
 		:data-node="node.id"
-		class="flex w-52 items-center gap-2.5 rounded-5 px-3 py-2.5 text-left shadow-sm transition-colors"
+		class="flex w-52 items-center gap-2.5 rounded-5 px-3 py-2.5 text-start shadow-sm transition-colors"
 		:class="selected ? 'bg-surface-gray-2' : 'bg-surface-elevation-1 hover:bg-surface-gray-1'"
 		:aria-pressed="selected"
 		@click="chart.select(node.id)"
@@ -26,7 +26,7 @@ const selected = computed(() => chart.selected.value === props.node.id);
 			<Avatar :image="node.image" :label="node.name" size="lg" />
 			<span
 				v-if="on_leave"
-				class="absolute -bottom-0.5 -right-0.5 rounded-full bg-surface-base p-0.5"
+				class="absolute -bottom-0.5 -end-0.5 rounded-full bg-surface-base p-0.5"
 				:title="on_leave"
 				:aria-label="on_leave"
 			>
