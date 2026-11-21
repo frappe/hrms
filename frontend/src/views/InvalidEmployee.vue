@@ -5,7 +5,7 @@
 				<Dialog
 					:options="{
 						title: __('Login Failed'),
-						message: __('No active employee found associated with the email ID {0}. Try logging in with your employee email ID or contact your HR manager for access.', [session?.user]),
+						message: __('No active employee found associated with the email ID {0}. Try logging in with your employee email ID or contact your HR manager for access.', [user.data?.email]),
 						size: 'lg',
 						actions: [
 							{
@@ -34,5 +34,6 @@ import { inject, ref } from "vue"
 import { Dialog } from "frappe-ui"
 
 const session = inject("$session")
+const user = inject("$user")
 const showDialog = ref(true)
 </script>

@@ -25,6 +25,7 @@ from frappe.utils import (
 	get_number_format_info,
 	get_quarter_ending,
 	get_quarter_start,
+	get_user_display_id,
 	get_year_ending,
 	get_year_start,
 	getdate,
@@ -487,7 +488,7 @@ def send_email_for_failed_allocations(failed_allocations):
 		frappe.qb.from_(HasRole)
 		.left_join(User)
 		.on(HasRole.parent == User.name)
-		.select(HasRole.parent)
+		.select(User.email)
 		.distinct()
 		.where((HasRole.parenttype == "User") & (User.enabled == 1) & (HasRole.role == "HR Manager"))
 	)
@@ -793,7 +794,8 @@ def share_doc_with_approver(doc, user):
 		)
 
 		frappe.msgprint(
-			_("Shared document with the user {0} with 'Submit' permission").format(user), alert=True
+			_("Shared document with the user {0} with 'Submit' permission").format(get_user_display_id(user)),
+			alert=True,
 		)
 
 	# remove shared doc if approver changes
