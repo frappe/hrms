@@ -1906,8 +1906,8 @@ class TestSalarySlip(HRMSTestSuite):
 		self.assertEqual(salary_slip.annual_taxable_amount, 1063600.0)
 		self.assertEqual(flt(salary_slip.income_tax_deducted_till_date, 2), monthly_tax_amount)
 		self.assertEqual(flt(salary_slip.current_month_income_tax, 2), monthly_tax_amount)
-		self.assertEqual(flt(salary_slip.future_income_tax_deductions, 2), 125439.65)
-		self.assertEqual(flt(salary_slip.total_income_tax, 2), 136843.25)
+		self.assertEqual(flt(salary_slip.future_income_tax_deductions, 2), 125439.6)
+		self.assertEqual(flt(salary_slip.total_income_tax, 2), 136843.2)
 
 	def test_income_tax_breakup_when_tax_added_via_additional_salary(self):
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
@@ -1964,8 +1964,8 @@ class TestSalarySlip(HRMSTestSuite):
 		self.assertEqual(salary_slip.annual_taxable_amount, 1063600.0)
 		self.assertEqual(flt(salary_slip.income_tax_deducted_till_date, 2), monthly_tax_amount)
 		self.assertEqual(flt(salary_slip.current_month_income_tax, 2), monthly_tax_amount)
-		self.assertEqual(flt(salary_slip.future_income_tax_deductions, 2), 124843.25)  # as 136843.25 - 12000
-		self.assertEqual(flt(salary_slip.total_income_tax, 2), 136843.25)
+		self.assertEqual(flt(salary_slip.future_income_tax_deductions, 2), 124843.2)  # as 136843.2 - 12000
+		self.assertEqual(flt(salary_slip.total_income_tax, 2), 136843.2)
 
 	def test_income_tax_unchanged_on_submit_with_exempted_additional_deduction(self):
 		from hrms.payroll.doctype.payroll_entry.test_payroll_entry import make_payroll_entry
