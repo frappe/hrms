@@ -107,7 +107,7 @@ def send_birthday_reminders():
 		if len(birthday_persons) > 1:
 			# special email for people sharing birthdays
 			for person in birthday_persons:
-				person_email = person["user_id"] or person["personal_email"] or person["company_email"]
+				person_email = get_employee_email(person)
 				others = [d for d in birthday_persons if d != person]
 				reminder_text, message = get_birthday_reminder_text_and_message(others)
 				send_birthday_reminder(person_email, reminder_text, others, message, sender)
@@ -222,7 +222,7 @@ def send_work_anniversary_reminders():
 		if len(anniversary_persons) > 1:
 			# email for people sharing work anniversaries
 			for person in anniversary_persons:
-				person_email = person["user_id"] or person["personal_email"] or person["company_email"]
+				person_email = get_employee_email(person)
 				others = [d for d in anniversary_persons if d != person]
 				reminder_text = get_work_anniversary_reminder_text(others)
 				send_work_anniversary_reminder(person_email, reminder_text, others, message, sender)
