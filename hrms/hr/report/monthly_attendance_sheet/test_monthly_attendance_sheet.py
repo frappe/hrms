@@ -1,6 +1,7 @@
 from dateutil.relativedelta import relativedelta
 
 import frappe
+from frappe.permissions import add_user_permission
 from frappe.utils import add_days, get_year_ending, get_year_start, getdate
 
 from erpnext.setup.doctype.employee.employee import is_holiday
@@ -399,6 +400,34 @@ class TestMonthlyAttendanceSheet(HRMSTestSuite):
 		filters.include_company_descendants = 0
 		report = execute(filters=filters)
 		self.assertEqual(len(report[1]), 1)
+
+	@assign_holiday_list("Salary Slip Test Holiday List", "_Test Company")
+	def test_chart_respects_user_permissions(self):
+		hidden_employee = make_employee("hidden_employee@example.com", company=self.company)
+		previous_month_first = get_first_day_for_prev_month()
+		mark_attendance(self.employee, previous_month_first, "Present")
+		mark_attendance(hidden_employee, previous_month_first, "Absent")
+
+		user = frappe.get_doc("User", "test_employee@example.com")
+		user.add_roles("HR User")
+		add_user_permission("Employee", self.employee, user.name)
+
+		frappe.set_user(user.name)
+		self.addCleanup(frappe.set_user, "Administrator")
+		report = execute(
+			filters=frappe._dict(
+				{
+					"month": previous_month_first.month,
+					"year": previous_month_first.year,
+					"company": self.company,
+					"filter_based_on": self.filter_based_on,
+				}
+			)
+		)
+
+		absent, present, _leave = (d["values"] for d in report[3]["data"]["datasets"])
+		self.assertEqual(present[0], 1)
+		self.assertEqual(absent[0], 0)
 
 	def test_attendance_with_employee_filter_and_summarized_view(self):
 		previous_month_first = get_first_day_for_prev_month()
