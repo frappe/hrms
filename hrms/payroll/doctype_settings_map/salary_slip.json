@@ -16,6 +16,10 @@
    "settings_doctype": "Payroll Settings"
   },
   {
+   "setting_field": "exclude_only_weekly_offs_from_working_days",
+   "settings_doctype": "Payroll Settings"
+  },
+  {
    "setting_field": "consider_unmarked_attendance_as",
    "settings_doctype": "Payroll Settings"
   },
@@ -60,7 +64,7 @@
    "settings_doctype": "Payroll Settings"
   }
  ],
- "modified": "2026-07-16 00:00:00.000000",
+ "modified": "2026-11-23 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip - Payroll",

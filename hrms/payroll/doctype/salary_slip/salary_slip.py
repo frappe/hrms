@@ -62,6 +62,7 @@ from hrms.payroll.utils import (
 )
 from hrms.utils.holiday_list import (
 	get_holiday_dates_between,
+	get_holiday_dates_between_range,
 	get_holiday_list_ranges_for_employee,
 	get_holidays_in_ranges_map,
 )
@@ -549,6 +550,7 @@ class SalarySlip(TransactionBase):
 			(
 				"payroll_based_on",
 				"include_holidays_in_total_working_days",
+				"exclude_only_weekly_offs_from_working_days",
 				"consider_marked_attendance_on_holidays",
 				"daily_wages_fraction_for_half_day",
 				"consider_unmarked_attendance_as",
@@ -571,19 +573,23 @@ class SalarySlip(TransactionBase):
 
 		holidays = self.get_holidays_for_employee(self.start_date, self.end_date)
 		# holidays marked as half day are half a working day, so they are only excluded by half
-		# when holidays are included in total working days, they are counted in full like any other holiday
-		half_day_holidays = (
-			[]
-			if cint(payroll_settings.include_holidays_in_total_working_days)
-			else self.get_half_day_holidays_for_employee(self.start_date, self.end_date)
+		# holidays that stay in total working days are counted in full like any other holiday
+		excluded_holidays, half_day_holidays = self.get_holidays_excluded_from_working_days(
+			self.start_date,
+			self.end_date,
+			payroll_settings.include_holidays_in_total_working_days,
+			payroll_settings.exclude_only_weekly_offs_from_working_days,
 		)
 		full_day_holidays = [date for date in holidays if date not in half_day_holidays]
+		excluded_full_day_holidays = [date for date in excluded_holidays if date not in half_day_holidays]
 		working_days_list = [add_days(getdate(self.start_date), days=day) for day in range(0, working_days)]
 
-		if not cint(payroll_settings.include_holidays_in_total_working_days):
-			working_days_list = [i for i in working_days_list if i not in full_day_holidays]
+		if excluded_holidays:
+			working_days_list = [i for i in working_days_list if i not in excluded_full_day_holidays]
 
-			working_days -= len(full_day_holidays) + HALF_DAY_HOLIDAY_FRACTION * len(half_day_holidays)
+			working_days -= len(excluded_full_day_holidays) + HALF_DAY_HOLIDAY_FRACTION * len(
+				half_day_holidays
+			)
 			if working_days < 0:
 				frappe.throw(_("There are more holidays than working days this month."))
 
@@ -615,7 +621,10 @@ class SalarySlip(TransactionBase):
 		self.leave_without_pay = lwp
 		self.total_working_days = working_days
 
-		payment_days = self.get_payment_days(payroll_settings.include_holidays_in_total_working_days)
+		payment_days = self.get_payment_days(
+			payroll_settings.include_holidays_in_total_working_days,
+			payroll_settings.exclude_only_weekly_offs_from_working_days,
+		)
 
 		if flt(payment_days) > flt(lwp):
 			self.payment_days = flt(payment_days) - flt(lwp)
@@ -631,6 +640,7 @@ class SalarySlip(TransactionBase):
 						payroll_settings.include_holidays_in_total_working_days,
 						full_day_holidays,
 						half_day_holidays,
+						excluded_full_day_holidays=excluded_full_day_holidays,
 					)
 					self.absent_days += unmarked_days  # will be treated as absent
 					self.payment_days -= unmarked_days
@@ -652,18 +662,25 @@ class SalarySlip(TransactionBase):
 		include_holidays_in_total_working_days: bool,
 		holidays: list | None = None,
 		half_day_holidays: list | None = None,
+		excluded_full_day_holidays: list | None = None,
 	) -> float:
 		"""Calculates the number of unmarked days for an employee within a date range"""
+		holidays = holidays or []
+		if excluded_full_day_holidays is None:
+			excluded_full_day_holidays = [] if include_holidays_in_total_working_days else holidays
+
 		unmarked_days = (
 			self.total_working_days
 			- self._get_days_outside_period(
-				include_holidays_in_total_working_days, holidays, half_day_holidays
+				include_holidays_in_total_working_days, excluded_full_day_holidays, half_day_holidays
 			)
 			- self._get_marked_attendance_days(holidays, half_day_holidays)
 		)
 
-		if include_holidays_in_total_working_days and holidays:
-			unmarked_days -= self._get_number_of_holidays(holidays)
+		# holidays counted in total working days are paid, so they are never unmarked
+		paid_holidays = [date for date in holidays if date not in excluded_full_day_holidays]
+		if paid_holidays:
+			unmarked_days -= self._get_number_of_holidays(paid_holidays)
 
 		return unmarked_days
 
@@ -757,7 +774,7 @@ class SalarySlip(TransactionBase):
 
 		return marked_days
 
-	def get_payment_days(self, include_holidays_in_total_working_days):
+	def get_payment_days(self, include_holidays_in_total_working_days, exclude_only_weekly_offs=False):
 		if self.joining_date and self.joining_date > getdate(self.end_date):
 			# employee joined after payroll date
 			return 0
@@ -773,15 +790,35 @@ class SalarySlip(TransactionBase):
 
 		payment_days = date_diff(self.actual_end_date, self.actual_start_date) + 1
 
-		if not cint(include_holidays_in_total_working_days):
-			holidays = self.get_holidays_for_employee(self.actual_start_date, self.actual_end_date)
-			half_day_holidays = self.get_half_day_holidays_for_employee(
-				self.actual_start_date, self.actual_end_date
-			)
-			# half day holidays are working days for half the day, so only half of them is deducted
-			payment_days -= len(holidays) - HALF_DAY_HOLIDAY_FRACTION * len(half_day_holidays)
+		excluded_holidays, half_day_holidays = self.get_holidays_excluded_from_working_days(
+			self.actual_start_date,
+			self.actual_end_date,
+			include_holidays_in_total_working_days,
+			exclude_only_weekly_offs,
+		)
+		# half day holidays are working days for half the day, so only half of them is deducted
+		payment_days -= len(excluded_holidays) - HALF_DAY_HOLIDAY_FRACTION * len(half_day_holidays)
 
 		return payment_days
+
+	def get_holidays_excluded_from_working_days(
+		self, start_date, end_date, include_holidays_in_total_working_days, exclude_only_weekly_offs=False
+	):
+		if cint(include_holidays_in_total_working_days):
+			return [], []
+
+		holidays = self.get_holidays_for_employee(start_date, end_date)
+		half_day_holidays = self.get_half_day_holidays_for_employee(start_date, end_date)
+
+		if cint(exclude_only_weekly_offs):
+			# public holidays are working days, so only weekly offs are excluded
+			public_holidays = get_holiday_dates_between_range(
+				self.employee, start_date, end_date, skip_weekly_offs=True
+			)
+			holidays = [date for date in holidays if date not in public_holidays]
+			half_day_holidays = [date for date in half_day_holidays if date not in public_holidays]
+
+		return holidays, half_day_holidays
 
 	def get_holidays_for_employee(self, start_date, end_date):
 		holidays_by_range = {}
