@@ -949,6 +949,31 @@ class TestSalarySlip(FrappeTestCase):
 
 		self.assertTrue(frappe.db.exists("Email Queue", email_filters))
 
+	@HRMSTestSuite.change_settings("Payroll Settings", {"email_salary_slip_to_employee": 1})
+	def test_delete_salary_slip_deletes_unsent_email(self):
+		emp_id = make_employee("test_email_salary_slip@salary.com", company="_Test Company")
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test Salary Slip Email")
+		ss.company = "_Test Company"
+		ss.save()
+		ss.submit()
+		ss.cancel()
+
+		# an unsent email left on a slip that was cancelled before the fix
+		frappe.sendmail(
+			recipients=["test_email_salary_slip@salary.com"],
+			subject="Salary Slip",
+			reference_doctype=ss.doctype,
+			reference_name=ss.name,
+		)
+		email_filters = {"reference_doctype": "Salary Slip", "reference_name": ss.name}
+		email_queue = frappe.db.get_value("Email Queue", {**email_filters, "status": "Not Sent"})
+		self.assertIsNotNone(email_queue)
+
+		ss.delete()
+
+		self.assertFalse(frappe.db.exists("Email Queue", email_filters))
+		self.assertFalse(frappe.db.exists("Email Queue Recipient", {"parent": email_queue}))
+
 	@HRMSTestSuite.change_settings("System Settings", {"date_format": "dd-mm-yyyy"})
 	def test_pdf_password_uses_system_date_format(self):
 		emp_id = make_employee("test_pdf_password@salary.com", company="_Test Company")
