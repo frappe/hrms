@@ -19,7 +19,7 @@ const in_form = computed(() => props.doctype === "Salary Slip");
 const periods = computed(() => props.doc?.__onload?.salary_structure_assignment_periods || []);
 
 const format_date = (value) => frappe.datetime.str_to_user(value);
-const format_days = (value) => frappe.format(value || 0, { fieldtype: "Float" });
+const format_days = (value) => frappe.format(value || 0, { fieldtype: "Float" }, { inline: true });
 const format_amount = (value) => window.format_currency(value, props.doc?.currency);
 const assignment_link = (name) => frappe.utils.get_form_link("Salary Structure Assignment", name);
 
@@ -52,9 +52,7 @@ onMounted(() => {
 			<table class="w-full text-base">
 				<thead>
 					<tr class="bg-surface-gray-2 text-left text-sm text-ink-gray-5">
-						<th class="px-3 py-2 font-medium">
-							{{ __("Salary Structure Assignment") }}
-						</th>
+						<th class="px-3 py-2 font-medium">{{ __("Assignment") }}</th>
 						<th class="px-3 py-2 font-medium">{{ __("Salary Structure") }}</th>
 						<th class="px-3 py-2 font-medium">{{ __("From Date") }}</th>
 						<th class="px-3 py-2 font-medium">{{ __("To Date") }}</th>
