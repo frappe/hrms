@@ -44,6 +44,8 @@
   "column_break_geio",
   "absent_days",
   "payment_days",
+  "salary_structure_assignments_section",
+  "salary_structure_assignments",
   "help_section",
   "payment_days_calculation_help",
   "earnings_and_deductions_tab",
@@ -709,6 +711,18 @@
    "label": "Timesheet Details"
   },
   {
+   "depends_on": "eval:doc.__onload && doc.__onload.salary_structure_assignment_periods && doc.__onload.salary_structure_assignment_periods.length",
+   "fieldname": "salary_structure_assignments_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval:doc.__onload && doc.__onload.salary_structure_assignment_periods && doc.__onload.salary_structure_assignment_periods.length",
+   "fieldname": "salary_structure_assignments",
+   "fieldtype": "Vue Component",
+   "label": "Salary Structure Assignments",
+   "options": "hrms.page.salary-slip-assignments"
+  },
+  {
    "fieldname": "help_section",
    "fieldtype": "Section Break"
   },
@@ -779,7 +793,7 @@
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-11-25 18:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",

@@ -218,6 +218,16 @@ frappe.ui.form.on("Salary Slip", {
 		frm.fields_dict["earnings"].grid.set_column_disp(salary_detail_fields, false);
 		frm.fields_dict["deductions"].grid.set_column_disp(salary_detail_fields, false);
 		frm.trigger("set_dynamic_labels");
+
+		const periods = frm.doc.__onload?.salary_structure_assignment_periods || [];
+		if (periods.length) {
+			frm.dashboard.set_headline(
+				__(
+					"This salary slip is calculated from {0} Salary Structure Assignments, each for its own dates. See the Payment Days tab.",
+					[periods.length],
+				),
+			);
+		}
 	},
 
 	salary_slip_based_on_timesheet: function (frm) {

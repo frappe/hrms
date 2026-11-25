@@ -36,6 +36,7 @@ class PayrollSettings(Document):
 		sender_copy: DF.Link | None
 		sender_email: DF.Data | None
 		show_leave_balances_in_salary_slip: DF.Check
+		split_salary_on_assignment_change: DF.Check
 	# end: auto-generated types
 
 	def validate(self):

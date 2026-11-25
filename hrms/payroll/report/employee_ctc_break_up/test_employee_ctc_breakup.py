@@ -77,6 +77,31 @@ class TestEmployeeCTCBreakup(HRMSTestSuite):
 			self.assertEqual(ctc_breakup.gross_pay, data["gross_pay"])
 			self.assertEqual(ctc_breakup.net_pay, data["net_pay"])
 
+	def test_ctc_breakup_of_an_earlier_assignment(self):
+		employee = make_employee("test_ctc_promotion@example.com", company="_Test Company")
+		salary_structure = make_salary_structure(
+			"Test CTC Breakup", payroll_frequency="Monthly", currency="INR"
+		)
+		year_start = get_year_start(getdate())
+		first_assignment = create_salary_structure_assignment(
+			employee, salary_structure.name, base=60000, currency="INR", from_date=year_start
+		)
+		create_salary_structure_assignment(
+			employee,
+			salary_structure.name,
+			base=75000,
+			currency="INR",
+			from_date=add_months(year_start, 1),
+			allow_duplicate=True,
+		)
+
+		frappe.flags.posting_date = add_months(year_start, 2)
+		self.addCleanup(frappe.flags.pop, "posting_date", None)
+		ctc_breakup = SalaryBreakupReport(employee, first_assignment.name)
+
+		# Basic (base) + HRA (3000) + Special Allowance (base/2) of the first assignment
+		self.assertEqual(ctc_breakup.gross_pay, 93000)
+
 	def test_income_tax_net_pay_calculation_at_the_start_of_payroll_period(self):
 		employee = make_employee("test_ctc@example.com", company="_Test Company")
 		salary_structure = make_salary_structure(
