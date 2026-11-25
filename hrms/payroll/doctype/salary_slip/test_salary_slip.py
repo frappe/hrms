@@ -903,6 +903,7 @@ class TestSalarySlip(FrappeTestCase):
 
 		self.assertIsNotNone(get_email_by_subject("Test Salary Slip Email Template"))
 
+<<<<<<< HEAD
 	@if_lending_app_installed
 	def test_loan_repayment_salary_slip(self):
 		from lending.loan_management.doctype.loan.test_loan import (
@@ -915,6 +916,43 @@ class TestSalarySlip(FrappeTestCase):
 		from lending.loan_management.doctype.process_loan_interest_accrual.process_loan_interest_accrual import (
 			process_loan_interest_accrual_for_term_loans,
 		)
+=======
+	@HRMSTestSuite.change_settings("Payroll Settings", {"email_salary_slip_to_employee": 1})
+	def test_cancel_salary_slip_deletes_unsent_email(self):
+		emp_id = make_employee("test_email_salary_slip@salary.com", company="_Test Company")
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test Salary Slip Email")
+		ss.company = "_Test Company"
+		ss.save()
+		ss.submit()
+
+		email_filters = {"reference_doctype": "Salary Slip", "reference_name": ss.name}
+		email_queue = frappe.db.get_value("Email Queue", email_filters)
+		self.assertTrue(frappe.db.exists("Email Queue Recipient", {"parent": email_queue}))
+
+		ss.cancel()
+
+		self.assertFalse(frappe.db.exists("Email Queue", email_filters))
+		self.assertFalse(frappe.db.exists("Email Queue Recipient", {"parent": email_queue}))
+
+	@HRMSTestSuite.change_settings("Payroll Settings", {"email_salary_slip_to_employee": 1})
+	def test_cancel_salary_slip_keeps_sent_email(self):
+		emp_id = make_employee("test_email_salary_slip@salary.com", company="_Test Company")
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test Salary Slip Email")
+		ss.company = "_Test Company"
+		ss.save()
+		ss.submit()
+
+		email_filters = {"reference_doctype": "Salary Slip", "reference_name": ss.name}
+		frappe.db.set_value("Email Queue", email_filters, "status", "Sent")
+
+		ss.cancel()
+
+		self.assertTrue(frappe.db.exists("Email Queue", email_filters))
+
+	@HRMSTestSuite.change_settings("System Settings", {"date_format": "dd-mm-yyyy"})
+	def test_pdf_password_uses_system_date_format(self):
+		emp_id = make_employee("test_pdf_password@salary.com", company="_Test Company")
+>>>>>>> 8b69b25 (fix(salary-slip): delete unsent emails on cancel and delete)
 
 		from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
 

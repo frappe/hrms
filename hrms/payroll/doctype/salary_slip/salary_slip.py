@@ -252,7 +252,21 @@ class SalarySlip(TransactionBase):
 		self.update_payment_status_for_gratuity_and_leave_encashment()
 
 		cancel_loan_repayment_entry(self)
+		self.delete_unsent_emails()
 		self.publish_update()
+
+	def delete_unsent_emails(self):
+		"""Remove queued salary slip emails, which are held until the posting date and carry the old PDF."""
+		unsent_emails = frappe.get_all(
+			"Email Queue",
+			filters={"reference_doctype": self.doctype, "reference_name": self.name, "status": "Not Sent"},
+			pluck="name",
+		)
+		if not unsent_emails:
+			return
+
+		frappe.db.delete("Email Queue Recipient", {"parent": ("in", unsent_emails)})
+		frappe.db.delete("Email Queue", {"name": ("in", unsent_emails)})
 
 	def publish_update(self):
 		employee_user = frappe.db.get_value("Employee", self.employee, "user_id", cache=True)
@@ -269,6 +283,12 @@ class SalarySlip(TransactionBase):
 		if not self.has_custom_naming_series:
 			revert_series_if_last(self.default_series, self.name)
 
+<<<<<<< HEAD
+=======
+		delete_employee_benefit_ledger_entry("salary_slip", self.name)
+		self.delete_unsent_emails()
+
+>>>>>>> 8b69b25 (fix(salary-slip): delete unsent emails on cancel and delete)
 	def get_status(self):
 		if self.docstatus == 2:
 			return "Cancelled"
