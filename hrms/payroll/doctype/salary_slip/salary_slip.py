@@ -283,12 +283,8 @@ class SalarySlip(TransactionBase):
 		if not self.has_custom_naming_series:
 			revert_series_if_last(self.default_series, self.name)
 
-<<<<<<< HEAD
-=======
-		delete_employee_benefit_ledger_entry("salary_slip", self.name)
 		self.delete_unsent_emails()
 
->>>>>>> 8b69b25 (fix(salary-slip): delete unsent emails on cancel and delete)
 	def get_status(self):
 		if self.docstatus == 2:
 			return "Cancelled"
