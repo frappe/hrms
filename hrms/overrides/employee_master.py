@@ -15,6 +15,23 @@ class EmployeeMaster(Employee):
 	def validate(self):
 		super().validate()
 		self.validate_left_status_before_relieving_date()
+		self.validate_relieving_date_not_passed()
+
+	def validate_relieving_date_not_passed(self):
+		"""Payroll Entry leaves out employees whose Relieving Date has passed, whatever their status."""
+		if self.status == "Left" or not self.relieving_date:
+			return
+		if not (self.has_value_changed("status") or self.has_value_changed("relieving_date")):
+			return
+
+		if getdate(self.relieving_date) < getdate(today()):
+			frappe.throw(
+				_(
+					"Relieving Date {0} is in the past, so this employee is left out of payroll. "
+					"Set the status to Left, or correct or clear the Relieving Date."
+				).format(frappe.bold(frappe.format(self.relieving_date, "Date"))),
+				title=_("Relieving Date Has Passed"),
+			)
 
 	def validate_left_status_before_relieving_date(self):
 		"""Status Left disables the linked User, so it waits until the employee has left."""

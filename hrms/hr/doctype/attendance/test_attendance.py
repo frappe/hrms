@@ -229,9 +229,10 @@ class TestAttendance(HRMSTestSuite):
 		employee = make_employee(
 			"test_unmarked_days_as_per_doj@example.com",
 			date_of_joining=doj,
-			relieving_date=relieving_date,
 			company="_Test Company",
 		)
+		# Attendance is marked for an Active employee whose Relieving Date may have passed.
+		frappe.db.set_value("Employee", employee, "relieving_date", relieving_date)
 
 		frappe.db.set_value("Employee", employee, "holiday_list", self.holiday_list)
 

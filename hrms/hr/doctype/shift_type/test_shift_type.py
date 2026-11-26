@@ -802,8 +802,9 @@ class TestShiftType(HRMSTestSuite):
 			"test_employee_dates@example.com",
 			company="_Test Company",
 			date_of_joining=doj,
-			relieving_date=relieving_date,
 		)
+		# Attendance is marked for an Active employee whose Relieving Date has passed.
+		frappe.db.set_value("Employee", employee, "relieving_date", relieving_date)
 		shift_type = setup_shift_type(
 			shift_type="Test Absent with no Attendance", process_attendance_after=add_days(doj, 2)
 		)

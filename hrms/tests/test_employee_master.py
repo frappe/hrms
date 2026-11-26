@@ -24,9 +24,42 @@ class TestEmployeeMaster(HRMSTestSuite):
 		self.assertTrue(frappe.db.get_value("User", employee.user_id, "enabled"))
 
 		# The last working day is today, so the employee can be marked Left now.
+		employee.reload()
+		employee.status = "Left"
 		employee.relieving_date = getdate()
 		employee.save()
 		self.assertFalse(frappe.db.get_value("User", employee.user_id, "enabled"))
+
+	def test_past_relieving_date_needs_left_status(self):
+		employee = frappe.get_doc(
+			"Employee", make_employee("past_relieving@example.com", company="_Test Company")
+		)
+		yesterday = add_days(getdate(), -1)
+
+		employee.relieving_date = yesterday
+		self.assertRaises(frappe.ValidationError, employee.save)
+
+		employee.reload()
+		employee.status = "Left"
+		employee.relieving_date = yesterday
+		employee.save()
+
+		# Reactivating needs the old Relieving Date corrected or cleared.
+		employee.status = "Active"
+		self.assertRaises(frappe.ValidationError, employee.save)
+
+		employee.reload()
+		employee.status = "Active"
+		employee.relieving_date = None
+		employee.save()
+		self.assertEqual(frappe.db.get_value("Employee", employee.name, "status"), "Active")
+
+	def test_other_changes_allowed_when_relieving_date_passed(self):
+		employee = make_relieving_employee("passed_overnight@example.com", add_days(getdate(), -1))
+
+		doc = frappe.get_doc("Employee", employee)
+		doc.cell_number = "9876543210"
+		doc.save()
 
 	def test_status_set_to_left_after_relieving_date(self):
 		left = make_relieving_employee("relieved_yesterday@example.com", add_days(getdate(), -1))
@@ -73,4 +106,7 @@ class TestEmployeeMaster(HRMSTestSuite):
 
 
 def make_relieving_employee(user, relieving_date, **kwargs):
-	return make_employee(user, company="_Test Company", relieving_date=relieving_date, **kwargs)
+	"""Return an Active employee whose Relieving Date may have passed overnight, before the daily job."""
+	employee = make_employee(user, company="_Test Company", **kwargs)
+	frappe.db.set_value("Employee", employee, "relieving_date", relieving_date)
+	return employee
