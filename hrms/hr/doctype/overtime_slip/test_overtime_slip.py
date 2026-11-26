@@ -150,8 +150,8 @@ class TestOvertimeSlip(HRMSTestSuite):
 		employee = make_employee(
 			"test_overtime_slip_mid_leaver@example.com",
 			company="_Test Company",
+			# The employee stays Active until the Relieving Date has passed.
 			relieving_date=relieving_date,
-			status="Left",
 		)
 		overtime_type = create_overtime_type(overtime_calculation_method="Fixed Hourly Rate")
 		shift_type = setup_shift_type(
