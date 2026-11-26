@@ -4,7 +4,6 @@
 from unittest.mock import patch
 
 import frappe
-from frappe.core.doctype.user_permission.test_user_permission import create_user
 from frappe.tests.classes.context_managers import freeze_time
 from frappe.utils import add_days, getdate
 
@@ -23,7 +22,7 @@ from hrms.hr.page.organizational_chart.organizational_chart import (
 	search_employees,
 )
 from hrms.payroll.doctype.salary_slip.test_salary_slip import make_leave_application
-from hrms.tests.test_utils import create_company
+from hrms.tests.test_utils import create_company, create_user
 from hrms.tests.utils import HRMSTestSuite
 
 
