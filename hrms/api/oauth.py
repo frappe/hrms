@@ -1,7 +1,9 @@
 import frappe
+from frappe.rate_limiter import rate_limit
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=True, methods=["POST"])  # nosemgrep: guest-whitelisted-method
+@rate_limit(limit=60, seconds=60)
 def oauth_providers():
 	from frappe.utils.html_utils import get_icon_html
 	from frappe.utils.oauth import get_oauth2_authorize_url, get_oauth_keys

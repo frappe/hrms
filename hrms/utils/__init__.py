@@ -3,12 +3,14 @@ from collections.abc import Generator
 import requests
 
 import frappe
+from frappe.rate_limiter import rate_limit
 from frappe.utils import add_days, date_diff
 
 country_info = {}
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist(allow_guest=True, methods=["GET", "POST"])  # nosemgrep: guest-whitelisted-method
+@rate_limit(limit=60, seconds=60)
 def get_country(fields: list | None = None) -> dict:
 	global country_info
 	ip = frappe.local.request_ip
