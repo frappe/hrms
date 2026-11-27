@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Frappe HR VERSION\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
-"POT-Creation-Date: 2026-11-15 09:34+0000\n"
-"PO-Revision-Date: 2026-11-15 09:34+0000\n"
+"POT-Creation-Date: 2026-11-22 09:34+0000\n"
+"PO-Revision-Date: 2026-11-22 09:34+0000\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: contact@frappe.io\n"
 "MIME-Version: 1.0\n"
@@ -76,11 +76,24 @@ msgstr ""
 msgid "1 claim"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/ProfileCard.vue:52
+msgid "1 direct report"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/ProfileCard.vue:33
+#, python-brace-format
+msgid "1 month at {0}"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.vue:142
+msgid "1 open request"
+msgstr ""
+
 #: hrms/hr/page/organizational_chart/components/DirectoryView.vue:108
 msgid "1 person"
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:21
+#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:23
 msgid "1 report"
 msgstr ""
 
@@ -90,6 +103,11 @@ msgstr ""
 
 #: hrms/public/js/erpnext/employee_overview.js:5
 msgid "1 salary slip"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/ProfileCard.vue:28
+#, python-brace-format
+msgid "1 year at {0}"
 msgstr ""
 
 #: hrms/hr/page/organizational_chart/components/DirectoryView.vue:129
@@ -191,9 +209,23 @@ msgstr ""
 msgid "A bonus, arrear or deduction for one payroll period. See [Additional Salary](https://docs.frappe.io/hr/additional-salary)."
 msgstr ""
 
+#. Description of the 'Proof' (Attach) field in DocType 'Bank Details Change
+#. Request'
+#: hrms/hr/doctype/bank_details_change_request/bank_details_change_request.json:115
+msgid "A cancelled cheque or a bank statement of the new account"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:79
+msgid "A cancelled cheque or a bank statement of this account"
+msgstr ""
+
 #. Description of the Onboarding Step 'Plan a training program'
 #: hrms/tenure/onboarding_step/create_training_program/create_training_program.json:5
 msgid "A course you run for employees, with its trainer and what it covers. See [Training Program](https://docs.frappe.io/hr/training-program)."
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:833
+msgid "A document can only be verified or rejected"
 msgstr ""
 
 #: hrms/controllers/employee_reminders.py:125
@@ -209,6 +241,11 @@ msgstr ""
 #. Description of the Onboarding Step 'Set a goal'
 #: hrms/performance/onboarding_step/create_goal/create_goal.json:5
 msgid "A measurable target for an employee, tracked against a KRA. See [Goal](https://docs.frappe.io/hr/goal)."
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:610
+#, python-brace-format
+msgid "A profile can have at most {0} sections"
 msgstr ""
 
 #. Description of the Onboarding Step 'Record a check-in'
@@ -242,6 +279,10 @@ msgstr ""
 msgid "A {0} exists between {1} and {2} ("
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/PublicProfile.vue:135
+msgid "About me"
+msgstr ""
+
 #. Option for the 'Status' (Select) field in DocType 'Attendance'
 #. Option for the 'Status for Other Half' (Select) field in DocType
 #. 'Attendance'
@@ -260,7 +301,7 @@ msgstr ""
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json:58
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:782
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json:101
-#: hrms/public/js/erpnext/employee_overview.js:460
+#: hrms/public/js/erpnext/employee_overview.js:474
 msgid "Absent"
 msgstr ""
 
@@ -281,6 +322,16 @@ msgstr ""
 
 #: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:58
 msgid "Account No"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:375
+#: hrms/hr/page/employee_profile/components/BankSection.vue:400
+msgid "Account change"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:39
+#: hrms/hr/page/employee_profile/components/BankSection.vue:65
+msgid "Account number"
 msgstr ""
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:161
@@ -370,7 +421,7 @@ msgstr ""
 msgid "Accrued amount {0} is less than paid amount {1} for Benefit {2} in payroll period {3}"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:364
+#: hrms/public/js/erpnext/employee_overview.js:378
 #, python-brace-format
 msgid "Across {0} leave types"
 msgstr ""
@@ -422,7 +473,7 @@ msgid "Add Day-wise Dates"
 msgstr ""
 
 #. Label of an action in the Onboarding Step 'Add your employees'
-#: hrms/hr/page/organizational_chart/organizational_chart.vue:397
+#: hrms/hr/page/organizational_chart/organizational_chart.vue:400
 #: hrms/hr_setup/onboarding_step/create_employee/create_employee.json:3
 msgid "Add Employee"
 msgstr ""
@@ -448,6 +499,10 @@ msgstr ""
 msgid "Add Tax"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:221
+msgid "Add a document"
+msgstr ""
+
 #. Title of an Onboarding Step
 #: hrms/performance/onboarding_step/create_kra/create_kra.json:19
 msgid "Add a key result area"
@@ -458,9 +513,17 @@ msgstr ""
 msgid "Add a leave type"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/PublicProfile.vue:187
+msgid "Add a line about you"
+msgstr ""
+
 #. Title of an Onboarding Step
 #: hrms/payroll/onboarding_step/create_salary_component/create_salary_component.json:19
 msgid "Add a salary component"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/SectionDialog.vue:78
+msgid "Add a topic"
 msgstr ""
 
 #. Title of an Onboarding Step
@@ -468,13 +531,26 @@ msgstr ""
 msgid "Add an applicant"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/BankSection.vue:310
+#: hrms/hr/page/employee_profile/components/BankSection.vue:318
+msgid "Add bank details"
+msgstr ""
+
 #. Title of an Onboarding Step
 #: hrms/tax_and_benefits/onboarding_step/create_income_tax_slab/create_income_tax_slab.json:19
 msgid "Add income tax slabs"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/SectionDialog.vue:135
+msgid "Add link"
+msgstr ""
+
 #: hrms/public/js/utils/employee_quick_entry.js:113
 msgid "Add more now"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/SectionDialog.vue:176
+msgid "Add photo"
 msgstr ""
 
 #: hrms/hr/employee_property_update.js:116
@@ -551,12 +627,12 @@ msgid "Additional Salary: {0} already exist for Salary Component: {1} for period
 msgstr ""
 
 #. Label of the section_break_4 (Section Break) field in DocType 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:389
+#: hrms/hr/doctype/job_offer/job_offer.json:421
 msgid "Additional Terms"
 msgstr ""
 
 #. Label of the address_of_organizer (Data) field in DocType 'Travel Request'
-#: hrms/hr/doctype/travel_request/travel_request.json:193
+#: hrms/hr/doctype/travel_request/travel_request.json:194
 msgid "Address of Organizer"
 msgstr ""
 
@@ -608,12 +684,12 @@ msgstr ""
 msgid "Advanced Filters"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:601
+#: hrms/public/js/erpnext/employee_overview.js:615
 msgid "Advances to Settle"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:654
-#: hrms/public/js/erpnext/employee_overview.js:661
+#: hrms/public/js/erpnext/employee_overview.js:668
+#: hrms/public/js/erpnext/employee_overview.js:675
 msgid "All Document Types"
 msgstr ""
 
@@ -934,7 +1010,7 @@ msgstr ""
 msgid "Annual Gross Earning"
 msgstr ""
 
-#: hrms/setup.py:510
+#: hrms/setup.py:640
 msgid "Annual Salary"
 msgstr ""
 
@@ -974,14 +1050,14 @@ msgstr ""
 #. Label of the applicant_email (Data) field in DocType 'Appointment Letter'
 #. Label of the applicant_email (Data) field in DocType 'Job Offer'
 #: hrms/hr/doctype/appointment_letter/appointment_letter.json:67
-#: hrms/hr/doctype/job_offer/job_offer.json:103
+#: hrms/hr/doctype/job_offer/job_offer.json:108
 msgid "Applicant Email Address"
 msgstr ""
 
 #. Label of the applicant_name (Data) field in DocType 'Appointment Letter'
 #. Label of the applicant_name (Data) field in DocType 'Job Offer'
 #: hrms/hr/doctype/appointment_letter/appointment_letter.json:59
-#: hrms/hr/doctype/job_offer/job_offer.json:95
+#: hrms/hr/doctype/job_offer/job_offer.json:100
 msgid "Applicant Name"
 msgstr ""
 
@@ -1147,7 +1223,7 @@ msgstr ""
 #: hrms/hr/doctype/appraisal/appraisal.json:194
 #: hrms/hr/doctype/appraisal_template/appraisal_template.json:81
 #: hrms/hr/doctype/appraisee/appraisee.json:68
-#: hrms/performance/sidebar/performance/performance.json:120 hrms/setup.py:240
+#: hrms/performance/sidebar/performance/performance.json:120 hrms/setup.py:332
 #: hrms/workspace_sidebar/performance.json:120
 msgid "Appraisal Template"
 msgstr ""
@@ -1204,7 +1280,7 @@ msgstr ""
 msgid "Appraisees: {0}"
 msgstr ""
 
-#: hrms/setup.py:502
+#: hrms/setup.py:632
 msgid "Apprentice"
 msgstr ""
 
@@ -1232,6 +1308,9 @@ msgstr ""
 
 #: frontend/src/components/RequestActionSheet.vue:108
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:119
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:501
+#: hrms/hr/page/employee_profile/components/BankSection.vue:254
+#: hrms/hr/page/employee_profile/components/BankSection.vue:432
 msgid "Approve"
 msgstr ""
 
@@ -1250,20 +1329,41 @@ msgstr ""
 msgid "Approve an expense claim and pay the employee back."
 msgstr ""
 
+#: hrms/hr/doctype/asset_request/asset_request.py:103
+#: hrms/hr/doctype/bank_details_change_request/bank_details_change_request.py:90
+msgid "Approve or reject the request before submitting it"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:249
+msgid "Approve this change?"
+msgstr ""
+
+#. Option for the 'Status' (Select) field in DocType 'Asset Request'
+#. Option for the 'Status' (Select) field in DocType 'Bank Details Change
+#. Request'
 #. Option for the 'Approval Status' (Select) field in DocType 'Expense Claim'
 #. Option for the 'Status' (Select) field in DocType 'Leave Application'
 #. Option for the 'Status' (Select) field in DocType 'Shift Request'
 #: frontend/src/components/ExpenseClaimSummary.vue:36
 #: frontend/src/views/leave/List.vue:31
+#: hrms/hr/doctype/asset_request/asset_request.json:83
+#: hrms/hr/doctype/bank_details_change_request/bank_details_change_request.json:75
 #: hrms/hr/doctype/expense_claim/expense_claim.json:129
 #: hrms/hr/doctype/leave_application/leave_application.json:191
 #: hrms/hr/doctype/shift_request/shift_request.json:92
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:216
+#: hrms/hr/page/employee_profile/components/BankSection.vue:379
 msgid "Approved"
 msgstr ""
 
 #. Label of a number card in the Expenses Workspace
 #: hrms/expenses/workspace/expenses/expenses.json:32
 msgid "Approved Claims (This Month)"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:210
+#, python-brace-format
+msgid "Approved by {0}"
 msgstr ""
 
 #. Description of the Onboarding Step 'See what is still owed'
@@ -1282,8 +1382,8 @@ msgstr ""
 msgid "Approver"
 msgstr ""
 
-#: hrms/public/js/utils/employee_quick_entry.js:25 hrms/setup.py:211
-#: hrms/setup.py:338
+#: hrms/public/js/utils/employee_quick_entry.js:25 hrms/setup.py:303
+#: hrms/setup.py:468
 msgid "Approvers"
 msgstr ""
 
@@ -1346,9 +1446,52 @@ msgstr ""
 msgid "As per your assigned Salary Structure you cannot apply for benefits"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:221
+msgid "Ask for a document"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:90
+msgid "Ask for it again"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:390
+#, python-brace-format
+msgid "Ask for {0}"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/PublicProfile.vue:111
+#: hrms/hr/page/employee_profile/components/PublicProfile.vue:113
+msgid "Ask me about"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:239
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:472
+#, python-brace-format
+msgid "Asked on {0}"
+msgstr ""
+
+#: hrms/hr/doctype/asset_request/asset_request.py:89
+#, python-brace-format
+msgid "Asks for {0}"
+msgstr ""
+
 #: hrms/hr/doctype/full_and_final_statement/full_and_final_statement.py:131
 #, python-brace-format
 msgid "Asset Recovery Cost for {0}: {1}"
+msgstr ""
+
+#. Name of a DocType
+#: hrms/hr/doctype/asset_request/asset_request.json:155
+msgid "Asset Request"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:727
+msgid "Asset request must be a set of fields"
+msgstr ""
+
+#: hrms/hr/doctype/asset_request/asset_request.py:81
+#, python-brace-format
+msgid "Asset {0} already has an open return request {1}"
 msgstr ""
 
 #. Label of the section_break_15 (Section Break) field in DocType 'Full and
@@ -1388,6 +1531,10 @@ msgstr ""
 #. Title of an Onboarding Step
 #: hrms/shift_and_attendance/onboarding_step/create_shift_assignment/create_shift_assignment.json:19
 msgid "Assign a shift"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:261
+msgid "Assign asset"
 msgstr ""
 
 #. Title of an Onboarding Step
@@ -1478,10 +1625,10 @@ msgstr ""
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json:57
 #: hrms/overrides/dashboard_overrides.py:10
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json:43
-#: hrms/public/js/erpnext/employee_overview.js:278
-#: hrms/public/js/erpnext/employee_overview.js:330
-#: hrms/public/js/erpnext/employee_overview.js:442
-#: hrms/public/js/erpnext/employee_overview.js:444
+#: hrms/public/js/erpnext/employee_overview.js:292
+#: hrms/public/js/erpnext/employee_overview.js:344
+#: hrms/public/js/erpnext/employee_overview.js:456
+#: hrms/public/js/erpnext/employee_overview.js:458
 #: hrms/shift_and_attendance/sidebar/shift_&_attendance/shift_&_attendance.json:66
 #: hrms/templates/emails/training_event.html:9
 msgid "Attendance"
@@ -1713,13 +1860,13 @@ msgstr ""
 msgid "Avg Utilization (Billed Only)"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:422
+#: hrms/public/js/erpnext/employee_overview.js:436
 #, python-brace-format
 msgid "Avg net pay {0} a month"
 msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:129
+#: hrms/hr/doctype/job_offer/job_offer.json:134
 msgid "Awaiting Response"
 msgstr ""
 
@@ -1737,6 +1884,11 @@ msgstr ""
 msgid "Backdated Leave Application is restricted. Please set the {} in {}"
 msgstr ""
 
+#. Name of a DocType
+#: hrms/hr/doctype/bank_details_change_request/bank_details_change_request.json:150
+msgid "Bank Details Change Request"
+msgstr ""
+
 #: hrms/hr/doctype/expense_claim/expense_claim.js:330
 msgid "Bank Entries"
 msgstr ""
@@ -1746,7 +1898,15 @@ msgstr ""
 msgid "Bank Remittance"
 msgstr ""
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:342
+#: hrms/hr/page/employee_profile/employee_profile.vue:109
+msgid "Bank account"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:695
+msgid "Bank details must be a set of fields"
+msgstr ""
+
+#: hrms/hr/doctype/employee_advance/employee_advance.py:352
 msgid "Bank/Cash Account Not Set"
 msgstr ""
 
@@ -1755,9 +1915,14 @@ msgstr ""
 msgid "Bank/Cash Account Required"
 msgstr ""
 
+#: hrms/hr/doctype/employee_advance/employee_advance.py:410
+#, python-brace-format
+msgid "Bank/Cash Account {0} must be a {1} Bank or Cash account of company {2}"
+msgstr ""
+
 #. Label of the base (Currency) field in DocType 'Job Offer'
 #. Label of the base (Currency) field in DocType 'Salary Structure Assignment'
-#: hrms/hr/doctype/job_offer/job_offer.json:249
+#: hrms/hr/doctype/job_offer/job_offer.json:254
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:180
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json:119
 msgid "Base"
@@ -1765,7 +1930,7 @@ msgstr ""
 
 #. Option for the 'Calculate Component Amount From' (Select) field in DocType
 #. 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:236
+#: hrms/hr/doctype/job_offer/job_offer.json:241
 msgid "Base and Variable"
 msgstr ""
 
@@ -1910,6 +2075,11 @@ msgstr ""
 msgid "Block Holidays on important days."
 msgstr ""
 
+#: hrms/hr/page/employee_profile/employee_profile.vue:159
+#: hrms/hr/page/employee_profile/employee_profile.vue:267
+msgid "Blood group"
+msgstr ""
+
 #. Label of the boarding_status (Select) field in DocType 'Employee Onboarding'
 #: hrms/hr/doctype/employee_onboarding/employee_onboarding.json:75
 msgid "Boarding Status"
@@ -1938,47 +2108,6 @@ msgstr ""
 #. Description of a DocType
 #: hrms/hr/doctype/hr_telemetry_milestone/hr_telemetry_milestone.json:6
 msgid "Bookkeeping for once-per-site activation telemetry. The document name is the event name, so the primary key makes claiming a milestone atomic across concurrent transactions."
-msgstr ""
-
-#. Label of the branch (Link) field in DocType 'Appraisal Cycle'
-#. Label of the branch (Link) field in DocType 'Appraisee'
-#. Label of the branch (Link) field in DocType 'Employee Attendance Tool'
-#. Label of the branch (Link) field in DocType 'Job Offer'
-#. Label of the branch (Link) field in DocType 'Leave Control Panel'
-#. Label of the branch (Link) field in DocType 'Shift Assignment Tool'
-#. Label of a Sidebar Item
-#. Label of the branch (Link) field in DocType 'Bulk Salary Structure
-#. Assignment'
-#. Label of the branch (Link) field in DocType 'Payroll Entry'
-#. Label of the branch (Link) field in DocType 'Salary Slip'
-#. Label of a Workspace Sidebar Item
-#: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json:86
-#: hrms/hr/doctype/appraisee/appraisee.json:59
-#: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json:51
-#: hrms/hr/doctype/job_offer/job_offer.json:188
-#: hrms/hr/doctype/leave_control_panel/leave_control_panel.json:53
-#: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:194
-#: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json:103
-#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:84
-#: hrms/hr/report/employee_advance_summary/employee_advance_summary.js:63
-#: hrms/hr/report/employee_advance_summary/employee_advance_summary.py:168
-#: hrms/hr/report/employee_analytics/employee_analytics.py:33
-#: hrms/hr/report/employee_birthday/employee_birthday.py:29
-#: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:123
-#: hrms/hr/report/unpaid_expense_claim/unpaid_expense_claim.js:32
-#: hrms/hr/report/unpaid_expense_claim/unpaid_expense_claim.py:68
-#: hrms/hr_setup/sidebar/hr_setup/hr_setup.json:85
-#: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json:71
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.json:85
-#: hrms/payroll/doctype/salary_slip/salary_slip.json:170
-#: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.js:56
-#: hrms/payroll/report/salary_payments_based_on_payment_mode/salary_payments_based_on_payment_mode.py:30
-#: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:23
-#: hrms/payroll/report/salary_register/salary_register.js:88
-#: hrms/payroll/report/salary_register/salary_register.py:189
-#: hrms/public/js/salary_slip_deductions_report_filters.js:48
-#: hrms/workspace_sidebar/hr_setup.json:85
-msgid "Branch"
 msgstr ""
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:284
@@ -2043,13 +2172,13 @@ msgstr ""
 #. Option for the 'Calculate Component Amount From' (Select) field in DocType
 #. 'Job Offer'
 #. Label of the ctc (Currency) field in DocType 'Salary Slip'
-#: hrms/hr/doctype/job_offer/job_offer.json:236
+#: hrms/hr/doctype/job_offer/job_offer.json:241
 #: hrms/payroll/doctype/salary_slip/salary_slip.json:593
 msgid "CTC"
 msgstr ""
 
 #. Label of the ctc_breakup (Table) field in DocType 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:290
+#: hrms/hr/doctype/job_offer/job_offer.json:294
 msgid "CTC Break-up"
 msgstr ""
 
@@ -2057,14 +2186,14 @@ msgstr ""
 msgid "CTC Missing for Employee"
 msgstr ""
 
-#: hrms/hr/doctype/job_offer/job_offer.js:322
+#: hrms/hr/doctype/job_offer/job_offer.js:330
 #, python-brace-format
 msgid "CTC set to {0}, the closest this salary structure can produce."
 msgstr ""
 
 #. Label of the calculate_component_amount_from (Select) field in DocType 'Job
 #. Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:234
+#: hrms/hr/doctype/job_offer/job_offer.json:239
 msgid "Calculate Component Amount From"
 msgstr ""
 
@@ -2091,12 +2220,21 @@ msgstr ""
 msgid "Calculated in days"
 msgstr ""
 
-#: hrms/setup.py:438
+#: hrms/setup.py:568
 msgid "Calls"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:245
+#: hrms/hr/page/employee_profile/components/BankSection.vue:418
+msgid "Cancel change"
 msgstr ""
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:787
 msgid "Cancel the Payment Entry made against it, correct the advance account to be of type Receivable, and create a new Payment Entry."
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:238
+msgid "Cancel this change?"
 msgstr ""
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:194
@@ -2189,6 +2327,10 @@ msgstr ""
 msgid "Cannot update status of Goal groups"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/SectionDialog.vue:158
+msgid "Caption"
+msgstr ""
+
 #. Label of the carry_forward (Check) field in DocType 'Leave Control Panel'
 #. Label of the is_carry_forward (Check) field in DocType 'Leave Type'
 #. Label of the carry_forward_section (Section Break) field in DocType 'Leave
@@ -2204,7 +2346,7 @@ msgstr ""
 msgid "Carry Forwarded Leaves"
 msgstr ""
 
-#: hrms/setup.py:453 hrms/setup.py:454
+#: hrms/setup.py:583 hrms/setup.py:584
 msgid "Casual Leave"
 msgstr ""
 
@@ -2215,6 +2357,20 @@ msgstr ""
 
 #: hrms/hr/page/organizational_chart/components/DirectoryView.vue:54
 msgid "Celebrating"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.vue:487
+msgid "Change cover"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:356
+#: hrms/hr/page/employee_profile/components/BankSection.vue:362
+msgid "Change request"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:164
+#: hrms/hr/page/employee_profile/components/BankSection.vue:194
+msgid "Change requested"
 msgstr ""
 
 #: hrms/hr/doctype/attendance_request/attendance_request.py:271
@@ -2265,6 +2421,10 @@ msgstr ""
 #. Label of the check_vacancies (Check) field in DocType 'HR Settings'
 #: hrms/hr/doctype/hr_settings/hr_settings.json:204
 msgid "Check Vacancies On Job Offer Creation"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:365
+msgid "Check back later, or ask HR directly."
 msgstr ""
 
 #. Title of an Onboarding Step
@@ -2349,6 +2509,10 @@ msgstr ""
 msgid "Choose the date on which you want to create these components as arrears."
 msgstr ""
 
+#: hrms/hr/page/employee_profile/employee_profile.py:741
+msgid "Choose whether to request or return an asset"
+msgstr ""
+
 #. Label of the earning_component (Link) field in DocType 'Employee Benefit
 #. Claim'
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.json:66
@@ -2393,11 +2557,11 @@ msgstr ""
 msgid "Claims"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:580
+#: hrms/public/js/erpnext/employee_overview.js:594
 msgid "Claims Awaiting Approval"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:588
+#: hrms/public/js/erpnext/employee_overview.js:602
 msgid "Claims to Reimburse"
 msgstr ""
 
@@ -2432,7 +2596,7 @@ msgid "Closing this Job Opening for {1} may not be according to the Staffing Pla
 msgstr ""
 
 #. Description of the 'Weekly Off' (Data) field in DocType 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:299
+#: hrms/hr/doctype/job_offer/job_offer.json:303
 msgid "Comma separated, for example: Saturday, Sunday"
 msgstr ""
 
@@ -2446,7 +2610,7 @@ msgid "Compare scores across a cycle"
 msgstr ""
 
 #. Label of the compensation_tab (Tab Break) field in DocType 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:205
+#: hrms/hr/doctype/job_offer/job_offer.json:210
 msgid "Compensation"
 msgstr ""
 
@@ -2462,7 +2626,7 @@ msgstr ""
 msgid "Compensatory Leave Requests"
 msgstr ""
 
-#: hrms/setup.py:462 hrms/setup.py:463
+#: hrms/setup.py:592 hrms/setup.py:593
 msgid "Compensatory Off"
 msgstr ""
 
@@ -2549,8 +2713,17 @@ msgstr ""
 msgid "Contact Number"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/employee_profile.vue:141
+msgid "Contact and emergency"
+msgstr ""
+
 #: hrms/public/js/utils/employee_quick_entry.js:10
 msgid "Contact and login"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/ProfileCard.vue:180
+#: hrms/hr/page/employee_profile/components/ProfileCard.vue:185
+msgid "Copy email"
 msgstr ""
 
 #. Label of the travel_proof (Attach) field in DocType 'Travel Request'
@@ -2560,34 +2733,34 @@ msgstr ""
 
 #. Label of the costing_details (Section Break) field in DocType 'Travel
 #. Request'
-#: hrms/hr/doctype/travel_request/travel_request.json:165
+#: hrms/hr/doctype/travel_request/travel_request.json:166
 msgid "Costing Details"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:332
-#: hrms/public/js/erpnext/employee_overview.js:448
+#: hrms/public/js/erpnext/employee_overview.js:346
+#: hrms/public/js/erpnext/employee_overview.js:462
 msgid "Could not load attendance"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:355
-#: hrms/public/js/erpnext/employee_overview.js:495
+#: hrms/public/js/erpnext/employee_overview.js:369
+#: hrms/public/js/erpnext/employee_overview.js:509
 msgid "Could not load leave balances"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:286
+#: hrms/public/js/erpnext/employee_overview.js:300
 msgid "Could not load overview"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:548
+#: hrms/public/js/erpnext/employee_overview.js:562
 msgid "Could not load pending items"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:302
-#: hrms/public/js/erpnext/employee_overview.js:388
+#: hrms/public/js/erpnext/employee_overview.js:316
+#: hrms/public/js/erpnext/employee_overview.js:402
 msgid "Could not load salary slips"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:227
+#: hrms/public/js/erpnext/employee_overview.js:241
 msgid "Could not load the overview"
 msgstr ""
 
@@ -2604,7 +2777,7 @@ msgstr ""
 msgid "Could not update goals"
 msgstr ""
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:338
+#: hrms/hr/doctype/employee_advance/employee_advance.py:348
 #, python-brace-format
 msgid "Couldn't automatically pick a Bank/Cash Account for this return. Please set one in the Accounting Entries below, or set a Default Cash Account in the {0} to avoid this next time."
 msgstr ""
@@ -2629,6 +2802,12 @@ msgstr ""
 msgid "Course"
 msgstr ""
 
+#. Option for the 'Section Type' (Select) field in DocType 'Employee Profile
+#. Section'
+#: hrms/hr/doctype/employee_profile_section/employee_profile_section.json:21
+msgid "Cover"
+msgstr ""
+
 #. Label of the cover_letter (Text) field in DocType 'Job Applicant'
 #. Label of a field in the job-application Web Form
 #: hrms/hr/doctype/job_applicant/job_applicant.json:103
@@ -2637,7 +2816,7 @@ msgid "Cover Letter"
 msgstr ""
 
 #. Label of an action in the Onboarding Step 'Pay a one-off amount'
-#: hrms/hr/doctype/employee_referral/employee_referral.js:40
+#: hrms/hr/doctype/employee_referral/employee_referral.js:46
 #: hrms/payroll/onboarding_step/create_additional_salary/create_additional_salary.json:3
 msgid "Create Additional Salary"
 msgstr ""
@@ -2720,7 +2899,7 @@ msgstr ""
 msgid "Create Interview"
 msgstr ""
 
-#: hrms/hr/doctype/employee_referral/employee_referral.js:21
+#: hrms/hr/doctype/employee_referral/employee_referral.js:22
 msgid "Create Job Applicant"
 msgstr ""
 
@@ -2764,7 +2943,7 @@ msgstr ""
 msgid "Create Overtime Slip For Eligible Employee(s)"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:83
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:88
 msgid "Create Overtime Slips"
 msgstr ""
 
@@ -2787,8 +2966,8 @@ msgstr ""
 msgid "Create Salary Slip"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:97
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:175
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:102
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:186
 msgid "Create Salary Slips"
 msgstr ""
 
@@ -2837,7 +3016,7 @@ msgstr ""
 msgid "Creating Appraisals"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:458
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:483
 msgid "Creating Payment Entries......"
 msgstr ""
 
@@ -2951,6 +3130,16 @@ msgstr ""
 msgid "Current Work Experience"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/employee_profile.vue:168
+#: hrms/hr/page/employee_profile/employee_profile.vue:290
+msgid "Current address"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/PublicProfile.vue:108
+#: hrms/hr/page/employee_profile/components/PublicProfile.vue:145
+msgid "Currently"
+msgstr ""
+
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:120
 #, python-brace-format
 msgid "Currently, there is no {0} leave period for this date to create/update leave allocation."
@@ -2980,6 +3169,11 @@ msgstr ""
 msgid "Date is repeated"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/employee_profile.vue:154
+#: hrms/hr/page/employee_profile/employee_profile.vue:254
+msgid "Date of birth"
+msgstr ""
+
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:84
 #, python-brace-format
 msgid "Date {0} is repeated in Overtime Details"
@@ -2996,11 +3190,11 @@ msgstr ""
 msgid "Dates Based On"
 msgstr ""
 
-#: hrms/setup.py:199
+#: hrms/setup.py:291
 msgid "Days for which Holidays are blocked for this department."
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:492
+#: hrms/public/js/erpnext/employee_overview.js:506
 msgid "Days left in the current allocation"
 msgstr ""
 
@@ -3014,7 +3208,7 @@ msgid "Days to Reverse must be greater than zero."
 msgstr ""
 
 #: hrms/hr/doctype/appointment_letter/appointment_letter.js:105
-#: hrms/hr/doctype/job_offer/job_offer.js:181
+#: hrms/hr/doctype/job_offer/job_offer.js:189
 #, python-brace-format
 msgid "Dear {0},"
 msgstr ""
@@ -3122,15 +3316,15 @@ msgstr ""
 msgid "Default Base Pay"
 msgstr ""
 
-#: hrms/setup.py:159
+#: hrms/setup.py:251
 msgid "Default Employee Advance Account"
 msgstr ""
 
-#: hrms/setup.py:151
+#: hrms/setup.py:243
 msgid "Default Expense Claim Payable Account"
 msgstr ""
 
-#: hrms/overrides/company.py:185 hrms/setup.py:174
+#: hrms/overrides/company.py:185 hrms/setup.py:266
 msgid "Default Payroll Payable Account"
 msgstr ""
 
@@ -3141,7 +3335,7 @@ msgid "Default Salary Structure"
 msgstr ""
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:204
-#: hrms/setup.py:310
+#: hrms/setup.py:440
 msgid "Default Shift"
 msgstr ""
 
@@ -3172,6 +3366,11 @@ msgstr ""
 #: hrms/hr/doctype/expense_claim/expense_claim.py:203
 #, python-brace-format
 msgid "Department {0} does not belong to company: {1}"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:581
+#, python-brace-format
+msgid "Department {0} is not in {1}"
 msgstr ""
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:286
@@ -3211,6 +3410,10 @@ msgstr ""
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:288
 #, python-brace-format
 msgid "Designation: {0}"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:547
+msgid "Details must be a set of fields"
 msgstr ""
 
 #. Label of the details_of_sponsor (Data) field in DocType 'Travel Request'
@@ -3268,6 +3471,11 @@ msgstr ""
 msgid "Do you want to update the Job Applicant {0} as {1} based on this interview result?"
 msgstr ""
 
+#. Label of the document_number (Data) field in DocType 'Employee Document'
+#: hrms/hr/doctype/employee_document/employee_document.json:39
+msgid "Document Number"
+msgstr ""
+
 #: frontend/src/components/RequestActionSheet.vue:337
 #, python-brace-format
 msgid "Document {0} failed!"
@@ -3276,6 +3484,11 @@ msgstr ""
 #. Option for the 'Travel Type' (Select) field in DocType 'Travel Request'
 #: hrms/hr/doctype/travel_request/travel_request.json:49
 msgid "Domestic"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:47
+#, python-brace-format
+msgid "Due {0}"
 msgstr ""
 
 #: hrms/hr/doctype/job_applicant/job_applicant.py:97
@@ -3434,6 +3647,20 @@ msgstr ""
 msgid "Edit Expense Tax"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/PublicProfile.vue:195
+msgid "Edit bio"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:423
+#, python-brace-format
+msgid "Edit request for {0}"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:330
+#, python-brace-format
+msgid "Edit return of {0}"
+msgstr ""
+
 #. Label of the effective_from (Date) field in DocType 'Leave Policy
 #. Assignment'
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.json:68
@@ -3454,7 +3681,7 @@ msgstr ""
 msgid "Email Appointment Letter"
 msgstr ""
 
-#: hrms/hr/doctype/job_offer/job_offer.js:151
+#: hrms/hr/doctype/job_offer/job_offer.js:159
 msgid "Email Offer Letter"
 msgstr ""
 
@@ -3468,8 +3695,12 @@ msgstr ""
 msgid "Email Salary Slips"
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:144
-#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:151
+#: hrms/hr/page/employee_profile/components/ProfileCard.vue:78
+msgid "Email copied"
+msgstr ""
+
+#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:136
+#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:143
 #, python-brace-format
 msgid "Email {0}"
 msgstr ""
@@ -3480,6 +3711,8 @@ msgstr ""
 msgid "Emails salary slip to employee based on preferred email selected in Employee"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/employee_profile.vue:657
+#: hrms/hr/page/employee_profile/employee_profile.vue:669
 #: hrms/public/js/utils/employee_quick_entry.js:29
 msgid "Emergency contact"
 msgstr ""
@@ -3489,7 +3722,7 @@ msgid "Employee A/C Number"
 msgstr ""
 
 #: hrms/patches/v16_0/create_custom_field_for_employee_advance_in_employee_master.py:11
-#: hrms/setup.py:373
+#: hrms/setup.py:503
 msgid "Employee Advance Account"
 msgstr ""
 
@@ -3578,7 +3811,7 @@ msgstr ""
 #. Label of the employee_benefits_section (Section Break) field in DocType
 #. 'Salary Structure Assignment'
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json:239
-#: hrms/setup.py:512
+#: hrms/setup.py:642
 msgid "Employee Benefits"
 msgstr ""
 
@@ -3660,6 +3893,16 @@ msgstr ""
 msgid "Employee Details"
 msgstr ""
 
+#. Name of a DocType
+#: hrms/hr/doctype/employee_document/employee_document.json:84
+msgid "Employee Document"
+msgstr ""
+
+#. Name of a DocType
+#: hrms/hr/doctype/employee_document_type/employee_document_type.json:67
+msgid "Employee Document Type"
+msgstr ""
+
 #. Label of the employee_email (Data) field in DocType 'Leave Application'
 #: hrms/hr/doctype/leave_application/leave_application.json:77
 msgid "Employee Email"
@@ -3732,7 +3975,7 @@ msgstr ""
 #: hrms/hr/doctype/employee_onboarding_template/employee_onboarding_template.json:57
 #: hrms/hr/doctype/employee_separation/employee_separation.json:116
 #: hrms/hr/doctype/employee_separation_template/employee_separation_template.json:57
-#: hrms/hr/doctype/job_offer/job_offer.json:168
+#: hrms/hr/doctype/job_offer/job_offer.json:173
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json:73
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json:187
 #: hrms/hr_setup/sidebar/hr_setup/hr_setup.json:129
@@ -3793,7 +4036,7 @@ msgstr ""
 
 #. Name of a report
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.json:20
-#: hrms/public/js/erpnext/employee_overview.js:493
+#: hrms/public/js/erpnext/employee_overview.js:507
 msgid "Employee Leave Balance"
 msgstr ""
 
@@ -3802,7 +4045,7 @@ msgstr ""
 msgid "Employee Leave Balance Summary"
 msgstr ""
 
-#: hrms/setup.py:866
+#: hrms/setup.py:996
 msgid "Employee Loan"
 msgstr ""
 
@@ -3850,6 +4093,11 @@ msgid "Employee Performance Feedback"
 msgstr ""
 
 #. Name of a DocType
+#: hrms/hr/doctype/employee_profile_section/employee_profile_section.json:44
+msgid "Employee Profile Section"
+msgstr ""
+
+#. Name of a DocType
 #. Label of a Sidebar Item
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/employee_promotion/employee_promotion.json:128
@@ -3880,7 +4128,7 @@ msgstr ""
 #: hrms/hr/doctype/employee_referral/employee_referral.json:213
 #: hrms/hr/doctype/job_applicant/job_applicant.json:168
 #: hrms/hr/doctype/job_requisition/job_requisition.js:18
-#: hrms/recruitment/sidebar/recruitment/recruitment.json:253 hrms/setup.py:506
+#: hrms/recruitment/sidebar/recruitment/recruitment.json:253 hrms/setup.py:636
 #: hrms/workspace_sidebar/recruitment.json:146
 msgid "Employee Referral"
 msgstr ""
@@ -4223,8 +4471,12 @@ msgstr ""
 msgid "Employer contribution accrual for salaries from {0} to {1}"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/employee_profile.vue:120
+msgid "Employment"
+msgstr ""
+
 #. Label of the employment_policy_tab (Tab Break) field in DocType 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:352
+#: hrms/hr/doctype/job_offer/job_offer.json:356
 msgid "Employment Policy"
 msgstr ""
 
@@ -4242,7 +4494,7 @@ msgstr ""
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json:113
 #: hrms/hr/doctype/employment_type/employment_type.json:19
 #: hrms/hr/doctype/employment_type/employment_type.json:32
-#: hrms/hr/doctype/job_offer/job_offer.json:174
+#: hrms/hr/doctype/job_offer/job_offer.json:179
 #: hrms/hr/doctype/job_opening/job_opening.json:219
 #: hrms/hr/doctype/job_opening_template/job_opening_template.json:38
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json:46
@@ -4250,7 +4502,7 @@ msgstr ""
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:88
 #: hrms/hr/report/shift_attendance/shift_attendance.js:35
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json:123
-#: hrms/setup.py:277 hrms/templates/generators/job_opening.html:141
+#: hrms/setup.py:407 hrms/templates/generators/job_opening.html:141
 msgid "Employment Type"
 msgstr ""
 
@@ -4354,6 +4606,14 @@ msgstr ""
 msgid "Enter a non-zero value to adjust."
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/CardEditor.vue:93
+msgid "Enter a phone number of 7 to 15 digits"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/CardEditor.vue:89
+msgid "Enter a whole number"
+msgstr ""
+
 #: hrms/hr/doctype/hr_settings/hr_settings.js:34
 msgid "Enter the Standard Working Hours for a normal work day. These hours will be used in calculations of reports such as Employee Hours Utilization and Project Profitability analysis."
 msgstr ""
@@ -4436,7 +4696,7 @@ msgid "Evaluation Method cannot be changed as there are existing appraisals crea
 msgstr ""
 
 #. Label of the event_details (Section Break) field in DocType 'Travel Request'
-#: hrms/hr/doctype/travel_request/travel_request.json:183
+#: hrms/hr/doctype/travel_request/travel_request.json:184
 msgid "Event Details"
 msgstr ""
 
@@ -4485,6 +4745,17 @@ msgstr ""
 #: hrms/payroll/onboarding_step/view_salary_register/view_salary_register.json:5
 #: hrms/payroll/onboarding_step/view_salary_register/view_salary_register.json:17
 msgid "Every salary slip in a period, component by component."
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.vue:131
+#: hrms/hr/page/employee_profile/employee_profile.vue:536
+#, python-brace-format
+msgid "Everyone at {0}"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.vue:603
+#, python-brace-format
+msgid "Everyone at {0} sees this"
 msgstr ""
 
 #: hrms/controllers/employee_reminders.py:212
@@ -4617,8 +4888,8 @@ msgstr ""
 
 #: hrms/hr/doctype/exit_interview/test_exit_interview.py:133
 #: hrms/hr/doctype/exit_interview/test_exit_interview.py:143
-#: hrms/hr/doctype/exit_interview/test_exit_interview.py:145 hrms/setup.py:581
-#: hrms/setup.py:583 hrms/setup.py:602
+#: hrms/hr/doctype/exit_interview/test_exit_interview.py:145 hrms/setup.py:711
+#: hrms/setup.py:713 hrms/setup.py:732
 msgid "Exit Questionnaire Notification"
 msgstr ""
 
@@ -4683,8 +4954,8 @@ msgstr ""
 #: hrms/hr/doctype/employee_advance/employee_advance.json:279
 #: hrms/hr/doctype/expense_claim/expense_claim.json:120
 #: hrms/hr/doctype/expense_claim/expense_claim.json:553
-#: hrms/patches/v15_0/update_approver_custom_fields.py:11 hrms/setup.py:231
-#: hrms/setup.py:344
+#: hrms/patches/v15_0/update_approver_custom_fields.py:11 hrms/setup.py:323
+#: hrms/setup.py:474
 msgid "Expense Approver"
 msgstr ""
 
@@ -4817,17 +5088,27 @@ msgstr ""
 msgid "Expired Leaves"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:127
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:428
+msgid "Expires on"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:43
+#, python-brace-format
+msgid "Expires {0}"
+msgstr ""
+
 #. Label of the explanation (Small Text) field in DocType 'Attendance Request'
 #: hrms/hr/doctype/attendance_request/attendance_request.json:113
 msgid "Explanation"
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/organizational_chart.vue:465
-#: hrms/hr/page/organizational_chart/organizational_chart.vue:469
+#: hrms/hr/page/organizational_chart/organizational_chart.vue:468
+#: hrms/hr/page/organizational_chart/organizational_chart.vue:472
 msgid "Export as image"
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/organizational_chart.vue:290
+#: hrms/hr/page/organizational_chart/organizational_chart.vue:293
 msgid "Exporting..."
 msgstr ""
 
@@ -4975,7 +5256,7 @@ msgid "Fetch Shifts"
 msgstr ""
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.js:109
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:136
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:141
 msgid "Fetching Employees"
 msgstr ""
 
@@ -4990,6 +5271,10 @@ msgstr ""
 
 #: frontend/src/components/FilePreviewModal.vue:4
 msgid "File Preview"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:675
+msgid "Files must be uploaded from your profile"
 msgstr ""
 
 #: hrms/hr/doctype/leave_application/leave_application.js:99
@@ -5033,12 +5318,12 @@ msgstr ""
 msgid "Final Score Formula"
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/organizational_chart.vue:429
+#: hrms/hr/page/organizational_chart/organizational_chart.vue:432
 msgid "Find a person"
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/organizational_chart.vue:449
-#: hrms/hr/page/organizational_chart/organizational_chart.vue:453
+#: hrms/hr/page/organizational_chart/organizational_chart.vue:452
+#: hrms/hr/page/organizational_chart/organizational_chart.vue:456
 msgid "Find me"
 msgstr ""
 
@@ -5063,9 +5348,13 @@ msgstr ""
 msgid "Fiscal Year {0} not found"
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/components/ChartCanvas.vue:353
-#: hrms/hr/page/organizational_chart/components/ChartCanvas.vue:357
+#: hrms/hr/page/organizational_chart/components/ChartCanvas.vue:356
+#: hrms/hr/page/organizational_chart/components/ChartCanvas.vue:360
 msgid "Fit to screen"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:394
+msgid "Fix what HR asked for and request the change again."
 msgstr ""
 
 #. Label of the fixed_components (Data) field in DocType 'Job Offer Component'
@@ -5115,12 +5404,16 @@ msgstr ""
 msgid "FnF Pending"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/PublicProfile.vue:142
+msgid "Focus hours, how you prefer feedback, the best way to reach you."
+msgstr ""
+
 #. Label of the follow_via_email (Check) field in DocType 'Leave Application'
 #: hrms/hr/doctype/leave_application/leave_application.json:218
 msgid "Follow via Email"
 msgstr ""
 
-#: hrms/setup.py:439
+#: hrms/setup.py:569
 msgid "Food"
 msgstr ""
 
@@ -5226,6 +5519,15 @@ msgstr ""
 msgid "From here, you can enable encashment for the balance leaves."
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/BankSection.vue:184
+msgid "From the first payroll after HR approves"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:216
+#, python-brace-format
+msgid "From the first payroll after {0}"
+msgstr ""
+
 #: hrms/payroll/report/salary_register/salary_register.html:8
 #, python-brace-format
 msgid "From {0} to {1}"
@@ -5271,7 +5573,7 @@ msgstr ""
 msgid "Full and Final Outstanding Statement"
 msgstr ""
 
-#: hrms/setup.py:495
+#: hrms/setup.py:625
 msgid "Full-time"
 msgstr ""
 
@@ -5322,7 +5624,7 @@ msgstr ""
 #. Tool'
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.json:108
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json:85
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:69
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:70
 msgid "Get Employees"
 msgstr ""
 
@@ -5347,6 +5649,12 @@ msgstr ""
 #. Label of an action in the Onboarding Step 'Give feedback'
 #: hrms/performance/onboarding_step/create_employee_performance_feedback/create_employee_performance_feedback.json:3
 msgid "Give Feedback"
+msgstr ""
+
+#: hrms/hr/doctype/asset_request/asset_request.py:52
+#: hrms/hr/doctype/bank_details_change_request/bank_details_change_request.py:47
+#, python-brace-format
+msgid "Give a rejection reason, so {0} knows what to do next"
 msgstr ""
 
 #. Title of an Onboarding Step
@@ -5435,10 +5743,12 @@ msgstr ""
 #. Label of the grade (Link) field in DocType 'Payroll Entry'
 #. Label of the grade (Link) field in DocType 'Salary Structure Assignment'
 #: hrms/hr/doctype/training_result_employee/training_result_employee.json:61
+#: hrms/hr/page/employee_profile/employee_profile.vue:194
+#: hrms/hr/page/employee_profile/employee_profile.vue:340
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.js:173
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json:326
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json:200
-#: hrms/setup.py:303
+#: hrms/setup.py:433
 msgid "Grade"
 msgstr ""
 
@@ -5515,15 +5825,15 @@ msgstr ""
 #. Label of the gross (Currency) field in DocType 'Job Offer'
 #. Label of the gross_pay (Currency) field in DocType 'Salary Slip'
 #: frontend/src/components/SalarySlipItem.vue:13
-#: hrms/hr/doctype/job_offer/job_offer.json:278
-#: hrms/hr/doctype/job_offer/job_offer.py:362
+#: hrms/hr/doctype/job_offer/job_offer.json:282
+#: hrms/hr/doctype/job_offer/job_offer.py:396
 #: hrms/payroll/doctype/salary_slip/salary_slip.json:337
 #: hrms/payroll/report/income_tax_deductions/income_tax_deductions.py:54
 #: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:44
 #: hrms/payroll/report/salary_register/salary_register.py:261
-#: hrms/public/js/erpnext/employee_overview.js:278
-#: hrms/public/js/erpnext/employee_overview.js:297
-#: hrms/public/js/erpnext/employee_overview.js:406
+#: hrms/public/js/erpnext/employee_overview.js:292
+#: hrms/public/js/erpnext/employee_overview.js:311
+#: hrms/public/js/erpnext/employee_overview.js:420
 msgid "Gross Pay"
 msgstr ""
 
@@ -5543,12 +5853,12 @@ msgstr ""
 msgid "Gross Year To Date(Company Currency)"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:385
+#: hrms/public/js/erpnext/employee_overview.js:399
 msgid "Gross and net pay from submitted salary slips"
 msgstr ""
 
 #. Description of the 'Gross Pay' (Currency) field in DocType 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:274
+#: hrms/hr/doctype/job_offer/job_offer.json:278
 msgid "Gross earnings for one payroll cycle, before deductions. Shown as a row in the break-up; kept as a field because statutory wage ceilings are drawn on it."
 msgstr ""
 
@@ -5556,15 +5866,15 @@ msgstr ""
 msgid "Group goal's progress is auto-calculated based on the child goals."
 msgstr ""
 
-#: hrms/setup.py:428
+#: hrms/setup.py:558
 msgid "HR"
 msgstr ""
 
-#: hrms/setup.py:137
+#: hrms/setup.py:229
 msgid "HR & Payroll"
 msgstr ""
 
-#: hrms/setup.py:143
+#: hrms/setup.py:235
 msgid "HR & Payroll Settings"
 msgstr ""
 
@@ -5592,6 +5902,31 @@ msgstr ""
 msgid "HR Telemetry Milestone"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/BankSection.vue:179
+msgid "HR checks the proof before approving"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:231
+msgid "HR hands it over next"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:887
+#, python-brace-format
+msgid "HR has verified {0}. Ask HR to remove it."
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:222
+msgid "HR rejected the change"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:209
+msgid "HR verified the new account"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:178
+msgid "HR verifies the new account"
+msgstr ""
+
 #: hrms/config/desktop.py:5
 msgid "HRMS"
 msgstr ""
@@ -5607,7 +5942,7 @@ msgstr ""
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.json:88
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json:77
 #: hrms/hr/doctype/leave_application/leave_application.json:135
-#: hrms/public/js/erpnext/employee_overview.js:458
+#: hrms/public/js/erpnext/employee_overview.js:472
 msgid "Half Day"
 msgstr ""
 
@@ -5655,6 +5990,14 @@ msgstr ""
 msgid "Half day date should be in between from date and to date"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:232
+msgid "Hand it back to HR"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:409
+msgid "Hand over"
+msgstr ""
+
 #. Title of an Onboarding Step
 #: hrms/tenure/onboarding_step/create_employee_separation/create_employee_separation.json:19
 msgid "Handle an exit"
@@ -5665,7 +6008,23 @@ msgstr ""
 msgid "Has Certificate"
 msgstr ""
 
-#: hrms/setup.py:318
+#. Label of the has_number (Check) field in DocType 'Employee Document Type'
+#: hrms/hr/doctype/employee_document_type/employee_document_type.json:43
+msgid "Has a Number"
+msgstr ""
+
+#. Label of the has_expiry (Check) field in DocType 'Employee Document Type'
+#: hrms/hr/doctype/employee_document_type/employee_document_type.json:49
+msgid "Has an Expiry Date"
+msgstr ""
+
+#. Option for the 'Section Type' (Select) field in DocType 'Employee Profile
+#. Section'
+#: hrms/hr/doctype/employee_profile_section/employee_profile_section.json:21
+msgid "Headline"
+msgstr ""
+
+#: hrms/setup.py:448
 msgid "Health Insurance"
 msgstr ""
 
@@ -5675,11 +6034,11 @@ msgstr ""
 msgid "Health Insurance Name"
 msgstr ""
 
-#: hrms/setup.py:332
+#: hrms/setup.py:462
 msgid "Health Insurance No"
 msgstr ""
 
-#: hrms/setup.py:324
+#: hrms/setup.py:454
 msgid "Health Insurance Provider"
 msgstr ""
 
@@ -5697,14 +6056,23 @@ msgstr ""
 msgid "Hey, {0} 👋"
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:154
-#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:157
+#: hrms/hr/page/employee_profile/components/ProfileCard.vue:200
+msgid "Hide mobile"
+msgstr ""
+
+#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:146
+#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:149
 msgid "Hide team"
 msgstr ""
 
 #: hrms/hr/page/organizational_chart/components/TeamToggle.vue:17
 #, python-brace-format
 msgid "Hide the team of {0}"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/PropertyRow.vue:67
+#, python-brace-format
+msgid "Hide {0}"
 msgstr ""
 
 #. Title of an Onboarding Step
@@ -5767,8 +6135,12 @@ msgstr ""
 msgid "Holiday List for Optional Leave"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/employee_profile.vue:197
+msgid "Holiday list"
+msgstr ""
+
 #. Description of the 'Public Holidays' (Int) field in DocType 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:305
+#: hrms/hr/doctype/job_offer/job_offer.json:309
 msgid "Holidays in the year other than weekly offs"
 msgstr ""
 
@@ -5814,6 +6186,10 @@ msgstr ""
 msgid "House rented dates should be atleast 15 days apart"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/PublicProfile.vue:140
+msgid "How I like to work"
+msgstr ""
+
 #. Description of the Onboarding Step 'Choose flexible benefits'
 #: hrms/tax_and_benefits/onboarding_step/create_employee_benefit_application/create_employee_benefit_application.json:5
 msgid "How an employee splits their flexible benefit amount across components. See [Employee Benefit Application](https://docs.frappe.io/hr/employee-benefit-application)."
@@ -5840,10 +6216,14 @@ msgstr ""
 msgid "How much of each leave type every employee has left."
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/BankSection.vue:45
+#: hrms/hr/page/employee_profile/components/BankSection.vue:71
 #: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:62
 msgid "IFSC"
 msgstr ""
 
+#. Label of the ifsc_code (Data) field in DocType 'Bank Details Change Request'
+#: hrms/hr/doctype/bank_details_change_request/bank_details_change_request.json:102
 #: hrms/payroll/report/bank_remittance/bank_remittance.py:48
 msgid "IFSC Code"
 msgstr ""
@@ -5853,17 +6233,16 @@ msgstr ""
 msgid "IN"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/PublicProfile.vue:301
+msgid "Ideas for your profile"
+msgstr ""
+
 #. Label of the personal_id_number (Data) field in DocType 'Travel Request'
-#: hrms/hr/doctype/travel_request/travel_request.json:144
+#: hrms/hr/doctype/travel_request/travel_request.json:145
 msgid "Identification Document Number"
 msgstr ""
 
-#. Name of a DocType
-#. Label of the identification_document_type (Data) field in DocType
-#. 'Identification Document Type'
 #. Label of the personal_id_type (Link) field in DocType 'Travel Request'
-#: hrms/hr/doctype/identification_document_type/identification_document_type.json:16
-#: hrms/hr/doctype/identification_document_type/identification_document_type.json:25
 #: hrms/hr/doctype/travel_request/travel_request.json:138
 msgid "Identification Document Type"
 msgstr ""
@@ -6015,6 +6394,11 @@ msgstr ""
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:189
 msgid "In case of any error during this background process, the system will add a comment about the error on this Payroll Entry and revert to the Submitted status"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:401
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:30
+msgid "In review"
 msgstr ""
 
 #. Label of the incentive_section (Section Break) field in DocType 'Employee
@@ -6199,7 +6583,7 @@ msgstr ""
 msgid "Interest Income Account"
 msgstr ""
 
-#: hrms/setup.py:501
+#: hrms/setup.py:631
 msgid "Intern"
 msgstr ""
 
@@ -6245,8 +6629,8 @@ msgstr ""
 #: hrms/hr/doctype/interview/test_interview.py:338
 #: hrms/hr/doctype/interview/test_interview.py:347
 #: hrms/hr/doctype/interview/test_interview.py:349
-#: hrms/hr/doctype/interview/test_interview.py:356 hrms/setup.py:567
-#: hrms/setup.py:569 hrms/setup.py:600
+#: hrms/hr/doctype/interview/test_interview.py:356 hrms/setup.py:697
+#: hrms/setup.py:699 hrms/setup.py:730
 msgid "Interview Feedback Reminder"
 msgstr ""
 
@@ -6262,8 +6646,8 @@ msgstr ""
 #: hrms/hr/doctype/interview/test_interview.py:322
 #: hrms/hr/doctype/interview/test_interview.py:331
 #: hrms/hr/doctype/interview/test_interview.py:333
-#: hrms/hr/doctype/interview/test_interview.py:355 hrms/setup.py:555
-#: hrms/setup.py:557 hrms/setup.py:596
+#: hrms/hr/doctype/interview/test_interview.py:355 hrms/setup.py:685
+#: hrms/setup.py:687 hrms/setup.py:726
 msgid "Interview Reminder"
 msgstr ""
 
@@ -6418,7 +6802,7 @@ msgstr ""
 msgid "Invalid employee filter: {0}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:1045
+#: hrms/hr/doctype/expense_claim/expense_claim.py:1042
 msgid "Invalid parameters provided. Please pass the required arguments."
 msgstr ""
 
@@ -6547,6 +6931,10 @@ msgstr ""
 msgid "Is Tax Applicable"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:359
+msgid "It comes off their record, with the file they gave."
+msgstr ""
+
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:36
 #: hrms/public/js/salary_slip_deductions_report_filters.js:19
 msgid "Jan"
@@ -6563,10 +6951,10 @@ msgstr ""
 #: hrms/hr/doctype/interview/interview.json:41
 #: hrms/hr/doctype/interview_feedback/interview_feedback.json:108
 #: hrms/hr/doctype/job_applicant/job_applicant.json:223
-#: hrms/hr/doctype/job_offer/job_offer.json:84
+#: hrms/hr/doctype/job_offer/job_offer.json:89
 #: hrms/hr/report/recruitment_analytics/recruitment_analytics.py:38
 #: hrms/patches/v16_0/set_job_offer_in_employee.py:13
-#: hrms/recruitment/sidebar/recruitment/recruitment.json:82 hrms/setup.py:285
+#: hrms/recruitment/sidebar/recruitment/recruitment.json:82 hrms/setup.py:415
 #: hrms/workspace_sidebar/recruitment.json:64
 msgid "Job Applicant"
 msgstr ""
@@ -6599,7 +6987,7 @@ msgstr ""
 #. Label of the job_description_tab (Tab Break) field in DocType 'Job
 #. Requisition'
 #. Label of the description (Text Editor) field in DocType 'Job Requisition'
-#: hrms/hr/doctype/job_requisition/job_requisition.json:156 hrms/setup.py:516
+#: hrms/hr/doctype/job_requisition/job_requisition.json:156 hrms/setup.py:646
 msgid "Job Description"
 msgstr ""
 
@@ -6610,10 +6998,10 @@ msgstr ""
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/appointment_letter/appointment_letter.json:49
 #: hrms/hr/doctype/employee_onboarding/employee_onboarding.json:36
-#: hrms/hr/doctype/job_offer/job_offer.json:487
+#: hrms/hr/doctype/job_offer/job_offer.json:519
 #: hrms/hr/report/recruitment_analytics/recruitment_analytics.py:52
 #: hrms/patches/v16_0/set_job_offer_in_employee.py:22
-#: hrms/recruitment/sidebar/recruitment/recruitment.json:114 hrms/setup.py:294
+#: hrms/recruitment/sidebar/recruitment/recruitment.json:114 hrms/setup.py:424
 #: hrms/workspace_sidebar/recruitment.json:88
 msgid "Job Offer"
 msgstr ""
@@ -6636,7 +7024,7 @@ msgstr ""
 #. Name of a DocType
 #. Label of a Sidebar Item
 #. Label of a Workspace Sidebar Item
-#: hrms/hr/doctype/job_offer/job_offer.json:394
+#: hrms/hr/doctype/job_offer/job_offer.json:426
 #: hrms/hr/doctype/job_offer_term_template/job_offer_term_template.json:33
 #: hrms/recruitment/sidebar/recruitment/recruitment.json:175
 #: hrms/workspace_sidebar/recruitment.json:226
@@ -6644,7 +7032,7 @@ msgid "Job Offer Term Template"
 msgstr ""
 
 #. Label of the offer_terms (Table) field in DocType 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:400
+#: hrms/hr/doctype/job_offer/job_offer.json:432
 msgid "Job Offer Terms"
 msgstr ""
 
@@ -6652,7 +7040,7 @@ msgstr ""
 msgid "Job Offer status"
 msgstr ""
 
-#: hrms/hr/doctype/job_offer/job_offer.py:137
+#: hrms/hr/doctype/job_offer/job_offer.py:163
 #, python-brace-format
 msgid "Job Offer {0} already exists for {1}"
 msgstr ""
@@ -6728,10 +7116,25 @@ msgstr ""
 msgid "Job Requisition {0} has been associated with Job Opening {1}"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/employee_profile.vue:145
+#: hrms/hr/page/employee_profile/employee_profile.vue:753
+msgid "Job details"
+msgstr ""
+
 #. Description of the 'Description' (Text Editor) field in DocType 'Job
 #. Opening'
 #: hrms/hr/doctype/job_opening/job_opening.json:131
 msgid "Job profile, qualifications required etc."
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.vue:189
+#: hrms/hr/page/employee_profile/employee_profile.vue:333
+msgid "Joined"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/ProfileCard.vue:36
+#, python-brace-format
+msgid "Joined {0} recently"
 msgstr ""
 
 #. Option for the 'Dates Based On' (Select) field in DocType 'Leave Control
@@ -6794,6 +7197,18 @@ msgstr ""
 #: hrms/hr/doctype/appraisal/appraisal.py:182
 #: hrms/hr/doctype/appraisal_template/appraisal_template.json:32
 msgid "KRAs"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:365
+msgid "Keep"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:244
+msgid "Keep request"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.vue:777
+msgid "Kept by HR. To change something here, talk to your manager or HR."
 msgstr ""
 
 #. Description of the 'KRA' (Link) field in DocType 'Appraisal KRA'
@@ -6887,7 +7302,7 @@ msgstr ""
 #. Label of the leave_section (Section Break) field in DocType 'Job Offer'
 #. Option for the 'Calculate Payroll Working Days Based On' (Select) field in
 #. DocType 'Payroll Settings'
-#: hrms/hr/doctype/job_offer/job_offer.json:314
+#: hrms/hr/doctype/job_offer/job_offer.json:318
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:784
 #: hrms/overrides/dashboard_overrides.py:12
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json:43
@@ -6899,7 +7314,7 @@ msgid "Leave & Attendance"
 msgstr ""
 
 #. Label of the leave_policy_tab (Tab Break) field in DocType 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:296
+#: hrms/hr/doctype/job_offer/job_offer.json:300
 msgid "Leave & Holidays"
 msgstr ""
 
@@ -6935,7 +7350,7 @@ msgstr ""
 #. Label of the leave_allocations_section (Section Break) field in DocType
 #. 'Leave Policy'
 #. Label of a Sidebar Item
-#: hrms/hr/doctype/job_offer/job_offer.json:329
+#: hrms/hr/doctype/job_offer/job_offer.json:333
 #: hrms/hr/doctype/leave_policy/leave_policy.json:22
 #: hrms/leaves/sidebar/leaves/leaves.json:66
 msgid "Leave Allocations"
@@ -6956,7 +7371,7 @@ msgstr ""
 msgid "Leave Application Cancelled"
 msgstr ""
 
-#: hrms/setup.py:538
+#: hrms/setup.py:668
 msgid "Leave Application Notification"
 msgstr ""
 
@@ -6979,8 +7394,8 @@ msgstr ""
 #: hrms/hr/doctype/leave_application/leave_application.json:171
 #: hrms/hr/doctype/leave_application/leave_application.json:328
 #: hrms/hr/doctype/overtime_slip/overtime_slip.json:211
-#: hrms/patches/v15_0/update_approver_custom_fields.py:19 hrms/setup.py:224
-#: hrms/setup.py:352
+#: hrms/patches/v15_0/update_approver_custom_fields.py:19 hrms/setup.py:316
+#: hrms/setup.py:482
 msgid "Leave Approver"
 msgstr ""
 
@@ -7009,9 +7424,9 @@ msgstr ""
 #: frontend/src/components/LeaveBalance.vue:4
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json:99
 #: hrms/leaves/sidebar/leaves/leaves.json:269
-#: hrms/public/js/erpnext/employee_overview.js:278
-#: hrms/public/js/erpnext/employee_overview.js:353
-#: hrms/public/js/erpnext/employee_overview.js:491
+#: hrms/public/js/erpnext/employee_overview.js:292
+#: hrms/public/js/erpnext/employee_overview.js:367
+#: hrms/public/js/erpnext/employee_overview.js:505
 #: hrms/workspace_sidebar/leaves.json:98
 msgid "Leave Balance"
 msgstr ""
@@ -7032,7 +7447,7 @@ msgstr ""
 #. Label of a Sidebar Item
 #. Label of a Workspace Sidebar Item
 #: hrms/hr/doctype/leave_block_list/leave_block_list.json:96
-#: hrms/leaves/sidebar/leaves/leaves.json:238 hrms/setup.py:203
+#: hrms/leaves/sidebar/leaves/leaves.json:238 hrms/setup.py:295
 #: hrms/workspace_sidebar/leaves.json:192
 msgid "Leave Block List"
 msgstr ""
@@ -7151,7 +7566,7 @@ msgstr ""
 #. Label of the leave_policy (Link) field in DocType 'Leave Policy Assignment'
 #. Label of a Sidebar Item
 #. Label of a Workspace Sidebar Item
-#: hrms/hr/doctype/job_offer/job_offer.json:336
+#: hrms/hr/doctype/job_offer/job_offer.json:340
 #: hrms/hr/doctype/leave_allocation/leave_allocation.json:177
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.json:101
 #: hrms/hr/doctype/leave_policy/leave_policy.json:61
@@ -7200,7 +7615,7 @@ msgstr ""
 msgid "Leave Policy: {0} already assigned for Employee {1} for period {2} to {3}"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:567
+#: hrms/public/js/erpnext/employee_overview.js:581
 msgid "Leave Requests"
 msgstr ""
 
@@ -7287,8 +7702,8 @@ msgstr ""
 
 #. Label of the leave_without_pay (Float) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json:264
-#: hrms/payroll/report/salary_register/salary_register.py:229 hrms/setup.py:487
-#: hrms/setup.py:488
+#: hrms/payroll/report/salary_register/salary_register.py:229 hrms/setup.py:617
+#: hrms/setup.py:618
 msgid "Leave Without Pay"
 msgstr ""
 
@@ -7324,6 +7739,11 @@ msgstr ""
 #: hrms/hr/doctype/leave_application/leave_application.py:280
 #, python-brace-format
 msgid "Leave cannot be applied/cancelled before {0}, as leave balance has already been carry-forwarded in the future leave allocation record {1}"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:106
+#, python-brace-format
+msgid "Leave empty to keep {0}"
 msgstr ""
 
 #. Label of the is_optional_leave (Check) field in DocType 'Leave Type'
@@ -7406,7 +7826,7 @@ msgstr ""
 msgid "Leaves for the Leave Type {0} won't be carry-forwarded since carry-forwarding is disabled."
 msgstr ""
 
-#: hrms/setup.py:518
+#: hrms/setup.py:648
 msgid "Leaves per Year"
 msgstr ""
 
@@ -7427,7 +7847,7 @@ msgctxt "Employee"
 msgid "Left"
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/organizational_chart.vue:61
+#: hrms/hr/page/organizational_chart/organizational_chart.vue:63
 msgid "Left to right"
 msgstr ""
 
@@ -7476,6 +7896,16 @@ msgstr ""
 msgid "Link the cycle and tag KRA to your goal to update the appraisal's goal score based on the goal progress"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/SectionDialog.vue:123
+#, python-brace-format
+msgid "Link {0} URL"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/SectionDialog.vue:118
+#, python-brace-format
+msgid "Link {0} title"
+msgstr ""
+
 #: hrms/overrides/employee_master.py:65
 #, python-brace-format
 msgid "Linked Job Offer {0} was {1}. Please update the Job Offer status if this hire was intended."
@@ -7484,6 +7914,10 @@ msgstr ""
 #: hrms/controllers/employee_boarding_controller.py:154
 #, python-brace-format
 msgid "Linked Project {} and Tasks deleted."
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:644
+msgid "Links must start with http:// or https://"
 msgstr ""
 
 #. Label of the loan_account (Link) field in DocType 'Salary Slip Loan'
@@ -7496,7 +7930,7 @@ msgstr ""
 msgid "Loan Product"
 msgstr ""
 
-#: hrms/payroll/report/salary_register/salary_register.py:283 hrms/setup.py:859
+#: hrms/payroll/report/salary_register/salary_register.py:283 hrms/setup.py:989
 msgid "Loan Repayment"
 msgstr ""
 
@@ -7577,7 +8011,7 @@ msgstr ""
 msgid "MICR"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:184
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:200
 msgid "Make Bank Entry"
 msgstr ""
 
@@ -7593,6 +8027,10 @@ msgstr ""
 msgid "Manage time off"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/ProfileCard.vue:147
+msgid "Manages"
+msgstr ""
+
 #. Label of the mandatory_benefit_application (Check) field in DocType 'Payroll
 #. Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json:201
@@ -7603,7 +8041,7 @@ msgstr ""
 msgid "Mandatory fields required for this action:"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:213
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:238
 #, python-brace-format
 msgid "Mandatory fields required in {0}"
 msgstr ""
@@ -7623,6 +8061,11 @@ msgstr ""
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:38
 #: hrms/public/js/salary_slip_deductions_report_filters.js:21
 msgid "Mar"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.vue:160
+#: hrms/hr/page/employee_profile/employee_profile.vue:274
+msgid "Marital status"
 msgstr ""
 
 #. Label of an action in the Onboarding Step 'Mark attendance'
@@ -7699,7 +8142,7 @@ msgstr ""
 msgid "Marked Attendance HTML"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:443
+#: hrms/public/js/erpnext/employee_overview.js:457
 msgid "Marked attendance in this period"
 msgstr ""
 
@@ -7848,7 +8291,7 @@ msgstr ""
 msgid "Meal Preference"
 msgstr ""
 
-#: hrms/setup.py:440
+#: hrms/setup.py:570
 msgid "Medical"
 msgstr ""
 
@@ -7940,13 +8383,26 @@ msgstr ""
 msgid "Monthly Attendance Sheet"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:384
+#: hrms/public/js/erpnext/employee_overview.js:398
 msgid "Monthly Pay"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:277
+#, python-brace-format
+msgid "More for {0}"
 msgstr ""
 
 #: hrms/hr/utils.py:274
 #, python-brace-format
 msgid "More than one selection for {0} not allowed"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/SectionDialog.vue:198
+msgid "Move down"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/SectionDialog.vue:191
+msgid "Move up"
 msgstr ""
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:388
@@ -7994,8 +8450,14 @@ msgid "Name error"
 msgstr ""
 
 #. Label of the name_of_organizer (Data) field in DocType 'Travel Request'
-#: hrms/hr/doctype/travel_request/travel_request.json:188
+#: hrms/hr/doctype/travel_request/travel_request.json:189
 msgid "Name of Organizer"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:59
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:122
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:165
+msgid "Needed by"
 msgstr ""
 
 #. Label of the net_pay (Currency) field in DocType 'Salary Slip'
@@ -8004,9 +8466,9 @@ msgstr ""
 #: hrms/payroll/doctype/salary_structure/salary_structure.json:206
 #: hrms/payroll/report/salary_payments_via_ecs/salary_payments_via_ecs.py:51
 #: hrms/payroll/report/salary_register/salary_register.py:301
-#: hrms/public/js/erpnext/employee_overview.js:278
-#: hrms/public/js/erpnext/employee_overview.js:297
-#: hrms/public/js/erpnext/employee_overview.js:407
+#: hrms/public/js/erpnext/employee_overview.js:292
+#: hrms/public/js/erpnext/employee_overview.js:311
+#: hrms/public/js/erpnext/employee_overview.js:421
 msgid "Net Pay"
 msgstr ""
 
@@ -8030,6 +8492,12 @@ msgstr ""
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:128
 msgid "Net pay cannot be negative"
+msgstr ""
+
+#. Label of the new_bank_details_section (Section Break) field in DocType 'Bank
+#. Details Change Request'
+#: hrms/hr/doctype/bank_details_change_request/bank_details_change_request.json:81
+msgid "New Bank Details"
 msgstr ""
 
 #. Label of the new_employee_id (Link) field in DocType 'Employee Transfer'
@@ -8070,7 +8538,16 @@ msgstr ""
 msgid "New Leaves Allocated (In Days)"
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/components/DirectoryView.vue:320
+#: hrms/hr/page/employee_profile/components/BankSection.vue:352
+msgid "New account"
+msgstr ""
+
+#: hrms/hr/doctype/bank_details_change_request/bank_details_change_request.py:81
+#: hrms/hr/page/employee_profile/components/BankSection.vue:147
+msgid "New bank"
+msgstr ""
+
+#: hrms/hr/page/organizational_chart/components/DirectoryView.vue:314
 msgid "New joiner"
 msgstr ""
 
@@ -8088,7 +8565,7 @@ msgstr ""
 msgid "New shift assignments will be created after this date."
 msgstr ""
 
-#: hrms/hr/doctype/employee_advance/employee_advance.py:415
+#: hrms/hr/doctype/employee_advance/employee_advance.py:444
 #, python-brace-format
 msgid "No Bank/Cash Account found for currency {0}. Please create one under company {1}."
 msgstr ""
@@ -8171,7 +8648,7 @@ msgstr ""
 msgid "No active employee found associated with the email ID {0}. Try logging in with your employee email ID or contact your HR manager for access."
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/organizational_chart.vue:330
+#: hrms/hr/page/organizational_chart/organizational_chart.vue:333
 #, python-brace-format
 msgid "No active employees in {0}"
 msgstr ""
@@ -8217,7 +8694,11 @@ msgstr ""
 msgid "No arrear details found"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:451
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:348
+msgid "No assets assigned"
+msgstr ""
+
+#: hrms/public/js/erpnext/employee_overview.js:465
 msgid "No attendance marked in this period"
 msgstr ""
 
@@ -8246,12 +8727,20 @@ msgstr ""
 msgid "No check-ins yet"
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/organizational_chart.vue:333
+#: hrms/hr/page/organizational_chart/organizational_chart.vue:336
 msgid "No company found"
 msgstr ""
 
 #: hrms/hr/page/organizational_chart/components/DirectoryView.vue:104
 msgid "No department"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:322
+msgid "No documents yet"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.vue:711
+msgid "No emergency contact yet"
 msgstr ""
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:293
@@ -8283,7 +8772,7 @@ msgstr ""
 msgid "No items selected"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:498
+#: hrms/public/js/erpnext/employee_overview.js:512
 msgid "No leave allocated"
 msgstr ""
 
@@ -8311,7 +8800,7 @@ msgid "No of. Positions"
 msgstr ""
 
 #: hrms/hr/page/organizational_chart/components/DirectoryView.vue:240
-#: hrms/hr/page/organizational_chart/organizational_chart.vue:430
+#: hrms/hr/page/organizational_chart/organizational_chart.vue:433
 msgid "No one found"
 msgstr ""
 
@@ -8328,9 +8817,9 @@ msgstr ""
 msgid "No salary slips found for the selected employee from {0}"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:313
-#: hrms/public/js/erpnext/employee_overview.js:323
-#: hrms/public/js/erpnext/employee_overview.js:390
+#: hrms/public/js/erpnext/employee_overview.js:327
+#: hrms/public/js/erpnext/employee_overview.js:337
+#: hrms/public/js/erpnext/employee_overview.js:404
 msgid "No salary slips in this period"
 msgstr ""
 
@@ -8382,6 +8871,23 @@ msgstr ""
 msgid "Non-Vegetarian"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/employee_profile.vue:144
+msgid "None assigned"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:441
+msgid "Not permitted to see this bank account"
+msgstr ""
+
+#: hrms/hr/doctype/asset_request/asset_request.py:68
+msgid "Not the Custodian"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:253
+#: hrms/hr/page/employee_profile/components/BankSection.vue:262
+msgid "Not yet"
+msgstr ""
+
 #. Description of the 'Shift' (Link) field in DocType 'Attendance Request'
 #: hrms/hr/doctype/attendance_request/attendance_request.json:125
 msgid "Note: Shift will not be overwritten in existing attendance records"
@@ -8397,12 +8903,16 @@ msgstr ""
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:574
-#: hrms/public/js/erpnext/employee_overview.js:584
+#: hrms/public/js/erpnext/employee_overview.js:588
+#: hrms/public/js/erpnext/employee_overview.js:598
 msgid "Nothing awaiting approval"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:611
+#: hrms/hr/page/employee_profile/employee_profile.vue:143
+msgid "Nothing due"
+msgstr ""
+
+#: hrms/public/js/erpnext/employee_overview.js:625
 msgid "Nothing outstanding"
 msgstr ""
 
@@ -8410,23 +8920,28 @@ msgstr ""
 msgid "Nothing to change"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:592
+#: hrms/public/js/erpnext/employee_overview.js:606
 msgid "Nothing to reimburse"
 msgstr ""
 
-#: hrms/setup.py:519
+#: hrms/setup.py:649
 msgid "Notice Period"
 msgstr ""
 
 #. Label of the notice_number_of_days (Int) field in DocType 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:371
+#: hrms/hr/doctype/job_offer/job_offer.json:375
 msgid "Notice Period (Days)"
 msgstr ""
 
 #. Label of the notice_period_during_probation (Int) field in DocType 'Job
 #. Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:364
+#: hrms/hr/doctype/job_offer/job_offer.json:368
 msgid "Notice Period During Probation (Days)"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.vue:202
+#: hrms/hr/page/employee_profile/employee_profile.vue:344
+msgid "Notice period"
 msgstr ""
 
 #: hrms/hr/doctype/exit_interview/exit_interview.py:159
@@ -8548,11 +9063,11 @@ msgid "Offer Terms"
 msgstr ""
 
 #. Label of the offer_valid_till (Date) field in DocType 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:142
+#: hrms/hr/doctype/job_offer/job_offer.json:147
 msgid "Offer Valid Till"
 msgstr ""
 
-#: hrms/hr/doctype/job_offer/job_offer.js:162
+#: hrms/hr/doctype/job_offer/job_offer.js:170
 #, python-brace-format
 msgid "Offer of Employment - {0}"
 msgstr ""
@@ -8569,8 +9084,12 @@ msgstr ""
 #. Option for the 'Status' (Select) field in DocType 'Attendance'
 #: frontend/src/components/AttendanceCalendar.vue:79
 #: hrms/hr/doctype/attendance/attendance.json:98
-#: hrms/public/js/erpnext/employee_overview.js:459
+#: hrms/public/js/erpnext/employee_overview.js:473
 msgid "On Leave"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:31
+msgid "On file"
 msgstr ""
 
 #: hrms/hr/page/organizational_chart/components/DirectoryView.vue:48
@@ -8604,6 +9123,10 @@ msgstr ""
 msgid "One employee's ratings for a cycle. The cycle can create these for everyone in it. See [Appraisal](https://docs.frappe.io/hr/appraisal)."
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/PublicProfile.vue:170
+msgid "One line about you, at the top of your profile"
+msgstr ""
+
 #. Label of a number card in the Performance Workspace
 #: hrms/performance/workspace/performance/performance.json:28
 msgid "Ongoing Appraisal Cycles"
@@ -8622,6 +9145,14 @@ msgstr ""
 msgid "Only Employee Grievance with status {0} or {1} can be submitted"
 msgstr ""
 
+#: hrms/hr/doctype/bank_details_change_request/bank_details_change_request.py:56
+msgid "Only HR can approve or reject a Bank Details Change Request"
+msgstr ""
+
+#: hrms/hr/doctype/asset_request/asset_request.py:60
+msgid "Only HR can approve or reject an Asset Request"
+msgstr ""
+
 #: hrms/hr/doctype/interview/interview.py:364
 msgid "Only Interviewer Are allowed to submit Interview Feedback"
 msgstr ""
@@ -8638,6 +9169,14 @@ msgstr ""
 msgid "Only Shift Request with status 'Approved' and 'Rejected' can be submitted"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/employee_profile.py:776
+msgid "Only bank details and asset requests can be approved or rejected here"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:756
+msgid "Only bank details and asset requests can be withdrawn here"
+msgstr ""
+
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.py:60
 msgid "Only expired allocation can be cancelled"
 msgstr ""
@@ -8651,9 +9190,31 @@ msgstr ""
 msgid "Only users with the {0} role can create backdated leave applications"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/employee_profile.vue:554
+msgid "Only you and HR"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.vue:605
+msgid "Only you and HR see this"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:766
+msgid "Only your own open requests can be changed"
+msgstr ""
+
 #: hrms/hr/doctype/goal/goal_list.js:110
 #, python-brace-format
 msgid "Only {0} Goals can be {1}"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.vue:555
+#, python-brace-format
+msgid "Only {0} and HR"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.vue:606
+#, python-brace-format
+msgid "Only {0} and HR see this"
 msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Job Requisition'
@@ -8674,6 +9235,10 @@ msgstr ""
 #. Label of an action in the Onboarding Step 'Check leave balances'
 #: hrms/leaves/onboarding_step/view_employee_leave_balance/view_employee_leave_balance.json:3
 msgid "Open Employee Leave Balance"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.vue:86
+msgid "Open Employee record"
 msgstr ""
 
 #. Label of an action in the Onboarding Step 'Settle employee expenses'
@@ -8724,6 +9289,11 @@ msgstr ""
 msgid "Open Recruitment Analytics"
 msgstr ""
 
+#: hrms/hr/doctype/asset_request/asset_request.py:84
+#: hrms/hr/doctype/bank_details_change_request/bank_details_change_request.py:74
+msgid "Open Request Exists"
+msgstr ""
+
 #. Label of the open_resume_button (Button) field in DocType 'Job Applicant'
 #: hrms/hr/doctype/job_applicant/job_applicant.json:213
 msgid "Open Resume in New Tab"
@@ -8770,7 +9340,6 @@ msgid "Open a job, add an applicant and make them an offer."
 msgstr ""
 
 #: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:131
-#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:137
 msgid "Open profile"
 msgstr ""
 
@@ -8804,14 +9373,14 @@ msgstr ""
 msgid "Org chart"
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/components/ChartCanvas.vue:285
+#: hrms/hr/page/organizational_chart/components/ChartCanvas.vue:288
 msgid "Org chart. Drag to move, plus and minus to zoom, 0 to fit."
 msgstr ""
 
 #. Label of a Sidebar Item
 #. Label of a Workspace Sidebar Item
-#: hrms/hr/page/organizational_chart/organizational_chart.vue:292
-#: hrms/hr/page/organizational_chart/organizational_chart.vue:341
+#: hrms/hr/page/organizational_chart/organizational_chart.vue:295
+#: hrms/hr/page/organizational_chart/organizational_chart.vue:344
 #: hrms/hr_setup/sidebar/hr_setup/hr_setup.json:52
 #: hrms/workspace_sidebar/hr_setup.json:52
 msgid "Organizational Chart"
@@ -9005,6 +9574,14 @@ msgstr ""
 msgid "PAN Number"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:327
+msgid "PDF or image. A document you upload for them counts as on file at once."
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:328
+msgid "PDF or image. HR checks each upload before it counts as on file."
+msgstr ""
+
 #. Name of a DocType
 #: hrms/hr/doctype/pwa_notification/pwa_notification.json:90
 msgid "PWA Notification"
@@ -9021,7 +9598,7 @@ msgstr ""
 msgid "Parent Goal"
 msgstr ""
 
-#: hrms/setup.py:496
+#: hrms/setup.py:626
 msgid "Part-time"
 msgstr ""
 
@@ -9088,7 +9665,7 @@ msgstr ""
 msgid "Pay via Salary Slip"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:461
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:486
 msgid "Payment Account is mandatory"
 msgstr ""
 
@@ -9175,7 +9752,7 @@ msgstr ""
 msgid "Payroll Correction Child"
 msgstr ""
 
-#: hrms/setup.py:189 hrms/setup.py:387
+#: hrms/setup.py:281 hrms/setup.py:517
 msgid "Payroll Cost Center"
 msgstr ""
 
@@ -9239,7 +9816,7 @@ msgstr ""
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json:65
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json:241
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json:179
-#: hrms/setup.py:932
+#: hrms/setup.py:1062
 msgid "Payroll Payable Account"
 msgstr ""
 
@@ -9320,7 +9897,7 @@ msgstr ""
 msgid "Pending Interviews"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:541
+#: hrms/public/js/erpnext/employee_overview.js:555
 msgid "Pending Items"
 msgstr ""
 
@@ -9358,6 +9935,11 @@ msgstr ""
 msgid "Performance Management"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/employee_profile.vue:170
+#: hrms/hr/page/employee_profile/employee_profile.vue:296
+msgid "Permanent address"
+msgstr ""
+
 #: frontend/src/components/FormView.vue:291
 #: frontend/src/components/RequestActionSheet.vue:162
 #, python-brace-format
@@ -9367,6 +9949,23 @@ msgstr ""
 #: frontend/src/components/FormView.vue:260
 #, python-brace-format
 msgid "Permanently submit {0}"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.vue:623
+msgid "Personal details"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.vue:167
+#: hrms/hr/page/employee_profile/employee_profile.vue:284
+msgid "Personal email"
+msgstr ""
+
+#. Option for the 'Section Type' (Select) field in DocType 'Employee Profile
+#. Section'
+#: hrms/hr/doctype/employee_profile_section/employee_profile_section.json:21
+#: hrms/hr/page/employee_profile/components/PublicProfile.vue:116
+#: hrms/hr/page/employee_profile/components/PublicProfile.vue:118
+msgid "Photos"
 msgstr ""
 
 #. Description of the Onboarding Step 'Pay the employee back'
@@ -9380,7 +9979,7 @@ msgstr ""
 msgid "Picking a template replaces the letter body with the template's text."
 msgstr ""
 
-#: hrms/setup.py:500
+#: hrms/setup.py:630
 msgid "Piecework"
 msgstr ""
 
@@ -9456,7 +10055,7 @@ msgstr ""
 msgid "Please reduce {0} to avoid shift time overlapping with itself"
 msgstr ""
 
-#: hrms/hr/doctype/job_offer/job_offer.js:191
+#: hrms/hr/doctype/job_offer/job_offer.js:199
 msgid "Please review the letter and confirm your acceptance at the earliest."
 msgstr ""
 
@@ -9742,7 +10341,7 @@ msgstr ""
 #: hrms/hr/doctype/training_event_employee/training_event_employee.json:58
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.py:783
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json:101
-#: hrms/public/js/erpnext/employee_overview.js:456
+#: hrms/public/js/erpnext/employee_overview.js:470
 msgid "Present"
 msgstr ""
 
@@ -9782,7 +10381,7 @@ msgstr ""
 #. Label of the printing_tab (Tab Break) field in DocType 'Appointment Letter'
 #. Label of the printing_tab (Tab Break) field in DocType 'Job Offer'
 #: hrms/hr/doctype/appointment_letter/appointment_letter.json:154
-#: hrms/hr/doctype/job_offer/job_offer.json:422
+#: hrms/hr/doctype/job_offer/job_offer.json:454
 msgid "Print & Email"
 msgstr ""
 
@@ -9791,20 +10390,20 @@ msgstr ""
 msgid "Printed On {0}"
 msgstr ""
 
-#: hrms/setup.py:479 hrms/setup.py:480
+#: hrms/setup.py:609 hrms/setup.py:610
 msgid "Privilege Leave"
 msgstr ""
 
-#: hrms/setup.py:497
+#: hrms/setup.py:627
 msgid "Probation"
 msgstr ""
 
 #. Label of the probation_period_days (Int) field in DocType 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:358
+#: hrms/hr/doctype/job_offer/job_offer.json:362
 msgid "Probation Period (Days)"
 msgstr ""
 
-#: hrms/setup.py:511
+#: hrms/setup.py:641
 msgid "Probationary Period"
 msgstr ""
 
@@ -9817,7 +10416,7 @@ msgstr ""
 #. Label of the process_payroll_accounting_entry_based_on_employee (Check)
 #. field in DocType 'Payroll Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json:114
-#: hrms/setup.py:943
+#: hrms/setup.py:1073
 msgid "Process Payroll Accounting Entry based on Employee"
 msgstr ""
 
@@ -9860,6 +10459,18 @@ msgstr ""
 msgid "Proficiency"
 msgstr ""
 
+#: hrms/setup.py:371
+msgid "Profile Sections"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.vue:523
+msgid "Profile sections"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:606
+msgid "Profile sections must be a list"
+msgstr ""
+
 #: hrms/hr/report/project_profitability/project_profitability.py:192
 msgid "Profit"
 msgstr ""
@@ -9883,6 +10494,20 @@ msgstr ""
 msgid "Promotions (This Month)"
 msgstr ""
 
+#. Label of the proof_section (Section Break) field in DocType 'Bank Details
+#. Change Request'
+#. Label of the proof (Attach) field in DocType 'Bank Details Change Request'
+#: hrms/hr/doctype/bank_details_change_request/bank_details_change_request.json:112
+#: hrms/hr/page/employee_profile/components/BankSection.vue:75
+#: hrms/hr/page/employee_profile/components/BankSection.vue:151
+msgid "Proof"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:172
+#: hrms/hr/page/employee_profile/components/BankSection.vue:200
+msgid "Proof added"
+msgstr ""
+
 #. Description of the Onboarding Step 'Submit proof of exemptions'
 #: hrms/tax_and_benefits/onboarding_step/create_employee_tax_exemption_proof_submission/create_employee_tax_exemption_proof_submission.json:5
 msgid "Proof of what was declared, so the exemption counts in the final tax. See [Employee Tax Exemption Proof Submission](https://docs.frappe.io/hr/employee-tax-exemption-proof-submission)."
@@ -9903,8 +10528,13 @@ msgid "Public Holiday Multiplier"
 msgstr ""
 
 #. Label of the total_public_holidays (Int) field in DocType 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:308
+#: hrms/hr/doctype/job_offer/job_offer.json:312
 msgid "Public Holidays"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.vue:129
+#: hrms/hr/page/employee_profile/employee_profile.vue:541
+msgid "Public profile"
 msgstr ""
 
 #. Label of the publish_applications_received (Check) field in DocType 'Job
@@ -10016,8 +10646,12 @@ msgstr ""
 msgid "Re-allocate Leaves"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/PublicProfile.vue:241
+msgid "Read more"
+msgstr ""
+
 #. Option for the 'Status' (Select) field in DocType 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:129
+#: hrms/hr/doctype/job_offer/job_offer.json:134
 msgid "Ready to Send"
 msgstr ""
 
@@ -10152,6 +10786,12 @@ msgstr ""
 #: frontend/src/components/RequestActionSheet.vue:96
 #: hrms/hr/doctype/job_applicant/job_applicant.js:74
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:126
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:491
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:497
+#: hrms/hr/page/employee_profile/components/BankSection.vue:263
+#: hrms/hr/page/employee_profile/components/BankSection.vue:428
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:449
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:456
 msgid "Reject"
 msgstr ""
 
@@ -10159,16 +10799,43 @@ msgstr ""
 msgid "Reject Employee Referral"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/BankSection.vue:258
+msgid "Reject this change?"
+msgstr ""
+
 #. Label of a number card in the Expenses Workspace
 #: hrms/expenses/workspace/expenses/expenses.json:36
 msgid "Rejected Claims (This Month)"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:223
+#, python-brace-format
+msgid "Rejected by {0}: {1}"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:227
+#, python-brace-format
+msgid "Rejected on {0}"
 msgstr ""
 
 #: frontend/src/components/RequestActionSheet.vue:335
 msgid "Rejection"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:188
+#. Label of the rejection_reason (Small Text) field in DocType 'Asset Request'
+#. Label of the rejection_reason (Small Text) field in DocType 'Bank Details
+#. Change Request'
+#: hrms/hr/doctype/asset_request/asset_request.json:144
+#: hrms/hr/doctype/bank_details_change_request/bank_details_change_request.json:139
+msgid "Rejection Reason"
+msgstr ""
+
+#: hrms/hr/doctype/asset_request/asset_request.py:55
+#: hrms/hr/doctype/bank_details_change_request/bank_details_change_request.py:50
+msgid "Rejection Reason Missing"
+msgstr ""
+
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:209
 msgid "Release Withheld Salaries"
 msgstr ""
 
@@ -10210,10 +10877,27 @@ msgstr ""
 msgid "Reminders"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/employee_profile.vue:471
+msgid "Remove cover"
+msgstr ""
+
 #. Label of the remove_if_zero_valued (Check) field in DocType 'Salary
 #. Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json:254
 msgid "Remove if Zero Valued"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/SectionDialog.vue:128
+msgid "Remove link"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/SectionDialog.vue:154
+msgid "Remove photo"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:354
+#, python-brace-format
+msgid "Remove {0}?"
 msgstr ""
 
 #. Option for the 'Mode of Travel' (Select) field in DocType 'Travel Itinerary'
@@ -10225,7 +10909,7 @@ msgstr ""
 msgid "Reopen Job Opening"
 msgstr ""
 
-#: hrms/setup.py:916 hrms/setup.py:925
+#: hrms/setup.py:1046 hrms/setup.py:1055
 msgid "Repay From Salary"
 msgstr ""
 
@@ -10244,12 +10928,29 @@ msgstr ""
 msgid "Repeat On Days"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:85
+msgid "Replace for them"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:89
+#, python-brace-format
+msgid "Replaces {0}"
+msgstr ""
+
 #: hrms/public/js/utils/employee_quick_entry.js:14
 msgid "Reports to and branch"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:128
+msgid "Request"
+msgstr ""
+
 #: frontend/src/views/Home.vue:32 frontend/src/views/attendance/Dashboard.vue:9
 msgid "Request Attendance"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:780
+msgid "Request Closed"
 msgstr ""
 
 #: frontend/src/views/Home.vue:47
@@ -10274,9 +10975,21 @@ msgstr ""
 msgid "Request an Advance"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:356
+msgid "Request an asset"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:253
+msgid "Request asset"
+msgstr ""
+
 #. Title of an Onboarding Step
 #: hrms/shift_and_attendance/onboarding_step/create_attendance_request/create_attendance_request.json:19
 msgid "Request attendance"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:318
+msgid "Request change"
 msgstr ""
 
 #. Label of the requested_by (Link) field in DocType 'Job Requisition'
@@ -10296,7 +11009,7 @@ msgstr ""
 msgid "Require Full Funding"
 msgstr ""
 
-#: hrms/setup.py:248
+#: hrms/setup.py:340
 msgid "Required Skills"
 msgstr ""
 
@@ -10306,19 +11019,24 @@ msgstr ""
 msgid "Required for Employee Creation"
 msgstr ""
 
+#. Label of the is_required (Check) field in DocType 'Employee Document Type'
+#: hrms/hr/doctype/employee_document_type/employee_document_type.json:33
+msgid "Required from Every Employee"
+msgstr ""
+
 #: hrms/hr/doctype/interview/interview.js:32
 msgid "Reschedule Interview"
 msgstr ""
 
-#: hrms/hr/doctype/job_offer/job_offer.js:151
+#: hrms/hr/doctype/job_offer/job_offer.js:159
 msgid "Resend Offer Letter"
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/components/ChartCanvas.vue:336
+#: hrms/hr/page/organizational_chart/components/ChartCanvas.vue:339
 msgid "Reset to 100%"
 msgstr ""
 
-#: hrms/setup.py:517
+#: hrms/setup.py:647
 msgid "Responsibilities"
 msgstr ""
 
@@ -10381,11 +11099,41 @@ msgstr ""
 msgid "Return amount cannot be greater than unclaimed amount"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:216
+msgid "Return approved"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:210
+msgid "Return rejected"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:221
+msgid "Return requested"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:437
+#, python-brace-format
+msgid "Return {0}"
+msgstr ""
+
+#: hrms/hr/doctype/asset_request/asset_request.py:91
+#, python-brace-format
+msgid "Returns {0}"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:465
+msgid "Review asset request"
+msgstr ""
+
 #. Title of an Onboarding Step
 #. Title of the Module Onboarding 'Performance Onboarding'
 #: hrms/hr_setup/onboarding_step/complete_performance_onboarding/complete_performance_onboarding.json:19
 #: hrms/performance/module_onboarding/performance_onboarding/performance_onboarding.json:50
 msgid "Review performance"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:464
+msgid "Review return request"
 msgstr ""
 
 #. Title of an Onboarding Step
@@ -10395,6 +11143,11 @@ msgstr ""
 
 #: hrms/hr/doctype/hr_settings/hr_settings.js:41
 msgid "Review various other settings related to Employee Leaves and Expense Claim"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:411
+#, python-brace-format
+msgid "Review {0}"
 msgstr ""
 
 #. Label of the reviewer (Link) field in DocType 'Employee Performance
@@ -10414,8 +11167,12 @@ msgstr ""
 msgid "Revised CTC"
 msgstr ""
 
+#: hrms/hr/page/organizational_chart/organizational_chart.vue:63
+msgid "Right to left"
+msgstr ""
+
 #. Label of the role_and_joining_tab (Tab Break) field in DocType 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:78
+#: hrms/hr/doctype/job_offer/job_offer.json:83
 msgid "Role & Joining"
 msgstr ""
 
@@ -10482,7 +11239,7 @@ msgstr ""
 msgid "Row #{0}: Timesheet amount will overwrite the Earning component amount for the Salary Component {1}"
 msgstr ""
 
-#: hrms/hr/doctype/expense_claim/expense_claim.py:1014
+#: hrms/hr/doctype/expense_claim/expense_claim.py:1011
 #, python-brace-format
 msgid "Row No {0}: Amount cannot be greater than the Outstanding Amount against Expense Claim {1}. Outstanding Amount is {2}"
 msgstr ""
@@ -10628,7 +11385,7 @@ msgstr ""
 #. Label of the salary_details_section (Section Break) field in DocType 'Job
 #. Offer'
 #: hrms/hr/doctype/employee_promotion/employee_promotion.json:89
-#: hrms/hr/doctype/job_offer/job_offer.json:210
+#: hrms/hr/doctype/job_offer/job_offer.json:215
 msgid "Salary Details"
 msgstr ""
 
@@ -10668,7 +11425,7 @@ msgstr ""
 #. Label of a Workspace Sidebar Item
 #: hrms/payroll/report/salary_register/salary_register.json:18
 #: hrms/payroll/sidebar/payroll/payroll.json:160
-#: hrms/public/js/erpnext/employee_overview.js:386
+#: hrms/public/js/erpnext/employee_overview.js:400
 #: hrms/workspace_sidebar/payroll.json:130
 msgid "Salary Register"
 msgstr ""
@@ -10686,7 +11443,7 @@ msgstr ""
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json:114
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json:123
 #: hrms/payroll/doctype/salary_slip/salary_slip.json:785
-#: hrms/payroll/sidebar/payroll/payroll.json:82 hrms/setup.py:415
+#: hrms/payroll/sidebar/payroll/payroll.json:82 hrms/setup.py:545
 #: hrms/workspace_sidebar/payroll.json:67
 msgid "Salary Slip"
 msgstr ""
@@ -10762,7 +11519,7 @@ msgstr ""
 msgid "Salary Slip {0} failed for Payroll Entry {1}"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:117
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:122
 #, python-brace-format
 msgid "Salary Slip {0} failed. You can resolve the {1} and retry {0}."
 msgstr ""
@@ -10801,7 +11558,7 @@ msgstr ""
 #. Assignment'
 #. Label of a Sidebar Item
 #. Label of a Workspace Sidebar Item
-#: hrms/hr/doctype/job_offer/job_offer.json:217
+#: hrms/hr/doctype/job_offer/job_offer.json:222
 #: hrms/payroll/doctype/arrear/arrear.json:99
 #: hrms/payroll/doctype/bulk_salary_structure_assignment/bulk_salary_structure_assignment.json:39
 #: hrms/payroll/doctype/salary_component/salary_component.js:47
@@ -10888,6 +11645,11 @@ msgstr ""
 msgid "Salary Withholding {0} already exists for employee {1} for the selected period"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/BankSection.vue:305
+#: hrms/hr/page/employee_profile/employee_profile.vue:142
+msgid "Salary account"
+msgstr ""
+
 #: hrms/hr/doctype/leave_application/leave_application.py:407
 #, python-brace-format
 msgid "Salary already processed for period between {0} and {1}, Leave application period cannot be between this date range."
@@ -10909,13 +11671,37 @@ msgstr ""
 msgid "Salary components should be part of the Salary Structure."
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/BankSection.vue:251
+#, python-brace-format
+msgid "Salary goes to {0} from the next payroll."
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:347
+msgid "Salary is paid into this account."
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:260
+#, python-brace-format
+msgid "Salary keeps going to {0}."
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/BankSection.vue:183
+#: hrms/hr/page/employee_profile/components/BankSection.vue:215
+msgid "Salary moves to the new account"
+msgstr ""
+
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:2868
 #, python-brace-format
 msgid "Salary slip emails have been enqueued for sending. Check {0} for status."
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:217
+#: hrms/public/js/erpnext/employee_overview.js:231
 msgid "Salary slips, attendance, leaves and expense claims for this employee will show up here."
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/CardEditor.vue:233
+#: hrms/hr/page/employee_profile/employee_profile.vue:174
+msgid "Same as current address"
 msgstr ""
 
 #. Label of the sanctioned_amount (Currency) field in DocType 'Expense Claim
@@ -10934,6 +11720,20 @@ msgstr ""
 #: hrms/hr/doctype/expense_claim/expense_claim.py:664
 #, python-brace-format
 msgid "Sanctioned Amount cannot be greater than Claim Amount in Row {0}."
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:195
+msgid "Say what is wrong, so they can fix it"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:787
+#, python-brace-format
+msgid "Say why the request is rejected, so {0} knows"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:145
+#: hrms/hr/page/employee_profile/components/BankSection.vue:274
+msgid "Say why, so they know what to do next"
 msgstr ""
 
 #. Label of an action in the Onboarding Step 'Schedule an interview'
@@ -10978,6 +11778,12 @@ msgstr ""
 
 #: hrms/hr/page/organizational_chart/components/DirectoryView.vue:150
 msgid "Search name, role or office"
+msgstr ""
+
+#. Label of the section_type (Select) field in DocType 'Employee Profile
+#. Section'
+#: hrms/hr/doctype/employee_profile_section/employee_profile_section.json:20
+msgid "Section Type"
 msgstr ""
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.js:73
@@ -11029,7 +11835,7 @@ msgid "Select Shift Requests"
 msgstr ""
 
 #. Label of the select_terms (Link) field in DocType 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:410
+#: hrms/hr/doctype/job_offer/job_offer.json:442
 msgid "Select Terms and Conditions"
 msgstr ""
 
@@ -11167,6 +11973,14 @@ msgstr ""
 msgid "Send an appointment letter"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:373
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:446
+#: hrms/hr/page/employee_profile/components/BankSection.vue:334
+#: hrms/hr/page/employee_profile/components/BankSection.vue:355
+#: hrms/hr/page/employee_profile/components/BankSection.vue:366
+msgid "Send to HR"
+msgstr ""
+
 #. Label of the sender_copy (Link) field in DocType 'Payroll Settings'
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.json:193
 msgid "Sender Copy"
@@ -11279,6 +12093,11 @@ msgstr ""
 #. DocType 'Employee Promotion'
 #: hrms/hr/doctype/employee_promotion/employee_promotion.json:67
 msgid "Set the properties that should be updated in the Employee master on promotion submission"
+msgstr ""
+
+#: hrms/hr/doctype/asset_request/asset_request.py:49
+#: hrms/hr/doctype/bank_details_change_request/bank_details_change_request.py:44
+msgid "Set the status to Open, or discard the request to cancel it"
 msgstr ""
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.py:231
@@ -11469,8 +12288,8 @@ msgstr ""
 msgid "Shift Request"
 msgstr ""
 
-#: hrms/patches/v15_0/update_approver_custom_fields.py:27 hrms/setup.py:217
-#: hrms/setup.py:365
+#: hrms/patches/v15_0/update_approver_custom_fields.py:27 hrms/setup.py:309
+#: hrms/setup.py:495
 msgid "Shift Request Approver"
 msgstr ""
 
@@ -11611,7 +12430,7 @@ msgid "Shortlisted"
 msgstr ""
 
 #: hrms/hr/doctype/job_applicant/job_applicant.js:89
-#: hrms/hr/doctype/job_offer/job_offer.js:109
+#: hrms/hr/doctype/job_offer/job_offer.js:117
 msgid "Show Employee"
 msgstr ""
 
@@ -11645,8 +12464,12 @@ msgstr ""
 msgid "Show Unread"
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:154
-#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:157
+#: hrms/hr/page/employee_profile/components/ProfileCard.vue:200
+msgid "Show mobile"
+msgstr ""
+
+#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:146
+#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:149
 msgid "Show team"
 msgstr ""
 
@@ -11655,11 +12478,16 @@ msgstr ""
 msgid "Show the team of {0}"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/ProfileCard.vue:224
+#, python-brace-format
+msgid "Show {0} more"
+msgstr ""
+
 #: hrms/www/jobs/index.html:121
 msgid "Showing"
 msgstr ""
 
-#: hrms/setup.py:471 hrms/setup.py:472
+#: hrms/setup.py:601 hrms/setup.py:602
 msgid "Sick Leave"
 msgstr ""
 
@@ -11669,8 +12497,13 @@ msgid "Sign to show on appointment letter"
 msgstr ""
 
 #. Label of the signature (Attach Image) field in DocType 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:457
+#: hrms/hr/doctype/job_offer/job_offer.json:489
 msgid "Sign to show on offer letter"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:281
+#, python-brace-format
+msgid "Since {0}"
 msgstr ""
 
 #: hrms/hr/doctype/leave_policy/leave_policy.js:9
@@ -11708,7 +12541,7 @@ msgstr ""
 msgid "Someone who applied for a job opening. Applications from the job portal arrive here. See [Job Applicant](https://docs.frappe.io/hr/job-applicant)."
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:228
+#: hrms/public/js/erpnext/employee_overview.js:242
 msgid "Something went wrong while loading this employee's activity."
 msgstr ""
 
@@ -11832,7 +12665,7 @@ msgstr ""
 msgid "Status for Other Half"
 msgstr ""
 
-#: hrms/setup.py:514
+#: hrms/setup.py:644
 msgid "Stock Options"
 msgstr ""
 
@@ -11873,17 +12706,17 @@ msgstr ""
 msgid "Submit Now"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:90
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:95
 msgid "Submit Overtime Slips"
 msgstr ""
 
 #. Label of an action in the Onboarding Step 'Submit proof of exemptions'
-#: hrms/payroll/doctype/employee_tax_exemption_declaration/employee_tax_exemption_declaration.js:43
+#: hrms/payroll/doctype/employee_tax_exemption_declaration/employee_tax_exemption_declaration.js:44
 #: hrms/tax_and_benefits/onboarding_step/create_employee_tax_exemption_proof_submission/create_employee_tax_exemption_proof_submission.json:3
 msgid "Submit Proof"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:171
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:177
 msgid "Submit Salary Slip"
 msgstr ""
 
@@ -11906,7 +12739,7 @@ msgstr ""
 msgid "Submitted via Payroll Entry"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:430
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:455
 msgid "Submitting Salary Slips and creating Journal Entry..."
 msgstr ""
 
@@ -11965,11 +12798,15 @@ msgstr ""
 msgid "Take Exact Completed Years"
 msgstr ""
 
-#: hrms/hr/doctype/job_offer/job_offer.py:365
+#: hrms/hr/doctype/job_offer/job_offer.py:404
 msgid "Take Home* (Income Tax applicable as per IT Act)"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:509
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:311
+msgid "Take back"
+msgstr ""
+
+#: hrms/public/js/erpnext/employee_overview.js:523
 msgid "Taken"
 msgstr ""
 
@@ -12111,6 +12948,7 @@ msgstr ""
 #. Title of a Workspace Sidebar
 #: hrms/desktop_icon/tenure.json:10
 #: hrms/hr/doctype/hr_settings/hr_settings.json:323
+#: hrms/hr/page/employee_profile/components/ProfileCard.vue:164
 #: hrms/tenure/sidebar/tenure/tenure.json:362
 #: hrms/tenure/workspace/tenure/tenure.json:19
 #: hrms/workspace_sidebar/tenure.json:231
@@ -12152,7 +12990,7 @@ msgstr ""
 msgid "The amount exceeds the available balance for Employee Advance {0}. Available amount for return: {1}."
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/organizational_chart.vue:296
+#: hrms/hr/page/organizational_chart/organizational_chart.vue:299
 msgid "The chart could not be exported. Try again, or with fewer teams open."
 msgstr ""
 
@@ -12191,12 +13029,21 @@ msgstr ""
 msgid "The earnings and deductions that make up a salary, and how each is calculated. See [Salary Structure](https://docs.frappe.io/hr/salary-structure)."
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/BankSection.vue:261
+msgid "The employee can send their bank details again."
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:480
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:438
+msgid "The employee sees this"
+msgstr ""
+
 #. Description of the Onboarding Step 'Set your payroll period'
 #: hrms/tax_and_benefits/onboarding_step/create_payroll_period/create_payroll_period.json:5
 msgid "The financial year that tax is calculated over. See [Payroll Period](https://docs.frappe.io/hr/payroll-period)."
 msgstr ""
 
-#: hrms/setup.py:208
+#: hrms/setup.py:300
 msgid "The first Approver in the list will be set as the default Approver."
 msgstr ""
 
@@ -12301,14 +13148,14 @@ msgstr ""
 msgid "There are no arrear differences between existing and new salary structure components."
 msgstr ""
 
-#: hrms/hr/doctype/job_offer/job_offer.py:190
+#: hrms/hr/doctype/job_offer/job_offer.py:217
 #, python-brace-format
 msgid "There are no vacancies under staffing plan {0}"
 msgstr ""
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:86
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:39
-#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:542
+#: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:547
 #, python-brace-format
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
 msgstr ""
@@ -12322,6 +13169,10 @@ msgstr ""
 #. 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json:101
 msgid "These leaves are holidays permitted by the company however, availing it is optional for an Employee."
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/PublicProfile.vue:123
+msgid "Things I wrote"
 msgstr ""
 
 #: hrms/hr/doctype/appraisal_cycle/appraisal_cycle.js:130
@@ -12369,12 +13220,12 @@ msgstr ""
 msgid "This is based on the attendance of this Employee"
 msgstr ""
 
-#: hrms/hr/doctype/job_offer/job_offer.js:189
+#: hrms/hr/doctype/job_offer/job_offer.js:197
 #, python-brace-format
 msgid "This offer is valid until {0}. Please review the letter and confirm your acceptance by then."
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/organizational_chart.vue:210
+#: hrms/hr/page/organizational_chart/organizational_chart.vue:214
 msgid "This person is not in this chart"
 msgstr ""
 
@@ -12383,7 +13234,7 @@ msgstr ""
 msgid "This will overwrite the tax component {0} in the salary slip and tax won't be calculated based on the Income Tax Slabs"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:421
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:446
 msgid "This will submit Salary Slips and create accrual Journal Entry. Do you want to proceed?"
 msgstr ""
 
@@ -12578,9 +13429,13 @@ msgid "Total Cost To Company (CTC)"
 msgstr ""
 
 #. Label of the ctc (Currency) field in DocType 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:268
-#: hrms/hr/doctype/job_offer/job_offer.py:364
+#: hrms/hr/doctype/job_offer/job_offer.json:272
+#: hrms/hr/doctype/job_offer/job_offer.py:401
 msgid "Total Cost to Company (CTC)"
+msgstr ""
+
+#: hrms/hr/doctype/job_offer/job_offer.py:399
+msgid "Total Cost to Company (CTC)* (Includes Statutory Contributions)"
 msgstr ""
 
 #. Label of the lwp_days (Float) field in DocType 'Payroll Correction'
@@ -12663,11 +13518,11 @@ msgstr ""
 msgid "Total Exemption Amount"
 msgstr ""
 
-#: hrms/setup.py:405
+#: hrms/setup.py:535
 msgid "Total Expense Claim (via Expense Claim)"
 msgstr ""
 
-#: hrms/setup.py:396
+#: hrms/setup.py:526
 msgid "Total Expense Claim (via Expense Claims)"
 msgstr ""
 
@@ -12695,7 +13550,7 @@ msgstr ""
 msgid "Total Income Tax"
 msgstr ""
 
-#: hrms/setup.py:889
+#: hrms/setup.py:1019
 msgid "Total Interest Amount"
 msgstr ""
 
@@ -12729,7 +13584,7 @@ msgstr ""
 msgid "Total Leaves Encashed"
 msgstr ""
 
-#: hrms/setup.py:903
+#: hrms/setup.py:1033
 msgid "Total Loan Repayment"
 msgstr ""
 
@@ -12776,7 +13631,7 @@ msgstr ""
 msgid "Total Present (This Month)"
 msgstr ""
 
-#: hrms/setup.py:880
+#: hrms/setup.py:1010
 msgid "Total Principal Amount"
 msgstr ""
 
@@ -13051,7 +13906,7 @@ msgstr ""
 
 #. Label of a Sidebar Item
 #. Label of a Workspace Sidebar Item
-#: hrms/expenses/sidebar/expenses/expenses.json:113 hrms/setup.py:442
+#: hrms/expenses/sidebar/expenses/expenses.json:113 hrms/setup.py:572
 #: hrms/workspace_sidebar/expenses.json:63
 msgid "Travel"
 msgstr ""
@@ -13076,7 +13931,7 @@ msgstr ""
 #. Label of the travel_itinerary (Section Break) field in DocType 'Travel
 #. Request'
 #: hrms/hr/doctype/travel_itinerary/travel_itinerary.json:116
-#: hrms/hr/doctype/travel_request/travel_request.json:155
+#: hrms/hr/doctype/travel_request/travel_request.json:156
 msgid "Travel Itinerary"
 msgstr ""
 
@@ -13084,7 +13939,7 @@ msgstr ""
 #. Name of a DocType
 #. Label of a Workspace Sidebar Item
 #: hrms/expenses/sidebar/expenses/expenses.json:144
-#: hrms/hr/doctype/travel_request/travel_request.json:234
+#: hrms/hr/doctype/travel_request/travel_request.json:236
 #: hrms/workspace_sidebar/expenses.json:86
 msgid "Travel Request"
 msgstr ""
@@ -13104,7 +13959,7 @@ msgstr ""
 msgid "Travel Type"
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/organizational_chart.vue:430
+#: hrms/hr/page/organizational_chart/organizational_chart.vue:433
 msgid "Type a name"
 msgstr ""
 
@@ -13142,6 +13997,10 @@ msgstr ""
 #. Option for the 'Status' (Select) field in DocType 'Interview'
 #: hrms/hr/doctype/interview/interview.json:60
 msgid "Under Review"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:622
+msgid "Unknown profile section"
 msgstr ""
 
 #: hrms/hr/doctype/attendance/attendance.py:271
@@ -13292,8 +14151,20 @@ msgstr ""
 msgid "Updated the status of linked Job Applicant {0} to {1}"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:85
+msgid "Upload for them"
+msgstr ""
+
 #: frontend/src/components/FileUploaderView.vue:11
 msgid "Upload images or documents"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/CardEditor.vue:176
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:302
+#: hrms/hr/page/employee_profile/components/SectionDialog.vue:176
+#: hrms/hr/page/employee_profile/employee_profile.vue:486
+#, python-brace-format
+msgid "Uploading {0}%"
 msgstr ""
 
 #. Label of the upper_range (Currency) field in DocType 'Job Applicant'
@@ -13352,7 +14223,7 @@ msgstr ""
 msgid "Validate Attendance"
 msgstr ""
 
-#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:404
+#: hrms/payroll/doctype/payroll_entry/payroll_entry.js:429
 msgid "Validating Employee Attendance..."
 msgstr ""
 
@@ -13415,6 +14286,11 @@ msgstr ""
 msgid "Vehicle Service Item"
 msgstr ""
 
+#. Label of the verified_on (Date) field in DocType 'Employee Document'
+#: hrms/hr/doctype/employee_document/employee_document.json:73
+msgid "Verified On"
+msgstr ""
+
 #: hrms/hr/doctype/employee_advance/employee_advance.js:236
 msgid "View Additional Salary entries"
 msgstr ""
@@ -13472,21 +14348,21 @@ msgstr ""
 msgid "Warning: {0} already has an active Shift Assignment {1} for some/all of these dates."
 msgstr ""
 
-#: hrms/hr/doctype/job_offer/job_offer.js:184
+#: hrms/hr/doctype/job_offer/job_offer.js:192
 #, python-brace-format
 msgid "We are delighted to offer you the position of {0} at {1}. Please find attached your offer letter, which sets out the details of your role and compensation."
 msgstr ""
 
-#: hrms/hr/doctype/job_offer/job_offer.js:193
+#: hrms/hr/doctype/job_offer/job_offer.js:201
 #, python-brace-format
 msgid "We look forward to welcoming you on {0}."
 msgstr ""
 
-#: hrms/hr/doctype/job_offer/job_offer.js:194
+#: hrms/hr/doctype/job_offer/job_offer.js:202
 msgid "We look forward to welcoming you to the team."
 msgstr ""
 
-#: hrms/setup.py:504
+#: hrms/setup.py:634
 msgid "Website Listing"
 msgstr ""
 
@@ -13519,6 +14395,19 @@ msgstr ""
 msgid "What do you use for HR today?"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:436
+msgid "What is wrong with it?"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/PublicProfile.vue:147
+msgid "What you are working on, reading or learning."
+msgstr ""
+
+#. Description of the 'Verified On' (Date) field in DocType 'Employee Document'
+#: hrms/hr/doctype/employee_document/employee_document.json:70
+msgid "When HR last accepted this document"
+msgstr ""
+
 #. Description of the 'Status' (Select) field in DocType 'Shift Assignment
 #. Tool'
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.json:72
@@ -13531,6 +14420,11 @@ msgstr ""
 msgid "When unchecked, only users who can read all employees, such as HR, see the chart"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/PublicProfile.vue:137
+#: hrms/hr/page/employee_profile/components/SectionDialog.vue:18
+msgid "Where you worked before, what you care about, life outside work."
+msgstr ""
+
 #: hrms/hr/doctype/leave_type/leave_type.py:70
 msgid "Whereas allocation for Compensatory Leaves is automatically created or updated on submission of Compensatory Leave Request."
 msgstr ""
@@ -13540,10 +14434,20 @@ msgstr ""
 msgid "Whether an employee was present, absent or on leave on a day. See [Attendance](https://docs.frappe.io/hr/attendance)."
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:478
+#: hrms/hr/page/employee_profile/components/BankSection.vue:453
+msgid "Why is it rejected?"
+msgstr ""
+
 #. Label of the qualification_reason (Text Editor) field in DocType 'Employee
 #. Referral'
 #: hrms/hr/doctype/employee_referral/employee_referral.json:166
 msgid "Why is this Candidate Qualified for this Position?"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:319
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:415
+msgid "Withdraw"
 msgstr ""
 
 #. Option for the 'Status' (Select) field in DocType 'Salary Slip'
@@ -13591,7 +14495,7 @@ msgstr ""
 #: hrms/hr/doctype/attendance/attendance.json:98
 #: hrms/hr/doctype/attendance_request/attendance_request.json:103
 #: hrms/hr/doctype/employee_attendance_tool/employee_attendance_tool.json:77
-#: hrms/public/js/erpnext/employee_overview.js:457
+#: hrms/public/js/erpnext/employee_overview.js:471
 msgid "Work From Home"
 msgstr ""
 
@@ -13690,9 +14594,9 @@ msgstr ""
 msgid "Yes, Proceed"
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/components/DirectoryView.vue:275
+#: hrms/hr/page/organizational_chart/components/DirectoryView.vue:269
 #: hrms/hr/page/organizational_chart/components/EmployeeCard.vue:40
-#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:51
+#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:53
 msgid "You"
 msgstr ""
 
@@ -13717,8 +14621,12 @@ msgstr ""
 msgid "You are not present all day(s) between compensatory leave request days"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/BankSection.vue:243
+msgid "You can add your bank details again later."
+msgstr ""
+
 #. Description of the 'Preview' (HTML) field in DocType 'Job Offer'
-#: hrms/hr/doctype/job_offer/job_offer.json:466
+#: hrms/hr/doctype/job_offer/job_offer.json:498
 msgid "You can email this offer letter to the applicant once the job offer is submitted."
 msgstr ""
 
@@ -13744,14 +14652,36 @@ msgstr ""
 msgid "You can only upload JPG, PNG, PDF, TXT or Microsoft documents."
 msgstr ""
 
+#: hrms/hr/page/employee_profile/employee_profile.py:782
+msgid "You cannot approve or reject your own request"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:535
+msgid "You cannot change this employee's details"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:550
+#: hrms/hr/page/employee_profile/employee_profile.py:557
+#, python-brace-format
+msgid "You cannot change {0} here"
+msgstr ""
+
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.py:79
 #, python-brace-format
 msgid "You cannot reverse more than the total LWP days {0}. You have already reversed {1} days for this employee."
 msgstr ""
 
+#: hrms/hr/page/employee_profile/employee_profile.py:837
+msgid "You cannot verify your own documents"
+msgstr ""
+
 #: hrms/hr/doctype/attendance/attendance.py:404
 #, python-brace-format
 msgid "You do not have access to Employee {0}"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:171
+msgid "You do not have access to employee profiles"
 msgstr ""
 
 #: hrms/hr/page/organizational_chart/organizational_chart.py:42
@@ -13764,8 +14694,15 @@ msgstr ""
 msgid "You do not have access to the Organizational Chart of {0}"
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:135
+#: hrms/hr/page/employee_profile/employee_profile.py:173
+#: hrms/hr/page/employee_profile/employee_profile.vue:66
 msgid "You do not have access to this profile"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:95
+#: hrms/hr/page/employee_profile/employee_profile.py:525
+#: hrms/hr/page/employee_profile/employee_profile.py:532
+msgid "You do not have an employee record"
 msgstr ""
 
 #: hrms/hr/doctype/shift_request/shift_request.py:171
@@ -13823,7 +14760,11 @@ msgstr ""
 msgid "You were only present for Half Day on {}. Cannot apply for a full day compensatory leave"
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/organizational_chart.vue:332
+#: hrms/hr/page/employee_profile/components/AssetsSection.vue:362
+msgid "Your HR team has not set up any assets to request yet."
+msgstr ""
+
+#: hrms/hr/page/organizational_chart/organizational_chart.vue:335
 msgid "Your HR team has not shared the Organizational Chart with employees"
 msgstr ""
 
@@ -13844,6 +14785,14 @@ msgstr ""
 msgid "Your password has expired. Please reset your password to continue"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/BankSection.vue:344
+msgid "Your salary is paid into this account. A change needs HR's approval."
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:360
+msgid "Your upload is taken back before HR checks it."
+msgstr ""
+
 #: hrms/hr/doctype/attendance_request/attendance_request.py:69
 msgid "action"
 msgstr ""
@@ -13856,7 +14805,7 @@ msgstr ""
 msgid "and then \"Add to Home Screen\""
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:591
+#: hrms/public/js/erpnext/employee_overview.js:605
 msgid "approved, not paid"
 msgstr ""
 
@@ -13880,12 +14829,16 @@ msgstr ""
 msgid "created"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:477
+#: hrms/public/js/erpnext/employee_overview.js:491
 msgid "day"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:477
+#: hrms/public/js/erpnext/employee_overview.js:491
 msgid "days"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/SectionDialog.vue:19
+msgid "e.g. payroll, Figma, chess"
 msgstr ""
 
 #: frontend/src/components/FormView.vue:659
@@ -14032,7 +14985,7 @@ msgstr ""
 msgid "{0} Unread"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:343
+#: hrms/public/js/erpnext/employee_overview.js:357
 #, python-brace-format
 msgid "{0} absent"
 msgstr ""
@@ -14057,7 +15010,12 @@ msgstr ""
 msgid "{0} already has an active Shift Assignment {1} for some/all of these dates."
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:571
+#: hrms/hr/doctype/bank_details_change_request/bank_details_change_request.py:70
+#, python-brace-format
+msgid "{0} already has an open request {1}"
+msgstr ""
+
+#: hrms/public/js/erpnext/employee_overview.js:585
 #, python-brace-format
 msgid "{0} already started"
 msgstr ""
@@ -14065,6 +15023,16 @@ msgstr ""
 #: hrms/hr/doctype/leave_application/leave_application.py:189
 #, python-brace-format
 msgid "{0} applicable after {1} calendar days"
+msgstr ""
+
+#: hrms/hr/doctype/bank_details_change_request/bank_details_change_request.py:80
+#, python-brace-format
+msgid "{0} asked to change their salary account"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.vue:144
+#, python-brace-format
+msgid "{0} assigned"
 msgstr ""
 
 #: frontend/src/components/LeaveBalance.vue:37
@@ -14093,7 +15061,7 @@ msgstr ""
 msgid "{0} days of {1}"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:321
+#: hrms/public/js/erpnext/employee_overview.js:335
 #, python-brace-format
 msgid "{0} deducted"
 msgstr ""
@@ -14101,6 +15069,22 @@ msgstr ""
 #: frontend/src/components/FormView.vue:585
 #, python-brace-format
 msgid "{0} deleted successfully!"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/ProfileCard.vue:53
+#, python-brace-format
+msgid "{0} direct reports"
+msgstr ""
+
+#: hrms/hr/doctype/asset_request/asset_request.py:65
+#, python-brace-format
+msgid "{0} does not hold asset {1}"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/DocumentsSection.vue:215
+#: hrms/hr/page/employee_profile/employee_profile.vue:143
+#, python-brace-format
+msgid "{0} due"
 msgstr ""
 
 #: frontend/src/components/CheckInPanel.vue:172
@@ -14114,6 +15098,16 @@ msgstr ""
 #: hrms/hr/page/organizational_chart/organizational_chart.py:129
 #, python-brace-format
 msgid "{0} has more than {1} active employees, too many to open at once. Find a person, or open teams one at a time."
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:841
+#, python-brace-format
+msgid "{0} has not uploaded {1}"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/PublicProfile.vue:205
+#, python-brace-format
+msgid "{0} has not written anything here yet."
 msgstr ""
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:242
@@ -14131,9 +15125,25 @@ msgstr ""
 msgid "{0} is an invalid Attendance Status."
 msgstr ""
 
+#: hrms/hr/page/employee_profile/employee_profile.py:780
+#, python-brace-format
+msgid "{0} is no longer open"
+msgstr ""
+
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:90
 #, python-brace-format
 msgid "{0} is not a holiday."
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:436
+#, python-brace-format
+msgid "{0} is not a request of {1}"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:577
+#: hrms/hr/page/employee_profile/employee_profile.py:579
+#, python-brace-format
+msgid "{0} is not a valid {1}"
 msgstr ""
 
 #: hrms/hr/doctype/interview_feedback/interview_feedback.py:50
@@ -14144,6 +15154,11 @@ msgstr ""
 #: hrms/hr/doctype/leave_application/leave_application.py:691
 #, python-brace-format
 msgid "{0} is not in Optional Holiday List"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:877
+#, python-brace-format
+msgid "{0} is not on the record"
 msgstr ""
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:403
@@ -14161,10 +15176,25 @@ msgstr ""
 msgid "{0} leaves were manually allocated by {1} on {2}"
 msgstr ""
 
+#: hrms/hr/page/employee_profile/components/ProfileCard.vue:34
+#, python-brace-format
+msgid "{0} months at {1}"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:590
+#, python-brace-format
+msgid "{0} must be a whole number"
+msgstr ""
+
 #: hrms/hr/doctype/training_feedback/training_feedback.py:33
 #: hrms/hr/doctype/training_result/training_result.py:33
 #, python-brace-format
 msgid "{0} must be submitted"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/employee_profile.py:587
+#, python-brace-format
+msgid "{0} must have 7 to 15 digits"
 msgstr ""
 
 #: hrms/hr/doctype/goal/goal.py:226
@@ -14172,13 +15202,13 @@ msgstr ""
 msgid "{0} of {1} Completed"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:344
+#: hrms/public/js/erpnext/employee_overview.js:358
 #, python-brace-format
 msgid "{0} on leave"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:363
-#: hrms/public/js/erpnext/employee_overview.js:523
+#: hrms/public/js/erpnext/employee_overview.js:377
+#: hrms/public/js/erpnext/employee_overview.js:537
 #, python-brace-format
 msgid "{0} pending approval"
 msgstr ""
@@ -14188,12 +15218,22 @@ msgstr ""
 msgid "{0} people"
 msgstr ""
 
+#: hrms/hr/doctype/asset_request/asset_request.py:94
+#, python-brace-format
+msgid "{0} raised an asset request"
+msgstr ""
+
 #: hrms/hr/doctype/employee_checkin/employee_checkin_list.js:234
 #, python-brace-format
 msgid "{0} recorded outside shift hours. It will not be considered for attendance."
 msgstr ""
 
-#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:21
+#: hrms/hr/page/employee_profile/components/BankSection.vue:166
+#, python-brace-format
+msgid "{0} replaces {1}"
+msgstr ""
+
+#: hrms/hr/page/organizational_chart/components/EmployeePopover.vue:23
 #, python-brace-format
 msgid "{0} reports"
 msgstr ""
@@ -14223,7 +15263,7 @@ msgstr ""
 msgid "{0} successfully!"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:522
+#: hrms/public/js/erpnext/employee_overview.js:536
 #, python-brace-format
 msgid "{0} taken"
 msgstr ""
@@ -14253,9 +15293,14 @@ msgstr ""
 msgid "{0} will be updated for the following Salary Structures: {1}."
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:347
+#: hrms/public/js/erpnext/employee_overview.js:361
 #, python-brace-format
 msgid "{0} worked"
+msgstr ""
+
+#: hrms/hr/page/employee_profile/components/ProfileCard.vue:29
+#, python-brace-format
+msgid "{0} years at {1}"
 msgstr ""
 
 #: hrms/hr/page/organizational_chart/components/DirectoryView.vue:129
@@ -14263,7 +15308,7 @@ msgstr ""
 msgid "{0} years today"
 msgstr ""
 
-#: hrms/public/js/erpnext/employee_overview.js:607
+#: hrms/public/js/erpnext/employee_overview.js:621
 #, python-brace-format
 msgid "{0} yet to be paid"
 msgstr ""
