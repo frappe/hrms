@@ -250,9 +250,10 @@ class FrappePushNotification {
 					"&project_name=" +
 					this.projectName,
 				{
-					method: "GET",
+					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
+						"X-Frappe-CSRF-Token": window.csrf_token,
 					},
 				}
 			)
@@ -277,9 +278,10 @@ class FrappePushNotification {
 					"&project_name=" +
 					this.projectName,
 				{
-					method: "GET",
+					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
+						"X-Frappe-CSRF-Token": window.csrf_token,
 					},
 				}
 			)
