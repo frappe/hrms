@@ -23,8 +23,7 @@ echo "Get ERPNext..."
 pilot get-app https://github.com/frappe/erpnext --branch "$BASE_BRANCH" --skip-assets
 
 echo "Get HRMS..."
-git -C "$GITHUB_WORKSPACE" update-ref refs/heads/ci-pr-head "$GITHUB_SHA"
-pilot get-app "$GITHUB_WORKSPACE" --branch ci-pr-head --skip-assets
+pilot get-app "$GITHUB_WORKSPACE" --branch "$GITHUB_SHA" --skip-assets
 
 echo "Generating POT file..."
 pilot frappe generate-pot-file --app hrms
