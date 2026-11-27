@@ -99,79 +99,97 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install
-        run: |
-          pip install frappe-bench
-          bash ${GITHUB_WORKSPACE}/.github/helper/install.sh
+        run: bash ${GITHUB_WORKSPACE}/.github/helper/install.sh
         env:
           DB: mariadb
           TYPE: server
 
       - name: Run Patch Tests
         run: |
-          cd ~/frappe-bench/
-          bench remove-app payments --force
-          bench remove-app lending --force
-          jq 'del(.install_apps)' ~/frappe-bench/sites/test_site/site_config.json > tmp.json
-          mv tmp.json ~/frappe-bench/sites/test_site/site_config.json
+          set -eo pipefail
+          cd ~/pilot/benches/frappe-bench/
+          pilot -b frappe-bench uninstall-app test_site lending --force
+          pilot -b frappe-bench uninstall-app test_site payments --force
+          # Frappe's restore helper reads the bench inventory even after the
+          # optional apps have been removed from the site.
+          printf 'frappe\nerpnext\nhrms\n' > sites/apps.txt
+          jq 'del(.install_apps)' sites/test_site/site_config.json > tmp.json
+          mv tmp.json sites/test_site/site_config.json
 
-          wget https://frappe.io/files/frappe-hr-v14-p.sql.gz
-          bench --site test_site --force restore ~/frappe-bench/frappe-hr-v14-p.sql.gz
+          wget -q https://frappe.io/files/frappe-hr-v14-p.sql.gz
+          (
+            cd sites
+            ../env/bin/python -m frappe.utils.bench_helper frappe --site test_site restore \
+              --db-root-username root --db-root-password root \
+              --force ~/pilot/benches/frappe-bench/frappe-hr-v14-p.sql.gz
+          )
 
-          git -C "apps/frappe" remote set-url upstream https://github.com/frappe/frappe.git
-          git -C "apps/erpnext" remote set-url upstream https://github.com/frappe/erpnext.git
-          git -C "apps/hrms" remote set-url upstream https://github.com/frappe/hrms.git
+          for app in frappe erpnext hrms; do
+            git -C "apps/$app" remote remove upstream 2>/dev/null || true
+            git -C "apps/$app" remote add upstream "https://github.com/frappe/${app}.git"
+          done
+          git -C "apps/hrms" branch -f pr-head HEAD
 
+          # The version hops only need Redis. Restarting the full stack would
+          # run each checkout's Socket.IO code against the original node_modules.
+          pilot -b frappe-bench stop
+          cache_port="$(python3 -c 'import tomllib; print(tomllib.load(open("bench.toml", "rb"))["redis"]["cache_port"])')"
+          queue_port="$(python3 -c 'import tomllib; print(tomllib.load(open("bench.toml", "rb"))["redis"]["queue_port"])')"
+          # Pilot signals the supervisor and returns before Redis has drained.
+          for port in "$cache_port" "$queue_port"; do
+            timeout 45 bash -c 'while redis-cli -p "$1" ping >/dev/null 2>&1; do sleep 1; done' _ "$port"
+          done
+          trap 'redis-cli -p "$cache_port" shutdown nosave || true; redis-cli -p "$queue_port" shutdown nosave || true' EXIT
+          redis-server config/redis_cache.conf --daemonize yes
+          redis-server config/redis_queue.conf --daemonize yes
+          redis-cli -p "$cache_port" ping | grep -qx PONG
+          redis-cli -p "$queue_port" ping | grep -qx PONG
 
-          function update_to_version() {
-            version=$1
+          migrate_with_python() {
+            # Remove stale Python modules left behind by the previous checkout.
+            for app in frappe erpnext hrms; do
+              git -C "apps/$app" clean -qxdf
+            done
+            rm -rf env
+            uv venv --python "python$1" env
+            uv pip install --python env/bin/python -e ./apps/frappe -e ./apps/erpnext -e ./apps/hrms
+            redis-cli -p "$cache_port" flushall
+            redis-cli -p "$queue_port" flushall
+            pilot -b frappe-bench frappe --site test_site clear-cache
+            pilot -b frappe-bench frappe --site test_site migrate
+          }
 
-            branch_name="version-$version-hotfix"
-            echo "Updating to v$version"
-
-            # Fetch and checkout branches
-            git -C "apps/frappe" fetch --depth 1 upstream $branch_name:$branch_name
-            git -C "apps/erpnext" fetch --depth 1 upstream $branch_name:$branch_name
-            git -C "apps/hrms" fetch --depth 1 upstream $branch_name:$branch_name
-            git -C "apps/frappe" checkout -q -f $branch_name
-            git -C "apps/erpnext" checkout -q -f $branch_name
-            git -C "apps/hrms" checkout -q -f $branch_name
-
-            # Resetup env and install apps
-            pgrep honcho | xargs kill
-            rm -rf ~/frappe-bench/env
-            bench -v setup env --python python$2
-            bench pip install -e ./apps/erpnext
-            bench pip install -e ./apps/hrms
-            bench start &>> ~/frappe-bench/bench_start.log &
-
-            bench --site test_site migrate
+          update_to_version() {
+            local branch_name="version-$1-hotfix"
+            echo "Updating to v$1"
+            for app in frappe erpnext hrms; do
+              git -C "apps/$app" fetch --depth 1 upstream "$branch_name:$branch_name"
+              git -C "apps/$app" checkout -q -f "$branch_name"
+            done
+            migrate_with_python "$2"
           }
 
           update_to_version 15 3.13
           update_to_version 16 3.14
 
           echo "Updating to latest version"
-          git -C "apps/frappe" fetch --depth 1 upstream "${GITHUB_BASE_REF:-${GITHUB_REF##*/}}"
-          git -C "apps/frappe" checkout -q -f FETCH_HEAD
-          git -C "apps/erpnext" checkout -q -f FETCH_HEAD
-          git -C "apps/hrms" checkout -q -f "$GITHUB_SHA"
+          target_branch="${GITHUB_BASE_REF:-develop}"
+          if ! git -C "apps/frappe" ls-remote --exit-code --heads upstream "$target_branch" >/dev/null 2>&1; then
+            target_branch="develop"
+          fi
+          for app in frappe erpnext; do
+            git -C "apps/$app" fetch --depth 1 upstream "$target_branch"
+            git -C "apps/$app" checkout -q -f FETCH_HEAD
+          done
+          git -C "apps/hrms" checkout -q -f pr-head
+          migrate_with_python 3.14
 
-          pgrep honcho | xargs kill
-          rm -rf ~/frappe-bench/env
-          bench -v setup env
-          bench pip install -e ./apps/erpnext
-          bench pip install -e ./apps/hrms
-          bench start &>> ~/frappe-bench/bench_start.log &
-
-          bench --site test_site migrate
-
-      - name: Show bench output
+      - name: Show Pilot output
         if: ${{ always() }}
         run: |
-          cd ~/frappe-bench
-          cat bench_start.log || true
-          cd logs
-          for f in ./*.log*; do
-            echo "Printing log: $f";
-            cat $f
-          done
+          cat "$RUNNER_TEMP/pilot.log" || true
+          cat ~/pilot/benches/frappe-bench/logs/*.log || true
+
+      - name: Stop Pilot
+        if: ${{ always() }}
+        run: ~/pilot/bin/pilot -b frappe-bench stop || true

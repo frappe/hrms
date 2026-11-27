@@ -16,11 +16,12 @@ on:
   schedule:
     # Run everday at midnight UTC / 5:30 IST
     - cron: "0 0 * * *"
+  workflow_dispatch:
 env:
     HR_BRANCH: ${{ github.base_ref || github.ref_name }}
 
 concurrency:
-  group: develop-${{ github.event.number }}
+  group: develop-${{ github.event.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -115,17 +116,27 @@ jobs:
           FRAPPE_BRANCH: ${{ github.event.inputs.branch }}
 
       - name: Run Tests
-        run: cd ~/frappe-bench/ && bench --site test_site run-parallel-tests --app hrms --total-builds ${{ strategy.job-total }} --build-number ${{ matrix.container }} --lightmode
+        run: pilot -b frappe-bench frappe --site test_site run-parallel-tests --app hrms --total-builds ${{ strategy.job-total }} --build-number ${{ matrix.container }} --lightmode
         env:
           TYPE: server
           CAPTURE_COVERAGE: ${{ github.event_name != 'pull_request' }}
+
+      - name: Show Pilot logs on failure
+        if: ${{ failure() }}
+        run: |
+          cat "$RUNNER_TEMP/pilot.log" || true
+          cat ~/pilot/benches/frappe-bench/logs/*.log || true
 
       - name: Upload coverage data
         uses: actions/upload-artifact@v4
         if: github.event_name != 'pull_request'
         with:
           name: coverage-${{ matrix.container }}
-          path: /home/runner/frappe-bench/sites/coverage.xml
+          path: /home/runner/pilot/benches/frappe-bench/sites/coverage.xml
+
+      - name: Stop Pilot
+        if: ${{ always() }}
+        run: pilot -b frappe-bench stop || true
 
   coverage:
     name: Coverage Wrap Up
