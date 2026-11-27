@@ -23,10 +23,10 @@ const stacked = computed(
 // the line from the bar down to each card, rounded at both ends of the bar
 function connector(index) {
 	const last = team.value.length - 1;
-	if (!last) return "left-1/2 top-0 h-8 border-l";
-	if (index === 0) return "left-1/2 right-0 top-0 h-8 rounded-tl-[12px] border-l border-t";
+	if (!last) return "start-1/2 top-0 h-8 border-s";
+	if (index === 0) return "start-1/2 end-0 top-0 h-8 rounded-ss-[12px] border-s border-t";
 	if (index === last) {
-		return "left-0 right-[calc(50%_-_1px)] top-0 h-8 rounded-tr-[12px] border-r border-t";
+		return "start-0 end-[calc(50%_-_1px)] top-0 h-8 rounded-se-[12px] border-e border-t";
 	}
 	return "inset-x-0 top-0 h-8 border-t";
 }
@@ -40,7 +40,7 @@ function line_above(index) {
 	return last ? "-top-2 h-6" : "-top-2 h-9";
 }
 
-// Columns: a team sits right of its manager, joined by a spine 32px along (left-8, -left-8).
+// Columns: a team sits after its manager, joined by a spine 32px along (start-8, -start-8).
 // Members are 24px apart, room for a team pill.
 function spine_above(index) {
 	return index === team.value.length - 1 ? "-top-6 h-10" : "-top-6 h-[52px]";
@@ -49,40 +49,40 @@ function spine_above(index) {
 
 <template>
 	<div v-if="columns_view" class="flex items-start">
-		<!-- on the card's right edge, 12px in, so a wide pill covers no text -->
+		<!-- on the card's end edge, 12px in, so a wide pill covers no text -->
 		<div class="relative shrink-0">
 			<EmployeeCard :node="node" />
 			<TeamToggle
 				v-if="node.reports"
 				:node="node"
 				:open="open"
-				direction="right"
-				class="absolute left-full top-1/2 z-10 -ml-3 -translate-y-1/2"
+				direction="side"
+				class="absolute start-full top-1/2 z-10 -ms-3 -translate-y-1/2"
 				@toggle="chart.toggle(id)"
 			/>
 		</div>
 
-		<div v-if="team.length" class="relative flex flex-col gap-6 pl-16">
+		<div v-if="team.length" class="relative flex flex-col gap-6 ps-16">
 			<span
-				class="pointer-events-none absolute left-0 top-7 w-8 border-t border-outline-gray-3"
+				class="pointer-events-none absolute start-0 top-7 w-8 border-t border-outline-gray-3"
 			/>
 			<div v-for="(member, index) in team" :key="member" class="relative">
 				<span
 					v-if="index > 0"
-					class="pointer-events-none absolute -left-8 border-l border-outline-gray-3"
+					class="pointer-events-none absolute -start-8 border-s border-outline-gray-3"
 					:class="spine_above(index)"
 				/>
 				<span
 					v-if="index < team.length - 1"
-					class="pointer-events-none absolute -left-8 bottom-0 top-7 border-l border-outline-gray-3"
+					class="pointer-events-none absolute -start-8 bottom-0 top-7 border-s border-outline-gray-3"
 				/>
 				<span
 					v-if="index > 0 && index === team.length - 1"
-					class="pointer-events-none absolute -left-8 top-4 h-3 w-8 rounded-bl-[12px] border-b border-l border-outline-gray-3"
+					class="pointer-events-none absolute -start-8 top-4 h-3 w-8 rounded-es-[12px] border-b border-s border-outline-gray-3"
 				/>
 				<span
 					v-else
-					class="pointer-events-none absolute -left-8 top-7 w-8 border-t border-outline-gray-3"
+					class="pointer-events-none absolute -start-8 top-7 w-8 border-t border-outline-gray-3"
 				/>
 				<TreeNode :id="member" />
 			</div>
@@ -103,25 +103,25 @@ function spine_above(index) {
 
 		<div
 			v-if="team.length && stacked"
-			class="flex flex-col pl-12 pt-8"
+			class="flex flex-col ps-12 pt-8"
 			:class="list_view ? 'gap-5' : 'w-64 gap-2'"
 		>
 			<div v-for="(member, index) in team" :key="member" class="relative">
 				<span
-					class="pointer-events-none absolute -left-3 border-l border-outline-gray-3"
+					class="pointer-events-none absolute -start-3 border-s border-outline-gray-3"
 					:class="line_above(index)"
 				/>
 				<template v-if="index < team.length - 1">
 					<span
-						class="pointer-events-none absolute -left-3 bottom-0 top-7 border-l border-outline-gray-3"
+						class="pointer-events-none absolute -start-3 bottom-0 top-7 border-s border-outline-gray-3"
 					/>
 					<span
-						class="pointer-events-none absolute -left-3 top-7 w-3 border-t border-outline-gray-3"
+						class="pointer-events-none absolute -start-3 top-7 w-3 border-t border-outline-gray-3"
 					/>
 				</template>
 				<span
 					v-else
-					class="pointer-events-none absolute -left-3 top-4 h-3 w-3 rounded-bl-[12px] border-b border-l border-outline-gray-3"
+					class="pointer-events-none absolute -start-3 top-4 h-3 w-3 rounded-es-[12px] border-b border-s border-outline-gray-3"
 				/>
 				<TreeNode :id="member" />
 			</div>
@@ -129,7 +129,7 @@ function spine_above(index) {
 
 		<div v-else-if="team.length" class="relative flex items-start pt-8">
 			<span
-				class="pointer-events-none absolute left-1/2 top-0 h-8 border-l border-outline-gray-3"
+				class="pointer-events-none absolute start-1/2 top-0 h-8 border-s border-outline-gray-3"
 			/>
 			<div v-for="(member, index) in team" :key="member" class="relative px-2.5 pt-8">
 				<span
@@ -138,7 +138,7 @@ function spine_above(index) {
 				/>
 				<span
 					v-if="index > 0 && index < team.length - 1"
-					class="pointer-events-none absolute left-1/2 top-0 h-8 border-l border-outline-gray-3"
+					class="pointer-events-none absolute start-1/2 top-0 h-8 border-s border-outline-gray-3"
 				/>
 				<TreeNode :id="member" />
 			</div>

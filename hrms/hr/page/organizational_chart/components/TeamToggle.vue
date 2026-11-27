@@ -5,7 +5,7 @@ import { Avatar } from "frappe-ui";
 const props = defineProps({
 	node: { type: Object, required: true },
 	open: { type: Boolean, default: false },
-	// the way the team opens from the card: "down" under it, or "right" beside it
+	// the way the team opens from the card: "down" under it, or "side" beside it
 	direction: { type: String, default: "down" },
 });
 
@@ -20,7 +20,9 @@ const label = computed(() =>
 // Written out whole, so Tailwind's scan finds every icon class
 const CHEVRONS = {
 	down: { open: "lucide-chevron-up", closed: "lucide-chevron-down" },
-	right: { open: "lucide-chevron-left", closed: "lucide-chevron-right" },
+	side: window.frappe.utils.is_rtl()
+		? { open: "lucide-chevron-right", closed: "lucide-chevron-left" }
+		: { open: "lucide-chevron-left", closed: "lucide-chevron-right" },
 };
 const chevron = computed(() => CHEVRONS[props.direction][props.open ? "open" : "closed"]);
 </script>
@@ -34,7 +36,7 @@ const chevron = computed(() => CHEVRONS[props.direction][props.open ? "open" : "
 		@click="$emit('toggle')"
 	>
 		<template v-if="!open">
-			<span class="flex -space-x-1.5">
+			<span class="flex [&>*+*]:-ms-1.5">
 				<span
 					v-for="member in node.team"
 					:key="member.id"
