@@ -57,7 +57,7 @@ uv pip install --python env/bin/python -e "apps/frappe[test]"
 pilot get-app "https://github.com/${frappeuser}/payments" --branch "$paymentsbranch" --skip-assets
 pilot get-app "https://github.com/${frappeuser}/erpnext" --branch "$erpnextbranch" --skip-assets
 pilot get-app "https://github.com/${frappeuser}/lending" --branch "$lendingbranch" --skip-assets
-pilot get-app "${GITHUB_WORKSPACE}" --branch "$githubbranch" --skip-assets
+pilot get-app "${GITHUB_WORKSPACE}" --skip-assets
 
 pilot -b frappe-bench start > "${RUNNER_TEMP:-/tmp}/pilot.log" 2>&1 &
 curl --fail --silent --show-error --retry 30 --retry-connrefused --retry-delay 1 \
