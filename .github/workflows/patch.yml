@@ -130,14 +130,28 @@ jobs:
           done
           git -C "apps/hrms" branch -f pr-head HEAD
 
+          # The version hops only need Redis. Restarting the full stack would
+          # run each checkout's Socket.IO code against the original node_modules.
+          pilot -b frappe-bench stop
+          cache_port="$(python3 -c 'import tomllib; print(tomllib.load(open("bench.toml", "rb"))["redis"]["cache_port"])')"
+          queue_port="$(python3 -c 'import tomllib; print(tomllib.load(open("bench.toml", "rb"))["redis"]["queue_port"])')"
+          trap 'redis-cli -p "$cache_port" shutdown nosave || true; redis-cli -p "$queue_port" shutdown nosave || true' EXIT
+          redis-server config/redis_cache.conf --daemonize yes
+          redis-server config/redis_queue.conf --daemonize yes
+          redis-cli -p "$cache_port" ping | grep -qx PONG
+          redis-cli -p "$queue_port" ping | grep -qx PONG
+
           migrate_with_python() {
-            pilot -b frappe-bench stop || true
+            # Remove stale Python modules left behind by the previous checkout.
+            for app in frappe erpnext hrms; do
+              git -C "apps/$app" clean -qxdf
+            done
             rm -rf env
             uv venv --python "python$1" env
             uv pip install --python env/bin/python -e ./apps/frappe -e ./apps/erpnext -e ./apps/hrms
-            pilot -b frappe-bench start > "$RUNNER_TEMP/pilot.log" 2>&1 &
-            curl --fail --silent --show-error --retry 30 --retry-connrefused --retry-delay 1 \
-              http://127.0.0.1:7000/api/v1/health
+            redis-cli -p "$cache_port" flushall
+            redis-cli -p "$queue_port" flushall
+            pilot -b frappe-bench frappe --site test_site clear-cache
             pilot -b frappe-bench frappe --site test_site migrate
           }
 
