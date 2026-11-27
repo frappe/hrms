@@ -135,6 +135,10 @@ jobs:
           pilot -b frappe-bench stop
           cache_port="$(python3 -c 'import tomllib; print(tomllib.load(open("bench.toml", "rb"))["redis"]["cache_port"])')"
           queue_port="$(python3 -c 'import tomllib; print(tomllib.load(open("bench.toml", "rb"))["redis"]["queue_port"])')"
+          # Pilot signals the supervisor and returns before Redis has drained.
+          for port in "$cache_port" "$queue_port"; do
+            timeout 45 bash -c 'while redis-cli -p "$1" ping >/dev/null 2>&1; do sleep 1; done' _ "$port"
+          done
           trap 'redis-cli -p "$cache_port" shutdown nosave || true; redis-cli -p "$queue_port" shutdown nosave || true' EXIT
           redis-server config/redis_cache.conf --daemonize yes
           redis-server config/redis_queue.conf --daemonize yes
