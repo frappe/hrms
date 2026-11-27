@@ -129,16 +129,31 @@ jobs:
           TYPE: server
           FRAPPE_USER: ${{ github.event.inputs.user }}
           FRAPPE_BRANCH: ${{ github.event.inputs.branch }}
+          SKIP_SITE_SETUP: "1"
 
       - name: Run Tests
         run: |
           site_name=$(echo "${{matrix.test}}" | sed -e 's/.*\.\(test_.*$\)/\1/')
           echo "$site_name"
-          mkdir ~/frappe-bench/sites/$site_name
-          cp -r "${GITHUB_WORKSPACE}/.github/helper/site_config.json" ~/frappe-bench/sites/$site_name/site_config.json
-          cd ~/frappe-bench/
-          bench --site $site_name reinstall --yes
-          bench --site $site_name install-app hrms
-          bench --site $site_name set-config allow_tests true
-          bench --site $site_name run-tests --module ${{ matrix.test }} --lightmode
+          cd ~/pilot/benches/frappe-bench
+          pilot -b frappe-bench new-site "$site_name" --admin-password admin --apps frappe payments erpnext lending hrms --skip-assets
+          pilot -b frappe-bench frappe --site "$site_name" set-config -p allow_tests True
+          pilot -b frappe-bench frappe --site "$site_name" set-config -p use_mysqlclient 1
+          pilot -b frappe-bench frappe --site "$site_name" set-config host_name "http://test_site:8000"
+          pilot -b frappe-bench frappe --site "$site_name" set-config auto_email_id "test@example.com"
+          pilot -b frappe-bench frappe --site "$site_name" set-config mail_server "smtp.example.com"
+          pilot -b frappe-bench frappe --site "$site_name" set-config mail_login "test@example.com"
+          pilot -b frappe-bench frappe --site "$site_name" set-config mail_password "test"
+          pilot -b frappe-bench frappe --site "$site_name" set-config -p throttle_user_limit 100
+          pilot -b frappe-bench frappe --site "$site_name" run-tests --module ${{ matrix.test }} --lightmode
+
+      - name: Show Pilot logs on failure
+        if: ${{ failure() }}
+        run: |
+          cat "$RUNNER_TEMP/pilot.log" || true
+          cat ~/pilot/benches/frappe-bench/logs/*.log || true
+
+      - name: Stop Pilot
+        if: ${{ always() }}
+        run: ~/pilot/bin/pilot -b frappe-bench stop || true
 
