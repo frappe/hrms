@@ -114,7 +114,7 @@ jobs:
           mv tmp.json sites/test_site/site_config.json
 
           wget -q https://frappe.io/files/frappe-hr-v14-p.sql.gz
-          env/bin/python -m frappe.commands --site test_site restore \
+          env/bin/python -m frappe.utils.bench_helper frappe --site test_site restore \
             --db-root-username root --db-root-password root \
             --force ~/pilot/benches/frappe-bench/frappe-hr-v14-p.sql.gz
 
