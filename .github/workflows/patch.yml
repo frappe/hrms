@@ -117,9 +117,12 @@ jobs:
           mv tmp.json sites/test_site/site_config.json
 
           wget -q https://frappe.io/files/frappe-hr-v14-p.sql.gz
-          env/bin/python -m frappe.utils.bench_helper frappe --site test_site restore \
-            --db-root-username root --db-root-password root \
-            --force ~/pilot/benches/frappe-bench/frappe-hr-v14-p.sql.gz
+          (
+            cd sites
+            ../env/bin/python -m frappe.utils.bench_helper frappe --site test_site restore \
+              --db-root-username root --db-root-password root \
+              --force ~/pilot/benches/frappe-bench/frappe-hr-v14-p.sql.gz
+          )
 
           for app in frappe erpnext hrms; do
             git -C "apps/$app" remote remove upstream 2>/dev/null || true
