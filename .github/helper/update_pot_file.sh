@@ -1,32 +1,42 @@
 #!/bin/bash
-set -e
-cd ~ || exit
+set -euo pipefail
 
-echo "Setting Up Bench..."
+BENCH_NAME="frappe-bench"
+BENCH_PATH="$HOME/pilot/benches/$BENCH_NAME"
+export PATH="$HOME/pilot/bin:$HOME/.local/bin:$PATH"
 
-pip install frappe-bench
-bench init frappe-bench --skip-assets --skip-redis-config-generation --python "$(which python)" --frappe-branch "${BASE_BRANCH}"
-cd ./frappe-bench || exit
+cleanup() {
+    pilot -b "$BENCH_NAME" stop >/dev/null 2>&1 || true
+}
+trap cleanup EXIT
 
-# We want to exclude strings from ERPNext from HRMS's translations.
+cd ~
+
+echo "Setting Up Pilot..."
+
+curl -fsSL https://raw.githubusercontent.com/frappe/pilot/develop/install.sh | sh -s -- --ci
+
+pilot new "$BENCH_NAME" --frappe-branch "$BASE_BRANCH" --database sqlite
+pilot -b "$BENCH_NAME" init --skip-frontend --no-dev
+
 echo "Get ERPNext..."
-bench get-app --skip-assets --branch "${BASE_BRANCH}" erpnext
+pilot get-app https://github.com/frappe/erpnext --branch "$BASE_BRANCH" --skip-assets
 
 echo "Get HRMS..."
-bench get-app --skip-assets hrms "${GITHUB_WORKSPACE}"
+pilot get-app "$GITHUB_WORKSPACE" --branch "$BASE_BRANCH" --skip-assets
 
 echo "Generating POT file..."
-bench generate-pot-file --app hrms
+pilot frappe generate-pot-file --app hrms
 
-cd ./apps/hrms || exit
+cd "$BENCH_PATH/apps/hrms"
 
 echo "Configuring git user..."
 git config user.email "developers@erpnext.com"
 git config user.name "frappe-pr-bot"
 
 echo "Setting the correct git remote..."
-# Here, the git remote is a local file path by default. Let's change it to the upstream repo.
-git remote set-url upstream https://github.com/frappe/hrms.git
+git remote remove upstream 2>/dev/null || true
+git remote add upstream https://github.com/frappe/hrms.git
 
 echo "Creating a new branch..."
 isodate=$(date -u +"%Y-%m-%d")
