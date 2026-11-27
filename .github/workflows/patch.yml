@@ -110,6 +110,9 @@ jobs:
           cd ~/pilot/benches/frappe-bench/
           pilot -b frappe-bench uninstall-app test_site lending --force
           pilot -b frappe-bench uninstall-app test_site payments --force
+          # Frappe's restore helper reads the bench inventory even after the
+          # optional apps have been removed from the site.
+          printf 'frappe\nerpnext\nhrms\n' > sites/apps.txt
           jq 'del(.install_apps)' sites/test_site/site_config.json > tmp.json
           mv tmp.json sites/test_site/site_config.json
 
