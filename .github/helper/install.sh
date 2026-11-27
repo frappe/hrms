@@ -45,7 +45,7 @@ pilot -b frappe-bench set-bench-config mariadb_host 127.0.0.1
 pilot -b frappe-bench set-bench-config mariadb_port 3306
 pilot -b frappe-bench set-bench-config mariadb_admin_user root
 pilot -b frappe-bench set-bench-config mariadb_password root
-pilot -b frappe-bench init --skip-frontend
+pilot -b frappe-bench init
 
 printf '[client]\nskip-ssl\n' > ~/.my.cnf
 mariadb --host 127.0.0.1 --port 3306 -u root -proot -e "SET GLOBAL character_set_server = 'utf8mb4'"
@@ -63,7 +63,8 @@ pilot -b frappe-bench start > "${RUNNER_TEMP:-/tmp}/pilot.log" 2>&1 &
 curl --fail --silent --show-error --retry 30 --retry-connrefused --retry-delay 1 \
     http://127.0.0.1:7000/api/v1/health
 
-mkdir -p sites/assets && echo '{}' > sites/assets/assets.json
+pilot build --apps frappe
+pilot build --apps hrms --force
 
 if [ "${SKIP_SITE_SETUP:-0}" != "1" ]; then
     pilot new-site test_site --admin-password admin --apps frappe payments erpnext lending hrms --skip-assets
