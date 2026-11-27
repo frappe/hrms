@@ -123,29 +123,21 @@ jobs:
             ${{ runner.os }}-yarn-
 
       - name: Install
-        run: bash ${GITHUB_WORKSPACE}/.github/helper/install.sh
+        run: |
+          export SITE_NAME="$(sed -e 's/.*\.\(test_.*$\)/\1/' <<< "$TEST_MODULE")"
+          echo "SITE_NAME=$SITE_NAME" >> "$GITHUB_ENV"
+          bash "${GITHUB_WORKSPACE}/.github/helper/install.sh"
         env:
           DB: mariadb
           TYPE: server
           FRAPPE_USER: ${{ github.event.inputs.user }}
           FRAPPE_BRANCH: ${{ github.event.inputs.branch }}
-          SKIP_SITE_SETUP: "1"
+          TEST_MODULE: ${{ matrix.test }}
 
       - name: Run Tests
-        run: |
-          site_name=$(echo "${{matrix.test}}" | sed -e 's/.*\.\(test_.*$\)/\1/')
-          echo "$site_name"
-          cd ~/pilot/benches/frappe-bench
-          pilot -b frappe-bench new-site "$site_name" --admin-password admin --apps frappe payments erpnext lending hrms --skip-assets
-          pilot -b frappe-bench frappe --site "$site_name" set-config -p allow_tests True
-          pilot -b frappe-bench frappe --site "$site_name" set-config -p use_mysqlclient 1
-          pilot -b frappe-bench frappe --site "$site_name" set-config host_name "http://test_site:8000"
-          pilot -b frappe-bench frappe --site "$site_name" set-config auto_email_id "test@example.com"
-          pilot -b frappe-bench frappe --site "$site_name" set-config mail_server "smtp.example.com"
-          pilot -b frappe-bench frappe --site "$site_name" set-config mail_login "test@example.com"
-          pilot -b frappe-bench frappe --site "$site_name" set-config mail_password "test"
-          pilot -b frappe-bench frappe --site "$site_name" set-config -p throttle_user_limit 100
-          pilot -b frappe-bench frappe --site "$site_name" run-tests --module ${{ matrix.test }} --lightmode
+        run: pilot -b frappe-bench frappe --site "$SITE_NAME" run-tests --module "$TEST_MODULE" --lightmode
+        env:
+          TEST_MODULE: ${{ matrix.test }}
 
       - name: Show Pilot logs on failure
         if: ${{ failure() }}

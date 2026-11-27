@@ -66,16 +66,15 @@ curl --fail --silent --show-error --retry 30 --retry-connrefused --retry-delay 1
 pilot build --apps frappe
 pilot build --apps hrms --force
 
-if [ "${SKIP_SITE_SETUP:-0}" != "1" ]; then
-    pilot new-site test_site --admin-password admin --apps frappe payments erpnext lending hrms --skip-assets
-    pilot frappe --site test_site set-config -p allow_tests True
-    pilot frappe --site test_site set-config -p use_mysqlclient 1
-    pilot frappe --site test_site set-config host_name "http://test_site:8000"
-    pilot frappe --site test_site set-config auto_email_id "test@example.com"
-    pilot frappe --site test_site set-config mail_server "smtp.example.com"
-    pilot frappe --site test_site set-config mail_login "test@example.com"
-    pilot frappe --site test_site set-config mail_password "test"
-    pilot frappe --site test_site set-config -p throttle_user_limit 100
-fi
+site_name="${SITE_NAME:-test_site}"
+pilot new-site "$site_name" --admin-password admin --apps frappe payments erpnext lending hrms --skip-assets
+pilot frappe --site "$site_name" set-config -p allow_tests True
+pilot frappe --site "$site_name" set-config -p use_mysqlclient 1
+pilot frappe --site "$site_name" set-config host_name "http://test_site:8000"
+pilot frappe --site "$site_name" set-config auto_email_id "test@example.com"
+pilot frappe --site "$site_name" set-config mail_server "smtp.example.com"
+pilot frappe --site "$site_name" set-config mail_login "test@example.com"
+pilot frappe --site "$site_name" set-config mail_password "test"
+pilot frappe --site "$site_name" set-config -p throttle_user_limit 100
 
 wait "$wkhtml_pid"

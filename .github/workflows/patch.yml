@@ -130,31 +130,25 @@ jobs:
           done
           git -C "apps/hrms" branch -f pr-head HEAD
 
-          start_pilot() {
+          migrate_with_python() {
+            pilot -b frappe-bench stop || true
+            rm -rf env
+            uv venv --python "python$1" env
+            uv pip install --python env/bin/python -e ./apps/frappe -e ./apps/erpnext -e ./apps/hrms
             pilot -b frappe-bench start > "$RUNNER_TEMP/pilot.log" 2>&1 &
             curl --fail --silent --show-error --retry 30 --retry-connrefused --retry-delay 1 \
               http://127.0.0.1:7000/api/v1/health
+            pilot -b frappe-bench frappe --site test_site migrate
           }
 
-          function update_to_version() {
-            version=$1
-            branch_name="version-$version-hotfix"
-            echo "Updating to v$version"
-
-            git -C "apps/frappe" fetch --depth 1 upstream "$branch_name:$branch_name"
-            git -C "apps/erpnext" fetch --depth 1 upstream "$branch_name:$branch_name"
-            git -C "apps/hrms" fetch --depth 1 upstream "$branch_name:$branch_name"
-            git -C "apps/frappe" checkout -q -f "$branch_name"
-            git -C "apps/erpnext" checkout -q -f "$branch_name"
-            git -C "apps/hrms" checkout -q -f "$branch_name"
-
-            pilot -b frappe-bench stop || true
-            rm -rf ~/pilot/benches/frappe-bench/env
-            uv venv --python "python$2" ~/pilot/benches/frappe-bench/env
-            uv pip install --python ~/pilot/benches/frappe-bench/env/bin/python -e ./apps/frappe -e ./apps/erpnext -e ./apps/hrms
-            start_pilot
-
-            pilot -b frappe-bench frappe --site test_site migrate
+          update_to_version() {
+            local branch_name="version-$1-hotfix"
+            echo "Updating to v$1"
+            for app in frappe erpnext hrms; do
+              git -C "apps/$app" fetch --depth 1 upstream "$branch_name:$branch_name"
+              git -C "apps/$app" checkout -q -f "$branch_name"
+            done
+            migrate_with_python "$2"
           }
 
           update_to_version 15 3.13
@@ -165,19 +159,12 @@ jobs:
           if ! git -C "apps/frappe" ls-remote --exit-code --heads upstream "$target_branch" >/dev/null 2>&1; then
             target_branch="develop"
           fi
-          git -C "apps/frappe" fetch --depth 1 upstream "$target_branch"
-          git -C "apps/frappe" checkout -q -f FETCH_HEAD
-          git -C "apps/erpnext" fetch --depth 1 upstream "$target_branch"
-          git -C "apps/erpnext" checkout -q -f FETCH_HEAD
+          for app in frappe erpnext; do
+            git -C "apps/$app" fetch --depth 1 upstream "$target_branch"
+            git -C "apps/$app" checkout -q -f FETCH_HEAD
+          done
           git -C "apps/hrms" checkout -q -f pr-head
-
-          pilot -b frappe-bench stop || true
-          rm -rf ~/pilot/benches/frappe-bench/env
-          uv venv --python python3.14 ~/pilot/benches/frappe-bench/env
-          uv pip install --python ~/pilot/benches/frappe-bench/env/bin/python -e ./apps/frappe -e ./apps/erpnext -e ./apps/hrms
-          start_pilot
-
-          pilot -b frappe-bench frappe --site test_site migrate
+          migrate_with_python 3.14
 
       - name: Show Pilot output
         if: ${{ always() }}
