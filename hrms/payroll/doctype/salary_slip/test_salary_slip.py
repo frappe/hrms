@@ -1080,6 +1080,83 @@ class TestSalarySlip(HRMSTestSuite):
 	@HRMSTestSuite.change_settings(
 		"Payroll Settings",
 		{
+			"include_holidays_in_total_working_days": 1,
+			"consider_marked_attendance_on_holidays": 0,
+			"payroll_based_on": "Attendance",
+			"consider_unmarked_attendance_as": "Present",
+		},
+	)
+	def test_absent_on_half_day_holiday_with_holidays_included(self):
+		"""Tests that being absent on a half day holiday deducts half a day when holidays are included"""
+		days_in_month = get_no_of_days()[0]
+		emp_id, half_day_holiday = setup_employee_with_half_day_holiday(
+			"Test Absent Half Day Holiday Included List", "test_absent_half_day_holiday_included@salary.com"
+		)
+
+		mark_attendance(emp_id, half_day_holiday, "Absent", ignore_validate=True)
+
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test Absent On Half Day Holiday Included")
+
+		self.assertEqual(ss.absent_days, 0.5)
+		self.assertEqual(ss.total_working_days, days_in_month)
+		self.assertEqual(ss.payment_days, days_in_month - 0.5)
+
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings",
+		{
+			"include_holidays_in_total_working_days": 1,
+			"consider_marked_attendance_on_holidays": 0,
+			"payroll_based_on": "Attendance",
+			"consider_unmarked_attendance_as": "Absent",
+		},
+	)
+	def test_unmarked_half_day_holiday_with_holidays_included(self):
+		"""Tests that an unmarked half day holiday is absent for half a day when holidays are included"""
+		no_of_days = get_no_of_days()
+		emp_id, half_day_holiday = setup_employee_with_half_day_holiday(
+			"Test Unmarked Half Day Holiday Included List",
+			"test_unmarked_half_day_holiday_included@salary.com",
+		)
+
+		# mark every working day present, leaving only the weekly offs and the half day holiday unmarked
+		holidays = frappe.get_all(
+			"Holiday", {"parent": "Test Unmarked Half Day Holiday Included List"}, pluck="holiday_date"
+		)
+		for day in range(no_of_days[0]):
+			date = getdate(add_days(get_first_day(nowdate()), day))
+			if date not in holidays:
+				mark_attendance(emp_id, date, "Present", ignore_validate=True)
+
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test Unmarked Half Day Holiday Included")
+
+		self.assertEqual(ss.absent_days, 0.5)
+		self.assertEqual(ss.total_working_days, no_of_days[0])
+		self.assertEqual(ss.payment_days, no_of_days[0] - 0.5)
+
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings", {"include_holidays_in_total_working_days": 1, "payroll_based_on": "Leave"}
+	)
+	def test_lwp_on_half_day_holiday_with_holidays_included(self):
+		"""Tests that leave without pay on a half day holiday is unpaid for half the day when holidays are included"""
+		days_in_month = get_no_of_days()[0]
+		emp_id, half_day_holiday = setup_employee_with_half_day_holiday(
+			"Test LWP Half Day Holiday Included List", "test_lwp_half_day_holiday_included@salary.com"
+		)
+		frappe.db.set_value("Leave Type", "Leave Without Pay", "include_holiday", 0)
+
+		# leave on the half day holiday and on the working day after it
+		make_leave_application(emp_id, half_day_holiday, add_days(half_day_holiday, 1), "Leave Without Pay")
+
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test LWP On Half Day Holiday Included")
+
+		# 0.5 for the half day holiday + 1 for the full working day
+		self.assertEqual(ss.leave_without_pay, 1.5)
+		self.assertEqual(ss.total_working_days, days_in_month)
+		self.assertEqual(ss.payment_days, days_in_month - 1.5)
+
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings",
+		{
 			"payroll_based_on": "Attendance",
 			"consider_unmarked_attendance_as": "Present",
 			"include_holidays_in_total_working_days": 1,
