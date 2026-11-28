@@ -147,7 +147,7 @@ def get_report_summary(data):
 	present_records = half_day_records = absent_records = late_entries = early_exits = 0
 
 	for entry in data:
-		if entry.status == "Present":
+		if entry.status in ("Present", "Work From Home"):
 			present_records += 1
 		elif entry.status == "Half Day":
 			half_day_records += 1

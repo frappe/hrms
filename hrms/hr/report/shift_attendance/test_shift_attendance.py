@@ -273,6 +273,27 @@ class TestShiftAttendance(HRMSTestSuite):
 		self.assertEqual(chart_data.late_entries, 3)
 		self.assertEqual(chart_data.early_exits, 2)
 
+	def test_work_from_home_counts_as_present_in_summary(self):
+		emp = make_employee("test_shift_report_wfh@example.com", company="_Test Company")
+
+		mark_attendance(emp, date(2023, 1, 1), "Work From Home", "Shift 1")
+		mark_attendance(emp, date(2023, 1, 2), "Absent", "Shift 1")
+
+		filters = frappe._dict(
+			{
+				"company": "_Test Company",
+				"employee": emp,
+				"from_date": date(2023, 1, 1),
+				"to_date": date(2023, 1, 3),
+				"include_attendance_without_checkins": 1,
+			}
+		)
+		chart_data = get_chart_data(execute(filters))
+
+		self.assertEqual(chart_data.total_records, 2)
+		self.assertEqual(chart_data.present_records, 1)
+		self.assertEqual(chart_data.absent_records, 1)
+
 
 def get_chart_data(report):
 	return frappe._dict(
