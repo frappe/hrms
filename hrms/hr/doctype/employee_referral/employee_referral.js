@@ -6,14 +6,9 @@ frappe.ui.form.on("Employee Referral", {
 		if (frm.doc.docstatus === 1 && frm.doc.status === "Pending") {
 			frm.add_custom_button(__("Reject Employee Referral"), function () {
 				frappe.confirm(
-					__("Are you sure you want to reject the Employee Referral?"),
+					__("Reject the referral for {0}?", [frm.doc.full_name]),
 					function () {
-						frm.doc.status = "Rejected";
-						frm.dirty();
-						frm.save_or_update();
-					},
-					function () {
-						window.close();
+						frm.events.reject_referral(frm);
 					},
 				);
 			});
@@ -55,12 +50,25 @@ frappe.ui.form.on("Employee Referral", {
 		}
 	},
 	create_job_applicant: function (frm) {
-		frappe.call({
-			method: "hrms.hr.doctype.employee_referral.employee_referral.create_job_applicant",
-			args: {
-				source_name: frm.docname,
-			},
-		});
+		frappe
+			.call({
+				method: "hrms.hr.doctype.employee_referral.employee_referral.create_job_applicant",
+				args: {
+					source_name: frm.docname,
+				},
+			})
+			.then(() => frm.reload_doc());
+	},
+
+	reject_referral: function (frm) {
+		frappe
+			.call({
+				method: "hrms.hr.doctype.employee_referral.employee_referral.reject_referral",
+				args: {
+					source_name: frm.docname,
+				},
+			})
+			.then(() => frm.reload_doc());
 	},
 
 	create_additional_salary: function (frm) {

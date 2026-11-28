@@ -39,7 +39,7 @@
   {
    "fieldname": "first_name",
    "fieldtype": "Data",
-   "label": "First Name ",
+   "label": "First Name",
    "reqd": 1
   },
   {
@@ -58,14 +58,13 @@
   {
    "fieldname": "contact_no",
    "fieldtype": "Data",
-   "in_standard_filter": 1,
    "label": "Contact No.",
    "options": "Phone"
   },
   {
    "fieldname": "current_employer",
    "fieldtype": "Data",
-   "label": "Current Employer "
+   "label": "Current Employer"
   },
   {
    "fieldname": "column_break_6",
@@ -74,7 +73,6 @@
   {
    "fieldname": "date",
    "fieldtype": "Date",
-   "in_standard_filter": 1,
    "label": "Date",
    "reqd": 1
   },
@@ -116,7 +114,7 @@
   {
    "fieldname": "additional_information_section",
    "fieldtype": "Section Break",
-   "label": "Additional Information "
+   "label": "Additional Information"
   },
   {
    "fieldname": "work_references",
@@ -141,7 +139,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "For Designation ",
+   "label": "For Designation",
    "options": "Designation",
    "reqd": 1
   },
@@ -149,7 +147,6 @@
    "fieldname": "email",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "in_standard_filter": 1,
    "label": "Email",
    "options": "Email",
    "reqd": 1
@@ -168,7 +165,6 @@
   {
    "fieldname": "referrer",
    "fieldtype": "Link",
-   "in_standard_filter": 1,
    "label": "Referrer",
    "options": "Employee",
    "reqd": 1
@@ -207,7 +203,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-10-19 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Referral",
@@ -302,6 +298,7 @@
   }
  ],
  "row_format": "Dynamic",
+ "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],

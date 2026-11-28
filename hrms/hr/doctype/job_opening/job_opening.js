@@ -12,6 +12,7 @@ frappe.ui.form.on("Job Opening", {
 		});
 	},
 	refresh: function (frm) {
+		frm.previous_designation = frm.doc.designation;
 		frm.trigger("add_status_toggle_button");
 	},
 	add_status_toggle_button: function (frm) {
@@ -26,28 +27,30 @@ frappe.ui.form.on("Job Opening", {
 		});
 	},
 	designation: function (frm) {
-		if (frm.doc.designation) {
+		// keep a title typed by hand: only follow the designation while it is empty or still the old one
+		if (
+			frm.doc.designation &&
+			(!frm.doc.job_title || frm.doc.job_title === frm.previous_designation)
+		) {
 			frm.set_value("job_title", frm.doc.designation);
 		}
+		if (frm.doc.designation) frm.previous_designation = frm.doc.designation;
 		if (frm.doc.designation && frm.doc.company) {
 			frappe.call({
 				method: "hrms.hr.doctype.staffing_plan.staffing_plan.get_active_staffing_plan_details",
 				args: {
 					company: frm.doc.company,
 					designation: frm.doc.designation,
-					date: frappe.datetime.now_date(), // ToDo - Date in Job Opening?
+					from_date: frappe.datetime.now_date(),
+					to_date: frappe.datetime.now_date(),
 				},
 				callback: function (data) {
-					if (data.message) {
+					if (data.message && data.message.length) {
 						frm.set_value("staffing_plan", data.message[0].name);
 						frm.set_value("planned_vacancies", data.message[0].vacancies);
 					} else {
 						frm.set_value("staffing_plan", "");
 						frm.set_value("planned_vacancies", 0);
-						frappe.show_alert({
-							indicator: "orange",
-							message: __("No Staffing Plans found for this Designation"),
-						});
 					}
 				},
 			});

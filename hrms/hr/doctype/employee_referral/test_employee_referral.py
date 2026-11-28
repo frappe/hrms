@@ -10,8 +10,10 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.employee_referral.employee_referral import (
 	create_additional_salary,
 	create_job_applicant,
+	reject_referral,
 )
-from hrms.tests.utils import HRMSTestSuite
+from hrms.hr.doctype.job_opening.test_job_opening import get_job_opening
+from hrms.tests.utils import HRMSTestSuite, make_user
 
 
 class TestEmployeeReferral(HRMSTestSuite):
@@ -46,11 +48,70 @@ class TestEmployeeReferral(HRMSTestSuite):
 		add_sal = create_additional_salary(emp_ref.name)
 		self.assertEqual(add_sal.ref_docname, emp_ref.name)
 
+	def test_status_is_kept_on_save(self):
+		emp_ref = create_employee_referral()
+		self.assertEqual(emp_ref.status, "Pending")
+
+		emp_ref.status = "Rejected"
+		emp_ref.validate()
+		self.assertEqual(emp_ref.status, "Rejected")
+
+		new_ref = frappe.new_doc("Employee Referral")
+		new_ref.status = "Accepted"
+		new_ref.set_status()
+		self.assertEqual(new_ref.status, "Pending")
+
+	def test_shortlisted_applicant_keeps_referral_in_process(self):
+		emp_ref = create_employee_referral()
+		job_applicant = create_job_applicant(emp_ref.name)
+		emp_ref.db_set("status", "Pending")
+
+		job_applicant.status = "Shortlisted"
+		job_applicant.save()
+
+		emp_ref.reload()
+		self.assertEqual(emp_ref.status, "In Process")
+
+	def test_job_applicant_gets_the_only_open_opening_for_designation(self):
+		emp_ref = create_employee_referral()
+		opening = get_job_opening(
+			job_title="Referral Opening", designation=emp_ref.for_designation, company="_Test Company"
+		)
+		opening.insert()
+
+		job_applicant = create_job_applicant(emp_ref.name)
+		self.assertEqual(job_applicant.job_title, opening.name)
+
 	def test_status_on_discard(self):
 		refarral = create_employee_referral(do_not_submit=True)
 		refarral.discard()
 		refarral.reload()
 		self.assertEqual(refarral.status, "Cancelled")
+
+	def test_cannot_reject_draft_referral(self):
+		emp_ref = create_employee_referral(do_not_submit=True)
+
+		self.assertRaises(frappe.ValidationError, reject_referral, emp_ref.name)
+
+	def test_reject_submitted_referral(self):
+		emp_ref = create_employee_referral()
+
+		reject_referral(emp_ref.name)
+
+		emp_ref.reload()
+		self.assertEqual(emp_ref.status, "Rejected")
+
+	def test_cannot_reject_referral_twice(self):
+		emp_ref = create_employee_referral()
+		reject_referral(emp_ref.name)
+
+		self.assertRaises(frappe.ValidationError, reject_referral, emp_ref.name)
+
+	def test_referral_actions_need_read_access(self):
+		emp_ref = create_employee_referral()
+		with self.set_user(make_user("referral_outsider@example.com", "Interviewer")):
+			self.assertRaises(frappe.PermissionError, create_additional_salary, emp_ref.name)
+			self.assertRaises(frappe.PermissionError, create_job_applicant, emp_ref.name)
 
 	def test_unique_referral(self):
 		referral_1 = create_employee_referral(email="test_ref@example.com")

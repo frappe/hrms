@@ -116,7 +116,6 @@
   {
    "fieldname": "company",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Company",
    "options": "Company",
    "print_hide": 1,
@@ -138,12 +137,14 @@
   {
    "fieldname": "offer_date",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "Offer Date",
    "reqd": 1
   },
   {
    "fieldname": "offer_valid_till",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "Offer Valid Till"
   },
   {
@@ -202,6 +203,7 @@
   {
    "fieldname": "date_of_joining",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "Date of Joining"
   },
   {
@@ -513,7 +515,7 @@
  "icon": "handshake",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-11-18 17:30:00.000000",
+ "modified": "2026-11-19 01:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Offer",
@@ -563,6 +565,7 @@
  ],
  "row_format": "Dynamic",
  "show_name_in_global_search": 1,
+ "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],

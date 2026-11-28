@@ -82,6 +82,7 @@
    "fetch_if_empty": 1,
    "fieldname": "company",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Company",
    "options": "Company",
    "reqd": 1
@@ -90,6 +91,7 @@
    "default": "Today",
    "fieldname": "letter_date",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "Letter Date"
   },
   {
@@ -97,6 +99,7 @@
    "fetch_if_empty": 1,
    "fieldname": "appointment_date",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "Date of Joining",
    "reqd": 1
   },
@@ -145,6 +148,7 @@
    "description": "Picking a template replaces the letter body with the template's text.",
    "fieldname": "appointment_letter_template",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Appointment Letter Template",
    "options": "Appointment Letter Template"
   },
@@ -213,7 +217,7 @@
  "icon": "mail-check",
  "link_display_mode": "Search",
  "links": [],
- "modified": "2026-11-06 14:00:00.000000",
+ "modified": "2026-11-13 23:55:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Appointment Letter",

@@ -39,6 +39,8 @@ class InterviewFeedback(Document):
 
 	def on_submit(self):
 		self.update_interview_average_rating()
+		if frappe.db.get_value("Interview", self.interview, "status") == "Pending":
+			frappe.db.set_value("Interview", self.interview, "status", "Under Review")
 
 	def on_cancel(self):
 		self.update_interview_average_rating()

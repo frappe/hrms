@@ -221,6 +221,7 @@ doc_events = {
 		"on_update": [
 			"hrms.overrides.employee_master.update_approver_role",
 			"hrms.overrides.employee_master.publish_update",
+			"hrms.overrides.employee_master.update_job_applicant_stage",
 		],
 		"after_insert": [
 			"hrms.overrides.employee_master.update_job_applicant_and_offer",
@@ -228,7 +229,10 @@ doc_events = {
 			"hrms.telemetry.on_employee_from_job_offer",
 		],
 		"on_trash": "hrms.overrides.employee_master.update_employee_transfer",
-		"after_delete": "hrms.overrides.employee_master.publish_update",
+		"after_delete": [
+			"hrms.overrides.employee_master.publish_update",
+			"hrms.overrides.employee_master.update_job_applicant_stage",
+		],
 	},
 	"Project": {"validate": "hrms.controllers.employee_boarding_controller.update_employee_boarding_status"},
 	"Task": {"on_update": "hrms.controllers.employee_boarding_controller.update_task"},

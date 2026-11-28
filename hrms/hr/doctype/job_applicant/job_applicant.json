@@ -21,7 +21,13 @@
   "country",
   "column_break_enue",
   "status",
+  "stage",
   "applicant_rating",
+  "interview_summary_section",
+  "interview_summary_html",
+  "rejection_section",
+  "rejection_reason",
+  "rejection_note",
   "section_break_6",
   "resume_link",
   "resume_preview_html",
@@ -46,6 +52,7 @@
    "fieldname": "applicant_name",
    "fieldtype": "Data",
    "in_global_search": 1,
+   "in_standard_filter": 1,
    "label": "Full Name",
    "reqd": 1
   },
@@ -60,8 +67,7 @@
   {
    "fieldname": "status",
    "fieldtype": "Select",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
+   "hidden": 1,
    "label": "Status",
    "options": "Open\nReplied\nShortlisted\nRejected\nHold\nAccepted",
    "reqd": 1
@@ -75,6 +81,7 @@
    "fieldname": "job_title",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Job Opening",
    "options": "Job Opening",
    "search_index": 1
@@ -82,6 +89,7 @@
   {
    "fieldname": "source",
    "fieldtype": "Link",
+   "in_standard_filter": 1,
    "label": "Source",
    "options": "Job Applicant Source"
   },
@@ -89,7 +97,7 @@
    "depends_on": "eval: doc.source==\"Employee Referral\" ",
    "fieldname": "source_name",
    "fieldtype": "Link",
-   "label": "Source Name",
+   "label": "Referred By",
    "options": "Employee"
   },
   {
@@ -129,6 +137,15 @@
    "fieldname": "resume_link",
    "fieldtype": "Data",
    "label": "Link"
+  },
+  {
+   "default": "Applied",
+   "fieldname": "stage",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Stage",
+   "options": "Applied\nShortlisted\nInterviewing\nOffered\nHired\nRejected"
   },
   {
    "fieldname": "applicant_rating",
@@ -211,13 +228,40 @@
    "fieldtype": "Button",
    "hidden": 1,
    "label": "Open Resume in New Tab"
+  },
+  {
+   "fieldname": "interview_summary_section",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "label": "Interview Summary"
+  },
+  {
+   "fieldname": "interview_summary_html",
+   "fieldtype": "HTML"
+  },
+  {
+   "depends_on": "eval:doc.status==\"Rejected\"",
+   "fieldname": "rejection_section",
+   "fieldtype": "Section Break",
+   "label": "Rejection"
+  },
+  {
+   "fieldname": "rejection_reason",
+   "fieldtype": "Link",
+   "label": "Rejection reason",
+   "options": "Rejection Reason"
+  },
+  {
+   "fieldname": "rejection_note",
+   "fieldtype": "Small Text",
+   "label": "Rejection note"
   }
  ],
  "icon": "user-round",
  "idx": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-11-14 00:50:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Applicant",
@@ -262,8 +306,9 @@
  "row_format": "Dynamic",
  "search_fields": "applicant_name, email_id, job_title, phone_number",
  "sender_field": "email_id",
+ "show_title_field_in_link": 1,
  "sort_field": "creation",
- "sort_order": "ASC",
+ "sort_order": "DESC",
  "states": [],
  "subject_field": "notes",
  "title_field": "applicant_name"

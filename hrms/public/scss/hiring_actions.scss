@@ -1,0 +1,12 @@
+// the submit-results dialog, shown on the Hiring page and the Job Applicant Kanban
+.hiring__dialog-note {
+	margin: calc(var(--spacing) * 3) 0 0;
+	color: var(--ink-gray-5);
+}
+
+// the reject dialog's "From" line, on the Hiring page and the Kanban
+.modal .hiring__mail-from {
+	margin: 0 0 calc(var(--spacing) * 3);
+	font-size: var(--text-p-sm);
+	color: var(--ink-gray-5);
+}

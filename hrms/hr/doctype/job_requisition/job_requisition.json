@@ -48,14 +48,13 @@
    "fieldname": "no_of_positions",
    "fieldtype": "Int",
    "in_list_view": 1,
-   "label": "No of. Positions",
+   "label": "Vacancies",
    "non_negative": 1,
    "reqd": 1
   },
   {
    "fieldname": "expected_compensation",
    "fieldtype": "Currency",
-   "in_list_view": 1,
    "label": "Expected Compensation",
    "non_negative": 1,
    "options": "Company:company:default_currency",
@@ -84,7 +83,7 @@
    "fieldname": "requested_by",
    "fieldtype": "Link",
    "in_standard_filter": 1,
-   "label": "Requested By",
+   "label": "Requester",
    "options": "Employee",
    "reqd": 1
   },
@@ -93,13 +92,13 @@
    "fieldname": "requested_by_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Requested By (Name)",
+   "label": "Requester Name",
    "read_only": 1
   },
   {
    "fieldname": "section_break_7",
    "fieldtype": "Section Break",
-   "label": "Requested By"
+   "label": "Requester Details"
   },
   {
    "fetch_from": "requested_by.department",
@@ -152,7 +151,7 @@
   },
   {
    "fieldname": "job_description_tab",
-   "fieldtype": "Tab Break",
+   "fieldtype": "Section Break",
    "label": "Job Description"
   },
   {
@@ -177,6 +176,7 @@
   {
    "fieldname": "department",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Department",
    "options": "Department"
   },
@@ -207,7 +207,7 @@
    "link_fieldname": "job_requisition"
   }
  ],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-11-14 00:30:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Job Requisition",
@@ -244,6 +244,7 @@
   }
  ],
  "row_format": "Dynamic",
+ "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],

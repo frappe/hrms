@@ -1,29 +1,73 @@
-<div class="feedback-section col-xs-12">
-	{% if feedbacks.length %}
-	<h4 class="my-4 mx-5" style="font-size: 18px">
-		{{ __("Overall Average Rating") }}
-	</h4>
-	{%=
-		frappe.render_template(
-			"feedback_summary",
-			{ number_of_stars: 5, average_rating: average_rating, feedback_count: feedbacks.length, reviews_per_rating: reviews_per_rating }
-		)
-	%}
-
-	<div class="m-5">
-		<h4 class="mb-2" style="font-size: 18px">{{ __("Feedback Summary") }}</h4>
-		<p class="mb-5 text-secondary">
-			{{ __("Average rating of demonstrated skills") }}
-		</p>
-		<div class="row">
-			{% for(const d of skills_average_rating) { %}
-			<div class="col-md-4 mb-4">
-				{%= frappe.render_template("circular_progress_bar", {skill: d.skill, rating: d.rating * 5}) %}
+<div class="interview-feedback">
+	{% if (feedbacks.length) { %}
+	<div class="if-summary">
+		<div class="if-rating">
+			<div class="if-rating__score text-6xl-semibold">{{ average_rating.toFixed(1) }}</div>
+			{%= frappe.ui.rating.html({ value: average_rating }) %}
+			<div class="text-p-base text-ink-gray-5">
+				{{ feedbacks.length == 1 ? __("1 review") : __("{0} reviews", [feedbacks.length]) }}
 			</div>
-			{% } %}
+		</div>
+
+		<div class="if-columns">
+			<div class="if-skills">
+				<div class="text-base-medium text-ink-gray-8">{{ __("Skills") }}</div>
+				{% for (const d of skills_average_rating) { %}
+				<div class="if-skills__row">
+					<span class="if-skills__name text-base text-ink-gray-7">{{ d.skill }}</span>
+					<span class="if-skills__bar">{%= frappe.ui.progress.html({ value: d.rating * 100, size: "md" }) %}</span>
+					<span class="if-skills__value text-base text-ink-gray-8">{{ (d.rating * 5).toFixed(1) }}</span>
+				</div>
+				{% } %}
+			</div>
+
+			<div class="if-panel">
+				<div class="if-panel__title">
+					<span class="text-base-medium text-ink-gray-8">{{ __("Panel") }}</span>
+					<span class="text-base text-ink-gray-5">{{ __("{0} of {1} submitted", [submitted_count, panel.length]) }}</span>
+				</div>
+				{% for (const p of panel) { %}
+				<div class="if-panel__row">
+					{%= frappe.ui.avatar.html({ label: p.name, image: p.image, size: "sm", theme: "auto" }) %}
+					<span class="if-panel__name text-p-base text-ink-gray-8">{{ p.name }}</span>
+					{% if (p.result) { %}
+					<span class="if-panel__result">{%= frappe.ui.badge.html({ label: __(p.result), theme: p.result == "Rejected" ? "red" : "gray" }) %}</span>
+					<span class="if-panel__score text-p-base text-ink-gray-8">{{ p.score.toFixed(1) }}</span>
+					{% } else { %}
+					<span class="if-panel__pending">{%= frappe.ui.badge.html({ label: __("Pending"), variant: "ghost" }) %}</span>
+					{% } %}
+				</div>
+				{% } %}
+			</div>
 		</div>
 	</div>
-	{% } %}
 
-	{%= frappe.render_template("feedback_history", { feedback_history: feedbacks, feedback_doctype: "Interview Feedback" }) %}
+	<div class="if-reviews">
+		<div class="if-reviews__title">
+			<span class="text-base-medium text-ink-gray-8">{{ __("Reviews") }}</span>
+			{%= frappe.ui.badge.html({ label: String(feedbacks.length) }) %}
+		</div>
+		{% for (const f of feedbacks) { %}
+		<div class="if-review" data-name="{{ f.name }}">
+			<div class="if-review__avatar">
+				{%= frappe.ui.avatar.html({ label: f.reviewer_name || f.user, size: "xl", theme: "auto" }) %}
+			</div>
+			<div class="if-review__body">
+				<a class="text-base-medium text-ink-gray-8" data-open-feedback href="{{ frappe.utils.get_form_link('Interview Feedback', f.name) }}">{{ strip_html(f.reviewer_name || f.user) }}</a>
+				{% if (f.feedback) { %}
+				<div class="if-review__comment text-p-base text-ink-gray-7">{{ f.feedback }}</div>
+				{% } %}
+			</div>
+			<div class="if-review__meta">
+				{%= frappe.ui.rating.html({ value: f.total_score }) %}
+				<span class="text-p-base text-ink-gray-5">{%= frappe.datetime.comment_when(f.added_on) %}</span>
+			</div>
+		</div>
+		{% } %}
+	</div>
+	{% } else if (owes_feedback) { %}
+	{%= frappe.ui.empty_state.html({ icon: "message-square-text", title: __("No feedback yet"), description: __("You're on the panel. Add yours once the interview is done."), actions: [{ label: __("Submit Feedback"), css_class: "if-submit-feedback" }] }) %}
+	{% } else { %}
+	{%= frappe.ui.empty_state.html({ icon: "message-square-text", title: __("No feedback yet"), description: __("Feedback from the panel shows up here.") }) %}
+	{% } %}
 </div>

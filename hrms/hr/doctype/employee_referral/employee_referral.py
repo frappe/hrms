@@ -63,7 +63,8 @@ class EmployeeReferral(Document):
 		self.full_name = " ".join(filter(None, [self.first_name, self.last_name]))
 
 	def set_status(self):
-		self.status = "Pending"
+		if self.is_new() or not self.status:
+			self.status = "Pending"
 
 	def set_referral_bonus_payment_status(self):
 		if not self.is_applicable_for_referral_bonus:
@@ -79,9 +80,10 @@ class EmployeeReferral(Document):
 @frappe.whitelist(methods=["POST"])
 def create_job_applicant(source_name: str, target_doc: str | Document | None = None) -> Document:
 	emp_ref = frappe.get_doc("Employee Referral", source_name)
+	emp_ref.check_permission("read")
 	# just for Api call if some set status apart from default Status
 	status = emp_ref.status
-	if emp_ref.status in ["Pending", "In process"]:
+	if emp_ref.status in ["Pending", "In Process"]:
 		status = "Open"
 
 	job_applicant = frappe.new_doc("Job Applicant")
@@ -89,6 +91,14 @@ def create_job_applicant(source_name: str, target_doc: str | Document | None = N
 	job_applicant.employee_referral = emp_ref.name
 	job_applicant.status = status
 	job_applicant.designation = emp_ref.for_designation
+	open_openings = frappe.get_all(
+		"Job Opening",
+		filters={"designation": emp_ref.for_designation, "status": "Open"},
+		pluck="name",
+		limit=2,
+	)
+	if len(open_openings) == 1:
+		job_applicant.job_title = open_openings[0]
 	job_applicant.applicant_name = emp_ref.full_name
 	job_applicant.email_id = emp_ref.email
 	job_applicant.phone_number = emp_ref.contact_no
@@ -109,16 +119,37 @@ def create_job_applicant(source_name: str, target_doc: str | Document | None = N
 	return job_applicant
 
 
+@frappe.whitelist(methods=["POST"])
+def reject_referral(source_name: str) -> Document:
+	emp_ref = frappe.get_doc("Employee Referral", source_name)
+
+	if emp_ref.docstatus != 1:
+		frappe.throw(_("Submit the Employee Referral before rejecting it."))
+	if emp_ref.status != "Pending":
+		frappe.throw(_("Only a Pending Employee Referral can be rejected."))
+
+	emp_ref.check_permission("write")
+	emp_ref.db_set("status", "Rejected")
+
+	return emp_ref
+
+
 @frappe.whitelist()
 def create_additional_salary(employee_referral: str) -> Document:
 	doc = frappe.get_doc("Employee Referral", employee_referral)
+	doc.check_permission("read")
 
-	if not frappe.db.exists("Additional Salary", {"ref_docname": doc.name}):
-		additional_salary = frappe.new_doc("Additional Salary")
-		additional_salary.employee = doc.referrer
-		additional_salary.company = frappe.db.get_value("Employee", doc.referrer, "company")
-		additional_salary.overwrite_salary_structure_amount = 0
-		additional_salary.ref_doctype = doc.doctype
-		additional_salary.ref_docname = doc.name
+	existing = frappe.db.exists("Additional Salary", {"ref_doctype": doc.doctype, "ref_docname": doc.name})
+	if existing:
+		additional_salary = frappe.get_doc("Additional Salary", existing)
+		additional_salary.check_permission("read")
+		return additional_salary
 
+	frappe.has_permission("Additional Salary", "create", throw=True)
+	additional_salary = frappe.new_doc("Additional Salary")
+	additional_salary.employee = doc.referrer
+	additional_salary.company = frappe.db.get_value("Employee", doc.referrer, "company")
+	additional_salary.overwrite_salary_structure_amount = 0
+	additional_salary.ref_doctype = doc.doctype
+	additional_salary.ref_docname = doc.name
 	return additional_salary
