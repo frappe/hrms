@@ -133,13 +133,34 @@ class SalaryBreakupReport:
 
 	def calculate_yearly_amounts_and_percent_of_ctc(self):
 		for component in self.salary_components:
-			annual_amount = component.get("per_cycle", 0) * self.cycle_multiplier
+			annual_amount = self.get_annual_tax_amount(component)
+			if annual_amount is None:
+				annual_amount = component.get("per_cycle", 0) * self.cycle_multiplier
 			component.update(
 				{
 					"annual": flt(annual_amount, 2),
 					"percent_of_ctc": self.calculate_percent_of_ctc(annual_amount),
 				}
 			)
+
+	def get_annual_tax_amount(self, component):
+		"""Income tax for the payroll period, as on the salary slip's Total Income Tax.
+
+		The tax deducted per cycle is the balance of the annual tax spread over the remaining
+		cycles, so it changes as salary slips are submitted and cannot be multiplied into an annual amount.
+		"""
+		if not component.get("is_tax_component"):
+			return None
+
+		tax_details = (getattr(self.salary_slip, "_component_based_variable_tax", None) or {}).get(
+			component.get("salary_component")
+		)
+		if not tax_details or "total_structured_tax_amount" not in tax_details:
+			return None
+
+		return flt(tax_details["total_structured_tax_amount"]) + flt(
+			tax_details.get("full_tax_on_additional_earnings")
+		)
 
 	def separate_salary_components_by_type(self):
 		self.earning_components = [
@@ -200,14 +221,19 @@ class SalaryBreakupReport:
 			set_totals_row(component_type)
 
 	def set_net_and_gross_earning_rows(self):
+		# use the annual income tax of the payroll period, not the current cycle's tax times the cycles
+		tax_totals = self.tax_components[0]
+		annual_net_pay = self.net_pay * self.cycle_multiplier - (
+			tax_totals.get("annual") - tax_totals.get("per_cycle") * self.cycle_multiplier
+		)
 		self.total_net_earnings = [
 			{
 				"salary_component": "Total Net Earnings",
 				"type": "",
 				"formula": "",
 				"per_cycle": self.net_pay,
-				"annual": self.net_pay * self.cycle_multiplier,
-				"percent_of_ctc": self.calculate_percent_of_ctc(self.net_pay * self.cycle_multiplier),
+				"annual": flt(annual_net_pay, 2),
+				"percent_of_ctc": self.calculate_percent_of_ctc(annual_net_pay),
 				"bold": True,
 			}
 		]

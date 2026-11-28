@@ -6,6 +6,7 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_exemption_declaration import (
 	create_payroll_period,
 )
+from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
 from hrms.payroll.doctype.salary_structure.test_salary_structure import (
 	create_salary_structure_assignment,
 	make_salary_structure,
@@ -97,7 +98,7 @@ class TestEmployeeCTCBreakup(HRMSTestSuite):
             Monthly net pay = Gross pay - Professional Tax - Monthly tax = 93000 - 200 - 11404 = 81396
         """
 		monthly_income_tax = 11404
-		annual_tax = flt(monthly_income_tax * 12, 2)
+		annual_tax = 136843.2
 		frappe.flags.posting_date = get_year_start(getdate())
 		ctc_breakup = SalaryBreakupReport(employee, salary_structure_assignment.name)
 		self.assertEqual(ctc_breakup.net_pay, 81396)
@@ -131,6 +132,34 @@ class TestEmployeeCTCBreakup(HRMSTestSuite):
 		income_tax_row = ctc_breakup.tax_components[-1]
 		self.assertEqual(income_tax_row.get("per_cycle"), monthly_income_tax)
 		self.assertEqual(income_tax_row.get("annual"), annual_tax)
+
+	def test_annual_income_tax_after_salary_slips_are_submitted(self):
+		"""The annual income tax stays the tax for the payroll period once salary slips are submitted,
+		instead of the remaining tax of the current month multiplied by 12."""
+		employee = make_employee("test_ctc@example.com", company="_Test Company")
+		salary_structure = make_salary_structure(
+			"Test CTC Breakup with Tax", payroll_frequency="Monthly", currency="INR", test_tax=True
+		)
+		salary_structure_assignment = create_salary_structure_assignment(
+			employee, salary_structure.name, base=60000, currency="INR", from_date=get_year_start(getdate())
+		)
+		salary_structure_assignment.ctc = 1116000
+		salary_structure_assignment.save()
+
+		for month in range(2):
+			salary_slip = make_salary_slip(
+				salary_structure.name,
+				employee=employee,
+				posting_date=add_months(get_year_start(getdate()), month),
+			)
+			salary_slip.submit()
+
+		frappe.flags.posting_date = add_months(get_year_start(getdate()), 2)
+		ctc_breakup = SalaryBreakupReport(employee, salary_structure_assignment.name)
+		ctc_breakup.get_data()
+		income_tax_row = ctc_breakup.tax_components[-1]
+		self.assertEqual(income_tax_row.get("annual"), 136843.2)
+		self.assertEqual(flt(ctc_breakup.salary_slip.total_income_tax, 2), income_tax_row.get("annual"))
 
 	def test_report(self):
 		employee = make_employee("test_ctc@example.com", company="_Test Company")
@@ -211,12 +240,12 @@ class TestEmployeeCTCBreakup(HRMSTestSuite):
 		self.assertEqual(tax_components_totals.get("type"), "")
 		self.assertEqual(tax_components_totals.get("formula"), "")
 		self.assertEqual(tax_components_totals.get("per_cycle"), 11404)
-		self.assertEqual(tax_components_totals.get("annual"), 136848)
+		self.assertEqual(tax_components_totals.get("annual"), 136843.2)
 		self.assertEqual(tax_components_totals.get("percent_of_ctc"), 12.26)
 
 		self.assertEqual(net_pay_row[0].get("salary_component"), "Total Net Earnings")
 		self.assertEqual(net_pay_row[0].get("per_cycle"), 81396)
-		self.assertEqual(net_pay_row[0].get("annual"), 976752)
+		self.assertEqual(net_pay_row[0].get("annual"), 976756.8)
 		self.assertEqual(net_pay_row[0].get("percent_of_ctc"), 87.52)
 
 		self.assertEqual(gross_pay_row[0].get("salary_component"), "Total Gross Earnings")
