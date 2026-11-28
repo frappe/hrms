@@ -6,12 +6,47 @@ from frappe import _
 from frappe.model.naming import set_name_by_naming_series
 from frappe.query_builder import Interval
 from frappe.query_builder.functions import Count, CurDate, UnixTimestamp
-from frappe.utils import add_years, cint, get_link_to_form, getdate
+from frappe.utils import add_years, cint, get_link_to_form, getdate, today
 
 from erpnext.setup.doctype.employee.employee import Employee
 
 
 class EmployeeMaster(Employee):
+	def validate(self):
+		super().validate()
+		self.validate_left_status_before_relieving_date()
+		self.validate_relieving_date_not_passed()
+
+	def validate_relieving_date_not_passed(self):
+		"""Payroll Entry leaves out employees whose Relieving Date has passed, whatever their status."""
+		if self.status == "Left" or not self.relieving_date:
+			return
+		if not (self.has_value_changed("status") or self.has_value_changed("relieving_date")):
+			return
+
+		if getdate(self.relieving_date) < getdate(today()):
+			frappe.throw(
+				_(
+					"Relieving Date {0} is in the past, so this employee is left out of payroll. "
+					"Set the status to Left, or correct or clear the Relieving Date."
+				).format(frappe.bold(frappe.format(self.relieving_date, "Date"))),
+				title=_("Relieving Date Has Passed"),
+			)
+
+	def validate_left_status_before_relieving_date(self):
+		"""Status Left disables the linked User, so it waits until the employee has left."""
+		if not (self.status == "Left" and self.has_value_changed("status") and self.relieving_date):
+			return
+
+		if getdate(self.relieving_date) > getdate(today()):
+			frappe.throw(
+				_(
+					"Relieving Date {0} is in the future. Keep the current status until then. "
+					"The status changes to Left automatically after the Relieving Date."
+				).format(frappe.bold(frappe.format(self.relieving_date, "Date"))),
+				title=_("Employee Has Not Left Yet"),
+			)
+
 	def autoname(self):
 		naming_method = frappe.db.get_single_value("HR Settings", "emp_created_by")
 		if not naming_method:
@@ -211,3 +246,33 @@ def get_retirement_date(date_of_birth: str | None = None):
 		except ValueError:
 			# invalid date
 			return
+
+
+def set_status_left_after_relieving_date():
+	"""Set status Left for employees whose Relieving Date has passed. Runs daily."""
+	employees = frappe.get_all(
+		"Employee",
+		# A "<" filter on a Date field also matches empty values, so require a Relieving Date.
+		filters=[
+			["status", "!=", "Left"],
+			["relieving_date", "is", "set"],
+			["relieving_date", "<", today()],
+		],
+		pluck="name",
+		# Reportees first: a manager cannot leave while an Active employee reports to them.
+		order_by="lft desc",
+	)
+
+	for name in employees:
+		frappe.db.savepoint("employee_left")
+		try:
+			employee = frappe.get_doc("Employee", name)
+			employee.status = "Left"
+			employee.save(ignore_permissions=True)
+		except Exception:
+			frappe.db.rollback(save_point="employee_left")
+			frappe.log_error(
+				title=_("Could not set status Left for Employee {0}").format(name),
+				reference_doctype="Employee",
+				reference_name=name,
+			)

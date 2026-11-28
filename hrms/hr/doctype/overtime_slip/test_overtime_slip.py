@@ -147,12 +147,9 @@ class TestOvertimeSlip(HRMSTestSuite):
 
 		company = frappe.get_doc("Company", "_Test Company")
 		make_earning_salary_component(setup=True, company_list=["_Test Company"])
-		employee = make_employee(
-			"test_overtime_slip_mid_leaver@example.com",
-			company="_Test Company",
-			relieving_date=relieving_date,
-			status="Left",
-		)
+		employee = make_employee("test_overtime_slip_mid_leaver@example.com", company="_Test Company")
+		# The Relieving Date can be past or future, depending on the day of the month.
+		frappe.db.set_value("Employee", employee, {"relieving_date": relieving_date, "status": "Left"})
 		overtime_type = create_overtime_type(overtime_calculation_method="Fixed Hourly Rate")
 		shift_type = setup_shift_type(
 			company="_Test Company",

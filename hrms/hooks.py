@@ -270,6 +270,7 @@ scheduler_events = {
 	"daily": [
 		"hrms.controllers.employee_reminders.send_birthday_reminders",
 		"hrms.controllers.employee_reminders.send_work_anniversary_reminders",
+		"hrms.overrides.employee_master.set_status_left_after_relieving_date",
 		"hrms.hr.doctype.interview.interview.send_daily_feedback_reminder",
 		"hrms.hr.doctype.shift_assignment.shift_assignment.mark_expired_shift_assignments_as_inactive",
 		"hrms.hr.doctype.job_opening.job_opening.close_expired_job_openings",
