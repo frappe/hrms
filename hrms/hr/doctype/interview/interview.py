@@ -209,6 +209,8 @@ def get_feedback(interview: str) -> list[dict]:
 @frappe.whitelist()
 def get_skill_wise_average_rating(interview: str) -> list[dict]:
 	frappe.has_permission("Interview", "read", interview, throw=True)
+	frappe.has_permission("Interview Feedback", "read", throw=True)
+
 	skill_assessment = frappe.qb.DocType("Skill Assessment")
 	interview_feedback = frappe.qb.DocType("Interview Feedback")
 	return (

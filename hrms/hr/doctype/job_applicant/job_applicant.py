@@ -262,7 +262,7 @@ def schedule_interview(
 @frappe.whitelist()
 def get_interview_details(job_applicant: str) -> dict:
 	frappe.has_permission("Job Applicant", "read", job_applicant, throw=True)
-	interview_details = frappe.db.get_all(
+	interview_details = frappe.get_list(
 		"Interview",
 		filters={"job_applicant": job_applicant, "docstatus": ["!=", 2]},
 		fields=["name", "interview_type", "scheduled_on", "average_rating", "status"],
