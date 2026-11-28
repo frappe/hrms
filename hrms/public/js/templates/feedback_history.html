@@ -52,7 +52,7 @@
 
 	{% } else { %}
 		<div class="no-feedback d-flex flex-col justify-content-center align-items-center text-muted">
-			<span>{{ __("No feedback has been received yet") }}</span>
+			<span>{{ typeof empty_message == "string" ? empty_message : __("No feedback has been received yet") }}</span>
 		</div>
 	{% } %}
 </div>

@@ -38,6 +38,21 @@ frappe.ui.form.on("Interview", {
 			);
 		}
 
+		const allow_feedback_submission = frm.doc.interview_details.some(
+			(interviewer) => interviewer.interviewer === frappe.session.user,
+		);
+
+		if (!allow_feedback_submission) {
+			const button = frm.add_custom_button(__("Submit Feedback"), () => {
+				frm.trigger("submit_feedback");
+			});
+			button
+				.prop("disabled", true)
+				.attr("title", __("Only interviewers can submit feedback"))
+				.tooltip({ delay: { show: 600, hide: 100 }, trigger: "hover" });
+			return;
+		}
+
 		const has_submitted_feedback = await frappe.db.get_value(
 			"Interview Feedback",
 			{
@@ -50,23 +65,9 @@ frappe.ui.form.on("Interview", {
 
 		if (has_submitted_feedback?.message?.name) return;
 
-		const allow_feedback_submission = frm.doc.interview_details.some(
-			(interviewer) => interviewer.interviewer === frappe.session.user,
-		);
-
-		if (allow_feedback_submission) {
-			frm.page.set_primary_action(__("Submit Feedback"), () => {
-				frm.trigger("submit_feedback");
-			});
-		} else {
-			const button = frm.add_custom_button(__("Submit Feedback"), () => {
-				frm.trigger("submit_feedback");
-			});
-			button
-				.prop("disabled", true)
-				.attr("title", __("Only interviewers can submit feedback"))
-				.tooltip({ delay: { show: 600, hide: 100 }, trigger: "hover" });
-		}
+		frm.page.set_primary_action(__("Submit Feedback"), () => {
+			frm.trigger("submit_feedback");
+		});
 	},
 
 	submit_feedback: function (frm) {
@@ -243,6 +244,14 @@ frappe.ui.form.on("Interview", {
 	},
 
 	load_feedback(frm) {
+		if (!frappe.model.can_read("Interview Feedback")) {
+			frm.feedback = [];
+			frm.events.render_feedback(
+				frm,
+				__("You don't have permission to view feedback for this interview"),
+			);
+			return;
+		}
 		frappe
 			.call({
 				method: "hrms.hr.doctype.interview.interview.get_feedback",
@@ -255,7 +264,7 @@ frappe.ui.form.on("Interview", {
 			});
 	},
 
-	render_feedback(frm) {
+	render_feedback(frm, empty_message) {
 		frappe.require("interview.bundle.js", () => {
 			const wrapper = $(frm.fields_dict.feedback_html.wrapper);
 			const feedback_html = frappe.render_template("interview_feedback", {
@@ -263,6 +272,7 @@ frappe.ui.form.on("Interview", {
 				average_rating: flt(frm.doc.average_rating * 5, 2),
 				reviews_per_rating: frm.reviews_per_rating,
 				skills_average_rating: frm.skills_average_rating,
+				empty_message: empty_message,
 			});
 			$(wrapper).empty();
 			$(feedback_html).appendTo(wrapper);

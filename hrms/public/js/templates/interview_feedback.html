@@ -25,5 +25,5 @@
 	</div>
 	{% } %}
 
-	{%= frappe.render_template("feedback_history", { feedback_history: feedbacks, feedback_doctype: "Interview Feedback" }) %}
+	{%= frappe.render_template("feedback_history", { feedback_history: feedbacks, feedback_doctype: "Interview Feedback", empty_message: empty_message }) %}
 </div>
