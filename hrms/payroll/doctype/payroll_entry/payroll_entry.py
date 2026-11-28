@@ -99,7 +99,15 @@ class PayrollEntry(Document):
 
 	def validate(self):
 		self.number_of_employees = len(self.employees)
+		self.validate_exchange_rate()
 		self.set_status()
+
+	def validate_exchange_rate(self):
+		# exchange rate is set only by the form's currency trigger, so it can be 0 when created via API / import
+		if self.currency == erpnext.get_company_currency(self.company):
+			self.exchange_rate = 1
+		elif flt(self.exchange_rate) <= 0:
+			frappe.throw(_("Exchange Rate must be greater than zero"))
 
 	def set_status(self, status=None, update=False):
 		if not status:
