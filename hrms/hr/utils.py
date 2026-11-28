@@ -124,23 +124,24 @@ def get_formatted_value(value, fieldtype):
 
 
 def delete_employee_work_history(details, employee, date):
-	filters = {}
-	for d in details:
-		for history in employee.internal_work_history:
-			if d.property == "Department" and history.department == d.new:
-				department = d.new
-				filters["department"] = department
-			if d.property == "Designation" and history.designation == d.new:
-				designation = d.new
-				filters["designation"] = designation
-			if d.property == "Branch" and history.branch == d.new:
-				branch = d.new
-				filters["branch"] = branch
-			if date and date == history.from_date:
-				filters["from_date"] = date
-	if filters:
-		frappe.db.delete("Employee Internal Work History", filters)
-		employee.save()
+	changes = {d.fieldname: d.new for d in details if d.fieldname in ("department", "designation", "branch")}
+	if not changes or not date:
+		return
+
+	for index in range(len(employee.internal_work_history) - 1, -1, -1):
+		history = employee.internal_work_history[index]
+		if not history.from_date or getdate(history.from_date) != getdate(date):
+			continue
+		if any(cstr(history.get(fieldname)) != cstr(value) for fieldname, value in changes.items()):
+			continue
+
+		employee.remove(history)
+		if index:
+			next_history = employee.internal_work_history[index : index + 1]
+			employee.internal_work_history[index - 1].to_date = (
+				add_days(next_history[0].from_date, -1) if next_history else None
+			)
+		break
 
 
 def update_to_date_in_work_history(employee, cancel):
