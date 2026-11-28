@@ -31,7 +31,7 @@ SUPPORTED_FIELD_TYPES = [
 def get_current_user_info() -> dict:
 	current_user = frappe.session.user
 	user = frappe.db.get_value(
-		"User", current_user, ["name", "first_name", "full_name", "user_image"], as_dict=True
+		"User", current_user, ["name", "email", "first_name", "full_name", "user_image"], as_dict=True
 	)
 	user["roles"] = frappe.get_roles(current_user)
 

@@ -52,13 +52,13 @@ def get_employee_email(employee_id: str) -> str | None:
 	employee_emails = frappe.db.get_value(
 		"Employee",
 		employee_id,
-		["prefered_email", "user_id", "company_email", "personal_email"],
+		["prefered_email", "user_id.email as user_email", "company_email", "personal_email"],
 		as_dict=True,
 	)
 
 	return (
 		employee_emails.prefered_email
-		or employee_emails.user_id
+		or employee_emails.user_email
 		or employee_emails.company_email
 		or employee_emails.personal_email
 	)

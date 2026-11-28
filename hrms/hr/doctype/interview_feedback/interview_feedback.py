@@ -6,7 +6,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.query_builder.functions import Avg
-from frappe.utils import flt, get_link_to_form, getdate
+from frappe.utils import flt, get_link_to_form, get_user_display_id, getdate
 
 
 class InterviewFeedback(Document):
@@ -48,7 +48,7 @@ class InterviewFeedback(Document):
 		if self.interviewer not in applicable_interviewers:
 			frappe.throw(
 				_("{0} is not allowed to submit Interview Feedback for the Interview: {1}").format(
-					frappe.bold(self.interviewer), frappe.bold(self.interview)
+					frappe.bold(get_user_display_id(self.interviewer)), frappe.bold(self.interview)
 				)
 			)
 

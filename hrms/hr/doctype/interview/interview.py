@@ -8,7 +8,16 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.query_builder.functions import Avg
-from frappe.utils import cint, cstr, get_datetime, get_link_to_form, get_time, getdate, nowtime
+from frappe.utils import (
+	cint,
+	cstr,
+	get_datetime,
+	get_email_addresses,
+	get_link_to_form,
+	get_time,
+	getdate,
+	nowtime,
+)
 
 
 class DuplicateInterviewRoundError(frappe.ValidationError):
@@ -172,9 +181,11 @@ def get_recipients(name, for_feedback=0):
 		feedback_given_interviewers = frappe.get_all(
 			"Interview Feedback", filters={"interview": name, "docstatus": 1}, pluck="interviewer"
 		)
-		recipients = [d for d in interviewers if d not in feedback_given_interviewers]
+		recipients = list(
+			get_email_addresses(d for d in interviewers if d not in feedback_given_interviewers)
+		)
 	else:
-		recipients = interviewers
+		recipients = list(get_email_addresses(interviewers))
 		recipients.append(frappe.db.get_value("Job Applicant", interview.job_applicant, "email_id"))
 
 	return recipients
