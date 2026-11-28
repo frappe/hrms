@@ -12,3 +12,11 @@ export function short_date(value) {
 	const text = day_first ? `${day} ${month_name}` : `${month_name} ${day}`;
 	return year === new Date().getFullYear() ? text : `${text} ${year}`;
 }
+
+export function show_upload_error(error) {
+	window.frappe?.msgprint({
+		title: __("Upload failed"),
+		message: error?.message || String(error || __("The file could not be uploaded")),
+		indicator: "red",
+	});
+}
