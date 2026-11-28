@@ -1,225 +1,75 @@
 {% extends "templates/web.html" %}
+{% from "hrms/templates/includes/job_opening_macros.html" import salary, count, deadline_date with context %}
+
+{% block style %}
+<style>
+{% include "hrms/templates/includes/careers.css" %}
+</style>
+{% endblock style %}
+
+{% block breadcrumbs %}{% endblock breadcrumbs %}
+
 {% block page_content %}
+{% set is_open = status == "Open" %}
+{% set apply_route = "/" ~ (job_application_route if job_application_route else "job_application") ~ "/new?job_title=" ~ name | urlencode %}
+{% set pay = salary(doc)|trim %}
+{% set deadline = closes_on if is_open else closed_on %}
 
-<div class="py-12">
-	<!-- Header -->
-	<div class="row">
-		<div class="col-md-9 mb-8">
-			<h1
-				class="mt-0 mb-2 mb-md-3 mx-auto mx-md-0 text-center text-md-left"
-				style="@include media-breakpoint-up(md) {font-size: 3rem}"
-			>
-				{{ job_title }}
-			</h1>
-			<div class="flex align-items-center">
-				<div class="mx-auto mx-md-0">
-					<span class="font-weight-bold">{{ company }}</span>
-					{{ " · " }}
-					{{ posted_on }}
+<div class="careers-page careers-role text-base">
+	<header class="careers-header">
+		<div class="careers-header-panel">
+			<div class="careers-header-top">
+				<div class="careers-header-title">
+					<h1 class="careers-role-title text-xl-semibold">{{ job_title | e }}</h1>
+					{%- if not is_open -%}
+						<span class="es-badge">{{ _("Opening closed.") }}</span>
+					{%- elif days_left is not none and 0 <= days_left <= 14 -%}
+						<span class="es-badge" data-theme="amber">
+							{{ _("Last day") if days_left == 0 else count(days_left, _("{0} day left"), _("{0} days left")) }}
+						</span>
+					{%- endif -%}
 				</div>
 			</div>
-		</div>
-		<div class="col-md-3 flex">
-			<div class="ml-auto d-none d-md-block">
-				{%- if status == "Open" -%}
-					<a
-						class="btn btn-primary btn-lg"
-						href="/{{ job_application_route if job_application_route else 'job_application' }}/new?job_title={{ name }}"
-					>
-						{{ _("Apply Now") }}
-					</a>
-				{%- else -%}
-					<div
-						class="py-4 px-10 font-weight-bold text-nowrap"
-						style="background: var(--bg-gray);
-							font-size: 1.1rem;
-							border-radius: var(--border-radius)"
-					>
-						{{ _("Opening closed.") }}
-					</div>
-				{% endif %}
-			</div>
-		</div>
-	</div>
 
-	<!-- Job Opening Details -->
-	<div class="mb-md-4 p-md-4">
-		<div class="row">
-			{%- if location -%}
-				<div class="col-12 col-md-4 mb-6 mb-md-8">
-					<div class="flex flex-row align-items-center">
-						<div class="rounded-circle p-4" style="background: var(--purple-50)">
-							<svg
-								class="icon"
-								style="height: 28px; width: 28px"
-								xmlns="http://www.w3.org/2000/svg"
-								viewBox="0 0 16 16"
-							>
-								<g stroke="var(--purple-700)" stroke-miterlimit="10">
-								<path d="M11.467 3.458c1.958 1.957 1.958 5.088.027 7.02L7.97 14l-3.523-3.523a4.945 4.945 0 010-6.993l.026-.026a4.922 4.922 0 016.993 0zm0 0c-.026-.026-.026-.026 0 0z">
-								</path>
-								<path d="M7.971 8.259a1.305 1.305 0 100-2.61 1.305 1.305 0 000 2.61z"></path>
-								</g>
-							</svg>
-						</div>
-						<div class="ml-5">
-							<div class="text-secondary text-uppercase" style="font-size: 11px">{{ _("Location") }}</div>
-							<div class="font-weight-bold">{{ location }}</div>
-						</div>
+			{%- set facts = [
+				(_("Team"), team),
+				(_("Location"), location),
+				(_("Type"), employment_type),
+				(_("Salary"), pay),
+				(_("Apply by") if is_open else _("Closed on"), deadline_date(deadline)|trim if deadline else ""),
+			] -%}
+			{%- if facts|selectattr(1)|list -%}
+			<dl class="careers-facts">
+				{%- for label, value in facts if value -%}
+					<div>
+						<dt class="text-sm">{{ label }}</dt>
+						<dd class="text-base">{{ value | e }}</dd>
 					</div>
-				</div>
-			{% endif %}
-
-			{%- if department -%}
-				<div class="col-12 col-md-4 mb-6 mb-md-8">
-					<div class="flex flex-row align-items-center">
-						<div class="rounded-circle p-4" style="background: var(--blue-50)">
-							<svg
-								class="icon"
-								style="height: 28px;
-									width: 28px;
-									--icon-stroke: var(--blue-700)"
-							>
-								<use href="#icon-git-branch"></use>
-							</svg>
-						</div>
-						<div class="ml-5">
-							<div class="text-secondary text-uppercase" style="font-size: 11px">{{ _("Department") }}</div>
-							<div class="font-weight-bold">{{ department }}</div>
-						</div>
-					</div>
-				</div>
-			{% endif %}
-
-			{%- if publish_salary_range -%}
-				<div class="col-12 col-md-4 mb-6 mb-md-8">
-					<div class="flex flex-row align-items-center">
-						<div class="rounded-circle p-4" style="background: var(--green-50)">
-							<svg
-								class="icon"
-								style="height: 28px;
-									width: 28px;
-									--icon-stroke: var(--green-700)"
-							>
-								<use href="#icon-banknote"></use>
-							</svg>
-						</div>
-						<div class="ml-5">
-							<div class="text-secondary text-uppercase" style="font-size: 11px">{{ _("Salary Range") }}</div>
-							<div class="font-weight-bold">
-								{%- if lower_range -%}
-									{{ frappe.format_value(frappe.utils.flt(lower_range) , currency=currency) }}
-								{% endif %}
-								{%- if lower_range and upper_range -%}
-									{{ " - " }}
-								{% endif %}
-								{%- if upper_range -%}
-									{{ frappe.format_value(frappe.utils.flt(upper_range) , currency=currency) }}
-								{% endif %}
-								/
-								{{ salary_per.lower() }}
-							</div>
-						</div>
-					</div>
-				</div>
-			{% endif %}
-
-			{%- if employment_type -%}
-				<div class="col-12 col-md-4 mb-6 mb-md-8">
-					<div class="flex flex-row align-items-center">
-						<div class="rounded-circle p-4" style="background: var(--yellow-50)">
-							<svg
-								class="icon"
-								style="height: 28px;
-									width: 28px;
-									--icon-stroke: var(--yellow-700)"
-							>
-								<use href="#icon-briefcase-business"></use>
-							</svg>
-						</div>
-						<div class="ml-5">
-							<div class="text-secondary text-uppercase" style="font-size: 11px">{{ _("Employment Type") }}</div>
-							<div class="font-weight-bold">{{ employment_type }}</div>
-						</div>
-					</div>
-				</div>
-			{% endif %}
-
-			{%- if publish_applications_received -%}
-				<div class="col-12 col-md-4 mb-6 mb-md-8">
-					<div class="flex flex-row align-items-center">
-						<div class="rounded-circle p-4" style="background: var(--orange-50)">
-							<svg
-								class="icon"
-								style="height: 28px;
-									width: 28px;
-									--icon-stroke: var(--orange-700)"
-							>
-								<use href="#icon-users"></use>
-							</svg>
-						</div>
-						<div class="ml-5">
-							<div class="text-secondary text-uppercase" style="font-size: 11px">{{ _("Applications Received") }}</div>
-							<div class="font-weight-bold">{{ no_of_applications }}</div>
-						</div>
-					</div>
-				</div>
+				{%- endfor -%}
+			</dl>
 			{%- endif -%}
-
-			{%- if (status == 'Open' and closes_on) or (status == 'Closed' and closed_on) -%}
-				<div class="col-12 col-md-4 mb-6 mb-md-8">
-					<div class="flex flex-row align-items-center">
-						<div class="rounded-circle p-4" style="background: var(--red-50)">
-							<svg
-								class="icon"
-								style="height: 28px;
-									width: 28px;
-									--icon-stroke: var(--red-700)"
-							>
-								<use href="#icon-calendar"></use>
-							</svg>
-						</div>
-						<div class="ml-5">
-							<div
-								class="text-secondary text-uppercase"
-								style="font-size: 11px"
-							>
-								{{ _("Closes On") if status == "Open" else _("Closed On") }}
-							</div>
-							<div class="font-weight-bold">
-								{{ frappe.utils.format_date(closes_on if status == "Open" else closed_on, "d MMM, YYYY") }}
-							</div>
-						</div>
-					</div>
-				</div>
-			{% endif %}
 		</div>
+		<div class="careers-header-foot text-sm">
+			{%- if publish_applications_received -%}
+				<span>{{ count(no_of_applications, _("{0} applicant"), _("{0} applicants")) }}</span>
+			{%- endif -%}
+			<span>{{ _("Posted {0}").format(posted_on) }}</span>
+		</div>
+	</header>
+
+	<div class="careers-body">
+		{%- if description -%}
+			<div class="careers-description text-p-base">{{ description }}</div>
+		{%- endif -%}
+		{%- if is_open -%}
+			<a class="es-button careers-apply-desktop careers-body-apply" data-variant="solid" href="{{ apply_route | e }}">{{ _("Apply for this role") }}</a>
+		{%- endif -%}
 	</div>
 
-	{%- if description -%}<p>{{ description }}</p>{% endif %}
-
-	<!-- Mobile Apply Now Button -->
-	<div id="sticky-div" class="position-sticky d-md-none" style="bottom: 0; ">
-		<div class="w-100 bg-white py-8">
-			{%- if status == "Open" -%}
-				<a
-					class="btn btn-primary btn-lg w-100"
-					href="/{{ job_application_route if job_application_route else 'job_application' }}/new?job_title={{ name }}"
-				>
-					{{ _("Apply Now") }}
-				</a>
-			{%- else -%}
-				<div
-					class="py-4 px-10 text-center font-weight-bold text-nowrap"
-					style="background: var(--bg-gray);
-						font-size: 1.1rem;
-						border-radius: var(--border-radius)"
-				>
-					{{ _("Opening closed.") }}
-				</div>
-			{% endif %}
+	{%- if is_open -%}
+		<div class="careers-sticky-apply">
+			<a class="es-button" data-variant="solid" href="{{ apply_route | e }}">{{ _("Apply for this role") }}</a>
 		</div>
-	</div>
+	{%- endif -%}
 </div>
-
 {% endblock page_content %}

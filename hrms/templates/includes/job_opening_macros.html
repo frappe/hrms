@@ -1,0 +1,38 @@
+{%- macro lakh(amount) -%}
+	₹{{ "%g"|format((amount / 100000)|round(1)) }}L
+{%- endmacro -%}
+
+{%- macro money(amount, currency, short) -%}
+	{%- if short -%}
+		{{ lakh(amount) }}
+	{%- else -%}
+		{{ frappe.format_value(frappe.utils.flt(amount), currency=currency) }}
+	{%- endif -%}
+{%- endmacro -%}
+
+{#- "₹18L – ₹28L a year" for rupees from one lakh up; the currency's own format otherwise. -#}
+{%- macro salary(opening) -%}
+	{%- if opening.publish_salary_range and (opening.lower_range or opening.upper_range) -%}
+		{%- set short = opening.currency == "INR" and ((opening.lower_range or 0) >= 100000 or (opening.upper_range or 0) >= 100000) -%}
+		{%- set lower = money(opening.lower_range, opening.currency, short)|trim if opening.lower_range else "" -%}
+		{%- set upper = money(opening.upper_range, opening.currency, short)|trim if opening.upper_range else "" -%}
+		{{ _("{0} a {1}").format([lower, upper]|select|join(" – "), _(opening.salary_per or "Year")|lower) }}
+	{%- endif -%}
+{%- endmacro -%}
+
+{#- "12 Mar", or "12 Mar 2027" outside this year. -#}
+{%- macro deadline_date(date) -%}
+	{{ frappe.utils.format_date(date, "d MMM" if frappe.utils.getdate(date).year == frappe.utils.getdate().year else "d MMM yyyy") }}
+{%- endmacro -%}
+
+{%- macro closes_label(date) -%}
+	{{ _("Closes {0}").format(deadline_date(date)) }}
+{%- endmacro -%}
+
+{%- macro icon(name) -%}
+	<svg class="icon careers-icon" aria-hidden="true"><use href="#icon-{{ name }}"></use></svg>
+{%- endmacro -%}
+
+{%- macro count(n, one, many) -%}
+	{{ (one if n == 1 else many).format(n) }}
+{%- endmacro -%}
