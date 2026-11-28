@@ -175,6 +175,14 @@ class TestShiftAssignment(HRMSTestSuite):
 		for shift in events:
 			self.assertIn(shift["name"], [shift1.name, shift2.name, shift3.name, shift4.name])
 
+		# the calendar view sends filters as a JSON string
+		events = get_events(
+			start=date,
+			end=add_days(date, 30),
+			filters=frappe.as_json([["Shift Assignment", "employee", "!=", employee2]]),
+		)
+		self.assertEqual(len(events), 6)
+
 	def test_calendar_for_night_shift(self):
 		employee1 = make_employee("test_shift_assignment1@example.com", company="_Test Company")
 
