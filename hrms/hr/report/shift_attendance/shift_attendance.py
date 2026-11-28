@@ -19,6 +19,15 @@ def execute(filters=None):
 	return columns, data, None, chart, report_summary
 
 
+def formatter(value, column, data, default_formatter):
+	value = default_formatter(value, column, data)
+	if (column.fieldname == "in_time" and data.late_entry) or (
+		column.fieldname == "out_time" and data.early_exit
+	):
+		value = f"<span style='color:red!important'>{value}</span>"
+	return value
+
+
 def get_columns():
 	return [
 		{
