@@ -23,8 +23,13 @@ class SalaryBreakupReport:
 			)
 		)
 		self.validate_ctc()
+		preview_slip = frappe.new_doc("Salary Slip")
+		preview_slip._salary_structure_assignment = frappe.db.get_value(
+			"Salary Structure Assignment", salary_structure_assignment, "*", as_dict=True
+		)
 		self.salary_slip = _make_salary_slip(
 			self.salary_structure,
+			target_doc=preview_slip,
 			employee=self.employee,
 			for_preview=1,
 			as_print=False,

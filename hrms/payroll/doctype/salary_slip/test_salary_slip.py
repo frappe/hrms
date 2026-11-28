@@ -851,6 +851,80 @@ class TestSalarySlip(HRMSTestSuite):
 
 		self.assertEqual(actual_amount, expected_amount)
 
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings",
+		{"split_salary_on_assignment_change": 1, "include_holidays_in_total_working_days": 1},
+	)
+	def test_salary_split_between_assignments_in_one_period(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+			create_salary_structure_assignment,
+			make_salary_structure,
+		)
+
+		start_date = get_year_start(nowdate())
+		employee = make_employee("test_split_salary@salary.com", company="_Test Company")
+		make_salary_structure(
+			"Test Engineer Structure", "Monthly", employee=employee, from_date=start_date, base=60000
+		)
+		senior_structure = make_salary_structure("Test Senior Engineer Structure", "Monthly")
+		# promoted on the 18th: 17 days on the first assignment and 14 on the second
+		create_salary_structure_assignment(
+			employee,
+			senior_structure.name,
+			from_date=add_days(start_date, 17),
+			base=75000,
+			allow_duplicate=True,
+		)
+
+		ss = make_salary_slip(senior_structure.name, employee=employee, posting_date=start_date)
+		ss.insert()
+		earnings = {row.salary_component: row for row in ss.earnings}
+
+		# Basic Salary = base: 60000 * 17/31 + 75000 * 14/31
+		self.assertEqual(earnings["Basic Salary"].amount, 66774.19)
+		# Special Allowance = BS * .5, does not depend on payment days
+		self.assertEqual(earnings["Special Allowance"].amount, 33387.1)
+		# the next months are paid from the latest assignment
+		self.assertEqual(earnings["Basic Salary"].default_amount, 75000)
+
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings",
+		{
+			"split_salary_on_assignment_change": 1,
+			"include_holidays_in_total_working_days": 1,
+			"payroll_based_on": "Leave",
+		},
+	)
+	def test_leave_without_pay_reduces_only_its_assignment_period(self):
+		from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+			create_salary_structure_assignment,
+			make_salary_structure,
+		)
+
+		start_date = get_year_start(nowdate())
+		employee = make_employee("test_split_salary_lwp@salary.com", company="_Test Company")
+		salary_structure = make_salary_structure(
+			"Test Engineer Structure", "Monthly", employee=employee, from_date=start_date, base=60000
+		)
+		create_salary_structure_assignment(
+			employee,
+			salary_structure.name,
+			from_date=add_days(start_date, 17),
+			base=75000,
+			allow_duplicate=True,
+		)
+		frappe.db.set_value("Leave Type", "Leave Without Pay", "include_holiday", 1)
+		make_leave_application(
+			employee, add_days(start_date, 9), add_days(start_date, 9), "Leave Without Pay"
+		)
+
+		ss = make_salary_slip(salary_structure.name, employee=employee, posting_date=start_date)
+		ss.insert()
+		basic = next(row for row in ss.earnings if row.salary_component == "Basic Salary")
+
+		# 16 payment days on 60000 and 14 on 75000
+		self.assertEqual(basic.amount, 64838.71)
+
 	@HRMSTestSuite.change_settings("Payroll Settings", {"include_holidays_in_total_working_days": 1})
 	def test_salary_slip_with_holidays_included(self):
 		no_of_days = get_no_of_days()

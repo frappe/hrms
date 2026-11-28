@@ -74,6 +74,20 @@ TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
 # fraction of a working day contributed by a holiday marked as half day
 HALF_DAY_HOLIDAY_FRACTION = 0.5
 
+# copied from the salary structure to a new component row on the slip
+COMPONENT_ROW_FLAGS = (
+	"depends_on_payment_days",
+	"salary_component",
+	"abbr",
+	"do_not_include_in_total",
+	"do_not_include_in_accounts",
+	"accrual_component",
+	"is_tax_applicable",
+	"is_flexible_benefit",
+	"variable_based_on_taxable_salary",
+	"exempted_from_income_tax",
+)
+
 
 class SalarySlip(TransactionBase):
 	# begin: auto-generated types
@@ -214,6 +228,25 @@ class SalarySlip(TransactionBase):
 			return self.relieving_date
 
 		return self.end_date
+
+	def onload(self):
+		self.set_onload(
+			"salary_structure_assignment_periods",
+			[
+				{
+					"salary_structure_assignment": slip._salary_structure_assignment.name,
+					"salary_structure": slip.salary_structure,
+					"from_date": slip._salary_structure_assignment.period_start_date,
+					"to_date": slip._salary_structure_assignment.period_end_date,
+					"base": slip._salary_structure_assignment.base,
+					"total_working_days": slip.total_working_days,
+					"leave_without_pay": slip.leave_without_pay,
+					"absent_days": slip.absent_days,
+					"payment_days": slip.payment_days,
+				}
+				for slip in self.get_period_slips(validate=False)
+			],
+		)
 
 	def validate(self):
 		self.check_salary_withholding()
@@ -974,12 +1007,17 @@ class SalarySlip(TransactionBase):
 		return lwp, absent
 
 	def set_salary_structure_assignment(self):
+		# When the salary is split, an assignment that starts during the period is the slip's own
+		# assignment (tax slab, future months), and the earlier ones only pay for their days
+		applicable_on = (
+			self.actual_end_date if is_salary_split_on_assignment_change() else self.actual_start_date
+		)
 		self._salary_structure_assignment = frappe.db.get_value(
 			"Salary Structure Assignment",
 			{
 				"employee": self.employee,
 				"salary_structure": self.salary_structure,
-				"from_date": ("<=", self.actual_start_date),
+				"from_date": ("<=", applicable_on),
 				"docstatus": 1,
 			},
 			"*",
@@ -993,9 +1031,248 @@ class SalarySlip(TransactionBase):
 					"Please assign a Salary Structure for Employee {0} applicable from or before {1} first"
 				).format(
 					frappe.bold(self.employee_name),
-					frappe.bold(formatdate(self.actual_start_date)),
+					frappe.bold(formatdate(applicable_on)),
 				)
 			)
+
+	def get_period_slips(self, validate: bool = True) -> list["SalarySlip"]:
+		"""Return one slip per Salary Structure Assignment that applies in this pay period, when an
+		assignment starts after the period's first day. Each slip covers only its own dates, and
+		counts its working and payment days with the same Payroll Settings as this slip."""
+		if (
+			getattr(self, "_without_period_split", False)
+			or self.salary_slip_based_on_timesheet
+			or not self.salary_structure
+			or not flt(self.total_working_days)
+			or not is_salary_split_on_assignment_change()
+		):
+			return []
+
+		assignments = self.get_assignments_in_period()
+		if not assignments:
+			return []
+
+		if validate:
+			self.validate_assignments_in_period(assignments)
+
+		period_slips = [self.get_period_slip(assignment) for assignment in assignments]
+
+		# Leave Without Pay changed on the slip, and LWP corrections, have no date, so they apply
+		# to the latest assignment
+		difference = flt(self.payment_days) - sum(flt(slip.payment_days) for slip in period_slips)
+		if difference:
+			latest = period_slips[-1]
+			latest.payment_days = min(
+				max(flt(latest.payment_days) + difference, 0), flt(latest.total_working_days)
+			)
+
+		return period_slips
+
+	def get_assignments_in_period(self) -> list[frappe._dict]:
+		"""Return the assignment that applies on the period's first day and every assignment that
+		starts after it, oldest first, each with the dates it covers. Empty when there is only one."""
+		ssa = frappe.qb.DocType("Salary Structure Assignment")
+		ss = frappe.qb.DocType("Salary Structure")
+		assignments = (
+			frappe.qb.from_(ssa)
+			.join(ss)
+			.on(ssa.salary_structure == ss.name)
+			.select(ssa.star, ss.payroll_frequency)
+			.where(
+				(ssa.employee == self.employee)
+				& (ssa.company == self.company)
+				& (ssa.docstatus == 1)
+				& (ssa.from_date <= self.actual_end_date)
+			)
+			.orderby(ssa.from_date, order=Order.desc)
+			.orderby(ssa.creation, order=Order.desc)
+			.run(as_dict=True)
+		)
+
+		in_period = []
+		for assignment in assignments:
+			# of two assignments from the same date, the one created last applies
+			if in_period and assignment.from_date == in_period[-1].from_date:
+				continue
+
+			in_period.append(assignment)
+			if getdate(assignment.from_date) <= getdate(self.actual_start_date):
+				break
+		else:
+			# no assignment applies on the first day, which is not a split
+			return []
+
+		if len(in_period) < 2:
+			return []
+
+		in_period.reverse()
+		for i, assignment in enumerate(in_period):
+			assignment.period_start_date = self.start_date if i == 0 else assignment.from_date
+			assignment.period_end_date = (
+				add_days(in_period[i + 1].from_date, -1) if i + 1 < len(in_period) else self.end_date
+			)
+
+		return in_period
+
+	def validate_assignments_in_period(self, assignments: list[frappe._dict]) -> None:
+		latest = assignments[-1]
+		for assignment in assignments[:-1]:
+			for fieldname, label in (
+				("currency", _("Currency")),
+				("payroll_frequency", _("Payroll Frequency")),
+				("payroll_payable_account", _("Payroll Payable Account")),
+			):
+				if (assignment.get(fieldname) or None) != (latest.get(fieldname) or None):
+					frappe.throw(
+						_(
+							"Salary Structure Assignments {0} and {1} have a different {2}, so one salary slip cannot be calculated from both."
+						).format(
+							get_link_to_form("Salary Structure Assignment", assignment.name),
+							get_link_to_form("Salary Structure Assignment", latest.name),
+							label,
+						),
+						title=_("Cannot Split Salary"),
+					)
+
+	def get_period_slip(self, assignment: frappe._dict) -> "SalarySlip":
+		slip = frappe.new_doc("Salary Slip")
+		slip.update(
+			{
+				fieldname: self.get(fieldname)
+				for fieldname in (
+					"employee",
+					"employee_name",
+					"company",
+					"posting_date",
+					"payroll_frequency",
+					"currency",
+					"exchange_rate",
+				)
+			}
+		)
+		slip.update({"start_date": assignment.period_start_date, "end_date": assignment.period_end_date})
+		slip.get_working_days_details()
+
+		# formulas still see the dates of the whole pay period
+		slip.update(
+			{
+				"start_date": self.start_date,
+				"end_date": self.end_date,
+				"salary_structure": assignment.salary_structure,
+			}
+		)
+		slip._salary_structure_assignment = assignment
+		return slip
+
+	def add_period_structure_components(self, component_type: str) -> None:
+		"""Set each structure component to the sum of what every period slip pays for it, each
+		weighted by its share of the pay period's working days."""
+		structure_earnings = {row.salary_component for slip in self._period_slips for row in slip.earnings}
+		merged = {}
+
+		# latest first, so rows follow the order of the latest salary structure
+		for slip in reversed(self._period_slips):
+			if not getattr(slip, "_evaluated_components", None):
+				slip.accrued_benefits, slip.benefit_ledger_components = [], []
+				slip._set_evaluated_components()
+
+			if component_type == "deductions":
+				# deductions see everything earned in the period, as on a slip without a split
+				for row in self.earnings:
+					if row.additional_salary or row.salary_component not in structure_earnings:
+						copied_row = row.as_dict(no_default_fields=True, no_child_table_fields=True)
+						slip.append("earnings", copied_row).from_whole_period = True
+				slip.gross_pay = slip.get_component_totals("earnings", depends_on_payment_days=1)
+
+			slip.add_structure_components(component_type)
+
+			share = flt(slip.total_working_days) / flt(self.total_working_days)
+			is_latest = slip is self._period_slips[-1]
+			for row in slip.get(component_type):
+				if row.get("from_whole_period"):
+					continue
+
+				component = merged.setdefault(
+					row.salary_component, frappe._dict(row=row, amount=0, default_amount=0)
+				)
+				component.amount += flt(row.amount) * share
+				if is_latest:
+					# future months are paid from the latest assignment
+					component.default_amount = flt(row.default_amount)
+
+		for salary_component, component in merged.items():
+			self.set_period_component_row(component_type, salary_component, component)
+
+		if component_type == "earnings":
+			self.add_period_accrued_benefits()
+
+	def set_period_component_row(
+		self, component_type: str, salary_component: str, component: frappe._dict
+	) -> None:
+		amount = flt(component.amount, component.row.precision("amount"))
+		if frappe.get_cached_value("Salary Component", salary_component, "round_to_the_nearest_integer"):
+			amount = rounded(amount)
+
+		remove_if_zero_valued = frappe.get_cached_value(
+			"Salary Component", salary_component, "remove_if_zero_valued"
+		)
+		row = next(
+			(
+				d
+				for d in self.get(component_type)
+				if d.salary_component == salary_component and not d.additional_salary
+			),
+			None,
+		)
+		if not row:
+			if not amount and remove_if_zero_valued:
+				return
+			row = self.append(component_type)
+
+		for attr in COMPONENT_ROW_FLAGS:
+			row.set(attr, component.row.get(attr))
+		row.update(
+			{
+				"default_amount": component.default_amount,
+				"additional_amount": 0,
+				"amount": amount,
+				"deduct_full_tax_on_selected_payroll_date": component.row.deduct_full_tax_on_selected_payroll_date,
+			}
+		)
+
+		if not amount and remove_if_zero_valued:
+			self.remove(row)
+			return
+
+		# the tax component is calculated later, on the whole slip
+		if not row.variable_based_on_taxable_salary:
+			self._period_component_amounts[(component_type, salary_component)] = amount
+
+		self.data[row.abbr] = amount
+		self.default_data[row.abbr] = row.default_amount
+
+	def add_period_accrued_benefits(self) -> None:
+		accrued = {}
+		for slip in self._period_slips:
+			share = flt(slip.total_working_days) / flt(self.total_working_days)
+			for entry in slip.benefit_ledger_components:
+				merged = accrued.setdefault(entry["salary_component"], {**entry, "amount": 0})
+				merged["amount"] += flt(entry["amount"]) * share
+
+		for entry in accrued.values():
+			self.append(
+				"accrued_benefits", {"salary_component": entry["salary_component"], "amount": entry["amount"]}
+			)
+			self.benefit_ledger_components.append(entry)
+
+	def get_period_component_amount(self, row) -> float | None:
+		"""The amount of a structure component on a split slip, or None if the slip is not split."""
+		if row.additional_salary:
+			return None
+
+		return (getattr(self, "_period_component_amounts", None) or {}).get(
+			(row.parentfield, row.salary_component)
+		)
 
 	def calculate_net_pay(self, skip_tax_breakup_computation: bool = False):
 		def set_gross_pay_and_base_gross_pay():
@@ -1003,6 +1280,9 @@ class SalarySlip(TransactionBase):
 			self.base_gross_pay = flt(
 				flt(self.gross_pay) * flt(self.exchange_rate), self.precision("base_gross_pay")
 			)
+
+		self._period_component_amounts = {}
+		self._period_slips = self.get_period_slips()
 
 		# get remaining numbers of sub-period (period for which one salary is processed)
 		if self.payroll_period:
@@ -1229,7 +1509,9 @@ class SalarySlip(TransactionBase):
 
 	def get_future_period_non_taxable_earnings(self):
 		salary_slip = frappe.copy_doc(self)
-		# consider full payment days for future period
+		# future periods are paid in full, from this slip's assignment
+		salary_slip._salary_structure_assignment = self._salary_structure_assignment
+		salary_slip._without_period_split = True
 		salary_slip.payment_days = salary_slip.total_working_days
 		salary_slip.calculate_net_pay(skip_tax_breakup_computation=True)
 
@@ -1373,6 +1655,10 @@ class SalarySlip(TransactionBase):
 
 	def add_structure_components(self, component_type):
 		self.data, self.default_data = self.get_data_for_eval()
+
+		if getattr(self, "_period_slips", None):
+			self.add_period_structure_components(component_type)
+			return
 
 		for struct_row in self._evaluated_components[component_type]:
 			self.add_structure_component(struct_row, component_type)
@@ -1942,18 +2228,7 @@ class SalarySlip(TransactionBase):
 				return
 
 			component_row = self.append(component_type)
-			for attr in (
-				"depends_on_payment_days",
-				"salary_component",
-				"abbr",
-				"do_not_include_in_total",
-				"do_not_include_in_accounts",
-				"accrual_component",
-				"is_tax_applicable",
-				"is_flexible_benefit",
-				"variable_based_on_taxable_salary",
-				"exempted_from_income_tax",
-			):
+			for attr in COMPONENT_ROW_FLAGS:
 				component_row.set(attr, component_data.get(attr))
 
 		if additional_salary:
@@ -2281,6 +2556,10 @@ class SalarySlip(TransactionBase):
 		return future_recurring_additional_amount
 
 	def get_amount_based_on_payment_days(self, row):
+		period_amount = self.get_period_component_amount(row)
+		if period_amount is not None:
+			return period_amount, 0
+
 		amount, additional_amount = row.amount, row.additional_amount
 		timesheet_component = getattr(self, "_timesheet_component", None)
 
@@ -2449,6 +2728,7 @@ class SalarySlip(TransactionBase):
 
 	def process_salary_structure(self, for_preview=0, lwp_days_corrected=None):
 		"""Calculate salary after salary structure details have been updated"""
+		self._without_period_split = for_preview
 		if self.payroll_frequency:
 			self.get_date_details()
 		self.pull_emp_details()
@@ -2707,6 +2987,10 @@ def generate_password_for_pdf(policy_template, employee):
 	employee = frappe.get_cached_doc("Employee", employee)
 	values = {key: format_dates_in_system_format(value) for key, value in employee.as_dict().items()}
 	return policy_template.format(**values)
+
+
+def is_salary_split_on_assignment_change() -> bool:
+	return bool(cint(frappe.db.get_single_value("Payroll Settings", "split_salary_on_assignment_change")))
 
 
 def get_salary_component_data(component):
