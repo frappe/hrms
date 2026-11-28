@@ -1,17 +1,21 @@
 import frappe
-from frappe.utils import add_days, getdate
+from frappe.utils import add_days, add_months, getdate
 
 from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.payroll.doctype.employee_tax_exemption_declaration.test_employee_tax_exemption_declaration import (
 	create_payroll_period,
 )
+from hrms.payroll.doctype.payroll_period.payroll_period import get_payroll_period
 from hrms.payroll.doctype.salary_slip.test_salary_slip import (
 	create_exemption_declaration,
 	create_salary_slips_for_payroll_period,
 	create_tax_slab,
 )
-from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.payroll.doctype.salary_structure.test_salary_structure import (
+	get_payable_account,
+	make_salary_structure,
+)
 from hrms.payroll.report.income_tax_computation.income_tax_computation import execute
 from hrms.tests.utils import HRMSTestSuite
 
@@ -209,3 +213,205 @@ class TestIncomeTaxComputation(HRMSTestSuite):
 		)
 		result = execute(filters)[1]
 		self.assertEqual(len(result), 4)
+
+	def test_report_skips_employee_with_tax_slab_not_effective_in_period(self):
+		# an employee assigned an income tax slab that only becomes effective after the
+		# payroll period start is left out of the report instead of aborting it for
+		# everyone; the correctly configured employees are still reported
+		employee = make_employee(
+			"slab_not_effective@example.com",
+			company="_Test Company",
+			date_of_joining=self.payroll_period.start_date,
+		)
+		salary_structure = make_salary_structure(
+			"Monthly Salary Structure Slab Not Effective",
+			"Monthly",
+			company="_Test Company",
+			currency="INR",
+			test_tax=True,
+		)
+
+		future_slab = frappe.get_doc(
+			{
+				"doctype": "Income Tax Slab",
+				"name": "Income Tax Slab Not Yet Effective",
+				"effective_from": add_days(self.payroll_period.start_date, 1),
+				"company": "_Test Company",
+				"currency": "INR",
+				"slabs": [{"from_amount": 0, "to_amount": 500000, "percent_deduction": 5}],
+			}
+		)
+		future_slab.insert()
+		future_slab.submit()
+
+		ssa = frappe.get_doc(
+			{
+				"doctype": "Salary Structure Assignment",
+				"employee": employee,
+				"salary_structure": salary_structure.name,
+				"from_date": self.payroll_period.start_date,
+				"company": "_Test Company",
+				"currency": "INR",
+				"base": 50000,
+				"income_tax_slab": future_slab.name,
+				"payroll_payable_account": get_payable_account("_Test Company"),
+			}
+		)
+		ssa.save(ignore_permissions=True)
+		ssa.submit()
+
+		filters = frappe._dict(
+			{
+				"company": "_Test Company",
+				"payroll_period": self.payroll_period.name,
+			}
+		)
+
+		# the report completes instead of raising, leaves the misconfigured employee out,
+		# and still reports the correctly configured employee
+		employees_in_report = [row.get("employee") for row in execute(filters)[1]]
+		self.assertNotIn(employee, employees_in_report)
+		self.assertIn(self.employee, employees_in_report)
+
+	def test_report_skips_employee_without_effective_salary_structure_assignment(self):
+		# an employee whose only salary structure assignment starts after the preview
+		# slip's start date cannot have a slip built; they are left out instead of
+		# aborting the whole report
+		employee = make_employee(
+			"ssa_starts_late@example.com",
+			company="_Test Company",
+			date_of_joining=self.payroll_period.start_date,
+		)
+		salary_structure = make_salary_structure(
+			"Monthly Salary Structure SSA Starts Late",
+			"Monthly",
+			company="_Test Company",
+			currency="INR",
+			test_tax=True,
+		)
+
+		ssa = frappe.get_doc(
+			{
+				"doctype": "Salary Structure Assignment",
+				"employee": employee,
+				"salary_structure": salary_structure.name,
+				# starts well after the slip start date (the period start)
+				"from_date": add_days(self.payroll_period.start_date, 60),
+				"company": "_Test Company",
+				"currency": "INR",
+				"base": 50000,
+				"income_tax_slab": self.income_tax_slab,
+				"payroll_payable_account": get_payable_account("_Test Company"),
+			}
+		)
+		ssa.save(ignore_permissions=True)
+		ssa.submit()
+
+		filters = frappe._dict(
+			{
+				"company": "_Test Company",
+				"payroll_period": self.payroll_period.name,
+			}
+		)
+
+		employees_in_report = [row.get("employee") for row in execute(filters)[1]]
+		self.assertNotIn(employee, employees_in_report)
+		self.assertIn(self.employee, employees_in_report)
+
+	def test_report_uses_employee_company_for_payroll_period(self):
+		employee = make_employee(
+			"employee_company_period@example.com",
+			company="_Test Company",
+			date_of_joining=self.payroll_period.start_date,
+		)
+		salary_structure = make_salary_structure(
+			"Monthly Salary Structure Employee Company",
+			"Monthly",
+			company="_Test Company",
+			currency="INR",
+			test_tax=True,
+		)
+
+		slab = frappe.get_doc(
+			{
+				"doctype": "Income Tax Slab",
+				"name": "Income Tax Slab Effective On Period Start",
+				"effective_from": self.payroll_period.start_date,
+				"company": "_Test Company",
+				"currency": "INR",
+				"slabs": [{"from_amount": 0, "to_amount": 0, "percent_deduction": 10}],
+			}
+		)
+		slab.insert()
+		slab.submit()
+
+		frappe.get_doc(
+			{
+				"doctype": "Salary Structure Assignment",
+				"employee": employee,
+				"salary_structure": salary_structure.name,
+				"from_date": self.payroll_period.start_date,
+				"company": "_Test Company",
+				"currency": "INR",
+				"base": 50000,
+				"income_tax_slab": slab.name,
+				"payroll_payable_account": get_payable_account("_Test Company"),
+			}
+		).submit()
+
+		create_payroll_period(
+			name="_Test Payroll Period Other Company",
+			company="_Test Company 1",
+			start_date=add_months(self.payroll_period.start_date, -6),
+			end_date=add_months(self.payroll_period.start_date, 6),
+		)
+
+		filters = frappe._dict(
+			{
+				"company": "_Test Company",
+				"payroll_period": self.payroll_period.name,
+				"employee": employee,
+			}
+		)
+
+		self.addCleanup(frappe.defaults.clear_user_default, "company")
+		self.addCleanup(get_payroll_period.clear_cache)
+
+		self.set_default_company("_Test Company")
+		expected = execute(filters)[1]
+		self.assertEqual(len(expected), 1)
+		self.assertGreater(expected[0].applicable_tax, 0)
+
+		self.set_default_company("_Test Company 1")
+		result = execute(filters)[1]
+		self.assertEqual(len(result), 1)
+		self.assertEqual(result[0].applicable_tax, expected[0].applicable_tax)
+
+	def set_default_company(self, company):
+		frappe.defaults.set_user_default("company", company)
+		frappe.local.new_doc_templates = {}
+		get_payroll_period.clear_cache()
+
+	def test_company_filter(self):
+		employee = make_employee("other_company_employee@example.com", company="_Test Company")
+		salary_structure = make_salary_structure(
+			"Monthly Salary Structure Other Company",
+			"Monthly",
+			employee=employee,
+			company="_Test Company",
+			currency="INR",
+			payroll_period=self.payroll_period,
+			test_tax=True,
+		)
+		create_salary_slips_for_payroll_period(
+			employee, salary_structure.name, self.payroll_period, deduct_random=False, num=3
+		)
+
+		filters = frappe._dict({"company": "_Test Company", "payroll_period": self.payroll_period.name})
+		self.assertIn(employee, [row.get("employee") for row in execute(filters)[1]])
+
+		frappe.db.set_value("Employee", employee, "company", "_Test Company 1")
+
+		employees_in_report = [row.get("employee") for row in execute(filters)[1]]
+		self.assertNotIn(employee, employees_in_report)
+		self.assertIn(self.employee, employees_in_report)
