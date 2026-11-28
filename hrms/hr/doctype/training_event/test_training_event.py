@@ -46,11 +46,11 @@ def create_training_program(training_program, company="_Test Company"):
 		).insert()
 
 
-def create_training_event(attendees):
+def create_training_event(attendees, event_name="Basic Training Event"):
 	return frappe.get_doc(
 		{
 			"doctype": "Training Event",
-			"event_name": "Basic Training Event",
+			"event_name": event_name,
 			"training_program": "Basic Training",
 			"location": "Union Square",
 			"start_time": add_days(today(), 5),
