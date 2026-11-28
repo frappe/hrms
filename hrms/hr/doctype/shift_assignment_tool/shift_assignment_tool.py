@@ -137,51 +137,41 @@ class ShiftAssignmentTool(Document):
 
 		return data
 
-	def get_query_for_employees_with_shifts(self):
+	def get_query_for_employees_with_shifts(self, shift_type=None, date_ranges=None):
 		ShiftAssignment = frappe.qb.DocType("Shift Assignment")
 		query = (
 			frappe.qb.from_(ShiftAssignment)
 			.select(ShiftAssignment.employee)
 			.distinct()
-			.where(
-				(ShiftAssignment.status == "Active")
-				& (ShiftAssignment.docstatus == 1)
-				# check for overlapping dates
-				& ((ShiftAssignment.end_date >= self.start_date) | (ShiftAssignment.end_date.isnull()))
-			)
+			.where((ShiftAssignment.status == "Active") & (ShiftAssignment.docstatus == 1))
 		)
 
-		if self.end_date:
-			query = query.where(ShiftAssignment.start_date <= self.end_date)
+		if date_ranges is None:
+			date_ranges = [(self.start_date, self.end_date)]
+
+		overlaps = []
+		for start_date, end_date in date_ranges:
+			condition = (ShiftAssignment.end_date >= start_date) | (ShiftAssignment.end_date.isnull())
+			if end_date:
+				condition &= ShiftAssignment.start_date <= end_date
+			overlaps.append(condition)
+
+		# A schedule with no occurrences in the requested period cannot conflict.
+		query = query.where(Criterion.any(overlaps) if overlaps else ShiftAssignment.name.isnull())
 
 		if self.allow_multiple_shifts:
-			query = self.get_query_checking_overlapping_shift_timings(query, ShiftAssignment, self.shift_type)
+			query = self.get_query_checking_overlapping_shift_timings(
+				query, ShiftAssignment, shift_type or self.shift_type
+			)
 
 		return query
 
 	def get_query_for_employees_with_same_shift_schedule(self):
-		days = frappe.get_all("Assignment Rule Day", {"parent": self.shift_schedule}, pluck="day")
-
-		ShiftScheduleAssignment = frappe.qb.DocType("Shift Schedule Assignment")
-		ShiftSchedule = frappe.qb.DocType("Shift Schedule")
-		Day = frappe.qb.DocType("Assignment Rule Day")
-
-		query = (
-			frappe.qb.from_(ShiftScheduleAssignment)
-			.left_join(ShiftSchedule)
-			.on(ShiftSchedule.name == ShiftScheduleAssignment.shift_schedule)
-			.left_join(Day)
-			.on(ShiftSchedule.name == Day.parent)
-			.select(ShiftScheduleAssignment.employee)
-			.distinct()
-			.where((ShiftScheduleAssignment.enabled == 1) & (Day.day.isin(days)))
+		shift_schedule = frappe.get_doc("Shift Schedule", self.shift_schedule)
+		return self.get_query_for_employees_with_shifts(
+			shift_type=shift_schedule.shift_type,
+			date_ranges=shift_schedule.get_shift_assignment_dates(self.start_date, self.end_date),
 		)
-
-		if self.allow_multiple_shifts:
-			shift_type = frappe.db.get_value("Shift Schedule", self.shift_schedule, "shift_type")
-			query = self.get_query_checking_overlapping_shift_timings(query, ShiftSchedule, shift_type)
-
-		return query
 
 	def get_query_checking_overlapping_shift_timings(self, query, doctype, shift_type):
 		shift_start, shift_end = frappe.db.get_value("Shift Type", shift_type, ["start_time", "end_time"])
@@ -199,7 +189,7 @@ class ShiftAssignmentTool(Document):
 		return (
 			query.left_join(ShiftType)
 			.on(doctype.shift_type == ShiftType.name)
-			.where((end_time_case >= shift_start) & (ShiftType.start_time <= shift_end))
+			.where((end_time_case > shift_start) & (ShiftType.start_time < shift_end))
 		)
 
 	@frappe.whitelist(methods=["POST"])
