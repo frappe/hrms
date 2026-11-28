@@ -24,6 +24,13 @@ SIMPLE_SLABS = [
 	{"from_amount": 1000000, "to_amount": 0, "percent_deduction": 30, "condition": ""},
 ]
 
+PLUS_ONE_SLABS = [
+	{"from_amount": 0, "to_amount": 300000, "percent_deduction": 0, "condition": ""},
+	{"from_amount": 300001, "to_amount": 700000, "percent_deduction": 5, "condition": ""},
+	{"from_amount": 700001, "to_amount": 1000000, "percent_deduction": 10, "condition": ""},
+	{"from_amount": 1000001, "to_amount": 0, "percent_deduction": 30, "condition": ""},
+]
+
 
 class TestIncomeTaxSlab(HRMSTestSuite):
 	def setUp(self):
@@ -34,6 +41,45 @@ class TestIncomeTaxSlab(HRMSTestSuite):
 				{"description": "cess", "percent": 4, "min_taxable_income": 0, "max_taxable_income": 0}
 			],
 		)
+
+	# calculate_base_tax_from_tax_slabs
+
+	def test_shared_boundaries_do_not_tax_the_boundary_twice(self):
+		self.assertAlmostEqual(calculate_base_tax_from_tax_slabs(300000, self.slab, None, {}), 0)
+		self.assertAlmostEqual(calculate_base_tax_from_tax_slabs(500000, self.slab, None, {}), 10000)
+		self.assertAlmostEqual(calculate_base_tax_from_tax_slabs(1200000, self.slab, None, {}), 110000)
+
+	def test_plus_one_boundaries_match_shared_boundaries(self):
+		slab = make_income_tax_slab(PLUS_ONE_SLABS)
+
+		for income in (300000, 500000, 700000, 1200000):
+			self.assertAlmostEqual(
+				calculate_base_tax_from_tax_slabs(income, slab, None, {}),
+				calculate_base_tax_from_tax_slabs(income, self.slab, None, {}),
+			)
+
+	def test_fractional_income_is_taxed_in_plus_one_gap(self):
+		slab = make_income_tax_slab(PLUS_ONE_SLABS)
+
+		self.assertAlmostEqual(calculate_base_tax_from_tax_slabs(300000.5, slab, None, {}), 0.025)
+		self.assertAlmostEqual(calculate_base_tax_from_tax_slabs(300000.5, self.slab, None, {}), 0.025)
+
+	def test_slabs_are_applied_in_amount_order_after_conditions(self):
+		slab = make_income_tax_slab(
+			[
+				{"from_amount": 700001, "to_amount": 0, "percent_deduction": 10, "condition": ""},
+				{"from_amount": 300001, "to_amount": 700000, "percent_deduction": 5, "condition": ""},
+				{
+					"from_amount": 300001,
+					"to_amount": 700000,
+					"percent_deduction": 50,
+					"condition": "annual_taxable_earning < 0",
+				},
+				{"from_amount": 0, "to_amount": 300000, "percent_deduction": 0, "condition": ""},
+			]
+		)
+
+		self.assertAlmostEqual(calculate_base_tax_from_tax_slabs(800000, slab, None, {}), 30000)
 
 	# calculate_other_charges
 

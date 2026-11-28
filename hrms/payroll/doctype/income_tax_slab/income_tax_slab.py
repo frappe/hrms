@@ -72,17 +72,22 @@ def calculate_base_tax_from_tax_slabs(annual_taxable_earning, tax_slab, eval_glo
 	tax_amount = 0
 	eval_locals.update({"annual_taxable_earning": annual_taxable_earning})
 
-	for slab in tax_slab.slabs:
+	previous_to_amount = None
+	for slab in sorted(tax_slab.slabs, key=lambda slab: flt(slab.from_amount)):
 		cond = cstr(slab.condition).strip()
 		if cond and not eval_tax_slab_condition(cond, eval_globals, eval_locals):
 			continue
-		if not slab.to_amount and annual_taxable_earning >= slab.from_amount:
-			tax_amount += (annual_taxable_earning - slab.from_amount + 1) * slab.percent_deduction * 0.01
-			continue
-		if annual_taxable_earning >= slab.from_amount and annual_taxable_earning < slab.to_amount:
-			tax_amount += (annual_taxable_earning - slab.from_amount + 1) * slab.percent_deduction * 0.01
-		elif annual_taxable_earning >= slab.from_amount and annual_taxable_earning >= slab.to_amount:
-			tax_amount += (slab.to_amount - slab.from_amount + 1) * slab.percent_deduction * 0.01
+
+		start = flt(slab.from_amount)
+		# slabs written as 0-250000, 250001-400000 continue from the previous slab's end
+		if previous_to_amount is not None and start == previous_to_amount + 1:
+			start = previous_to_amount
+
+		end = flt(slab.to_amount) or annual_taxable_earning
+		if annual_taxable_earning > start:
+			tax_amount += (min(annual_taxable_earning, end) - start) * flt(slab.percent_deduction) * 0.01
+
+		previous_to_amount = flt(slab.to_amount) if slab.to_amount else None
 	return tax_amount
 
 
