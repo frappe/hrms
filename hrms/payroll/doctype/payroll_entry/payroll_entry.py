@@ -94,7 +94,8 @@ class PayrollEntry(Document):
 
 		# check if salary slips were manually submitted
 		entries = frappe.db.count("Salary Slip", {"payroll_entry": self.name, "docstatus": 1})
-		if cint(entries) == len(self.employees):
+		# manually submitted slips still need an accrual entry via "Submit Salary Slip"
+		if cint(entries) == len(self.employees) and not self.get_sal_slip_list(ss_status=1):
 			self.set_onload("submitted_ss", True)
 
 	def validate(self):
@@ -347,13 +348,13 @@ class PayrollEntry(Document):
 				# since this method is called via frm.call this doc needs to be updated manually
 				self.reload()
 
-	def get_sal_slip_list(self, ss_status, as_dict=False):
+	def get_sal_slip_list(self, ss_status, as_dict=False, for_update=False):
 		"""
 		Returns list of salary slips based on selected criteria
 		"""
 
 		ss = frappe.qb.DocType("Salary Slip")
-		ss_list = (
+		query = (
 			frappe.qb.from_(ss)
 			.select(ss.name, ss.salary_structure)
 			.where(
@@ -364,9 +365,11 @@ class PayrollEntry(Document):
 				& ((ss.journal_entry.isnull()) | (ss.journal_entry == ""))
 				& (Coalesce(ss.salary_slip_based_on_timesheet, 0) == self.salary_slip_based_on_timesheet)
 			)
-		).run(as_dict=as_dict)
+		)
+		if for_update:
+			query = query.for_update()
 
-		return ss_list
+		return query.run(as_dict=as_dict)
 
 	@frappe.whitelist(methods=["POST"])
 	def submit_salary_slips(self) -> None:
@@ -1838,6 +1841,9 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 	try:
 		submitted = []
 		unsubmitted = []
+		# slips submitted outside the payroll entry have no accrual entry yet
+		# lock them so a parallel submission waits and skips the slips accrued here
+		manually_submitted = payroll_entry.get_sal_slip_list(ss_status=1, as_dict=True, for_update=True)
 		frappe.flags.via_payroll_entry = True
 		count = 0
 		savepoint = "before_salary_slip_submission"
@@ -1861,12 +1867,12 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 					count * 100 / len(salary_slips), title=_("Submitting Salary Slips...")
 				)
 
-		if submitted:
-			payroll_entry.make_accrual_jv_entry(submitted)
+		if submitted or manually_submitted:
+			payroll_entry.make_accrual_jv_entry(submitted + manually_submitted)
 			payroll_entry.email_salary_slip(submitted)
 			payroll_entry.db_set({"salary_slips_submitted": 1, "status": "Submitted", "error_message": ""})
 
-		show_payroll_submission_status(submitted, unsubmitted, payroll_entry)
+		show_payroll_submission_status(submitted + manually_submitted, unsubmitted, payroll_entry)
 
 	except Exception as e:
 		if not frappe.in_test:
