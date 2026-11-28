@@ -8,6 +8,7 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 
 from hrms.payroll.doctype.salary_structure.salary_structure import make_salary_slip
 from hrms.payroll.doctype.salary_structure.test_salary_structure import make_salary_structure
+from hrms.setup import CTC_ROLE_PERMISSIONS, restrict_employee_ctc
 from hrms.tests.utils import HRMSTestSuite
 
 
@@ -531,3 +532,20 @@ class TestSalaryStructureAssignment(HRMSTestSuite):
 
 		usd_assignment.cancel()
 		self.assertEqual(get_employee_currency(emp), "INR")
+
+
+class TestEmployeeCTC(HRMSTestSuite):
+	def test_ctc_is_on_permission_level_1(self):
+		restrict_employee_ctc()
+		frappe.clear_cache(doctype="Employee")
+
+		self.assertEqual(frappe.get_meta("Employee").get_field("ctc").permlevel, 1)
+		for role, ptypes in CTC_ROLE_PERMISSIONS.items():
+			perm = frappe.db.get_value(
+				"Custom DocPerm",
+				{"parent": "Employee", "role": role, "permlevel": 1},
+				["read", "write"],
+				as_dict=True,
+			)
+			self.assertEqual(perm.read, 1)
+			self.assertEqual(perm.write, ptypes.get("write", 0))

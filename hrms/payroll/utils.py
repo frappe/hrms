@@ -257,6 +257,58 @@ def _bisect_base_for_ctc(ctc_at, target_ctc: float, scale: float, tolerance: flo
 	return base, ctc_at(base)
 
 
+def get_periods_per_year(salary_structure: str) -> int:
+	from hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment import (
+		PERIODS_PER_YEAR,
+	)
+
+	frequency = frappe.get_cached_value("Salary Structure", salary_structure, "payroll_frequency")
+	return PERIODS_PER_YEAR.get(frequency, 12)
+
+
+def get_breakup_rows(
+	assignment, periods: int, total_ctc: float, left_out: tuple[str, ...] = ()
+) -> list[dict]:
+	rows_by_type = assignment.get_evaluated_components()
+
+	def row(label, per_cycle: float, is_summary: int) -> dict:
+		return {
+			"fixed_components": label,
+			"per_cycle": flt(per_cycle),
+			"yearly": flt(per_cycle * periods),
+			"currency": assignment.currency,
+			"is_summary": is_summary,
+		}
+
+	def payable(component_type) -> list:
+		return [
+			r for r in rows_by_type[component_type] if not r.statistical_component and flt(r.default_amount)
+		]
+
+	earnings = payable("earnings")
+	employer_contributions = payable("employer_contributions")
+	shown_contributions = [r for r in employer_contributions if r.salary_component not in left_out]
+
+	if not earnings and not employer_contributions:
+		return []
+
+	gross = flt(assignment.annual_gross_earning) / periods
+	deductions = sum(flt(r.default_amount) for r in payable("deductions") if not r.do_not_include_in_total)
+
+	breakup = [row(r.salary_component, flt(r.default_amount), 0) for r in earnings]
+	breakup.append(row(_("Gross Pay"), gross, 1))
+	breakup += [row(r.salary_component, flt(r.default_amount), 0) for r in shown_contributions]
+	ctc_label = (
+		_("Total Cost to Company (CTC)* (Includes Statutory Contributions)")
+		if len(shown_contributions) < len(employer_contributions)
+		else _("Total Cost to Company (CTC)")
+	)
+	breakup.append(row(ctc_label, flt(total_ctc) / periods, 1))
+	breakup.append(row(_("Take Home* (Income Tax applicable as per IT Act)"), gross - deductions, 1))
+
+	return breakup
+
+
 @frappe.whitelist()
 def get_payroll_settings_for_payment_days() -> dict:
 	return frappe.get_cached_value(

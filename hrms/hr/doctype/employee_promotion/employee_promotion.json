@@ -9,6 +9,7 @@
  "field_order": [
   "employee",
   "employee_name",
+  "employee_email",
   "department",
   "salary_currency",
   "column_break_3",
@@ -17,9 +18,30 @@
   "details_section",
   "promotion_details",
   "salary_details_section",
-  "current_ctc",
+  "current_salary_structure_assignment",
+  "current_salary_structure",
   "column_break_12",
+  "current_base",
+  "current_ctc",
+  "revised_salary_section",
+  "revised_salary_structure_assignment",
+  "salary_structure",
+  "column_break_revised_salary",
+  "revised_base",
   "revised_ctc",
+  "ctc_breakup_section",
+  "ctc_breakup",
+  "promotion_letter_tab",
+  "letter_details_section",
+  "letter_print_format",
+  "signature",
+  "column_break_letter",
+  "letter_head",
+  "terms_section",
+  "select_terms",
+  "terms",
+  "letter_preview_section",
+  "letter_preview",
   "amended_from"
  ],
  "fields": [
@@ -39,6 +61,14 @@
    "read_only": 1
   },
   {
+   "fieldname": "employee_email",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Employee Email",
+   "options": "Email",
+   "read_only": 1
+  },
+  {
    "fetch_from": "employee.department",
    "fieldname": "department",
    "fieldtype": "Link",
@@ -51,6 +81,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "default": "Today",
    "fieldname": "promotion_date",
    "fieldtype": "Date",
    "label": "Promotion Date",
@@ -86,7 +117,7 @@
   {
    "fieldname": "salary_details_section",
    "fieldtype": "Section Break",
-   "label": "Salary Details"
+   "label": "Current Salary"
   },
   {
    "fieldname": "column_break_12",
@@ -101,28 +132,161 @@
    "read_only": 1
   },
   {
-   "fetch_from": "employee.ctc",
-   "fetch_if_empty": 1,
+   "depends_on": "current_ctc",
    "fieldname": "current_ctc",
    "fieldtype": "Currency",
    "label": "Current CTC",
-   "mandatory_depends_on": "revised_ctc",
    "non_negative": 1,
-   "options": "salary_currency"
+   "options": "salary_currency",
+   "read_only": 1
   },
   {
-   "depends_on": "current_ctc",
    "fieldname": "revised_ctc",
    "fieldtype": "Currency",
    "label": "Revised CTC",
    "non_negative": 1,
+   "options": "salary_currency",
+   "read_only_depends_on": "eval:doc.salary_structure && doc.revised_base"
+  },
+  {
+   "depends_on": "eval:(doc.ctc_breakup || []).length",
+   "fieldname": "ctc_breakup_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "ctc_breakup",
+   "fieldtype": "Table",
+   "label": "Revised CTC Break-up",
+   "options": "Job Offer Component",
+   "read_only": 1
+  },
+  {
+   "fieldname": "promotion_letter_tab",
+   "fieldtype": "Tab Break",
+   "label": "Promotion Letter"
+  },
+  {
+   "fieldname": "letter_details_section",
+   "fieldtype": "Section Break",
+   "label": "Letter Details"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "Promotion Letter with Salary Break-up",
+   "fieldname": "letter_print_format",
+   "fieldtype": "Link",
+   "label": "Print Format",
+   "options": "Print Format",
+   "print_hide": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "signature",
+   "fieldtype": "Attach Image",
+   "label": "Sign to show on promotion letter",
+   "print_hide": 1
+  },
+  {
+   "fieldname": "column_break_letter",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fetch_from": "company.default_letter_head",
+   "fetch_if_empty": 1,
+   "fieldname": "letter_head",
+   "fieldtype": "Link",
+   "label": "Letter Head",
+   "options": "Letter Head",
+   "print_hide": 1
+  },
+  {
+   "fieldname": "terms_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "select_terms",
+   "fieldtype": "Link",
+   "label": "Select Terms and Conditions",
+   "options": "Terms and Conditions",
+   "print_hide": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "terms",
+   "fieldtype": "Text Editor",
+   "label": "Terms and Conditions"
+  },
+  {
+   "depends_on": "letter_print_format",
+   "fieldname": "letter_preview_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "description": "You can email this letter to the employee once the promotion is submitted.",
+   "fieldname": "letter_preview",
+   "fieldtype": "HTML",
+   "label": "Preview"
+  },
+  {
+   "fieldname": "current_salary_structure_assignment",
+   "fieldtype": "Link",
+   "label": "Current Salary Structure Assignment",
+   "options": "Salary Structure Assignment",
+   "read_only": 1
+  },
+  {
+   "depends_on": "current_salary_structure_assignment",
+   "fieldname": "current_salary_structure",
+   "fieldtype": "Link",
+   "label": "Current Salary Structure",
+   "options": "Salary Structure",
+   "read_only": 1
+  },
+  {
+   "depends_on": "current_salary_structure_assignment",
+   "fieldname": "current_base",
+   "fieldtype": "Currency",
+   "label": "Current Base",
+   "non_negative": 1,
+   "options": "salary_currency",
+   "read_only": 1
+  },
+  {
+   "fieldname": "salary_structure",
+   "fieldtype": "Link",
+   "label": "Salary Structure",
+   "mandatory_depends_on": "revised_base",
+   "options": "Salary Structure"
+  },
+  {
+   "fieldname": "revised_base",
+   "fieldtype": "Currency",
+   "label": "Revised Base",
+   "non_negative": 1,
    "options": "salary_currency"
+  },
+  {
+   "fieldname": "revised_salary_section",
+   "fieldtype": "Section Break",
+   "label": "Revised Salary"
+  },
+  {
+   "fieldname": "column_break_revised_salary",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.docstatus==1",
+   "fieldname": "revised_salary_structure_assignment",
+   "fieldtype": "HTML",
+   "label": "Revised Salary Structure Assignment"
   }
  ],
  "icon": "trending-up",
  "is_submittable": 1,
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-11-17 14:00:00.000000",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Promotion",
@@ -166,7 +330,7 @@
    "write": 1
   }
  ],
- "quick_entry": 1,
+ "quick_entry": 0,
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
