@@ -9,6 +9,7 @@ import {
 	TextInput,
 	Textarea,
 } from "frappe-ui";
+import { show_upload_error } from "../utils.js";
 
 // Edits one private card where it is shown, in the card's own label and value rows
 const props = defineProps({
@@ -161,6 +162,7 @@ function link_options(field) {
 									file_names[field.fieldname] = file.file_name;
 								}
 							"
+							@failure="show_upload_error"
 						>
 							<template #default="{ openFileSelector, uploading, progress }">
 								<div class="flex min-h-7 items-center gap-2">

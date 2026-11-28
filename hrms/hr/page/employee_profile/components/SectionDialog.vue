@@ -1,6 +1,7 @@
 <script setup>
 import { ref, watch } from "vue";
 import { Badge, Button, Dialog, FileUploader, TextInput, Textarea } from "frappe-ui";
+import { show_upload_error } from "../utils.js";
 
 // One section being edited: a copy, handed back on Done, so Close leaves it as it was
 const props = defineProps({
@@ -166,6 +167,7 @@ function done() {
 						@success="
 							(file) => draft.content.push({ image: file.file_url, caption: '' })
 						"
+						@failure="show_upload_error"
 					>
 						<template #default="{ openFileSelector, uploading, progress }">
 							<Button

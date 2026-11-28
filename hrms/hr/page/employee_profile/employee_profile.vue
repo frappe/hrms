@@ -9,7 +9,7 @@ import CardEditor from "./components/CardEditor.vue";
 import DocumentsSection from "./components/DocumentsSection.vue";
 import ProfileCard from "./components/ProfileCard.vue";
 import PublicProfile from "./components/PublicProfile.vue";
-import { API } from "./utils.js";
+import { API, show_upload_error } from "./utils.js";
 
 const props = defineProps({
 	route: { type: Array, default: () => [] },
@@ -476,6 +476,7 @@ function open_profile(id) {
 							:private="false"
 							optimize
 							@success="set_cover"
+							@failure="show_upload_error"
 						>
 							<template #default="{ openFileSelector, uploading, progress }">
 								<Button

@@ -6,4 +6,8 @@ import { mountVueIsland } from "@framework/ui/island";
 
 import Page from "./employee_profile.vue";
 
-export const mount = (el, context) => mountVueIsland(el, { ...context, component: Page });
+export const mount = (el, context) => {
+	// frappe-ui's FileUploader sends window.csrf_token, but Desk keeps the token on frappe.csrf_token
+	window.csrf_token ||= window.frappe?.csrf_token;
+	return mountVueIsland(el, { ...context, component: Page });
+};

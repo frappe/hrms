@@ -4,7 +4,7 @@ import { Badge, Button, Dialog, Dropdown, FileUploader, Textarea } from "frappe-
 import CardEditor from "./CardEditor.vue";
 import ListRow, { LIST_CLASS } from "./ListRow.vue";
 import PropertyRow from "./PropertyRow.vue";
-import { API, short_date } from "../utils.js";
+import { API, short_date, show_upload_error } from "../utils.js";
 
 // The documents HR keeps for the employee. Each one is a file on the Employee, and counts once HR
 // has checked it. The employee uploads their own; HR checks them, asks for one by a date, or
@@ -291,6 +291,7 @@ function review(status) {
 						:file-types="['image/*', 'application/pdf']"
 						:private="true"
 						@success="(file) => upload(doc.document_type, { file_url: file.file_url })"
+						@failure="show_upload_error"
 					>
 						<template #default="{ openFileSelector, uploading, progress }">
 							<Button
