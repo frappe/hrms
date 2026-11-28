@@ -266,6 +266,7 @@ def get_payroll_settings_for_payment_days() -> dict:
 			"payroll_based_on",
 			"consider_unmarked_attendance_as",
 			"include_holidays_in_total_working_days",
+			"exclude_only_weekly_offs_from_working_days",
 			"consider_marked_attendance_on_holidays",
 		],
 		as_dict=True,

@@ -11,6 +11,7 @@
   "payroll_based_on",
   "consider_unmarked_attendance_as",
   "include_holidays_in_total_working_days",
+  "exclude_only_weekly_offs_from_working_days",
   "consider_marked_attendance_on_holidays",
   "column_break_6",
   "max_working_hours_against_timesheet",
@@ -54,6 +55,14 @@
    "fieldname": "include_holidays_in_total_working_days",
    "fieldtype": "Check",
    "label": "Include holidays in Total no. of Working Days"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:!doc.include_holidays_in_total_working_days",
+   "description": "If enabled, only holidays with Weekly Off checked in the Holiday List are removed from the total no. of working days. Other holidays, such as public holidays, count as paid working days, even when the employee is marked absent on them",
+   "fieldname": "exclude_only_weekly_offs_from_working_days",
+   "fieldtype": "Check",
+   "label": "Exclude only Weekly Offs from Total no. of Working Days"
   },
   {
    "default": "0",
@@ -205,7 +214,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-10-05 15:00:00.000000",
+ "modified": "2026-11-23 12:00:00.000000",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Settings",

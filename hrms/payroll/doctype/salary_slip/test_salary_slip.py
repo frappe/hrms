@@ -931,6 +931,150 @@ class TestSalarySlip(HRMSTestSuite):
 		self.assertEqual(ss.payment_days, days_in_month - sundays_before_today)
 
 	@HRMSTestSuite.change_settings(
+		"Payroll Settings",
+		{
+			"include_holidays_in_total_working_days": 0,
+			"exclude_only_weekly_offs_from_working_days": 1,
+			"payroll_based_on": "Leave",
+		},
+	)
+	def test_only_weekly_offs_excluded_from_working_days(self):
+		no_of_days = get_no_of_days()
+		emp_id, _holiday = setup_employee_with_holiday(
+			"Test Only Weekly Offs Excluded List", "test_only_weekly_offs_excluded@salary.com"
+		)
+
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test Only Weekly Offs Excluded")
+
+		# the public holiday stays a working day, only the Sundays are removed
+		self.assertEqual(ss.total_working_days, no_of_days[0] - no_of_days[1])
+		self.assertEqual(ss.payment_days, no_of_days[0] - no_of_days[1])
+
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings",
+		{
+			"include_holidays_in_total_working_days": 0,
+			"exclude_only_weekly_offs_from_working_days": 1,
+		},
+	)
+	def test_payroll_period_days_exclude_only_weekly_offs(self):
+		from hrms.payroll.doctype.payroll_period.payroll_period import get_payroll_period_days
+
+		emp_id, holiday = setup_employee_with_holiday(
+			"Test Only Weekly Offs Period List", "test_only_weekly_offs_period@salary.com"
+		)
+		payroll_period = create_payroll_period(name="_Test Payroll Period", company="_Test Company")
+		self.assertTrue(
+			getdate(payroll_period.start_date) <= getdate(holiday) <= getdate(payroll_period.end_date)
+		)
+		weekly_offs = frappe.db.count(
+			"Holiday",
+			{
+				"parent": "Test Only Weekly Offs Period List",
+				"weekly_off": 1,
+				"holiday_date": ("between", (payroll_period.start_date, payroll_period.end_date)),
+			},
+		)
+
+		_name, working_days, total_days = get_payroll_period_days(
+			payroll_period.start_date, payroll_period.end_date, emp_id, "_Test Company"
+		)
+
+		# the public holiday stays a working day of the payroll period
+		self.assertEqual(working_days, total_days - weekly_offs)
+
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings",
+		{
+			"include_holidays_in_total_working_days": 0,
+			"exclude_only_weekly_offs_from_working_days": 1,
+			"payroll_based_on": "Leave",
+		},
+	)
+	def test_half_day_public_holiday_is_a_full_working_day_when_only_weekly_offs_excluded(self):
+		no_of_days = get_no_of_days()
+		emp_id, _holiday = setup_employee_with_half_day_holiday(
+			"Test Only Weekly Offs Half Day List", "test_only_weekly_offs_half_day@salary.com"
+		)
+
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test Only Weekly Offs Half Day")
+
+		self.assertEqual(ss.total_working_days, no_of_days[0] - no_of_days[1])
+		self.assertEqual(ss.payment_days, no_of_days[0] - no_of_days[1])
+
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings",
+		{
+			"include_holidays_in_total_working_days": 0,
+			"exclude_only_weekly_offs_from_working_days": 1,
+			"payroll_based_on": "Leave",
+		},
+	)
+	def test_lwp_skips_public_holiday_when_only_weekly_offs_excluded(self):
+		no_of_days = get_no_of_days()
+		emp_id, holiday = setup_employee_with_holiday(
+			"Test Only Weekly Offs LWP List", "test_only_weekly_offs_lwp@salary.com"
+		)
+		frappe.db.set_value("Leave Type", "Leave Without Pay", "include_holiday", 0)
+
+		# leave on the public holiday and on the working day after it
+		make_leave_application(emp_id, holiday, add_days(holiday, 1), "Leave Without Pay")
+
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test Only Weekly Offs LWP")
+
+		# the public holiday is paid, only the working day after it is unpaid
+		expected_working_days = no_of_days[0] - no_of_days[1]
+		self.assertEqual(ss.leave_without_pay, 1)
+		self.assertEqual(ss.total_working_days, expected_working_days)
+		self.assertEqual(ss.payment_days, expected_working_days - 1)
+
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings",
+		{
+			"include_holidays_in_total_working_days": 0,
+			"exclude_only_weekly_offs_from_working_days": 1,
+			"payroll_based_on": "Attendance",
+			"consider_unmarked_attendance_as": "Absent",
+		},
+	)
+	def test_unmarked_public_holiday_is_paid_when_only_weekly_offs_excluded(self):
+		no_of_days = get_no_of_days()
+		emp_id, _holiday = setup_employee_with_holiday(
+			"Test Only Weekly Offs Unmarked List", "test_only_weekly_offs_unmarked@salary.com"
+		)
+
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test Only Weekly Offs Unmarked")
+
+		# no attendance is marked, so every working day except the public holiday is absent
+		expected_working_days = no_of_days[0] - no_of_days[1]
+		self.assertEqual(ss.total_working_days, expected_working_days)
+		self.assertEqual(ss.absent_days, expected_working_days - 1)
+		self.assertEqual(ss.payment_days, 1)
+
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings",
+		{
+			"include_holidays_in_total_working_days": 0,
+			"exclude_only_weekly_offs_from_working_days": 1,
+			"payroll_based_on": "Attendance",
+			"consider_unmarked_attendance_as": "Present",
+		},
+	)
+	def test_absent_on_public_holiday_is_paid_when_only_weekly_offs_excluded(self):
+		no_of_days = get_no_of_days()
+		emp_id, holiday = setup_employee_with_holiday(
+			"Test Only Weekly Offs Absent List", "test_only_weekly_offs_absent@salary.com"
+		)
+
+		mark_attendance(emp_id, holiday, "Absent", ignore_validate=True)
+
+		ss = make_employee_salary_slip(emp_id, "Monthly", "Test Only Weekly Offs Absent")
+
+		self.assertEqual(ss.absent_days, 0)
+		self.assertEqual(ss.total_working_days, no_of_days[0] - no_of_days[1])
+		self.assertEqual(ss.payment_days, no_of_days[0] - no_of_days[1])
+
+	@HRMSTestSuite.change_settings(
 		"Payroll Settings", {"include_holidays_in_total_working_days": 0, "payroll_based_on": "Leave"}
 	)
 	def test_salary_slip_with_half_day_holiday(self):
@@ -3343,14 +3487,20 @@ def setup_employee_with_half_day_holiday(list_name: str, employee_email: str) ->
 	"""Creates a holiday list with weekly offs and one half day holiday, assigned to a new employee.
 
 	Returns the employee and the half day holiday date."""
+	return setup_employee_with_holiday(list_name, employee_email, is_half_day=1)
+
+
+def setup_employee_with_holiday(
+	list_name: str, employee_email: str, is_half_day: bool = 0
+) -> tuple[str, str]:
 	from hrms.hr.doctype.holiday_list_assignment.test_holiday_list_assignment import (
 		create_holiday_list_assignment,
 	)
 
 	holiday_list = make_holiday_list(list_name)
 	# the day after the first weekly off, so that it does not fall on one
-	half_day_holiday = add_days(get_first_sunday(holiday_list), 1)
-	add_date_to_holiday_list(half_day_holiday, holiday_list, is_half_day=1)
+	holiday = add_days(get_first_sunday(holiday_list), 1)
+	add_date_to_holiday_list(holiday, holiday_list, is_half_day=is_half_day)
 
 	emp_id = make_employee(
 		employee_email,
@@ -3361,7 +3511,7 @@ def setup_employee_with_half_day_holiday(list_name: str, employee_email: str) ->
 	)
 	create_holiday_list_assignment("Employee", emp_id, holiday_list)
 
-	return emp_id, half_day_holiday
+	return emp_id, holiday
 
 
 def make_holiday_list(

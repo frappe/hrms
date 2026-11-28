@@ -8,7 +8,7 @@ from frappe.model.document import Document
 from frappe.utils import add_months, cint, date_diff, flt, formatdate, getdate
 from frappe.utils.caching import redis_cache
 
-from hrms.hr.utils import get_exact_month_diff, get_holiday_dates_for_employee
+from hrms.hr.utils import get_exact_month_diff, get_holidays_for_employee
 
 
 class PayrollPeriod(Document):
@@ -87,9 +87,13 @@ def get_payroll_period_days(start_date, end_date, employee, company=None):
 		actual_no_of_days = date_diff(getdate(payroll_period[0][2]), getdate(payroll_period[0][1])) + 1
 		working_days = actual_no_of_days
 		if not cint(frappe.db.get_single_value("Payroll Settings", "include_holidays_in_total_working_days")):
-			holidays = get_holiday_dates_for_employee(
+			holidays = get_holidays_for_employee(
 				employee, getdate(payroll_period[0][1]), getdate(payroll_period[0][2])
 			)
+			if cint(
+				frappe.db.get_single_value("Payroll Settings", "exclude_only_weekly_offs_from_working_days")
+			):
+				holidays = [holiday for holiday in holidays if holiday.weekly_off]
 			working_days -= len(holidays)
 		return payroll_period[0][0], working_days, actual_no_of_days
 	return False, False, False

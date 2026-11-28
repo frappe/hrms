@@ -276,6 +276,7 @@ frappe.ui.form.on("Salary Slip", {
 				payroll_based_on,
 				consider_unmarked_attendance_as,
 				include_holidays_in_total_working_days,
+				exclude_only_weekly_offs_from_working_days,
 				consider_marked_attendance_on_holidays,
 			} = r.message;
 
@@ -284,6 +285,13 @@ frappe.ui.form.on("Salary Slip", {
 					${__("Note").bold()}: ${__("Payment Days calculations are based on these Payroll Settings")}:
 					<br><br>${__("Payroll Based On")}: ${__(payroll_based_on).bold()}
 					<br>${__("Consider Unmarked Attendance As")}: ${__(consider_unmarked_attendance_as).bold()}
+					<br>${__("Exclude only Weekly Offs from Total no. of Working Days")}:
+					${
+						!cint(include_holidays_in_total_working_days) &&
+						cint(exclude_only_weekly_offs_from_working_days)
+							? __("Enabled").bold()
+							: __("Disabled").bold()
+					}
 					<br>${__("Consider Marked Attendance on Holidays")}:
 					${
 						cint(include_holidays_in_total_working_days) &&
